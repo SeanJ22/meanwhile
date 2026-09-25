@@ -83,6 +83,17 @@ export type DerivedInputRef =
     }
   | {
       /**
+       * One item the control plane's promotion pipeline APPROVED (the campaign-site chain,
+       * lib/control-plane/promotion/campaign-site-chain.ts): the approval record a published row rests on. The
+       * writer reads it from the pipeline log and verifies its vaulted bytes again before citing it.
+       */
+      readonly kind: "PIPELINE_APPROVAL";
+      readonly itemId: string;
+      readonly recordId: string;
+      readonly approvedAt: string;
+    }
+  | {
+      /**
        * One read a derived meeting family made of one wired row's route. Not recomputable: it is the read itself,
        * authorized only by the promoted wiring version the candidate also names (checked at the door).
        */
@@ -104,6 +115,7 @@ export const DERIVED_INPUT_KINDS = [
   "DISCOVERY_ATTEMPT",
   "COMMITTED_ROUTE_HINT",
   "CROSSWALK_VERSION",
+  "PIPELINE_APPROVAL",
   "MEMBER_ACQUISITION",
 ] as const satisfies readonly DerivedInputKind[];
 
@@ -419,7 +431,8 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
       input.kind === "PROMOTED_VERSION" ? input.promotedAt
         : input.kind === "VAULTED_EVIDENCE" || input.kind === "MEMBER_ACQUISITION" ? input.retrievedAt
           : input.kind === "DISCOVERY_ATTEMPT" ? input.recordedAt
-            : null)
+            : input.kind === "PIPELINE_APPROVAL" ? input.approvedAt
+              : null)
     .filter((time): time is string => time !== null && Number.isFinite(Date.parse(time)))
     .sort();
   return {

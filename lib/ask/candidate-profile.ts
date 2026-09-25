@@ -1,5 +1,6 @@
 import { allCandidateCards, type CandidateCardData } from "../ballot/candidate-cards.ts";
-import { allCandidateLinks, type CandidateLinks } from "../ballot/candidate-sites.ts";
+import { allCandidateLinks, campaignLinkIsDerived, type CandidateLinks } from "../ballot/candidate-sites.ts";
+import { derivedCampaignSiteHoldingPath } from "../civic-data/derived-campaign-sites.ts";
 import { readerPersonKeys } from "../identity/reader-person.ts";
 import { candidateContactForCandidacy } from "../ballot/candidate-contacts.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
@@ -12,12 +13,17 @@ const sourceUrl = (url: string | null | undefined) => Boolean(url && /^https?:\/
 const embeddedUrl = (text: string | null | undefined) => text?.match(/https?:\/\/[^\s)]+/)?.[0] ?? null;
 const contactValue = (text: string) => text.toLowerCase().replace(/[^a-z0-9@]/g, "");
 
-/** Same curated fields that feed candidate cards; pictures retain their image-review contract. */
+/**
+ * Same curated fields that feed candidate cards; pictures retain their image-review contract.
+ * `campaignHolding` names the pointer a key's campaign link is held in when it is not candidate-profiles:
+ * a verified site the standing runner published (lib/civic-data/derived-campaign-sites.ts).
+ */
 export function projectCandidateProfile(
   subject: EvidenceSubject,
   keys: readonly string[],
   cards: Record<string, CandidateCardData>,
   links: Record<string, CandidateLinks>,
+  campaignHolding: (key: string) => string | null = () => null,
 ): ProfileAnswer {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
@@ -75,7 +81,8 @@ export function projectCandidateProfile(
         continue;
       }
       const label = link.label ?? (field === "official" ? "Official page" : "Campaign site");
-      const holdingPath = `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/${pointer(key)}/${field}`;
+      const holdingPath = (field === "campaign" ? campaignHolding(key) : null) ??
+        `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/${pointer(key)}/${field}`;
       records.push({ kind: "CANDIDATE_LINK", id: `candidate-link:${key}:${field}`, subjectId: subject.id,
         canonicalSubjectId: key, text: `${label}: ${link.url}`, sourceUrl: link.url,
         sourceOrg: label, retrievedAt: link.attemptedAt,
@@ -96,7 +103,8 @@ export function candidateProfileEvidenceFor(subject: EvidenceSubject): ProfileAn
       denominators: { candidateProfileIdentityUnresolved: 1 },
     };
     const cards = allCandidateCards();
-    return projectCandidateProfile(subject, identity.keys, cards.cards, allCandidateLinks().links);
+    return projectCandidateProfile(subject, identity.keys, cards.cards, allCandidateLinks().links,
+      (key) => (campaignLinkIsDerived(key) ? derivedCampaignSiteHoldingPath(key) : null));
   } catch {
     return { records: [], gaps: [{ whose: "OURS", statement: "The held candidate biographies, contacts, and verified links could not be read for this answer." }],
       denominators: { candidateProfileLoaderFailures: 1 } };

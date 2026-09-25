@@ -49,7 +49,7 @@
 import { fingerprint } from "../ids.ts";
 import { controlsClean } from "./fact-verification.ts";
 import { scoreControls, type ControlFact, type ControlObservation, type ControlScore } from "../../health/control-fact.ts";
-import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { classFieldOpen } from "./activation-gate.ts";
@@ -138,13 +138,36 @@ export interface CampaignSiteChainOptions {
   readonly now: string;
   /** Distinct lead URLs read in one run at most; the rest stay owed, named. */
   readonly maxReads?: number;
+  /**
+   * Second reads for the audit, counted apart from the lead reads so a backlog
+   * of new leads never starves an item one read from approval. Absent, the two
+   * share `maxReads`.
+   */
+  readonly maxRereads?: number;
+  /**
+   * A lead our own ACQUIRER read more recently than this is judged again from
+   * its vaulted bytes instead of being read again: the run's bounded reads go
+   * to leads never read, or read too long ago. Absent, every lead is read.
+   */
+  readonly recheckAfterMs?: number;
+  /**
+   * Orders the held items by a digest of this and their id, so the bounded
+   * reads of successive runs rotate through every held item instead of always
+   * reaching the same first few. Absent, the log's order.
+   */
+  readonly rotation?: string;
 }
+
+/** The door every approval publishes through: the derived routine contract `candidate-campaign-sites-derived`. */
+export const CAMPAIGN_SITE_PUBLICATION_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
 
 /** What an approval carries for the promotion writer: the site, its reader keys, and its evidence. */
 export interface CampaignSiteApproval {
   readonly field: typeof CAMPAIGN_SITE_FIELD;
   readonly candidacyId: string;
   readonly candidateName: string;
+  /** The canonical identity the site verified for, so the publication door can verify the vaulted bytes again. */
+  readonly identity: CampaignSiteIdentity;
   readonly readerKeys: readonly string[];
   readonly url: string;
   readonly host: string;
@@ -161,7 +184,7 @@ export interface CampaignSiteApproval {
     readonly readAt: string;
   };
   readonly audit: { readonly startedFrom: readonly AuditEvidenceBase[]; readonly secondSignal: string };
-  readonly publicationDoor: "CANDIDATE_PROFILES_MANUAL_CONTRACT";
+  readonly publicationDoor: typeof CAMPAIGN_SITE_PUBLICATION_DOOR;
 }
 
 export type CampaignSiteApprovedRecord = ApprovedRecord & { readonly campaignSite: CampaignSiteApproval };
@@ -173,6 +196,8 @@ export interface CampaignSiteLeadOutcome {
   readonly outcome: "VERIFIED" | "REFUSED" | "DEFERRED";
   readonly refusals: readonly CampaignSiteRefusal[];
   readonly historical: readonly number[] | null;
+  /** How the verdict was reached: a read this run, an earlier read's vaulted bytes, or no read (refused by host, or deferred). */
+  readonly via: "READ" | "VAULT" | "NONE";
 }
 
 export interface CampaignSiteChainReport {
@@ -184,7 +209,12 @@ export interface CampaignSiteChainReport {
   /** Held findings that joined no canonical candidacy: never guessed onto one. */
   readonly unjoined: readonly { readonly itemId: string; readonly subjectId: string }[];
   readonly approved: readonly CampaignSiteApprovedRecord[];
+  /** Every read this run made: lead reads and the audit's second reads. */
   readonly readsUsed: number;
+  /** Of `readsUsed`, the audit's second reads. */
+  readonly rereadsUsed: number;
+  /** Leads judged again from an earlier read's vaulted bytes, with no request. */
+  readonly judgedFromVault: number;
 }
 
 /* ------------------------------------------------------------------ ids */
@@ -377,6 +407,19 @@ function zeroStages(): Record<PipelineStage, number> {
 }
 
 /**
+ * Whether the item's log already holds exactly this refusal: the same offer,
+ * byte for byte. Re-offering it would append nothing (`refuse` derives the
+ * refusal's id from the offer's content), so the run skips the store calls.
+ * An offer that differs in any byte (a burden that moved, a new read) is
+ * offered again.
+ */
+function alreadyRefused(state: PipelineItemState | undefined, offered: TransitionRecord): boolean {
+  if (state === undefined) return false;
+  const wanted = canonicalJson(offered);
+  return state.records.some((r) => r.stage === "REFUSED" && r.offered.recordId === offered.recordId && canonicalJson(r.offered) === wanted);
+}
+
+/**
  * Offer every stage the evidence supports for every held campaign-site lead.
  * Idempotent: record ids derive from evidence, so a re-run re-offers the same
  * records and the log dedupes them; a new read is a new record.
@@ -387,20 +430,33 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const unjoined: { itemId: string; subjectId: string }[] = [];
   const maxReads = options.maxReads ?? 200;
   let ctx = await contextFromRepositories(repos);
+  /* Every artifact the log holds, read once; this run's reads are added as they are recorded. */
+  const allArtifacts: ArtifactRecord[] = [...(await repos.artifacts.readAll())];
+  let heldStates = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s] as const));
+  let recordedThisRun = 0;
   const offer = async (record: TransitionRecord): Promise<PipelineItemState> => {
+    const held = heldStates.get(record.itemId);
+    if (alreadyRefused(held, record)) {
+      offers.push({ stage: record.stage, itemId: record.itemId, accepted: false, refusalCodes: held!.records.filter((r) => r.stage === "REFUSED" && r.offered.recordId === record.recordId).at(-1)!.reasons.map((r) => r.code) });
+      return held!;
+    }
     const out = await appendTransition(repos, record, ctx, options.now);
     offers.push({ stage: record.stage, itemId: record.itemId, accepted: out.accepted, refusalCodes: out.accepted || out.record.stage !== "REFUSED" ? [] : out.record.reasons.map((r) => r.code) });
+    heldStates.set(record.itemId, out.state);
     return out.state;
   };
 
-  /* SCOUTED: every Marginalia pointer that is a lead becomes its own item. */
+  /* SCOUTED: every Marginalia pointer that is a lead becomes its own item, once: a later answer naming the same page is the same lead. */
+  let pointersOffered = 0;
   for (const held of options.marginalia ?? []) {
     const subject = options.subjects.get(held.subjectId);
     if (subject === undefined) { unjoined.push({ itemId: held.artifactId, subjectId: held.subjectId }); continue; }
     const found = marginaliaLeads(held, subject);
-    for (const refused of found.refused) leadsOut.push({ itemId: null, subjectId: held.subjectId, lead: { url: refused.url, origin: "MARGINALIA_POINTER", ref: held.artifactId }, outcome: "REFUSED", refusals: [refused.refusal], historical: null });
+    for (const refused of found.refused) leadsOut.push({ itemId: null, subjectId: held.subjectId, lead: { url: refused.url, origin: "MARGINALIA_POINTER", ref: held.artifactId }, outcome: "REFUSED", refusals: [refused.refusal], historical: null, via: "NONE" });
     for (const lead of found.leads) {
       const itemId = discoveryPointerItemId(held.subjectId, lead.url);
+      if (heldStates.get(itemId)?.byStage.SCOUTED !== undefined) continue;
+      pointersOffered += 1;
       const role: WorkerRole = ctx.attemptRoleById(held.attemptId) ?? "ACQUIRER";
       const scouted: ScoutedRecord = {
         formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:scouted`, itemId, at: held.retrievedAt,
@@ -412,10 +468,25 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       await offer(scouted);
     }
   }
+  if (pointersOffered > 0) heldStates = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s] as const));
 
-  const states = (await readPipelineStates(repos)).filter((s) =>
+  const rotate = (s: PipelineItemState): string => (options.rotation === undefined ? "" : fingerprint([options.rotation, s.itemId]));
+  const states = [...heldStates.values()].filter((s) =>
     s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.byStage.SCOUTED !== undefined &&
-    (s.byStage.SCOUTED.source.kind === "SCOUT_RESULT" || s.byStage.SCOUTED.source.kind === "DISCOVERY_POINTER"));
+    (s.byStage.SCOUTED.source.kind === "SCOUT_RESULT" || s.byStage.SCOUTED.source.kind === "DISCOVERY_POINTER"))
+    .sort((a, b) => rotate(a).localeCompare(rotate(b)) || a.itemId.localeCompare(b.itemId));
+
+  /*
+   * Our own reads already held, newest per URL: a deterministic ACQUIRER's
+   * vaulted page (never a Scout's). Within `recheckAfterMs` a lead is judged
+   * again from these bytes, so the run's reads go to what was never read.
+   */
+  const ownReads = new Map<string, ArtifactRecord>();
+  for (const a of allArtifacts) {
+    if (!/html/i.test(a.contentType) || ctx.attemptRoleById(a.attemptId) !== "ACQUIRER") continue;
+    const newest = ownReads.get(a.canonicalUrl);
+    if (newest === undefined || a.recordedAt > newest.recordedAt) ownReads.set(a.canonicalUrl, a);
+  }
 
   /*
    * CONFIRMED, in two passes: every lead of every held item at SCOUTED is read
@@ -423,8 +494,9 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
    * per run, within the read bound), then the context is rebuilt once so the
    * pipeline's confirmation rules can see the new Attempts and artifacts.
    */
-  const readCache = new Map<string, { result: LeadReadResult; artifact: ArtifactRecord | null }>();
+  const readCache = new Map<string, { result: LeadReadResult; artifact: ArtifactRecord | null; via: "READ" | "VAULT" }>();
   let readsUsed = 0;
+  let judgedFromVault = 0;
   const pending: { state: PipelineItemState; subject: CampaignSiteSubject; verdicts: { lead: CampaignSiteLead; verdict: CampaignSiteVerdict; artifact: ArtifactRecord }[] }[] = [];
   for (const state of states) {
     const subject = options.subjects.get(state.subjectId ?? "");
@@ -433,32 +505,48 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     const verdicts: (typeof pending)[number]["verdicts"] = [];
     for (const lead of scoutLeads(state, ctx).slice(0, MAX_LEADS_PER_ITEM)) {
       const pre = campaignSiteHostRefusal(lead.url);
-      if (pre !== null) { leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "REFUSED", refusals: [pre], historical: null }); continue; }
+      if (pre !== null) { leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "REFUSED", refusals: [pre], historical: null, via: "NONE" }); continue; }
       let cached = readCache.get(lead.url);
+      const earlier = cached === undefined && options.recheckAfterMs !== undefined ? ownReads.get(lead.url) : undefined;
+      if (earlier !== undefined && Date.parse(options.now) - Date.parse(earlier.recordedAt) < options.recheckAfterMs!) {
+        const page = await options.heldPage(earlier);
+        if (page !== null) {
+          judgedFromVault += 1;
+          cached = { result: { ok: true, read: page }, artifact: earlier, via: "VAULT" };
+          readCache.set(lead.url, cached);
+        }
+      }
       if (cached === undefined) {
         if (readsUsed >= maxReads) {
-          leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "DEFERRED", refusals: [{ code: "NOT_READ", detail: `the ${maxReads}-read bound for this run was reached; the lead stays owed` }], historical: null });
+          leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "DEFERRED", refusals: [{ code: "NOT_READ", detail: `the ${maxReads}-read bound for this run was reached; the lead stays owed` }], historical: null, via: "NONE" });
           continue;
         }
         readsUsed += 1;
         const result = await options.readLead(lead);
+        /* A lead the caller did not read (its own time bound) was not a read: it stays owed and uses none of the run's reads. */
+        if (!result.ok && result.refusal.code === "NOT_READ") readsUsed -= 1;
         const artifact = result.ok ? await options.recordRead(subject.candidacyId, lead, result.read) : null;
-        cached = { result, artifact };
+        if (artifact !== null) {
+          recordedThisRun += 1;
+          allArtifacts.push(artifact);
+        }
+        cached = { result, artifact, via: "READ" };
         readCache.set(lead.url, cached);
       }
       if (!cached.result.ok || cached.artifact === null) {
         const refusal = cached.result.ok ? { code: "TRANSPORT_FAILED" as const, detail: "the read was not recorded" } : cached.result.refusal;
-        leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: refusal.code === "NOT_READ" ? "DEFERRED" : "REFUSED", refusals: [refusal], historical: null });
+        leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: refusal.code === "NOT_READ" ? "DEFERRED" : "REFUSED", refusals: [refusal], historical: null, via: refusal.code === "NOT_READ" ? "NONE" : "READ" });
         continue;
       }
       const verdict = verifyCampaignSitePage(subject, lead, cached.result.read);
       verdicts.push({ lead, verdict, artifact: cached.artifact });
       leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: verdict.verdict,
-        refusals: verdict.verdict === "REFUSED" ? verdict.refusals : [], historical: verdict.verdict === "REFUSED" ? verdict.historical?.years ?? null : null });
+        refusals: verdict.verdict === "REFUSED" ? verdict.refusals : [], historical: verdict.verdict === "REFUSED" ? verdict.historical?.years ?? null : null, via: cached.via });
     }
     pending.push({ state, subject, verdicts });
   }
-  ctx = await contextFromRepositories(repos);
+  /* The confirmation rules see this run's Attempts and artifacts only once the context is read again. */
+  if (recordedThisRun > 0) ctx = await contextFromRepositories(repos);
   for (const { state, subject, verdicts } of pending) {
     const scouted = state.byStage.SCOUTED!;
     const verified = verdicts.filter((v) => v.verdict.verdict === "VERIFIED");
@@ -495,9 +583,11 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
 
   /* VERIFIED, AUDITED, APPROVED — from the vault, for every item past SCOUTED. */
   const approved: CampaignSiteApprovedRecord[] = [];
-  const allArtifacts: ArtifactRecord[] = [...(await repos.artifacts.readAll())];
   const attempts = (await repos.attempts.list()).map((row) => row.value);
-  for (const initial of await readPipelineStates(repos)) {
+  const maxRereads = options.maxRereads;
+  let rereadsUsed = 0;
+  const mayReread = (): boolean => (maxRereads === undefined ? readsUsed < maxReads : rereadsUsed < maxRereads);
+  for (const initial of [...heldStates.values()]) {
     if (initial.recordClass !== CAMPAIGN_SITE_RECORD_CLASS || initial.stage === null || initial.stage === "SCOUTED") continue;
     const subject = options.subjects.get(initial.subjectId ?? "");
     if (subject === undefined) continue;
@@ -561,14 +651,19 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         if (gapFrom(at)) others.push({ artifactId: artifact.artifactId, url: artifact.canonicalUrl, at, attemptId: attempt.id, role: attempt.worker.role, how: "REOBSERVED" });
       }
       const filing = subject.filingDomains.includes(registrableDomain(host));
-      if (others.length === 0 && !filing && gapFrom(options.now) && readsUsed < maxReads) {
+      if (others.length === 0 && !filing && gapFrom(options.now) && mayReread()) {
         readsUsed += 1;
+        rereadsUsed += 1;
         const lead: CampaignSiteLead = { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: `second-read:${state.itemId}` };
         const again = await options.readLead(lead);
         if (again.ok) {
           const recorded = await options.recordRead(subject.candidacyId, lead, again.read);
+          recordedThisRun += 1;
           allArtifacts.push(recorded);
           await considerArtifact(recorded, "ACQUIRER");
+        } else if (again.refusal.code === "NOT_READ") {
+          readsUsed -= 1;
+          rereadsUsed -= 1;
         }
       }
       const startedFrom: AuditEvidenceBase[] = ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"];
@@ -601,7 +696,11 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       const failedChecks = verifiedRecord.checks.filter((c) => c.result !== "PASS").map((c) => c.name);
       const clean = audited.controls === null ? { clean: false, detail: "controls NOT MEASURED" } : controlsClean(audited.controls);
       const host = siteHost(artifact.canonicalUrl) ?? "";
-      const newer = allArtifacts.filter((a) => siteHost(a.canonicalUrl) === host && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
+      /*
+       * A later read of THIS PAGE that no longer verifies contradicts it. Another page of the same site (its donate or
+       * press page, which need not name the office) is not a contradiction, and never holds the site's approval.
+       */
+      const newer = allArtifacts.filter((a) => a.canonicalUrl === artifact.canonicalUrl && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
         .sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1))[0];
       const newerPage = newer === undefined ? null : await options.heldPage(newer);
       const newerVerdict = newer === undefined || newerPage === null ? null : verifyCampaignSitePage(subject, { url: newer.canonicalUrl, origin: "RECORDED_SITE", ref: newer.artifactId }, newerPage);
@@ -610,7 +709,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verifiedRecord.checks.length} checks PASS on ${verifiedRecord.recordId}` : `${failedChecks.join(", ")} not PASS on ${verifiedRecord.recordId}` },
         { name: "CONTROLS_MEASURED_CLEAN", result: clean.clean ? "PASS" : "FAIL", detail: clean.detail },
         { name: "FACT_CURRENT", result: newerVerdict !== null && newerVerdict.verdict !== "VERIFIED" ? "FAIL" : "PASS",
-          detail: newerVerdict === null ? `no later read of ${host} by our own Attempt contradicts ${artifact.artifactId}` : `the newest read ${newer!.artifactId} ${newerVerdict.verdict === "VERIFIED" ? "agrees" : `no longer verifies (${newerVerdict.refusals.map((r) => r.code).join(", ")})`}` },
+          detail: newerVerdict === null ? `no later read of ${artifact.canonicalUrl} by our own Attempt contradicts ${artifact.artifactId}` : `the newest read ${newer!.artifactId} of ${artifact.canonicalUrl} ${newerVerdict.verdict === "VERIFIED" ? "agrees" : `no longer verifies (${newerVerdict.refusals.map((r) => r.code).join(", ")})`}` },
         { name: "FRESHNESS_NOT_STALE", result: age <= MAX_READ_AGE_MS ? "PASS" : "FAIL", detail: `the verifying read is ${Math.round(age / 3_600_000)}h old; the bound is ${MAX_READ_AGE_MS / 86_400_000} days` },
         { name: "RECORD_CLASS_CANDIDATE", result: classFieldOpen(options.gate, CAMPAIGN_SITE_RECORD_CLASS, CAMPAIGN_SITE_FIELD) ? "PASS" : "FAIL",
           detail: `${CAMPAIGN_SITE_RECORD_CLASS}.${CAMPAIGN_SITE_FIELD} ${classFieldOpen(options.gate, CAMPAIGN_SITE_RECORD_CLASS, CAMPAIGN_SITE_FIELD) ? "is" : "is not"} open at the activation gate` },
@@ -626,6 +725,10 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
           field: CAMPAIGN_SITE_FIELD,
           candidacyId: subject.candidacyId,
           candidateName: displayName(subject),
+          identity: {
+            candidacyId: subject.candidacyId, givenName: subject.givenName, familyName: subject.familyName,
+            officeTitle: subject.officeTitle, ocdId: subject.ocdId, stateCode: subject.stateCode, cycle: subject.cycle,
+          },
           readerKeys: subject.readerKeys,
           url: verdict.measurement.finalUrl,
           host,
@@ -642,7 +745,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
             readAt: verdict.measurement.retrievedAt,
           },
           audit: { startedFrom: audited.startedFrom, secondSignal: signal },
-          publicationDoor: "CANDIDATE_PROFILES_MANUAL_CONTRACT",
+          publicationDoor: CAMPAIGN_SITE_PUBLICATION_DOOR,
         },
       };
       state = await offer(record);
@@ -653,9 +756,10 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     }
   }
 
-  const finalStates = (await readPipelineStates(repos)).filter((s) => s.recordClass === CAMPAIGN_SITE_RECORD_CLASS);
+  /* Every offer's outcome replaced its item's state as it was made, so the final count needs no second read of the log. */
+  const finalStates = [...heldStates.values()].filter((s) => s.recordClass === CAMPAIGN_SITE_RECORD_CLASS);
   const byStage = zeroStages();
   for (const s of finalStates) if (s.stage !== null) byStage[s.stage] += 1;
-  return { version: CAMPAIGN_SITE_CHAIN_VERSION, items: finalStates.length, byStage, leads: leadsOut, offers, unjoined, approved, readsUsed };
+  return { version: CAMPAIGN_SITE_CHAIN_VERSION, items: finalStates.length, byStage, leads: leadsOut, offers, unjoined, approved, readsUsed, rereadsUsed, judgedFromVault };
 }
 

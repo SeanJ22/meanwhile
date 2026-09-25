@@ -579,6 +579,33 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  /*
+   * VERIFIED CAMPAIGN SITES, PUBLISHED AUTOMATICALLY (Sean, 2026-09-21: "You may enable automatic promotion for
+   * qualifying results. Fix the gap, recover value already paid for."; RULING 292). The standing runner's
+   * campaign-site chain (lib/control-plane/promotion/campaign-site-chain.ts) approves a site only after our own
+   * robots-first read, five measured checks and an audit with an independent second signal. This DERIVED store is
+   * the one writer of its own pointer; the owner's `candidate-profiles` door stays the only writer of profiles, and
+   * the profile Reader composes the two, a reviewed campaign link always winning (lib/ballot/candidate-sites.ts).
+   */
+  {
+    id: "candidate-campaign-sites-derived",
+    sourceId: "candidate-campaign-site-chain",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:candidate-campaign-sites-derived",
+    acquisitionFailureDomain: "derived:candidate-campaign-sites",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", "--promote"] },
+    parserNormalizerVersion: "candidate-campaign-site-chain/1",
+    cadence: { description: "hourly, the research cycle's own rhythm", defaultEveryMs: HOUR },
+    retry: { afterMs: HOUR, description: "one hour after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "candidate-campaign-site-chain" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "candidate-verified-campaign-sites", consumers: ["/ballot", "Ask candidate profiles"] },
+    lkgBehavior: "A pass that cannot read the pipeline's approvals, the promoted candidate-profiles version or an approval's vaulted bytes records its refusal and leaves the prior GOOD sites live; an approval whose vaulted bytes no longer verify is held by name and not published.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

@@ -235,10 +235,10 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // 169 from 2026-09-25: − meetings:diligent for Newbury's Selectboard (its CivicWeb host no longer resolves),
   // + Mesa's council decisions read off its minutes (NH332), + Holbrook's (document listing) and Winslow's
   // (SuiteOne) City Council partitions; + the automatic crosswalk (C16 option A), and a derived family for every
-  // registered state (53 more than AZ, NH, NJ).
+  // registered state (53 more than AZ, NH, NJ). + the verified campaign sites the runner publishes (2026-09-25).
   assert.equal(
     contracts.length,
-    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3),
+    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1,
     "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)",
   );
   assert.deepEqual(
@@ -248,6 +248,7 @@ test("PDC: readiness authority coverage accounts for every production contract",
       ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
       "meeting-body-crosswalk-derived",
       "meeting-source-wiring",
+      "candidate-campaign-sites-derived",
     ],
     "the guard must move when the canonical contract denominator moves",
   );

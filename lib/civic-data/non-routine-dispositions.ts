@@ -292,6 +292,8 @@ export const ROUTINE_INVENTORY_BINDINGS = [
   },
   // One registration contract per state, DC and territory, from the FIPS table (lib/registration/publication.ts).
   { inventorySourceId: "census-governments-registration", contractIds: REGISTRATION_TARGETS.map(({ contractId }) => contractId), contractSourceId: "census-governments-registration" },
+  // The verified campaign sites the campaign-site chain approves, published automatically (Sean 2026-09-21; RULING 292).
+  { inventorySourceId: "candidate-campaign-site-chain", contractIds: ["candidate-campaign-sites-derived"], contractSourceId: "candidate-campaign-site-chain" },
 ] as const satisfies readonly RoutineInventoryBinding[];
 
 export interface ManualProductionInventoryBinding {

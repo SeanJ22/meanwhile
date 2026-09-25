@@ -111,9 +111,19 @@ import { campaignFinanceProvider } from "../lib/control-plane/scheduler/provider
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
+  candidateEnrichmentHoldings,
   candidateEnrichmentProvider,
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import {
+  CAMPAIGN_SITE_BUDGET_MS,
+  campaignSiteCycleLine,
+  campaignSiteSubjectsFromHoldings,
+  heldMarginaliaFromManifest,
+  runCampaignSiteCycle,
+  type CampaignSiteCycleReport,
+} from "../lib/control-plane/promotion/campaign-site-cycle.ts";
+import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   materializedDiscoveryNeeds,
@@ -188,6 +198,7 @@ import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts"
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import {
   promotionLines,
+  readStagingManifest,
   stageOne,
   writeStagingManifest,
   type StagedEntry,
@@ -2441,6 +2452,68 @@ console.log(
 finishPhase("meetings-discovery");
 
 /*
+ * **THE CAMPAIGN-SITE PASS: HELD RESEARCH REACHES THE PUBLICATION DOOR, FREE.**
+ * (2026-09-25; the design note and the bounds are in
+ * lib/control-plane/promotion/campaign-site-cycle.ts.)
+ *
+ * The held Scout findings and Marginalia answers go through the complete
+ * campaign-site chain: robots-first reads through this cycle's guarded seam
+ * and host spacer, at most 12 lead reads and 6 audit second reads in 60 s. It
+ * calls no model and no paid search, so it runs while the owner's pause keeps
+ * the paid lane closed; it is not gated on that lane. Its offers are pipeline
+ * records (Admin's delivery trail); its approvals publish through the derived
+ * routine contract `candidate-campaign-sites-derived` on the routine runner's
+ * own clock, with no owner step. Only a full standing cycle with the budget
+ * left runs it.
+ */
+let campaignSites: CampaignSiteCycleReport | null = null;
+let campaignSitesState: string;
+if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
+  campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
+} else if (intents.runnerPause.paused) {
+  campaignSitesState = "not run: the owner has paused the runner";
+} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS > DISPATCH_DEADLINE_MS) {
+  campaignSitesState = "not run: less of the cycle's admission window remains than the pass's budget";
+} else {
+  const leaveCampaignSites = pending.enter("campaign-sites");
+  try {
+    const holdings = candidateEnrichmentHoldings();
+    if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
+    const { subjects } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+    const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
+    const held = await heldMarginaliaFromManifest(ROOT, readStagingManifest(ROOT), vaultIndex, nowIso());
+    const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+    campaignSites = await runCampaignSiteCycle({
+      repos,
+      subjects,
+      marginalia: held.responses,
+      gate: readActivationGate(ROOT),
+      now: nowIso(),
+      clock: () => Date.now(),
+      sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
+      open: async ({ url, headers, timeoutMs }) => {
+        const got = await openCampaignSite({ url, headers, timeoutMs });
+        return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+      },
+      spaceOut: spacer,
+      vaultRoot: join(ROOT, ...VAULT_DIR),
+      heldVault: vaultIndex,
+      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+    });
+    campaignSitesState =
+      `ran over ${subjects.size} canonical candidacies and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+      (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : "");
+  } catch (error) {
+    campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
+  } finally {
+    leaveCampaignSites();
+  }
+}
+console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
+finishPhase("campaign-sites");
+
+/*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
  * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
  * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
@@ -2905,6 +2978,7 @@ const lines = [
         ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
         (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "") +
         (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side` : "")),
+  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`,
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -3035,6 +3109,26 @@ const runRecord = {
         /* Walks that failed on something of ours, named; the pass went on without them and each need stays due. */
         walkFailures: meetingsDiscovery?.walkFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
+      },
+      /* The free campaign-site pass (2026-09-25): whether it ran, each lead it read, and every verdict by code. */
+      campaignSites: {
+        state: campaignSitesState,
+        report: campaignSites === null
+          ? null
+          : {
+              readsUsed: campaignSites.chain.readsUsed,
+              rereadsUsed: campaignSites.chain.rereadsUsed,
+              judgedFromVault: campaignSites.chain.judgedFromVault,
+              verdicts: campaignSites.verdicts,
+              byCode: campaignSites.byCode,
+              byStage: campaignSites.chain.byStage,
+              offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
+              approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
+              unjoined: campaignSites.chain.unjoined.length,
+              budgetSpent: campaignSites.budgetSpent,
+              elapsedMs: campaignSites.elapsedMs,
+              read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
+            },
       },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:

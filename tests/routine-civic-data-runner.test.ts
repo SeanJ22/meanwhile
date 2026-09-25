@@ -205,6 +205,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-body-crosswalk-derived",
     // The derived meeting-source wiring (C16): recomputed from promoted and vaulted inputs, no route of its own.
     "meeting-source-wiring",
+    // The verified campaign sites the campaign-site chain approves (2026-09-25): pipeline approvals and vaulted reads, no route of its own.
+    "candidate-campaign-sites-derived",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(

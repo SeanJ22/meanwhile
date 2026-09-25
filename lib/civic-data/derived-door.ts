@@ -14,6 +14,10 @@
  *   members' reads are real HTTP reads, and what authorizes each is the
  *   promoted wiring version's ACTIVE row for that member, on that row's
  *   attested host.
+ * - `candidate-campaign-site-chain` (2026-09-25) is the verified campaign
+ *   sites the campaign-site chain approved: each row cites its pipeline
+ *   approval and the vaulted bytes of its verifying read, and the version
+ *   names the promoted `candidate-profiles` version it was composed against.
  *
  * So SOURCE_AUTHENTICITY for them is not a final URL. It is:
  *
@@ -77,6 +81,8 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
       return text(input.fingerprint) ? null : `a route-hint input has no fingerprint`;
     case "CROSSWALK_VERSION":
       return text(input.versionId) ? null : `a crosswalk input has no version`;
+    case "PIPELINE_APPROVAL":
+      return text(input.itemId) && text(input.recordId) && instant(input.approvedAt) ? null : `a pipeline-approval input lacks its item, record or approval time`;
     case "MEMBER_ACQUISITION":
       return text(input.memberKey) && httpsHost(input.requestedUrl) !== null && httpsHost(input.finalUrl) !== null &&
           Number.isInteger(input.httpStatus) && input.httpStatus >= 200 && input.httpStatus < 300 &&

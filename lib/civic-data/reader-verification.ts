@@ -103,6 +103,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "meeting-body-crosswalk": return "lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection";
     case "meeting-source-wiring": return "lib/civic-data/derived-meeting-wiring.ts#readDerivedMeetingWiring";
     case "meeting-body-crosswalk-derived": return "lib/civic-data/derived-crosswalk.ts#readDerivedMeetingBodyCrosswalk";
+    case "candidate-campaign-sites-derived": return "lib/civic-data/derived-campaign-sites.ts#readDerivedCampaignSites";
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
@@ -299,6 +300,10 @@ export async function verifyRoutineReaderProjection(
       case "meeting-body-crosswalk-derived": {
         const { readDerivedMeetingBodyCrosswalk } = await import("./derived-crosswalk.ts");
         return verifyExactVersion(verifierId, await readDerivedMeetingBodyCrosswalk({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+      }
+      case "candidate-campaign-sites-derived": {
+        const { readDerivedCampaignSites } = await import("./derived-campaign-sites.ts");
+        return verifyExactVersion(verifierId, await readDerivedCampaignSites({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "everyday-routing": {
         const { readEverydayRoutingProjection } = await import("../routing/everyday-data-plane.ts");

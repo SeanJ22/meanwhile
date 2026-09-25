@@ -139,7 +139,7 @@ export const NON_ROUTINE_DISPOSITIONS: readonly NonRoutineDispositionContract[] 
     sourceId: "static-reference-vintages",
     inventoryClassification: "STATIC_VERSIONED_REFERENCE",
     disposition: "EXPLICIT_VERSION_ADOPTION",
-    trackedPaths: ["data/reference/census_govt_units_2022*.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
+    trackedPaths: ["data/reference/census_govt_units_2022*.csv", "data/reference/census_tiger_2023_territory_functional_status.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
     execution: VERSION_ADOPTION,
     reason: "The filename and review identify the adopted source vintage; replacement is a deliberate version change.",
   },
@@ -250,6 +250,17 @@ export interface RoutineInventoryBinding {
   readonly inventorySourceId: string;
   readonly contractIds: readonly string[];
   readonly contractSourceId: string;
+  /**
+   * A bound contract whose own source authority differs from the row's first
+   * writer, by contract id: one frozen family, read from another permitted
+   * route. Every other bound contract carries `contractSourceId`.
+   */
+  readonly contractSourceIds?: Readonly<Record<string, string>>;
+}
+
+/** The source authority a binding requires of one bound contract. */
+export function boundContractSourceId(binding: RoutineInventoryBinding, contractId: string): string {
+  return binding.contractSourceIds?.[contractId] ?? binding.contractSourceId;
 }
 
 /**
@@ -260,7 +271,8 @@ export interface RoutineInventoryBinding {
 export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "meetings-composite", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily === null).map(({ id }) => id), contractSourceId: "meetings-public-bodies" },
   // C16 (owner decision recorded 2026-09-24T22:43Z): the derived wiring store and the per-state derived meeting families.
-  { inventorySourceId: "meeting-source-wiring", contractIds: ["meeting-source-wiring"], contractSourceId: "meeting-source-wiring" },
+  // + the automatic crosswalk (C16 option A, 2026-09-25), the same authority's second derived store.
+  { inventorySourceId: "meeting-source-wiring", contractIds: ["meeting-body-crosswalk-derived", "meeting-source-wiring"], contractSourceId: "meeting-source-wiring" },
   { inventorySourceId: "meetings-derived-families", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily !== null).map(({ id }) => id), contractSourceId: "meetings-derived-routes" },
   { inventorySourceId: "nj-morris-clerk-ballot", contractIds: ["nj-morris-filing"], contractSourceId: "nj-morris-county-clerk" },
   { inventorySourceId: "dotgov", contractIds: ["dotgov"], contractSourceId: "cisa-dotgov-registry" },
@@ -270,9 +282,18 @@ export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "census-geography-relationships", contractIds: ["census-geography-overlaps"], contractSourceId: "census-geography-relationships" },
   // Formerly an explicit-owner contract; the standing runner is now its only
   // clock and writer, so it carries no manual binding below.
-  { inventorySourceId: "legistar-outcomes", contractIds: ["pima-legistar-outcomes"], contractSourceId: "pima-legistar-outcomes" },
+  // NH332 (2026-09-25): the same official Legistar body records, read for Mesa
+  // off the council's minutes on its permitted portal host, under its own authority.
+  {
+    inventorySourceId: "legistar-outcomes",
+    contractIds: ["pima-legistar-outcomes", "mesa-legistar-minutes-outcomes"],
+    contractSourceId: "pima-legistar-outcomes",
+    contractSourceIds: { "mesa-legistar-minutes-outcomes": "mesa-legistar-minutes-outcomes" },
+  },
   // One registration contract per state, DC and territory, from the FIPS table (lib/registration/publication.ts).
   { inventorySourceId: "census-governments-registration", contractIds: REGISTRATION_TARGETS.map(({ contractId }) => contractId), contractSourceId: "census-governments-registration" },
+  // The verified campaign sites the campaign-site chain approves, published automatically (Sean 2026-09-21; RULING 292).
+  { inventorySourceId: "candidate-campaign-site-chain", contractIds: ["candidate-campaign-sites-derived"], contractSourceId: "candidate-campaign-site-chain" },
 ] as const satisfies readonly RoutineInventoryBinding[];
 
 export interface ManualProductionInventoryBinding {
@@ -518,7 +539,7 @@ export function validatePdc7DispositionRegistry(
     for (const contractId of binding.contractIds) {
       const contract = routineContracts.get(contractId);
       if (!contract) problems.push(`${binding.inventorySourceId}: routine production contract ${contractId} is absent`);
-      else if (contract.sourceId !== binding.contractSourceId) problems.push(`${binding.inventorySourceId}: routine production authority differs from ${binding.contractSourceId}`);
+      else if (contract.sourceId !== boundContractSourceId(binding, contractId)) problems.push(`${binding.inventorySourceId}: routine production authority differs from ${boundContractSourceId(binding, contractId)}`);
       if (boundRoutineContracts.has(contractId)) problems.push(`routine production contract has multiple frozen inventory bindings: ${contractId}`);
       boundRoutineContracts.add(contractId);
     }

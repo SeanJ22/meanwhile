@@ -1,3 +1,4 @@
+import type { AskGapCode, AskGapRecordClass } from "./gap-codes.ts";
 import type { AskIntent, AskTemporal } from "./intent.ts";
 
 /**
@@ -270,6 +271,23 @@ export interface EvidenceGap {
   whose: "OURS" | "THEIRS";
   /** Plain language, reader-safe. This is the sentence the answer may use. */
   statement: string;
+  /*
+   * **WHICH HELD GAP THIS IS, FOR THE MACHINE.** (2026-09-25.) Additive and
+   * optional: set where the gap is decided by `held-gaps.ts`, the one decision
+   * the standing runner's `ask-gaps` provider also makes, so a gap a reader is
+   * told about is a gap the system is working. Never part of the sentence and
+   * never handed to the synthesis model (`gapWords`).
+   */
+  code?: AskGapCode;
+  /** The canonical body the gap belongs to. */
+  bodyId?: string;
+  /** The routine record class whose read closes it. */
+  recordClass?: AskGapRecordClass;
+}
+
+/** What a reader and the synthesis model are given of a gap: whose it is and its sentence, nothing else. */
+export function gapWords(gap: EvidenceGap): Pick<EvidenceGap, "whose" | "statement"> {
+  return { whose: gap.whose, statement: gap.statement };
 }
 
 /** What the question resolved to. Null means nothing canonical was bound. */

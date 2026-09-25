@@ -32,8 +32,9 @@ import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers
  * ```
  *
  * The Scout lane is ADMITTED per row or DEFERRED BY CODE: `LANE_DISABLED`
- * (no credential in this process, `--dry`, `--no-model`), `PAUSED` (an owner
- * intent), `CEILING` (the rolling $/day ceiling, RULING 241), `CYCLE_MAX`
+ * (no credential in this process, `--dry`, `--no-model`, no delivery path),
+ * `PAUSED` (the owner's lane PAUSE or runner PAUSE_RUNNER, or an owner control
+ * that could not be read), `CEILING` (the rolling $/day ceiling, RULING 241), `CYCLE_MAX`
  * (the per-cycle Scout maximum), `BUDGET` (it could not finish inside the
  * dispatch budget). A deferred row keeps its next-due; nothing is dropped and
  * nothing is reported complete.
@@ -67,6 +68,10 @@ import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers
  *   --max=N               the stated deterministic dispatch ceiling for this cycle
  *   --scout-max=N         the stated Scout ceiling for this cycle (default RESEARCH_BOUNDS)
  *   --no-model            hold the Scout lane closed for this cycle (a diagnostic)
+ *   --owner-intents-unreadable
+ *                         the runner could not read the owner's intents before
+ *                         starting this cycle: the paid lane stays closed, free
+ *                         work runs (pilot-runner.mts passes it)
  *   --interval=N          the runner's minutes between cycles, so the heartbeat
  *                         can state when the next cycle is due
  *   --only=<prefix>       work only obligations whose id starts with <prefix>.
@@ -111,16 +116,29 @@ import { campaignFinanceProvider } from "../lib/control-plane/scheduler/provider
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
+  candidateEnrichmentHoldings,
   candidateEnrichmentProvider,
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
+  CAMPAIGN_SITE_BUDGET_MS,
+  campaignSiteCycleLine,
+  campaignSiteSubjectsFromHoldings,
+  heldMarginaliaFromManifest,
+  runCampaignSiteCycle,
+  type CampaignSiteCycleReport,
+} from "../lib/control-plane/promotion/campaign-site-cycle.ts";
+import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
+import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
   paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
+import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
+import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
@@ -140,6 +158,7 @@ import {
   ownerDispatchWorkOf,
   scopeWorkTarget,
   planDispatchWork,
+  type DispatchWorkApplied,
   type DispatchWorkReading,
   type DispatchWorkTarget,
   type DurableRowFacts,
@@ -188,6 +207,7 @@ import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts"
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import {
   promotionLines,
+  readStagingManifest,
   stageOne,
   writeStagingManifest,
   type StagedEntry,
@@ -200,8 +220,8 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_LOOP_STEP, SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { SCOUT_TOOL_SPECS, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -231,6 +251,7 @@ import {
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
   scoutStateHint,
+  usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
@@ -256,9 +277,9 @@ import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import type { AttemptCost } from "../lib/control-plane/attempt.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
-import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
@@ -273,9 +294,16 @@ import {
   FleetSafetyController,
   resolveRollingCeiling,
   scheduledBlackoutAt,
+  scoutEscalationReservation,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
-import { ADMIN_CONFIG_ID, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import {
+  ADMIN_CONFIG_ID,
+  adminConfigForPaidWork,
+  discoverySearchEnabled,
+  fleetSpendCeilingOverrideUsd,
+  type AdminConfigRead,
+} from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -287,6 +315,15 @@ import {
 } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { loadExpansionPlan, readCensusUnitTerritories, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
+import {
+  armAssignmentBudget,
+  assignmentBudgetsOf,
+  assignmentCycleReading,
+  assignmentMembership,
+  type AssignmentBudgetGate,
+  type AssignmentCycleReading,
+} from "../lib/control-plane/expansion/assignment-budget.ts";
+import { evaluateAssignmentFromRecords } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import {
@@ -425,6 +462,8 @@ if (wantsPostgres) {
 }
 const dry = argv.includes("--dry");
 const noModel = argv.includes("--no-model");
+/* The runner could not read the owner's intents before starting this cycle; the paid lane stays closed (2026-09-25). */
+const ownerIntentsUnreadableByRunner = argv.includes("--owner-intents-unreadable");
 const canary = argv.includes("--canary");
 const boundedNumber = (raw: string | undefined, fallback: number, maximum: number): number => {
   const parsed = raw === undefined ? fallback : Number(raw);
@@ -647,6 +686,10 @@ try {
 } catch (error) {
   materialized = { unreadable: error instanceof Error ? error.message : String(error) };
 }
+/* A state with created work and no reviewed registry is read from its registration first, so its providers keep that work (2026-09-25). */
+if ("ids" in materialized) {
+  await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => stateOfJurisdictionId(id) ?? []), options: { bypassCache: true } });
+}
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
@@ -654,6 +697,11 @@ const registry = buildRegistry(
     localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
+    /* The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded. */
+    (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
+      await pending.step("ask-gaps:held-reading", async () =>
+        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW })),
+    ),
   ],
   { root: ROOT, nowIso: NOW },
 );
@@ -830,10 +878,9 @@ const gapLedgerRead = (() => {
  */
 const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
-/* A dispatched need's address comes from the promoted jurisdiction reference; it carries that version (NH330). */
-const referenceAddress = { source: "OPERATIONAL_REFERENCE" as const, versionId: operationalReference?.metadata.versionId ?? null };
+/* A dispatched need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
 const dispatchedNeeds = new Map(
-  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: referenceAddress }]),
+  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: dispatchedAddressSource(e.reg, operationalReference?.metadata.versionId ?? null) }]),
 );
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
@@ -967,16 +1014,30 @@ for (const o of sync.all) {
  * READ ONCE, BEFORE ANY ORDER IS DECIDED. The owner's DISPATCH (ADM-8)
  * reorders both lanes, so the intent log is read before the deterministic
  * sort and the reader-impact bands below. A log that cannot be read is a
- * named runtime condition and the cycle proceeds as if the owner said
- * nothing — an intent nobody can read is not an intent nobody sent, so the
- * failure is on the record rather than in a guess.
+ * named runtime condition — an intent nobody can read is not an intent nobody
+ * sent, so the failure is on the record rather than in a guess.
+ *
+ * **UNREADABLE FAILS CLOSED FOR PAID WORK ONLY (2026-09-25).** Before this an
+ * unreadable log read as "not paused" and the paid lane could open over a
+ * pause nobody could see. Now `intentLogUnreadable` holds the model lane
+ * closed as if paused (model-lane.ts), and FleetSafety refuses every model
+ * request on the same reason. Each other reader of `intents` was weighed:
+ * RUN_CYCLE_NOW / DISPATCH / lane PAUSE-RESUME honoring have nothing to honor
+ * from an empty log; routine meeting intake and the dispatch-work writes are
+ * plain-code work behind `runnerPause`, and they continue — "free work
+ * continues" is the owner's rule for an unreadable control, and anything model-
+ * class they create waits behind the closed lane. `pausedByOwner` is not set:
+ * the record says the log was unreadable, never that the owner paused.
  */
 let intentLog: ResearchIntent[] = [];
+let intentLogUnreadable: string | null = null;
 try {
   intentLog = [...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))];
 } catch (error) {
+  intentLogUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(
-    `research intents could not be read (${error instanceof Error ? error.message : String(error)}); the lane treats the owner as not paused`,
+    `research intents could not be read (${intentLogUnreadable}); the paid model lane stays closed this cycle as if paused, ` +
+      "and plain-code work, routine intake and free discovery walks continue",
   );
 }
 const intents = readIntents(intentLog);
@@ -1102,6 +1163,11 @@ for (const pending of intents.pendingDispatch) {
  * A registry the reader refuses is named, never used.
  */
 const promoted = promotedRegistries();
+/** The registries as read now: the ones above, and every state's registration read since. */
+const registriesNow = (fallback: ReadonlyMap<string, JurisdictionRegistry>): ReadonlyMap<string, JurisdictionRegistry> => {
+  const now = promotedRegistries();
+  return "registries" in now ? now.registries : fallback;
+};
 if ("refused" in promoted) {
   for (const [state, why] of promoted.refused) {
     runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
@@ -1112,7 +1178,12 @@ const expansionLoad = await loadExpansionPlan({
   root: ROOT,
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
-  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...promoted.registries.values()]) } : {}),
+  /* Each scope state with no reviewed registry is read from its registration before the territory (2026-09-25). */
+  beforeTerritory: async (states) =>
+    [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } })).refused].map(
+      ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
+    ),
+  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1199,6 +1270,7 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
   });
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
+/* Plain-code intake: an unreadable intent log does not stop it (the paid lane is what fails closed, above). */
 if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
@@ -1299,27 +1371,80 @@ finishPhase("open-occurrences");
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
 const credentialConfigured = workerKey.length > 0;
 
-/* Compliant search-index discovery (RULING 248: find every avenue). Null when
-   neither BRAVE_SEARCH_API_KEY nor EXA_API_KEY is set — the `search` tool is
-   then left out of the toolkit entirely and the lane behaves exactly as before.
-   Pointers only: the model still opens each hit with fetch_public/browse, which
-   enforce robots and vault. */
-const scoutSearch = makeScoutSearch({
-  braveKey: process.env.BRAVE_SEARCH_API_KEY,
-  exaKey: process.env.EXA_API_KEY,
-});
-if (scoutSearch !== null) {
-  console.log(
-    `  scout search: ENABLED (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}) — pointers only, robots enforced downstream`,
+/*
+ * THE ROLLING CEILING IN FORCE — the owner's console override, read at cycle
+ * start from the control plane (`AdminConfig.fleetSpendCeiling`), or the built-in
+ * fallback when the row was read and no override stands. Read HERE, not at
+ * module import, so a change Sean makes in the console governs this very cycle
+ * with no deploy and no restart. One number drives BOTH scout-admission gates —
+ * the FleetSafety rolling ceiling (`rollingCeilingReached`, which admitScout
+ * reads) and the research daily ceiling (`ceilingPermits`) — the auditor's
+ * admission, and the per-request reservation through the controller's bounds,
+ * so a lane paused at the old ceiling resumes on this cycle and there is no
+ * second ceiling that silently binds when the dial is raised.
+ *
+ * A row that cannot be read or is malformed HOLDS paid work (2026-09-25): the
+ * owner's dial may be set below the built-in fallback, so falling back could
+ * raise the ceiling in force. `configHold` closes the model lane below and turns
+ * paid search off; the cycle's free work is untouched. Read before the lane is
+ * decided, which is why this sits above `modelLaneClosure`.
+ *
+ * The owner's switch for PAID discovery search (`AdminConfig.discoverySearch`)
+ * is read from the same row at the same moment, so a change in the console
+ * governs this cycle. Absent, malformed or unreadable reads OFF.
+ */
+let discoverySearchOn = false;
+/* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
+let discoverySearchReceiptId: string | null = null;
+let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
+let configRead: AdminConfigRead;
+try {
+  configRead = { row: await repos.adminConfig.read(ADMIN_CONFIG_ID) };
+} catch (error) {
+  configRead = { unreadable: error instanceof Error ? error.message : String(error) };
+}
+const { config, holdPaidWork: configHold } = adminConfigForPaidWork(configRead);
+const ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
+discoverySearchOn = discoverySearchEnabled(config);
+if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
+  discoverySearchReceiptId = config.discoverySearch.receiptId;
+  discoverySearchDecision =
+    `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
+}
+if (configHold !== null) {
+  discoverySearchDecision = `OFF: ${configHold}`;
+  runtimeConditions.push(
+    `${configHold}; paid work is held this cycle (no Scout, pre-warm, auditor or paid search) rather than fall back to the built-in ` +
+      `$${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)}, which could be above the owner's dial`,
   );
 }
+const rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
+const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
+/*
+ * Every owner spending control this cycle could not read, as a sentence. The
+ * runner passes `--owner-intents-unreadable` when its own read before starting
+ * this cycle failed (pilot-runner.mts `ownerSays`): it could not tell whether
+ * the runner itself is paused, so this cycle's paid lane stays closed even when
+ * the read above succeeds.
+ */
+const unreadableControls: string[] = [
+  ...(intentLogUnreadable === null ? [] : [`the owner's research intents could not be read (${intentLogUnreadable})`]),
+  ...(ownerIntentsUnreadableByRunner
+    ? ["the runner could not read the owner's intents before it started this cycle, so it cannot know the runner is not paused"]
+    : []),
+  ...(configHold === null ? [] : [configHold]),
+];
+
 /* One ordered answer for why the model lane is closed (model-lane.ts). It also
    closes the lane while no delivery path is open: with promotion off, paid
-   Scout and auditor output could only accumulate unread (owner, 2026-09-22). */
+   Scout and auditor output could only accumulate unread (owner, 2026-09-22).
+   Either owner pause closes it — the research-lane PAUSE and the runner-level
+   PAUSE_RUNNER Admin's runner card issues — and so does any control above that
+   could not be read (2026-09-25). */
 const laneClosure = modelLaneClosure({
   scheduledBlackout,
   dry,
@@ -1329,6 +1454,9 @@ const laneClosure = modelLaneClosure({
   activation: readActivationGate(ROOT),
   paused: intents.paused,
   pauseIntentId: intents.pauseIntentId ?? null,
+  runnerPaused: intents.runnerPause.paused,
+  runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
+  unreadableControls,
 });
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
@@ -1384,52 +1512,15 @@ try {
 } catch (error) {
   runtimeConditions.push(`prior Fleet safety state could not be read: ${error instanceof Error ? error.message : String(error)}`);
 }
-/*
- * THE ROLLING CEILING IN FORCE — the owner's console override, read at cycle
- * start from the control plane (`AdminConfig.fleetSpendCeiling`), or the built-in
- * fallback when no override stands or the row cannot be read. Read HERE, not at
- * module import, so a change Sean makes in the console governs this very cycle
- * with no deploy and no restart. One number drives BOTH scout-admission gates —
- * the FleetSafety rolling ceiling (`rollingCeilingReached`, which admitScout
- * reads) and the research daily ceiling (`ceilingPermits`) — and the per-request
- * reservation through the controller's bounds, so a lane paused at the old
- * ceiling resumes on this cycle and there is no second ceiling that silently
- * binds when the dial is raised.
- */
-let ceilingOverrideUsd: number | null = null;
-/*
- * The owner's switch for PAID discovery search (`AdminConfig.discoverySearch`),
- * read from the same row at the same moment, so a change in the console
- * governs this cycle. Absent, malformed or unreadable reads OFF.
- */
-let discoverySearchOn = false;
-/* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
-let discoverySearchReceiptId: string | null = null;
-let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
-try {
-  const cfg = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  ceilingOverrideUsd = cfg !== null && isAdminConfig(cfg.value) ? fleetSpendCeilingOverrideUsd(cfg.value) : null;
-  const config = cfg !== null && isAdminConfig(cfg.value) ? cfg.value : null;
-  discoverySearchOn = discoverySearchEnabled(config);
-  if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
-    discoverySearchReceiptId = config.discoverySearch.receiptId;
-    discoverySearchDecision =
-      `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
-  }
-} catch (error) {
-  discoverySearchDecision = `OFF: the owner's switch could not be read (${error instanceof Error ? error.message : String(error)})`;
-  runtimeConditions.push(
-    `the Fleet spend-ceiling override could not be read (${error instanceof Error ? error.message : String(error)}); the built-in fallback $${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)} governs this cycle`,
-  );
-}
-const rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
-const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
+/* The ceiling in force and the paid-search switch were read above the lane closure. */
 
 const fleetSafety = new FleetSafetyController({
   now: NOW,
   costs: costLedger,
   costLedgerReadable: ledgerUnreadable === null,
   paused: intents.runnerPause.paused,
+  /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
+  modelHold: laneDisabledReason,
   circuits: priorCircuits,
   lastSuccessfulActivity: priorLastSuccessfulActivity,
   rollingCeilingUsd: effectiveCeilingUsd,
@@ -1437,6 +1528,50 @@ const fleetSafety = new FleetSafetyController({
 if (ledgerUnreadable !== null) {
   fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
 }
+
+/*
+ * PAID SEARCH: ONE SWITCH, ONE BUDGET, BOTH CALLERS (2026-09-25). The Scout
+ * `search` tool and the discovery walk's search rung send the same paid Brave
+ * and Exa requests. Before this the Scout tool was built from the env keys
+ * alone — outside the owner's switch, the per-cycle and per-day caps and
+ * FleetSafety admission. Now neither exists unless the switch is on (an
+ * unreadable or malformed row reads OFF, above), and both draw on this one
+ * budget: the cycle's cap here, the day's cap in the durable shared ledger
+ * under the `discovery-search` vendor, and FleetSafety on its own provider key.
+ * The Scout tool is reached only inside the paid model lane besides.
+ */
+const searchCap = (name: string, fallback: number): number => {
+  const raw = Number(process.env[name]);
+  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
+};
+const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
+const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
+const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
+  repos,
+  perCycle: SEARCH_PER_CYCLE,
+  perDay: SEARCH_PER_DAY,
+  admit: () => {
+    try {
+      fleetSafety.admitProviderRequest("discovery-search", "paid-search");
+      return null;
+    } catch (error) {
+      return error instanceof Error ? error.message : String(error);
+    }
+  },
+  now: nowIso,
+});
+/* Pointers only: the model still opens each hit with fetch_public/browse, which enforce robots and vault. */
+const scoutSearch = searchBudget === null ? null : makeScoutSearch({
+  braveKey: process.env.BRAVE_SEARCH_API_KEY,
+  exaKey: process.env.EXA_API_KEY,
+  budget: searchBudget,
+});
+console.log(
+  scoutSearch === null
+    ? `  scout search: OFF (${discoverySearchOn ? "no Brave or Exa key in this process" : configHold !== null ? "held: the owner's config row could not be trusted" : "the owner's paid-search switch is off"})`
+    : `  scout search: ON under the owner's switch (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}; ` +
+        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots enforced downstream`,
+);
 
 /*
  * THE EXPANSION-SCOPE BUDGETS, armed from the same ledger the Fleet ceiling
@@ -1474,6 +1609,7 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
  * work waits behind the same lane, the same Fleet ceiling and the same scope
  * budgets as every other row. Only a full standing cycle writes.
  */
+/* Obligation rows only, no spend: an unreadable intent log does not stop them; what they create waits behind the closed lane. */
 const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !scheduledBlackout && !intents.runnerPause.paused;
 const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
   ? null
@@ -1499,10 +1635,16 @@ const dispatchTargets: DispatchWorkTarget[] = [];
   for (const scope of expansionPlan?.scopes ?? []) add(scopeWorkTarget(scope));
 }
 let dispatchWork: DispatchWorkReading | null = null;
+/* The Sends this cycle recorded on rows after they were read, for the assignment budgets below. */
+let dispatchRecorded: NonNullable<DispatchWorkApplied["recorded"]> = [];
 if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
-    const registries = promoted.registries;
+    /* A DISPATCH's states with no reviewed registry are read from their registration, as a scope's were (2026-09-25). */
+    await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
+    const current = promotedRegistries();
+    const registries = "registries" in current ? current.registries : promoted.registries;
+    const refusedRegistries = "refused" in current ? current.refused : promoted.refused;
     let censusUnitsByState: Map<string, number> | null = null;
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
@@ -1516,7 +1658,7 @@ if (dispatchTargets.length > 0) {
       }
     }
     const durable = new Map<string, DurableRowFacts>();
-    for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy });
+    for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
     const plan = planDispatchWork({
       targets: dispatchTargets,
       world: {
@@ -1527,12 +1669,13 @@ if (dispatchTargets.length > 0) {
         durable,
         meetingPartitions: UNREAD_MEETING_PARTITIONS,
         censusUnitsByState,
-        refusedRegistries: promoted.refused,
+        refusedRegistries,
       },
     });
     const applied = dispatchWorkWrites
       ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS })
       : null;
+    dispatchRecorded = applied?.recorded ?? [];
     dispatchWork = dispatchWorkReading(plan, applied, {
       at: NOW,
       modelLaneClosed: laneDisabledReason,
@@ -1567,6 +1710,51 @@ for (const { intent, detail } of dispatchDetails) {
   const work = dispatchWork?.targets.find((t) => t.key === `dispatch:${intent.intentId}`) ?? null;
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
+
+/*
+ * **MW-021 — EACH SEND'S OWN BUDGET.** (2026-09-25; `lib/control-plane/expansion/
+ * assignment-budget.ts` carries the design note.) Who belongs to a Send is read
+ * from the obligations' own records (plus what the step above recorded after
+ * they were read); what it spent, from the same canonical ledger the Fleet
+ * ceiling reads. Restrict-only, consulted in `admitScout` after every Fleet gate.
+ */
+const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? [])], dispatchRecorded);
+const assignmentSpecs = assignmentBudgetsOf({ scopes: (expansionPlan?.scopes ?? []).map((s) => s.decision), intents: intentLog });
+const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
+  now: NOW,
+  specs: assignmentSpecs,
+  membership: assignmentMembers,
+  costs: ledgerUnreadable === null ? costLedger : null,
+  worstCaseUsd: SCOUT_WORST_CASE_USD,
+  /* MW-021: an unread log cannot say which DISPATCH carries a budget, so its work is held (assignment-budget.ts). */
+  intentsReadable: intentLogUnreadable === null,
+});
+const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
+/* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
+   read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
+const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
+const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
+const assignmentCompletion = (key: string) =>
+  evaluateAssignmentFromRecords({
+    assignmentKey: key,
+    obligations: assignmentObligations,
+    debtFor: (id) => debtByObligation.get(id) ?? null,
+    now: NOW,
+  });
+const assignmentsReading = (): AssignmentCycleReading | null =>
+  assignmentSpecs.length === 0 && assignmentMembers.byKey.size === 0
+    ? null
+    : assignmentCycleReading({
+        at: nowIso(),
+        now: NOW,
+        gate: assignmentBudget,
+        specs: assignmentSpecs,
+        membership: assignmentMembers,
+        costs: ledgerUnreadable === null ? costLedger : null,
+        intentsReadable: intentLogUnreadable === null,
+        labels: assignmentLabels,
+        completionFor: assignmentCompletion,
+      });
 
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
@@ -1792,6 +1980,10 @@ let laneCounts: { deterministicDispatched: number; modelDispatched: number; defe
   modelDispatched: 0,
   deferredBy: {},
 };
+/** Obligations started this cycle in either lane, for the in-flight lane reading's oldest waiting row. */
+const startedThisCycle = new Set<string>();
+/** The lanes' final accounting, set once the cycle's lanes (and then the coordinator) have run; in-flight until then. */
+let finalQueueLanes: QueueLanes | null = null;
 /** Computed once at cycle end; null on the start-of-cycle state. */
 let metrics: ResearchMetrics | null = null;
 const researchWindowId = `research:${HOST}:${NOW}`;
@@ -1854,6 +2046,17 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       modelClassDeferredForLane: (laneCounts.deferredBy.LANE_DISABLED ?? 0) + (laneCounts.deferredBy.PAUSED ?? 0),
       deterministicDue: dueDeterministic,
       deterministicDispatchedThisCycle: laneCounts.deterministicDispatched,
+      lanes:
+        finalQueueLanes ??
+        lanesInFlight({
+          at: nowIso(),
+          deterministicRows: dueDeterministicRows,
+          modelRows: dueModel,
+          deterministicDispatched: laneCounts.deterministicDispatched,
+          modelDispatched: laneCounts.modelDispatched,
+          startedIds: startedThisCycle,
+          runningIds: new Set(running.map((r) => r.obligationId)),
+        }),
     },
     running: [...running],
     runtimeConditions: [...runtimeConditions],
@@ -1872,6 +2075,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     researchProgression,
     expansion: expansionReading,
     dispatchWork,
+    assignments: assignmentsReading(),
   };
 }
 
@@ -1952,9 +2156,11 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   const at = nowIso();
   const started = Date.now();
   try {
-    const route = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
-    const model = route.model === SCOUT_MODEL ? SCOUT_MODEL : route.model;
-    const request = scoutPrewarmRequest({ model, effort: route.effort, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    /* MW-033 (2026-09-25): warm the model the loop STARTS on, and only when its prefix can cache — else skip, by name, with no paid call. */
+    /* The Attempts' own tool list: with `search` exactly when `scoutFor` hands the toolkit `scoutSearch` (2026-09-25), so the entry warmed is the one read. */
+    const plan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
+    const { model, request } = plan;
     const transport = fleetSafety.guardedModelTransport("anthropic", "scout-prewarm", anthropicTransport(workerKey));
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
@@ -1991,6 +2197,8 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? scoutExecutor({
       transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
+      /* MW-033: a Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling. */
+      reserveEscalation: scoutEscalationReservation(fleetSafety),
       toolkitFor: (toolCtx) => buildScoutToolkit(scoutSearch !== null ? { ...toolCtx, search: scoutSearch } : toolCtx),
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
@@ -2043,7 +2251,10 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           ...amended,
           inheritedFieldManual: pair.inheritedCount,
           rebuiltExistingRoutes: pair.rebuiltExisting,
-          ...(doors ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines } : {}),
+          /* MW-025: beside what was handed, which handed doors the walk went through, matched against the manual it was handed from. */
+          ...(doors
+            ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines, usedFieldManualEntryIds: usedFieldManualEntryIds(result, doors.entryIds, fieldManual) }
+            : {}),
         };
         if (result.refusal === null && result.candidates.length > 0) {
           const written = await writeFieldManualDiscoveries(
@@ -2198,12 +2409,18 @@ const cycle = await runCycle({
         };
       }
       if (Number.isFinite(SCOUT_MAX) && scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `the diagnostic --scout-max cap of ${SCOUT_MAX} for this cycle is reached` };
+      /* MW-021: each Send's own budget, checked (nothing held yet) before the
+         geography's, so a Send's work is refused under the Send's own name. */
+      const sent = assignmentBudget.check(row.obligation.id);
+      if (!sent.admit) return { admit: false, code: sent.code, why: sent.why };
       /* The owner's expansion-scope budgets: last, so a scope reservation is
          only ever taken for a Scout every Fleet gate above already admitted. */
       if (expansionBudget !== null) {
         const scoped = expansionBudget.gate.admit(row.obligation.id, row.obligation.subjectId);
         if (!scoped.admit) return { admit: false, code: scoped.code, why: scoped.why };
       }
+      /* Admission is synchronous, so this re-check agrees with the one above; it takes the Send's hold. */
+      assignmentBudget.admit(row.obligation.id);
       scoutsAdmittedThisCycle += 1;
       return { admit: true };
     },
@@ -2222,11 +2439,14 @@ const cycle = await runCycle({
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
+      startedThisCycle.add(result.obligationId);
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
         spentThisCycle += result.cost?.usd ?? 0;
         /* A Scout that reported no dollar figure leaves its scope's spend unmeasured, which holds that scope's paid work. */
         expansionBudget?.gate.settle(result.obligationId, result.cost?.usd ?? null);
+        /* The same for every Send it held against (MW-021). */
+        assignmentBudget.settle(result.obligationId, result.cost?.usd ?? null);
         const at = running.findIndex((r) => r.attemptId === result.attemptId);
         if (at >= 0) running.splice(at, 1);
         laneCounts = { ...laneCounts, modelDispatched: laneCounts.modelDispatched + 1 };
@@ -2251,6 +2471,8 @@ laneCounts = {
   modelDispatched: cycle.lanes?.model.dispatched ?? laneCounts.modelDispatched,
   deferredBy: { ...(cycle.lanes?.model.deferredBy ?? {}) },
 };
+/* MW-014: every lane's reasons, summing to what it skipped; the coordinator's pass is folded in when it runs. */
+if (cycle.lanes !== null) finalQueueLanes = lanesAtCycleEnd(cycle.lanes, null, nowIso());
 for (const row of cycle.deferred) {
   const code = /^([A-Z][A-Z0-9_]+)/.exec(row.why)?.[1] ?? "CYCLE_DEFERRED";
   fleetSafety.defer(row.obligationId, code, row.why);
@@ -2319,17 +2541,12 @@ const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
 const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
 /*
- * The search rung's caps (Brave and Exa combined, pointers only): per cycle
- * here, per day in the durable shared budget ledger. The defaults are the
+ * The search rung's caps (Brave and Exa combined, pointers only) are
+ * SEARCH_PER_CYCLE / SEARCH_PER_DAY, set with the one paid-search budget at
+ * cycle start and shared with the Scout `search` tool. The defaults are the
  * conservative dial agreed with the data-plane owner; an env value may lower or
  * raise them within 0..1000.
  */
-const searchCap = (name: string, fallback: number): number => {
-  const raw = Number(process.env[name]);
-  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
-};
-const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
-const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState: string;
 if (!MEETINGS_DISCOVERY_ENABLED) {
@@ -2352,22 +2569,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
      * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
      * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
      * no refusal, no budget-ledger write. When it is on, the env caps bind it per cycle and per day, on FleetSafety's
-     * own key, and every request sent is charged.
+     * own key, and every request sent is charged. `searchBudget` is the one budget the Scout tool also draws on.
      */
-    const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
-      repos,
-      perCycle: SEARCH_PER_CYCLE,
-      perDay: SEARCH_PER_DAY,
-      admit: () => {
-        try {
-          fleetSafety.admitProviderRequest("discovery-search", "meetings-discovery-search");
-          return null;
-        } catch (error) {
-          return error instanceof Error ? error.message : String(error);
-        }
-      },
-      now: nowIso,
-    });
     const discoverySearch = searchBudget === null ? null : makeDiscoverySearch({
       braveKey: process.env.BRAVE_SEARCH_API_KEY,
       exaKey: process.env.EXA_API_KEY,
@@ -2436,6 +2639,75 @@ console.log(
 finishPhase("meetings-discovery");
 
 /*
+ * **THE CAMPAIGN-SITE PASS: HELD RESEARCH REACHES THE PUBLICATION DOOR, FREE.**
+ * (2026-09-25; the design note and the bounds are in
+ * lib/control-plane/promotion/campaign-site-cycle.ts.)
+ *
+ * The held Scout findings and Marginalia answers go through the complete
+ * campaign-site chain: robots-first reads through this cycle's guarded seam
+ * and host spacer, at most 12 lead reads and 6 audit second reads in 60 s. It
+ * calls no model and no paid search, so it runs while the owner's pause keeps
+ * the paid lane closed; it is not gated on that lane. Its offers are pipeline
+ * records (Admin's delivery trail); its approvals publish through the derived
+ * routine contract `candidate-campaign-sites-derived` on the routine runner's
+ * own clock, with no owner step. Only a full standing cycle with the budget
+ * left runs it.
+ */
+let campaignSites: CampaignSiteCycleReport | null = null;
+let campaignSitesState: string;
+if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
+  campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
+} else if (intents.runnerPause.paused) {
+  campaignSitesState = "not run: the owner has paused the runner";
+} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS > DISPATCH_DEADLINE_MS) {
+  campaignSitesState = "not run: less of the cycle's admission window remains than the pass's budget";
+} else {
+  const leaveCampaignSites = pending.enter("campaign-sites");
+  try {
+    const holdings = candidateEnrichmentHoldings();
+    if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
+    const { subjects } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+    const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
+    /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
+    let stagingManifest: ReturnType<typeof readStagingManifest> = null;
+    try {
+      stagingManifest = readStagingManifest(ROOT);
+    } catch (error) {
+      runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
+    }
+    const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
+    const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+    campaignSites = await runCampaignSiteCycle({
+      repos,
+      subjects,
+      marginalia: held.responses,
+      gate: readActivationGate(ROOT),
+      now: nowIso(),
+      clock: () => Date.now(),
+      sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
+      open: async ({ url, headers, timeoutMs }) => {
+        const got = await openCampaignSite({ url, headers, timeoutMs });
+        return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+      },
+      spaceOut: spacer,
+      vaultRoot: join(ROOT, ...VAULT_DIR),
+      heldVault: vaultIndex,
+      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+    });
+    campaignSitesState =
+      `ran over ${subjects.size} canonical candidacies and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+      (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : "");
+  } catch (error) {
+    campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
+  } finally {
+    leaveCampaignSites();
+  }
+}
+console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
+finishPhase("campaign-sites");
+
+/*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
  * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
  * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
@@ -2480,7 +2752,10 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
-      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) } : {}) });
+      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)),
+        reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
+      /* The auditor admits against the ceiling in force, the same one admitScout reads — not the static default. */
+      auditCeilingUsd: effectiveCeilingUsd });
     // Retained civic bytes get one guaranteed stage before open-ended discovery.
     // Both queues consume the same aggregate counter; unused shares are lent
     // back within the existing ten-dispatch and wall limits.
@@ -2493,6 +2768,8 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
       deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
       admitDispatch: work => fleetSafety.admitDispatch(work) });
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
+    /* MW-014: the coordinator's deferrals AND its silent non-dispatches (BLOCKED, STAGED), counted by reason. */
+    if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
     const legacy = [...heldFirst];
     // No per-cycle dispatch cap: the held-worker loop runs until the wall
@@ -2850,7 +3127,7 @@ const researchLines = [
   `  candidates         ${candidateReports.reduce((n, r) => n + r.proposed.length, 0)} method candidate(s) proposed and validated (never admitted here)`,
   `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
   `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · ${honoredDispatch.length} of ${intents.pendingDispatch.length} pending DISPATCH honored · ` +
-    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intents.paused ? "yes" : "no"}`,
+    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intentLogUnreadable !== null ? "UNKNOWN (log unreadable; paid lane held closed)" : intents.paused ? "yes" : "no"}`,
   ...ownerDispatches.map(
     (d) => `  owner dispatch     ${d.intentId}: "${d.target}" -> ${d.matched} of ${d.registered} registered unit(s) placed first in both lanes`,
   ),
@@ -2900,6 +3177,7 @@ const lines = [
         ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
         (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "") +
         (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side` : "")),
+  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`,
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -3030,6 +3308,26 @@ const runRecord = {
         /* Walks that failed on something of ours, named; the pass went on without them and each need stays due. */
         walkFailures: meetingsDiscovery?.walkFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
+      },
+      /* The free campaign-site pass (2026-09-25): whether it ran, each lead it read, and every verdict by code. */
+      campaignSites: {
+        state: campaignSitesState,
+        report: campaignSites === null
+          ? null
+          : {
+              readsUsed: campaignSites.chain.readsUsed,
+              rereadsUsed: campaignSites.chain.rereadsUsed,
+              judgedFromVault: campaignSites.chain.judgedFromVault,
+              verdicts: campaignSites.verdicts,
+              byCode: campaignSites.byCode,
+              byStage: campaignSites.chain.byStage,
+              offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
+              approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
+              unjoined: campaignSites.chain.unjoined.length,
+              budgetSpent: campaignSites.budgetSpent,
+              elapsedMs: campaignSites.elapsedMs,
+              read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
+            },
       },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:

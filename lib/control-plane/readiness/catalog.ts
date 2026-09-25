@@ -8,9 +8,11 @@
  *     NOT_WALKED, never blank and never an error (acceptance #14).
  *   - `CAPABILITY_TAXONOMY`: the starting capability rows (§5.3). It is a STARTING
  *     POINT, not a limit — the publisher adds every capability the repo actually
- *     tracks; these are the rows a bare, unwalked state shows.
+ *     tracks; these are the rows a bare, unwalked state shows. Loaded from the
+ *     versioned readiness standard (`standard.json`, MW-063).
  */
-import type { CapabilityDomain, JurisdictionLevel } from "./model.ts";
+import { CAPABILITY_DOMAINS, JURISDICTION_LEVELS, type CapabilityDomain, type JurisdictionLevel } from "./model.ts";
+import { currentStandard, type StandardCapability } from "./standard.ts";
 
 export interface StateEntry {
   readonly code: string;
@@ -96,37 +98,21 @@ export interface TaxonomyRow {
 }
 
 /**
- * The starting rows (§5.3). A starting point, never a limit: the publisher may
+ * A standard capability row, checked: its domain and level must be ones the
+ * panel groups and filters by. A row the code cannot place refuses to load
+ * rather than rendering under no heading.
+ */
+function taxonomyRow(row: StandardCapability): TaxonomyRow {
+  if (!(CAPABILITY_DOMAINS as readonly string[]).includes(row.domain) || !(JURISDICTION_LEVELS as readonly string[]).includes(row.level)) {
+    throw new Error(`READINESS_STANDARD_CAPABILITY_UNKNOWN: ${row.capabilityId} names domain "${row.domain}" and level "${row.level}"; the code knows neither or not both`);
+  }
+  return { capabilityId: row.capabilityId, domain: row.domain as CapabilityDomain, label: row.label, level: row.level as JurisdictionLevel };
+}
+
+/**
+ * The starting rows (§5.3), from the readiness standard in force
+ * (`standard.json`, MW-063). A starting point, never a limit: the publisher may
  * add every capability the repo tracks, and a bare state renders exactly these,
  * all NOT_WALKED.
  */
-export const CAPABILITY_TAXONOMY: readonly TaxonomyRow[] = [
-  // Districts and geography
-  { capabilityId: "districts.congressional", domain: "Districts and geography", label: "Congressional · legislative", level: "federal" },
-  { capabilityId: "districts.state-legislative", domain: "Districts and geography", label: "State legislative", level: "state" },
-  { capabilityId: "districts.county-precinct", domain: "Districts and geography", label: "County and precinct", level: "county" },
-  { capabilityId: "districts.municipal-wards", domain: "Districts and geography", label: "Municipal wards", level: "municipal" },
-  { capabilityId: "districts.school", domain: "Districts and geography", label: "School districts", level: "school" },
-  { capabilityId: "districts.special", domain: "Districts and geography", label: "Special districts", level: "special" },
-  // Officials and offices
-  { capabilityId: "officials.state-federal-seats", domain: "Officials and offices", label: "State and federal seats", level: "state" },
-  { capabilityId: "officials.county", domain: "Officials and offices", label: "County offices", level: "county" },
-  { capabilityId: "officials.municipal", domain: "Officials and offices", label: "Municipal offices", level: "municipal" },
-  { capabilityId: "officials.school-board", domain: "Officials and offices", label: "School board seats", level: "school" },
-  { capabilityId: "officials.special-district-boards", domain: "Officials and offices", label: "Special district boards", level: "special" },
-  // Elections and ballot
-  { capabilityId: "ballot.candidate-filings", domain: "Elections and ballot", label: "Candidate filings", level: "state" },
-  { capabilityId: "ballot.statewide-propositions", domain: "Elections and ballot", label: "Statewide propositions", level: "state" },
-  { capabilityId: "ballot.local-measures", domain: "Elections and ballot", label: "Local measures", level: "municipal" },
-  { capabilityId: "ballot.certified-results", domain: "Elections and ballot", label: "Certified results", level: "state" },
-  // Campaign finance
-  { capabilityId: "finance.federal-fec", domain: "Campaign finance", label: "Federal · FEC", level: "federal" },
-  { capabilityId: "finance.state-disclosure", domain: "Campaign finance", label: "State · secretary of state", level: "state" },
-  { capabilityId: "finance.county-committees", domain: "Campaign finance", label: "County committees", level: "county" },
-  { capabilityId: "finance.municipal", domain: "Campaign finance", label: "Municipal", level: "municipal" },
-  // Meetings and agendas
-  { capabilityId: "meetings.county-boards", domain: "Meetings and agendas", label: "County boards", level: "county" },
-  { capabilityId: "meetings.city-councils", domain: "Meetings and agendas", label: "City councils", level: "municipal" },
-  { capabilityId: "meetings.school-boards", domain: "Meetings and agendas", label: "School boards", level: "school" },
-  { capabilityId: "meetings.planning-zoning", domain: "Meetings and agendas", label: "Planning and zoning", level: "municipal" },
-];
+export const CAPABILITY_TAXONOMY: readonly TaxonomyRow[] = currentStandard().capabilities.map(taxonomyRow);

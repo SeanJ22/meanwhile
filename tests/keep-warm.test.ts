@@ -75,11 +75,12 @@ test("KEEP-WARM · a call that fails is counted as not answered and does not sto
 });
 
 test("KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask reads first, and never the database; an unmarked call loads nothing", async () => {
+  const nothing = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0 };
   const marked = await (await call("?hold=0", true)).json();
-  assert.deepEqual(marked.primed, { manifest: false, authorityFamilies: 0, meetings: false }, "no edge store here, so nothing is loaded and nothing falls back");
+  assert.deepEqual(marked.primed, nothing, "no edge store here, so nothing is loaded and nothing falls back");
   const unmarked = await (await call("?hold=0", false)).json();
   assert.equal(unmarked.primed, null);
-  assert.deepEqual(await primeReaderEdge(), { manifest: false, authorityFamilies: 0, meetings: false });
+  assert.deepEqual(await primeReaderEdge(), nothing);
   const source = readFileSync("app/api/warm/route.ts", "utf8");
   assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
   assert.match(source, /readReaderEdgeMeetings\(\{\s*manifest,\s*fallback: \(\) => Promise\.reject\(/, "the meetings read's database fallback is refused");

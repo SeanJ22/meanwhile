@@ -110,6 +110,10 @@ export interface PreparedReaderProjectionInput {
   readonly promotedThrough: string | null;
 }
 
+export interface CandidateTransitionOptions {
+  readonly candidate?: RoutineCandidate;
+}
+
 export interface RoutineDataStore {
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
@@ -119,6 +123,12 @@ export interface RoutineDataStore {
     detail: string,
     receipt?: ValidationReceipt,
     failure?: { code: string; detail: string },
+    /**
+     * The candidate envelope the caller already holds (R26). Returned as the
+     * record's envelope once it is verified to be this row's; a mismatch is
+     * refused. Without it the Postgres store reads the envelope once.
+     */
+    options?: CandidateTransitionOptions,
   ) => Promise<CandidateVersionRecord>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   /** A candidate's disposition without its dataset: every column but the envelope and identity set. */
@@ -519,8 +529,14 @@ function allowedPriorStates(next: CandidateState): readonly CandidateState[] {
   return [];
 }
 
+/** What a transition checks: the candidate's name, its state, and when it was retrieved. Never its dataset. */
+interface TransitionSubject {
+  readonly state: CandidateState;
+  readonly candidate: RoutineCandidateName & { readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt"> };
+}
+
 function assertTransitionInput(
-  record: CandidateVersionRecord,
+  record: TransitionSubject,
   state: CandidateState,
   at: string,
   detail: string,
@@ -832,9 +848,17 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     this.history.set(record.candidate.id, [structuredClone(firstEvent)]);
   }
 
-  async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }): Promise<CandidateVersionRecord> {
+  async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }, options: CandidateTransitionOptions = {}): Promise<CandidateVersionRecord> {
     const prior = this.candidates.get(candidateId);
     if (!prior) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
+    if (options.candidate && !heldEnvelopeMatches({
+      ...prior.candidate,
+      rawHash: prior.candidate.retrieval.rawHash ?? null,
+      normalizedHash: prior.candidate.normalization.normalizedHash ?? null,
+      retrievedAt: prior.candidate.retrieval.retrievedAt,
+    }, options.candidate)) {
+      throw new Error(`CANDIDATE_TRANSITION_ENVELOPE_MISMATCH:${candidateId}`);
+    }
     assertTransitionInput(prior, state, at, detail, receipt, failure);
     const { history, event } = this.nextEvent(candidateId, state, at, detail);
     const next: CandidateVersionRecord = {
@@ -1491,23 +1515,71 @@ function postgresCandidateSummary(row: PostgresCandidateSummaryRow): CandidateVe
  * identity columns equal the envelope's by CHECK
  * (`civic_data_candidates_envelope_identity_coherent`).
  */
+const READER_EVIDENCE_CANDIDATE_COLUMNS = {
+  id: civicDataCandidates.id,
+  sourceId: civicDataCandidates.sourceId,
+  recordClass: civicDataCandidates.recordClass,
+  scope: civicDataCandidates.scope,
+  state: civicDataCandidates.state,
+  // An absent marker and a JSON-null marker both read back as null; the
+  // key test keeps a present-but-null marker a marker, exactly as the
+  // whole envelope's own-property check decides.
+  hasBootstrapImport: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
+  bootstrapImport: sql<unknown>`${civicDataCandidates.candidate}->'bootstrapImport'`,
+};
+
 export function readerEvidenceCandidateRead(db: RoutineClockDb, candidateId: string) {
   return db
+    .select(READER_EVIDENCE_CANDIDATE_COLUMNS)
+    .from(civicDataCandidates)
+    .where(eq(civicDataCandidates.id, candidateId))
+    .limit(1);
+}
+
+/**
+ * **A TRANSITION'S PRE-READ, WITHOUT THE ENVELOPE.** (2026-09-25, R26.)
+ *
+ * `transition()` read the whole candidate row before its compare-and-set —
+ * the envelope carries the normalized dataset and read model, ~235 MB an hour
+ * across the runner's promotions — to use five identity columns, the state,
+ * and `retrieval.retrievedAt`. This reads the Reader-evidence columns, plus
+ * `retrieved_at` (a VALIDATED receipt may not predate retrieval) and the two
+ * hash columns a caller's held envelope is verified against. Each equals the
+ * envelope's own value by CHECK (`civic_data_candidates_envelope_identity_coherent`).
+ */
+export function candidateTransitionRead(db: RoutineClockDb, candidateId: string) {
+  return db
     .select({
-      id: civicDataCandidates.id,
-      sourceId: civicDataCandidates.sourceId,
-      recordClass: civicDataCandidates.recordClass,
-      scope: civicDataCandidates.scope,
-      state: civicDataCandidates.state,
-      // An absent marker and a JSON-null marker both read back as null; the
-      // key test keeps a present-but-null marker a marker, exactly as the
-      // whole envelope's own-property check decides.
-      hasBootstrapImport: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
-      bootstrapImport: sql<unknown>`${civicDataCandidates.candidate}->'bootstrapImport'`,
+      ...READER_EVIDENCE_CANDIDATE_COLUMNS,
+      retrievedAt: civicDataCandidates.retrievedAt,
+      rawHash: civicDataCandidates.rawHash,
+      normalizedHash: civicDataCandidates.normalizedHash,
     })
     .from(civicDataCandidates)
     .where(eq(civicDataCandidates.id, candidateId))
     .limit(1);
+}
+
+/** The envelope a caller holds must be this row's: same identity, retrieval instant and hashes. */
+function heldEnvelopeMatches(
+  row: {
+    readonly id: string;
+    readonly sourceId: string;
+    readonly recordClass: string;
+    readonly scope: string;
+    readonly retrievedAt: string;
+    readonly rawHash: string | null;
+    readonly normalizedHash: string | null;
+  },
+  held: RoutineCandidate,
+): boolean {
+  return held.id === row.id &&
+    held.sourceId === row.sourceId &&
+    held.recordClass === row.recordClass &&
+    held.scope === row.scope &&
+    Date.parse(held.retrieval.retrievedAt) === Date.parse(row.retrievedAt) &&
+    (held.retrieval.rawHash ?? null) === row.rawHash &&
+    (held.normalization.normalizedHash ?? null) === row.normalizedHash;
 }
 
 export function readerEvidenceRowToRecord(
@@ -1689,13 +1761,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     ]);
   }
 
-  async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }): Promise<CandidateVersionRecord> {
+  async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }, options: CandidateTransitionOptions = {}): Promise<CandidateVersionRecord> {
     this.assertMutationAuthority();
-    const [priorRow] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+    // Identity, state, retrieval instant and hashes — never the envelope (R26).
+    const [priorRow] = await candidateTransitionRead(this.db, candidateId);
     if (!priorRow) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
-    const prior = rowToCandidate(priorRow);
-    this.assertCandidateMutationAuthority(prior.candidate);
-    assertTransitionInput(prior, state, at, detail, receipt, failure);
+    const authority = readerEvidenceRowToRecord(priorRow);
+    this.assertCandidateMutationAuthority(authority.candidate);
+    // A held envelope that is not this row's is refused before anything is written.
+    if (options.candidate && !heldEnvelopeMatches(priorRow, options.candidate)) {
+      throw new Error(`CANDIDATE_TRANSITION_ENVELOPE_MISMATCH:${candidateId}`);
+    }
+    assertTransitionInput(
+      { state: authority.state, candidate: { ...authority.candidate, retrieval: { retrievedAt: priorRow.retrievedAt } } },
+      state, at, detail, receipt, failure,
+    );
     const allowed = allowedPriorStates(state);
     const priorStateEligible = and(
       eq(civicDataCandidates.id, candidateId),
@@ -1723,9 +1803,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         from ${updatedCandidate}
       `)
       .returning();
-    // The row's columns after the write, never its envelope again: the
-    // envelope and identity set are written once at create and no statement
-    // updates them, so the pre-read's copy is the durable one.
+    // The row's columns after the write, never the envelope: it and the
+    // identity set are written once at create and no statement updates them,
+    // so the caller's verified copy is the durable one.
     const updatedCandidateRead = candidateSummaryRead(this.db, candidateId);
     const [, eventRows, updatedRows] = await this.db.batch([
       this.candidateEventLock(candidateId),
@@ -1741,7 +1821,17 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw new Error(`CANDIDATE_TRANSITION_INVALID:${candidateId}:${current.state}:${state}`);
     }
     const { candidate: _sameRow, ...columns } = postgresCandidateSummary(updatedRows[0]);
-    return { ...columns, candidate: prior.candidate };
+    return { ...columns, candidate: options.candidate ?? await this.readCandidateEnvelope(candidateId) };
+  }
+
+  /** The envelope alone, for a caller that transitions without the candidate in hand. */
+  private async readCandidateEnvelope(candidateId: string): Promise<RoutineCandidate> {
+    const [row] = await this.db.select({ candidate: civicDataCandidates.candidate })
+      .from(civicDataCandidates)
+      .where(eq(civicDataCandidates.id, candidateId))
+      .limit(1);
+    if (!row) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
+    return row.candidate as RoutineCandidate;
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {

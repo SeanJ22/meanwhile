@@ -19,7 +19,11 @@ import {
   refreshNhBallotFromPromoted,
 } from "../../lib/civic-data/manual-read-models.ts";
 import { refreshOfficeholderStatementsFromPromoted } from "../../lib/corpus/data-plane.ts";
-import { HELD_MEETING_PARTITIONS, MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
+import {
+  HELD_MEETING_PARTITIONS,
+  MEETING_PARTITION_CONTRACTS,
+  RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD,
+} from "../../lib/civic-data/meeting-partitions.ts";
 import { pdcV2CanonicalMeetingFactEvidence } from "../../lib/civic-data/store.ts";
 import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
@@ -139,32 +143,44 @@ export function readerProofMeetingsAuthorityFromImport(
   // promoted body stays promoted, and losing it remains a hard failure. An
   // import that named both identities is a duplicate and is refused below.
   const successorOf = new Map(HELD_MEETING_PARTITIONS.map(({ id, successorId }) => [id, successorId]));
+  // A partition retired beside a successor that was already wired for the same
+  // body (RETIRED_MEETING_ROUTES `successorAlreadyWired`) hands nothing on: the
+  // import names the successor's own disposition, which stays the body's
+  // authority. The retired identity still counts in the frozen import's
+  // denominator, and then leaves the authority.
+  const retiredWithoutHold = new Map(RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD.map(({ id, successorId }) => [id, successorId]));
   const dispositions = admission.dispositionSet.map((row) =>
     successorOf.has(row.contractId) ? { ...row, contractId: successorOf.get(row.contractId)! } : row
   );
   const unexpected = dispositions.filter(({ contractId }) =>
-    contractId.startsWith("meetings:") && !registered.has(contractId)
+    contractId.startsWith("meetings:") && !registered.has(contractId) && !retiredWithoutHold.has(contractId)
   );
   if (unexpected.length) {
     throw new Error("Reader phase import names an unregistered meeting partition.");
   }
-  const promotedRows = dispositions.filter(({ contractId }) => registered.has(contractId));
-  const promotedById = new Map(promotedRows.map((row) => [row.contractId, row]));
-  if (promotedById.size !== promotedRows.length) {
+  const importedRows = dispositions.filter(({ contractId }) => registered.has(contractId) || retiredWithoutHold.has(contractId));
+  const importedById = new Map(importedRows.map((row) => [row.contractId, row]));
+  if (importedById.size !== importedRows.length) {
     throw new Error("Reader phase import duplicates a meeting partition disposition.");
   }
   // Partitions registered after the frozen import are outside its universe:
   // NOT_RECORDED in this authority until routine promotion gains them.
   const postImport = new Set(PDC_V2_POST_IMPORT_MEETING_PARTITIONS.filter((id) => registered.has(id)));
-  if (promotedRows.some(({ contractId }) => postImport.has(contractId))) {
+  if (importedRows.some(({ contractId }) => postImport.has(contractId))) {
     throw new Error("Reader phase import claims a meeting partition registered after it.");
   }
   if (
     admission.zeroMeetingPartitionsRefused !== PDC_V2_ZERO_LKG_MEETING_PARTITIONS ||
-    promotedRows.length !== registered.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS - postImport.size
+    importedRows.length !== registered.size + retiredWithoutHold.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS - postImport.size
   ) {
     throw new Error("Reader phase import meeting partition denominator differs from the permanent 83/41 authority.");
   }
+  for (const [retiredId, successorId] of retiredWithoutHold) {
+    if (importedById.has(retiredId) && !importedById.has(successorId)) {
+      throw new Error("Reader phase import promoted a retired meeting partition whose wired successor it does not carry.");
+    }
+  }
+  const promotedById = new Map([...importedById].filter(([id]) => registered.has(id)));
   const partitions = MEETING_PARTITION_CONTRACTS.map(({ id }) => {
     const promoted = promotedById.get(id);
     return promoted
@@ -172,8 +188,8 @@ export function readerProofMeetingsAuthorityFromImport(
       : { contractId: id, kind: "NOT_RECORDED" as const, versionId: null };
   });
   return {
-    meetingPartitionsWithLkg: promotedRows.length,
-    meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused + postImport.size,
+    meetingPartitionsWithLkg: promotedById.size,
+    meetingPartitionsWithoutLkg: partitions.length - promotedById.size,
     legacyMeetingsAggregate: admission.legacyMeetingsAggregate,
     partitions,
   };
@@ -433,25 +449,45 @@ export function loadReaderProofMeetingsExpectedAuthority(
   return loadReaderProofMeetingsExpectedAuthorityFor(root, environment);
 }
 
+/**
+ * **Proof priming reads each family once per process, proved in full (R29, 2026-09-25).**
+ *
+ * The non-meeting families are read through the ordinary proven read model,
+ * not `bypassCache`. Proof strength is unchanged: a proof executor is a fresh
+ * process, so its read model holds nothing yet, and each family's first read
+ * here fetches the pointer and its candidate and runs the full promotion proof
+ * (`promotionProofIssue`), exactly as a bypassing read does. What changes is
+ * everything after that first read. Concurrent readers of one scope share the
+ * one in-flight read instead of each downloading it, and a later read of an
+ * unmoved pointer (after the 30-second scope cache expires, in an executor that
+ * runs for minutes) asks only the pointer's identity and is served from the
+ * proof this process made; a pointer that moved is fetched and proved again.
+ * Bypassing skipped both, so a long executor re-downloaded every family whole
+ * after each expiry. Priming was 77% of a proof's 6-7 GB transfer.
+ *
+ * The meeting partitions keep `bypassCache`: the pinned meeting read is the
+ * proof harness's own contract (lib/meetings/proof-pin.ts).
+ */
 function productionLoaders(
   meetingAuthority: ReaderProofMeetingsExpectedAuthority,
 ): ReaderProofRuntimeLoaders {
+  const proven = {} as const;
   const bypass = { bypassCache: true } as const;
   return {
-    "az-pima-local-finance": () => refreshAzPimaFinanceFromPromoted(bypass),
-    "registry-runtime-bindings": () => refreshRegistryRuntimeFromPromoted(bypass),
-    "congress-bulk-roster": () => refreshFederalDirectoryFromPromoted(bypass),
-    "candidate-profiles": () => refreshCandidateProfilesFromPromoted(bypass),
-    "candidate-corpus": () => refreshCandidateCorpusFromPromoted(bypass),
-    "az-sos-ballot": () => refreshAzBallotFromPromoted(bypass),
-    "nh-curated-ballot": () => refreshNhBallotFromPromoted(bypass),
+    "az-pima-local-finance": () => refreshAzPimaFinanceFromPromoted(proven),
+    "registry-runtime-bindings": () => refreshRegistryRuntimeFromPromoted(proven),
+    "congress-bulk-roster": () => refreshFederalDirectoryFromPromoted(proven),
+    "candidate-profiles": () => refreshCandidateProfilesFromPromoted(proven),
+    "candidate-corpus": () => refreshCandidateCorpusFromPromoted(proven),
+    "az-sos-ballot": () => refreshAzBallotFromPromoted(proven),
+    "nh-curated-ballot": () => refreshNhBallotFromPromoted(proven),
     "nj-morris-filing": async () => promotedVersion(
       "nj-morris-filing",
-      await readNjMorrisFiling(bypass),
+      await readNjMorrisFiling(proven),
     ),
-    "fec-funding": () => refreshFundingFromPromoted(bypass),
+    "fec-funding": () => refreshFundingFromPromoted(proven),
     "state-campaign-finance": async () => {
-      await refreshStateMoneyFromPromoted(bypass);
+      await refreshStateMoneyFromPromoted(proven);
       const versions = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
         .sort()
         .map((state) => promotedVersion(
@@ -460,22 +496,22 @@ function productionLoaders(
       ));
       return versions.join(",");
     },
-    "congress-rollcalls": () => refreshFederalVotesFromPromoted(bypass),
-    "federal-key-votes": () => refreshFederalKeyVotesFromPromoted(bypass),
+    "congress-rollcalls": () => refreshFederalVotesFromPromoted(proven),
+    "federal-key-votes": () => refreshFederalKeyVotesFromPromoted(proven),
     "nh-members": async () => promotedVersion(
       "nh-members",
-      await refreshNhSeatHolders(bypass),
+      await refreshNhSeatHolders(proven),
     ),
-    "voting-sites": () => refreshVotingSitesFromPromoted(bypass),
-    "prl": () => refreshPrlFromPromoted(bypass),
-    "officeholder-statements": () => refreshOfficeholderStatementsFromPromoted(bypass),
-    "az-official-actions": () => refreshExecutiveActionsFromPromoted(bypass),
-    "pima-legistar-outcomes": () => refreshOutcomeSnapshotFromPromoted(bypass),
-    "comment-access": () => refreshCommentAccessFromPromoted(bypass),
-    "ballot-navigation": () => refreshBallotNavigationFromPromoted(bypass),
-    "campaign-sites": () => refreshCampaignSitesFromPromoted(bypass),
-    "venue-resolutions": () => refreshVenueResolutionsFromPromoted(bypass),
-    "everyday-routing": () => refreshEverydayRoutingFromPromoted(bypass),
+    "voting-sites": () => refreshVotingSitesFromPromoted(proven),
+    "prl": () => refreshPrlFromPromoted(proven),
+    "officeholder-statements": () => refreshOfficeholderStatementsFromPromoted(proven),
+    "az-official-actions": () => refreshExecutiveActionsFromPromoted(proven),
+    "pima-legistar-outcomes": () => refreshOutcomeSnapshotFromPromoted(proven),
+    "comment-access": () => refreshCommentAccessFromPromoted(proven),
+    "ballot-navigation": () => refreshBallotNavigationFromPromoted(proven),
+    "campaign-sites": () => refreshCampaignSitesFromPromoted(proven),
+    "venue-resolutions": () => refreshVenueResolutionsFromPromoted(proven),
+    "everyday-routing": () => refreshEverydayRoutingFromPromoted(proven),
     "meeting-partitions": async () => readerProofMeetingPartitionIdentity(
       await readMeetingsProjection(bypass),
       meetingAuthority,

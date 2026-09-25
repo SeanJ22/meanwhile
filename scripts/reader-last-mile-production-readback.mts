@@ -26,8 +26,21 @@ const pilots = [
   { zip: "85701", name: "Katie Hobbs", official: "statewide:az/governor", target: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613", meetingId: "legistar:pima:1825" },
   { zip: "85641", name: "Katie Hobbs", official: "statewide:az/governor", target: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613", meetingId: "apptegy:vail:60703698" },
   { zip: "07866", name: "Tayfun Selen", official: "roster:morris#6", target: "ballot-nj-morris:county-commissioner:selen", raised: "$225,026", spent: "$229,526", meetingId: "iqm2:morriscountynj:2236" },
-  { zip: "03255", name: "Kelly Ayotte", official: "statewide:nh/governor", target: "ballot-nh-merrimack:governor:ayotte-kelly", raised: "$5,995,303", spent: "$3,276,135", meetingId: "diligent:newburynh:3367" },
+  { zip: "03255", name: "Kelly Ayotte", official: "statewide:nh/governor", target: "ballot-nh-merrimack:governor:ayotte-kelly", raised: "$5,995,303", spent: "$3,276,135", meetingId: "prefix:ical:newbury-ical-governing:" },
 ] as const;
+/*
+ * A pilot names its meeting witness exactly, or as "prefix:<id prefix>" when the
+ * source's ids are publisher-minted and move: then the witness is the last listed
+ * meeting carrying that prefix. Newbury's Selectboard moved to its own calendar
+ * feed when its CivicWeb host stopped resolving (2026-09-25), so 03255 names the feed.
+ */
+function witnessFor(spec: string, listed: readonly (string | null)[]): string {
+  if (!spec.startsWith("prefix:")) return spec;
+  const prefix = spec.slice("prefix:".length);
+  const found = listed.filter((id): id is string => typeof id === "string" && id.startsWith(prefix)).sort().at(-1);
+  assert.ok(found, `no listed meeting starts with ${prefix}`);
+  return found;
+}
 const browser = await launchGuarded({ label: "reader-last-mile-production-readback" });
 const rows: unknown[] = [];
 const requests: { method: string; path: string; status: number }[] = [];
@@ -116,14 +129,14 @@ try {
     const statedMeetings = Number((await page.locator(".al-overlay-count").innerText()).split(" ")[0]);
     const meetingIds = await page.locator(".al-row[data-meeting-id]").evaluateAll(nodes => nodes.map(node => node.getAttribute("data-meeting-id")));
     assert.equal(meetingIds.length, statedMeetings);
-    assert.ok(meetingIds.includes(pilot.meetingId));
+    const witness = witnessFor(pilot.meetingId, meetingIds);
+    assert.ok(meetingIds.includes(witness));
     await capture(page, `${pilot.zip}-meetings`, page.locator(".al-row").first());
-    const agendaResponse = await context.request.get(`${base}/api/agenda?meetingId=${encodeURIComponent(pilot.meetingId)}`);
+    const agendaResponse = await context.request.get(`${base}/api/agenda?meetingId=${encodeURIComponent(witness)}`);
     assert.equal(agendaResponse.status(), 200);
     const agenda = await agendaResponse.json();
-    assert.equal(agenda.meetingId, pilot.meetingId);
+    assert.equal(agenda.meetingId, witness);
     assert.equal(agenda.documentCount, agenda.documents.length);
-    if (pilot.zip === "03255") assert.equal(agenda.publication.acquisition, "ACQUIRED_IS_PUBLICATION_INDEX");
     await page.goto(`${base}/ballot?zip=${pilot.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
     await page.locator(".candidate-row").filter({ hasText: pilot.name }).first().locator("[data-battlecard-pill]").click();
     modal = page.getByRole("dialog", { name: pilot.name, exact: true });

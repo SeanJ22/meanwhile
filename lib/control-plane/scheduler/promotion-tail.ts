@@ -110,6 +110,20 @@ export interface Normalization {
    * here stands; the number that justified it does not.
    */
   readonly unresolved: readonly string[];
+  /**
+   * A LEGITIMATE EMPTY ANSWER, NAMED. (2026-09-25.) Set only by a normalizer
+   * whose publisher answers a query with an empty list as a real result — a
+   * search index with no hit. The tail stages it as a named no-hit, never as a
+   * failed normalization and never as a snapshot of nothing. It is a dated fact
+   * about one query to one index, never a fact about the subject.
+   */
+  readonly noHit?: string;
+  /**
+   * The rows are POINTERS (a URL and what the index called it), never records.
+   * A pointer is staged for the verifier that reads its origin; it is never
+   * promoted as it stands.
+   */
+  readonly pointerOnly?: boolean;
 }
 
 /** Raised by a normalizer that read a document and produced nothing from it. */
@@ -246,10 +260,58 @@ export const normalizeAzSeeTheMoney: Normalizer = (body) => {
   };
 };
 
+/**
+ * MARGINALIA — `results[]`, POINTERS ONLY. (2026-09-25.)
+ *
+ * `api.marginalia.nu/public/search/<query>` answers `{license, page, pages,
+ * query, results[]}`, each result `{url, title, description, quality, format,
+ * resultsFromDomain, details}` (read from the 563 held responses in the
+ * runner's vault; docs/sources.md documented only `license` and `results`).
+ * The index is CC-BY-NC-SA and may only POINT: a row carries the URL, the
+ * title the index gave it, its format and rank — never the description, which
+ * is the index's licensed text — and every row is a lead for
+ * `lib/candidates/campaign-site-verifier.ts`, which reads the origin itself.
+ *
+ * An empty `results` is a NO-HIT: the index answered and had nothing for this
+ * query. That is a legitimate answer, named as such; it is not a failed
+ * normalization and never an absence about the person searched for.
+ */
+export const normalizeMarginaliaSearch: Normalizer = (body) => {
+  const parsed = JSON.parse(body) as { license?: unknown; query?: unknown; results?: unknown };
+  if (typeof parsed.license !== "string" || !Array.isArray(parsed.results)) {
+    throw new FailedNormalization(
+      "candidate-marginalia-index",
+      "the response carries no `license` string and `results` array, so it is not the documented search answer",
+    );
+  }
+  const query = typeof parsed.query === "string" ? parsed.query : null;
+  const rows = (parsed.results as readonly Record<string, unknown>[]).flatMap((row, index) =>
+    typeof row?.url === "string" && /^https?:\/\//.test(row.url)
+      ? [{ kind: "POINTER", url: row.url, title: typeof row.title === "string" ? row.title : null, format: typeof row.format === "string" ? row.format : null, rank: index + 1 }]
+      : [],
+  );
+  const unresolved = [
+    `POINTERS ONLY (${parsed.license}): each row is a URL the index returned for ${JSON.stringify(query)}. ` +
+      "A row is a lead for the campaign-site verifier, which reads the origin robots-first; the index is never a source of record.",
+  ];
+  if (rows.length === 0) {
+    return {
+      normalizerId: "candidate-marginalia-index",
+      declaredTotal: 0,
+      rows,
+      pointerOnly: true,
+      noHit: `NO_HIT: the index answered ${JSON.stringify(query)} with no result — a dated fact about one query to one index, never a statement about the candidate`,
+      unresolved,
+    };
+  }
+  return { normalizerId: "candidate-marginalia-index", declaredTotal: null, rows, pointerOnly: true, unresolved };
+};
+
 /** Every normalizer this project holds, by route id. A floor, never complete. */
 export const NORMALIZERS: Readonly<Record<string, Normalizer>> = {
   "nh-cfs-filing-entity-details": normalizeNhCfs,
   "az-sos-seethemoney-datatables": normalizeAzSeeTheMoney,
+  "candidate-marginalia-index": normalizeMarginaliaSearch,
 };
 
 /* ---------------------------------------------------------------- staging */
@@ -428,6 +490,19 @@ export function stageOne(input: StageInput): StagedEntry {
     );
   }
 
+  /*
+   * A NAMED NO-HIT stages as the honest gap it is: the query was answered and
+   * had nothing. Never NORMALIZER MISSING, never NORMALIZATION FAILED, and
+   * never a snapshot of nothing presented as data.
+   */
+  if (normalized.rows.length === 0 && normalized.noHit !== undefined) {
+    return gap(
+      `${input.route.label}: the index answered and returned no result for this query. That is a fact ` +
+        "about one search, never about the subject.",
+      [normalized.noHit, `artifact(s): ${input.artifactIds.join(", ") || "none recorded"}`, ...normalized.unresolved],
+    );
+  }
+
   const rowCount = normalized.rows.length;
   const declaredTotal = normalized.declaredTotal;
   const complete = declaredTotal === null ? false : rowCount >= declaredTotal;
@@ -475,6 +550,22 @@ export function stageOne(input: StageInput): StagedEntry {
     promotedToReaderTruth: false,
   };
   writeFileSync(join(dir, file), `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
+
+  if (normalized.pointerOnly === true) {
+    /* Pointers are staged for the verifier that reads their origins; they are never promoted as they stand. */
+    return {
+      ...base,
+      state: "STAGED_PROMOTION_READY",
+      rowCount,
+      declaredTotal,
+      complete,
+      snapshotPath: `${STAGING_DIR.join("/")}/${file}`,
+      readerSentence:
+        `${input.route.label}: ${rowCount} pointer lead(s) staged for the campaign-site verifier. An index ` +
+        "points at pages and is never the record; nothing here reaches a reader until the origin is read and verified.",
+      unresolved: normalized.unresolved,
+    };
+  }
 
   return {
     ...base,

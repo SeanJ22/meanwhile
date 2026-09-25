@@ -31,7 +31,7 @@ import {
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
+import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted, refreshCommentAccessFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
@@ -108,9 +108,63 @@ export class RegistryHoldingReadError extends Error {
 let cache: { readonly authorityKey: string; readonly value: Promise<Loaded> } | null = null;
 let registryCache: { readonly authorityKey: string; readonly value: Promise<RegistryLoaded> } | null = null;
 
+/*
+ * **THE COMMITTED GEOGRAPHY IS READ ONCE PER PROCESS, AND CAN BE STARTED
+ * FIRST.** (C21, 2026-09-25.)
+ *
+ * The resolver geometry and the body territories are the reviewed static files
+ * this deploy ships; they cannot change while the process runs. They used to be
+ * read inside `loadRegistry` and `load`, which wait for the registry authority
+ * to settle, so a cold `/api/meetings` fetched the edge families first and only
+ * then began ~25 file reads and parses. Held as their own promises, a route can
+ * start them on its first line (`prefetchReaderGeography`), beside the edge
+ * fetch, and a new registry version reuses them instead of re-reading every
+ * file. A failed read is never held: the next caller reads again, and the
+ * failure still reaches whoever awaits it exactly as before.
+ */
+let geometryRead: Promise<GeoFeature[]> | null = null;
+let territoryRead: Promise<BodyTerritoryFile> | null = null;
+
+function held<T>(current: Promise<T> | null, start: () => Promise<T>, keep: (value: Promise<T> | null) => void): Promise<T> {
+  if (current) return current;
+  const read = start();
+  keep(read);
+  read.catch(() => keep(null));
+  return read;
+}
+
+function resolverGeometry(): Promise<GeoFeature[]> {
+  return held(geometryRead, readResolverGeometry, (read) => { geometryRead = read; });
+}
+
+function bodyTerritories(): Promise<BodyTerritoryFile> {
+  return held(territoryRead, readBodyTerritories, (read) => { territoryRead = read; });
+}
+
+/**
+ * Start reading the committed geography now, without waiting for it. Reads no
+ * edge or database state, so a route may call it before it has entered the
+ * reader authority edge; the loaders below await the same reads.
+ */
+export function prefetchReaderGeography(): void {
+  void resolverGeometry().catch(() => undefined);
+  void bodyTerritories().catch(() => undefined);
+}
+
 async function loadRegistry(): Promise<RegistryLoaded> {
-  const root = process.cwd();
   const runtimeRegistry = getRegistryRuntimeReadModel();
+  const features = await resolverGeometry();
+  const registry: Registry = runtimeRegistry.registry;
+
+  return {
+    features,
+    divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
+    registry,
+  };
+}
+
+async function readResolverGeometry(): Promise<GeoFeature[]> {
+  const root = process.cwd();
   const stateCodes = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
 
   /*
@@ -173,15 +227,27 @@ async function loadRegistry(): Promise<RegistryLoaded> {
       return (JSON.parse(raw) as { features: GeoFeature[] }).features;
     }),
   );
-  const features: GeoFeature[] = perFile.flat();
+  return perFile.flat();
+}
 
-  const registry: Registry = runtimeRegistry.registry;
-
-  return {
-    features,
-    divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
-    registry,
-  };
+async function readBodyTerritories(): Promise<BodyTerritoryFile> {
+  const root = process.cwd();
+  /*
+   * LITERAL PATH SEGMENTS, not the imported constant.
+   *
+   * Next traces this route to decide what ships. Given `join(root, SOME_CONST)`
+   * it cannot resolve the path statically, and the first version of this line
+   * blew the app trace from 215 files to 4,073 — it swallowed screenshots/,
+   * docs/feedback/ and all 1,005 official portraits. `pnpm build`'s own
+   * cardinality budget caught it, which is exactly what that budget is for.
+   *
+   * BODY_TERRITORY_FILE stays exported for the generator and the guards, so
+   * there is still one spelling of the path; this is the one place that
+   * spells it in segments, because the tracer has to read it.
+   */
+  return JSON.parse(
+    await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
+  ) as BodyTerritoryFile;
 }
 
 async function load(base: RegistryLoaded): Promise<Loaded> {
@@ -250,22 +316,8 @@ async function load(base: RegistryLoaded): Promise<Loaded> {
    */
   let territory: BodyTerritoryFile | null = null;
   try {
-    /*
-     * LITERAL PATH SEGMENTS, not the imported constant.
-     *
-     * Next traces this route to decide what ships. Given `join(root, SOME_CONST)`
-     * it cannot resolve the path statically, and the first version of this line
-     * blew the app trace from 215 files to 4,073 — it swallowed screenshots/,
-     * docs/feedback/ and all 1,005 official portraits. `pnpm build`'s own
-     * cardinality budget caught it, which is exactly what that budget is for.
-     *
-     * BODY_TERRITORY_FILE stays exported for the generator and the guards, so
-     * there is still one spelling of the path; this is the one place that
-     * spells it in segments, because the tracer has to read it.
-     */
-    territory = JSON.parse(
-      await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
-    ) as BodyTerritoryFile;
+    // Read once per process (`bodyTerritories`), possibly already started by the route.
+    territory = await bodyTerritories();
   } catch (error) {
     throw new RegistryHoldingReadError(BODY_TERRITORY_FILE, error);
   }
@@ -292,30 +344,28 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
-/**
- * The federal reader, edge-aware: a reader request that primed a request-scoped
- * federal-directory edge value serves it WITHOUT reading Neon; the runner and
- * workers (which never set it) fall through to the authoritative database reader.
+/*
+ * **EDGE FIRST, DATABASE SECOND — EACH A BINDING OF `settleEdgeFirst`.** (R24,
+ * 2026-09-25.) A reader request that entered the reader authority edge primes
+ * the family from its edge value WITHOUT reading Neon; the standing runner and
+ * the workers never enter one, so they read the authoritative database pointer
+ * (`refresh*FromPromoted`, unchanged); an edge-only context (the keep-warm
+ * call) refuses instead. The five settles were five copies of that shape.
  */
-export async function settleFederalDirectoryRead(): Promise<void> {
-  const edge = currentFederalDirectoryEdge();
-  if (edge) { primeFederalDirectoryFromValue(edge.value, edge.versionId); return; }
-  await refreshFederalDirectoryFromPromoted();
-}
+
+/** The federal directory, edge first. */
+export const settleFederalDirectoryRead = (): Promise<void> =>
+  settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
+
+/** The registry runtime (divisions, bodies, rosters), edge first. */
+const settleRegistryRuntimeRead = (): Promise<void> =>
+  settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
 
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
   scope: "REGISTRY" | "OFFICIALS",
   readers: RegistryAuthorityReaders = {
-    // Reader requests that primed a request-scoped registry-runtime edge value
-    // serve it WITHOUT reading Neon. The standing runner and workers never set
-    // that value, so they fall through to the authoritative database reader —
-    // `refreshRegistryRuntimeFromPromoted` is unchanged.
-    registry: async () => {
-      const edge = currentRegistryRuntimeEdge();
-      if (edge) { primeRegistryRuntimeFromValue(edge.value, edge.versionId); return; }
-      await refreshRegistryRuntimeFromPromoted();
-    },
+    registry: settleRegistryRuntimeRead,
     federal: settleFederalDirectoryRead,
   },
 ): Promise<void> {
@@ -324,24 +374,37 @@ export async function settleRegistryAuthorityReads(
 }
 
 /**
- * The comment-access rules, edge-aware (C20, 2026-09-24): a reader request that
- * entered the reader authority edge primes them from its comment-access artifact
- * without Neon (0.6–0.8 s from a cold database); otherwise the authoritative
- * database read, which the runner and the workers always take.
+ * The comment-access rules, edge first (C20, 2026-09-24): from its
+ * comment-access artifact without Neon (0.6–0.8 s from a cold database).
  */
-export async function settleCommentAccessRead(): Promise<void> {
-  const edge = currentCommentAccessEdge();
-  if (edge) {
-    primeCuratedReaderProjection("comment-access", edge.value, edge.versionId);
-    return;
-  }
-  await refreshCommentAccessFromPromoted();
+export const settleCommentAccessRead = (): Promise<void> =>
+  settleEdgeFirst(currentCommentAccessEdge, (value, versionId) => primeCuratedReaderProjection("comment-access", value, versionId), refreshCommentAccessFromPromoted, "The comment-access rules");
+
+/** The campaign-site URLs, edge first. */
+const settleCampaignSitesRead = (): Promise<void> =>
+  settleEdgeFirst(currentCampaignSitesEdge, (value, versionId) => primeCuratedReaderProjection("campaign-sites", value, versionId), refreshCampaignSitesFromPromoted, "The campaign-site URLs");
+
+/**
+ * **ONE VERSION, ONE KEY, WHICHEVER PATH SERVED IT.** (R30, 2026-09-25.)
+ *
+ * An edge prime records its family as BOOTSTRAP (the serving copy carries the
+ * value and version, not the promotion receipt) and a database read of the
+ * same promoted version records PROMOTED. The cache keys below used to include
+ * that kind, so an instance serving one request from the edge and the next
+ * from the database (a route that does not enter the edge, or a failed edge
+ * fetch) saw two keys for one version and rebuilt the registry and the whole
+ * officeholder graph each time it alternated. The edge copies exactly the
+ * promoted version it names, so a served value is keyed by its version alone;
+ * a first seed carries its own `bootstrap:` version id and stays distinct.
+ */
+export function authorityVersionKey(state: { readonly kind: string; readonly metadata: { readonly versionId: string | null } }): string {
+  const served = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP";
+  return `${served ? "SERVED" : state.kind}:${state.metadata.versionId ?? "none"}`;
 }
 
 async function currentRegistryAuthorityKey(): Promise<string> {
   await settleRegistryAuthorityReads("REGISTRY");
-  const registry = registryRuntimeReadState();
-  return `registry:${registry.kind}:${registry.metadata.versionId ?? "none"}`;
+  return `registry:${authorityVersionKey(registryRuntimeReadState())}`;
 }
 
 async function currentAuthorityKey(registryKey: string): Promise<string> {
@@ -352,13 +415,8 @@ async function currentAuthorityKey(registryKey: string): Promise<string> {
   let campaign = "TEST_FIRST_SEED";
   if (process.env.NODE_ENV === "production") {
     try {
-      // Campaign URLs, edge-aware: a primed request-scoped value serves without
-      // Neon; otherwise the authoritative database read (runner/workers path).
-      const edge = currentCampaignSitesEdge();
-      if (edge) primeCuratedReaderProjection("campaign-sites", edge.value, edge.versionId);
-      else await refreshCampaignSitesFromPromoted();
-      const state = curatedReaderReadState("campaign-sites");
-      campaign = `${state.kind}:${state.metadata.versionId ?? "none"}`;
+      await settleCampaignSitesRead();
+      campaign = authorityVersionKey(curatedReaderReadState("campaign-sites"));
     } catch {
       // Campaign URLs are an optional, separately promoted projection. A
       // store failure withholds those URLs but cannot make the registry,
@@ -366,9 +424,8 @@ async function currentAuthorityKey(registryKey: string): Promise<string> {
       campaign = "UNAVAILABLE";
     }
   }
-  const federal = federalDirectoryReadState();
   return [
-    `federal:${federal.kind}:${federal.metadata.versionId ?? "none"}`,
+    `federal:${authorityVersionKey(federalDirectoryReadState())}`,
     registryKey,
     `campaign:${campaign}`,
   ].join("|");
@@ -416,6 +473,7 @@ async function registrationFor(state: string): Promise<ComposedRegistration | nu
     if (served) return composed(state, base, served.value, served.versionId);
     // The artifact could not be fetched: this state is read from the database, on this request only.
   }
+  refuseDatabaseInEdgeOnlyContext(`The ${state} registration`);
   const read = await readRegistrationProjection(state);
   // No store at all (tests, the census gate, local work) has no registration to compose: registration has
   // no first seed. A configured store that did not answer is a failure.
@@ -640,7 +698,7 @@ export async function seatHoldersForDivision(
   const officialStateScope = officialStateLegislatorScopeForDivision(ocdId);
   if (officialStateScope) {
     try {
-      const held = await heldOfficialStateLegislators(officialStateScope);
+      const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
       if (held) {
         const ids = new Set(held.divisions.filter((row) => row.ocdId === ocdId).map((row) => row.officeholderId));
         return held.seats.filter((holder) => ids.has(holder.id)).sort((a, b) => a.name.localeCompare(b.name));
@@ -684,6 +742,20 @@ export async function seatHoldersForDivision(
    */
   const statewide = stateOcdIdFrom(ocdId) === ocdId ? statewideExecutivesFor([ocdId]) : [];
   return [...holdersFor(officials, ocdId), ...statewide];
+}
+
+/**
+ * `heldOfficialStateLegislators`, edge-first (C21, 2026-09-25): a request that
+ * entered the reader edge reads a district's state legislators from the
+ * state-legislators edge value, as the coverage card already does, so the
+ * district battlecard (`/api/representation`) does not wake the database for
+ * them. Without that scope on the edge it is the same database read as before.
+ */
+async function heldStateLegislatorsEdgeFirst(scope: OfficialStateVoteScope) {
+  const read = await settleStateLegislatorsRead(scope);
+  if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return null;
+  return heldOfficialStateLegislatorsFromRead(scope, read);
 }
 
 /** Exact divisions to which the production federal roster can contribute. */
@@ -732,6 +804,7 @@ const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) 
       detail: `Served from the state-legislators edge artifact (version ${edge.versionId}); the promotion receipt stays on the authoritative database path.`,
     };
   }
+  refuseDatabaseInEdgeOnlyContext(`The ${scope} state legislators`);
   return readOfficialStateLegislatorsProjection(scope);
 };
 
@@ -826,6 +899,18 @@ export async function seatHoldersForOffice(
   }
   const holders = await seatHoldersForDivision(ocdId);
   return holders.filter((h) => officeIdentity(h.officeTitle) === office);
+}
+
+/**
+ * Build the coverage graph (rosters, photos, officeholder indexes) for the
+ * authority this request reads, so a later `coverageAt` finds it held (C21,
+ * 2026-09-25). `/api/meetings` starts it beside its meetings read instead of
+ * after it. Edge-aware like every read here: call it only after the handler
+ * has entered the reader edge, or it settles the authority from the database.
+ * A failure is not held; `coverageAt` then builds, and fails, on its own.
+ */
+export async function prepareCoverage(): Promise<void> {
+  await loaded();
 }
 
 export async function coverageAt(

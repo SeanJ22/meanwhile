@@ -35,9 +35,27 @@ export type FetchLike = (url: string, init: {
   readonly text: () => Promise<string>;
 }>;
 
+/**
+ * Admits one paid provider request, or says why not; `done` returns the slot.
+ * Structurally the discovery walk's `SearchBudget` (discovery/search-runtime.ts),
+ * so the runner hands both callers the one durable budget.
+ */
+export interface ScoutSearchBudget {
+  take(host: string): Promise<string | null>;
+  done(host: string): Promise<void>;
+}
+
 export interface ScoutSearchOptions {
   readonly braveKey?: string | null;
   readonly exaKey?: string | null;
+  /**
+   * REQUIRED (2026-09-25). Every Brave or Exa request is paid, and the owner
+   * governs paid search with his Admin switch and its per-cycle and per-day
+   * caps. Before this the Scout tool was built from the env keys alone and
+   * spent outside both; now each provider request is admitted by this budget
+   * first, and a refused or unreadable budget sends nothing.
+   */
+  readonly budget: ScoutSearchBudget;
   readonly fetchImpl?: FetchLike;
   readonly timeoutMs?: number;
   /** Results requested from each provider before dedupe. */
@@ -48,6 +66,8 @@ export interface ScoutSearchOptions {
 
 const BRAVE_ENDPOINT = "https://api.search.brave.com/res/v1/web/search";
 const EXA_ENDPOINT = "https://api.exa.ai/search";
+/** The budget's host keys; the same hosts the discovery walk's per-day cap is kept under (`SEARCH_HOSTS`). */
+export const SCOUT_SEARCH_HOSTS = { brave: new URL(BRAVE_ENDPOINT).host, exa: new URL(EXA_ENDPOINT).host } as const;
 const DEFAULT_TIMEOUT_MS = 8_000;
 const DEFAULT_PER_PROVIDER = 5;
 const DEFAULT_MAX_HITS = 8;
@@ -134,7 +154,8 @@ export async function exaSearch(
 /**
  * Build the search seam, or null when no provider key is configured (the caller
  * then leaves the `search` tool out of the toolkit entirely — inert, never
- * offered). Both providers are queried when both keys are present; they are
+ * offered). The runner also builds it only while the owner's paid-search switch
+ * is on, and hands it that switch's budget. Both providers are queried when both keys are present; they are
  * complementary (Brave keyword-strong, Exa neural catches different sites), and
  * one erroring never fails the call — its error is named and the other's hits
  * still return.
@@ -153,13 +174,33 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
     if (query === "") {
       return { hits: [], requestCount: 0, bytesFetched: 0, providersUsed: [], errors: ["empty query"] };
     }
-    const jobs: { name: string; run: Promise<{ hits: SearchHit[]; bytes: number }> }[] = [];
-    if (braveKey) jobs.push({ name: "brave", run: braveSearch(query, braveKey, fetchImpl, timeoutMs, perProvider) });
-    if (exaKey) jobs.push({ name: "exa", run: exaSearch(query, exaKey, fetchImpl, timeoutMs, perProvider, input.includeDomains) });
+    const candidates: { name: string; host: string; run: () => Promise<{ hits: SearchHit[]; bytes: number }> }[] = [];
+    if (braveKey) candidates.push({ name: "brave", host: SCOUT_SEARCH_HOSTS.brave, run: () => braveSearch(query, braveKey, fetchImpl, timeoutMs, perProvider) });
+    if (exaKey) candidates.push({ name: "exa", host: SCOUT_SEARCH_HOSTS.exa, run: () => exaSearch(query, exaKey, fetchImpl, timeoutMs, perProvider, input.includeDomains) });
 
-    const settled = await Promise.allSettled(jobs.map((j) => j.run));
     const providersUsed: string[] = [];
     const errors: string[] = [];
+    // Admission is taken one provider at a time, so two requests cannot both
+    // pass the last unit of the per-cycle cap. A budget that throws (its ledger
+    // could not be read) is a refusal: nothing is sent.
+    const jobs: typeof candidates = [];
+    for (const candidate of candidates) {
+      let refused: string | null;
+      try {
+        refused = await options.budget.take(candidate.host);
+      } catch (error) {
+        refused = `the paid-search budget could not be read (${error instanceof Error ? error.message : String(error)})`;
+      }
+      if (refused === null) jobs.push(candidate);
+      else errors.push(`${candidate.name}: not sent, ${refused}`.slice(0, 200));
+    }
+
+    let settled: PromiseSettledResult<{ hits: SearchHit[]; bytes: number }>[];
+    try {
+      settled = await Promise.allSettled(jobs.map((j) => j.run()));
+    } finally {
+      for (const j of jobs) await options.budget.done(j.host);
+    }
     let bytesFetched = 0;
     let requestCount = 0;
     // Interleave provider results so neither dominates the head of the list before dedupe.

@@ -5,9 +5,11 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import registryFile from "../lib/registry/registry.json" with { type: "json" };
+import { loadRegistrationReference, registeredGovernments } from "../lib/registration/reference.ts";
 import {
   SOURCE_WIRING,
   wiringForTypes,
+  type BodySourceWiring,
 } from "../lib/registry/source-wiring.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import {
@@ -38,8 +40,21 @@ const fixture = (name: string) =>
 // name a body the registry actually has. This has failed silently four times
 // in this project; here the denominator prints in the assertion message.
 
+/**
+ * The bodies the committed REGISTRATION reference registers beyond the
+ * reviewed registry, minted exactly as the registration writer mints them
+ * (`registeredGovernments`). The runtime registry is the reviewed registry plus
+ * these, so a wired body outside the frozen registry.json must be one of them.
+ */
+function registeredBodyIds(): Set<string> {
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  return new Set(["az", "nh", "nj"].flatMap((state) => registeredGovernments(loadRegistrationReference(root, state), state).bodies.map((b) => b.id)));
+}
+
 test("every source-wiring row names a real registry body", () => {
-  const bodyIds = new Set(registryFile.bodies.map((b: { id: string }) => b.id));
+  // The frozen reviewed registry, or a body the committed registration
+  // reference registers (Holbrook and Winslow, AZ, 2026-09-25).
+  const bodyIds = new Set([...registryFile.bodies.map((b: { id: string }) => b.id), ...registeredBodyIds()]);
   const missing = SOURCE_WIRING.filter((w) => !bodyIds.has(w.bodyId));
   assert.deepEqual(
     missing.map((w) => w.bodyId),
@@ -435,10 +450,27 @@ test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", 
 });
 
 test("civicweb: Newbury Selectboard names from the cited type map", () => {
+  // The route is retired (2026-09-25: newburynh.civicweb.net no longer
+  // resolves), so the row is no longer wired; the adapter's CivicWeb type-map
+  // path is exercised on the row exactly as it was wired, against its recording.
   const rows = wiringForTypes(["DILIGENT", "CIVICWEB"]);
-  const source = makeDiligentSource(rows);
-  const newbury = rows.find((r) => r.config.slug === "newburynh");
-  assert.ok(newbury);
+  assert.equal(rows.some((r) => r.config.slug === "newburynh"), false, "the retired route is not wired");
+  const newbury: BodySourceWiring = {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "CIVICWEB",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newburynh",
+      serviceBase: "https://newburynh.civicweb.net",
+      meetingPath: "/Portal/MeetingInformation.aspx?Id=",
+      "typeName:10": "Selectboard",
+    },
+    verifiedAt: "2026-08-13",
+  };
+  const source = makeDiligentSource([...rows, newbury]);
 
   const raw = [
     {

@@ -519,9 +519,12 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (!rosterReaderDispositions.length) issues.push("ROSTER_DISPOSITIONS_EMPTY");
   if (duplicate(dispositionIds)) issues.push("ROSTER_DISPOSITION_ID_INVALID_OR_DUPLICATED");
   const eligibleDispositions = rosterReaderDispositions.filter((row) => row.state === "READER_ELIGIBLE");
-  if (eligibleDispositions.some((row) => row.canonicalId !== row.sourceId || !memberIds.includes(row.sourceId))) issues.push("ROSTER_ELIGIBLE_DISPOSITION_UNRESOLVED");
-  if (memberIds.some((id) => !eligibleDispositions.some((row) => row.sourceId === id))) issues.push("ROSTER_MEMBER_DISPOSITION_MISSING");
-  if (rosterReaderDispositions.some((row) => row.state === "EXACT_DUPLICATE" && (!row.canonicalId || !memberIds.includes(row.canonicalId)))) issues.push("ROSTER_DUPLICATE_CANONICAL_ID_UNRESOLVED");
+  // Membership is asked of Sets, not arrays (C21): the same answers, without walking every member once per row.
+  const memberIdSet = new Set(memberIds);
+  const eligibleSourceIds = new Set(eligibleDispositions.map((row) => row.sourceId));
+  if (eligibleDispositions.some((row) => row.canonicalId !== row.sourceId || !memberIdSet.has(row.sourceId))) issues.push("ROSTER_ELIGIBLE_DISPOSITION_UNRESOLVED");
+  if (memberIds.some((id) => !eligibleSourceIds.has(id))) issues.push("ROSTER_MEMBER_DISPOSITION_MISSING");
+  if (rosterReaderDispositions.some((row) => row.state === "EXACT_DUPLICATE" && (!row.canonicalId || !memberIdSet.has(row.canonicalId)))) issues.push("ROSTER_DUPLICATE_CANONICAL_ID_UNRESOLVED");
   if (rosterReaderDispositions.some((row) => row.state === "IDENTITY_UNRESOLVED" && row.canonicalId !== null)) issues.push("ROSTER_UNRESOLVED_DISPOSITION_HAS_CANONICAL_ID");
   const executiveIds = statewideExecutives.map((row) => row.holder.id);
   if (!statewideExecutives.length) issues.push("STATEWIDE_EXECUTIVES_EMPTY");
@@ -553,8 +556,9 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
     : row.candidacy !== null)) issues.push("OFFICIAL_CANDIDACY_STATUS_PAYLOAD_INVALID");
   if (duplicate(bridgeRows.filter((row) => row.status === "RESOLVED").map((row) => row.candidacy?.candidacyId ?? ""))) issues.push("OFFICIAL_CANDIDACY_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => row.status === "IDENTITY_UNRESOLVED" ? !row.unresolvedCandidacyIds.length : row.unresolvedCandidacyIds.length > 0)) issues.push("OFFICIAL_CANDIDACY_UNRESOLVED_SET_INVALID");
-  if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_BODY_ROSTER" && !memberIds.includes(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_BODY_HOLDER_UNRESOLVED");
-  if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" && !executiveIds.includes(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_UNRESOLVED");
+  const executiveIdSet = new Set(executiveIds);
+  if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_BODY_ROSTER" && !memberIdSet.has(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_BODY_HOLDER_UNRESOLVED");
+  if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" && !executiveIdSet.has(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_UNRESOLVED");
   if (memberIds.some((id) => !bridgeHolderIds.has(id))) issues.push("OFFICIAL_CANDIDACY_BODY_HOLDER_MISSING");
   if (executiveIds.some((id) => !bridgeHolderIds.has(id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_MISSING");
   if (bridgeRows.some((row) => {

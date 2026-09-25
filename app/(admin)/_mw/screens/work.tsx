@@ -24,7 +24,7 @@ import type { ReactNode } from "react";
 import { readDigests, readFleetSafety, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
-import { buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
+import { askGapCountWords, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import {
   instructionKey,
@@ -41,6 +41,8 @@ import {
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
+import { isAssignmentCycleReading } from "@/lib/control-plane/expansion/assignment-budget.ts";
+import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
@@ -49,6 +51,8 @@ import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { PILOT_ZIPS } from "@/lib/health/owner-corpus-compile.ts";
 import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
 import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
+import { WORK_QUESTION_WORDS } from "@/lib/control-plane/work-question.ts";
+import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-reading.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
@@ -58,6 +62,7 @@ import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
 import { REGISTERED_STATE_CODES, stateName } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
+import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
 import { withScope, type MwArea } from "../scope.ts";
@@ -141,6 +146,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const lane = paidLaneOf(research);
   const expansionRaw: unknown = research ? (research as { expansion?: unknown }).expansion : null;
   const reading = isExpansionCycleReading(expansionRaw) ? expansionRaw : null;
+  /* MW-001/MW-021: each instruction as the runner read it from the work itself, with its own budget. */
+  const assignmentsRaw: unknown = research ? (research as { assignments?: unknown }).assignments : null;
+  const sends = isAssignmentCycleReading(assignmentsRaw) ? assignmentsRaw : null;
   const pause = heartbeatOut.kind === "HELD" ? (heartbeatOut.value as { pause?: { since?: string | null } | null }).pause ?? null : null;
 
   const published = snapshotOut.kind === "HELD" ? snapshotOut.value.assignments ?? null : null;
@@ -159,6 +167,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       totalAssignments: view?.summary.total ?? null,
       paidLaneClosedBecause: lane.open ? null : lane.closedBecause,
       runnerPaused: pause ? { since: pause.since ?? null } : null,
+      assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
+      assignmentAt: sends?.at ?? null,
+      dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),
     }),
   );
 
@@ -180,7 +191,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
         const row = buildAssignments(read.value, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
-          ? { kind: "DETAIL", id: openId, detail: standingDetail(row), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
+          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
           : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
       } else opened = { kind: "MISSING", id: openId, says: read.detail };
     }
@@ -193,23 +204,34 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     return { state, listed, total };
   }).filter((g) => g.total > 0 || g.listed.length > 0);
   const routineGroups = (["STUCK", "NEEDS ATTENTION", "WORKING", "NOT READ YET"] as const).map((st) => ({ st, bodies: inScopeBodies.filter((b) => b.status === st) })).filter((g) => g.bodies.length > 0);
+  /* Every card the lists below draw, so an opened row they do not draw is still drawn once. */
+  const drawnIds = new Set<string>([
+    ...(view === null ? [] : groups.filter((g) => show === null || show === g.state).flatMap((g) => (show === g.state ? g.listed : g.listed.slice(0, FIRST_PER_GROUP)).map((r) => r.id))),
+    ...routineGroups.flatMap((g) => g.bodies.slice(0, show === `routine-${g.st}` ? g.bodies.length : FIRST_PER_GROUP).flatMap((b) => b.contractIds.map((cid) => `routine:${cid}`))),
+  ]);
 
   const numbers: RenderedNumber[] = [];
   const claims: CountClaim[] = [{ label: "your instructions", stated: base.selected.length, rendered: instructions.length }];
   if (view) {
     numbers.push({ label: "assignments listed", value: rows.length, denominator: view.summary.total, contract: "rows the published assignment list carries, of every assignment the control plane holds" });
+    if (view.summary.askGaps?.held) {
+      for (const c of view.summary.askGaps.value.byCode) numbers.push({ label: `open Ask gaps · ${c.code}`, value: c.count.value, denominator: c.count.denominator, contract: c.count.contract });
+    }
     for (const g of groups) claims.push({ label: `listed ${g.state}`, stated: g.listed.length, rendered: g.listed.length });
   }
   const na = auditRenderedNumbers(numbers);
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
-  /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — registered ones first. */
+  /*
+   * Every state and territory can be chosen — the Census lookup behind the geographies covers them all — the ones
+   * with a reviewed registry first. Every other one is registered too: a Send there reads its registration (2026-09-25).
+   */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
   const composerStates = [
     ...REGISTERED_STATE_CODES.map((code) => ({ code, name: stateName(code) })),
-    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — nothing registered` })),
+    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — from registration` })),
   ];
   const selected: Record<string, { priority: number; budgetUsd: number }> = {};
   for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
@@ -275,8 +297,17 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           {instructions.length === 0 ? (
             <p className={s.note}>You have not sent any. The runner works through the standing work below in its own order until you do.</p>
           ) : (
-            instructions.map((i) => card(i.card, opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? <InstructionDetail view={i} /> : null))
+            instructions.map((i) =>
+              card(
+                i.card,
+                opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? (
+                  <InstructionDetail view={i} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
+                ) : null,
+              ),
+            )
           )}
+          {/* A piece of work opened from an instruction (or from Money) that the list below does not draw is drawn here, whole. */}
+          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} says={opened.says} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
             Standing work the system owes{view ? ` — ${view.summary.total.toLocaleString("en-US")}` : ""}
@@ -290,6 +321,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               <p className={s.note}>
                 {view!.selection.rule} {view!.selection.omitted > 0 ? `${view!.selection.omitted.toLocaleString("en-US")} rows are not carried on the published list; each group says how many it holds.` : ""}
               </p>
+              <p className={s.note}>{askGapCountWords(view!)}</p>
               <div className={s.rowCenter} style={{ gap: 8 }}>
                 {groups.map((g) => (
                   <Link key={g.state} href={`${here({ show: show === g.state ? null : g.state, open: null })}#assignments`} className={`${s.chip} ${show === g.state ? s.chipOn : ""}`}>
@@ -346,6 +378,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           )}
         </div>
       )}
+      {/* The lane gauges, drawn from the research state read above and refreshed from the pulse while the page is visible (MW-071). */}
+      {props.area === "fleet" && <LaneStrip initial={pulseLanesOf(research)} />}
       {/* The runner is not drawn in the design; it follows the design's own sections so Work leads with the instruction, as the design does. */}
       {props.area === "fleet" && (
         <RunnerCard
@@ -355,6 +389,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           digest={digestsOut && digestsOut.kind === "HELD" && digestsOut.value.length > 0 ? digestsOut.value[0] : null}
           digestNote={digestsOut && digestsOut.kind !== "HELD" ? digestsOut.detail : null}
           returnTo={base.here}
+          lanes={queueLanesOf(research)}
         />
       )}
       {props.area === "fleet" && (
@@ -368,8 +403,19 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view }: { view: InstructionView }) {
+function InstructionDetail({ view, openHref }: { view: InstructionView; openHref: (id: string) => string }) {
   const d = view.decision;
+  const r = view.reach;
+  const links = (ids: readonly string[], more: number) => (
+    <div className={s.stack2}>
+      {ids.map((id) => (
+        <Link key={id} href={openHref(id)} className={s.btnLink} scroll={false}>
+          {id}
+        </Link>
+      ))}
+      {more > 0 && <span className={s.note}>and {more.toLocaleString("en-US")} more, not listed here</span>}
+    </div>
+  );
   return (
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
@@ -394,7 +440,46 @@ function InstructionDetail({ view }: { view: InstructionView }) {
           </span>
           <Pill tone="slate">PRIORITY {d.priority}</Pill>
         </div>
-        <p className={s.note}>No requirement instance is recorded against an assignment yet (MW-063); the geography is what it is for.</p>
+        {(d.questions ?? []).map((q) => (
+          <div key={q} className={s.insetRow}>
+            <span className={s.monoId}>{q}</span>
+            <span className={`${s.text14} ${s.grow}`}>{WORK_QUESTION_WORDS[q]}</span>
+            <Pill tone="teal">YOUR QUESTION</Pill>
+          </div>
+        ))}
+        <p className={s.note}>
+          {(d.questions ?? []).length > 0
+            ? "Your questions are kept on the instruction and on every piece of work it reaches. They say what it is for; they do not yet change how the work runs."
+            : "You asked no question of it — or sent it before questions were kept. The geography is what it is for."}
+        </p>
+      </div>
+      <h4 className={s.h4}>What it reached</h4>
+      <div style={{ marginBottom: 24 }}>
+        {r === null ? (
+          <p className={s.note}>{view.reachWhyNot}</p>
+        ) : (
+          <>
+            <p className={s.note} style={{ marginBottom: 12 }}>
+              {r.says}
+            </p>
+            <div className={s.gridAuto240} style={{ gap: 12 }}>
+              <div className={s.inset}>
+                <div className={s.row10} style={{ marginBottom: 8 }}>
+                  <span className={s.name14}>Created by it</span>
+                  <Pill tone="cyan">{r.created.toLocaleString("en-US")}</Pill>
+                </div>
+                {r.created === 0 ? <p className={s.note}>Nothing yet.</p> : links(r.createdIds, r.createdMore)}
+              </div>
+              <div className={s.inset}>
+                <div className={s.row10} style={{ marginBottom: 8 }}>
+                  <span className={s.name14}>Put first by it</span>
+                  <Pill tone="slate">{r.reordered.toLocaleString("en-US")}</Pill>
+                </div>
+                {r.reordered === 0 ? <p className={s.note}>Nothing recorded yet.</p> : links(r.reorderedIds, r.reorderedMore)}
+              </div>
+            </div>
+          </>
+        )}
       </div>
       {view.lanes.length > 0 && (
         <>
@@ -416,10 +501,26 @@ function InstructionDetail({ view }: { view: InstructionView }) {
         </>
       )}
       <h4 className={s.h4}>What it has spent</h4>
+      {view.budget ? (
+        <div className={s.inset} style={{ marginBottom: 12 }}>
+          <KV tight rows={view.budget.rows} />
+          <p className={s.note} style={{ marginTop: 10 }}>
+            {view.budget.says}
+          </p>
+        </div>
+      ) : (
+        <p className={s.note} style={{ marginBottom: 12 }}>
+          This instruction&rsquo;s own budget is not read yet: the runner has not recorded what it spent, held and has left.
+        </p>
+      )}
       <p className={s.note} style={{ marginBottom: 24 }}>
         {view.spend}.
       </p>
       <h4 className={s.h4}>Where it got to</h4>
+      <p className={s.note} style={{ marginBottom: 6 }}>
+        Joined by place, not read from the work: standing work about governments in this geography. It covers work recorded before instructions were kept on the work,
+        and it is not the same as what this instruction reached.
+      </p>
       {view.inScope ? (
         <p className={s.note}>
           {view.inScope.inScope} listed {view.inScope.inScope === 1 ? "assignment is" : "assignments are"} about governments here
@@ -529,7 +630,7 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
           </p>
           <div className={s.stack10}>
             {detail.unsettled.map((u) => (
-              <DeadEnd key={`${u.pill}-${u.title}`} flush d={{ pill: u.pill, title: u.title, ruledOut: u.ruledOut, wouldSettle: u.wouldSettle, whoMoves: u.whoMoves }} />
+              <DeadEnd key={`${u.pill}-${u.title}`} flush d={{ pill: u.pill, title: u.title, ruledOut: u.ruledOut, wouldSettle: u.wouldSettle, whoMoves: u.whoMoves, gaps: u.gaps }} />
             ))}
           </div>
         </div>

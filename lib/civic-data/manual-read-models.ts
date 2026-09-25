@@ -12,6 +12,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
+import { refreshDerivedCampaignSites } from "./derived-campaign-sites.ts";
 import type {
   AzBallotProjection,
   CandidateProfilesProjection,
@@ -203,8 +204,15 @@ export async function readCandidateCorpusProjection(options: PromotedCivicDataRe
   return corpusState;
 }
 
+/**
+ * The profile Reader's preload. It also reads the verified campaign sites the
+ * standing runner publishes (`derived-campaign-sites.ts`), in their own failure
+ * domain: that read never fails or delays the profiles it accompanies, and the
+ * Reader composes the two (`lib/ballot/candidate-sites.ts`).
+ */
 export async function refreshCandidateProfilesFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  return promotedVersionOrThrow(await readCandidateProfilesProjection(options));
+  const [profiles] = await Promise.all([readCandidateProfilesProjection(options), refreshDerivedCampaignSites(options)]);
+  return promotedVersionOrThrow(profiles);
 }
 
 export async function refreshCandidateCorpusFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {

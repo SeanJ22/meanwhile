@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { AgendaDocumentStore, type AgendaDocument } from "../lib/meetings/agenda-documents.ts";
+import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { documentUrlFor, isAnotherPublishersNoticePage, seedHeldAgendaDocuments } from "../scripts/ingest.ts";
+import { documentUrlFor, heldNoticePageIsNotItsAgenda, seedHeldAgendaDocuments } from "../scripts/ingest.ts";
 
 /**
  * **A SITTING IS NEVER LENT ANOTHER PUBLISHER'S NOTICE PAGE.** (2026-09-24.)
@@ -30,10 +32,12 @@ const NEWBURY = "ocd-division/country:us/state:nh/county:merrimack/place:newbury
 const BRADFORD = "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 
-function sitting(id: string, ocdId: string, bodyName: string, sourceOrg: string, agendaUrl: string | null = null): Meeting {
+/** Production sittings carry their body id (NH-RC4); these carry the ones production's did. */
+function sitting(id: string, ocdId: string, bodyName: string, sourceOrg: string, agendaUrl: string | null = null, slot = bodyName.toLowerCase().replace(/\s+/g, "-")): Meeting {
   return {
     id,
     ocdId,
+    bodyId: `${ocdId}#${slot}`,
     bodyName,
     title: bodyName,
     startsAt: "2026-10-13T19:00:00-04:00",
@@ -52,7 +56,7 @@ const newburyConservation = sitting(
   "schedulepage:newbury-conservation-commission:2026-10-15",
   NEWBURY, "Conservation Commission", "Newbury Conservation Commission",
 );
-const pimaStudySession = sitting("legistar-insite:pima:1381578", PIMA, "Board of Supervisors", "Pima County Clerk of the Board");
+const pimaStudySession = sitting("legistar-insite:pima:1381578", PIMA, "Board of Supervisors", "Pima County Clerk of the Board", null, "governing");
 const lakeTodd = sitting("ical:lake-todd-village-district-newbury:2026-10-10", NEWBURY, "Lake Todd Village District", "Town of Bradford");
 const bradfordSelectBoard = sitting("ical:bradford-select-board:2026-10-06", BRADFORD, "Select Board", "Town of Bradford");
 const bradfordUnwiredBody = sitting("ical:bradford-other:2026-10-07", BRADFORD, "Heritage Commission", "Town of Bradford");
@@ -75,14 +79,73 @@ test("a body's own notice page, and its own publisher's shared page, still reach
   assert.equal(documentUrlFor(linked), linked.agendaUrl, "an agenda link is never replaced");
 });
 
-test("a lent page is recognized as another publisher's; a sitting's own link never is", () => {
-  assert.equal(isAnotherPublishersNoticePage(newburyPlanning, BRADFORD_CALENDAR), true);
-  assert.equal(isAnotherPublishersNoticePage(pimaStudySession, CAP_BOARD_PAGE), true);
-  assert.equal(isAnotherPublishersNoticePage(lakeTodd, BRADFORD_CALENDAR), false);
-  assert.equal(isAnotherPublishersNoticePage(bradfordUnwiredBody, BRADFORD_CALENDAR), false);
-  assert.equal(isAnotherPublishersNoticePage(newburyPlanning, "https://www.newbury.nh.gov/some-agenda.pdf"), false, "not a notice page");
+/** The ownership question the ingest asks, in the one form every reader surface asks it (R14). */
+const anotherBodys = (meeting: Meeting, url: string) =>
+  isAnotherBodysNoticePage(url, { bodyId: meeting.bodyId, publisher: meeting.provenance.sourceOrg });
+
+test("a lent page is recognized as another body's; a sitting's own link never is", () => {
+  assert.equal(anotherBodys(newburyPlanning, BRADFORD_CALENDAR), true);
+  assert.equal(anotherBodys(pimaStudySession, CAP_BOARD_PAGE), true);
+  assert.equal(anotherBodys(lakeTodd, BRADFORD_CALENDAR), false);
+  assert.equal(anotherBodys(bradfordUnwiredBody, BRADFORD_CALENDAR), false, "one town, one calendar: its publisher's page");
+  assert.equal(anotherBodys(newburyPlanning, "https://www.newbury.nh.gov/some-agenda.pdf"), false, "not a notice page");
+  // The sitting's own agenda link is decided before ownership, and never set aside.
   const ownLink = sitting(newburyPlanning.id, NEWBURY, "Planning Board", "Town of Newbury", BRADFORD_CALENDAR);
-  assert.equal(isAnotherPublishersNoticePage(ownLink, BRADFORD_CALENDAR), false, "the sitting's own agenda link");
+  assert.equal(heldNoticePageIsNotItsAgenda(ownLink, { documentUrl: BRADFORD_CALENDAR, text: "Calendar" }), false, "the sitting's own agenda link");
+  const scriptSource = readFileSync(new URL("../scripts/ingest.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(scriptSource, /function isAnotherPublishersNoticePage/, "one ownership rule, not a second copy in the ingest");
+});
+
+/*
+ * R14 (2026-09-25): the ingest's own publisher-only copy called Tucson
+ * Unified's board page "another's" — the board's sittings are published as
+ * "Tucson Unified School District", its wiring row as "… Governing Board" —
+ * so a notice the board posted with agenda items was set aside unread.
+ */
+const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
+const TUSD_BOARD_PAGE = "https://govboard.tusd1.org/";
+const tusdSpecial = sitting("diligent:tusd1:510", TUSD, "Governing Board", "Tucson Unified School District", null, "board");
+
+test("R14: Tucson Unified's own notice page is its own, whichever publisher name its sittings carry", () => {
+  assert.equal(anotherBodys(tusdSpecial, TUSD_BOARD_PAGE), false);
+  const notice = "Special Meeting of the Governing Board 1. Call to order. 2. Public hearing on the Palo Verde ITM. 3. Adjournment.";
+  assert.equal(
+    heldNoticePageIsNotItsAgenda(tusdSpecial, { documentUrl: TUSD_BOARD_PAGE, text: notice }),
+    false,
+    "a notice the board posted with agenda items is the sitting's agenda",
+  );
+  assert.equal(
+    heldNoticePageIsNotItsAgenda(tusdSpecial, { documentUrl: TUSD_BOARD_PAGE, text: "Governing Board Members Meeting Schedule" }),
+    true,
+    "its page stating no agenda item is still not an agenda",
+  );
+  assert.equal(
+    heldNoticePageIsNotItsAgenda({ ...tusdSpecial, bodyId: undefined }, { documentUrl: TUSD_BOARD_PAGE, text: "Governing Board Members Meeting Schedule" }),
+    true,
+    "an unknown body is never called another's, and the page still states no item",
+  );
+});
+
+test("R14: every held production case keeps its answer — each is set aside as before", () => {
+  const heldPages = JSON.parse(readFileSync(new URL("./fixtures/notice-pages-held-2026-09-24.json", import.meta.url), "utf8")) as {
+    cap: { url: string; text: string };
+    mesa: { url: string; text: string };
+  };
+  const newburyHeld = JSON.parse(readFileSync(new URL("./fixtures/newbury-selectboard-held-2026-09-24.json", import.meta.url), "utf8")) as {
+    calendar: { url: string; text: string };
+  };
+  const mesaCouncil = sitting("legistar-insite:mesa:1343183", "ocd-division/country:us/state:az/place:mesa", "City Council", "City of Mesa", null, "governing");
+  const newburySelectboard = sitting("ical:newbury-ical-governing:calendar.42961", NEWBURY, "Selectboard", "Town of Newbury", null, "governing");
+  const cases: [string, Meeting, { documentUrl: string; text: string }][] = [
+    ["CAP's page held for a Pima Board sitting", pimaStudySession, { documentUrl: heldPages.cap.url, text: heldPages.cap.text }],
+    ["Mesa's council page held for a council sitting", mesaCouncil, { documentUrl: heldPages.mesa.url, text: heldPages.mesa.text }],
+    ["Bradford's calendar held for a Newbury Selectboard sitting", newburySelectboard, { documentUrl: newburyHeld.calendar.url, text: newburyHeld.calendar.text }],
+    ["Bradford's calendar held for a Newbury Planning Board sitting", newburyPlanning, { documentUrl: BRADFORD_CALENDAR, text: newburyHeld.calendar.text }],
+    ["Bradford's calendar held for Lake Todd", lakeTodd, { documentUrl: BRADFORD_CALENDAR, text: newburyHeld.calendar.text }],
+  ];
+  for (const [label, meeting, doc] of cases) {
+    assert.equal(heldNoticePageIsNotItsAgenda(meeting, doc), true, label);
+  }
 });
 
 test("held notice pages that are not their sitting's agenda are left out of the run's store", () => {

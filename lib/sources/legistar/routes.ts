@@ -300,15 +300,20 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
   {
     id: "INSITE_ACCESSIBLE_MINUTES",
     routeClass: "MINUTES",
-    transport: "HTML",
-    urlShape: "https://{insiteHost}/View.ashx?M=M&ID={eventId}&GUID={guid}",
+    transport: "PDF",
+    urlShape: "https://{insiteHost}/View.ashx?M=M&ID={portalId}&GUID={guid}",
     bears: ["NARRATIVE_MINUTES", "ACTION_TAKEN", "PERSON_VOTE"],
-    disposition: "REQUIRES_NEW_ADAPTER",
+    disposition: "WALKED",
     note:
-      "The accessible minutes rendering, again on the permitted portal host rather " +
-      "than the disallowed document host. The only route in this portfolio that " +
-      "could bear PERSON_VOTE for a body whose clerk does not enter roll calls into " +
-      "the vendor's vote table — which is 108 acted Pima items in four months.",
+      "The minutes on the permitted portal host rather than the disallowed document " +
+      "host, linked from the calendar grid's minutes cell ({portalId} is the portal's " +
+      "own sitting id). `M=M` answers 200 application/pdf (Mesa, 2026-09-25); the " +
+      "grid's accessible-minutes HTML cell is read first when a tenant publishes it, " +
+      "and Mesa published it on none of 163 rows. WALKED for Mesa (NH332, " +
+      "scripts/legistar-insite-minutes-ingest.mts, lib/sources/legistar-insite/minutes.ts): " +
+      "each motion, its mover and seconder, the clerk's AYES/NAYS tabulation and the " +
+      "chair's result. The tabulation names members by surname and is held as the " +
+      "clerk's text; it is not yet turned into per-member roll-call records.",
   },
   {
     id: "INSITE_LEGISLATION_DETAIL",
@@ -493,10 +498,11 @@ export function routesStillWorthAsking(
  * as an absence, pointed the other way: an unbuilt route is a gap in US, and a
  * gap in us cannot be counted as coverage.
  *
- * Not an error — PERSON_VOTE is genuinely single-routed today on every tenant
- * whose minutes sit behind the disallowed host — but a thing a session should be
- * able to SEE, because a singly routed fact is one vendor change away from being
- * an unexplained absence.
+ * Not an error, but a thing a session should be able to SEE, because a singly
+ * routed fact is one vendor change away from being an unexplained absence.
+ * PERSON_VOTE was singly routed until the portal minutes route was walked for
+ * Mesa (NH332, 2026-09-25); that route carries it as the clerk's AYES/NAYS text,
+ * held verbatim and not yet turned into per-member records.
  */
 export function singlyRoutedFacts(): readonly LegistarFactClass[] {
   return LEGISTAR_FACT_CLASSES.filter(

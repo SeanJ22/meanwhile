@@ -11,6 +11,9 @@ import {
   type BindableEntity,
 } from "../lib/routing/named-entity.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
+import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import { snapshotEntities } from "../lib/ask/inventory.ts";
+import { resolveInterpretation } from "../lib/ask/resolve.ts";
 
 /**
  * **A CONTEXT DEFAULT MAY NOT OVERRIDE AN EXPLICITLY NAMED ENTITY.**
@@ -502,4 +505,64 @@ test("the ambiguous sentence asks for something the product actually does", asyn
     "the sentence tells the reader to say which kind, and saying it must resolve the tie",
   );
   if (disambiguated.kind === "BOUND") assert.equal(disambiguated.entity.id, "vail-sd");
+});
+
+/* ───────────── R12: a topic word is not a body's name (2026-09-25) ────────── */
+
+/*
+ * "What is Tucson doing about housing?" bound Tucson's Public Housing Authority
+ * Board of Commissioners over Mayor and Council: the authority's own name
+ * identifies it only by "housing", `nameAReaderCanSay` qualifies it with
+ * "Tucson", and the whole-question tier ranked tucson+housing (two identifying
+ * words) over tucson (one). Run against the Ask inventory builder and the
+ * registry's own names, so the qualified name is the one the route binds on.
+ */
+const TUCSON = "ocd-division/country:us/state:az/place:tucson";
+const TUCSON_PHA = `${TUCSON}#public-housing-authority`;
+const NO_INTERPRETATION = { entityMentions: [], normalizedMentions: [] } as unknown as Parameters<typeof resolveInterpretation>[0];
+
+function tucsonAskInventory(): BindableEntity[] {
+  return snapshotEntities(
+    [
+      { bodyId: `${TUCSON}#governing`, ocdId: TUCSON },
+      { bodyId: TUCSON_PHA, ocdId: TUCSON },
+      { bodyId: `${TUCSON}#tucson-parks-and-recreation-commission`, ocdId: TUCSON },
+    ],
+    (bodyId) => canonicalBodyIdentity(bodyId),
+  );
+}
+
+test("R12: a topic word does not bind the body named for it; the question stays about the city", () => {
+  const entities = tucsonAskInventory();
+  const pha = entities.find((e) => e.id === TUCSON_PHA);
+  assert.ok(pha && /^Tucson .*Housing Authority/.test(pha.name), `precondition: the authority is named "${pha?.name}" for a reader`);
+
+  const housing = resolveInterpretation(NO_INTERPRETATION, "What is Tucson doing about housing?", entities);
+  assert.notEqual(
+    housing.binding.kind === "BOUND" ? housing.binding.entity.id : null,
+    TUCSON_PHA,
+    "the reader named a city and asked about a subject; they did not name the housing authority",
+  );
+  /* THE PROOF, as for Vail: deleting the topic word changes nothing. */
+  const without = resolveInterpretation(NO_INTERPRETATION, "What is Tucson doing?", entities);
+  assert.deepEqual(housing.binding, without.binding);
+  assert.equal(housing.binding.kind, "BOUND");
+  if (housing.binding.kind === "BOUND") assert.equal(housing.binding.entity.id, `${TUCSON}#governing`);
+});
+
+test("R12: saying what kind of body it is still names the authority", () => {
+  const entities = tucsonAskInventory();
+  for (const question of [
+    "Tucson Housing Authority",
+    "What is the Tucson Public Housing Authority doing?",
+    "tucson housing board of commissioners",
+  ]) {
+    const bound = bindNamedEntity(question, entities);
+    assert.equal(bound.kind, "BOUND", question);
+    if (bound.kind === "BOUND") assert.equal(bound.entity.id, TUCSON_PHA, question);
+  }
+  /* A name with an identifying word of its own past the topic word is untouched. */
+  const parks = bindNamedEntity("tucson parks and recreation", entities);
+  assert.equal(parks.kind, "BOUND");
+  if (parks.kind === "BOUND") assert.equal(parks.entity.id, `${TUCSON}#tucson-parks-and-recreation-commission`);
 });

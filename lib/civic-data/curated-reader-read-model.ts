@@ -7,6 +7,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
+import { validateOnce } from "./validated-once.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
@@ -84,7 +85,8 @@ export function primeCuratedReaderProjection(
   value: CuratedReaderProjection,
   versionId: string,
 ): void {
-  validate(id, value, versionId);
+  // Once per edge object and version (C21): a request primes the same value repeatedly.
+  validateOnce(id, value, versionId, () => validate(id, value, versionId));
   const contract = requiredManualProductionContract(id);
   states.set(id, {
     kind: "BOOTSTRAP",

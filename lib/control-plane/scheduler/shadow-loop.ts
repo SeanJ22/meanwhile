@@ -34,6 +34,7 @@
 
 import {
   aggregateIncidents,
+  debtCauseForDisposition,
   recordFailure,
   retryable,
   stalenessRisk,
@@ -267,16 +268,41 @@ export type PrewarmOutcome =
       readonly usd: number | null;
       readonly durationMs: number;
     }
-  | { readonly status: "FAILED"; readonly at: string; readonly detail: string; readonly durationMs: number };
+  | { readonly status: "FAILED"; readonly at: string; readonly detail: string; readonly durationMs: number }
+  /* MW-033 (2026-09-25): no paid call was made — the loop's start model's prefix could not be shown to reach its cacheable minimum. */
+  | { readonly status: "SKIPPED"; readonly at: string; readonly model: string; readonly code: string; readonly detail: string; readonly durationMs: number };
 
+/**
+ * **EVERY DUE ROW IS ACCOUNTED FOR, BY LANE.** (MW-014, MW-029, 2026-09-25.)
+ *
+ * Each due row a lane holds ends the cycle in exactly one place: dispatched,
+ * deferred under one code, or recovered with a disposition an interrupted
+ * cycle already committed. So `dispatched + Σ deferredBy + recovered = due`
+ * for each lane, and a reader of the counts can check it rather than trust it.
+ * `oldestWaitingDueAt` is the earliest next-due among the rows the lane did not
+ * reach — how long the oldest waiting work has been owed.
+ */
 export interface LaneCounts {
-  readonly deterministic: { readonly due: number; readonly dispatched: number };
+  readonly deterministic: {
+    readonly due: number;
+    readonly dispatched: number;
+    /** Deferral counts by code (NO_OPEN_OCCURRENCE, BUDGET, DISPATCH_CEILING, an aggregate admission code). */
+    readonly deferredBy: Readonly<Record<string, number>>;
+    /** Rows recovered with an already-committed disposition: neither dispatched nor deferred. */
+    readonly recovered: number;
+    /** The earliest next-due among the deferred rows; null when none was deferred. */
+    readonly oldestWaitingDueAt: string | null;
+  };
   readonly model: {
     readonly due: number;
     readonly dispatched: number;
     readonly deferred: number;
     /** Deferral counts by the admit code, so a cap reads as a cap and a pause as a pause. */
     readonly deferredBy: Readonly<Record<string, number>>;
+    /** Rows recovered with an already-committed disposition: neither dispatched nor deferred. */
+    readonly recovered: number;
+    /** The earliest next-due among the deferred rows; null when none was deferred. */
+    readonly oldestWaitingDueAt: string | null;
     /** The cycle's pre-warm, when a Scout was admitted and the lane has one. Null when no Scout was admitted. */
     readonly prewarm?: PrewarmOutcome | null;
   };
@@ -441,7 +467,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       row.obligation.id,
       recordFailure(debtsById.get(row.obligation.id) ?? null, {
         obligationId: row.obligation.id,
-        cause: "REFUSED_BY_HOST",
+        cause: debtCauseForDisposition(settled.disposition.disposition),
         detail: settledUnresolvedReason(settled.disposition),
         target: row.obligation.routeId ?? row.obligation.subjectId,
         dueAt: row.nextDueAt,
@@ -526,7 +552,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             result.outcome === "NO_ROUTE_TASK"
               ? "NEVER_DISPATCHED"
               : result.dispositionCommitted
-                ? "REFUSED_BY_HOST"
+                ? debtCauseForDisposition(result.disposition ?? "")
                 : "UPSTREAM_ERROR",
           detail: result.dispositionCommitted
             ? `the route was disposed ${result.disposition}, which closes the RouteTask and is ` +
@@ -646,15 +672,34 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const deferredBy: Record<string, number> = {};
   let modelDispatched = 0;
   let modelDeferred = 0;
+  let modelRecovered = 0;
+  let modelOldestWaiting: string | null = null;
+  const deterministicDeferredBy: Record<string, number> = {};
+  let deterministicDispatched = 0;
+  let deterministicRecovered = 0;
+  let deterministicOldestWaiting: string | null = null;
+  const earlier = (held: string | null, row: ScheduledObligation): string =>
+    held === null || row.nextDueAt < held ? row.nextDueAt : held;
+  /* The deterministic lane's one deferral tally: every hold below names its code here, so its reasons sum. */
+  const holdDeterministic = (row: ScheduledObligation, code: string): void => {
+    deterministicDeferredBy[code] = (deterministicDeferredBy[code] ?? 0) + 1;
+    deterministicOldestWaiting = earlier(deterministicOldestWaiting, row);
+  };
+  const holdModel = (row: ScheduledObligation, code: string): void => {
+    modelDeferred += 1;
+    deferredBy[code] = (deferredBy[code] ?? 0) + 1;
+    modelOldestWaiting = earlier(modelOldestWaiting, row);
+  };
 
-  const aggregateAdmits = (row: ScheduledObligation): boolean => {
+  /** The admission's code when it refused, so each lane counts the refusal under the code that made it; null when admitted. */
+  const aggregateRefusal = (row: ScheduledObligation): string | null => {
     const admission = input.admitDispatch?.(row) ?? { admit: true as const };
-    if (admission.admit) return true;
+    if (admission.admit) return null;
     deferred.push({
       obligationId: row.obligation.id,
       why: `${admission.code}: ${admission.why}. Deferred with its next-due, never dropped and never reported complete.`,
     });
-    return false;
+    return admission.code;
   };
 
   /*
@@ -681,10 +726,12 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     for (const row of deterministicRows) {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
+        holdDeterministic(row, "NO_OPEN_OCCURRENCE");
         continue;
       }
       if (budgetSpent()) {
         deferForBudget(row);
+        holdDeterministic(row, "BUDGET");
         continue;
       }
       if (admitted >= ceiling) {
@@ -696,19 +743,27 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             "continues to age — a ceiling that dropped them silently would report the same number " +
             "whatever the backlog was",
         });
+        holdDeterministic(row, "DISPATCH_CEILING");
         continue;
       }
       const opened = await tryOpen(row);
       if (opened === false) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
+        holdDeterministic(row, "NO_OPEN_OCCURRENCE");
         continue;
       }
       if (opened !== true) {
         recover(row, opened.settled);
+        deterministicRecovered += 1;
         continue;
       }
-      if (!aggregateAdmits(row)) continue;
+      const refusedBy = aggregateRefusal(row);
+      if (refusedBy !== null) {
+        holdDeterministic(row, refusedBy);
+        continue;
+      }
       admitted += 1;
+      deterministicDispatched += 1;
       const result = await dispatchRow(row, {
         executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
         leaseTtlMs: input.leaseTtlMs,
@@ -747,8 +802,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
-        modelDeferred += 1;
-        deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
+        holdModel(row, "NO_OPEN_OCCURRENCE");
         return;
       }
       /*
@@ -772,8 +826,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             `this Scout could finish inside its ${Math.round(research.scoutWallMs / 1000)}s wall. It keeps ` +
             "its next-due and is dispatched by a later cycle.",
         });
-        modelDeferred += 1;
-        deferredBy.BUDGET = (deferredBy.BUDGET ?? 0) + 1;
+        holdModel(row, "BUDGET");
         return;
       }
       const admit = research.admitScout(row);
@@ -782,25 +835,25 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
           obligationId: row.obligation.id,
           why: `${admit.code}: ${admit.why}. Deferred with its next-due, never dropped and never reported complete.`,
         });
-        modelDeferred += 1;
-        deferredBy[admit.code] = (deferredBy[admit.code] ?? 0) + 1;
+        holdModel(row, admit.code);
         return;
       }
       const opened = await tryOpen(row);
       if (opened === false) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
-        modelDeferred += 1;
-        deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
+        holdModel(row, "NO_OPEN_OCCURRENCE");
         return;
       }
       /* No Scout runs for a recovered row, so it is not counted as dispatched. */
       if (opened !== true) {
         recover(row, opened.settled);
+        modelRecovered += 1;
         return;
       }
-      if (!aggregateAdmits(row)) {
-        modelDeferred += 1;
-        deferredBy.AGGREGATE = (deferredBy.AGGREGATE ?? 0) + 1;
+      /* Counted under the aggregate admission's own code (a wall, a blackout), never a generic AGGREGATE. */
+      const refusedBy = aggregateRefusal(row);
+      if (refusedBy !== null) {
+        holdModel(row, refusedBy);
         return;
       }
       /* Admitted: the static prefix is warmed once, before the first dispatch, and every dispatch waits for it. */
@@ -821,11 +874,23 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     research === undefined
       ? null
       : {
+          /* Counted where each row is started, so a lane's dispatched count cannot drift from the rows it held. */
           deterministic: {
             due: deterministicRows.length,
-            dispatched: dispatched.filter((d) => d.executor !== "BOUNDED_MODEL_WORKER" && d.executorChosen !== "BOUNDED_MODEL_WORKER").length,
+            dispatched: deterministicDispatched,
+            deferredBy: deterministicDeferredBy,
+            recovered: deterministicRecovered,
+            oldestWaitingDueAt: deterministicOldestWaiting,
           },
-          model: { due: modelRows.length, dispatched: modelDispatched, deferred: modelDeferred, deferredBy, prewarm: prewarmOutcome },
+          model: {
+            due: modelRows.length,
+            dispatched: modelDispatched,
+            deferred: modelDeferred,
+            deferredBy,
+            recovered: modelRecovered,
+            oldestWaitingDueAt: modelOldestWaiting,
+            prewarm: prewarmOutcome,
+          },
         };
 
   const debts = [...debtsById.values()];

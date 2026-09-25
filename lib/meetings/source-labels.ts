@@ -65,6 +65,9 @@ export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   // reconfiguration page, say — where it dates its committee meetings and
   // community sessions. Not a calendar product, so not called one.
   "official-page-events": "their own website's page for these meetings",
+  // The body's own page of agendas and minutes, one link per document.
+  "document-listing": "their own website's agendas and minutes page",
+  suiteone: "their online agenda portal",
   // Plain words for a format a reader has no reason to know the name of. Not
   // "their iCalendar feed": the reader is trying to find out when their town
   // meets, and "iCalendar" is an identifier wearing a label's clothes.

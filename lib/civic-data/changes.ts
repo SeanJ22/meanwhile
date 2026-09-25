@@ -438,6 +438,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
               minutesPointer: sitting.minutesPointer,
               routesWalked: sitting.routesWalked,
               publicationObservations: sitting.publicationObservations,
+              // Minutes-route sittings only (NH332): the document read and its standing.
+              ...(sitting.minutesDocument !== undefined ? { minutesDocument: sitting.minutesDocument } : {}),
             },
           },
           ...array(sitting.agenda).map((record, index) => ({ key: `agenda:${meetingId}:${textKey(record, ["eventItemId"]) ?? `row-${index}`}`, record })),

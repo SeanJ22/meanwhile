@@ -558,8 +558,8 @@
     {
       "source_id": "meeting-source-wiring",
       "record_class": "CURATED_READER_RECORD",
-      "authority": "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and vaulted evidence (owner decision C16, recorded 2026-09-24T22:43Z)",
-      "current_writer": "scripts/derive-meeting-source-wiring.mts (reads promoted versions, the attempt log and the vault read only; writes no tracked file)",
+      "authority": "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, the automatic crosswalk its deterministic reviewer accepts, registration, the discovery walk's attempts and vaulted evidence (owner decision C16, recorded 2026-09-24T22:43Z)",
+      "current_writer": "scripts/derive-meeting-body-crosswalk.mts (contract meeting-body-crosswalk-derived) and scripts/derive-meeting-source-wiring.mts (each reads promoted versions, the attempt log and the vault read only; writes no tracked file)",
       "current_scheduler": "standing routine civic-data runner",
       "current_canonical_store": "Postgres promotion pointer",
       "tracked_paths": [],
@@ -579,9 +579,9 @@
       "source_id": "meetings-derived-families",
       "record_class": "MEETING",
       "authority": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host",
-      "current_writer": "scripts/ingest.ts composite --promote --only-partition=meetings:derived:<state> (one static partition per covered state; writes no tracked file)",
+      "current_writer": "scripts/ingest.ts composite --promote --only-partition=meetings:derived:<state> (one partition per registered state; writes no tracked file)",
       "current_scheduler": "standing routine civic-data runner",
-      "current_canonical_store": "Postgres promotion pointer, one per covered state",
+      "current_canonical_store": "Postgres promotion pointer, one per registered state",
       "tracked_paths": [],
       "runtime_readers": [
         "lib/meetings/snapshot.ts",
@@ -597,6 +597,28 @@
       "classification": "RUNTIME_CIVIC_DATA",
       "target_plane": "routine candidate/version store",
       "migration_status": "ROUTINE_DERIVED_UNDER_OWNER_DECISION_C16"
+    },
+    {
+      "source_id": "candidate-campaign-site-chain",
+      "record_class": "CURATED_READER_RECORD",
+      "authority": "The standing runner, from held and vaulted inputs only: the campaign-site chain's pipeline approvals, the vaulted bytes of each verifying robots-first read, and the promoted candidate-profiles version (Sean, 2026-09-21: automatic promotion of qualifying results; RULING 292)",
+      "current_writer": "scripts/derive-candidate-campaign-sites.mts (contract candidate-campaign-sites-derived; reads the pipeline log, the promoted candidate-profiles version and the vault read only; writes no tracked file)",
+      "current_scheduler": "standing routine civic-data runner",
+      "current_canonical_store": "Postgres promotion pointer",
+      "tracked_paths": [],
+      "runtime_readers": [
+        "lib/civic-data/derived-campaign-sites.ts",
+        "lib/ballot/candidate-sites.ts",
+        "app/ballot/page.tsx",
+        "app/api/ask/grounded/route.ts"
+      ],
+      "current_promotion_door": "atomic processRegisteredRoutineCandidate (DERIVED: authentic only as its named inputs)",
+      "cadence": "hourly",
+      "retry": "1 hour",
+      "LKG_behavior": "durable DB pointer; a pass that cannot read its inputs leaves the prior sites live; an approval whose vaulted bytes no longer verify is held by name; a reviewed candidate-profiles campaign link always wins in the Reader",
+      "classification": "RUNTIME_CIVIC_DATA",
+      "target_plane": "routine candidate/version store",
+      "migration_status": "ROUTINE_AUTO_PROMOTED_UNDER_RULING_292"
     },
     {
       "source_id": "meeting-body-crosswalk",
@@ -692,7 +714,7 @@
       "current_writer": "intentional source-version adoption and deterministic generators",
       "current_scheduler": "none",
       "current_canonical_store": "versioned Git",
-      "tracked_paths": ["data/reference/census_govt_units_2022*.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
+      "tracked_paths": ["data/reference/census_govt_units_2022*.csv", "data/reference/census_tiger_2023_territory_functional_status.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
       "runtime_readers": ["registry, coverage, and selected Reader definition inputs"],
       "current_promotion_door": "reviewed source-version bump",
       "cadence": "per named published vintage",

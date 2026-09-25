@@ -196,11 +196,17 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "census-geography-overlaps",
     "nj-morris-filing",
     "pima-legistar-outcomes",
+    // Mesa's council decisions, read off its minutes on the portal host (NH332).
+    "mesa-legistar-minutes-outcomes",
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    // The automatic crosswalk (C16 option A, 2026-09-25): the runner's own reviewer, on promoted and vaulted inputs.
+    "meeting-body-crosswalk-derived",
     // The derived meeting-source wiring (C16): recomputed from promoted and vaulted inputs, no route of its own.
     "meeting-source-wiring",
+    // The verified campaign sites the campaign-site chain approves (2026-09-25): pipeline approvals and vaulted reads, no route of its own.
+    "candidate-campaign-sites-derived",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -1000,7 +1006,7 @@ test("the standing authority envelope is narrowed independently for every runtim
     assert.match(pilot, new RegExp(`standingChildEnvironment\\(\\s*"${capability}"`));
   }
   assert.match(runner, /capability:\s*"ROUTINE_CONTRACT",[\s\S]*contract:\s*pending\.task\.id/);
-  assert.match(runner, /readerDomains\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
+  assert.match(runner, /readerLaunch\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
   assert.match(runner, /parentPid:\s*process\.pid/);
 });
 
@@ -1063,7 +1069,8 @@ test("Reader readback repair covers the observable registry independently of sou
   const protocol = readFileSync("lib/civic-data/reader-repair-protocol.ts", "utf8");
   assert.match(runner, /const readerContracts = \[[\s\S]*\.\.\.observableRoutineContracts\(\),[\s\S]*\.\.\.MANUAL_PRODUCTION_SOURCE_CONTRACTS/);
   assert.match(runner, /const readerDomains = routineReaderRepairDomains\(readerContracts\)/);
-  assert.match(runner, /runBoundedChildPass\([\s\S]*readerDomains\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
+  // Launched racing-first (C6, lib/civic-data/hot-read-catch-up.ts); every domain still runs.
+  assert.match(runner, /runBoundedChildPass\([\s\S]*readerLaunch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
   assert.match(runner, /timeoutMs: domain\.timeoutMs/);
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
   assert.match(runner, /reconcileRoutineReaderRepairDomain/);
@@ -1071,7 +1078,10 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
   // One composition per pass serves both the readbacks and the prepared snapshot.
-  assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate \},?\s*\)/);
+  assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
+  // A receipt from an earlier commit is carried, not re-read, when no Reader code changed (R31).
+  assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
+  assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.match(child, /preparePublishedMeetingSnapshot\(store, observedAt, \{ aggregate \}\)/);
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
@@ -1110,11 +1120,11 @@ test("the pilot awaits independently bounded routine and intake children without
   assert.match(pilot, /id:\s*"intake-runtime"[\s\S]*timeoutMs:\s*PUBLISH_TIMEOUT_MS/);
   assert.match(pilot, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run:\s*runRoutineCivicData[\s\S]*run:\s*runIntakeRuntime/);
   assert.match(pilot, /standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/);
-  assert.match(pilot, /async function runOneCycle\(\): Promise</);
-  assert.match(pilot, /const result = await runOneCycle\(\)/);
+  assert.match(pilot, /async function runOneCycle\(owner: \{ readonly ownerIntentsUnreadable: boolean \}\): Promise</);
+  assert.match(pilot, /const result = await runOneCycle\(owner\)/);
   assert.doesNotMatch(pilot, /spawnSync/);
   assert.ok(
-    pilot.indexOf("standingRuntimeTimer = setInterval(") < pilot.indexOf("const result = await runOneCycle()"),
+    pilot.indexOf("standingRuntimeTimer = setInterval(") < pilot.indexOf("const result = await runOneCycle(owner)"),
     "the independent clock starts before research can remain pending",
   );
   assert.match(pilot, /clearInterval\(standingRuntimeTimer\)/);
@@ -1195,6 +1205,7 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/acs-population-promote.mts", "census-acs-population"],
     ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
     ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
+    ["scripts/legistar-insite-minutes-ingest.mts", "mesa-legistar-minutes-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
   ] as const;
   for (const [path, contractId] of fixedChildren) {
@@ -1535,10 +1546,13 @@ test("nonzero child receipts must prove a durable held candidate and cannot clai
   }, task, noDurable, "HELD") ?? "", /nonzero child claimed a successful promotion/);
 });
 
-test("the durable receipt check proves exactly one pointer through the full proof and reads nothing else whole", async () => {
+test("the durable receipt check proves a Reader-projected pointer by identity and reads nothing whole", async () => {
   // Measured 2026-09-23: the whole-row reads here moved 66.9 MB for one held
   // NJ roll-call settle (the refused candidate's envelope plus the LKG
-  // pointer's payload twice), against a 67.11 MB Neon response cap.
+  // pointer's payload twice), against a 67.11 MB Neon response cap. Since
+  // then each settle still moved the pointer's payload and candidate once;
+  // the pass's Reader repair re-proves a Reader-projected version in full, so
+  // the settle proves the pointer by identity alone.
   class CountingStore extends MemoryRoutineDataStore {
     readonly whole: string[] = [];
 
@@ -1560,6 +1574,7 @@ test("the durable receipt check proves exactly one pointer through the full proo
     }
   }
   const task = ROUTINE_SOURCE_TASKS[0];
+  assert.notEqual(task.contract.readerProjection, null, "fec-funding has a Reader projection the repair phase re-proves");
   const store = new CountingStore();
   const good = sourceGoodCandidate();
   const promoted = await processRegisteredRoutineCandidate(store, task.id, good, T0);
@@ -1578,7 +1593,19 @@ test("the durable receipt check proves exactly one pointer through the full proo
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
   assert.equal(await durableRoutineRunnerReceiptIssue(success, task, store, "SUCCESS"), null);
-  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "success: the new pointer's proof, once, narrowed");
+  assert.deepEqual(store.whole, [], "success: identity only; the Reader repair reads the new version in full");
+
+  // A contract no Reader readback ever proves keeps the full proven read on
+  // success, and that proof still refuses a payload its candidate does not back.
+  const unprojected = { ...task, contract: { ...task.contract, readerProjection: null } };
+  store.whole.length = 0;
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, unprojected, store, "SUCCESS"), null);
+  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "no Reader projection: the new pointer's proof, once, narrowed");
+  // A caller that does not name the contract keeps the full proof as well.
+  const { contract: _contract, ...anonymous } = task;
+  store.whole.length = 0;
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, anonymous, store, "SUCCESS"), null);
+  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "unnamed contract: the full proof");
 
   const failure = failedAcquisitionCandidate({
     sourceId: task.sourceId,
@@ -1591,21 +1618,24 @@ test("the durable receipt check proves exactly one pointer through the full proo
   });
   const held = await processRegisteredRoutineCandidate(store, task.id, failure, failure.retrieval.retrievedAt);
   assert.equal(held.candidate.state, "SOURCE_BLOCKED");
-  store.whole.length = 0;
-  assert.equal(await durableRoutineRunnerReceiptIssue({
+  const heldReceipt = {
     source: task.id,
     candidateId: failure.id,
     acquisitionSucceeded: false,
-    state: "SOURCE_BLOCKED",
+    state: "SOURCE_BLOCKED" as const,
     decision: held.candidate.receipt?.decision ?? null,
     promotedVersion: null,
     lastKnownGoodVersion: good.id,
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }, task, store, "HELD"), null);
-  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "held: the unchanged LKG's proof, once, narrowed; never the refused envelope");
+  };
+  for (const expected of [task, unprojected]) {
+    store.whole.length = 0;
+    assert.equal(await durableRoutineRunnerReceiptIssue(heldReceipt, expected, store, "HELD"), null);
+    assert.deepEqual(store.whole, [], "held: the unchanged LKG by identity; never the refused envelope or the LKG payload");
+  }
 
-  // The proof is still whole: a pointer whose payload no longer matches its
-  // candidate's read model is refused on both paths.
+  // The no-projection proof is still whole: a pointer whose payload no longer
+  // matches its candidate's read model is refused.
   class TamperedStore extends CountingStore {
     override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
       const row = await super.readPromotion<T>(recordClass, scope);
@@ -1614,7 +1644,72 @@ test("the durable receipt check proves exactly one pointer through the full proo
   }
   const tampered = new TamperedStore();
   await processRegisteredRoutineCandidate(tampered, task.id, good, T0);
-  assert.match(await durableRoutineRunnerReceiptIssue(success, task, tampered, "SUCCESS") ?? "", /does not prove the reported GOOD candidate/);
+  assert.match(await durableRoutineRunnerReceiptIssue(success, unprojected, tampered, "SUCCESS") ?? "", /does not prove the reported GOOD candidate/);
+});
+
+test("the durable receipt check's identity proof refuses every pointer that does not name the reported version", async () => {
+  const task = ROUTINE_SOURCE_TASKS[0];
+  const store = new MemoryRoutineDataStore();
+  const good = sourceGoodCandidate();
+  await processRegisteredRoutineCandidate(store, task.id, good, T0);
+  const failure = failedAcquisitionCandidate({
+    sourceId: task.sourceId,
+    recordClass: task.recordClass,
+    scope: task.scope,
+    requestedUrl: task.requestedUrl,
+    attemptedAt: "2026-09-08T13:00:00.000Z",
+    failureDetail: "The official publisher was unavailable.",
+    parserVersion: task.parserVersion,
+  });
+  const held = await processRegisteredRoutineCandidate(store, task.id, failure, failure.retrieval.retrievedAt);
+  const real = await store.readPromotionIdentity(task.recordClass, task.scope);
+  assert.ok(real);
+  const success = {
+    source: task.id,
+    candidateId: good.id,
+    acquisitionSucceeded: true,
+    state: "PROMOTED" as const,
+    decision: "GOOD" as const,
+    promotedVersion: good.id,
+    lastKnownGoodVersion: good.id,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  };
+  const heldReceipt = {
+    source: task.id,
+    candidateId: failure.id,
+    acquisitionSucceeded: false,
+    state: "SOURCE_BLOCKED" as const,
+    decision: held.candidate.receipt?.decision ?? null,
+    promotedVersion: null,
+    lastKnownGoodVersion: good.id,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  };
+  // Every dataset door fails the test: a mismatch is refused from identity alone.
+  const pointing = (identity: typeof real | null): DurableReceiptStore => Object.assign(Object.create(store), {
+    readPromotionIdentity: async () => identity,
+    readPromotion: async () => { throw new Error("the payload was read"); },
+    readCandidate: async () => { throw new Error("the candidate was read"); },
+  });
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, task, pointing(real), "SUCCESS"), null);
+  assert.equal(await durableRoutineRunnerReceiptIssue(heldReceipt, task, pointing(real), "HELD"), null);
+  for (const [label, identity] of [
+    ["absent", null],
+    ["another version", { ...real, versionId: "cv-other", lastKnownGoodVersionId: "cv-other" }],
+    ["an LKG that is not the current version", { ...real, lastKnownGoodVersionId: "cv-older" }],
+    ["another source", { ...real, sourceId: "another-source" }],
+    ["another scope", { ...real, scope: "US:another-scope" }],
+  ] as const) {
+    assert.match(
+      await durableRoutineRunnerReceiptIssue(success, task, pointing(identity), "SUCCESS") ?? "",
+      /does not prove the reported GOOD candidate/,
+      `success refuses a pointer with ${label}`,
+    );
+    assert.match(
+      await durableRoutineRunnerReceiptIssue(heldReceipt, task, pointing(identity), "HELD") ?? "",
+      /omitted the canonical|unchanged, proof-valid canonical LKG pointer/,
+      `held refuses a pointer with ${label}`,
+    );
+  }
 });
 
 test("the supervisor proves the registry once for two or more meeting children and hands only them the attestation", () => {

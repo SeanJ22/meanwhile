@@ -329,6 +329,19 @@ export function collapseDuplicateSittings(rows: Meeting[]): {
   return { rows: kept, collapsed, dropped };
 }
 
+/**
+ * A rejected child's message, with the transport's own code when the message
+ * alone hides it. Node's fetch rejects a host that no longer resolves with a
+ * bare `TypeError: fetch failed` and puts `ENOTFOUND` on `cause.code`; from
+ * 2026-09-14 Newbury's retired CivicWeb host was stored ~2,077 times as only
+ * "fetch failed", which reads like a flaky network rather than a gone host.
+ */
+export function childFailureMessage(reason: unknown): string {
+  const message = String((reason as { message?: unknown } | null | undefined)?.message ?? reason);
+  const code = (reason as { cause?: { code?: unknown } } | null | undefined)?.cause?.code;
+  return typeof code === "string" && code && !message.includes(code) ? `${message} (${code})` : message;
+}
+
 export class CompositeSource implements MeetingSource<TaggedRaw> {
   readonly name = "composite";
 
@@ -425,7 +438,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
         const rung = (result.reason as { rung?: number } | undefined)?.rung;
         fetchReports.set(child.name, {
           ok: false,
-          error: String(result.reason?.message ?? result.reason),
+          error: childFailureMessage(result.reason),
           fetched: 0,
           // Whose stopwatch ran out, decided from the thrown value — never
           // assumed to be the publisher's (see ./failure-kind.ts).

@@ -1,3 +1,4 @@
+import { isJurisdictionSegment } from "../ocd/fips.ts";
 import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
@@ -187,10 +188,15 @@ export function indexByDivision(
  *
  * That is the identifier hierarchy doing its job, not a name-string join, which
  * is the thing CLAUDE.md actually forbids.
+ *
+ * DC and the territories are roots too (`district:dc`, `territory:pr`, as
+ * `lib/ocd/fips.ts` mints them; 2026-09-25). None has senators or a statewide
+ * executive on file, so their root answers with nobody rather than with a
+ * state's officials, and a division inside one still names where it sits.
  */
 export function stateOcdIdFrom(ocdId: string): string | null {
-  const match = /^(ocd-division\/country:us\/state:[a-z]{2})(\/|$)/.exec(ocdId);
-  return match ? match[1] : null;
+  const match = /^(ocd-division\/country:us\/(state|district|territory):([a-z]{2}))(\/|$)/.exec(ocdId);
+  return match && isJurisdictionSegment(match[2], match[3]) ? match[1] : null;
 }
 
 /** Everyone holding a seat for this division. Empty is a real answer. */

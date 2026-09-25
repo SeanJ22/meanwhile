@@ -1,11 +1,23 @@
-import { agendaItems, agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
-import { isAnotherBodysNoticePage, isWiredNoticePage } from "../meetings/notice-pages.ts";
-import { agendaDocumentRepresentation } from "./agenda-publication.ts";
+import { agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
 import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
 import { formatDateLong } from "../text/format-date.ts";
-import { localDate } from "./meeting-time.ts";
 import { overLengthBudget } from "./length-contract.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
+import {
+  CALENDAR_READ_STALE_MS,
+  bodyLocalDay,
+  heldBodyGaps,
+  recordedOutcomeStatus,
+  type HeldAskGap,
+  type UnreadSitting,
+} from "./held-gaps.ts";
+
+export {
+  CALENDAR_READ_STALE_MS,
+  UNREAD_LOOKAHEAD_DAYS,
+  UNREAD_LOOKBACK_DAYS,
+  type UnreadSitting,
+} from "./held-gaps.ts";
 
 /**
  * **A TOPIC QUESTION IS ANSWERED FROM EVERY DATED MENTION, NOT FROM THE NEXT
@@ -80,15 +92,12 @@ export interface TopicTimelineEntry {
   readonly sourceUrl: string | null;
   readonly sourceOrg: string | null;
   readonly retrievedAt: string | null;
-  /** Where the entry came from: the structured agenda record, or a line in a held agenda document. */
-  readonly basis: "STRUCTURED_AGENDA_RECORD" | "AGENDA_DOCUMENT_LINE";
-}
-
-export interface UnreadSitting {
-  readonly meetingId: string;
-  readonly startsAt: string;
-  readonly localDay: string;
-  readonly past: boolean;
+  /**
+   * Where the entry came from: the structured agenda record, a line in a held
+   * agenda document, or an item and its recorded result in the body's own
+   * minutes (a body whose clerk records decisions only there, NH332).
+   */
+  readonly basis: "STRUCTURED_AGENDA_RECORD" | "AGENDA_DOCUMENT_LINE" | "MINUTES_RECORD";
 }
 
 export interface TopicTimeline {
@@ -108,16 +117,15 @@ export interface TopicTimeline {
   readonly calendarReadBoundsUpcoming: boolean;
   readonly records: EvidenceRecord[];
   readonly gaps: EvidenceGap[];
+  /**
+   * Every gap this body carries, coded, from the ONE decision the standing
+   * runner's `ask-gaps` provider also makes (`held-gaps.ts`). `gaps` states
+   * all but `OUTCOME_NOT_READ`, which each concluded entry states in its own
+   * sentence.
+   */
+  readonly heldGaps: readonly HeldAskGap[];
   readonly denominators: Record<string, number>;
 }
-
-/** Days either side of today in which an unread agenda is worth naming. */
-export const UNREAD_LOOKBACK_DAYS = 45;
-export const UNREAD_LOOKAHEAD_DAYS = 21;
-/** A calendar read older than this is stated with its date. */
-export const CALENDAR_READ_STALE_MS = 36 * 3_600_000;
-
-const DAY_MS = 86_400_000;
 
 /**
  * Is this a question about a TOPIC across a body's business, rather than about
@@ -257,13 +265,7 @@ function possessive(name: string): string {
   return /s$/i.test(name) ? `${name}'` : `${name}'s`;
 }
 
-function dayOf(startsAt: string, timeZone: string | null | undefined): string {
-  try {
-    return localDate({ startsAt, timeZone: timeZone ?? null });
-  } catch {
-    return startsAt.slice(0, 10);
-  }
-}
+const dayOf = bodyLocalDay;
 
 function statusFor(sitting: PersistedSittingOutcomes, eventItemId: number, now: number): {
   status: TopicEntryStatus;
@@ -273,9 +275,7 @@ function statusFor(sitting: PersistedSittingOutcomes, eventItemId: number, now: 
   if (!sitting.startsAt || Date.parse(sitting.startsAt) >= now) return { status: "SCHEDULED", action: null, tallyText: null };
   const outcome = sitting.outcomes.find((row) => row.eventItemId === eventItemId) ?? null;
   if (!outcome) return { status: "OUTCOME_NOT_READ", action: null, tallyText: null };
-  const status: TopicEntryStatus =
-    outcome.disposition === "PASSED" ? "PASSED" : outcome.disposition === "FAILED" ? "FAILED" : outcome.action ? "ACTED" : "OUTCOME_NOT_READ";
-  return { status, action: outcome.action, tallyText: outcome.tallyText };
+  return { status: recordedOutcomeStatus(outcome), action: outcome.action, tallyText: outcome.tallyText };
 }
 
 /**
@@ -299,13 +299,21 @@ export function buildTopicTimeline(input: {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
   const structuredDays = new Set<string>();
-  const readDays = new Set<string>();
+  // What we hold and do not hold for this body, decided once (held-gaps.ts):
+  // the sittings read, the agendas that can be searched, and every coded gap.
+  const held = heldBodyGaps({
+    bodyId: input.bodyId,
+    meetings: input.meetings,
+    documents: input.documents,
+    sittings: input.sittings,
+    now,
+    outcomesUnavailable: input.outcomesUnavailable,
+  });
 
   // 1. The publisher's structured agenda records, joined to their recorded outcome.
   for (const sitting of input.sittings) {
     if (!sitting.startsAt || !Number.isFinite(Date.parse(sitting.startsAt))) continue;
     const day = sitting.startsAt.slice(0, 10);
-    if (sitting.agenda.length > 0) readDays.add(day);
     for (const item of sitting.agenda) {
       if (!matchesTopic(item.title, topic)) continue;
       structuredDays.add(day);
@@ -358,6 +366,57 @@ export function buildTopicTimeline(input: {
         });
       }
     }
+
+    /*
+     * 1b. A sitting read off its MINUTES (NH332): no structured agenda, and
+     * each recorded action carries the item as the minutes print it and the
+     * exact passage recording its result. Minutes list every item the body
+     * reached, so a read sitting is not an unread one.
+     */
+    if (sitting.agenda.length > 0 || sitting.extraction !== "RETRIEVED") continue;
+    // Whether a minutes-read sitting counts as read is decided once, in heldBodyGaps (held-gaps.ts).
+    for (const outcome of sitting.outcomes) {
+      if (!outcome.quote || !outcome.itemQuote || !matchesTopic(outcome.itemQuote, topic)) continue;
+      structuredDays.add(day);
+      const past = Date.parse(sitting.startsAt) < now;
+      const status: TopicEntryStatus = !past
+        ? "SCHEDULED"
+        : outcome.disposition === "PASSED" ? "PASSED" : outcome.disposition === "FAILED" ? "FAILED" : "ACTED";
+      const sourceUrl = outcome.provenance.endpoint || sitting.sourceUrl;
+      const retrievedAt = outcome.provenance.readOn === "NEVER_READ" ? null : outcome.provenance.readOn;
+      entries.push({
+        key: `${sitting.meetingId}#${outcome.eventItemId}`,
+        meetingId: sitting.meetingId,
+        startsAt: sitting.startsAt,
+        localDay: day,
+        // One motion can carry several items: the words around the topic, windowed as a document line is.
+        itemText: topicWindow(outcome.itemQuote, topic),
+        agendaNumber: outcome.itemReference ?? null,
+        matterFile: outcome.matterFile,
+        status,
+        action: outcome.action,
+        tallyText: outcome.tallyText,
+        sourceUrl,
+        sourceOrg: sitting.sourceOrg,
+        retrievedAt,
+        basis: "MINUTES_RECORD",
+      });
+      records.push({
+        kind: "MEETING_ACTION",
+        id: `${outcome.eventItemId}#action`,
+        bodyId: input.bodyId,
+        meetingId: sitting.meetingId,
+        text: [
+          `Item ${outcome.itemReference ?? ""}${outcome.sectionQuote ? ` (under "${outcome.sectionQuote}")` : ""}: "${outcome.itemQuote}".`,
+          `The minutes record: "${outcome.quote}"`,
+          sitting.minutesDocument ? sitting.minutesDocument.approval.detail : null,
+        ].filter(Boolean).join(" "),
+        occurredAt: sitting.startsAt,
+        sourceUrl,
+        sourceOrg: sitting.sourceOrg,
+        retrievedAt,
+      });
+    }
   }
 
   // 2. Lines in held agenda documents, for sittings the structured records did not cover.
@@ -368,17 +427,11 @@ export function buildTopicTimeline(input: {
   // Nor is a publisher portal's shell, which the publication reading already
   // names as a portal: Newbury Selectboard's nine held pages (four CivicWeb
   // shells, five copies of Bradford's calendar) were answered as "the 9
-  // agendas we hold" beside a gap saying none of them was readable.
-  const documents = input.documents.filter((document) =>
-    agendaDocumentRepresentation(document) !== "PUBLICATION_PORTAL" &&
-    !isAnotherBodysNoticePage(document.documentUrl, { bodyId: input.bodyId, publisher: document.sourceOrg }) &&
-    !(isWiredNoticePage(document.documentUrl) && agendaItems(document.text ?? "").length === 0));
+  // agendas we hold" beside a gap saying none of them was readable. The one
+  // filter is `heldAgendaDocuments` (held-gaps.ts).
+  const documents = held.agendaDocuments;
   const byMeeting = new Map(input.meetings.map((meeting) => [meeting.id, meeting]));
   const { hits, searched, unreadable } = searchAgendas(documents, topic);
-  for (const document of documents) {
-    const meeting = byMeeting.get(document.meetingId);
-    if (meeting && document.text && document.text.trim()) readDays.add(dayOf(meeting.startsAt, meeting.timeZone));
-  }
   // Each occurrence is windowed from the FULL agenda text: the sweep's quote is
   // capped at 400 characters and, on a line that runs items together, can end
   // before the phrase it matched. Versions of one agenda collapse by content.
@@ -423,68 +476,46 @@ export function buildTopicTimeline(input: {
   }
   entries.sort((a, b) => b.startsAt.localeCompare(a.startsAt));
 
-  // 3. Sittings in the recent window whose agenda we have not read — named, never implied empty.
-  const unreadByDay = new Map<string, UnreadSitting>();
-  for (const meeting of input.meetings) {
-    const at = Date.parse(meeting.startsAt);
-    if (!Number.isFinite(at)) continue;
-    if (meeting.status === "CANCELED") continue;
-    if (at < now - UNREAD_LOOKBACK_DAYS * DAY_MS || at > now + UNREAD_LOOKAHEAD_DAYS * DAY_MS) continue;
-    const day = dayOf(meeting.startsAt, meeting.timeZone);
-    if (readDays.has(day)) continue;
-    const prior = unreadByDay.get(day);
-    if (!prior || meeting.startsAt > prior.startsAt) {
-      unreadByDay.set(day, { meetingId: meeting.id, startsAt: meeting.startsAt, localDay: day, past: at < now });
+  // 3. Sittings in the recent window whose agenda we have not read — named, never implied empty —
+  // and the other gaps this body carries, each stated with its code (held-gaps.ts decides them).
+  const { unreadSittings, calendarLastReadAt, calendarReadBoundsUpcoming } = held;
+  for (const gap of held.gaps) {
+    const coded = { code: gap.code, bodyId: gap.bodyId, recordClass: gap.recordClass };
+    switch (gap.code) {
+      case "AGENDA_NOT_HELD": {
+        const sitting = gap.sitting!;
+        const spelled = formatDateLong(sitting.localDay) ?? sitting.localDay;
+        gaps.push({
+          whose: "OURS",
+          statement: sitting.past
+            ? `We have not read the agenda of the ${input.bodyName} meeting held ${spelled}, so this answer cannot say whether ${topic.label} was on it.`
+            : `The ${input.bodyName} meets next on ${spelled}; we do not yet hold an agenda for that meeting.`,
+          ...coded,
+        });
+        break;
+      }
+      case "CALENDAR_STALE": {
+        const readDay = formatDateLong(gap.since!.slice(0, 10)) ?? gap.since!.slice(0, 10);
+        gaps.push({
+          whose: "OURS",
+          statement: calendarReadBoundsUpcoming
+            ? `The upcoming ${input.bodyName} meetings in this answer were last read from its calendar on ${readDay}; anything posted since then is not in this answer yet.`
+            : `Our most recent read of the ${input.bodyName} meeting calendar was ${readDay}; anything posted since then is not in this answer yet.`,
+          ...coded,
+        });
+        break;
+      }
+      case "OUTCOMES_UNREADABLE":
+        gaps.push({
+          whose: "OURS",
+          statement: "The recorded actions and votes we hold could not be read for this answer. This is a failure of our holding, not evidence that the body took no action.",
+          ...coded,
+        });
+        break;
+      case "OUTCOME_NOT_READ":
+        // Stated in each concluded entry's own sentence ("we have not read the recorded outcome of that item").
+        break;
     }
-  }
-  const unreadSittings = [...unreadByDay.values()].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-
-  /*
-   * **THE READ THAT BOUNDS WHAT IS COMING.** (2026-09-24.) A body read by two
-   * routes can be current on one and weeks old on the other. At 85701 the
-   * Pima Board's API route was read at 11:14Z and carries no upcoming
-   * sitting, while every upcoming sitting shown came from the portal's
-   * September 8 read. Dating the body by its newest read of ANY row hid that.
-   * The upcoming listings are therefore dated by the OLDEST read among them.
-   * Only when none is upcoming is the body dated by its newest read.
-   */
-  const readOf = (meeting: TopicMeetingLike) => {
-    const at = meeting.provenance?.collectedAt ?? null;
-    return at && Number.isFinite(Date.parse(at)) ? at : null;
-  };
-  const upcomingReads = input.meetings
-    .filter((meeting) => meeting.status !== "CANCELED" && Date.parse(meeting.startsAt) >= now)
-    .map(readOf)
-    .filter((at): at is string => at !== null)
-    .sort();
-  const anyReads = input.meetings.map(readOf).filter((at): at is string => at !== null).sort();
-  const calendarReadBoundsUpcoming = upcomingReads.length > 0;
-  const calendarLastReadAt = calendarReadBoundsUpcoming ? upcomingReads[0]! : (anyReads.at(-1) ?? null);
-
-  for (const sitting of unreadSittings) {
-    const spelled = formatDateLong(sitting.localDay) ?? sitting.localDay;
-    gaps.push({
-      whose: "OURS",
-      statement: sitting.past
-        ? `We have not read the agenda of the ${input.bodyName} meeting held ${spelled}, so this answer cannot say whether ${topic.label} was on it.`
-        : `The ${input.bodyName} meets next on ${spelled}; we do not yet hold an agenda for that meeting.`,
-    });
-  }
-  if (calendarLastReadAt && now - Date.parse(calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
-    const readDay = formatDateLong(calendarLastReadAt.slice(0, 10)) ?? calendarLastReadAt.slice(0, 10);
-    gaps.push({
-      whose: "OURS",
-      statement: calendarReadBoundsUpcoming
-        ? `The upcoming ${input.bodyName} meetings in this answer were last read from its calendar on ${readDay}; anything posted since then is not in this answer yet.`
-        : `Our most recent read of the ${input.bodyName} meeting calendar was ${readDay}; anything posted since then is not in this answer yet.`,
-    });
-  }
-
-  if (input.outcomesUnavailable) {
-    gaps.push({
-      whose: "OURS",
-      statement: "The recorded actions and votes we hold could not be read for this answer. This is a failure of our holding, not evidence that the body took no action.",
-    });
   }
 
   const count = (status: TopicEntryStatus) => entries.filter((entry) => entry.status === status).length;
@@ -492,6 +523,7 @@ export function buildTopicTimeline(input: {
     topicTimelineEntries: entries.length,
     topicStructuredAgendaItems: entries.filter((entry) => entry.basis === "STRUCTURED_AGENDA_RECORD").length,
     topicAgendaDocumentLines: entries.filter((entry) => entry.basis === "AGENDA_DOCUMENT_LINE").length,
+    topicMinutesRecords: entries.filter((entry) => entry.basis === "MINUTES_RECORD").length,
     topicItemsScheduled: count("SCHEDULED"),
     topicItemsPassed: count("PASSED"),
     topicItemsFailed: count("FAILED"),
@@ -503,7 +535,7 @@ export function buildTopicTimeline(input: {
     topicSittingsWithUnreadAgenda: unreadSittings.length,
   };
 
-  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, calendarReadBoundsUpcoming, records, gaps, denominators };
+  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, calendarReadBoundsUpcoming, records, gaps, heldGaps: held.gaps, denominators };
 }
 
 function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
@@ -513,9 +545,9 @@ function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
 function itemPhrase(entry: TopicTimelineEntry): string {
   const label = entry.agendaNumber ? `agenda item ${entry.agendaNumber}` : "an agenda item";
   const file = entry.matterFile ? ` (${entry.matterFile})` : "";
-  // A document line is already windowed on the topic (topicWindow); a
-  // structured title is quoted to its first sentence.
-  const quote = entry.basis === "AGENDA_DOCUMENT_LINE" ? entry.itemText : quotable(entry.itemText, 150);
+  // A document line and a minutes item are already windowed on the topic
+  // (topicWindow); a structured title is quoted to its first sentence.
+  const quote = entry.basis === "STRUCTURED_AGENDA_RECORD" ? quotable(entry.itemText, 150) : entry.itemText;
   return `${label}${file}, "${quote}"`;
 }
 

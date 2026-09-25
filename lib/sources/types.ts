@@ -70,6 +70,25 @@ export interface Provenance {
    * so the claim can be checked against its source without re-deriving it.
    */
   evidenceExcerpt?: string;
+  /**
+   * **THE PUBLISHER'S OWN CALENDAR LISTS THIS ONE SITTING MORE THAN ONCE.**
+   * (2026-09-25.)
+   *
+   * Set by an adapter that merged two or more of one source's own listings of
+   * one body's sitting because every field the publisher published about them
+   * is identical and only the publisher's own entry ids differ — the Town of
+   * Newbury's calendar lists some Selectboard sittings under two series. The
+   * record keeps every listing: `sourceIds` names each one's id (this row's
+   * included) and `sourceUrls` each one's own page, in the same order, so the
+   * merge can be audited against the publisher and reversed. See
+   * `collapsePublisherRelistings` in `lib/sources/ical/index.ts`.
+   */
+  publisherListings?: {
+    /** "listed twice in the publisher's own calendar". */
+    readonly note: string;
+    readonly sourceIds: readonly string[];
+    readonly sourceUrls: readonly (string | null)[];
+  };
 }
 
 /**
@@ -551,6 +570,12 @@ export interface DuplicateIdentityCounts {
   exact: number;
   /** Two records with no publisher identity that this code judged identical. */
   weakIdCollision: number;
+  /**
+   * Listings of one sitting the publisher gave different ids to, every
+   * published field identical, merged into one (`provenance.publisherListings`).
+   * Absent from sources that never merge their own listings.
+   */
+  publisherRelisted?: number;
 }
 
 /** Which half of a two-feed source failed — see `partialScopes`. */

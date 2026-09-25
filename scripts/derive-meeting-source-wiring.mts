@@ -9,7 +9,9 @@
  *
  * - the promoted wiring version it succeeds (its rows, suspensions and all);
  * - the promoted meeting-body crosswalk: the reviewed rows connecting a calendar
- *   to its exact body (`lib/civic-data/meeting-body-crosswalk.ts`);
+ *   to its exact body (`lib/civic-data/meeting-body-crosswalk.ts`), composed
+ *   with the rows the runner's own reviewer accepted
+ *   (`lib/civic-data/derived-crosswalk.ts`), the reviewed rows winning;
  * - each covered state's promoted registration: which division a government is;
  * - the discovery walk's newest attempt for each crosswalked government, from
  *   the control plane's attempt log (read only);
@@ -24,15 +26,19 @@
  * promoted input against the store. Anything it cannot read refuses the
  * candidate by name and leaves the last known good wiring live.
  */
-import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
-import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import {
+  DERIVED_CROSSWALK_RECORD_CLASS,
+  DERIVED_CROSSWALK_SCOPE,
+  composeCrosswalk,
+  readDerivedMeetingBodyCrosswalk,
+} from "../lib/civic-data/derived-crosswalk.ts";
+import { planDerivedVersion, promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   derivedWiringCandidate,
@@ -42,9 +48,7 @@ import {
   type DerivedWiringKind,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
+import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { deriveWiringDecisions, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
@@ -53,8 +57,10 @@ import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArt
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 
@@ -72,28 +78,16 @@ assertWriteAllowed("a routine civic data candidate/version promotion");
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   // An unchanged wiring re-check is receipted on the pointed version instead of
   // re-promoted (R23); the receipt then names that version, never the unwritten
   // re-check candidate.
-  const outcome = await processRegisteredRoutineCandidate(store, CONTRACT_ID, candidate, now, undefined, { confirmUnchanged: true });
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: CONTRACT_ID,
-    ...routineReceiptFields(candidate, outcome),
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
-  if (!outcome.promoted) process.exitCode = 2;
+  await promoteDerivedCandidate(store, CONTRACT_ID, candidate, now);
 }
 
-function promotedInput(recordClass: string, scope: string, versionId: string | null, value: unknown, promotedAt: string | null): DerivedInputRef | null {
-  return versionId === null || promotedAt === null
-    ? null
-    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: sha256(canonicalCivicDataJson(value)), promotedAt };
-}
-
-const stateOf = (ocdId: string): string | null => /\/state:([a-z]{2})(\/|$)/.exec(ocdId)?.[1]?.toUpperCase() ?? null;
+/* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */
+const stateOf = (ocdId: string): string | null => ocdStateCode(ocdId)?.toUpperCase() ?? null;
 const ADAPTER_ENTRY: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "lib/sources/ical/index.ts",
   OFFICIAL_PAGE_EVENTS: "lib/sources/official-page-events/index.ts",
@@ -124,29 +118,53 @@ async function main(): Promise<void> {
   }
   const previous = lkg.kind === "PROMOTED" ? derivedWiringEntries(lkg.value) : [];
   const lkgInput = lkg.kind === "PROMOTED"
-    ? promotedInput("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
+    ? promotedInputRef("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
     : null;
 
+  /*
+   * Two crosswalks, composed (C16 option A, 2026-09-25): the reviewed manual one and the rows the runner's own
+   * reviewer accepted (meeting-body-crosswalk-derived). A reviewed row wins over an automatic one for the same body,
+   * and either alone connects calendars. An unreadable one refuses the pass; neither promoted is no connection yet.
+   */
   const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
   const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now });
-  if (crosswalk.kind !== "PROMOTED") {
-    await finish(derivedWiringFailedCandidate(now, crosswalk.kind === "NOT_RECORDED"
-      ? "No reviewed meeting-body crosswalk is promoted yet, so no calendar is connected to a body."
-      : `The meeting-body crosswalk could not be read (${crosswalk.kind}): ${"detail" in crosswalk ? crosswalk.detail : ""}`));
+  const automaticRead = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
+  for (const read of [crosswalk, automaticRead]) {
+    if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") {
+      await finish(derivedWiringFailedCandidate(now, `A meeting-body crosswalk could not be read (${read.kind}): ${"detail" in read ? read.detail : ""}`));
+      return;
+    }
+  }
+  if (crosswalk.kind !== "PROMOTED" && automaticRead.kind !== "PROMOTED") {
+    await finish(derivedWiringFailedCandidate(now, "No reviewed or automatic meeting-body crosswalk is promoted yet, so no calendar is connected to a body."));
     return;
   }
-  const crosswalkInput = promotedInput(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt);
-  if (crosswalkInput === null) {
-    await finish(derivedWiringFailedCandidate(now, "The promoted crosswalk carries no version id or promotion time."));
+  const manualInput = crosswalk.kind === "PROMOTED"
+    ? promotedInputRef(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt)
+    : null;
+  const automaticInput = automaticRead.kind === "PROMOTED"
+    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, automaticRead.metadata.versionId, automaticRead.value, automaticRead.metadata.promotedAt)
+    : null;
+  if ((crosswalk.kind === "PROMOTED" && manualInput === null) || (automaticRead.kind === "PROMOTED" && automaticInput === null)) {
+    await finish(derivedWiringFailedCandidate(now, "A promoted crosswalk carries no version id or promotion time."));
     return;
   }
-  const rows = (crosswalk.value.records as unknown as MeetingBodyCrosswalkRow[]).filter((row) => crosswalkRowIssue(row) === null);
+  const composed = composeCrosswalk(
+    crosswalk.kind === "PROMOTED" ? crosswalk.value.records as unknown as MeetingBodyCrosswalkRow[] : null,
+    automaticRead.kind === "PROMOTED" ? automaticRead.value.records : null,
+  );
+  for (const s of composed.shadowed) console.log(`  automatic row ${s.id} not used: ${s.why}`);
+  const crosswalkInput = (manualInput ?? automaticInput)!;
+  const automatic = automaticInput === null
+    ? undefined
+    : { input: automaticInput, versionId: automaticRead.metadata.versionId ?? "", rowIds: composed.automaticIds };
+  const rows = composed.rows.filter((row) => crosswalkRowIssue(row) === null);
 
   /* Registration: which division each crosswalked government is, per covered state. */
   const registrations = new Map<string, { readonly input: DerivedInputRef; readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[] } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
     const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
-    const input = read.kind === "PROMOTED" ? promotedInput("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
+    const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
     registrations.set(state, read.kind === "PROMOTED" && input !== null
       ? { input, bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) }
       : { unread: `${state} registration is ${read.kind}` });
@@ -203,7 +221,12 @@ async function main(): Promise<void> {
   const readings = read.verifications;
 
   const decisions = deriveWiringDecisions({
-    crosswalk: { input: crosswalkInput, versionId: crosswalk.metadata.versionId ?? "", rows },
+    crosswalk: {
+      input: crosswalkInput,
+      versionId: (crosswalk.kind === "PROMOTED" ? crosswalk.metadata.versionId : automaticRead.metadata.versionId) ?? "",
+      rows,
+      ...(automatic === undefined ? {} : { automatic }),
+    },
     registration: (row) => {
       const state = stateOf(row.ocdId);
       const reg = state === null ? undefined : registrations.get(state);
@@ -231,7 +254,14 @@ async function main(): Promise<void> {
     console.log(`  ${d.key}: ${d.disposition === "HOLD" ? `HOLD ${d.reason}: ${d.detail}` : d.disposition === "SUSPEND" ? `SUSPEND ${d.trigger}: ${d.detail}` : d.disposition}`);
   }
   for (const r of plan.refusals) console.error(`  refused ${r.key}: ${r.code}: ${r.detail}`);
-  await finish(derivedWiringCandidate(plan, [crosswalkInput, ...(lkgInput === null ? [] : [lkgInput])], now));
+  console.log(floorLine(floored(
+    "derived wiring rows promoted",
+    "the calendar-to-body rows decided this pass",
+    decisions.length,
+    decisions.filter((d) => d.disposition === "PROMOTE").length,
+    decisions.length === 0 ? "no calendar-to-body row reached the derive this pass" : undefined,
+  )));
+  await finish(derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is DerivedInputRef => i !== null), now));
 }
 
 await main();

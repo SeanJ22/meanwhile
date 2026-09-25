@@ -1,11 +1,11 @@
 {
-  "exactHead": "31052a9376bbe5dd1b8914e1b356b6b9e7ac0f04",
+  "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "fe0afbd9ded19eecefc65911a6dd4d97868ccd4a6186045805e9876d9b5701c7"
+      "sha256": "dce1e0d945787efa513e1f7dba352be3384361b998e6ebe12934c8e127346024"
     },
     {
       "path": "lib/ask/meeting-knowledge.ts",
@@ -33,11 +33,11 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "2ada27ef1014cfcbad5c36ffb2d33b1a0241eb37f7155da8818af2b4dbbdd734"
+      "sha256": "dddab248a48f8237f3339bbe937046a1912ce32ed4692987106d353c4b47db8f"
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
-      "sha256": "e88cf9db28bb5436d6a53c23ce873e41bcc7f370151c4dda3c96662ee99a0467"
+      "sha256": "6d8183e634a0fa028c4e0a8e58b4885a9ea54f8042b9334e7fe81ef6d59e04d5"
     },
     {
       "path": "data/states/az/meetings/notice-summaries.json",
@@ -133,7 +133,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d890482b67fe5040600a3ccbb1903905a1eedde02605fe75386759b783453484",
+      "payloadSha256": "e268b0308d8499e551f29bd4d832b1ffe7fcb161589f16ce97b8226134001a56",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "817c61edbf5a70130732224c99e71f5f9fb337a0b090f1a356265a81899aca3e",
+      "payloadSha256": "d61dac9cb16f5ecc99e4381d9a6f378bad9fb726f590a701825834e1d9c4e22f",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -436,7 +436,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f011e9674fa55964d47c68a9898cf2e9792cbaa9c08056c194a6e3ec24cfad1f",
+      "payloadSha256": "daa385b33c069713b2f175b15d44ec97ecf7f0c71c8edbd7a04dd74376eee39d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -589,7 +589,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "311d6cc3b2fb7563f4f99657ac9cfac7b1669d8a3116f681cc2886bd67b9d5c1",
+      "payloadSha256": "040a204452a214bb53228bf805d3cf564e2fe9b0eaf6be0fc9126e8a48c64aec",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -774,7 +774,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "93859e5904cb8b68386c18e8d151ef2edaf82d6304eb8aaf1594f55777a54599",
+      "payloadSha256": "f012be2e69d1760fb423cddf59a2ee55a4a52882cc9d87aa86086b253d306b34",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -959,7 +959,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "ab6e424ecc3cb9390f64066df826757eddfce5f8b6ff141dec5280cdb2425dfb",
+      "payloadSha256": "0e9a3bc04cf50cb175f8c57fbda0656f6cc2a3272d32c4d264b14daae09f5eff",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1144,7 +1144,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "678bfa6c249b91e9cc67877191c9e260006132d61a6971348f4d353939222708",
+      "payloadSha256": "8e1dbdf64e1a692375c13ec93b86a497c47decb8964153cab936a38b15911d49",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1353,7 +1353,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "60ca4696539ed8af7fa21cf774c46c9ddc0d2a8601b649ed6faa9dae9536f99e",
+      "payloadSha256": "b8ab32258e68cfaf2085992d9c83070217348f19a773978c0547b1917e0343e4",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1566,7 +1566,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "341db47a1f8be69b59ce6754e8df48e27c73ee6f060502a7a9b5c22b5ff8dd7c",
+      "payloadSha256": "a7a465bcb6d737323a2d6b0d88275fd55ca15f92bcb164aa528f77e25c515542",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1712,7 +1712,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "59df837b344a44a6bce239145fac202b501c5b3eb7bbadb3e52eb9776d9abd84",
+      "payloadSha256": "4fe5f4af93ba7bb75625d43b88f70d55470d7307c899781cb4d03d704b0a82fd",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1925,7 +1925,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "de1464c3d9aa12e2fd210a5319bbf51618235c565cae8897c47fc466ac3ce200",
+      "payloadSha256": "a3ccec37dab562f9c2c6d7fdf9f000f955a91affbfeadf787308b78969e291b3",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2102,7 +2102,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "6c67fff61b0558e33ae1212462df16d47ab8190742e9c9df2611295cd7072864",
+      "payloadSha256": "497ab1fba34e48d32e76288a362e12e8b090b278bea34171c0a19cf06112daf1",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2255,7 +2255,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "03a686de4c351a24c653e7e05f30d7ca4fa835ec86ea3965337dfd6e08552a6c",
+      "payloadSha256": "6d03cc6785da819e30d06a025443e3eb5363e1f9c3a94ab8022bdb6fb4d67af9",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2464,7 +2464,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "588614a4898709b2868a4896c6e230e5f6110367e63850f9ab537cabb7e29266",
+      "payloadSha256": "49d00303346e9130c30d50fbb30adc554f6bb002a4e25226639e7654b374fcad",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2673,7 +2673,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0aff67a86376c6c7e79b1a2bdbfd00d646cea23bb46c47be26fa8d25679cd094",
+      "payloadSha256": "28841a69899a39b9452cf13b9ce750eb87b760f2609fc9e9c8cc339095de3f08",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2868,7 +2868,7 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 5,
-        "calendarListingsHeldForThisBody": 23,
+        "calendarListingsHeldForThisBody": 21,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 1,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -2881,7 +2881,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "957485e986cdcfece618b1790f303c1ab8e43445ade39a771c412cbab231eaad",
+      "payloadSha256": "476af0a5f77058a6b6432267ea254e03b906cc46f04bdea0265dd2ed82acc5f7",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3062,7 +3062,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "6f95884ff557d0e744c2d640ac1e2a7234739a96d80c9b3c06de5a813b65d71d",
+      "payloadSha256": "4034d0890350c7f38c58103280f4a9d31964bb5ab0997f94a46095203b353ae3",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3243,7 +3243,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0462d81a91a3140c6b5f36310f802bcd3fc23091c688a986a91cfa5e27544381",
+      "payloadSha256": "a5a53d3fb109feed7054060e4ea59a91ad8cf7044d7f4659c41de6fda75d2769",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3396,7 +3396,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "c0a4d36b7a6c170280847e66250cd71d302f0d564eee6af162ee1306a30bf7b3",
+      "payloadSha256": "3d9b41e2880fe475a59c6af0059847614a2b6395cbecd9ada47307b94a51c206",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3549,7 +3549,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "7536ab2320c5d147180fbba1e3a57c9c9c6074abfba48366fad0f4aca74be5ba",
+      "payloadSha256": "d38c8bdb40478098a6b949cae6c2146212377e81f3cb4170565621a638df260c",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

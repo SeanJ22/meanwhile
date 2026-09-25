@@ -1,7 +1,22 @@
-import { loadedFrom, outcomeEvidenceFor, outcomeGapWhose, sittingsForBody } from "../outcomes/store.ts";
+import { isMinutesRouteSitting, loadedFrom, outcomeEvidenceFor, outcomeGapWhose, sittingsForBody } from "../outcomes/store.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import type { QuestionClass } from "../answerability/record-class.ts";
+import type { LegistarOutcomeRecord } from "../sources/legistar/outcomes.ts";
+import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
+
+/**
+ * A record read off a sitting's minutes (NH332) is answered in the minutes'
+ * own words: the item as printed, the exact passage, and where the document
+ * stands — action minutes are never presented as the approved record.
+ */
+function minutesActionText(rec: LegistarOutcomeRecord, sitting: PersistedSittingOutcomes | undefined): string {
+  const section = rec.sectionQuote ? ` (under "${rec.sectionQuote}")` : "";
+  const item = rec.itemReference ? `Item ${rec.itemReference}${section}${rec.itemQuote ? `, "${rec.itemQuote}"` : ""}: the` : "The";
+  const where = rec.page ? ` (page ${rec.page})` : "";
+  const standing = sitting?.minutesDocument ? ` ${sitting.minutesDocument.approval.detail}` : "";
+  return `${item} minutes${where} record "${rec.quote}".${standing}`;
+}
 
 /** Agenda wording requests noticed items; decision/vote wording stays stricter. */
 export function meetingRecordQuestionClass(question: string): QuestionClass | null {
@@ -21,6 +36,10 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
   // this separate structured source has no sitting. Its outcome-store absence
   // must not become a claim that an already held document has no agenda.
   if (questionClass === "WHAT_WAS_NOTICED" && evidence.state === "NO_SITTING_HELD") return { records, gaps, denominators };
+  // A minutes-read sitting holds decisions, never agenda items: its agenda is
+  // answered by the meeting's own agenda document, exactly as for a sitting
+  // this store does not hold.
+  if (questionClass === "WHAT_WAS_NOTICED" && evidence.sittings.length > 0 && evidence.sittings.every(isMinutesRouteSitting)) return { records, gaps, denominators };
   const sitting = sittingsForBody(input.bodyId).find((row) => row.meetingId === input.meetingId);
   const titles = new Map((sitting?.agenda ?? []).map((record) => [record.eventItemId, record.title]));
   for (const rec of evidence.records) if (rec.recordClass === "AGENDA") {
@@ -35,7 +54,7 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
     records.push({ kind: "MEETING_MEMBER_VOTE", id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`, bodyId: input.bodyId, text: title ? `On "${title}", ${vote.personName} voted ${vote.value}.` : `${vote.personName} voted ${vote.value}.`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
   }
   for (const rec of evidence.records) if (rec.recordClass === "ACTION_SUMMARY") {
-    const parts = [rec.action ? `The board's recorded action was "${rec.action}".` : null, rec.mover ? `Moved by ${rec.mover}${rec.seconder ? `, seconded by ${rec.seconder}` : ""}.` : null, rec.tallyText ? `The clerk recorded: "${rec.tallyText}"` : null, rec.rollCall === "OUTCOME_WITHOUT_ROLL_CALL" ? "No per-member roll call was published for this item." : null].filter(Boolean);
+    const parts = rec.quote ? [minutesActionText(rec, sitting)] : [rec.action ? `The board's recorded action was "${rec.action}".` : null, rec.mover ? `Moved by ${rec.mover}${rec.seconder ? `, seconded by ${rec.seconder}` : ""}.` : null, rec.tallyText ? `The clerk recorded: "${rec.tallyText}"` : null, rec.rollCall === "OUTCOME_WITHOUT_ROLL_CALL" ? "No per-member roll call was published for this item." : null].filter(Boolean);
     records.push({ kind: "MEETING_ACTION", id: `${rec.eventItemId}#action`, bodyId: input.bodyId, text: `${rec.matterFile ? `${rec.matterFile}: ` : ""}${parts.join(" ")}`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
   }
   denominators.outcomeRecordsForThatMeeting = evidence.records.length;

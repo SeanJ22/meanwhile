@@ -11,10 +11,13 @@
  *       executor calls it before every transport call, so a model turn on a
  *       deterministic step is a thrown defect, never a billed one.
  *   EACH MODEL STEP ROUTES TO THE CHEAPEST CLASS THAT MEETS ITS STANDARD
- *       extraction / classification / page-to-representation: Haiku, then
- *       Sonnet on escalation; novelty / ambiguity / adversarial audit: the
- *       frontier model. A cheaper model that fails a step's standard ESCALATES
- *       and the escalation is recorded (`escalateTo`), never silent.
+ *       extraction / classification: Haiku, then Sonnet on escalation; the
+ *       Scout research loop: Sonnet, then the frontier on escalation
+ *       (MW-033, 2026-09-25); adversarial audit: the frontier model, by
+ *       MW-035's selective-expensive-step rule. A cheaper model that fails a
+ *       step's standard ESCALATES only for a reason in the closed
+ *       `MODEL_ESCALATION_REASONS`, and the reason, its evidence and the cost
+ *       of both attempts are recorded on the step's result, never silent.
  *   EFFORT IS SET PER ROLE
  *       `output_config.effort` comes from `ROLE_EFFORT`, is recorded on the
  *       result, and never varies within an Attempt (an effort change
@@ -48,7 +51,7 @@ export type ModelEffort = "low" | "medium" | "high";
 
 /** The roles that invoke a model in this lane, and the effort each runs at. */
 export const ROLE_EFFORT = {
-  /** The Scout's research loop: a bounded frontier step. Medium — the cap is economic, never a truth judgement. */
+  /** The Scout's research loop, on whichever class runs it. Medium — the cap is economic, never a truth judgement. */
   SCOUT: "medium",
   /** Sub-steps (extraction, classification, summarization): terse, single-purpose. */
   SUB_STEP: "low",
@@ -76,13 +79,23 @@ export type StepRoute =
  * and the deterministic ones say where the code is.
  */
 export const SCOUT_STEPS = {
-  /** The research loop itself: novelty, ambiguity, an unknown route. Frontier. */
+  /**
+   * The research loop itself: novelty, ambiguity, an unknown route. Sonnet 5
+   * FIRST, the frontier only for a recorded reason (MW-033, 2026-09-25). Until
+   * that date the loop started on the frontier and nothing ever escalated.
+   * Haiku 4.5 is cheaper but unsuitable for THIS request: it rejects the
+   * `output_config.effort` the loop sends and caps context at 200K (claude-api
+   * reference, read 2026-09-25). The escalation rule and its closed reason list
+   * are `MODEL_ESCALATION_REASONS` below; the executor applies them.
+   */
   "scout-research-loop": {
     kind: "MODEL",
-    modelClass: "frontier",
+    modelClass: "sonnet",
     role: "SCOUT",
-    escalateTo: null,
-    why: "finding a compliant route nothing deterministic can open is the novelty case RULING 244 reserves for the frontier model",
+    escalateTo: "frontier",
+    why:
+      "Sonnet 5 is the cheapest class that accepts this loop's request (its effort setting, tool use and long context — Haiku 4.5 rejects the effort setting); " +
+      "it moves up to the frontier only when the Sonnet attempt shows a recorded reason (MW-033)",
   },
   /** HTML/JSON/PDF -> title, visible text, links, extracted text. Code, in scout-tools.ts. */
   "page-to-representation": {
@@ -126,7 +139,14 @@ export const SCOUT_STEPS = {
     escalateTo: "frontier",
     why: "summarization for a reader-facing owner surface needs Sonnet's standard; ambiguity escalates to the frontier and is recorded",
   },
-  /** An adversarial audit of a Scout result. Frontier. */
+  /**
+   * An adversarial audit of a Scout result. Frontier, and no cheaper class is
+   * tried first: this is one of the expensive steps MW-035 allows because it is
+   * selective — it runs once per record the parser and validator already
+   * passed, on its way to promotion — and its whole job is to catch what a
+   * cheaper pass missed, so a cheaper auditor would repeat the blind spot it
+   * exists to check (workers/model-audit.ts).
+   */
   "adversarial-audit": {
     kind: "MODEL",
     modelClass: "frontier",
@@ -180,6 +200,89 @@ export function assertStepMayInvokeModel(
   if (route.kind === "DETERMINISTIC") throw new DeterministicStepInvokedModel(step, route.implementedIn);
   const modelClass = escalated && route.escalateTo !== null ? route.escalateTo : route.modelClass;
   return { model: MODEL_FOR_CLASS[modelClass], modelClass, effort: ROLE_EFFORT[route.role], role: route.role };
+}
+
+/* ------------------------------------------------ the escalation vocabulary */
+
+/**
+ * **WHY A MODEL STEP MOVED UP A CLASS — A CLOSED LIST.** (MW-031, MW-033,
+ * 2026-09-25.)
+ *
+ * `assertStepMayInvokeModel(step, escalated)` takes escalation as a yes-or-no,
+ * so it could never say why. A step moves up only for one of these reasons, each
+ * OBSERVED on the cheaper attempt by the executor — never the model's own claim
+ * that it needs help — and the reason travels with a short machine-written
+ * evidence line and the cost of both attempts on the step's own result.
+ *
+ * This is MODEL-ROUTING escalation. It is not the owner escalation in
+ * `work-item.ts` (work handed to a person); the two are never mixed.
+ */
+export const MODEL_ESCALATION_REASONS = [
+  /** The cheaper attempt reached its turn, tool-call or token bound (or the early stop) and still produced no accepted typed result. */
+  "BOUND_EXHAUSTED_WITHOUT_RESULT",
+  /** The cheaper attempt's typed result was refused by the executor's own validation (a SCOUT_* refusal) and never corrected. */
+  "RESULT_REFUSED",
+  /** The cheaper attempt stopped calling tools without ever calling finish. */
+  "NO_TYPED_RESULT",
+  /** The provider refused the cheaper model's request as invalid for it (HTTP 400) — a capability the cheaper model lacks. */
+  "CAPABILITY_ERROR",
+] as const;
+export type ModelEscalationReason = (typeof MODEL_ESCALATION_REASONS)[number];
+
+/**
+ * **WHY AN ESCALATION THE LADDER CALLED FOR DID NOT RUN — ALSO CLOSED.** A
+ * refused escalation is recorded on the result with the reason it would have
+ * run for; the Attempt then ends on the cheaper attempt's own outcome.
+ */
+export const MODEL_ESCALATION_REFUSALS = [
+  /** No reservation seam was supplied, so the second attempt could not be reserved first: fail closed. */
+  "NOT_RESERVED",
+  /** The rolling spend ceiling cannot cover the second attempt's worst case (or its spend is unmeasured). */
+  "CEILING",
+  /** The cheaper attempt's own cost is unmeasured, so the combined cost could not be known or reserved against. */
+  "UNMEASURED_SPEND",
+  /** Too little of the Attempt's shared wall clock remains for a second attempt. */
+  "WALL_CLOCK",
+] as const;
+export type ModelEscalationRefusal = (typeof MODEL_ESCALATION_REFUSALS)[number];
+
+export class UnrecordedEscalation extends Error {
+  constructor(step: string, why: string) {
+    super(
+      `STEP ESCALATION REFUSED: "${step}" ${why}. A step moves up a class only for a reason in MODEL_ESCALATION_REASONS ` +
+        `(${MODEL_ESCALATION_REASONS.join(", ")}), and only below the top of its ladder (MW-033).`,
+    );
+    this.name = "UnrecordedEscalation";
+  }
+}
+
+/** The class a MODEL step escalates to, or null at the top of its ladder (or for a deterministic/unknown step, which throws first). */
+export function escalationTargetFor(
+  step: string,
+): { readonly model: string; readonly modelClass: ModelClass; readonly effort: ModelEffort; readonly role: ModelRole } | null {
+  const base = assertStepMayInvokeModel(step);
+  const up = assertStepMayInvokeModel(step, true);
+  return up.modelClass === base.modelClass ? null : up;
+}
+
+/**
+ * The model, effort and class for an ESCALATED call of a MODEL step. Throws
+ * for a deterministic or unknown step, for a reason outside the closed list,
+ * for a step already at the top of its ladder, and — re-checked at the call,
+ * not only at module load — for a target above the ceiling. The escalated
+ * executor calls this before EVERY transport call of its second attempt.
+ */
+export function assertStepMayEscalate(
+  step: string,
+  reason: ModelEscalationReason,
+): { readonly model: string; readonly modelClass: ModelClass; readonly effort: ModelEffort; readonly role: ModelRole; readonly escalatedFrom: ModelClass } {
+  if (!(MODEL_ESCALATION_REASONS as readonly string[]).includes(reason)) throw new UnrecordedEscalation(step, `names no recorded reason (${JSON.stringify(reason)})`);
+  const base = assertStepMayInvokeModel(step);
+  const up = escalationTargetFor(step);
+  if (up === null) throw new UnrecordedEscalation(step, `is already at the top of its ladder (${base.modelClass})`);
+  const violation = modelCeilingViolation(up.model);
+  if (violation !== null) throw new ModelAboveCeiling(up.modelClass, up.model, violation);
+  return { ...up, escalatedFrom: base.modelClass };
 }
 
 /* ------------------------------------------------------- the model ceiling */

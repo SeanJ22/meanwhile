@@ -8,6 +8,7 @@ import { getTableConfig } from "drizzle-orm/pg-core";
 
 // Plain .mjs, shared with the plain-node scripts that never see tsx.
 import { posixRelative } from "../scripts/repo-path.mjs";
+import { importReachability } from "../lib/holdings/reader-census.ts";
 import {
   COVERAGE_TIERS,
   COVERAGE_TIER_NEXT_STEP,
@@ -471,8 +472,10 @@ test("the runtime ledger agrees with the audit ledger, zip for zip", () => {
 test("every route that reads the coverage ledger traces it into the deploy", () => {
   const config = readFileSync(join(ROOT, "next.config.ts"), "utf8");
   const RUNTIME = "zip-coverage-tiers-runtime.json";
+  // `/api/meetings` left this list on 2026-09-25 (C21): its search-log row, the
+  // only thing on it that read the ledger, moved to the client's `/api/log`
+  // beacon (PDC-9), and the test below holds that it no longer reaches it.
   for (const route of [
-    "/api/meetings",
     "/ballot",
     "/about-area",
     "/api/reactions",
@@ -493,6 +496,21 @@ test("every route that reads the coverage ledger traces it into the deploy", () 
     "the 18 MB AUDIT ledger must never be traced into a function bundle — only " +
       "the 666 KB runtime copy",
   );
+});
+
+test("C21: /api/meetings no longer reaches the coverage ledger, so it no longer traces it", () => {
+  // If a later change makes the route read the ledger again, the reachability
+  // fails first and the trace goes back with it; the trace alone never stays.
+  assert.equal(
+    importReachability(ROOT, "app/api/meetings/route.ts", "lib/coverage/zip-tier.ts").reached,
+    false,
+    "the meetings route reaches lib/coverage/zip-tier.ts again — trace the ledger for it",
+  );
+  const config = readFileSync(join(ROOT, "next.config.ts"), "utf8");
+  const at = config.indexOf(`"/api/meetings": [`);
+  assert.ok(at > 0, "the /api/meetings trace entry is still where the static geography is named");
+  const block = config.slice(at, config.indexOf("],", at));
+  assert.ok(!block.includes(`"./data/derived/zip-coverage-tiers-runtime.json"`), "an untraced-by-need ledger rides the route's trace");
 });
 
 /* ---- item 3: the per-government tier distribution on every sold row ------- */

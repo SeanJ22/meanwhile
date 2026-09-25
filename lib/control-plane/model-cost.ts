@@ -124,6 +124,12 @@ export function rateFor(model: string): ModelRate | null {
  */
 export const MODEL_CACHE_MINIMUMS = {
   values: {
+    /*
+     * Re-read 2026-09-25: the claude-api skill's prompt-caching table (cached
+     * 2026-06-24) has no Opus 5.5 row; its model-migration guide, "Migrating to
+     * Claude Opus 5.5", lists "prompt caching with the 512-token minimum" as
+     * carried over from Opus 5. The recorded value stands.
+     */
     "claude-opus-5-5": 512,
     "claude-opus-5": 512,
     "claude-sonnet-5": 1024,

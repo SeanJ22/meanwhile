@@ -57,8 +57,10 @@
  * never split across assignments by guesswork — it is named as shared. PURE:
  * records in, rows out; the only clock is `nowIso`.
  */
+import { ASK_GAP_CODES, ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
+import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
 import type { Attempt, ExecutionLease, WorkerRef } from "./attempt.ts";
-import type { CostEntry } from "./cost.ts";
+import { isProofProject, type CostEntry } from "./cost.ts";
 import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
 import { displayNameOf, words } from "./display-name.ts";
 import {
@@ -85,10 +87,11 @@ import type { RouteDisposition, RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "./scheduler/durable.ts";
 import { DISCHARGING_DISPOSITIONS } from "./scheduler/dispatch.ts";
-import { isScheduled, scheduleObligation } from "./scheduler/obligation.ts";
+import { isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { WorkItem, WorkItemState } from "./work-item.ts";
+import type { WorkQuestion } from "./work-question.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
@@ -222,6 +225,14 @@ export interface AssignmentWhat {
     readonly band: { readonly band: 1 | 2 | 3; readonly why: string } | null;
   };
   readonly workers: Held<readonly AssignmentWorker[]>;
+  /**
+   * MW-002: the question the latest round asks, as its work item recorded it.
+   * Null when no round recorded one — "not recorded", never a default. Absent
+   * on rows built by paths that do not read it.
+   */
+  readonly question?: WorkQuestion | null;
+  /** MW-001: the owner's Sends recorded on the obligation, in the order they reached it. */
+  readonly assignments?: readonly ObligationAssignment[];
 }
 
 export interface AssignmentLead {
@@ -380,7 +391,7 @@ export interface AssignmentCost {
    * discharged round is not a retry. Null when it cannot be told.
    */
   readonly retries: number | null;
-  /** Model-routing escalations: a named gap (recorded nowhere yet), or null where the lane uses no model at all. */
+  /** Model-routing escalations: a named gap (recorded on each Scout result since 2026-09-25, not yet joined here), or null where the lane uses no model at all. */
   readonly escalations: { readonly toOwner: number; readonly modelRouting: Gap | null };
   /** Requests, bytes and time from the cost rows; null where the lane writes no cost rows at all. */
   readonly nonDollar: { readonly requests: number; readonly bytes: number; readonly durationMs: number } | null;
@@ -688,6 +699,8 @@ export const OBLIGATION_PROVIDER_PREFIXES: readonly { readonly prefix: string; r
   { prefix: "freshness:tracker:", providerId: "tracker-intake" },
   /* MW-028: meetings discovery the owner's dispatch materialized. */
   { prefix: "freshness:meetings-discovery:", providerId: "meetings-discovery" },
+  /* The gaps Ask states about a body, one per body and gap code (2026-09-25). */
+  { prefix: "freshness:ask-gap:", providerId: "ask-gaps" },
 ];
 
 export function providerOfObligation(id: string): string | null {
@@ -697,8 +710,7 @@ export function providerOfObligation(id: string): string | null {
 /** Conformance and proof runs write rows into the control plane; they are real rows and never real work. */
 export function isProofRecord(input: { readonly obligationId?: string | null; readonly project?: string | null }): boolean {
   if (typeof input.obligationId === "string" && input.obligationId.startsWith("proof-")) return true;
-  const project = input.project ?? "";
-  return /^conformance(-|$)/.test(project) || project === "control-plane-proof";
+  return isProofProject(input.project);
 }
 
 /** A shared cost is attributable to no single assignment: today, the Scout prompt-cache pre-warm. */
@@ -1402,15 +1414,22 @@ function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSources, clips: 
   );
   const cadence = isScheduled(scheduled) ? clip(scheduled.basis, clips.text) : clip(`the scheduler cannot place it: ${scheduled.reason}`, clips.text);
   const routeWords = ob.routeId === null ? "no route named yet" : words(ob.routeId);
+  const askGap = parseAskGapObligationId(ob.id);
+  /* MW-002: the latest round's own recorded question; an older round that recorded none says so. */
+  const latestRound = [...g.workItems].sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0))[0] ?? null;
   return {
-    title: `${sentenceCase(ob.recordClass)} via ${routeWords}`,
+    question: latestRound?.question ?? null,
+    assignments: ob.assignments ?? [],
+    title: askGap ? `${askGapTitle(askGap.code)} — ${displayNameOf(askGap.bodyId).short}` : `${sentenceCase(ob.recordClass)} via ${routeWords}`,
     recordClass: ob.recordClass,
     subject: ob.subjectId,
     subjectName: displayNameOf(ob.subjectId).short,
     route: ob.routeId,
     where: whereOf(ob.subjectId),
     why: {
-      says: ob.active
+      says: ob.active && askGap
+        ? "Owed because Ask tells anyone who asks about this body that we do not hold this yet; it closes when a read holds the record."
+        : ob.active
         ? `Owed on a standing freshness clock: ${sentenceCase(ob.recordClass).toLowerCase()} for this subject, through ${routeWords}.`
         : `This clock was retired${ob.retiredAt ? ` on ${ob.retiredAt}` : ""}: ${clip(ob.retirementReason ?? "no reason was recorded", clips.text)}`,
       dueAt: ob.nextDueAt ?? null,
@@ -1859,7 +1878,7 @@ function costOf(g: Gathered, idx: Index, denominatorUsd: number | null): Assignm
       toOwner,
       modelRouting: {
         whose: "OURS",
-        says: "model-routing escalations are recorded nowhere yet, so they are not counted — not zero",
+        says: "model-routing escalations are recorded on each Scout result (since Sep 25) but not yet joined to this view, so they are not counted here — not zero",
       },
     },
     nonDollar: { requests, bytes, durationMs },
@@ -2020,6 +2039,46 @@ function nextStepWords(input: {
   return input.outcome?.nextAction ?? "";
 }
 
+/**
+ * **AN ASK GAP'S NEXT STEP, FROM ITS LATEST ROUND'S OWN NOTE.** (2026-09-25.)
+ * A round closed `DISCOVERED` was carried by a routine read: the runner owns it,
+ * and a `CADENCE_BROKEN` note names the read that is behind the owner's cadence.
+ * A round closed `REQUIRES_NEW_ADAPTER` names the adapter engineering owes. The
+ * note grammar is `ask-gap-id.ts`'s. Null before any round, or for any other
+ * disposition, which keeps the ordinary reading.
+ */
+function askGapStep(d: RouteDisposition | null, clipAt: number): { readonly owner: NextStepOwner; readonly nextAction: string } | null {
+  if (d === null) return null;
+  const parts = askGapNoteParts(d.note);
+  if (d.disposition === "DISCOVERED") {
+    return parts.cadenceFailure !== null
+      ? {
+          owner: "RUNNER",
+          nextAction: clip(
+            `Named failure, CADENCE_BROKEN as of ${d.at}: ${parts.cadenceFailure} Find why the routine runner is not reading it on cadence; the gap closes when a read holds the record.`,
+            clipAt,
+          ),
+        }
+      : {
+          owner: "RUNNER",
+          nextAction: clip(
+            `The routine read closes it${parts.nextRead ? ` — its next read is ${parts.nextRead}` : ""} (as of ${d.at}); nothing is owed by anyone else.`,
+            clipAt,
+          ),
+        };
+  }
+  if (d.disposition === "REQUIRES_NEW_ADAPTER") {
+    return {
+      owner: "ENGINEERING",
+      nextAction: clip(
+        `Build the adapter owed${parts.nextMove ? `: ${parts.nextMove}` : ""}. Until it exists no scheduled read can close this gap; when a routine contract carries it, this becomes the runner's on the next cycle.`,
+        clipAt,
+      ),
+    };
+  }
+  return null;
+}
+
 function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Clips): Derived {
   const ob = g.obligation;
   const now = idx.now;
@@ -2149,6 +2208,7 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
       : state === "SUCCEEDED"
         ? (backoff?.since ?? (overdue ? eligibleAt : null))
         : outcome.at;
+  const askGap = ob !== null && parseAskGapObligationId(ob.id) !== null ? askGapStep(latest?.routeTask?.disposition ?? null, clips.text) : null;
   return {
     state,
     stateSays: outcome.says,
@@ -2161,8 +2221,8 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
       eligibleAt,
       backoff,
       blocker,
-      owner: state === "SUCCEEDED" ? "RUNNER" : outcome.owner,
-      nextAction: stepWords(state, outcome),
+      owner: askGap?.owner ?? (state === "SUCCEEDED" ? "RUNNER" : outcome.owner),
+      nextAction: askGap?.nextAction ?? stepWords(state, outcome),
       openRound,
     },
   };
@@ -2381,6 +2441,12 @@ export interface AssignmentSummary {
   readonly inBackoff: Held<Measured>;
   readonly costs: AssignmentCostSummary;
   readonly pipeline: Held<{ readonly linked: Measured; readonly unlinked: number }>;
+  /**
+   * Open Ask gaps by code: the active `freshness:ask-gap:` obligations. A gap —
+   * never zero — when no Ask-gap obligation is on record at all. Absent on a
+   * view published before the count existed, which a page names as not counted.
+   */
+  readonly askGaps?: Held<{ readonly open: number; readonly byCode: readonly { readonly code: AskGapCode; readonly count: Measured }[] }>;
 }
 
 export interface AssignmentView {
@@ -2566,7 +2632,28 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
           });
         })();
 
-  return { total, byState, byLane, groups, overdue, inBackoff, costs, pipeline: pipelineHeld };
+  const askGapRows = src.obligations.flatMap((o) => {
+    const parsed = parseAskGapObligationId(o.id);
+    return parsed === null ? [] : [{ code: parsed.code, active: o.active }];
+  });
+  const openAskGaps = askGapRows.filter((row) => row.active);
+  const askGaps: AssignmentSummary["askGaps"] =
+    askGapRows.length === 0
+      ? gap("OURS", "no Ask-gap obligation is on record: the ask-gaps provider has registered none yet, so open Ask gaps are not counted — never read as zero")
+      : held({
+          open: openAskGaps.length,
+          byCode: ASK_GAP_CODES.map((code) => ({
+            code,
+            count: measured(
+              openAskGaps.filter((row) => row.code === code).length,
+              openAskGaps.length,
+              `open Ask gaps coded ${code}, of every open Ask gap`,
+              "cp_obligations (active freshness:ask-gap: rows)",
+            ),
+          })),
+        });
+
+  return { total, byState, byLane, groups, overdue, inBackoff, costs, pipeline: pipelineHeld, askGaps };
 }
 
 /**
@@ -2748,6 +2835,7 @@ export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: re
   pushHeld(out, "assignment costs · unattributed", view.summary.costs.unattributed.usd);
   pushHeld(out, "assignment costs · unmeasured model rows", view.summary.costs.unmeasuredModelRows);
   if (view.summary.pipeline.held) pushMeasured(out, "assignments · pipeline items linked", view.summary.pipeline.value.linked);
+  if (view.summary.askGaps?.held) for (const c of view.summary.askGaps.value.byCode) pushMeasured(out, `open Ask gaps · ${c.code}`, c.count);
   out.push({
     label: "assignments · published rows",
     value: view.selection.published,
@@ -2761,6 +2849,18 @@ export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: re
   }
   for (const row of renderedRows) out.push(...assignmentListRowNumbers(row));
   return out;
+}
+
+/** Open Ask gaps by code as the owner reads them, or the named reason they are not counted — never a zero standing in for unknown. */
+export function askGapCountWords(view: Pick<AssignmentView, "summary">): string {
+  const counted = view.summary.askGaps;
+  if (counted === undefined) return "Open Ask gaps are not counted on this published list: it was built before the count existed.";
+  if (!counted.held) return `Open Ask gaps are not counted: ${counted.gap.says}.`;
+  return (
+    `Open Ask gaps — ${counted.value.open.toLocaleString("en-US")}: ` +
+    counted.value.byCode.map((c) => `${ASK_GAP_CODE_WORDS[c.code].toLowerCase()} ${c.count.value.toLocaleString("en-US")}`).join(" · ") +
+    "."
+  );
 }
 
 /** The combined filter counts, for `auditRenderedNumbers`. */
@@ -2784,6 +2884,9 @@ export function assignmentCountClaims(view: AssignmentView): CountClaim[] {
     { label: "published assignment rows", stated: view.selection.published, rendered: view.rows.length },
     { label: "published rows by group", stated: view.selection.published, rendered: groups },
     { label: "published plus omitted", stated: view.summary.total, rendered: view.selection.published + view.selection.omitted },
+    ...(view.summary.askGaps?.held
+      ? [{ label: "open Ask gaps by code", stated: view.summary.askGaps.value.open, rendered: view.summary.askGaps.value.byCode.reduce((n, c) => n + c.count.value, 0) }]
+      : []),
   ];
 }
 

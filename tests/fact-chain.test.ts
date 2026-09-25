@@ -181,7 +181,8 @@ test("PRDY-3/PDC: immutable facts can read the permanent meetings receipt, but c
 
   /* The old writer stays OFF even when the PDC intake can read approved facts. */
   const verdicts = evaluateItems(pass3.states, ACTIVATION_GATE);
-  assert.equal(ACTIVATION_GATE.promotionEnabled, false);
+  /* The gate opens candidate-enrichment for campaign sites only (2026-09-21); no meeting-fact class is open to the old writer. */
+  assert.ok(!ACTIVATION_GATE.openRecordClasses.includes("meeting-times") && !ACTIVATION_GATE.openRecordClasses.includes("agendas"));
   assert.ok(verdicts.verdicts.every((v) => v.verdict === "REFUSE_WOULD"));
 });
 

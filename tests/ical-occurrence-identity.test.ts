@@ -176,7 +176,7 @@ test("ICAL-OCC · every sitting of the Conservation Commission series is its own
   );
   // The four sittings the town edited are stated twice, by the rule and by
   // their overrides; the override is the sitting, and the rule's copy is not.
-  assert.deepEqual(duplicateIdentity, { exact: 4, weakIdCollision: 0 });
+  assert.deepEqual(duplicateIdentity, { exact: 4, weakIdCollision: 0, publisherRelisted: 0 });
   assert.equal(accounting.outcome, "CONSERVED");
   assert.deepEqual(recurrence, { expandedSeries: 1, exclusions: [], notExpanded: [] });
 });
@@ -1041,7 +1041,11 @@ test("ICAL-OCC · a feed that restates the series' rule on every sitting is read
   const governing = partition("newbury-ical-governing");
   const result = normalize([governing.wiring!], NEWBURY_SELECTBOARD, FULL_READ_AT);
   const uids = new Set(parseIcs(NEWBURY_SELECTBOARD).map((event) => event.uid));
-  assert.equal(result.meetings.length, 21);
+  // 21 events select, and seven sittings are listed twice under two series
+  // with every published field identical: 14 sittings (2026-09-25,
+  // `collapsePublisherRelistings`; tests/ical-publisher-relisted.test.ts).
+  assert.equal(result.meetings.length, 14);
+  assert.equal(result.duplicateIdentity?.publisherRelisted, 7);
   for (const meeting of result.meetings) {
     assert.equal(occurrenceParts(meeting.id), null, `${meeting.id} kept its single-event id`);
     assert.ok(uids.has(meeting.id.slice("ical:newbury-ical-governing:".length)));

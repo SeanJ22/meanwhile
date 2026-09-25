@@ -4,7 +4,7 @@ import { ZERO_COST } from "../attempt.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from "../repository/types.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
-import { dispatchOne, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
+import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
@@ -331,7 +331,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
           routeId:d.task!.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null},nextDueAt:d.task!.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:d.task!.id,holder:`autonomous:SCOUT:${randomUUID()}`,
           now:now(),leaseTtlMs:RESEARCH_BOUNDS.perDispatch.maxWallMs+120_000,bound:{maxAttempts:3,maxWallMs:RESEARCH_BOUNDS.perDispatch.maxWallMs,maxCostUnits:RESEARCH_BOUNDS.perDispatch.maxTokens},
-          maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION}));
+          maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)}));
       });
       } catch(error) {
         if(!(error instanceof RepositoryLockHeld)) throw error;
@@ -342,5 +342,6 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
-  return {recovery,decisions,dispatches,scoutsAdmitted,deferred};
+  // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run (MW-014).
+  return {recovery,decisions,dispatches,scoutsAdmitted,deferred,considered:ids.length};
 }

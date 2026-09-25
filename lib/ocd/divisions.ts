@@ -231,6 +231,13 @@ export function subdivisionIdentity(
 
   // `NAMELSADCO` arrives as "Morris County" / "Merrimack County"; the canonical
   // vocabulary drops the suffix, matching countyIdentity above.
+  //
+  // Not every county-equivalent's suffix is dropped ("Adjuntas Municipio",
+  // "Capitol Planning Region", "Alexandria city"), so this segment can differ
+  // from the county's own id. Do not widen the list to fix that: these ids are
+  // committed (the national ZIP index names 1,224 of them, measured 2026-09-25)
+  // and would move. A subdivision's county is its GEOID's first five digits,
+  // which is how registration resolves the parent (lib/registration/candidate.ts).
   const county = slugify(countyName.replace(/\s+(County|Parish|Borough|Census Area)$/i, ""));
   const slug = slugify(nameLsad);
   if (!county || !slug) return null;

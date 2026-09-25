@@ -38,9 +38,9 @@ import { readerQuery } from "./reader-query.ts";
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead, type SharedRead } from "./shared-read.ts";
 
 /** One code's place in the index: every division whose territory reaches it, or not indexed. */
-async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[] }> {
+async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[]; readonly partial: readonly string[] }> {
   const entry = await zipDivisionEntry(zcta5);
-  return entry === null ? { indexed: false, divisions: [] } : { indexed: true, divisions: entry.ids };
+  return entry === null ? { indexed: false, divisions: [], partial: [] } : { indexed: true, divisions: entry.ids, partial: entry.partial };
 }
 
 export interface ZctaInScope {
@@ -51,6 +51,8 @@ export interface ZctaInScope {
   readonly indexed: boolean;
   /** Every division whose territory reaches this ZCTA (empty when not indexed). */
   readonly divisions: readonly string[];
+  /** Of those, the ones covering only part of its sampled area (the index's `partial`). */
+  readonly partial: readonly string[];
 }
 
 export type LookupRead<T> =

@@ -1,5 +1,5 @@
 import { lengthRuleForPrompt } from "./length-contract.ts";
-import { packHasEvidence, type EvidencePack } from "./evidence.ts";
+import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { resolveAskEffort, resolveAskModel, type AskEffort } from "./model.ts";
 import {
   SYNTHESIS_CACHE_TTL,
@@ -219,7 +219,8 @@ function synthesisFields(pack: EvidencePack): Record<string, unknown> {
     timeframe: pack.temporal,
     subject: pack.subject,
     records: pack.records,
-    namedGaps: pack.gaps,
+    /* Whose and the sentence only: a gap's machine code is never part of what the model reads. */
+    namedGaps: pack.gaps.map(gapWords),
     whatWasSearched: pack.denominators,
   };
 }

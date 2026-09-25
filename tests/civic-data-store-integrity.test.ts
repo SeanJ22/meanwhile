@@ -987,11 +987,14 @@ test("a candidate summary is every row column but the envelope and identity set"
   }
 });
 
-test("a Postgres transition moves the candidate envelope once and returns it with the written columns", async () => {
+test("a Postgres transition never reads the envelope the caller holds; it verifies it and returns it", async () => {
   // A transition read the whole row before its compare-and-set and again
   // after it: two copies of the envelope per step, 47.3 MB for one NJ
-  // roll-call step on 2026-09-23. The envelope is written once at create and
-  // never updated, so the pre-read's copy is the durable one.
+  // roll-call step on 2026-09-23. The post-write copy went first; then the
+  // pre-read still carried the envelope, ~235 MB an hour (R26, 2026-09-25).
+  // The envelope is written once at create and never updated, and promotion
+  // already holds it: the pre-read is identity, state, retrieval instant and
+  // hashes, and the held envelope is verified against those columns.
   const value = candidate("postgres-transition-narrow");
   const at = "2026-09-08T12:00:00.000Z";
   const wholeRow: readonly (readonly [NeonColumn, unknown])[] = [
@@ -1021,7 +1024,15 @@ test("a Postgres transition moves the candidate envelope once and returns it wit
     columns: cells.map(([column]) => column),
     rows: [cells.map(([, cell]) => cell)],
   });
-  const result = await withCannedNeon((statement) => {
+  const cell = (name: string) => wholeRow.find(([[column]]) => column === name)!;
+  // The pre-read, in its select order: the Reader-evidence columns, then the instant and hashes.
+  const transitionRow: readonly (readonly [NeonColumn, unknown])[] = [
+    cell("id"), cell("source_id"), cell("record_class"), cell("scope"), cell("state"),
+    [["has_bootstrap_import", "bool"], false], [["bootstrap_import", "jsonb"], null],
+    cell("retrieved_at"), cell("raw_hash"), cell("normalized_hash"),
+  ];
+  const envelopeSelected = (select: string) => /"candidate"(?!\s*(?:->|\?))/.test(select);
+  const canned = (statement: NeonStatement): NeonAnswer => {
     const text = statement.query;
     if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
     if (text.startsWith("with ")) {
@@ -1031,25 +1042,101 @@ test("a Postgres transition moves the candidate envelope once and returns it wit
       };
     }
     if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) {
-      return selectList({ toSQL: () => ({ sql: text }) }).includes(`"candidate"`) ? answer(wholeRow) : answer(summaryRow);
+      const select = selectList({ toSQL: () => ({ sql: text }) });
+      if (/"raw_hash"/.test(select)) return answer(transitionRow);
+      if (envelopeSelected(select)) return answer([cell("candidate")]);
+      return answer(summaryRow);
     }
     throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
-  }, async (store, sent) => {
-    const record = await store.transition(value.id, "NORMALIZED", at, "normalized");
-    const candidateReads = sent.filter(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_candidates"`));
-    assert.equal(candidateReads.length, 2, "the pre-read and the post-write read");
-    assert.match(selectList({ toSQL: () => ({ sql: candidateReads[0]!.query }) }), /"candidate"/, "the pre-read is the one envelope read");
-    assert.doesNotMatch(
-      selectList({ toSQL: () => ({ sql: candidateReads[1]!.query }) }),
-      /"candidate"|"identity"/,
-      "the post-write read carries the row's columns, never the envelope again",
-    );
+  };
+  const candidateReads = (sent: readonly NeonStatement[]) =>
+    sent.filter(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_candidates"`))
+      .map(({ query }) => selectList({ toSQL: () => ({ sql: query }) }));
+
+  const result = await withCannedNeon(canned, async (store, sent) => {
+    const record = await store.transition(value.id, "NORMALIZED", at, "normalized", undefined, undefined, { candidate: value });
+    const reads = candidateReads(sent);
+    assert.equal(reads.length, 2, "the pre-read and the post-write read");
+    assert.equal(reads.some(envelopeSelected), false, "no read carries the envelope: the caller holds it");
+    assert.match(reads[0]!, /"retrieved_at"/, "the pre-read carries the retrieval instant a VALIDATED receipt is checked against");
+    assert.match(reads[0]!, /"raw_hash"/);
+    assert.match(reads[0]!, /"normalized_hash"/);
+    assert.doesNotMatch(reads[0]!, /"identity"|"validation_receipt"/);
+    assert.doesNotMatch(reads[1]!, /"candidate"|"identity"/, "the post-write read carries the row's columns, never the envelope");
     assert.ok(sent.some(({ query }) => /^with "updated_candidate" as \(update "civic_data_candidates"/.test(query)), "the compare-and-set CTE is unchanged");
     return record;
   });
   assert.equal(result.state, "NORMALIZED");
   assert.deepEqual(result.candidate, value, "the returned record carries the durable envelope");
   assert.equal(result.receipt, null);
+
+  // A held envelope that is not this row's is refused before anything is written.
+  for (const mismatched of [
+    { ...value, normalization: { ...value.normalization, normalizedHash: "f".repeat(64) } },
+    { ...value, retrieval: { ...value.retrieval, rawHash: "e".repeat(64) } },
+    { ...value, retrieval: { ...value.retrieval, retrievedAt: "2026-09-08T12:00:01.000Z" } },
+    { ...value, scope: `${value.scope}-other` },
+  ] as RoutineCandidate[]) {
+    await withCannedNeon(canned, async (store, sent) => {
+      await assert.rejects(
+        store.transition(value.id, "NORMALIZED", at, "normalized", undefined, undefined, { candidate: mismatched }),
+        /CANDIDATE_TRANSITION_ENVELOPE_MISMATCH/,
+      );
+      assert.equal(sent.some(({ query }) => query.startsWith("with ")), false, "no state change and no event for a mismatched envelope");
+    });
+  }
+
+  // A caller that does not hold the envelope gets it from one envelope-only read, after the write.
+  const unheld = await withCannedNeon(canned, async (store, sent) => {
+    const record = await store.transition(value.id, "NORMALIZED", at, "normalized");
+    const reads = candidateReads(sent);
+    assert.equal(reads.length, 3, "the pre-read, the post-write read, and the envelope");
+    assert.equal(reads.filter(envelopeSelected).length, 1, "the envelope is read once");
+    assert.equal(envelopeSelected(reads[0]!), false, "and never by the pre-read");
+    return record;
+  });
+  assert.deepEqual(unheld.candidate, value);
+});
+
+test("promotion hands every transition the candidate it already holds", async () => {
+  // R26: the NORMALIZED step discarded the envelope it had read, and the
+  // VALIDATED step's copy was the one promotion returned. The memory store
+  // enforces the same verification, so a run that passes a foreign envelope
+  // fails here as it would against Postgres.
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("promotion-holds-envelope");
+  const held: { state: string; candidate: RoutineCandidate | undefined }[] = [];
+  const spying = new Proxy(store, {
+    get(target, property, receiver) {
+      if (property !== "transition") return Reflect.get(target, property, receiver);
+      return (...args: Parameters<MemoryRoutineDataStore["transition"]>) => {
+        held.push({ state: args[1], candidate: args[6]?.candidate });
+        return target.transition(...args);
+      };
+    },
+  });
+  const outcome = await processRoutineCandidate(spying, value, "2026-09-08T12:01:00.000Z");
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  assert.deepEqual(held.map(({ state }) => state), ["NORMALIZED", "VALIDATED"]);
+  // Promotion holds the envelope it created (the change set attached), which is the durable one.
+  const durable = (await store.readCandidate(value.id))!.candidate;
+  assert.ok(durable.changeSet, "precondition: promotion stores the envelope with its change set");
+  for (const step of held) assert.deepEqual(step.candidate, durable, `${step.state} was handed the envelope promotion holds`);
+  assert.deepEqual(outcome.candidate.candidate, durable);
+
+  // And a foreign envelope is refused by the memory store exactly as by Postgres.
+  const other = candidate("promotion-holds-envelope-2");
+  await store.create({
+    candidate: other, state: "FETCHED", acquisitionSucceeded: true, receipt: null,
+    promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null,
+  }, { candidateId: other.id, sequence: 1, state: "FETCHED", at: other.retrieval.retrievedAt, detail: "acquired" });
+  await assert.rejects(
+    store.transition(other.id, "NORMALIZED", other.retrieval.retrievedAt, "normalized", undefined, undefined, {
+      candidate: { ...other, normalization: { ...other.normalization, normalizedHash: "f".repeat(64) } },
+    }),
+    /CANDIDATE_TRANSITION_ENVELOPE_MISMATCH/,
+  );
+  assert.equal((await store.readCandidateSummary(other.id))?.state, "FETCHED", "nothing moved");
 });
 
 test("every Postgres candidate-event allocator is serialized inside its Neon batch", () => {

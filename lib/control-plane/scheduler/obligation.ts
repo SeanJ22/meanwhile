@@ -127,6 +127,48 @@ export interface FreshnessObligation {
    * Absent on every row a standing provider registered on its own.
    */
   readonly materializedBy?: typeof OWNER_DISPATCH;
+  /**
+   * MW-001: every owner Send that reached this obligation, and how — appended
+   * by the runner's dispatch-work step, never overwritten. A Send that created
+   * the row is CREATED; one that found it already on a clock and put it first
+   * is REORDERED. One obligation can serve several Sends. Runtime-owned and
+   * durable; absent on rows no Send has reached, and on rows a Send created
+   * before this field existed.
+   */
+  readonly assignments?: readonly ObligationAssignment[];
+  /**
+   * Set with `materializedBy`: which registry defined the government this row is about — a state's reviewed
+   * registry, or its REGISTRATION where it has none (2026-09-25, `lib/registration/jurisdictions.ts`), so Admin
+   * can say which. Runtime-owned like the mark: a registration pass never resets it.
+   */
+  readonly materializedFrom?: "REVIEWED_REGISTRY" | "REGISTRATION";
+}
+
+/** One owner Send, as it is recorded on an obligation it reached (MW-001). */
+export interface ObligationAssignment {
+  /** The Send: the scope decision key (`county:2020/04019`) or `dispatch:<intent id>`. */
+  readonly assignmentKey: string;
+  /** The gateway receipt (a scope) or the DISPATCH intent id that carried the Send when it reached this row. */
+  readonly ref: string;
+  readonly relation: "CREATED" | "REORDERED";
+  /** When the runner recorded it. */
+  readonly at: string;
+  /** The questions the owner asked of the Send (MW-002); absent when it asked none. */
+  readonly questions?: readonly import("../work-question.ts").WorkQuestion[];
+}
+
+/**
+ * Append a Send to an obligation's list, never overwriting: a Send already
+ * recorded with the same relation is left as it is. Returns the same list when
+ * nothing is added, so a caller can skip the write.
+ */
+export function withAssignment(
+  current: readonly ObligationAssignment[] | undefined,
+  entry: ObligationAssignment,
+): readonly ObligationAssignment[] {
+  const held = current ?? [];
+  if (held.some((a) => a.assignmentKey === entry.assignmentKey && a.relation === entry.relation)) return held;
+  return [...held, entry];
 }
 
 /** The one value `FreshnessObligation.materializedBy` carries. */

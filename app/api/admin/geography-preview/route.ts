@@ -11,6 +11,11 @@
  * way in; the distinct bodies over the whole geography; and how many of them
  * we already read on the standing clock. A code outside the index is named
  * as such, never counted as empty.
+ *
+ * And, per state the geography reaches (2026-09-25), what a Send would create
+ * there: the reviewed registry's name, or — for a state with none — how many
+ * governments its promoted registration places here, by the runner's own rule
+ * (`send`; `lib/control-plane/expansion/send-preview.ts`).
  */
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -19,9 +24,14 @@ import { containerStanding, indexBodies } from "@/lib/control-plane/admin-view/c
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 
+import { DISPATCH_WORK_TARGET_CAP } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
+import { stateSendPreviewSentence } from "@/lib/control-plane/expansion/send-preview.ts";
+
 import { loadContainer } from "../../../(admin)/_mw/data/geography.ts";
 import { loadWatchedStandings } from "../../../(admin)/_mw/data/load-bodies.ts";
+import { readerQuery } from "../../../(admin)/_mw/data/reader-query.ts";
 import { loadRegistryBodies } from "../../../(admin)/_mw/data/registry.ts";
+import { sendPreviewFor } from "../../../(admin)/_mw/data/send-preview.ts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -47,6 +57,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (container.kind === "UNREAD") return NextResponse.json({ ok: false, says: container.detail }, { status: 200 });
   const g = container.value.geography;
   const stateCode = g.stateAbbr.toLowerCase();
+  /* How many governments a Send here creates work for, per state, and whether a reviewed registry or registration names them (2026-09-25). */
+  const query = readerQuery();
+  const sendStates = await Promise.all(
+    [...new Set([g.stateAbbr, ...g.memberStates].map((s) => s.toUpperCase()))].sort().map((st) => sendPreviewFor(st, container.value.zctas, query)),
+  );
+  const send = { states: sendStates, says: sendStates.map((p) => stateSendPreviewSentence(p, DISPATCH_WORK_TARGET_CAP)) };
   if (registry.kind === "UNREAD") {
     return NextResponse.json({
       ok: true,
@@ -54,6 +70,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       codes: container.value.zctas.map((z) => ({ zcta5: z.zcta5, whole: z.whole, fraction: z.fraction, indexed: z.indexed, counts: null })),
       totals: null,
       totalsGap: registry.detail,
+      send,
       lookup: { source: container.source, versionId: container.versionId },
     });
   }
@@ -75,6 +92,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       readerVisibleRecords: bodies.kind === "HELD" ? readerVisible : null,
     },
     totalsGap: bodies.kind === "HELD" ? null : bodies.detail,
+    send,
     lookup: { source: container.source, versionId: container.versionId },
   });
 }

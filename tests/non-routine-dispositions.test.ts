@@ -12,6 +12,7 @@ import {
   PDC7_MIGRATION_BLOCKERS,
   PDC7_RESOLVED_SPLIT_BINDINGS,
   ROUTINE_INVENTORY_BINDINGS,
+  boundContractSourceId,
   pdc7ClosureProblems,
   validatePdc7DispositionRegistry,
 } from "../lib/civic-data/non-routine-dispositions.ts";
@@ -54,9 +55,9 @@ test("the PDC-7 frozen denominator accounts for every source row and all 42 hold
   const problems = validatePdc7DispositionRegistry(inventory.rows, DATASET_FAMILIES.map((family) => family.id));
   assert.deepEqual(problems, []);
 
-  assert.equal(inventory.rows.length, 41); // + meeting-source-wiring, meetings-derived-families, meeting-body-crosswalk (C16)
+  assert.equal(inventory.rows.length, 42); // + meeting-source-wiring, meetings-derived-families, meeting-body-crosswalk (C16) // + candidate-campaign-site-chain (2026-09-25)
   // legistar-outcomes moved from the explicit-owner bindings to the standing clock; registration adds one row.
-  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 11); // + the derived wiring store and the derived meeting families (C16) // + registration (56 contracts, one binding) and + pima-legistar-outcomes, moved to the standing clock
+  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 12); // + the derived wiring store and the derived meeting families (C16) // + registration (56 contracts, one binding) and + pima-legistar-outcomes, moved to the standing clock // + the verified campaign sites (2026-09-25)
   assert.equal(NON_ROUTINE_DISPOSITIONS.length, 11);
   assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 18); // + the meeting-body crosswalk (C16)
   assert.equal(PDC7_RESOLVED_SPLIT_BINDINGS.length, 1);
@@ -90,7 +91,7 @@ test("six direct routine rows plus the retired LegiScan row resolve every standi
   const replacements = NON_ROUTINE_DISPOSITIONS.flatMap((row) => [...(row.replacementRoutineContracts ?? [])]);
   assert.deepEqual(
     byId([
-      ...ROUTINE_INVENTORY_BINDINGS.flatMap(({ contractIds, contractSourceId }) => contractIds.map((contractId) => ({ contractId, contractSourceId }))),
+      ...ROUTINE_INVENTORY_BINDINGS.flatMap((binding) => binding.contractIds.map((contractId) => ({ contractId, contractSourceId: boundContractSourceId(binding, contractId) }))),
       ...replacements,
     ]),
     byId(observableRoutineContracts().map(({ id: contractId, sourceId: contractSourceId }) => ({ contractId, contractSourceId }))),

@@ -9,7 +9,8 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { scoutExecutor, anthropicTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
-import { dispatchOne } from "../lib/control-plane/scheduler/dispatch.ts";
+import { dispatchOne, proofChargeOf } from "../lib/control-plane/scheduler/dispatch.ts";
+import { AUTONOMOUS_FLEET_PROOF_PROJECT } from "../lib/control-plane/cost.ts";
 import { RESEARCH_BOUNDS, WORKER_CREDENTIAL_VAR, researchSpendInWindow, ceilingPermits, readIntents, RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 import { durableResearchTools } from "../lib/control-plane/workers/research-runtime.ts";
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
@@ -33,7 +34,8 @@ const sourceId = "BALLOT_AND_CANDIDATES:THIS_JURISDICTION:county-of-atlantic-cou
 const source = registry.sourceCatalog[sourceId];
 if (!subject || !subject.ownWebAddress || !source || !subject.sourceIds.includes(sourceId)) throw new Error("SCOUT_PROOF_CANONICAL_OWED_SOURCE_MISSING");
 const repos = await createPgRepositories(connection);
-const draft = createWorkItem({ project: "freshness", subject: subject.id,
+/* MW-024: a proof run works and charges under its own project, never `freshness`, so its spend stays real and out of production's figures. */
+const draft = createWorkItem({ project: AUTONOMOUS_FLEET_PROOF_PROJECT, subject: subject.id,
   obligation: "Acquire the Atlantic County Clerk's 2026 candidate-filing universe",
   why: `Canonical NJ source ${sourceId} is DISCOVERY_OWED; the government itself receives and publishes local candidate filings.`,
   contract: { requiresValidation: true, requiresAudit: true, requiresCompleteDenominator: true }, now: now() });
@@ -86,7 +88,7 @@ if (!admitted.permits || intents.paused || !key) {
     subjectId: item.subject, routeId: task.routeId, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
     nextDueAt: task.createdAt, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "Canonical county filing source remains DISCOVERY_OWED." },
     routeTaskId: task.id, holder: `atlantic-scout-proof:${process.pid}`, now: now(), leaseTtlMs: 300_000, bound: { maxAttempts: 3, maxWallMs: 240_000, maxCostUnits: 20_000 },
-    maturity: () => "UNGRADUATED", executor, methodVersion, policyVersion: FLEET_POLICY_VERSION }) : null;
+    maturity: () => "UNGRADUATED", executor, methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proofChargeOf(item.project) }) : null;
   const results = await repos.scoutResults.read(task.id);
   const proof = { formatVersion: 1, startedAt: beganAt, observedAt: now(), state: "NJ", workItemId: item.id, subjectId: item.subject,
     routeTaskId: task.id, sourceId, spendBefore: spend, dispatch, results, promotion: "OFF" };

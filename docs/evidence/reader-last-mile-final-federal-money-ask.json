@@ -1,11 +1,11 @@
 {
-  "exactHead": "31052a9376bbe5dd1b8914e1b356b6b9e7ac0f04",
+  "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "fe0afbd9ded19eecefc65911a6dd4d97868ccd4a6186045805e9876d9b5701c7"
+      "sha256": "dce1e0d945787efa513e1f7dba352be3384361b998e6ebe12934c8e127346024"
     },
     {
       "path": "lib/ask/campaign-money.ts",
@@ -82,7 +82,7 @@
           "text": "This campaign has raised $173,000 in the 2025–26 election cycle and spent $757,000. It has $872,000 on hand. About 6% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -97,10 +97,10 @@
           "text": "This campaign has raised $173,000 in the 2025–26 election cycle and spent $757,000. It has $872,000 on hand. About 6% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "c8bdd5d042549833f62613af9206c83aa32433ac128a163dd2a328eff27e1a52",
+      "payloadSha256": "2a0d0a292ae888a23407c252a3fe78eb9189beb421ae1d1c2f3203d9b1f6cad0",
       "gaps": [
         {
           "whose": "OURS",
@@ -201,7 +201,7 @@
           "text": "This campaign has raised $19 million in the 2025–26 election cycle and spent $7 million. It has $23 million on hand. About 45% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -216,10 +216,10 @@
           "text": "This campaign has raised $19 million in the 2025–26 election cycle and spent $7 million. It has $23 million on hand. About 45% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "94c478046d4653fc3c69f64cf3485cb790416e6c89539e782413c9bfc0c1af35",
+      "payloadSha256": "1c462c3be34a6d3ec956ad11ca77846668d7ccdd7f2252a0f44d0e02666df1d9",
       "gaps": [
         {
           "whose": "OURS",
@@ -319,7 +319,7 @@
           "text": "This campaign has raised $4.3 million in the 2025–26 election cycle and spent $2.5 million. It has $2.1 million on hand. About 41% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -334,10 +334,10 @@
           "text": "This campaign has raised $4.3 million in the 2025–26 election cycle and spent $2.5 million. It has $2.1 million on hand. About 41% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "f92482537289d818db13dda9ef9db8a0b90370f87348b47acd4dbf82d0dcd16c",
+      "payloadSha256": "3369ef837c9f957fad16b105bc65acb73641ded1469838860cbc95888b9cef0e",
       "gaps": [
         {
           "whose": "OURS",
@@ -529,7 +529,7 @@
           "text": "This campaign has raised $2.5 million in the 2025–26 election cycle and spent $1.7 million. It has $1.7 million on hand. About 32% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -544,10 +544,10 @@
           "text": "This campaign has raised $2.5 million in the 2025–26 election cycle and spent $1.7 million. It has $1.7 million on hand. About 32% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "b0f74655371421edcbc6e340f2cf3cc4ec3f5101ba04533374edca5f6641bf91",
+      "payloadSha256": "6facbd95be126cd2eb320fe5ab719abed8795bff1e23555c1d4e83e374caad2f",
       "gaps": [
         {
           "whose": "OURS",
@@ -647,7 +647,7 @@
           "text": "This campaign has raised $1.7 million in the 2025–26 election cycle and spent $1.1 million. It has $1.2 million on hand. About 22% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -662,10 +662,10 @@
           "text": "This campaign has raised $1.7 million in the 2025–26 election cycle and spent $1.1 million. It has $1.2 million on hand. About 22% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "e0acc1409244cb9e6d174296a26bb68195e49c20287c89ea7d5baa4630ee852f",
+      "payloadSha256": "17815f0b55951e3fd2f3e45b858084353ed1590a2d5e14db1db9a2d515ede715",
       "gaps": [
         {
           "whose": "OURS",
@@ -853,7 +853,7 @@
           "text": "This campaign has raised $41 million in the 2025–26 election cycle and spent $21 million. It has $24 million on hand. About 65% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -868,10 +868,10 @@
           "text": "This campaign has raised $41 million in the 2025–26 election cycle and spent $21 million. It has $24 million on hand. About 65% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "97c26275fa84d70c985b2515d88ff2773862fbb9bd35c89f2e2dd3c0a42f39b0",
+      "payloadSha256": "df0573133f13ce185a0dd658e81045e13b41d8ae51049b3bd577e462ff8ddf64",
       "gaps": [
         {
           "whose": "OURS",
@@ -981,7 +981,7 @@
           "text": "This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -996,10 +996,10 @@
           "text": "This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "b7e75ab14fe7ecc542ac66f6f2c27d58a2c66995de557aa27226ba6c21eab560",
+      "payloadSha256": "6c8ee274ce7fd80ea23056e96ffbe7509f015dee031cf35dc9bff579b734744e",
       "gaps": [
         {
           "whose": "OURS",
@@ -1128,7 +1128,7 @@
           "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.5 million. It has $2.7 million on hand. About 7% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -1143,10 +1143,10 @@
           "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.5 million. It has $2.7 million on hand. About 7% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "b60b7876c14f72d9786dfadb6865defe32a87e327c2fbef2a48e9a8167873d8c",
+      "payloadSha256": "171f957273da9d9e23d313bc899fb8e6480b8f002cb54834e6b2908cd33d64c8",
       "gaps": [
         {
           "whose": "OURS",
@@ -1300,7 +1300,7 @@
           "text": "This campaign has raised $2.3 million in the 2025–26 election cycle and spent $1.9 million. It has $428,000 on hand. About 44% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -1315,10 +1315,10 @@
           "text": "This campaign has raised $2.3 million in the 2025–26 election cycle and spent $1.9 million. It has $428,000 on hand. About 44% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "db42ab9667e536996eada33c2ebda25676f76f2c78738f974ccbc46df16a616a",
+      "payloadSha256": "2bd0504a3ff8d0c913589514365a5c60f524c2c8483b1e4976a7af5696f9db34",
       "gaps": [
         {
           "whose": "OURS",
@@ -1483,7 +1483,7 @@
           "text": "This campaign has raised $1.8 million in the 2025–26 election cycle and spent $1.8 million. It has $27,000 on hand. About 35% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -1498,10 +1498,10 @@
           "text": "This campaign has raised $1.8 million in the 2025–26 election cycle and spent $1.8 million. It has $27,000 on hand. About 35% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "c9dee4ddd8742651fbdc3b4c692e52f8c05eb3519474a7fb615deab407f47658",
+      "payloadSha256": "d514dd0a3f91406ef5d7496d89d6044af86e44eec8a48cbd47284227ee716ebc",
       "gaps": [
         {
           "whose": "OURS",
@@ -1671,7 +1671,7 @@
           "text": "This campaign has raised $27,000 in the 2025–26 election cycle and spent $26,000. It has $123 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -1686,10 +1686,10 @@
           "text": "This campaign has raised $27,000 in the 2025–26 election cycle and spent $26,000. It has $123 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "de1a1cc92dfe84236d99a96d897d08412f4077b90b3b845c649d9758b7704f6a",
+      "payloadSha256": "4cbdd2a088830d1e5a070119dd435efc3d49c89f0ab49fbc1a834f1b6eaed0c5",
       "gaps": [
         {
           "whose": "OURS",
@@ -1786,7 +1786,7 @@
           "text": "This campaign has raised $658,000 in the 2025–26 election cycle and spent $653,000. It has $5,036 on hand. About 11% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -1801,10 +1801,10 @@
           "text": "This campaign has raised $658,000 in the 2025–26 election cycle and spent $653,000. It has $5,036 on hand. About 11% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "08115123f5df5ccd0c96299f0fe4c03e6e42943af0a44c23df787aac23b33a27",
+      "payloadSha256": "ad2fcdba2eaa2f5ff1e407b99036da4c97b8f3dcb854b31f411c2991e956c0a0",
       "gaps": [
         {
           "whose": "OURS",
@@ -1902,7 +1902,7 @@
           "text": "This campaign has raised $7.4 million in the 2025–26 election cycle and spent $4.1 million. It has $3.3 million on hand. About 38% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -1917,10 +1917,10 @@
           "text": "This campaign has raised $7.4 million in the 2025–26 election cycle and spent $4.1 million. It has $3.3 million on hand. About 38% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "85c94db968b5eac7d02a2de6d4b5deada2e0ce9bea2d2e62fd232671eec9df23",
+      "payloadSha256": "641e522ec1cf042cdb1d067db13b9d45d18b53582ef63cb6f41d5a62eeb04f7d",
       "gaps": [
         {
           "whose": "OURS",
@@ -2017,7 +2017,7 @@
           "text": "This campaign has raised $195 in the 2025–26 election cycle and spent $75. It has $225 on hand. About $195 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2032,10 +2032,10 @@
           "text": "This campaign has raised $195 in the 2025–26 election cycle and spent $75. It has $225 on hand. About $195 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "cb565dc9351ac3730e5820ff9c7938261d9634154f03c3c7def3db43ae0c93b6",
+      "payloadSha256": "875544771c56517538ac37986af5030815cb6860936d190d52b3ffd993b450be",
       "gaps": [
         {
           "whose": "OURS",
@@ -2133,7 +2133,7 @@
           "text": "This campaign has raised $11,000 in the 2025–26 election cycle and spent $11,000. It has $0 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2148,10 +2148,10 @@
           "text": "This campaign has raised $11,000 in the 2025–26 election cycle and spent $11,000. It has $0 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "2fdd990c84c6427350fe47f3088379e21b667ee555072ec686c5955a6fd71b99",
+      "payloadSha256": "1b0e8f2905668fe95bd9b8d10b1303f558ae303e5b12d86391f600ec6a5e74e2",
       "gaps": [
         {
           "whose": "OURS",
@@ -2249,7 +2249,7 @@
           "text": "This campaign has raised $224,000 in the 2025–26 election cycle and spent $214,000. It has $11,000 on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2264,10 +2264,10 @@
           "text": "This campaign has raised $224,000 in the 2025–26 election cycle and spent $214,000. It has $11,000 on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "e968b02cf84d479fb50cac5ca6b4c21fd234bb7c40ee5a6e0ea85bd0d2b84aad",
+      "payloadSha256": "ecc5629a554074f7ee6763638753cf14ec2ffe5b857902e99f13f5ef345d21a8",
       "gaps": [
         {
           "whose": "OURS",
@@ -2364,7 +2364,7 @@
           "text": "This campaign has raised $415,000 in the 2025–26 election cycle and spent $311,000. It has $104,000 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2379,10 +2379,10 @@
           "text": "This campaign has raised $415,000 in the 2025–26 election cycle and spent $311,000. It has $104,000 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "282083866a27f38e7f303e8832ab15b6382b40781d5bb7c264582d973927c932",
+      "payloadSha256": "d8ab847a4e28e35d8a655baf7fa162773daa1f27e08417058dab2b03e8311bf7",
       "gaps": [
         {
           "whose": "OURS",
@@ -2479,7 +2479,7 @@
           "text": "This campaign has raised $15 million in the 2025–26 election cycle and spent $12 million. It has $4.3 million on hand. About 31% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2494,10 +2494,10 @@
           "text": "This campaign has raised $15 million in the 2025–26 election cycle and spent $12 million. It has $4.3 million on hand. About 31% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "e0605596ebec784b3d4c00aac88820dd7ce27ed6af62d87d755dd7a01c6775b6",
+      "payloadSha256": "62df71534e531b78c4d8ea17553b935b5663e421df7f90298fe732a454f0e258",
       "gaps": [
         {
           "whose": "OURS",
@@ -2601,7 +2601,7 @@
           "text": "This campaign has raised $2.2 million in the 2025–26 election cycle and spent $1.7 million. It has $417,000 on hand. About 29% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2616,10 +2616,10 @@
           "text": "This campaign has raised $2.2 million in the 2025–26 election cycle and spent $1.7 million. It has $417,000 on hand. About 29% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "7f2f48cd569e492333250797e208df6328eec03447897b196587005db808b2ff",
+      "payloadSha256": "28aef391efd6cadead7c834db178bc7efffdf3817537ba62fa3f044be6239d34",
       "gaps": [
         {
           "whose": "OURS",
@@ -2716,7 +2716,7 @@
           "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.1 million. It has $3.1 million on hand. About 12% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2731,10 +2731,10 @@
           "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.1 million. It has $3.1 million on hand. About 12% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "f41b868bb57f2a4049f0f979321b8c48ccaced0c44b2f10314d91dbf641d2c77",
+      "payloadSha256": "3820f6c7d6d5241fc3e79cbe3e9faa1b1da4d3194e58c0e113cf65987df71a6d",
       "gaps": [
         {
           "whose": "OURS",
@@ -2831,7 +2831,7 @@
           "text": "This campaign has raised $44,000 in the 2025–26 election cycle and spent $39,000. It has $4,793 on hand. About 58% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2846,10 +2846,10 @@
           "text": "This campaign has raised $44,000 in the 2025–26 election cycle and spent $39,000. It has $4,793 on hand. About 58% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "428336f11c953f59011a2770ea4990b1a4db7bb5a67eef73736d1d29f7563d60",
+      "payloadSha256": "cf5bae265857c42fb91215958bc73ed4d72b423718957611a097b7fc6af63599",
       "gaps": [
         {
           "whose": "OURS",
@@ -2946,7 +2946,7 @@
           "text": "This campaign has raised $475 in the 2025–26 election cycle and spent $315. It has $160 on hand. About $175 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -2961,10 +2961,10 @@
           "text": "This campaign has raised $475 in the 2025–26 election cycle and spent $315. It has $160 on hand. About $175 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "ee0c87926bb5e1aacf0be5ab3373f510bbdb05b3e88610a73de83a24058cc50c",
+      "payloadSha256": "64399ae0b7640f3c4ffbc286252a589f0db269dae662a4dc97ba26a5ab7a4669",
       "gaps": [
         {
           "whose": "OURS",
@@ -3061,7 +3061,7 @@
           "text": "This campaign has raised $171,000 in the 2025–26 election cycle and spent $170,000. It has $9,596 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -3076,10 +3076,10 @@
           "text": "This campaign has raised $171,000 in the 2025–26 election cycle and spent $170,000. It has $9,596 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "9a0c079fc116c14b282fbc5c25922f8151f041af5d5daaf79c6a14e93df70df2",
+      "payloadSha256": "35904b018b1396f4b4e1e3f07af2a6164a2bcc7a6cc2666c1890aee3f375ba73",
       "gaps": [
         {
           "whose": "OURS",
@@ -3176,7 +3176,7 @@
           "text": "This campaign has raised $1.2 million in the 2025–26 election cycle and spent $701,000. It has $628,000 on hand. About 54% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
       "returnedRecordIds": [
@@ -3191,10 +3191,10 @@
           "text": "This campaign has raised $1.2 million in the 2025–26 election cycle and spent $701,000. It has $628,000 on hand. About 54% of the money came from small donors — people who gave under $200 in total.",
           "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
           "sourceOrg": "Federal Election Commission",
-          "retrievedAt": "2026-09-24"
+          "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "58d0fba65a422975ef33f0e996e524b02e6e7499cf32d6162c4d9e19fe27ebef",
+      "payloadSha256": "9c95b7dd5b2dc01c987b7d12f9a538ab09adb25170e1b75de2ea98a22ba6c00b",
       "gaps": [
         {
           "whose": "OURS",

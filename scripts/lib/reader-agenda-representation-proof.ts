@@ -136,7 +136,10 @@ export async function agendaRepresentationProof() {
   }
   // Source-independent negatives: a numbered menu on the same portal may not
   // become a civic item, and a real linked HTML agenda remains readable.
-  const portal = documents.find(row => row.meetingId === "diligent:newburynh:3367")!;
+  // Any held document the reader classifies as a publisher portal's page (Newbury's CivicWeb
+  // page served this until its host stopped resolving, 2026-09-25); chosen by rule, not by id.
+  const portal = [...documents].sort((a, b) => a.meetingId.localeCompare(b.meetingId)).find(row =>
+    classifyAgendaPublication({ meetingId: row.meetingId, bodyName: row.sourceOrg, documentsForMeeting: [row], documentsAcrossCorpus: [row], now: Date.now() }).acquisition === "ACQUIRED_IS_PUBLICATION_INDEX")!;
   assert.ok(portal);
   const planted = { ...portal, text: `${portal.text}\n1. Rezoning menu navigation.\n2. Housing development search menu.` };
   const plantedReading = classifyAgendaPublication({ meetingId: planted.meetingId, bodyName: planted.sourceOrg, documentsForMeeting: [planted], documentsAcrossCorpus: [planted], now: Date.now() });

@@ -35,6 +35,7 @@
  */
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
+import type { WorkQuestion } from "./work-question.ts";
 /* Re-exported so a cost reader keys on the one constant (2026-09-23). */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
@@ -134,6 +135,123 @@ export interface CostEntry {
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;
+  /*
+   * WHAT THE CHARGE WAS FOR (MW-001, MW-013, MW-024; 2026-09-25). Each is
+   * optional and absent on every row written before it existed, which a reader
+   * names as "recorded before purpose was kept" — never as a purpose of its own.
+   * The body the work was for is `jurisdiction`, as it always was.
+   */
+  /** The standing obligation (or task) the dispatch was a round of. */
+  readonly obligationId?: string;
+  /** The owner's Sends that obligation belonged to when the charge was written; empty when none reached it. */
+  readonly assignmentKeys?: readonly string[];
+  /** The record class the work kept fresh. */
+  readonly recordClass?: string;
+  /** The question the work asked (MW-002), when the round recorded one. */
+  readonly question?: WorkQuestion;
+  /**
+   * What the attempt came to: the disposition it committed (`INGESTED`,
+   * `WALKED_NO_YIELD`, …), or `NO_DISPOSITION`, `SIMULATED`,
+   * `DISPOSITION_REFUSED`, `LANE_MISMATCH` when it committed none.
+   */
+  readonly resultKind?: string;
+  /**
+   * A proof or test run's charge (MW-024). Real money: it stays inside every
+   * total and every ceiling, and is kept out of what production work produced.
+   */
+  readonly nonProduction?: true;
+  /**
+   * WHICH MODEL EACH PART OF THE CHARGE WAS FOR (MW-031, 2026-09-25). Written
+   * only when one Attempt ran more than one model — a Scout that started on
+   * Sonnet 5 and escalated to Opus 5.5. `cost` stays the Attempt's one combined
+   * charge; these shares split it, each priced at its own model's rate, and sum
+   * to it. Absent: the whole charge is the Attempt's worker model, as before.
+   * Read through `costPortionsByModel`, never summed beside `cost`.
+   */
+  readonly byModel?: readonly CostModelShare[];
+}
+
+/** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */
+export interface CostModelShare {
+  readonly model: string;
+  /** Model requests (provider turns) sent to this model. */
+  readonly requestCount: number;
+  readonly usd: number | null;
+  /** The whole prompt: uncached + cache reads + cache writes, as on the ledger row. */
+  readonly inputTokens: number | null;
+  readonly outputTokens: number | null;
+  readonly cacheReadInputTokens: number | null;
+  readonly cacheCreationInputTokens: number | null;
+  readonly cacheCreation5mInputTokens: number | null;
+  readonly cacheCreation1hInputTokens: number | null;
+  readonly uncachedInputTokens: number | null;
+}
+
+/**
+ * **A CHARGE, SPLIT BY THE MODEL EACH PART WAS FOR — WITHOUT COUNTING IT TWICE.**
+ * (MW-031, 2026-09-25.) A row with no `byModel` is one portion under
+ * `attemptModel` (the Attempt's worker model), exactly as every by-model view
+ * read it before. A row with a split gives one portion per share: the share's
+ * dollars and billed tokens replace the row's, and the Attempt's non-model
+ * quantities (its duration, the bytes it fetched, its non-model requests) stay
+ * on the FIRST share — the model the Attempt started on — so every portion's
+ * figures sum back to the row's. A split that does not sum to the row's
+ * dollars (a share unmeasured under a measured total, or a different sum) is
+ * not trusted: the row is read whole under `attemptModel`, never guessed.
+ */
+export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
+  const shares = entry.byModel;
+  if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: attemptModel, entry }];
+  const otherRequests = shares.slice(1).reduce((n, s) => n + s.requestCount, 0);
+  return shares.map((s, i) => ({
+    model: s.model,
+    entry: {
+      ...entry,
+      cost: {
+        ...entry.cost,
+        usd: s.usd,
+        inputTokens: s.inputTokens,
+        outputTokens: s.outputTokens,
+        cacheReadInputTokens: s.cacheReadInputTokens,
+        cacheCreationInputTokens: s.cacheCreationInputTokens,
+        cacheCreation5mInputTokens: s.cacheCreation5mInputTokens,
+        cacheCreation1hInputTokens: s.cacheCreation1hInputTokens,
+        uncachedInputTokens: s.uncachedInputTokens,
+        requestCount: i === 0 ? (entry.cost.requestCount === null ? null : entry.cost.requestCount - otherRequests) : s.requestCount,
+        durationMs: i === 0 ? entry.cost.durationMs : 0,
+        bytesFetched: i === 0 ? entry.cost.bytesFetched : 0,
+      },
+    },
+  }));
+}
+
+function splitMatchesCharge(cost: AttemptCost, shares: readonly CostModelShare[]): boolean {
+  if (shares.some((s) => typeof s.model !== "string" || s.model === "" || !Number.isFinite(s.requestCount) || s.requestCount < 0)) return false;
+  if (cost.usd === null) return true;
+  if (shares.some((s) => s.usd === null || !Number.isFinite(s.usd))) return false;
+  const sum = shares.reduce((n, s) => n + (s.usd ?? 0), 0);
+  return Math.abs(sum - cost.usd) <= 1e-9 * Math.max(1, Math.abs(cost.usd));
+}
+
+/** What the dispatcher writes on a charge's `resultKind` when no disposition was committed. */
+export const COST_RESULT_WITHOUT_DISPOSITION = ["NO_DISPOSITION", "SIMULATED", "DISPOSITION_REFUSED", "LANE_MISMATCH"] as const;
+
+/** The project the autonomous-fleet proof scripts run and charge under (MW-024): never `freshness`. */
+export const AUTONOMOUS_FLEET_PROOF_PROJECT = "autonomous-fleet-proof";
+
+/**
+ * A charge from a proof or test run: marked so, or written under a proof or
+ * conformance project. Real money all the same — this only decides which
+ * productivity figure it may enter.
+ */
+export function isNonProductionCost(entry: Pick<CostEntry, "project" | "nonProduction">): boolean {
+  return entry.nonProduction === true || isProofProject(entry.project);
+}
+
+/** The projects conformance tests and proof runs write under. */
+export function isProofProject(project: string | null | undefined): boolean {
+  const p = project ?? "";
+  return /^conformance(-|$)/.test(p) || p === "control-plane-proof" || p === AUTONOMOUS_FLEET_PROOF_PROJECT;
 }
 
 /**

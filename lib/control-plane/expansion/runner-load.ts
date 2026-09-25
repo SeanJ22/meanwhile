@@ -93,8 +93,16 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     const key = unitShareKey(unit);
     if (key !== null) wanted.add(key);
   }
+  /* A registry read from registration places each government by the division its body sits on, by that division's own layer and GEOID (2026-09-25). */
+  for (const registry of registries) {
+    if (registry.registration?.kind !== "REGISTRATION") continue;
+    for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
+  }
   const shares = readZctaShares(root, wanted);
-  return buildTerritoryIndex(registries, units, (key) => shares.get(key));
+  return buildTerritoryIndex(registries, units, (key) => shares.get(key), (j) => {
+    const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
+    return own === undefined ? undefined : { zctas: new Set(own.keys()), shares: own };
+  });
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
@@ -214,15 +222,39 @@ export async function loadExpansionPlan(input: {
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
   readonly loadTerritory?: () => TerritoryIndex;
+  /**
+   * Called once the scopes are resolved, with every state they span (a metro's member states included), before
+   * the territory is read: the runner reads there the registration of each state with no reviewed registry
+   * (`preloadRegistrationJurisdictions`). Answers named conditions, if any.
+   */
+  readonly beforeTerritory?: (states: readonly string[]) => Promise<readonly string[]>;
 }): Promise<ExpansionLoad> {
   const conditions: string[] = [];
   let decisions: readonly ExpansionScopeDecision[] = [];
   let malformed = 0;
   try {
     const row = await input.repos.adminConfig.read(ADMIN_CONFIG_ID);
-    const held = expansionScopesOf(row !== null && isAdminConfig(row.value) ? row.value : null);
-    decisions = held.scopes;
-    malformed = held.malformed;
+    if (row !== null && !isAdminConfig(row.value)) {
+      /*
+       * A policy row that is not a policy fails CLOSED, exactly as a row that
+       * could not be read does (2026-09-25). It used to read as "no row", so the
+       * owner's scope budgets silently disappeared and paid work ran unbounded
+       * by them. Whatever scopes the row still carries readably are kept, so
+       * their work is still placed and created; the row itself counts as one
+       * unreadable entry, which holds paid Scout work until it is fixed.
+       */
+      const salvaged = row.value !== null && typeof row.value === "object" ? expansionScopesOf(row.value as { readonly expansionScopes?: unknown }) : null;
+      decisions = salvaged?.scopes ?? [];
+      malformed = 1 + (salvaged?.malformed ?? 0);
+      conditions.push(
+        "the owner's policy row is on record and is not a readable policy, so whether an expansion scope budget stands cannot be known; " +
+          `paid Scout work is held this cycle${decisions.length > 0 ? ` (${decisions.length} scope(s) on it were still readable and are placed as usual)` : ""}`,
+      );
+    } else {
+      const held = expansionScopesOf(row !== null ? row.value : null);
+      decisions = held.scopes;
+      malformed = held.malformed;
+    }
   } catch (error) {
     malformed = 1;
     conditions.push(
@@ -249,6 +281,14 @@ export async function loadExpansionPlan(input: {
 
   let territory: TerritoryIndex | null = null;
   let territoryDetail: string | null = null;
+  if (decisions.length > 0 && input.beforeTerritory !== undefined) {
+    const states = [...new Set(resolved.scopes.flatMap((s) => s.states.map((st) => st.toUpperCase())))].sort();
+    try {
+      conditions.push(...(await input.beforeTerritory(states)));
+    } catch (error) {
+      conditions.push(`the registration of ${states.join(", ")} could not be read (${error instanceof Error ? error.message : String(error)})`);
+    }
+  }
   if (decisions.length > 0) {
     try {
       territory = (input.loadTerritory ?? (() => readTerritoryIndex(input.root, Object.values(requiredOperationalReferenceBundle().registries))))();

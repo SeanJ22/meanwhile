@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { test } from "node:test";
 
 import { RIPCORDS, RIPCORD_NAMES, ripcordPulled } from "../lib/ripcords.ts";
@@ -172,26 +172,38 @@ test("D40: distinct officials resolve to distinct funding payloads", () => {
   );
 });
 
-test("D40: no query-keyed API route marks itself publicly cacheable", () => {
+test("D40: no query-keyed API route marks itself publicly cacheable unless the CDN keys on every query parameter", () => {
   // The incident's actual mechanism: /api/funding?target=… marked
   // `cache-control: public`, and the CDN's cache key dropped the query
   // string — the first official's body served for every target. A response
   // whose body varies by query string must not enter a shared cache; vary
   // by path instead.
+  //
+  // C21 (2026-09-25): or carry the query where the CDN keys on it. Netlify's
+  // Next runtime keys a route handler on its own parameters only; a response
+  // that sends `Netlify-Vary: query` is keyed on EVERY query parameter
+  // (docs.netlify.com caching overview), and browsers and ordinary HTTP caches
+  // key on the whole URL already. `/api/meetings` is the one such route; its
+  // live header is asserted in tests/reader-cold-path.test.ts. A bare `query`,
+  // never a list: a list is a second copy of the parameters that can drift.
   const walk = (dir: string): string[] =>
     readdirSync(dir).flatMap((entry) => {
       const full = join(dir, entry);
       return statSync(full).isDirectory() ? walk(full) : /route\.ts$/.test(entry) ? [full] : [];
     });
+  const keyedOnEveryParameter: string[] = [];
   for (const file of walk(join(ROOT, "app", "api"))) {
     const source = readFileSync(file, "utf8");
-    if (/searchParams/.test(source)) {
-      assert.ok(
-        !/cache-control["']?\s*:\s*["'][^"']*public/i.test(source),
-        `${file} keys its body on a query string AND marks the response public — a shared cache may serve one target's body to all (D40)`,
+    if (/searchParams/.test(source) && /cache-control["']?\s*:\s*["'][^"']*public/i.test(source)) {
+      assert.match(
+        source,
+        /"Netlify-Vary":\s*"query"/,
+        `${file} keys its body on a query string AND marks the response public without keying the CDN on the query — a shared cache may serve one target's body to all (D40)`,
       );
+      keyedOnEveryParameter.push(relative(ROOT, file).replaceAll("\\", "/"));
     }
   }
+  assert.deepEqual(keyedOnEveryParameter, ["app/api/meetings/route.ts"], "a new publicly cached query route is a decision to name here");
   // And the funding client asks the path-keyed form.
   const block = readFileSync(join(ROOT, "components", "funding", "funding-block.tsx"), "utf8");
   assert.match(block, /\/api\/funding\/\$\{encodeURIComponent\(holder\.id\)\}/, "funding block must fetch the path-keyed route");

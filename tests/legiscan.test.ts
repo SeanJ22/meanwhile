@@ -12,8 +12,8 @@ import {
 import {
   clearStateVotesProjectionCacheForTest,
   getStateVotesSnapshot,
-  OFFICIAL_STATE_VOTE_SCOPES,
 } from "../lib/sources/legiscan/snapshot.ts";
+import { OFFICIAL_STATE_ROLL_CALL_TARGETS } from "../lib/state-rollcalls/authority.ts";
 import { LEGISCAN_ATTRIBUTION } from "../lib/sources/legiscan/types.ts";
 import { readZip } from "../lib/sources/legiscan/zip.ts";
 
@@ -28,7 +28,9 @@ import { readZip } from "../lib/sources/legiscan/zip.ts";
  * committed boundary labels, and the snapshot is asserted for distinctness.
  */
 
-const fixtureSnapshots = OFFICIAL_STATE_VOTE_SCOPES.map((scope) => getStateVotesSnapshot(scope));
+// The retained research fixture covers every official target, including New
+// Hampshire, whose STATE_ROLL_CALL pointer the Reader no longer reads (R9).
+const fixtureSnapshots = OFFICIAL_STATE_ROLL_CALL_TARGETS.map(({ jurisdiction }) => getStateVotesSnapshot(jurisdiction));
 const snapshot = {
   generatedAt: fixtureSnapshots.map((value) => value.generatedAt).sort().at(-1)!,
   datasets: fixtureSnapshots.flatMap((value) => value.datasets),

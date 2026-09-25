@@ -50,6 +50,8 @@ const PIMA = "ocd-division/country:us/state:az/county:pima#governing";
 const PIMA_LEGISTAR = meetingPartitionId("legistar", PIMA);
 const PIMA_INSITE = meetingPartitionId("legistar-insite", PIMA);
 const OUTCOMES = "pima-legistar-outcomes";
+const MESA_OUTCOMES = "mesa-legistar-minutes-outcomes";
+const MESA_INSITE = meetingPartitionId("legistar-insite", "ocd-division/country:us/state:az/place:mesa#governing");
 
 function task(id: string): RoutineSourceTask {
   const found = ROUTINE_SOURCE_TASKS.find((row) => row.id === id);
@@ -75,11 +77,13 @@ test("the policy is the owner's: seven days either side, hourly when hot, twice 
     assert.deepEqual(sittingWindowSourceIds(partition.id), [partition.id]);
   }
   assert.deepEqual(sittingWindowSourceIds(OUTCOMES), [PIMA_LEGISTAR, PIMA_INSITE]);
+  // Mesa's council decisions follow the council's one InSite partition (NH332).
+  assert.deepEqual(sittingWindowSourceIds(MESA_OUTCOMES), [MESA_INSITE]);
 });
 
 test("no other data family's schedule is changed: only meeting partitions and meeting outcomes carry a sitting window", () => {
   const windowed = ROUTINE_SOURCE_CONTRACTS.filter((contract) => contract.schedule !== undefined).map((contract) => contract.id);
-  assert.deepEqual(windowed, [OUTCOMES]);
+  assert.deepEqual(windowed, [OUTCOMES, MESA_OUTCOMES]);
   const at = "2026-09-24T09:00:00.000Z";
   for (const row of ROUTINE_SOURCE_TASKS.filter((candidate) => candidate.contract.schedule === undefined)) {
     // The retired-rule inputs: a success claimed seconds before its observed attempt.

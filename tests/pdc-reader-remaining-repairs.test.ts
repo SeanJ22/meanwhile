@@ -19,6 +19,15 @@ test("listing witnesses bind the complete current group set rather than a histor
   validateListingWitnessReadback([one], [one]);
   validateListingWitnessReadback([one, two], [one, two]);
   assert.throws(() => validateListingWitnessReadback([], []), /population is empty/);
+  // No ambiguous group left: accepted only with a positive resolved readback.
+  const resolved = { heading: "Meetings", countNote: null, unresolvedNoticeCount: 0, renderedListingCount: 12 };
+  validateListingWitnessReadback([], [], resolved);
+  assert.throws(() => validateListingWitnessReadback([one], [], resolved), /none may be rendered/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, heading: "Calendar listings" }), /meeting count/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, countNote: "Distinct meeting count unresolved." }), /unresolved-count note/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, unresolvedNoticeCount: 1 }), /no unresolved-listing notice/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, renderedListingCount: 0 }), /no rows/);
+  assert.throws(() => validateListingWitnessReadback([], [one], resolved), /Every current/, "a resolved readback never excuses a present ambiguous group");
   assert.throws(() => validateListingWitnessReadback([one], [one, two]), /Every current/);
   assert.throws(() => validateListingWitnessReadback([{ ...one, sourceIds: ["listing:a", "listing:other"] }], [one]), /Every current/);
   assert.throws(() => validateListingWitnessReadback([{ ...one, sourceListingCount: 3 }], [one]), /Every current/);

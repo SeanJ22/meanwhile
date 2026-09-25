@@ -11,7 +11,7 @@ import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { prepareReaderProofRuntime, requiredPreparedReaderProofMeetingsAuthority } from "./lib/reader-proof-runtime.ts";
-import { validateListingWitnessReadback } from "./lib/reader-full-reproof.ts";
+import { validateListingWitnessReadback, type ResolvedListingReadback } from "./lib/reader-full-reproof.ts";
 
 interface RenderedReaderCase {
   label: string;
@@ -19,7 +19,7 @@ interface RenderedReaderCase {
   build?: { commit: string };
   mapFederalRecords?: { billSummary: RenderedBillSummary } | null;
   ballotFederalRecords?: { billSummary: RenderedBillSummary } | null;
-  listingMultiplicity?: { renderedListingCount: number; groups: { sourceIds: string[]; sourceListingCount: number; uniqueMeetingCount: null; reason: string }[] } | null;
+  listingMultiplicity?: { renderedListingCount: number; groups: { sourceIds: string[]; sourceListingCount: number; uniqueMeetingCount: null; reason: string }[]; resolved?: ResolvedListingReadback } | null;
 }
 interface RenderedBillSummary extends BillSummary {
   billUrl: string;
@@ -66,7 +66,8 @@ const cases: Record<string, [string, string[]]> = {
   // sitting's own Board Actions PDF (govboard.tusd1.org .../actions/08-25-2026S.pdf,
   // 14,335 characters, sitting-specific; 116 index rows set aside), so the render
   // now opens its agenda text. The -publication-index surface stays proven by
-  // apptegy:vail:60703698 (85641) and diligent:newburynh:3367 (03255).
+  // apptegy:vail:60703698 (85641); Newbury's CivicWeb portal page (03255) left with
+  // its retired route (2026-09-25).
   "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "diligent-tusd1-493-agenda-text"]],
   "state-money-section": ["85701-desktop-light", ["map-money", "ballot-money"]],
   "candidate-contact": ["07866-desktop-dark", ["ballot-filed-contact"]],
@@ -125,10 +126,13 @@ const witnesses = requirements.filter(row => row.importReach).flatMap(row => {
     assert.equal(hash(participation.screenshot.path), participation.screenshot.sha256);
     return [{ ...row, exactHead: head, evidencePath: path, evidenceSha256: hash(path), resultPointer: `/results/${index}`, screenshots: [...screenshots, participation.screenshot], status: "PROVEN", boundary: "Actual current future-sitting participation instructions and source link, plus the executed minutes and agenda-text screenshots. Exhaustive native-record and actual-leaf proofs remain required." }];
   }
-  const listingSuffixes = leaf === "meeting-popup" ? canonicalListingGroups.map((_, index) => `listing-popup-${index + 1}`) : leaf === "meeting-panel" ? ["listing-count", "listing-overlay", "listing-venue"] : leaf === "entity-modal" ? ["listing-full-meeting"] : [];
+  // With no ambiguous group held, the resolved render (count and list) is the
+  // listing witness; the venue, popup and full-meeting notices have nothing to show.
+  const ambiguous = canonicalListingGroups.length > 0;
+  const listingSuffixes = leaf === "meeting-popup" ? canonicalListingGroups.map((_, index) => `listing-popup-${index + 1}`) : leaf === "meeting-panel" ? (ambiguous ? ["listing-count", "listing-overlay", "listing-venue"] : ["listing-count", "listing-overlay"]) : leaf === "entity-modal" && ambiguous ? ["listing-full-meeting"] : [];
   const listingCase = listingSuffixes.length ? report.results.find(result => result.label === "03255-phone-dark") : null;
   if (listingSuffixes.length) {
-    validateListingWitnessReadback(listingCase?.listingMultiplicity?.groups, canonicalListingGroups);
+    validateListingWitnessReadback(listingCase?.listingMultiplicity?.groups, canonicalListingGroups, listingCase?.listingMultiplicity?.resolved);
     for (const suffix of listingSuffixes) {
       const path = report.screenshots.find(path => path.endsWith(`03255-phone-dark-${suffix}.png`));
       assert.ok(path, `Actual unresolved calendar-listing screenshot missing ${suffix}`);

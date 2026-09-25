@@ -31,8 +31,8 @@ import {
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
-import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
+import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted, refreshCommentAccessFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
@@ -321,6 +321,21 @@ export async function settleRegistryAuthorityReads(
 ): Promise<void> {
   await readers.registry();
   if (scope === "OFFICIALS") await readers.federal();
+}
+
+/**
+ * The comment-access rules, edge-aware (C20, 2026-09-24): a reader request that
+ * entered the reader authority edge primes them from its comment-access artifact
+ * without Neon (0.6–0.8 s from a cold database); otherwise the authoritative
+ * database read, which the runner and the workers always take.
+ */
+export async function settleCommentAccessRead(): Promise<void> {
+  const edge = currentCommentAccessEdge();
+  if (edge) {
+    primeCuratedReaderProjection("comment-access", edge.value, edge.versionId);
+    return;
+  }
+  await refreshCommentAccessFromPromoted();
 }
 
 async function currentRegistryAuthorityKey(): Promise<string> {

@@ -5,6 +5,7 @@ import type { FederalDirectoryReadModel } from "../officials/federal-directory-d
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
+import type { OutcomeSnapshot } from "../outcomes/types.ts";
 
 /**
  * Request-scoped "reader authority" edge bundle: the large families the coverage
@@ -31,6 +32,16 @@ export interface CampaignSitesEdgeValue {
   readonly value: CuratedReaderProjection;
   readonly versionId: string;
 }
+/** The promoted recorded-outcome projection (C20: a cold Ask's slowest database read). */
+export interface MeetingOutcomesEdgeValue {
+  readonly value: OutcomeSnapshot;
+  readonly versionId: string;
+}
+/** The promoted comment-access rules, a curated reader projection like campaign sites. */
+export interface CommentAccessEdgeValue {
+  readonly value: CuratedReaderProjection;
+  readonly versionId: string;
+}
 /** Per-scope state-legislator read models, keyed by OfficialStateVoteScope. */
 export interface StateLegislatorsEdgeValue {
   readonly value: Readonly<Record<string, OfficialStateLegislatorReadModel>>;
@@ -53,6 +64,8 @@ export interface ReaderAuthorityEdgeBundle {
   readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
+  readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
+  readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
 }
 
@@ -82,6 +95,12 @@ export function currentCampaignSitesEdge(): CampaignSitesEdgeValue | null {
 }
 export function currentStateLegislatorsEdge(): StateLegislatorsEdgeValue | null {
   return edgeStore.getStore()?.stateLegislators ?? null;
+}
+export function currentMeetingOutcomesEdge(): MeetingOutcomesEdgeValue | null {
+  return edgeStore.getStore()?.meetingOutcomes ?? null;
+}
+export function currentCommentAccessEdge(): CommentAccessEdgeValue | null {
+  return edgeStore.getStore()?.commentAccess ?? null;
 }
 export function currentRegistrationsEdge(): RegistrationsEdge | null {
   return edgeStore.getStore()?.registrations ?? null;

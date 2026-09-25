@@ -1,10 +1,11 @@
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
+import type { AuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
-import { seatHolderById, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -113,6 +114,7 @@ import {
   outcomeProjectionReadState,
   publicationObservationsFor,
   refreshOutcomeSnapshotFromPromoted,
+  settleOutcomeRead,
   sittingsForBody,
 } from "@/lib/outcomes/store";
 import { buildTopicTimeline, composeAreaTopicAnswer, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
@@ -705,38 +707,55 @@ export async function POST(request: Request) {
     }
   };
   /*
-   * **ONLY WHAT READS THE AUTHORITY EDGE WAITS FOR IT, AND THE EDGE IS ENTERED
-   * HERE.** (2026-09-24, C20/C22.) The recorded outcomes and the comment-access
-   * rules read the database, so they start before the edge is fetched instead
-   * of after it (and comment access no longer waits for every other source).
+   * **EVERY SOURCE THE EDGE CARRIES IS READ FROM IT, IN ONE PARALLEL FETCH, AND
+   * THE EDGE IS ENTERED HERE.** (2026-09-24, C20.) On a cold instance the
+   * recorded outcomes took 2.0–2.3 s from the database (the pole of a cold Ask)
+   * and the comment-access rules 0.6–0.8 s. Both are reader authority families
+   * now, fetched with the registry and the federal directory. A family the
+   * manifest does not carry is read from the database, started the moment the
+   * manifest says so, beside the edge fetch; one whose edge fetch fails is read
+   * from the database by its settle. The meetings read needs only the manifest,
+   * so it starts beside the edge fetch too.
    * The edge itself is entered in THIS function's own execution:
    * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`, and on Node 24
    * a store entered inside a helper never reaches the reads chained on it
-   * ("none" against "EDGE", measured the same day; see
-   * tests/reader-edge-context.test.ts). Entered there, the registry and the
-   * federal directory would silently be read from the database again.
+   * ("none" against "EDGE"; see tests/reader-edge-context.test.ts). Entered
+   * there, every edge family would silently be read from the database again.
    */
-  const outcomesRead = timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
-  // Observed here at once so a failure while the edge is fetched is never an
-  // unhandled rejection; the settle below still records it as a failed source.
-  outcomesRead.catch(() => undefined);
-  const commentAccessRead = process.env.NODE_ENV === "production"
+  const production = process.env.NODE_ENV === "production";
+  const edgeManifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
+  const onEdge = (family: AuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
+  // Each database read is observed at once, so a failure while the edge is
+  // fetched is never an unhandled rejection; the settle below still records it.
+  const outcomesFromDatabase = onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  outcomesFromDatabase?.catch(() => undefined);
+  const commentAccessFromDatabase = production && !onEdge("comment-access")
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
     ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
     : null;
-  const edgeManifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
+  const meetingsRead = readReaderEdgeMeetings({ manifest: edgeManifest });
+  meetingsRead.catch(() => undefined);
+  let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
-    const authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
+    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
     timed("federalDirectory", settleFederalDirectoryRead),
-    () => outcomesRead,
-    ...(commentAccessRead ? [() => commentAccessRead] : []),
+    outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead),
+    ...(commentAccessFromDatabase
+      ? [() => commentAccessFromDatabase]
+      : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
+  trace.preloadSources = {
+    registry: authorityEdge?.registryRuntime ? "EDGE" : "DATABASE",
+    federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
+    outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
+    ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
+  };
   const deferrablePreloads = [
     timed("funding", refreshFundingFromPromoted),
     timed("stateMoney", refreshStateMoneyFromPromoted),
@@ -775,7 +794,7 @@ export async function POST(request: Request) {
      * (~1.4-2.3 s measured). One read path also means Ask and the map can
      * never describe two different versions of a body's calendar.
      */
-    const read = await readReaderEdgeMeetings({ manifest: edgeManifest });
+    const read = await meetingsRead;
     meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
     meetingDataDetail = read.kind === "PROMOTED"
       ? `Canonical meetings projection ${read.metadata.versionId ?? "unknown"} was read.`

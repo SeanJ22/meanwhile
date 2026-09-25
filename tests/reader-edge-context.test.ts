@@ -4,12 +4,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
 import { registryRuntimeFirstSeed, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryFirstSeed, federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
+import { loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
+import { curatedReaderReadState } from "../lib/civic-data/curated-reader-read-model.ts";
+import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
+import { currentCommentAccess } from "../lib/registry/comment-access.ts";
+import { settleCommentAccessRead } from "../lib/registry/server.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 /**
@@ -25,6 +30,11 @@ import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-fir
  * there was no edge. These tests publish a real local edge store
  * (`WTP_READER_EDGE_DIR`) and ask the real Ask and funding routes, so the reads
  * must come from it.
+ *
+ * B6 (C20, later the same day): the recorded meeting outcomes and the
+ * comment-access rules are edge families too. From a cold database they were
+ * the slowest reads of a cold Ask (2.0–2.3 s and 0.6–0.8 s), so a request that
+ * reads either from the database while the edge carries it fails here.
  */
 
 delete process.env.ANTHROPIC_API_KEY;
@@ -40,9 +50,35 @@ after(() => {
   rmSync(edgeDir, { recursive: true, force: true });
 });
 
-async function publishEdge(registryVersion: string, federalVersion: string): Promise<void> {
+// The validated values the edge serves: the same first seeds and test fixtures
+// the database path reads in this process.
+await refreshOutcomeSnapshotFromPromoted();
+const outcomesValue = outcomeProjectionReadState();
+assert.ok(outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED", "the outcome fixture is readable");
+// The comment-access first seed, in the projection shape the runner publishes.
+const commentAccessProjection: CuratedReaderProjection = {
+  kind: "comment-access",
+  records: currentCommentAccess().map((value) => ({ id: `comment-access:${value.bodyId}`, ...value }) as unknown as CuratedReaderProjection["records"][number]),
+};
+
+interface EdgeVersions {
+  readonly registry: string;
+  readonly federal: string;
+  readonly outcomes?: string;
+  readonly commentAccess?: string;
+}
+
+async function publishEdge(versions: EdgeVersions): Promise<void> {
   const snapshot = readSnapshot();
   assert.ok(snapshot, "the bundled meetings snapshot publishes the edge's meeting scopes");
+  const authority: PublishAuthority = {
+    "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: versions.registry },
+    "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: versions.federal },
+    ...(versions.outcomes && (outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED")
+      ? { "meeting-outcomes": { value: outcomesValue.value, versionId: versions.outcomes } }
+      : {}),
+    ...(versions.commentAccess ? { "comment-access": { value: commentAccessProjection, versionId: versions.commentAccess } } : {}),
+  };
   const result = await publishReaderEdgeArtifacts(snapshot, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
@@ -50,13 +86,24 @@ async function publishEdge(registryVersion: string, federalVersion: string): Pro
   }, {
     store: new LocalFileArtifactStore(edgeDir),
     now: new Date().toISOString(),
-    authority: {
-      "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: registryVersion },
-      "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: federalVersion },
-    },
+    authority,
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   process.env.WTP_READER_EDGE_DIR = edgeDir;
+}
+
+const AZ = "ocd-division/country:us/state:az";
+
+async function askPima(): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string> }; answer: string | null }> {
+  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  resetGroundedState();
+  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "reader-edge-context-test" },
+    body: JSON.stringify({ question: "is pima county voting on data centers", approximateLocation: "85701", surface: "MAP", ocdIds: [AZ, `${AZ}/county:pima`, `${AZ}/place:tucson`], today: "2026-09-24" }),
+  }));
+  assert.equal(response.status, 200);
+  return await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string> }; answer: string | null };
 }
 
 test("Node 24: an edge entered inside a helper never reaches the reads chained on it; entered by the caller, it does", async () => {
@@ -74,31 +121,51 @@ test("Node 24: an edge entered inside a helper never reaches the reads chained o
   assert.equal(await byCaller(), "als-probe");
 });
 
-test("Ask reads the registry and the federal directory from the edge it entered", async () => {
-  await publishEdge("edge-test:registry:1", "edge-test:federal:1");
-  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
-  resetGroundedState();
-  const AZ = "ocd-division/country:us/state:az";
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "reader-edge-context-test" },
-    body: JSON.stringify({ question: "is pima county voting on data centers", approximateLocation: "85701", surface: "MAP", ocdIds: [AZ, `${AZ}/county:pima`, `${AZ}/place:tucson`], today: "2026-09-24" }),
-  }));
-  assert.equal(response.status, 200);
-  const payload = await response.json() as { trace: { preloads?: Record<string, number> } };
+test("Ask reads the registry, the federal directory and the recorded outcomes from the edge it entered", async () => {
+  await publishEdge({ registry: "edge-test:registry:1", federal: "edge-test:federal:1", outcomes: "edge-test:outcomes:1", commentAccess: "edge-test:comment-access:1" });
+  const payload = await askPima();
   assert.ok(Number.isFinite(payload.trace.preloads?.authorityEdge), "the edge was not fetched");
   assert.equal(registryRuntimeReadState().metadata?.versionId, "edge-test:registry:1", "the registry was read from the database, not the edge");
   assert.equal(federalDirectoryReadState().metadata?.versionId, "edge-test:federal:1", "the federal directory was read from the database, not the edge");
+  assert.equal(outcomeProjectionReadState().metadata?.versionId, "edge-test:outcomes:1", "the recorded outcomes were read from the database, not the edge");
+  assert.equal(loadedFrom(), "DATA_PLANE", "an edge-served outcome projection is the data plane's own value, never a test fixture");
+  assert.deepEqual(
+    { registry: payload.trace.preloadSources?.registry, federalDirectory: payload.trace.preloadSources?.federalDirectory, outcomes: payload.trace.preloadSources?.outcomes },
+    { registry: "EDGE", federalDirectory: "EDGE", outcomes: "EDGE" },
+    "the trace names where each essential source was read",
+  );
+  assert.match(payload.answer ?? "", /September 22nd, 2026/, "the edge-served outcomes still answer the Pima question");
+});
+
+test("a manifest without the outcomes family reads them from the database, and the trace says so", async () => {
+  await publishEdge({ registry: "edge-test:registry:2", federal: "edge-test:federal:2" });
+  const payload = await askPima();
+  assert.equal(payload.trace.preloadSources?.outcomes, "DATABASE");
+  assert.notEqual(outcomeProjectionReadState().metadata?.versionId, "edge-test:outcomes:1");
+  assert.ok(["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind), "the database fallback read the outcomes");
+});
+
+test("comment access is primed from the edge the caller entered, and read from the database without one", async () => {
+  await (async () => {
+    enterReaderAuthorityEdge({ commentAccess: { value: commentAccessProjection, versionId: "edge-test:comment-access:2" } });
+    await settleCommentAccessRead();
+    assert.equal(curatedReaderReadState("comment-access").metadata?.versionId, "edge-test:comment-access:2", "comment access was read from the database, not the edge");
+  })();
+  await (async () => {
+    enterReaderAuthorityEdge({});
+    // No edge value: the authoritative database read is asked (this test process has no store configured).
+    await assert.rejects(settleCommentAccessRead(), /not configured/);
+  })();
 });
 
 test("Campaign money reads the registry from the edge it entered, and names every read's time", async () => {
-  await publishEdge("edge-test:registry:2", "edge-test:federal:2");
+  await publishEdge({ registry: "edge-test:registry:3", federal: "edge-test:federal:3" });
   const { GET } = await import("../app/api/funding/[target]/route.ts");
   const response = await GET(new Request("https://wtp.test/api/funding/congress%3AC001133"), {
     params: Promise.resolve({ target: "congress%3AC001133" }),
   });
   assert.ok([200, 503].includes(response.status));
-  assert.equal(registryRuntimeReadState().metadata?.versionId, "edge-test:registry:2", "the registry was read from the database, not the edge");
+  assert.equal(registryRuntimeReadState().metadata?.versionId, "edge-test:registry:3", "the registry was read from the database, not the edge");
   const timing = response.headers.get("server-timing") ?? "";
   for (const name of ["edgeManifest", "authorityEdge", "registry", "fec", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${name};dur=\\d+`), `${name} is not timed: ${timing}`);

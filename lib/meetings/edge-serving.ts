@@ -22,6 +22,7 @@ import type { CuratedReaderProjection } from "../civic-data/manual-projections.t
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
+import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import {
   resolveReaderArtifactStore,
   resolveReaderArtifactWriteStore,
@@ -264,20 +265,26 @@ export async function ensureReaderAuthorityEdge(
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
     stateLegislators?: { value: Record<string, OfficialStateLegislatorReadModel>; versionId: string };
+    meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
+    commentAccess?: { value: CuratedReaderProjection; versionId: string };
   } = {};
-  // The four families are independent artifacts, fetched together rather than
-  // one after another on a cold instance (2026-09-24, C20/C22). Each fetch
-  // answers null for its own failure, so one missing family never costs another.
-  const [registry, federal, campaign, legislators] = await Promise.all([
+  // The families are independent artifacts, fetched together rather than one
+  // after another on a cold instance (2026-09-24, C20/C22). Each fetch answers
+  // null for its own failure, so one missing family never costs another.
+  const [registry, federal, campaign, legislators, outcomes, commentAccess] = await Promise.all([
     fetchAuthorityValue("registry-runtime", refs["registry-runtime"], store),
     fetchAuthorityValue("federal-directory", refs["federal-directory"], store),
     fetchAuthorityValue("campaign-sites", refs["campaign-sites"], store),
     fetchAuthorityValue("state-legislators", refs["state-legislators"], store),
+    fetchAuthorityValue("meeting-outcomes", refs["meeting-outcomes"], store),
+    fetchAuthorityValue("comment-access", refs["comment-access"], store),
   ]);
   if (registry !== null) bundle.registryRuntime = { value: registry as RegistryRuntimeReadModel, versionId: refs["registry-runtime"]!.version };
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
   if (legislators !== null) bundle.stateLegislators = { value: legislators as Record<string, OfficialStateLegislatorReadModel>, versionId: refs["state-legislators"]!.version };
+  if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
+  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
   return { ...bundle, ...registrations };
 }
 

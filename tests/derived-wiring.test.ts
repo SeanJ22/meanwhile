@@ -30,7 +30,8 @@ import {
   type DerivedWiringInputs,
   type WiringVerification,
 } from "../lib/control-plane/discovery/derived-wiring.ts";
-import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { walkMeetingsDiscoveryNeed } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 
@@ -42,13 +43,10 @@ const OCD = "ocd-division/country:us/state:az/place:example";
 const ROUTE = "https://www.example.gov/council.ics";
 const NOW = "2026-09-25T02:00:00.000Z";
 
-type Reply = { status: number; body?: string; contentType?: string; location?: string };
+type Reply = RecordedReply;
 
 async function walk(map: Record<string, Reply>, address: string): Promise<MeetingsDiscoveryAttempt> {
-  const open: DiscoveryOpen = async ({ url }) => {
-    const r = map[url] ?? { status: 404, body: "not found" };
-    return { status: r.status, body: r.body ?? "", bytes: (r.body ?? "").length, contentType: r.contentType ?? "text/html", location: r.location ?? null, transportError: null };
-  };
+  const open = recordedDiscoveryOpen(map);
   let tick = 0;
   const need: MeetingsDiscoveryNeed = {
     jurisdictionId: JURISDICTION, stateCode: "AZ", name: "TOWN OF EXAMPLE", govClass: "CITY_OR_TOWN",

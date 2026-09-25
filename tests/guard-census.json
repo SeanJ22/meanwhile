@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 783,
-    "named": 7638,
+    "files": 784,
+    "named": 7642,
     "dynamic": 30
   },
   "files": {
@@ -3697,6 +3697,15 @@
         "M134 rule 4 — resolving a pick cannot alter a reaction: this module writes nothing",
         "M134 rule 5 — a measure's Yes/No derives the same way, through the same function",
         "M134 — a derived pick says where it came from, and stays on the device"
+      ],
+      "dynamic": 0
+    },
+    "tests/derived-wiring-reading.test.ts": {
+      "names": [
+        "C16: a store with no promoted venue resolutions refuses the whole reading by name, before any adapter runs",
+        "C16: an adapter throw of ours is ADAPTER_REFUSED, never CALENDAR_CHANGED: the unread-projection throw itself",
+        "C16: the adapter's zero-row extraction stays CALENDAR_CHANGED: the held calendar selects nothing for the reviewed filter",
+        "C16: the derive reads venue resolutions before any adapter reading, with no test seed to fall back to"
       ],
       "dynamic": 0
     },

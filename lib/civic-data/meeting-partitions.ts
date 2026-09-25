@@ -217,7 +217,7 @@ export interface HeldMeetingPartition {
 
 function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
   const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
-  const held = RETIRED_MEETING_ROUTES.map((route) => {
+  const held = RETIRED_MEETING_ROUTES.flatMap((route) => {
     const id = meetingPartitionId(route.meetingSource, route.bodyId);
     const successorId = meetingPartitionId(route.replacedBy, route.bodyId);
     if (registered.has(id)) throw new Error(`MEETING_PARTITION_RETIRED_BUT_REGISTERED:${id}`);
@@ -225,7 +225,10 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
     if (!successor || successor.bodyId !== route.bodyId) {
       throw new Error(`MEETING_PARTITION_SUCCESSOR_NOT_REGISTERED:${id}->${successorId}`);
     }
-    return {
+    // A successor that was already a wired route for the body has its own
+    // pointer from before the retirement: there is no gap to hold across.
+    if (route.successorAlreadyWired) return [];
+    return [{
       id,
       scope: meetingPartitionScope(route.meetingSource, route.bodyId),
       meetingSource: route.meetingSource,
@@ -233,7 +236,7 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
       successorId,
       successorScope: successor.scope,
       retiredOn: route.retiredOn,
-    };
+    }];
   });
   const successors = new Set<string>();
   for (const row of held) {
@@ -244,6 +247,19 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
 }
 
 export const HELD_MEETING_PARTITIONS = buildHeldMeetingPartitions();
+
+/**
+ * Retired partitions that hold nothing: the successor was already a wired,
+ * promoting route for the body when the retired one stopped
+ * (`successorAlreadyWired`), so the successor's own pointer is the body's
+ * authority and the retired pointer is simply no longer composed. Validated
+ * with the held rows above (retired unregistered, successor registered).
+ */
+export const RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD: readonly { readonly id: string; readonly successorId: string }[] =
+  RETIRED_MEETING_ROUTES.filter((route) => route.successorAlreadyWired).map((route) => ({
+    id: meetingPartitionId(route.meetingSource, route.bodyId),
+    successorId: meetingPartitionId(route.replacedBy, route.bodyId),
+  }));
 
 /** The retired partition a registered successor holds until its first promotion, if any. */
 export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartition | null {

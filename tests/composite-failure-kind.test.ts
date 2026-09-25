@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { CompositeSource } from "../lib/sources/composite/index.ts";
+import { CompositeSource, childFailureMessage } from "../lib/sources/composite/index.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { fetchFailureKind, jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
@@ -35,6 +35,41 @@ test("our own code and configuration failures are jobs, and so is an unknown", (
   assert.equal(fetchFailureKind(new TypeError("Cannot read properties of undefined (reading 'venues')")), "JOB");
   assert.equal(fetchFailureKind(new RangeError("Invalid time value")), "JOB");
   assert.equal(fetchFailureKind("something odd happened"), "JOB", "unknown escalates");
+});
+
+/*
+ * 2026-09-25: Newbury's CivicWeb host stopped resolving on 2026-09-14 and
+ * ~2,077 SOURCE_BLOCKED rows recorded only "fetch failed". Node's fetch puts
+ * the resolver's answer on `cause.code`; the stored error keeps it.
+ */
+test("a child rejected by a host that no longer resolves keeps the transport's code", async () => {
+  const gone = Object.assign(new TypeError("fetch failed"), {
+    cause: Object.assign(new Error("getaddrinfo ENOTFOUND newburynh.civicweb.net"), { code: "ENOTFOUND" }),
+  });
+  const child = {
+    name: "diligent",
+    fetch: async () => { throw gone; },
+    normalize: () => [],
+    normalizeWithDrops: () => ({ meetings: [], drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }),
+  } as unknown as ConstructorParameters<typeof CompositeSource>[0][number];
+  const composite = new CompositeSource([child]);
+  // Newbury, NH; the point only keys the composite cache.
+  const query = { lat: 43.32, lng: -72.03, radiusKm: 25 } as Parameters<CompositeSource["fetch"]>[0];
+  composite.normalize(await composite.fetch(query), new Date("2026-09-25T17:00:00Z"));
+  const report = composite.lastReport?.children.find((row) => row.source === "diligent");
+  assert.ok(report);
+  assert.equal(report.ok, false);
+  assert.equal(report.error, "fetch failed (ENOTFOUND)", "the resolver's answer survives into the stored failure");
+  assert.equal(report.failure, "WALL", "still the publisher side, as before");
+
+  assert.equal(childFailureMessage(gone), "fetch failed (ENOTFOUND)");
+  assert.equal(childFailureMessage(new Error("connect ECONNREFUSED 10.0.0.1:443")), "connect ECONNREFUSED 10.0.0.1:443");
+  assert.equal(
+    childFailureMessage(Object.assign(new Error("connect ECONNREFUSED 10.0.0.1:443"), { cause: { code: "ECONNREFUSED" } })),
+    "connect ECONNREFUSED 10.0.0.1:443",
+    "a code the message already names is not repeated",
+  );
+  assert.equal(childFailureMessage("plain string"), "plain string");
 });
 
 test("a JOB failure detail says whose failure it is, once", () => {

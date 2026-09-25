@@ -18,8 +18,9 @@ import {
   runReaderProofRuntimeLoaders,
   type ReaderProofRuntimeLoaders,
 } from "../scripts/lib/reader-proof-runtime.ts";
-import type {
-  ReaderExecutionAuthorityArchivedSupportAdmission,
+import {
+  PDC_V2_POST_IMPORT_MEETING_PARTITIONS,
+  type ReaderExecutionAuthorityArchivedSupportAdmission,
 } from "../lib/holdings/reader-execution-authority.ts";
 import {
   readerClosureReadConnectionIdentity,
@@ -29,7 +30,9 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   heldMeetingPartitionFor,
+  meetingPartitionId,
 } from "../lib/civic-data/meeting-partitions.ts";
+import { RETIRED_MEETING_ROUTES } from "../lib/registry/source-wiring.ts";
 import { pdcV2CanonicalMeetingFactEvidence } from "../lib/civic-data/store.ts";
 import {
   readSnapshot,
@@ -300,9 +303,29 @@ function frozenMeetingAuthority(): ReaderProofMeetingsExpectedAuthority {
   };
 }
 
+/**
+ * Routes retired beside a successor that was already wired for the body
+ * (2026-09-25: Newbury's CivicWeb portal beside the town's calendar feed).
+ * The frozen import promoted BOTH identities, each under its own disposition.
+ */
+function frozenRetiredBesideWiredSuccessor(): { contractId: string; versionId: string }[] {
+  const frozen = readSnapshot()!;
+  return RETIRED_MEETING_ROUTES
+    .filter((route) => route.successorAlreadyWired)
+    .filter((route) => frozen.meetings.some((meeting) =>
+      meeting.bodyId === route.bodyId && meeting.id.startsWith(`${route.meetingSource}:`)
+    ))
+    .map((route) => {
+      const contractId = meetingPartitionId(route.meetingSource, route.bodyId);
+      return { contractId, versionId: `${contractId}:trusted-lkg-test-version` };
+    });
+}
+
 function frozenImportAdmission(): ReaderExecutionAuthorityArchivedSupportAdmission {
-  const dispositionSet = frozenMeetingAuthority().partitions
-    .filter(({ kind }) => kind === "PROMOTED")
+  const dispositionSet = [
+    ...frozenMeetingAuthority().partitions.filter(({ kind }) => kind === "PROMOTED"),
+    ...frozenRetiredBesideWiredSuccessor(),
+  ]
     .map(({ contractId, versionId }) => ({
       // The archived import names the identity that existed when it was taken.
       contractId: heldMeetingPartitionFor(contractId)?.id ?? contractId,
@@ -320,14 +343,22 @@ function frozenImportAdmission(): ReaderExecutionAuthorityArchivedSupportAdmissi
   };
 }
 
+function admissionPromotedCount(): number {
+  return frozenImportAdmission().dispositionSet.filter(({ contractId }) => contractId.startsWith("meetings:")).length;
+}
+
 test("meeting proof derives the exact 83/41 authority from admitted import membership", () => {
   const authority = readerProofMeetingsAuthorityFromImport(frozenImportAdmission());
   // 124 imported (83 promoted / 41 zero-LKG) + 7 registered after the import
   // (PDC_V2_POST_IMPORT_MEETING_PARTITIONS: Tucson Unified's own page, C9's two
   // Newbury pages, C14's Chandler schedule table and C16's three derived state
-  // families), NOT_RECORDED until the runner gains them.
-  assert.equal(authority.partitions.length, 131);
-  assert.equal(authority.meetingPartitionsWithLkg, 83);
+  // families), NOT_RECORDED until the runner gains them — less Newbury's
+  // CivicWeb route, retired 2026-09-25 beside the town's already-promoted
+  // calendar feed: imported as one of the 83, it leaves the authority.
+  assert.equal(frozenRetiredBesideWiredSuccessor().length, 1);
+  assert.equal(admissionPromotedCount(), 83, "the frozen import itself still promoted 83");
+  assert.equal(authority.partitions.length, 130);
+  assert.equal(authority.meetingPartitionsWithLkg, 82);
   assert.equal(authority.meetingPartitionsWithoutLkg, 48);
   assert.deepEqual(authority, frozenMeetingAuthority());
 
@@ -393,10 +424,10 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
   const input = meetingProofInput();
   assert.equal(input.kind, "PROMOTED");
   if (input.kind !== "PROMOTED") return;
-  assert.equal(input.partitions.length, 131);
-  assert.equal(input.partitions.filter(({ kind }) => kind === "PROMOTED").length, 83);
+  assert.equal(input.partitions.length, 130);
+  assert.equal(input.partitions.filter(({ kind }) => kind === "PROMOTED").length, 82);
   assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 48);
-  assert.equal(expected.meetingPartitionsWithLkg, 83);
+  assert.equal(expected.meetingPartitionsWithLkg, 82);
   assert.equal(expected.meetingPartitionsWithoutLkg, 48);
   assert.equal(requireReaderProofMeetingsProjection(input, expected), input.value);
   const identity = readerProofMeetingPartitionIdentity(input, expected);
@@ -444,6 +475,46 @@ test("a partition retired by a proved cutover hands its imported authority to it
     }),
     /duplicates a meeting partition disposition/,
     "an import naming both identities is two authorities for one body",
+  );
+});
+
+test("a route retired beside an already-promoted successor leaves the authority; the successor keeps its own", () => {
+  const newbury = RETIRED_MEETING_ROUTES.find((route) => route.successorAlreadyWired)!;
+  assert.ok(newbury, "Newbury's CivicWeb route is retired beside the town calendar feed");
+  const retiredId = meetingPartitionId(newbury.meetingSource, newbury.bodyId);
+  const successorId = meetingPartitionId(newbury.replacedBy, newbury.bodyId);
+  const admission = frozenImportAdmission();
+  assert.ok(admission.dispositionSet.some(({ contractId }) => contractId === retiredId), "the frozen import promoted the retired identity");
+  assert.ok(admission.dispositionSet.some(({ contractId }) => contractId === successorId), "and the successor under its own");
+
+  const authority = readerProofMeetingsAuthorityFromImport(admission);
+  assert.equal(authority.partitions.some(({ contractId }) => contractId === retiredId), false, "the retired identity leaves the authority");
+  const successor = authority.partitions.find(({ contractId }) => contractId === successorId);
+  assert.equal(successor?.kind, "PROMOTED");
+  assert.equal(successor?.versionId, `${successorId}:trusted-lkg-test-version`, "the successor keeps its own version, not the retired one's");
+
+  // An import that promoted the retired identity but not its successor would
+  // lose the body; refused, never read as a smaller authority.
+  // The count is held equal (another registered zero-LKG partition takes the
+  // successor's place) so the refusal is the lost body, not the denominator.
+  const withoutSuccessor = admission.dispositionSet.filter(({ contractId }) => contractId !== successorId);
+  const zeroLkg = authority.partitions.find(({ kind, contractId }) =>
+    kind === "NOT_RECORDED" && !PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(contractId)
+  )!;
+  assert.ok(zeroLkg);
+  assert.throws(
+    () => readerProofMeetingsAuthorityFromImport({
+      ...admission,
+      dispositionSet: [
+        ...withoutSuccessor,
+        { contractId: zeroLkg.contractId, candidateId: "x", disposition: "PROMOTED_ABSENT_POINTER", versionId: "x", readerReadback: "PASS" },
+      ],
+    }),
+    /wired successor it does not carry/,
+  );
+  assert.throws(
+    () => readerProofMeetingsAuthorityFromImport({ ...admission, dispositionSet: withoutSuccessor }),
+    /denominator differs/,
   );
 });
 

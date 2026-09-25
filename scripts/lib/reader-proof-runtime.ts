@@ -19,7 +19,11 @@ import {
   refreshNhBallotFromPromoted,
 } from "../../lib/civic-data/manual-read-models.ts";
 import { refreshOfficeholderStatementsFromPromoted } from "../../lib/corpus/data-plane.ts";
-import { HELD_MEETING_PARTITIONS, MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
+import {
+  HELD_MEETING_PARTITIONS,
+  MEETING_PARTITION_CONTRACTS,
+  RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD,
+} from "../../lib/civic-data/meeting-partitions.ts";
 import { pdcV2CanonicalMeetingFactEvidence } from "../../lib/civic-data/store.ts";
 import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
@@ -139,32 +143,44 @@ export function readerProofMeetingsAuthorityFromImport(
   // promoted body stays promoted, and losing it remains a hard failure. An
   // import that named both identities is a duplicate and is refused below.
   const successorOf = new Map(HELD_MEETING_PARTITIONS.map(({ id, successorId }) => [id, successorId]));
+  // A partition retired beside a successor that was already wired for the same
+  // body (RETIRED_MEETING_ROUTES `successorAlreadyWired`) hands nothing on: the
+  // import names the successor's own disposition, which stays the body's
+  // authority. The retired identity still counts in the frozen import's
+  // denominator, and then leaves the authority.
+  const retiredWithoutHold = new Map(RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD.map(({ id, successorId }) => [id, successorId]));
   const dispositions = admission.dispositionSet.map((row) =>
     successorOf.has(row.contractId) ? { ...row, contractId: successorOf.get(row.contractId)! } : row
   );
   const unexpected = dispositions.filter(({ contractId }) =>
-    contractId.startsWith("meetings:") && !registered.has(contractId)
+    contractId.startsWith("meetings:") && !registered.has(contractId) && !retiredWithoutHold.has(contractId)
   );
   if (unexpected.length) {
     throw new Error("Reader phase import names an unregistered meeting partition.");
   }
-  const promotedRows = dispositions.filter(({ contractId }) => registered.has(contractId));
-  const promotedById = new Map(promotedRows.map((row) => [row.contractId, row]));
-  if (promotedById.size !== promotedRows.length) {
+  const importedRows = dispositions.filter(({ contractId }) => registered.has(contractId) || retiredWithoutHold.has(contractId));
+  const importedById = new Map(importedRows.map((row) => [row.contractId, row]));
+  if (importedById.size !== importedRows.length) {
     throw new Error("Reader phase import duplicates a meeting partition disposition.");
   }
   // Partitions registered after the frozen import are outside its universe:
   // NOT_RECORDED in this authority until routine promotion gains them.
   const postImport = new Set(PDC_V2_POST_IMPORT_MEETING_PARTITIONS.filter((id) => registered.has(id)));
-  if (promotedRows.some(({ contractId }) => postImport.has(contractId))) {
+  if (importedRows.some(({ contractId }) => postImport.has(contractId))) {
     throw new Error("Reader phase import claims a meeting partition registered after it.");
   }
   if (
     admission.zeroMeetingPartitionsRefused !== PDC_V2_ZERO_LKG_MEETING_PARTITIONS ||
-    promotedRows.length !== registered.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS - postImport.size
+    importedRows.length !== registered.size + retiredWithoutHold.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS - postImport.size
   ) {
     throw new Error("Reader phase import meeting partition denominator differs from the permanent 83/41 authority.");
   }
+  for (const [retiredId, successorId] of retiredWithoutHold) {
+    if (importedById.has(retiredId) && !importedById.has(successorId)) {
+      throw new Error("Reader phase import promoted a retired meeting partition whose wired successor it does not carry.");
+    }
+  }
+  const promotedById = new Map([...importedById].filter(([id]) => registered.has(id)));
   const partitions = MEETING_PARTITION_CONTRACTS.map(({ id }) => {
     const promoted = promotedById.get(id);
     return promoted
@@ -172,8 +188,8 @@ export function readerProofMeetingsAuthorityFromImport(
       : { contractId: id, kind: "NOT_RECORDED" as const, versionId: null };
   });
   return {
-    meetingPartitionsWithLkg: promotedRows.length,
-    meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused + postImport.size,
+    meetingPartitionsWithLkg: promotedById.size,
+    meetingPartitionsWithoutLkg: partitions.length - promotedById.size,
     legacyMeetingsAggregate: admission.legacyMeetingsAggregate,
     partitions,
   };

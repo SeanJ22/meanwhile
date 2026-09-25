@@ -39,9 +39,50 @@ test("every retired route has exactly one wired successor for the same body, and
       "the successor partition must be registered",
     );
     assert.match(retired.retiredOn, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(retired.reason.includes("robots.txt"), "the reason names the permission document");
+    assert.ok(
+      retired.reason.includes("robots.txt") || /NXDOMAIN|ENOTFOUND/.test(retired.reason),
+      "the reason names its evidence: the permission document, or the host's failed resolution",
+    );
     assert.ok(retired.held.length > 0, "what the retired route holds is stated");
   }
+});
+
+/*
+ * 2026-09-25: Newbury's CivicWeb host (newburynh.civicweb.net) answers
+ * NXDOMAIN; every read since 2026-09-14 ended SOURCE_BLOCKED. The town's own
+ * calendar feed was already wired for the Selectboard, so the portal route is
+ * retired beside it and nothing is held.
+ */
+const NEWBURY_SELECTBOARD = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing";
+
+test("Newbury's dead CivicWeb route is retired, and its already-wired calendar feed is the Selectboard's one clock", () => {
+  const retired = RETIRED_MEETING_ROUTES.find((route) => route.bodyId === NEWBURY_SELECTBOARD);
+  assert.ok(retired, "the CivicWeb route is named as retired");
+  assert.equal(retired.meetingSource, "diligent");
+  assert.deepEqual(retired.hosts, ["newburynh.civicweb.net"]);
+  assert.equal(retired.replacedBy, "ical");
+  assert.equal(retired.successorAlreadyWired, true);
+  const rows = SOURCE_WIRING.filter((row) => row.bodyId === NEWBURY_SELECTBOARD);
+  assert.deepEqual(rows.map((row) => row.config.slug), ["newbury-ical-governing"]);
+  assert.equal(
+    MEETING_PARTITION_CONTRACTS.some((p) => p.id === meetingPartitionId("diligent", NEWBURY_SELECTBOARD)),
+    false,
+    "no clock, acquisition or SOURCE_BLOCKED row can be written for the dead host again",
+  );
+  assert.equal(isRetiredMeetingHost("https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370"), true);
+  assert.throws(
+    () => meetingSourceNamesForWiring({
+      bodyId: NEWBURY_SELECTBOARD,
+      ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+      agendaSourceType: "CIVICWEB",
+      jurisdiction: "Newbury, NH",
+      publishingOrg: "Town of Newbury",
+      timeZone: "America/New_York",
+      config: { slug: "newburynh", serviceBase: "https://newburynh.civicweb.net" },
+      verifiedAt: "2026-08-13",
+    }),
+    /MEETING_ROUTE_RETIRED:diligent:ocd-division\/country:us\/state:nh\/county:merrimack\/place:newbury_town#governing/,
+  );
 });
 
 test("re-opening a retired (route, body) pair fails at registration, loudly", () => {

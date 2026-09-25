@@ -45,9 +45,9 @@ import {
 } from "../lib/sources/legistar-insite/clerk-schedule.ts";
 import { parseCalendarRows, parseGridPager } from "../lib/sources/legistar-insite/calendar.ts";
 import {
-  GRANICUS_LIVE_PROCEEDINGS_WALL,
+  GRANICUS_LIVE_PROCEEDINGS_ROUTE,
   MEETING_PRODUCING_ROUTES,
-  granicusWallObservation,
+  granicusRouteObservation,
   intersectionOfRoutes,
   openObligations,
   richerRouteLink,
@@ -511,30 +511,33 @@ test("a route this tenant has not declared says NOBODY LOOKED, not that nothing 
   assert.equal(unread.union.length, 14);
 });
 
-test("the Granicus wall is a wall — a verdict, a date, and a NULL claim about content", () => {
-  const wall = granicusWallObservation();
-  assert.equal(wall.enumeration, "PERMISSION_DISALLOWED");
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_WALL.rule, "User-agent: * / Disallow: /");
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_WALL.readAt, "2026-08-28");
+test("the Granicus route is unbuilt, not walled — its robots.txt recorded with a date, and a NULL claim about content", () => {
+  const route = granicusRouteObservation();
+  // Owner decision 2026-09-25: robots.txt is recorded and blocks nothing, so
+  // the route's zero is ours (no adapter reads it yet), never a permission wall.
+  assert.equal(route.enumeration, "NOT_BUILT");
+  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, "User-agent: * / Disallow: /");
+  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt, "2026-08-28");
   assert.equal(
-    GRANICUS_LIVE_PROCEEDINGS_WALL.claimAboutContent,
+    GRANICUS_LIVE_PROCEEDINGS_ROUTE.claimAboutContent,
     null,
-    "a permission refusal entitles us to NO claim about what is behind it",
+    "a route nobody read entitles us to NO claim about what is behind it",
   );
-  assert.match(wall.note ?? "", /NOT FETCHED AT ANY RUNG/);
-  assert.match(wall.note ?? "", /makes NO claim about what the route publishes/);
+  assert.match(route.note ?? "", /NOT BUILT: no adapter reads this route yet/);
+  assert.match(route.note ?? "", /not blocking since the owner decision of 2026-09-25/);
+  assert.match(route.note ?? "", /NO claim is made about what the route publishes/);
 
   // The counts are OUR action, not the route's contents.
-  assert.equal(wall.rawFutureCount, 0);
+  assert.equal(route.rawFutureCount, 0);
   assert.notEqual(
-    wall.enumeration,
+    route.enumeration,
     "PUBLISHER_STATED_EMPTY",
-    "a disallow is never the publisher stating emptiness",
+    "an unread route is never the publisher stating emptiness",
   );
 
   // And the whole horizon is reachable without it.
   const result = normalizeWithDrops([pimaReading()], NOW);
-  assert.equal(result.union.length, 14, "nothing we owe a reader depends on the disallowed route");
+  assert.equal(result.union.length, 14, "nothing we owe a reader depends on the unbuilt route");
 });
 
 // ---------------------------------------------------------------------------

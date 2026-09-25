@@ -145,7 +145,7 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
     if (retired) {
       throw new Error(
         `MEETING_ROUTE_RETIRED:${route}:${row.bodyId} — retired ${retired.retiredOn} (${retired.reason}); ` +
-          `the permitted route is ${retired.replacedBy}.`,
+          `the route that replaced it is ${retired.replacedBy}.`,
       );
     }
   }
@@ -153,22 +153,30 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
 }
 
 /**
- * **A ROUTE RETIRED FOR PERMISSION, AND WHAT IT LEAVES BEHIND.**
+ * **A RETIRED MEETINGS ROUTE, AND WHAT IT LEAVES BEHIND.**
  * (2026-09-23, the Pima school-agenda routes session. RULING 283, RULING 263.)
  *
  * RULING 283: a proved source cutover disables its old writer in the same
  * transaction, and neither two authoritative clocks nor none is lawful. When a
- * body's permitted route replaces a route whose host refuses this client, the
- * old (route, body) pair is named here, and naming it is enforced, not
- * described:
+ * body's new route replaces an old one, the old (route, body) pair is named
+ * here, and naming it is enforced, not described:
  *
  * - `meetingSourceNamesForWiring` throws for a wiring row that would re-open
  *   the pair, so no partition, clock or acquisition can exist for it;
- * - `scripts/ingest.ts` refuses agenda-document retrieval from `hosts` — the
- *   body still PUBLISHES links into its agenda platform, and a reader may
- *   follow one, but this client never requests it;
+ * - `scripts/ingest.ts` refuses agenda-document retrieval from `hosts` unless
+ *   they are marked `hostsReadable` — the body may still PUBLISH links into
+ *   its old platform, and a reader may follow one; this client reads it only
+ *   when there is something there to read;
  * - `tests/retired-meeting-routes.test.ts` holds that every retired pair has a
  *   wired successor for the same body.
+ *
+ * **robots.txt alone retires nothing, and closes no host.** (Owner decision
+ * 2026-09-25: "Robots.txt alone must not block acquisition.") The first
+ * retirement here (Pima Community College's Diligent tenant, 2026-09-23) was
+ * made for robots.txt alone. It stays retired because its successor carries
+ * every sitting it did and more, and a second route for the body would show
+ * each sitting twice; but its host is readable again (`hostsReadable`), so the
+ * college's own links into the tenant are read like any public agenda link.
  *
  * **What the retired route already holds stays.** Its promoted partition
  * version and every candidate behind it remain in the production store exactly
@@ -177,20 +185,31 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
  * successor's place and named on its readback (`HELD_MEETING_PARTITIONS`,
  * `lib/civic-data/meeting-partitions.ts`), so the body's sittings never leave
  * the page between the old writer stopping and the new one's first version.
- * The first promotion supersedes it. A permission rule binds the next fetch,
- * never possession of what was already published (RULING 263).
+ * The first promotion supersedes it. A retirement binds the next fetch, never
+ * possession of what was already published (RULING 263).
  *
  * A route whose host is GONE (2026-09-25: Newbury's CivicWeb portal, NXDOMAIN)
- * retires under the same rules. When its successor was already a wired route
- * for the body (`successorAlreadyWired`), that successor has its own pointer,
- * so nothing is held and the retired pointer simply stops being composed.
+ * retires under the same rules, and its host is not readable: there is nothing
+ * there. When its successor was already a wired route for the body
+ * (`successorAlreadyWired`), that successor has its own pointer, so nothing is
+ * held and the retired pointer simply stops being composed.
  */
 export interface RetiredMeetingRoute {
   /** The adapter route (partition `meetings:<meetingSource>:<bodyId>`) that no longer runs. */
   readonly meetingSource: string;
   readonly bodyId: string;
-  /** Hosts the retired route read. Nothing may fetch them for this body. */
+  /**
+   * Hosts the retired route read. No clock or partition reads them for this
+   * body. Agenda retrieval refuses them too, unless `hostsReadable` is set.
+   */
   readonly hosts: readonly string[];
+  /**
+   * The retirement closes the route's clock only: its hosts stay readable, so
+   * a link into them (the body's own agenda link) is read like any public
+   * document. Set for a route superseded by a better one while its host still
+   * serves the body's documents — never for a host that is gone.
+   */
+  readonly hostsReadable?: true;
   /** ISO date of the cutover (`pnpm stamp`). */
   readonly retiredOn: string;
   readonly reason: string;
@@ -214,17 +233,21 @@ export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
     meetingSource: "diligent",
     bodyId: "curated:az/pima-community-college#governing",
     hosts: ["pima.community.highbond.com"],
+    hostsReadable: true,
     retiredOn: "2026-09-23",
     reason:
-      "robots.txt on pima.community.highbond.com is an allowlist — six named search crawlers may read " +
-      "/Portal/, /document/ and /Services/, and User-agent: * carries Disallow: / (read 2026-09-23T20:02Z, " +
-      "23,479 bytes, sha256 b5cbf0b4b2cbcf18…); docs/sources.md recorded the host DISALLOWED on 2026-08-29",
+      "retired 2026-09-23 for robots.txt alone: the tenant's robots.txt is an allowlist — six named search " +
+      "crawlers may read /Portal/, /document/ and /Services/, and User-agent: * carries Disallow: / (read " +
+      "2026-09-23T20:02Z and again 2026-09-25, 23,479 bytes, sha256 b5cbf0b4b2cbcf18…). robots.txt no longer " +
+      "blocks since the owner decision of 2026-09-25. The route stays retired because pima-edu carries every " +
+      "sitting it did (cutover dry run: 7 the same, 5 added, none removed), and a second route for the body " +
+      "would show each sitting twice; its host is readable again for the college's agenda links",
     replacedBy: "pima-edu",
     held:
       "the promoted meetings:diligent partition for this body (7 sittings, 486 stored portal-page reads as of " +
       "2026-09-23T19:48Z) stays in the production store unchanged, composed as held rows until the pima-edu " +
-      "partition's first promotion supersedes it; the college's own " +
-      "links into the tenant are carried by pima-edu as links and never fetched",
+      "partition's first promotion supersedes it; the college's own links into the tenant are carried by " +
+      "pima-edu as links, and agenda retrieval reads them",
   },
   {
     // Not a permission cutover: the host is gone. Every read since 2026-09-14
@@ -254,17 +277,24 @@ export function retiredMeetingRoute(meetingSource: string, bodyId: string): Reti
 }
 
 /**
- * Is this URL on a host a retired route read? Agenda retrieval refuses these:
- * the link stays a link a reader can follow, and this client does not read it.
+ * Is this URL on a retired route's host that nothing may fetch? Agenda
+ * retrieval refuses these: the link stays a link a reader can follow, and this
+ * client does not read it.
+ *
+ * A retired route whose hosts stay readable (`hostsReadable`) is not one: its
+ * retirement closed its clock, not its host. Until 2026-09-25 this refused
+ * every retired route's host, including Pima Community College's Diligent
+ * tenant, retired for robots.txt alone; since the owner decision of that day
+ * robots.txt closes nothing.
  */
-export function isRetiredMeetingHost(url: string): boolean {
+export function isUnreadableRetiredMeetingHost(url: string): boolean {
   let host: string;
   try {
     host = new URL(url).hostname.toLowerCase();
   } catch {
     return false;
   }
-  return RETIRED_MEETING_ROUTES.some((r) => r.hosts.includes(host));
+  return RETIRED_MEETING_ROUTES.some((r) => !r.hostsReadable && r.hosts.includes(host));
 }
 
 export function wiringForMeetingSource(sourceName: string): BodySourceWiring[] {
@@ -498,12 +528,15 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
 
   // ── D28: Pima Community College Governing Board ─────────────────────────
   // No Census division: `ocdId` is null and the body is the curated registry
-  // row. Read from the college's OWN permitted pages since 2026-09-23 — the
-  // Diligent tenant this row used to name (pima.community.highbond.com)
-  // disallows this client in robots.txt, and that route is retired in
-  // RETIRED_MEETING_ROUTES above. See lib/sources/pima-edu/index.ts.
+  // row. Read from the college's OWN pages since 2026-09-23, which carry every
+  // sitting the Diligent tenant this row used to name
+  // (pima.community.highbond.com) did, and five more. That route is retired
+  // in RETIRED_MEETING_ROUTES above; it was retired for robots.txt alone,
+  // which blocks nothing since the owner decision of 2026-09-25, so the
+  // tenant's host is readable again for the college's agenda links. See
+  // lib/sources/pima-edu/index.ts.
   //
-  // Every URL below was read 2026-09-23 under a robots.txt that permits it:
+  // robots.txt as read 2026-09-23 for every URL below, recorded:
   // www.pima.edu (8 narrow disallows, none on the governing-board path) and
   // events.pima.edu (Drupal defaults: /admin/, /search/, /user/…). Venue
   // spellings key the promoted `venue-resolutions` rows reviewed 2026-08-14
@@ -805,8 +838,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   },
 
   // Chandler, AZ — City Council (C14, 2026-09-24). Every agenda, result and
-  // minutes set is published only on destinyhosted.com, whose robots.txt reads
-  // as disallow-all and which is never requested. The city's own City Clerk
+  // minutes set is published only on destinyhosted.com. Those Destiny agenda
+  // links are not read yet because no adapter follows them; its robots.txt,
+  // which reads as disallow-all, is recorded and has blocked nothing since the
+  // owner decision of 2026-09-25. The city's own City Clerk
   // page publishes the year's sittings as the "2026 City Council Meeting Dates"
   // table (Resolution No. 5937, Exhibit A): 33 full dates in three columns
   // (Regular and Study Sessions, Study Sessions, Regular Meetings). The table
@@ -853,8 +888,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   // governing body of `az:city:city-of-holbrook` (Census place 0433280).
   //
   // The page states no hour and no room; the agendas that do sit on Google
-  // Drive, whose viewer is script-only and whose byte route robots.txt
-  // disallows. Every sitting ships date-only with its own agenda cited. The
+  // Drive, whose viewer is script-only. Its byte route's robots.txt disallow
+  // is recorded and has blocked nothing since the owner decision of
+  // 2026-09-25; no adapter reads the Drive bytes yet. Every sitting ships
+  // date-only with its own agenda cited. The
   // publisher's horizon: a sitting appears when the city posts its agenda.
   {
     bodyId: "ocd-division/country:us/state:az/place:holbrook#governing",
@@ -913,12 +950,15 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-09-25",
   },
 
-  // ── The browser rung (M79, 2026-08-15) ──────────────────────────────────
-  // Two New Hampshire hosts answer 403 to this pipeline's civic-index client
-  // and 200 to a browser, which is why these four bodies sat unwired with
-  // their schedules in plain view. `profile: "browser"` is the rung — the
-  // same public page, one step up the ladder, contact address intact. See
-  // `lib/sources/http.ts`.
+  // ── Two hosts that refuse the identified client (M79, 2026-08-15) ─────────
+  // kearsarge.org and newbury.nh.gov answer 403 (a bot challenge) to this
+  // pipeline's identified client. From 2026-08-15 these four rows asked for a
+  // browser header set instead ("profile: browser"); the owner decision of
+  // 2026-09-25 rules that out — dressing the client as a browser to get past a
+  // filter is bypassing an access control — so they are read by the one
+  // identified client (`lib/sources/http.ts`). Measured 2026-09-25: both hosts
+  // answer it 403 with a challenge, so each partition keeps its last good
+  // version while another public route is pursued.
   //
   // Kearsarge Regional School District is 03255's school district. Its board
   // publishes the whole 2026-2027 year as a two-column month table with the
@@ -937,7 +977,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "kearsarge",
-      profile: "browser",
       shapes: "month-table",
       schedulePage:
         "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
@@ -980,7 +1019,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "newbury-planning-board",
-      profile: "browser",
       shapes: "agenda-list",
       schedulePage: "https://www.newbury.nh.gov/planning-board",
       pathPrefix: "/planning-board/",
@@ -1000,7 +1038,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "newbury-conservation-commission",
-      profile: "browser",
       // Two shapes on one page: the commission writes its whole year with
       // times in its own free-content block, and the agenda block links the
       // sittings that have documents. Unioned by date.
@@ -1081,7 +1118,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "newbury-zoning-board-of-adjustment",
-      profile: "browser",
       shapes: "agenda-list",
       schedulePage: "https://www.newbury.nh.gov/zoning-board-adjustment",
       pathPrefix: "/zoning-board-adjustment/",

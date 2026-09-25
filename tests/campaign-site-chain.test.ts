@@ -20,6 +20,7 @@ import { readActivationGate } from "../lib/control-plane/promotion/activation-ga
 import { VERIFICATION_CHECKS, type ActivationGateReading } from "../lib/control-plane/promotion/types.ts";
 import {
   CAMPAIGN_SITE_FIELD,
+  campaignSiteChecks,
   discoveryPointerItemId,
   projectCampaignSiteChains,
   type HeldMarginaliaResponse,
@@ -27,7 +28,7 @@ import {
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { campaignSiteReadRecorder } from "../lib/control-plane/promotion/campaign-site-reads.ts";
 import { heldArtifactRecord, scoutedFromHeldFinding, type HeldRead } from "../lib/candidates/research-findings-replay.ts";
-import { heldPageRead, readCampaignSiteLead } from "../lib/candidates/campaign-site-verifier.ts";
+import { heldPageRead, readCampaignSiteLead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
 import { DUARTE, KAPNER, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256 } from "./helpers/campaign-sites.ts";
 
 const MEET = "https://www.duarte4mendham.com/meet-amalia";
@@ -74,9 +75,9 @@ async function plane(t: { after: (fn: () => void) => void }) {
   return { repos, vaultRoot, duarte, kapner };
 }
 
-async function options(repos: ReturnType<typeof createMemoryRepositories>, vaultRoot: string, now: string, gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields"> = readActivationGate(".")) {
+async function options(repos: ReturnType<typeof createMemoryRepositories>, vaultRoot: string, now: string, gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields"> = readActivationGate("."), pages = served()) {
   let clock = Date.parse(now);
-  const runtime = servedRuntime(served(), now);
+  const runtime = servedRuntime(pages, now);
   const recorder = campaignSiteReadRecorder({ repos, vaultRoot, methodVersion: 1, now: () => new Date(clock += 1_000).toISOString(), heldVault: await indexVault(vaultRoot) });
   return {
     runtime,
@@ -157,6 +158,40 @@ test("with the gate closed (the state before this change) nothing is approved: t
   assert.equal(d.refused?.atStage, "APPROVED_FOR_PROMOTION");
   assert.ok(d.refused!.reasons.some((r) => r.code === "APPROVAL_BURDEN_FAILED" && /RECORD_CLASS_CANDIDATE/.test(r.detail)));
   assert.equal(report.approved.length, 0);
+});
+
+/*
+ * Owner decision 2026-09-25: "Robots.txt alone must not block acquisition." Robots.txt is still read first and its
+ * verdict recorded on the read, the artifact and the VERIFIED check; it is never a class burden. An access control is.
+ */
+test("robots.txt is recorded, not a burden: a site whose robots.txt disallows every path is approved with the verdict on its record; an access control or an unread robots.txt still fails the class burden", async (t) => {
+  const { repos, vaultRoot, duarte } = await plane(t);
+  const pages = { ...served(), "https://www.duarte4mendham.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" } };
+  const run = await options(repos, vaultRoot, "2026-09-25T21:00:00.000Z", readActivationGate("."), pages);
+  const report = await projectCampaignSiteChains(repos, run.options);
+  assert.ok(run.runtime.requests.indexOf("https://www.duarte4mendham.com/robots.txt") < run.runtime.requests.indexOf(MEET), "robots.txt is read before the page");
+  const d = (await readPipelineStates(repos)).find((s) => s.itemId === duarte.itemId)!;
+  assert.equal(d.stage, "APPROVED_FOR_PROMOTION", JSON.stringify(report.offers.filter((o) => o.itemId === duarte.itemId)));
+  const burdens = d.byStage.VERIFIED!.checks.find((c) => c.name === "ASSERTION_CLASS_BURDENS")!;
+  assert.equal(burdens.result, "PASS");
+  assert.match(burdens.detail, /robots\.txt read first and recorded \(https:\/\/www\.duarte4mendham\.com DISALLOWED; evidence, not a gate\)/);
+  const artifact = (await repos.artifacts.readAll()).find((a) => a.artifactId === d.byStage.CONFIRMED!.confirmingArtifactIds[0])!;
+  const held = (await indexVault(vaultRoot)).byId.get(artifact.artifactId);
+  assert.equal(held?.permission, "DISALLOWED", "the artifact records the verdict the read ran under, never ALLOWED by default");
+
+  /* The class burden, measured on the bytes: an unread robots.txt and an access control each fail it. */
+  const subjects = committedSubjects();
+  const subject = subjects.get(DUARTE)!;
+  const page = (await run.options.heldPage(artifact))!;
+  const burdenOf = (read: typeof page) => {
+    const verdict = verifyCampaignSitePage(subject, { url: MEET, origin: "RECORDED_SITE", ref: "test" }, read);
+    return campaignSiteChecks({ subject, verdict, read, artifact, subjects, now: "2026-09-25T21:30:00.000Z" }).find((c) => c.name === "ASSERTION_CLASS_BURDENS")!;
+  };
+  assert.equal(burdenOf(page).result, "PASS");
+  assert.match(burdenOf({ ...page, permissions: [] }).detail, /no robots reading is recorded for the read/);
+  const challenged = burdenOf({ ...page, body: `<html><head><title>Just a moment...</title></head>${page.body}</html>` });
+  assert.equal(challenged.result, "FAIL");
+  assert.match(challenged.detail, /an access control answered in place of the page \(a bot challenge/);
 });
 
 test("a class opened for another field does not approve a campaign site", async (t) => {

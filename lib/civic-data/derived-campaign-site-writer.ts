@@ -53,6 +53,7 @@ import {
   verifyCampaignSitePage,
   type CampaignSiteIdentity,
 } from "../candidates/campaign-site-verifier.ts";
+import { verdictOfRecordedPermission } from "../control-plane/scheduler/robots.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -127,7 +128,7 @@ export interface HeldVerifyingRead {
   readonly sha256: string;
   /** The vault's tier for them; a restricted body is never cited, so the caller never hands one here. */
   readonly tier: "RAW" | "SANITIZED_DERIVED";
-  /** The robots verdict the read ran under, as its sidecar recorded it. */
+  /** The robots verdict the read ran under, as its sidecar recorded it: evidence carried with the read, never a refusal. */
   readonly permission: string | null;
 }
 
@@ -156,14 +157,16 @@ export function reverifyApprovedSite(record: PublishableCampaignSiteApproval, he
   }
   let origin = site.evidence.finalUrl;
   try { origin = new URL(site.evidence.finalUrl).origin; } catch { /* kept as written; the verdict refuses a malformed URL */ }
+  /* The verdict the sidecar recorded, as it was: evidence, never a refusal (owner decision 2026-09-25). None recorded, none assumed. */
+  const recorded = verdictOfRecordedPermission(held.permission);
   const read = {
     ...heldPageRead({
       requestedUrl: site.evidence.requestedUrl, finalUrl: site.evidence.finalUrl, httpStatus: site.evidence.httpStatus,
       contentType: site.evidence.contentType, body: held.body, retrievedAt: site.evidence.readAt, sha256: held.sha256,
     }),
-    permissions: held.permission === null
+    permissions: recorded === null
       ? []
-      : [{ origin, verdict: held.permission === "ALLOWED" ? "ALLOWED" as const : "DISALLOWED" as const, detail: `recorded on the vaulted sidecar of ${site.evidence.artifactId}` }],
+      : [{ origin, verdict: recorded, detail: `${held.permission} recorded on the vaulted sidecar of ${site.evidence.artifactId}` }],
   };
   const verdict = verifyCampaignSitePage(site.identity, { url: site.evidence.requestedUrl, origin: "RECORDED_SITE", ref: record.recordId }, read);
   return verdict.verdict === "VERIFIED"

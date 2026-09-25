@@ -49,9 +49,24 @@ export interface ObservedAttempt {
  * and `BLOCKED` never narrows applicability — RULING 182 and RULING 184 both
  * turn on that. Reading these as ZERO would convert a wall into a measurement
  * of the government behind it, which is the collapse this project names first.
+ *
+ * A robots.txt line is not one of them (owner decision 2026-09-25: "Robots.txt
+ * alone must not block acquisition"). "permission" alone meant the robots
+ * verdict in these results, so only an access-control "permission denied"
+ * stays here.
  */
 const BLOCKED_SHAPES =
-  /\b(403|401|429|captcha|challenge|cloudflare|blocked|wall(ed)?|forbidden|robots|disallow|permission|credential|paywall|login|sign[- ]in|tls|timed? ?out|timeout)\b/i;
+  /\b(403|401|429|captcha|challenge|cloudflare|blocked|wall(ed)?|forbidden|permission denied|credential|paywall|login|sign[- ]in|tls|timed? ?out|timeout)\b/i;
+
+/**
+ * A branch that stopped on robots.txt alone. That was never a measurement of the
+ * fact (so never ZERO) and is no longer the source's wall (so never BLOCKED): no
+ * fetcher stops on robots.txt since the owner decision of 2026-09-25, so a branch
+ * that did stopped on OUR side, and is walked again. A result that merely reports
+ * the robots verdict beside a real answer ("robots.txt allows; no rows") is not this.
+ */
+const ROBOTS_STOP_SHAPES =
+  /\bdisallow|\b(robots(\.txt)?|permission)\b[^.;]*\b(refus\w*|den(y|ied|ies)|not requested|no request|skipp\w*|cannot[_ ]tell)\b/i;
 
 /** Words a branch uses when OUR side broke. RULING 12: a JOB failure. */
 const FAILED_SHAPES =
@@ -71,6 +86,12 @@ export function classifyBranch(b: ManifestBranch): { outcome: RouteOutcome["outc
   const text = `${b.result} ${b.branch}`;
   if (BLOCKED_SHAPES.test(text)) {
     return { outcome: "BLOCKED", why: "a wall on the source's side — never a measurement of the fact" };
+  }
+  if (ROBOTS_STOP_SHAPES.test(text)) {
+    return {
+      outcome: "FAILED",
+      why: "stopped on robots.txt alone, which never blocks a read (owner decision 2026-09-25): our side, walked again — never a measurement of the fact",
+    };
   }
   if (FAILED_SHAPES.test(text)) {
     return { outcome: "FAILED", why: "the attempt failed on our side (RULING 12: a JOB failure)" };

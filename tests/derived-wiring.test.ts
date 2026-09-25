@@ -213,6 +213,46 @@ test("C16 TRIGGERS SUSPEND A PROMOTED ROW; OUTAGES HOLD IT, CARRIED", async () =
   }
 });
 
+test("ROBOTS IS RECORDED, NOT BLOCKING: a walk over a disallowing robots.txt promotes the row; a recorded wall holds it as CHALLENGED; a pre-2026-09-25 robots skip holds it until the next walk", async () => {
+  const disallow: Reply = { status: 200, body: "User-agent: *\nDisallow: /\n", contentType: "text/plain" };
+  const overRobots = await walk({ ...SITE, "https://example.gov/robots.txt": disallow, "https://www.example.gov/robots.txt": disallow }, "example.gov");
+  assert.equal(overRobots.outcome, "FOUND", "the public calendar is read over the robots.txt (owner decision 2026-09-25)");
+  assert.ok(overRobots.steps.some((s) => s.url === ROUTE && s.status === 200 && s.permission === "DISALLOWED"), "the verdict is recorded on the read");
+  assert.equal(reasonOf(deriveWiringDecisions(inputs(overRobots))[0]), "PROMOTE");
+
+  const previous = [await promotedEntry()];
+  const read = await walk(SITE, "example.gov");
+  const unrequested = (permission: "RECORDED_WALL" | "DISALLOWED"): MeetingsDiscoveryAttempt => ({
+    ...read,
+    found: [],
+    steps: [
+      ...read.steps.filter((s) => s.url !== ROUTE),
+      { purpose: "endpoint", url: ROUTE, permission, status: null, transportError: null, bytes: 0, artifactId: null, rung: null, note: `not requested: ${permission}` },
+    ],
+  });
+  for (const [permission, expected] of [["RECORDED_WALL", "CHALLENGED"], ["DISALLOWED", "ROBOTS_REFUSED"]] as const) {
+    const [d] = deriveWiringDecisions(inputs(unrequested(permission), { previous }));
+    assert.equal(reasonOf(d), expected, permission);
+    if (permission === "DISALLOWED") assert.match(d?.disposition === "HOLD" ? d.detail : "", /before 2026-09-25; the next walk reads it/);
+    const plan = planDerivedVersion(previous, [d!]);
+    assert.deepEqual(plan.rows.map((r) => r.key), [KEY], `${expected}: held, carried, never removed`);
+    assert.equal(plan.rows[0]!.suspension, undefined, `${expected}: never a suspension`);
+  }
+});
+
+test("A BOT CHALLENGE AT 200 ON A REVIEWED CALENDAR HOLDS THE ROW AS CHALLENGED — never read as the calendar, never a suspension", async () => {
+  const challenge: Reply = { status: 200, body: "<html><head><title>Just a moment...</title></head></html>", contentType: "text/html" };
+  const previous = [await promotedEntry()];
+  const walled = await walk({ ...SITE, [ROUTE]: challenge }, "example.gov");
+  const step = walled.steps.find((s) => s.url === ROUTE);
+  assert.match(step?.accessControl ?? "", /challenge/, "the walk records the access control on the route's step");
+  const [d] = deriveWiringDecisions(inputs(walled, { previous }));
+  assert.equal(reasonOf(d), "CHALLENGED");
+  const plan = planDerivedVersion(previous, [d!]);
+  assert.deepEqual(plan.rows.map((r) => r.key), [KEY], "held, carried, never removed");
+  assert.equal(plan.rows[0]!.suspension, undefined, "an access control never suspends a connection");
+});
+
 test("C16: two reviewed bodies selecting the same sitting is conflicting evidence, and neither is published", async () => {
   const attempt = await walk(SITE, "example.gov");
   const board = crosswalkRow({ bodyId: subBodyId(OCD, "Planning Board"), bodyRole: "SUB_BODY", bodyName: "Planning Board", filter: { titleMatch: "Council" },

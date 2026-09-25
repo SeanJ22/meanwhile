@@ -302,22 +302,25 @@ test("the run agrees with the acceptance established BEFORE the control plane ex
   assert.equal(grid?.normalizedCount, PIMA_UNION_DENOMINATOR);
 });
 
-test("the Granicus wall stays a WALL — an OPEN disposition, never an emptiness", () => {
+test("the Granicus route stays OPEN — unbuilt, its robots.txt recorded, never an emptiness", () => {
   const granicus = RESULT.record.routeTasks.find((t) => t.routeId === "GRANICUS_VIEW_PUBLISHER");
   assert.ok(granicus);
-  assert.equal(granicus.disposition, "BLOCKED_CURRENTLY");
-  assert.equal(granicus.permission, "DISALLOWED");
-  assert.equal(granicus.outstanding, true, "a blocked route is not a settled fact");
+  // Owner decision 2026-09-25: robots.txt is recorded and blocks nothing, so the
+  // route is open because no adapter reads it, not because it is walled.
+  assert.equal(granicus.disposition, "REQUIRES_NEW_ADAPTER");
+  assert.equal(granicus.permission, "DISALLOWED", "the robots.txt reading is still recorded");
+  assert.notEqual(granicus.transport, "CHALLENGED", "an unbuilt route is never recorded as an access control");
+  assert.equal(granicus.outstanding, true, "an unbuilt route is not a settled fact");
   // The one conversion this product cannot survive.
   assert.notEqual(
     granicus.disposition,
     "WALKED_NO_YIELD",
-    "'we are not allowed to look' became 'there is nothing there'",
+    "'we have not looked' became 'there is nothing there'",
   );
   assert.equal(
     RESULT.record.artifacts.filter((a) => a.methodRouteId === "GRANICUS_VIEW_PUBLISHER").length,
     0,
-    "a disallowed host was fetched anyway to produce an artifact",
+    "an unbuilt route has no recorded bytes, and none are invented",
   );
 });
 

@@ -1,11 +1,16 @@
 /**
- * **THE PORTAL'S OWN LINK TO A SITTING'S AGENDA, FOR A SITTING WHOSE API LINK
- * WE MAY NOT READ.** (2026-09-24, RULING 248 / RULING 263.)
+ * **THE PORTAL'S OWN LINK TO A SITTING'S AGENDA, READ BEFORE THE VENDOR'S
+ * FILE.** (2026-09-24, RULING 248 / RULING 263; the vendor file is the
+ * fallback since 2026-09-25.)
  *
  * The Web API's `EventAgendaFile` names the agenda PDF on
- * `legistar.granicus.com`, whose robots.txt refuses this client, so the ingest
- * holds that link and never reads it. The tenant publishes the same agenda on
- * its own portal host, which publishes no restriction (robots.txt 404,
+ * `legistar.granicus.com`, whose robots.txt reads `Disallow: /`. From
+ * 2026-09-24 the ingest refused that host and read the agenda here instead.
+ * Since the owner decision of 2026-09-25 robots.txt blocks nothing, and this
+ * link is still read first — every such sitting read since 2026-09-24 holds its
+ * versions under it — with the vendor's file as the fallback when the page
+ * links no agenda or cannot be read (`scripts/ingest.ts`). The tenant publishes
+ * the same agenda on its own portal host, which publishes no robots.txt (404,
  * docs/sources.md). The sitting's MeetingDetail page is `EventInSiteURL`, which
  * the API row already holds as its `provenance.sourceUrl`. That page links the
  * agenda as `…_hypAgenda` → `View.ashx?M=A&ID={portal id}&GUID=…`. The link

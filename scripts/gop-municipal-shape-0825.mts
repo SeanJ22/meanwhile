@@ -157,7 +157,7 @@ for (const slug of MUNICIPALITIES) {
     let status = 0;
     let text = "";
     try {
-      const r = await politeGetText(url, { profile: "browser" });
+      const r = await politeGetText(url, {});
       status = r.status;
       text = r.text;
     } catch {
@@ -171,7 +171,7 @@ for (const slug of MUNICIPALITIES) {
 
     let control = -1;
     try {
-      const c = await politeGetText(`${new URL(url).origin}/${CONTROL_IDENTIFIER}`, { profile: "browser" });
+      const c = await politeGetText(`${new URL(url).origin}/${CONTROL_IDENTIFIER}`, {});
       control = c.status === 200 ? c.text.length : -1;
     } catch {
       control = -1;

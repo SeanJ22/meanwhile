@@ -81,7 +81,7 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
       "Read https://<host>/robots.txt for the URL's host and report the verdict for that URL: ALLOWED, " +
       "DISALLOWED (the rules name the path), NO_ROBOTS (no document) or CANNOT_TELL (the document could not " +
       "be read as robots). The verdict is RECORDED as evidence and never refuses a public page: the owner " +
-      "decided on 2026-09-25 that robots.txt alone does not block acquisition. The robots document is " +
+      "decided that robots.txt alone does not block acquisition. The robots document is " +
       "vaulted and the operative lines are returned. fetch_public and browse read and record it " +
       "automatically; call this to see the rules themselves.",
     input_schema: {
@@ -141,8 +141,9 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
     "Look up a query in the compliant paid search indexes (Brave and Exa) and return POINTERS ONLY — a " +
     "ranked list of result URLs and titles, no page content. Use it when direct routes are walled, or to " +
     "discover a candidate's own publication: the \"<name> for <office>\" committee phrasing surfaces campaign " +
-    "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read " +
-    "permission and vault the evidence. A hit is a lead, never proof, and may be a prior cycle's site.",
+    "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read and " +
+    "record robots.txt (never a refusal of a public page) and vault the evidence; an access control there is a " +
+    "wall, never bypassed. A hit is a lead, never proof, and may be a prior cycle's site.",
   input_schema: {
     type: "object",
     properties: {
@@ -792,13 +793,15 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const permLine = permissionLine(url, reading, robots);
     let nextHopUrls: string[] = [];
     let returnedCount: number | null = null;
+    /* A challenge served at 2xx is CHALLENGED on the rung as on the artifact, never REACHABLE. */
+    let challenged = false;
     const rung = (observed: string): Rung => ({
       rung: input.rung,
       tool: "fetch_public",
       target: url.toString(),
       observed,
       artifactIds: acc.artifacts.map((a) => a.artifactId),
-      transport: transportOf(got.status, got.transportError), httpStatus: got.status,
+      transport: challenged ? "CHALLENGED" : transportOf(got.status, got.transportError), httpStatus: got.status,
       nextHopUrls, returnedCount, applicableBecause: input.why,
     });
 
@@ -828,6 +831,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       /* A challenge served at 2xx is an access control: vaulted as DIAGNOSTIC, never shown as the page, never solved. */
       const control = accessControlIn({ status, text });
       if (control !== null) {
+        challenged = true;
         const walled = await vaultText(
           {
             url, finalUrl, status, contentType: got.contentType, text, methodRouteId: "scout:fetch_public",
@@ -1026,6 +1030,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
      */
     const control = accessControlIn({ status: obs.status, text: obs.html });
     if (control !== null) {
+      browserTransport = "CHALLENGED";
       const walled = await vaultText(
         {
           url, finalUrl, status, contentType: "text/html; charset=utf-8", text: obs.html, methodRouteId: "scout:browse",
@@ -1136,7 +1141,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       ? `SEARCH "${query}" reached no provider${errNote}`
       : res.hits.length === 0
         ? `SEARCH "${query}" — no pointers from ${res.providersUsed.join(", ")}. A search index finding nothing is a real (not failed) negative for this query.${errNote}`
-        : `SEARCH "${query}" — ${res.hits.length} pointer(s) from ${res.providersUsed.join(", ")}. LEADS, not evidence: open a promising one with fetch_public or browse (which read permission and vault). A hit may be a prior cycle's site.${errNote}`;
+        : `SEARCH "${query}" — ${res.hits.length} pointer(s) from ${res.providersUsed.join(", ")}. LEADS, not evidence: open a promising one with fetch_public or browse (which read and record robots.txt and vault). A hit may be a prior cycle's site.${errNote}`;
     const forModel =
       res.hits.length === 0
         ? header

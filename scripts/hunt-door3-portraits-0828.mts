@@ -146,7 +146,7 @@ for (const file of BALLOTS) {
     let html = "";
     let status: number | null = null;
     try {
-      const res = await politeGetText(chosen.url, { profile: "browser" });
+      const res = await politeGetText(chosen.url, {});
       html = res.text;
       status = res.status;
       walked += 1;

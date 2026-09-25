@@ -273,7 +273,7 @@ test("one run reads all six Board Actions links and no landing page; the next ru
   assert.ok(!requested.includes(`${ACTIONS}07-14-2026R(1).pdf`), "the farthest re-read was preferred to a nearer one");
 });
 
-test("a refused link read through its portal page ranks as read once the sitting holds the portal's link", () => {
+test("a vendor-host link read through its portal page ranks as read once the sitting holds the portal's link", () => {
   const API = "https://legistar.granicus.com/pima/meetings/2026/9/1828_A_Board_of_Supervisors_26-09-22_Online_Agenda.pdf";
   const DETAIL = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1828&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
   const PORTAL_AGENDA = "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
@@ -288,5 +288,11 @@ test("a refused link read through its portal page ranks as read once the sitting
     ["legistar:pima:1828", "legistar:pima:1829"], "an unread portal-routed sitting does not compete as unread");
   store.append(version(pima.id, PORTAL_AGENDA, "1. Call to order. 2. Minutes.", "2026-09-24T11:14:00.000Z", PIMA));
   assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), store).map(({ id }) => id),
-    ["legistar:pima:1829", "legistar:pima:1828"], "a portal-routed sitting holding its portal agenda still ranks as unread");
+    ["legistar:pima:1829", "legistar:pima:1828"], "a portal-routed sitting holding its portal agenda does not rank as unread");
+  // Since 2026-09-25 the vendor's own file is read when the portal falls short;
+  // a sitting holding that file has been read too.
+  const vendorHeld = new AgendaDocumentStore();
+  vendorHeld.append(version(pima.id, API, "1. Call to order. 2. Minutes.", "2026-09-25T11:14:00.000Z", PIMA));
+  assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), vendorHeld).map(({ id }) => id),
+    ["legistar:pima:1829", "legistar:pima:1828"], "a sitting holding the vendor's file does not rank as unread");
 });

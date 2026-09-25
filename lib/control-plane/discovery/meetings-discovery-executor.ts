@@ -39,6 +39,7 @@
 
 import { createHash } from "node:crypto";
 
+import { accessControlIn } from "../../hunt/access-control.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import {
@@ -474,7 +475,15 @@ export async function walkMeetingsDiscoveryNeed(
         current = to;
         continue;
       }
-      const ok = got.status !== null && got.status >= 200 && got.status < 300 && got.transportError === null;
+      /*
+       * A bot challenge answered in place of the page (at 2xx or any status) is an access control: the step
+       * records it, the body is vaulted as its evidence, and the walk never reads it as the page.
+       */
+      const challenge = got.transportError === null && got.status !== null && textualType(got.contentType)
+        ? accessControlIn({ status: got.status, text: got.body })
+        : null;
+      const walled = challenge !== null && challenge.kind === "CHALLENGE";
+      const ok = got.status !== null && got.status >= 200 && got.status < 300 && got.transportError === null && !walled;
       /*
        * A 404 or 410 is the only evidence that withdraws a derived wiring row (ROUTE_WITHDRAWN_BY_PUBLISHER,
        * NH330), so its body is vaulted as that evidence. Nothing else is read from it.
@@ -482,12 +491,15 @@ export async function walkMeetingsDiscoveryNeed(
       const gone = got.transportError === null && (got.status === 404 || got.status === 410);
       /* The body reaches the walk as decoded text, so a binary one (a PDF) would be vaulted as something it is not. */
       const binary = (ok || gone) && !textualType(got.contentType);
-      const kept = (ok || gone) && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
+      const kept = (ok || gone || walled) && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
       const artifactId = kept?.artifactId ?? null;
       steps.push({
         purpose, url: url.toString(), permission: permission.verdict, status: got.status, transportError: got.transportError, bytes: got.bytes,
         artifactId, rung: 2,
-        note: binary
+        ...(walled ? { accessControl: challenge.detail } : {}),
+        note: walled
+          ? `${challenge.detail}; never solved or evaded${artifactId === null ? "" : "; the challenge page is vaulted as its evidence"}`
+          : binary
           ? `read ${got.bytes} bytes of ${got.contentType}; not vaulted: a binary body does not survive the text decode`
           : ok ? `read ${got.bytes} bytes${kept?.note ? `; ${kept.note}` : ""}`
             : gone ? `HTTP ${got.status}${artifactId === null ? "" : "; its body is vaulted as withdrawal evidence"}`
@@ -917,11 +929,13 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
   }
   if (attempt.outcome === "BLOCKED") {
     /* What walled each origin: a recorded wall (the step's permission), or its own 401, 403 or 429 to this client. A step a pre-2026-09-25 walk skipped for robots.txt still names its verdict. */
+    /* An access control only: a recorded wall, the site's own 401/403/429, or a bot challenge. Never a robots line. */
     const walls = attempt.steps.filter((s) =>
-      s.purpose === "homepage" && (s.status === null ? s.permission !== "ALLOWED" && s.permission !== "NO_ROBOTS" : [401, 403, 429].includes(s.status)));
-    const why = [...new Set(walls.map((s) => (s.status === null ? s.permission : `HTTP ${s.status}`)))].join(", ");
+      s.purpose === "homepage" &&
+      (s.accessControl !== undefined || (s.status === null ? s.permission === "RECORDED_WALL" : [401, 403, 429].includes(s.status))));
+    const why = [...new Set(walls.map((s) => (s.accessControl !== undefined ? "a bot challenge" : s.status === null ? s.permission : `HTTP ${s.status}`)))].join(", ");
     entries.push(entry("DEAD_DOOR", "BLOCKED", "own-site", walls[0]?.url ?? attempt.ownWebAddress,
-      `${attempt.jurisdictionId}: the site's own origins refused this client (${why}).`,
+      `${attempt.jurisdictionId}: the site's own origins walled this client by an access control (${why}); never bypassed.`,
       { attemptId: attempt.attemptId, steps: walls }));
   }
   return entries;

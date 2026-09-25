@@ -47,8 +47,9 @@ test("a promoted row carries its inputs, and an undecided row is carried byte-ex
   assert.ok(plan.inputs.some((i) => i.kind === "VAULTED_EVIDENCE" && i.artifactId === "art-feed"));
 });
 
-test("a held row is never removed: absence, transport, robots and a challenge hold it by name", () => {
+test("a held row is never removed: absence, transport, an access control and a walk's pre-2026-09-25 robots skip hold it by name", () => {
   const previous = [{ key: "trustees", row: trustees }, { key: "energy", row: energy }];
+  /* ROBOTS_REFUSED names only a route a walk made before the owner decision of 2026-09-25 skipped; robots.txt holds nothing now. */
   for (const reason of ["WALK_ABSENT", "TRANSPORT_FAILED", "ROBOTS_REFUSED", "CHALLENGED"] as const) {
     const plan = planDerivedVersion(previous, [{ disposition: "HOLD", key: "trustees", reason, detail: "this pass", inputs: [] }]);
     assert.deepEqual(plan.rows.map((r) => r.key), ["energy", "trustees"], `${reason} keeps the row`);

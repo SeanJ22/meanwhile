@@ -23,7 +23,10 @@ import {
   runInSourceAcquisitionDomain,
   sourceAcquisitionSleep,
 } from "../lib/sources/acquisition-deadline.ts";
-import { curlGetText, politeGetText } from "../lib/sources/http.ts";
+import { politeGetText } from "../lib/sources/http.ts";
+
+/** Nothing named curl is exported by the shared client any more. */
+const curlRungGone = (await import("../lib/sources/http.ts") as Record<string, unknown>).curlGetText;
 import { ROUTINE_CHILD_TIMEOUT_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
 import {
@@ -272,33 +275,10 @@ test("publisher request, body, and retry deadlines cancel their real work before
   }
 });
 
-test("the curl rung receives both a native deadline and an abortable process signal", async () => {
-  let activeProcesses = 0;
-  let observedMaxTime = false;
-  await assert.rejects(
-    runInSourceAcquisitionDomain(
-      { sourceLabel: "curl fixture", timeoutMs: 25 },
-      (signal) => curlGetText(
-        "https://example.invalid/hung",
-        { "User-Agent": "fixture" },
-        signal,
-        (args, options) => new Promise<Buffer>((_resolve, reject) => {
-          activeProcesses += 1;
-          observedMaxTime = args.includes("--max-time") && Number(args[args.indexOf("--max-time") + 1]) >= 1;
-          assert.equal(options.signal, signal);
-          const abort = () => {
-            activeProcesses -= 1;
-            reject(signal.reason);
-          };
-          if (signal.aborted) abort();
-          else signal.addEventListener("abort", abort, { once: true });
-        }),
-      ),
-    ),
-    /acquisition deadline/,
-  );
-  assert.equal(observedMaxTime, true);
-  assert.equal(activeProcesses, 0, "curl process settled from abort before the domain returned");
+test("there is no curl rung to outlive a deadline: the shared client never shells out to a second client (2026-09-25)", () => {
+  const http = readFileSync("lib/sources/http.ts", "utf8");
+  assert.doesNotMatch(http, /child_process|execFile|"curl"/, "the curl rung disguised the client's TLS fingerprint and is gone");
+  assert.equal(typeof curlRungGone, "undefined");
 });
 
 test("the source deadline leaves a bounded durable-settlement window inside the outer child kill", () => {

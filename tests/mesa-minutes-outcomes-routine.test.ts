@@ -158,9 +158,12 @@ test("Mesa's minutes are one routine contract on the standing clock, following t
   assert.equal(task.acquisitionFailureDomain, routineTaskFromContract(partition).acquisitionFailureDomain);
 
   const authority = sourceAuthority(CONTRACT_ID)!;
-  assert.deepEqual(authority.allowedFinalHosts, ["mesa.legistar.com"]);
-  assert.deepEqual(authority.routePrefixes, ["https://mesa.legistar.com/"]);
-  assert.ok(!authority.allowedFinalHosts.includes("legistar.granicus.com"), "the vendor's document host refuses us and is never an allowed host");
+  assert.deepEqual(authority.allowedFinalHosts, ["mesa.legistar.com", "legistar.granicus.com"]);
+  assert.deepEqual(authority.routePrefixes, ["https://mesa.legistar.com/", "https://legistar.granicus.com/mesa/"]);
+  assert.ok(
+    authority.routePrefixes.every((p) => p.startsWith("https://mesa.legistar.com/") || p.startsWith("https://legistar.granicus.com/mesa/")),
+    "the vendor's document host is admitted for Mesa's own path only: robots.txt is recorded, not blocking (owner decision 2026-09-25)",
+  );
 
   const binding = ROUTINE_INVENTORY_BINDINGS.find(({ inventorySourceId }) => inventorySourceId === "legistar-outcomes")!;
   assert.deepEqual([...binding.contractIds], ["pima-legistar-outcomes", CONTRACT_ID]);

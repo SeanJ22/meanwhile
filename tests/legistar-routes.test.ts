@@ -92,10 +92,11 @@ test("SEEDED FAILURE: one successful route never collapses the universe for the 
 test("every information-bearing fact class is reachable through more than one route, or is NAMED as singly routed", () => {
   /*
    * Not an assertion that everything is multiply routed — PERSON_VOTE genuinely
-   * is not, on any tenant whose minutes sit behind the disallowed host. The
-   * assertion is that the portfolio KNOWS which facts hang on one thread, so a
-   * vendor change to that thread reads as a known single point of failure
-   * rather than as a body that stopped publishing.
+   * is not, on any tenant whose minutes sit only on the vendor's document host,
+   * which no adapter reads yet. The assertion is that the portfolio KNOWS which
+   * facts hang on one thread, so a vendor change to that thread reads as a
+   * known single point of failure rather than as a body that stopped
+   * publishing.
    */
   const singles = singlyRoutedFacts();
   for (const fact of singles) {
@@ -116,41 +117,31 @@ test("every information-bearing fact class is reachable through more than one ro
   assert.match(findRoute("INSITE_ACCESSIBLE_MINUTES")!.note, /not yet turned into per-member roll-call records/);
 });
 
-test("a DISALLOWED route keeps its facts OWED and is never SUGGESTED — a blocked route is not a blocked fact", () => {
+test("robots.txt is recorded on a route and never decides it: the vendor's minutes file keeps its facts OWED and IS suggested", () => {
   const minutesRoutes = routesBearing("NARRATIVE_MINUTES");
   assert.ok(minutesRoutes.length >= 2, "minutes are borne by more than one route");
 
-  const disallowed = minutesRoutes.filter((r) => r.disposition === "DISALLOWED");
-  assert.ok(
-    disallowed.length >= 1,
-    "legistar.granicus.com answers Disallow: / and its minutes PDF must still be " +
-      "in the portfolio — deleting it would convert a permission wall into an " +
-      "absence of minutes (RULING 184).",
-  );
+  // The vendor's minutes file stays in the portfolio, its robots.txt reading kept as evidence.
+  const vendorMinutes = findRoute("GRANICUS_MINUTES_PDF");
+  assert.ok(vendorMinutes && minutesRoutes.includes(vendorMinutes), "the vendor's minutes PDF must still be in the portfolio");
+  assert.match(vendorMinutes.note, /Disallow: \//, "the robots.txt reading is recorded on the route");
+  assert.match(vendorMinutes.note, /owner decision of 2026-09-25/, "and says it no longer blocks");
+  assert.equal(vendorMinutes.disposition, "REQUIRES_NEW_ADAPTER", "what it lacks is a reader, not permission");
 
-  // Owed: yes, permanently, because we do not hold it.
+  // Owed: yes, until a route that carries it is walked, because we do not hold it.
   assert.ok(
     factClassesOwedAfter(ALL_WEBAPI_ROUTES).includes("NARRATIVE_MINUTES"),
-    "A fact borne only by disallowed and unbuilt routes stays owed.",
+    "A fact borne only by unbuilt and unwalked routes stays owed.",
   );
 
-  // Suggested: no. We do not tell a caller to go and break a permission rule.
-  const suggested = routesStillWorthAsking("NARRATIVE_MINUTES", ALL_WEBAPI_ROUTES);
-  assert.ok(
-    suggested.every((route) => route.disposition !== "DISALLOWED"),
-    "A disallowed route may never be suggested as the next thing to ask.",
-  );
-  assert.ok(
-    suggested.some((route) => route.id === "INSITE_ACCESSIBLE_MINUTES"),
-    "The permitted accessible-minutes route on the portal host is the honest " +
-      "next avenue, and it must be the one offered.",
-  );
+  // Suggested: every route that can carry it, robots.txt notwithstanding (owner decision 2026-09-25).
+  const suggested = routesStillWorthAsking("NARRATIVE_MINUTES", ALL_WEBAPI_ROUTES).map((route) => route.id);
+  assert.ok(suggested.includes("INSITE_ACCESSIBLE_MINUTES"), "the portal's own minutes are offered");
+  assert.ok(suggested.includes("GRANICUS_MINUTES_PDF"), "and so is the vendor's file, whatever its robots.txt says");
 });
 
 test("MEETING_EXISTENCE is multiply routed across transports — the union rule, made structural", () => {
-  const routes = routesBearing("MEETING_EXISTENCE").filter(
-    (route) => route.disposition !== "DISALLOWED",
-  );
+  const routes = routesBearing("MEETING_EXISTENCE");
   const transports = new Set(routes.map((route) => route.transport));
 
   /*

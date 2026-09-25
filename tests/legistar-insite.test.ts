@@ -67,7 +67,7 @@ import {
   type InSiteRange,
 } from "../lib/sources/legistar-insite/calendar.ts";
 import {
-  GRANICUS_LIVE_PROCEEDINGS_WALL,
+  GRANICUS_LIVE_PROCEEDINGS_ROUTE,
   RANGES,
   makeLegistarInSiteSource,
   normalizeWithDrops,
@@ -959,24 +959,28 @@ test("the portal route is registered on the same bodies, BELOW the API route", (
   );
 });
 
-test("pima.granicus.com is recorded as a PERMISSION wall, with no claim about what it holds", () => {
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_WALL.host, "pima.granicus.com");
-  assert.equal(GRANICUS_LIVE_PROCEEDINGS_WALL.state, "PERMISSION_DISALLOWED");
-  assert.match(GRANICUS_LIVE_PROCEEDINGS_WALL.rule, /Disallow: \//);
+test("pima.granicus.com is recorded as an UNBUILT route, its robots.txt reading kept as evidence, with no claim about what it holds", () => {
+  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.host, "pima.granicus.com");
+  // Owner decision 2026-09-25: robots.txt is recorded and blocks nothing, so the
+  // state is ours (no adapter yet), not a permission wall.
+  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.state, "NOT_BUILT");
+  assert.match(GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule, /Disallow: \//);
+  assert.equal(GRANICUS_LIVE_PROCEEDINGS_ROUTE.robotsBlocks, false);
   assert.equal(
-    GRANICUS_LIVE_PROCEEDINGS_WALL.claimAboutContent,
+    GRANICUS_LIVE_PROCEEDINGS_ROUTE.claimAboutContent,
     null,
-    "a disallow is a rule about us, never evidence about the record behind it",
+    "a route nobody read is never evidence about the record behind it",
   );
 
-  // And nothing in this adapter fetches it.
+  // NOT_BUILT is true only while this adapter requests no granicus.com URL.
+  // An adapter that starts reading the route must stop calling it unbuilt.
   const adapter = readFileSync(
     join(import.meta.dirname, "..", "lib", "sources", "legistar-insite", "index.ts"),
     "utf8",
   );
   const requests = adapter.match(/session\.get\(\s*`?https?:\/\/[^`"')]+/g) ?? [];
   for (const request of requests) {
-    assert.equal(request.includes("granicus.com"), false, `this adapter requests ${request}`);
+    assert.equal(request.includes("granicus.com"), false, `this adapter requests ${request}, so the route is no longer NOT_BUILT`);
   }
 });
 

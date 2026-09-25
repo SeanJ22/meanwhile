@@ -48,7 +48,7 @@
  */
 import { writeFileSync } from "node:fs";
 
-import { browserProfileHeaders, challengeIn, sourceUserAgent } from "../lib/sources/http.ts";
+import { challengeIn, sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 import { EGRESS_SPACING_MS, readViaEgress } from "../lib/hunt/egress.ts";
 import { launchGuarded } from "./browser.mts";
 
@@ -93,7 +93,7 @@ async function walkHttp(url: string, profile: "plain" | "browser"): Promise<Rung
   const name = RUNGS.find((r) => r.rung === rung)!.name;
   const headers =
     profile === "browser"
-      ? browserProfileHeaders()
+      ? sourceRequestHeaders("text/html,application/xhtml+xml,*/*;q=0.8") /* Since 2026-09-25 the browser header set is retired (it disguised the client); this is the one identified client. */
       : { "User-Agent": sourceUserAgent(), Accept: "*/*" };
   try {
     const response = await fetch(url, { headers, signal: AbortSignal.timeout(60_000) });

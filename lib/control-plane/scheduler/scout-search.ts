@@ -17,7 +17,7 @@
  * pointer response carries none to strip), and neither `outputSchema` nor an
  * `/answer` endpoint is used, because a synthesized claim has no verifiable path
  * back to a source. The model must then open each pointer with fetch_public or
- * browse, and THOSE enforce robots and vault with provenance. Nothing here is
+ * browse, and THOSE read and record robots.txt (never a gate) and vault with provenance. Nothing here is
  * vaulted and nothing is evidence.
  */
 

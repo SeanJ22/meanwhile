@@ -17,6 +17,12 @@ import { isScheduled } from "../scheduler/obligation.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 
+/**
+ * Blocker codes an acquisition recorded for robots.txt alone, before the owner decision of 2026-09-25. Historical:
+ * the acquirer no longer produces them, and a result carrying only these is re-acquired, never left refused.
+ */
+const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", "PERMISSION_UNKNOWN"]);
+
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
   /** Existing Scout executor, configured with this canonical WorkItem and its inherited history. */
   readonly scoutFor?: (item: WorkItem, task: RouteTask, history?: readonly ScoutResult[]) => DeclaredExecutor;
@@ -191,6 +197,15 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       continue;
     }
     unresolved = true;
+    // A result blocked by robots.txt alone (PERMISSION_DENIED / PERMISSION_UNKNOWN, only ever recorded before the owner
+    // decision of 2026-09-25) is not a failure of the route: robots.txt is recorded and never blocks a public page, so
+    // the route is acquired again at once, with no failure debt and no Scout turn owed first. Access controls and
+    // integrity failures keep their own retry rules below.
+    if (latest.result.blockers.length > 0 && latest.result.blockers.every(blocker => ROBOTS_ONLY_BLOCKERS.has(blocker.code))) {
+      const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`robots-recorded-after:${latest.id}`});
+      if (next) return next;
+      continue;
+    }
     if (latest.result.blockers.some(blocker => !blocker.retryable)) continue;
     let debt: FreshnessDebt | null = null;
     for (const failed of [...history].reverse()) {

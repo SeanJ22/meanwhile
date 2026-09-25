@@ -86,7 +86,7 @@ async function main(): Promise<void> {
     let text = "";
     let status = 0;
     try {
-      const res = await politeGetText(url, { profile: "browser", accept: "text/html,*/*" });
+      const res = await politeGetText(url, { accept: "text/html,*/*" });
       text = res.text;
       status = res.status;
       totals.read += 1;

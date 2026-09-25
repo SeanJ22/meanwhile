@@ -247,7 +247,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@fc21ea11fd2e";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@0e9a3bb73e5d";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -545,6 +545,11 @@ export interface DiscoveryStep {
   /** RULING 249's rung this request walked: 2, a plain identified fetch. Null when nothing was sent. */
   readonly rung: 2 | null;
   readonly note: string;
+  /**
+   * The access control that answered in place of the page (a bot challenge, at any status), when one did
+   * (2026-09-25). Absent on a step that read the page, and on every step recorded before that date.
+   */
+  readonly accessControl?: string;
 }
 
 export interface DiscoveryFind {
@@ -684,10 +689,11 @@ export function decideOutcome(input: {
   if (input.leads.length > 0) return "LEAD";
   /* A redirect is a hop, not an answer: judge the steps each chain ended on. */
   const homepage = input.steps.filter((s) => s.purpose === "homepage" && !(s.status !== null && s.status >= 300 && s.status < 400));
-  if (homepage.some((s) => s.status !== null && s.status >= 200 && s.status < 300)) return "NOTHING_DETECTED";
+  if (homepage.some((s) => s.status !== null && s.status >= 200 && s.status < 300 && s.accessControl === undefined)) return "NOTHING_DETECTED";
   /* Each origin's homepage is a wall when a recorded wall refused it, or when it answered this client with 401, 403 or 429. */
   const walled = (s: DiscoveryStep): boolean =>
-    s.status === null ? s.transportError === null && REFUSED.has(s.permission) && isWall(s) : WALL_STATUSES.has(s.status);
+    s.accessControl !== undefined ||
+    (s.status === null ? s.transportError === null && REFUSED.has(s.permission) && isWall(s) : WALL_STATUSES.has(s.status));
   if (homepage.length > 0 && homepage.every(walled)) return "BLOCKED";
   return "COULD_NOT_READ";
 }

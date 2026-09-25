@@ -28,8 +28,11 @@
  * 1. the calendar is on the government's attested own host: the walk's chain
  *    from its recorded site reaches it (`attestationFor`), and its host is the
  *    host of the homepage the walk read as the government's;
- * 2. robots permitted every read it rests on: the calendar, the page naming
- *    the body, and that host's robots.txt;
+ * 2. every read it rests on (the calendar, the page naming the body) answered
+ *    2xx with no access control in front of it, and the walk read and recorded
+ *    that host's robots.txt first. The robots verdict is evidence and never
+ *    holds a row (owner decision 2026-09-25: robots.txt alone must not block
+ *    acquisition); a login, a 403, a rate limit or a bot challenge still does;
  * 3. the calendar's bytes and the naming page's bytes are held in the vault,
  *    cited by their sha256;
  * 4. the state's registration pairs the government with a body;
@@ -70,6 +73,7 @@ import {
   type CrosswalkKind,
   type MeetingBodyCrosswalkRow,
 } from "../../civic-data/meeting-body-crosswalk.ts";
+import { accessControlIn } from "../../hunt/access-control.ts";
 import { STATE_TIME_ZONES, type DiscoveryFind, type DiscoveryStep, type MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import { parseIcs } from "../../sources/ical/index.ts";
 import { extractOfficialPageEvents } from "../../sources/official-page-events/index.ts";
@@ -112,7 +116,6 @@ export interface AutoCrosswalkReviewInput {
 }
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = { ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS" };
-const PERMITTED: ReadonlySet<string> = new Set(["ALLOWED", "NO_ROBOTS"]);
 
 const flat = (s: string): string => s.replace(/\s+/g, " ").trim();
 const low = (s: string): string => flat(s).toLowerCase();
@@ -514,8 +517,11 @@ function deadEnd(reason: AutoCrosswalkHoldReason, name: string | null, route: st
       return { ruledOut: "accepting a calendar whose chain from the government's recorded site cannot be recomputed", wouldSettle: "a walk that reaches the calendar from the government's own site, with every page on the way vaulted", whoMovesNext: "the free discovery walk, on its next visit" };
     case "HOST_NOT_OWN":
       return { ruledOut: "accepting a calendar off the government's attested own host", wouldSettle: "a reviewing agent session confirming the host is the government's, through the manual crosswalk", whoMovesNext: "a reviewing agent session" };
+    case "ROBOTS_NOT_READ":
+      return { ruledOut: "accepting a read made without the host's robots.txt read and recorded first", wouldSettle: "a walk that reads the host's robots.txt first and records it (any verdict), then reads the calendar and the naming page", whoMovesNext: "the free discovery walk, on its next visit" };
     case "PERMISSION_NOT_SHOWN":
-      return { ruledOut: "accepting a read robots did not permit", wouldSettle: "a walk that reads the calendar and the naming page with robots permitting", whoMovesNext: "the free discovery walk, on its next visit" };
+      /* Historical: produced before the owner decision of 2026-09-25, when a robots verdict other than ALLOWED held a row. */
+      return { ruledOut: "nothing now: a robots.txt verdict no longer holds a row (owner decision 2026-09-25)", wouldSettle: "the next review of a walk of this calendar", whoMovesNext: "the free discovery walk, on its next visit" };
     case "EVIDENCE_NOT_VAULTED":
       return { ruledOut: "citing bytes the vault does not hold", wouldSettle: "a walk that vaults the calendar and the page naming the body", whoMovesNext: "the free discovery walk, on its next visit" };
     case "BODY_NOT_REGISTERED":
@@ -570,9 +576,10 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
   const homepage = attempt.site?.homepage ?? null;
   const homeHost = homepage === null ? null : httpsHost(homepage.url);
   const steps = attempt.steps;
-  const readOk = (s: DiscoveryStep): boolean => s.status !== null && s.status >= 200 && s.status < 300 && PERMITTED.has(s.permission);
-  const robotsOk = (host: string): boolean =>
-    steps.some((s) => s.purpose === "robots" && PERMITTED.has(s.permission) && httpsHost(s.url) === host);
+  /* A read is one that answered 2xx: a 401, 403 or 429 is an access control and is never read past. */
+  const readOk = (s: DiscoveryStep): boolean => s.status !== null && s.status >= 200 && s.status < 300;
+  /* Robots.txt read first and recorded for the host, whatever it said: the verdict is evidence, never a hold (owner decision 2026-09-25). */
+  const robotsRead = (host: string): boolean => steps.some((s) => s.purpose === "robots" && httpsHost(s.url) === host);
 
   const byRoute = new Map<string, DiscoveryFind>();
   for (const find of attempt.found) if (!byRoute.has(find.url)) byRoute.set(find.url, find);
@@ -602,8 +609,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, "HOST_NOT_ATTESTED", "the walk did not read the calendar at its own address (it answered through a redirect); a row's route is the URL read");
       continue;
     }
-    if (!readOk(calendarStep) || !robotsOk(routeHost)) {
-      hold(route, "PERMISSION_NOT_SHOWN", `the walk's read of ${route} has no robots permission recorded for ${routeHost}`);
+    if (!robotsRead(routeHost)) {
+      hold(route, "ROBOTS_NOT_READ", `the walk read ${route} with no robots.txt reading recorded for ${routeHost} first`);
       continue;
     }
     const calendar = find.artifactId === null ? null : input.held(find.artifactId);
@@ -639,13 +646,13 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
     }
 
-    /* The pages that may name a body: saved, permitted, on the calendar's own host, never the calendar itself. */
+    /* The pages that may name a body: saved, read (2xx) with robots.txt read first, on the calendar's own host, never the calendar itself. */
     const pageOrder = [find.via?.page ?? null, homepage?.url ?? null];
     const pages = steps
       .filter((s) => (s.purpose === "homepage" || s.purpose === "endpoint") && readOk(s) && s.artifactId !== null && !sameRoute(s.url, route))
       .filter((s) => {
         const h = httpsHost(s.url);
-        return h !== null && bare(h) === bare(routeHost) && robotsOk(h);
+        return h !== null && bare(h) === bare(routeHost) && robotsRead(h);
       })
       .sort((a, b) => {
         const rank = (s: DiscoveryStep) => {
@@ -659,6 +666,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       for (const page of pages) {
         const bytes = input.held(page.artifactId!);
         if (bytes === null) continue;
+        /* A bot challenge answered in place of the page is an access control, never the government's page. */
+        if (accessControlIn({ status: page.status, text: bytes.text }) !== null) continue;
         const visible = pageText(bytes.text);
         for (const s of spellings) {
           const at = wordAt(visible, s);

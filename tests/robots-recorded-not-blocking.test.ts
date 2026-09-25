@@ -18,6 +18,11 @@
  * 3. An access control is never pushed through: a 401, a 403, a challenge page
  *    and a 429 are named as walls, a 429 backs the host off, nothing is re-sent
  *    under another identity, and no request carries a credential or a cookie.
+ *    The shared source client (`lib/sources/http.ts`) is one identified client:
+ *    since 2026-09-25 it has no browser-header, name-dropping or `curl` rung,
+ *    no wiring row may ask for a browser profile, the relay rung
+ *    (`readViaEgress`) refuses, and no production module carries a borrowed
+ *    browser identity or shells out to a second client.
  * 4. Every module that consumes the robots evaluator is named here with the
  *    test that holds it to the rule, so a new consumer cannot quietly bring the
  *    refusal back; and the old refusal messages do not return in code.
@@ -45,6 +50,10 @@ import {
   type ResearchGet,
 } from "../lib/hunt/robots-first-fetch.ts";
 import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
+import { EgressRefusal, readViaEgress } from "../lib/hunt/egress.ts";
+import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from "../lib/sources/http.ts";
+import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 
 const DISALLOW_ALL = "User-agent: *\nDisallow: /\n";
 
@@ -223,6 +232,110 @@ test("THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and
   const b = await walkMeetingsDiscoveryNeed(need("az:town:waftown", "waftown.gov"), walled.runtime);
   assert.equal(b.outcome, "BLOCKED");
   assert.equal(walled.seen.filter((u) => u === "https://waftown.gov/").length, 1, "a 403 is asked once, never re-sent under another identity");
+});
+
+test("THE SHARED SOURCE CLIENT IS ONE HONEST CLIENT: a 403 or a challenge is a wall asked once, under the project's own name, and never re-sent", async () => {
+  const seen: { url: string; headers: Record<string, string> }[] = [];
+  const answering = (status: number, body: string) =>
+    (async (url: string | URL | Request, init?: RequestInit) => {
+      seen.push({ url: String(url), headers: { ...(init?.headers as Record<string, string>) } });
+      return new Response(body, { status, headers: { "content-type": "text/html" } });
+    }) as unknown as typeof fetch;
+
+  await assert.rejects(politeGetText("https://waf.example.gov/a", { fetchImpl: answering(403, "Forbidden") }), (e: unknown) =>
+    e instanceof SourceHttpError && e.status === 403 && /access control/.test(e.message));
+  await assert.rejects(politeGetText("https://waf.example.gov/b", { fetchImpl: answering(200, "<html><title>Just a moment...</title></html>") }), (e: unknown) =>
+    e instanceof SourceHttpError && /challenge/.test(e.message));
+  await assert.rejects(politeGetBytes("https://waf.example.gov/c.pdf", { fetchImpl: answering(403, "Forbidden") }), (e: unknown) =>
+    e instanceof SourceHttpError && e.status === 403);
+  assert.deepEqual(seen.map((s) => s.url), ["https://waf.example.gov/a", "https://waf.example.gov/b", "https://waf.example.gov/c.pdf"], "each asked exactly once");
+  for (const s of seen) {
+    assert.equal(s.headers["User-Agent"], sourceUserAgent(), "the project's own identified User-Agent, every time");
+    assert.equal(carriesCredential(s.headers), false);
+    assert.ok(!Object.keys(s.headers).some((h) => /^sec-fetch-/i.test(h)), "no browser-navigation headers");
+  }
+});
+
+test("NO WIRING ROW ASKS FOR A DISGUISE, AND THE RELAY RUNG REFUSES BEFORE ANY REQUEST", async () => {
+  const browserRows = SOURCE_WIRING.filter((row) => row.config.profile !== undefined).map((row) => row.bodyId);
+  assert.deepEqual(browserRows, [], "the browser profile dressed the client as a browser to get past a refusal; it is retired");
+  let asked = 0;
+  const counting = (async () => {
+    asked += 1;
+    return new Response("page", { status: 200 });
+  }) as unknown as typeof fetch;
+  await assert.rejects(readViaEgress("https://www.kearsarge.org/", { fetchImpl: counting }), (e: unknown) =>
+    e instanceof EgressRefusal && /retired/.test(e.message) && /access control/.test(e.message));
+  assert.equal(asked, 0, "nothing is relayed");
+});
+
+test("A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to the vendor's document host", async () => {
+  const sent: { url: string; cookie: string | null }[] = [];
+  const fetchImpl = (async (url: string | URL | Request, init?: RequestInit) => {
+    const headers = (init?.headers ?? {}) as Record<string, string>;
+    sent.push({ url: String(url), cookie: headers.Cookie ?? headers.cookie ?? null });
+    const setCookie: Record<string, string> = String(url).startsWith("https://mesa.legistar.com/") ? { "set-cookie": "ASP.NET_SessionId=abc; path=/; HttpOnly" } : {};
+    const pdf = String(url).endsWith(".pdf");
+    return new Response(pdf ? new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]) : "<html>Calendar</html>", {
+      status: 200,
+      headers: { "content-type": pdf ? "application/pdf" : "text/html", ...setCookie },
+    });
+  }) as unknown as typeof fetch;
+  const session = new InSiteSession({ fetchImpl });
+  await session.get("https://mesa.legistar.com/Calendar.aspx");
+  await session.getBytes("https://legistar.granicus.com/mesa/meetings/2026/9/x_Minutes.pdf");
+  await session.get("https://mesa.legistar.com/MeetingDetail.aspx?ID=1");
+  assert.deepEqual(sent.map((s) => s.cookie), [null, null, "ASP.NET_SessionId=abc"]);
+});
+
+/** A borrowed browser identity, a second client shelled out to, or the retired relay being called. */
+const DISGUISES: readonly RegExp[] = [
+  /Mozilla\/5\.0 \((Windows|Macintosh|X11|Linux|iPhone|iPad)/,
+  /\bChrome\/\d{2,3}\./,
+  /HeadlessChrome/,
+  /(execFile|spawn|execFileSync|spawnSync|run)\(\s*["']curl["']/,
+  /["']?user-agent["']?\s*:\s*["']Mozilla/i,
+  /(?<!function )readViaEgress\(/,
+];
+
+/**
+ * Session scripts (never run by the standing runner) that still carry their own disguising client on
+ * 2026-09-25: a browser User-Agent, a `curl` rung, or a call to the retired relay. Named so the debt is
+ * visible and can only shrink: a script leaves this list the day its disguise is removed, and a new file
+ * carrying one fails. Some use `curl` with the project's own User-Agent as their only client, which is not a
+ * disguise by itself; each still needs reading before it is taken off.
+ */
+const KNOWN_SCRIPT_DEBT: readonly string[] = [
+  "scripts/adjudicate-leads.mts",
+  "scripts/candidate-site-probe.mts",
+  "scripts/d50-reinstate.mts",
+  "scripts/definitions-verify.mts",
+  "scripts/descent.mts",
+  "scripts/enumerate-town-bodies.mts",
+  "scripts/hunt-campaign-sites.mts",
+  "scripts/hunt-roster.mts",
+  "scripts/ladder-fetch.mts",
+  "scripts/ladder-monotonicity.mts",
+  "scripts/nh-cfs-ladder.mts",
+  "scripts/nj-filing.mts",
+  "scripts/nj-hunt4-portrait-sheet.mts",
+  "scripts/nj-hunt4-search.mts",
+  "scripts/recover-redirected-directory.mts",
+  "scripts/robots-sweep.mts",
+  "scripts/tenancy.mts",
+  "scripts/verify-extraction.mts",
+];
+
+test("NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY OR A SECOND CLIENT, and the script debt only shrinks", () => {
+  const offenders = (files: readonly string[]) =>
+    files.map((f) => f.replace(/\\/g, "/")).filter((f) => {
+      const text = code(readFileSync(join(ROOT, f), "utf8"));
+      return DISGUISES.some((p) => p.test(text));
+    });
+  assert.deepEqual(offenders([...sources("lib"), ...sources("app"), "scripts/ingest.ts"]), [], "production code sends one honest client");
+  const scripts = offenders(sources("scripts"));
+  assert.deepEqual(scripts.filter((f) => !KNOWN_SCRIPT_DEBT.includes(f)), [], "a new script carries a disguising client");
+  assert.deepEqual(KNOWN_SCRIPT_DEBT.filter((f) => !scripts.includes(f)), [], "this script no longer carries one: take it off the debt list");
 });
 
 /* --------------------------------------------- 4. every consumer is named */

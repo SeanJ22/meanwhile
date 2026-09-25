@@ -47,6 +47,7 @@
  * verified, labelled as the campaign's, and nothing more is claimed.
  */
 import { fingerprint } from "../ids.ts";
+import { accessControlIn } from "../../hunt/access-control.ts";
 import { controlsClean } from "./fact-verification.ts";
 import { scoreControls, type ControlFact, type ControlObservation, type ControlScore } from "../../health/control-fact.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -320,21 +321,26 @@ export function campaignSiteChecks(input: {
     ? { name: "CANONICAL_IDENTITY_UNIQUE", result: "PASS", detail: `"${form}" names exactly one of ${input.subjects.size} canonical candidacies with its office or district here (${subject.candidacyId}); ${subject.readerKeys.length} exact Reader key(s)` }
     : { name: "CANONICAL_IDENTITY_UNIQUE", result: "FAIL", detail: form === null ? "the page names no form of the candidate" : `"${form}" is shared by ${sharing.length} candidacy(ies), ${placed.length} placed here (${placed.map((p) => p.candidacyId).join(", ") || "none"}); ${subject.readerKeys.length} Reader key(s)` });
 
-  /* The campaign-site class burdens: an HTTPS page answered 2xx, robots-first on every origin, a candidate-owned host, fresh, hashed. */
+  /*
+   * The campaign-site class burdens: an HTTPS page answered 2xx with no access control in front of it, robots.txt
+   * read first and recorded on every origin, a candidate-owned host, fresh, hashed. The robots verdict is evidence and
+   * never a burden by itself (owner decision 2026-09-25: robots.txt alone must not block acquisition).
+   */
   const burdens: string[] = [];
   if (m === null) burdens.push("no measurement");
   else {
     if (!m.finalUrl.startsWith("https://")) burdens.push("final URL not HTTPS");
     if (m.httpStatus < 200 || m.httpStatus >= 300) burdens.push(`HTTP ${m.httpStatus}`);
+    const control = accessControlIn({ status: m.httpStatus, text: input.read.body });
+    if (control !== null) burdens.push(`an access control answered in place of the page (${control.detail})`);
     if (m.permissions.length === 0) burdens.push("no robots reading is recorded for the read");
-    if (m.permissions.some((p) => p.verdict !== "ALLOWED" && p.verdict !== "NO_ROBOTS")) burdens.push("an origin was not robots-allowed");
     if (campaignSiteHostRefusal(m.finalUrl) !== null) burdens.push(`host refused: ${campaignSiteHostRefusal(m.finalUrl)!.code}`);
     if (m.branding === null) burdens.push("neither host nor title names the candidate");
     if (Date.parse(input.now) - Date.parse(m.retrievedAt) > MAX_READ_AGE_MS) burdens.push(`read ${m.retrievedAt} is older than ${MAX_READ_AGE_MS / 86_400_000} days`);
     if (`sha256-${m.sha256}` !== artifact.contentHash) burdens.push(`the read's sha256 ${m.sha256} is not the vaulted ${artifact.contentHash}`);
   }
   checks.push(burdens.length === 0
-    ? { name: "ASSERTION_CLASS_BURDENS", result: "PASS", detail: `campaign-site burdens hold: HTTPS 2xx HTML, robots ALLOWED on ${m!.permissions.map((p) => p.origin).join(", ")}, ${m!.branding!.evidence}, read ${m!.retrievedAt}, vaulted ${artifact.contentHash}` }
+    ? { name: "ASSERTION_CLASS_BURDENS", result: "PASS", detail: `campaign-site burdens hold: HTTPS 2xx HTML, robots.txt read first and recorded (${m!.permissions.map((p) => `${p.origin} ${p.verdict}`).join(", ")}; evidence, not a gate), ${m!.branding!.evidence}, read ${m!.retrievedAt}, vaulted ${artifact.contentHash}` }
     : { name: "ASSERTION_CLASS_BURDENS", result: "FAIL", detail: burdens.join("; ") });
 
   /* Rendering symmetry: the link renders through the one campaign slot every candidate's link uses, from one sentence template, with no label and nothing about party. */

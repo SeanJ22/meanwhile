@@ -390,7 +390,8 @@
     "ship:amplification": "tsx scripts/shipping-amplification.mts",
     "method:learn-legistar-outcomes": "tsx scripts/method/learn-legistar-outcome-routes.mts",
     "method:learn-legistar-portal-documents": "tsx scripts/method/learn-legistar-portal-documents.mts",
-    "method:learn-pima-schedule-union": "tsx scripts/method/learn-pima-schedule-union.mts"
+    "method:learn-pima-schedule-union": "tsx scripts/method/learn-pima-schedule-union.mts",
+    "method:learn-robots-recorded-not-blocking": "tsx scripts/method/learn-robots-recorded-not-blocking.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -48,6 +48,25 @@ export const ROBOTS_OWNER_DECISION =
 
 export type PermissionVerdict = "ALLOWED" | "DISALLOWED" | "NO_ROBOTS" | "CANNOT_TELL";
 
+/**
+ * A recorded permission state (a workstate `PermissionState`, as a vaulted read or a sidecar carries it) as the
+ * evaluator's verdict: `NOT_APPLICABLE` is `NO_ROBOTS`; null when nothing was recorded. The one mapping every
+ * reader of a held robots record uses.
+ */
+export function verdictOfRecordedPermission(permission: string | null | undefined): PermissionVerdict | null {
+  switch (permission) {
+    case "ALLOWED":
+    case "DISALLOWED":
+    case "CANNOT_TELL":
+      return permission;
+    case "NOT_APPLICABLE":
+    case "NO_ROBOTS":
+      return "NO_ROBOTS";
+    default:
+      return null;
+  }
+}
+
 export interface RobotsRule {
   readonly kind: "allow" | "disallow";
   /** The path pattern as written (after trimming). Never empty. */

@@ -563,7 +563,7 @@ test("ADM-10: a role lead says what is happening, says plainly when nothing need
   const empty = roleLead({ role: "ENGINEERING", shown: metric(0, 0, "attempts"), pending: metric(0, 0, "tasks"), due: metric(0, 0, "tasks"), attempts: [] } as WorkerRoleView);
   assert.match(empty.doing, /^No engineers have run yet; nothing is queued for them\./);
   assert.equal(verdictPlain(null), "no typed result was recorded");
-  assert.equal(findingPlain("PERMISSION_DENIED"), "the source's permission rules refused the route");
+  assert.equal(findingPlain("PERMISSION_DENIED"), "an older attempt stopped at the site's robots.txt, which no longer blocks a public page");
   assert.equal(findingPlain("SOMETHING_NEW"), "something new");
   assert.equal(workItemStatePlain("AUTHOR_DECISION_REQUIRED"), "needs your decision");
   const panel = src("app/(admin)/admin/research/worker-fleet-panel.tsx");

@@ -19,13 +19,18 @@
  * - A source that now contradicts the review REFUSES the correction, and the
  *   Census address stays. So does a source its publisher withdrew (404 or 410):
  *   the correction no longer rests on a live publication.
- * - A source that could not be read (a timeout, a server error, a refusal to
- *   this client, a challenge, robots.txt that could not be read or that now
- *   refuses us) is an outage. The reviewed evidence stands, and the correction
- *   is applied on it, saying which source was not read again.
+ * - A source that could not be read (a timeout, a server error, or an access
+ *   control in front of it: a 401, 403 or 429 to this client, a bot challenge,
+ *   a recorded wall) is an outage. The reviewed evidence stands, and the
+ *   correction is applied on it, saying which source was not read again. An
+ *   access control is never bypassed (`lib/hunt/access-control.ts`).
+ * - Robots.txt is read first and recorded by `researchFetch`, and never stops
+ *   the read: a public page read over a robots.txt that names it, or one that
+ *   could not be read, is a reading like any other (owner decision 2026-09-25:
+ *   robots.txt alone must not block acquisition).
  */
 
-import { challengeIn } from "../sources/http.ts";
+import { accessControlIn } from "../hunt/access-control.ts";
 import { researchFetch, type ResearchRuntime } from "../hunt/robots-first-fetch.ts";
 import type { JurisdictionReferenceSourceReceipt, WebsiteCorrectionSourceId } from "./jurisdiction-reference-acquisition.ts";
 import {
@@ -71,14 +76,16 @@ export async function acquireWebsiteCorrections(
   const receipts: JurisdictionReferenceSourceReceipt[] = [];
 
   async function read(url: string, sourceId: WebsiteCorrectionSourceId): Promise<Reading> {
+    /* The robots verdicts in got.permissions are recorded by researchFetch and refuse nothing; only a recorded wall or a bad URL is REFUSED. */
     const got = await researchFetch(url, runtime);
     if (got.outcome === "REFUSED") return { kind: "NOT_READ", detail: `${url} was not read: ${got.reason}` };
     if (got.transportError !== null || got.status === null) return { kind: "NOT_READ", detail: `${url}: ${got.transportError ?? "no response"}` };
     if (got.status === 404 || got.status === 410) return { kind: "WITHDRAWN", detail: `${url} answered ${got.status}: its publisher withdrew it` };
-    if (got.status < 200 || got.status >= 300) return { kind: "NOT_READ", detail: `${url} answered HTTP ${got.status}` };
     const text = new TextDecoder().decode(got.body);
-    const challenge = challengeIn(text);
-    if (challenge !== null) return { kind: "NOT_READ", detail: `${url} answered a ${challenge} in place of the page` };
+    /* An access control (a login, a 403, a rate limit, a bot challenge) is not a reading, and is never pushed past. */
+    const control = accessControlIn({ status: got.status, text });
+    if (control !== null) return { kind: "NOT_READ", detail: `${url}: an access control answered in place of the page (${control.detail})` };
+    if (got.status < 200 || got.status >= 300) return { kind: "NOT_READ", detail: `${url} answered HTTP ${got.status}` };
     receipts.push({
       sourceId,
       requestedUrl: url,

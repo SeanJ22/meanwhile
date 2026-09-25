@@ -50,7 +50,7 @@ import {
 import { parseClerkSchedule } from "./clerk-schedule.ts";
 import {
   MEETING_PRODUCING_ROUTES,
-  granicusWallObservation,
+  granicusRouteObservation,
   openObligations,
   richerRouteLink,
   summarizeRoute,
@@ -132,20 +132,22 @@ import {
  * no rules published, read 2026-08-28. The `legistar.com` apex publishes
  * `Crawl-delay: 2` and disallows only `*?wtime` / `*?wmediaid` / `*?wchannelid`,
  * none of which this adapter requests. The delay is honoured for the whole
- * vendor. **`pima.granicus.com` publishes `Disallow: /` and is NOT fetched by
- * anything here** — see `GRANICUS_LIVE_PROCEEDINGS_WALL` below.
+ * vendor. `pima.granicus.com` publishes `Disallow: /`; that is recorded and,
+ * since the owner decision of 2026-09-25, blocks nothing. Its Live Proceedings
+ * page is not read by anything here because no adapter for it exists yet — see
+ * `GRANICUS_LIVE_PROCEEDINGS_ROUTE` below.
  */
 const SOURCE_NAME = "legistar-insite";
 
 /**
- * The Granicus permission wall now lives with the rest of the route model, in
- * `./horizon.ts`, because it IS a route observation — one whose enumeration
- * state is `PERMISSION_DISALLOWED` and whose claim about the content is null.
- * Re-exported here because it is part of this adapter's public surface and
- * because a permission fact that moved file is a permission fact somebody
- * stops finding.
+ * The Granicus Live Proceedings route lives with the rest of the route model,
+ * in `./horizon.ts`, because it IS a route observation — one whose enumeration
+ * state is `NOT_BUILT` (it was `PERMISSION_DISALLOWED` until 2026-09-25) and
+ * whose claim about the content is null. Re-exported here because it is part
+ * of this adapter's public surface, and a route that moved file is a route
+ * somebody stops finding.
  */
-export { GRANICUS_LIVE_PROCEEDINGS_WALL } from "./horizon.ts";
+export { GRANICUS_LIVE_PROCEEDINGS_ROUTE } from "./horizon.ts";
 
 const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
 
@@ -377,8 +379,8 @@ export interface InSiteNormalizeResult {
    * **What each first-party route actually answered about the future**, with
    * its mechanism, its observation time, its counts, its earliest and latest
    * instance, and how complete the enumeration was. One row per route per
-   * tenant, including the routes that answered nothing and the one we are not
-   * permitted to ask.
+   * tenant, including the routes that answered nothing and the one no adapter
+   * reads yet.
    */
   routes: RouteObservation[];
   /**
@@ -884,7 +886,7 @@ export function normalizeWithDrops(
       ),
       feedObservation(reading, tenant, tenantToday),
       clerkObservation(reading, tenant, tenantToday),
-      granicusWallObservation(),
+      granicusRouteObservation(),
     ];
     routes.push(...observations);
 
@@ -1060,12 +1062,11 @@ export function normalizeWithDrops(
  * sentence. A disposition is the machine-readable form of exactly that
  * distinction, so every verdict states its owner in the first word.
  *
- * `ROUTE_DISALLOWED` returns **null**, and that is the point of it: a
- * permission refusal entitles us to no claim whatever about the record behind
- * it (RULING 182).
+ * There is no permission verdict. `ROUTE_DISALLOWED` returned null here until
+ * 2026-09-25; it was never given to an instance, and since the owner decision
+ * of that day robots.txt blocks nothing, so it is gone.
  */
 function dispositionClaim(verdict: DispositionVerdict, because: string | null): string | null {
-  if (verdict === "ROUTE_DISALLOWED") return null;
   if (because) return because;
   switch (verdict) {
     case "REPRESENTED_IN_READER":

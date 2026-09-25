@@ -195,9 +195,11 @@ export const CAPABILITIES: Array<{
       makeSchedulePageSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
-    // Pima Community College's own pages — the permitted route that replaced
-    // its robots-disallowed Diligent tenant (2026-09-23). Asks each host's
-    // robots.txt before every run; see lib/sources/permission-gate.ts.
+    // Pima Community College's own pages — the route that replaced its
+    // Diligent tenant (2026-09-23), and carries every sitting the tenant did.
+    // Reads and records each host's robots.txt before every run, which blocks
+    // nothing since the owner decision of 2026-09-25; see
+    // lib/sources/permission-gate.ts.
     name: "pima-edu",
     types: ["PIMA_EDU"],
     make: (rows) => makePimaEduSource(rows) as ReportingMeetingSource<unknown>,

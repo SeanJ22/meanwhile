@@ -310,6 +310,9 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
       const evidence = stepEvidence === null ? base : [...base, stepEvidence];
       if (step.status === 404 || step.status === 410) {
         decide(trigger(key, "ROUTE_GONE", `${reviewed.route} answered ${step.status}`, evidence));
+      } else if (step.accessControl !== undefined) {
+        /* A bot challenge answered in place of the calendar: an access control holds the row; it never suspends it. */
+        decide(hold(key, "CHALLENGED", `${reviewed.route}: ${step.accessControl}`, base));
       } else if (step.status === null && step.permission === "RECORDED_WALL") {
         decide(hold(key, "CHALLENGED", `${reviewed.route}: a recorded access-control wall; ${step.note}`, base));
       } else if (step.status === null && step.permission === "DISALLOWED") {

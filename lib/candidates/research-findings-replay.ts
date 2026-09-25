@@ -23,7 +23,7 @@
  */
 import { createHash } from "node:crypto";
 
-import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
+import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, verdictOfRecordedPermission } from "../control-plane/scheduler/robots.ts";
 import { createMemoryRepositories } from "../control-plane/repository/memory.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { appendTransition, contextFromRepositories, scoutResultItemId } from "../control-plane/promotion/pipeline.ts";
@@ -144,7 +144,7 @@ function offlineRead(held: readonly HeldRead[], lead: CampaignSiteLead): LeadRea
   const robots = origin === null ? null : latestBy(held.filter((h) => h.canonicalUrl === `${origin}/robots.txt`));
   const page = latestBy(held.filter((h) => h.canonicalUrl === lead.url && /html/i.test(h.contentType)));
   if (page === null) return { ok: false, refusal: { code: "NOT_READ", detail: `the vault holds no read of ${lead.url}; a live robots-first read is owed` } };
-  const recorded = heldVerdict(page.permission);
+  const recorded = verdictOfRecordedPermission(page.permission);
   const permission = robots !== null
     ? evaluatePermission({ robotsText: robots.body, status: robots.httpStatus, transportError: null, contentType: robots.contentType }, lead.url, DEFAULT_ROBOTS_TOKEN)
     : recorded !== null ? { verdict: recorded, detail: `the held read ${page.artifactId} ran under ${page.permission}` } : null;
@@ -157,20 +157,6 @@ function offlineRead(held: readonly HeldRead[], lead: CampaignSiteLead): LeadRea
       permissions: [{ origin: origin!, verdict: permission.verdict, detail: permission.detail }],
     },
   };
-}
-
-/** The robots verdict a vaulted read recorded (a workstate permission state), as the evaluator names it; null when none was recorded. */
-function heldVerdict(permission: string | null): PermissionVerdict | null {
-  switch (permission) {
-    case "ALLOWED":
-    case "DISALLOWED":
-    case "CANNOT_TELL":
-      return permission;
-    case "NOT_APPLICABLE":
-      return "NO_ROBOTS";
-    default:
-      return null;
-  }
 }
 
 /** A held finding as the SCOUTED record production maps it to (`scoutedFromScoutResult`): same item id, same Scout actor. */
@@ -301,8 +287,10 @@ export async function replayResearchFindings(input: {
   const heldPage = async (artifact: ArtifactRecord) => {
     const h = heldById.get(artifact.artifactId);
     if (h !== undefined) {
+      /* The verdict the held read recorded, whatever it was: evidence, never a refusal (owner decision 2026-09-25). None recorded, none assumed. */
+      const recorded = verdictOfRecordedPermission(h.permission);
       return { ...heldPageRead({ requestedUrl: h.canonicalUrl, httpStatus: h.httpStatus, contentType: h.contentType, body: h.body, retrievedAt: h.retrievedAt, sha256: h.sha256 }),
-        permissions: h.permission === "ALLOWED" ? [{ origin: originOf(h.canonicalUrl) ?? h.canonicalUrl, verdict: "ALLOWED" as const, detail: `recorded on held ${h.artifactId}` }] : [] };
+        permissions: recorded === null ? [] : [{ origin: originOf(h.canonicalUrl) ?? h.canonicalUrl, verdict: recorded, detail: `${h.permission} recorded on held ${h.artifactId}` }] };
     }
     return recorder.heldPage(artifact);
   };

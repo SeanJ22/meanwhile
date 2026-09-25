@@ -5,21 +5,29 @@ import { test } from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
-import { evaluatePermission } from "../lib/control-plane/scheduler/robots.ts";
+import { ROBOTS_BLOCKS_ACQUISITION, evaluatePermission } from "../lib/control-plane/scheduler/robots.ts";
 import {
   RETIRED_MEETING_ROUTES,
   SOURCE_WIRING,
-  isRetiredMeetingHost,
+  isUnreadableRetiredMeetingHost,
   meetingSourceNamesForWiring,
   type BodySourceWiring,
 } from "../lib/registry/source-wiring.ts";
+import { agendaRetrievalRefusal } from "../scripts/ingest.ts";
+import { agendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 
 /**
  * RULING 283: a proved source cutover disables its old writer in the same
  * transaction; neither two authoritative clocks nor none is lawful. These hold
- * that mechanically for every route retired because its host refuses this
- * client (2026-09-23: Pima Community College's Diligent tenant).
+ * that mechanically for every retired route (2026-09-23: Pima Community
+ * College's Diligent tenant, retired for robots.txt alone; 2026-09-25:
+ * Newbury's CivicWeb portal, whose host no longer resolves).
+ *
+ * Since the owner decision of 2026-09-25 ("Robots.txt alone must not block
+ * acquisition") a retirement closes a route's clock, and closes its host only
+ * when there is nothing there to read: the college's tenant is readable again.
  */
+const PCC = "curated:az/pima-community-college#governing";
 
 const ROOT = join(import.meta.dirname, "..");
 
@@ -39,10 +47,14 @@ test("every retired route has exactly one wired successor for the same body, and
       "the successor partition must be registered",
     );
     assert.match(retired.retiredOn, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(
-      retired.reason.includes("robots.txt") || /NXDOMAIN|ENOTFOUND/.test(retired.reason),
-      "the reason names its evidence: the permission document, or the host's failed resolution",
-    );
+    assert.ok(retired.reason.length > 0, "the reason names its evidence");
+    if (!retired.hostsReadable) {
+      // A host agenda retrieval refuses must be unreadable for a reason other
+      // than robots.txt: robots.txt alone closes nothing (owner decision 2026-09-25).
+      assert.match(retired.reason, /NXDOMAIN|ENOTFOUND/, `${retired.bodyId}: a closed host names its failed resolution`);
+    } else {
+      assert.match(retired.reason, /owner decision of 2026-09-25/, `${retired.bodyId}: a robots-only retirement says robots.txt no longer blocks`);
+    }
     assert.ok(retired.held.length > 0, "what the retired route holds is stated");
   }
 });
@@ -69,7 +81,8 @@ test("Newbury's dead CivicWeb route is retired, and its already-wired calendar f
     false,
     "no clock, acquisition or SOURCE_BLOCKED row can be written for the dead host again",
   );
-  assert.equal(isRetiredMeetingHost("https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370"), true);
+  assert.equal(retired.hostsReadable, undefined, "a host that no longer resolves is not readable");
+  assert.equal(isUnreadableRetiredMeetingHost("https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370"), true);
   assert.throws(
     () => meetingSourceNamesForWiring({
       bodyId: NEWBURY_SELECTBOARD,
@@ -115,8 +128,9 @@ test("no wiring row names a retired host, and meetings authority no longer reach
   }
 });
 
-test("the retired tenant's recorded robots.txt refuses this client and admits named search crawlers", () => {
-  // Recorded 2026-09-23T20:02Z; the SUSD and TUSD tenants served byte-identical files.
+test("the retired tenant's recorded robots.txt reads DISALLOWED for this client and ALLOWED for named search crawlers, and blocks nothing", () => {
+  // Recorded 2026-09-23T20:02Z (the same sha256 was read again 2026-09-25);
+  // the SUSD and TUSD tenants served byte-identical files.
   const text = readFileSync(join(ROOT, "tests", "fixtures", "pima-edu", "robots-pima.community.highbond.com.txt"), "utf8");
   const read = { robotsText: text, status: 200, transportError: null, contentType: "text/plain" };
   for (const path of [
@@ -127,24 +141,81 @@ test("the retired tenant's recorded robots.txt refuses this client and admits na
     const url = `https://pima.community.highbond.com${path}`;
     assert.equal(evaluatePermission(read, url, "we-the-people").verdict, "DISALLOWED", path);
     assert.equal(evaluatePermission(read, url, "googlebot").verdict, "ALLOWED", `${path} for googlebot`);
+    // The verdict is evidence: the owner decision of 2026-09-25 keeps it from refusing the read.
+    assert.equal(agendaRetrievalRefusal(url), null, `${path} is readable for agenda retrieval`);
   }
+  assert.equal(ROBOTS_BLOCKS_ACQUISITION, false);
 });
 
-test("a link into a retired host is recognised as held-as-link, and nothing else is", () => {
-  assert.equal(isRetiredMeetingHost("https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705"), true);
-  assert.equal(isRetiredMeetingHost("https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/agendas-docs-2026/0810.pdf"), false);
+test("only a dead retired route's host is held as a link; the robots-retired college tenant is readable, and nothing else is refused", () => {
+  assert.equal(isUnreadableRetiredMeetingHost("https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705"), false);
+  assert.equal(isUnreadableRetiredMeetingHost("https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370"), true);
+  assert.equal(isUnreadableRetiredMeetingHost("https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/agendas-docs-2026/0810.pdf"), false);
   // Sibling tenants that were NOT cut over are untouched by this list.
-  assert.equal(isRetiredMeetingHost("https://susd-12.community.highbond.com/Portal/"), false);
-  assert.equal(isRetiredMeetingHost("not a url"), false);
+  assert.equal(isUnreadableRetiredMeetingHost("https://susd-12.community.highbond.com/Portal/"), false);
+  assert.equal(isUnreadableRetiredMeetingHost("not a url"), false);
+});
+
+/*
+ * The college's Diligent tenant was retired on 2026-09-23 for robots.txt
+ * alone. The retirement stands — pima-edu carries every sitting the tenant did
+ * (cutover dry run: 7 the same, 5 added, none removed), and a second route for
+ * the body would show each sitting twice — but what robots.txt removed comes
+ * back: the tenant's host is read again when the college links into it.
+ */
+test("a superseded retired route's host is readable for agenda retrieval while its clock stays off", async () => {
+  const retired = RETIRED_MEETING_ROUTES.find((route) => route.bodyId === PCC && route.meetingSource === "diligent");
+  assert.ok(retired, "the college's Diligent route is named as retired");
+  assert.equal(retired.hostsReadable, true, "its host is readable again");
+  assert.deepEqual(retired.hosts, ["pima.community.highbond.com"]);
+  assert.equal(retired.replacedBy, "pima-edu");
+  assert.match(retired.reason, /robots\.txt alone/);
+  assert.match(retired.reason, /7 the same, 5 added, none removed/);
+
+  // The clock stays off: no partition for the retired pair, one route for the body, re-wiring refused.
+  assert.equal(MEETING_PARTITION_CONTRACTS.some((p) => p.id === meetingPartitionId("diligent", PCC)), false);
+  assert.deepEqual(SOURCE_WIRING.filter((row) => row.bodyId === PCC).flatMap(meetingSourceNamesForWiring), ["pima-edu"]);
+
+  // The host is read: the college's own link into the tenant is requested like any public agenda link.
+  const tenantLink = "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698";
+  assert.equal(agendaRetrievalRefusal(tenantLink), null);
+  const { retrieveAgendas } = await import("../scripts/ingest.ts");
+  const requested: string[] = [];
+  const realFetch = globalThis.fetch;
+  const realLog = console.log;
+  globalThis.fetch = (async (input: RequestInfo | URL) => {
+    const url = String(input instanceof Request ? input.url : input);
+    requested.push(url);
+    return new Response(
+      "<html><body><h1>Finance and Audit Committee Meeting - Aug 28 2026</h1><p>1. General Matters 1.01 Call to Order</p><p>2. Action Items 2.01 Approval of Minutes</p></body></html>",
+      { status: 200, headers: { "content-type": "text/html; charset=utf-8" } },
+    );
+  }) as typeof fetch;
+  console.log = () => undefined;
+  try {
+    await retrieveAgendas([{
+      id: "pima-edu:pcc:2026-08-28-committee", ocdId: null, bodyId: PCC, bodyName: "Finance and Audit Committee",
+      title: "Finance and Audit Committee", startsAt: "2026-08-28T09:00:00-07:00", timeZone: "America/Phoenix",
+      location: null, agendaUrl: tenantLink, jurisdiction: "Pima Community College District, AZ", status: "CONCLUDED",
+      provenance: { sourceUrl: "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/agendas-minutes.html", sourceOrg: "Pima Community College Governing Board", collectedAt: "2026-09-25T20:00:00Z", verifiedAt: null },
+    }] as never);
+  } finally {
+    globalThis.fetch = realFetch;
+    console.log = realLog;
+  }
+  assert.deepEqual(requested, [tenantLink], "the college's link into its tenant is read");
+  assert.equal(agendaDocumentStore.latestFor("pima-edu:pcc:2026-08-28-committee")?.documentUrl, tenantLink);
 });
 
 test("agenda retrieval consults the retired-host rule before any request", () => {
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
-  // 2026-09-24: one refusal helper holds both rules — a retired route's host,
-  // and a host a route catalogue records DISALLOWED (legistar.granicus.com).
+  // One refusal rule: a retired route's host that nothing may fetch. The
+  // 2026-09-24 rule that also refused a host a route catalogue recorded
+  // DISALLOWED for robots.txt (legistar.granicus.com) is gone since the owner
+  // decision of 2026-09-25.
   const helper = ingest.slice(ingest.indexOf("export function agendaRetrievalRefusal"), ingest.indexOf("export async function retrieveAgendas"));
-  assert.match(helper, /isRetiredMeetingHost\(url\)/, "the refusal consults the retired-host rule");
-  assert.match(helper, /isDisallowedLegistarHost\(url\)/, "and the recorded-DISALLOWED rule");
+  assert.match(helper, /isUnreadableRetiredMeetingHost\(url\)/, "the refusal consults the retired-host rule");
+  assert.doesNotMatch(helper, /isDisallowedLegistarHost|"RECORDED_DISALLOWED"/, "and no robots.txt rule");
   const body = ingest.slice(ingest.indexOf("async function retrieveAgendas"), ingest.indexOf("async function main"));
   assert.match(body, /agendaRetrievalRefusal\(url\)/, "retrieveAgendas must filter refused hosts");
   assert.ok(

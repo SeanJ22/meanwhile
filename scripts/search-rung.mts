@@ -43,7 +43,7 @@
  */
 
 import { launchGuarded } from "./browser.mts";
-import { browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
+import { sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 
 const PROBE_QUERIES = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const QUERIES = PROBE_QUERIES.length > 0 ? PROBE_QUERIES : ['"Gary Kapner" Mendham 2026'];
@@ -100,7 +100,7 @@ for (const q of QUERIES) {
   /* Rung 3 — the full browser header set. */
   try {
     const r = await fetch(url, {
-      headers: { ...browserProfileHeaders(), "User-Agent": sourceUserAgent() },
+      headers: sourceRequestHeaders("text/html,application/xhtml+xml,*/*;q=0.8"),
       signal: AbortSignal.timeout(30_000),
     });
     const t = await r.text();

@@ -49,7 +49,12 @@ export const INSITE_SPACING_MS = INSITE_CRAWL_DELAY_SECONDS * 1000;
  * honest and keeps nothing between runs.
  */
 export class InSiteSession {
-  private readonly jar = new Map<string, string>();
+  /**
+   * Cookies by the host that set them. A portal's ASP.NET session goes back to that portal only: since
+   * 2026-09-25 a minutes link may sit on the vendor's document host, and a session is never handed to a host
+   * that did not issue it.
+   */
+  private readonly jar = new Map<string, Map<string, string>>();
   private readonly spacingMs: number;
   private readonly impl: typeof fetch;
   private readonly signal?: AbortSignal;
@@ -78,19 +83,32 @@ export class InSiteSession {
     this.spacingMs = options.spacingMs ?? (options.fetchImpl ? 0 : INSITE_SPACING_MS);
   }
 
-  private cookieHeader(): string {
-    return [...this.jar.entries()].map(([k, v]) => `${k}=${v}`).join("; ");
+  private static hostOf(url: string): string {
+    try {
+      return new URL(url).host.toLowerCase();
+    } catch {
+      return "";
+    }
   }
 
-  private store(response: Response): void {
+  private cookieHeader(url: string): string {
+    const cookies = this.jar.get(InSiteSession.hostOf(url));
+    return cookies ? [...cookies.entries()].map(([k, v]) => `${k}=${v}`).join("; ") : "";
+  }
+
+  private store(response: Response, url: string): void {
     const lines =
       typeof response.headers.getSetCookie === "function"
         ? response.headers.getSetCookie()
         : [];
+    const host = InSiteSession.hostOf(response.url || url);
     for (const line of lines) {
       const [pair] = line.split(";");
       const eq = pair.indexOf("=");
-      if (eq > 0) this.jar.set(pair.slice(0, eq).trim(), pair.slice(eq + 1).trim());
+      if (eq <= 0) continue;
+      const cookies = this.jar.get(host) ?? new Map<string, string>();
+      cookies.set(pair.slice(0, eq).trim(), pair.slice(eq + 1).trim());
+      this.jar.set(host, cookies);
     }
   }
 
@@ -101,8 +119,8 @@ export class InSiteSession {
     this.lastAt = Date.now();
   }
 
-  private headers(extra: Record<string, string> = {}): Record<string, string> {
-    const cookie = this.cookieHeader();
+  private headers(url: string, extra: Record<string, string> = {}): Record<string, string> {
+    const cookie = this.cookieHeader(url);
     return {
       "User-Agent": sourceUserAgent(),
       ...(cookie ? { Cookie: cookie } : {}),
@@ -116,11 +134,11 @@ export class InSiteSession {
   ): Promise<{ status: number; contentType: string; text: string }> {
     await this.pace();
     const response = await this.impl(url, {
-      headers: this.headers({ Accept: accept }),
+      headers: this.headers(url, { Accept: accept }),
       signal: this.signal,
       ...(this.followRedirects ? {} : { redirect: "manual" as const }),
     });
-    this.store(response);
+    this.store(response, url);
     const movedTo = !this.followRedirects && response.status >= 300 && response.status < 400
       ? response.headers.get("location")
       : null;
@@ -159,11 +177,11 @@ export class InSiteSession {
   ): Promise<{ status: number; contentType: string; finalUrl: string; bytes: Uint8Array }> {
     await this.pace();
     const response = await this.impl(url, {
-      headers: this.headers({ Accept: accept }),
+      headers: this.headers(url, { Accept: accept }),
       signal: this.signal,
       ...(this.followRedirects ? {} : { redirect: "manual" as const }),
     });
-    this.store(response);
+    this.store(response, url);
     if (!response.ok) {
       await response.body?.cancel().catch(() => undefined);
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
@@ -190,7 +208,7 @@ export class InSiteSession {
     await this.pace();
     const response = await this.impl(url, {
       method: "POST",
-      headers: this.headers({
+      headers: this.headers(url, {
         Accept: "text/html,application/xhtml+xml",
         "Content-Type": "application/x-www-form-urlencoded",
         Referer: url,
@@ -198,7 +216,7 @@ export class InSiteSession {
       body: new URLSearchParams(form).toString(),
       signal: this.signal,
     });
-    this.store(response);
+    this.store(response, url);
     if (!response.ok) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }

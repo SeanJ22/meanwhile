@@ -194,7 +194,7 @@ test("WALL OR NOT: only an access control — a recorded wall, or the site's own
     if (id === "az:t:closed") assert.ok(seen.includes("https://closed.gov/"), `${id}: a Disallow: / is recorded, and the homepage is read`);
     const deadDoors = discoveryFieldManualEntries(attempt).filter((e) => e.kind === "DEAD_DOOR");
     assert.equal(deadDoors.length, expected === "BLOCKED" ? 1 : 0, `${id}: a dead door is taught only for a wall`);
-    if (id === "az:t:waf") assert.match(deadDoors[0].summary, /refused this client (.*HTTP 403.*)/, "the dead door names what refused: the homepage's own 403");
+    if (id === "az:t:waf") assert.match(deadDoors[0].summary, /walled this client by an access control \(.*HTTP 403.*\)/, "the dead door names what walled it: the homepage's own 403");
   }
 });
 
@@ -261,6 +261,26 @@ test("REDIRECT: each hop reads and records its host's robots.txt first; a hop on
   const blocked = await walkMeetingsDiscoveryNeed(need("az:town:newtown", "newtown.gov"), runtime(walled.open));
   assert.equal(walled.seen.some((u) => u.includes("boarddocs.com")), false, "a recorded wall is never asked anything, not even through a redirect");
   assert.equal(blocked.steps.find((s) => s.url.includes("boarddocs.com"))?.permission, "RECORDED_WALL");
+});
+
+test("A CHALLENGE AT 200 IS A WALL: the walk records the access control on the step, vaults the page as its evidence, never reads it as the homepage, and teaches a dead door", async () => {
+  const challenge = "<html><head><title>Just a moment...</title></head><body>Checking</body></html>";
+  const { open, seen } = fakeOpen({
+    "https://cftown.gov/robots.txt": ALLOW,
+    "https://cftown.gov/": { status: 200, body: challenge },
+    "https://www.cftown.gov/robots.txt": ALLOW,
+    "https://www.cftown.gov/": { status: 200, body: challenge },
+  });
+  const rt = runtime(open);
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:town:cftown", "cftown.gov"), rt);
+  assert.equal(attempt.outcome, "BLOCKED");
+  const home = attempt.steps.filter((s) => s.purpose === "homepage");
+  assert.ok(home.length > 0 && home.every((s) => /challenge/.test(s.accessControl ?? "")), JSON.stringify(home));
+  assert.ok(home.every((s) => s.artifactId !== null), "the challenge page is vaulted as the wall's evidence");
+  assert.equal(seen.filter((u) => u === "https://cftown.gov/").length, 1, "asked once, never re-sent");
+  const doors = discoveryFieldManualEntries(attempt).filter((e) => e.kind === "DEAD_DOOR");
+  assert.equal(doors.length, 1);
+  assert.match(doors[0].summary, /a bot challenge/);
 });
 
 test("WALL: a recorded wall is never requested, not even its robots.txt", async () => {

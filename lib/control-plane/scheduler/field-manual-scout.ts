@@ -60,15 +60,38 @@ export function scoutFieldManualProjection(
   });
 }
 
+/** A projected door recorded as dead (BLOCKED or FAILED), from its rendered line (`<role>/<kind> <outcome> (...)`). */
+const DEAD_DOOR_LINE = /^\S+\/\S+ (BLOCKED|FAILED) \(/;
+/** An access control named on a door: the only thing that makes a dead door a wall. */
+const ACCESS_CONTROL_NAMED = /\b(HTTP )?(401|402|403|407|429|451)\b|challenge|captcha|login|sign[- ]in|paywall|rate[- ]limit|forbidden|authenticat/i;
+/** A robots.txt verdict named on a door, as a pre-2026-09-25 walk recorded a robots-only refusal. */
+const ROBOTS_VERDICT_NAMED = /\b(DISALLOWED|CANNOT_TELL)\b|robots\.txt|permission (was )?(denied|unknown)/i;
+
+/**
+ * Whether a projected dead door was recorded for robots.txt alone: dead, naming a robots verdict, and naming no
+ * access control. Such a door is NOT a wall — robots.txt is recorded and never refuses a public page (owner
+ * decision 2026-09-25) — so the scout is told to walk it.
+ */
+export function isRobotsOnlyDeadDoor(line: string): boolean {
+  return DEAD_DOOR_LINE.test(line) && ROBOTS_VERDICT_NAMED.test(line) && !ACCESS_CONTROL_NAMED.test(line);
+}
+
 /** The brief lines a scout reads, with the RULING 63 header naming the manual it inherited. */
 export function fieldManualBriefLines(projection: FieldManualProjection): string[] {
   if (projection.total === 0) return [];
   if (projection.entryIds.length === 0) {
     return [`FIELD MANUAL (${projection.total} entries): none apply to this jurisdiction/record class yet — you are opening a new branch.`];
   }
+  const dead = projection.lines.some((l) => DEAD_DOOR_LINE.test(l));
   return [
     `FIELD MANUAL — ${projection.entryIds.length} inherited door(s) of ${projection.total}; walk what already worked before novelty, and do not rebuild a door already listed here (RULING 63):`,
-    ...projection.lines.map((l) => `  • ${l}`),
+    ...(dead
+      ? [
+          "  A BLOCKED or FAILED door is a wall only when an access control stopped it (a login or 401, a paywall, a 403 or bot challenge, a 429): never bypass it, walk another public route. " +
+            "A door recorded dead for robots.txt alone is NOT a wall: robots.txt is recorded and never refuses a public page (owner decision 2026-09-25), so walk it.",
+        ]
+      : []),
+    ...projection.lines.map((l) => `  • ${l}${isRobotsOnlyDeadDoor(l) ? " [robots.txt only — not a wall; walk it]" : ""}`),
   ];
 }
 

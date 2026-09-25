@@ -30,6 +30,7 @@ import {
 } from "../sources/legistar-insite/minutes.ts";
 import type { InSiteTenant } from "../sources/legistar-insite/tenant-registry.ts";
 import type { LegistarMinutesPointer } from "../sources/legistar/outcomes.ts";
+import { LEGISTAR_DOCUMENT_HOSTS } from "../sources/legistar/routes.ts";
 import type { NeverRead, ReadStamp } from "../ops/freshness.ts";
 import { toZonedIso } from "../time/zoned.ts";
 import { observationFromGridCell } from "./publication.ts";
@@ -57,23 +58,47 @@ export interface MinutesLink {
   readonly label: string;
 }
 
-function onHost(href: string, host: string): string | null {
+/**
+ * A grid link, resolved against the tenant's portal, when it is a public web
+ * address this route may follow: https, no credentials in the URL, and on one
+ * of `hosts`. Null otherwise.
+ */
+function publicLinkOn(href: string, host: string, hosts: readonly string[]): string | null {
   try {
     const url = new URL(href, `https://${host}/`);
-    // Only the tenant's own permitted portal host. A link off it (the vendor's
-    // document host refuses us in robots.txt) is never followed here.
-    return url.protocol === "https:" && url.hostname.toLowerCase() === host.toLowerCase() ? url.href : null;
+    if (url.protocol !== "https:" || url.username !== "" || url.password !== "") return null;
+    return hosts.includes(url.hostname.toLowerCase()) ? url.href : null;
   } catch {
     return null;
   }
 }
 
+/** A page of the tenant's own portal (the sitting's detail page): the portal host only. */
+function onPortal(href: string, host: string): string | null {
+  return publicLinkOn(href, host, [host.toLowerCase()]);
+}
+
+/**
+ * A document the grid links (minutes, agenda file): on the tenant's portal
+ * host or on the vendor's document host (`LEGISTAR_DOCUMENT_HOSTS`,
+ * `legistar.granicus.com`). (2026-09-25.)
+ *
+ * Until the owner decision of 2026-09-25 only the portal host was followed,
+ * because the vendor's document host answers robots.txt with `Disallow: /`.
+ * robots.txt is recorded and blocks nothing now, so a public document on the
+ * vendor's host is read like one on the portal. A link to any other host is
+ * not this tenant's publication and stays unfollowed.
+ */
+function documentOn(href: string, host: string): string | null {
+  return publicLinkOn(href, host, [host.toLowerCase(), ...LEGISTAR_DOCUMENT_HOSTS]);
+}
+
 export function minutesLinkFor(row: InSiteCalendarRow, host: string): MinutesLink | null {
-  const accessible = row.accessibleMinutes.href ? onHost(row.accessibleMinutes.href, host) : null;
+  const accessible = row.accessibleMinutes.href ? documentOn(row.accessibleMinutes.href, host) : null;
   if (accessible && !/not available/i.test(row.accessibleMinutes.status)) {
     return { url: accessible, format: "HTML", label: row.accessibleMinutes.status || row.minutes.status };
   }
-  const pdf = row.minutes.href ? onHost(row.minutes.href, host) : null;
+  const pdf = row.minutes.href ? documentOn(row.minutes.href, host) : null;
   if (pdf && !/not available/i.test(row.minutes.status)) return { url: pdf, format: "PDF", label: row.minutes.status };
   return null;
 }
@@ -227,7 +252,7 @@ function publicationFromRow(
   return {
     agendaStatusName: row.agenda.status || null,
     agendaStatusId: null,
-    agendaFile: row.agenda.href ? onHost(row.agenda.href, tenant.host) : null,
+    agendaFile: row.agenda.href ? documentOn(row.agenda.href, tenant.host) : null,
     agendaLastPublishedUtc: null,
     // The portal cell's words, verbatim. Not the vendor's "Minutes status"
     // field, which reads "Draft" on approved and action minutes alike.
@@ -235,15 +260,21 @@ function publicationFromRow(
     minutesStatusId: null,
     minutesFile: link?.url ?? null,
     minutesLastPublishedUtc: null,
-    inSiteUrl: row.detailHref ? onHost(row.detailHref, tenant.host) : null,
+    inSiteUrl: row.detailHref ? onPortal(row.detailHref, tenant.host) : null,
     lastModifiedUtc: null,
     videoStatus: null,
     observedAt,
   };
 }
 
-function pointerFromLink(link: MinutesLink | null, row: InSiteCalendarRow, host: string, note: string): LegistarMinutesPointer {
-  return { url: link?.url ?? null, status: (link?.label ?? row.minutes.status) || null, host: link ? host : null, retrievalNote: note };
+/** The pointer's host is the link's own: the portal's, or the vendor's document host. */
+function pointerFromLink(link: MinutesLink | null, row: InSiteCalendarRow, note: string): LegistarMinutesPointer {
+  return {
+    url: link?.url ?? null,
+    status: (link?.label ?? row.minutes.status) || null,
+    host: link ? new URL(link.url).hostname.toLowerCase() : null,
+    retrievalNote: note,
+  };
 }
 
 interface SittingInput {
@@ -266,7 +297,7 @@ function sittingBase(input: SittingInput, link: MinutesLink | null): Omit<Persis
     jurisdiction: tenant.jurisdiction,
     startsAt: gridStartsAt(row, tenant.timeZone),
     sourceOrg: tenant.publishingOrg,
-    sourceUrl: row.detailHref ? onHost(row.detailHref, tenant.host) : null,
+    sourceUrl: row.detailHref ? onPortal(row.detailHref, tenant.host) : null,
     publication: publicationFromRow(row, tenant, link, input.observedAt),
     agenda: [],
     rollCalls: [],
@@ -295,7 +326,7 @@ export function notYetPublishedSitting(input: SittingInput): PersistedSittingOut
       `${input.tenant.publishingOrg} has not published minutes for this sitting yet: the portal's ` +
       `minutes cell read "${cell}" at ${input.observedAt}. Its decisions are not yet in the public ` +
       "record we read. That is not a record that nothing was decided.",
-    minutesPointer: pointerFromLink(null, input.row, input.tenant.host, "The portal links no minutes for this sitting yet."),
+    minutesPointer: pointerFromLink(null, input.row, "The portal links no minutes for this sitting yet."),
     outcomes: [],
     routesWalked: ["INSITE_CALENDAR"],
   };
@@ -311,7 +342,7 @@ export function failedMinutesSitting(
     extractionNote:
       `The minutes request for this sitting failed: ${input.error}. Nothing is claimed about what ` +
       "the sitting decided; the read is retryable and stays open.",
-    minutesPointer: pointerFromLink(input.link, input.row, input.tenant.host, "The read of this minutes document failed; it stays owed."),
+    minutesPointer: pointerFromLink(input.link, input.row, "The read of this minutes document failed; it stays owed."),
     outcomes: [],
     routesWalked: ["INSITE_CALENDAR"],
   };
@@ -339,7 +370,7 @@ export function minutesSitting(
 ): { readonly sitting: PersistedSittingOutcomes; readonly parsed: ParsedCouncilMinutes | null } {
   const { document } = input;
   const base = sittingBase(input, document.link);
-  const pointer = pointerFromLink(document.link, input.row, input.tenant.host, "Read by the InSite minutes route; see minutesDocument.");
+  const pointer = pointerFromLink(document.link, input.row, "Read by the InSite minutes route; see minutesDocument.");
   if (document.unreadable !== null) {
     return {
       parsed: null,

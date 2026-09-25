@@ -4,10 +4,10 @@ import test from "node:test";
 import {
   REQUEST_SPACING_MS,
   SourceHttpError,
-  browserProfileHeaders,
   decodeEntities,
   politeGetJson,
   politeGetText,
+  sourceRequestHeaders,
   sourceUserAgent,
 } from "../lib/sources/http.ts";
 
@@ -55,25 +55,19 @@ function fakeFetch(
 
 /* ------------------------------------------------------- identification --- */
 
-test("http: the client identifies itself, and a contact address survives the browser rung", () => {
+test("http: the client identifies itself on every request, and there is no browser rung", async () => {
   const ua = sourceUserAgent();
   assert.match(ua, /we-the-people civic meeting index/);
-
-  const browser = browserProfileHeaders();
-  assert.ok(browser["User-Agent"], "the browser profile has no User-Agent");
-  assert.match(
-    browser["User-Agent"],
-    /we-the-people civic meeting index/,
-    "the browser rung must still tell an administrator who to write to — " +
-      "we look like a browser to a filter and like ourselves to a human",
-  );
+  const calls: Call[] = [];
+  await politeGetText("https://example.gov/a", { fetchImpl: fakeFetch([{ status: 200, body: "<html>ok</html>" }], calls) });
+  assert.equal(calls[0].headers["User-Agent"], ua, "the request carries the identified User-Agent");
 });
 
-test("http: the browser profile carries a real browser header set, not just a User-Agent", () => {
-  const headers = browserProfileHeaders();
-  const names = Object.keys(headers).map((h) => h.toLowerCase());
-  for (const required of ["user-agent", "accept", "accept-language"]) {
-    assert.ok(names.includes(required), `the browser profile is missing ${required}`);
+test("http: no request carries a borrowed browser identity or browser-only navigation headers", () => {
+  const headers = sourceRequestHeaders("text/html");
+  assert.doesNotMatch(headers["User-Agent"], /Mozilla|Chrome|Safari|Gecko/);
+  for (const name of Object.keys(headers)) {
+    assert.doesNotMatch(name, /^sec-fetch-|^upgrade-insecure-requests$/i, `${name} pretends to be a browser navigation`);
   }
 });
 
@@ -151,12 +145,11 @@ test("http: every wall records the RUNG it stopped at, never a terminal blocked 
   assert.equal(plain.rung, 2, "the plain profile stops at rung 2");
   assert.equal(plain.url, "https://example.gov/e", "the wall does not name its URL");
 
-  const browser = await politeGetText("https://example.gov/f", {
-    profile: "browser",
-    fetchImpl: fakeFetch([{ status: 404 }]),
+  const refused = await politeGetText("https://example.gov/f", {
+    fetchImpl: fakeFetch([{ status: 403 }]),
   }).catch((error: unknown) => error as SourceHttpError);
-  assert.ok(browser instanceof SourceHttpError);
-  assert.equal(browser.rung, 3, "the browser profile stops at rung 3");
+  assert.ok(refused instanceof SourceHttpError);
+  assert.equal(refused.rung, 2, "a 403 stops at rung 2 too: there is no rung above it to climb");
 });
 
 test("http: a rung is a number from the CLAUDE.md ladder, and never a `blocked` string", () => {

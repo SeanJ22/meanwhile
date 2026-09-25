@@ -98,7 +98,7 @@ async function page(url: string): Promise<string | null> {
   if (cache.has(url)) return cache.get(url)!;
   let text: string | null = null;
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     text = r.text;
   } catch {
     text = null;

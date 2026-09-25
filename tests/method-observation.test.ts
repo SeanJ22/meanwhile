@@ -205,7 +205,14 @@ test("C2 — classification puts the wall before the emptiness", () => {
   assert.equal(classifyBranch(branch("x", { found: true })).outcome, "YIELDED");
   assert.equal(classifyBranch(branch("x", { result: "403 forbidden" })).outcome, "BLOCKED");
   assert.equal(classifyBranch(branch("x", { result: "captcha challenge" })).outcome, "BLOCKED");
-  assert.equal(classifyBranch(branch("x", { result: "robots disallows" })).outcome, "BLOCKED");
+  // Owner decision 2026-09-25: robots.txt alone never blocks a read. A branch that stopped on it stopped on our side
+  // (FAILED, walked again): never the source's wall, and never a measurement of the fact.
+  assert.equal(classifyBranch(branch("x", { result: "robots disallows" })).outcome, "FAILED");
+  assert.equal(classifyBranch(branch("x", { result: "not requested: permission DISALLOWED (Disallow: /)" })).outcome, "FAILED");
+  assert.equal(classifyBranch(branch("x", { result: "robots.txt could not be read (CANNOT_TELL); no request sent" })).outcome, "FAILED");
+  assert.equal(classifyBranch(branch("x", { result: "robots.txt allows; no rows on the page" })).outcome, "ZERO", "a recorded verdict beside a real answer is the answer");
+  assert.equal(classifyBranch(branch("x", { result: "robots.txt disallows; HTTP 403 forbidden" })).outcome, "BLOCKED", "an access control is still the wall");
+  assert.equal(classifyBranch(branch("x", { result: "permission denied" })).outcome, "BLOCKED");
   assert.equal(classifyBranch(branch("x", { result: "timed out" })).outcome, "BLOCKED");
   assert.equal(classifyBranch(branch("x", { result: "threw an exception" })).outcome, "FAILED");
   assert.equal(classifyBranch(branch("x", { result: "no rows on the page" })).outcome, "ZERO");

@@ -11,6 +11,7 @@ import { parseGeneralizedRecords } from "./generalized-parser.ts";
 import { verifyExternalAuthorities } from "./record-verification.ts";
 import { assertGeneralizedScope } from "./record-evidence.ts";
 import { createHash } from "node:crypto";
+import { PERMISSION_STATES } from "../../workstate/types.ts";
 
 export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER"] as const;
 const MAX_REPAIR_DEPTH = 3;
@@ -23,6 +24,8 @@ export interface PlanRepairLink {
 type LinkedWorkItem = WorkItem & { readonly planRepair?: PlanRepairLink; readonly planRepairObservations?: Readonly<Record<string, RepairObservation>> };
 export interface RepairObservation { readonly parentWorkItemId: string; readonly scoutAttemptId: string; readonly code: string; readonly successorWorkItemId: string | null; readonly detail: string; }
 function requireThat(condition: unknown, code: string): asserts condition { if (!condition) throw new Error(code); }
+/** A robots.txt verdict the vault records (ALLOWED, DISALLOWED, CANNOT_TELL, NOT_APPLICABLE). Evidence, never a refusal. */
+function isRecordedRobotsVerdict(value: unknown): boolean { return (PERMISSION_STATES as readonly unknown[]).includes(value); }
 function origin(value: string): string {
   const url = new URL(value); requireThat(url.protocol === "https:" && !url.username && !url.password && (!url.port || url.port === "443"), "REPAIR_PUBLIC_HTTPS_REQUIRED"); return url.origin;
 }
@@ -40,7 +43,8 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   observedAtByArtifact?: ReadonlyMap<string, string> }) {
   const { plan, candidate, evidence, now } = input;
   requireThat(plan.contract.schemaVersion === 2 && (PLAN_REPAIR_CLASSES as readonly string[]).includes(plan.contract.recordClass), "REPAIR_CLASS_NOT_ADMITTED");
-  requireThat(candidate.recordClass === plan.contract.recordClass && candidate.permission === "ALLOWED", "REPAIR_CANDIDATE_SCOPE_MISMATCH");
+  // The robots.txt verdict is a record, never a gate (owner decision 2026-09-25): any recorded verdict is admitted.
+  requireThat(candidate.recordClass === plan.contract.recordClass && isRecordedRobotsVerdict(candidate.permission), "REPAIR_CANDIDATE_SCOPE_MISMATCH");
   requireThat(candidate.contractRepair && Buffer.byteLength(canonicalJson(candidate.contractRepair)) <= 32_768, "REPAIR_PROPOSAL_BOUND");
   const proposal = candidate.contractRepair as { schemaVersion?: unknown; sourceArtifactId?: unknown; extraction?: unknown; authorities?: unknown };
   requireThat(Object.keys(proposal).every(key => ["schemaVersion", "sourceArtifactId", "extraction", "authorities"].includes(key)) && proposal.schemaVersion === 1 && typeof proposal.sourceArtifactId === "string", "REPAIR_PROPOSAL_INVALID");
@@ -141,7 +145,8 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
       const candidate = candidates[0];
       const evidence = await Promise.all(candidate.evidenceArtifactIds.map(async id => {
         const capture = await input.readCapture(id);
-        requireThat(capture.permission === "ALLOWED" && capture.transport === "REACHABLE" && !capture.partial &&
+        // Any recorded robots.txt verdict is admissible; a walled, partial or non-2xx capture never is.
+        requireThat(isRecordedRobotsVerdict(capture.permission) && capture.transport === "REACHABLE" && !capture.partial &&
           capture.httpStatus !== null && capture.httpStatus >= 200 && capture.httpStatus < 300, "REPAIR_CAPTURE_NOT_ADMISSIBLE");
         const row = capture.evidence; const acquisition = attempts.get(row.acquiredByAttemptId);
         requireThat(acquisition?.outcome === "COMPLETED" && acquisition.workItemId === parent.id, "REPAIR_CAPTURE_COMPLETION_MISSING"); return row;

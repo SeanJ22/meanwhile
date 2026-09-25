@@ -13,7 +13,9 @@ import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts"
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { factChainHarness, PIMA_CONTRACT } from "./fact-chain-harness.ts";
 import type { ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
+import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { ResearchBlocker } from "../lib/control-plane/workers/research-types.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 
@@ -95,11 +97,76 @@ test("recovery never relaxes provenance, freshness, partial-capture or permissio
     assert.equal(result.blockers[0].code, "EVIDENCE_IDENTITY_MISMATCH", variant);
     assert.equal(f.networkCalls(), 0, variant);
   }
+  /* The capability boundary holds: without the network grant, recovery sends nothing. */
   const f = cacheRecoveryFixture();
-  const permissionUnknown = await runAcquirer({ ...f.input, held: [], route: { ...f.input.route, permission: "CANNOT_TELL" } }, f.runtime);
-  assert.equal(permissionUnknown.verdict, "BLOCKED");
-  assert.equal(permissionUnknown.blockers[0].code, "PERMISSION_UNKNOWN");
+  const noNetwork = await runAcquirer({ ...f.input, held: [], grant: { ...f.input.grant, capabilities: f.input.grant.capabilities.filter(c => c !== "NETWORK_PUBLIC_READ") } }, f.runtime);
+  assert.equal(noNetwork.verdict, "BLOCKED");
+  assert.equal(noNetwork.blockers[0].code, "CAPABILITY_DENIED");
   assert.equal(f.networkCalls(), 0);
+  /*
+   * A recorded robots.txt verdict is NOT a boundary (owner decision 2026-09-25): a CANNOT_TELL route walks the
+   * network, robots.txt first, and only the page's own access control (here a 403) walls it — never bypassed.
+   */
+  const calls: string[] = [];
+  const walled: ScoutToolkit = { ...f.runtime.toolkit, call: async (name) => {
+    calls.push(name);
+    const robots = name === "read_permission";
+    return { ok: robots, forModel: "fixture", artifacts: [], provenance: [], requestCount: 1, bytesFetched: 0,
+      rung: { rung: "linked-documents-or-bulk-download", tool: name, target: RECORD_URL, artifactIds: [], ok: robots, permission: "CANNOT_TELL",
+        observed: robots ? "robots.txt HTTP 403; permission CANNOT_TELL" : "HTTP 403 (wall)", transport: "CHALLENGED", httpStatus: 403 } };
+  } };
+  const permissionUnknown = await runAcquirer({ ...f.input, held: [], route: { ...f.input.route, permission: "CANNOT_TELL" } }, { ...f.runtime, toolkit: walled });
+  assert.deepEqual(calls, ["read_permission", "fetch_public"], "robots.txt is read and recorded, then the page is requested once");
+  assert.equal(permissionUnknown.verdict, "BLOCKED");
+  assert.equal(permissionUnknown.blockers[0].code, "PUBLISHER_AUTHENTICATION", "the page's own 403 is the wall, not the robots verdict");
+  assert.ok(!permissionUnknown.blockers.some(b => b.code === "PERMISSION_UNKNOWN" || b.code === "PERMISSION_DENIED"));
+  assert.equal(permissionUnknown.walk[0].permission, "CANNOT_TELL", "the unread robots.txt is still on record");
+  assert.equal(f.networkCalls(), 0);
+});
+
+type WorkerResultRow = Awaited<ReturnType<ControlPlaneRepositories["workerResults"]["readAll"]>>[number];
+
+/**
+ * A read-only view of `repos` in which every BLOCKED acquisition carries `code` / `retryable`: the shape a result
+ * recorded before 2026-09-25 carries when robots.txt alone stopped it. Nothing is written; the store is unchanged.
+ */
+function historicalBlockView(repos: ControlPlaneRepositories, code: ResearchBlocker["code"], retryable: boolean): ControlPlaneRepositories {
+  const rewrite = (r: WorkerResultRow): WorkerResultRow => r.result.role === "ACQUIRER" && r.result.verdict === "BLOCKED"
+    ? { ...r, result: { ...r.result, blockers: r.result.blockers.map(b => ({ ...b, code, retryable })) } } : r;
+  const results = new Proxy(repos.workerResults, { get(t, p, rcv) {
+    const value = Reflect.get(t, p, rcv) as unknown;
+    if (p === "read" || p === "readAll") {
+      return async (...args: unknown[]) => (await (value as (...a: unknown[]) => Promise<WorkerResultRow[]>).apply(t, args)).map(rewrite);
+    }
+    return typeof value === "function" ? (value as (...a: unknown[]) => unknown).bind(t) : value;
+  } });
+  return new Proxy(repos, { get: (target, prop, receiver) => prop === "workerResults" ? results : Reflect.get(target, prop, receiver) });
+}
+
+test("a route an older acquisition blocked for robots.txt alone (PERMISSION_DENIED, never retryable) is acquired again at once, robots first; any other non-retryable block still holds", async () => {
+  const response: { transportError: string | null } = { transportError: "socket timeout" };
+  const h = await autonomousHarness({ response });
+  const first = await nextAutonomousOperation(h.runtime, h.item.id);
+  assert.equal(first.task?.workerTask?.role, "ACQUIRER");
+  assert.equal((await dispatchWorkerTask(h.runtime, first.task!)).outcome, "WORKED");
+  const failed = (await h.repos.workerResults.readAll())[0];
+  assert.equal(failed.result.role === "ACQUIRER" && failed.result.verdict, "BLOCKED");
+  response.transportError = null;
+  const robotsOnly = await nextAutonomousOperation({ ...h.runtime, repos: historicalBlockView(h.repos, "PERMISSION_DENIED", false) }, h.item.id);
+  assert.equal(robotsOnly.action, "WORKER", robotsOnly.reason);
+  assert.equal(robotsOnly.task?.workerTask?.role, "ACQUIRER", "robots.txt alone never leaves a public route refused (owner decision 2026-09-25)");
+  assert.notEqual(robotsOnly.task?.id, first.task!.id, "a fresh acquisition, not the recorded one");
+  const before = h.calls.length;
+  assert.equal((await dispatchWorkerTask(h.runtime, robotsOnly.task!)).outcome, "WORKED");
+  assert.deepEqual(h.calls.slice(before), ["https://fixture-clerk.example.gov/robots.txt", FIXTURE_URL], "robots.txt is read first, then the page");
+  const reacquired = (await h.repos.workerResults.readAll()).find(record => record.routeTaskId === robotsOnly.task!.id)!;
+  assert.equal(reacquired.result.verdict, "ACQUIRED");
+  /* POSITIVE CONTROL: a non-retryable block that is not robots-only keeps its own rule. */
+  const h2 = await autonomousHarness({ response: { transportError: "socket timeout" } });
+  const t2 = await nextAutonomousOperation(h2.runtime, h2.item.id);
+  assert.equal((await dispatchWorkerTask(h2.runtime, t2.task!)).outcome, "WORKED");
+  const held = await nextAutonomousOperation({ ...h2.runtime, repos: historicalBlockView(h2.repos, "EVIDENCE_IDENTITY_MISMATCH", false) }, h2.item.id);
+  assert.notEqual(held.task?.workerTask?.role, "ACQUIRER", "an integrity block is not re-acquired on this path");
 });
 
 test("failed publisher refresh retains the last acquired capture for unfinished validation while automatic recovery remains owed", async () => {

@@ -94,7 +94,7 @@ interface Row {
 
 async function readBody(url: string): Promise<{ status: number; body: string }> {
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     return { status: r.status, body: r.text };
   } catch (e) {
     const status = (e as { status?: number }).status ?? 0;

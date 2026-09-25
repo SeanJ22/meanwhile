@@ -207,7 +207,7 @@ test("SEEDED: walking seven of eight routes and omitting /EventDates cannot clos
     .filter((t) => t.routeId !== forgotten)
     .map((t) => {
       if (t.routeId === "GRANICUS_VIEW_PUBLISHER") {
-        return walk(t, "BLOCKED_CURRENTLY", { permission: "DISALLOWED", transport: "CHALLENGED" });
+        return walk(t, "REQUIRES_NEW_ADAPTER", { permission: "DISALLOWED", transport: "REACHABLE" });
       }
       const rows = PIMA_MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof PIMA_MEASURED_FUTURE_COUNTS];
       return rows && rows > 0
@@ -225,14 +225,16 @@ test("SEEDED: walking seven of eight routes and omitting /EventDates cannot clos
   assert.deepEqual(missing, [forgotten], "the refusal must name the forgotten route, not report a count");
 });
 
-test("SEEDED: the Granicus wall keeps the obligation open — a permission verdict is not a finding", () => {
+test("SEEDED: the unbuilt Granicus route keeps the obligation open — its robots.txt reading is evidence, not a finding", () => {
   const { floor } = floorFor();
   const { item, routeTasks } = materializeFloor(pimaFutureMeetingsWorkItem(T0), floor, T0);
 
-  // Every route walked, including /EventDates. Granicus is disallowed.
+  // Every route walked, including /EventDates. No adapter reads Granicus yet;
+  // its robots.txt Disallow is recorded and, since the owner decision of
+  // 2026-09-25, blocks nothing.
   const walked = routeTasks.map((t) => {
     if (t.routeId === "GRANICUS_VIEW_PUBLISHER") {
-      return walk(t, "BLOCKED_CURRENTLY", { permission: "DISALLOWED", transport: "CHALLENGED" });
+      return walk(t, "REQUIRES_NEW_ADAPTER", { permission: "DISALLOWED", transport: "REACHABLE" });
     }
     const rows = PIMA_MEASURED_FUTURE_COUNTS[t.routeId as keyof typeof PIMA_MEASURED_FUTURE_COUNTS];
     return rows && rows > 0 ? walk(t, "INGESTED", { rows }) : walk(t, "WALKED_NO_YIELD", { rows: 0 });
@@ -240,21 +242,23 @@ test("SEEDED: the Granicus wall keeps the obligation open — a permission verdi
 
   const verdict = evaluateCompletion(snapshotFor(item, walked, true), "VERIFIED_COMPLETE");
 
-  assert.equal(verdict.mayComplete, false, "a BLOCKED_CURRENTLY route is an open obligation");
-  const blocked = verdict.refusals.filter((r) => r.code === "ROUTE_TASK_STILL_OUTSTANDING");
-  assert.ok(blocked.length >= 1);
+  assert.equal(verdict.mayComplete, false, "a REQUIRES_NEW_ADAPTER route is an open obligation");
+  const open = verdict.refusals.filter((r) => r.code === "ROUTE_TASK_STILL_OUTSTANDING");
+  assert.ok(open.length >= 1);
   assert.ok(
-    blocked.some((r) => /BLOCKED_CURRENTLY/.test(r.detail)),
-    "the refusal must say the route is blocked, not that the meetings are absent",
+    open.some((r) => /REQUIRES_NEW_ADAPTER/.test(r.detail)),
+    "the refusal must say the route is unbuilt, not that the meetings are absent",
   );
 
-  // And the adapter's own record still refuses to say anything about the content.
+  // And the adapter's own record still says nothing about the content, and its
+  // robots.txt reading is kept and blocks nothing.
   assert.equal(
     PIMA_GRANICUS_PERMISSION.claimAboutContent,
     null,
-    "a wall carries no claim about what is behind it",
+    "an unread route carries no claim about what is behind it",
   );
   assert.match(PIMA_GRANICUS_PERMISSION.rule, /Disallow: \//);
+  assert.equal(PIMA_GRANICUS_PERMISSION.robotsBlocks, false);
 });
 
 test("SEEDED: an incomplete denominator refuses the close even when every route is disposed", () => {

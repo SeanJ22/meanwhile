@@ -440,6 +440,12 @@ test("the door verifies the vault again and holds by name what it cannot prove; 
     planDerivedCampaignSites({ approvals: [structural], held: () => held, profiles: { input: { kind: "PROMOTED_VERSION", recordClass: "CANDIDATE_PROFILE", scope: "s", versionId: "v", readModelSha256: "b".repeat(64), promotedAt: T0 }, links } });
 
   assert.equal(plan(heldBytes).records.length, subject(TANG_WILLIAMS).readerKeys.length);
+  /* Whatever robots verdict the sidecar recorded is evidence carried with the read, never a hold (owner decision 2026-09-25). */
+  for (const permission of ["DISALLOWED", "CANNOT_TELL", "NOT_APPLICABLE", null]) {
+    const again = plan({ ...heldBytes, permission });
+    assert.deepEqual(again.held, [], `a sidecar recording ${permission} holds nothing`);
+    assert.equal(again.records.length, subject(TANG_WILLIAMS).readerKeys.length);
+  }
   assert.deepEqual(plan(null).held.map((h) => h.code), ["EVIDENCE_NOT_HELD"]);
   assert.deepEqual(plan({ ...heldBytes, sha256: "c".repeat(64) }).held.map((h) => h.code), ["REVERIFICATION_FAILED"]);
   /* Bytes that are the approved bytes but do not verify for the approval's own identity: the vault does not prove the claim, so nothing publishes. */

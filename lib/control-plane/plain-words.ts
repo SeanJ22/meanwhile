@@ -156,9 +156,18 @@ export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
   ASK_ANSWERS: { words: "Ask can answer it" },
 
   /* ------------------------------------------- permission verdicts */
-  NO_ROBOTS: { words: "No rules file published", means: "The host publishes no robots file, so nothing there forbids this route." },
+  /*
+   * A robots.txt verdict is a RECORD, never a block (owner decision 2026-09-25): a public page is read whatever the
+   * robots file says; what stops a read is an access control (a login, a paywall, a 403, a bot challenge, a 429).
+   * ALLOWED, DISALLOWED and CANNOT_TELL are shared with other verdict vocabularies (licences, release states), so
+   * their labels stay general and only the robots-specific meanings say so.
+   */
+  NO_ROBOTS: { words: "No robots file published", means: "The host publishes no robots file. That is recorded; it neither allows nor blocks anything." },
   ALLOWED: { words: "Allowed by the host" },
-  DISALLOWED: { words: "Not allowed by the host" },
+  DISALLOWED: {
+    words: "The host's rules name it",
+    means: "The host's published rules name this. For a web page that is its robots file, which is recorded and does not block reading a public page (your decision of 2026-09-25); a login, a paywall or a bot check would.",
+  },
   CANNOT_TELL: { words: "Cannot tell" },
 
   /* -------------------------------------------------- worker roles */

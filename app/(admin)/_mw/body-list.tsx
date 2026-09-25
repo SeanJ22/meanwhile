@@ -28,6 +28,15 @@ function when(iso: string): string {
   return Number.isFinite(t) ? `${FMT.format(new Date(t))} ET` : "at no recorded time";
 }
 
+/** The "show all" page, naming the body open now so it is still open when the rest arrive. */
+function keepOpen(href: string, open: string | null): string {
+  if (open === null) return href;
+  const at = href.indexOf("?");
+  const params = new URLSearchParams(at < 0 ? "" : href.slice(at + 1));
+  params.set("body", open);
+  return `${at < 0 ? href : href.slice(0, at)}?${params.toString()}`;
+}
+
 export function BodyList(props: {
   /** The views sent: the first `firstShown`, or every one of `total`. */
   readonly bodies: readonly BodyView[];
@@ -160,7 +169,7 @@ export function BodyList(props: {
             {showAll ? `Show the first ${props.firstShown} only` : `Show all ${props.total} bodies`}
           </button>
         ) : (
-          <Link href={props.showAllHref} scroll={false} className={s.btnSecondary} style={{ alignSelf: "flex-start" }}>
+          <Link href={keepOpen(props.showAllHref, open)} scroll={false} className={s.btnSecondary} style={{ alignSelf: "flex-start" }}>
             {`Show all ${props.total} bodies`}
           </Link>
         ))}

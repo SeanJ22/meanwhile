@@ -339,6 +339,6 @@ test("Fleet · Now sends the body list only the views it draws until the whole l
   assert.match(src, /for \(const b of bodyList\.sent\)/, "work links only for the views sent");
   assert.match(src, /key=\{bodyList\.every \? "every" : "first"\}/, "the island starts over when the rest arrive");
   const list = readFileSync("app/(admin)/_mw/body-list.tsx", "utf8");
-  assert.match(list, /<Link href=\{props\.showAllHref\} scroll=\{false\}/);
+  assert.match(list, /<Link href=\{keepOpen\(props\.showAllHref, open\)\} scroll=\{false\}/, "the body open now is still open when the rest arrive");
   assert.match(list, /Show all \$\{props\.total\} bodies/);
 });

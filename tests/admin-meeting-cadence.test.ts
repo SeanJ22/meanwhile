@@ -99,7 +99,8 @@ test("the watched meeting partitions all carry the runner's sitting-window sched
   assert.match(versions, /e\.candidate_id = p\.current_version_id AND e\.sequence = 1\) AS observed_at/, "the success instant is the version's first event, as the runner reads it");
   const full = bodyStore.slice(bodyStore.indexOf("export async function readBodyStore("), bodyStore.indexOf("export async function readBodyStanding("));
   const standing = bodyStore.slice(bodyStore.indexOf("export async function readBodyStanding("));
-  assert.match(full, /sql\.query\(VERSIONS_WITH_CLOCK, \[nowIso, CONFIRMATION_LIKE\]\)/, "the full read carries the clock");
+  // Through the scope-narrowing helper when an opened read asks for one body (claude/ac-admin-first-open).
+  assert.match(full, /(?:sql\.query|statement)\(VERSIONS_WITH_CLOCK, \[nowIso, CONFIRMATION_LIKE\]\)/, "the full read carries the clock");
   assert.doesNotMatch(standing, /VERSIONS_WITH_CLOCK|CONFIRMATION_LIKE/, "the preview's standing read never pays for a schedule it does not show");
 });
 

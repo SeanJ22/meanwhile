@@ -78,6 +78,12 @@ async function zipsFor(contracts: readonly WatchedContract[]): Promise<(ocdId: s
  * A minute fresh, five minutes recent (see shared-read.ts): a body's standing
  * moves on the runner's clock, not on a click, and every page names the time
  * its bodies were read.
+ *
+ * Every body, WITHOUT the change history (`history: false`): no page's list
+ * draws a body's latest change, and reading it was 920 ms of the body read's
+ * server time (2026-09-25; see body-store.ts). Each view says its trail was not
+ * read (`changeRead: false`). The one view that draws a trail — a routine read
+ * opened on Work — reads its own body with it (`loadWatchedBody`).
  */
 const shared = sharedRead<BodiesRead>({
   freshMs: 60_000,
@@ -100,7 +106,7 @@ async function readWatchedBodies(nowIso: string): Promise<BodiesRead> {
     };
   }
   try {
-    const [store, zipOf] = await Promise.all([readBodyStore(connection, nowIso), zipsFor(WATCHED_CONTRACTS)]);
+    const [store, zipOf] = await Promise.all([readBodyStore(connection, nowIso, { history: false }), zipsFor(WATCHED_CONTRACTS)]);
     return { kind: "HELD", asOf: store.asOf, views: buildBodyViews({ contracts: WATCHED_CONTRACTS, store, nowIso, zipOf }) };
   } catch (error) {
     // Server log only: a driver error can carry the connection string, so the page gets the class name alone.
@@ -109,6 +115,57 @@ async function readWatchedBodies(nowIso: string): Promise<BodiesRead> {
       kind: "UNREAD",
       detail: `The body read did not complete (${error instanceof Error ? error.name : "error"}). No body count is claimed until it does.`,
     };
+  }
+}
+
+export type BodyRead =
+  | { readonly kind: "HELD"; readonly asOf: string; readonly view: BodyView }
+  | { readonly kind: "NOT_WATCHED"; readonly detail: string }
+  | { readonly kind: "UNREAD"; readonly detail: string };
+
+/*
+ * ONE body, read whole and fresh — its figures and its change history, for the
+ * routine read opened on Work, which draws that body's delivery trail. Every
+ * statement is narrowed to the body's own contracts' scopes, so the history is
+ * one short walk rather than every body's (see body-store.ts); the view is the
+ * one the whole read would have built for it. Not kept: it is read at the
+ * click, and the opened card says when.
+ */
+export async function loadWatchedBody(nowIso: string, contractId: string): Promise<BodyRead> {
+  const contract = WATCHED_CONTRACTS.find((c) => c.id === contractId);
+  if (contract === undefined) return { kind: "NOT_WATCHED", detail: `No routine meeting contract has the id ${contractId}.` };
+  const contracts = WATCHED_CONTRACTS.filter((c) => c.bodyId === contract.bodyId);
+  const connection = process.env.DATABASE_URL?.trim() ?? "";
+  if (connection === "") {
+    return {
+      kind: "UNREAD",
+      detail: "This Admin runtime has no connection to the routine civic-data store, so no body was read. That is not the same as having no bodies.",
+    };
+  }
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<BodyRead>((resolve) => {
+    timer = setTimeout(() => resolve({ kind: "UNREAD", detail: lateWords("The body read", ADMIN_READ_DEADLINE_MS) }), ADMIN_READ_DEADLINE_MS);
+  });
+  const read = (async (): Promise<BodyRead> => {
+    try {
+      const [store, zipOf] = await Promise.all([
+        readBodyStore(connection, nowIso, { history: true, scopes: contracts.map((c) => c.scope) }),
+        zipsFor(contracts),
+      ]);
+      const [view] = buildBodyViews({ contracts, store, nowIso, zipOf });
+      return view === undefined ? { kind: "NOT_WATCHED", detail: `No routine meeting contract has the id ${contractId}.` } : { kind: "HELD", asOf: store.asOf, view };
+    } catch (error) {
+      console.error("[admin] watched-body read failed", error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error);
+      return {
+        kind: "UNREAD",
+        detail: `The body read did not complete (${error instanceof Error ? error.name : "error"}). No body count is claimed until it does.`,
+      };
+    }
+  })();
+  try {
+    return await Promise.race([read, late]);
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
   }
 }
 

@@ -64,8 +64,11 @@ async function openWithConfig(): Promise<{ readonly opened: Awaited<ReturnType<t
   return { opened, adminConfig: cfg.kind === "HELD" ? cfg.value : null };
 }
 
-export async function openPage(path: string, sp: SearchParams): Promise<PageBase> {
-  const nowIso = new Date().toISOString();
+/**
+ * `nowIso` lets a page start a read that needs only the instant (the body read)
+ * before this one, so the policy row's round trip is not added in front of it.
+ */
+export async function openPage(path: string, sp: SearchParams, nowIso: string = new Date().toISOString()): Promise<PageBase> {
   const scope = parseScope(sp.scope);
   // The registration pointers are read beside the control plane, never after it: one small read the page does not wait on twice.
   const [{ opened, adminConfig }, registration] = await Promise.all([openWithConfig(), loadRegistrationPointers()]);

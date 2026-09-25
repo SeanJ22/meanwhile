@@ -355,7 +355,7 @@ test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, 
     assert.equal((await repos.obligations.mustRead("ob-adapter")).value.lastWorkedAt, null, `${label}: the anchor does not move`);
     const debt = (await repos.debts.mustRead("ob-adapter")).value;
     assert.equal(debt.consecutiveFailures, 2, `${label}: the owed obligation accrues debt as a WORKED non-reading does`);
-    assert.equal(debt.cause, "REFUSED_BY_HOST");
+    assert.equal(debt.cause, "AWAITING_ADAPTER", `${label}: a missing adapter is not a host refusal`);
     assert.match(debt.detail, /REQUIRES_NEW_ADAPTER/);
 
     /* Reported apart from dispatches, and a recovered reading is not overdue. */

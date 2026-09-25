@@ -666,3 +666,14 @@ test("NH328: canonical reader-impact priority reaches the Scout pool before an o
   assert.deepEqual(cycle.dispatched.map((row) => row.obligationId), [readerPriority.id]);
   assert.equal(cycle.lanes?.model.deferredBy.CYCLE_MAX, 1);
 });
+
+test("a committed non-reading is named for what it is: only a wall is a host refusal", async () => {
+  const { debtCauseForDisposition, DEBT_CAUSES } = await import("../lib/control-plane/scheduler/debt.ts");
+  assert.equal(debtCauseForDisposition("BLOCKED_CURRENTLY"), "REFUSED_BY_HOST");
+  assert.equal(debtCauseForDisposition("REQUIRES_NEW_ADAPTER"), "AWAITING_ADAPTER");
+  assert.equal(debtCauseForDisposition("DISCOVERED"), "AWAITING_ROUTINE_READ");
+  const { plainCode, hasPlainMeaning } = await import("../lib/control-plane/plain-words.ts");
+  for (const cause of DEBT_CAUSES) assert.ok(hasPlainMeaning(cause), `${cause} has plain words`);
+  assert.equal(plainCode("AWAITING_ADAPTER"), "Waiting for a reader to be built");
+  assert.equal(plainCode("AWAITING_ROUTINE_READ"), "Waiting for its scheduled read");
+});

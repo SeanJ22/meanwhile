@@ -60,7 +60,22 @@ export const DEBT_CAUSES = [
   "EXTRACTION_FAILED",
   /** Scheduled, never dispatched, and the due time has passed. */
   "NEVER_DISPATCHED",
+  /** The route closed REQUIRES_NEW_ADAPTER: nothing refused us; the reader for this record is not built yet. */
+  "AWAITING_ADAPTER",
+  /** The route closed DISCOVERED: the record is carried by a routine read on its own clock, which has not yet filled it. */
+  "AWAITING_ROUTINE_READ",
 ] as const;
+
+/**
+ * The cause a committed non-reading disposition stands for. Only a wall is a
+ * host refusal; a missing adapter or a record a routine read will carry is not,
+ * and naming it so would send the owner after a block that does not exist.
+ */
+export function debtCauseForDisposition(disposition: string): DebtCause {
+  if (disposition === "REQUIRES_NEW_ADAPTER") return "AWAITING_ADAPTER";
+  if (disposition === "DISCOVERED") return "AWAITING_ROUTINE_READ";
+  return "REFUSED_BY_HOST";
+}
 export type DebtCause = (typeof DEBT_CAUSES)[number];
 
 /** First retry after 15 minutes. Short enough that a blip is invisible. */

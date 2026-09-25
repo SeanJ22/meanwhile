@@ -34,6 +34,7 @@
 
 import {
   aggregateIncidents,
+  debtCauseForDisposition,
   recordFailure,
   retryable,
   stalenessRisk,
@@ -441,7 +442,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       row.obligation.id,
       recordFailure(debtsById.get(row.obligation.id) ?? null, {
         obligationId: row.obligation.id,
-        cause: "REFUSED_BY_HOST",
+        cause: debtCauseForDisposition(settled.disposition.disposition),
         detail: settledUnresolvedReason(settled.disposition),
         target: row.obligation.routeId ?? row.obligation.subjectId,
         dueAt: row.nextDueAt,
@@ -526,7 +527,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             result.outcome === "NO_ROUTE_TASK"
               ? "NEVER_DISPATCHED"
               : result.dispositionCommitted
-                ? "REFUSED_BY_HOST"
+                ? debtCauseForDisposition(result.disposition ?? "")
                 : "UPSTREAM_ERROR",
           detail: result.dispositionCommitted
             ? `the route was disposed ${result.disposition}, which closes the RouteTask and is ` +

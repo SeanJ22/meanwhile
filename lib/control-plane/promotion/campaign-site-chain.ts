@@ -63,6 +63,7 @@ import {
   type ConfirmedRecord,
   type PipelineItemState,
   type PipelineStage,
+  type RefusedRecord,
   type ScoutedRecord,
   type TransitionRecord,
   type VerificationCheck,
@@ -413,10 +414,10 @@ function zeroStages(): Record<PipelineStage, number> {
  * An offer that differs in any byte (a burden that moved, a new read) is
  * offered again.
  */
-function alreadyRefused(state: PipelineItemState | undefined, offered: TransitionRecord): boolean {
-  if (state === undefined) return false;
+function alreadyRefused(state: PipelineItemState | undefined, offered: TransitionRecord): RefusedRecord | null {
+  if (state === undefined) return null;
   const wanted = canonicalJson(offered);
-  return state.records.some((r) => r.stage === "REFUSED" && r.offered.recordId === offered.recordId && canonicalJson(r.offered) === wanted);
+  return state.records.find((r): r is RefusedRecord => r.stage === "REFUSED" && r.offered.recordId === offered.recordId && canonicalJson(r.offered) === wanted) ?? null;
 }
 
 /**
@@ -436,9 +437,10 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   let recordedThisRun = 0;
   const offer = async (record: TransitionRecord): Promise<PipelineItemState> => {
     const held = heldStates.get(record.itemId);
-    if (alreadyRefused(held, record)) {
-      offers.push({ stage: record.stage, itemId: record.itemId, accepted: false, refusalCodes: held!.records.filter((r) => r.stage === "REFUSED" && r.offered.recordId === record.recordId).at(-1)!.reasons.map((r) => r.code) });
-      return held!;
+    const refused = alreadyRefused(held, record);
+    if (held !== undefined && refused !== null) {
+      offers.push({ stage: record.stage, itemId: record.itemId, accepted: false, refusalCodes: refused.reasons.map((r) => r.code) });
+      return held;
     }
     const out = await appendTransition(repos, record, ctx, options.now);
     offers.push({ stage: record.stage, itemId: record.itemId, accepted: out.accepted, refusalCodes: out.accepted || out.record.stage !== "REFUSED" ? [] : out.record.reasons.map((r) => r.code) });

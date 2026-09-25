@@ -2481,7 +2481,14 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
     if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
     const { subjects } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
     const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
-    const held = await heldMarginaliaFromManifest(ROOT, readStagingManifest(ROOT), vaultIndex, nowIso());
+    /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
+    let stagingManifest: ReturnType<typeof readStagingManifest> = null;
+    try {
+      stagingManifest = readStagingManifest(ROOT);
+    } catch (error) {
+      runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
+    }
+    const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
     const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
     campaignSites = await runCampaignSiteCycle({
       repos,

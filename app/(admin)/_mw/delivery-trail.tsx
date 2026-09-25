@@ -77,13 +77,18 @@ export function DeliveryTrailCard({ trail, note }: { readonly trail: DeliveryTra
           </p>
           {trail.promotions.length > 0 && (
             <div className={s.stack8}>
-              <span className={s.label}>Promoted records, with their history</span>
+              <span className={s.label}>Records approved for promotion, with their history</span>
               {trail.promotions.map((p) => (
                 <div key={`${p.version}-${p.subjectId ?? ""}`} className={s.insetRow}>
                   <div className={s.stack2}>
                     <span className={s.text14}>
-                      {p.subjectId ?? p.recordClass} — promoted {formatEastern(p.promotedAt)}, version {p.version}, to {p.destination}
+                      {p.subjectId ?? p.recordClass} — approved for promotion {formatEastern(p.approvedAt ?? p.promotedAt ?? null)} (when readers could first see it is not recorded), version {p.version}, to{" "}
+                      {p.destination}
                       {p.checkedAt ? `, checked ${formatEastern(p.checkedAt)}` : ", not yet checked on the public site"}.
+                    </span>
+                    <span className={s.text14}>
+                      <span className={s.strong}>What changed: </span>
+                      {p.changeSummary ?? "not recorded on this snapshot (it was published before the change summary existed)"}
                     </span>
                     <span className={s.monoSmall}>
                       Found {p.evidenceChain.scouted} · confirmed {p.evidenceChain.confirmed} · verified {p.evidenceChain.verified} · audited {p.evidenceChain.audited}

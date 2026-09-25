@@ -1061,8 +1061,9 @@ const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms
  *
  * The file provider is a local proof and carries no owner intents: NOTHING.
  *
- * The nightly window (RULING 242) keeps its own clock through a pause: a pause
- * holds CYCLES; the reader-truth door runs in shadow and catches up on its own.
+ * The nightly window (RULING 242) keeps its own clock, and the owner's
+ * PAUSE_RUNNER holds it as it holds cycles (see holdWhilePaused and
+ * sleepUnlessRunNow); a window skipped while paused catches up on its own.
  */
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
@@ -1651,7 +1652,10 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   while (Date.now() < until) {
     await sleep(Math.min(POLL_MS, until - Date.now()));
     /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
-    if ((await ownerSays()) === "START_NOW") return;
+    const says = await ownerSays();
+    if (says === "START_NOW") return;
+    /* The owner's PAUSE_RUNNER holds the window between cycles too (holdWhilePaused holds it before one). */
+    if (says === "HOLD") continue;
     /* LANE E — the nightly window runs between cycles, on this clock. */
     const decision = await windowDecision();
     if (decision.run) await runNightlyWindow(decision.trigger);
@@ -1666,9 +1670,10 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
  * paid lane closed (2026-09-25) — a pause nobody could read is never assumed
  * lifted for paid work, and the cycle's free work still runs.
  *
- * The nightly window is held too. "I paused the runner" means the WHOLE
- * runner: the owner's stated reason on 9.4.26 was usage, and the shadow window
- * spends exactly as a cycle does. A window skipped while paused is caught up
+ * The nightly window is held too, here and between cycles. "I paused the
+ * runner" means the WHOLE runner: the owner's stated reason on 9.4.26 was
+ * usage. The window makes no model calls, but it uses the host and the
+ * databases like a cycle does. A window skipped while paused is caught up
  * by the next window decision after RESUME_RUNNER (it reads the last window
  * run, not this clock).
  *

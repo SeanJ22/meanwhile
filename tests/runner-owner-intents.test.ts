@@ -298,7 +298,10 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   const hold = src.match(/async function holdWhilePaused\(\): Promise<\{ readonly ownerIntentsUnreadable: boolean \}> \{[\s\S]*?\n\}/);
   assert.ok(hold, "pilot-runner.mts has no holdWhilePaused()");
   assert.doesNotMatch(hold[0], /runStandingRuntimeTick/, "a research pause must not own or stop the independent runtime clock");
-  assert.match(src, /if \(\(await ownerSays\(\)\) === "START_NOW"\) return;/, "the sleep does not end on the owner's word");
+  assert.match(src, /const says = await ownerSays\(\);\s*if \(says === "START_NOW"\) return;/, "the sleep does not end on the owner's word");
+  const sleepLoop = src.match(/async function sleepUnlessRunNow\(totalMs: number\): Promise<void> \{[\s\S]*?\n\}/);
+  assert.ok(sleepLoop, "pilot-runner.mts has no sleepUnlessRunNow()");
+  assert.match(sleepLoop[0], /if \(says === "HOLD"\) continue;[\s\S]*windowDecision\(\)/, "the owner's PAUSE_RUNNER does not hold the nightly window between cycles");
 }
 
 test("pilot-runner.mts publishes the console after every digest (ADM-1)", () => {
@@ -327,6 +330,10 @@ test("POSITIVE CONTROL: a runner that drops the publish call, the readiness targ
   const noHold = src.replace("\n  const owner = await holdWhilePaused();\n  cycle += 1;", "\n  const owner = { ownerIntentsUnreadable: false };\n  cycle += 1;");
   assert.notEqual(noHold, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noHold)), "a runner that cycles through a pause passed");
+
+  const windowThroughPause = src.replace('\n    if (says === "HOLD") continue;', "");
+  assert.notEqual(windowThroughPause, src);
+  assert.ok(fails(() => checkRunnerHonorsOwnerIntents(windowThroughPause)), "a runner whose nightly window runs through a pause passed");
 
   const starvedRuntime = src.replace('{ id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },\n', "");
   assert.notEqual(starvedRuntime, src);

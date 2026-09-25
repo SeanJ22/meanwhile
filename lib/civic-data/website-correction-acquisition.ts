@@ -1,4 +1,7 @@
 /**
+ * @freshness-reads-here — a correction receipt's retrievedAt is the instant its own robots-first read returned,
+ * minted in the function that performed that read.
+ *
  * **EACH WEBSITE CORRECTION, READ AGAIN WHEN THE REFERENCE IS PROMOTED.** (C15, 2026-09-24.)
  *
  * `lib/civic-data/website-corrections.ts` holds the reviewed corrections and

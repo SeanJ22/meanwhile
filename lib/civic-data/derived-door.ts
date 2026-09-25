@@ -47,7 +47,8 @@ const VAULT_HASH = /^sha256-[a-f0-9]{64}$/;
 const instant = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
 const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
 
-function httpsHost(url: string): string | null {
+/** A URL's host when it is a credential-free https URL, lower-cased; null otherwise. */
+export function httpsHost(url: string): string | null {
   try {
     const parsed = new URL(url);
     return parsed.protocol === "https:" && !parsed.username && !parsed.password ? parsed.hostname.toLowerCase() : null;

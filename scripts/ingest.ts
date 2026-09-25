@@ -1,6 +1,9 @@
 /**
  * Run one source adapter locally.
  *
+ * @freshness-reads-here — a derived family member's retrievedAt is the instant its own read returned, minted in
+ * readDerivedFamilyMember, the function that performed that read (C16).
+ *
  *   pnpm ingest mock
  *   pnpm ingest composite -- --promote --only-partition=<contract-id>
  *

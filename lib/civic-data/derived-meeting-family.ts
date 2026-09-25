@@ -32,6 +32,7 @@ import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import { sourceProjectionEvidence, type RoutineCandidate, type RoutineRemovalEvidence } from "./types.ts";
 import type { DerivedFamilyMemberReport, MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
+import { mark as markCarried } from "../meetings/carry-forward.ts";
 
 export const DERIVED_FAMILY_SOURCE_ID = "meetings-derived-routes" as const;
 
@@ -51,16 +52,11 @@ export function familyMemberSlice(previous: MeetingsSnapshot | null, member: Der
 }
 
 /**
- * A carried row keeps the instant it was really read; a row already carried keeps its first mark. Like
- * `lib/meetings/carry-forward.ts`, the mark names no reason: a member is held for an outage, a read off its host, or a
- * review, and no one sentence is true of all three. The version's `derivedMembers` says which.
+ * A held member's rows are marked by carry-forward's own mark: a row keeps the instant it was really read, a row
+ * already carried keeps its first mark, and the mark names no reason (a member is held for an outage, a read off its
+ * host, or a review, and no one sentence is true of all three). The version's `derivedMembers` says which.
  */
-export function carriedMember(meeting: Meeting, source: string, previousGeneratedAt: string): Meeting {
-  if (meeting.carried) return meeting;
-  const collected = meeting.provenance?.collectedAt;
-  const lastFreshAt = Number.isFinite(Date.parse(collected ?? "")) ? (collected as string) : previousGeneratedAt;
-  return { ...meeting, carried: { source, lastFreshAt } };
-}
+export const carriedMember = markCarried;
 
 /** One member's read, as the family child made it. */
 export interface FamilyMemberRead {

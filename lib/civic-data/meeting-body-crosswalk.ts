@@ -34,6 +34,8 @@
  * PURE: no fetch, no clock, no store.
  */
 
+import { httpsHost } from "./derived-door.ts";
+
 /** The owner's authorization, cited on every row. */
 export const CROSSWALK_CITATION =
   "C16: owner decision recorded 2026-09-24T22:43Z (agents may review and promote the records connecting a calendar to its governing body, on saved official evidence)" as const;
@@ -96,15 +98,6 @@ export function subBodyId(ocdId: string, bodyName: string): string {
 
 export function crosswalkRowId(bodyId: string, kind: CrosswalkKind): string {
   return `${bodyId}|${kind}`;
-}
-
-function httpsHost(url: string): string | null {
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:" && !parsed.username && !parsed.password ? parsed.hostname.toLowerCase() : null;
-  } catch {
-    return null;
-  }
 }
 
 /** Why one row does not establish its body and its meetings, or null when it does. */

@@ -6,11 +6,12 @@ This page keeps the agent-specific resume and provider details in one place.
 
 ## The authority, in one sentence
 
-Read the [authority precedence in CLAUDE.md](../CLAUDE.md#authority-precedence-ruling-272).
-`AGENTS.md` is its generated mirror, not a separate authority. The ledger is
-the canonical store used to generate governance views; it does not introduce a
-second precedence order. Check the [ruling index](rulings.md) before relying on
-older comments or session notes.
+Read [Sean's standing decisions](rulings.md) first — the single source for owner
+policy — then the working guide [CLAUDE.md](../CLAUDE.md), which `AGENTS.md`
+mirrors for Codex; neither is a separate version of those decisions. The
+governance ledger and its generated views, including the
+[historical ruling index](governance/rulings-index.md), are historical evidence:
+use them to understand older comments or session notes, not as active instructions.
 
 ## First commands, in order
 
@@ -22,7 +23,7 @@ workspaces stay protected until their own dependencies are resolved.
 ```bash
 pnpm session:start --check                     # stale main, CLAUDE.md intact, port 3000, hooks
 git fetch origin && git rev-parse origin/main  # the exact current main SHA
-pnpm governance:open --task <domain>           # current authority + policy + decisions + snapshot
+pnpm governance:open --task <domain>           # authority pointers + ledger views (historical) + work state
 pnpm workstream:status                         # canonical work state + the EXACT resume cursor
 pnpm tracker:open                              # open rows, Needs Sean, the author's own notes
 pnpm stamp                                     # the only source of a date you write
@@ -42,13 +43,13 @@ meta-governance.
 
 | You need | Command |
 | --- | --- |
-| current authority & governance | `pnpm governance:open --task <domain>` |
-| relevant task policy | the same command prints `docs/governance/policies/<domain>.md` to read |
+| standing decisions | [`docs/rulings.md`](rulings.md), applied by `CLAUDE.md` / `AGENTS.md` |
+| earlier ledger rulings for a domain (historical evidence) | `pnpm governance:open --task <domain>` |
 | exact current main SHA | `git rev-parse origin/main` |
 | workstream / session resume state | `pnpm workstream:status` (cursor + open streams) |
-| active acceptance denominator | the session directive; the SESSION EFFICIENCY LAW (`docs/governance/session-efficiency.md`) turns it into the finite table |
+| active acceptance denominator | the session directive |
 | unresolved Needs Sean / carried items | `pnpm tracker:open` and `docs/frontier.md` |
-| shipping law | `pnpm governance:open --task shipping-ci`; use the current policy, not an old ruling citation |
+| how work ships | `docs/rulings.md` §5–6 and §9, then the gates and handoff commands below |
 | required gates | `pnpm gates` and the exact checks required by the current CI workflow |
 | how to close out and hand off | `pnpm handoff --check` (report), then `pnpm handoff --ship` (the only path that merges) |
 

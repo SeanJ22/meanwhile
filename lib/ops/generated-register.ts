@@ -76,13 +76,16 @@ export const GENERATED: GeneratedArtifact[] = [
      * 699 only in the other.
      *
      * It is generated now, from `docs/governance/ledger.jsonl`, and kept so
-     * every `RULING n` reference in this repository still resolves.
+     * every `RULING n` reference in this repository still resolves. Since
+     * 2026-09-25 it is written to `docs/governance/rulings-index.md`:
+     * `docs/rulings.md` now holds Sean's adopted standing decisions and is
+     * not generated.
      *
      * Pure: after the 2026-09-03 cutover the compiler reads the committed
      * ledger and nothing else — no overlay module, no clock, no network — and
      * never writes the ledger back.
      */
-    path: "docs/rulings.md",
+    path: "docs/governance/rulings-index.md",
     command: "corepack pnpm governance:compile",
     pure: true,
   },

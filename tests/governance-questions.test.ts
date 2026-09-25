@@ -30,6 +30,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const index = loadIndex();
 const law = currentLawText(ROOT);
 const answers = currentClaims(index.records);
+/**
+ * Sean's standing decisions, adopted 2026-09-25 as the single source for owner
+ * policy. Where a question's answer used to be read from the old root
+ * constitution, it is now read here — the first file the startup path names.
+ */
+const rulings = readFileSync(join(ROOT, "docs/rulings.md"), "utf8").replace(/\s+/g, " ");
 
 /** Collapse hard wrapping, so a match is over the sentence a reader sees. */
 function flat(s: string): string {
@@ -55,8 +61,8 @@ test("Q: What is the shipping / close-out path?", () => {
 
 test("Q: What counts as an absence? Does any number of attempted routes earn one?", () => {
   assert.equal(claim("discovery.absence_standard"), "argued-never-counted");
-  // and the constitution says it in words a reader can act on
-  assert.ok(whereInLaw("A finite attempt count never earns an absence", ROOT));
+  // and Sean's standing decisions say it in words a reader can act on
+  assert.match(rulings, /A checklist or fixed number of attempts is not the limit\./);
   assert.ok(whereInLaw("I have run out of ideas", ROOT));
 });
 
@@ -89,9 +95,11 @@ test("Q: If the current client cannot fetch robots.txt, what exactly is known ab
 /* --------------------------------------------- answered by the constitution */
 
 test("Q: Which document wins if history disagrees with current policy?", () => {
-  const where = whereInLaw("History explains. History never overrides.", ROOT);
-  assert.equal(where, "CLAUDE.md", "the precedence model is in the root constitution");
-  assert.match(readFileSync(join(ROOT, "CLAUDE.md"), "utf8"), /Authority precedence/);
+  // Since 2026-09-25 Sean's standing decisions answer it (§1, §9), and the
+  // working guide repeats that a historical label is not current policy.
+  assert.match(rulings, /Sean's current explicit instructions take priority over older project instructions/);
+  assert.match(rulings, /Historical rulings are evidence, not independently active instructions/);
+  assert.match(readFileSync(join(ROOT, "CLAUDE.md"), "utf8"), /a historical ACTIVE label does not establish current policy/);
 });
 
 test("Q: What governs candidate display right now?", () => {
@@ -100,9 +108,9 @@ test("Q: What governs candidate display right now?", () => {
   const text = readFileSync(policy, "utf8");
   assert.match(text, /Never generate a candidate position/);
   assert.match(text, /RULING 26|Collection state never governs display|SHOW EVERYTHING WE FIND/i);
-  // and the constitution carries the cross-cutting version, so a session that
-  // reads only the root file is not misled about it.
-  assert.ok(whereInLaw("Show everything we find", ROOT));
+  // and Sean's standing decisions carry the cross-cutting version (§3), so a
+  // session that reads only the startup files is not misled about it.
+  assert.match(rulings, /Missing information must not hide independently verified information/);
 });
 
 test("Q: What happens when a route is blocked?", () => {
@@ -119,14 +127,13 @@ test("Q: When may a session stop before the workstream is complete?", () => {
   // the rule — a removed instruction that survives in the file a session reads
   // is not removed.
   const raw = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  const claude = flat(raw);
   const lawFlat = flat(law);
 
-  // The one-line form is in the constitution; the full vocabulary is in the
-  // meta-governance policy (RULING 273). Both are current law.
-  assert.match(claude, /A session does not measure itself/i);
-  assert.match(claude, /keep working while authorized/i);
-  assert.match(claude, /stop only when complete, redirected, or actually prevented/i);
+  // Since 2026-09-25 the rule a session reads first is Sean's adopted wording
+  // (rulings §1, §5); the full vocabulary is in the ledger's meta-governance
+  // policy view (RULING 273).
+  assert.match(rulings, /Stay on the original objective until it is completed, a fatal error derails it, or Sean changes it/);
+  assert.match(rulings, /Do not stop just to report progress while useful work remains/);
   assert.match(lawFlat, /CLEAN_HANDOFF_AUTHOR_STOP/);
   assert.match(lawFlat, /external stop is never inferred/i);
   assert.match(lawFlat, /Merge cadence is not session cadence/i);
@@ -289,7 +296,7 @@ test("Q: every route we know is blocked and the record exists. Is that an absenc
 
 test("Q: the vendor host that serves the agenda PDF disallows us. Is the agenda unavailable?", () => {
   assert.equal(claim("acquisition.record_identity"), "government-record-with-representations");
-  assert.ok(whereInLaw("VENDOR != RECORD", ROOT));
+  assert.match(rulings, /Finding a link or knowing information exists is not completion/);
   // The distinction that does the work: the URL is a representation, and the
   // record belongs to the government.
   assert.match(
@@ -301,7 +308,7 @@ test("Q: the vendor host that serves the agenda PDF disallows us. Is the agenda 
 
 test("Q: the API returned 200. May the adapter skip the accessible agenda and the PDF?", () => {
   assert.equal(claim("acquisition.representation_coverage"), "every-material-representation");
-  assert.ok(whereInLaw("ONE ROUTE SUCCESS", ROOT));
+  assert.match(rulings, /A healthy feed does not prove complete coverage/);
   assert.match(
     flat(law),
     /an API 200 never retires the PDF|Materially distinct representations carry different facts/i,
@@ -313,7 +320,7 @@ test("Q: the API returned 200. May the adapter skip the accessible agenda and th
 
 test("Q: an API key would help. May this record's work stop until the author answers?", () => {
   assert.equal(claim("escalation.access_request"), "parallel-never-blocking");
-  assert.ok(whereInLaw("NEEDS SEAN != STOP", ROOT));
+  assert.match(rulings, /continue independent work, and resume after he acts/);
   assert.match(
     flat(law),
     /never closes, pauses or satisfies the obligation the row is about/i,
@@ -369,7 +376,7 @@ test("Q: May the standing autonomous system perform bounded public-source scouti
     /Level 1 never authorizes promotion because a model found something/i,
     "current law no longer withholds promotion from a model's finding",
   );
-  assert.match(flat(law), /Absence is argued, never asserted/);
+  assert.match(rulings, /“Not found in the sources checked” must not become “does not exist\.”/);
   const r215 = index.resolve("RULING 215");
   assert.ok(r215 && ["ACTIVE", "AMENDED"].includes(r215.status), "RULING 215 stopped being current");
 });
@@ -388,7 +395,7 @@ test("answering a CURRENT question never requires the history files", () => {
   // The bar: if answering a current-rule question still requires reading the
   // chronology, the remediation is not finished. So the history is measured
   // against what a session must actually load.
-  const historyBytes = ["docs/governance/history.md", "docs/rulings.md", "docs/governance/ledger.jsonl"]
+  const historyBytes = ["docs/governance/history.md", "docs/governance/rulings-index.md", "docs/governance/ledger.jsonl"]
     .filter((p) => existsSync(join(ROOT, p)))
     .reduce((n, p) => n + Buffer.byteLength(readFileSync(join(ROOT, p), "utf8")), 0);
   const constitution = Buffer.byteLength(readFileSync(join(ROOT, "CLAUDE.md"), "utf8"));

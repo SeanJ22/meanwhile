@@ -40,8 +40,8 @@
     "tests/acquisition-doctrine.test.ts": {
       "names": [
         "AGENTS.md carries the project law as its first project-owned content",
-        "CLAUDE.md states the acquisition doctrine, near the top, undiluted",
         "a session cannot satisfy the doctrine by opening a tracker row",
+        "docs/rulings.md states the acquisition doctrine, near the top, undiluted, and CLAUDE.md applies it",
         "the AGENTS.md mirror has not drifted from current law",
         "the acquisition doctrine is CURRENT canonical law with author provenance"
       ],
@@ -2882,7 +2882,7 @@
         "a non-current record carrying a ruleKey must link to the current holder",
         "an active LAW_DECISION with no ruleKey is refused",
         "current-decisions.md promotes no LAW_DECISION",
-        "every ruling cited in CLAUDE.md as a rule carrier resolves and is current",
+        "every rulings section CLAUDE.md applies exists in docs/rulings.md",
         "governance:compile imports no overlay and never writes the ledger",
         "history never overrides: the reversed clause is gone",
         "numbering facts: 88 and 89 were issued and superseded; 11 is a retired id",

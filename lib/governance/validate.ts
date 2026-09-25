@@ -237,14 +237,18 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
   // The view is a one-line-per-ruling index now, not one section per ruling, so
   // the subject is a table ROW (`| RULING n | ...`) rather than an `## RULING n`
   // heading. The invariant is unchanged; only where the number is read moved.
+  //
+  // Since 2026-09-25 the index lives at `docs/governance/rulings-index.md`:
+  // `docs/rulings.md` now holds Sean's adopted standing decisions and is not
+  // a generated view.
   check("compatibility-view-content");
-  const rulingsPath = join(root, "docs", "rulings.md");
+  const rulingsPath = join(root, "docs", "governance", "rulings-index.md");
   if (existsSync(rulingsPath)) {
     const text = readFileSync(rulingsPath, "utf8");
 
     const undef = (text.match(/RULING undefined/g) ?? []).length;
     if (undef > 0) {
-      bad("docs/rulings.md", "ruling-undefined", `${undef} row(s) render as "RULING undefined"`);
+      bad("docs/governance/rulings-index.md", "ruling-undefined", `${undef} row(s) render as "RULING undefined"`);
     }
 
     const rows = [...text.matchAll(/^\| RULING (.+?) \|/gm)].map((m) => m[1].trim());
@@ -254,13 +258,13 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
     const seenRow = new Set<string>();
     for (const h of rows) {
       if (!/^\d+$/.test(h)) {
-        bad("docs/rulings.md", "malformed-ruling-row", `"| RULING ${h} |" is not a ruling number`);
+        bad("docs/governance/rulings-index.md", "malformed-ruling-row", `"| RULING ${h} |" is not a ruling number`);
         continue;
       }
       seenRow.add(String(Number(h)));
       if (!numericIds.has(String(Number(h)))) {
         bad(
-          "docs/rulings.md",
+          "docs/governance/rulings-index.md",
           "row-without-record",
           `"| RULING ${h} |" resolves to no canonical numeric record`,
         );
@@ -271,7 +275,7 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
         bad(
           `R-${id.padStart(4, "0")}`,
           "record-omitted-from-compatibility-view",
-          "a numbered ruling is missing from docs/rulings.md, so a legacy reference to it stops resolving",
+          "a numbered ruling is missing from docs/governance/rulings-index.md, so a legacy reference to it stops resolving",
         );
       }
     }
@@ -316,21 +320,14 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
 
   // --- policy modules exist and are registered -----------------------------
   check("policy-registration");
-  const constitutionPath = join(root, "CLAUDE.md");
-  const constitution = existsSync(constitutionPath) ? readFileSync(constitutionPath, "utf8") : "";
-  const referenced = new Set<string>();
+  // Until 2026-09-25 `CLAUDE.md` was the index of these policy views and this
+  // check required it to name each one. `CLAUDE.md` is now the working guide
+  // for Sean's standing decisions in `docs/rulings.md`, and the ledger's policy
+  // views are historical evidence, so it no longer names them.
   for (const r of records) {
     if (!r.operativePolicy) continue;
-    referenced.add(r.operativePolicy);
     if (!existsSync(join(root, r.operativePolicy))) {
       bad(r.id, "missing-policy", `operativePolicy does not exist on disk: ${r.operativePolicy}`);
-    }
-  }
-  for (const p of referenced) {
-    // The root constitution is the policy INDEX. A policy it does not name is a
-    // policy a session opening on the constitution would never find.
-    if (constitution && !constitution.includes(p)) {
-      bad(p, "policy-not-indexed", "policy module is not registered by the root constitution");
     }
   }
   // And the other direction: a domain with active law must have a policy file.

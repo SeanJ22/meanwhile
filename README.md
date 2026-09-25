@@ -41,12 +41,13 @@ with [session workspace closeout](docs/session-closeout.md). That procedure
 preserves useful deliverables, removes eligible temporary files and task branches,
 and verifies the result. A release note alone is not completed cleanup.
 
-Start with [CLAUDE.md](CLAUDE.md), the root constitution, and follow its policy
-links. [AGENTS.md](AGENTS.md) gives Codex the generated mirror; it is not a
-separate authority. The current authority order is in CLAUDE.md.
+Start with [Sean's standing decisions](docs/rulings.md), the single source for
+owner policy, and the working guide [CLAUDE.md](CLAUDE.md) that applies them.
+[AGENTS.md](AGENTS.md) points Codex to the same decisions and mirrors the same
+guide; it is not a separate authority.
 
-- [Ruling index](docs/rulings.md): check whether an old ruling is still current.
-- [Current decisions](docs/governance/current-decisions.md): active author decisions.
+- [Historical ruling index](docs/governance/rulings-index.md): resolve an old `RULING n` reference. Earlier rulings are evidence, not active instructions.
+- [Ledger decisions](docs/governance/current-decisions.md): earlier recorded decisions, kept as evidence.
 - [Governance system](docs/governance/README.md): the ledger and generated views.
 - [Agent session commands](docs/codex-resume.md): opening, resuming and handing off work.
 - [CI verification and merge efficiency](docs/ci-efficiency.md): check selection, integrity retries, timings and merge windows.
@@ -129,7 +130,7 @@ tests/fixtures/       recorded API responses, no live calls in tests
 
 | What you want | Where it lives |
 |---|---|
-| **The rules.** Non-negotiables, the transparency mandate, the retrieval ladder. Read this before changing anything. | [CLAUDE.md](./CLAUDE.md) |
+| **The rules.** Sean's standing decisions, and the working guide that applies them. Read these before changing anything. | [docs/rulings.md](./docs/rulings.md) · [CLAUDE.md](./CLAUDE.md) |
 | **Capability evidence.** Generated claims and their proving checks; live activity is in the admin console above. | [docs/status-ledger.md](./docs/status-ledger.md) |
 | **Session history.** The append-only session records. The old hand-written "current state" sections (§2, §3, §7) retired into the generated ledger on 2026-08-30. | [docs/state.md](./docs/state.md) |
 | **Repo inventory.** The generated mechanical census — tree, routes, schema, gates, method store, scheduled jobs. Written by `pnpm repo-map`. | [docs/repo-inventory.md](./docs/repo-inventory.md) |

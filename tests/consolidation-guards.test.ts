@@ -153,18 +153,21 @@ test("numbering facts: 88 and 89 were issued and superseded; 11 is a retired id"
   assert.ok(r11 && (r11.kind === "TOMBSTONE" || r11.status === "RETIRED"), "R-0011 must be a retired id");
 });
 
-// --- §7: every ruling CLAUDE.md cites as a rule-carrier is ACTIVE -------------
-test("every ruling cited in CLAUDE.md as a rule carrier resolves and is current", () => {
-  const idx = loadIndex();
+// --- §7: every rule-carrier CLAUDE.md cites resolves -------------------------
+// Until 2026-09-25 CLAUDE.md cited ledger rulings as "(nnn)" and this asserted
+// each was ACTIVE. It is now the working guide for Sean's standing decisions,
+// and its rule-carriers are "rulings §n" references into docs/rulings.md.
+test("every rulings section CLAUDE.md applies exists in docs/rulings.md", () => {
   const claude = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  // Rule-carrier citations are the trailing "(nnn)" tags on non-negotiable lines
-  // and the "(RULING nnn)" section headers.
-  const nums = new Set<string>();
-  for (const m of claude.matchAll(/\((?:RULING\s+)?(\d{2,4})\)/g)) nums.add(m[1]);
-  assert.ok(nums.size > 15, "found too few CLAUDE.md ruling citations — parser drift");
-  for (const n of nums) {
-    const r = idx.resolve(n);
-    assert.ok(r, `CLAUDE.md cites RULING ${n} which resolves to no record`);
-    assert.ok(CURRENT_STATUSES.includes(r!.status), `CLAUDE.md cites RULING ${n} as a rule carrier but it is ${r!.status}`);
+  const rulings = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
+  const sections = new Set<number>();
+  for (const m of claude.matchAll(/§(\d+)(?:–(\d+))?/g)) {
+    for (let n = Number(m[1]); n <= Number(m[2] ?? m[1]); n += 1) sections.add(n);
   }
+  assert.ok(sections.size >= 8, "found too few CLAUDE.md rulings references — parser drift");
+  for (const n of sections) {
+    assert.match(rulings, new RegExp(`^## ${n}\\. `, "m"), `CLAUDE.md applies rulings §${n}, which docs/rulings.md does not have`);
+  }
+  // And it no longer carries a ledger ruling as though it were current policy.
+  assert.doesNotMatch(claude, /\((?:RULING\s+)?\d{2,4}\)/, "CLAUDE.md cites a ledger ruling as a rule carrier");
 });

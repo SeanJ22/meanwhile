@@ -74,7 +74,7 @@ test("every generated governance view reproduces byte-for-byte", () => {
       "docs/governance/current-decisions.md",
       "docs/governance/history.md",
       "docs/governance/constitution.md",
-      "docs/rulings.md",
+      "docs/governance/rulings-index.md",
       "docs/governance/policies/discovery.md",
       "docs/governance/policies/meta-governance.md",
     ]) {
@@ -91,11 +91,11 @@ test("every generated governance view reproduces byte-for-byte", () => {
 
 test("a hand-edited generated view is caught by governance:check", () => {
   // The guard is shown catching the real thing rather than asserted to work
-  // (RULING 110). Somebody edits `docs/rulings.md` by hand, as they did for
+  // (RULING 110). Somebody edits the generated ruling index by hand, as they did for
   // months; the check must go red.
   const dir = scratchRepo();
   try {
-    const p = join(dir, "docs", "rulings.md");
+    const p = join(dir, "docs", "governance", "rulings-index.md");
     writeFileSync(p, readFileSync(p, "utf8") + "\n\n## RULING 999 — smuggled in by hand\n", "utf8");
     let failed = false;
     try {
@@ -160,24 +160,9 @@ test("the constitution stays a ROOT constitution, not a second copy of the polic
   // words; this asserts the constitution has not grown back into one.
   assert.ok(words < 12_000, `the root constitution is ${words} words and should stay far below the 41,699 it replaced`);
 
-  // And it must still index every policy, or a session opening on it cannot
-  // find the domain law.
-  for (const d of [
-    "discovery",
-    "rendering-neutrality",
-    "data-privacy",
-    "sources-licensing",
-    "shipping-ci",
-    "tracker-workflow",
-    "visual-feedback",
-    "business",
-    "meta-governance",
-  ]) {
-    assert.ok(
-      claude.includes(`docs/governance/policies/${d}.md`),
-      `the constitution must index the ${d} policy`,
-    );
-  }
+  // Since 2026-09-25 it is the working guide for Sean's standing decisions and
+  // must send a session to them, not to the ledger's policy views.
+  assert.ok(claude.includes("docs/rulings.md"), "CLAUDE.md must point to Sean's standing decisions in docs/rulings.md");
 });
 
 test("no superseded operative text sits in current authority", () => {

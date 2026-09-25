@@ -623,8 +623,10 @@ export async function buildContext({
         // is the exact shape of stale confidence this repository refuses.
         "> **Source: `docs/governance/ledger.jsonl`, the canonical governance store, verbatim.**",
         "> Both hand-written copies of each ruling are carried where they diverged.",
-        "> `CLAUDE.md` is the authority; this is a copy of it, pinned here because the",
-        "> failure RULING 88 fixes is a session not knowing there was anything to look up.",
+        "> Since 2026-09-25 Sean's standing decisions are `docs/rulings.md`; this ledger",
+        "> text is historical evidence, not an independently active instruction. It is",
+        "> pinned here because the failure RULING 88 fixes is a session not knowing there",
+        "> was anything to look up.",
         "> `tests/context-pinned-conduct.test.ts` fails the build if the two diverge.",
         "",
         conduct.body,
@@ -642,10 +644,10 @@ export async function buildContext({
     put(
       `## Rulings — ${rulings.headings.length} recorded`,
       "",
-      "Source: `docs/rulings.md`, append-only. **This is an index, not the text.**",
-      "`CLAUDE.md` is law; these are the author's calls that are not, and a session",
-      "told to hardcode a ruling as fact reads the file rather than the chat it came",
-      "from. Each entry there names what it supersedes.",
+      "Source: `docs/governance/ledger.jsonl` (indexed in `docs/governance/rulings-index.md`).",
+      "**This is an index, not the text.** Since 2026-09-25 Sean's standing decisions are",
+      "`docs/rulings.md`, the single source for owner policy; the ledger records listed",
+      "here are historical evidence, not independently active instructions.",
       "",
     );
     if (rulings.failure) {

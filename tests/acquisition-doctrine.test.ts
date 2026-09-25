@@ -4,7 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { currentLawText } from "../lib/governance/current-law.ts";
 import { loadIndex } from "../lib/governance/ledger.ts";
 import { CURRENT_STATUSES, type SemanticClaim } from "../lib/governance/schema.ts";
 
@@ -61,11 +60,12 @@ const flat = (text: string) => text.replace(/\s+/g, " ");
  * ## What this file therefore asserts
  *
  * 1. the canonical law exists, is CURRENT, and carries author provenance;
- * 2. `CLAUDE.md` still states it, near the top, undiluted;
+ * 2. `docs/rulings.md` §2 still states it, near the top, undiluted (Sean's
+ *    adopted wording since 2026-09-25), and `CLAUDE.md` applies it;
  * 3. `AGENTS.md` still carries the project-law block as its FIRST
  *    project-owned content, with the generated block intact;
- * 4. the agent mirror has not DRIFTED — every operative claim it makes is a
- *    claim current law also makes.
+ * 4. the agent mirror has not DRIFTED — every rulings section the working
+ *    guide applies exists, and the mirror carries the same references.
  *
  * Point 4 is the one that matters most over time. A mirror is only safe while
  * something checks that it is still a mirror.
@@ -170,70 +170,56 @@ test("the acquisition doctrine is CURRENT canonical law with author provenance",
 });
 
 /**
- * The mantras, in the author's own shorthand.
+ * The doctrine, in the words Sean adopted on 2026-09-25.
  *
- * These are asserted against `CLAUDE.md` and `AGENTS.md` rather than against
- * the ledger, because their job is to be UNMISSABLE to a session that reads
- * only the normal repository instructions. That was the directive's stated
- * invariant: a fresh coding agent must meet the doctrine without being handed
- * the brief that created it.
+ * Until that date these were the mantras in the author's shorthand ("IT
+ * EXISTS = GET IT", "VENDOR != RECORD", ...), asserted against the old root
+ * constitution. Sean then adopted `docs/rulings.md` as the single source for
+ * his standing decisions, and its §2 carries the doctrine in plain words;
+ * `CLAUDE.md` and `AGENTS.md` send every agent there. The job is unchanged:
+ * the doctrine must be UNMISSABLE to a session that reads only the normal
+ * repository instructions.
  */
-const MANTRAS = [
-  "IT EXISTS = GET IT",
-  "VENDOR != RECORD",
-  "URL != RECORD",
-  "ONE ROUTE SUCCESS",
-  "EFFORT != EVIDENCE",
-  "EXHAUSTION != DISPOSITION",
-  "THE WORKER MAY STOP; THE OBLIGATION DOES NOT",
+const DOCTRINE = [
+  "Find a way to get the information, parse it, verify it, and push it to readers.",
+  "Finding a link or knowing information exists is not completion.",
+  "A failed route does not end the obligation.",
+  "A healthy feed does not prove complete coverage.",
+  "One failed step does not establish that the information is unavailable.",
+  "“Not found in the sources checked” must not become “does not exist.”",
 ] as const;
 
-test("CLAUDE.md states the acquisition doctrine, near the top, undiluted", () => {
-  const text = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
+
+test("docs/rulings.md states the acquisition doctrine, near the top, undiluted, and CLAUDE.md applies it", () => {
+  const rulings = read("docs/rulings.md");
 
   /*
-   * Post-consolidation the doctrine is the transparency mandate's operative
-   * half and carries the acquisition mantras with it, near the top: it must
-   * follow the transparency mandate and precede the non-negotiables that
-   * inherit from it.
+   * Near the top: §2 follows only the section that sets the direction, and
+   * precedes the publishing and coverage rules that inherit from it.
    */
-  const mandate = text.indexOf("## The transparency mandate");
-  const nonNegotiables = text.indexOf("## The non-negotiables");
-  assert.ok(mandate > 0 && nonNegotiables > 0, "CLAUDE.md's section layout changed shape");
-  assert.ok(
-    mandate < nonNegotiables,
-    "the transparency mandate/doctrine has been pushed below the non-negotiables — " +
-      "the rules that inherit from it now read first",
-  );
-
-  for (const m of MANTRAS) {
-    assert.ok(flat(text).includes(flat(m)), `CLAUDE.md no longer carries the mantra "${m}"`);
-  }
+  const doctrine = rulings.indexOf("## 2. Get the public information to readers");
+  const next = rulings.indexOf("## 3. ");
+  assert.ok(doctrine > 0 && next > doctrine, "docs/rulings.md's section layout changed shape");
 
   /*
-   * The clauses that carry the weight. Deleting a mantra is loud; softening
-   * the sentence under it is quiet, and it is how a rule stops meaning what it
+   * The clauses that carry the weight. Deleting a section is loud; softening
+   * the sentence in it is quiet, and it is how a rule stops meaning what it
    * said while still appearing to say it.
    */
-  const UNDILUTED = [
-    "no upstream success implies a downstream one",
-    "The vendor is not the record",
-    "one route never collapses the source universe",
-    "Acquisition without promotion is inventory, not product",
-    "NEEDS SEAN != STOP",
-    "THE WORKER MAY STOP; THE OBLIGATION DOES NOT",
-  ];
-  for (const clause of UNDILUTED) {
+  const section = flat(rulings.slice(doctrine, next));
+  for (const clause of DOCTRINE) {
     assert.ok(
-      flat(text).includes(flat(clause)),
-      `CLAUDE.md's acquisition doctrine lost the operative clause "${clause.replace(/\n/g, " ")}" — ` +
-        `the section survived but the rule in it did not`,
+      section.includes(flat(clause)),
+      `docs/rulings.md §2 lost the operative clause "${clause}" — the section survived but the rule in it did not`,
     );
   }
+
+  assert.match(flat(read("CLAUDE.md")), /Apply rulings §2–4 and §7/, "CLAUDE.md no longer applies rulings §2");
 });
 
 test("AGENTS.md carries the project law as its first project-owned content", () => {
-  const text = readFileSync(join(ROOT, "AGENTS.md"), "utf8");
+  const text = read("AGENTS.md");
 
   const end = text.indexOf("<!-- END:nextjs-agent-rules -->");
   assert.ok(
@@ -244,92 +230,64 @@ test("AGENTS.md carries the project law as its first project-owned content", () 
       "That has happened to this repository before (tracker R01).",
   );
 
-  const law = text.indexOf("# MEANWHILE — NON-NEGOTIABLE PROJECT LAW");
-  assert.ok(law > 0, "AGENTS.md has lost the project-law block");
-  assert.ok(law > end, "the project-law block moved INSIDE the generated region and will be erased");
+  const law = text.indexOf("# MEANWHILE — INSTRUCTIONS FOR CODEX AND EVERY CODING AGENT");
+  assert.ok(law > 0, "AGENTS.md has lost the project-instructions block");
+  assert.ok(law > end, "the project-instructions block moved INSIDE the generated region and will be erased");
 
   /*
    * FIRST project-owned content, asserted as "nothing but whitespace between
-   * the generated block and the law". An agent that reads the top of the file
-   * and stops must still have met the doctrine.
+   * the generated block and the instructions". An agent that reads the top of
+   * the file and stops must still have been sent to Sean's standing decisions.
    */
   const between = text.slice(end + "<!-- END:nextjs-agent-rules -->".length, law);
   assert.equal(
     between.trim(),
     "",
-    `${JSON.stringify(between.trim().slice(0, 80))} was inserted ahead of the project law — ` +
+    `${JSON.stringify(between.trim().slice(0, 80))} was inserted ahead of the project instructions — ` +
       `it is no longer the first thing an agent reads after the generated block`,
   );
 
-  for (const m of MANTRAS) {
-    assert.ok(
-      flat(text).includes(flat(m)),
-      `the AGENTS.md mirror no longer carries the mantra "${m}"`,
-    );
-  }
-  for (const extra of ["ROUTE FAILED", "BLOCKED", "EXTRACTION FAILED", "NEEDS SEAN != STOP"]) {
-    assert.ok(flat(text).includes(extra), `the AGENTS.md mirror no longer carries "${extra}"`);
-  }
+  const head = flat(text.slice(law, law + 1200));
+  assert.match(head, /Sean's standing decisions are `docs\/rulings\.md`/, "AGENTS.md no longer sends Codex to docs/rulings.md first");
+  assert.ok(flat(text).includes("Apply rulings §2–4 and §7"), "the AGENTS.md mirror no longer applies rulings §2");
 });
 
 test("the AGENTS.md mirror has not drifted from current law", () => {
-  const agents = readFileSync(join(ROOT, "AGENTS.md"), "utf8");
-  const law = currentLawText(ROOT);
+  const agents = read("AGENTS.md");
+  const claude = read("CLAUDE.md");
+  const rulings = read("docs/rulings.md");
 
   /*
    * **THE DRIFT CHECK.**
    *
-   * A mirror is safe only while something proves it is still a mirror. Two
-   * directions, and they fail differently:
-   *
-   *   mirror says something law does not   -> an agent obeys a rule nobody
-   *                                           adopted, believing it is law
-   *   law says something the mirror omits  -> an agent misses a rule that
-   *                                           binds it
-   *
-   * Both are checked here on the doctrine's operative vocabulary. This cannot
-   * prove semantic identity of two prose documents and does not claim to — it
-   * proves that the load-bearing statements travel together, which is the part
-   * that actually rots.
+   * A mirror is safe only while something proves it is still a mirror, and a
+   * pointer is safe only while its target exists. So: every rulings section
+   * the working guide applies must exist in docs/rulings.md, and the AGENTS.md
+   * mirror must carry the same references. This cannot prove semantic
+   * identity of two prose documents and does not claim to — it proves that
+   * the references an agent follows still land.
    */
-  for (const m of MANTRAS) {
-    assert.ok(
-      flat(law).includes(flat(m)),
-      `the AGENTS.md mirror states "${m}" but current law no longer does. ` +
-        `The ledger and CLAUDE.md are the authority; a mirror that outlives its source ` +
-        `is an agent obeying a rule nobody adopted.`,
-    );
-    assert.ok(
-      flat(agents).includes(flat(m)),
-      `current law states "${m}" but the AGENTS.md mirror does not — a coding agent reading ` +
-        `only AGENTS.md would never meet it`,
-    );
+  const cited = new Set<number>();
+  for (const m of claude.matchAll(/§(\d+)(?:–(\d+))?/g)) {
+    const from = Number(m[1]);
+    const to = Number(m[2] ?? m[1]);
+    for (let n = from; n <= to; n += 1) cited.add(n);
+  }
+  assert.ok(cited.size >= 8, `CLAUDE.md cites only ${cited.size} rulings sections — parser drift`);
+  for (const n of cited) {
+    assert.match(rulings, new RegExp(`^## ${n}\\. `, "m"), `CLAUDE.md applies rulings §${n}, which docs/rulings.md does not have`);
+  }
+  for (const m of claude.matchAll(/(?:rulings )?§\d+(?:–\d+)?/g)) {
+    assert.ok(agents.includes(m[0]), `the AGENTS.md mirror does not carry "${m[0]}"`);
   }
 
   /*
-   * The mirror must say where it is NOT the authority. Without this line an
-   * agent that finds a disagreement has no rule for resolving it, and the
-   * convenient reading — "the file I already have open wins" — is the wrong
-   * one every time.
+   * The mirror must say which file wins. Without this line an agent that finds
+   * a disagreement has no rule for resolving it, and the convenient reading —
+   * "the file I already have open wins" — is the wrong one every time.
    */
-  assert.match(
-    flat(agents),
-    /the ledger wins/i,
-    "the AGENTS.md mirror no longer defers to the canonical ledger, so a drift between " +
-      "them has no stated resolution",
-  );
-  assert.ok(
-    agents.includes("docs/governance/ledger.jsonl"),
-    "the AGENTS.md mirror no longer names the canonical store it mirrors",
-  );
-  for (const rule of CANONICAL) {
-    const n = rule.id.replace("R-0", "").replace(/^0+/, "");
-    assert.ok(
-      agents.includes(`RULING ${n}`) || agents.includes(`(${n})`) || agents.includes(`${n},`),
-      `the AGENTS.md mirror no longer cites RULING ${n} (${rule.what}), so an agent cannot ` +
-        `reach the canonical text from it`,
-    );
-  }
+  assert.ok(agents.includes("`CLAUDE.md` is right"), "the AGENTS.md mirror no longer defers to CLAUDE.md");
+  assert.ok(agents.includes("docs/rulings.md"), "the AGENTS.md mirror no longer names Sean's standing decisions");
 });
 
 test("a session cannot satisfy the doctrine by opening a tracker row", () => {
@@ -337,23 +295,16 @@ test("a session cannot satisfy the doctrine by opening a tracker row", () => {
    * The directive names this failure by name, and it is the one a capable
    * session is most likely to commit: the work is real, large and executable,
    * so it gets WRITTEN DOWN instead of done, and the row is then reported as
-   * progress.
-   *
-   * `CLAUDE.md` already carried "A tracker row is a record of work, never a
-   * substitute for it" under the engineering-organization rules. The doctrine
-   * needs it too, because the row is exactly what a blocked route tempts a
-   * session into producing INSTEAD of another route.
+   * progress. Sean's adopted wording is rulings §10.
    */
-  const law = currentLawText(ROOT);
   assert.match(
-    flat(law),
-    /a tracker row is a record of work, never a substitute for it/i,
-    "current law lost the rule that a tracker row is not work completion",
+    flat(read("docs/rulings.md")),
+    /A task recorded for later is not completed work/,
+    "docs/rulings.md lost the rule that a recorded task is not work completion",
   );
-  const agents = readFileSync(join(ROOT, "AGENTS.md"), "utf8");
   assert.match(
-    flat(agents),
-    /a tracker row is a record of work, never a substitute for it/i,
-    "the AGENTS.md mirror lost the rule that a tracker row is not work completion",
+    flat(read("AGENTS.md")),
+    /Apply rulings §10/,
+    "the AGENTS.md mirror no longer applies rulings §10",
   );
 });

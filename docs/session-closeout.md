@@ -6,7 +6,7 @@ bookends; it is not another source of project law.
 
 ## Open one workspace
 
-Read `CLAUDE.md` (or its generated `AGENTS.md` mirror), the task policy and the
+Read `docs/rulings.md`, `CLAUDE.md` (or its generated `AGENTS.md` mirror) and the
 existing workstream cursor first. From a stable checkout, use:
 
 ```text

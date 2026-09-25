@@ -299,9 +299,12 @@ test("RULING 190 and RULING 191 are in force, with the operative law where they 
     ["ACTIVE", "AMENDED"].includes(r.status as string),
     `R-0273 is ${String(r.status)} and does not bind`,
   );
-  const constitution = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  assert.match(constitution, /\(273\)/);
-  assert.match(constitution, /Independent work runs in parallel by default/i);
+  // Since 2026-09-25 the rule an agent reads is Sean's adopted wording in
+  // docs/rulings.md §5, which CLAUDE.md applies.
+  const rulings = readFileSync(join(ROOT, "docs/rulings.md"), "utf8").replace(/\s+/g, " ");
+  assert.match(rulings, /Run independent work in parallel without conflicting edits or interfering tests/);
+  const guide = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  assert.match(guide, /parallelize independent work/i);
 });
 
 test("this session's own plan is on disk and passes its own rule", () => {

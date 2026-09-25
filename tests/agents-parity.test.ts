@@ -55,12 +55,12 @@ test("AGENTS.md is the Next block plus a byte-exact generated mirror of CLAUDE.m
   const inside = text.slice(begin, end);
   assert.ok(inside.includes(body.split("\n")[0]), "CLAUDE.md's first line is in the mirror");
   assert.ok(inside.includes(body.split("\n").at(-1) ?? ""), "CLAUDE.md's last line is in the mirror");
-  assert.ok(inside.includes("## The transparency mandate"), "the doctrine section travels");
-  assert.ok(inside.includes("## Ask before"), "the ask-before section travels");
+  assert.ok(inside.includes("## Acquire, publish, and learn"), "the acquisition section travels");
+  assert.ok(inside.includes("## Finish and report"), "the reporting section travels");
 });
 
 test("SEEDED: a hand edit inside the mirror is STALE, by line", () => {
-  const planted = normalize(AGENTS).replace("## The transparency mandate", "## The transparency suggestion");
+  const planted = normalize(AGENTS).replace("## Verify before declaring completion", "## Verify when convenient");
   assert.notEqual(planted, normalize(AGENTS), "the plant must land");
   const verdict = checkAgentsFile(planted, CLAUDE);
   assert.equal(verdict.ok, false);
@@ -69,7 +69,7 @@ test("SEEDED: a hand edit inside the mirror is STALE, by line", () => {
 });
 
 test("SEEDED: a CLAUDE.md change that was not regenerated is STALE, and the digest says so", () => {
-  const amended = normalize(CLAUDE).replace("Never generate a candidate position.", "Never generate a candidate position, ever.");
+  const amended = normalize(CLAUDE).replace("Start ready work now,", "Start ready work eventually,");
   assert.notEqual(amended, normalize(CLAUDE), "the amendment must land");
   const verdict = checkAgentsFile(AGENTS, amended);
   assert.equal(verdict.ok, false);
@@ -101,10 +101,13 @@ test("SEEDED: a file with no Next.js block is REFUSED — the generator never in
 
 test("the mirror says it is not an authority, names the canonical store, and says who wins", () => {
   const text = normalize(AGENTS);
-  const notice = text.slice(text.indexOf(MIRROR_BEGIN_PREFIX), text.indexOf("# CLAUDE.md — the root constitution"));
+  const notice = text.slice(text.indexOf(MIRROR_BEGIN_PREFIX), text.indexOf(normalize(CLAUDE).split("\n")[0]));
   assert.match(notice, /NOT an authority/);
-  assert.match(notice, /the ledger wins/i);
-  assert.ok(notice.includes("docs/governance/ledger.jsonl"));
+  /* Since 2026-09-25 the canonical store of owner policy is docs/rulings.md,
+     and the notice sends Codex there rather than to a second copy. */
+  assert.match(notice, /Sean's standing decisions are `docs\/rulings\.md`/);
+  assert.match(notice, /binds you exactly as it binds Claude/);
+  assert.match(notice, /not a separate version of Sean's policies/);
   assert.ok(notice.includes("CLAUDE.md` is right"), "the notice says CLAUDE.md wins over the mirror");
   assert.ok(notice.includes("pnpm agents:sync"), "the notice names the regenerate command");
 });

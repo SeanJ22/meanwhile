@@ -2,6 +2,12 @@
 
 **Adopted 2026-08-26, the governance remediation.**
 
+**Since 2026-09-25, Sean's standing decisions are [`docs/rulings.md`](../rulings.md),
+the single source for owner policy, and `CLAUDE.md` / `AGENTS.md` are the working
+guide that applies them.** The ledger and every view generated from it are
+historical evidence, not independently active instructions (`docs/rulings.md` §9).
+This page still describes how that machinery works.
+
 This directory replaces a pair of hand-maintained authorities with one canonical
 store and a set of generated views. What follows is what a person needs to
 operate it. The rules it implements are RULINGS 172 through 186; the reasoning
@@ -37,13 +43,14 @@ the 169/170 mismatch was one visible instance of it.
 ## The pieces
 
 ```
-CLAUDE.md                              ROOT CONSTITUTION — current cross-cutting law only
+docs/rulings.md                        SEAN'S STANDING DECISIONS (since 2026-09-25). Hand-maintained; not generated.
+CLAUDE.md                              WORKING GUIDE that applies docs/rulings.md; AGENTS.md mirrors it.
 docs/governance/ledger.jsonl           CANONICAL. One typed record per line; new records append.
-docs/governance/policies/*.md          GENERATED. Current law, per domain.
-docs/governance/current-decisions.md   GENERATED. Active non-law decisions, by domain.
+docs/governance/policies/*.md          GENERATED. The ledger's policy view, per domain (historical evidence).
+docs/governance/current-decisions.md   GENERATED. The ledger's non-law decisions, by domain (historical evidence).
 docs/governance/history.md             GENERATED. The full narrative. Not startup context.
 docs/governance/index.json             GENERATED. Ids, aliases, relations, pointers, snapshot.
-docs/rulings.md                        GENERATED. Compatibility view so `RULING n` resolves.
+docs/governance/rulings-index.md       GENERATED. Historical index so `RULING n` resolves (was docs/rulings.md).
 docs/governance/legacy/*.md            PINNED pre-remediation snapshots, byte-verified.
 docs/governance/migration-manifest.json  The preservation receipt.
 docs/governance/session-efficiency.md  OWNER DIRECTIVE, committed VERBATIM (RULING 237). Hand-authored law text;

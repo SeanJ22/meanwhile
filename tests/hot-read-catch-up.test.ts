@@ -266,7 +266,7 @@ test("C6: no round may outlast the pilot's own outer limit on the pass", () => {
     clockTaskCount: ROUTINE_SOURCE_TASKS.length,
     clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
     clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    coordinationRequests: 3,
+    coordinationRequests: 4,
     readerSingleDomains: domains.filter(({ mode }) => mode === "SINGLE").length,
     readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
     readerMeetingDomains: domains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,
@@ -279,7 +279,7 @@ test("C6: no round may outlast the pilot's own outer limit on the pass", () => {
   );
   // The pilot sizes its limit from exactly these inputs.
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(pilot, /ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\(\s*ROUTINE_PASS_BOUND\.commandCount,\s*ROUTINE_PASS_BOUND\.largestFailureDomainSize,\s*\{\s*neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,\s*settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,\s*clockTaskCount: ROUTINE_SOURCE_TASKS\.length,\s*clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,\s*clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,[\s\S]*?coordinationRequests: 3,\s*readerSingleDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "SINGLE"\)\.length,\s*readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,\s*readerMeetingDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "MEETING_AGGREGATE"\)\.length,\s*readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,\s*readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,/);
+  assert.match(pilot, /ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\(\s*ROUTINE_PASS_BOUND\.commandCount,\s*ROUTINE_PASS_BOUND\.largestFailureDomainSize,\s*\{\s*neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,\s*settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,\s*clockTaskCount: ROUTINE_SOURCE_TASKS\.length,\s*clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,\s*clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,[\s\S]*?coordinationRequests: 4,\s*readerSingleDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "SINGLE"\)\.length,\s*readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,\s*readerMeetingDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "MEETING_AGGREGATE"\)\.length,\s*readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,\s*readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,/);
   // One lane's three reads, one after another with the gaps, settle within the worst case.
   const three = meetingTasks.filter((task) => task.acquisitionFailureDomain === meetingTasks[0]!.acquisitionFailureDomain).slice(0, 3);
   const settlementMs = ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS * STANDING_NEON_REQUEST_DEADLINE_MS;

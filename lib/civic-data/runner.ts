@@ -223,6 +223,27 @@ export function routineFailureDomainFrontier(
   return candidates.filter(({ task }) => admitted.has(task.id));
 }
 
+/**
+ * **A PASS STARTS THE READ OWED SOONEST FIRST (C6, 2026-09-25).** The pass's
+ * pool of four children takes the first runnable read in this order. Every task
+ * without a deadline keeps its registry position at the front, as before; the
+ * sitting-window reads follow earliest deadline first. In registry order, a
+ * backlog (after a runner outage, or twice-daily reads that fell due together)
+ * of about a hundred reads took some 15 minutes to drain, and a read owed ten
+ * minutes in could start last: the whole-registry replay in
+ * tests/meeting-refresh-schedule-clock.test.ts read a twice-daily body at 12:00:57.
+ */
+export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number }>(admitted: readonly T[]): T[] {
+  const group = (candidate: T) => candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 0 : 1;
+  return admitted
+    .map((candidate, index) => ({ candidate, index }))
+    .sort((left, right) =>
+      group(left.candidate) - group(right.candidate) ||
+      (group(left.candidate) === 1 ? (left.candidate.deadlineMs! < right.candidate.deadlineMs! ? -1 : left.candidate.deadlineMs! > right.candidate.deadlineMs! ? 1 : 0) : 0) ||
+      left.index - right.index)
+    .map(({ candidate }) => candidate);
+}
+
 /** A restart in the same admission slot makes the same deterministic choice. */
 export function routineFailureDomainRotationSeed(startedAt: string): number {
   const parsed = Date.parse(startedAt);
@@ -555,8 +576,8 @@ export function sittingWindowSignals(
  * its last success, and is eligible 15 minutes or 2 hours before that
  * (sitting-window-admission.ts). Both instants are store-observed first events,
  * so a success is never mistaken for a later failed attempt. A failed later
- * attempt owes a retry on the contract clock; a partition never published owes
- * one twice daily.
+ * attempt owes a retry on the contract clock, never later than the hour while
+ * hourly; a partition never published owes one twice daily.
  */
 function sittingWindowTaskDue(
   task: RoutineSourceTask,

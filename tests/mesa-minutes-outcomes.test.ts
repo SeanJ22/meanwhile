@@ -326,3 +326,109 @@ test("the concluded sittings a pass considers: the wired bodies, in the window, 
   assert.ok(!rows.some((candidate) => candidate.insiteId === "1336059"), "7/27 is outside this window");
   resetOutcomeSnapshotCache();
 });
+
+/*
+ * THE CLERK'S OTHER TWO WORDINGS (2026-09-25). Mesa's first production minutes pass (3:23-3:26 PM MST) held
+ * two sittings as failed extractions. Read through the InSite route that evening (22:30Z): the 2026-06-04
+ * study session writes its one motion without "that" ("… seconded by Councilmember Taylor, receipt of the
+ * above listed minutes be acknowledged."), and the 2026-08-13 study session, already promoted with three
+ * motions, wrote its fourth as an infinitive ("… seconded by Councilmember Duff, to direct the City Attorney
+ * to pursue litigation …") and published it as an unread passage. The 2026-05-28 strategic planning session
+ * records no motion and does not say no action was taken: it stays a failed extraction.
+ *
+ * A scan of all 21 documents the promoted projection cites (fetched the same evening) found no other motion
+ * passage the parser did not read: the other motion-vocabulary hits are "Motion Industries", "any motion to
+ * approve would …", a clerk's parenthetical note, and "will be voted on in one motion" ahead of a read motion.
+ */
+
+/** The grid row as Mesa's calendar printed it on 2026-09-25 (22:30Z) for a sitting the recorded grids do not carry. */
+function printedRow(insiteId: string, date: string, kind: string, guid: string): InSiteCalendarRow {
+  return {
+    bodyName: "City Council",
+    bodyHref: null,
+    date,
+    time: "7:30 AM",
+    location: "",
+    kind,
+    insiteId,
+    insiteGuid: null,
+    icalHref: null,
+    detailHref: null,
+    notViewable: false,
+    agenda: { status: "", href: null },
+    accessibleAgenda: { status: "", href: null },
+    minutes: { status: "Minutes", href: `View.ashx?M=M&ID=${insiteId}&GUID=${guid}` },
+    accessibleMinutes: { status: "Not available", href: null },
+  };
+}
+
+function printedSitting(insiteId: string, printed: InSiteCalendarRow): PersistedSittingOutcomes {
+  const fixture = pagesFixture(insiteId);
+  const link = minutesLinkFor(printed, tenant.host)!;
+  assert.equal(link.url, fixture.url, "the printed row links the document the fixture was read from");
+  const document: MinutesDocumentRead = { link, sha256: fixture.sha256, byteCount: fixture.byteCount, pageCount: fixture.pageCount, pages: fixture.pages, unreadable: null };
+  return minutesSitting({ tenant, row: printed, calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T22:30:58.000Z", document, readOn: NEVER_READ }).sitting;
+}
+
+test("a motion written without 'that' is read: the 2026-06-04 study session acknowledges its boards' minutes", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1343167").pages);
+  assert.equal(parsed.sittingDate, "2026-06-04");
+  assert.deepEqual(parsed.unreadMotions, [], "no passage beginning 'It was moved' is left unread");
+  assert.equal(parsed.motions.length, 1);
+  const [receipt] = parsed.motions;
+  assert.equal(receipt.mover, "Councilmember Duff");
+  assert.equal(receipt.seconder, "Councilmember Taylor");
+  assert.equal(receipt.motion, "receipt of the above listed minutes be acknowledged", "the motion is the clerk's own words, no 'that' supplied");
+  assert.equal(receipt.disposition, "PASSED");
+  assert.match(receipt.result ?? "", /declared the motion carried unanimously by those present/);
+  assert.ok(minutesBodyText(pagesFixture("1343167").pages).includes(receipt.quote), "the quote is a substring of the page");
+
+  const sitting = printedSitting("1343167", printedRow("1343167", "6/4/2026", "Study Session", "93E1C4BC-0679-46E0-BC3E-504D43EA97AD"));
+  assert.equal(sitting.extraction, "RETRIEVED", "it was a failed extraction in production; the minutes record a motion");
+  assert.equal(sitting.outcomes.length, 1);
+});
+
+test("a motion written as an infinitive is read: the 2026-08-13 study session's direction to the City Attorney", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1343172").pages);
+  assert.deepEqual(parsed.unreadMotions, []);
+  assert.equal(parsed.motions.length, 4, "three motions were promoted; the fourth was an unread passage");
+  const direction = parsed.motions[3]!;
+  assert.equal(direction.mover, "Councilmember Adams");
+  assert.equal(direction.seconder, "Councilmember Duff");
+  assert.match(direction.motion, /^to direct the City Attorney to pursue litigation on behalf of the City of Mesa/);
+  assert.equal(direction.disposition, "PASSED");
+  // The usual form still quotes its "that".
+  assert.match(parsed.motions[0]!.motion, /^that the Council concur with the Mayor’s recommendations/);
+});
+
+test("minutes that record no motion and do not say no action was taken stay a failed extraction: the 2026-05-28 strategic planning session", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1343166").pages);
+  assert.equal(parsed.title, "COUNCIL STRATEGIC PLANNING MINUTES");
+  assert.deepEqual(parsed.motions, []);
+  assert.deepEqual(parsed.unreadMotions, []);
+  assert.equal(parsed.statesNoFormalAction, false);
+  const sitting = printedSitting("1343166", printedRow("1343166", "5/28/2026", "Strategic Planning Session", "F1571C51-0D0D-4537-9B82-C6F355A76A24"));
+  assert.equal(sitting.extraction, "ZERO_ROWS_FAILED", "the fail-closed rule holds for genuinely motion-free text");
+});
+
+test("a held sitting whose note names unread passages is read again, so a parser that now reads them reaches readers", () => {
+  const printed = printedRow("1343172", "8/13/2026", "Study Session", "DABA0407-10BF-4893-B11D-B037EB724A63");
+  const link = minutesLinkFor(printed, tenant.host)!;
+  const now = printedSitting("1343172", printed);
+  assert.equal(now.extractionNote, null, "this parser leaves no passage unread");
+  assert.deepEqual(minutesRefreshDecision(link, now), { walk: false, reason: "UNCHANGED_SKIP" });
+  // As production held it on 2026-09-25 (22:26Z): three motions and the fourth named unread.
+  const heldThen = {
+    ...now,
+    extractionNote:
+      ' 1 passage(s) beginning "It was moved" were not in the clerk\'s usual form and were not read: "It was moved by Councilmember Adams, seconded by Councilmember Duff, to direct the City Attorney …"',
+  };
+  assert.deepEqual(minutesRefreshDecision(link, heldThen), { walk: true, reason: "UNREAD_PASSAGES_HELD" });
+});
+
+test("a continuation that is not a motion's own words stays an unread passage, never a guessed motion", () => {
+  const pages = [{ page: 1, text: "OFFICE OF THE CITY CLERK COUNCIL MINUTES June 4, 2026 1. Item. It was moved by Councilmember Duff, seconded by Councilmember Taylor, and the item was discussed. Carried unanimously. It was moved by Councilmember Duff, seconded by Councilmember Taylor, Resolution No. 12001 be adopted." }];
+  const parsed = parseCouncilMinutes(pages);
+  assert.deepEqual(parsed.motions, []);
+  assert.equal(parsed.unreadMotions.length, 2);
+});

@@ -49,6 +49,7 @@ import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
+import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
 import { readerEdgeCarriesForward } from "./lib/reader-edge-current.ts";
@@ -64,6 +65,13 @@ function safeFailure(value: string): string {
     .join(" | ")
     .slice(0, 4_000) || "Reader repair failed without a diagnostic.";
 }
+
+// An error nothing caught ends this child through one sanitized RCD_FATAL line
+// naming its step (lib/ops/fatal-line.ts). Without it the supervisor quoted the
+// last eight stderr lines, which for an uncaught throw are stack frames: the
+// 2026-09-25T23:01Z runtime-authority refusals recorded no reason at all.
+let step = "reading the Reader repair arguments";
+installFatalLine("routine-civic-data-reader-repair", () => step);
 
 const argv = process.argv.slice(2);
 const meetingAggregate = present(argv, "meeting-aggregate");
@@ -83,16 +91,20 @@ if (meetingAggregate === (contractId !== null && contractId !== "")) {
 const stage = meetingAggregate
   ? null
   : (what: string): void => {
+    step = what;
     process.stderr.write(`${stageLine("READER_REPAIR_STAGE", what)}\n`);
   };
+step = `modules loaded for ${contractId ?? "the meeting aggregate"}`;
 stage?.(`modules loaded for ${contractId}`);
 
 installNeonRequestDeadline();
+step = "admitting the production write";
 const handle = resolveProductionWriteHandle();
 process.env.DATABASE_URL = handle.connection;
 process.env.WTP_DB_ROLE = "production";
 process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
 assertWriteAllowed("a routine civic data candidate/version promotion");
+step = meetingAggregate ? "repairing the meeting aggregate" : `repairing ${contractId}`;
 const store = stage
   ? traceMethodCalls(new PostgresRoutineDataStore(), "store", stage)
   : new PostgresRoutineDataStore();

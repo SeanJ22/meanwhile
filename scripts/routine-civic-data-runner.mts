@@ -111,7 +111,7 @@ import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
-import { installFatalLine } from "../lib/ops/fatal-line.ts";
+import { childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
@@ -734,7 +734,10 @@ function readerDomainExecutionFailure(
   return {
     taskId: domain.id,
     code: "READER_REPAIR_CHILD_EXIT_NONZERO",
-    detail: safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`),
+    // A child that died on an error nothing caught names its step and cause in
+    // one sanitized line. The stderr tail alone was the stack, so the
+    // 2026-09-25T23:01Z runtime-authority refusals recorded no reason.
+    detail: childFatalLine(run.stdout) ?? safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`),
   };
 }
 

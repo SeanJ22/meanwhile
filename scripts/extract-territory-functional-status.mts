@@ -1,4 +1,7 @@
 /**
+ * @freshness-reads-here — each download receipt's retrievedAt is the instant this script's own census.gov read
+ * answered, minted right beside that fetch and kept with the file it read.
+ *
  * **THE TERRITORIES' GOVERNMENTS, IN THE CENSUS'S OWN WORDS.** (2026-09-25.)
  *
  *   node_modules/.bin/tsx scripts/extract-territory-functional-status.mts [--tiger=<dir>]

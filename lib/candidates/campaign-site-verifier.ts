@@ -1,4 +1,7 @@
 /**
+ * @freshness-reads-here — a verified page's retrievedAt is the instant this module's own robots-first read of
+ * that page returned, minted in the function that performed the read.
+ *
  * **THE CAMPAIGN-SITE VERIFIER — PLAIN CODE, NO MODEL.** (2026-09-25.)
  *
  * Paid research left 582 candidate-enrichment findings at SCOUTED and 325
@@ -206,7 +209,9 @@ export function registrableDomain(host: string): string {
 /** How deep a page sits in its site; the shallowest verified page of one site is the one a card links. */
 export function sitePathLength(url: string): number {
   try {
-    return new URL(url).pathname.replace(/\/+$/, "").length;
+    // A web page's path, never a file path.
+    const page = new URL(url);
+    return page.pathname.replace(/\/+$/, "").length;
   } catch {
     return Number.MAX_SAFE_INTEGER;
   }

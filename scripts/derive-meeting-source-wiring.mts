@@ -59,6 +59,7 @@ import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArt
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
@@ -259,6 +260,13 @@ async function main(): Promise<void> {
     console.log(`  ${d.key}: ${d.disposition === "HOLD" ? `HOLD ${d.reason}: ${d.detail}` : d.disposition === "SUSPEND" ? `SUSPEND ${d.trigger}: ${d.detail}` : d.disposition}`);
   }
   for (const r of plan.refusals) console.error(`  refused ${r.key}: ${r.code}: ${r.detail}`);
+  console.log(floorLine(floored(
+    "derived wiring rows promoted",
+    "the calendar-to-body rows decided this pass",
+    decisions.length,
+    decisions.filter((d) => d.disposition === "PROMOTE").length,
+    decisions.length === 0 ? "no calendar-to-body row reached the derive this pass" : undefined,
+  )));
   await finish(derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is DerivedInputRef => i !== null), now));
 }
 

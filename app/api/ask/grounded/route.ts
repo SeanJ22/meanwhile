@@ -49,6 +49,8 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
+import { lexicalReading, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { composeSittingAnswer, settleSittingComposition, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
 import { readableSitting } from "@/lib/ask/meeting-time";
@@ -287,6 +289,8 @@ interface MeetingLike {
   bodyName: string;
   startsAt: string;
   timeZone?: string | null;
+  /** `DAY`: a date-only posting; `startsAt`'s midnight is never a time (M59). */
+  startPrecision?: Meeting["startPrecision"];
   agendaUrl?: string | null;
   /**
    * **WHERE IT IS, WHETHER IT IS STILL ON, AND WHOSE IT IS.**
@@ -1033,12 +1037,34 @@ export async function POST(request: Request) {
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
   const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute;
-  const interpretationKey = modelFreeTopicRoute ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
+  /*
+   * **THE LEXICAL READING.** (2026-09-25, the Ask latency repair.) A question
+   * in one of a few canonical shapes ("when does the Mesa City Council meet
+   * next?") whose name binds one body identically in every binder the route
+   * consults is read in code: the model rung cost 2.4-3.3 s on a warm instance
+   * to return the same body, intent and tense. Anything the module does not
+   * settle returns null and is read by the model exactly as before. See
+   * `lib/ask/lexical-reading.ts` for the conditions.
+   */
+  const lexical = modelFreeTopicRoute ? null : lexicalReading({
+    question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects,
+  });
+  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
-  const outcome = modelFreeTopicRoute ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
+  const outcome = modelFreeTopicRoute || lexical ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
-  if (outcome === null) {
+  if (outcome === null && lexical) {
+    interpretation = structuredClone(lexical.interpretation);
+    trace.interpretation = {
+      ran: false,
+      why: "lexical-reading",
+      ms: Date.now() - interpretationStarted,
+      intent: interpretation.intent,
+      temporal: interpretation.temporal,
+      fellBackToDeterministic: true,
+    };
+  } else if (outcome === null) {
     /* The deterministic topic route above: the topic is curated code and the
        body bound on the reader's own words, so no model reading is needed and
        no tense is imposed — a topic spans what was decided and what is next. */
@@ -1251,6 +1277,16 @@ export async function POST(request: Request) {
   /** A topic question's dated timeline for the bound body, when one was built. */
   let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
   const gaps: EvidenceGap[] = [...holdingLoadGaps];
+  /* The gaps attached to the chosen sitting(s), by why they were attached, for
+     an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
+     also in `gaps`; this only remembers which ones are about the sitting. */
+  const sittingGaps: SittingGap[] = [];
+  const attachSittingGaps = (role: SittingGapRole, attached: readonly EvidenceGap[]) => {
+    for (const gap of attached) {
+      gaps.push(gap);
+      sittingGaps.push({ role, gap });
+    }
+  };
   const denominators: Record<string, number> = {
     ballotLoaderFailures: ballot.loaderFailures.length,
     meetingCanonicalProjectionReads: meetingDataState === "PROMOTED" ? 1 : 0,
@@ -1455,7 +1491,7 @@ export async function POST(request: Request) {
     } else if (!chosen && archivedOutcomes.length === 0) {
       /* A body we hold no meeting of carries its code (held-gaps.ts), so the gap a reader is told is work the runner creates (2026-09-25). */
       const notHeld = snapshot && !requestedMeetingDate ? meetingsNotHeldGap(subject.id, forBody.length) : null;
-      gaps.push({
+      attachSittingGaps("NO_SITTING", [{
         ...(notHeld ? { code: notHeld.code, bodyId: notHeld.bodyId, recordClass: notHeld.recordClass } : {}),
         whose: "OURS",
         statement:
@@ -1470,7 +1506,7 @@ export async function POST(request: Request) {
             : selection === "LAST"
               ? `We hold meetings for ${subject.name} but none that have already happened.`
               : `We hold meetings for ${subject.name} but none scheduled in the future.`,
-      });
+      }]);
     } else if (chosen) {
       /*
        * **THE SITTING IS PRINTED IN THE BODY'S OWN ZONE, SPELLED OUT.**
@@ -1493,7 +1529,7 @@ export async function POST(request: Request) {
       const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
       const listingKnowledge = meetingListingKnowledgeFor(snapshot?.meetings ?? [], [chosen.id, ...sameDay.map(meeting => meeting.id)]);
       const listingGroupFor = (id: string) => listingKnowledge.readback.groups.find(group => group.sourceIds.includes(id));
-      gaps.push(...listingKnowledge.gaps);
+      attachSittingGaps("LISTING", listingKnowledge.gaps);
       records.push({
         kind: "MEETING",
         id: chosen.id,
@@ -1680,9 +1716,9 @@ export async function POST(request: Request) {
          */
         const unacquired = publication.gap.whose === "OURS" &&
           (publication.acquisition === "NOT_ACQUIRED" || publication.acquisition === "ROUTE_BLOCKED" || publication.acquisition === "REPRESENTATION_DISCOVERED");
-        gaps.push(unacquired
+        attachSittingGaps("AGENDA", [unacquired
           ? { ...publication.gap, code: "AGENDA_NOT_HELD", bodyId: subject.id, recordClass: ASK_GAP_RECORD_CLASS.AGENDA_NOT_HELD }
-          : publication.gap);
+          : publication.gap]);
       }
 
       // The document the reader is shown first — the one the reading, and so
@@ -1759,11 +1795,11 @@ export async function POST(request: Request) {
       records.push(...outcome.records);
       records.push(...minutes.records);
       records.push(...notice.records);
-      gaps.push(...notice.gaps);
-      gaps.push(...minutes.gaps);
+      attachSittingGaps("NOTICE", notice.gaps);
+      attachSittingGaps("MINUTES", minutes.gaps);
       // A sourced summary answers what happened without pretending it records
       // each member's vote. No outcome-store absence may erase that answer.
-      if (!minutes.records.length) gaps.push(...outcome.gaps);
+      if (!minutes.records.length) attachSittingGaps("OUTCOME", outcome.gaps);
       denominators.minutesSummaryRecordsReturned = (denominators.minutesSummaryRecordsReturned ?? 0) + minutes.records.length;
       denominators.noticeSummaryRecordsReturned = (denominators.noticeSummaryRecordsReturned ?? 0) + notice.records.length;
       for (const [key, count] of Object.entries(outcome.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
@@ -2178,9 +2214,38 @@ export async function POST(request: Request) {
    * does; a rejection falls back exactly as a rejected model answer would.
    */
   lap("resolutionAndRetrieval");
-  const composed = topicTimeline
+  const topicComposed = topicTimeline
     ? composeTopicAnswer(topicTimeline, selectionNow)
     : areaTimelines.length > 0 ? composeAreaTopicAnswer(areaTimelines, selectionNow) : null;
+  /*
+   * **WHEN A BODY SITS IS COMPOSED FROM THE SITTING, NOT WRITTEN BY A MODEL.**
+   * (2026-09-25, the Ask latency repair.) A question asking when a named body
+   * meets — or for its agenda or decisions when the pack holds nothing to
+   * summarise, only the sitting and its named gaps — is answered from the
+   * MEETING records and those gaps in their own words (`lib/ask/sitting-answer.ts`).
+   * The synthesis rung spent 4-6.5 s warm to say the same thing. The composed
+   * prose must pass the SAME validator first; a refusal is recorded and the
+   * question goes to the model exactly as before, so a composition that fails
+   * a check can never reach a reader.
+   */
+  const sittingShape = !topicComposed && !topicFocus && !requestedMeetingDate && snapshot && subject?.kind === "BODY"
+    ? shapeForBoundBody(question, inventory, subject.id) : null;
+  const sittingSettled = settleSittingComposition(
+    sittingShape && subject
+      ? composeSittingAnswer({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow })
+      : null,
+    (text, urls) => validateAnswer(text, urls, pack, bodies),
+  );
+  if (sittingShape) {
+    trace.composition = {
+      kind: "SITTING",
+      shape: sittingShape,
+      composed: Boolean(sittingSettled.verdict),
+      ...(sittingSettled.verdict ? { passed: sittingSettled.verdict.kind === "PASSED" } : {}),
+      ...(sittingSettled.verdict?.kind === "FAILED" ? { failed: sittingSettled.verdict.failed } : {}),
+    };
+  }
+  const composed = topicComposed ?? sittingSettled.composed;
   const synthesisKey = composed ? null : synthesisCacheKey(pack, resolveAskModel(), resolveAskEffort());
   const cachedSynthesis = synthesisKey ? synthesisCache.get(synthesisKey) : null;
   const synthesis = composed ? null : cachedSynthesis ?? await synthesizeAnswer(pack, {
@@ -2198,7 +2263,7 @@ export async function POST(request: Request) {
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (composed) {
-    trace.synthesis = { ran: false, why: "composed-from-structured-evidence", ms: 0 };
+    trace.synthesis = { ran: false, why: topicComposed ? "composed-from-structured-evidence" : "composed-from-sitting-records", ms: 0 };
     const verdict = validateAnswer(composed.answer, composed.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {

@@ -42,6 +42,17 @@ import { formatDateLong } from "../text/format-date.ts";
 export interface SittingTime {
   startsAt: string;
   timeZone?: string | null;
+  /**
+   * `DAY` when the publisher posted a date and no time (`Meeting.startPrecision`,
+   * M59): `startsAt` then carries local midnight as an ORDERING ARTIFACT, never
+   * a claim, and no time may be printed from it. Absent means `MINUTE`.
+   */
+  startPrecision?: "MINUTE" | "DAY";
+}
+
+/** True when the publisher gave a start time (the map's `startTimeIsKnown`, for the Ask shape). */
+export function startTimePosted(sitting: SittingTime): boolean {
+  return sitting.startPrecision !== "DAY";
 }
 
 /**
@@ -102,7 +113,12 @@ export function localTime(sitting: SittingTime): string {
 export function readableSitting(sitting: SittingTime): string {
   const date = localDate(sitting);
   const spelled = formatDateLong(date) ?? date;
-  const base = `${localWeekday(sitting)}, ${spelled} at ${localTime(sitting)}`;
+  /* A date-only posting is printed as the date and says the time was not
+     posted (2026-09-25): "at 12:00 AM" was printed from the midnight ordering
+     artifact on Chandler's date-only council listing — a time no one posted. */
+  const base = startTimePosted(sitting)
+    ? `${localWeekday(sitting)}, ${spelled} at ${localTime(sitting)}`
+    : `${localWeekday(sitting)}, ${spelled} (start time not posted)`;
   /* An unknown zone is NAMED as unknown rather than silently rendered as UTC
      wearing a local face. Whose gap it is: ours. */
   return zoneOf(sitting).known

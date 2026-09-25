@@ -9,6 +9,7 @@ import type { AskEffort } from "./model.ts";
 import { readCacheUsage, type CacheUsage } from "./prompt-cache.ts";
 import {
   SYNTHESIS_MESSAGES_URL,
+  citedUrlsFrom,
   synthesisContextPayload,
   synthesisDateBlock,
   synthesisPrompt,
@@ -248,7 +249,7 @@ export async function synthesizeForComparison(
         ms: elapsed(),
       };
     }
-    const parsed = JSON.parse(text) as { answer?: unknown; citedUrls?: unknown };
+    const parsed = JSON.parse(text) as { answer?: unknown; citedSources?: unknown };
     if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0) {
       return {
         kind: "UNAVAILABLE",
@@ -262,9 +263,8 @@ export async function synthesizeForComparison(
       kind: "WROTE",
       model,
       answer: parsed.answer.trim(),
-      citedUrls: Array.isArray(parsed.citedUrls)
-        ? parsed.citedUrls.filter((u): u is string => typeof u === "string")
-        : [],
+      /* The same mapping the production rung uses: source numbers back to the pack's URLs. */
+      citedUrls: citedUrlsFrom(pack, parsed.citedSources),
       ms: elapsed(),
       usage: readCacheUsage(body),
       outputTokens:

@@ -83,7 +83,7 @@ test("R13: a length-only rejection falls back to the code-composed answer when t
 
 const ANTHROPIC = "https://api.anthropic.com/";
 
-async function askWithModelAnswer(modelAnswer: { answer: string; citedUrls: string[] }) {
+async function askWithModelAnswer(modelAnswer: { answer: string; citedSources: number[] }) {
   const priorKey = process.env.ANTHROPIC_API_KEY;
   const priorFetch = globalThis.fetch;
   let synthesisCalls = 0;
@@ -92,7 +92,7 @@ async function askWithModelAnswer(modelAnswer: { answer: string; citedUrls: stri
     const url = input instanceof Request ? input.url : String(input);
     if (!url.startsWith(ANTHROPIC)) throw new Error(`R13 test refused an outbound request: ${url}`);
     const body = typeof init?.body === "string" ? init.body : "";
-    if (body.includes("citedUrls")) {
+    if (body.includes("citedSources")) {
       synthesisCalls += 1;
       return new Response(JSON.stringify({ content: [{ type: "text", text: JSON.stringify(modelAnswer) }] }), {
         status: 200,
@@ -131,7 +131,7 @@ async function askWithModelAnswer(modelAnswer: { answer: string; citedUrls: stri
 }
 
 test("R13: a 726-character model answer that fails only on length is not reported as a rejection", { concurrency: false }, async () => {
-  const { payload, synthesisCalls } = await askWithModelAnswer({ answer: modelAnswerOf726(), citedUrls: [] });
+  const { payload, synthesisCalls } = await askWithModelAnswer({ answer: modelAnswerOf726(), citedSources: [] });
   assert.equal(synthesisCalls, 1, "the model path ran (from the stub)");
   assert.equal(payload.trace.validation.ran, true);
   assert.deepEqual(payload.trace.validation.failed, ["too-long:726-characters-over-700"], "length is the only failure");
@@ -144,7 +144,7 @@ test("R13: a 726-character model answer that fails only on length is not reporte
 
 test("R13: the same answer with an invented source is still REJECTED_FELL_BACK", { concurrency: false }, async () => {
   const answer = modelAnswerOf726().replace(/^This summary/, "https://invented.example/page This summary").slice(0, 725) + ".";
-  const { payload } = await askWithModelAnswer({ answer, citedUrls: ["https://invented.example/page"] });
+  const { payload } = await askWithModelAnswer({ answer, citedSources: [99] });
   assert.ok(payload.trace.validation.failed?.some((reason) => reason.startsWith("invented-source-url:")));
   assert.equal(payload.mode, "REJECTED_FELL_BACK");
   assert.equal(payload.answer, null);

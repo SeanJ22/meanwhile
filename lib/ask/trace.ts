@@ -125,6 +125,20 @@ export interface AskTrace {
     failed?: string[];
   };
   /**
+   * An answer composed in code from a named body's sitting
+   * (`lib/ask/sitting-answer.ts`, 2026-09-25): which question shape was
+   * recognised, whether the records allowed composition, and whether the
+   * composed prose passed the validator. A composition that failed a check is
+   * named here and was never shown; the model wrote the answer instead.
+   */
+  composition?: {
+    kind: "SITTING";
+    shape: string;
+    composed: boolean;
+    passed?: boolean;
+    failed?: string[];
+  };
+  /**
    * Wall-clock milliseconds per stage of the request, in order (2026-09-24):
    * source preloads, the meetings projection, officeholders and ballot,
    * interpretation, resolution and retrieval, then composition or synthesis.

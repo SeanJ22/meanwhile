@@ -2,14 +2,15 @@ import "server-only";
 
 /**
  * **WHAT COUNTS AS DONE — the standard every reading is measured against.**
- * (Admin redesign, 2026-09-23; Readiness · What counts as done.)
+ * (Admin redesign, 2026-09-23; Readiness · What counts as done. Versioned,
+ * MW-063, 2026-09-25.)
  *
- * The design shows a versioned checklist with its adoption history. Today the
- * standard is the readiness instrument's own definition — capabilities, each
- * through five gates, under the derivation contract every published snapshot
- * carries — and it is code, not versioned data (MW-063). So this screen shows
- * the standard that is actually in force, measured from the published
- * snapshots, and says plainly which of the design's slots have no record yet.
+ * The standard is versioned data (`lib/control-plane/readiness/standard.json`):
+ * each version has an id — the derivation contract a published snapshot
+ * stamps — an adoption date, and the gates and capabilities it asks. This
+ * screen lists the versions, shows the one in force, and reports each state's
+ * result against the version it was measured under. A slot the design shows
+ * that has no record yet (proposals) says so.
  */
 import { familyRows, gridCounts } from "@/lib/control-plane/admin-view/readiness-view.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
@@ -17,6 +18,7 @@ import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type 
 import { GATE_DEFINITION, GATE_LABEL, GATE_ORDER } from "@/lib/control-plane/readiness/gates.ts";
 import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "@/lib/control-plane/readiness/model.ts";
 import { readReadinessSnapshot } from "@/lib/control-plane/readiness/read.ts";
+import { standardHistory, standardVersion } from "@/lib/control-plane/readiness/standard.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
@@ -58,6 +60,22 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
   const [bodiesRead, ...reads] = await Promise.all([loadWatchedBodies(base.nowIso), ...states.map(async (code) => ({ code, read: await readReadinessSnapshot(code) }))]);
   const held: ReadinessStateSnapshot[] = reads.flatMap((r) => (r.read.kind === "HELD" ? [r.read.snapshot] : []));
   const unread = reads.filter((r) => r.read.kind !== "HELD").map((r) => stateName(r.code));
+  /* Each state's result, against the version it was measured under — a superseded one is named, never re-graded under the new bar. */
+  const measuredUnder = reads.map((r) => {
+    const contract = r.read.kind === "HELD" ? r.read.snapshot.derivationContract : r.read.kind === "REQUIRES_REPUBLISH" ? r.read.snapshotContract : null;
+    const version = standardVersion(contract);
+    return {
+      code: r.code,
+      says:
+        r.read.kind === "HELD"
+          ? `measured under ${contract}${version ? `, adopted ${version.adoptedOn}` : ""}`
+          : r.read.kind === "REQUIRES_REPUBLISH"
+            ? `measured under ${contract ?? "no version marker"}${version?.supersededOn ? `, superseded ${version.supersededOn}` : ""} — not shown until it is measured again under ${READINESS_DERIVATION_CONTRACT}`
+            : "no result read",
+    };
+  });
+  const history = standardHistory();
+  const inForceVersion = standardVersion(READINESS_DERIVATION_CONTRACT);
 
   const perState = held.map((snap) => ({ code: snap.state, capabilities: snap.capabilities.length, grid: gridCounts(snap.capabilities), publishedAt: snap.publishedAt }));
   const sizes = [...new Set(perState.map((p) => p.capabilities))];
@@ -69,7 +87,10 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
   const readBack = published.filter((b) => b.readerVisible !== null);
 
   const numbers: RenderedNumber[] = [];
-  const claims: CountClaim[] = [{ label: "requirement families", stated: families.length, rendered: families.length }];
+  const claims: CountClaim[] = [
+    { label: "requirement families", stated: families.length, rendered: families.length },
+    { label: "versions of the standard", stated: history.length, rendered: history.length },
+  ];
   for (const p of perState) {
     numbers.push({ label: `${p.code} checks satisfied`, value: p.grid.byState.CURRENT, denominator: p.grid.cells, contract: "capability gates CURRENT, of every capability gate in the state's published grid" });
   }
@@ -110,9 +131,9 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
           </span>
         </div>
         <p className={s.lede}>
-          The standard is a version, not an opinion: results measured against one version stay true against it. Today the version is the readiness instrument&rsquo;s
-          own definition — every capability, each through five gates — and it is code rather than a versioned list, so raising the bar is an engineering change and
-          a deployment (MW-063).
+          The standard is a version, not an opinion: results measured against one version stay true against it, and each state&rsquo;s result below is reported
+          against the version it was measured under. The versions are a list with adoption dates; the one in force asks every capability through five gates.
+          Raising the bar is a new version on that list, which still ships as a deployment (MW-063).
         </p>
         <div className={s.grid3}>
           <div className={`${s.insetTile} ${s.stack8}`}>
@@ -129,8 +150,8 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
           </div>
           <div className={`${s.insetTile} ${s.stack8}`}>
             <span className={s.titleStrong14}>Added in this version</span>
-            <Dash large>NOT VERSIONED YET</Dash>
-            <span className={s.note}>The standard lives in code, so what changed between versions is in the code history, not recorded against the standard. Progress cannot yet be reported against an old bar and a new one.</span>
+            {inForceVersion === null ? <Dash large>NOT IN THE LIST</Dash> : <span className={s.monoSmall}>adopted {inForceVersion.adoptedOn}</span>}
+            <span className={s.note}>{inForceVersion === null ? `The version in force, ${READINESS_DERIVATION_CONTRACT}, is not on the versioned list.` : inForceVersion.summary}</span>
           </div>
           <div className={`${s.insetTile} ${s.stack8}`}>
             <span className={s.titleStrong14}>Proposed, not adopted</span>
@@ -139,6 +160,33 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
           </div>
         </div>
       </section>
+
+      <Section
+        title="Versions of the standard"
+        lede="Every version, newest first. A result keeps the version it was measured under; a state measured under a superseded version is named, not re-graded."
+      />
+      <div className={`${s.card} ${s.cardList} ${s.gap32}`}>
+        <div className={s.stack10}>
+          {history.map((v) => (
+            <div key={v.id} className={s.insetRow}>
+              <span className={s.monoId}>{v.id}</span>
+              <span className={s.note}>
+                adopted {v.adoptedOn}
+                {v.supersededOn ? `, superseded ${v.supersededOn}` : ", in force"}. {v.summary}
+                {v.gates === null ? ` ${v.notRecorded ?? "Its gates and capabilities are not recorded in the list."}` : ` ${v.gates.length} gates, ${v.capabilities?.length ?? 0} capabilities.`}
+              </span>
+              <span className={s.pushRight}>
+                <Pill tone={v.supersededOn ? "slate" : "teal"}>{v.supersededOn ? "SUPERSEDED" : "IN FORCE"}</Pill>
+              </span>
+            </div>
+          ))}
+          {measuredUnder.map((m) => (
+            <p key={m.code} className={s.note}>
+              {stateName(m.code)}: {m.says}.
+            </p>
+          ))}
+        </div>
+      </div>
 
       <Section
         title="Requirement families"

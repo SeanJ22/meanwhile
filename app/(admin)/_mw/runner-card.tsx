@@ -14,6 +14,7 @@ import { ownerDigestAttention, type HealthLevel, type OwnerDigestRecord, type Ru
 import { plainText } from "@/lib/control-plane/plain-words.ts";
 import { runnerFace, stopMomentIn } from "@/lib/control-plane/runner-plain.ts";
 import type { RunnerStanding } from "@/lib/control-plane/runner-standing.ts";
+import type { QueueLanes, SkippedWork } from "@/lib/control-plane/scheduler/lane-reading.ts";
 import { INTENT_NOTE_MAX_CHARS } from "@/lib/control-plane/scheduler/research-policy.ts";
 
 import { IntentButton } from "./intent-control.tsx";
@@ -29,6 +30,8 @@ export function RunnerCard(props: {
   readonly digest: OwnerDigestRecord | null;
   readonly digestNote: string | null;
   readonly returnTo: string;
+  /** The research state's lane accounting (MW-014); null when the state carries none. */
+  readonly lanes: QueueLanes | null;
 }) {
   const { standing, heartbeat, safety } = props;
   const stopIso = safety ? stopMomentIn(safety.stoppedBecause) : null;
@@ -39,6 +42,7 @@ export function RunnerCard(props: {
     resumesAtWords: heartbeat?.nextCycleDueAt ? formatEastern(heartbeat.nextCycleDueAt) : null,
     stoppedAtWords: stopIso === null ? null : formatEastern(stopIso),
     didThisCycle: null,
+    lanes: props.lanes,
   });
   return (
     <section className={`${s.card} ${s.cardList} ${s.gap24}`} aria-labelledby="runner">
@@ -68,6 +72,7 @@ export function RunnerCard(props: {
             {easternize(face.stopped)}
           </p>
         )}
+        <Skipped skipped={face.skipped} />
         <LatestReport digest={props.digest} note={props.digestNote} />
         <div className={s.row10}>
           {standing.control === "PAUSE_RUNNER" ? (
@@ -93,6 +98,44 @@ export function RunnerCard(props: {
         </span>
       </div>
     </section>
+  );
+}
+
+/**
+ * What the cycle did not start, by lane and reason (MW-014). The reasons add
+ * up to each lane's skipped count, or a MISMATCH line names the lane where
+ * they do not; a state written before the lanes were accounted says so.
+ */
+function Skipped({ skipped }: { readonly skipped: SkippedWork | null }) {
+  if (skipped === null) {
+    return <p className={s.note}>The runner&rsquo;s last state does not record why due work was skipped (it predates that accounting), so no reasons are shown.</p>;
+  }
+  return (
+    <div className={`${s.insetBox} ${s.stack8}`}>
+      <div className={s.row10}>
+        <span className={s.label}>Skipped work</span>
+        {skipped.mismatches.length > 0 && <Pill tone="gold">MISMATCH</Pill>}
+        <span className={s.note}>{skipped.final ? "counted at the cycle's end" : "cycle still running"}, {formatEastern(skipped.at)}</span>
+      </div>
+      <p className={s.text14}>{skipped.says}</p>
+      {skipped.lanes.map((l) => (
+        <div key={l.lane} className={s.stack2}>
+          <span className={s.text14}>
+            <span className={s.strong}>{l.name}: </span>
+            {l.skipped.toLocaleString("en-US")} of {l.due.toLocaleString("en-US")} due not started
+            {l.reasons === null ? " — reasons are counted when the cycle ends." : l.reasons.length === 0 ? "." : " — "}
+            {l.reasons !== null &&
+              l.reasons.map((r, i) => (
+                <span key={r.code} title={r.code}>
+                  {i > 0 ? "; " : ""}
+                  {r.count.toLocaleString("en-US")} because {r.words}
+                </span>
+              ))}
+          </span>
+          {l.mismatch !== null && <span className={s.goldNote}>{l.mismatch}</span>}
+        </div>
+      ))}
+    </div>
   );
 }
 

@@ -116,7 +116,9 @@ test("MW-054: an approved record becomes a promotion-history row with evidence, 
   assert.equal(row.subjectId, "body-1");
   assert.equal(row.recordClass, "meetings");
   assert.deepEqual(row.evidenceChain, approved.chain);
-  assert.equal(row.promotedAt, approved.at);
+  // MW-053: the time is the approval, named as such; the misleading name is no longer written.
+  assert.equal(row.approvedAt, approved.at);
+  assert.equal(row.promotedAt, undefined);
   assert.equal(row.version, "pp-1:approved");
   // No served-reader producer wired: the destination is NOT_OBSERVED, never a fabricated URL.
   assert.match(row.destination, /NOT_OBSERVED/);
@@ -124,4 +126,49 @@ test("MW-054: an approved record becomes a promotion-history row with evidence, 
   // publication reached 1 of 1; availability still a gap.
   assert.ok(view.stages.find((s) => s.key === "publication")!.reached.held);
   assert.equal(view.stages.find((s) => s.key === "publicly_available")!.reached.held, false);
+});
+
+test("MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records", () => {
+  const approved = { chain: { scouted: "sc", confirmed: "cf", verified: "vf", audited: "au" }, recordClass: "meetings", at: "2026-09-22T00:00:00.000Z", recordId: "pp-2:approved" };
+  const base = state({ itemId: "m2", recordClass: "meetings", subjectId: "body-2", stage: "APPROVED_FOR_PROMOTION", approved });
+  const withChain = {
+    ...base,
+    byStage: {
+      ...base.byStage,
+      SCOUTED: {
+        stage: "SCOUTED",
+        source: {
+          kind: "FLEET_EXTRACTION", workItemId: "wi", attemptId: "at", parserResultId: "pr", artifactId: "ar", extractedRecordId: "er",
+          factKey: "mtg-9@2026-10-01T17:00:00.000Z", sourceRecordClass: "LEGISTAR_EVENTS", sourceKey: "legistar:pima", applicableAt: "2026-10-01T17:00:00.000Z",
+        },
+        summary: "Board of Supervisors regular meeting",
+        canonicalUrl: "https://pima.legistar.com/Calendar.aspx",
+      },
+      CONFIRMED: { stage: "CONFIRMED", sameFact: "2026-10-01T17:00:00.000Z" },
+    },
+  } as unknown as PipelineItemState;
+  const row = buildDeliveryTrail([withChain], input()).promotions[0]!;
+  assert.match(
+    row.changeSummary ?? "",
+    /^A meeting time \(mtg-9@2026-10-01T17:00:00\.000Z\) from legistar:pima, for October 1, 2026, 1:00 PM ET: Board of Supervisors regular meeting <https:\/\/pima\.legistar\.com\/Calendar\.aspx>; the confirming read states 2026-10-01T17:00:00\.000Z$/,
+  );
+  // An item without its SCOUTED record says so rather than inventing a change.
+  assert.equal(buildDeliveryTrail([base], input()).promotions[0]!.changeSummary, "What changed is not recorded: the item holds no SCOUTED record.");
+  // A campaign-site lead from a search index names its route, rank and the page it pointed at.
+  const pointer = {
+    ...base,
+    byStage: {
+      ...base.byStage,
+      SCOUTED: {
+        stage: "SCOUTED",
+        source: { kind: "DISCOVERY_POINTER", routeId: "candidate-marginalia-index", attemptId: "at", artifactId: "ar", pointerUrl: "https://lilytangwilliams.com/", rank: 2 },
+        summary: "Lily Tang Williams for Congress",
+        canonicalUrl: null,
+      },
+    },
+  } as unknown as PipelineItemState;
+  assert.equal(
+    buildDeliveryTrail([pointer], input()).promotions[0]!.changeSummary,
+    "A lead from a search index (route candidate-marginalia-index, result 2), read at https://lilytangwilliams.com/: Lily Tang Williams for Congress",
+  );
 });

@@ -38,6 +38,7 @@
  */
 
 import { COVERED_STATES } from "../../coverage/states.ts";
+import { isWorkQuestion, type WorkQuestion } from "../work-question.ts";
 
 /** The five primary groupings the owner may select, in the lookup's own vocabulary. */
 export const EXPANSION_SCOPE_TYPES = [
@@ -103,6 +104,12 @@ export interface ExpansionScopeDecision {
   /** Rolling-24-hour cap on paid model work in this scope, in USD. May be 0. */
   readonly budgetUsd: number;
   readonly note: string | null;
+  /**
+   * MW-002: the questions the owner asked of this Send, typed — not folded into
+   * the note. The runner records them on every obligation the Send reaches.
+   * Absent on decisions made before they were kept, and when none was asked.
+   */
+  readonly questions?: readonly WorkQuestion[];
   readonly decidedAt: string;
   /** The admin session reference that decided it. Never a person's name. */
   readonly decidedBy: string;
@@ -200,7 +207,9 @@ export function isExpansionScopeDecision(value: unknown): value is ExpansionScop
     v.budgetUsd >= 0 &&
     typeof v.decidedAt === "string" &&
     typeof v.decidedBy === "string" &&
-    typeof v.receiptId === "string"
+    typeof v.receiptId === "string" &&
+    /* A question list that is not six-question vocabulary is a malformed decision, never "no questions". */
+    (v.questions === undefined || (Array.isArray(v.questions) && v.questions.every(isWorkQuestion)))
   );
 }
 
@@ -256,6 +265,8 @@ export function withScopeSet(
     readonly priority: number;
     readonly budgetUsd: number;
     readonly note: string | null;
+    /** MW-002. Absent or empty: the Send asked no question. */
+    readonly questions?: readonly WorkQuestion[];
     readonly decidedAt: string;
     readonly decidedBy: string;
     readonly receiptId: string;
@@ -269,6 +280,7 @@ export function withScopeSet(
     priority: change.priority,
     budgetUsd: change.budgetUsd,
     note: change.note,
+    ...(change.questions !== undefined && change.questions.length > 0 ? { questions: [...change.questions] } : {}),
     decidedAt: change.decidedAt,
     decidedBy: change.decidedBy,
     receiptId: change.receiptId,

@@ -48,6 +48,7 @@ import type { CampaignFinanceCoverage } from "../lib/control-plane/campaign-fina
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { isScheduled, scheduleObligation, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 
 /**
  * The in-memory double AND a fresh durable file store, each labelled, so one
@@ -137,4 +138,11 @@ export function coverageFixture(
     completeAsOf: null,
     ...over,
   };
+}
+
+/** A fixture obligation as the scheduler schedules it at `nowMs`; a fixture that would not schedule is a broken fixture. */
+export function scheduledFixture(obligation: FreshnessObligation, nowMs: number): ScheduledObligation {
+  const row = scheduleObligation(obligation, nowMs);
+  if (!isScheduled(row)) throw new Error("fixture obligation did not schedule");
+  return row;
 }

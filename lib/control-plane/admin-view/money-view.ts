@@ -44,6 +44,7 @@ import { SEARCH_PRICES } from "../../hunt/discovery-search.ts";
 import { DISCOVERY_SEARCH_ROLE, SEARCH_SOURCE_NOT_ON_RECORD } from "../cost.ts";
 import { DEFAULT_SEARCH_BUDGET } from "../discovery/search-runtime.ts";
 import { modelName } from "../plain-words.ts";
+import { WORK_QUESTION_WORDS, isWorkQuestion } from "../work-question.ts";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 
@@ -497,10 +498,12 @@ export function reconciliation(input: {
       pill: "TEST SPEND",
       tone: "cyan",
       text:
-        "Test and proof runs stay inside actual spending and inside the ceilings — they are real money." +
+        "Test and proof runs stay inside actual spending and inside the ceilings — they are real money, and every total above includes them. " +
+        "They are left out of what paid work produced and what a result cost: their charges are marked as test runs, and Cost of work shows them on a line of their own." +
         (input.proofAssignments !== null
-          ? ` ${plural(input.proofAssignments, "proof assignment")} are kept in their own lane so they never count as production work; their dollars are inside the totals above and are not yet separated from them (MW-024).`
-          : ""),
+          ? ` ${plural(input.proofAssignments, "proof assignment")} ${input.proofAssignments === 1 ? "is" : "are"} kept in their own lane so they never count as production work.`
+          : "") +
+        " Proof runs recorded before test runs were marked charged under the production project, so those still count as production.",
     },
     {
       pill: "CANNOT STOP",
@@ -560,6 +563,186 @@ export function outcomesInScope(
   const refused = by.get("REFUSED");
   if (refused && top) by.set("REFUSED", { ...refused, topRefusal: { code: top[0], count: top[1].count, detail: top[1].detail } });
   return orderOutcomes([...by.values()]);
+}
+
+/* ==================================================================== *
+ * WHAT THE PAID CHARGES WERE FOR (MW-013), AND TEST RUNS (MW-024)
+ * ==================================================================== */
+
+/** One group of paid charges as the store reads them (`PurposeRow`). */
+export interface PurposeFacts {
+  readonly state: string;
+  readonly kept: "KEPT" | "BEFORE" | "NOT_KEPT";
+  readonly recordClass: string | null;
+  readonly question: string | null;
+  readonly assigned: boolean;
+  readonly resultKind: string | null;
+  readonly test: boolean;
+  readonly role: string;
+  readonly charges: number;
+  readonly usd: number;
+  readonly unpriced: number;
+  readonly first: string | null;
+  readonly last: string | null;
+}
+
+export interface PurposeLine {
+  readonly key: string;
+  readonly label: string;
+  readonly detail: string;
+  readonly charges: number;
+  readonly usd: number;
+  readonly unpriced: number;
+  readonly tone: "text" | "muted" | "gold";
+}
+
+export interface PurposeSplit {
+  /** Production charges that recorded their purpose, by purpose, most dollars first. */
+  readonly lines: readonly PurposeLine[];
+  /** Charges written before any charge recorded its purpose. */
+  readonly before: PurposeLine | null;
+  /** Charges written since by a path that does not record purpose (search requests, the cache pre-warm). */
+  readonly notKept: PurposeLine | null;
+  /** Proof and test runs: inside every total, apart from what production produced. */
+  readonly test: PurposeLine | null;
+  readonly totalUsd: number;
+  readonly totalCharges: number;
+  /** The span of charges it covers, in words. */
+  readonly window: string;
+}
+
+const RESULT_WORDS: Readonly<Record<string, string>> = {
+  INGESTED: "acquired",
+  WALKED_NO_YIELD: "walked, nothing there",
+  POINTER_ONLY: "found a pointer",
+  NO_DISPOSITION: "no conclusion reached",
+  SIMULATED: "simulated, nothing run",
+  DISPOSITION_REFUSED: "conclusion refused",
+  LANE_MISMATCH: "refused: ran as the wrong worker",
+};
+
+const ROLE_PATH_WORDS: Readonly<Record<string, string>> = {
+  [DISCOVERY_SEARCH_ROLE]: "search requests",
+  SCOUT: "Scout charges outside an attempt (the cache pre-warm)",
+};
+
+function sumLine(rows: readonly PurposeFacts[]): { charges: number; usd: number; unpriced: number } {
+  return rows.reduce((n, r) => ({ charges: n.charges + r.charges, usd: n.usd + r.usd, unpriced: n.unpriced + r.unpriced }), { charges: 0, usd: 0, unpriced: 0 });
+}
+
+function unpricedWords(n: number): string {
+  return n > 0 ? ` ${plural(n, "charge")} reported no dollar figure — unknown, not free, so the amount is a floor.` : "";
+}
+
+/**
+ * Paid charges split by what each recorded it was for — record class,
+ * question, whether an owner Send reached the work, and what it came to — in
+ * one scope (every state, or one). Nothing is inferred for a charge that did
+ * not record it: rows from before purpose was kept are one line saying so, and
+ * so are rows from paths that still do not record it. Proof and test runs are
+ * their own line: in the total, never in a purpose.
+ */
+export function purposeSplit(rows: readonly PurposeFacts[], state: string | null): PurposeSplit {
+  const mine = rows.filter((r) => state === null || r.state === state);
+  const test = mine.filter((r) => r.test);
+  const prod = mine.filter((r) => !r.test);
+  const groups = new Map<string, PurposeFacts[]>();
+  for (const r of prod.filter((x) => x.kept === "KEPT")) {
+    const key = `${r.recordClass ?? ""}|${r.question ?? ""}|${r.assigned ? "A" : "S"}`;
+    groups.set(key, [...(groups.get(key) ?? []), r]);
+  }
+  const lines: PurposeLine[] = [...groups.entries()].map(([key, g]) => {
+    const s = sumLine(g);
+    const head = g[0];
+    const question = head.question !== null && isWorkQuestion(head.question) ? WORK_QUESTION_WORDS[head.question] : null;
+    const results = new Map<string, number>();
+    for (const r of g) results.set(r.resultKind ?? "NOT_RECORDED", (results.get(r.resultKind ?? "NOT_RECORDED") ?? 0) + r.charges);
+    const came = [...results.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([k, n]) => `${n} ${k === "NOT_RECORDED" ? "result not recorded" : (RESULT_WORDS[k] ?? k.toLowerCase().replace(/_/g, " "))}`)
+      .join(", ");
+    return {
+      key,
+      label:
+        `${head.recordClass === null ? "Record class not recorded" : head.recordClass.replace(/[-_]+/g, " ").replace(/^./, (c) => c.toUpperCase())} · ` +
+        `${question ?? "question not recorded"} · ${head.assigned ? "work an instruction of yours reached" : "standing work no instruction reached"}`,
+      detail: `${plural(s.charges, "charge")}; what each came to: ${came}.${unpricedWords(s.unpriced)}`,
+      charges: s.charges,
+      usd: s.usd,
+      unpriced: s.unpriced,
+      tone: "text",
+    };
+  });
+  lines.sort((a, b) => b.usd - a.usd || a.key.localeCompare(b.key));
+
+  const beforeRows = prod.filter((r) => r.kept === "BEFORE");
+  const b = sumLine(beforeRows);
+  const beforeLast = beforeRows.map((r) => r.last ?? "").sort().slice(-1)[0] ?? "";
+  const notKeptRows = prod.filter((r) => r.kept === "NOT_KEPT");
+  const n = sumLine(notKeptRows);
+  const roles = new Map<string, number>();
+  for (const r of notKeptRows) roles.set(r.role, (roles.get(r.role) ?? 0) + r.charges);
+  const t = sumLine(test);
+  const all = sumLine(mine);
+  const first = mine.map((r) => r.first ?? "").filter((x) => x !== "").sort()[0] ?? null;
+  const last = mine.map((r) => r.last ?? "").sort().slice(-1)[0] ?? null;
+  return {
+    lines,
+    before:
+      b.charges === 0
+        ? null
+        : {
+            key: "before",
+            label: "Recorded before purpose was kept",
+            detail:
+              `${plural(b.charges, "charge")}${beforeLast ? `, the last on ${eastern(beforeLast)}` : ""}. These charges did not say what their work was for, so they are not split — never guessed into a purpose.` +
+              unpricedWords(b.unpriced),
+            charges: b.charges,
+            usd: b.usd,
+            unpriced: b.unpriced,
+            tone: "muted",
+          },
+    notKept:
+      n.charges === 0
+        ? null
+        : {
+            key: "not-kept",
+            label: "Written by a path that does not record purpose",
+            detail:
+              `${plural(n.charges, "charge")}: ${[...roles.entries()].sort((x, y) => y[1] - x[1]).map(([role, c]) => `${c} ${ROLE_PATH_WORDS[role] ?? `${role.toLowerCase().replace(/_/g, " ")} charges`}`).join(", ")}. ` +
+              "Only the dispatcher's charges say what their work was for yet." +
+              unpricedWords(n.unpriced),
+            charges: n.charges,
+            usd: n.usd,
+            unpriced: n.unpriced,
+            tone: "gold",
+          },
+    test:
+      t.charges === 0
+        ? null
+        : {
+            key: "test",
+            label: "Test and proof runs",
+            detail:
+              `${plural(t.charges, "charge")}. Real money: inside this total, the ledger's totals and the ceilings. ` +
+              "Left out of what paid work produced and of what a result cost." +
+              unpricedWords(t.unpriced),
+            charges: t.charges,
+            usd: t.usd,
+            unpriced: t.unpriced,
+            tone: "gold",
+          },
+    totalUsd: all.usd,
+    totalCharges: all.charges,
+    window: first && last ? `every paid charge on record, ${eastern(first)} to ${eastern(last)}` : "every paid charge on record",
+  };
+}
+
+/** What the page says about the proof and test attempts it left out of production's figures. */
+export function testAttemptsWords(t: { readonly attempts: number; readonly usd: number } | null): string {
+  if (t === null) return "";
+  if (t.attempts === 0) return "No proof or test attempt is among them.";
+  return `${plural(t.attempts, "proof or test attempt")} (${usd(t.usd)}) ${t.attempts === 1 ? "is" : "are"} left out of these figures — real money, inside every total and ceiling, and not production's result.`;
 }
 
 /** A dollar figure per attempt; a fraction of a cent says so rather than rounding to a free-looking $0.00. */
@@ -773,8 +956,8 @@ export const LADDER_RULES: readonly { readonly holds: boolean; readonly text: st
     text: "The most capable class is the ceiling, and no model named Fable may route. Both are guards now, not observations: a routing edit that points any class above the ceiling or at a Fable fails when the code loads (MW-034).",
   },
   {
-    holds: false,
-    text: "Cheapest first, moving up only for a recorded reason. Not yet true: every production call runs its step's base class, nothing has ever moved up, and the reason and the combined cost of both tries would be recorded nowhere (MW-031).",
+    holds: true,
+    text: "Cheapest first, moving up only for a recorded reason. Enforced in code since Sep 25: the Scout's research starts on Sonnet 5 and moves up to Opus 5.5 only for one of four recorded reasons, after the spending ceiling holds room for the second try, and the result keeps the reason, the evidence and what both tries cost. The audit stays on Opus by design (MW-035). Checked with a stand-in provider only: no paid call has run under it yet (MW-031, MW-033).",
   },
   {
     holds: true,

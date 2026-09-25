@@ -43,6 +43,15 @@ export interface ScoutToolSpec {
   readonly input_schema: Record<string, unknown>;
   /** The executor sets this on the LAST definition so the tool list is a cache prefix. */
   readonly cache_control?: { readonly type: "ephemeral" };
+  /**
+   * Strict tool use: the provider guarantees the call's `input` validates
+   * against `input_schema` (every object `additionalProperties: false`, no
+   * numeric, string-length or complex array constraints). The replacement for
+   * a forced `tool_choice`, which Claude Opus 5.5 answers with HTTP 400
+   * (claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
+   * breaking change 2).
+   */
+  readonly strict?: boolean;
 }
 
 /**
@@ -205,7 +214,8 @@ export interface ScoutToolContext {
   readonly timeoutMs?: number;
   /**
    * The search seam (2026-09-19). Present only when a compliant search-index
-   * key is configured; absent leaves the `search` tool out of the toolkit's
+   * key is configured and the owner's paid-search switch is on, with that
+   * switch's budget admitting every request (2026-09-25); absent leaves the `search` tool out of the toolkit's
    * specs entirely, so a runtime with no key never offers it. It returns
    * POINTERS ONLY — the model opens each hit with fetch_public/browse, which
    * enforce robots and vault with provenance. The tool itself fetches no page

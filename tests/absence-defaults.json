@@ -84,6 +84,21 @@
       "file": "app/(admin)/admin/research/page.tsx",
       "text": "not readable",
       "reason": "Labels only the aggregateRevision field returned as null by the method-candidate authority projection. The adjacent fail-closed authority state, exact status code, and detail distinguish absence, refusal, and store failure; this text supplies no revision and makes no authority claim."
+    },
+    {
+      "file": "app/(admin)/_mw/delivery-trail.tsx",
+      "text": "not recorded on this snapshot (it was published before the change summary existed)",
+      "reason": "Names the absence as an absence. The publisher always writes changeSummary (promotionChangeSummary in lib/control-plane/delivery-trail.ts returns a string for every item, and says so itself when the item holds no SCOUTED record), so the field is missing only on a snapshot published by code from before it existed, which is exactly what the parenthetical says (MW-054)."
+    },
+    {
+      "file": "app/(admin)/_mw/screens/done.tsx",
+      "text": "no version marker",
+      "reason": "Names the absence as an absence. It completes 'measured under …' only for a readiness result whose snapshot carries no derivation-contract marker (the REQUIRES_REPUBLISH branch), and the same line says the result is not shown until it is measured again under the standard in force (MW-063)."
+    },
+    {
+      "file": "app/(admin)/_mw/screens/done.tsx",
+      "text": "Its gates and capabilities are not recorded in the list.",
+      "reason": "Names the absence as an absence. It renders only for a readiness-standard version whose gates are null, which lib/control-plane/readiness/standard.ts defines as a version recorded before the standard was data, and only when that version's own notRecorded reason is missing. It claims nothing about what the gates were (MW-063)."
     }
   ]
 }

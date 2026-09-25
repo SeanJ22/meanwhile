@@ -82,6 +82,7 @@ export function costSection(record: CostDigestRecord): CostLines {
   if (prewarm === undefined) lines.push("- PRE-WARM — not recorded on this record (the cycle predates the pre-warm, 2026-09-06)");
   else if (prewarm === null) lines.push("- PRE-WARM — none: no Scout was admitted this cycle, so nothing was warmed");
   else if (prewarm.status === "FAILED") lines.push(`- PRE-WARM — FAILED at ${prewarm.at}: ${prewarm.detail}; the Attempts ran without it`);
+  else if (prewarm.status === "SKIPPED") lines.push(`- PRE-WARM — SKIPPED at ${prewarm.at} for ${prewarm.model} (${prewarm.code}): ${prewarm.detail}`);
   else
     lines.push(
       `- PRE-WARM — the static prefix (tools + system) at ${prewarm.at}: wrote ${prewarm.cacheCreationInputTokens ?? "UNMEASURED"} · read ${prewarm.cacheReadInputTokens ?? "UNMEASURED"} · ` +

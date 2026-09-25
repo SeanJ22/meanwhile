@@ -41,10 +41,11 @@ test("the gate opens candidate-enrichment for campaignSite only, and cites the o
 test("gate open + owner pause: the paid lane stays CLOSED (PAUSED); the pause is what holds it", () => {
   const gate = readActivationGate(ROOT);
   assert.equal(deliveryPathOpen(gate), true);
-  const base = { scheduledBlackout: false, dry: false, noModel: false, credentialConfigured: true, credentialVar: "WTP_WORKERS_ANTHROPIC_API_KEY", activation: gate };
+  const base = { scheduledBlackout: false, dry: false, noModel: false, credentialConfigured: true, credentialVar: "WTP_WORKERS_ANTHROPIC_API_KEY", activation: gate, runnerPaused: false, runnerPauseIntentId: null, unreadableControls: [] };
   assert.deepEqual(modelLaneClosure({ ...base, paused: true, pauseIntentId: "ri-owner-pause" }), { code: "PAUSED", reason: "paused by owner intent ri-owner-pause" });
-  /* Without a credential the lane is closed before the pause is even read. */
-  assert.equal(modelLaneClosure({ ...base, credentialConfigured: false, paused: true, pauseIntentId: "ri-owner-pause" })?.code, "LANE_DISABLED");
+  /* The owner's pause is named first, credential or not (model-lane.ts orders the owner's decisions ahead of configuration); without the pause, a missing credential closes it. */
+  assert.equal(modelLaneClosure({ ...base, credentialConfigured: false, paused: true, pauseIntentId: "ri-owner-pause" })?.code, "PAUSED");
+  assert.equal(modelLaneClosure({ ...base, credentialConfigured: false, paused: false, pauseIntentId: null })?.code, "LANE_DISABLED");
   /* Recorded plainly: once the owner resumes, the open class IS a delivery path and the lane opens (owner directive 2026-09-22). */
   assert.equal(modelLaneClosure({ ...base, paused: false, pauseIntentId: null }), null);
 });

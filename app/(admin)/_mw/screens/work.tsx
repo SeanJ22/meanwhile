@@ -182,7 +182,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
         const row = buildAssignments(read.value, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
-          ? { kind: "DETAIL", id: openId, detail: standingDetail(row), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
+          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
           : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
       } else opened = { kind: "MISSING", id: openId, says: read.detail };
     }
@@ -534,7 +534,7 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
           </p>
           <div className={s.stack10}>
             {detail.unsettled.map((u) => (
-              <DeadEnd key={`${u.pill}-${u.title}`} flush d={{ pill: u.pill, title: u.title, ruledOut: u.ruledOut, wouldSettle: u.wouldSettle, whoMoves: u.whoMoves }} />
+              <DeadEnd key={`${u.pill}-${u.title}`} flush d={{ pill: u.pill, title: u.title, ruledOut: u.ruledOut, wouldSettle: u.wouldSettle, whoMoves: u.whoMoves, gaps: u.gaps }} />
             ))}
           </div>
         </div>

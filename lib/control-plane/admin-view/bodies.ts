@@ -27,6 +27,8 @@
  * PURE: rows in, views out; the only clock is `nowIso`.
  */
 
+import { routineRuledOut, type DeadEndGaps } from "./dead-ends.ts";
+
 export type BodyStatus = "WORKING" | "NEEDS ATTENTION" | "STUCK" | "NOT READ YET";
 export type ViewTone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 export type FigureTone = "text" | "muted" | "gold" | "amber" | "teal" | "accent";
@@ -168,6 +170,8 @@ export interface BodyDeadEnd {
   readonly ruledOut: string | null;
   readonly wouldSettle: string | null;
   readonly whoMoves: string | null;
+  /** Why a null field is missing, named (MW-016); absent on a field that has a value. */
+  readonly gaps?: DeadEndGaps;
 }
 
 export interface BodyView {
@@ -750,10 +754,23 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   /* ---------------------------------------------------------------- dead end */
   let deadEnd: BodyDeadEnd | null = null;
   if (last !== null && lastFailed) {
+    /* What the run of reads ruled out, from the reads themselves (MW-016); a gap is named, never left blank. */
+    const ruled = routineRuledOut(
+      attempts.map((a) => ({
+        state: a.state,
+        failureCode: a.failureCode,
+        acquisitionSucceeded: a.acquisitionSucceeded,
+        attemptedAt: a.attemptedAt,
+        failed: !a.acquisitionSucceeded || FAILED_STATES.has(a.state),
+        jobFailure: isJobFailure(a.failureDetail),
+      })),
+      (a) => readStateWords(a.state, a.failureCode),
+    );
     deadEnd = {
       pill: version ? "LAST READ FAILED" : "CANNOT FINISH",
       title: `The last read ${readStateWords(last.state, last.failureCode, last.failureDetail)}${last.failureDetail ? ` — ${detailWords(last.failureDetail)}` : ""}`,
-      ruledOut: null,
+      ruledOut: ruled.ruledOut,
+      ...(ruled.gap !== null ? { gaps: { ruledOut: ruled.gap } } : {}),
       wouldSettle: wouldSettleWords(last.state, last.failureCode, source, contract.sourceUrl, last.failureDetail),
       whoMoves: isJobFailure(last.failureDetail)
         ? `Engineering: our adapter or its configuration has to change. The runner retries on its clock (${contract.retry.description} after a failure), but the same code fails the same way${version ? "; the last good version keeps serving meanwhile" : ""}.`

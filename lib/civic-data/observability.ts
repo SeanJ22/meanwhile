@@ -15,6 +15,7 @@ import { meetingPayloadSittingStarts } from "./store.ts";
 import {
   SITTING_WINDOW_ADMISSION_LEAD_MS,
   SITTING_WINDOW_BASE_ADMISSION_LEAD_MS,
+  meetingPayloadStatedEnds,
   sittingWindowHotByConclusion,
   sittingWindowObligation,
   sittingWindowRetryMs,
@@ -1292,11 +1293,18 @@ function sittingWindowSignalsFromPromotions(
     .filter((row) => row.recordClass === "MEETING")
     .map((row) => [row.scope, meetingPayloadSittingStarts(row.payload)] as const));
   const startsById = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, startsByScope.get(partition.scope)]));
+  // A publisher-stated end decides when its sitting concluded, as the runner reads it (C6).
+  const endsByScope = new Map(promotions
+    .filter((row) => row.recordClass === "MEETING")
+    .map((row) => [row.scope, meetingPayloadStatedEnds(row.payload)] as const));
+  const endsById = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, endsByScope.get(partition.scope)]));
   const signals = new Map<string, boolean | undefined>();
   for (const contract of contracts) {
     const schedule = "schedule" in contract ? contract.schedule : undefined;
     if (schedule?.kind !== "SITTING_WINDOW") continue;
-    signals.set(contract.id, sittingWindowHotByConclusion(schedule, sittingWindowSourceIds(contract.id).map((id) => startsById.get(id)), nowMs));
+    const sources = sittingWindowSourceIds(contract.id);
+    const ends = new Map(sources.flatMap((id) => [...(endsById.get(id) ?? new Map<string, number>())]));
+    signals.set(contract.id, sittingWindowHotByConclusion(schedule, sources.map((id) => startsById.get(id)), nowMs, ends));
   }
   return signals;
 }

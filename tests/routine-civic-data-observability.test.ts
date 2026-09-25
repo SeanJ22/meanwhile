@@ -1928,8 +1928,8 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
     NOW,
     [contract],
   ).contracts[0];
-  // Owed an hour after the failed attempt, admitted 15 minutes before.
-  assert.deepEqual(published.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:15:00.000Z" });
+  // Owed an hour after the failed attempt, admitted 25 minutes before.
+  assert.deepEqual(published.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:05:00.000Z" });
   assert.equal(published.cadence.operationalState, "RETRYING");
   assert.ok(published.cadence.retryDescription.startsWith(contract.retry.description));
   assert.doesNotMatch(published.cadence.retryDescription, /never published/);

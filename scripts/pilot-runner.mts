@@ -246,8 +246,8 @@ const ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs(
     clockTaskCount: ROUTINE_SOURCE_TASKS.length,
     clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
     clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    // Provider-frontier history read plus the idempotent supervisor digest append.
-    coordinationRequests: 2,
+    // Provider-frontier history read, the stated sitting-ends read (C6) and the idempotent supervisor digest append.
+    coordinationRequests: 3,
     readerSingleDomains: ROUTINE_READER_DOMAINS.filter(({ mode }) => mode === "SINGLE").length,
     readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
     readerMeetingDomains: ROUTINE_READER_DOMAINS.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,

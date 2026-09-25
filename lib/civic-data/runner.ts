@@ -121,15 +121,19 @@ export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
  */
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
 /**
- * **A MEETING LANE TAKES UP TO TWO READS A PASS (C6, 2026-09-25).** Every task on
- * a meeting lane owes its next read by a deadline (sitting-window-admission.ts),
+ * **A MEETING LANE TAKES UP TO THREE READS A PASS (C6, 2026-09-25).** Every task
+ * on a meeting lane owes its next read by a deadline (sitting-window-admission.ts),
  * and one read a pass, 12 an hour, is too few for the busiest lane: Tucson's
- * board site hosts 27 bodies, up to 15 of them hourly around 2026-10-13 by the
- * published sittings, which is about 19 reads an hour with the twice-daily rest.
- * Two a pass is 24 an hour. The two run one after the other, never together, so
- * the host still sees one request at a time. Other lanes keep one a pass.
+ * board site hosts 27 bodies, up to 16 of them hourly around 2026-10-14 by the
+ * promoted sittings. Replaying 30 days of production's schedule against the 196
+ * passes recorded on 2026-09-24, two a pass still left 49 hourly reads late on
+ * that lane after long passes (up to 15:52), when a stalled lane has to catch
+ * up; three a pass with the 25-minute lead left 13, none with passes of normal
+ * length. The reads run one after another with the same-host gap between them
+ * (bounded-child-pass.ts), so a host sees one request at a time. Other lanes
+ * keep one a pass.
  */
-export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 2;
+export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS };
 /** Canonical clock reads are independent HTTP queries, not one serial failure chain. */
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
@@ -519,19 +523,24 @@ export async function readRoutineTaskClocks(
 
 /**
  * Every sitting-window task's hot signal for one admission instant, from the
- * same pass's clock reads. A failed or missing read counts as unknown.
+ * same pass's clock reads. A failed or missing read counts as unknown. A
+ * sitting concludes at its publisher-stated end where one is given, by task id
+ * (`statedEnds`), and otherwise by the day bound (sitting-window-admission.ts).
  */
 export function sittingWindowSignals(
   reads: readonly { readonly task: RoutineSourceTask; readonly ok: boolean; readonly clock?: RoutineTaskClock }[],
   nowMs: number,
+  statedEnds: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map(),
 ): ReadonlyMap<string, boolean | undefined> {
   const clocks = new Map(reads.map((read) => [read.task.id, read.ok ? read.clock ?? {} : undefined]));
   const signals = new Map<string, boolean | undefined>();
   for (const read of reads) {
     const schedule = read.task.contract.schedule;
     if (schedule?.kind !== "SITTING_WINDOW") continue;
-    const lists = sittingWindowSourceIds(read.task.id).map((id) => clocks.get(id)?.sittingStarts);
-    signals.set(read.task.id, sittingWindowHotByConclusion(schedule, lists, nowMs));
+    const sources = sittingWindowSourceIds(read.task.id);
+    const lists = sources.map((id) => clocks.get(id)?.sittingStarts);
+    const ends = new Map(sources.flatMap((id) => [...(statedEnds.get(id) ?? new Map<string, number>())]));
+    signals.set(read.task.id, sittingWindowHotByConclusion(schedule, lists, nowMs, ends));
   }
   return signals;
 }

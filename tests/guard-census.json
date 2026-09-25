@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 783,
-    "named": 7645,
+    "named": 7651,
     "dynamic": 30
   },
   "files": {
@@ -6086,6 +6086,10 @@
     "tests/meeting-sitting-window.test.ts": {
       "names": [
         "C6: a body is hourly for a meeting in the next seven days or one that concluded in the previous seven",
+        "C6: a sitting concludes at its publisher-stated end; only a sitting with none takes the day bound, which is never stored or shown",
+        "C6: the runner reads the stated ends once a pass and hands them to the sitting window by task",
+        "C6: the scheduling bound is outside what readers see: no reader-bound file imports the admission rules",
+        "C6: the stated-ends read is built in Postgres, returns only stated pairs, and never selects a payload whole",
         "Pima outcomes follow both Board partitions; an unreadable partition never cools them",
         "R20: a meeting partition never published is retried twice daily, not hourly; a published one keeps its retry",
         "a meeting partition is re-read hourly when hot and twice daily otherwise, never drifting past the hour",
@@ -9088,9 +9092,10 @@
     },
     "tests/routine-civic-data-frontier.test.ts": {
       "names": [
-        "C6: 30 days on a lane shaped like Tucson's, with late passes and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00",
-        "C6: a meeting lane is read earliest deadline first, up to two a pass; every other lane keeps one least-recently-considered",
-        "C6: no production lane mixes sitting-window tasks with any other task, so deadline order and two slots touch meeting lanes only",
+        "C6 residual, open: with production's recorded passes (up to 15:52, drawn at random) a Tucson-shaped lane still misses the hour, rarely and by at most two minutes",
+        "C6: 30 days on a lane shaped like Tucson's, passes of normal length, the same-host gap and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00",
+        "C6: a meeting lane is read earliest deadline first, up to three a pass; every other lane keeps one least-recently-considered",
+        "C6: no production lane mixes sitting-window tasks with any other task, so deadline order and the extra slots touch meeting lanes only",
         "C6: the runner hands the frontier each due task's deadline from the same pass's clocks and sitting signals",
         "a corrupt supervisor row is explicit and cannot erase valid fairness clocks",
         "a malformed exact receipt cannot suppress a valid prior supervisor attempt",
@@ -9230,6 +9235,7 @@
     "tests/routine-civic-data-runner.test.ts": {
       "names": [
         "--only selection refuses typos and empty tokens before store access",
+        "C6: two reads of one host in one pass start at least the gap apart; other hosts do not wait, and the outer bound counts the gap",
         "Reader readback repair covers the observable registry independently of source cadence",
         "Reader repair work drains continuously under a fixed cap after one item hangs or fails",
         "a child process or receipt failure is operational and cannot fabricate source state",

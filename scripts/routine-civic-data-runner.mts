@@ -53,9 +53,11 @@ import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
   ROUTINE_CHILD_TIMEOUT_MS,
+  ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
   runBoundedChildPass,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
+import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -85,6 +87,7 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
+import { getDb } from "../lib/db/index.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
@@ -356,8 +359,22 @@ const clockReads = FORCE
       (task) => store.clock(task.sourceId, task.recordClass, task.scope),
     );
 // Meeting sources follow their bodies' sittings; the window is decided once,
-// at the same frozen instant, from this pass's own clock reads.
-const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs);
+// at the same frozen instant, from this pass's own clock reads. A sitting's
+// publisher-stated end, where one exists, decides when it concluded (C6); an
+// unreadable end set falls back to the day bound and is reported.
+let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
+if (!FORCE) {
+  try {
+    const byScope = statedSittingEndsByScope(await statedSittingEndsRead(getDb()));
+    statedEndsByTask = new Map(selectedTasks.flatMap((task) =>
+      task.recordClass === "MEETING" && byScope.has(task.scope) ? [[task.id, byScope.get(task.scope)!] as const] : []));
+  } catch (error) {
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    supervisorFailures.push({ taskId: "routine-civic-data-stated-sitting-ends", code: "STATED_ENDS_READ_FAILED", detail });
+    console.error(`RCD_TASK routine-civic-data-stated-sitting-ends: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+  }
+}
+const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask);
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -486,6 +503,8 @@ const childRuns = await runBoundedChildPass(
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: ROUTINE_CHILD_CONCURRENCY,
+    // Two reads of one host in this pass start at least a minute apart (C6).
+    sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onSettled: async (run, index) => settlePendingRun(pendingRuns[index]!, run),
     // Classification consumes the exact receipt before this worker advances.
     // Retaining only the small result summary bounds memory across the full portfolio.

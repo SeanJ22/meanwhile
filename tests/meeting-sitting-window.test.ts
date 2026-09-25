@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+
+import { drizzle } from "drizzle-orm/neon-http";
+
+import * as schema from "../lib/db/schema.ts";
 
 import {
   MEETING_SITTING_WINDOW,
@@ -13,7 +18,11 @@ import {
   SITTING_CONCLUSION_BOUND_MS,
   SITTING_WINDOW_ADMISSION_LEAD_MS,
   SITTING_WINDOW_BASE_ADMISSION_LEAD_MS,
+  meetingPayloadStatedEnds,
+  sittingConclusionMs,
   sittingWindowHotByConclusion,
+  statedSittingEndsByScope,
+  statedSittingEndsRead,
 } from "../lib/civic-data/sitting-window-admission.ts";
 import {
   ROUTINE_SOURCE_TASKS,
@@ -112,9 +121,9 @@ test("a meeting partition is re-read hourly when hot and twice daily otherwise, 
   const base = Date.parse(at);
   const clock = succeededAt(at);
   // The next read is owed exactly an hour (hot) or twelve hours after the last.
-  // An hourly read is admitted 15 minutes before it is owed, so it lands inside
+  // An hourly read is admitted 25 minutes before it is owed, so it lands inside
   // the hour; a twice-daily read 2 hours before, so it fills free slots.
-  assert.equal(LEAD, 15 * 60_000);
+  assert.equal(LEAD, 25 * 60_000);
   assert.equal(BASE_LEAD, 2 * HOUR);
   assert.equal(routineTaskDeadlineMs(partition, clock, true), base + HOUR);
   assert.equal(routineTaskDeadlineMs(partition, clock, false), base + 12 * HOUR);
@@ -152,11 +161,11 @@ test("the success is read in the attempt clock's own units, so a success is neve
   const clock = succeededAt(at);
   assert.ok(Date.parse(clock.lastSucceededAt!) < Date.parse(clock.lastAttemptedAt!));
   assert.equal(routineTaskDue(partition, clock, base + HOUR, false), false, "base: not re-read at the retry hour");
-  // A genuinely failed later attempt owes its retry an hour later, admitted 15 minutes early.
+  // A genuinely failed later attempt owes its retry an hour later, admitted 25 minutes early.
   const failed: RoutineTaskClock = { ...clock, lastAttemptedAt: "2026-09-24T10:00:00.000Z" };
   assert.equal(routineTaskDeadlineMs(partition, failed, false), Date.parse("2026-09-24T11:00:00.000Z"));
-  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T10:45:00.000Z") - 1, false), false);
-  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T10:45:00.000Z"), false), true);
+  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T10:35:00.000Z") - 1, false), false);
+  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T10:35:00.000Z"), false), true);
   // A published source with no proven success retries on its attempt; a never-run one is due at once.
   assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR - LEAD - 1, false), false);
   assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR - LEAD, false), true);
@@ -241,4 +250,60 @@ test("Pima outcomes follow both Board partitions; an unreadable partition never 
   assert.equal(routineTaskDue(outcomes, clock, base + 12 * HOUR - BASE_LEAD - 1, false), false);
   assert.equal(routineTaskDue(outcomes, clock, base + 12 * HOUR - BASE_LEAD, false), true);
   assert.equal(routineTaskDue(outcomes, clock, base + HOUR - LEAD, true), true);
+});
+
+test("C6: a sitting concludes at its publisher-stated end; only a sitting with none takes the day bound, which is never stored or shown", () => {
+  const now = Date.parse("2026-09-25T06:00:00.000Z");
+  const iso = (ms: number) => new Date(ms).toISOString();
+  // A three-day hearing that ended 6.5 days ago stays hourly by its stated end;
+  // the day bound alone would have cooled it.
+  const long = iso(now - 9 * DAY);
+  const longEnds = new Map([[long, now - 6.5 * DAY]]);
+  assert.equal(sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [[long]], now), false);
+  assert.equal(sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [[long]], now, longEnds), true);
+  // A two-hour meeting that ended 7 days and an hour ago is not hourly by its
+  // stated end, though the day bound would have kept it.
+  const short = iso(now - 7 * DAY - 3 * HOUR);
+  const shortEnds = new Map([[short, now - 7 * DAY - HOUR]]);
+  assert.equal(sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [[short]], now), true);
+  assert.equal(sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [[short]], now, shortEnds), false);
+  // An end before its start is not an end.
+  assert.equal(sittingConclusionMs(short, new Map([[short, Date.parse(short) - 1]])), Date.parse(short) + DAY);
+  // The payload twin reads only stated pairs, the latest end per start.
+  const ends = meetingPayloadStatedEnds({ meetings: [
+    { startsAt: long, endsAt: iso(now - 6.5 * DAY) },
+    { startsAt: short },
+    { startsAt: short, endsAt: "not a time" },
+    { startsAt: 5, endsAt: iso(now) },
+  ] });
+  assert.deepEqual([...ends], [[long, now - 6.5 * DAY]]);
+  assert.deepEqual([...meetingPayloadStatedEnds({})], []);
+  assert.deepEqual([...statedSittingEndsByScope([{ scope: "s", pairs: [[long, iso(now - 6.5 * DAY)], [short, null], ["x"]] }, { scope: "t", pairs: [] }])],
+    [["s", new Map([[long, now - 6.5 * DAY]])]]);
+});
+
+test("C6: the stated-ends read is built in Postgres, returns only stated pairs, and never selects a payload whole", () => {
+  const text = statedSittingEndsRead(drizzle.mock({ schema })).toSQL().sql;
+  assert.match(text, /jsonb_build_array\(m->'startsAt', m->'endsAt'\)/);
+  assert.match(text, /jsonb_typeof\(m->'endsAt'\) = 'string'/);
+  assert.doesNotMatch(text.slice(0, text.indexOf(" from \"civic_data_promotions\"")), /select (?:"civic_data_promotions"\.)?"payload"[,\s]/);
+});
+
+test("C6: the scheduling bound is outside what readers see: no reader-bound file imports the admission rules", () => {
+  const receipt = readFileSync("docs/evidence/reader-last-mile-final-closure-receipt.json", "utf8");
+  for (const path of ["lib/civic-data/sitting-window-admission.ts", "lib/civic-data/runner.ts", "lib/civic-data/bounded-child-pass.ts", "lib/civic-data/observability.ts"]) {
+    assert.equal(receipt.includes(`"${path}"`), false, `${path} is not a reader source`);
+  }
+});
+
+test("C6: the runner reads the stated ends once a pass and hands them to the sitting window by task", () => {
+  const now = Date.parse("2026-09-25T06:00:00.000Z");
+  const partition = task(PIMA_LEGISTAR);
+  const start = new Date(now - 9 * DAY).toISOString();
+  const read = { task: partition, ok: true, clock: succeededAt("2026-09-25T05:30:00.000Z", [start]) };
+  assert.equal(sittingWindowSignals([read], now).get(partition.id), false);
+  assert.equal(sittingWindowSignals([read], now, new Map([[partition.id, new Map([[start, now - 6 * DAY]])]])).get(partition.id), true);
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.ok(runner.indexOf("statedSittingEndsRead(getDb())") < runner.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)"));
+  assert.match(runner, /sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS/);
 });

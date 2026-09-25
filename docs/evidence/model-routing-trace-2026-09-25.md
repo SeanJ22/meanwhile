@@ -24,7 +24,7 @@ references are to that branch.
 | The step registry is closed. `page-to-representation`, `permission-reading` and `date-parsing` are `DETERMINISTIC` and name the code that does them | `lib/control-plane/scheduler/model-routing.ts:101`, `:107`, `:113` | CODE |
 | `assertStepMayInvokeModel` throws for a deterministic or unknown step before any transport call | `model-routing.ts:194` | OFFLINE-VERIFIED (`tests/scout-lane.test.ts` test 15; `tests/scout-model-ladder.test.ts` L7) |
 | An escalation of a deterministic step throws the same way | `model-routing.ts:275` (`assertStepMayEscalate` calls `assertStepMayInvokeModel` first) | OFFLINE-VERIFIED (L7) |
-| A route the executor decision marks DETERMINISTIC (graduated or declared) never sends a request: `SCOUT_GRADUATED_ROUTE`, measured zero cost, no escalation | `lib/control-plane/scheduler/scout-executor.ts:1051`; decision rule `lib/control-plane/scheduler/dispatch.ts:165` | OFFLINE-VERIFIED (`scout-lane` tests 1 and 13) |
+| A route the executor decision marks DETERMINISTIC (graduated or declared) never sends a request: `SCOUT_GRADUATED_ROUTE`, measured zero cost, no escalation | `lib/control-plane/scheduler/scout-executor.ts:1065`; decision rule `lib/control-plane/scheduler/dispatch.ts:165` | OFFLINE-VERIFIED (`scout-lane` tests 1 and 13) |
 | Only two roles can reach a paid model: SCOUT and ADVERSARIAL_AUDITOR. Every other role declares the plain-code lane | `lib/control-plane/cost-panel.ts:510`; `lib/control-plane/workers/runtime.ts:99` | OFFLINE-VERIFIED (`tests/cost-section-adm-c14.test.ts`, which rebuilds the table from the files) |
 
 ## 2. Reuse before research
@@ -33,16 +33,16 @@ references are to that branch.
 |---|---|---|
 | Free walk first: a meetings-discovery row reaches a paid Scout only after the unpaid walk read the site and found nothing, or when there is no site to walk (`FREE_WALK_FIRST`) | `scripts/freshness-shadow.mts:2180` → `lib/control-plane/scheduler/providers/meetings-discovery.ts:134` | CODE |
 | Field manual inheritance: each Scout brief starts with the doors earlier walks found, projected to its jurisdiction. The IDs are recorded on the result (`inheritedFieldManualEntryIds`) | `scripts/freshness-shadow.mts:1701`; autonomous path `lib/control-plane/workers/standing-runtime.ts:77` | CODE (the delivery was checked earlier; see the memory note "scout field-manual delivery verified") |
-| Resume, don't restart: the last two Scout results, their rungs and named next rungs lead the brief | `scripts/freshness-shadow.mts:1639`, `:1671`, `:1714`; `scout-executor.ts:363` | OFFLINE-VERIFIED (`scout-lane` tests 5 and 17) |
-| No re-read, no re-walk: a URL already vaulted this Attempt, or a rung recorded as durably failed, is refused before it runs | `scout-executor.ts:1072` | OFFLINE-VERIFIED (`scout-lane` tests 17 and 18) |
-| **Escalation reuses the cheaper attempt's work.** The frontier continues the same conversation, with every rung, artifact and representation. It shares the no-re-read set, the tool-call bound and the per-host bound, so a second attempt never means more requests to a publisher | `scout-executor.ts:1472`–`:1519` | OFFLINE-VERIFIED (L3: the frontier's first request contains the Sonnet attempt's tool results, and its accepted finish cites an artifact the Sonnet attempt stored) |
+| Resume, don't restart: the last two Scout results, their rungs and named next rungs lead the brief | `scripts/freshness-shadow.mts:1639`, `:1671`, `:1714`; `scout-executor.ts:377` | OFFLINE-VERIFIED (`scout-lane` tests 5 and 17) |
+| No re-read, no re-walk: a URL already vaulted this Attempt, or a rung recorded as durably failed, is refused before it runs | `scout-executor.ts:1086` | OFFLINE-VERIFIED (`scout-lane` tests 17 and 18) |
+| **Escalation reuses the cheaper attempt's work.** The frontier continues the same conversation, with every rung, artifact and representation. It shares the no-re-read set, the tool-call bound and the per-host bound, so a second attempt never means more requests to a publisher | `scout-executor.ts:1486`–`:1533` | OFFLINE-VERIFIED (L3: the frontier's first request contains the Sonnet attempt's tool results, and its accepted finish cites an artifact the Sonnet attempt stored) |
 
 ## 3. Cheapest suitable class first, for each paid step
 
 | Step | Class it starts on | Why | Where | Status |
 |---|---|---|---|---|
-| Scout research loop | **Sonnet 5** (`claude-sonnet-5`), then the frontier on a recorded reason | Cheapest class that accepts this request. Sonnet 5 accepts the effort setting, tool use and long context. Haiku 4.5 rejects `output_config.effort` and has a 200K context limit | registry `model-routing.ts:91`; one start answer for the executor and pre-warm `scout-executor.ts:906`; first attempt `:1426`; request model `:1140`–`:1160` | OFFLINE-VERIFIED (L1, L2; `scout-lane` tests 8, 15, 19) |
-| Scout cache pre-warm | The loop's start model (Sonnet 5) | Warms the entry the loop reads first. It never warms a model an Attempt might escalate to | `scout-executor.ts:786`; `scripts/freshness-shadow.mts:1956` | OFFLINE-VERIFIED (L6: pre-warm tools, system, effort and model match the loop's first request byte-for-byte) |
+| Scout research loop | **Sonnet 5** (`claude-sonnet-5`), then the frontier on a recorded reason | Cheapest class that accepts this request. Sonnet 5 accepts the effort setting, tool use and long context. Haiku 4.5 rejects `output_config.effort` and has a 200K context limit | registry `model-routing.ts:91`; one start answer for the executor and pre-warm `scout-executor.ts:920`; first attempt `:1440`; request model `:1154`–`:1174` | OFFLINE-VERIFIED (L1, L2; `scout-lane` tests 8, 15, 19) |
+| Scout cache pre-warm | The loop's start model (Sonnet 5) | Warms the entry the loop reads first. It never warms a model an Attempt might escalate to | `scout-executor.ts:800`; `scripts/freshness-shadow.mts:1956` | OFFLINE-VERIFIED (L6: pre-warm tools, system, effort and model match the loop's first request byte-for-byte) |
 | Adversarial audit | Frontier (`claude-opus-5-5`), no cheaper class and no escalation | MW-035 allows an expensive step when it is selective. This one runs once per record that the parser and validator already passed on its way to promotion. It exists to find what cheaper passes missed | `model-routing.ts:150`; `lib/control-plane/workers/model-audit.ts:228`–`:237` | OFFLINE-VERIFIED (L7: frontier, `escalationTargetFor` is null, escalation throws) |
 | extraction / classification / summarization | Haiku → Sonnet / Sonnet → frontier | Registry entries only | `model-routing.ts:119`, `:127`, `:135` | CODE: **no production caller exists**, so no production call reaches these steps |
 
@@ -55,24 +55,24 @@ loop's start model: `lib/control-plane/scheduler/research-policy.ts` (end of fil
   observed on the cheaper attempt by the executor and never taken from the model's
   words: `BOUND_EXHAUSTED_WITHOUT_RESULT`, `RESULT_REFUSED`, `NO_TYPED_RESULT` and
   `CAPABILITY_ERROR` (HTTP 400 on the cheaper model). They are defined at
-  `model-routing.ts:220` and classified at `scout-executor.ts:1390`.
+  `model-routing.ts:220` and classified at `scout-executor.ts:1404`.
   OFFLINE-VERIFIED: L3 tests each reason.
 - **What does not escalate.** A provider overload, a network fault or a ceiling
-  refusal is not the model's failure, so it never escalates (`:1392`–`:1396`).
+  refusal is not the model's failure, so it never escalates (`:1406`–`:1410`).
   Neither does an accepted result, including an argued NO_PROGRESS.
   OFFLINE-VERIFIED: L2 and L4, where an HTTP 529 does not escalate.
 - **Checks before every frontier call.** Each call runs `assertStepMayEscalate(step, reason)` first
-  (`scout-executor.ts:1510`). It refuses a reason outside the list, a step already
+  (`scout-executor.ts:1524`). It refuses a reason outside the list, a step already
   at the top of its ladder, and a target above the ceiling.
   OFFLINE-VERIFIED: L7.
 - **Reserve first.** The frontier attempt's worst case is held before its first
   request, against the same rolling 24-hour inequality every request uses:
-  `scoutAttemptWorstCaseUsd` (`scout-executor.ts:508`), then
+  `scoutAttemptWorstCaseUsd` (`scout-executor.ts:522`), then
   `FleetSafetyController.holdModelBudget` (`lib/control-plane/fleet-safety.ts:769`)
   through `scoutEscalationReservation` (`:800`). It is wired to both production
   Scout paths: `scripts/freshness-shadow.mts:1996` and `:2487` →
   `standing-runtime.ts:62`. As each frontier turn is priced, its cost is drawn from
-  the hold (`scout-executor.ts:1190`). The rest is released when the attempt ends,
+  the hold (`scout-executor.ts:1204`). The rest is released when the attempt ends,
   so the hold and the spend are never counted twice.
   OFFLINE-VERIFIED: L5 uses the real controller. At a $5 ceiling the escalation is
   refused before any frontier request and is deferred by name. At a $100 ceiling it
@@ -80,7 +80,7 @@ loop's start model: `lib/control-plane/scheduler/research-policy.ts` (end of fil
 - **Refusals are recorded.** A refused escalation records `escalationRefused`
   with one of four codes: `CEILING`, `WALL_CLOCK`, `UNMEASURED_SPEND` or
   `NOT_RESERVED`. It also appends `SCOUT_ESCALATION_REFUSED` to the result's refusal
-  list, after the root cause (`scout-executor.ts:1447`–`:1454`, `:1631`). With no
+  list, after the root cause (`scout-executor.ts:1461`–`:1468`, `:1645`). With no
   seam wired, every escalation is refused `NOT_RESERVED`, so the default fails
   closed. OFFLINE-VERIFIED: L5.
 - **What is recorded.** Each result records `modelClass`, `modelClassWhy`,
@@ -114,10 +114,10 @@ OFFLINE-VERIFIED: `tests/model-ceiling.test.ts` (positive controls) and L7.
 ## 6. Prompt-cache placement
 
 - Breakpoints appear in render order (`SCOUT_CACHE_POLICY`, `model-routing.ts:430`):
-  - the last tool definition (`scout-executor.ts:656`);
-  - the system block (`:669`);
-  - the top-level moving breakpoint (`:1160`), with message blocks sent bare (`:558`).
-- `cacheTtlOrderProblems` (`:690`) refuses an unlawful TTL order before sending.
+  - the last tool definition (`scout-executor.ts:670`);
+  - the system block (`:683`);
+  - the top-level moving breakpoint (`:1174`), with message blocks sent bare (`:572`).
+- `cacheTtlOrderProblems` (`:704`) refuses an unlawful TTL order before sending.
   OFFLINE-VERIFIED: L1 checks the Sonnet request bodies. L3 checks the frontier
   requests after escalation.
 - **Minimum cacheable prefix.** The minimum is looked up for each model
@@ -125,12 +125,12 @@ OFFLINE-VERIFIED: `tests/model-ceiling.test.ts` (positive controls) and L7.
   Sonnet 5 1024, Haiku 4.5 4096 tokens.
   - The pre-warm is sent only when a lower bound on the prefix size clears the
     start model's minimum. The bound is the prefix's bytes divided by 4
-    (`PREFIX_BYTES_PER_TOKEN_CEILING`, `scout-executor.ts:753`).
+    (`PREFIX_BYTES_PER_TOKEN_CEILING`, `scout-executor.ts:767`).
   - Otherwise the pre-warm is `SKIPPED` with a named reason and no paid call.
     OFFLINE-VERIFIED: L6. The production prefix clears Sonnet's 1024. Haiku is
     `BELOW_CACHE_MINIMUM`, and an unrated model is `CACHE_MINIMUM_UNKNOWN`.
 - **Cache defects.** The detector now runs once per model attempt, against that
-  attempt's own model minimum (`scout-executor.ts:1608`). The frontier's first turn
+  attempt's own model minimum (`scout-executor.ts:1622`). The frontier's first turn
   rewrites the conversation into its own model's cache by design. That is counted
   as its first turn, not as a defect. OFFLINE-VERIFIED: L3 (`cacheDefect` is null).
 

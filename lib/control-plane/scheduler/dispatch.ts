@@ -63,8 +63,41 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/typ
 import type { RouteDisposition } from "../route-task.ts";
 import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
 import { PolicyRefusal } from "../capability.ts";
+import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry } from "../cost.ts";
+import { questionOfObligation } from "../work-question.ts";
 
-import type { ScheduledObligation } from "./obligation.ts";
+import type { FreshnessObligation, ScheduledObligation } from "./obligation.ts";
+
+type CostResultWithoutDisposition = (typeof COST_RESULT_WITHOUT_DISPOSITION)[number];
+
+/**
+ * **WHAT A CHARGE WAS FOR** (MW-001, MW-013; 2026-09-25), from the obligation
+ * the dispatch is a round of: its id, the owner's Sends recorded on it (an
+ * empty list is a fact: none reached it), its record class, and the question
+ * the round asks. The question is derived only for a durable standing row —
+ * one that carries its occurrence count — exactly as `openOccurrence` derived
+ * it for the round's work item; a caller's hand-built obligation gets none.
+ */
+export function chargePurposeOf(o: FreshnessObligation): Pick<CostEntry, "obligationId" | "assignmentKeys" | "recordClass" | "question"> {
+  const standingRow = typeof (o as { readonly occurrenceCount?: unknown }).occurrenceCount === "number";
+  const question = standingRow ? questionOfObligation(o) : null;
+  return {
+    obligationId: o.id,
+    assignmentKeys: [...new Set((o.assignments ?? []).map((a) => a.assignmentKey))],
+    recordClass: o.recordClass,
+    ...(question !== null ? { question } : {}),
+  };
+}
+
+/**
+ * MW-024: the `dispatchOne` inputs that keep a proof run's charges apart — its
+ * own project and the non-production mark — when the work belongs to a proof
+ * or conformance project; nothing otherwise, so production charges are
+ * written exactly as before.
+ */
+export function proofChargeOf(project: string | null | undefined): { readonly costProject?: string; readonly nonProduction?: true } {
+  return typeof project === "string" && isProofProject(project) ? { costProject: project, nonProduction: true } : {};
+}
 
 /** Who runs a piece of due work. Decided per obligation, recorded per run. */
 export const EXECUTOR_KINDS = ["DETERMINISTIC", "BOUNDED_MODEL_WORKER"] as const;
@@ -534,6 +567,10 @@ export async function dispatchOne(
     readonly decision?: ExecutorDecision;
     readonly methodVersion?: number;
     readonly policyVersion?: string;
+    /** The project the charge is written under. Absent: `freshness`, the standing runner's. */
+    readonly costProject?: string;
+    /** A proof or test run (MW-024): its charges say so, and stay inside every total and ceiling. */
+    readonly nonProduction?: boolean;
   },
 ): Promise<DispatchResult> {
   const obligationId = input.obligation.obligation.id;
@@ -647,7 +684,11 @@ export async function dispatchOne(
    * Attempts most likely to be repeated. The append is idempotent by record id.
    */
   const claimedRouteTaskId: string = input.routeTaskId;
-  const ledgerCost = async (cost: AttemptCost): Promise<void> => {
+  /* MW-013/MW-024: every charge says what it was for, and a proof run says it is one. */
+  const purpose = chargePurposeOf(input.obligation.obligation);
+  const project = input.costProject ?? "freshness";
+  const proof = input.nonProduction === true ? { nonProduction: true as const } : {};
+  const ledgerCost = async (cost: AttemptCost, resultKind: CostResultWithoutDisposition): Promise<void> => {
     let source: string | null = null;
     try {
       source = (await repos.routeTasks.read(claimedRouteTaskId))?.value.target ?? null;
@@ -663,10 +704,13 @@ export async function dispatchOne(
         routeId: input.obligation.obligation.routeId,
         source,
         jurisdiction: input.obligation.obligation.subjectId,
-        project: "freshness",
+        project,
         role: worker.role,
         cost,
         recordedAt: input.now,
+        ...purpose,
+        resultKind,
+        ...proof,
       },
       input.now,
     ).catch(() => undefined);
@@ -748,7 +792,7 @@ export async function dispatchOne(
       now: input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
-    if (outcome.cost) await ledgerCost(outcome.cost);
+    if (outcome.cost) await ledgerCost(outcome.cost, "LANE_MISMATCH");
     return {
       ...base,
       ...ran(),
@@ -843,7 +887,7 @@ export async function dispatchOne(
       now: outcome.endedAt ?? input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     });
-    if (outcome.cost) await ledgerCost(outcome.cost);
+    if (outcome.cost) await ledgerCost(outcome.cost, simulated ? "SIMULATED" : "NO_DISPOSITION");
     return {
       ...base,
       ...ran(),
@@ -900,7 +944,7 @@ export async function dispatchOne(
       now: input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
-    if (outcome.cost) await ledgerCost(outcome.cost);
+    if (outcome.cost) await ledgerCost(outcome.cost, "DISPOSITION_REFUSED");
     return {
       ...base,
       ...ran(),
@@ -923,10 +967,13 @@ export async function dispatchOne(
         routeId: input.obligation.obligation.routeId,
         source: taskRow.value.target,
         jurisdiction: input.obligation.obligation.subjectId,
-        project: "freshness",
+        project,
         role: worker.role,
         cost: outcome.cost,
         recordedAt: input.now,
+        ...purpose,
+        resultKind: disposition.disposition,
+        ...proof,
       },
       input.now,
     );

@@ -16,6 +16,7 @@
 
 import type { Disposition } from "../workstate/types.ts";
 import { workItemId } from "./ids.ts";
+import type { WorkQuestion } from "./work-question.ts";
 
 /**
  * The states a WorkItem may occupy.
@@ -292,6 +293,11 @@ export interface WorkItem {
   readonly obligation: string;
   /** Why it is owed. A WorkItem with no reason is a WorkItem nobody can retire. */
   readonly why: string;
+  /**
+   * MW-002: which of the six questions this work asks of its record. Absent
+   * when nothing recorded it — a page says "not recorded", never a guess.
+   */
+  readonly question?: WorkQuestion;
   readonly priority: "P0" | "P1" | "P2" | "P3";
   readonly state: WorkItemState;
   readonly contract: CompletionContract;
@@ -315,6 +321,8 @@ export function createWorkItem(input: {
   subject: string;
   obligation: string;
   why: string;
+  /** MW-002. Not part of the id: the same work asks the same question. */
+  question?: WorkQuestion;
   priority?: WorkItem["priority"];
   contract?: Partial<CompletionContract>;
   dependencies?: readonly WorkDependency[];
@@ -327,6 +335,7 @@ export function createWorkItem(input: {
     subject: input.subject,
     obligation: input.obligation,
     why: input.why,
+    ...(input.question !== undefined ? { question: input.question } : {}),
     priority: input.priority ?? "P2",
     state: "OPEN",
     contract: { ...DEFAULT_CONTRACT, ...input.contract },

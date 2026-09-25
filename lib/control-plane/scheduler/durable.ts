@@ -46,6 +46,7 @@
 
 import { createRouteTask, type RouteDisposition, type RouteTask } from "../route-task.ts";
 import { createWorkItem, type WorkItem } from "../work-item.ts";
+import { questionOfObligation } from "../work-question.ts";
 import { registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 
@@ -163,6 +164,9 @@ const RUNTIME_OWNED = [
   /* The owner's dispatch materialized this row (MW-028). A provider that
      re-emits it without the mark must not erase the mark that keeps it owed. */
   "materializedBy",
+  /* The owner's Sends that reached this row (MW-001). The runner appends them;
+     no provider emits them, and a registration pass must never drop them. */
+  "assignments",
 ] as const;
 
 /**
@@ -262,6 +266,7 @@ export async function syncObligations(
       lastWorkedAt: held.lastWorkedAt,
       absentUntil: held.absentUntil,
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
+      ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       updatedAt: now,
     };
 
@@ -1040,6 +1045,9 @@ export async function openOccurrence(
     if (held !== null && held.value.closedAt === null) throw new OccurrenceStillOpen(o.id, held.id);
   }
   const sequence = current.value.occurrenceCount + 1;
+  /* MW-002: the round names its question from the row as it is now — never read,
+     an argued absence, discovery, or a recheck — and none when that is not on the row. */
+  const question = questionOfObligation(current.value);
   const workItem = createWorkItem({
     project: FRESHNESS_PROJECT,
     subject: o.subjectId,
@@ -1047,6 +1055,7 @@ export async function openOccurrence(
     why:
       `occurrence ${sequence} of standing freshness obligation ${o.id} (${o.recordClass}), due ` +
       `${input.dueAt}. The obligation recurs; THIS is the piece of work that completes.`,
+    ...(question !== null ? { question } : {}),
     now: input.now,
   });
   const routeTask = createRouteTask({

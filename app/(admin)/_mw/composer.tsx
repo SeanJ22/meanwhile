@@ -20,15 +20,18 @@
  *                enforces the budget on paid research there.
  * ```
  *
- * The questions, categories and stop rule have no command that carries them
- * (MW-002). They are written into your words on the instruction — kept, shown
- * back, and not acted on — and the panel says so before you send.
+ * The questions travel as their own typed field on `expansion.scope.set`
+ * (MW-002): kept on the scope decision and recorded by the runner on every
+ * obligation the Send reaches. The categories and stop rule have no command
+ * that carries them; they are written into your words — kept, shown back, and
+ * not acted on — and the panel says so before you send.
  */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
+import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "@/lib/control-plane/work-question.ts";
 
 import { fnv } from "./fnv.ts";
 import s from "./mw.module.css";
@@ -76,14 +79,8 @@ interface Preview {
   readonly totalsGap?: string | null;
 }
 
-const QUESTIONS = [
-  ["have", "Do we have this record at all?"],
-  ["correct", "Is what we hold still correct?"],
-  ["missing", "Is anything missing from it?"],
-  ["changed", "Has it changed since we last looked?"],
-  ["reader", "Can a reader actually see it?"],
-  ["consistent", "Is it consistent with what we hold elsewhere?"],
-] as const;
+/* MW-002: the six questions, in the gateway's own vocabulary — sent typed, never folded into the words. */
+const QUESTIONS: readonly (readonly [WorkQuestion, string])[] = WORK_QUESTIONS.map((q) => [q, WORK_QUESTION_WORDS[q]] as const);
 const CATEGORIES = [
   ["meetings", "Meetings and agendas"],
   ["bodies", "Governments and bodies"],
@@ -137,7 +134,7 @@ export function Composer(props: {
   const [geoid, setGeoid] = useState<string>(props.initial?.geoid ?? "");
   // The preview for one geography; a key that does not match the choice is still loading, so nothing is set during an effect.
   const [preview, setPreview] = useState<{ readonly key: string; readonly p: Preview } | null>(null);
-  const [questions, setQuestions] = useState<readonly string[]>([]);
+  const [questions, setQuestions] = useState<readonly WorkQuestion[]>([]);
   const [categories, setCategories] = useState<readonly string[]>([]);
   const [stop, setStop] = useState<string>("budget");
   const [budget, setBudget] = useState<string>("0");
@@ -177,12 +174,12 @@ export function Composer(props: {
   const composedNote = useMemo(() => {
     const parts: string[] = [];
     if (words.trim()) parts.push(words.trim());
-    if (questions.length) parts.push(`For: ${QUESTIONS.filter(([id]) => questions.includes(id)).map(([, l]) => l).join(" ")}`);
     if (categories.length) parts.push(`Categories: ${CATEGORIES.filter(([id]) => categories.includes(id)).map(([, l]) => l).join(", ")}.`);
     const st = STOPS.find(([id]) => id === stop);
     if (st && stop !== "budget") parts.push(`Stop: ${st[1]}.`);
     return parts.join(" ");
-  }, [words, questions, categories, stop]);
+  }, [words, categories, stop]);
+  const questionsSent = useMemo(() => WORK_QUESTIONS.filter((q) => questions.includes(q)), [questions]);
   const noteTooLong = composedNote.length > NOTE_MAX;
   const canSend = chosen !== null && budgetOk && priorityOk && !noteTooLong && sent.kind !== "SENDING";
 
@@ -190,7 +187,7 @@ export function Composer(props: {
     if (!chosen || !canSend) return;
     setSent({ kind: "SENDING" });
     try {
-      const idempotencyKey = `scope:${chosen.geoid}:${fnv(`${priorityNum}|${budgetNum}|${composedNote}`)}:${nonce()}`;
+      const idempotencyKey = `scope:${chosen.geoid}:${fnv(`${priorityNum}|${budgetNum}|${composedNote}|${questionsSent.join(",")}`)}:${nonce()}`;
       const res = await fetch(props.actionRoute, {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
@@ -202,6 +199,7 @@ export function Composer(props: {
             priority: priorityNum,
             budgetUsd: budgetNum,
             note: composedNote === "" ? null : composedNote,
+            questions: questionsSent,
           },
           idempotencyKey,
           returnTo: props.workHref,
@@ -352,7 +350,8 @@ export function Composer(props: {
             ))}
           </div>
           <p className={s.note} style={{ marginTop: 12 }}>
-            Written into your words on the instruction and shown back to you. No command carries a question yet (MW-002), so the runner does not act on it.
+            Sent as the instruction&rsquo;s questions, and recorded by the runner on every piece of work it creates or puts first. They say what the instruction is for; they
+            do not yet change how the work runs.
           </p>
           <div className={`${s.label} ${s.labelSpaced}`}>3 · Categories</div>
           <div className={s.rowCenter} style={{ gap: 8 }}>
@@ -475,11 +474,20 @@ export function Composer(props: {
               </span>
             </div>
           )}
-          {(questions.length > 0 || categories.length > 0 || stop !== "budget") && (
+          {questions.length > 0 && (
+            <div className={s.row}>
+              <Pill tone="teal">YOUR QUESTIONS GO WITH IT</Pill>
+              <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
+                {questions.length === 1 ? "Your question is" : `Your ${questions.length} questions are`} sent as their own field, kept on the instruction and recorded on every
+                piece of work it reaches. They do not yet change how the work runs.
+              </span>
+            </div>
+          )}
+          {(categories.length > 0 || stop !== "budget") && (
             <div className={s.row}>
               <Pill tone="stone">KEPT IN YOUR WORDS</Pill>
               <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
-                Your questions, categories and stop rule are written into your words ({composedNote.length} of {NOTE_MAX} characters) and not acted on.
+                Your categories and stop rule are written into your words ({composedNote.length} of {NOTE_MAX} characters) and not acted on.
                 {noteTooLong ? " That is too long to send — shorten your words." : ""}
               </span>
             </div>

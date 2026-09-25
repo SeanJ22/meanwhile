@@ -12,6 +12,7 @@ import {
   DISPATCH_WORK_TARGET_CAP,
   DISPATCH_WORK_WRITE_BUDGET,
   applyDispatchWork,
+  assignmentEntry,
   carriedDispatchTargets,
   dispatchWorkReading,
   dispatchWorkSentence,
@@ -151,7 +152,7 @@ async function cycleWorld(repos: ControlPlaneRepositories, now: string, over: Pa
   const registry = registryPass({ ids: new Set(rows.map((r) => r.id)) });
   const sync = await syncObligations(repos, registry.obligations, now);
   const durable = new Map<string, DurableRowFacts>();
-  for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy });
+  for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
   const world: DispatchWorkWorld = {
     registries: new Map(Object.entries(REGISTRIES)),
     territory: territory(),
@@ -209,7 +210,11 @@ test("sending the fleet to Pima County creates what the registry defines there a
   for (const id of applied.written) {
     const row = await repos.obligations.mustRead(id);
     const instance = plan.writes.find((w) => w.instance.obligation.id === id)!.instance;
-    assert.deepEqual(row.value, standing(instance.obligation, T0), `${id} is exactly the row syncObligations would register, marked`);
+    assert.deepEqual(
+      row.value,
+      standing({ ...instance.obligation, assignments: [assignmentEntry(target, "CREATED", T0)] }, T0),
+      `${id} is exactly the row syncObligations would register, marked, recording the Send that created it (MW-001)`,
+    );
     assert.equal(row.value.materializedBy, OWNER_DISPATCH);
     assert.equal(row.value.active, true);
     assert.equal(stateOfSubject(row.value.subjectId), "AZ");
@@ -513,12 +518,12 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
   });
   assert.equal(gate.admit(discovery, jurisdictionId).admit, false);
 
-  /* And the receipt says why the created work waits, and that MW-021 is not built. */
+  /* And the receipt says why the created work waits, and which budgets bind it — the Send's own among them (MW-021). */
   const [t] = dispatchWorkReading(plan, applied, CONTEXT).targets;
   const says = t.says.join(" ");
   assert.match(says, /need a model and wait: paused by owner intent pause-1/);
-  assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this geography's \$0\.00 budget/);
-  assert.match(says, /no per-assignment budget yet \(MW-021\)/);
+  assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this Send's own \$0\.00 rolling 24-hour budget over the work it reached, and this geography's\./);
+  assert.doesNotMatch(says, /no per-assignment budget/);
   assert.match(says, /the free discovery walk takes them first/);
 });
 
@@ -561,7 +566,21 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
   const carried = carriedDispatchTargets(reading);
   assert.equal(carried.length, 1, "a DISPATCH with work still owed is carried to the next cycle");
   assert.equal(carried[0].key, "dispatch:i-1");
-  assert.equal(carriedDispatchTargets({ ...reading, targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 0 } })) }).length, 0);
+  assert.equal(
+    carriedDispatchTargets({
+      ...reading,
+      targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 0 }, assignment: { recordedThisCycle: 0, marksDeferred: 0, marksFailed: 0 } })),
+    }).length,
+    0,
+  );
+  /* MW-001: a Send is carried until every row it reached records it, even with nothing left to create. */
+  assert.equal(
+    carriedDispatchTargets({
+      ...reading,
+      targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 0 }, assignment: { recordedThisCycle: 0, marksDeferred: 2, marksFailed: 0 } })),
+    }).length,
+    1,
+  );
   assert.equal(carriedDispatchTargets({ nonsense: true }).length, 0, "an unreadable prior reading carries nothing, never throws");
   assert.equal(isDispatchWorkReading(reading), true);
 

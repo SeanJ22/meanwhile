@@ -35,7 +35,9 @@ import { SCOPE_TYPE_WORDS, scopeKeyOf, type ExpansionScopeDecision } from "../ex
 import { assignmentsInScope, runnerViewFor, type ScopeAssignmentView } from "../expansion/view.ts";
 import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";
 import { formatEastern } from "../eastern-time.ts";
+import type { AssignmentReading } from "../expansion/assignment-budget.ts";
 import { modelName } from "../plain-words.ts";
+import { WORK_QUESTION_WORDS } from "../work-question.ts";
 import type { BodyView } from "./bodies.ts";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
@@ -285,9 +287,19 @@ export function standingDetail(row: AssignmentRow): AssignmentDetailView {
           ? `${c.dollars.gap.says} ${c.attempts ?? "An uncounted number of"} attempts.`
           : c.dollars.says;
 
+  /* MW-001: the owner's Sends recorded on the work itself; MW-002: the question its latest round asks. */
+  const sends = row.what.assignments ?? [];
+  const createdBy = sends.find((a) => a.relation === "CREATED") ?? null;
+  const why = `${row.what.why.says}${row.what.why.cadence ? ` (${row.what.why.cadence})` : ""}`;
+  const question = row.what.question ?? null;
   return {
     words: null,
-    wordsNote: `No instruction of yours created this. It is standing work the system owes: ${row.what.why.says}${row.what.why.cadence ? ` (${row.what.why.cadence})` : ""}.`,
+    wordsNote:
+      createdBy !== null
+        ? `Your instruction ${createdBy.assignmentKey} created this on ${formatEastern(createdBy.at)}: the registry defined it and no clock carried it. It is owed from then on like any standing work: ${why}.`
+        : sends.length > 0
+          ? `No instruction of yours created this; ${sends.length === 1 ? "one" : String(sends.length)} put it first (below). It is standing work the system owes: ${why}.`
+          : `No instruction of yours created this. It is standing work the system owes: ${why}.`,
     addresses: [
       {
         id: row.what.recordClass ?? row.kind,
@@ -295,8 +307,25 @@ export function standingDetail(row: AssignmentRow): AssignmentDetailView {
         pill: row.what.why.band ? `BAND ${row.what.why.band.band}` : "NO BAND",
         tone: row.what.why.band?.band === 1 ? "amber" : "slate",
       },
+      {
+        id: "QUESTION",
+        text: question !== null ? WORK_QUESTION_WORDS[question] : "Not recorded: no round of this work recorded which of the six questions it asks.",
+        pill: question !== null ? "ITS QUESTION" : "NOT RECORDED",
+        tone: question !== null ? "teal" : "gold",
+      },
+      ...sends.map((a) => ({
+        id: a.assignmentKey,
+        text:
+          `${a.relation === "CREATED" ? "Created by" : "Put first by"} your instruction, recorded ${formatEastern(a.at)} (receipt ${a.ref})` +
+          (a.questions && a.questions.length > 0 ? `. You asked: ${a.questions.map((q) => WORK_QUESTION_WORDS[q]).join(" ")}` : ""),
+        pill: a.relation,
+        tone: (a.relation === "CREATED" ? "cyan" : "slate") as Tone,
+      })),
     ],
-    addressesNote: "No requirement instance is recorded against an assignment yet; the record class and subject above are what it is for (MW-063).",
+    addressesNote:
+      sends.length > 0
+        ? "Each instruction of yours that reached this work is recorded on the work itself, with how it reached it. Your questions say what the instruction is for; they do not yet change how the work runs."
+        : "No instruction of yours has reached this work. The record class, the subject and the question above are what it is for.",
     lanes,
     models,
     modelsNote:
@@ -323,11 +352,41 @@ export interface AckFact {
   readonly at: string | null;
 }
 
+/**
+ * MW-001: what this instruction reached, READ FROM THE WORK ITSELF — every
+ * obligation that records it, created or reordered — never joined by place.
+ */
+export interface InstructionReach {
+  readonly created: number;
+  readonly reordered: number;
+  /** Obligation ids to open, up to the runner's list cap; `more` counts the rest. */
+  readonly createdIds: readonly string[];
+  readonly reorderedIds: readonly string[];
+  readonly createdMore: number;
+  readonly reorderedMore: number;
+  readonly says: string;
+}
+
+/** MW-021: this instruction's own budget, as the runner holds it — spent, held and left, with its window. */
+export interface InstructionBudget {
+  readonly rows: readonly (readonly [string, string])[];
+  readonly says: string;
+}
+
 export interface InstructionView {
   readonly card: CardView;
   readonly decision: ExpansionScopeDecision;
   readonly reading: ExpansionScopeReading | null;
   readonly readingAt: string | null;
+  /** Null until a runner that keeps instructions on the work has read it; `reachWhyNot` says why. */
+  readonly reach: InstructionReach | null;
+  readonly reachWhyNot: string | null;
+  readonly budget: InstructionBudget | null;
+  /**
+   * The earlier join by place — standing work about governments in the
+   * geography. Kept only as a labeled fallback: it covers work recorded before
+   * instructions were kept on the work, and it is not what the instruction reached.
+   */
   readonly inScope: ScopeAssignmentView | null;
   /** Why the assignments here are not counted, when they are not — the real reason, never a generic one. */
   readonly inScopeWhyNot: string | null;
@@ -335,6 +394,45 @@ export interface InstructionView {
   readonly lanes: readonly LaneCard[];
   readonly spend: string;
 }
+
+function reachOf(a: AssignmentReading): InstructionReach {
+  const m = a.members;
+  return {
+    created: m.created,
+    reordered: m.reordered,
+    createdIds: m.createdSample,
+    reorderedIds: m.reorderedSample,
+    createdMore: Math.max(0, m.created - m.createdSample.length),
+    reorderedMore: Math.max(0, m.reordered - m.reorderedSample.length),
+    says:
+      `${m.created} piece${m.created === 1 ? "" : "s"} of work ${m.created === 1 ? "was" : "were"} created by this instruction and ` +
+      `${m.reordered} already on a clock ${m.reordered === 1 ? "was" : "were"} put first by it — as recorded on the work itself. ` +
+      "Work it reached on an existing clock is recorded a bounded number per cycle, so the reordered count can trail what was put first.",
+  };
+}
+
+function budgetOf(a: AssignmentReading, readAt: string | null): InstructionBudget | null {
+  const b = a.budget;
+  if (b === null) return null;
+  const window = `rolling ${b.windowHours} hours to ${formatEastern(b.until)}`;
+  const spent = b.spentUsd === null ? "unknown — a charge on its work reported no dollar figure, so it is held" : money(b.spentUsd);
+  const left = b.leftUsd === null ? "unknown" : b.leftUsd < 0 ? `none — over by ${money(-b.leftUsd)}` : money(b.leftUsd);
+  return {
+    rows: [
+      ["Budget", `${money(b.budgetUsd)}, ${window}`],
+      ["Spent", spent],
+      ["Held for work in flight", money(b.heldUsd)],
+      ["Left", left],
+      ["Scouts admitted under it", String(b.admitted)],
+      ["Scouts it held back", String(b.refused)],
+    ],
+    says:
+      `As the runner held it${readAt ? ` at ${formatEastern(readAt)}` : ""}: every charge on work this instruction reached, from when it reached it${b.bySubjectRows > 0 ? `; ${b.bySubjectRows} of those charges named no piece of work and are counted by their government, which can only hold more back` : ""}. ` +
+      "A charge on work several instructions share counts in full toward each.",
+  };
+}
+
+const REACH_NOT_READ = "Not read yet: the runner has not recorded, on the work itself, what this instruction reached.";
 
 export function instructionKey(d: ExpansionScopeDecision): string {
   return `scope:${scopeKeyOf(d.geography)}`;
@@ -347,9 +445,14 @@ export function instructionView(input: {
   readonly totalAssignments: number | null;
   readonly paidLaneClosedBecause: string | null;
   readonly runnerPaused: { readonly since: string | null } | null;
+  /** MW-001/MW-021: this instruction as the runner read it from the work (research state `assignments`); null when not recorded. */
+  readonly assignment?: AssignmentReading | null;
+  readonly assignmentAt?: string | null;
 }): InstructionView {
   const d = input.decision;
   const rv = runnerViewFor(d, input.reading);
+  const assignment = input.assignment ?? null;
+  const sendBudget = assignment === null ? null : budgetOf(assignment, input.assignmentAt ?? null);
   const read = rv.kind === "READ" ? rv.reading : null;
   const inScope =
     read && read.work && input.rows ? assignmentsInScope(input.rows, new Set(read.work.subjectIds), input.totalAssignments, !read.work.subjectIdsComplete) : null;
@@ -398,10 +501,11 @@ export function instructionView(input: {
           tone: input.paidLaneClosedBecause ? "amber" : "teal",
           rows: [
             ["Admitted", read.work?.scoutAdmitted === null || read.work === null ? "not counted yet" : String(read.work.scoutAdmitted)],
-            ["Held by budget", read.heldThisCycle === null ? "not counted yet" : String(read.heldThisCycle)],
+            ["Held by the geography's budget", read.heldThisCycle === null ? "not counted yet" : String(read.heldThisCycle)],
+            ["Held by this instruction's budget", assignment?.budget ? String(assignment.budget.refused) : "not counted yet"],
             ["Placed first", read.work ? String(read.work.scoutRowsPlacedFirst) : "—"],
           ],
-          note: read.budgetSays,
+          note: `${read.budgetSays} Both counts are for the runner's last cycle.`,
         },
         {
           name: "Acquisition and validation (plain code)",
@@ -419,8 +523,8 @@ export function instructionView(input: {
 
   const spend =
     read?.spend
-      ? `${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days, against a ${money(d.budgetUsd)} rolling-24-hour budget`
-      : `Nothing measured yet, against a ${money(d.budgetUsd)} rolling-24-hour budget`;
+      ? `In the geography: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there, against a ${money(d.budgetUsd)} rolling-24-hour budget`
+      : `In the geography: nothing measured yet, against a ${money(d.budgetUsd)} rolling-24-hour budget`;
 
   const pill = rv.kind === "READ" ? (input.paidLaneClosedBecause ? { p: "READ · PARTLY BLOCKED", t: "gold" as Tone } : { p: "READ BY RUNNER", t: "teal" as Tone }) : { p: "SAVED · NOT YET READ", t: "cyan" as Tone };
   return {
@@ -432,12 +536,15 @@ export function instructionView(input: {
       title: `${d.geography.label} — ${SCOPE_TYPE_WORDS[d.geography.type].toLowerCase()}, priority ${d.priority}`,
       summary:
         rv.kind === "READ"
-          ? `Read by the runner at its cycle start. ${read?.work ? `${read.work.registeredObligations} ${read.work.registeredObligations === 1 ? "piece" : "pieces"} of standing work ${read.work.registeredObligations === 1 ? "is" : "are"} about governments here.` : read?.resolution.kind === "UNRESOLVED" ? `It could not be resolved: ${read.resolution.why}` : "What is in it was not recorded."} Paid work here may spend ${money(d.budgetUsd)} in any rolling 24 hours.`
+          ? `Read by the runner at its cycle start. ${read?.work ? `${read.work.registeredObligations} ${read.work.registeredObligations === 1 ? "piece" : "pieces"} of standing work ${read.work.registeredObligations === 1 ? "is" : "are"} about governments here.` : read?.resolution.kind === "UNRESOLVED" ? `It could not be resolved: ${read.resolution.why}` : "What is in it was not recorded."}${assignment ? ` It created ${assignment.members.created} and put ${assignment.members.reordered} first, as recorded on the work.` : ""} Paid work here may spend ${money(d.budgetUsd)} in any rolling 24 hours.`
           : `${rv.says} Paid work here may spend ${money(d.budgetUsd)} in any rolling 24 hours once it is read.`,
     },
     decision: d,
     reading: read,
     readingAt: rv.kind === "READ" ? rv.at : null,
+    reach: assignment === null ? null : reachOf(assignment),
+    reachWhyNot: assignment === null ? REACH_NOT_READ : null,
+    budget: sendBudget,
     inScope,
     inScopeWhyNot:
       inScope !== null

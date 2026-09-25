@@ -220,9 +220,27 @@ export async function loadExpansionPlan(input: {
   let malformed = 0;
   try {
     const row = await input.repos.adminConfig.read(ADMIN_CONFIG_ID);
-    const held = expansionScopesOf(row !== null && isAdminConfig(row.value) ? row.value : null);
-    decisions = held.scopes;
-    malformed = held.malformed;
+    if (row !== null && !isAdminConfig(row.value)) {
+      /*
+       * A policy row that is not a policy fails CLOSED, exactly as a row that
+       * could not be read does (2026-09-25). It used to read as "no row", so the
+       * owner's scope budgets silently disappeared and paid work ran unbounded
+       * by them. Whatever scopes the row still carries readably are kept, so
+       * their work is still placed and created; the row itself counts as one
+       * unreadable entry, which holds paid Scout work until it is fixed.
+       */
+      const salvaged = row.value !== null && typeof row.value === "object" ? expansionScopesOf(row.value as { readonly expansionScopes?: unknown }) : null;
+      decisions = salvaged?.scopes ?? [];
+      malformed = 1 + (salvaged?.malformed ?? 0);
+      conditions.push(
+        "the owner's policy row is on record and is not a readable policy, so whether an expansion scope budget stands cannot be known; " +
+          `paid Scout work is held this cycle${decisions.length > 0 ? ` (${decisions.length} scope(s) on it were still readable and are placed as usual)` : ""}`,
+      );
+    } else {
+      const held = expansionScopesOf(row !== null ? row.value : null);
+      decisions = held.scopes;
+      malformed = held.malformed;
+    }
   } catch (error) {
     malformed = 1;
     conditions.push(

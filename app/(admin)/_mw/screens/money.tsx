@@ -41,13 +41,16 @@ import {
   outcomeWords,
   modelProviderWords,
   providerRows,
+  purposeSplit,
   reconciliation,
   resultTiles,
+  testAttemptsWords,
   topWorkLine,
   unreadProviders,
   type LedgerMonth,
   type MapTilerReading,
   type OutcomeFacts,
+  type PurposeLine,
   type RoutineDay,
 } from "@/lib/control-plane/admin-view/money-view.ts";
 import { FLEET_SPEND_CEILING_MAX_USD, resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
@@ -437,6 +440,18 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
       numbers.push({ label: "reads that caught a change", value: day.changedReads, denominator: day.versions, contract: "reads whose promoted version carried a changed record, of every read that promoted a version, last 24 hours" });
     }
     const names = snapshot?.candidateNames;
+    /* MW-013: what the paid charges were for, as each recorded it; MW-024: test runs on their own line. */
+    const purpose = facts2 ? purposeSplit(facts2.purpose, scopeState) : null;
+    const purposeLines: PurposeLine[] = purpose ? [...purpose.lines, ...(purpose.before ? [purpose.before] : []), ...(purpose.notKept ? [purpose.notKept] : []), ...(purpose.test ? [purpose.test] : [])] : [];
+    if (purpose) {
+      claims.push({ label: "what the paid charges were for", stated: purposeLines.length, rendered: purposeLines.length });
+      numbers.push({
+        label: "paid charges that recorded their purpose",
+        value: purpose.lines.reduce((n, l) => n + l.charges, 0),
+        denominator: purpose.totalCharges,
+        contract: "production paid charges that recorded what their work was for, of every paid charge in scope, test runs included",
+      });
+    }
 
     const scopeName = scopeWords(base.scope, base.shell.label);
     const headline =
@@ -444,7 +459,9 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
         ? {
             title: `${scopeName} — what the money bought is split by what each attempt recorded it produced.`,
             text:
-              "Charges do not record what the work was for (MW-013), so no charge can be split by purpose after the fact. Every paid attempt, though, records its own result — found a way in, found the record, hit a wall, produced nothing — and its own cost, and those agree with the charge ledger to the cent. That is the split used here. Plain-code work is counted from the routine store and carries no model cost.",
+              "Every paid attempt records its own result — found a way in, found the record, hit a wall, produced nothing — and its own cost, and those agree with the charge ledger to the cent. That is the split used here. " +
+              "Charges now also record what the work was for (MW-013), shown below; charges written before that are named as such and never split by guesswork. Test and proof runs are real money inside every total, and are kept out of what a result cost (MW-024). " +
+              "Plain-code work is counted from the routine store and carries no model cost.",
           }
         : {
             title: `${scopeName} — paid work is shown for ${stateName(scopeState)} as a whole${base.scope.kind === "geo" ? ", because no charge records a county or a district" : ""}.`,
@@ -492,7 +509,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
           title="What the paid attempts produced"
           lede={
             facts2
-              ? `${usd(totalPaid)} on ${attemptsPaid.toLocaleString("en-US")} paid attempts — ${window}. The last paid charge was recorded ${facts2.ledger.lastPaidAt ? eastern(facts2.ledger.lastPaidAt) : "at an unrecorded time"}.`
+              ? `${usd(totalPaid)} on ${attemptsPaid.toLocaleString("en-US")} paid attempts — ${window}. The last paid charge was recorded ${facts2.ledger.lastPaidAt ? eastern(facts2.ledger.lastPaidAt) : "at an unrecorded time"}. ${scopeState === null ? "" : "Everywhere: "}${testAttemptsWords(facts2.testAttempts)}`
               : undefined
           }
         />
@@ -522,6 +539,34 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
               : ""}
             {facts2.ledger.resultsOnly > 0 ? `${facts2.ledger.resultsOnly.toLocaleString("en-US")} results carry no charge: plain-code attempts that never reached a model.` : ""}
           </p>
+          </div>
+        )}
+
+        <Section
+          title="What the paid charges were for"
+          lede={
+            purpose
+              ? `${usd(purpose.totalUsd)} on ${purpose.totalCharges.toLocaleString("en-US")} paid charges — ${purpose.window}${scopeState === null ? "" : `, whose body is in ${stateName(scopeState)}`}. Each line is what the charge itself recorded: the kind of record, the question the work asked, and whether an instruction of yours reached it. Test and proof runs are inside this total, on their own line.`
+              : undefined
+          }
+        />
+        {spend.kind === "UNREAD" ? (
+          <Refusal title="The charges were not read.">{spend.detail}</Refusal>
+        ) : purposeLines.length === 0 ? (
+          <p className={s.note}>No paid charge in this scope.</p>
+        ) : (
+          <div className={`${s.card} ${s.cardList} ${s.gap32}`}>
+            <div className={s.stack12}>
+              {purposeLines.map((l) => (
+                <div key={l.key} className={s.insetRow}>
+                  <div className={s.stack2}>
+                    <span className={l.tone === "text" ? s.titleStrong14 : `${s.titleStrong14} ${s.note}`}>{l.label}</span>
+                    <span className={s.note}>{l.detail}</span>
+                  </div>
+                  <span className={s.figSm}>{usd(l.usd)}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

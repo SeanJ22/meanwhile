@@ -10,7 +10,8 @@ import { defaultGrant, requireCapability } from "../lib/control-plane/capability
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { buildScoutToolkit, extractLinks } from "../lib/control-plane/scheduler/scout-tools.ts";
-import { dispatchOne, type DeclaredExecutor, type WorkArtifact } from "../lib/control-plane/scheduler/dispatch.ts";
+import { dispatchOne, proofChargeOf, type DeclaredExecutor, type WorkArtifact } from "../lib/control-plane/scheduler/dispatch.ts";
+import { AUTONOMOUS_FLEET_PROOF_PROJECT } from "../lib/control-plane/cost.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import type { ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, FLEET_POLICY_VERSION, type FleetRuntime } from "../lib/control-plane/workers/runtime.ts";
@@ -46,7 +47,8 @@ const repos = await createPgRepositories(connection);
 const store = new DurableEvidenceStore(resolve(vaultRoot));
 const tools = { repos, store, spaceOut: hostSpacer(), now };
 const methodVersion = JSON.parse(readFileSync(join(root, "data/method/knowledge.json"), "utf8")).version;
-const draft = createWorkItem({ project: "freshness", subject: target.subject, obligation: "Acquire and independently verify the official meeting-document source universe",
+/* MW-024: a proof run works and charges under its own project, never `freshness`, so its spend stays real and out of production's figures. */
+const draft = createWorkItem({ project: AUTONOMOUS_FLEET_PROOF_PROJECT, subject: target.subject, obligation: "Acquire and independently verify the official meeting-document source universe",
   why: `Canonical registry ${body.coverageStatus} source for ${body.name}; official meeting documents remain owed.`,
   contract: { requiresValidation: true, requiresAudit: true, requiresCompleteDenominator: true }, now: now() });
 let item: WorkItem = (await repos.workItems.read(draft.id))?.value ?? (await registerWorkItem(repos, draft, now())).value;
@@ -102,7 +104,7 @@ if (["PENDING", "RECLAIMABLE"].includes(observationTask.state)) {
         cost: { ...ZERO_COST, durationMs: result.elapsedMs, requestCount: toolkit.requestCount, bytesFetched: toolkit.bytesFetched }, detail: "Official publisher observation committed; no promotion authority." };
     } };
   dispatches.push(await dispatchOne(repos, { obligation: scheduled(observationTask), routeTaskId: observationTask.id, holder: `source-proof:${process.pid}`, now: now(),
-    leaseTtlMs: 300_000, maturity: () => "GRADUATED", executor, methodVersion, policyVersion: FLEET_POLICY_VERSION }));
+    leaseTtlMs: 300_000, maturity: () => "GRADUATED", executor, methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proofChargeOf(item.project) }));
 }
 const sourceRecords = (await repos.artifacts.readAll()).filter(a => a.workItemId === item.id && a.routeTaskId === observationTask.id && !a.partial);
 const sources = await Promise.all(sourceRecords.map(a => resolveVault(a.artifactId)));

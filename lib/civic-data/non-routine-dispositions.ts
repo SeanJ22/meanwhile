@@ -258,7 +258,10 @@ export interface RoutineInventoryBinding {
  * source/body contracts; it does not name or recreate an aggregate authority.
  */
 export const ROUTINE_INVENTORY_BINDINGS = [
-  { inventorySourceId: "meetings-composite", contractIds: MEETING_PARTITION_CONTRACTS.map(({ id }) => id), contractSourceId: "meetings-public-bodies" },
+  { inventorySourceId: "meetings-composite", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily === null).map(({ id }) => id), contractSourceId: "meetings-public-bodies" },
+  // C16 (owner decision recorded 2026-09-24T22:43Z): the derived wiring store and the per-state derived meeting families.
+  { inventorySourceId: "meeting-source-wiring", contractIds: ["meeting-source-wiring"], contractSourceId: "meeting-source-wiring" },
+  { inventorySourceId: "meetings-derived-families", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily !== null).map(({ id }) => id), contractSourceId: "meetings-derived-routes" },
   { inventorySourceId: "nj-morris-clerk-ballot", contractIds: ["nj-morris-filing"], contractSourceId: "nj-morris-county-clerk" },
   { inventorySourceId: "dotgov", contractIds: ["dotgov"], contractSourceId: "cisa-dotgov-registry" },
   { inventorySourceId: "fec-open-api", contractIds: ["fec-funding"], contractSourceId: "fec-open-api" },
@@ -281,6 +284,10 @@ export interface ManualProductionInventoryBinding {
 
 /** Runtime civic data with an explicit owner clock and canonical promotion plane. */
 export const MANUAL_PRODUCTION_INVENTORY_BINDINGS = [
+  {
+    inventorySourceId: "meeting-body-crosswalk", contractId: "meeting-body-crosswalk", contractSourceId: "curated-reader-primary-sources",
+    reason: "Reviewed records connecting a government's calendar to its exact body, each on the government's own saved pages cited by sha256 and promoted through the verified manual door by the owner or a reviewing agent session (owner decision C16); the derived meeting-source wiring reads only the promoted version.",
+  },
   {
     inventorySourceId: "congress-bulk-roster", contractId: "congress-bulk-roster", contractSourceId: "congress-directory-project",
     reason: "The SHA-pinned five-file Congress directory acquisition promotes current federal membership/contact/committee facts with exact hashes and LKG isolation; tracked roster/directory files are first-seed/test evidence only and the migration/build/enrichment writers are deleted.",

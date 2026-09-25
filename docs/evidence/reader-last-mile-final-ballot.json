@@ -1,6 +1,6 @@
 {
-  "exactHead": "92f2c370662127b74ab2ee1b1b795f22510b3c73",
-  "buildId": "A-irs4JRGJLaIszg3aHPy",
+  "exactHead": "76e59c99402187cb11f520df628468fd65feb4a9",
+  "buildId": "lG3nN8r6Etd7jmCOAKvSU",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -20,7 +20,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "64dcfc0821d9d9a76554779fe1b1072d0cff000de0fbbb2049e892caaf589692"
+      "sha256": "0152083ced02c0a3bfeaed17380aad1dd5336fb0a4f2b62d73fb7486e512b8e0"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -32,7 +32,7 @@
     },
     {
       "path": "app/api/funding/[target]/route.ts",
-      "sha256": "255b64df145e6386476c7effe27afbcb3775cc10c28fe2211f5e0aa0620dcb77"
+      "sha256": "2a5e8aeb090a4dfbdee260084009a8e81f33b3d89c2ca901f67b95943f25f4e0"
     },
     {
       "path": "app/api/log/route.ts",
@@ -512,7 +512,7 @@
     },
     {
       "path": "data/derived/gap-ledger.json",
-      "sha256": "aac1c286c925a18974020d511ceaa080d50c1541b577ad82954e19f68114eb92"
+      "sha256": "85e8c99adb6d577b54df4355bb633b394ecd290ecb7197a5c144bf51cf76771d"
     },
     {
       "path": "data/derived/resolver-geometry.json",
@@ -2152,11 +2152,19 @@
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "013174dcdf7aae63297d3b5e70899901c39c48785db502e879cd64daa7a4d0f3"
+      "sha256": "e5aefb6f5c6b68dde584439c600a4cba71dfd1bd75c56e7fed55270ef99203b4"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
-      "sha256": "3f1661987f2c419b4e7a69ba26f099712a180b047fcfd74855fe267b73de703a"
+      "sha256": "cd656b78b1b5310c15a412b15ea713f09a99445bfce8690e344b0e9cccac3602"
+    },
+    {
+      "path": "lib/civic-data/derived-authority.ts",
+      "sha256": "70d519fb0c1afbb36dce5c7503a84ebe0dcdfd7ec8fd4b3d7d998a9283d0482d"
+    },
+    {
+      "path": "lib/civic-data/derived-door.ts",
+      "sha256": "d93cdfce33e74285a78e56f32cb802a5bd0ffb885042232d83095acf2934dcc2"
     },
     {
       "path": "lib/civic-data/fixture-policy.ts",
@@ -2164,11 +2172,11 @@
     },
     {
       "path": "lib/civic-data/manual-contracts.ts",
-      "sha256": "51cff702706ce863f2d3f186a7b44e12f2f3881501708f29e2c21c97d693d30f"
+      "sha256": "f299b33f3316d93b2ea2a5b04bb92eadd9734d91663cbae94937975573bde88a"
     },
     {
       "path": "lib/civic-data/manual-projections.ts",
-      "sha256": "fc4744d5a81f8c7a8ad00dc1e72588c0feeeb9021275a160ae5e713508a8273f"
+      "sha256": "21f12485d3b77cf003135fe300c648b6853d4a0f2bc961350d50960c867895ce"
     },
     {
       "path": "lib/civic-data/manual-read-models.ts",
@@ -2179,8 +2187,12 @@
       "sha256": "582660ae6c1ff25cda5259033cf41cdceebef708b1fe90076354276090a38f05"
     },
     {
+      "path": "lib/civic-data/meeting-body-crosswalk.ts",
+      "sha256": "c91caea530b3c6026516ca89f48e2c7ae73f15f4ba0da6fd3d69c5cd769407fe"
+    },
+    {
       "path": "lib/civic-data/meeting-partitions.ts",
-      "sha256": "06f742cb0330448db5a10b234b6e1daa870bf9f58266579cf7093a848a885d71"
+      "sha256": "e88cf9db28bb5436d6a53c23ce873e41bcc7f370151c4dda3c96662ee99a0467"
     },
     {
       "path": "lib/civic-data/morris-filing-documents.ts",
@@ -2212,7 +2224,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "1ffabc01b5ccdea8d998e0efd0f3140f1a8c50af8ed4b73ff271463ce33d8ee8"
+      "sha256": "87d21ae718f9116d4ba990deda95594bebcc9afe1791d51808af32a451056d09"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2228,7 +2240,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "5fec124558de0bf02086fb900859836bd2503b38f378bbab64e577ff47b9cfdf"
+      "sha256": "0c567be7362a5c997ec4878e97093474b1b05b999e608643f49f4a34dfd74086"
     },
     {
       "path": "lib/civic-data/unchanged-confirmation.ts",
@@ -2556,7 +2568,7 @@
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "cf909f932bb5d47ac27c2358a1b751eedd0b2a62b9a666da1f36428ff5ccc534"
+      "sha256": "eacf20fa0dc589a8a3f06b53a2f0fd78e84529f77233b1d336d15f9521f1169a"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -2632,7 +2644,7 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "98d6e87e5947b593d2655c86c344d4fe10e3e3346d34ab540edb5fec2d410a8a"
+      "sha256": "2ada27ef1014cfcbad5c36ffb2d33b1a0241eb37f7155da8818af2b4dbbdd734"
     },
     {
       "path": "lib/meetings/status-marks.ts",
@@ -3096,7 +3108,7 @@
     },
     {
       "path": "lib/sources/composite/wiring.ts",
-      "sha256": "718e3960fa5ce0a0620f4fdafcf6ec56350f802c6f84b4334309e0273c4038c2"
+      "sha256": "e068b26e45a6085e6577487b95b15ae8641017013325cf311d0b17010c2e5cce"
     },
     {
       "path": "lib/sources/diligent/index.ts",
@@ -3416,7 +3428,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "b369c93a148793d27989ad07a8fa672b115aa0cbe5c9a28378ece3e29929b091"
+      "sha256": "d5a9e308452e7e560bcbf8a23bad0f61262995bbc0c8f18ee9ac9aff462deb3c"
     },
     {
       "path": "pnpm-lock.yaml",

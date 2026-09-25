@@ -5,8 +5,11 @@ import {
   type BodySourceWiring,
 } from "../registry/source-wiring.ts";
 import {
+  DERIVED_MEETING_FAMILY_POLICY,
+  DERIVED_MEETING_FAMILY_STATES,
   MEETING_PARTITION_POLICY,
   ROUTINE_SOURCE_CONTRACTS,
+  type DerivedMeetingFamilyState,
   type RoutineSourceContract,
 } from "./contracts.ts";
 
@@ -18,7 +21,24 @@ export interface MeetingPartitionContract extends RoutineSourceContract {
   readonly acquisitionFailureDomain: string;
   readonly bodyId: string;
   readonly ocdId: string | null;
-  readonly wiring: BodySourceWiring;
+  /** The SOURCE_WIRING row this partition reads; null for a derived family, whose members are read at runtime. */
+  readonly wiring: BodySourceWiring | null;
+  /**
+   * The covered state of a derived meeting family (C16): its members are the promoted meeting-source wiring's
+   * ACTIVE rows for that state. Null for a SOURCE_WIRING partition.
+   */
+  readonly derivedFamily: DerivedMeetingFamilyState | null;
+}
+
+/** A derived family's meetings carry their members' own sources; the family itself is named by this one. */
+export const DERIVED_FAMILY_SOURCE = "derived";
+
+export function derivedMeetingFamilyId(state: DerivedMeetingFamilyState): string {
+  return `meetings:${DERIVED_FAMILY_SOURCE}:${state}`;
+}
+
+export function derivedMeetingFamilyScope(state: DerivedMeetingFamilyState): string {
+  return `source:${DERIVED_FAMILY_SOURCE}:family:${state}`;
 }
 
 export function meetingPartitionScope(sourceName: string, bodyId: string): string {
@@ -91,7 +111,7 @@ export function meetingAcquisitionFailureDomain(
 
 function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
   const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
-  const partitions = SOURCE_WIRING.flatMap((wiring) =>
+  const partitions: MeetingPartitionContract[] = SOURCE_WIRING.flatMap((wiring) =>
     meetingSourceNamesForWiring(wiring).map((meetingSource) => ({
       ...policy,
       id: meetingPartitionId(meetingSource, wiring.bodyId),
@@ -112,8 +132,37 @@ function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
       bodyId: wiring.bodyId,
       ocdId: wiring.ocdId,
       wiring,
+      derivedFamily: null,
     })),
   );
+  /*
+   * **ONE STATIC DERIVED FAMILY PER COVERED STATE** (C16). Its membership is data: the promoted meeting-source
+   * wiring's ACTIVE rows, read by its own child at runtime, so a reviewed calendar publishes with no code release.
+   */
+  const { readerConsumers: familyConsumers, ...familyPolicy } = DERIVED_MEETING_FAMILY_POLICY;
+  for (const state of DERIVED_MEETING_FAMILY_STATES) {
+    const id = derivedMeetingFamilyId(state);
+    partitions.push({
+      ...familyPolicy,
+      id,
+      scope: derivedMeetingFamilyScope(state),
+      acquisitionAdapter: {
+        authorityMode: "DERIVED" as const,
+        command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${id}`],
+      },
+      readerProjection: { id: `meetings-partition:${DERIVED_FAMILY_SOURCE}:${state}`, consumers: familyConsumers },
+      lkgBehavior:
+        `Only the ${state} derived family may move this pointer. A failed or suspended member keeps its own last verified sittings; ` +
+        "an unreadable wiring store refuses the family's candidate and leaves its prior GOOD version live.",
+      bootstrapFixturePaths: [],
+      meetingSource: DERIVED_FAMILY_SOURCE,
+      acquisitionFailureDomain: `derived-family:${state}`,
+      bodyId: `derived-family:${state}`,
+      ocdId: null,
+      wiring: null,
+      derivedFamily: state,
+    });
+  }
   const ids = new Set<string>();
   const scopes = new Set<string>();
   for (const partition of partitions) {

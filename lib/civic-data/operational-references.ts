@@ -14,6 +14,13 @@ import {
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { sourceProjectionEvidence, type CivicRecordMember, type RoutineCandidate } from "./types.ts";
+import {
+  applicableWebsiteCorrections,
+  registryIsTheSitesOwn,
+  WEBSITE_CORRECTIONS,
+  websiteCorrectionReceiptIssue,
+  websiteCorrectionRowIssue,
+} from "./website-corrections.ts";
 
 export const OPERATIONAL_REFERENCE_RECORD_CLASS = "OPERATIONAL_REFERENCE" as const;
 export const JURISDICTION_REFERENCE_SOURCE_ID = "jurisdiction-operational-reference" as const;
@@ -99,11 +106,45 @@ function sourceReceiptIssues(receipts: readonly JurisdictionReferenceSourceRecei
     if (!Number.isFinite(Date.parse(receipt.retrievedAt))) issues.push(`SOURCE_RETRIEVED_AT_INVALID:${required.id}`);
   }
   for (const receipt of receipts) {
+    /* A page read again to confirm a reviewed website correction (C15): only the pages the reviewed list names. */
+    if (receipt.sourceId.startsWith("website-correction:")) {
+      const issue = websiteCorrectionReceiptIssue(receipt);
+      if (issue !== null) issues.push(issue);
+      continue;
+    }
     if (!JURISDICTION_REFERENCE_HTTP_SOURCES.some((required) => required.id === receipt.sourceId)) {
       issues.push(`UNREGISTERED_SOURCE_RECEIPT:${receipt.sourceId}`);
     }
   }
   return [...new Set(issues)].sort();
+}
+
+/**
+ * Every corrected row must carry the reviewed correction exactly (C15), and one this promotion read as verified
+ * must have the receipts of the pages it read.
+ */
+function websiteCorrectionIssues(
+  registries: OperationalReferenceBundle["registries"],
+  receipts: readonly JurisdictionReferenceSourceReceipt[],
+): string[] {
+  const issues: string[] = [];
+  const read = new Set(receipts.map((receipt) => receipt.sourceId));
+  const reviewed = applicableWebsiteCorrections(WEBSITE_CORRECTIONS);
+  for (const state of JURISDICTION_REFERENCE_STATES) {
+    for (const row of registries[state]?.jurisdictions ?? []) {
+      const issue = websiteCorrectionRowIssue(row);
+      if (issue !== null) issues.push(`WEBSITE_CORRECTION_ROW:${issue}`);
+      const correction = reviewed.get(row.id);
+      if (row.ownWebAddressCorrection?.reading !== "APPLIED_VERIFIED" || correction === undefined) continue;
+      if (correction.homepage !== null && !read.has(`website-correction:${row.id}:homepage`)) {
+        issues.push(`WEBSITE_CORRECTION_UNRECEIPTED:${row.id}:homepage`);
+      }
+      if (registryIsTheSitesOwn(correction) && !read.has("website-correction:dotgov-registry")) {
+        issues.push(`WEBSITE_CORRECTION_UNRECEIPTED:${row.id}:dotgov-registry`);
+      }
+    }
+  }
+  return issues;
 }
 
 export function operationalReferenceBundle(
@@ -179,7 +220,7 @@ export function jurisdictionOperationalReferenceCandidate(input: {
 }): RoutineCandidate {
   const bundle = operationalReferenceBundle(input.registries);
   const receiptIssues = sourceReceiptIssues(input.sourceReceipts);
-  const issues = [...registryIssues(input.registries), ...receiptIssues].sort();
+  const issues = [...registryIssues(input.registries), ...receiptIssues, ...websiteCorrectionIssues(input.registries, input.sourceReceipts)].sort();
   const records: CivicRecordMember[] = JURISDICTION_REFERENCE_STATES.flatMap((state) =>
     input.registries[state].jurisdictions.map((jurisdiction) => ({
       key: `jurisdiction:${jurisdiction.id}`,

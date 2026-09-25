@@ -24,6 +24,12 @@
  * so.
  */
 
+import {
+  websiteCorrectionFor,
+  websiteCorrectionNote,
+  type WebsiteAddressCorrectionNote,
+} from "../civic-data/website-corrections.ts";
+
 /** The registries' own-site MEETINGS source key. */
 export const OWN_SITE_MEETINGS_SOURCE = "MEETINGS:THIS_JURISDICTION:this-government-itself";
 
@@ -66,6 +72,8 @@ export interface MeetingsDiscoveryNeed {
    * ledger (its file's sha256) or the promoted jurisdiction reference (its version id). Absent when unrecorded.
    */
   readonly addressSource?: DiscoveryAddressSource;
+  /** Present when `ownWebAddress` is a reviewed website correction, not the Census record (C15). */
+  readonly addressCorrection?: WebsiteAddressCorrectionNote;
 }
 
 export interface DiscoveryAddressSource {
@@ -97,6 +105,29 @@ export function meetingsDiscoveryNeeds(files: readonly JurisdictionRegistryFile[
     }
   }
   return needs.sort((a, b) => (a.jurisdictionId < b.jurisdictionId ? -1 : a.jurisdictionId > b.jurisdictionId ? 1 : 0));
+}
+
+/**
+ * The need with its reviewed website correction applied (C15): while the address on record is still the one a
+ * reviewed correction replaces, the need walks the corrected site and says so. A build reads nothing, so the
+ * correction is applied as reviewed; the jurisdiction reference's promotion reads its sources again.
+ */
+export function withWebsiteCorrection(need: MeetingsDiscoveryNeed): MeetingsDiscoveryNeed {
+  const c = websiteCorrectionFor(need.jurisdictionId, need.ownWebAddress);
+  return c === null ? need : { ...need, ownWebAddress: c.corrected, addressCorrection: websiteCorrectionNote(c, "REVIEWED") };
+}
+
+/** A recorded correction note is well formed, and it is the reviewed correction for this jurisdiction. */
+function isCorrectionNote(value: unknown, site: unknown, jurisdictionId: string): boolean {
+  const n = value as Partial<Record<keyof WebsiteAddressCorrectionNote, unknown>> | null;
+  return (
+    typeof n === "object" && n !== null &&
+    typeof n.recorded === "string" && typeof n.corrected === "string" && n.corrected === site &&
+    websiteCorrectionFor(jurisdictionId, n.recorded)?.corrected === n.corrected &&
+    (n.basis === "HOMEPAGE_AND_REGISTRY" || n.basis === "OTHER_GOVERNMENT_PUBLICATION") &&
+    typeof n.reviewedBy === "string" && n.reviewedBy !== "" && typeof n.reviewedAt === "string" &&
+    n.reading === "REVIEWED" && typeof n.authorization === "string"
+  );
 }
 
 /**
@@ -132,6 +163,10 @@ export function recordedMeetingsDiscovery(
     jurisdictionIds.add(id);
     const site = row?.ownWebAddress;
     const basis = row?.basis;
+    const correction = row?.addressCorrection;
+    if (correction !== undefined && !isCorrectionNote(correction, site, id)) {
+      return { unreadable: `${GAP_LEDGER_PATH} holds a malformed website correction for ${id}` };
+    }
     if (
       typeof row?.stateCode !== "string" || typeof row.name !== "string" || typeof row.govClass !== "string" ||
       (site !== null && typeof site !== "string") ||
@@ -148,6 +183,7 @@ export function recordedMeetingsDiscovery(
       ownWebAddress: site as string | null,
       basis,
       sources: row.sources as string[],
+      ...(correction === undefined ? {} : { addressCorrection: correction as WebsiteAddressCorrectionNote }),
     });
   }
   if (section.counts?.enumerated !== jurisdictionIds.size) {

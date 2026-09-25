@@ -7,11 +7,10 @@ import {
 } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import {
-  getRegistryRuntimeReadModel,
-  refreshRegistryRuntimeFromPromoted,
-} from "@/lib/registry/runtime-read-model";
+import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
+import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { mayUseTestFixture, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 
 export { directFundingTargetPlan, type FundingTargetPlan } from "@/lib/funding/target-authorities";
@@ -49,14 +48,32 @@ export type FundingHoldingSettlement =
     }
   | { readonly kind: "HOLDING_UNAVAILABLE"; readonly unavailableAuthorities: string[] };
 
-async function currentFundingTargetPlan(target: string): Promise<FundingTargetPlan> {
-  await refreshRegistryRuntimeFromPromoted();
+/**
+ * **WHAT THE FIRST REQUEST WAITED ON, NAMED.** (2026-09-24, C22.) Campaign money
+ * for Ciscomani (congress:C001133) took 10.56 s on its first request on a warm
+ * instance, 9,478 ms inside this handler, with no breakdown. Each read is timed
+ * by name and reported in the `Server-Timing` header.
+ */
+type ReadTimings = Record<string, number>;
+
+function timedRead<T>(timings: ReadTimings | undefined, name: string, read: () => Promise<T>): Promise<T> {
+  const started = Date.now();
+  const running = Promise.resolve().then(read);
+  if (!timings) return running;
+  return running.finally(() => { timings[name] = Date.now() - started; });
+}
+
+async function currentFundingTargetPlan(target: string, timings?: ReadTimings): Promise<FundingTargetPlan> {
+  // The registry and the federal directory are served from the reader authority
+  // edge when this request entered one (GET below), the database otherwise:
+  // the same readers Ask uses (C22). This route read them from the database always.
+  await timedRead(timings, "registry", () => settleRegistryAuthorityReads("REGISTRY"));
   const direct = directFundingTargetPlan(target);
   const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
     row.holder.id === target || row.candidacy?.candidacyId === target,
   );
   if (related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")) {
-    await refreshFederalDirectoryFromPromoted();
+    await timedRead(timings, "federalDirectory", settleFederalDirectoryRead);
   }
   const candidacy = related.find((row) => row.candidacy !== null)?.candidacy ?? null;
   const contestId = direct.contestId ?? candidacy?.contestId ?? null;
@@ -71,48 +88,75 @@ async function currentFundingTargetPlan(target: string): Promise<FundingTargetPl
   };
 }
 
-const defaultReaders: FundingHoldingReaders = {
-  identityPlan: currentFundingTargetPlan,
-  federal: async () => {
-    const result = await readFundingSnapshot();
-    if (result.kind !== "PROMOTED" && result.kind !== "BOOTSTRAP") throw new Error(result.detail);
-    return { kind: result.kind, metadata: result.metadata };
-  },
-  state: async (state) => {
-    const result = await refreshStateMoneyProjectionFromPromoted(state);
-    if (result.kind === "PROMOTED") return { kind: "PROMOTED", metadata: result.metadata };
-    // Deterministic tests can install the explicit fixture behind the exact
-    // state cache. Touching a made-up key verifies that exact cache without
-    // manufacturing a record or opening a sibling state.
-    if (mayUseTestFixture()) {
-      stateMoneyForTarget(`ballot-${state.toLowerCase()}-fixture-probe:contest:candidate`);
-      return { kind: "BOOTSTRAP", metadata: null };
-    }
-    throw new Error(result.detail);
-  },
-  azIdentity: async () => { await refreshAzBallotFromPromoted(); },
-  answer: (target, contestId, selection) => campaignMoneyApiAnswer(target, contestId, selection),
-};
+function defaultReadersFor(timings?: ReadTimings): FundingHoldingReaders {
+  return {
+    identityPlan: (target) => currentFundingTargetPlan(target, timings),
+    federal: () => timedRead(timings, "fec", async () => {
+      const result = await readFundingSnapshot();
+      if (result.kind !== "PROMOTED" && result.kind !== "BOOTSTRAP") throw new Error(result.detail);
+      return { kind: result.kind, metadata: result.metadata };
+    }),
+    state: (state) => timedRead(timings, `stateMoney_${state}`, async () => {
+      const result = await refreshStateMoneyProjectionFromPromoted(state);
+      if (result.kind === "PROMOTED") return { kind: "PROMOTED" as const, metadata: result.metadata };
+      // Deterministic tests can install the explicit fixture behind the exact
+      // state cache. Touching a made-up key verifies that exact cache without
+      // manufacturing a record or opening a sibling state.
+      if (mayUseTestFixture()) {
+        stateMoneyForTarget(`ballot-${state.toLowerCase()}-fixture-probe:contest:candidate`);
+        return { kind: "BOOTSTRAP" as const, metadata: null };
+      }
+      throw new Error(result.detail);
+    }),
+    azIdentity: () => timedRead(timings, "azBallot", async () => { await refreshAzBallotFromPromoted(); }),
+    answer: (target, contestId, selection) => campaignMoneyApiAnswer(target, contestId, selection),
+  };
+}
+
+const defaultReaders: FundingHoldingReaders = defaultReadersFor();
+
+/** Reads a target's own id already decides; none of them reads the authority edge. */
+export interface DirectFundingReads {
+  readonly federal?: ReturnType<FundingHoldingReaders["federal"]>;
+  readonly state?: ReturnType<FundingHoldingReaders["state"]>;
+  readonly azIdentity?: ReturnType<FundingHoldingReaders["azIdentity"]>;
+}
+
+/**
+ * Start what the target's own id already decides (C22): a congress: target's FEC
+ * read, a ballot target's state read, beside the registry read that plans the
+ * rest instead of after it. Each is observed at once, so a failure before it is
+ * awaited is never an unhandled rejection; the settlement still records it.
+ */
+export function startDirectFundingReads(direct: FundingTargetPlan, readers: FundingHoldingReaders): DirectFundingReads {
+  const observed = <T,>(running: Promise<T>): Promise<T> => { running.catch(() => undefined); return running; };
+  return {
+    ...(direct.federal ? { federal: observed(Promise.resolve().then(() => readers.federal())) } : {}),
+    ...(direct.state ? { state: observed(Promise.resolve().then(() => readers.state(direct.state!))) } : {}),
+    ...(direct.azIdentity ? { azIdentity: observed(Promise.resolve().then(() => readers.azIdentity())) } : {}),
+  };
+}
 
 /** Read only the authorities applicable to this target and settle them independently. */
 export async function settleFundingHoldingAnswer(
   target: string,
   readers: FundingHoldingReaders = defaultReaders,
+  started?: DirectFundingReads,
 ): Promise<FundingHoldingSettlement> {
   const direct = directFundingTargetPlan(target);
-  const [identityResult] = await Promise.allSettled([
-    Promise.resolve().then(() => readers.identityPlan(target)),
-  ]);
+  const identityPromise = Promise.resolve().then(() => readers.identityPlan(target));
+  const early = started ?? startDirectFundingReads(direct, readers);
+  const [identityResult] = await Promise.allSettled([identityPromise]);
   const plan = identityResult.status === "fulfilled" ? identityResult.value : direct;
 
   const federalPromise = plan.federal
-    ? Promise.resolve().then(() => readers.federal())
+    ? early.federal ?? Promise.resolve().then(() => readers.federal())
     : Promise.resolve(null);
   const statePromise = plan.state
-    ? Promise.resolve().then(() => readers.state(plan.state!))
+    ? (early.state && plan.state === direct.state ? early.state : Promise.resolve().then(() => readers.state(plan.state!)))
     : Promise.resolve(null);
   const azIdentityPromise = plan.azIdentity
-    ? Promise.resolve().then(() => readers.azIdentity())
+    ? early.azIdentity ?? Promise.resolve().then(() => readers.azIdentity())
     : Promise.resolve(null);
   const [federalResult, stateResult, azIdentityResult] = await Promise.allSettled([
     federalPromise,
@@ -180,9 +224,27 @@ export async function GET(
     return Response.json({ error: "target must contain 1–512 characters" }, { status: 400 });
   }
 
-  const settled = await settleFundingHoldingAnswer(target);
+  const timings: ReadTimings = {};
+  const startedAt = Date.now();
+  const readers = defaultReadersFor(timings);
+  // What the target's own id decides starts first; none of it reads the edge.
+  const started = startDirectFundingReads(directFundingTargetPlan(target), readers);
+  // The reader authority edge is entered HERE, in this handler's own execution:
+  // it is AsyncLocalStorage.enterWith, which on Node 24 never reaches reads
+  // chained on a helper that entered it (tests/reader-edge-context.test.ts).
+  const manifest = await timedRead(timings, "edgeManifest", () => readReaderManifest().catch(() => null));
+  if (manifest?.authorityArtifacts) {
+    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest).catch(() => null));
+    if (edge) enterReaderAuthorityEdge(edge);
+  }
+  const settled = await settleFundingHoldingAnswer(target, readers, started);
+  timings.total = Date.now() - startedAt;
+  const serverTiming = Object.entries(timings).map(([name, ms]) => `${name};dur=${ms}`).join(", ");
   if (settled.kind === "HOLDING_UNAVAILABLE") {
-    return Response.json({ error: "funding data unavailable", holdingStatus: "HOLDING_UNAVAILABLE", unavailableAuthorities: settled.unavailableAuthorities }, { status: 503 });
+    return Response.json(
+      { error: "funding data unavailable", holdingStatus: "HOLDING_UNAVAILABLE", unavailableAuthorities: settled.unavailableAuthorities },
+      { status: 503, headers: { "server-timing": serverTiming } },
+    );
   }
   return Response.json({
     ...settled.answer,
@@ -192,6 +254,7 @@ export async function GET(
     unavailableAuthorities: settled.unavailableAuthorities,
   }, {
     headers: {
+      "server-timing": serverTiming,
       "cache-control": settled.holdingStatus === "HELD"
         && settled.dataState === "PROMOTED"
         && settled.dataMetadata?.stale === "CURRENT"

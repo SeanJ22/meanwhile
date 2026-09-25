@@ -38,7 +38,7 @@ import {
 
 const PARTITION = MEETING_PARTITION_CONTRACTS.find((partition) =>
   partition.meetingSource === "official-page-events" &&
-  (partition.wiring.config as { slug?: string }).slug === "tusd1-reconfiguration",
+  (partition.wiring?.config as { slug?: string } | undefined)?.slug === "tusd1-reconfiguration",
 )!;
 const PAGE = "https://www.tusd1.org/Reconfiguration";
 

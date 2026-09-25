@@ -23,9 +23,15 @@ export const JURISDICTION_REFERENCE_HTTP_SOURCES = [
 
 export type JurisdictionReferenceHttpSourceId = (typeof JURISDICTION_REFERENCE_HTTP_SOURCES)[number]["id"];
 
+/**
+ * A page read again to confirm a reviewed website correction (C15): the .gov registry file, or one correction's
+ * homepage or other evidence (`lib/civic-data/website-correction-acquisition.ts`).
+ */
+export type WebsiteCorrectionSourceId = `website-correction:${string}`;
+
 /** Exact response-byte receipt. The timestamp belongs to this response, not the batch. */
 export interface JurisdictionReferenceSourceReceipt {
-  readonly sourceId: JurisdictionReferenceHttpSourceId;
+  readonly sourceId: JurisdictionReferenceHttpSourceId | WebsiteCorrectionSourceId;
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly httpStatus: number;

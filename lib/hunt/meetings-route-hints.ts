@@ -129,75 +129,37 @@ function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): Juris
   return { jurisdictionId, officialSite, routes: [] };
 }
 
+/*
+ * Cottonwood, Douglas, El Mirage, Eloy, Flagstaff and Holbrook left this list on 2026-09-24, and Newbury's and
+ * Kearsarge's official-site parts with them: their current sites are reviewed website corrections now (C15,
+ * `lib/civic-data/website-corrections.ts`), so the gap ledger records the corrected address itself and a hint
+ * replacing the old one would name an address no longer on record. Newbury's and Kearsarge's routes stay.
+ */
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
-  siteHint("az:city:city-of-cottonwood", {
-    origin: "https://cottonwoodaz.gov",
-    selfName: "City of Cottonwood",
-    replaces: "http://www.ci.cottonwood.az.us",
-    recordedState: "it does not resolve: www.ci.cottonwood.az.us is a CNAME to ci.cottonwood.az.us, which has no address record",
-    evidence: [
-      `${DOTGOV} cottonwoodaz.gov, City, City of Cottonwood, Cottonwood, AZ`,
-      "its homepage answered 200, titled \"Cottonwood, AZ | Official Website\", naming the City of Cottonwood at 827 N. Main St",
+  {
+    /*
+     * C16's first reviewed calendar (2026-09-24): the walk confirms this feed so the reviewed crosswalk rows for the
+     * city's commissions can connect to it. The feed never names a body on its own; each crosswalk row's reviewed
+     * title filter does, on the city's own event page naming the commission.
+     */
+    jurisdictionId: "az:city:city-of-flagstaff",
+    officialSite: null,
+    routes: [
+      {
+        url: "https://www.flagstaff.az.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+        kind: "FEED",
+        body: "Boards and Commissions: the Housing, Tourism and Indigenous Commissions among 18 bodies",
+        platform: "civicplus",
+        verifyAs: "ical",
+        evidence:
+          "The city's own CivicPlus \"Boards & Commissions\" iCal feed (catID=49): 440 events with America/Phoenix start times, " +
+          "among them 16 \"Housing Commission\", 17 \"Tourism Commission Meeting\" and 33 \"Indigenous Commission Meeting\" " +
+          "sittings; read robots-first (sha256 ce54348d…). The commissions' own event pages (Calendar.aspx?EID=2823, 3031, 3778) name each body.",
+        observed: { at: "2026-09-24T23:16:02Z", by: "RouteTask session research, robots-checked" },
+      },
     ],
-    observed: { at: "2026-09-24T18:07:56Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-douglas", {
-    origin: "https://douglasaz.gov",
-    selfName: "City of Douglas",
-    replaces: "http://www.douglasaz.org",
-    recordedState: "it does not resolve: douglasaz.org's nameservers refuse or time out (SERVFAIL)",
-    evidence: [
-      `${DOTGOV} douglasaz.gov, City, City of Douglas, Douglas, AZ`,
-      "Cochise County's Quick Links page (www.cochise.az.gov/QuickLinks.aspx) links www.douglasaz.gov",
-      "its homepage answered 200, titled \"Douglas, AZ | Official Website\"",
-    ],
-    observed: { at: "2026-09-24T18:08:01Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-el-mirage", {
-    origin: "https://elmirageaz.gov",
-    selfName: "City of El Mirage",
-    replaces: "http://www.cityofelmirage.org",
-    recordedState: "it has moved: http and https both answer 301 to https://elmirageaz.gov/",
-    evidence: [
-      "the recorded host's own 301 names https://elmirageaz.gov/",
-      `${DOTGOV} elmirageaz.gov, City, City of El Mirage, El Mirage, AZ`,
-    ],
-    observed: { at: "2026-09-24T18:08:06Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-eloy", {
-    origin: "https://eloyaz.gov",
-    selfName: "City of Eloy",
-    replaces: "http://www.ci.eloy.az.us",
-    recordedState: "it serves a stock IIS default page (last modified 2022-05-19) over http, and https resets",
-    evidence: [
-      `${DOTGOV} eloyaz.gov, City, City of Eloy, Eloy, AZ`,
-      "Pinal County's City & Town Governments list (www.pinal.gov/QuickLinks.aspx?CID=74) links https://www.eloyaz.gov/",
-    ],
-    observed: { at: "2026-09-24T18:08:12Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-flagstaff", {
-    origin: "https://www.flagstaff.az.gov",
-    selfName: "City of Flagstaff",
-    replaces: "http://www.flagstaffaz.gov",
-    recordedState: "it answers, but its root is 404 and does not redirect (flagstaffaz.gov is still registered to the City of Flagstaff)",
-    evidence: [
-      "the State of Arizona's az.gov zone (az.gov is registered to the State of Arizona) delegates flagstaff.az.gov to the city's CivicPlus host",
-      "its homepage answered 200, titled \"City of Flagstaff Official Website\"",
-    ],
-    observed: { at: "2026-09-24T18:08:17Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-holbrook", {
-    origin: "https://holbrookaz.gov",
-    selfName: "City of Holbrook",
-    replaces: "http://www.ci.holbrook.az.us/",
-    recordedState: "it does not resolve: ci.holbrook.az.us is delegated to nameservers that time out (SERVFAIL)",
-    evidence: [
-      `${DOTGOV} holbrookaz.gov, City, Holbrook, City of, Holbrook, AZ`,
-      "its homepage answered 200 and reads \"The Official City of Holbrook Website\"",
-    ],
-    observed: { at: "2026-09-24T18:08:23Z", by: SITE_RESEARCH },
-  }),
+  },
   siteHint("az:city:city-of-winslow", {
     origin: "https://www.winslowaz.gov",
     selfName: "City Of Winslow",
@@ -506,21 +468,7 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:city:town-of-newbury",
-    officialSite: {
-      origin: "https://www.newbury.nh.gov",
-      selfName: "Newbury",
-      replaces: "http://www.newburyh.org",
-      recordedState: "it is not registered (NXDOMAIN): newburyh.org is one letter short of the town's former newburynh.org, which is dead too",
-      evidence: [
-        "the State of New Hampshire's own nh.gov zone publishes the name: nh.gov's authoritative nameserver answers newbury.nh.gov " +
-          "directly (zone SOA nh.gov, hostmaster.nh.gov), and www.newbury.nh.gov is a CNAME to the town's CivicPlus host; only " +
-          "the State can publish a name there, as it does for newlondon.nh.gov, which Merrimack County links",
-        "the apex answers 301 to https://www.newbury.nh.gov/",
-        "its homepage served a challenge when observed, and Merrimack County still links the dead newburynh.org, so the name " +
-          "the walk requires is the town's short name",
-      ],
-      observed: { at: "2026-09-24T18:10:35Z", by: SITE_RESEARCH },
-    },
+    officialSite: null,
     routes: [
       {
         url: "https://newburynhlibrary.net/feed/",
@@ -588,19 +536,7 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:school:kearsarge-regional-school-dist",
-    officialSite: {
-      origin: "https://www.kearsarge.org",
-      selfName: "Kearsarge",
-      replaces: "http://www.kearsarge.k12.nh.us/",
-      recordedState: "it is a CNAME to ghs.google.com that answers Google's 404",
-      evidence: [
-        "a Town of Warner library newsletter (library.warnernh.gov; warnernh.gov is registered to the Town of Warner) gives " +
-          "https://www.kearsarge.org/district/school-board-mbc for the district's School Board minutes",
-        "the district's board schedule and agenda PDFs are served from www.kearsarge.org (the Backend session's ledger, below)",
-        "its homepage served a challenge when observed, so the name the walk requires is the district's short name",
-      ],
-      observed: { at: "2026-09-24T18:10:44Z", by: SITE_RESEARCH },
-    },
+    officialSite: null,
     routes: [
       {
         url: "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/2026-2027_school_board_schedule.pdf",

@@ -71,13 +71,13 @@ function row(source: string, suffix: string, startsAt: string, collectedAt: stri
     bodyName: "Pima Community College District Governing Board",
     title: `Regular Board Meeting ${suffix}`,
     startsAt,
-    timeZone: successor.wiring.timeZone,
+    timeZone: successor.wiring!.timeZone,
     location: null,
     online: { label: "Zoom Webinar", joinUrl: null },
     agendaUrl: null,
-    jurisdiction: successor.wiring.jurisdiction,
+    jurisdiction: successor.wiring!.jurisdiction,
     status: "SCHEDULED",
-    provenance: { sourceUrl: ACQUIRED_URL, sourceOrg: successor.wiring.publishingOrg, collectedAt, verifiedAt: null },
+    provenance: { sourceUrl: ACQUIRED_URL, sourceOrg: successor.wiring!.publishingOrg, collectedAt, verifiedAt: null },
   };
 }
 

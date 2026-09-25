@@ -1,13 +1,13 @@
 {
   "purpose": "Executed canonical Ask POST proof for each current quotable snapshot, selecting a known-answer query whose canonical selector returns a verbatim passage from that exact snapshot. Unreadable or unquotable snapshots remain explicitly unexecuted. This proves source retrieval and attribution, not that every possible question can be answered.",
   "modelDisabled": true,
-  "exactHead": "92f2c370662127b74ab2ee1b1b795f22510b3c73",
+  "exactHead": "76e59c99402187cb11f520df628468fd65feb4a9",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "sourceHashScope": "Working-tree source bytes; not a deployed build proof",
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "64dcfc0821d9d9a76554779fe1b1072d0cff000de0fbbb2049e892caaf589692"
+      "sha256": "0152083ced02c0a3bfeaed17380aad1dd5336fb0a4f2b62d73fb7486e512b8e0"
     },
     {
       "path": "lib/ask/statements.ts",
@@ -109,7 +109,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|Lupe Diaz",
-      "payloadSha256": "4841d39cd5f7c192565aa87b34b82fee37e2b2f096443778998190520edb8d17",
+      "payloadSha256": "8e04dd7d5575d45c82fa251ad4a4615d42f839891745cff01ede8259653889c5",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19:diaz-lupe|https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2100|20018a302e269d047ce33ca33690d14440c37b525bae9f952f73d0d0cc4b5032"
@@ -297,7 +297,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|David Gowan",
-      "payloadSha256": "aa40d20c759cc8537ea7b04885ab8527a5cfe64c39a84433173bbd1769a864cd",
+      "payloadSha256": "70782ed8851991a83dff2823c59c4c2769cc064d06351bb6aa7db5334b823108",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19:gowan-david|https://www.azleg.gov/senate-member/?legislature=55&legislator=1968|ad66f1a52c06f525e128dccc18c7ec74c9c040c76abd3c6405e8c82c76236787"
@@ -455,7 +455,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Sally Ann Gonzales",
-      "payloadSha256": "9862aac10bbf0f307f0b5e57130876e9c10f539e6860b84d46d0820a5889fcf8",
+      "payloadSha256": "6dc91a098b3d1710d5d84efeb12dea529f22b3055aea683a999bd1c85fd302f3",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20:gonzales-sally-ann|https://www.azleg.gov/senate-member/?legislature=55&legislator=1957|7d8ae16f03fb9612eaeadb06c2441cbce8d3f5252c3bce46eac84fc5b165bd46"
@@ -579,7 +579,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Betty Villegas",
-      "payloadSha256": "c4045aaa27b33966fa60436d588b05573890ec2bbb5bbba286074d440dcf973a",
+      "payloadSha256": "9c9a4678f37b9bd46ba94a9ce65c73424ecd0d0803baede788906231d4115bda",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20:villegas-betty|https://bettyvillegasaz.com|50f58d8e9d0212f49fbeea68a80dbb0f425bbcfa07bd71512664495916f613d4"
@@ -757,7 +757,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Betty Villegas",
-      "payloadSha256": "12b127aa8291930d4a0cb33272c68f82a3b91f6d259c8cb1e847355eaa1ec908",
+      "payloadSha256": "45dfeb830f65fce44ff6a66c9a8d2728742a9b121541cd4290397adb484c54c4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20:villegas-betty|https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2274|19e8e0f8bf49085367185a92928774a4fdbde25422c837a27cb21be5fb4028c9"
@@ -935,7 +935,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-19|Gail Griffin",
-      "payloadSha256": "5ce87b9b772276a51d0a1f13fd9d6d62fb17168a2dec4e96386a3ce17152cd83",
+      "payloadSha256": "0ad1682c1caa5bbfcc12ca96603c369283d7350acfa2157d3b28c08968cd8d7e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-19:griffin-gail|https://www.azleg.gov/house-member/?legislature=55&legislator=2053|bbf53484bea3f7fd56e912149a3c8c33b9c6164a22560aee52d70ac4e9354109"
@@ -1123,7 +1123,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-20|Alma Hernandez",
-      "payloadSha256": "f918a91705eee51bd6d76736318da3d68650789aa52aef9db4b112088074ce0c",
+      "payloadSha256": "186e21b7b218817509d8695bd5aacf758f1919396f956feb00c08357f85c24b7",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-20:hernandez-alma|https://www.azleg.gov/house-member/?legislature=55&legislator=2033|9694cf8d6215d19704f90141171ddf4a1970a42f996bf061a0456083096b9541"
@@ -1309,7 +1309,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-      "payloadSha256": "41e571b229f84ed22f768dd931d84519cd56e5918fbfa9431a902287fae14174",
+      "payloadSha256": "98b20f674f2dd2bd150a7da5c4a247ea09254e4ca59774b2bffcd71960b4a3ed",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth|https://gc.nh.gov/house/members/member.aspx?member=377093|ce01b501b0d11edc066b1e1c696ac3f80ce2c144be735ad8f33f97a6e43093ac"
@@ -1501,7 +1501,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-      "payloadSha256": "c8ea1fee55a9b248f5f0bb6c01bd8e91b845815eed11b8bd21eb467f7ebd6e2a",
+      "payloadSha256": "1c3e293a67e23c08764bb119c4d452f6e048c0111722d195df7a132c955712c0",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-|https://gc.nh.gov/house/members/member.aspx?pid=10832|bcea8da79e82e3a87612c3cefaea9e5e6057767f180c389ca5106c0acd4f28e6"
@@ -2067,7 +2067,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-      "payloadSha256": "0c94de9d76ea695af99517c15116143cd997c5b14971309a4dc6c79694e0f8d9",
+      "payloadSha256": "7f8e9d4039a54b7db30f4fb53cc4437fc09b83bf7a703b528bcb5de7ad3a60fd",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-senate-7:innis-daniel-e-|https://gc.nh.gov/senate/members/webpages/district07.aspx|f33d5e7ad55cefd2c1f6cd400ae0cb8514c4d069e97c25706e8f582ccfe6201e"
@@ -2269,7 +2269,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:booker",
-      "payloadSha256": "0ff7551e1d2a7d8a1bce23b721204f5d98a8f46dcb95294b12248c46fd3f609e",
+      "payloadSha256": "e656af8c2432ff5a0cb72c2b188b2eca8d14f50454fdd5876fc5f4e39b5d6c62",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:B001288|https://corybooker.com|b924a9b71819c9f51d721eac630768120e06c0a6f27ac9a20974e8915e98d2a6"
@@ -3964,7 +3964,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:booker",
-      "payloadSha256": "390dac60d813cf639ff810c16e60a4572ce96098fdad76e48f6aab5ee6622a71",
+      "payloadSha256": "a625113ec24c5f670401bafb65bc3cc019170489e42adf6d43c77592af322970",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:B001288|https://www.booker.senate.gov|477b31516e4d944aed5cbfc420443ba7093f124e1af498e51eda421c546f845e"
@@ -5663,7 +5663,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:C001133",
-      "payloadSha256": "7c16af187c49a0c5892ba60bfd590988b190f4831dec4683854282c6c497e94c",
+      "payloadSha256": "f5884b2e1ff1c5e3cc73da4f201a94cf9f874e654a7e8df8c1ad47310e872240",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:C001133|https://ciscomani.house.gov|49fdaf745e2c279056912e4cc8ff30281aa4c5834ce5ec812ae6a91220dd2ad3"
@@ -6841,7 +6841,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:C001133",
-      "payloadSha256": "1aac9be5baea77d8305ae00ea1a1fb9641c4dbb3ab48298a1d2096ed1e13fff8",
+      "payloadSha256": "255e332db803eed9adde5a4688cb11a3d938a8cd3e755daeed0b917a586f22eb",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:C001133|https://juanciscomani.com|f1c6d18fac4e3e38b70d20873f279bb93def9c2ddc7a8a6c68d65d9250950f72"
@@ -8002,7 +8002,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000574",
-      "payloadSha256": "b1af0f735b5f0f9262fd2a6f7e105f02d1a19042650aee7d4dce0d422d730ef4",
+      "payloadSha256": "92517713fd4595519075cfbdee031e786010aaabf13260c7c6533bf7d70dca05",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000574|https://gallegoforarizona.com|8592dd13e8ae298b29dc671c5b9b571bf4f7788b8dd5aca757b50fc6e9c68f50"
@@ -9204,7 +9204,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000574",
-      "payloadSha256": "2e10da95fbd325130d993b62725a893b7c1b60676f5bc3488b2ddf20a9df44ff",
+      "payloadSha256": "056231681c3715d546c9c323c734358096cef5845836ee04590f7ffdeba33a2e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000574|https://www.gallego.senate.gov|0e98f2e5f64e1709c6db5756f56ae47e76a585c7a90028203662786e53e8f180"
@@ -10326,7 +10326,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000604",
-      "payloadSha256": "cadc717aeb04a9af9642160c9f7513c6a965cd181af7eac53a34724a6c792857",
+      "payloadSha256": "06142e8cf2626726b8fcdfe51f11911dcab5aaf7474e5f81b72d657d3daf96c8",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000604|https://goodlander.house.gov|6d522f7dfe4e50ab143fb22f065937da70b6b06cc5da5faf275981d28550a529"
@@ -11410,7 +11410,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000604",
-      "payloadSha256": "06d03a560fbc774422fd68d4beda8ee556df00f7b1a164524809d0115209fdcf",
+      "payloadSha256": "47eb42bf3a7a0f596736e213e300ca2d8f1231b7a74b72becd5a485f50a5ad3a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000604|https://maggiefornh.com|c72ebab0ecc9b01d4bd872b1ec17e351c5a7963f3d4ae6d8e0402c6b28cfa1d9"
@@ -12490,7 +12490,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000606",
-      "payloadSha256": "1b31aa10195db26da0d50d7408ef5b318c9ed14c1efa78e913e854b67c1f4fa0",
+      "payloadSha256": "3b3d78277d14d241045e3560f41bf082416fa796956a42de593cc3f373da3a1d",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000606|https://grijalva.house.gov|f94909b2b7bc789e43218197d5183e9af167ea66c62e28580324446bd5267644"
@@ -13453,7 +13453,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000606",
-      "payloadSha256": "49abb01ff3cb84d043ac7bee3f3e81b57bf4e7e6f0b84823268b07eee4bf47e2",
+      "payloadSha256": "4c535382dba5932fc10b6b64b657da4f31b40e64cda1838eaaa19d9de9c9417d",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000606|https://www.adelitaforcongress.com|a115b554505d8c9050b7213d8986c8cf1cd6f2033b0706ffb3af46c2ee641046"
@@ -14389,7 +14389,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:H001076",
-      "payloadSha256": "4de0a954856e3fa5b5001920cd567d879be31a5410cb71f3ac01deb7ff5b8efe",
+      "payloadSha256": "d5177bd1f5ca278f9416f4f795f73416256417a415f65ce1f11ce651bf25bea7",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:H001076|https://www.hassan.senate.gov|edd0f446a1f914a9cffea82bd106b77519032cbd6e644291adea263220192594"
@@ -15940,7 +15940,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:K000377",
-      "payloadSha256": "c7b29a2664f8422efa5cce43e9833d81333e36cd9786ba601469ac486109e823",
+      "payloadSha256": "d18f1f1d6494969f8a08e6e4de11044c67a98585c1bce15eae6454b5a6f5891f",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:K000377|https://www.kelly.senate.gov|8bb755b4be96146cced8b769d75b0f3125c229c2f2d4878f264b5975f15d747c"
@@ -17456,7 +17456,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:K000394",
-      "payloadSha256": "0a29df08e27f4d07e7af0f2ba13b64823db69d3dad1d3cfb81465a5d36aaf967",
+      "payloadSha256": "8761b502c8ddbd8360ff5d19b0677b9368892f49793d1b00501625b37c25c9ef",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:K000394|https://www.andykim.com|6440a0ef06bd2fe85920116f6f712ba30c64d04fddf2a2f2d5b22306b1693f6e"
@@ -18655,7 +18655,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:K000394",
-      "payloadSha256": "9ace47888b512565ebf352032b70a18fccd0ac1fd694179a7ea78bf3f7765f41",
+      "payloadSha256": "4501786cfa562063792aad3a1b67e301069abcc58f0084379fb2faa961b9fd13",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:K000394|https://www.kim.senate.gov|139d9942d4224141334400a7c669641a2c5dea4646f50e7ff0a0488fc5bc8d5e"
@@ -19836,7 +19836,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:M001246",
-      "payloadSha256": "c7382575ccdcfc9b38bc8e1f55723a40e94f974f54a2475a05f848417245ef43",
+      "payloadSha256": "1ceef55462e1fce62b86544ea1bea7fc4b06aa8397cf90c062d12dbf1bc81de5",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:M001246|https://mejia.house.gov|51d753290c83b225f5b5decb5e96312d0fe686ae3327cc11f35d86b64318f6fa"
@@ -20836,7 +20836,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:M001246",
-      "payloadSha256": "f5b2c806df32aad352b96fb4aefdc190739b45d7f1fa76f07c79e355811bef92",
+      "payloadSha256": "e37722be4a37371d30909671e64706947cff748adf53e798b50b14a59d64a6b4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:M001246|https://www.analiliafornj.com|5b385f1a14c427dff257312cc9c05f0944dc61dfab072a4878ec340cacca3a74"
@@ -21875,7 +21875,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:S001181",
-      "payloadSha256": "ee62a910c578ec55df9e5d93615149873e0177c30816cded50741c04988c3598",
+      "payloadSha256": "e03bc80620292c08cf6d85a9000a95c0dd4c422e1be30c1c39d6c7ee7c711924",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:S001181|https://www.shaheen.senate.gov|5021efbfb663889481b6aa2b22a96a632a1a83e1f06ed84c429127d1f693ad7e"
@@ -23418,7 +23418,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:attorney-general|Kris Mayes",
-      "payloadSha256": "88edfce72181f30b694e4196956983063f0587ecbcecf5c01c7033a2789a9638",
+      "payloadSha256": "87f7bc849d7ad3864ab65b6d07223197f820c09b117f3c4a1aab8f392ba1e6e1",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:attorney-general|Kris Mayes@8e58da83b2f14301d34f1b07f29a3a5f6074839fb0792b23d3149566d8f7d2f9"
@@ -23594,7 +23594,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:attorney-general|Kris Mayes",
-      "payloadSha256": "d17e8aeb112d52f5c08ad3e4abb9b64af2ef61f08744eec2c09df4f164b5a2a4",
+      "payloadSha256": "b80a4cd1ad91536f9f61f2dfff46efa3955a0d9ed2d09286a0469287467e902d",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:attorney-general|Kris Mayes@a596a2b0cba1a401d3c28557196c978ae8e3c443a5e7a3344a406087e7bf6e44"
@@ -23770,7 +23770,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:attorney-general|Warren Petersen",
-      "payloadSha256": "8f3b866381e81607a07479ce0f9d1cef860aad9b4f2b7d03b04e32e22e33ef28",
+      "payloadSha256": "b2a62c4a4e1d45f70dd1a65a39b22c7436db482ce30725f02104d4f5bbb6e6e7",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:attorney-general|Warren Petersen@73db6c3ad8e2b48990c36e7ef2e423c03f5353798308432b2685fb7fd1d14505"
@@ -23946,7 +23946,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Andy Biggs",
-      "payloadSha256": "74a3311dcee8df0beb76dcb122aba05c8e476351b4b9b43d4cb9c73cf7145194",
+      "payloadSha256": "8186884a8204f8d71cdc5fac28d83d3214c88d1008e7f899e46137dfe66559e9",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Andy Biggs@2b16a66b183861edc71d9e25a4fdefc914e599c5c08acae2cc14f32bd3e78907"
@@ -25357,7 +25357,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Andy Biggs",
-      "payloadSha256": "398fd7e2099bc73a489a1848593265ed3c227e945d50f3e2cf2076bf4a9899aa",
+      "payloadSha256": "0b81d09ae7d092f0bd1ee05844097237e8b4a94fbeae00a0ac800553346cd6b3",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Andy Biggs@a7e8f65fb2442b3787fbd178ecb14985d6fae6c87dd3033aeb13e65a77150528"
@@ -26691,7 +26691,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Katie Hobbs",
-      "payloadSha256": "3b103e5eba5b888efc5a8fbb473c14be9aeab2fc05a8c00e3298061e9ea3616b",
+      "payloadSha256": "e9a09a7e65371d15ede19da129c8ca0f4d23432e5ebfdb5ba24ab39dc8850fb1",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Katie Hobbs@b77927d187092f65f8dca088415929b2c981a8ea8f12e1a1bb920ecb2a398a23"
@@ -27383,7 +27383,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Katie Hobbs",
-      "payloadSha256": "711e80752974a8411c439141d2c11d57d1adce81e6438702a9a88a5d8bf0e7b4",
+      "payloadSha256": "fc34919414314c494ac7e7402d84f76211d8e79b8724793f0d728a402d950a7e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Katie Hobbs@f203f93f845519e214ee8586f4df09911bb39d87dc974eae13f0f902bc415b19"
@@ -28076,7 +28076,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Teri Ann Hourihan",
-      "payloadSha256": "d4b68fc40acf1d361c5f863aad467ea3f9a059c444e151d1f2980cafffa3b29a",
+      "payloadSha256": "2de7d9f612a9818d2644817a62dc77e80068af747befe5e2502aa123f82ebaf8",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Teri Ann Hourihan@302e1d83328c053be95c932d90133428339b9174464e10e7e0264ca0a7cfc043"
@@ -28727,7 +28727,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
-      "payloadSha256": "a25047f047f873c42c2b5b681e4fc5a38d915f0916eee235611c8540fa6ee2b3",
+      "payloadSha256": "5acf7662902ba72e35d732ad5857ce31c647340f1562c864a535a62bc960605d",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk@e4a8446994168c761748cc44345b1116ab95d701a15c783698c4730cafc223a0"
@@ -28907,7 +28907,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:secretary-of-state|Adrian Fontes",
-      "payloadSha256": "a29f8d9a2fca1ddc4ae3aaddc2a7f41a162a6594be4d3e3eb11b2dc65c72822f",
+      "payloadSha256": "f26ff5e91930c099806bd466d153ae166b0254f0de60d36321e9fa85aada48cb",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:secretary-of-state|Adrian Fontes@1aacf8aeffbb8321baf4bc7b79e3aac1c1d633daa436acf5d4734ca7ebad51c7"
@@ -29075,7 +29075,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:secretary-of-state|Adrian Fontes",
-      "payloadSha256": "7af47a8aa45bc67973a90ea57608a756422038d3365da338356daab4d34af0f0",
+      "payloadSha256": "89ee92c95c8f22eded6ac3148a9718732ef96c4cab6542c41e89e891615f647a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:secretary-of-state|Adrian Fontes@6017f010dac1b3be4402f83270f74477993ef2f08d6d1f5927386e21814f49e8"
@@ -29280,7 +29280,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:secretary-of-state|Alexander Kolodin",
-      "payloadSha256": "466b78ce20554f4466f9bf328bd8526c00ea98791a97f56130921e4d2e83a366",
+      "payloadSha256": "e01a5da1889378d66e9644f24782de4e911fafbc57a1d0a5c942bbab9ac6a299",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:secretary-of-state|Alexander Kolodin@c2086be8f0fe6a764063c6a544fd01d875ed83a2996c199795dcd82428286a98"
@@ -29437,7 +29437,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|Aiden Nicholette Swallow",
-      "payloadSha256": "2fd18065451b7bc4a82501be41a3c0e607cc98a5fdfb194c04b2b843e47037ad",
+      "payloadSha256": "55bbdd59bb3c3703da98daec2d47b74cf33a49b867c6b290e26e2bc142aa14e5",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19|Aiden Nicholette Swallow@dc455aac3bd696630dbf2344997e7fe1848be52fb8c46fa32cfd6fc34787e090"
@@ -29655,7 +29655,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|Lupe Diaz",
-      "payloadSha256": "4b0189ecec6ff2c4eea9eb7c4f7e314ed7a31013468453f08c38912865250f5b",
+      "payloadSha256": "e796cb8903273b33e8387c830d796d382d09e7fd6e4d00f6b5019b520ceed44d",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19|Lupe Diaz@72cfe08450999c8e3370af6032a89df64b0379d01e17a9505cfc1a0cf071486f"
@@ -29862,7 +29862,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Betty Villegas",
-      "payloadSha256": "bf798615734779c47582e551070250c387f2d4749d39688ca3ac78e78ffff453",
+      "payloadSha256": "09b4ee9f65cbb2b5eadb31e0029cc657df851266f3c1b1a998b8df57891e7e32",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20|Betty Villegas@5470bfbc3f4cb7a3186e52da8811d1febb41bdd68ac3b5aabb83be781bb2fae1"
@@ -30064,7 +30064,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-19|Bob Karp",
-      "payloadSha256": "8fc820bece84b78e14651f67328731aed1dea8e52d86829348c76fdd27d9fe21",
+      "payloadSha256": "2136463b2943d9bd79808619bd5cf2738f7594e3685ba80ed9c90d45d8cbf3d0",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-19|Bob Karp@a5a4397d781a1f84977ec1531b5d09c2173cbcab59b4ad704837c7ce31b03742"
@@ -30200,7 +30200,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-20|Alma Hernandez",
-      "payloadSha256": "44dfd4c886c9ad36610ba2cc67c7e10a7643531584a11578528532ec2a8e72bb",
+      "payloadSha256": "0eedc2bf92722b062a4fa2db678f6a36c82d8b9afc02d1ee94544eca5550622a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-20|Alma Hernandez@9bb951bea7187cd09862790c0016f86bd471e05a0627016e7d4bb4c851207f2b"
@@ -30385,7 +30385,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-treasurer|Elijah Norton",
-      "payloadSha256": "d7ca362e4a5c3cc86ff948fb78ebc865913a33e839f0f5dedf7642ca177abff4",
+      "payloadSha256": "212503330a340e9fd01d255a121c00a5a3b32e886cc1a9db070f59e750216360",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-treasurer|Elijah Norton@4b504d6944e057a0212d9fd71d65598a2991c67f5e59056510ed97ab0059126f"
@@ -30546,7 +30546,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-treasurer|Nick Mansour",
-      "payloadSha256": "56580808d41a574fd79561b564afb775a81693130bf5a82f17c51c4c391c74b8",
+      "payloadSha256": "395dc055701da05702f231646cdf7b0f82da1c065f0c1fb8c4a8663d7f6415f7",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-treasurer|Nick Mansour@61904e763c8fcfb39eb85a9a077b6d91f2416e8336150db93fc59354f52f51d4"
@@ -30684,7 +30684,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:superintendent|Kimberly Yee",
-      "payloadSha256": "204feb56449c55e2410217f1e8bafcaa13ec9fc5e17d8de181c0f31030839fa0",
+      "payloadSha256": "afed3ab74361233acbc07e8a926e3af35e784d228646564b9eae428aa102f824",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:superintendent|Kimberly Yee@c7342133e401bd75792894b31efa7f069f5e6a13ea440dc1ae4687cdbcadd5e3"
@@ -30942,7 +30942,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:superintendent|Kimberly Yee",
-      "payloadSha256": "a21883fce04867680166d1b1efe4b487a59c66eaf525275651e5a8a26b70467b",
+      "payloadSha256": "3637d36bb67e32320e019aa9ca8e49977176962dc1241370b83cb40fa7e7d76b",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:superintendent|Kimberly Yee@edcd98930dfee01a6be5da04b1b370c337c0454701c6a1039267d492173017f7"
@@ -31186,7 +31186,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
-      "payloadSha256": "ec20c92f2c7f141cf4d400558481ba796a64b07898753833ca300af7db54e993",
+      "payloadSha256": "0e65291464b5b855a25b38e3490447975499e19896063c456f949a46732d07dd",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:superintendent|Teresa Leyba Ruiz@9e4cc50b52417bf37127a71bf706b690503eb105ea0fb358c5a66b1c89b2af44"
@@ -31326,7 +31326,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-6|Gary Swing",
-      "payloadSha256": "a84a63e9462f4de98ef76a32e701b1fc99c519f76c2af4ad8499a16c48a79286",
+      "payloadSha256": "44a7335108204e915bac71d9b6039f0c4a699dd8b18073a777a55bb7959c09bb",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-6|Gary Swing@81c35990921e938673ae0112144015d7126a580eae56a4e7b529128d9826b8e3"
@@ -31465,7 +31465,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-6|JoAnna Mendoza",
-      "payloadSha256": "77311c3bec95058046c0b355ae559113c7267b4b5f5f4b2fc4b8e9e92de3df7e",
+      "payloadSha256": "21cbbe7ec0a988bd674a79191f12d04a7f3d4251228a9971082a2c003deca7bf",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-6|JoAnna Mendoza@70830914ebe8633d2b8dff184d158ab60935307e17d44c39639ae4d3d480a718"
@@ -31659,7 +31659,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-6|Juan Ciscomani",
-      "payloadSha256": "d27978dcc603348305bed16cdfeb9e2f722cb419a2667d1581a6d3748f52c7e1",
+      "payloadSha256": "cb4684c824721eb27fe3ac634e107bf2328d51c9418e7ab1baa99a47885f6231",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-6|Juan Ciscomani@72efdcf7b26d811626eadd0d93da0c601ef732ecb7512f6cb05ccc7d0123d6e3"
@@ -32862,7 +32862,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-7|Adelita Grijalva",
-      "payloadSha256": "109986f62f4c6f1a3b6070a0de0fbe82b99bd386180de0c4308dbbdf4a08c96b",
+      "payloadSha256": "e54b7b2a4f4ae2f9040b49c767987a87df22f304d390411495b1342d37fa6040",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-7|Adelita Grijalva@0782bb039c63e10c46f23c23fd42d226493b46939d06fe8bb4fb98a88b3af2f6"
@@ -33838,7 +33838,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-7|Adelita Grijalva",
-      "payloadSha256": "8350b161f9b0fb64858d23b95c569eb42e46f9cc180dd4e6257330d9d10cb799",
+      "payloadSha256": "703b34dd83e098b660498fa29022eeb98c270a4d6995cbe524bd684336460bde",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-7|Adelita Grijalva@dbf9709f311e6b5302352bed3379b5437269b4c8c015019857ccc12621ceecf9"
@@ -34804,7 +34804,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
-      "payloadSha256": "c4e9e29241e1023a65a650b2328e0da02e1860c5d0535301c687857d473ac7d6",
+      "payloadSha256": "36e4c9eb6160f238771c29a6922e48a42dca32dad4f80dea9fc313acf71326a1",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.@3fd4e49c4d8b8caf79cbf116e6b385100460f3c051753bf798794dfccfdd2559"
@@ -34959,7 +34959,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
-      "payloadSha256": "2ec831f1c12bfdc5cec1f8d1e7557de7ef66834654eb3bb141b81e84ea1d6ff4",
+      "payloadSha256": "8f353bc5bb263b6b41d94d4939ff381e90b6150f184382eac62e1f3605368fed",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:executive-council-2:liot-hill-karen@9566bb0b9239975471b595e2cf1d4cf68df8bfca7cfdecf2482fbed67fcc5d46"
@@ -35248,7 +35248,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:governor:ayotte-kelly",
-      "payloadSha256": "5b536c63fba3ab1063f7b8906bfc21055af54bd182af655c312022503b004814",
+      "payloadSha256": "7d22435922facfbe4dac23c7278915f0bae5b096918bf8c4d0fcd6c3a2cf7eae",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:governor:ayotte-kelly@c03ee4a5f55dca7b3bfbea52a1f306cd1b8b4750e40e40b23a88d8ea3c2655e0"
@@ -35471,7 +35471,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:governor:warmington-cinde",
-      "payloadSha256": "67e03f65ebe6b5670a076b3526b7996c1316d869a3430f400d954b9a0e6e4788",
+      "payloadSha256": "1e4e3a47c9f27f9885a76c2e0c6df2ca4cd243a1eb3c72977bd0944ad0a3204a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:governor:warmington-cinde@d38b61de8c9d2208e36465e1dd75c1c50ed1928593905c1fae315a42daf55c8c"
@@ -35699,7 +35699,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-      "payloadSha256": "7feb5a5fe518927dde2df59d6f3fde18db330599ad45d06238ed270205a319a7",
+      "payloadSha256": "239716d6e749e786dc1c2fa84b52b4841b4bec6072f2ea81bc7dc33d78b5d7d1",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-@2433d93f72d1b08884799e50d7f6acef8c1a04271cfa775286691e40e2022f14"
@@ -36433,7 +36433,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
-      "payloadSha256": "d686764e27b9cf2c3eb6bc1a801f59009660a18e877206126f8ed11b2204403b",
+      "payloadSha256": "ebc96ec8781b1e8955021f6238955cc81da63ef59cc0c8cfb5c012d9a38bb200",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-senate-7:harned-rebecca@189d0e39f7d708adb741f6c920aad381b25003a985fb13474bc3a08b7b59331d"
@@ -36597,7 +36597,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
-      "payloadSha256": "fbaeab3722cbbcbe9e5e2a47d99ade5b8296bcd763d3d79dbeae4c5df9d0643d",
+      "payloadSha256": "94678ad692518d15e3c5a3de137cb6d601d962e76c4c79628182560dea3e29bb",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:beauchemin-paige@bbbd8b81c671c9c95547d05850fbdbfc9195d845758f6851f12b1fab9438e5de"
@@ -36800,7 +36800,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
-      "payloadSha256": "8dfb87e73a6c13ea46c7ab8857a809d03829ece27b5b294fdb801f65ae358ffe",
+      "payloadSha256": "fd9625316393987ed28d8eda7efbef6ecdc3a5f487c7f4bb0b194bdc25ccd9e3",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:goodlander-maggie@85be3bb1f0fe18e4a9583c722efda73233afed6608c8bb6f7e8bb6878da77716"
@@ -37903,7 +37903,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
-      "payloadSha256": "27b0e9aba46488136631508d1128b671fea3b89d7e9376627a47674fea9db018",
+      "payloadSha256": "760381bcd5f0779d5df3eb85eee7d09de35b5091852982893d41293e41d05d4f",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:goodlander-maggie@896adcebc161c16d09dbbf8cb0dff37d78ca1cb6b9ac0ece1f04c9e9dbb77f88"
@@ -39003,7 +39003,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
-      "payloadSha256": "3067398c2d8db7a38303b43aa3795ef739580e3541fc857c3e49e5146fc638ea",
+      "payloadSha256": "e27bb51b26b161cda466693ec3924d7498d422d5db8963b930ea5d1baecf38d5",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:tang-williams-lily@36e833f73bc3ec2246b48a81d2f57804583d9f0e2353b1a79dbd652601405158"
@@ -39201,7 +39201,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:brown-scott-p-",
-      "payloadSha256": "3b1b0a3e2c3d47b77a9d984a905b787e5b2bee32ecb8e2324f46f9be37437035",
+      "payloadSha256": "8fa3c855d0117bfbf42553196726c6f29ede9e98a81169dbdc689fee915c2504",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:brown-scott-p-@ee3c110f65963b038f7b48c5a927153cc2f47fc75920ec24b6c3ba7b8415002d"
@@ -39384,7 +39384,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
-      "payloadSha256": "220175ba72e6f038f97e93b9d6405311f4d4f0f46352517750b558ddc2968e14",
+      "payloadSha256": "a78d0925ceacfeda6827c8c7aef857ce3102800fa254ebb39843c36f2f8b4e18",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:pappas-chris@3bc980ccafa08d96ca1b2155e3b1db125499e006ea18a12516d3c811c75f5f4f"
@@ -40749,7 +40749,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
-      "payloadSha256": "9546f9d6b44cb0c514f0ec45ed3275edc54295a543beeac2ee4036ca665fde6e",
+      "payloadSha256": "4236930faedb6914e10ee9a37b8dc48f4939a43644f96af27cfe9ad7a768cda9",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:pappas-chris@652d9c7595ae75409b0c58eda328808efa13b922956fdcf44a8ad0cd94e6ce89"
@@ -42114,7 +42114,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:sununu-john-e-",
-      "payloadSha256": "1b586ae9c428c5c47ec5bafc48111091549b472eff781e14cfd135ef1f9467be",
+      "payloadSha256": "68769f1ae3a136bda7b21652b1675bd549fa43fe9fac9f8b55e142606da9b59a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:sununu-john-e-@0c15ad592ecd5d76970156c7915f38c638485075cb06a1b15543d2f3b13395bc"
@@ -42358,7 +42358,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:county-commissioner:selen",
-      "payloadSha256": "c3d0a6cef3c7883c2127d6b68be17c52aa991406ae624525306f54f1acd10dbb",
+      "payloadSha256": "c2e1427c4cd1affc3a460aec066f4cc072177c1d8b388a175e799d107fbd6b10",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:county-commissioner:selen@4a08209929658b753feacbad6464feda37019bca18ef67e300effe79ef96a435"
@@ -42433,9 +42433,9 @@
           "subjectId": "ballot-nj-morris:county-commissioner:selen",
           "canonicalSubjectId": "ballot-nj-morris:county-commissioner:selen",
           "text": "Recorded email: selentayfun@gmail.com",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18",
+          "retrievedAt": "2026-09-24",
           "candidateProfile": {
             "field": "email",
             "value": "selentayfun@gmail.com",
@@ -42452,7 +42452,7 @@
           "subjectId": "ballot-nj-morris:county-commissioner:selen",
           "canonicalSubjectId": "ballot-nj-morris:county-commissioner:selen",
           "text": "Filed mailing address: 30 Woodmont Drive Chatham NJ 07928",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk, 2026 general-election candidate filing (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -42506,17 +42506,17 @@
           "id": "ballot-nj-morris:county-commissioner",
           "text": "Member of the Board of County Commissioners appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 3 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:county-commissioner:selen",
           "text": "Tayfun SELEN filed for Member of the Board of County Commissioners, as Republican. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -42594,9 +42594,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:county-commissioner:selen",
           "text": "Tayfun SELEN — Candidate for Member of the Board of County Commissioners — contact published on the filing. Published contact: email selentayfun@gmail.com, filed mailing address 30 Woodmont Drive Chatham NJ 07928.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CONTACT",
@@ -42705,7 +42705,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:county-commissioner:selen",
-      "payloadSha256": "209690936446ffaf4e5f506e8dddc1639e89787d74039521bdb613113731ab5e",
+      "payloadSha256": "93c3eb9d055f9e9f2574f69f3d7d9adfced774f6ec401413e26333de1fc57c43",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:county-commissioner:selen@cf521fbee83128271a8080617185118a593d57887eca3c23b2310aa405d7348c"
@@ -42766,9 +42766,9 @@
           "subjectId": "ballot-nj-morris:county-commissioner:selen",
           "canonicalSubjectId": "ballot-nj-morris:county-commissioner:selen",
           "text": "Recorded email: selentayfun@gmail.com",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18",
+          "retrievedAt": "2026-09-24",
           "candidateProfile": {
             "field": "email",
             "value": "selentayfun@gmail.com",
@@ -42785,7 +42785,7 @@
           "subjectId": "ballot-nj-morris:county-commissioner:selen",
           "canonicalSubjectId": "ballot-nj-morris:county-commissioner:selen",
           "text": "Filed mailing address: 30 Woodmont Drive Chatham NJ 07928",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk, 2026 general-election candidate filing (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -42839,17 +42839,17 @@
           "id": "ballot-nj-morris:county-commissioner",
           "text": "Member of the Board of County Commissioners appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 3 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:county-commissioner:selen",
           "text": "Tayfun SELEN filed for Member of the Board of County Commissioners, as Republican. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -42891,9 +42891,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:county-commissioner:selen",
           "text": "Tayfun SELEN — Candidate for Member of the Board of County Commissioners — contact published on the filing. Published contact: email selentayfun@gmail.com, filed mailing address 30 Woodmont Drive Chatham NJ 07928.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CONTACT",
@@ -43002,7 +43002,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-house-11:hathaway",
-      "payloadSha256": "08eda7d2c31297f80a8abb7a2e435a4be7708065c3d09ecf5fbb064a3929d571",
+      "payloadSha256": "d8e7f37898853da67819a6e8e085cd68e10508eee7cb48023608dde18a624c87",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-house-11:hathaway@b8b9fffc9786883783e912e439eb3ebe34d5cb4d7118854737d22f6fa72da626"
@@ -43072,9 +43072,9 @@
           "subjectId": "ballot-nj-morris:us-house-11:hathaway",
           "canonicalSubjectId": "ballot-nj-morris:us-house-11:hathaway",
           "text": "Recorded email: info@joehathawayforcongress.com",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18",
+          "retrievedAt": "2026-09-24",
           "candidateProfile": {
             "field": "email",
             "value": "info@joehathawayforcongress.com",
@@ -43091,7 +43091,7 @@
           "subjectId": "ballot-nj-morris:us-house-11:hathaway",
           "canonicalSubjectId": "ballot-nj-morris:us-house-11:hathaway",
           "text": "Filed mailing address: P.O. Box 999 Edison NJ 08818",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "NJ Division of Elections, 2026 general-election candidate list (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -43145,17 +43145,17 @@
           "id": "ballot-nj-morris:us-house-11",
           "text": "Member of the House of Representatives (11th Congressional District) appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:us-house-11:hathaway",
           "text": "Joe HATHAWAY filed for Member of the House of Representatives (11th Congressional District), as Republican. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -43204,9 +43204,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:us-house-11:hathaway",
           "text": "Joe HATHAWAY — Candidate for Member of the House of Representatives (11th Congressional District) — contact published on the filing. Published contact: email info@joehathawayforcongress.com, filed mailing address P.O. Box 999 Edison NJ 08818.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         }
       ],
       "traceRecordCount": 13,
@@ -43247,7 +43247,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-house-11:mejia",
-      "payloadSha256": "63aca9851470b2dd77b02dd5ff161ed7e134b16330d53f6726b1c2c98ac76c08",
+      "payloadSha256": "dc921f693c2f68ac2479e0c0f1691e40767bc14e2e9b28f40c8a222228679f37",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-house-11:mejia@232b73a29b12d33ec546ce4056fec6af8abd6bdea6249ec6ba37a4ae3d7e6d55"
@@ -43383,7 +43383,7 @@
           "subjectId": "ballot-nj-morris:us-house-11:mejia",
           "canonicalSubjectId": "ballot-nj-morris:us-house-11:mejia",
           "text": "Filed mailing address: 13 Municipal Plaza, P.O. Box 41 Bloomfield NJ 07003",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "NJ Division of Elections, 2026 general-election candidate list (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -43437,17 +43437,17 @@
           "id": "ballot-nj-morris:us-house-11",
           "text": "Member of the House of Representatives (11th Congressional District) appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:us-house-11:mejia",
           "text": "Analilia MEJIA filed for Member of the House of Representatives (11th Congressional District), as Democratic. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -44130,9 +44130,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:us-house-11:mejia",
           "text": "Analilia MEJIA — Candidate for Member of the House of Representatives (11th Congressional District) — contact published on the filing. Published contact: email info@analiliafornj.com, filed mailing address 13 Municipal Plaza, P.O. Box 41 Bloomfield NJ 07003.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CONTACT",
@@ -44249,7 +44249,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-house-11:mejia",
-      "payloadSha256": "19784186ea3ae432d4fb76d627d805fd3b527635e809c0e9ba833beaa27daea1",
+      "payloadSha256": "904f5e650257e8f83f2dffa6e0a1c42a34bfa4eceed080e1eaee1185cd043d71",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-house-11:mejia@ba7255b9f4bd1ba07fefa28fd57ee081095c8df7b55869bad5596ef8330c3d7d"
@@ -44398,7 +44398,7 @@
           "subjectId": "ballot-nj-morris:us-house-11:mejia",
           "canonicalSubjectId": "ballot-nj-morris:us-house-11:mejia",
           "text": "Filed mailing address: 13 Municipal Plaza, P.O. Box 41 Bloomfield NJ 07003",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "NJ Division of Elections, 2026 general-election candidate list (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -44452,17 +44452,17 @@
           "id": "ballot-nj-morris:us-house-11",
           "text": "Member of the House of Representatives (11th Congressional District) appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:us-house-11:mejia",
           "text": "Analilia MEJIA filed for Member of the House of Representatives (11th Congressional District), as Democratic. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -45208,9 +45208,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:us-house-11:mejia",
           "text": "Analilia MEJIA — Candidate for Member of the House of Representatives (11th Congressional District) — contact published on the filing. Published contact: email info@analiliafornj.com, filed mailing address 13 Municipal Plaza, P.O. Box 41 Bloomfield NJ 07003.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CONTACT",
@@ -45326,7 +45326,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:booker",
-      "payloadSha256": "8ff73658586f23fbea1e3b60fa6a7e38230427afb9b2566a247839323d40b076",
+      "payloadSha256": "cbf8afa2bf4b69b6313f02657d87334546885dc0057a590a9a18668b55f8a281",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-senate:booker@254d0cceeab19591c9de0ebbd1f4eac1e19429069cb41c1ad1d136da1a0edb2e"
@@ -45471,9 +45471,9 @@
           "subjectId": "ballot-nj-morris:us-senate:booker",
           "canonicalSubjectId": "ballot-nj-morris:us-senate:booker",
           "text": "Recorded email: bookerteam@corybooker.com",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18",
+          "retrievedAt": "2026-09-24",
           "candidateProfile": {
             "field": "email",
             "value": "bookerteam@corybooker.com",
@@ -45490,7 +45490,7 @@
           "subjectId": "ballot-nj-morris:us-senate:booker",
           "canonicalSubjectId": "ballot-nj-morris:us-senate:booker",
           "text": "Filed mailing address: 8 Lombardy Street, P.O. Box 346 Newark NJ 07102",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "NJ Division of Elections, 2026 general-election candidate list (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -45544,17 +45544,17 @@
           "id": "ballot-nj-morris:us-senate",
           "text": "Member of the United States Senate appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 6 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:us-senate:booker",
           "text": "Cory BOOKER filed for Member of the United States Senate, as Democratic. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "OFFICEHOLDER",
@@ -46963,9 +46963,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:us-senate:booker",
           "text": "Cory BOOKER — Candidate for Member of the United States Senate — contact published on the filing. Published contact: email bookerteam@corybooker.com, filed mailing address 8 Lombardy Street, P.O. Box 346 Newark NJ 07102.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CONTACT",
@@ -47020,7 +47020,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:fernandez",
-      "payloadSha256": "d1552178f9c3bbec8663e05c5f54052d36b58d37aacea7939f2c004dc1477083",
+      "payloadSha256": "f6edfa5d35c719bfcb4b9fbc48799768c06bc79fef9abcaf4f0c720609836c4e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-senate:fernandez@63257be248c6b417ec6814a1c2d0d84a0f3ffaec7f038e0e9ef2138e6cb510ac"
@@ -47070,9 +47070,9 @@
           "subjectId": "ballot-nj-morris:us-senate:fernandez",
           "canonicalSubjectId": "ballot-nj-morris:us-senate:fernandez",
           "text": "Recorded email: info@veronicaforsenate.com",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18",
+          "retrievedAt": "2026-09-24",
           "candidateProfile": {
             "field": "email",
             "value": "info@veronicaforsenate.com",
@@ -47089,7 +47089,7 @@
           "subjectId": "ballot-nj-morris:us-senate:fernandez",
           "canonicalSubjectId": "ballot-nj-morris:us-senate:fernandez",
           "text": "Filed mailing address: 157 Bartley Road Long Valley NJ 07853",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "NJ Division of Elections, 2026 general-election candidate list (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -47125,17 +47125,17 @@
           "id": "ballot-nj-morris:us-senate",
           "text": "Member of the United States Senate appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 6 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:us-senate:fernandez",
           "text": "Veronica FERNANDEZ filed for Member of the United States Senate, as Independent, under the filed slogan \"End The Corruption!\". The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -47150,9 +47150,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:us-senate:fernandez",
           "text": "Veronica FERNANDEZ — Candidate for Member of the United States Senate — contact published on the filing. Published contact: email info@veronicaforsenate.com, filed mailing address 157 Bartley Road Long Valley NJ 07853.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         }
       ],
       "traceRecordCount": 8,
@@ -47192,7 +47192,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:murphy",
-      "payloadSha256": "f97547476cf1eb128cce96cb6bc011375ff53f83c141f47c7f1123c998135738",
+      "payloadSha256": "93b25404a3b4d74a1010a48a97ef5855b42a65905b651e9ee9e94349680fb67a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-senate:murphy@23c6cb8dec680ff8128c9228994cc21bf47c161c22dde6c9c50afcf4c10d857d"
@@ -47291,9 +47291,9 @@
           "subjectId": "ballot-nj-morris:us-senate:murphy",
           "canonicalSubjectId": "ballot-nj-morris:us-senate:murphy",
           "text": "Recorded email: jerseyjustin4senate@gmail.com",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18",
+          "retrievedAt": "2026-09-24",
           "candidateProfile": {
             "field": "email",
             "value": "jerseyjustin4senate@gmail.com",
@@ -47329,7 +47329,7 @@
           "subjectId": "ballot-nj-morris:us-senate:murphy",
           "canonicalSubjectId": "ballot-nj-morris:us-senate:murphy",
           "text": "Filed mailing address: 20 Worrell Road Tabernacle NJ 08088",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "NJ Division of Elections, 2026 general-election candidate list (read 2026-08-22)",
           "retrievedAt": "2026-08-22",
           "candidateProfile": {
@@ -47365,17 +47365,17 @@
           "id": "ballot-nj-morris:us-senate",
           "text": "Member of the United States Senate appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 6 years.",
           "occurredAt": "2026-11-03",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "CANDIDACY",
           "id": "ballot-nj-morris:us-senate:murphy",
           "text": "Justin MURPHY filed for Member of the United States Senate, as Republican. The filing does not state whether they are the incumbent.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         },
         {
           "kind": "POSITION",
@@ -47561,9 +47561,9 @@
           "kind": "CONTACT",
           "id": "candidate-contact:ballot-nj-morris:us-senate:murphy",
           "text": "Justin MURPHY — Candidate for Member of the United States Senate — contact published on the filing. Published contact: email jerseyjustin4senate@gmail.com, filed mailing address 20 Worrell Road Tabernacle NJ 08088.",
-          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-18"
+          "retrievedAt": "2026-09-24"
         }
       ],
       "traceRecordCount": 32,

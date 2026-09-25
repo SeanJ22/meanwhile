@@ -63,6 +63,14 @@ import {
   type JurisdictionReferenceAcquisitionFailure,
 } from "../lib/civic-data/jurisdiction-reference-acquisition.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { acquireWebsiteCorrections, type WebsiteCorrectionOutcome } from "../lib/civic-data/website-correction-acquisition.ts";
+import {
+  applicableWebsiteCorrections,
+  WEBSITE_CORRECTIONS,
+  websiteCorrectionFor,
+  websiteCorrectionNote,
+} from "../lib/civic-data/website-corrections.ts";
+import { memoryInProcess, nodeResearchGet } from "../lib/hunt/robots-first-fetch.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
@@ -70,6 +78,8 @@ const GENERATOR = "scripts/enumerate-jurisdictions.mts";
 let asOf = "";
 let acquiredCensusUnits: readonly CensusJurisdictionUnitInput[] = [];
 let acquiredDependentSchoolSystems: readonly CensusJurisdictionUnitInput[] = [];
+/** Each reviewed website correction's reading at this promotion (C15), by jurisdiction id. */
+let websiteCorrectionOutcomes: ReadonlyMap<string, WebsiteCorrectionOutcome> = new Map();
 
 /* ------------------------------------------------------------- the sources */
 
@@ -651,6 +661,13 @@ function build(plan: StatePlan): JurisdictionRegistry {
     let id = `${plan.code.toLowerCase()}:${PREFIX_OF[govClass]}:${slug(unit.name)}`;
     if (seen.has(id)) id = `${id}-${unit.pid}`;
     seen.add(id);
+    /*
+     * A reviewed website correction replaces the Census address only while Census still records the address it
+     * replaces, and only as this promotion read its sources again: refused, the Census address stays and says why.
+     */
+    const census = ownWebAddress(unit);
+    const correction = websiteCorrectionFor(id, census);
+    const reading = correction === null ? undefined : websiteCorrectionOutcomes.get(id);
     jurisdictions.push({
       id,
       stateCode: plan.code,
@@ -658,7 +675,10 @@ function build(plan: StatePlan): JurisdictionRegistry {
       govClass,
       countyName: unit.county || null,
       enumeratedFrom,
-      ownWebAddress: ownWebAddress(unit),
+      ownWebAddress: correction !== null && reading !== undefined && reading.disposition !== "REFUSED" ? correction.corrected : census,
+      ...(correction === null || reading === undefined
+        ? {}
+        : { ownWebAddressCorrection: websiteCorrectionNote(correction, reading.disposition, reading.detail) }),
       sourceIds: plan.sourcesFor(unit, govClass).map(catalogKey),
     });
   };
@@ -769,7 +789,19 @@ if (acquisition.kind === "FAILED") {
 }
 acquiredCensusUnits = acquisition.censusUnits;
 acquiredDependentSchoolSystems = acquisition.dependentSchoolSystems;
-const retrievedAt = acquisition.receipts.map((receipt) => receipt.retrievedAt).sort().at(-1)!;
+/* Each reviewed website correction is read again, robots.txt first, before it may replace a Census address (C15). */
+const corrections = await acquireWebsiteCorrections([...applicableWebsiteCorrections(WEBSITE_CORRECTIONS).values()], {
+  get: nodeResearchGet,
+  memory: memoryInProcess(),
+  now: () => Date.now(),
+  sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+});
+websiteCorrectionOutcomes = new Map(corrections.outcomes.map((outcome) => [outcome.jurisdictionId, outcome]));
+for (const outcome of corrections.outcomes) {
+  console.log(`website correction ${outcome.jurisdictionId}: ${outcome.disposition} — ${outcome.detail}`);
+}
+const sourceReceipts = [...acquisition.receipts, ...corrections.receipts];
+const retrievedAt = sourceReceipts.map((receipt) => receipt.retrievedAt).sort().at(-1)!;
 asOf = retrievedAt.slice(0, 10);
 
 console.log(`jurisdictions:enumerate · acquired authoritative inputs as of ${asOf}\n`);
@@ -854,7 +886,7 @@ const registries = Object.fromEntries(
 ) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
 const candidate = jurisdictionOperationalReferenceCandidate({
   registries,
-  sourceReceipts: acquisition.receipts,
+  sourceReceipts,
   workbook: acquisition.workbook,
   retrievedAt,
 });

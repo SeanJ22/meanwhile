@@ -642,18 +642,21 @@ test("ballot absence supersession permits only a unique later verification of th
   const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/nj/ballot/nj-morris-2026.json"), "utf8")) as { absences: Record<string, unknown>[] };
   const frozen = structuredClone(snapshot.absences[0]!);
   const provenance = frozen.provenance as Record<string, unknown>;
-  const successor = {
-    ...structuredClone(frozen),
-    provenance: { ...provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  // Dates are relative to the committed seed's own observation, so the fixture keeps its meaning
+  // whichever edition of the clerk's list the seed mirrors (it moved from 09-06 to 09-24 on 2026-09-24).
+  const shifted = (days: number) => {
+    const at = (value: unknown) => new Date(Date.parse(`${String(value)}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
+    return { ...provenance, collectedAt: at(provenance.collectedAt), verifiedAt: at(provenance.verifiedAt) };
   };
+  const successor = { ...structuredClone(frozen), provenance: shifted(2) };
 
   assert.equal(ballotAbsenceAuthorityRelation(frozen, [structuredClone(frozen)]).kind, "EXACT");
   assert.equal(ballotAbsenceAuthorityRelation(frozen, [successor]).kind, "MONOTONIC_SUCCESSOR");
   assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, statement: `${String(frozen.statement)} drift` }]).kind, "MISSING");
-  assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, provenance: { ...provenance, collectedAt: "2026-08-31", verifiedAt: "2026-08-31" } }]).kind, "MISSING");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, provenance: shifted(-6) }]).kind, "MISSING");
   assert.equal(ballotAbsenceAuthorityRelation(frozen, [
     successor,
-    { ...structuredClone(successor), provenance: { ...provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } },
+    { ...structuredClone(successor), provenance: shifted(3) },
   ]).kind, "MISSING", "two later observations cannot be resolved by array order");
 });
 

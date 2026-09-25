@@ -43,6 +43,15 @@ export interface ScoutToolSpec {
   readonly input_schema: Record<string, unknown>;
   /** The executor sets this on the LAST definition so the tool list is a cache prefix. */
   readonly cache_control?: { readonly type: "ephemeral" };
+  /**
+   * Strict tool use: the provider guarantees the call's `input` validates
+   * against `input_schema` (every object `additionalProperties: false`, no
+   * numeric, string-length or complex array constraints). The replacement for
+   * a forced `tool_choice`, which Claude Opus 5.5 answers with HTTP 400
+   * (claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
+   * breaking change 2).
+   */
+  readonly strict?: boolean;
 }
 
 /**

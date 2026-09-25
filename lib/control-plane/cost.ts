@@ -160,6 +160,77 @@ export interface CostEntry {
    * total and every ceiling, and is kept out of what production work produced.
    */
   readonly nonProduction?: true;
+  /**
+   * WHICH MODEL EACH PART OF THE CHARGE WAS FOR (MW-031, 2026-09-25). Written
+   * only when one Attempt ran more than one model — a Scout that started on
+   * Sonnet 5 and escalated to Opus 5.5. `cost` stays the Attempt's one combined
+   * charge; these shares split it, each priced at its own model's rate, and sum
+   * to it. Absent: the whole charge is the Attempt's worker model, as before.
+   * Read through `costPortionsByModel`, never summed beside `cost`.
+   */
+  readonly byModel?: readonly CostModelShare[];
+}
+
+/** One model's part of a charge (`CostEntry.byModel`): the billed quantities of the requests sent to it. */
+export interface CostModelShare {
+  readonly model: string;
+  /** Model requests (provider turns) sent to this model. */
+  readonly requestCount: number;
+  readonly usd: number | null;
+  /** The whole prompt: uncached + cache reads + cache writes, as on the ledger row. */
+  readonly inputTokens: number | null;
+  readonly outputTokens: number | null;
+  readonly cacheReadInputTokens: number | null;
+  readonly cacheCreationInputTokens: number | null;
+  readonly cacheCreation5mInputTokens: number | null;
+  readonly cacheCreation1hInputTokens: number | null;
+  readonly uncachedInputTokens: number | null;
+}
+
+/**
+ * **A CHARGE, SPLIT BY THE MODEL EACH PART WAS FOR — WITHOUT COUNTING IT TWICE.**
+ * (MW-031, 2026-09-25.) A row with no `byModel` is one portion under
+ * `attemptModel` (the Attempt's worker model), exactly as every by-model view
+ * read it before. A row with a split gives one portion per share: the share's
+ * dollars and billed tokens replace the row's, and the Attempt's non-model
+ * quantities (its duration, the bytes it fetched, its non-model requests) stay
+ * on the FIRST share — the model the Attempt started on — so every portion's
+ * figures sum back to the row's. A split that does not sum to the row's
+ * dollars (a share unmeasured under a measured total, or a different sum) is
+ * not trusted: the row is read whole under `attemptModel`, never guessed.
+ */
+export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
+  const shares = entry.byModel;
+  if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: attemptModel, entry }];
+  const otherRequests = shares.slice(1).reduce((n, s) => n + s.requestCount, 0);
+  return shares.map((s, i) => ({
+    model: s.model,
+    entry: {
+      ...entry,
+      cost: {
+        ...entry.cost,
+        usd: s.usd,
+        inputTokens: s.inputTokens,
+        outputTokens: s.outputTokens,
+        cacheReadInputTokens: s.cacheReadInputTokens,
+        cacheCreationInputTokens: s.cacheCreationInputTokens,
+        cacheCreation5mInputTokens: s.cacheCreation5mInputTokens,
+        cacheCreation1hInputTokens: s.cacheCreation1hInputTokens,
+        uncachedInputTokens: s.uncachedInputTokens,
+        requestCount: i === 0 ? (entry.cost.requestCount === null ? null : entry.cost.requestCount - otherRequests) : s.requestCount,
+        durationMs: i === 0 ? entry.cost.durationMs : 0,
+        bytesFetched: i === 0 ? entry.cost.bytesFetched : 0,
+      },
+    },
+  }));
+}
+
+function splitMatchesCharge(cost: AttemptCost, shares: readonly CostModelShare[]): boolean {
+  if (shares.some((s) => typeof s.model !== "string" || s.model === "" || !Number.isFinite(s.requestCount) || s.requestCount < 0)) return false;
+  if (cost.usd === null) return true;
+  if (shares.some((s) => s.usd === null || !Number.isFinite(s.usd))) return false;
+  const sum = shares.reduce((n, s) => n + (s.usd ?? 0), 0);
+  return Math.abs(sum - cost.usd) <= 1e-9 * Math.max(1, Math.abs(cost.usd));
 }
 
 /** What the dispatcher writes on a charge's `resultKind` when no disposition was committed. */

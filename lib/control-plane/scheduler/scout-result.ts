@@ -393,6 +393,30 @@ export interface ScoutResult {
   readonly escalationRefused?: ScoutEscalationRefused | null;
   /** Every model attempt that ran, cheapest first, each with its own cost. `usd` above is their combined cost. */
   readonly modelAttempts?: readonly ScoutModelAttempt[];
+  /* ---- Preserved thinking (Claude Opus 5.5, 2026-09-25). Absent on results before: those sent no thinking setting and read no drops. ---- */
+  /**
+   * Every thinking block the provider reported dropping (`input_transformations`).
+   * A `prefix_binding_mismatch` means our history changed under a block — a
+   * defect of our request assembly, named like a cache defect; a
+   * `model_binding_mismatch` after an escalation is the model switch, expected.
+   * Empty when nothing was dropped.
+   */
+  readonly inputTransformations?: readonly ScoutInputTransformation[];
+  /**
+   * How many times the conversation was restarted from the machine's record to
+   * stay under the payload budget (`scoutCarriedForward`). Each restart is one
+   * cache write of the carried-forward start, never an edit of history.
+   */
+  readonly contextRestarts?: number;
+}
+
+/** One `input_transformations` entry, with the turn and model it came back on. */
+export interface ScoutInputTransformation {
+  readonly turn: number;
+  readonly model: string;
+  readonly type: string;
+  readonly path: string | null;
+  readonly reason: string | null;
 }
 
 /* ------------------------------------------------------------- validation */

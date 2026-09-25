@@ -207,7 +207,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { SCOUT_TOOL_SPECS, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -2121,7 +2121,8 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   const started = Date.now();
   try {
     /* MW-033 (2026-09-25): warm the model the loop STARTS on, and only when its prefix can cache — else skip, by name, with no paid call. */
-    const plan = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    /* The Attempts' own tool list: with `search` exactly when `scoutFor` hands the toolkit `scoutSearch` (2026-09-25), so the entry warmed is the one read. */
+    const plan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
     if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
     const { model, request } = plan;
     const transport = fleetSafety.guardedModelTransport("anthropic", "scout-prewarm", anthropicTransport(workerKey));

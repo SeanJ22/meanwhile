@@ -49,6 +49,8 @@ import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts"
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
+import { readerEdgeCarriesForward } from "./lib/reader-edge-current.ts";
+import { readerVerifierClosureAttestor } from "./lib/reader-verifier-attestation.ts";
 
 function safeFailure(value: string): string {
   return value
@@ -94,6 +96,10 @@ const store = stage
   : new PostgresRoutineDataStore();
 
 let failed = false;
+// A receipt from an earlier commit carries to this one when no typed Reader
+// code changed between them; otherwise the Reader re-reads (R31, 2026-09-25).
+// Every runner handoff once re-read every Reader (195.3 MB on an isolated copy).
+const attestor = readerVerifierClosureAttestor();
 if (meetingAggregate) {
   // One composition of every partition per pass, made only when something
   // needs it: the Reader readbacks of newly promoted versions and the prepared
@@ -115,7 +121,7 @@ if (meetingAggregate) {
     MEETING_PARTITION_CONTRACTS,
     observedAt,
     undefined,
-    { aggregate },
+    { aggregate, attestor },
   );
   for (const result of results) {
     const contract = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === result.contractId);
@@ -153,9 +159,24 @@ if (meetingAggregate) {
   // (unchanged data republishes nothing) and last-valid-safe (a failure leaves
   // the previous manifest serving). Degrades to SKIPPED when the runner has no
   // Netlify credentials — the reader then falls back to the DB prepared row.
+  //
+  // R28 (2026-09-25): the served manifest is read first, and the prepared row
+  // (about 7.5 MB) is read only when the publish could change something
+  // (scripts/lib/reader-edge-current.ts). Every pass once read the whole row to
+  // learn that the manifest was already current.
   try {
-    const readBack = await readPreparedMeetingsProjection({ store });
-    if (readBack.kind === "PROMOTED") {
+    // The runner write store, when this host has one; without it the publish
+    // is SKIPPED_NO_STORE whatever it is given, so nothing below is read.
+    const artifactStore = resolveReaderArtifactWriteStore();
+    if (artifactStore === null) {
+      console.log(JSON.stringify({ readerEdge: "SKIPPED_NO_STORE" }));
+    } else {
+      let servedManifest: ReaderManifest | null = null;
+      try {
+        servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
+      } catch {
+        servedManifest = null;
+      }
       // The other ready-to-display families the reader serves, read here (the
       // single clock, production DB) so the visitor never reads them from the DB.
       // A failed read leaves them out of the manifest; the reader then falls back
@@ -180,13 +201,6 @@ if (meetingAggregate) {
       // artifact was written from a proven read of the same immutable version.
       // Every pass once read every family whole (30.8 MB on 2026-09-23, 24 MB
       // of it registry-runtime) to learn that nothing had changed.
-      const artifactStore = resolveReaderArtifactWriteStore();
-      let servedManifest: ReaderManifest | null = null;
-      try {
-        servedManifest = artifactStore ? (await artifactStore.readManifest())?.manifest ?? null : null;
-      } catch {
-        servedManifest = null;
-      }
       const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
         const served = servedAuthorityVersion(servedManifest, family);
         if (served === null) return null;
@@ -315,31 +329,40 @@ if (meetingAggregate) {
         process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}
 `);
       }
-      const edge = await publishReaderEdgeArtifacts(
-        readBack.value,
-        {
-          sourceThrough: readBack.metadata.sourceThrough,
-          retrievedAt: readBack.metadata.retrievedAt,
-          promotedThrough: readBack.metadata.promotedAt,
-        },
-        {
-          store: artifactStore,
-          now: observedAt,
-          ...(extras ? { extras } : {}),
-          ...(Object.keys(authority).length > 0 ? { authority } : {}),
-          ...(registrations !== undefined ? { registrations } : {}),
-        },
-      );
-      if (edge.status === "FAILED") {
-        failed = true;
-        process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(edge.error)}\n`);
-      } else if (edge.status === "NOT_COMPOSABLE") {
-        process.stderr.write(`READER_EDGE_PUBLISH_NOT_COMPOSABLE: ${safeFailure(edge.detail)}\n`);
-      } else if (edge.status === "PUBLISHED") {
-        const purge = await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]);
-        console.log(JSON.stringify({ readerEdge: "PUBLISHED", sequence: edge.sequence, scopes: edge.scopes, meetings: edge.meetings, purged: purge.purged }));
+      const carry = readerEdgeCarriesForward({ prepared, servedManifest, extras, authority, registrations });
+      if (carry.current) {
+        // Exactly what the publish would answer, without the prepared row.
+        console.log(JSON.stringify({ readerEdge: "CURRENT", sequence: carry.sequence }));
       } else {
-        console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}) }));
+        const readBack = await readPreparedMeetingsProjection({ store });
+        if (readBack.kind === "PROMOTED") {
+          const edge = await publishReaderEdgeArtifacts(
+            readBack.value,
+            {
+              sourceThrough: readBack.metadata.sourceThrough,
+              retrievedAt: readBack.metadata.retrievedAt,
+              promotedThrough: readBack.metadata.promotedAt,
+            },
+            {
+              store: artifactStore,
+              now: observedAt,
+              ...(extras ? { extras } : {}),
+              ...(Object.keys(authority).length > 0 ? { authority } : {}),
+              ...(registrations !== undefined ? { registrations } : {}),
+            },
+          );
+          if (edge.status === "FAILED") {
+            failed = true;
+            process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(edge.error)}\n`);
+          } else if (edge.status === "NOT_COMPOSABLE") {
+            process.stderr.write(`READER_EDGE_PUBLISH_NOT_COMPOSABLE: ${safeFailure(edge.detail)}\n`);
+          } else if (edge.status === "PUBLISHED") {
+            const purge = await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]);
+            console.log(JSON.stringify({ readerEdge: "PUBLISHED", sequence: edge.sequence, scopes: edge.scopes, meetings: edge.meetings, purged: purge.purged }));
+          } else {
+            console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}) }));
+          }
+        }
       }
     }
   } catch (error) {
@@ -360,7 +383,7 @@ if (meetingAggregate) {
   }
   try {
     stage?.("readback repair started");
-    const result = await repairRoutineReaderProjectionReadback(store, contract, observedAt);
+    const result = await repairRoutineReaderProjectionReadback(store, contract, observedAt, undefined, { attestor });
     stage?.(`readback repair ${result.kind}`);
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,

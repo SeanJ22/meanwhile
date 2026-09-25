@@ -456,6 +456,81 @@ export type ReaderReadbackRepairOutcome =
 interface ReaderReadbackInspection {
   readonly outcome: ReaderReadbackRepairOutcome | null;
   readonly promotion: PromotedPointerIdentity | null;
+  /**
+   * The newest receipt when it is an exact PASS for this contract and version
+   * in every respect except the code commit that produced it: the one receipt
+   * an attestation may carry forward (`ReaderVerifierClosureAttestor`).
+   */
+  readonly attestFrom?: ReaderProjectionReadbackReceipt & { readonly status: "PASS"; readonly verifierCodeSha: string };
+}
+
+/** Whether the typed Reader code is byte-identical at two commits, and how that was established. */
+export interface ReaderVerifierClosureAttestation {
+  readonly identical: boolean;
+  readonly detail: string;
+}
+
+/**
+ * **Attest, never re-run, across a runner handoff (R31, 2026-09-25).**
+ *
+ * A receipt is current only at the executing commit, so every handoff used to
+ * re-run every typed Reader with the full proof (195.3 MB per handoff on an
+ * isolated copy) although most handoffs change no Reader code. An attestor
+ * answers whether every file the typed Reader verifiers execute is
+ * byte-identical at the commit of the newest exact PASS and at the executing
+ * commit (scripts/lib/reader-verifier-attestation.ts). When it is, the PASS is
+ * carried to the executing commit as a new receipt, appended through the same
+ * door, which the database admits only while the pointer still names that
+ * version (migration 0026). The version is immutable, the code is the same
+ * bytes, so the typed Reader would read exactly what it read before; this is
+ * the in-process rule of lib/civic-data/read-model.ts (`provenByVersion`)
+ * carried across processes by code identity.
+ *
+ * A new version, a FAIL, any change to the verifier closure, or an attestor
+ * that cannot answer still re-reads through the typed Reader.
+ */
+export type ReaderVerifierClosureAttestor = (
+  priorVerifierCodeSha: string,
+  currentVerifierCodeSha: string,
+) => Promise<ReaderVerifierClosureAttestation> | ReaderVerifierClosureAttestation;
+
+/** Carry an exact PASS to the executing commit, or null when it cannot be attested. */
+async function attestReaderProjectionReadback(
+  store: RoutineDataStore,
+  contract: ReaderContract,
+  promotion: PromotedPointerIdentity,
+  prior: NonNullable<ReaderReadbackInspection["attestFrom"]>,
+  observedAt: string,
+  normalizedVerifierCodeSha: string | null,
+  attestor: ReaderVerifierClosureAttestor | undefined,
+): Promise<ReaderProjectionReadbackReceipt | null> {
+  if (attestor === undefined || normalizedVerifierCodeSha === null) return null;
+  let attestation: ReaderVerifierClosureAttestation;
+  try {
+    attestation = await attestor(prior.verifierCodeSha, normalizedVerifierCodeSha);
+  } catch {
+    return null;
+  }
+  if (!attestation.identical) return null;
+  try {
+    return await appendReaderProjectionReadback(
+      store,
+      contract,
+      promotion,
+      observedAt,
+      normalizedVerifierCodeSha,
+      pass(
+        prior.verifierId,
+        `ATTESTED, not re-read: the exact PASS for canonical version ${promotion.versionId} at code ` +
+          `${prior.verifierCodeSha} (observed ${prior.observedAt}) carries to code ${normalizedVerifierCodeSha}; ` +
+          `${attestation.detail}`,
+      ),
+    );
+  } catch {
+    // Not attested (the pointer moved, or the append failed): the caller
+    // re-reads through the typed Reader, whose own failure stays visible.
+    return null;
+  }
 }
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
@@ -483,15 +558,15 @@ function inspectReaderReadbackEvents(
     .sort((left, right) => Date.parse(right.at) - Date.parse(left.at) || right.sequence - left.sequence);
   const latestEvent = marked[0];
   const latest = latestEvent ? parseReaderProjectionReadback(latestEvent.detail) : null;
-  const exact = normalizedVerifierCodeSha !== null && latest !== null &&
+  const sameVersion = normalizedVerifierCodeSha !== null && latest !== null &&
     latest.contractId === contract.id &&
     latest.sourceId === contract.sourceId &&
     latest.recordClass === contract.recordClass &&
     latest.scope === contract.scope &&
     latest.projectionId === contract.readerProjection?.id &&
     latest.versionId === promotion.versionId &&
-    latest.pointerKey === promotion.key &&
-    latest.verifierCodeSha === normalizedVerifierCodeSha;
+    latest.pointerKey === promotion.key;
+  const exact = sameVersion && latest.verifierCodeSha === normalizedVerifierCodeSha;
   if (exact && latest.status === "PASS") {
     return { outcome: { kind: "CURRENT", receipt: { ...latest, status: "PASS" } }, promotion: null };
   }
@@ -508,6 +583,9 @@ function inspectReaderReadbackEvents(
       return { outcome: { kind: "FAILED_BACKOFF", receipt: { ...latest, status: "FAIL" } }, promotion: null };
     }
     return { outcome: { kind: "BACKOFF", receipt: null }, promotion: null };
+  }
+  if (sameVersion && !exact && latest.status === "PASS" && latest.verifierCodeSha !== null) {
+    return { outcome: null, promotion, attestFrom: { ...latest, status: "PASS", verifierCodeSha: latest.verifierCodeSha } };
   }
   return { outcome: null, promotion };
 }
@@ -542,11 +620,27 @@ export async function repairRoutineReaderProjectionReadback(
   contract: ReaderContract,
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
+  options: {
+    /** Carries an exact PASS across a commit that changed no Reader code; omitted, every new commit re-reads. */
+    readonly attestor?: ReaderVerifierClosureAttestor;
+  } = {},
 ): Promise<ReaderReadbackRepairOutcome> {
   const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
   const inspection = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
   if (inspection.outcome !== null) return inspection.outcome;
   if (inspection.promotion === null) throw new Error(`READER_REPAIR_PROMOTION_MISSING:${contract.id}`);
+  if (inspection.attestFrom !== undefined) {
+    const attested = await attestReaderProjectionReadback(
+      store,
+      contract,
+      inspection.promotion,
+      inspection.attestFrom,
+      now,
+      normalizedVerifierCodeSha,
+      options.attestor,
+    );
+    if (attested !== null) return { kind: "RECORDED", receipt: attested };
+  }
   const receipt = await recordRoutineReaderProjectionReadback(
     store,
     contract,
@@ -598,6 +692,11 @@ export async function repairMeetingReaderProjectionReadbacks(
      * so a pass that records readbacks and republishes composes once.
      */
     readonly aggregate?: () => Promise<MeetingsAggregateRead>;
+    /**
+     * Carries each partition's exact PASS across a commit that changed no
+     * Reader code; the aggregate is composed only for the partitions left.
+     */
+    readonly attestor?: ReaderVerifierClosureAttestor;
   } = {},
 ): Promise<readonly MeetingReaderReadbackRepairResult[]> {
   const ids = contracts.map(({ id }) => id);
@@ -663,7 +762,12 @@ export async function repairMeetingReaderProjectionReadbacks(
     MEETING_READER_EVENT_READ_CONCURRENCY,
     ({ promotion }) => readLatestReaderReadbacks(store, [promotion.versionId]),
   );
-  const pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
+  let pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
+  const attestable: {
+    readonly contract: RoutineSourceContract;
+    readonly promotion: PromotedPointerIdentity;
+    readonly prior: NonNullable<ReaderReadbackInspection["attestFrom"]>;
+  }[] = [];
   for (const read of eventReads) {
     const input = eventInputs[read.index]!;
     if (!read.ok) {
@@ -689,9 +793,43 @@ export async function repairMeetingReaderProjectionReadbacks(
         value: inspection.outcome,
         error: null,
       });
+    } else if (inspection.attestFrom !== undefined && options.attestor !== undefined) {
+      attestable.push({ ...input, prior: inspection.attestFrom });
     } else {
       pendingRecords.push(input);
     }
+  }
+
+  if (attestable.length > 0) {
+    const attestations = await runBoundedWorkPool(
+      attestable,
+      MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
+      ({ contract, promotion, prior }) => attestReaderProjectionReadback(
+        store,
+        contract,
+        promotion,
+        prior,
+        now,
+        normalizedVerifierCodeSha,
+        options.attestor,
+      ),
+    );
+    const unattested: typeof pendingRecords = [];
+    for (const attestation of attestations) {
+      const { contract, promotion } = attestable[attestation.index]!;
+      if (attestation.ok && attestation.value !== null) {
+        results.set(contract.id, {
+          contractId: contract.id,
+          ok: true,
+          value: { kind: "RECORDED", receipt: attestation.value },
+          error: null,
+        });
+      } else {
+        // Not attested, or its append failed: the aggregate re-reads it.
+        unattested.push({ contract, promotion });
+      }
+    }
+    pendingRecords = [...pendingRecords, ...unattested];
   }
 
   if (pendingRecords.length > 0) {

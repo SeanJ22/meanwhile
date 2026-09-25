@@ -431,6 +431,55 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
   assert.equal(store.readPromotionsCalls, 0, "a current pass reads no partition payload");
 });
 
+test("R31: meeting receipts carry across a commit that changed no Reader code without composing the aggregate", async () => {
+  const store = new CountingMeetingStore();
+  const promoted = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "attest-pima"), meeting(insite, FIRST, "attest-mesa")],
+    agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
+  const first = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], SECOND, "f".repeat(40));
+  assert.deepEqual(first.map((repair) => repair.ok ? repair.value.kind : repair.error), ["RECORDED", "RECORDED"]);
+
+  let compositions = 0;
+  const aggregate = () => {
+    compositions += 1;
+    return readMeetingsProjection({ store, now: SECOND, bypassCache: true, allowUnconfiguredBootstrap: false });
+  };
+  const later = (ms: number) => new Date(Date.parse(SECOND) + ms).toISOString();
+
+  // An unchanged closure: every partition's PASS carries to the new commit; nothing is composed.
+  store.readPromotionsCalls = 0;
+  const attested = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(1), "e".repeat(40), {
+    aggregate,
+    attestor: () => ({ identical: true, detail: "closure byte-identical" }),
+  });
+  for (const repair of attested) {
+    assert.equal(repair.ok, true);
+    if (!repair.ok || repair.value.kind !== "RECORDED") throw new Error(`not recorded: ${repair.contractId}`);
+    assert.equal(repair.value.receipt.status, "PASS");
+    assert.equal(repair.value.receipt.verifierCodeSha, "e".repeat(40));
+    assert.match(repair.value.receipt.detail, /^ATTESTED, not re-read/);
+  }
+  assert.equal(compositions, 0, "no partition is re-read through the aggregate");
+  assert.equal(store.readPromotionsCalls, 0, "no partition payload crosses the wire");
+
+  // A changed closure: the aggregate Reader re-reads every partition.
+  const reread = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(2), "d".repeat(40), {
+    aggregate,
+    attestor: () => ({ identical: false, detail: "closure changed" }),
+  });
+  assert.deepEqual(reread.map((repair) => repair.ok && repair.value.kind === "RECORDED" ? repair.value.receipt.status : "not recorded"), ["PASS", "PASS"]);
+  assert.equal(compositions, 1, "a changed closure composes the aggregate once");
+  for (const repair of reread) {
+    if (repair.ok && repair.value.kind === "RECORDED") assert.doesNotMatch(repair.value.receipt.detail, /ATTESTED/);
+  }
+});
+
 test("a pass that records readbacks and republishes the prepared snapshot composes every partition once", async () => {
   const store = new CountingMeetingStore();
   const promoted = await promoteMeetingPartitions({

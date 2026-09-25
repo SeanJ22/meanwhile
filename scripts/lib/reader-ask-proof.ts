@@ -106,7 +106,11 @@ export async function exhaustiveAskProof(
 
   const holders = new Map((await allSeatHolders()).map((holder) => [holder.id, holder]));
   const federal = getVotesSnapshot();
-  const stateAuthority = await (options.readStateVotes ?? (() => readAvailableOfficialStateVotes({ bypassCache: true })))();
+  // The proven read model, not bypassCache (R29): a fresh proof process proves
+  // each state's pointer in full on its first read either way, and the Ask
+  // route's own later reads of the same pointers share that proof instead of
+  // downloading every official state vote again.
+  const stateAuthority = await (options.readStateVotes ?? (() => readAvailableOfficialStateVotes({})))();
   const stateSnapshots = stateAuthority.promoted.map(({ snapshot }) => snapshot);
   const state = {
     rollCalls: stateSnapshots.flatMap((snapshot) => snapshot.rollCalls),

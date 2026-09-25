@@ -46,7 +46,7 @@ export interface QueueLaneReading {
   /**
    * How long the oldest waiting row has been owed; null when none waits or it was not recorded.
    * Paid Scout: the earliest next-due. Plain code: the earliest time a waiting row joined the
-   * queue (`waitingSince`), which is its next-due, or its retry after a failed attempt.
+   * queue (`waitingSince`): its next-due, or after a failed attempt the end of its backoff.
    */
   readonly oldestWaitingDueAt: string | null;
 }

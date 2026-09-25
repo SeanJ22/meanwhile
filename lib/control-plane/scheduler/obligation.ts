@@ -434,12 +434,17 @@ export interface QueueDebt {
  * capacity.
  *
  * So a row whose last attempt failed rejoins the queue when its backoff ends,
- * behind every row already waiting. Any other row joins at its next-due, as
- * before. Nothing about a row's cadence or backoff changes here: this is only
- * the order among rows that are already due.
+ * behind every row already waiting. Precisely, it rejoins at the later of its
+ * backoff's end and its next-due, so a row due only as a retry still comes after
+ * every row due by the clock, as before. Any other row joins at its next-due,
+ * as before. A row's key never moves earlier than its next-due, so a row
+ * without failing debt never has more rows ahead of it than it did. Nothing
+ * about a row's cadence or backoff changes here. This only orders rows that are
+ * already due.
  */
 export function waitingSince(row: { readonly nextDueAt: string }, debt: QueueDebt | null | undefined): string {
-  return debt !== null && debt !== undefined && debt.consecutiveFailures > 0 ? debt.retryAt : row.nextDueAt;
+  if (debt === null || debt === undefined || debt.consecutiveFailures <= 0) return row.nextDueAt;
+  return debt.retryAt > row.nextDueAt ? debt.retryAt : row.nextDueAt;
 }
 
 /**
@@ -448,8 +453,8 @@ export function waitingSince(row: { readonly nextDueAt: string }, debt: QueueDeb
  *
  * **THE BOUND.** A dispatch that ends in a reading or a failure puts its row
  * back behind the cycle that ran it. A discharged row rejoins at its next-due,
- * at least 15 minutes after the cycle started. A failed row rejoins at its
- * retry, and every backoff is at least 15 minutes. So a row that was dispatched
+ * at least 15 minutes after the cycle started. A failed row rejoins no earlier
+ * than its retry, and every backoff is at least 15 minutes. So a row that was dispatched
  * cannot pass a waiting row again. If A rows were waiting ahead of a row when it
  * joined, and the lane runs c ≥ 1 rows a cycle, the row is dispatched within
  * ⌈(A + 1) / c⌉ cycles. A row appears in the queue at most once, so A is

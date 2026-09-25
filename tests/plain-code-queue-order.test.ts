@@ -262,3 +262,16 @@ test("NOT SLOWED: a row with no failing debt never has more rows ahead of it tha
   assert.equal(waitingSince(due.find((r) => r.obligation.id === "never-tried-tie")!, undefined), TIE);
   assert.equal(waitingSince(due.find((r) => r.obligation.id === "fail-tie")!, debts.get("fail-tie")), debts.get("fail-tie")!.retryAt);
 });
+
+test("a row due only as a retry (its next-due still ahead) stays behind every row due by the clock, as before", () => {
+  const now = new Date(START_MS).toISOString();
+  const later = new Date(START_MS + 5 * HOUR_MS).toISOString();
+  const retryOnly = { obligation: { id: "retry-only" }, nextDueAt: later };
+  const clockDue = { obligation: { id: "clock-due" }, nextDueAt: now };
+  const debt = { consecutiveFailures: 3, retryAt: new Date(START_MS - HOUR_MS).toISOString() };
+  assert.equal(waitingSince(retryOnly, debt), later, "the later of its next-due and its retry");
+  assert.deepEqual(
+    plainCodeQueueOrder([retryOnly, clockDue], (id) => (id === "retry-only" ? debt : undefined)).map((r) => r.obligation.id),
+    ["clock-due", "retry-only"],
+  );
+});

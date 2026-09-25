@@ -8,11 +8,11 @@
  * 2026-09-24 9:17 PM EDT, M4). Traffic that lands on a booted instance does
  * not pay that.
  *
- * `netlify/functions/keep-warm.mts` calls this route ten times at once every
- * five minutes. A marked call holds for up to a second, so the ten overlap and
- * each keeps its own instance booted. Measured 2026-09-24 11:54-11:58 PM MST,
- * ten overlapping calls reached 8-9 booted instances and never a new one; the
- * one or two calls sharing an instance waited for the other.
+ * `netlify/functions/keep-warm.mts` calls this route fourteen times at once
+ * every five minutes. A marked call holds for up to a second, so the calls
+ * overlap and keep instances booted. Measured 2026-09-24 11:54 PM to 2026-09-25
+ * 12:47 AM MST, overlapping calls reach fewer instances than calls (ten reached
+ * 8-9, fourteen 10-11), and the calls sharing an instance wait for each other.
  *
  * A booted instance can still be cold for an Ask: on 38e2a643 (11:41 PM MST)
  * two of five concurrent Pima Asks spent 1.9-2.1 s in the server loading the

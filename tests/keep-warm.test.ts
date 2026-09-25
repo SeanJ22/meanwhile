@@ -42,9 +42,10 @@ test("KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parame
   assert.equal(MAX_HOLD_MS, 1000);
 });
 
-test("KEEP-WARM · every five minutes the pinger makes ten overlapping marked calls to the site's own warm route", async () => {
+test("KEEP-WARM · every five minutes the pinger makes fourteen overlapping marked calls to the site's own warm route", async () => {
   assert.equal(config.schedule, "*/5 * * * *");
-  assert.equal(WARM_INSTANCES, 10);
+  // Fourteen overlapping calls reached 10-11 booted instances on production (2026-09-25).
+  assert.equal(WARM_INSTANCES, 14);
   assert.ok(HOLD_MS > 0 && HOLD_MS <= MAX_HOLD_MS);
   const seen: { url: string; marker: string | null }[] = [];
   const fakeFetch = (async (input: string | URL | Request, init?: RequestInit) => {
@@ -52,8 +53,8 @@ test("KEEP-WARM · every five minutes the pinger makes ten overlapping marked ca
     return new Response("{}", { status: 200 });
   }) as typeof fetch;
   const { answered } = await pingWarm(fakeFetch);
-  assert.equal(answered, 10);
-  assert.equal(seen.length, 10);
+  assert.equal(answered, WARM_INSTANCES);
+  assert.equal(seen.length, WARM_INSTANCES);
   for (const call of seen) {
     assert.equal(call.url, `${PUBLIC_SITE_ORIGIN}/api/warm?hold=${HOLD_MS}`);
     assert.equal(call.marker, KEEP_WARM_MARKER);
@@ -69,8 +70,8 @@ test("KEEP-WARM · a call that fails is counted as not answered and does not sto
     return new Response("{}", { status: n % 5 === 0 ? 503 : 200 });
   }) as typeof fetch;
   const { answered } = await pingWarm(flaky);
-  assert.equal(n, 10);
-  assert.equal(answered, 10 - 3 - 2, "calls 3, 6 and 9 threw; calls 5 and 10 answered 503");
+  assert.equal(n, WARM_INSTANCES);
+  assert.equal(answered, 14 - 4 - 2, "calls 3, 6, 9 and 12 threw; calls 5 and 10 answered 503");
 });
 
 test("KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask reads first, and never the database; an unmarked call loads nothing", async () => {

@@ -4,8 +4,8 @@ import { CivicDataStoreUnavailableError, type CivicDataReadResult } from "../../
 import {
   azBallotReadState,
   nhBallotReadState,
-  readAzBallotProjection,
-  readNhBallotProjection,
+  settleAzBallotRead,
+  settleNhBallotRead,
 } from "../../civic-data/manual-read-models.ts";
 import type { AzBallotProjection, NhBallotProjection } from "../../civic-data/manual-projections.ts";
 
@@ -13,6 +13,10 @@ import type { AzBallotProjection, NhBallotProjection } from "../../civic-data/ma
  * The two manually curated ballots now read their exact promoted projections.
  * Bundled files are named only as first-seed/test fixtures inside the canonical
  * read-model adapter; a store error can never reopen them.
+ *
+ * Edge first (2026-09-25): a reader request that entered the reader edge reads
+ * the pointer's proven copy through the same Reader; any other caller reads
+ * the database exactly as before.
  */
 type CuratedProjection = AzBallotProjection | NhBallotProjection;
 type CuratedEntry = {
@@ -24,12 +28,12 @@ type CuratedEntry = {
 const CURATED_FILES: Record<string, CuratedEntry> = {
   "ballot-az-pima": {
     bootstrapFile: "data/states/az/ballot/az-pima-2026.json",
-    read: readAzBallotProjection,
+    read: settleAzBallotRead,
     state: azBallotReadState,
   },
   "ballot-nh-merrimack": {
     bootstrapFile: "data/states/nh/ballot/nh-merrimack-2026.json",
-    read: readNhBallotProjection,
+    read: settleNhBallotRead,
     state: nhBallotReadState,
   },
 };

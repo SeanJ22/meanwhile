@@ -9,9 +9,11 @@ import {
   scopesForStates,
   sha256OfJson,
   AUTHORITY_FAMILIES,
+  PROMOTED_AUTHORITY_FAMILIES,
   READER_ARTIFACT_FORMAT_VERSION,
   type AuthorityArtifactRef,
   type AuthorityFamily,
+  type PromotedFamilyArtifactValue,
   type ReaderGeoArtifact,
   type ReaderManifest,
   type ReaderManifestScope,
@@ -23,6 +25,7 @@ import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-b
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
+import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   resolveReaderArtifactStore,
   resolveReaderArtifactWriteStore,
@@ -231,6 +234,25 @@ export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
 ];
 
+/**
+ * What a cold `/ballot` reads (2026-09-25): the map's four, and the proven
+ * pointers it read from the database in two stages until now — the ballots,
+ * the candidate profiles (with the derived campaign sites) and publications,
+ * the navigation links, the NH roster, FEC and state money. Never the
+ * Ask-only records (Pima finance, votes, statements, executive actions).
+ */
+export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  ...READER_MAP_AUTHORITY_FAMILIES,
+  "ballot-az",
+  "ballot-nh",
+  "candidate-profiles",
+  "candidate-publications",
+  "ballot-navigation",
+  "nh-members",
+  "federal-funding",
+  "state-money",
+];
+
 // The reader fetches each large authority artifact from the edge at most once
 // per version per process; every request thereafter reuses the in-process value
 // (national artifacts, shared by all ZIPs — never per-ZIP). The PROMISE is held
@@ -384,6 +406,8 @@ export async function ensureReaderAuthorityEdge(
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
     wanted.has(family) ? fetchAuthorityValue(family, refs[family], store) : Promise.resolve(null);
+  // The proven-pointer families start with the others, never after them.
+  const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
   const [registry, federal, campaign, legislators, outcomes, commentAccess] = await Promise.all([
     fetchWanted("registry-runtime"),
     fetchWanted("federal-directory"),
@@ -398,7 +422,22 @@ export async function ensureReaderAuthorityEdge(
   if (legislators !== null) bundle.stateLegislators = { value: legislators as Record<string, OfficialStateLegislatorReadModel>, versionId: refs["state-legislators"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
   if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
-  return { ...bundle, ...registrations };
+  // The proven-pointer families, fetched beside the others. A family whose
+  // artifact is missing, failed or malformed adds nothing, and each of its
+  // pointers is then read from the database by its own settle.
+  const promoted = new Map<string, PromotedEdgeEntry>();
+  const promotedFamilies = new Set<string>();
+  const promotedValues = await promotedFetch;
+  PROMOTED_AUTHORITY_FAMILIES.forEach((family, index) => {
+    const artifact = promotedValues[index] as Partial<PromotedFamilyArtifactValue> | null;
+    if (artifact?.kind !== "PROMOTED_POINTERS" || !Array.isArray(artifact.entries)) return;
+    promotedFamilies.add(family);
+    for (const entry of artifact.entries) {
+      const pointer = entry?.kind === "PROMOTED" ? entry.projection?.key : entry?.kind === "NOT_RECORDED" ? `${entry.recordClass}:${entry.scope}` : null;
+      if (typeof pointer === "string") promoted.set(pointer, entry);
+    }
+  });
+  return { ...bundle, ...registrations, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {

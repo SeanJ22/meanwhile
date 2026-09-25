@@ -182,7 +182,7 @@ test("all production ballot entry points use state-scoped selection", () => {
   assert.match(page, /data-ballot-canonical-holding-gaps/);
   assert.match(page, /data-ballot-authority-unavailable/);
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);
-  assert.match(page, /auxiliaryPreloads\.set\("nh-members", refreshNhSeatHolders\)/);
+  assert.match(page, /auxiliaryPreloads\.set\("nh-members", settleNhSeatHolders\)/);
 
   const reactions = readFileSync(join(process.cwd(), "app/api/reactions/route.ts"), "utf8");
   assert.match(reactions, /candidateTargets:\s*getCandidateTargetIds/);

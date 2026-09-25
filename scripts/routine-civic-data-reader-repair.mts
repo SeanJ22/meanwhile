@@ -43,6 +43,7 @@ import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRAC
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readPromotedEdgeFamilies } from "../lib/civic-data/promoted-edge-publication.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -323,6 +324,21 @@ if (meetingAggregate) {
         }
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
+      // The proven pointers a cold /ballot and a cold Ask read from the database
+      // (2026-09-25): the ballots, candidate profiles and publications, navigation,
+      // the NH roster, FEC, state and Pima money, federal votes and key votes,
+      // statements and executive actions (lib/civic-data/promoted-edge-publication.ts).
+      // Each family is carried while its pointers still name the served version,
+      // read and proved only when one moved, and published only after its own
+      // Reader accepted the entry; a family that fails is left out, and the
+      // reader reads it from the database.
+      try {
+        const promoted = await readPromotedEdgeFamilies({ store, servedManifest, now: observedAt });
+        Object.assign(authority, promoted.authority);
+        for (const line of promoted.skipped) process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: ${safeFailure(line)}\n`);
+      } catch (error) {
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: promoted pointers ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       // Every state's promoted registration (lib/registration/edge.ts): one identity read for every registration
       // pointer decides which states carry by reference; only a state whose version moved is read. The section is

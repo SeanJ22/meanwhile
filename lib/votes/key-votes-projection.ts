@@ -19,6 +19,7 @@ import {
 } from "./data-plane.ts";
 import { KEY_VOTES_CRITERIA } from "./key-votes.ts";
 import { federalKeyVoteSelectionV1Issue, hydrateFederalKeyVoteBootstrapV1 } from "./key-vote-selection-v1.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 let cache: FederalKeyVotesReadModel | null = null;
 let readState: CivicDataReadResult<FederalKeyVotesReadModel> = civicDataReadNotInitialized(
@@ -102,6 +103,10 @@ export async function refreshFederalKeyVotesFromPromoted(options: PromotedCivicD
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
+
+/** The key-vote preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+export const settleFederalKeyVotesRead = (): Promise<string | null> =>
+  readPromotedEdgeFirst("FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE, refreshFederalKeyVotesFromPromoted, "The federal key votes");
 
 export function federalKeyVotesReadState(): CivicDataReadResult<FederalKeyVotesReadModel> {
   return readState;

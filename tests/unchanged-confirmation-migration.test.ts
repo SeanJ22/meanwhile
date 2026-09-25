@@ -111,3 +111,25 @@ test("the sources event is admitted only directly after its own receipt, at the 
     `jsonb_typeof(confirmation->'retainedSourceResponses') IS DISTINCT FROM 'array'`,
   ]) assert.ok(sources.includes(guard), guard);
 });
+
+test("R23: a derived version's receipt may omit its HTTP status only on its own derived route, in SQL and in TS alike", () => {
+  const receipt = branch(UNCHANGED_CONFIRMATION_PREFIX);
+  assert.ok(receipt.includes(`confirmation#>>'{retrieval,requestedUrl}' = 'derived:' || candidate_row."source_id" || ':' || candidate_row."scope"`), "the null status is bound to this candidate's own derived route");
+  assert.ok(receipt.includes(`jsonb_typeof(confirmation#>'{retrieval,httpStatus}') = 'null'`));
+  // A missing key must refuse too: the exception is wrapped so an unknown reads as false.
+  assert.match(receipt, /OR NOT coalesce\(\s*jsonb_typeof\(confirmation#>'\{retrieval,httpStatus\}'\) = 'number'/);
+  assert.ok(receipt.includes(`(jsonb_typeof(confirmation#>'{retrieval,httpStatus}') = 'number'\n            AND (confirmation#>>'{retrieval,httpStatus}')::numeric NOT BETWEEN 200 AND 299)`), "a status, when present, is still 2xx");
+  const shape = (retrieval: Record<string, unknown>, scope = "US-AZ:derived") => unchangedConfirmationShapeIssue({
+    kind: "UNCHANGED_CONFIRMATION_V1", sourceId: "derived-meeting-family", recordClass: "MEETING", scope, pointerKey: `MEETING:${scope}`,
+    versionId: "cv-1", readModelHash: "a".repeat(64), basis: "READ_MODEL_RECOMPUTED", parserVersion: "p",
+    retrieval: { rawHash: "b".repeat(64), retrievedAt: "2026-09-24T00:00:00.000Z", ...retrieval },
+    stamps: null, observedAt: "2026-09-24T00:00:01.000Z",
+  });
+  assert.equal(shape({ requestedUrl: "derived:derived-meeting-family:US-AZ:derived", finalUrl: null, httpStatus: null }), null, "its own derived route");
+  assert.equal(shape({ requestedUrl: "derived:derived-meeting-family:US-AZ:derived", finalUrl: "derived:derived-meeting-family:US-AZ:derived", httpStatus: null }), null);
+  assert.notEqual(shape({ requestedUrl: "derived:derived-meeting-family:US-NH:derived", finalUrl: null, httpStatus: null }), null, "another scope's route");
+  assert.notEqual(shape({ requestedUrl: "https://city.example.gov/cal.ics", finalUrl: null, httpStatus: null }), null, "a fetched route must name its status");
+  assert.notEqual(shape({ requestedUrl: "derived:derived-meeting-family:US-AZ:derived", finalUrl: "https://elsewhere.example", httpStatus: null }), null, "no final URL of its own");
+  assert.notEqual(shape({ requestedUrl: "https://a", finalUrl: "https://a", httpStatus: 404 }), null, "a non-2xx status");
+  assert.equal(shape({ requestedUrl: "https://a", finalUrl: "https://a", httpStatus: 200 }), null);
+});

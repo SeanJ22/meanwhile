@@ -5,7 +5,10 @@
 -- receipt that names this exact pointed, live (non-import) version and its
 -- read-model hash, or that receipt's companion sources event immediately after
 -- it. Anything else repeated after PROMOTED is still refused with the same
--- message. No table, column, constraint or row changes.
+-- message. A derived version (a meeting family or the source wiring, built from
+-- promoted inputs) carries no HTTP status; its receipt may omit one only when
+-- its retrieval names that version's own derived:<source>:<scope> route (R23).
+-- No table, column, constraint or row changes.
 CREATE OR REPLACE FUNCTION enforce_civic_data_candidate_event_insert()
 RETURNS trigger LANGUAGE plpgsql AS $pdc_event_insert$
 DECLARE
@@ -88,7 +91,15 @@ BEGIN
            OR coalesce(confirmation->>'parserVersion', '') = ''
            OR jsonb_typeof(confirmation->'retrieval') IS DISTINCT FROM 'object'
            OR coalesce(confirmation#>>'{retrieval,rawHash}', '') !~ '^[a-f0-9]{64}$'
-           OR jsonb_typeof(confirmation#>'{retrieval,httpStatus}') IS DISTINCT FROM 'number'
+           -- An HTTP status, or none only for this version's own derived retrieval
+           -- (derived:<source>:<scope>, no final URL of its own): a derived family
+           -- or wiring version is built from promoted inputs and fetches nothing.
+           OR NOT coalesce(
+                jsonb_typeof(confirmation#>'{retrieval,httpStatus}') = 'number'
+                OR (jsonb_typeof(confirmation#>'{retrieval,httpStatus}') = 'null'
+                    AND confirmation#>>'{retrieval,requestedUrl}' = 'derived:' || candidate_row."source_id" || ':' || candidate_row."scope"
+                    AND coalesce(confirmation#>>'{retrieval,finalUrl}', confirmation#>>'{retrieval,requestedUrl}') = confirmation#>>'{retrieval,requestedUrl}'),
+                false)
            OR coalesce(confirmation#>>'{retrieval,retrievedAt}', '') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}'
            OR coalesce(confirmation->>'observedAt', '') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}'
            OR (confirmation->>'basis' = 'PUBLISHER_STAMPS_UNCHANGED' AND CASE
@@ -99,7 +110,8 @@ BEGIN
         THEN
           RAISE EXCEPTION 'candidate % unchanged confirmation does not name this live version and its read model', NEW."candidate_id" USING ERRCODE = '23514';
         END IF;
-        IF (confirmation#>>'{retrieval,httpStatus}')::numeric NOT BETWEEN 200 AND 299
+        IF (jsonb_typeof(confirmation#>'{retrieval,httpStatus}') = 'number'
+            AND (confirmation#>>'{retrieval,httpStatus}')::numeric NOT BETWEEN 200 AND 299)
            OR (confirmation->>'observedAt')::timestamptz IS DISTINCT FROM NEW."at"
            OR (confirmation#>>'{retrieval,retrievedAt}')::timestamptz > NEW."at"
            OR NOT EXISTS (

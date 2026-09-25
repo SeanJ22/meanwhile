@@ -5,17 +5,57 @@ import Link from "next/link";
 
 import s from "./mw.module.css";
 import type { RenderedNumber, CountClaim } from "@/lib/control-plane/owner-surface.ts";
+import { registrationWords, type StateStanding } from "@/lib/control-plane/admin-view/registration-standing.ts";
 import { withScope, type MwScope } from "./scope.ts";
 
-/** A scope with nothing registered: sentences, never arithmetic (ACCEPTANCE §2). */
-export function EmptyScope({ name, scope, census }: { name: string; scope: MwScope; census?: string }) {
+/**
+ * A scope with no figures of ours: sentences, never arithmetic (ACCEPTANCE
+ * §2). What the sentences say follows where the state stands — a state whose
+ * registration is promoted is never called one with nothing registered, and
+ * one whose registration was not read is called neither.
+ */
+export function EmptyScope({ name, scope, census, standing, counts }: { name: string; scope: MwScope; census?: string; standing: StateStanding | null; counts?: string | null }) {
+  if (standing && standing.kind !== "NOT_REGISTERED" && standing.kind !== "TRACKED") {
+    return (
+      <div className={s.grid2}>
+        <div className={s.card}>
+          <h2 className={s.h2CardTight}>{standing.kind === "REGISTERED" ? "Registered, not measured yet" : "Registration not read"}</h2>
+          <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch" }}>
+            {registrationWords(name, standing)}{" "}
+            {standing.kind === "REGISTERED"
+              ? "A zero here would mean the system measured and found nothing. It has not measured."
+              : `${standing.detail} Nothing on this page is claimed about ${name} until it is read.`}
+          </p>
+          {counts ? (
+            <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch", marginTop: 12 }}>
+              {counts}
+            </p>
+          ) : null}
+          {census ? (
+            <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch", marginTop: 12 }}>
+              {census} That is what exists there, not anything collected.
+            </p>
+          ) : null}
+        </div>
+        <div className={s.card}>
+          <h2 className={s.h2CardTight}>What you can do</h2>
+          <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch", marginBottom: 16 }}>
+            Choose one of its geographies and send it as an assignment. Nothing about {name}&rsquo;s bodies can be reported until one of them has been read.
+          </p>
+          <Link href={withScope("/admin/work", scope)} className={s.btnPrimary}>
+            Open an assignment here
+          </Link>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={s.grid2}>
       <div className={s.card}>
         <h2 className={s.h2CardTight}>Nothing is registered here</h2>
         <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch" }}>
-          {name} has no registered bodies and no records, and no work has ever run here. A zero would mean the system looked and found nothing. It has not
-          looked.
+          {name} has no promoted registration, no registered bodies and no records of ours, so nothing of ours is counted here. A zero would mean the system
+          measured and found nothing. It has not measured.
         </p>
         {census ? (
           <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch", marginTop: 12 }}>

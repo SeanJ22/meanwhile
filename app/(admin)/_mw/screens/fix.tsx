@@ -43,7 +43,7 @@ export async function FixScreen(props: { readonly area: MwArea; readonly searchP
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
   if (base.repos === null) {
     return (

@@ -46,6 +46,7 @@ import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
+import { standingLabel } from "@/lib/control-plane/admin-view/registration-standing.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { PILOT_ZIPS } from "@/lib/health/owner-corpus-compile.ts";
@@ -60,7 +61,7 @@ import { censusEntryOf } from "../data/census-universe.ts";
 import { listContainers } from "../data/geography.ts";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
-import { REGISTERED_STATE_CODES, stateName } from "../load-shell.ts";
+import { TRACKED_STATE_CODES, stateName, statesByStanding } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
 import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
@@ -100,7 +101,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
   if (base.repos === null) {
     return (
@@ -111,7 +112,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   }
 
   /* ------------------------------------------------------------ what the composer offers */
-  const composerState = (param(sp, "st") ?? (base.scope.kind === "all" ? REGISTERED_STATE_CODES[0] ?? US_STATES[0].code : base.scope.state)).toLowerCase();
+  const composerState = (param(sp, "st") ?? (base.scope.kind === "all" ? TRACKED_STATE_CODES[0] ?? US_STATES[0].code : base.scope.state)).toLowerCase();
   const geoParam = param(sp, "geo");
   const initialGeo = (() => {
     if (!geoParam) {
@@ -223,16 +224,10 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
-  /*
-   * Every state and territory can be chosen — the Census lookup behind the geographies covers them all — the ones
-   * with a reviewed registry first. Every other one is registered too: a Send there reads its registration (2026-09-25).
-   */
+  /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — tracked ones first, then registered ones, each named for where it stands. */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
-  const composerStates = [
-    ...REGISTERED_STATE_CODES.map((code) => ({ code, name: stateName(code) })),
-    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — from registration` })),
-  ];
+  const composerStates = statesByStanding(base.registration).map((st) => ({ code: st.code, name: standingLabel(st.name, st.standing) }));
   const selected: Record<string, { priority: number; budgetUsd: number }> = {};
   for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
 
@@ -258,8 +253,13 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
 
   return (
     <MwShell {...shellProps} extraStrip={[{ label: "LIST PUBLISHED", value: snapshotOut.kind === "HELD" ? formatEastern(snapshotOut.value.publishedAt) : "not read", warn: snapshotOut.kind !== "HELD" }]}>
-      {base.scope.kind !== "all" && !base.shell.registered ? (
-        <EmptyScope name={stateName(base.scope.state)} scope={base.scope} census={censusUniverseWords(stateName(base.scope.state), censusEntryOf(base.scope.state))} />
+      {base.scope.kind !== "all" && !base.shell.tracked ? (
+        <EmptyScope
+          name={stateName(base.scope.state)}
+          scope={base.scope}
+          standing={base.shell.standing}
+          census={censusUniverseWords(stateName(base.scope.state), censusEntryOf(base.scope.state))}
+        />
       ) : null}
       <Composer
         states={composerStates}

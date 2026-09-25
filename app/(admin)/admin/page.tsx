@@ -12,8 +12,9 @@
  *                    narrowly from the production data plane (body-store.ts)
  *   the decisions    the published decision cards, minus those already decided
  *                    on the owner's decision log
- *   the scope        everywhere, a state, or a selected geography; a scope with
- *                    nothing registered answers in sentences
+ *   the scope        everywhere, a state, or a selected geography; a scope in a
+ *                    state not tracked with figures answers in sentences that
+ *                    say whether its registration is promoted
  * ```
  *
  * The page audits itself before it shows anything: every figure carries a
@@ -97,14 +98,19 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
 
-  if (!base.shell.registered) {
+  if (!base.shell.tracked) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
-        <EmptyScope name={name} scope={base.scope} census={base.scope.kind === "all" ? undefined : censusUniverseWords(name, censusEntryOf(base.scope.state))} />
+        <EmptyScope
+          name={name}
+          scope={base.scope}
+          standing={base.shell.standing}
+          census={base.scope.kind === "all" ? undefined : censusUniverseWords(name, censusEntryOf(base.scope.state))}
+        />
       </MwShell>
     );
   }

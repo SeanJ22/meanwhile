@@ -70,12 +70,7 @@ import type { PersistedSittingOutcomes } from "../../../outcomes/types.ts";
 import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "../../../civic-data/contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../../civic-data/meeting-partitions.ts";
 import { displayNameOf } from "../../display-name.ts";
-import {
-  ASK_GAPS_PROVIDER_ID,
-  ASK_GAP_OBLIGATION_CLASS,
-  NEXT_READ_MARK,
-  askGapObligationId,
-} from "../../ask-gap-id.ts";
+import { ASK_GAPS_PROVIDER_ID, ASK_GAP_OBLIGATION_CLASS, NEXT_READ_MARK } from "../../ask-gap-id.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderYield, RouteDescriptor } from "../registry.ts";
 
 export { ASK_GAPS_PROVIDER_ID, ASK_GAP_NAMESPACE, askGapObligationId, parseAskGapObligationId } from "../../ask-gap-id.ts";
@@ -385,9 +380,4 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
       };
     },
   };
-}
-
-/** The obligation id each of a reading's gaps is tracked under, for a digest or a test. */
-export function askGapObligationIds(yielded: ProviderYield): readonly string[] {
-  return yielded.obligations.flatMap((r) => r.routes.map((route) => askGapObligationId(r.subjectId, route.routeId as AskGapCode))).sort();
 }

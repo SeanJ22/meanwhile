@@ -406,6 +406,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const labels = new Map(model.divisions.map((d) => [d.ocdId, d.label] as const));
   const body = model.bodies.find((b) => b.jurisdictionId === COLUMBUS)!;
   assert.equal(body.id, COLUMBUS_BODY);
+  /* The registered government's division: the registration stub below answers only a row on it. */
+  const columbusDivision = body.ocdId;
   assert.equal(ohio.jurisdictions.find((j) => j.id === COLUMBUS)?.bodyId, COLUMBUS_BODY, "the registry row carries the body registration minted");
   const walk = { attempt: attempt!, recordId: "pos-columbus", recordedAt: attempt!.finishedAt };
   const review = reviewDiscoveryWalk({
@@ -437,7 +439,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   if (read.kind !== "READ") return;
   const decisions = deriveWiringDecisions({
     crosswalk: { input: automaticInput, versionId: automatic.metadata.versionId!, rows: composed.rows, automatic: { input: automaticInput, versionId: automatic.metadata.versionId!, rowIds: composed.automaticIds } },
-    registration: (row) => (row.jurisdictionId === COLUMBUS && row.ocdId === body.ocdId ? { input: regInput } : { notRegistered: `no body for ${row.jurisdictionId}` }),
+    registration: (row) => (row.jurisdictionId === COLUMBUS && row.ocdId === columbusDivision ? { input: regInput } : { notRegistered: `no body for ${row.jurisdictionId}` }),
     attempts: [walk],
     handWired: () => false,
     vaulted: (id) => vault.get(id)?.evidence ?? null,

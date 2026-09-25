@@ -314,6 +314,40 @@ export function routeExecutor(input: {
       };
     }
 
+    /*
+     * A ROUTE A ROUTINE CONTRACT CARRIES IS NEVER OPENED HERE (2026-09-25).
+     *
+     * The record is read on the routine contract's own clock; a fetch from this
+     * process would be a second clock on the same feed. Nothing is sent. The
+     * round closes `DISCOVERED` — the route to the record is known and the
+     * record itself is still owed — which is neither terminal nor discharging,
+     * so the obligation stays live until the provider stops emitting it (the
+     * routine read closed the gap) and its retirement names that.
+     */
+    if (route.open.kind === "ROUTINE_READ") {
+      const failure = route.open.cadenceFailure;
+      return {
+        ranAs: RAN_AS,
+        kind: "DISPOSED",
+        disposition: {
+          disposition: "DISCOVERED",
+          observation: null,
+          permission: "NOT_APPLICABLE",
+          transport: "OTHER_NAMED_FAILURE",
+          note:
+            `${failure === null ? "" : `CADENCE_BROKEN: ${failure} `}${route.label}: CARRIED BY THE ROUTINE READ of ` +
+            `${route.open.contractIds.join(", ")} — nothing was sent by this process, which never opens a feed a routine ` +
+            `contract reads. ${route.open.reason}`,
+        },
+        /* Measured, not absent: no request was sent and no byte fetched. */
+        cost: { ...ZERO_COST, requestCount: 0, bytesFetched: 0 },
+        detail:
+          failure === null
+            ? `${route.open.target} is carried by its routine read; the record is still owed and closes when that read holds it.`
+            : `${route.open.target} is carried by a routine read that has not succeeded within its required cadence: ${failure}`,
+      };
+    }
+
     let url: URL;
     try {
       url = assertPublicUrl(route.open.url);

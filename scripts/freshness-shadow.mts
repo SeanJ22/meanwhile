@@ -654,6 +654,11 @@ const registry = buildRegistry(
     localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
+    /* The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded. */
+    (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
+      await pending.step("ask-gaps:held-reading", async () =>
+        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW })),
+    ),
   ],
   { root: ROOT, nowIso: NOW },
 );

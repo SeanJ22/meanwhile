@@ -14,7 +14,9 @@
  *
  * OLDEST-FIRST answered "what has waited longest", which is the wrong
  * question for a lane whose whole purpose is what a reader can see. The order
- * is now READER IMPACT, in three bands, oldest due first within a band:
+ * is now READER IMPACT, in three bands, and within a band the longest wait
+ * first. A row that failed waits from the end of its backoff (`waitingSince`),
+ * not from its first next-due (2026-09-25):
  *
  * ```
  *   band 1   feeds a pilot surface: readerImpactAt is set on the canonical
@@ -35,6 +37,7 @@ import type { WorkerRole } from "./attempt.ts";
 import { cacheReadMultiplierFor, rateFor } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
+import { waitingSince, type QueueDebt } from "./scheduler/obligation.ts";
 
 /* ------------------------------------------------------------- capacity */
 
@@ -123,6 +126,37 @@ export interface OrderableObligation {
   readonly readerImpactAt: string | null;
   readonly providerId: string | null;
   readonly nextDueAt: string;
+  /**
+   * When the row joined the queue (`waitingSince`): its next-due, or after a
+   * failed attempt the end of its backoff. Absent, the next-due. Within a band
+   * this is the order key, so a failing row cannot hold its first next-due and
+   * go back to the head each time its backoff ends (2026-09-25).
+   */
+  readonly queuedSince?: string;
+}
+
+/**
+ * **ONE DUE ROW, AS THE SCOUT ORDER READS IT.** (2026-09-25.) Both the recorded
+ * queue and the live Scout pool build their rows here, so the waiting key
+ * cannot be dropped from one of them. `debt` is the row's debt carried into
+ * the cycle.
+ */
+export function orderableDueRow(
+  row: {
+    readonly obligation: { readonly id: string; readonly subjectId: string; readonly readerImpactAt: string | null };
+    readonly nextDueAt: string;
+  },
+  providerId: string | null,
+  debt: QueueDebt | null | undefined,
+): OrderableObligation {
+  return {
+    id: row.obligation.id,
+    subjectId: row.obligation.subjectId,
+    readerImpactAt: row.obligation.readerImpactAt,
+    providerId,
+    nextDueAt: row.nextDueAt,
+    queuedSince: waitingSince(row, debt),
+  };
 }
 
 export interface BandedObligation<T extends OrderableObligation> {
@@ -139,19 +173,23 @@ export interface DispatchOrdering {
     readonly readerImpactAt: "FreshnessObligation.readerImpactAt";
     readonly pilotJurisdictions: string;
     readonly universeProviders: readonly string[];
-    readonly tieBreak: "oldest nextDueAt first within a band";
+    /** A record written before 2026-09-25 carries the older rule, which ordered by next-due alone. */
+    readonly tieBreak: typeof TIE_BREAK | "oldest nextDueAt first within a band";
   };
   readonly bands: { readonly 1: number; readonly 2: number; readonly 3: number };
-  /** The lane the order applied to. The deterministic lane keeps oldest-first. */
+  /** The lane the order applied to. The plain-code lane has its own order (`plainCodeQueueOrder`). */
   readonly appliesTo: "BOUNDED_MODEL_WORKER";
 }
 
+export const TIE_BREAK = "longest wait first within a band: the next-due, or the end of the backoff after a failed attempt";
+
 export const ORDERING_RULE =
   "band 1 = feeds a pilot surface (canonical FreshnessObligation.readerImpactAt set or release-pinned pilot jurisdiction); " +
-  "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, oldest due first";
+  "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, the longest wait first " +
+  "(a row that failed waits from the end of its backoff)";
 
 export const ORDERING_SCOPE =
-  "orders every due model-class row before admission to the bounded Scout pool, so reader-impact priority decides both which rows fit the per-cycle ceiling and which one starts first. The deterministic lane keeps oldest-first";
+  "orders every due model-class row before admission to the bounded Scout pool, so reader-impact priority decides both which rows fit the per-cycle ceiling and which one starts first. The plain-code lane has its own longest-wait-first order";
 
 function pilotKeysFor(zips: readonly string[]): string[] {
   return [...new Set(zips.flatMap((z) => PILOT_JURISDICTION_KEYS[z] ?? []))];
@@ -179,8 +217,19 @@ export function compareReaderImpact(
   right: OrderableObligation,
   inputs: OrderingInputs,
 ): number {
+  /*
+   * Within a band, the longest wait first (2026-09-25). Before, the key was
+   * the next-due, with ties broken by id. A failing row keeps its first
+   * next-due, so on 2026-09-25 329 failing and 49 never-tried authored-site
+   * rows shared one next-due (2026-09-15T17:58:43.627Z). The failing rows
+   * whose ids sorted first went back to the head each time their backoff
+   * ended.
+   */
+  const leftSince = left.queuedSince ?? left.nextDueAt;
+  const rightSince = right.queuedSince ?? right.nextDueAt;
   return (
     bandFor(left, inputs).band - bandFor(right, inputs).band ||
+    (leftSince < rightSince ? -1 : leftSince > rightSince ? 1 : 0) ||
     (left.nextDueAt < right.nextDueAt ? -1 : left.nextDueAt > right.nextDueAt ? 1 : 0) ||
     left.id.localeCompare(right.id)
   );
@@ -203,7 +252,7 @@ export function orderByReaderImpact<T extends OrderableObligation>(
         readerImpactAt: "FreshnessObligation.readerImpactAt",
         pilotJurisdictions: `PILOT_ZIPS ${inputs.pilotZips.join(", ")} -> PILOT_JURISDICTION_KEYS (lib/control-plane/research-metrics.ts)`,
         universeProviders: UNIVERSE_PROVIDERS,
-        tieBreak: "oldest nextDueAt first within a band",
+        tieBreak: TIE_BREAK,
       },
       bands: { 1: count(1), 2: count(2), 3: count(3) },
       appliesTo: "BOUNDED_MODEL_WORKER",

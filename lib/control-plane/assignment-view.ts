@@ -2027,7 +2027,7 @@ function nextStepWords(input: {
   }
   if (input.state === "WAITING") {
     if (input.overdue === false && input.eligibleAt !== null) return `First reading not before ${input.eligibleAt} (${heldBy}).`;
-    return `The runner dispatches it when its turn comes${input.band !== null ? ` (reader-impact band ${input.band}; within a band the oldest due goes first)` : ""}.`;
+    return `The runner dispatches it when its turn comes${input.band !== null ? ` (reader-impact band ${input.band}; within a band the longest wait goes first)` : ""}.`;
   }
   return input.outcome?.nextAction ?? "";
 }

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 797,
-    "named": 7755,
+    "files": 798,
+    "named": 7761,
     "dynamic": 31
   },
   "files": {
@@ -9747,6 +9747,17 @@
         "PC-7: no admitted Scout, no pre-warm; and a failed pre-warm is recorded while the Attempts still run",
         "PC-7: the cycle pre-warms ONCE, before the first admitted Scout, and both concurrent Scouts start after the entry exists",
         "PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder"
+      ],
+      "dynamic": 0
+    },
+    "tests/scout-queue-order.test.ts": {
+      "names": [
+        "BAND ORDER STANDS: a band-1 row whose backoff just ended still goes ahead of the longest-waiting band-2 row",
+        "BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles, and no row waits more than ⌈N / c⌉ − 1",
+        "NOT SLOWED: a row with no failing debt never has more rows ahead of it than under the old order, and no key is before its own due time",
+        "SEEDED STARVATION: within a band, ordered by next-due then id, a never-tried row waits forever behind Scouts that keep failing",
+        "the replay is the dispatcher: runCycle's Scout pool admits exactly the replay's new order, cycle by cycle",
+        "the standing runner builds BOTH the recorded queue and the live Scout pool through orderableDueRow with the debt it carried in, after placement"
       ],
       "dynamic": 0
     },

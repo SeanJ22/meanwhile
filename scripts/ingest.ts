@@ -35,6 +35,7 @@ import {
   resolveMeetingBodies,
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
+import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import {
   readMeetingPartitionProjection,
   snapshotCounts,
@@ -256,35 +257,28 @@ function readThroughNoticePage(meeting: Meeting): boolean {
 }
 
 /**
- * A held document that is not this sitting's agenda (D1): another publisher's
- * notice page, or a wiring notice page, not the sitting's own link, that states
- * no agenda item. Production held 70 notice-page documents on 2026-09-24 and
- * not one yields an agenda item.
+ * A held document that is not this sitting's agenda (D1): a notice page that
+ * is neither the sitting's body's nor its publisher's, or a wiring notice
+ * page, not the sitting's own link, that states no agenda item. Production
+ * held 70 notice-page documents on 2026-09-24 and not one yields an agenda
+ * item.
+ *
+ * Ownership is the one rule every reader surface asks
+ * (`isAnotherBodysNoticePage`, lib/meetings/notice-pages.ts), by body id or
+ * publisher (R14, 2026-09-25). This file used to keep its own publisher-only
+ * copy, under which Tucson Unified's own notice page was "another's" — its
+ * sittings are published as "Tucson Unified School District", its wiring row
+ * as "… Governing Board" — and was set aside whatever it said.
  */
 export function heldNoticePageIsNotItsAgenda(
-  meeting: Pick<Meeting, "agendaUrl" | "provenance">,
+  meeting: Pick<Meeting, "agendaUrl" | "provenance" | "bodyId">,
   doc: Pick<AgendaDocument, "documentUrl" | "text">,
 ): boolean {
-  if (isAnotherPublishersNoticePage(meeting, doc.documentUrl)) return true;
+  // The sitting's own agenda link is never set aside.
   if (meeting.agendaUrl === doc.documentUrl) return false;
-  if (!SOURCE_WIRING.some((row) => row.noticeUrl === doc.documentUrl)) return false;
+  if (isAnotherBodysNoticePage(doc.documentUrl, { bodyId: meeting.bodyId, publisher: meeting.provenance?.sourceOrg })) return true;
+  if (!isWiredNoticePage(doc.documentUrl)) return false;
   return agendaItems(doc.text ?? "").length === 0;
-}
-
-/**
- * Whether a held document is a wiring notice page that the sitting's own
- * publisher does not publish: a page the division-wide fallback lent it before
- * the rule above. Its own agenda link is never one.
- */
-export function isAnotherPublishersNoticePage(
-  meeting: Pick<Meeting, "agendaUrl" | "provenance">,
-  url: string,
-): boolean {
-  if (meeting.agendaUrl === url) return false;
-  const rows = SOURCE_WIRING.filter((row) => row.noticeUrl === url);
-  if (rows.length === 0) return false;
-  const publisher = meeting.provenance?.sourceOrg ?? null;
-  return !rows.some((row) => row.publishingOrg === publisher);
 }
 
 /**

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 822,
-    "named": 7946,
+    "files": 823,
+    "named": 7975,
     "dynamic": 33
   },
   "files": {
@@ -2975,6 +2975,7 @@
       "names": [
         "a JOB failure detail says whose failure it is, once",
         "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
+        "a calendar whose every sitting falls outside the window is a counted clip, never our zero-row JOB (2026-09-25)",
         "a challenge served with HTTP 200 is the same wall",
         "a child rejected by a host that no longer resolves keeps the transport's code",
         "a real calendar we extract nothing from is still OUR zero-row JOB",
@@ -5236,9 +5237,12 @@
     },
     "tests/http-empty-success.test.ts": {
       "names": [
-        "A-003 · a 403 is a WALL on rung 2 and nothing escalates: no browser header set, no name-dropping client, no curl (2026-09-25)",
+        "A-003 · a rung-4 200 carrying the wrong format is a WALL, not a document",
+        "A-003 · a rung-4 200 that IS the document still succeeds, and reports rung 4's bytes",
+        "A-003 · a rung-4 200 with an EMPTY body is a WALL — the case challengeIn cannot see",
         "A-003 · injecting a fetchImpl alone still does NOT walk the ladder",
         "A-003 · politeGetText has exactly ONE place a body becomes a return value",
+        "A-003 · the rung-4 curl fallback is validated too — it used to be returned raw",
         "a 200 in the wrong format is a WALL, and the wall names the format",
         "a caller that declares no format still gets the blank check",
         "a real document still passes, and is returned untouched",
@@ -5360,14 +5364,20 @@
         "ICAL: line folding is unfolded before the address is read",
         "ICAL: the Wilmot fixture reaches Wilmot's rows and only those",
         "ICAL: the fixture parses to the events it actually contains",
-        "ICAL: the wired boards produce meetings, and the counts are stated"
+        "ICAL: the wired boards produce meetings, and the counts are stated",
+        "the Village Water District's commissioners sit at the treatment plant, never pinned at the town hall",
+        "the river committee's every-other-month series is expanded: another body's split series is no evidence about this one"
       ],
       "dynamic": 0
     },
     "tests/identified-ua-wall.test.ts": {
       "names": [
+        "a Cloudflare-style host that challenges Node is read with our own name through curl",
+        "a challenge from the curl request is a WALL on rung 4 — never answered, and no other identity is tried",
         "a host that refuses our name is a WALL named as an access control, and nothing is re-sent under another identity",
-        "the identification travels in the User-Agent of every request"
+        "a refusal on rung 4 is a WALL naming rung 4, and a 404 there is the answer",
+        "rung 4 is one request: our own name in the User-Agent, purpose and contact beside it, never a browser's",
+        "the identification travels in the User-Agent of every request, on both clients"
       ],
       "dynamic": 0
     },
@@ -6545,9 +6555,14 @@
     },
     "tests/mesa-minutes-outcomes.test.ts": {
       "names": [
+        "a continuation that is not a motion's own words stays an unread passage, never a guessed motion",
+        "a held sitting whose note names unread passages is read again, so a parser that now reads them reaches readers",
         "a later sitting's minutes approving these minutes marks them APPROVED, with its own words",
+        "a motion written as an infinitive is read: the 2026-08-13 study session's direction to the City Attorney",
+        "a motion written without 'that' is read: the 2026-06-04 study session acknowledges its boards' minutes",
         "a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'",
         "action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken",
+        "minutes that record no motion and do not say no action was taken stay a failed extraction: the 2026-05-28 strategic planning session",
         "result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed",
         "the 2026-06-01 minutes: one motion adopting five resolutions and an ordinance reaches all six items",
         "the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found",
@@ -9350,6 +9365,15 @@
       ],
       "dynamic": 0
     },
+    "tests/research-transport.test.ts": {
+      "names": [
+        "a 403 is asked once more through curl, with the same User-Agent and our purpose and contact, never following a redirect",
+        "a host that refuses the second client too is recorded as refusing, and a curl that cannot run leaves the first answer",
+        "an answered read is returned as it came, and curl is never run",
+        "curl's included headers are read for the status, the type and a redirect's target"
+      ],
+      "dynamic": 0
+    },
     "tests/reset-registry.test.ts": {
       "names": [
         "every UiState field is either a registered control or declared non-control",
@@ -9467,7 +9491,7 @@
         "A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to the vendor's document host",
         "ACCESS CONTROLS ARE NAMED, NEVER PUSHED THROUGH: 401, 402, 403, 407, 429, 451 and a challenge page at any status",
         "EVERY ROBOTS CONSUMER IS NAMED with the test that holds it to the rule, and none has gone missing",
-        "NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY OR A SECOND CLIENT, and the script debt only shrinks",
+        "NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY, and the script debt only shrinks",
         "NO WIRING ROW ASKS FOR A DISGUISE, AND THE RELAY RUNG REFUSES BEFORE ANY REQUEST",
         "THE ADAPTER PERMISSION GATE reads robots.txt once per origin, records the Disallow, and the page is read",
         "THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and records a homepage 403 as a wall, never re-sent",
@@ -9475,8 +9499,9 @@
         "THE OLD ROBOTS REFUSALS DO NOT RETURN in production code",
         "THE RESEARCH FETCH names each access control, sends each request once, and backs a rate-limited host off",
         "THE RESEARCH FETCH reads robots.txt first, records a Disallow: / with its rule, and reads the public page",
+        "THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once more through curl with the same User-Agent, and a refusal there stands",
         "THE RULE HAS ONE HOME: ROBOTS_BLOCKS_ACQUISITION is false, no host waits on the owner for robots, and every recorded wall is an access control",
-        "THE SHARED SOURCE CLIENT IS ONE HONEST CLIENT: a 403 or a challenge is a wall asked once, under the project's own name, and never re-sent"
+        "THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a wall, and the one second ask is the same name through curl"
       ],
       "dynamic": 0
     },
@@ -9861,7 +9886,13 @@
     },
     "tests/schedulepage-chandler.test.ts": {
       "names": [
+        "DESTINY: a month the list says is empty is read and empty; a page that is not the list is unread, never empty",
+        "DESTINY: the September list is seven Council sittings, each with its agenda page, and the results and video where posted",
+        "DESTINY: the months read run from the window's start to 35 days ahead, across a year's end",
+        "FETCH with DESTINY: one list request per month in reach, and a refused month keeps the schedule",
         "FETCH: one day file per scheduled date inside the window, and a refused day keeps its sitting date-only",
+        "NORMALIZE with DESTINY: a date-only sitting joins only a date the list gives one row; four rows on a date join none",
+        "NORMALIZE with DESTINY: each dated sitting carries its own agenda, results and video; a month read with nothing marks the slot empty",
         "NORMALIZE: a scheduled date the day file answers becomes its Council sittings with time and place; one it does not stays date-only",
         "THE DAY FILE: each Council sitting the city posted for a scheduled date, with its own start and street address; the city's other events are not the Council's",
         "no time is claimed: the table states none, and the page's 'usually' sentence is not the section's",
@@ -9888,10 +9919,12 @@
         "documents join by the date the body wrote in the link text",
         "event-tip: a band concert is not a meeting of the Planning Board",
         "event-tip: a board's own sittings come out of a town-wide calendar",
+        "event-tip: a sitting in the Syd Crook Room or at the Fire Department is its own room, never the hall",
         "event-tip: an empty titleMatch matches NOTHING rather than everything",
         "event-tip: fetch asks the calendar for every month in the window it was given, behind and ahead",
         "event-tip: four New London boards are wired, each with its own match",
         "event-tip: the time comes off the event's own line",
+        "event-tip: titleMatch is a list of the body's spellings, and apostrophes do not decide a match (2026-09-25)",
         "monthsAhead stays a floor when the window asked for is shorter than it",
         "normalize windows the year, times it from the page, and cites its source",
         "the Conservation Commission's two shapes union by date",
@@ -10391,9 +10424,9 @@
         "program/store/protocol exceptions cannot be relabelled as a source attempt",
         "publisher request, body, and retry deadlines cancel their real work before reporting failure",
         "source parsers brand publisher evidence while a missing credential remains configuration",
+        "the curl rung receives both a native deadline and an abortable process signal",
         "the shared meeting client cancels hung request/body work and its real retry sleep",
-        "the source deadline leaves a bounded durable-settlement window inside the outer child kill",
-        "there is no curl rung to outlive a deadline: the shared client never shells out to a second client (2026-09-25)"
+        "the source deadline leaves a bounded durable-settlement window inside the outer child kill"
       ],
       "dynamic": 0
     },
@@ -11220,6 +11253,7 @@
         "clerksboards: a Meeting Location with no reviewed row publishes every instance in the Clerk's words",
         "diligent: a portal row naming an unreviewed room, or none, is published with the gap the portal states",
         "ical: a LOCATION with no reviewed row, a blank one, and an online one are all published",
+        "ical: a standing venue stands in only for a LOCATION that names no place, never for another building (2026-09-25)",
         "ical: with a standing venue that has no reviewed row, the feed's words still render, and a blank keeps our own gap",
         "iqm2: an unreviewed room, a blank tooltip venue and a virtual sitting are all published",
         "onbase: an unmatched meeting name still drops, counted — the name key is its only body filter",

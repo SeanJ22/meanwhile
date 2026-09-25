@@ -298,8 +298,10 @@ test("a foreign row under window_runs is not a window: the last-window read and 
 
 test("PDC: local shadow run records are diagnostic only and cannot activate promotion", () => {
   const gate = readActivationGate(ROOT);
-  assert.equal(gate.promotionEnabled, false);
-  assert.deepEqual(gate.openRecordClasses, []);
+  /* The one open class is the owner's decision in code (2026-09-21, campaign sites only; tests/campaign-site-gate.test.ts), never a run record. */
+  assert.equal(gate.promotionEnabled, true);
+  assert.deepEqual(gate.openRecordClasses, ["candidate-enrichment"]);
+  assert.deepEqual(gate.openFields, { "candidate-enrichment": ["campaignSite"] });
   assert.equal(gate.mode, "SHADOW");
   assert.equal(gate.readFrom, null);
   assert.deepEqual(gate.contracts, { READER: "UNREAD", TRUTH: "UNREAD", FRESHNESS: "UNREAD" });

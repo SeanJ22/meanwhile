@@ -57,7 +57,11 @@ const input = (over: Partial<DeliveryTrailInput> = {}): DeliveryTrailInput => ({
 });
 
 test("empty pipeline: every stage is a named gap, the blockers are named, promotions empty", () => {
-  const view = buildDeliveryTrail([], input());
+  /* A closed gate is named as a blocker; the live gate now opens campaign sites (2026-09-21), so it is not one. */
+  const open = buildDeliveryTrail([], input());
+  assert.ok(!open.blockers.some((b) => b.what === "Activation gate (publication)"));
+  const closedGate = { ...readActivationGate(""), promotionEnabled: false, openRecordClasses: [], openFields: {}, reason: "promotion OFF" };
+  const view = buildDeliveryTrail([], input({ activation: closedGate }));
   assert.equal(view.version, DELIVERY_TRAIL_VERSION);
   assert.equal(view.items, 0);
   for (const s of view.stages) assert.equal(s.reached.held, false, `${s.key} must be a gap when nothing has entered`);

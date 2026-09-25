@@ -1,0 +1,139 @@
+{
+ "note": "Real public pages, read robots-first. *.live.html: read 2026-09-25 with `pnpm research:fetch` (lib/hunt/robots-first-fetch.ts). *.held.html: the bytes a paid Scout Attempt vaulted, copied read-only from the standing runner's evidence vault. Each is an EXCERPT: <script>, <style>, <svg>, <noscript>, <template>, <link> and comments removed — the parts the campaign-site verifier strips before reading — so every verdict on the excerpt equals the verdict on the original bytes, whose sha256 and length are recorded here. Marginalia answers are reduced to the fields the normalizer reads (url, title, format): the index's licensed descriptions are not copied.",
+ "pages": [
+  {
+   "file": "duarte4mendham-meet-amalia.live.html",
+   "url": "https://www.duarte4mendham.com/meet-amalia",
+   "read": "LIVE_2026-09-25",
+   "retrievedAt": "2026-09-25",
+   "originalSha256": "2bb99736dcd43368657497b28d7b10d86b41ea4fde485eed214a35f2c68e8a77",
+   "originalBytes": 453386,
+   "excerptBytes": 35946
+  },
+  {
+   "file": "chippersonforharding-root.live.html",
+   "url": "https://www.chippersonforharding.com/",
+   "read": "LIVE_2026-09-25",
+   "retrievedAt": "2026-09-25",
+   "originalSha256": "a791cd1067d12a5ecf828540b851c3a00218de74d1c5b95d487f484c2c3efbd9",
+   "originalBytes": 16840,
+   "excerptBytes": 13291
+  },
+  {
+   "file": "kapner4mendhamtwp-root.live.html",
+   "url": "https://www.kapner4mendhamtwp.com/",
+   "read": "LIVE_2026-09-25",
+   "retrievedAt": "2026-09-25",
+   "originalSha256": "e86e56ea920aaa57ea34d967112e26cbffa103c676353f54ad542ed4e4190ed8",
+   "originalBytes": 541869,
+   "excerptBytes": 22174
+  },
+  {
+   "file": "montvillevotes-root.live.html",
+   "url": "https://montvillevotes.org/",
+   "read": "LIVE_2026-09-25",
+   "retrievedAt": "2026-09-25",
+   "originalSha256": "9001fa315eb65afbfb3bdd1b00bce6833af504fb74965001d8a71aea535c9076",
+   "originalBytes": 108092,
+   "excerptBytes": 64049
+  },
+  {
+   "file": "haroldfrench-root.live.html",
+   "url": "https://haroldfrench.com/",
+   "read": "LIVE_2026-09-25",
+   "retrievedAt": "2026-09-25",
+   "originalSha256": "d54dae8a063d373523d60be723058efa9b4d18c0c12226ea5568a89d5a97727f",
+   "originalBytes": 6863,
+   "excerptBytes": 3602
+  },
+  {
+   "file": "lilytangwilliams-endorsements.live.html",
+   "url": "https://www.lilytangwilliams.com/congress/endorsements/",
+   "read": "LIVE_2026-09-25",
+   "retrievedAt": "2026-09-25",
+   "originalSha256": "8a244622a0f8a72a2c1db21228f3238895ed5f4c01c3ab195239180e6310e249",
+   "originalBytes": 94802,
+   "excerptBytes": 58030
+  },
+  {
+   "file": "duarte4mendham-meet-amalia.held.html",
+   "url": "https://www.duarte4mendham.com/meet-amalia",
+   "read": "SCOUT_VAULTED",
+   "retrievedAt": "2026-09-21T02:23:01.279Z",
+   "artifactId": "ar-3b51327b6cf0b9695d8ff308",
+   "attemptId": "at-eb04313c14ef7a57dc66eadd",
+   "methodRouteId": "scout:fetch_public",
+   "originalSha256": "6032737892b78ca28c67ec4c41b3fc8b08d5c40f664313b39603dc05da711773",
+   "originalBytes": 449364,
+   "excerptBytes": 35946
+  },
+  {
+   "file": "chippersonforharding-root.held.html",
+   "url": "https://www.chippersonforharding.com/",
+   "read": "SCOUT_VAULTED",
+   "retrievedAt": "2026-09-20T18:53:43.604Z",
+   "artifactId": "ar-87b06c59184065e96383c5d7",
+   "attemptId": "at-aa6a7069f1e19f3972259cc5",
+   "methodRouteId": "scout:fetch_public",
+   "originalSha256": "ad86a205c6871ff5b94e6c37f9934839585b53e11a7afd7506818ad112dc031f",
+   "originalBytes": 16840,
+   "excerptBytes": 13291
+  },
+  {
+   "file": "yateschipperson-home-2022.archived.html",
+   "url": "https://www.yateschipperson.com/home",
+   "read": "SCOUT_VAULTED_ARCHIVE_CAPTURE",
+   "capturedBy": "https://web.archive.org/web/20220315122859/https://www.yateschipperson.com/home",
+   "capturedOn": "2022-03-15",
+   "retrievedAt": "2026-09-20T18:54:10.390Z",
+   "artifactId": "ar-d6fdc23d74e589f39ea20bdc",
+   "attemptId": "at-331536529c5cce7a7733ede1",
+   "originalSha256": "0a5808a1ea44bf051a9b69c2925adb78ba9e92c5689a8664c041e34d9be12934",
+   "originalBytes": 62752,
+   "excerptBytes": 53927,
+   "note": "The 2022 campaign page as the Internet Archive captured it. An archive host is refused before its content is read; the test serves these bytes at the page's own URL only to exercise the past-cycle rule."
+  }
+ ],
+ "robots": [
+  {
+   "file": "chippersonforharding.robots.txt",
+   "read": "LIVE_2026-09-25",
+   "sha256": "91c99063e3b83313031ae64d2c0b320ff40b8ccee3d3dd430b072c225fd61fb9"
+  },
+  {
+   "file": "duarte4mendham.robots.txt",
+   "read": "LIVE_2026-09-25",
+   "sha256": "05eb658f464614cb35addba4c19bff1e8b7288ef2ab9c77b67daedbca0b6fd02"
+  },
+  {
+   "file": "kapner4mendhamtwp.robots.txt",
+   "read": "LIVE_2026-09-25",
+   "sha256": "2b3b74457e80881d1abb5fe6e29bef81be429e5647fe38766ebdbe945bbf2a24"
+  },
+  {
+   "file": "lilytangwilliams.robots.txt",
+   "read": "LIVE_2026-09-25",
+   "sha256": "468743adf069c83a7b860040ac30d13b9e679838456eab8d05979fbfdeb7ce81"
+  }
+ ],
+ "marginalia": [
+  {
+   "file": "marginalia-tang-williams-lily.json",
+   "subjectId": "nh:2026:state-nh-cd-2:representative-in-congress-district-2:tang-williams-lily",
+   "artifactId": "ar-4d9376186b42027d39556f58",
+   "attemptId": "at-b47ff6e89e654170c3c9e426",
+   "retrievedAt": "2026-09-23T21:20:34.048Z",
+   "originalSha256": "09ba3ecf9cfbfe6352a107958d43d0d2a09150985b1490e51dc15fd523c82213",
+   "results": 20
+  },
+  {
+   "file": "marginalia-althoff-marilyn.json",
+   "subjectId": "nj:2026:state-nj-place-mendham:member-of-the-borough-council:althoff-marilyn",
+   "artifactId": "ar-0dbc9b05760e47958da03816",
+   "attemptId": "at-641edc9cb3d65007e397bb23",
+   "retrievedAt": "2026-09-25T01:35:59.350Z",
+   "originalSha256": "a5ec8600ec1f41e82c4b46a5ad32460edfb8985ddb735debb6a85a625205c54c",
+   "results": 2
+  }
+ ]
+}

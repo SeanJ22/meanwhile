@@ -308,7 +308,7 @@ export async function withNightlyWindowLease<R>(
  */
 export function evaluateItems(
   states: readonly PipelineItemState[],
-  gate: Pick<ActivationGateReading, "openRecordClasses">,
+  gate: Pick<ActivationGateReading, "openRecordClasses" | "openFields">,
   deferAll: string | null = null,
 ): { readonly verdicts: readonly ItemVerdict[]; readonly byRecordClass: readonly RecordClassTally[] } {
   const open = new Set(gate.openRecordClasses);
@@ -324,6 +324,12 @@ export function evaluateItems(
     if (s.recordClass === null) return { ...base, verdict: "DEFER", reason: "the item names no record class, so the gate cannot be read for it" };
     if (!open.has(s.recordClass)) {
       return { ...base, verdict: "REFUSE_WOULD", reason: `record class ${s.recordClass} is not open at the activation gate` };
+    }
+    /* A class opened by field (2026-09-25: candidate-enrichment, campaign sites only) is open for those fields alone. */
+    const fields = gate.openFields?.[s.recordClass];
+    const field = s.byStage.APPROVED_FOR_PROMOTION?.field;
+    if (fields !== undefined && (field === undefined || !fields.includes(field))) {
+      return { ...base, verdict: "REFUSE_WOULD", reason: `record class ${s.recordClass} is open only for ${fields.join(", ")}; this approval names ${field ?? "no field"}` };
     }
     return { ...base, verdict: "PROMOTE_WOULD", reason: `APPROVED_FOR_PROMOTION and record class ${s.recordClass} is open` };
   });

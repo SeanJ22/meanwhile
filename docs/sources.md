@@ -634,6 +634,18 @@ the wall across four rungs.
 | `index.commoncrawl.org/CC-MAIN-2026-34-index` | does a host exist in the August 2026 crawl, and which URLs does it hold | Common Crawl, open | an impossible host returns **HTTP 404 `No Captures found`** — a real control | 2026-08-24 |
 | `api.marginalia.nu/public/search/<query>` | an independent keyword index of the non-commercial web | **CC-BY-NC-SA 4.0 — DISCOVERY ONLY.** The non-commercial clause means it may point at a URL and may never be a source of record here; the URL is then fetched from the origin and proved there, exactly as RULING 87 governs Wikipedia | returns a `license` field and a `results` array | 2026-08-24 |
 
+**Marginalia's answer shape, read from the runner's held responses on
+2026-09-25.** Beside `license` and `results` sit `page`, `pages` and `query`;
+each result carries `url`, `title`, `description`, `quality`, `format`,
+`resultsFromDomain` and `details`. `normalizeMarginaliaSearch`
+(`lib/control-plane/scheduler/promotion-tail.ts`) keeps only `url`, `title`,
+`format` and rank, as POINTER leads — never the licensed `description` — and
+names an empty `results` a NO_HIT rather than a failed normalization. Of the
+326 held candidate answers (4,647 results, none empty), 12 carry a lead whose
+own host, or the title the index gave it, names the candidate; the
+campaign-site verifier (`lib/candidates/campaign-site-verifier.ts`) reads those
+origins robots-first and refuses the rest by type.
+
 **Coverage measured rather than assumed.** Common Crawl's August 2026 index
 holds **6** URLs for `newjerseyglobe.com`, **98** for `morristowngreen.com`,
 **22** for `tapinto.net`, **77** for `patch.com` and **7** for

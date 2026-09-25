@@ -196,6 +196,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    // The derived meeting-source wiring (C16): recomputed from promoted and vaulted inputs, no route of its own.
+    "meeting-source-wiring",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -261,9 +263,11 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     assert.ok(source.publisher);
     assert.equal(source.routePrefixes.length === 0, source.allowedFinalHosts.length === 0);
     if (source.routePrefixes.length === 0) {
+      /* A route-less authority is authorized only by a reviewed receipt, or only as the exact inputs it names (C16). */
       assert.ok(
-        "manualReceiptPromotion" in source && source.manualReceiptPromotion,
-        `${id} needs an explicit receipt policy when it has no globally trusted route`,
+        ("manualReceiptPromotion" in source && source.manualReceiptPromotion) ||
+          ("derivedPromotion" in source && source.derivedPromotion && source.derivedPromotion.inputKinds.length > 0),
+        `${id} needs an explicit receipt or derived-input policy when it has no globally trusted route`,
       );
     }
     assert.ok(source.jurisdictions.length && source.recordClasses.length && source.competentFacts !== undefined);

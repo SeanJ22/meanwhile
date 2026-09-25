@@ -55,6 +55,7 @@ import {
   type FetchOutcome,
 } from "./http-executor.ts";
 import type { RouteDescriptor, YieldContract } from "./registry.ts";
+import { DEFAULT_USER_AGENT } from "./user-agent.ts";
 
 const RAN_AS = "DETERMINISTIC" as const;
 
@@ -77,8 +78,7 @@ export type OpenOne = (input: {
  * that route moves the identification into `From:` and `X-Purpose:`, which is
  * still identification.
  */
-export const DEFAULT_USER_AGENT =
-  "we-the-people-freshness/1.0 (civic records refresh; public data; contact via repository)";
+export { DEFAULT_USER_AGENT };
 
 export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs }) => {
   const started = Date.now();

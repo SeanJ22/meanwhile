@@ -60,6 +60,11 @@ export const PDC_V2_POST_IMPORT_MEETING_PARTITIONS: readonly string[] = [
   // Newbury, NH bodies the town iCal never carries, read from their own pages (C9, 2026-09-24).
   "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23library-trustees",
   "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23energy-committee",
+  // The derived meeting families, one static partition per covered state (C16, 2026-09-24). Their members are data
+  // read from the promoted meeting-source wiring, so this list never changes per reviewed calendar.
+  "meetings:derived:US-AZ",
+  "meetings:derived:US-NH",
+  "meetings:derived:US-NJ",
 ];
 
 type Row = Record<string, unknown>;

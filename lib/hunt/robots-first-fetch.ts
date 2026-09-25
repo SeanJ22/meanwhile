@@ -31,9 +31,9 @@
 
 import { createHash } from "node:crypto";
 
-import { RECORDED_WALLS } from "../control-plane/discovery/meetings-discovery-executor.ts";
+import { RECORDED_WALLS } from "./recorded-walls.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
-import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/route-executor.ts";
+import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import { assertPublicUrl } from "./egress.ts";
 
 /** Hosts whose use waits on the owner's decision. Nothing is requested from them, robots.txt included. */

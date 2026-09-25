@@ -556,6 +556,68 @@
       "migration_status": "ROUTINE_AUTO_PROMOTED_UNDER_RULING_292"
     },
     {
+      "source_id": "meeting-source-wiring",
+      "record_class": "CURATED_READER_RECORD",
+      "authority": "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and vaulted evidence (owner decision C16, recorded 2026-09-24T22:43Z)",
+      "current_writer": "scripts/derive-meeting-source-wiring.mts (reads promoted versions, the attempt log and the vault read only; writes no tracked file)",
+      "current_scheduler": "standing routine civic-data runner",
+      "current_canonical_store": "Postgres promotion pointer",
+      "tracked_paths": [],
+      "runtime_readers": [
+        "lib/civic-data/derived-meeting-wiring.ts",
+        "scripts/ingest.ts (derived meeting families)"
+      ],
+      "current_promotion_door": "atomic processRegisteredRoutineCandidate (DERIVED: authentic only as its named inputs)",
+      "cadence": "every six hours",
+      "retry": "6 hours",
+      "LKG_behavior": "durable DB pointer; a refused or unreadable pass leaves the prior wiring live; no row is dropped, and a suspended row stays marked until a later review",
+      "classification": "RUNTIME_CIVIC_DATA",
+      "target_plane": "routine candidate/version store",
+      "migration_status": "ROUTINE_DERIVED_UNDER_OWNER_DECISION_C16"
+    },
+    {
+      "source_id": "meetings-derived-families",
+      "record_class": "MEETING",
+      "authority": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host",
+      "current_writer": "scripts/ingest.ts composite --promote --only-partition=meetings:derived:<state> (one static partition per covered state; writes no tracked file)",
+      "current_scheduler": "standing routine civic-data runner",
+      "current_canonical_store": "Postgres promotion pointer, one per covered state",
+      "tracked_paths": [],
+      "runtime_readers": [
+        "lib/meetings/snapshot.ts",
+        "app/api/meetings/route.ts",
+        "app/api/agenda/route.ts",
+        "app/api/ask/agenda/route.ts",
+        "app/api/ask/grounded/route.ts"
+      ],
+      "current_promotion_door": "atomic processRegisteredMeetingPartitionCandidate (DERIVED: every member read checked against the named wiring version)",
+      "cadence": "the meeting sitting window: hourly within seven days of a sitting, twice daily otherwise",
+      "retry": "6 hours",
+      "LKG_behavior": "durable DB pointer per state; a failed, off-host or suspended member keeps its own last verified sittings; an unreadable wiring store leaves the family's prior version live",
+      "classification": "RUNTIME_CIVIC_DATA",
+      "target_plane": "routine candidate/version store",
+      "migration_status": "ROUTINE_DERIVED_UNDER_OWNER_DECISION_C16"
+    },
+    {
+      "source_id": "meeting-body-crosswalk",
+      "record_class": "CURATED_READER_RECORD",
+      "authority": "Each government's own saved pages naming a body and its calendar, cited by sha256 and reviewed by the agent session that checked them",
+      "current_writer": "scripts/promote-manual-civic-projection.mts --contract=meeting-body-crosswalk (a reviewed package outside the repository)",
+      "current_scheduler": "explicit invocation only: the owner, or a reviewing agent session under the owner decision C16",
+      "current_canonical_store": "Postgres promotion pointer",
+      "tracked_paths": [],
+      "runtime_readers": [
+        "scripts/derive-meeting-source-wiring.mts"
+      ],
+      "current_promotion_door": "processRegisteredManualCandidate",
+      "cadence": "on review",
+      "retry": "explicit re-invocation",
+      "LKG_behavior": "durable DB pointer; a row whose evidence is not its receipted bytes is held alone; a row leaves only when a later review withdraws it",
+      "classification": "RUNTIME_CIVIC_DATA",
+      "target_plane": "manual candidate/version store",
+      "migration_status": "MANUAL_REVIEWED_UNDER_OWNER_DECISION_C16"
+    },
+    {
       "source_id": "registry-static-identities",
       "record_class": "CURATED_BODY_DIVISION_SCHEMA_IDENTITY",
       "authority": "cited legal and official identity sources",

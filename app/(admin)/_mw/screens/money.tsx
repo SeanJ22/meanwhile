@@ -116,11 +116,11 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
     observedAt: base.nowIso,
     standard: null,
   };
-  if (!base.shell.registered) {
+  if (!base.shell.tracked) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
-        <EmptyScope name={name} scope={base.scope} />
+        <EmptyScope name={name} scope={base.scope} standing={base.shell.standing} />
       </MwShell>
     );
   }

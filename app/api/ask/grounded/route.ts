@@ -120,6 +120,7 @@ import {
 import { buildTopicTimeline, composeAreaTopicAnswer, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
+import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
 import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
 import {
   askAnswer,
@@ -2216,8 +2217,21 @@ export async function POST(request: Request) {
        * **A REJECTED ANSWER IS DISCARDED, NOT REPAIRED.** The records are
        * still real and still render; only the prose goes. Degradation runs
        * grounded → structured → honest gap, and never grounded → plausible.
+       * An answer rejected ONLY for length is not a wrong answer: it falls
+       * back to prose code composes from the same evidence, else to the
+       * records, and is not reported as a rejection (R13, lib/ask/length-fallback.ts).
        */
-      mode = "REJECTED_FELL_BACK";
+      const settled = settleRejectedModelAnswer({
+        verdict,
+        composeFallback: () => topicTimeline
+          ? composeTopicAnswer(topicTimeline, selectionNow)
+          : areaTimelines.length > 0 ? composeAreaTopicAnswer(areaTimelines, selectionNow) : null,
+        validate: (text, urls) => validateAnswer(text, urls, pack, bodies),
+        structuredMode: mode,
+      });
+      mode = settled.mode;
+      answer = settled.answer;
+      if (settled.answer !== null) validationPassed = true;
     }
   } else if (synthesis) {
     /*

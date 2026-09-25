@@ -23,6 +23,7 @@ import {
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
 } from "../lib/civic-data/supervisor-history.ts";
 import {
+  ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   ROUTINE_SOURCE_TASKS,
@@ -55,8 +56,17 @@ import {
   ROUTINE_CHILD_TIMEOUT_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
   runBoundedChildPass,
+  type BoundedChildCommand,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
+import {
+  HOT_READ_CATCH_UP_CONCURRENCY,
+  hotReadRoundAdmission,
+  hotReadRoundWorstCaseMs,
+  repairDomainRacesHotReads,
+  routinePassWorkDeadlineMs,
+  runHotReadCatchUp,
+} from "../lib/civic-data/hot-read-catch-up.ts";
 import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
@@ -325,6 +335,9 @@ const supervisorFailures: SupervisorFailure[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
 const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined }[] = [];
+// When each lane's last read of this pass ended: a meeting read admitted while
+// Reader repair runs keeps the same-host gap after it (C6).
+const laneLastEndedMs = new Map<string, number>();
 
 function captureTaskReceipt(
   pending: PendingRun,
@@ -478,9 +491,9 @@ console.log(
     `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS} (meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS}); ` +
     `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
 );
-step = "running the source pass";
-const childRuns = await runBoundedChildPass(
-  pendingRuns.map((pending) => ({
+/** One source child: its own narrowed authority, and the pass's registry attestation for a meeting read. */
+function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
+  return {
     id: pending.id,
     // One degraded provider may occupy one lane, never the whole standing
     // pool. Distinct sources keep running and settling independently.
@@ -496,7 +509,21 @@ const childRuns = await runBoundedChildPass(
       }),
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
-  })),
+  };
+}
+
+function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): void {
+  for (const run of runs) {
+    if (run.settlementErrorMessage === null) continue;
+    const detail = safeFailure(run.settlementErrorMessage ?? "unknown settlement failure");
+    supervisorFailures.push({ taskId: run.id, code: "CHILD_SETTLEMENT_FAILED", detail });
+    console.error(`RCD_TASK ${run.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+  }
+}
+
+step = "running the source pass";
+const childRuns = await runBoundedChildPass(
+  pendingRuns.map(sourceChildCommand),
   {
     cwd: ROOT,
     env: process.env,
@@ -511,15 +538,10 @@ const childRuns = await runBoundedChildPass(
     discardOutputAfterSettlement: true,
   },
 );
-
-for (const run of childRuns) {
-  if (run.settlementErrorMessage === null) continue;
-  const detail = safeFailure(run.settlementErrorMessage ?? "unknown settlement failure");
-  supervisorFailures.push({ taskId: run.id, code: "CHILD_SETTLEMENT_FAILED", detail });
-  console.error(`RCD_TASK ${run.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
-}
+recordSourceSettlementFailures(childRuns);
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
+  laneLastEndedMs.set(pending.task.acquisitionFailureDomain, Date.now());
   if (run.id !== pending.id) {
     const detail = `expected result ${pending.id}; observed ${run.id}`;
     supervisorFailures.push({ taskId: pending.id, code: "BOUNDED_CHILD_RESULT_ORDER_MISMATCH", detail });
@@ -682,9 +704,26 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
   supervisorFailures.push(...reconciled.failures);
 }
 
+// A meeting read that falls due while Reader repair runs is admitted on the
+// lane's own five-minute cadence instead of waiting for the pass to end (C6;
+// lib/civic-data/hot-read-catch-up.ts). The repairs such a read could race run
+// first, so rounds open as soon as they settle.
+const hotReadTasks = FORCE
+  ? []
+  : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
+const hotReadTaskIds = new Set(hotReadTasks.map(({ id }) => id));
+const readerLaunch = [
+  ...readerDomains.filter((domain) => repairDomainRacesHotReads(domain, hotReadTaskIds)),
+  ...readerDomains.filter((domain) => !repairDomainRacesHotReads(domain, hotReadTaskIds)),
+];
+let racingRepairs = readerLaunch.filter((domain) => repairDomainRacesHotReads(domain, hotReadTaskIds)).length;
+let openHotReadRounds: () => void = () => undefined;
+const hotReadRoundsOpen = new Promise<void>((resolve) => { openHotReadRounds = resolve; });
+if (racingRepairs === 0) openHotReadRounds();
+
 step = "running the Reader readbacks";
-const readerRuns = await runBoundedChildPass(
-  readerDomains.map((domain) => ({
+const readerPass = runBoundedChildPass(
+  readerLaunch.map((domain) => ({
     id: domain.id,
     executable: process.execPath,
     args: [
@@ -706,10 +745,85 @@ const readerRuns = await runBoundedChildPass(
     timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-    onSettled: (run, index) => settleReaderDomain(readerDomains[index]!, run),
+    onSettled: (run, index) => {
+      const domain = readerLaunch[index]!;
+      try {
+        settleReaderDomain(domain, run);
+      } finally {
+        if (repairDomainRacesHotReads(domain, hotReadTaskIds) && --racingRepairs === 0) openHotReadRounds();
+      }
+    },
     discardOutputAfterSettlement: true,
   },
 );
+
+const hotReadClocks = new Map(clockReads.flatMap((read) => read.ok ? [[read.task.id, read.clock] as const] : []));
+const launchedTaskIds = new Set(pendingRuns.map(({ id }) => id));
+const passWorkDeadlineMs = routinePassWorkDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains);
+const hotReadRotationSeed = routineFailureDomainRotationSeed(RUN_STARTED_AT);
+
+/** One catch-up round: admit the meeting reads due now, run them, settle them exactly as the pass's own. */
+async function runHotReadRound(atMs: number): Promise<readonly string[]> {
+  const admittedTasks = hotReadRoundAdmission({
+    nowMs: atMs,
+    candidates: hotReadTasks
+      .filter(({ id }) => !launchedTaskIds.has(id))
+      .map((task) => ({
+        task,
+        clock: hotReadClocks.get(task.id),
+        lastConsideredAt: newestConsideredAt(hotReadClocks.get(task.id), supervisorAttempts.get(task.id)),
+      })),
+    clockReads,
+    statedEnds: statedEndsByTask,
+    laneLastEndedMs,
+    rotationSeed: hotReadRotationSeed,
+  });
+  if (admittedTasks.length === 0) return [];
+  if (atMs + hotReadRoundWorstCaseMs(admittedTasks) > passWorkDeadlineMs) {
+    console.log(`RCD_DEFER catch-up: ${admittedTasks.length} due meeting read(s) wait for the next pass; this round could outlast the pass limit`);
+    return [];
+  }
+  const runs: PendingRun[] = admittedTasks.map((task) => ({
+    kind: MEETING_PARTITION_TASK_IDS.has(task.id) ? "MEETING_PARTITION" : "SINGLE",
+    id: task.id,
+    command: task.command,
+    task,
+  }));
+  for (const run of runs) launchedTaskIds.add(run.id);
+  attempted += runs.length;
+  console.log(
+    `RCD_PASS catch-up at ${new Date(atMs).toISOString()}: launching ${runs.length} due meeting read(s) while Reader repair runs; ` +
+      `concurrency=${HOT_READ_CATCH_UP_CONCURRENCY}`,
+  );
+  recordSourceSettlementFailures(await runBoundedChildPass(runs.map(sourceChildCommand), {
+    cwd: ROOT,
+    env: process.env,
+    timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+    maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
+    onSettled: async (run, index) => settlePendingRun(runs[index]!, run),
+    discardOutputAfterSettlement: true,
+  }));
+  return runs.map(({ id }) => id);
+}
+
+const { repair: readerRuns, rounds: hotReadRounds } = await runHotReadCatchUp({
+  repair: readerPass,
+  unblocked: hotReadRoundsOpen,
+  admittedAtMs: admissionNowMs,
+  intervalMs: ROUTINE_DATA_ADMISSION_MS,
+  now: () => Date.now(),
+  // Unreferenced: a finished repair ends the pass without waiting out the timer.
+  sleepUntil: (atMs) => new Promise<void>((resolve) => { setTimeout(resolve, Math.max(0, atMs - Date.now())).unref(); }),
+  round: runHotReadRound,
+});
+for (const round of hotReadRounds) {
+  if (round.error === undefined) continue;
+  const detail = safeFailure(round.error);
+  supervisorFailures.push({ taskId: "routine-civic-data-hot-read-catch-up", code: "HOT_READ_CATCH_UP_FAILED", detail });
+  console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+}
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");

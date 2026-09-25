@@ -564,6 +564,138 @@ test("a Reader readback moves identity around the typed Reader, never another co
   );
 });
 
+test("R31: a handoff that changed no Reader code carries the exact PASS without re-reading; any change still re-reads", async () => {
+  class CountingReadStore extends MemoryRoutineDataStore {
+    readonly reads = { promotion: 0, candidate: 0 };
+
+    override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
+      this.reads.promotion += 1;
+      return super.readPromotion<T>(recordClass, scope);
+    }
+
+    override async readCandidate(candidateId: string) {
+      this.reads.candidate += 1;
+      return super.readCandidate(candidateId);
+    }
+
+    override async readCandidateProof(candidateId: string) {
+      this.reads.candidate += 1;
+      return super.readCandidateProof(candidateId);
+    }
+  }
+  const READER_CODE_SHA_C = "e".repeat(40);
+  const READER_CODE_SHA_D = "f".repeat(40);
+  const store = new CountingReadStore();
+  const exact = candidate("reader-attested-across-handoff", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  await processRoutineCandidate(store, exact, NOW);
+  const contract = ROUTINE_SOURCE_CONTRACTS[0];
+  const at = (ms: number) => new Date(Date.parse(NOW) + ms).toISOString();
+  const reset = () => Object.assign(store.reads, { promotion: 0, candidate: 0 });
+  const asked: string[] = [];
+  const identical = (answer: boolean) => (prior: string, current: string) => {
+    asked.push(`${prior.slice(0, 1)}->${current.slice(0, 1)}`);
+    return { identical: answer, detail: answer ? "closure byte-identical" : "closure changed" };
+  };
+
+  const first = await repairRoutineReaderProjectionReadback(store, contract, at(1), READER_CODE_SHA_A);
+  assert.equal(first.kind, "RECORDED");
+  assert.equal(first.receipt?.status, "PASS");
+
+  // An unchanged closure: a new receipt at the executing commit, no dataset read.
+  reset();
+  const attested = await repairRoutineReaderProjectionReadback(store, contract, at(2), READER_CODE_SHA_B, { attestor: identical(true) });
+  assert.equal(attested.kind, "RECORDED");
+  if (attested.kind !== "RECORDED") return;
+  assert.equal(attested.receipt.status, "PASS");
+  assert.equal(attested.receipt.verifierCodeSha, READER_CODE_SHA_B);
+  assert.equal(attested.receipt.versionId, exact.id);
+  assert.equal(attested.receipt.verifierId, first.receipt?.verifierId);
+  assert.match(attested.receipt.detail, new RegExp(`^ATTESTED, not re-read: .*${READER_CODE_SHA_A}.*carries to code ${READER_CODE_SHA_B}`));
+  assert.deepEqual(store.reads, { promotion: 0, candidate: 0 }, "the typed Reader did not re-read the dataset");
+  assert.deepEqual(asked, ["c->d"]);
+  // It is the durable receipt the next pass finds current.
+  const current = await repairRoutineReaderProjectionReadback(store, contract, at(3), READER_CODE_SHA_B, { attestor: identical(true) });
+  assert.equal(current.kind, "CURRENT");
+  assert.equal(current.receipt?.verifierCodeSha, READER_CODE_SHA_B);
+
+  // A changed closure: the typed Reader re-reads, with the full proof.
+  reset();
+  asked.length = 0;
+  const reread = await repairRoutineReaderProjectionReadback(store, contract, at(4), READER_CODE_SHA_C, { attestor: identical(false) });
+  assert.equal(reread.kind, "RECORDED");
+  if (reread.kind !== "RECORDED") return;
+  assert.equal(reread.receipt.status, "PASS");
+  assert.equal(reread.receipt.verifierCodeSha, READER_CODE_SHA_C);
+  assert.doesNotMatch(reread.receipt.detail, /ATTESTED/);
+  assert.ok(store.reads.promotion > 0 && store.reads.candidate > 0, "a changed closure re-reads the dataset");
+  assert.deepEqual(asked, ["d->e"]);
+
+  // An attestor that cannot answer re-reads too.
+  reset();
+  const unanswered = await repairRoutineReaderProjectionReadback(store, contract, at(5), READER_CODE_SHA_D, {
+    attestor: () => { throw new Error("git unavailable"); },
+  });
+  assert.equal(unanswered.kind, "RECORDED");
+  assert.doesNotMatch(unanswered.receipt?.detail ?? "", /ATTESTED/);
+  assert.ok(store.reads.candidate > 0);
+
+  // A new version has no PASS to carry: the attestor is never asked.
+  const next = candidate("reader-attested-new-version", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    retrieval: { ...exact.retrieval, retrievedAt: at(6), rawHash: "b".repeat(64) },
+    normalization: { ...exact.normalization, normalizedHash: "b".repeat(64) },
+    readModel: { formatVersion: 1, candidates: [{ id: "moved" }], absences: [] },
+  });
+  const moved = await processRoutineCandidate(store, next, at(6));
+  assert.equal(moved.promoted?.versionId, next.id);
+  reset();
+  asked.length = 0;
+  const newVersion = await repairRoutineReaderProjectionReadback(store, contract, at(7), READER_CODE_SHA_A, { attestor: identical(true) });
+  assert.equal(newVersion.kind, "RECORDED");
+  if (newVersion.kind !== "RECORDED") return;
+  assert.equal(newVersion.receipt.versionId, next.id);
+  assert.doesNotMatch(newVersion.receipt.detail, /ATTESTED/);
+  assert.deepEqual(asked, [], "a new version is always read by the typed Reader");
+  assert.ok(store.reads.candidate > 0);
+});
+
+test("R31: a FAIL is never carried to a new commit", async () => {
+  class TransientReadStore extends MemoryRoutineDataStore {
+    hidePromotion = false;
+
+    override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
+      if (this.hidePromotion) return null;
+      return super.readPromotion<T>(recordClass, scope);
+    }
+  }
+  const store = new TransientReadStore();
+  const exact = candidate("reader-fail-not-attested", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const promoted = (await processRoutineCandidate(store, exact, NOW)).promoted!;
+  store.hidePromotion = true;
+  const failed = await recordRoutineReaderProjectionReadback(store, ROUTINE_SOURCE_CONTRACTS[0], promoted, NOW, READER_CODE_SHA_A);
+  assert.equal(failed?.status, "FAIL");
+  let asked = 0;
+  const repaired = await repairRoutineReaderProjectionReadback(
+    store,
+    ROUTINE_SOURCE_CONTRACTS[0],
+    new Date(Date.parse(NOW) + 1).toISOString(),
+    READER_CODE_SHA_B,
+    { attestor: () => { asked += 1; return { identical: true, detail: "closure byte-identical" }; } },
+  );
+  assert.equal(asked, 0, "only an exact PASS may be carried");
+  assert.equal(repaired.kind, "RECORDED");
+  assert.equal(repaired.receipt?.status, "FAIL", "the Reader re-read, still hidden, and its failure stays visible");
+});
+
 test("a promotion reports its durable record without reading the promoted envelope back again", async () => {
   class CountingStore extends MemoryRoutineDataStore {
     readonly wholeCandidateReads: string[] = [];

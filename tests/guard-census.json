@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 787,
+    "named": 7678,
     "dynamic": 30
   },
   "files": {
@@ -4956,6 +4956,18 @@
       ],
       "dynamic": 0
     },
+    "tests/hot-read-catch-up.test.ts": {
+      "names": [
+        "C6: a due hourly read is admitted within its deadline while a long Reader repair is in flight",
+        "C6: a round admits only due sitting-window reads, earliest deadline first, three a lane, after the same-host gap",
+        "C6: a round due while a racing repair runs starts as soon as that repair settles",
+        "C6: an ordinary short repair runs no round, and a failed repair still fails the phase",
+        "C6: no round may outlast the pilot's own outer limit on the pass",
+        "C6: the parent's account of a killed pass counts the reads admitted during repair",
+        "C6: the repairs a catch-up read could race run first"
+      ],
+      "dynamic": 0
+    },
     "tests/hotfix-audit.test.ts": {
       "names": [
         "FINDING 1 — every RULING n row names a real numeric record, and none is omitted",
@@ -6074,6 +6086,7 @@
     },
     "tests/meeting-partition-data-plane.test.ts": {
       "names": [
+        "R31: meeting receipts carry across a commit that changed no Reader code without composing the aggregate",
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
         "a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof",
@@ -8064,6 +8077,14 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-edge-carry.test.ts": {
+      "names": [
+        "R28: an unchanged pass carries the served edge forward, exactly where the publish would answer CURRENT",
+        "R28: every condition that could change the edge reads the prepared row and publishes",
+        "R28: the aggregate child decides the carry before it reads the prepared row, and reads it only to publish"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-edge-context.test.ts": {
       "names": [
         "Ask reads the registry, the federal directory and the recorded outcomes from the edge it entered",
@@ -8520,6 +8541,8 @@
     },
     "tests/reader-proof-runtime.test.ts": {
       "names": [
+        "R29: a proven read in a fresh process still runs the full proof; later reads share it instead of re-downloading",
+        "R29: proof priming reads every non-meeting family through the proven read model, not bypassCache",
         "Reader proof authority binds the actual read-only connection without exposing it",
         "Reader proof authority permits a descendant only for an unchanged validated production merge",
         "a partition retired by a proved cutover hands its imported authority to its registered successor",
@@ -8606,6 +8629,13 @@
         "a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line",
         "the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none",
         "the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-verifier-attestation.test.ts": {
+      "names": [
+        "R31: a closure that cannot be walked is not identical, and the next ask walks again",
+        "R31: the attestor says identical only when every verifier closure file is the same bytes at both commits"
       ],
       "dynamic": 0
     },
@@ -9188,6 +9218,8 @@
       "names": [
         "FEC candidate identity accepts the official nine-character office forms and rejects a numeric congressional impostor",
         "GOOD is the only path that reaches PROMOTED",
+        "R31: a FAIL is never carried to a new commit",
+        "R31: a handoff that changed no Reader code carries the exact PASS without re-reading; any change still re-reads",
         "T4 intermediary bytes remain research-only and cannot auto-promote",
         "a FEC period that regresses behind the class LKG is refused",
         "a Reader code-version change re-verifies the same LKG immediately without source reacquisition",
@@ -9277,7 +9309,8 @@
         "standing routine data and intake launch together and one failure cannot suppress the other",
         "standing task construction enforces every declarative authority and validation field",
         "the Neon transport deadline aborts underlying I/O instead of abandoning a promise",
-        "the durable receipt check proves exactly one pointer through the full proof and reads nothing else whole",
+        "the durable receipt check proves a Reader-projected pointer by identity and reads nothing whole",
+        "the durable receipt check's identity proof refuses every pointer that does not name the reported version",
         "the fixed pool caps host load and drains queued siblings after timeout and launcher failure",
         "the pilot awaits independently bounded routine and intake children without overlapping ticks",
         "the pilot outer bound contains the frontier (one a pass, two on a meeting lane), not a failed provider tail",

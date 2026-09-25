@@ -433,25 +433,45 @@ export function loadReaderProofMeetingsExpectedAuthority(
   return loadReaderProofMeetingsExpectedAuthorityFor(root, environment);
 }
 
+/**
+ * **Proof priming reads each family once per process, proved in full (R29, 2026-09-25).**
+ *
+ * The non-meeting families are read through the ordinary proven read model,
+ * not `bypassCache`. Proof strength is unchanged: a proof executor is a fresh
+ * process, so its read model holds nothing yet, and each family's first read
+ * here fetches the pointer and its candidate and runs the full promotion proof
+ * (`promotionProofIssue`), exactly as a bypassing read does. What changes is
+ * everything after that first read. Concurrent readers of one scope share the
+ * one in-flight read instead of each downloading it, and a later read of an
+ * unmoved pointer (after the 30-second scope cache expires, in an executor that
+ * runs for minutes) asks only the pointer's identity and is served from the
+ * proof this process made; a pointer that moved is fetched and proved again.
+ * Bypassing skipped both, so a long executor re-downloaded every family whole
+ * after each expiry. Priming was 77% of a proof's 6-7 GB transfer.
+ *
+ * The meeting partitions keep `bypassCache`: the pinned meeting read is the
+ * proof harness's own contract (lib/meetings/proof-pin.ts).
+ */
 function productionLoaders(
   meetingAuthority: ReaderProofMeetingsExpectedAuthority,
 ): ReaderProofRuntimeLoaders {
+  const proven = {} as const;
   const bypass = { bypassCache: true } as const;
   return {
-    "az-pima-local-finance": () => refreshAzPimaFinanceFromPromoted(bypass),
-    "registry-runtime-bindings": () => refreshRegistryRuntimeFromPromoted(bypass),
-    "congress-bulk-roster": () => refreshFederalDirectoryFromPromoted(bypass),
-    "candidate-profiles": () => refreshCandidateProfilesFromPromoted(bypass),
-    "candidate-corpus": () => refreshCandidateCorpusFromPromoted(bypass),
-    "az-sos-ballot": () => refreshAzBallotFromPromoted(bypass),
-    "nh-curated-ballot": () => refreshNhBallotFromPromoted(bypass),
+    "az-pima-local-finance": () => refreshAzPimaFinanceFromPromoted(proven),
+    "registry-runtime-bindings": () => refreshRegistryRuntimeFromPromoted(proven),
+    "congress-bulk-roster": () => refreshFederalDirectoryFromPromoted(proven),
+    "candidate-profiles": () => refreshCandidateProfilesFromPromoted(proven),
+    "candidate-corpus": () => refreshCandidateCorpusFromPromoted(proven),
+    "az-sos-ballot": () => refreshAzBallotFromPromoted(proven),
+    "nh-curated-ballot": () => refreshNhBallotFromPromoted(proven),
     "nj-morris-filing": async () => promotedVersion(
       "nj-morris-filing",
-      await readNjMorrisFiling(bypass),
+      await readNjMorrisFiling(proven),
     ),
-    "fec-funding": () => refreshFundingFromPromoted(bypass),
+    "fec-funding": () => refreshFundingFromPromoted(proven),
     "state-campaign-finance": async () => {
-      await refreshStateMoneyFromPromoted(bypass);
+      await refreshStateMoneyFromPromoted(proven);
       const versions = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
         .sort()
         .map((state) => promotedVersion(
@@ -460,22 +480,22 @@ function productionLoaders(
       ));
       return versions.join(",");
     },
-    "congress-rollcalls": () => refreshFederalVotesFromPromoted(bypass),
-    "federal-key-votes": () => refreshFederalKeyVotesFromPromoted(bypass),
+    "congress-rollcalls": () => refreshFederalVotesFromPromoted(proven),
+    "federal-key-votes": () => refreshFederalKeyVotesFromPromoted(proven),
     "nh-members": async () => promotedVersion(
       "nh-members",
-      await refreshNhSeatHolders(bypass),
+      await refreshNhSeatHolders(proven),
     ),
-    "voting-sites": () => refreshVotingSitesFromPromoted(bypass),
-    "prl": () => refreshPrlFromPromoted(bypass),
-    "officeholder-statements": () => refreshOfficeholderStatementsFromPromoted(bypass),
-    "az-official-actions": () => refreshExecutiveActionsFromPromoted(bypass),
-    "pima-legistar-outcomes": () => refreshOutcomeSnapshotFromPromoted(bypass),
-    "comment-access": () => refreshCommentAccessFromPromoted(bypass),
-    "ballot-navigation": () => refreshBallotNavigationFromPromoted(bypass),
-    "campaign-sites": () => refreshCampaignSitesFromPromoted(bypass),
-    "venue-resolutions": () => refreshVenueResolutionsFromPromoted(bypass),
-    "everyday-routing": () => refreshEverydayRoutingFromPromoted(bypass),
+    "voting-sites": () => refreshVotingSitesFromPromoted(proven),
+    "prl": () => refreshPrlFromPromoted(proven),
+    "officeholder-statements": () => refreshOfficeholderStatementsFromPromoted(proven),
+    "az-official-actions": () => refreshExecutiveActionsFromPromoted(proven),
+    "pima-legistar-outcomes": () => refreshOutcomeSnapshotFromPromoted(proven),
+    "comment-access": () => refreshCommentAccessFromPromoted(proven),
+    "ballot-navigation": () => refreshBallotNavigationFromPromoted(proven),
+    "campaign-sites": () => refreshCampaignSitesFromPromoted(proven),
+    "venue-resolutions": () => refreshVenueResolutionsFromPromoted(proven),
+    "everyday-routing": () => refreshEverydayRoutingFromPromoted(proven),
     "meeting-partitions": async () => readerProofMeetingPartitionIdentity(
       await readMeetingsProjection(bypass),
       meetingAuthority,

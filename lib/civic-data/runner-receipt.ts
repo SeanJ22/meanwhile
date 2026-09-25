@@ -6,11 +6,13 @@ import { parseValidationReceipt } from "./receipt.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { PromotionOutcome } from "./promotion.ts";
+import type { RoutineSourceContract } from "./contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 /**
- * The durable-receipt check's store: the proven read model for the one
- * canonical pointer it must prove, and narrow doors for everything else.
+ * The durable-receipt check's store: narrow doors for the candidate and the
+ * pointer's identity, and the proven read model for the one success no Reader
+ * readback re-proves (a contract without a Reader projection).
  */
 export type DurableReceiptStore = CivicDataReadStore & Pick<RoutineDataStore, "readCandidateSummary" | "readPromotionIdentity">;
 
@@ -126,9 +128,15 @@ export function routineSupervisorOuterEvidence(input: {
     successes.delete(id);
     failures.delete(id);
   }
+  // Meeting reads admitted while Reader repair ran (C6) add to the pass's plan.
+  const catchUpLaunched = lines.reduce((sum, line) => {
+    const match = /^RCD_PASS catch-up at \S+: launching (\d+) due meeting read\(s\)/.exec(line);
+    const count = match ? Number(match[1]) : 0;
+    return sum + (Number.isSafeInteger(count) && count >= 0 ? count : 0);
+  }, 0);
   const distinctLaunchCounts = [...new Set(launchCounts)];
   const attemptedTasks = distinctLaunchCounts.length === 1
-    ? distinctLaunchCounts[0]!
+    ? distinctLaunchCounts[0]! + catchUpLaunched
     : successes.size + failures.size;
   const exit = input.exitStatus === null ? "unavailable" : String(input.exitStatus);
   return {
@@ -273,18 +281,47 @@ export interface ExpectedRoutineRunnerReceipt {
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
+  /**
+   * The registered contract, when the caller holds it (a `RoutineSourceTask`
+   * does). Only its Reader projection decides how a success is proved; without
+   * it a success keeps the full proven read.
+   */
+  readonly contract?: Pick<RoutineSourceContract, "readerProjection">;
+}
+
+/**
+ * Whether the pass's Reader-repair phase re-proves this contract's new version
+ * through the full proven read (`verifyRoutineReaderProjection`, run by
+ * scripts/routine-civic-data-reader-repair.mts after every source phase).
+ */
+function readerRepairReprovesVersion(expected: ExpectedRoutineRunnerReceipt): boolean {
+  return expected.contract !== undefined && expected.contract.readerProjection !== null;
 }
 
 /**
  * Prove a child summary against its durable candidate and canonical LKG.
  *
- * The one pointer it must prove (the new version on success, the unchanged
- * LKG when held) is read through the proven read model, payload and candidate
- * included, with the full promotion proof. Everything else is read narrow: the
- * reported candidate's own columns, and on a held outcome the pointer's
- * identity. The whole-row reads this replaced moved the reported candidate's
- * envelope and a second copy of the pointer's payload: 66.9 MB for one held
- * NJ roll-call settle on 2026-09-23, against a 67.11 MB response cap.
+ * The reported candidate is read narrow (its own columns), and its durable
+ * eight-check receipt must back the emitted decision. The pointer is then
+ * proved by identity: the version, LKG and source it names. That is the whole
+ * proof the database leaves open. `assert_civic_data_promotion_integrity`
+ * (migration 0026) refuses every pointer write whose payload is not that
+ * candidate's read model, whose receipt is not that candidate's receipt, whose
+ * candidate is not PROMOTED, or whose LKG is not the current version, and the
+ * pointer is never rewritten in place. So a pointer naming the candidate proved
+ * above carries exactly its payload and receipt.
+ *
+ * A success on a contract WITHOUT a Reader projection (`readerProjection:
+ * null`, the CISA dotgov registry) still reads the new version through the full
+ * proven read: no Reader readback ever proves those versions, so this is their
+ * only whole proof. Every other new version is re-proved by the pass's Reader
+ * repair, which reads it through the typed Reader with the full proof.
+ *
+ * A held outcome moved nothing: the pointer must still name the LKG the
+ * receipt reports, which was proved when it was promoted, and never the refused
+ * candidate. The full reads this replaced moved the pointer's payload and its
+ * candidate on every settle; the whole-row reads before them moved 66.9 MB for
+ * one held NJ roll-call settle on 2026-09-23, against a 67.11 MB response cap.
  */
 export async function durableRoutineRunnerReceiptIssue(
   receipt: RoutineRunnerReceipt,
@@ -342,12 +379,24 @@ export async function durableRoutineRunnerReceiptIssue(
         ) return `canonical ${expected.recordClass}:${expected.scope} does not carry the reported confirmation of ${receipt.candidateId}`;
         return null;
       }
-      const readback = await readPromotedCivicData(expected.recordClass, expected.scope, { store, bypassCache: true });
+      if (!readerRepairReprovesVersion(expected)) {
+        const readback = await readPromotedCivicData(expected.recordClass, expected.scope, { store, bypassCache: true });
+        if (
+          readback.kind !== "PROMOTED" ||
+          readback.metadata.versionId !== receipt.candidateId ||
+          readback.metadata.sourceId !== expected.sourceId ||
+          canonicalCivicDataJson(readback.projection.receipt) !== canonicalCivicDataJson(durableReceipt)
+        ) return `canonical ${expected.recordClass}:${expected.scope} does not prove the reported GOOD candidate`;
+        return null;
+      }
+      const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
       if (
-        readback.kind !== "PROMOTED" ||
-        readback.metadata.versionId !== receipt.candidateId ||
-        readback.metadata.sourceId !== expected.sourceId ||
-        canonicalCivicDataJson(readback.projection.receipt) !== canonicalCivicDataJson(durableReceipt)
+        pointer === null ||
+        pointer.recordClass !== expected.recordClass ||
+        pointer.scope !== expected.scope ||
+        pointer.versionId !== receipt.candidateId ||
+        pointer.lastKnownGoodVersionId !== receipt.candidateId ||
+        pointer.sourceId !== expected.sourceId
       ) return `canonical ${expected.recordClass}:${expected.scope} does not prove the reported GOOD candidate`;
       return null;
     }
@@ -356,12 +405,14 @@ export async function durableRoutineRunnerReceiptIssue(
     if (receipt.lastKnownGoodVersion === null) {
       return pointer === null ? null : "the held receipt omitted the canonical last-known-good pointer";
     }
-    const lkg = await readPromotedCivicData(expected.recordClass, expected.scope, { store, bypassCache: true });
     if (
-      lkg.kind !== "PROMOTED" ||
-      lkg.metadata.versionId !== receipt.lastKnownGoodVersion ||
-      lkg.metadata.sourceId !== expected.sourceId ||
-      lkg.metadata.versionId === receipt.candidateId
+      pointer === null ||
+      pointer.recordClass !== expected.recordClass ||
+      pointer.scope !== expected.scope ||
+      pointer.versionId !== receipt.lastKnownGoodVersion ||
+      pointer.lastKnownGoodVersionId !== pointer.versionId ||
+      pointer.sourceId !== expected.sourceId ||
+      pointer.versionId === receipt.candidateId
     ) return "the held receipt does not match an unchanged, proof-valid canonical LKG pointer";
     return null;
   } catch (error) {

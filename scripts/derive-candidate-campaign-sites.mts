@@ -25,12 +25,11 @@
  * leaves the last known good sites live. The profile Reader composes the
  * published sites with `candidate-profiles` on its next read.
  */
-import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { DERIVED_CAMPAIGN_SITES_CONTRACT_ID, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   derivedCampaignSitesFailedCandidate,
@@ -39,10 +38,9 @@ import {
   type HeldVerifyingRead,
   type PublishableCampaignSiteApproval,
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
+import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { indexVault, readHeldBytes, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
@@ -63,22 +61,11 @@ assertWriteAllowed("a routine civic data candidate/version promotion");
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
 const PROFILES = requiredManualProductionContract("candidate-profiles");
 
+/* An unchanged pass (the same approvals, the same bytes, the same profiles) is receipted on the pointed version, never re-promoted (R23). */
 async function finish(candidate: RoutineCandidate): Promise<void> {
-  const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CAMPAIGN_SITES_CONTRACT_ID, candidate, now);
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: DERIVED_CAMPAIGN_SITES_CONTRACT_ID,
-    candidateId: candidate.id,
-    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-    state: outcome.candidate.state,
-    decision: outcome.candidate.receipt?.decision ?? null,
-    promotedVersion: outcome.promoted?.versionId ?? null,
-    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
-  if (!outcome.promoted) process.exitCode = 2;
+  await promoteDerivedCandidate(store, DERIVED_CAMPAIGN_SITES_CONTRACT_ID, candidate, now);
 }
 
 /** Every APPROVED campaign-site record in the pipeline log, narrowed in the database to approvals only. */
@@ -122,17 +109,14 @@ async function main(): Promise<void> {
   const profilesRead = await readPromotedCivicData<{ readonly links?: { readonly links?: Readonly<Record<string, CandidateLinksShape>> } }>(
     PROFILES.recordClass, PROFILES.scope, { store, bypassCache: true, now },
   );
-  const profiles = profilesRead.kind === "PROMOTED" && profilesRead.metadata.versionId !== null && profilesRead.metadata.promotedAt !== null
-    ? {
-        input: {
-          kind: "PROMOTED_VERSION" as const, recordClass: PROFILES.recordClass, scope: PROFILES.scope, versionId: profilesRead.metadata.versionId,
-          readModelSha256: sha256(canonicalCivicDataJson(profilesRead.value)), promotedAt: profilesRead.metadata.promotedAt,
-        },
-        links: profilesRead.value.links?.links ?? {},
-      }
+  const profilesInput = profilesRead.kind === "PROMOTED"
+    ? promotedInputRef(PROFILES.recordClass, PROFILES.scope, profilesRead.metadata.versionId, profilesRead.value, profilesRead.metadata.promotedAt)
+    : null;
+  const profiles = profilesRead.kind === "PROMOTED" && profilesInput !== null && profilesInput.kind === "PROMOTED_VERSION"
+    ? { input: profilesInput, links: profilesRead.value.links?.links ?? {} }
     : profilesRead.kind === "NOT_RECORDED"
       ? null
-      : { unreadable: `${profilesRead.kind}${"detail" in profilesRead ? `: ${profilesRead.detail}` : ""}` };
+      : { unreadable: `${profilesRead.kind}${"detail" in profilesRead ? `: ${profilesRead.detail}` : ": the promoted version names no version or promotion time"}` };
   let held = new Map<string, HeldVerifyingRead>();
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {

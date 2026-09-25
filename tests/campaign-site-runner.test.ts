@@ -40,7 +40,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { manualProjectionCandidate, type CandidateProfilesProjection, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedAuthorityFor } from "../lib/civic-data/derived-door.ts";
 import { refreshCandidateProfilesFromPromoted } from "../lib/civic-data/manual-read-models.ts";
 import {
@@ -186,12 +186,10 @@ async function profilesStore() {
   const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-AZ+US-NH+US-NJ:2026-supported-candidates", { store, bypassCache: true, now: T2 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("unreachable");
-  const profiles = {
-    input: { kind: "PROMOTED_VERSION" as const, recordClass: "CANDIDATE_PROFILE", scope: "US-AZ+US-NH+US-NJ:2026-supported-candidates", versionId: read.metadata.versionId!,
-      readModelSha256: sha256(canonicalCivicDataJson(read.value)), promotedAt: read.metadata.promotedAt! },
-    links: read.value.links.links,
-  };
-  return { store, profiles };
+  const input = promotedInputRef("CANDIDATE_PROFILE", "US-AZ+US-NH+US-NJ:2026-supported-candidates", read.metadata.versionId, read.value, read.metadata.promotedAt);
+  assert.equal(input?.kind, "PROMOTED_VERSION");
+  if (input?.kind !== "PROMOTED_VERSION") throw new Error("unreachable");
+  return { store, profiles: { input, links: read.value.links.links } };
 }
 
 test("a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it", async (t) => {
@@ -227,6 +225,11 @@ test("a runner cycle over held results publishes a verified site through the der
   assert.equal(outcome.readerReadback?.status, "PASS");
   const derived = pass.candidate.retrieval.derived!.inputs;
   assert.ok(derived.some((i) => i.kind === "PIPELINE_APPROVAL") && derived.some((i) => i.kind === "VAULTED_EVIDENCE") && derived.some((i) => i.kind === "PROMOTED_VERSION"));
+
+  /* The next hourly pass finds nothing new: it is receipted on the pointed version (R23), never re-promoted. */
+  const nextPass = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held, profiles, gateOpen: true, now: "2026-09-25T00:05:00.000Z" });
+  const unchanged = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", nextPass.candidate, "2026-09-25T00:05:00.000Z", undefined, { confirmUnchanged: true });
+  assert.equal(unchanged.confirmed?.versionId, outcome.promoted!.versionId, `${unchanged.candidate.state}`);
 
   /* The Reader: the profile preload reads the derived store beside the profiles, and the campaign slot shows the site. */
   await refreshCandidateProfilesFromPromoted({ store, bypassCache: true, now: PUBLISH });

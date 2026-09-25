@@ -1,6 +1,8 @@
 import { lengthRuleForPrompt } from "./length-contract.ts";
+import { writerSelection } from "./writer-selection.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
-import { resolveAskEffort, resolveAskModel, type AskEffort } from "./model.ts";
+import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelEnv } from "./model.ts";
+import type { ValidationVerdict } from "./validate.ts";
 import {
   SYNTHESIS_CACHE_TTL,
   askCallerKey,
@@ -92,8 +94,8 @@ export type SynthesisOutcome =
        * answer from before a model switch is incomparable to every one after.
        */
       model: string;
-      /** The resolved effort. Recorded for the same reason as `model`. */
-      effort: AskEffort;
+      /** The resolved effort. Recorded for the same reason as `model`. Null for a model that takes none. */
+      effort: AskEffort | null;
       ms: number;
       /**
        * What the API reported about cache activity on THIS call. The only
@@ -162,6 +164,8 @@ export function synthesisPrompt(pack: EvidencePack): string {
     "- Use only the supplied records. You have no other source. If something is not in the records, you do not know it.",
     "- Never state a fact about a government that the records do not contain. Do not fill a gap with what is likely, typical, or what you may remember.",
     "- The named gaps are part of the evidence. Say them plainly when they matter to the answer.",
+    ...(writerSelection(pack).note
+      ? ["- You were given a selection of the per-member vote rows; writerSelection says how many exist. Never say or imply that the others were not published, not recorded or not available."] : []),
     ...(pack.records.some(record => record.meetingListingIdentity?.uniqueMeetingCount === null)
       ? ["- Calendar listings with uniqueMeetingCount:null have an unresolved distinct-meeting count. State their source-listing count and the identity gap; never call that number a count of meetings or merge their agendas, minutes or votes."] : []),
     "- A gap marked OURS is about us — say we have not recorded it. A gap marked THEIRS is about the government — say what they have not published. Never swap these.",
@@ -228,10 +232,14 @@ export function synthesisSources(pack: Pick<EvidencePack, "records">): { n: numb
   return urls.map((url, index) => ({ n: index + 1, url }));
 }
 
-/** The cited source numbers, as the URLs they name; an unknown number is never dropped. */
+/**
+ * The cited source numbers, as the URLs they name; an unknown number is never
+ * dropped. Numbered over the writer's selection — the sources list the model
+ * was actually shown.
+ */
 export function citedUrlsFrom(pack: Pick<EvidencePack, "records">, cited: unknown): string[] {
   if (!Array.isArray(cited)) return [];
-  const sources = synthesisSources(pack);
+  const sources = synthesisSources(writerSelection(pack));
   const out: string[] = [];
   for (const value of cited) {
     const source = typeof value === "number" && Number.isInteger(value) ? sources.find((entry) => entry.n === value) : undefined;
@@ -252,13 +260,17 @@ export function citedUrlsFrom(pack: Pick<EvidencePack, "records">, cited: unknow
  * side fails the partition test rather than vanishing from the model's view.
  */
 function synthesisFields(pack: EvidencePack): Record<string, unknown> {
+  /* The writer reads a bounded selection of the records (lib/ask/writer-selection.ts);
+     the reader and the validator keep the whole pack. */
+  const selection = writerSelection(pack);
   return {
     question: pack.question,
     whatTheyAreAskingFor: pack.intent,
     timeframe: pack.temporal,
     subject: pack.subject,
-    records: pack.records,
-    sources: synthesisSources(pack),
+    records: selection.records,
+    writerSelection: selection.note,
+    sources: synthesisSources(selection),
     /* Whose and the sentence only: a gap's machine code is never part of what the model reads. */
     namedGaps: pack.gaps.map(gapWords),
     whatWasSearched: pack.denominators,
@@ -272,6 +284,7 @@ function synthesisFields(pack: EvidencePack): Record<string, unknown> {
 export const SYNTHESIS_CONTEXT_FIELDS = [
   "subject",
   "records",
+  "writerSelection",
   "sources",
   "namedGaps",
   "whatWasSearched",
@@ -462,8 +475,13 @@ export function synthesisRequestBody(
      * — `{type: "enabled", budget_tokens: N}` — is REMOVED on this model
      * generation and answers 400. There is no thinking budget to tune here;
      * `effort` below is the whole of the depth control.
+     *
+     * 2026-09-25: a model of the Haiku 4.5 generation (the fast writer,
+     * `lib/ask/model.ts`) accepts neither adaptive thinking nor `effort` —
+     * both are a 400 there — so its request carries neither and it writes
+     * without thinking. `askModelTakesEffort` is the one place that decides.
      */
-    thinking: { type: "adaptive" },
+    ...(askModelTakesEffort(shape.model) ? { thinking: { type: "adaptive" } } : {}),
     output_config: {
       /*
        * PINNED, never omitted. An omitted `effort` defaults to `high` on the
@@ -472,7 +490,7 @@ export function synthesisRequestBody(
        * by accident. The value is `lib/ask/model.ts`'s resolved one so the
        * override and the recorded value cannot disagree.
        */
-      effort: shape.effort ?? resolveAskEffort(),
+      ...(askModelTakesEffort(shape.model) ? { effort: shape.effort ?? resolveAskEffort() } : {}),
       format: { type: "json_schema", schema: synthesisSchema() },
     },
     /*
@@ -510,9 +528,69 @@ export interface SynthesizeOptions {
   callerKey?: AskCallerKey;
 }
 
+/**
+ * **ONE WRITER, ONE CALL.** The model and its effort arrive as a RUNG of the
+ * declared ladder (`synthesisLadder`), never from a caller's options: no
+ * route, caller key, reader or request header has an expression that could
+ * select a model. `null` effort is a model that takes none (Haiku 4.5).
+ */
+export interface SynthesisRung {
+  model: string;
+  effort: AskEffort | null;
+  /** FAST writes first; FRONTIER only after the fast answer failed a check or could not be had. */
+  role: "FAST" | "FRONTIER";
+  /** The rung's whole budget, request to parsed reply. */
+  timeoutMs: number;
+}
+
+/** The fast writer's budget: past it, the frontier writer is asked instead. Measured 1.6-4.5 s on 2026-09-25. */
+export const ASK_FAST_WRITER_TIMEOUT_MS = 6_000;
+
+/** The frontier rung alone — what `synthesizeAnswer` calls, and the ladder's last rung. */
+export function frontierRung(env: AskModelEnv = process.env): SynthesisRung {
+  return { model: resolveAskModel(env), effort: resolveAskEffort(env), role: "FRONTIER", timeoutMs: ASK_SYNTHESIS_TIMEOUT_MS };
+}
+
+/**
+ * **THE WRITING LADDER: CHEAPEST SUITABLE FIRST, THE FRONTIER ONLY FOR A
+ * RECORDED REASON.** (2026-09-25, the Ask latency repair; the repo's MW-033
+ * pattern.)
+ *
+ * Measured that day on production read-only packs (streaming; first answer
+ * token / total): Haiku 4.5 0.8-2.5 s / 1.6-4.5 s, Sonnet 5 1.1-2.1 s /
+ * 3.2-6.6 s, Opus 5 1.3-2.5 s / 3.4-5.6 s. Sonnet 5 was slower than Opus 5 on
+ * half the packs, so it is not a rung. The fast writer is `lib/ask/model.ts`'s
+ * `resolveAskFastWriter()`; `WTP_ASK_FAST_MODEL=off` collapses the ladder to
+ * the frontier alone without a deploy.
+ */
+export function synthesisLadder(env: AskModelEnv = process.env): SynthesisRung[] {
+  const frontier = frontierRung(env);
+  const fast = resolveAskFastWriter(env);
+  if (!fast || fast === frontier.model) return [frontier];
+  return [{ model: fast, effort: askModelTakesEffort(fast) ? "low" : null, role: "FAST", timeoutMs: ASK_FAST_WRITER_TIMEOUT_MS }, frontier];
+}
+
+/** The ladder as strings for a cache key: a changed rung is a new key. */
+export function ladderIdentity(ladder: readonly SynthesisRung[]): { model: string; effort: string } {
+  return { model: ladder.map((rung) => rung.model).join(">"), effort: ladder.map((rung) => rung.effort ?? "none").join(">") };
+}
+
+/**
+ * The frontier writer alone, as before the ladder: one call on the resolved
+ * Ask model. The production route calls `synthesizeWithLadder`, whose last
+ * rung is exactly this.
+ */
 export async function synthesizeAnswer(
   pack: EvidencePack,
   options: SynthesizeOptions = {},
+): Promise<SynthesisOutcome> {
+  return synthesizeOnRung(pack, frontierRung(), options);
+}
+
+async function synthesizeOnRung(
+  pack: EvidencePack,
+  rung: SynthesisRung,
+  options: SynthesizeOptions,
 ): Promise<SynthesisOutcome> {
   const started = Date.now();
   const elapsed = () => Date.now() - started;
@@ -535,14 +613,11 @@ export async function synthesizeAnswer(
   }
 
   /*
-   * **RESOLVED ONCE, HERE, AND USED FOR BOTH THE REQUEST AND THE RECORD.**
-   *
-   * Reading the environment twice — once to build the body and once to write
-   * the outcome — is how a record comes to disagree with what was actually
-   * sent. One read, one pair of values, one truth.
+   * **RESOLVED ONCE, AND USED FOR BOTH THE REQUEST AND THE RECORD.** The rung
+   * was resolved from the environment once; the same pair is what is sent and
+   * what the outcome records, so a record can never disagree with the request.
    */
-  const model = resolveAskModel();
-  const effort = resolveAskEffort();
+  const { model, effort } = rung;
 
   const impl = options.fetchImpl ?? fetch;
   try {
@@ -554,21 +629,16 @@ export async function synthesizeAnswer(
         "anthropic-version": "2023-06-01",
       },
       /*
-       * **THE MODEL IS RESOLVED FROM `lib/ask/model.ts` AND NOTHING ELSE
-       * READS IT IN.**
-       *
-       * `options` is not consulted for a model here and carries no field that
-       * could supply one. One model for all Ask traffic is not a convention
-       * this line follows; it is the only expression this line can write. The
-       * `WTP_ASK_MODEL` override is a DEPLOYMENT-wide value read once above —
-       * it cannot vary by caller, by reader or by request, so it does not
-       * fragment the model-scoped prompt cache.
+       * **THE MODEL COMES FROM THE DECLARED LADDER AND NOTHING ELSE.**
+       * `options` is not consulted for a model and carries no field that could
+       * supply one. The overrides are DEPLOYMENT-wide values read once — they
+       * cannot vary by caller, by reader or by request.
        */
-      body: JSON.stringify(synthesisRequestBody(pack, { model, cached: true, effort })),
+      body: JSON.stringify(synthesisRequestBody(pack, { model, cached: true, ...(effort ? { effort } : {}) })),
       // A bounded wait (2026-09-24). Past the bound the records still ship as
-      // the structured answer; an unbounded call could outlive the platform
-      // limit and deliver the reader nothing at all.
-      signal: AbortSignal.timeout(ASK_SYNTHESIS_TIMEOUT_MS),
+      // the structured answer (or the next rung writes); an unbounded call
+      // could outlive the platform limit and deliver the reader nothing at all.
+      signal: AbortSignal.timeout(rung.timeoutMs),
     });
     if (!response.ok) {
       /* The status, and Anthropic's own error TYPE token if it sent one. The
@@ -622,4 +692,71 @@ export async function synthesizeAnswer(
       detail: error instanceof Error ? error.name : "threw a non-Error",
     };
   }
+}
+
+/** One writer's try, as the trace records it. Facts about our machinery only. */
+export interface LadderAttempt {
+  model: string;
+  role: SynthesisRung["role"];
+  ms: number;
+  result: "PASSED" | "FAILED" | "UNAVAILABLE";
+  /** The validator's failed checks, for a FAILED answer. */
+  failed?: string[];
+  /** Why no answer was had, for an UNAVAILABLE one. */
+  detail?: string;
+}
+
+export interface LadderResult {
+  /** The outcome whose answer the route settles — the last writer that ran. */
+  outcome: SynthesisOutcome;
+  /** That outcome's verdict from the caller's validator; null when nothing was written. */
+  verdict: ValidationVerdict | null;
+  attempts: LadderAttempt[];
+  /** Why the frontier writer ran, or null when the fast writer's answer stood. */
+  escalation: string | null;
+}
+
+/**
+ * **THE FAST WRITER FIRST; THE FRONTIER ONLY WHEN ITS ANSWER FAILS A CHECK.**
+ *
+ * Each rung's answer faces the caller's validator — the same one, over the
+ * whole pack. The first answer that PASSES is the answer. A FAILED answer is
+ * discarded, never repaired, and the next rung writes; the reason is recorded.
+ * When the last rung's answer fails too, that outcome and verdict are returned
+ * and the caller settles it exactly as it always has (fail closed).
+ *
+ * A structural refusal — an empty pack, no key, the spend ceiling — ends the
+ * ladder at once: the next rung would meet the same refusal. A transport
+ * failure or timeout on the fast rung is escalated, because the frontier writer
+ * may still answer.
+ */
+export async function synthesizeWithLadder(
+  pack: EvidencePack,
+  options: SynthesizeOptions & {
+    validate: (answer: string, citedUrls: readonly string[]) => ValidationVerdict;
+    /** Test seam only; production reads the declared ladder. */
+    ladder?: readonly SynthesisRung[];
+  },
+): Promise<LadderResult> {
+  const ladder = options.ladder ?? synthesisLadder();
+  const attempts: LadderAttempt[] = [];
+  let escalation: string | null = null;
+  let last: LadderResult | null = null;
+  for (const [index, rung] of ladder.entries()) {
+    const outcome = await synthesizeOnRung(pack, rung, options);
+    const hasNext = index < ladder.length - 1;
+    if (outcome.kind === "UNAVAILABLE") {
+      attempts.push({ model: rung.model, role: rung.role, ms: outcome.ms, result: "UNAVAILABLE", detail: outcome.detail ? `${outcome.why}: ${outcome.detail}` : outcome.why });
+      last = { outcome, verdict: null, attempts, escalation };
+      if (outcome.why !== "error" || !hasNext) return last;
+      escalation = `${rung.role.toLowerCase()}-writer-unavailable: ${outcome.detail ?? outcome.why}`;
+      continue;
+    }
+    const verdict = options.validate(outcome.answer, outcome.citedUrls);
+    attempts.push({ model: rung.model, role: rung.role, ms: outcome.ms, result: verdict.kind, ...(verdict.kind === "FAILED" ? { failed: verdict.failed } : {}) });
+    last = { outcome, verdict, attempts, escalation };
+    if (verdict.kind === "PASSED" || !hasNext) return last;
+    escalation = `${rung.role.toLowerCase()}-writer-failed-validation: ${verdict.failed.join(", ")}`;
+  }
+  return last ?? { outcome: { kind: "UNAVAILABLE", why: "error", ms: 0, detail: "no writer declared" }, verdict: null, attempts, escalation };
 }

@@ -117,6 +117,23 @@ export interface AskTrace {
       cacheCreationInputTokens: number;
       uncachedInputTokens: number;
     };
+    /**
+     * **EVERY WRITER THAT RAN, IN ORDER.** (2026-09-25, the writing ladder,
+     * `lib/ask/synthesize.ts`.) The fast writer first; the frontier writer
+     * only after the fast answer failed validation or could not be had. Each
+     * entry is the model, its role, its time and its verdict — a failed
+     * check's names, or an unavailable call's status. `model` above is the
+     * writer whose answer was settled.
+     */
+    writers?: { model: string; role: "FAST" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
+    /** Why the frontier writer ran: the fast writer's failed checks, or why it could not answer. */
+    escalation?: string;
+    /**
+     * What the writer was NOT sent (`lib/ask/writer-selection.ts`): per-member
+     * vote rows beyond the bound, by whole roll call. The reader's records and
+     * the pack's denominators still carry every row.
+     */
+    writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number };
   };
   validation: {
     ran: boolean;

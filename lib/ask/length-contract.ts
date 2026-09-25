@@ -52,6 +52,21 @@ export const ANSWER_LENGTH_CONTRACT = {
   maxSentences: 5,
   /** Five long sentences. The second gate, because a count alone passes a wall. */
   maxCharacters: 700,
+  /**
+   * **THE TARGET THE WRITER AIMS AT, BELOW THE LIMIT IT IS HELD TO.**
+   * (2026-09-25, the Ask latency repair.)
+   *
+   * Measured on production read-only data that day, 9 of 16 model answers
+   * across Haiku 4.5, Sonnet 5 and Opus 5 were rejected for length ALONE —
+   * 703 to 1,138 characters, or six and seven sentences — and discarded, the
+   * reader getting the records without prose. A model told "at most 700" writes
+   * to 700 and over it. Every generated token is also time the reader waits
+   * (~10 ms each), so the answer is asked to be short and the limit stays where
+   * it is: the validator still rejects past `maxSentences` / `maxCharacters`,
+   * and the records below the answer carry the detail, as ASK-19 intended.
+   */
+  targetSentences: 3,
+  targetCharacters: 450,
 } as const;
 
 export interface AnswerLength {
@@ -103,7 +118,9 @@ export function overLengthBudget(answer: string): string | null {
  */
 export function lengthRuleForPrompt(): string {
   return (
-    `- Length is a HARD LIMIT, not a preference: at most ` +
+    `- Aim for ${ANSWER_LENGTH_CONTRACT.targetSentences} sentences or fewer and about ` +
+    `${ANSWER_LENGTH_CONTRACT.targetCharacters} characters. ` +
+    `Length is a HARD LIMIT, not a preference: at most ` +
     `${ANSWER_LENGTH_CONTRACT.maxSentences} sentences and at most ` +
     `${ANSWER_LENGTH_CONTRACT.maxCharacters} characters. An answer over either limit is ` +
     `discarded and the reader is shown the records instead, so a longer answer is not a ` +

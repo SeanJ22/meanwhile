@@ -1,11 +1,14 @@
 import { normalizeName } from "../routing/exact-name.ts";
 import {
   bindNamedEntity,
+  classPhraseIn,
+  COMMON_QUESTION_NOUNS,
+  distinctiveTokens,
   GENERIC_CIVIC_TOKENS,
   type BindableEntity,
 } from "../routing/named-entity.ts";
 import { decideNamedBody } from "./body-confirmation.ts";
-import { unavailableInterpretation, type AskInterpretation } from "./intent.ts";
+import { unavailableInterpretation, type AskIntent, type AskInterpretation } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import { resolveInterpretation } from "./resolve.ts";
@@ -16,45 +19,56 @@ import type { AskSubjectRef } from "./subject.ts";
  * IT.** (2026-09-25, the Ask latency repair.)
  *
  * Measured on production 2026-09-25: a new question on a warm instance spent
- * 2.4-3.3 s in the interpretation rung before any record was read. For
+ * 2.0-3.3 s in the interpretation rung before any record was read. For
  * *"When does the Mesa City Council meet next?"* the model returned exactly
  * what the product's own binder and tense reader already knew — the body the
- * reader named (bound on the whole question, basis `WHOLE_QUESTION`), the
- * intent `MEETING_TIME` and the tense `NEXT`. Sean's bar is three seconds from
- * the question to a usable answer, and that call alone was most of it.
+ * reader named (bound on the whole question), the intent `MEETING_TIME` and
+ * the tense `NEXT`. Sean's bar is three seconds from the question to a usable
+ * answer, and that call alone was most of it.
  *
- * So a small, closed set of question SHAPES is read here, in code, and the
- * model rung is skipped for them. The set is deliberately narrow — narrower
- * than what a model could read — because every question it admits must get
- * the same binding, the same tense and the same retrieval the model path would
- * have produced:
+ * So a closed set of question SHAPES is read here, in code, and the model rung
+ * is skipped for them. The set is deliberately narrow — narrower than what a
+ * model could read — because every question it admits must get the same
+ * binding, the same tense and the same retrieval the model path would have
+ * produced:
  *
  * 1. **The whole question matches one canonical shape** (below), anchored at
- *    both ends. Nothing may sit outside the shape's own words and the body's
- *    name: "when does the council meet next about the budget" does not match,
- *    so a qualifier the shape would ignore can never be silently dropped.
+ *    both ends. Nothing may sit outside the shape's own words and the name:
+ *    "when does the council meet next about the budget" does not match, so a
+ *    qualifier the shape would ignore can never be silently dropped.
  * 2. **The name slot is only a name.** Every word in it is either a word of
- *    the bound body's own name or generic civic vocabulary ("city",
- *    "council", "board"...). Another government, a person or a topic in the
- *    slot fails the shape.
- * 3. **The slot, the whole question and the named-body decision all bind the
- *    SAME body**, each through the product's own binder. The named-body
- *    decision must bind on the reader's words alone — the branch that never
- *    consults a model mention — so what the route decides next is identical
- *    whatever a model would have said.
+ *    the bound subject's own name or generic civic vocabulary ("city",
+ *    "council", "board"...), and it binds the SAME subject the whole question
+ *    binds. No second subject is named anywhere in the question — so no model
+ *    mention could bind something else first.
+ * 3. **The subject is the kind the shape asks about** (a body for "when does
+ *    X meet", a ballot measure for "explain X", a person for "who is X"), and
+ *    for a body the route's named-body decision binds the same body on the
+ *    reader's words alone — the branch that never consults a model mention.
+ * 4. **The tense is one the retrieval reads identically either way.** The
+ *    sitting shapes use the deterministic tense (it matched the model on
+ *    every question of the 2026-09-25 agreement check); the named-subject
+ *    shapes admit only a question with no tense word at all, whose selection
+ *    is the same `ANY` whatever intent a model would name.
  *
- * Anything else — a pronoun, an unmatched phrasing, an ambiguous or unheld
- * name, a person, a ballot measure, a confirmation round-trip — returns null
- * and the model reads the question exactly as before. A null is never a
- * verdict about the question; it only means "not settled here".
+ * Anything else — a pronoun, an unmatched phrasing, an ambiguous, unheld or
+ * second name, a class phrase on a non-body, a tense word on a named-subject
+ * shape — returns null and the model reads the question exactly as before. A
+ * null is never a verdict about the question; it only means "not settled here".
  */
 
+/** The shapes about one body's sittings — the ones `lib/ask/sitting-answer.ts` can compose. */
+export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
 /** The closed set of question shapes this module reads. */
-export type LexicalShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
+export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD";
+
+type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
 interface ShapePattern {
   readonly shape: LexicalShape;
-  /** Anchored, over `normalizeName(question)`; the ONE capturing group is the body's name. */
+  /** The kind of subject the shape asks about; any other binding refuses it. */
+  readonly kind: SubjectKind;
+  /** Anchored, over `normalizeName(question)`; the ONE capturing group is the name. */
   readonly pattern: RegExp;
 }
 
@@ -71,51 +85,103 @@ const RECENTLY = "(?: (?:recently|lately|last time|at (?:its|their|the) (?:last|
 
 const SHAPES: readonly ShapePattern[] = [
   /* MEETING_TIME — when a named body sits. */
-  { shape: "MEETING_TIME", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:(?:next|last|first) )?(?:meet|convene|sit)${WHEN_TAIL}$`) },
-  { shape: "MEETING_TIME", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:hold|have) (?:its|their) (?:next|last|first) (?:meeting|session)$`) },
-  { shape: "MEETING_TIME", pattern: /^when (?:is|s|was) (?:the )?(?:next|upcoming|last|latest|most recent|previous) (.+?) (?:meeting|session)$/ },
-  { shape: "MEETING_TIME", pattern: /^when (?:is|s|was) (?:the )?(.+?)(?: s)? (?:next|upcoming|last|latest|most recent|previous) (?:meeting|session)$/ },
-  { shape: "MEETING_TIME", pattern: new RegExp(`^what (?:time|day|date) (?:does|do|will|is) (?:the )?(.+?) (?:(?:next )?meet|meeting)${WHEN_TAIL}$`) },
-  { shape: "MEETING_TIME", pattern: /^what (?:is|s) the (?:date|time|date and time|day) of the (?:next|upcoming|last|latest|most recent) (.+?) (?:meeting|session)$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:(?:next|last|first) )?(?:meet|convene|sit)${WHEN_TAIL}$`) },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:hold|have) (?:its|their) (?:next|last|first) (?:meeting|session)$`) },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s|was) (?:the )?(?:next|upcoming|last|latest|most recent|previous) (.+?) (?:meeting|session)$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s|was) (?:the )?(.+?)(?: s)? (?:next|upcoming|last|latest|most recent|previous) (?:meeting|session)$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^what (?:time|day|date) (?:does|do|will|is) (?:the )?(.+?) (?:(?:next )?meet|meeting)${WHEN_TAIL}$`) },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^what (?:is|s) the (?:date|time|date and time|day) of the (?:next|upcoming|last|latest|most recent) (.+?) (?:meeting|session)$/ },
   /* BODY_AGENDA — what is on a named body's own docket. */
-  { shape: "BODY_AGENDA", pattern: /^what (?:s|is|are|was|were) on (?:the )?(.+?)(?: s)? (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:meeting )?(?:agenda|docket)$/ },
-  { shape: "BODY_AGENDA", pattern: /^what (?:s|is|are|was|were) on the (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:agenda|docket) (?:for|of|at) (?:the )?(.+?)(?: (?:next )?meeting)?$/ },
+  { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on (?:the )?(.+?)(?: s)? (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:meeting )?(?:agenda|docket)$/ },
+  { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on the (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:agenda|docket) (?:for|of|at) (?:the )?(.+?)(?: (?:next )?meeting)?$/ },
   /* MEETING_OUTCOME — what a named body decided, or how it voted. */
-  { shape: "MEETING_OUTCOME", pattern: new RegExp(`^what did (?:the )?(.+?) (?:decide|decide on|vote on|approve|pass|adopt)${RECENTLY}$`) },
-  { shape: "MEETING_OUTCOME", pattern: new RegExp(`^how did (?:the )?(.+?) vote${RECENTLY}$`) },
+  { shape: "MEETING_OUTCOME", kind: "BODY", pattern: new RegExp(`^what did (?:the )?(.+?) (?:decide|decide on|vote on|approve|pass|adopt)${RECENTLY}$`) },
+  { shape: "MEETING_OUTCOME", kind: "BODY", pattern: new RegExp(`^how did (?:the )?(.+?) vote${RECENTLY}$`) },
+  /* BODY_ROSTER — who sits on a named body. Before PERSON_RECORD: "who is on X" is not "who is X". */
+  { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who (?:sits|serves) on (?:the )?(.+?)$/ },
+  { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who (?:is|s|are) on (?:the )?(.+?)$/ },
+  { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who are the members of (?:the )?(.+?)$/ },
+  /* BODY_CIVICS — what a named body does. */
+  { shape: "BODY_CIVICS", kind: "BODY", pattern: /^what does (?:the )?(.+?) do$/ },
+  /* MEASURE_EXPLAIN — what a named ballot measure means. */
+  { shape: "MEASURE_EXPLAIN", kind: "MEASURE", pattern: /^explain (?:the )?(.+?)(?: to me)?$/ },
+  { shape: "MEASURE_EXPLAIN", kind: "MEASURE", pattern: /^what (?:is|s) (?:the )?(.+?)$/ },
+  { shape: "MEASURE_EXPLAIN", kind: "MEASURE", pattern: /^what (?:does|would) (?:the )?(.+?) (?:do|mean|change)$/ },
+  { shape: "MEASURE_EXPLAIN", kind: "MEASURE", pattern: /^tell me about (?:the )?(.+?)$/ },
+  /* CONTEST_FIELD — who is on the ballot for a named contest. */
+  { shape: "CONTEST_FIELD", kind: "CONTEST", pattern: /^who (?:is|s|are) running for (?:the )?(.+?)$/ },
+  /* PERSON_RECORD — who a named person is, what they have done, how they have voted. */
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^who (?:is|s) (.+?)$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what has (.+?) done$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^how has (.+?) voted$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^tell me about (.+?)$/ },
 ];
+
+const SITTING_SHAPES: ReadonlySet<LexicalShape> = new Set<LexicalShape>(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
+
+/**
+ * The intent each named-subject shape carries: what `claude-opus-5` returned
+ * for the same question in the 2026-09-25 agreement checks — PERSON_RECORD
+ * for a roster question (all three models measured), for "who is running for
+ * governor?", "what has Katie Hobbs done?" and "who is Juan Ciscomani?";
+ * MEASURE for "explain Prop 141"; all with no tense. BODY_CIVICS's CIVICS is
+ * the prompt's own definition (its one live check errored). For a body, any
+ * of these selects the same `ANY` sitting; for the others no sitting is
+ * selected — the intent reaches only the writer's `whatTheyAreAskingFor`.
+ */
+const SHAPE_INTENT: Readonly<Record<Exclude<LexicalShape, SittingShape>, AskIntent>> = {
+  BODY_ROSTER: "PERSON_RECORD",
+  BODY_CIVICS: "CIVICS",
+  MEASURE_EXPLAIN: "MEASURE",
+  CONTEST_FIELD: "PERSON_RECORD",
+  PERSON_RECORD: "PERSON_RECORD",
+};
 
 const SLOT_PRONOUNS: ReadonlySet<string> = new Set([
   "they", "them", "their", "it", "its", "this", "that", "these", "those", "he", "she", "his", "her", "my", "our", "your",
+  "i", "me", "we", "you", "him", "there",
 ]);
 
 /**
- * The shape of this question, and the words that name its body, or null.
- *
- * A pure reading of the words: no binding happens here. `MEETING_OUTCOME`
- * additionally requires the route's own outcome detector to agree, and
- * `BODY_AGENDA` requires that it does NOT — the route asks the same two
- * questions when it decides what to retrieve, so the shape can never disagree
- * with retrieval about which question was asked.
+ * Every shape this question matches, in declaration order, with the words in
+ * its name slot. A pure reading of the words: no binding happens here. The
+ * sitting shapes also keep the route's own outcome detector's reading —
+ * `MEETING_OUTCOME` requires it, `BODY_AGENDA` / `MEETING_TIME` require its
+ * absence — so a shape can never disagree with retrieval about which question
+ * was asked.
  */
-export function lexicalQuestionShape(question: string): { shape: LexicalShape; slot: string } | null {
+function shapeMatches(question: string): { shape: LexicalShape; kind: SubjectKind; slot: string }[] {
   const normalized = normalizeName(question);
-  if (!normalized || normalized.length > 160) return null;
+  if (!normalized || normalized.length > 160) return [];
   const outcome = outcomeQuestionClass(question);
-  for (const { shape, pattern } of SHAPES) {
-    const match = pattern.exec(normalized);
-    const slot = match?.[1]?.trim();
+  const out: { shape: LexicalShape; kind: SubjectKind; slot: string }[] = [];
+  for (const { shape, kind, pattern } of SHAPES) {
+    const slot = pattern.exec(normalized)?.[1]?.trim();
     if (!slot) continue;
     // A pronoun is not a name: "when do they meet" depends on something earlier.
-    if (slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) return null;
-    if (shape === "MEETING_OUTCOME" && !outcome) continue;
-    if (shape !== "MEETING_OUTCOME" && outcome) continue;
-    return { shape, slot };
+    if (slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
+    if (SITTING_SHAPES.has(shape) && (shape === "MEETING_OUTCOME") !== Boolean(outcome)) continue;
+    if (!SITTING_SHAPES.has(shape) && outcome) continue;
+    out.push({ shape, kind, slot });
   }
+  return out;
+}
+
+/** The first shape this question matches, and the words in its name slot, or null. */
+export function lexicalQuestionShape(question: string): { shape: LexicalShape; slot: string } | null {
+  const found = shapeMatches(question)[0];
+  return found ? { shape: found.shape, slot: found.slot } : null;
+}
+
+function kindOf(entity: BindableEntity): SubjectKind | null {
+  if (entity.level === "BODY") return "BODY";
+  if (entity.divisionType === "measure") return "MEASURE";
+  if (entity.divisionType === "contest") return "CONTEST";
+  if (entity.divisionType === "person" || entity.nameClass === "person") return "PERSON";
   return null;
 }
 
-/** Every word of the slot is the body's own name or generic civic vocabulary. */
+/** Every word of the slot is the subject's own name or generic civic vocabulary. */
 function slotIsOnlyTheName(slot: string, entity: BindableEntity): boolean {
   const own = new Set(normalizeName(entity.name).split(" ").filter(Boolean));
   const words = normalizeName(slot).split(" ").filter(Boolean);
@@ -123,8 +189,34 @@ function slotIsOnlyTheName(slot: string, entity: BindableEntity): boolean {
 }
 
 /**
- * The shape of a question already bound to `bodyId`, when its name slot is
- * that body's name and nothing else. The composer (`lib/ask/sitting-answer.ts`)
+ * Does the question also name a DIFFERENT subject — one whose identifying words
+ * all appear in it and are not simply the bound subject's own words? "Mesa"
+ * the city and "Mesa Unified" share the one identifying word the reader typed,
+ * and the binder's class tie-break already chose between them; "Katie Hobbs"
+ * and "Prop 141" are two subjects, and a model's first mention could bind
+ * either, so such a question is left to the model.
+ */
+function namesAnotherSubject(question: string, inventory: readonly BindableEntity[], id: string): boolean {
+  const words = new Set(normalizeName(question).split(" ").filter(Boolean));
+  const own = new Set(inventory.filter((entity) => entity.id === id).flatMap((entity) => distinctiveTokens(entity.name)));
+  return inventory.some((entity) => {
+    if (entity.id === id) return false;
+    const identifying = distinctiveTokens(entity.name);
+    if (identifying.length === 0 || identifying.every((token) => COMMON_QUESTION_NOUNS.has(token))) return false;
+    return identifying.every((token) => words.has(token)) && identifying.some((token) => !own.has(token));
+  });
+}
+
+/** The slot binds `id` in the inventory, through a name variant that is the slot and nothing else. */
+function slotNames(slot: string, inventory: readonly BindableEntity[], id: string): boolean {
+  const binding = bindNamedEntity(slot, inventory);
+  if (binding.kind !== "BOUND" || binding.entity.id !== id) return false;
+  return inventory.some((entity) => entity.id === id && slotIsOnlyTheName(slot, entity));
+}
+
+/**
+ * The SITTING shape of a question already bound to `bodyId`, when its name slot
+ * is that body's name and nothing else. The composer (`lib/ask/sitting-answer.ts`)
  * asks this whichever rung read the question, so a composed answer is only
  * ever about the body the reader's own words named.
  */
@@ -132,12 +224,10 @@ export function shapeForBoundBody(
   question: string,
   inventory: readonly BindableEntity[],
   bodyId: string,
-): LexicalShape | null {
-  const found = lexicalQuestionShape(question);
+): SittingShape | null {
+  const found = shapeMatches(question).find((match) => SITTING_SHAPES.has(match.shape));
   if (!found) return null;
-  const slotBinding = bindNamedEntity(found.slot, inventory);
-  if (slotBinding.kind !== "BOUND" || slotBinding.entity.id !== bodyId) return null;
-  return slotIsOnlyTheName(found.slot, slotBinding.entity) ? found.shape : null;
+  return slotNames(found.slot, inventory, bodyId) ? found.shape as SittingShape : null;
 }
 
 export interface LexicalReadingInput {
@@ -155,8 +245,8 @@ export interface LexicalReadingInput {
 export interface LexicalReading {
   shape: LexicalShape;
   interpretation: AskInterpretation;
-  /** The canonical body every binder agreed on. */
-  bodyId: string;
+  /** The canonical subject every binder agreed on. */
+  subjectId: string;
 }
 
 /**
@@ -164,48 +254,56 @@ export interface LexicalReading {
  * code — or null, in which case the caller asks the model exactly as before.
  */
 export function lexicalReading(input: LexicalReadingInput): LexicalReading | null {
-  const found = lexicalQuestionShape(input.question);
-  if (!found) return null;
+  const matches = shapeMatches(input.question);
+  if (matches.length === 0) return null;
 
-  /*
-   * The tense is the deterministic reader's, unchanged: it is what the model
-   * returned on every question of these shapes in the 2026-09-25 agreement
-   * check (12 of 12 against `claude-opus-5`), including NONE for "when does
-   * the Vail school board meet?" — the route's selection turns MEETING_TIME
-   * into the next sitting either way. The one intent the model reads
-   * differently from the shape is a past meeting-time question ("when did the
-   * Mesa City Council last meet?"), which it calls PAST_MEETING; so does this.
-   */
+  // 1. The whole question binds one subject on the reader's own words, and names no other.
   const temporal = interpretWithoutModel(input.question).temporal;
-  if (temporal.kind === "RANGE" || temporal.kind === "DATE") return null;
-  if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST") return null;
-
-  const interpretation: AskInterpretation = {
-    ...unavailableInterpretation(),
-    intent: found.shape === "BODY_AGENDA"
-      ? "UPCOMING_AGENDA"
-      : found.shape === "MEETING_OUTCOME" || temporal.kind === "LAST" ? "PAST_MEETING" : "MEETING_TIME",
-    temporal,
-  };
-
-  // 1. The whole question binds one BODY on the reader's own words.
-  const resolved = resolveInterpretation(interpretation, input.question, input.inventory, {
+  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
     activeSubjects: input.activeSubjects ?? [],
     priorSubjects: input.priorSubjects ?? [],
   });
   if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION") return null;
   const entity = resolved.binding.entity;
-  if (entity.level !== "BODY") return null;
+  if (namesAnotherSubject(input.question, input.inventory, entity.id)) return null;
+  const kind = kindOf(entity);
+  const found = matches.find((match) => match.kind === kind);
+  if (!found || !kind) return null;
 
-  // 2. The slot is the name and nothing else, and it binds the same body.
-  if (!slotIsOnlyTheName(found.slot, entity)) return null;
-  const slotBinding = bindNamedEntity(found.slot, input.inventory);
-  if (slotBinding.kind !== "BOUND" || slotBinding.entity.id !== entity.id) return null;
+  // 2. The slot is the name and nothing else, and it binds the same subject.
+  if (!slotNames(found.slot, input.inventory, entity.id)) return null;
 
-  // 3. The route's named-body decision binds the same body on the reader's
-  //    words alone (the branch that never reads a model mention), unconfirmed.
-  const decision = decideNamedBody(input.question, input.namedBodies, input.confirmation, []);
-  if (decision.kind !== "BOUND" || decision.confirmed || decision.entity.id !== entity.id) return null;
+  // 3. For a body, the route's named-body decision binds the same body on the
+  //    reader's words alone (never a model mention), unconfirmed. A class phrase
+  //    on anything else sends the route down that decision too, so it is refused.
+  if (kind === "BODY") {
+    const decision = decideNamedBody(input.question, input.namedBodies, input.confirmation, []);
+    if (decision.kind !== "BOUND" || decision.confirmed || decision.entity.id !== entity.id) return null;
+  } else if (classPhraseIn(input.question)) {
+    return null;
+  }
 
-  return { shape: found.shape, interpretation, bodyId: entity.id };
+  // 4. The tense, read identically either way.
+  let intent: AskIntent;
+  if (SITTING_SHAPES.has(found.shape)) {
+    /*
+     * The deterministic tense, unchanged: it is what the model returned on
+     * every question of these shapes in the 2026-09-25 agreement check (12 of
+     * 12 against `claude-opus-5`), including NONE for "when does the Vail
+     * school board meet?" — the route's selection turns MEETING_TIME into the
+     * next sitting either way. The one intent the model reads differently
+     * from the shape is a past meeting-time question ("when did the Mesa City
+     * Council last meet?"), which it calls PAST_MEETING; so does this.
+     */
+    if (temporal.kind === "RANGE" || temporal.kind === "DATE") return null;
+    if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST") return null;
+    intent = found.shape === "BODY_AGENDA"
+      ? "UPCOMING_AGENDA"
+      : found.shape === "MEETING_OUTCOME" || temporal.kind === "LAST" ? "PAST_MEETING" : "MEETING_TIME";
+  } else {
+    if (temporal.kind !== "NONE") return null;
+    intent = SHAPE_INTENT[found.shape as Exclude<LexicalShape, SittingShape>];
+  }
+
+  return { shape: found.shape, interpretation: { ...unavailableInterpretation(), intent, temporal }, subjectId: entity.id };
 }

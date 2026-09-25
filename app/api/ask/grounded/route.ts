@@ -97,13 +97,14 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
-import { askModelStartupLine, resolveAskEffort, resolveAskModel } from "@/lib/ask/model";
+import { askModelStartupLine, resolveAskModel } from "@/lib/ask/model";
 import {
   BoundedTtlCache,
   interpretationCacheKey,
   synthesisCacheKey,
 } from "@/lib/ask/model-result-cache";
-import { synthesizeAnswer } from "@/lib/ask/synthesize";
+import { ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
+import { writerSelection } from "@/lib/ask/writer-selection";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { meetingDateInQuestion } from "@/lib/ask/meeting-date";
 import {
@@ -244,9 +245,8 @@ function allowCall(): boolean {
 }
 /* Successful model results, keyed by their exact inputs (lib/ask/model-result-cache.ts). */
 const interpretationCache = new BoundedTtlCache<InterpretReadOutcome>();
-const synthesisCache = new BoundedTtlCache<SynthesisWroteOutcome>();
+const synthesisCache = new BoundedTtlCache<LadderResult>();
 type InterpretReadOutcome = Extract<Awaited<ReturnType<typeof interpretQuestion>>, { kind: "READ" }>;
-type SynthesisWroteOutcome = Extract<Awaited<ReturnType<typeof synthesizeAnswer>>, { kind: "WROTE" }>;
 
 /** Test seam — the suite must never inherit another test's counter or cached model result. */
 export function resetGroundedState(): void {
@@ -2185,7 +2185,7 @@ export async function POST(request: Request) {
     ? shapeForBoundBody(question, inventory, subject.id) : null;
   const sittingSettled = settleSittingComposition(
     sittingShape && subject
-      ? composeSittingAnswer({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow })
+      ? composeSittingAnswer({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, questionClass: outcomeQuestionClass(question) })
       : null,
     (text, urls) => validateAnswer(text, urls, pack, bodies),
   );
@@ -2199,13 +2199,34 @@ export async function POST(request: Request) {
     };
   }
   const composed = topicComposed ?? sittingSettled.composed;
-  const synthesisKey = composed ? null : synthesisCacheKey(pack, resolveAskModel(), resolveAskEffort());
+  /*
+   * **THE WRITING LADDER.** (2026-09-25, the Ask latency repair.) The fast
+   * writer answers first; the frontier model writes only when that answer fails
+   * the SAME validator (or cannot be had), and the reason is recorded. Each
+   * writer reads a bounded selection of the pack (lib/ask/writer-selection.ts);
+   * the reader's records and the validator keep the whole pack. See
+   * `synthesizeWithLadder` in lib/ask/synthesize.ts.
+   */
+  const ladder = synthesisLadder();
+  const ladderKey = ladderIdentity(ladder);
+  const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
   const cachedSynthesis = synthesisKey ? synthesisCache.get(synthesisKey) : null;
-  const synthesis = composed ? null : cachedSynthesis ?? await synthesizeAnswer(pack, {
+  const written = composed ? null : cachedSynthesis ?? await synthesizeWithLadder(pack, {
     allowCall,
     callerKey: askCallerKey(process.env, markerFromRequest(request).runClass),
+    validate: (text, urls) => validateAnswer(text, urls, pack, bodies),
+    ladder,
   });
-  if (synthesisKey && !cachedSynthesis && synthesis?.kind === "WROTE") synthesisCache.set(synthesisKey, synthesis);
+  if (synthesisKey && !cachedSynthesis && written?.outcome.kind === "WROTE") synthesisCache.set(synthesisKey, written);
+  const synthesis = written?.outcome ?? null;
+  const selectionForWriter = composed ? null : writerSelection(pack);
+  const writerTrace = written ? {
+    writers: written.attempts,
+    ...(written.escalation ? { escalation: written.escalation } : {}),
+    ...(selectionForWriter && selectionForWriter.withheld.memberVoteRows > 0
+      ? { writerSelection: { memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls } }
+      : {}),
+  } : {};
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
@@ -2238,8 +2259,9 @@ export async function POST(request: Request) {
          made the call rather than off the constants — an override that ran
          unrecorded is exactly the un-attributable answer §5 exists to stop. */
       model: synthesis.model,
-      effort: synthesis.effort,
-      ms: cachedSynthesis ? 0 : synthesis.ms,
+      ...(synthesis.effort ? { effort: synthesis.effort } : {}),
+      /* The whole ladder's time, every writer that ran, not only the last. */
+      ms: cachedSynthesis ? 0 : written!.attempts.reduce((total, attempt) => total + attempt.ms, 0),
       /* Reused from byte-identical evidence on this instance: no model call was made. */
       ...(cachedSynthesis ? { cached: true } : {}),
       /*
@@ -2253,6 +2275,7 @@ export async function POST(request: Request) {
         cacheCreationInputTokens: synthesis.usage.cacheCreationInputTokens,
         uncachedInputTokens: synthesis.usage.inputTokens,
       },
+      ...writerTrace,
     };
     /* And into the server console, so a collapsed hit rate is visible in the
        deployment log rather than only in a trace somebody has to go and read.
@@ -2310,7 +2333,8 @@ export async function POST(request: Request) {
     trace.synthesis = {
       ran: false,
       why: synthesis.detail ? `${synthesis.why}: ${synthesis.detail}` : synthesis.why,
-      ms: synthesis.ms,
+      ms: written ? written.attempts.reduce((total, attempt) => total + attempt.ms, 0) || synthesis.ms : synthesis.ms,
+      ...(written && written.attempts.length > 0 ? writerTrace : {}),
     };
   }
 

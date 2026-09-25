@@ -143,12 +143,19 @@ export function buildLearningTrends(rows: readonly WeekLearningRow[], nowIso: st
     freshFound: (r) => share(r.freshFound, r.fresh),
     perFind: (r) => (r.found > 0 && r.walks > r.unpriced ? { value: r.usd / r.found, of: r.found, floor: r.unpriced > 0 } : { value: null, of: null }),
   };
-  const series = Object.fromEntries(
-    (Object.keys(LABEL) as SeriesKey[]).map((key) => {
-      const points = weeks.map((w) => point(w, measure[key]));
-      return [key, { key, ...LABEL[key], points, measuredWeeks: points.filter((p) => p.value !== null).length, says: seriesSays(points, weeks.length) }];
-    }),
-  ) as Record<SeriesKey, LearningSeries>;
+  const build = (key: SeriesKey): LearningSeries => {
+    const points = weeks.map((w) => point(w, measure[key]));
+    return { key, ...LABEL[key], points, measuredWeeks: points.filter((p) => p.value !== null).length, says: seriesSays(points, weeks.length) };
+  };
+  const series: Record<SeriesKey, LearningSeries> = {
+    handed: build("handed"),
+    used: build("used"),
+    rebuilt: build("rebuilt"),
+    reused: build("reused"),
+    resumedFound: build("resumedFound"),
+    freshFound: build("freshFound"),
+    perFind: build("perFind"),
+  };
   const walked = rows.filter((r) => r.walks > 0).length;
   return {
     weeks,

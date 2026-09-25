@@ -54,7 +54,7 @@ const WEEKS_DRAWN = 12;
 
 /** Series that measured at least one week — a series with no week measured is not drawn as a trend. */
 function measured(trends: LearningTrends | null, keys: readonly (keyof LearningTrends["series"])[]): LearningSeries[] {
-  return trends === null ? [] : keys.map((k) => trends.series[k]).filter((s) => s.measuredWeeks > 0);
+  return trends === null ? [] : keys.map((k) => trends.series[k]).filter((line) => line.measuredWeeks > 0);
 }
 
 /** "given N, used M (named)" — the used half of the field-manual pair, from the walks that record it. */

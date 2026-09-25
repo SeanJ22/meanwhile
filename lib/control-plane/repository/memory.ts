@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * THE IN-PROCESS DOUBLE.
@@ -311,6 +312,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
+    /* What readers were told Ask does not hold (schema v13). */
+    askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

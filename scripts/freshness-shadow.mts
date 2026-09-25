@@ -697,10 +697,14 @@ const registry = buildRegistry(
     localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
-    /* The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded. */
+    /*
+     * The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded.
+     * Beside it, the counts of gaps readers were told (body, code, day, count — the owner's decision of 2026-09-25), which
+     * make those gaps reader impact now and create the work for a body readers were told we hold no meeting of.
+     */
     (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
       await pending.step("ask-gaps:held-reading", async () =>
-        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW })),
+        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
     ),
   ],
   { root: ROOT, nowIso: NOW },

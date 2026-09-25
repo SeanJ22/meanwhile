@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * THE DURABLE FILESYSTEM STORE — where "the worker may die" stops being a
@@ -785,6 +786,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
+    /* What readers were told Ask does not hold (schema v13). */
+    askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

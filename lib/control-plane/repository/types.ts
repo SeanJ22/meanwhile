@@ -110,6 +110,7 @@ import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -758,6 +759,16 @@ export interface ControlPlaneRepositories {
    */
   readonly discoveryAttempts: AppendOnlyRepository<MeetingsDiscoveryAttempt>;
   readonly adminConfig: AggregateRepository<AdminConfig>;
+  /**
+   * What readers were told Ask does not hold (v13, 2026-09-25; the owner's
+   * decision of that day): one aggregate per body, gap code and UTC day,
+   * `<body id>#<code>#<day>`, holding exactly the body, the code, its record
+   * class, the day and a count — no question, no reader, no instant. Ask's
+   * route adds to it after the answer has gone; the `ask-gaps` provider folds
+   * the recent days into the work it creates and orders
+   * (`lib/control-plane/ask-gap-observations.ts`).
+   */
+  readonly askGapObservations: AggregateRepository<AskGapObservation>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

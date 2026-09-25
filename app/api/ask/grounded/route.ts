@@ -118,6 +118,9 @@ import {
   sittingsForBody,
 } from "@/lib/outcomes/store";
 import { buildTopicTimeline, composeAreaTopicAnswer, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
+import { ASK_GAP_RECORD_CLASS, meetingsNotHeldGap } from "@/lib/ask/held-gaps";
+import { planAskGapObservations, recordAskGapObservations, statedAskGaps } from "@/lib/ask/gap-observation";
+import { afterResponse } from "@/lib/log/after-response";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
@@ -178,12 +181,15 @@ import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
  *
  * ## What this route deliberately does NOT do
  *
- * **It writes nothing today.** `captureAskInteraction` is called at the end,
- * with the delivered answer, and `ripcord.askSignalCapture` ships PULLED so the
- * call returns `GATED` and no row exists. The gate is an operator decision
- * pending the author's approval of reader-facing disclosure copy (NH246) — see
- * `lib/db/ask-signal.ts`, which states that basis honestly rather than citing a
- * rule that governs a different store.
+ * **It writes nothing about the reader.** `captureAskInteraction` is called at
+ * the end, with the delivered answer, and `ripcord.askSignalCapture` ships
+ * PULLED so the call returns `GATED` and no row exists. The gate is an operator
+ * decision pending the author's approval of reader-facing disclosure copy
+ * (NH246) — see `lib/db/ask-signal.ts`, which states that basis honestly rather
+ * than citing a rule that governs a different store. The one write that runs
+ * (2026-09-25, the owner's decision of that day) is a count: for each coded
+ * gap the answer stated, one more for that body, gap and day in the control
+ * plane — no question, no reader, no instant (`lib/ask/gap-observation.ts`).
  *
  * **It never lets the model reach past the pack.** The synthesis rung has no
  * corpus, no tools and no network. Its inability to look anything up is
@@ -1423,7 +1429,10 @@ export async function POST(request: Request) {
       gaps.push(...topicTimeline.gaps);
       Object.assign(denominators, topicTimeline.denominators);
     } else if (!chosen && archivedOutcomes.length === 0) {
+      /* A body we hold no meeting of carries its code (held-gaps.ts), so the gap a reader is told is work the runner creates (2026-09-25). */
+      const notHeld = snapshot && !requestedMeetingDate ? meetingsNotHeldGap(subject.id, forBody.length) : null;
       gaps.push({
+        ...(notHeld ? { code: notHeld.code, bodyId: notHeld.bodyId, recordClass: notHeld.recordClass } : {}),
         whose: "OURS",
         statement:
           !snapshot
@@ -1636,7 +1645,21 @@ export async function POST(request: Request) {
       const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
       // A document extraction gap is not an absence of the separately held
       // structured agenda for this exact sitting.
-      if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) gaps.push(publication.gap);
+      if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) {
+        /*
+         * OUR "we have not yet acquired the agenda" for this body's sitting is
+         * the gap held-gaps.ts codes AGENDA_NOT_HELD (2026-09-25): no document
+         * for the sitting is held at all. Coded, a reader being told it raises
+         * the runner's matching obligation; a sitting outside that rule's
+         * window raises nothing. A publisher's own "not posted" (THEIRS) and a
+         * held document we could not read are not this gap and stay uncoded.
+         */
+        const unacquired = publication.gap.whose === "OURS" &&
+          (publication.acquisition === "NOT_ACQUIRED" || publication.acquisition === "ROUTE_BLOCKED" || publication.acquisition === "REPRESENTATION_DISCOVERED");
+        gaps.push(unacquired
+          ? { ...publication.gap, code: "AGENDA_NOT_HELD", bodyId: subject.id, recordClass: ASK_GAP_RECORD_CLASS.AGENDA_NOT_HELD }
+          : publication.gap);
+      }
 
       // The document the reader is shown first — the one the reading, and so
       // `items`, was taken over — never merely the newest stored row.
@@ -2266,6 +2289,22 @@ export async function POST(request: Request) {
    * itself, returns GATED, and builds no row at all.
    */
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
+
+  /*
+   * **THE GAPS THIS READER WAS TOLD, COUNTED BY BODY — AND NOTHING ABOUT THE
+   * READER.** (2026-09-25, the owner's decision of that day.) Each coded gap
+   * the delivered answer states adds one to its body's count for that gap and
+   * day (`lib/ask/gap-observation.ts`); the runner turns those counts into
+   * targeted work. The plan is decided HERE, in the handler, so a reader-edge
+   * context that refuses the database is honoured; the write runs after the
+   * response, bounded, and its failure is logged by name and never reaches
+   * this reader. Synthetic runs are not readers and count nothing.
+   */
+  const gapObservations = planAskGapObservations({
+    stated: statedAskGaps({ gaps: packGaps, timelines: topicTimeline ? [topicTimeline] : areaTimelines }),
+    runClass: markerFromRequest(request).runClass,
+  });
+  await afterResponse(() => recordAskGapObservations(gapObservations));
 
   /*
    * **ONE DECLARED SHAPE, BUILT FROM THE PACK THAT PRODUCED IT.** (ASK-05.)

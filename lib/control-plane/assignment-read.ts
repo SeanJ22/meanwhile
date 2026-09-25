@@ -24,6 +24,8 @@
  */
 import type { Attempt, ExecutionLease } from "./attempt.ts";
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
+import { parseAskGapObligationId } from "./ask-gap-id.ts";
+import { readAskGapObservations } from "./ask-gap-observations.ts";
 import type { AssignmentSources } from "./assignment-view.ts";
 import type { CostEntry } from "./cost.ts";
 import { deriveItemState, isPipelineRecord, methodCandidateItemId, scoutResultItemId } from "./promotion/pipeline.ts";
@@ -109,6 +111,8 @@ export async function readAllAssignmentSources(
   ]);
   const pipeline =
     already.pipeline !== undefined ? already.pipeline : pipelineStatesOf(await repos.promotionPipeline.readAll());
+  /* What readers were told (v13). A failed read is null — the page says it was not read — and never fails the publish. */
+  const observed = await readAskGapObservations(repos.askGapObservations);
   return {
     nowIso: base.nowIso,
     obligations,
@@ -128,6 +132,7 @@ export async function readAllAssignmentSources(
     activation: base.activation,
     servedReader: null,
     pilotZips: base.pilotZips,
+    askGapObservations: "unreadable" in observed ? null : observed.rows,
   };
 }
 
@@ -217,6 +222,12 @@ export async function readAssignmentSourcesById(
     const workerResults: WorkerResultRecord[] = workerLists.flat();
     const dispositions: DispositionCommit[] = commitLists.flat();
 
+    /* An Ask-gap obligation's body: what readers were told of its gaps, read by body. A failed read is null, never a failed drilldown. */
+    const askGap = obligations.length === 1 ? parseAskGapObligationId(obligations[0]!.id) : null;
+    const askGapObservations = askGap === null
+      ? undefined
+      : await repos.askGapObservations.listWhere(["bodyId"], askGap.bodyId).then((rows) => rows.map((row) => row.value), () => null);
+
     let pipeline: PipelineItemState[];
     if (wholePipeline) {
       // A fleet extraction names its work item, not a derivable item id: the (small) log is read whole.
@@ -250,6 +261,7 @@ export async function readAssignmentSourcesById(
         activation: base.activation,
         servedReader: null,
         pilotZips: base.pilotZips,
+        ...(askGapObservations !== undefined ? { askGapObservations } : {}),
       },
     };
   } catch (error) {

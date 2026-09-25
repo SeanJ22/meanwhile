@@ -23,7 +23,9 @@
  * unreadable clock is carried as UNREAD for that one contract.
  *
  * Read-only. It never writes a store, never opens a publisher's feed, and
- * never reads Ask's question log.
+ * never reads Ask's question log. Beside the holdings it may read the counts
+ * of gaps readers were told (`ask-gap-observations.ts`): a body, a code, a day
+ * and a number each, never a question or a reader.
  */
 
 import { cadenceMsAt, sittingWindowRereadMs } from "../../civic-data/contracts.ts";
@@ -43,6 +45,8 @@ import type { MeetingsProjectionReadResult } from "../../meetings/snapshot.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, readOutcomeProjection } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
 import type { AgendaDocumentLike } from "../../routing/agenda-search.ts";
+import { readAskGapObservations, type AskGapObservation } from "../ask-gap-observations.ts";
+import type { AggregateRepository } from "../repository/types.ts";
 import type { AskGapHoldingsReading, AskGapMeeting, AskGapsInput, CarrierClock } from "./providers/ask-gaps.ts";
 
 /** The tasks whose reads can close an Ask gap: every meeting partition and every recorded-outcome routine. */
@@ -182,8 +186,19 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
   };
 }
 
-/** The provider's input from one reading, for the runner's registry: `askGapsProvider(await askGapsInputFromHeld({ now }))`. */
-export async function askGapsInputFromHeld(options: ReadingOptions): Promise<AskGapsInput> {
-  const reading = await readAskGapHoldings(options);
-  return { holdings: () => reading };
+/**
+ * The provider's input from one reading, for the runner's registry:
+ * `askGapsProvider(await askGapsInputFromHeld({ now, observations }))`. With
+ * `observations` (the control plane's `askGapObservations` repository), the
+ * counts of what readers were told are read beside the holdings; a failed read
+ * is the provider's named read failure, never an empty count.
+ */
+export async function askGapsInputFromHeld(
+  options: ReadingOptions & { readonly observations?: Pick<AggregateRepository<AskGapObservation>, "list"> },
+): Promise<AskGapsInput> {
+  const [reading, observed] = await Promise.all([
+    readAskGapHoldings(options),
+    options.observations ? readAskGapObservations(options.observations) : Promise.resolve(null),
+  ]);
+  return { holdings: () => reading, ...(observed !== null ? { observations: () => observed } : {}) };
 }

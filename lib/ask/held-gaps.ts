@@ -25,6 +25,7 @@ import { localDate } from "./meeting-time.ts";
  * | `OUTCOME_NOT_READ` | a concluded sitting within the window whose agenda we hold and for which no recorded decision is held |
  * | `CALENDAR_STALE` | the body's calendar listings were last read longer ago than `CALENDAR_READ_STALE_MS` |
  * | `OUTCOMES_UNREADABLE` | the recorded-outcome store could not be read (a holding failure of ours) |
+ * | `MEETINGS_NOT_HELD` | no held meeting names the body at all ({@link meetingsNotHeldGap}) |
  *
  * Ask calls {@link heldBodyGaps} to write its gap sentences (the wording is
  * the timeline's and is unchanged), and the standing runner's `ask-gaps`
@@ -133,6 +134,19 @@ export function heldAgendaDocuments(documents: readonly AgendaDocumentLike[], bo
     agendaDocumentRepresentation(document) !== "PUBLICATION_PORTAL" &&
     !isAnotherBodysNoticePage(document.documentUrl, { bodyId, publisher: document.sourceOrg }) &&
     !(isWiredNoticePage(document.documentUrl) && agendaItems(document.text ?? "").length === 0));
+}
+
+/**
+ * **A BODY WE HOLD NO MEETING OF.** (2026-09-25.) Ask states "We have not
+ * recorded any meetings for …" when the held meetings name the body not once.
+ * {@link heldBodyGaps} never sees such a body — its callers group the held
+ * meetings by body — so this is the rule on its own: Ask's route codes the
+ * sentence with it, and the runner's `ask-gaps` provider asks it again of a
+ * body a reader was told this about, to know whether the gap is still open.
+ */
+export function meetingsNotHeldGap(bodyId: string, heldMeetingsOfBody: number): HeldAskGap | null {
+  if (heldMeetingsOfBody > 0) return null;
+  return { code: "MEETINGS_NOT_HELD", bodyId, recordClass: ASK_GAP_RECORD_CLASS.MEETINGS_NOT_HELD, sitting: null, since: null };
 }
 
 /**

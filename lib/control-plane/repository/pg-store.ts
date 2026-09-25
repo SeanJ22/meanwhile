@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
@@ -970,6 +971,8 @@ export async function createPgRepositories(
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
+    /* What readers were told Ask does not hold (schema v13). Ask's route adds through `pgAskGapObservationSink`, one atomic upsert per row. */
+    askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded),
       locks,

@@ -3,12 +3,11 @@ import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_CONTRACTS,
   cadenceMsAt,
-  sittingWindowDueAtMs,
-  sittingWindowHot,
   type RoutineSourceContract,
   type SittingWindowSchedule,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "./meeting-partitions.ts";
+import { sittingWindowHotByConclusion, sittingWindowObligation } from "./sitting-window-admission.ts";
 import { SOURCE_AUTHORITIES, authorityFor, sourceAuthority } from "./source-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import {
@@ -121,6 +120,20 @@ export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
  * partition, using durable source attempts plus append-only supervisor faults.
  */
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
+/**
+ * **A MEETING LANE TAKES UP TO THREE READS A PASS (C6, 2026-09-25).** Every task
+ * on a meeting lane owes its next read by a deadline (sitting-window-admission.ts),
+ * and one read a pass, 12 an hour, is too few for the busiest lane: Tucson's
+ * board site hosts 27 bodies, up to 16 of them hourly around 2026-10-14 by the
+ * promoted sittings. Replaying 30 days of production's schedule against the 196
+ * passes recorded on 2026-09-24, two a pass still left 49 hourly reads late on
+ * that lane after long passes (up to 15:52), when a stalled lane has to catch
+ * up; three a pass with the 25-minute lead left 13, none with passes of normal
+ * length. The reads run one after another with the same-host gap between them
+ * (bounded-child-pass.ts), so a host sees one request at a time. Other lanes
+ * keep one a pass.
+ */
+export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS };
 /** Canonical clock reads are independent HTTP queries, not one serial failure chain. */
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
@@ -134,6 +147,20 @@ export interface RoutineTaskAdmissionCandidate {
    * means this task has never been considered and therefore goes first.
    */
   readonly lastConsideredAt: string | null;
+  /**
+   * When the task's next read is owed (`routineTaskDeadlineMs`); only
+   * sitting-window tasks have one. A lane of such tasks is read earliest
+   * deadline first, hourly and twice-daily bodies alike, so neither can starve
+   * the other while the lane has capacity for both.
+   */
+  readonly deadlineMs?: number;
+}
+
+/** Earliest deadline first; a task without a deadline sorts after every task with one. */
+function deadlineOrder(candidate: RoutineTaskAdmissionCandidate): number {
+  return candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs)
+    ? Number.POSITIVE_INFINITY
+    : candidate.deadlineMs;
 }
 
 function consideredAtMs(candidate: RoutineTaskAdmissionCandidate): number {
@@ -175,8 +202,12 @@ export function routineFailureDomainFrontier(
   for (const group of byDomain.values()) {
     const groupIndex = new Map(group.map(({ task }, index) => [task.id, index]));
     const rotation = rotationSeed % group.length;
+    const slots = group.every(({ deadlineMs }) => deadlineMs !== undefined)
+      ? Math.max(perDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS)
+      : perDomain;
     group
       .sort((left, right) =>
+        deadlineOrder(left) - deadlineOrder(right) ||
         consideredAtMs(left) - consideredAtMs(right) ||
         (
           (groupIndex.get(left.task.id)! - rotation + group.length) % group.length -
@@ -184,7 +215,7 @@ export function routineFailureDomainFrontier(
         ) ||
         registryIndex.get(left.task.id)! - registryIndex.get(right.task.id)!,
       )
-      .slice(0, perDomain)
+      .slice(0, slots)
       .forEach(({ task }) => admitted.add(task.id));
   }
   // Preserve registry order across providers so logs and deterministic tests
@@ -199,6 +230,25 @@ export function routineFailureDomainRotationSeed(startedAt: string): number {
     throw new Error(`ROUTINE_FAILURE_DOMAIN_ROTATION_TIME_INVALID:${startedAt}`);
   }
   return Math.floor(parsed / ROUTINE_DATA_ADMISSION_MS);
+}
+
+/**
+ * The most commands one pass can admit, and the most from one lane: what the
+ * runner's outer time limit is sized for. A lane whose every task has a sitting
+ * window takes `SITTING_WINDOW_LANE_SLOTS_PER_PASS`; every other lane one.
+ */
+export function routineFrontierPassBound(
+  tasks: readonly Pick<RoutineSourceTask, "acquisitionFailureDomain" | "contract">[] = ROUTINE_SOURCE_TASKS,
+): { readonly commandCount: number; readonly largestFailureDomainSize: number } {
+  routineFailureDomainCount(tasks);
+  const lanes = new Map<string, boolean>();
+  for (const task of tasks) {
+    const windowed = task.contract.schedule?.kind === "SITTING_WINDOW";
+    lanes.set(task.acquisitionFailureDomain, (lanes.get(task.acquisitionFailureDomain) ?? true) && windowed);
+  }
+  const slots = [...lanes.values()].map((windowed) =>
+    windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS);
+  return { commandCount: slots.reduce((sum, n) => sum + n, 0), largestFailureDomainSize: Math.max(...slots) };
 }
 
 export function routineFailureDomainCount(
@@ -473,28 +523,35 @@ export async function readRoutineTaskClocks(
 
 /**
  * Every sitting-window task's hot signal for one admission instant, from the
- * same pass's clock reads. A failed or missing read counts as unknown.
+ * same pass's clock reads. A failed or missing read counts as unknown. A
+ * sitting concludes at its publisher-stated end where one is given, by task id
+ * (`statedEnds`), and otherwise by the day bound (sitting-window-admission.ts).
  */
 export function sittingWindowSignals(
   reads: readonly { readonly task: RoutineSourceTask; readonly ok: boolean; readonly clock?: RoutineTaskClock }[],
   nowMs: number,
+  statedEnds: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map(),
 ): ReadonlyMap<string, boolean | undefined> {
   const clocks = new Map(reads.map((read) => [read.task.id, read.ok ? read.clock ?? {} : undefined]));
   const signals = new Map<string, boolean | undefined>();
   for (const read of reads) {
     const schedule = read.task.contract.schedule;
     if (schedule?.kind !== "SITTING_WINDOW") continue;
-    const lists = sittingWindowSourceIds(read.task.id).map((id) => clocks.get(id)?.sittingStarts);
-    signals.set(read.task.id, sittingWindowHot(schedule, lists, nowMs));
+    const sources = sittingWindowSourceIds(read.task.id);
+    const lists = sources.map((id) => clocks.get(id)?.sittingStarts);
+    const ends = new Map(sources.flatMap((id) => [...(statedEnds.get(id) ?? new Map<string, number>())]));
+    signals.set(read.task.id, sittingWindowHotByConclusion(schedule, lists, nowMs, ends));
   }
   return signals;
 }
 
 /**
- * A sitting-window task is due at `sittingWindowDueAtMs` after its last
- * success. Both instants are store-observed first events, so a success is
- * never mistaken for a later failed attempt. A failed later attempt keeps the
- * retry clock exactly, as every other task does.
+ * A sitting-window task owes its next read an hour (hot) or twelve hours after
+ * its last success, and is eligible 15 minutes or 2 hours before that
+ * (sitting-window-admission.ts). Both instants are store-observed first events,
+ * so a success is never mistaken for a later failed attempt. A failed later
+ * attempt owes a retry on the contract clock; a partition never published owes
+ * one twice daily.
  */
 function sittingWindowTaskDue(
   task: RoutineSourceTask,
@@ -508,8 +565,47 @@ function sittingWindowTaskDue(
   const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
   if (!Number.isFinite(attempted)) return true;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
-  if (!Number.isFinite(succeeded) || attempted > succeeded) return nowMs - attempted >= task.retryMs;
-  return nowMs >= sittingWindowDueAtMs(schedule, succeeded, hot);
+  const { eligibleAtMs } = sittingWindowObligation(
+    schedule,
+    task.retryMs,
+    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
+    hot,
+  );
+  return nowMs >= eligibleAtMs;
+}
+
+/**
+ * When a sitting-window task's next read is owed, for the frontier's ordering:
+ * a task never run, or with an unreadable clock, is owed at once. Other tasks
+ * have no deadline and keep the least-recently-considered order.
+ */
+export function routineTaskDeadlineMs(
+  task: RoutineSourceTask,
+  clock: RoutineTaskClock | undefined,
+  sittingHot?: boolean,
+): number | undefined {
+  const schedule = task.contract?.schedule;
+  if (schedule?.kind !== "SITTING_WINDOW") return undefined;
+  if (!clock?.lastAttemptedAt) return Number.NEGATIVE_INFINITY;
+  const attempted = Date.parse(clock.lastAttemptedAt);
+  const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
+  if (!Number.isFinite(attempted)) return Number.NEGATIVE_INFINITY;
+  return sittingWindowObligation(
+    schedule,
+    task.retryMs,
+    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
+    sittingHot,
+  ).deadlineMs;
+}
+
+/**
+ * Whether a sitting-window task's own scope holds a promotion. The store
+ * reports a sitting list, empty or not, for every MEETING scope with a
+ * promotion and none for a scope never promoted. It reports none for other
+ * record classes, so those keep their contract's retry.
+ */
+function sittingTaskPublished(task: RoutineSourceTask, clock: RoutineTaskClock): boolean {
+  return task.recordClass !== "MEETING" || clock.sittingStarts !== undefined;
 }
 
 export function routineTaskDue(

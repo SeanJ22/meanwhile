@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { cadenceMsAt, routineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { SITTING_WINDOW_ADMISSION_LEAD_MS, SITTING_WINDOW_BASE_ADMISSION_LEAD_MS } from "../lib/civic-data/sitting-window-admission.ts";
 import {
   MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   manualProductionContract,
@@ -261,12 +262,15 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
     lastSucceededAt: "2026-09-24T08:59:58.000Z",
     lastSucceededObservedAt: "2026-09-24T09:00:00.000Z",
   };
-  const PASS = 5 * 60_000;
-  assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - PASS - 1, false), false);
-  assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - PASS, false), true);
-  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - PASS - 1, true), false);
-  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - PASS, true), true);
-  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - PASS, undefined), true, "an unreadable window is read as hot");
+  // Owed an hour (hot) or twelve hours after its success, and admitted 15
+  // minutes or 2 hours before it is owed (C6).
+  const LEAD = SITTING_WINDOW_ADMISSION_LEAD_MS;
+  const BASE_LEAD = SITTING_WINDOW_BASE_ADMISSION_LEAD_MS;
+  assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - BASE_LEAD - 1, false), false);
+  assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - BASE_LEAD, false), true);
+  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - LEAD - 1, true), false);
+  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - LEAD, true), true);
+  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - LEAD, undefined), true, "an unreadable window is read as hot");
   assert.equal(routineTaskDue(task, undefined, succeededAt), true, "a never-run task is due at once");
 
   // Its frozen inventory row now binds the standing clock and nothing else.

@@ -12,6 +12,15 @@ export const ROUTINE_CHILD_MAX_BUFFER_BYTES = 16 * 1024 * 1024;
  * still isolating independent source/body acquisitions in parallel.
  */
 export const ROUTINE_CHILD_CONCURRENCY = 4;
+/**
+ * **TWO READS OF ONE HOST IN ONE PASS ARE AT LEAST A MINUTE APART (C6, 2026-09-25).**
+ * A meeting lane may take two reads a pass. They never run together, and the
+ * second starts no sooner than this after the first ends, so a host's own
+ * Crawl-delay holds between them: the largest any meeting host publishes is 60
+ * s (morriscountynj.iqm2.com; also www.kearsarge.org and www.newbury.nh.gov 10
+ * s, www.mhrd.org 5 s, read 2026-09-25).
+ */
+export const ROUTINE_SAME_DOMAIN_CHILD_GAP_MS = 60_000;
 /** Clock reads, durable receipt readback, and the supervisor digest share this bounded allowance. */
 export const ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS = 10 * 60_000;
 /** Process shutdown and timer jitter beyond the explicit coordination allowance. */
@@ -68,6 +77,8 @@ export interface BoundedChildResult {
 
 export interface BoundedChildPassOptions {
   readonly cwd: string;
+  /** The least time between one command of a failure domain ending and the next starting. */
+  readonly sameDomainGapMs?: number;
   readonly env: NodeJS.ProcessEnv;
   readonly timeoutMs?: number;
   readonly maxBufferBytes?: number;
@@ -193,33 +204,44 @@ export async function runBoundedChildPass(
   // work from unrelated providers remained queued. Scan in registry order for
   // the next runnable domain, fill every free global lane, and release that
   // domain only after its result has been durably classified by `onSettled`.
+  const gapMs = options.sameDomainGapMs ?? 0;
+  if (!Number.isSafeInteger(gapMs) || gapMs < 0) throw new Error(`BOUNDED_CHILD_DOMAIN_GAP_INVALID:${gapMs}`);
   const started = new Set<number>();
   const activeDomains = new Set<string>();
+  const domainFreeAt = new Map<string, number>();
   const activeRuns = new Map<number, Promise<void>>();
   let completed = 0;
+  const waiting = () => commands
+    .map((_, index) => index)
+    .filter((index) => !started.has(index) && !activeDomains.has(failureDomains[index]!));
 
   while (completed < commands.length) {
     while (activeRuns.size < concurrency) {
-      const index = commands.findIndex((_, candidateIndex) =>
-        !started.has(candidateIndex) && !activeDomains.has(failureDomains[candidateIndex]!),
-      );
-      if (index < 0) break;
+      const now = Date.now();
+      const index = waiting().find((candidate) => (domainFreeAt.get(failureDomains[candidate]!) ?? 0) <= now);
+      if (index === undefined) break;
 
       const failureDomain = failureDomains[index]!;
       started.add(index);
       activeDomains.add(failureDomain);
       const activeRun = runAt(index).finally(() => {
         activeDomains.delete(failureDomain);
+        if (gapMs > 0) domainFreeAt.set(failureDomain, Date.now() + gapMs);
         activeRuns.delete(index);
         completed += 1;
       });
       activeRuns.set(index, activeRun);
     }
 
-    if (activeRuns.size === 0) {
+    // A command held only by its domain's gap wakes the dispatcher when the gap ends.
+    const gated = waiting().map((index) => domainFreeAt.get(failureDomains[index]!) ?? 0).filter((at) => at > Date.now());
+    if (activeRuns.size === 0 && gated.length === 0) {
       throw new Error("BOUNDED_CHILD_DISPATCH_DEADLOCK");
     }
-    await Promise.race(activeRuns.values());
+    const wake = gated.length > 0 && activeRuns.size < concurrency
+      ? new Promise<void>((resolve) => setTimeout(resolve, Math.max(0, Math.min(...gated) - Date.now())))
+      : null;
+    await Promise.race([...activeRuns.values(), ...(wake ? [wake] : [])]);
   }
   return results;
 }
@@ -324,12 +346,13 @@ export function routineRunnerBoundedWorkMs(
   ) throw new Error("ROUTINE_RUNNER_OUTER_BOUND_ZERO");
 
   const settlementMs = bounds.settlementRequestsPerCommand * bounds.neonRequestDeadlineMs;
+  // A domain's commands run one after another with a gap between them (C6).
   const acquisitionMs = routineChildPassWorstCaseMs(
     commandCount,
     ROUTINE_CHILD_TIMEOUT_MS + settlementMs,
     ROUTINE_CHILD_CONCURRENCY,
     largestFailureDomainSize,
-  );
+  ) + Math.max(0, largestFailureDomainSize - 1) * ROUTINE_SAME_DOMAIN_CHILD_GAP_MS;
   const clockMs = Math.ceil(bounds.clockTaskCount / bounds.clockConcurrency) *
     bounds.clockRequestsPerTask * bounds.neonRequestDeadlineMs;
   const coordinationMs = bounds.coordinationRequests * bounds.neonRequestDeadlineMs;

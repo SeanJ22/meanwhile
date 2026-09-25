@@ -378,7 +378,7 @@ async function createSlow(t: { after: (fn: () => void) => void }, pages: Record<
 
 test("the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it", () => {
   const gate = readActivationGate(ROOT);
-  const base = { scheduledBlackout: false, dry: false, noModel: false, credentialConfigured: true, credentialVar: "WTP_WORKERS_ANTHROPIC_API_KEY", activation: gate };
+  const base = { scheduledBlackout: false, dry: false, noModel: false, credentialConfigured: true, credentialVar: "WTP_WORKERS_ANTHROPIC_API_KEY", activation: gate, runnerPaused: false, runnerPauseIntentId: null, unreadableControls: [] };
   assert.deepEqual(modelLaneClosure({ ...base, paused: true, pauseIntentId: "ri-owner-pause" }), { code: "PAUSED", reason: "paused by owner intent ri-owner-pause" });
   for (const file of [
     "lib/control-plane/promotion/campaign-site-cycle.ts",

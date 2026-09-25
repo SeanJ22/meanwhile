@@ -1007,39 +1007,40 @@ async function readAuthorityDatabase(
   // reached this store. Read every current pointer's exact candidate and event
   // history, then bind the resulting sets into the authority artifact.
   const candidates: Row[] = [];
-  let candidateCursor: string | null = null;
   // Candidate envelopes contain the immutable source payload needed for the
   // independent Reader proof. The complete frozen set is intentionally larger
-  // than Neon's 64 MiB HTTP response ceiling, so fetch one ordered envelope per
+  // than Neon's 64 MiB HTTP response ceiling, so fetch one envelope per
   // response while preserving the same complete-set validation and hashes.
-  for (;;) {
+  //
+  // Each pointer's candidate is the one THAT POINTER named when the pass above
+  // read it, fetched by id. The standing runner re-promotes routine meetings
+  // about once a minute, so a second join on the live pointer paired a pointer
+  // read minutes earlier with a candidate promoted since, and refused a
+  // coherent store (2026-09-25: two mints in a row, New London's and Bradford's
+  // boards re-promoted mid-mint). The authority binds the snapshot the pointer
+  // pass read; a later runner edition is a gain the proof already accepts
+  // (`requireReaderProofMeetingsProjection`). The pointer fields below are that
+  // same pass's, so the linkage checks still bind candidate to pointer exactly.
+  for (const [index, pointer] of pointers.entries()) {
+    const versionId = normalized[index]!.currentVersionId;
     const page = await sql.query(`
-      select p.key as pointer_key, p.current_version_id, p.last_known_good_version_id,
-             c.id as candidate_id, c.source_id, c.record_class, c.scope, c.state,
-             p.promoted_at as pointer_promoted_at,
+      select c.id as candidate_id, c.source_id, c.record_class, c.scope, c.state,
              c.acquisition_succeeded, c.promoted_version_id,
              c.last_known_good_version_id as candidate_lkg_version_id,
              c.failure_code, c.failure_detail, c.candidate, c.validation_receipt
-        from public.civic_data_promotions p
-        join public.civic_data_candidates c on c.id = p.current_version_id
-       where ($1::text is null or p.key > $1::text)
-       order by p.key
-       limit 1
-    `, [candidateCursor]);
-    if (page.length === 0) break;
-    if (page.length !== 1) throw new Error("Reader authority durable candidate page cardinality differs");
-    const nextCursor = String(page[0]!.pointer_key);
-    if (!nextCursor || (candidateCursor !== null && nextCursor <= candidateCursor)) {
-      throw new Error("Reader authority durable candidate cursor did not advance");
+        from public.civic_data_candidates c
+       where c.id = $1::text
+    `, [versionId]);
+    if (page.length !== 1 || String(page[0]!.candidate_id) !== versionId) {
+      throw new Error("Reader authority current pointers do not have one durable candidate each");
     }
-    candidates.push(page[0]!);
-    candidateCursor = nextCursor;
-    if (candidates.length > normalized.length) {
-      throw new Error("Reader authority durable candidate set exceeds its pointer set");
-    }
-  }
-  if (candidates.length !== normalized.length) {
-    throw new Error("Reader authority current pointers do not have one durable candidate each");
+    candidates.push({
+      ...page[0]!,
+      pointer_key: pointer.key,
+      current_version_id: pointer.current_version_id,
+      last_known_good_version_id: pointer.last_known_good_version_id,
+      pointer_promoted_at: pointer.promoted_at,
+    });
   }
 
   const predecessorIds = [...new Set(candidates.flatMap((candidateRow) => {

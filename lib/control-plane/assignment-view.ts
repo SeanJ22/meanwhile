@@ -58,7 +58,7 @@
  * records in, rows out; the only clock is `nowIso`.
  */
 import type { Attempt, ExecutionLease, WorkerRef } from "./attempt.ts";
-import type { CostEntry } from "./cost.ts";
+import { isProofProject, type CostEntry } from "./cost.ts";
 import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
 import { displayNameOf, words } from "./display-name.ts";
 import {
@@ -85,10 +85,11 @@ import type { RouteDisposition, RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "./scheduler/durable.ts";
 import { DISCHARGING_DISPOSITIONS } from "./scheduler/dispatch.ts";
-import { isScheduled, scheduleObligation } from "./scheduler/obligation.ts";
+import { isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { WorkItem, WorkItemState } from "./work-item.ts";
+import type { WorkQuestion } from "./work-question.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
@@ -222,6 +223,14 @@ export interface AssignmentWhat {
     readonly band: { readonly band: 1 | 2 | 3; readonly why: string } | null;
   };
   readonly workers: Held<readonly AssignmentWorker[]>;
+  /**
+   * MW-002: the question the latest round asks, as its work item recorded it.
+   * Null when no round recorded one — "not recorded", never a default. Absent
+   * on rows built by paths that do not read it.
+   */
+  readonly question?: WorkQuestion | null;
+  /** MW-001: the owner's Sends recorded on the obligation, in the order they reached it. */
+  readonly assignments?: readonly ObligationAssignment[];
 }
 
 export interface AssignmentLead {
@@ -697,8 +706,7 @@ export function providerOfObligation(id: string): string | null {
 /** Conformance and proof runs write rows into the control plane; they are real rows and never real work. */
 export function isProofRecord(input: { readonly obligationId?: string | null; readonly project?: string | null }): boolean {
   if (typeof input.obligationId === "string" && input.obligationId.startsWith("proof-")) return true;
-  const project = input.project ?? "";
-  return /^conformance(-|$)/.test(project) || project === "control-plane-proof";
+  return isProofProject(input.project);
 }
 
 /** A shared cost is attributable to no single assignment: today, the Scout prompt-cache pre-warm. */
@@ -1402,7 +1410,11 @@ function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSources, clips: 
   );
   const cadence = isScheduled(scheduled) ? clip(scheduled.basis, clips.text) : clip(`the scheduler cannot place it: ${scheduled.reason}`, clips.text);
   const routeWords = ob.routeId === null ? "no route named yet" : words(ob.routeId);
+  /* MW-002: the latest round's own recorded question; an older round that recorded none says so. */
+  const latestRound = [...g.workItems].sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0))[0] ?? null;
   return {
+    question: latestRound?.question ?? null,
+    assignments: ob.assignments ?? [],
     title: `${sentenceCase(ob.recordClass)} via ${routeWords}`,
     recordClass: ob.recordClass,
     subject: ob.subjectId,

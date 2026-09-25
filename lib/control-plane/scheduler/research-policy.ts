@@ -231,6 +231,14 @@ export interface ResearchState {
    * measured", never as zero.
    */
   readonly dispatchWork?: import("../expansion/dispatch-work.ts").DispatchWorkReading | null;
+  /**
+   * MW-001/MW-021: every owner Send as the obligations themselves record it —
+   * what it created and reordered — and its budget as the runner holds it:
+   * spent, held and left in the rolling window. Absent on states written
+   * before Sends were kept on the row, and null when no Send stands: both read
+   * as "nothing measured", never as zero.
+   */
+  readonly assignments?: import("../expansion/assignment-budget.ts").AssignmentCycleReading | null;
 }
 
 /**
@@ -303,6 +311,12 @@ export type ResearchIntent =
       readonly adminSessionRef: string;
       /** The owner's words: a DISPATCH target or a PAUSE_RUNNER reason. Null otherwise. */
       readonly note: string | null;
+      /**
+       * MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it
+       * reaches, in USD. Absent when the owner sent it without one (only the
+       * Fleet ceiling bounds it) and on every other action.
+       */
+      readonly budgetUsd?: number;
     }
   | {
       readonly formatVersion: number;

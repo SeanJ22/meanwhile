@@ -204,7 +204,8 @@ export function parseResearchIntentAction(raw: unknown): ResearchIntentAction | 
 /**
  * The intent the admin route appends. The session id is provenance, never a
  * reader identity. `note` is the owner's own words — a DISPATCH target or a
- * PAUSE_RUNNER reason — and is null for every other action.
+ * PAUSE_RUNNER reason — and is null for every other action. `budgetUsd` is a
+ * DISPATCH's own budget (MW-021), kept only on a DISPATCH.
  */
 export function buildResearchIntent(
   action: ResearchIntentAction,
@@ -212,6 +213,7 @@ export function buildResearchIntent(
   adminSessionRef: string,
   note: string | null = null,
   actor = "owner (admin session)",
+  budgetUsd: number | null = null,
 ): ResearchIntentRecord {
   return {
     formatVersion: RESEARCH_FORMAT_VERSION,
@@ -222,6 +224,7 @@ export function buildResearchIntent(
     actor,
     adminSessionRef,
     note,
+    ...(action === "DISPATCH" && budgetUsd !== null ? { budgetUsd } : {}),
   };
 }
 

@@ -110,7 +110,9 @@ test("a resolved geography renders its ZCTAs, work, spend, coverage and budget â
   assert.match(words, /\$0\.25 in the rolling 24 hours/);
   assert.match(words, /Governments with work: 1 of 1/);
   assert.match(words, /\$0\.25 spent in the rolling 24 hours of a \$5\.00 budget/);
-  assert.match(words, /Admitted: 0\nHeld by budget: 0/, "last cycle it held 0 paid Scouts and let 0 through");
+  assert.match(words, /Admitted: 0\nHeld by the geography's budget: 0/, "last cycle it held 0 paid Scouts and let 0 through");
+  /* MW-021: the instruction's own budget is its own row, and unread is said, never a zero. */
+  assert.match(words, /Held by this instruction's budget: not counted yet/);
   // Admin redesign, 2026-09-23: the card no longer quotes the priority and budget it replaced, and the geography's ZCTA gap is read on the readiness state page (Where the gaps are) rather than on the instruction.
   assert.equal(view.card.id, `scope:${scopeKeyOf(PIMA)}`, "the card opens in place by the same reference Readiness links to");
   // No published assignment list is a named gap on the Work screen, never an empty list.

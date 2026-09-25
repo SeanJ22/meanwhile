@@ -35,6 +35,7 @@
  */
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
+import type { WorkQuestion } from "./work-question.ts";
 /* Re-exported so a cost reader keys on the one constant (2026-09-23). */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
@@ -134,6 +135,52 @@ export interface CostEntry {
   readonly cost: AttemptCost;
   /** Caller-supplied ISO stamp. This module never reads a clock. */
   readonly recordedAt: string;
+  /*
+   * WHAT THE CHARGE WAS FOR (MW-001, MW-013, MW-024; 2026-09-25). Each is
+   * optional and absent on every row written before it existed, which a reader
+   * names as "recorded before purpose was kept" — never as a purpose of its own.
+   * The body the work was for is `jurisdiction`, as it always was.
+   */
+  /** The standing obligation (or task) the dispatch was a round of. */
+  readonly obligationId?: string;
+  /** The owner's Sends that obligation belonged to when the charge was written; empty when none reached it. */
+  readonly assignmentKeys?: readonly string[];
+  /** The record class the work kept fresh. */
+  readonly recordClass?: string;
+  /** The question the work asked (MW-002), when the round recorded one. */
+  readonly question?: WorkQuestion;
+  /**
+   * What the attempt came to: the disposition it committed (`INGESTED`,
+   * `WALKED_NO_YIELD`, …), or `NO_DISPOSITION`, `SIMULATED`,
+   * `DISPOSITION_REFUSED`, `LANE_MISMATCH` when it committed none.
+   */
+  readonly resultKind?: string;
+  /**
+   * A proof or test run's charge (MW-024). Real money: it stays inside every
+   * total and every ceiling, and is kept out of what production work produced.
+   */
+  readonly nonProduction?: true;
+}
+
+/** What the dispatcher writes on a charge's `resultKind` when no disposition was committed. */
+export const COST_RESULT_WITHOUT_DISPOSITION = ["NO_DISPOSITION", "SIMULATED", "DISPOSITION_REFUSED", "LANE_MISMATCH"] as const;
+
+/** The project the autonomous-fleet proof scripts run and charge under (MW-024): never `freshness`. */
+export const AUTONOMOUS_FLEET_PROOF_PROJECT = "autonomous-fleet-proof";
+
+/**
+ * A charge from a proof or test run: marked so, or written under a proof or
+ * conformance project. Real money all the same — this only decides which
+ * productivity figure it may enter.
+ */
+export function isNonProductionCost(entry: Pick<CostEntry, "project" | "nonProduction">): boolean {
+  return entry.nonProduction === true || isProofProject(entry.project);
+}
+
+/** The projects conformance tests and proof runs write under. */
+export function isProofProject(project: string | null | undefined): boolean {
+  const p = project ?? "";
+  return /^conformance(-|$)/.test(p) || p === "control-plane-proof" || p === AUTONOMOUS_FLEET_PROOF_PROJECT;
 }
 
 /**

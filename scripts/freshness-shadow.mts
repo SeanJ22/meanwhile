@@ -140,6 +140,7 @@ import {
   ownerDispatchWorkOf,
   scopeWorkTarget,
   planDispatchWork,
+  type DispatchWorkApplied,
   type DispatchWorkReading,
   type DispatchWorkTarget,
   type DurableRowFacts,
@@ -287,6 +288,14 @@ import {
 } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { loadExpansionPlan, readCensusUnitTerritories, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
+import {
+  armAssignmentBudget,
+  assignmentBudgetsOf,
+  assignmentCycleReading,
+  assignmentMembership,
+  type AssignmentBudgetGate,
+  type AssignmentCycleReading,
+} from "../lib/control-plane/expansion/assignment-budget.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import {
@@ -972,9 +981,12 @@ for (const o of sync.all) {
  * failure is on the record rather than in a guess.
  */
 let intentLog: ResearchIntent[] = [];
+/* MW-021: an unread log cannot say which DISPATCH carries a budget, so their work is held (assignment-budget.ts). */
+let intentLogReadable = true;
 try {
   intentLog = [...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))];
 } catch (error) {
+  intentLogReadable = false;
   runtimeConditions.push(
     `research intents could not be read (${error instanceof Error ? error.message : String(error)}); the lane treats the owner as not paused`,
   );
@@ -1499,6 +1511,8 @@ const dispatchTargets: DispatchWorkTarget[] = [];
   for (const scope of expansionPlan?.scopes ?? []) add(scopeWorkTarget(scope));
 }
 let dispatchWork: DispatchWorkReading | null = null;
+/* The Sends this cycle recorded on rows after they were read, for the assignment budgets below. */
+let dispatchRecorded: NonNullable<DispatchWorkApplied["recorded"]> = [];
 if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
@@ -1516,7 +1530,7 @@ if (dispatchTargets.length > 0) {
       }
     }
     const durable = new Map<string, DurableRowFacts>();
-    for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy });
+    for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
     const plan = planDispatchWork({
       targets: dispatchTargets,
       world: {
@@ -1533,6 +1547,7 @@ if (dispatchTargets.length > 0) {
     const applied = dispatchWorkWrites
       ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS })
       : null;
+    dispatchRecorded = applied?.recorded ?? [];
     dispatchWork = dispatchWorkReading(plan, applied, {
       at: NOW,
       modelLaneClosed: laneDisabledReason,
@@ -1567,6 +1582,38 @@ for (const { intent, detail } of dispatchDetails) {
   const work = dispatchWork?.targets.find((t) => t.key === `dispatch:${intent.intentId}`) ?? null;
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
+
+/*
+ * **MW-021 — EACH SEND'S OWN BUDGET.** (2026-09-25; `lib/control-plane/expansion/
+ * assignment-budget.ts` carries the design note.) Who belongs to a Send is read
+ * from the obligations' own records (plus what the step above recorded after
+ * they were read); what it spent, from the same canonical ledger the Fleet
+ * ceiling reads. Restrict-only, consulted in `admitScout` after every Fleet gate.
+ */
+const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? [])], dispatchRecorded);
+const assignmentSpecs = assignmentBudgetsOf({ scopes: (expansionPlan?.scopes ?? []).map((s) => s.decision), intents: intentLog });
+const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
+  now: NOW,
+  specs: assignmentSpecs,
+  membership: assignmentMembers,
+  costs: ledgerUnreadable === null ? costLedger : null,
+  worstCaseUsd: SCOUT_WORST_CASE_USD,
+  intentsReadable: intentLogReadable,
+});
+const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
+const assignmentsReading = (): AssignmentCycleReading | null =>
+  assignmentSpecs.length === 0 && assignmentMembers.byKey.size === 0
+    ? null
+    : assignmentCycleReading({
+        at: nowIso(),
+        now: NOW,
+        gate: assignmentBudget,
+        specs: assignmentSpecs,
+        membership: assignmentMembers,
+        costs: ledgerUnreadable === null ? costLedger : null,
+        intentsReadable: intentLogReadable,
+        labels: assignmentLabels,
+      });
 
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
@@ -1872,6 +1919,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     researchProgression,
     expansion: expansionReading,
     dispatchWork,
+    assignments: assignmentsReading(),
   };
 }
 
@@ -2198,12 +2246,18 @@ const cycle = await runCycle({
         };
       }
       if (Number.isFinite(SCOUT_MAX) && scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `the diagnostic --scout-max cap of ${SCOUT_MAX} for this cycle is reached` };
+      /* MW-021: each Send's own budget, checked (nothing held yet) before the
+         geography's, so a Send's work is refused under the Send's own name. */
+      const sent = assignmentBudget.check(row.obligation.id);
+      if (!sent.admit) return { admit: false, code: sent.code, why: sent.why };
       /* The owner's expansion-scope budgets: last, so a scope reservation is
          only ever taken for a Scout every Fleet gate above already admitted. */
       if (expansionBudget !== null) {
         const scoped = expansionBudget.gate.admit(row.obligation.id, row.obligation.subjectId);
         if (!scoped.admit) return { admit: false, code: scoped.code, why: scoped.why };
       }
+      /* Admission is synchronous, so this re-check agrees with the one above; it takes the Send's hold. */
+      assignmentBudget.admit(row.obligation.id);
       scoutsAdmittedThisCycle += 1;
       return { admit: true };
     },
@@ -2227,6 +2281,8 @@ const cycle = await runCycle({
         spentThisCycle += result.cost?.usd ?? 0;
         /* A Scout that reported no dollar figure leaves its scope's spend unmeasured, which holds that scope's paid work. */
         expansionBudget?.gate.settle(result.obligationId, result.cost?.usd ?? null);
+        /* The same for every Send it held against (MW-021). */
+        assignmentBudget.settle(result.obligationId, result.cost?.usd ?? null);
         const at = running.findIndex((r) => r.attemptId === result.attemptId);
         if (at >= 0) running.splice(at, 1);
         laneCounts = { ...laneCounts, modelDispatched: laneCounts.modelDispatched + 1 };

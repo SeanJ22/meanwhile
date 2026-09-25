@@ -50,12 +50,14 @@
  * ```
  *   CARRIED    a standing provider already has it on a clock (or a production
  *              meeting partition carries it). The Send puts it first — the
- *              "reordered" count. Nothing is written
+ *              "reordered" count — and records itself on the row as REORDERED
+ *              (MW-001); nothing else about the row changes
  *   CREATED    the owner's dispatch materialized it: a durable obligation in
  *              the same shape `syncObligations` registers (`standing()`),
- *              marked `materializedBy: OWNER_DISPATCH`. The providers keep it
- *              in their corpus from the next cycle, so it is scheduled, owed and
- *              retired like any other clock
+ *              marked `materializedBy: OWNER_DISPATCH` and recording the Send
+ *              that created it (MW-001). The providers keep it in their corpus
+ *              from the next cycle, so it is scheduled, owed and retired like
+ *              any other clock
  *   DEFERRED   missing, inside the cap, and not written this cycle because the
  *              per-cycle write budget ran out (or the dispatch wall came). The
  *              next cycle writes it: the remainder is counted, never dropped
@@ -75,7 +77,8 @@
  * - **Idempotent.** Ids are derived from (government, requirement), never from
  *   the target, so the same requirement is one row however many overlapping
  *   geographies or repeated Sends reach it. Sending the same scope twice creates
- *   nothing new.
+ *   nothing new. Each Send is recorded on a row once per relation, appended to
+ *   what the row already records (MW-001).
  * - **Bounded.** At most `DISPATCH_WORK_WRITE_BUDGET` rows are written per cycle
  *   across every target (owner DISPATCH first, then scopes in priority order),
  *   and at most `DISPATCH_WORK_TARGET_CAP` rows for any one target.
@@ -88,9 +91,9 @@
  *   every other one does: the paid lane is closed while the owner's PAUSE
  *   stands or no delivery path is open, and when it opens every Scout still
  *   passes the Fleet's rolling ceiling (AdminConfig.fleetSpendCeiling, or the
- *   FLEET_SAFETY_BOUNDS fallback) and the scope's own budget
- *   (`ScopeBudgetGate`). There is no per-assignment budget (MW-021); the
- *   budget that binds inside a geography is the geography's. Deterministic rows
+ *   FLEET_SAFETY_BOUNDS fallback), the budget of every Send recorded on the row
+ *   (`AssignmentBudgetGate`, MW-021) and the scope's own budget
+ *   (`ScopeBudgetGate`). Deterministic rows
  *   run on the plain-code lane as they come due. A meetings-discovery row goes
  *   to the unpaid discovery walk first: a paid Scout is admitted for it only
  *   after that walk read the government's site and found nothing
@@ -105,7 +108,8 @@
  * repositories it is handed. No clock, no environment, no file.
  */
 
-import { OWNER_DISPATCH, type FreshnessObligation } from "../scheduler/obligation.ts";
+import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
+import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
@@ -162,6 +166,8 @@ export type DispatchWorkTarget =
       readonly ref: string;
       readonly budgetUsd: number;
       readonly scope: PlannedScope;
+      /** MW-002: the questions the owner asked of this Send; recorded on every obligation it reaches. */
+      readonly questions?: readonly WorkQuestion[];
     }
   | {
       readonly kind: "DISPATCH";
@@ -180,6 +186,8 @@ export type DispatchWorkTarget =
 export interface DurableRowFacts {
   readonly active: boolean;
   readonly materializedBy?: string;
+  /** The Sends already recorded on the row (MW-001), so a Send is recorded on it once. */
+  readonly assignments?: readonly ObligationAssignment[];
 }
 
 /** Everything the planner reads, loaded once by the runner. */
@@ -484,13 +492,41 @@ export interface TargetPlan {
   readonly reordered: number;
 }
 
+/** A MISSING instance queued for writing, with the Send it is written under (the first that reached it). */
+export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarget };
+
+/**
+ * MW-001: a row a Send reached that is already on a clock and does not yet
+ * record that Send — a CARRIED row, or one another Send created. It is
+ * recorded REORDERED; a created row whose creator is not on record (created
+ * before Sends were kept on the row) is left unmarked rather than guessed.
+ */
+export interface PlannedMark {
+  readonly obligationId: string;
+  readonly target: DispatchWorkTarget;
+}
+
 export interface DispatchWorkPlan {
   readonly targets: readonly TargetPlan[];
   /** Every MISSING instance, in write order, each once. */
-  readonly writes: readonly PlannedInstance[];
+  readonly writes: readonly PlannedWrite[];
+  /** Every REORDERED record still to write, in target order; written after the creations, inside the same write budget. */
+  readonly marks: readonly PlannedMark[];
   readonly writeBudget: number;
   readonly cap: number;
   readonly corpusSize: number;
+}
+
+/** The entry a Send leaves on an obligation it reached (MW-001), with its questions when it asked any (MW-002). */
+export function assignmentEntry(target: DispatchWorkTarget, relation: ObligationAssignment["relation"], at: string): ObligationAssignment {
+  const questions = target.kind === "SCOPE" ? (target.questions ?? []) : [];
+  return {
+    assignmentKey: target.key,
+    ref: target.ref,
+    relation,
+    at,
+    ...(questions.length > 0 ? { questions: [...questions] } : {}),
+  };
 }
 
 /**
@@ -526,7 +562,8 @@ export function planDispatchWork(input: {
   ];
 
   const targets: TargetPlan[] = [];
-  const writes: PlannedInstance[] = [];
+  const writes: PlannedWrite[] = [];
+  const marks: PlannedMark[] = [];
   const queued = new Set<string>();
   for (const target of ordered) {
     const units = target.kind === "SCOPE" ? scopeUnits(target.scope, world) : dispatchUnits(target.target, world);
@@ -534,6 +571,8 @@ export function planDispatchWork(input: {
     for (const { reg, jurisdiction } of units.placed) {
       instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions));
     }
+    /* MW-001: does the row already record this Send, in any relation? */
+    const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key);
 
     let window = 0;
     const planned: PlannedInstance[] = [];
@@ -545,16 +584,20 @@ export function planDispatchWork(input: {
         continue;
       }
       if (instance.carriage === "MEETING_PARTITION") {
+        /* A production meeting partition carries it: there is no obligation row to record the Send on. */
         planned.push({ instance, state: "CARRIED", existsUnmarked: false });
         continue;
       }
       if (row?.materializedBy === OWNER_DISPATCH) {
         window += 1;
         planned.push({ instance, state: "CREATED", existsUnmarked: false });
+        /* Another Send created it: this one found it on a clock. A creator not on record is never guessed. */
+        if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) marks.push({ obligationId: id, target });
         continue;
       }
       if (corpusIds.has(id) && row?.active !== false) {
         planned.push({ instance, state: "CARRIED", existsUnmarked: false });
+        if (row !== undefined && !recorded(row)) marks.push({ obligationId: id, target });
         continue;
       }
       if (window >= cap) {
@@ -566,7 +609,7 @@ export function planDispatchWork(input: {
       planned.push(entry);
       if (!queued.has(id)) {
         queued.add(id);
-        writes.push(entry);
+        writes.push({ ...entry, target });
       }
     }
 
@@ -579,7 +622,7 @@ export function planDispatchWork(input: {
           : world.corpus.filter((o) => unitMatchesTarget(target.target, o) && world.durable.get(o.id)?.materializedBy !== OWNER_DISPATCH).length;
     targets.push({ target, units, instances: planned, reordered });
   }
-  return { targets, writes, writeBudget, cap, corpusSize: world.corpus.length };
+  return { targets, writes, marks, writeBudget, cap, corpusSize: world.corpus.length };
 }
 
 /* ------------------------------------------------------------------- apply */
@@ -590,16 +633,26 @@ export interface DispatchWorkApplied {
   /** Planned writes not reached this cycle: the budget or the wall ran out first. */
   readonly deferred: readonly string[];
   readonly stoppedBy: "DONE" | "WRITE_BUDGET" | "DEADLINE";
+  /** MW-001: REORDERED records written this cycle. */
+  readonly marked?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
+  readonly markFailed?: readonly { readonly obligationId: string; readonly assignmentKey: string; readonly why: string }[];
+  /** REORDERED records not reached this cycle (the same budget and wall); the next cycle plans them again. */
+  readonly marksDeferred?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
+  /** Every Send recorded on a row this cycle — created or reordered — for the runner's assignment budgets. */
+  readonly recorded?: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[];
 }
 
 /**
  * **APPLY.** Write the plan's missing rows in order, up to the write budget,
  * stopping early when `deadlineReached` says the cycle's wall is near. A row
  * nobody holds is registered exactly as `syncObligations` registers a new one
- * (`standing()`), marked OWNER_DISPATCH. A row that exists unmarked — retired,
- * or live outside the corpus — is marked and made active again, keeping its
- * runtime history (occurrences, last work, argued absence). One row's failure
- * is named and never stops the others. The runner is the only caller.
+ * (`standing()`), marked OWNER_DISPATCH and recording the Send that created it
+ * (MW-001). A row that exists unmarked — retired, or live outside the corpus —
+ * is marked and made active again, keeping its runtime history (occurrences,
+ * last work, argued absence, earlier Sends). Then, inside what is left of the
+ * same budget, every row the Sends reached on an existing clock records them
+ * as REORDERED — appended, never overwriting. One row's failure is named and
+ * never stops the others. The runner is the only caller.
  */
 export async function applyDispatchWork(
   repos: ControlPlaneRepositories,
@@ -609,14 +662,19 @@ export async function applyDispatchWork(
   const written: string[] = [];
   const failed: { obligationId: string; why: string }[] = [];
   const deferred: string[] = [];
+  const marked: { obligationId: string; assignmentKey: string }[] = [];
+  const markFailed: { obligationId: string; assignmentKey: string; why: string }[] = [];
+  const marksDeferred: { obligationId: string; assignmentKey: string }[] = [];
+  const recorded: { obligationId: string; subjectId: string; entry: ObligationAssignment }[] = [];
   let stoppedBy: DispatchWorkApplied["stoppedBy"] = "DONE";
+  const spent = (): number => written.length + failed.length + marked.length + markFailed.length;
   for (const entry of plan.writes) {
     const id = entry.instance.obligation.id;
     if (stoppedBy !== "DONE") {
       deferred.push(id);
       continue;
     }
-    if (written.length + failed.length >= plan.writeBudget) {
+    if (spent() >= plan.writeBudget) {
       stoppedBy = "WRITE_BUDGET";
       deferred.push(id);
       continue;
@@ -626,11 +684,15 @@ export async function applyDispatchWork(
       deferred.push(id);
       continue;
     }
+    const created = assignmentEntry(entry.target, "CREATED", input.now);
     try {
+      /* The Send is recorded only where this write is what made the row this Send's. */
+      let recordedHere = true;
       if (!entry.existsUnmarked) {
-        await repos.obligations.put(id, standing(entry.instance.obligation, input.now), input.now);
+        await repos.obligations.put(id, standing({ ...entry.instance.obligation, assignments: [created] }, input.now), input.now);
       } else {
         const held = await repos.obligations.mustRead(id);
+        recordedHere = held.value.materializedBy !== OWNER_DISPATCH;
         if (held.value.materializedBy !== OWNER_DISPATCH) {
           const { retiredAt: _retiredAt, retirementReason: _retirementReason, ...rest } = held.value;
           await repos.obligations.compareAndSet(
@@ -641,6 +703,7 @@ export async function applyDispatchWork(
               active: true,
               nextDueAt: held.value.active ? held.value.nextDueAt : null,
               materializedBy: OWNER_DISPATCH,
+              assignments: withAssignment(held.value.assignments, created),
               updatedAt: input.now,
             },
             input.now,
@@ -648,11 +711,41 @@ export async function applyDispatchWork(
         }
       }
       written.push(id);
+      if (recordedHere) recorded.push({ obligationId: id, subjectId: entry.instance.obligation.subjectId, entry: created });
     } catch (error) {
       failed.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
     }
   }
-  return { written, failed, deferred, stoppedBy };
+  for (const mark of plan.marks) {
+    const key = { obligationId: mark.obligationId, assignmentKey: mark.target.key };
+    if (stoppedBy !== "DONE") {
+      marksDeferred.push(key);
+      continue;
+    }
+    if (spent() >= plan.writeBudget) {
+      stoppedBy = "WRITE_BUDGET";
+      marksDeferred.push(key);
+      continue;
+    }
+    if (input.deadlineReached?.() === true) {
+      stoppedBy = "DEADLINE";
+      marksDeferred.push(key);
+      continue;
+    }
+    const reordered = assignmentEntry(mark.target, "REORDERED", input.now);
+    try {
+      const held = await repos.obligations.mustRead(mark.obligationId);
+      const next = withAssignment(held.value.assignments, reordered);
+      if (next !== held.value.assignments) {
+        await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next, updatedAt: input.now }, input.now);
+      }
+      marked.push(key);
+      recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });
+    } catch (error) {
+      markFailed.push({ ...key, why: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  return { written, failed, deferred, stoppedBy, marked, markFailed, marksDeferred, recorded };
 }
 
 /* ----------------------------------------------------------------- reading */
@@ -699,6 +792,12 @@ export interface DispatchWorkTargetReading {
   readonly requirements: DispatchWorkRequirementCounts;
   /** Standing obligations about the target's governments, of every standing obligation this cycle. */
   readonly reordered: { readonly obligations: number; readonly of: number };
+  /**
+   * MW-001: this Send recorded on the rows it reached this cycle — created and
+   * reordered — and the REORDERED records still to write. Absent on readings
+   * written before Sends were kept on the row.
+   */
+  readonly assignment?: { readonly recordedThisCycle: number; readonly marksDeferred: number; readonly marksFailed: number };
   readonly cap: number;
   /** Plain sentences: why created work waits, which budgets bind, what is not built. */
   readonly says: readonly string[];
@@ -715,6 +814,9 @@ export interface DispatchWorkReading {
   readonly deferred: number;
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
   readonly stoppedBy: DispatchWorkApplied["stoppedBy"] | null;
+  /** MW-001: REORDERED records written this cycle, and those left for the next. Absent on older readings. */
+  readonly marked?: number;
+  readonly marksDeferred?: number;
   readonly targets: readonly DispatchWorkTargetReading[];
 }
 
@@ -740,6 +842,7 @@ export function dispatchWorkReading(
 ): DispatchWorkReading {
   const written = new Set(applied?.written ?? []);
   const failed = new Set((applied?.failed ?? []).map((f) => f.obligationId));
+  const countFor = (rows: readonly { readonly assignmentKey: string }[] | undefined, key: string): number => (rows ?? []).filter((r) => r.assignmentKey === key).length;
   const targets = plan.targets.map((t): DispatchWorkTargetReading => {
     let carried = 0;
     let created = 0;
@@ -785,8 +888,10 @@ export function dispatchWorkReading(
       says.push(
         `When the paid lane runs, every Scout passes the Fleet's ${usd(context.ceilingUsd)} rolling 24-hour ceiling ` +
           `(${context.ceilingSource === "OVERRIDE" ? "your dial" : "the built-in fallback"}) first` +
-          (t.target.kind === "SCOPE" ? `, then this geography's ${usd(t.target.budgetUsd)} budget.` : ".") +
-          " There is no per-assignment budget yet (MW-021).",
+          (t.target.kind === "SCOPE"
+            ? `, then this Send's own ${usd(t.target.budgetUsd)} rolling 24-hour budget over the work it reached, and this geography's.`
+            : ", then this Send's own budget over the work it reached, when you sent it with one.") +
+          " Work several Sends reached runs while any of them has room.",
       );
     }
     if (createdDeterministic > 0) says.push(`${createdDeterministic} run on the plain-code lane as they come due, at no model cost.`);
@@ -806,6 +911,18 @@ export function dispatchWorkReading(
       says.push(
         `${t.units.unplaced} government(s) in ${t.target.kind === "SCOPE" ? t.target.scope.states.join(", ") : "these states"} cannot be placed in or out of ` +
           `any geography — most have no ZCTA territory (${DATASET.unitTerritory}), the rest join no single Census unit — so they are counted here and never guessed in.`,
+      );
+    }
+    const planMarks = plan.marks.filter((m) => m.target.key === t.target.key).length;
+    const assignment = {
+      recordedThisCycle: applied === null ? 0 : countFor(applied.marked, t.target.key) + (applied.recorded ?? []).filter((r) => r.entry.assignmentKey === t.target.key && r.entry.relation === "CREATED").length,
+      marksDeferred: applied === null ? planMarks : countFor(applied.marksDeferred, t.target.key),
+      marksFailed: applied === null ? 0 : countFor(applied.markFailed, t.target.key),
+    };
+    if (assignment.marksDeferred + assignment.marksFailed > 0) {
+      says.push(
+        `${assignment.marksDeferred + assignment.marksFailed} obligation(s) this Send reached on an existing clock do not record it yet; ` +
+          "they are recorded inside the same per-cycle write budget as the next cycles run.",
       );
     }
     return {
@@ -835,6 +952,7 @@ export function dispatchWorkReading(
         createdMeetingsDiscovery,
       },
       reordered: { obligations: t.reordered, of: plan.corpusSize },
+      assignment,
       cap: plan.cap,
       says,
     };
@@ -849,6 +967,8 @@ export function dispatchWorkReading(
     deferred: applied?.deferred.length ?? (context.writes === "PLAN_ONLY" ? plan.writes.length : 0),
     failed: applied?.failed ?? [],
     stoppedBy: applied?.stoppedBy ?? null,
+    marked: applied?.marked?.length ?? 0,
+    marksDeferred: applied === null ? plan.marks.length : (applied.marksDeferred?.length ?? 0),
     targets,
   };
 }
@@ -917,7 +1037,16 @@ export function dispatchWorkTarget(input: { readonly intentId: string; readonly 
 /** A SCOPE target from a selected scope as the cycle planned it. */
 export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
   const d = scope.decision;
-  return { kind: "SCOPE", key: d.key, label: d.geography.label, requestedAt: d.decidedAt, ref: d.receiptId, budgetUsd: d.budgetUsd, scope };
+  return {
+    kind: "SCOPE",
+    key: d.key,
+    label: d.geography.label,
+    requestedAt: d.decidedAt,
+    ref: d.receiptId,
+    budgetUsd: d.budgetUsd,
+    scope,
+    ...(d.questions !== undefined && d.questions.length > 0 ? { questions: d.questions } : {}),
+  };
 }
 
 /**
@@ -929,7 +1058,15 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
 export function carriedDispatchTargets(prior: unknown): DispatchWorkTarget[] {
   if (!isDispatchWorkReading(prior)) return [];
   return prior.targets
-    .filter((t) => t.kind === "DISPATCH" && (t.requirements.deferred > 0 || t.requirements.failed > 0))
+    .filter(
+      (t) =>
+        t.kind === "DISPATCH" &&
+        (t.requirements.deferred > 0 ||
+          t.requirements.failed > 0 ||
+          /* MW-001: a Send is carried until every row it reached records it. */
+          (t.assignment?.marksDeferred ?? 0) > 0 ||
+          (t.assignment?.marksFailed ?? 0) > 0),
+    )
     .map((t) => dispatchWorkTarget({ intentId: t.ref, note: t.label, requestedAt: t.requestedAt }));
 }
 

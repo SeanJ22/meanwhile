@@ -96,7 +96,7 @@ try {
 
   /* ---------------------------------------------------------- the control plane */
   const control = await readOnly(urlOf("WTP_CONTROL_PLANE_DATABASE_URL"), {
-    rows: `SELECT id, value->>'active' AS active, value->>'materializedBy' AS marked FROM cp_obligations ORDER BY id`,
+    rows: `SELECT id, value->>'active' AS active, value->>'materializedBy' AS marked, value->'assignments' AS assignments FROM cp_obligations ORDER BY id`,
     config: `SELECT value FROM cp_admin_config WHERE id = 'current'`,
     research: `SELECT value->>'modelLaneDisabledReason' AS closed, value->>'pausedByOwner' AS paused FROM cp_research_state WHERE id = 'level-1'`,
   });
@@ -104,7 +104,9 @@ try {
   const materialized = new Set<string>();
   for (const row of control.rows) {
     const marked = row.marked === OWNER_DISPATCH ? OWNER_DISPATCH : undefined;
-    durable.set(String(row.id), { active: row.active === "true", ...(marked ? { materializedBy: marked } : {}) });
+    /* MW-001: the Sends a row already records, so the plan does not record them twice. */
+    const assignments = Array.isArray(row.assignments) ? (row.assignments as DurableRowFacts["assignments"]) : undefined;
+    durable.set(String(row.id), { active: row.active === "true", ...(marked ? { materializedBy: marked } : {}), ...(assignments ? { assignments } : {}) });
     if (marked) materialized.add(String(row.id));
   }
   const config = control.config[0]?.value;

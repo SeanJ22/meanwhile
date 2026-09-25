@@ -65,7 +65,7 @@ import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
 import { refreshStateMoneyFromPromoted } from "@/lib/funding/state-snapshot";
 import { refreshAzPimaFinanceFromPromoted } from "@/lib/control-plane/campaign-finance/held-records";
-import { refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
+import { isRetiredStateRollCallScope, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
   officialStateRollCallTargetByScope,
   officialStateVoteScopeForOfficeholderId,
@@ -649,16 +649,18 @@ export async function POST(request: Request) {
   // State-roll identity is established before any state pointer opens. Only
   // the state(s) named by the reader's divisions or exact source-namespaced
   // subject ids are eligible for this request; unrelated states are not
-  // touched and therefore cannot suppress or delay the answer.
+  // touched and therefore cannot suppress or delay the answer. A retired
+  // STATE_ROLL_CALL scope (New Hampshire, now per-legislator) is never opened:
+  // its pointer is a stale version nothing writes (R9).
   const stateVoteScopes = new Set<OfficialStateVoteScope>();
   for (const state of statesOf(ocdIds)) {
     const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
-    if (target) stateVoteScopes.add(target.jurisdiction);
+    if (target && !isRetiredStateRollCallScope(target.jurisdiction)) stateVoteScopes.add(target.jurisdiction);
   }
   for (const ref of [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]) {
     if (!ref.id) continue;
     const scope = officialStateVoteScopeForOfficeholderId(ref.id);
-    if (scope) stateVoteScopes.add(scope);
+    if (scope && !isRetiredStateRollCallScope(scope)) stateVoteScopes.add(scope);
   }
 
   /* Wall-clock per stage (2026-09-24): the time outside the model calls was

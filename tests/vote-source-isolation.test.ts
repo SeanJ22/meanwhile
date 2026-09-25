@@ -12,14 +12,18 @@ import {
   clearStateVotesProjectionCacheForTest,
   getStateVotesSnapshot,
   OFFICIAL_STATE_VOTE_SCOPES,
+  RETIRED_STATE_ROLL_CALL_SCOPES,
+  isRetiredStateRollCallScope,
   officialStateVoteProjectionIssue,
   readAvailableOfficialStateVotes,
+  readOfficialStateVotesProjection,
   type OfficialStateVoteScope,
 } from "../lib/sources/legiscan/snapshot.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import type { StateVotesSnapshot } from "../lib/sources/legiscan/types.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { MemberKeyVotes } from "../lib/votes/key-votes-reader.ts";
-import { officialStateLegislatorTargetByScope } from "../lib/state-rollcalls/authority.ts";
+import { OFFICIAL_STATE_ROLL_CALL_TARGETS, officialStateLegislatorTargetByScope } from "../lib/state-rollcalls/authority.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 
 const MEMBER = "congress:C001133";
@@ -177,10 +181,10 @@ test("official state proof enumeration keeps NOT_RECORDED explicit without borro
     return stateReadResult(scope, scope === "US-AZ" ? "NOT_RECORDED" : "PROMOTED");
   });
   assert.deepEqual(calls, OFFICIAL_STATE_VOTE_SCOPES);
-  assert.deepEqual(result.promoted.map(({ scope }) => scope), ["US-NH", "US-NJ"]);
+  assert.deepEqual(calls, ["US-AZ", "US-NJ"], "the retired New Hampshire pointer is never opened");
+  assert.deepEqual(result.promoted.map(({ scope }) => scope), ["US-NJ"]);
   assert.deepEqual(result.readbacks, [
     { scope: "US-AZ", kind: "NOT_RECORDED", versionId: null },
-    { scope: "US-NH", kind: "PROMOTED", versionId: "US-NH:good" },
     { scope: "US-NJ", kind: "PROMOTED", versionId: "US-NJ:good" },
   ]);
 });
@@ -189,9 +193,49 @@ test("official state proof enumeration fails closed on an unreadable canonical s
   await assert.rejects(
     readAvailableOfficialStateVotes({}, async (scope) => stateReadResult(
       scope,
-      scope === "US-NH" ? "STORE_UNREACHABLE" : "NOT_RECORDED",
+      scope === "US-NJ" ? "STORE_UNREACHABLE" : "NOT_RECORDED",
     )),
-    /Official state-roll read for US-NH is STORE_UNREACHABLE/,
+    /Official state-roll read for US-NJ is STORE_UNREACHABLE/,
+  );
+});
+
+/*
+ * R9 (2026-09-25): New Hampshire moved to the per-legislator fan-out
+ * (`nh-state-rollcalls`, STATE_LEGISLATOR_VOTES); nothing writes its
+ * STATE_ROLL_CALL pointer, yet every proof enumeration and Reader read still
+ * opened that stale version. The read list is derived from the contracts, as
+ * the Reader render gate is, and the retired scope is named.
+ */
+test("R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; the retired one is named", () => {
+  const derived = OFFICIAL_STATE_ROLL_CALL_TARGETS
+    .filter((target) => {
+      const contract = ROUTINE_SOURCE_CONTRACTS.find((entry) => entry.id === target.contractId);
+      assert.ok(contract, `no registered contract for ${target.contractId}`);
+      return contract.recordClass === "STATE_ROLL_CALL";
+    })
+    .map((target) => target.jurisdiction);
+  assert.deepEqual([...OFFICIAL_STATE_VOTE_SCOPES], derived);
+  assert.deepEqual(
+    RETIRED_STATE_ROLL_CALL_SCOPES.map(({ scope }) => scope),
+    OFFICIAL_STATE_ROLL_CALL_TARGETS.map(({ jurisdiction }) => jurisdiction).filter((scope) => !derived.includes(scope)),
+    "every official target the contracts no longer promote per jurisdiction is retired by name, and only those",
+  );
+  assert.deepEqual(RETIRED_STATE_ROLL_CALL_SCOPES.map(({ scope }) => scope), ["US-NH"]);
+  assert.equal(
+    ROUTINE_SOURCE_CONTRACTS.find((entry) => entry.id === "nh-state-rollcalls")?.recordClass,
+    "STATE_LEGISLATOR_VOTES",
+  );
+  assert.equal(isRetiredStateRollCallScope("US-NH"), true);
+  assert.equal(isRetiredStateRollCallScope("US-NJ"), false);
+});
+
+test("R9: the retired New Hampshire pointer is refused before any store opens", async () => {
+  const store = new Proxy({}, {
+    get() { throw new Error("the store was opened for a retired scope"); },
+  });
+  await assert.rejects(
+    readOfficialStateVotesProjection("US-NH", { store: store as never, bypassCache: true }),
+    /STATE_ROLL_CALL_SCOPE_RETIRED:US-NH/,
   );
 });
 
@@ -247,7 +291,7 @@ test("an exact Arizona id absent from its held projection is a scoped no-record 
 test("the permanent state-vote Reader has no retired aggregate-scope probe", () => {
   const reader = readFileSync(new URL("../lib/sources/legiscan/snapshot.ts", import.meta.url), "utf8");
   assert.doesNotMatch(reader, /supported-states/);
-  assert.deepEqual(OFFICIAL_STATE_VOTE_SCOPES, ["US-AZ", "US-NH", "US-NJ"]);
+  assert.deepEqual(OFFICIAL_STATE_VOTE_SCOPES, ["US-AZ", "US-NJ"]);
 });
 
 test("a production process cannot reopen the retired aggregate through a test marker", { concurrency: false }, () => {

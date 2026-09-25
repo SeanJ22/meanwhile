@@ -11,7 +11,9 @@
  *                kind. Changing the kind replaces the choices and clears the
  *                pick, so a county can never stay chosen under a district.
  *   the preview  the geography's real codes and the bodies reaching them,
- *                read before anything is sent (/api/admin/geography-preview)
+ *                read before anything is sent (/api/admin/geography-preview),
+ *                and per state how many governments a Send creates work for
+ *                and whether a reviewed registry or registration names them
  *   Send it      `expansion.scope.set`: your geography, its priority, its
  *                rolling 24-hour budget for paid work there, and your words.
  *                At its next cycle the runner creates the work the registry
@@ -77,6 +79,15 @@ interface Preview {
     readonly watched: Readonly<Record<string, number>>;
   } | null;
   readonly totalsGap?: string | null;
+  /** Per state the geography reaches: what a Send creates there, and whether a reviewed registry or registration names its governments. */
+  readonly send?: {
+    readonly states: readonly (
+      | { readonly kind: "REVIEWED_REGISTRY"; readonly state: string }
+      | { readonly kind: "REGISTRATION"; readonly state: string; readonly versionId: string; readonly governments: readonly string[]; readonly edge: readonly string[] }
+      | { readonly kind: "NOT_READ"; readonly state: string; readonly why: string }
+    )[];
+    readonly says: readonly string[];
+  };
 }
 
 /* MW-002: the six questions, in the gateway's own vocabulary — sent typed, never folded into the words. */
@@ -218,6 +229,10 @@ export function Composer(props: {
     }
   }
 
+  /* Governments a Send here creates work for, where registration names them (the reviewed registries' count is the runner's). */
+  const registrationStates = (p?.send?.states ?? []).filter((x) => x.kind === "REGISTRATION");
+  const sendCount = registrationStates.length === 0 ? null : registrationStates.reduce((n, x) => n + x.governments.length, 0);
+  const sendEdge = registrationStates.reduce((n, x) => n + x.edge.length, 0);
   const watchedNow = t ? Object.values(t.watched ?? {}).reduce((a, b) => a + b, 0) : 0;
   const stuck = t?.watched?.STUCK ?? 0;
 
@@ -318,6 +333,11 @@ export function Composer(props: {
                       ? p.totalsGap
                       : "The preview returned no count of bodies, and no reason for it."}
                 </p>
+                {(p.send?.says ?? []).map((line) => (
+                  <p key={line} className={s.note} style={{ marginTop: 8 }}>
+                    {line}
+                  </p>
+                ))}
               </>
             )}
           </div>
@@ -434,7 +454,11 @@ export function Composer(props: {
             <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
               At its next cycle the runner creates the work the registry defines here that no clock carries yet — at most {DISPATCH_WORK_WRITE_BUDGET} a cycle and{" "}
               {DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} for this geography — and counts what it created, reordered and could not reach. It invents nothing no
-              registry defines: governments in a state with no promoted registry are named as blocked.
+              registry defines: a state&apos;s governments come from its reviewed registry, or where it has none from its registration (the 2022 Census of Governments),
+              and a state whose registration cannot be read is named as blocked.
+              {sendCount !== null
+                ? ` Here that is ${sendCount} ${sendCount === 1 ? "government" : "governments"} from registration${sendEdge > 0 ? `, and up to ${sendEdge} more at the edge` : ""}.`
+                : ""}
               {t && t.neverWalked > 0 ? ` ${t.neverWalked} bodies here have never been walked; finding a way in is paid research` : " Finding a way in to a body is paid research"}
               {props.paidLaneClosedBecause ? `, and that lane is ${props.paidLaneClosedBecause}` : ", which this budget bounds."}
             </span>

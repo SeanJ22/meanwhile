@@ -36,7 +36,9 @@
  *
  * Every collection row carries a `run_class`. Roughly 537 rows on production
  * were written by this project's own Playwright walks and every walk adds ~28
- * more, because `/api/meetings` writes a `SEARCH` row on every GET. Counting
+ * more, because the map sends a `SEARCH` row for every meetings answer it
+ * receives (the client's `/api/log` beacon since PDC-9; `/api/meetings` itself
+ * writes nothing, and a CDN-held answer never reaches it). Counting
  * those as readers would be a false claim about demand — the exact failure
  * `lib/signal/search-log-reads.ts` exists to prevent, and the reason
  * `tests/search-log-exclusion.test.ts` refuses any read of that table which

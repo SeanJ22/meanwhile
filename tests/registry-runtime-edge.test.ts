@@ -16,7 +16,7 @@ import {
   registryRuntimeReadState,
   getRegistryRuntimeReadModel,
 } from "../lib/registry/runtime-read-model.ts";
-import { currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
+import { currentRegistryRuntimeEdge, enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal, settleEdgeFirst } from "../lib/registry/runtime-edge.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 
 function emptySnapshot(): MeetingsSnapshot {
@@ -69,6 +69,27 @@ test("primeRegistryRuntimeFromValue serves the value synchronously with its vers
   assert.equal(getRegistryRuntimeReadModel().bodyRosters.length, value.bodyRosters.length);
   const state = registryRuntimeReadState();
   assert.equal(state.metadata.versionId, "rt-prime-v9", "the registry authority key sees the edge version");
+});
+
+test("settleEdgeFirst (R24): the edge value is primed with no read; without one the database is read; an edge-only context refuses", async () => {
+  const calls: string[] = [];
+  const settle = (edge: { value: { n: number }; versionId: string } | null) => settleEdgeFirst(
+    () => edge,
+    (value, versionId) => { calls.push(`prime:${value.n}:${versionId}`); },
+    async () => { calls.push("database"); },
+    "The probe family",
+  );
+  await settle({ value: { n: 7 }, versionId: "edge-v7" });
+  assert.deepEqual(calls.splice(0), ["prime:7:edge-v7"], "an edge value never reaches the database");
+  await settle(null);
+  assert.deepEqual(calls.splice(0), ["database"], "no edge value: the authoritative database read");
+  await (async () => {
+    // Entered after this helper's first await, so the edge-only context stays inside it.
+    await Promise.resolve();
+    enterReaderAuthorityEdge({ edgeOnly: true });
+    await assert.rejects(settle(null), (error: unknown) => error instanceof ReaderEdgeOnlyRefusal && /The probe family/.test(error.message));
+  })();
+  assert.deepEqual(calls, [], "an edge-only context refuses before any database read");
 });
 
 test("the registry-runtime edge value is request-scoped: absent by default (runner/workers keep the DB path)", () => {

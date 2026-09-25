@@ -326,5 +326,9 @@ test("the production promoter has no tracked-input or Git-writer fallback", () =
   assert.doesNotMatch(command, /tests\/fixtures|data\/reference\/census_govt_units_2022/);
   const provider = readFileSync(join(ROOT, "lib/control-plane/scheduler/providers/local-jurisdictions.ts"), "utf8");
   assert.doesNotMatch(provider, /readFileSync|data\/states\/\$?\{?state|jurisdictionRegistryPath/);
-  assert.match(provider, /requiredOperationalJurisdictionRegistry/);
+  /* The one accessor (2026-09-25): the promoted reviewed bundle, else a state's promoted registration the runner installed. */
+  assert.match(provider, /requiredJurisdictionRegistry/);
+  const accessor = readFileSync(join(ROOT, "lib/civic-data/operational-references.ts"), "utf8");
+  assert.doesNotMatch(accessor, /readFileSync|node:fs|data\/states/, "the accessor reads no tracked file");
+  assert.match(accessor, /export function requiredJurisdictionRegistry[\s\S]*?requiredOperationalJurisdictionRegistry\(key\)[\s\S]*?installedRegistration\.get\(key\)/);
 });

@@ -416,10 +416,28 @@ async function listingMultiplicityWitness(page: Page, label: string) {
   // multiple source listings — not the volatile total. Mirrors the identical
   // reconciliation already applied in reader-last-mile-final-render.mts. The loop
   // below is data-derived from `groups`, so it exercises whatever is present.
-  assert.ok(groups.length >= 1, `expected at least one unresolved-count Newbury listing group; got ${groups.length}`);
   assert.ok(groups.every(g => g.uniqueMeetingCount === null && g.sourceIds.length >= 2 && g.sourceListingCount >= 2), "every unresolved Newbury group must disclose a null distinct count over multiple source listings");
   const stat = page.locator('[data-stat="meetings"]').first();
   if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+  if (groups.length === 0) {
+    // Newbury's identical twice-listed sittings merge at the source (7b3e5abb), so
+    // a held projection can carry no ambiguous group. The proof is then the
+    // resolved render, read positively: a plain meeting count, no unresolved note,
+    // no notice, and every stated row (validated in reader-last-mile-witnesses.mts).
+    await stat.getByText("Meetings", { exact: true }).waitFor({ state: "visible" });
+    const statText = await stat.innerText();
+    const count = Number(await stat.locator(".num").innerText());
+    await capture(page, `${label}-listing-count`, stat);
+    await stat.click();
+    await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
+    while (await page.locator(".al-more").count()) await page.locator(".al-more").click();
+    const renderedListingCount = await page.locator(".al-row").count();
+    assert.equal(renderedListingCount, count, "Every stated meeting is an accessible row");
+    const unresolvedNoticeCount = await page.locator('.al-panel [data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]').count();
+    await capture(page, `${label}-listing-overlay`, page.locator(".al-row").first());
+    await page.keyboard.press("Escape");
+    return { renderedListingCount: count, groups: [], resolved: { heading: "Meetings", countNote: statText.includes("Distinct meeting count unresolved.") ? "Distinct meeting count unresolved." : null, unresolvedNoticeCount, renderedListingCount } };
+  }
   await stat.getByText("Calendar listings", { exact: true }).waitFor({ state: "visible" });
   assert.ok((await stat.innerText()).includes("Distinct meeting count unresolved."));
   const count = Number(await stat.locator(".num").innerText());
@@ -534,10 +552,11 @@ async function meetingWitness(page: Page, meetingId: string, label: string, comp
   } else {
   await row.click();
   if (meeting.location) {
-    // The list first opens the venue's real sitting list. Use the sitting's
-    // held agenda link and date to distinguish regular/study sessions there.
-    assert.ok(meeting.agendaUrl, `${meetingId}: known-answer witness has its exact agenda URL`);
-    const entry = page.locator('aside:is([aria-label^="Meetings at"],[aria-label^="Calendar listings at"]):visible article').filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }).filter({ hasText: formatMeetingDate(meeting) });
+    // The list first opens the venue's real sitting list. The sitting's own
+    // article, its date, and its held agenda link when it has one (a calendar
+    // feed's sitting publishes none) distinguish regular/study sessions there.
+    const venueSittings = page.locator(`aside:is([aria-label^="Meetings at"],[aria-label^="Calendar listings at"]):visible article[data-meeting-id="${meetingId}"]`).filter({ hasText: formatMeetingDate(meeting) });
+    const entry = meeting.agendaUrl ? venueSittings.filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }) : venueSittings;
     assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
     if (componentWitness) await capture(page, `${label}-venue-meeting-panel`, entry);
     await entry.locator("h3 button").click();
@@ -633,8 +652,18 @@ async function meetingWitness(page: Page, meetingId: string, label: string, comp
   return { meetingId, bodyId: meeting.bodyId, path, placeless, returned: payload, renderedCounts: payload.records.counts, minutes: minutes?.summary ?? null, commentAccessBodyId: access?.bodyId ?? null, commentAccessLines: accessLines, commentAccessApplicability: readerStatus === "CONCLUDED" ? "Concluded sitting: participation rules intentionally do not apply" : "Current body participation rules" };
 }
 
+/** 03255's witness: the newest concluded Newbury Selectboard sitting from its own calendar feed (CivicWeb retired 2026-09-25). */
+function newburySelectboardWitness(): string {
+  const now = Date.now();
+  const found = heldMeetings
+    .filter((row) => row.id.startsWith("ical:newbury-ical-governing:") && Date.parse(row.startsAt) < now)
+    .sort((a, b) => Date.parse(b.startsAt) - Date.parse(a.startsAt))[0];
+  assert.ok(found, "no concluded Newbury Selectboard sitting is held");
+  return found.id;
+}
+
 async function activityWitnesses(page: Page, zip: string, label: string) {
-  const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827", "diligent:tusd1:493"] : zip === "85641" ? ["apptegy:vail:60703698"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : ["diligent:newburynh:3367"];
+  const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827", "diligent:tusd1:493"] : zip === "85641" ? ["apptegy:vail:60703698"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : [newburySelectboardWitness()];
   const rows = [];
   // The venue panel and the map popup are witnessed on the ZIP's first LOCATED
   // witness: a placeless sitting has neither (owner decision 1, 2026-09-24). Until

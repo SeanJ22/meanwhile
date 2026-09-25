@@ -13,6 +13,7 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
+import { JURISDICTION_REFERENCE_STATES, type JurisdictionReferenceState } from "./reviewed-registry-states.ts";
 import { sourceProjectionEvidence, type CivicRecordMember, type RoutineCandidate } from "./types.ts";
 import {
   applicableWebsiteCorrections,
@@ -27,9 +28,8 @@ export const JURISDICTION_REFERENCE_SOURCE_ID = "jurisdiction-operational-refere
 export const JURISDICTION_REFERENCE_SCOPE = "US:covered-jurisdiction-routing:v1" as const;
 export const JURISDICTION_REFERENCE_PARSER_VERSION = "jurisdiction-operational-reference/3" as const;
 export const JURISDICTION_REFERENCE_VERSION = "census-2022+reviewed-routing-v1" as const;
-export const JURISDICTION_REFERENCE_STATES = ["az", "nh", "nj"] as const;
-
-export type JurisdictionReferenceState = (typeof JURISDICTION_REFERENCE_STATES)[number];
+/* The reviewed states live in their own small module, so Admin's Send preview can read them alone. */
+export { JURISDICTION_REFERENCE_STATES, type JurisdictionReferenceState };
 
 export interface OperationalReferenceBundle {
   readonly formatVersion: 1;
@@ -185,6 +185,81 @@ export function requiredOperationalJurisdictionRegistry(state: string): Jurisdic
     throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:${state}`);
   }
   return requiredOperationalReferenceBundle().registries[key];
+}
+
+/*
+ * **EVERY OTHER REGISTERED STATE, READ FROM ITS REGISTRATION.** (2026-09-25.)
+ *
+ * A state the reviewed bundle above does not carry has no reviewed registry, and every state is registered
+ * (REGISTRATION, per state, from the 2022 Census of Governments). The runner reads the registration of each
+ * state a Send reaches as a registry (`lib/registration/jurisdictions.ts`) and installs it here, beside the
+ * reviewed bundle, with the states it could not read and why. The reviewed registry always wins: a reviewed
+ * state is never installed from registration.
+ */
+let installedRegistration = new Map<string, JurisdictionRegistry>();
+let refusedRegistration = new Map<string, string>();
+
+/**
+ * Install the registries read from registration, keyed by lower-case state, and the states whose registration
+ * could not be read with the reason. Merged over what an earlier call installed this process: a state read
+ * again replaces its row. Refuses a reviewed state, a registry with no registration origin, or a key that is
+ * not the registry's own state.
+ */
+export function installRegistrationJurisdictionRegistries(
+  registries: ReadonlyMap<string, JurisdictionRegistry>,
+  refused: ReadonlyMap<string, string> = new Map(),
+): void {
+  const next = new Map(installedRegistration);
+  const nextRefused = new Map(refusedRegistration);
+  for (const [state, registry] of registries) {
+    const key = state.toLowerCase();
+    if ((JURISDICTION_REFERENCE_STATES as readonly string[]).includes(key)) {
+      throw new Error(`REGISTRATION_REGISTRY_FOR_REVIEWED_STATE:${key}: the reviewed registry wins wherever it exists`);
+    }
+    if (registry.registration?.kind !== "REGISTRATION" || registry.stateCode.toLowerCase() !== key || registry.jurisdictions.length === 0) {
+      throw new Error(`REGISTRATION_REGISTRY_INVALID:${key}`);
+    }
+    next.set(key, structuredClone(registry));
+    nextRefused.delete(key);
+  }
+  for (const [state, why] of refused) {
+    const key = state.toLowerCase();
+    if ((JURISDICTION_REFERENCE_STATES as readonly string[]).includes(key) || next.has(key)) continue;
+    nextRefused.set(key, why);
+  }
+  installedRegistration = next;
+  refusedRegistration = nextRefused;
+}
+
+export function clearRegistrationJurisdictionRegistries(): void {
+  installedRegistration = new Map();
+  refusedRegistration = new Map();
+}
+
+/** The registries installed from registration (lower-case state keys), and the states refused with why. */
+export function installedRegistrationJurisdictionRegistries(): {
+  readonly registries: ReadonlyMap<string, JurisdictionRegistry>;
+  readonly refused: ReadonlyMap<string, string>;
+} {
+  return { registries: new Map(installedRegistration), refused: new Map(refusedRegistration) };
+}
+
+/**
+ * **THE ONE ACCESSOR A PROVIDER AND A SEND READ A STATE'S REGISTRY THROUGH.** The reviewed registry where the
+ * promoted bundle carries the state; otherwise the registry installed from its registration; otherwise it
+ * throws by name, never an empty registry.
+ */
+export function requiredJurisdictionRegistry(state: string): JurisdictionRegistry {
+  const key = state.toLowerCase();
+  if ((JURISDICTION_REFERENCE_STATES as readonly string[]).includes(key)) return requiredOperationalJurisdictionRegistry(key);
+  const registry = installedRegistration.get(key);
+  if (registry !== undefined) return registry;
+  const why = refusedRegistration.get(key);
+  throw new Error(
+    why === undefined
+      ? `JURISDICTION_REGISTRY_NOT_READ:${state}: no reviewed registry, and its registration was not read by this process`
+      : `REGISTRATION_NOT_READ:${state}: ${why}`,
+  );
 }
 
 /** Production preload reads only the proof-validated atomic pointer. */

@@ -107,7 +107,8 @@ export function crosswalkRowIssue(value: unknown): string | null {
   const who = typeof row.id === "string" && row.id !== "" ? row.id : "a crosswalk row";
   const text = (v: unknown): v is string => typeof v === "string" && v.trim() !== "";
   if (!text(row.jurisdictionId) || !/^[a-z]{2}:[a-z]+:[a-z0-9-]+$/.test(row.jurisdictionId)) return `${who} names no jurisdiction`;
-  if (!text(row.ocdId) || !/^ocd-division\/country:us\/state:[a-z]{2}(\/[a-z_]+:[a-z0-9_~.-]+)+$/.test(row.ocdId)) return `${who} names no registered division`;
+  /* A division of a state, DC or a territory (`lib/ocd/state-of.ts`): every registered one has a derived family. */
+  if (!text(row.ocdId) || !/^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(\/[a-z_]+:[a-z0-9_~.-]+)+$/.test(row.ocdId)) return `${who} names no registered division`;
   if (!text(row.bodyName) || row.bodyName.length > 160) return `${who} has no body name as the government prints it`;
   const expectedBody = row.bodyRole === "GOVERNING" ? `${row.ocdId}#governing`
     : row.bodyRole === "BOARD" ? `${row.ocdId}#board`

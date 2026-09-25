@@ -1,3 +1,4 @@
+import { isJurisdictionSegment } from "../ocd/fips.ts";
 import type { CoverageStatus } from "./types.ts";
 
 /**
@@ -31,11 +32,15 @@ const NO_AGENDA_REQUIRED: Record<string, string> = {
   nh: "New Hampshire",
 };
 
-/** The state segment of an OCD-ID, or null. */
+/**
+ * The state segment of an OCD-ID, or null. DC and the territories count as
+ * their own jurisdictions (`district:dc`, `territory:pr`, as `lib/ocd/fips.ts`
+ * mints them), so a division there reaches its registration like any state's.
+ */
 export function stateOf(ocdId: string | null): string | null {
   if (!ocdId) return null;
-  const match = /\/state:([a-z]{2})(\/|$)/.exec(ocdId);
-  return match ? match[1] : null;
+  const match = /\/(state|district|territory):([a-z]{2})(\/|$)/.exec(ocdId);
+  return match && isJurisdictionSegment(match[1], match[2]) ? match[2] : null;
 }
 
 /**

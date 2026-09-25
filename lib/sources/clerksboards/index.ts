@@ -76,7 +76,24 @@ const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
 export interface ClerksBoardsRaw {
   wiring: BodySourceWiring;
   html: string;
+  /**
+   * The board's own Past Agendas list (`?run=pastagenda&board=<id>`), read
+   * only when the published schedule places no sitting in the served window.
+   * See `concludedSittingsFromPastAgendas`.
+   */
+  pastAgendaHtml?: string;
   collectedAt: string;
+}
+
+const BOARD_PAGE = "https://clerksboards.tucsonaz.gov/boards/";
+
+export function boardPageUrl(boardId: string): string {
+  return `${BOARD_PAGE}?board=${boardId}`;
+}
+
+/** The Past Agendas list every board page links from its Documentation table. */
+export function pastAgendaListUrl(boardId: string): string {
+  return `${BOARD_PAGE}?run=pastagenda&board=${boardId}`;
 }
 
 /** One text segment of the page after tags become separators. */
@@ -504,9 +521,108 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
   return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
+export interface PastAgendaEntry {
+  /** The link text as the Clerk wrote it: `IDA Agenda (Revised) 08-20-26`. */
+  title: string;
+  pdfUrl: string;
+}
+
+/** Every document link in a board's Past Agendas list, newest first as published. */
+export function parsePastAgendaList(html: string): PastAgendaEntry[] {
+  const start = html.indexOf("Past Agendas:");
+  if (start < 0) return [];
+  const out: PastAgendaEntry[] = [];
+  for (const m of html.slice(start).matchAll(/<a\b[^>]*\bhref="\s*(https:\/\/assets\.tucsonaz\.gov\/[^"\s]+)\s*"[^>]*>([^<]+)<\/a>/g)) {
+    out.push({ pdfUrl: decodeEntities(m[1]), title: decodeEntities(m[2]).replace(/\s+/g, " ").trim() });
+  }
+  return out;
+}
+
+export interface PastAgendaSitting {
+  y: number;
+  mo: number;
+  d: number;
+  /** The parenthetical the Clerk put on the agenda, e.g. `Special Meeting`; null for a plain agenda. */
+  qualifier: string | null;
+  canceled: boolean;
+  pdfUrl: string;
+}
+
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function localDateKey(instant: Date, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(instant);
+}
+
+/**
+ * **A BOARD WHOSE SCHEDULE PLACES NOTHING STILL PUBLISHES WHEN IT MET.**
+ * (2026-09-25, R8.)
+ *
+ * Tucson's Industrial Development Authority (board 43) publishes a schedule
+ * that ends 6/18/2026, and the Convention Center Commission (board 15) one
+ * whose July and October dates are "TBD". Inside the served window both
+ * expand to zero sittings, so both bodies showed none — while each board's
+ * Past Agendas list dates the sittings it actually held: `IDA Agenda 07-16-26`,
+ * `IDA Agenda (Special Meeting) 07-28-26`, `TCCC Agenda 07-16-26`.
+ *
+ * Each concluded sitting here is dated by the Clerk's own agenda title and
+ * cites that agenda PDF. Only the BODY'S OWN agendas count: the title must be
+ * `<the board's abbreviation or name> Agenda [(qualifier)] <date>`, so
+ * `IDA Property Committee Agenda` and `IDA Finance Subcommittee Agenda` — other
+ * bodies — and `IDA Public Notice` — not an agenda — are not sittings of the
+ * board. Where one date carries several agendas the newest-listed wins (a
+ * revision or a cancellation is posted after the original), and "(Canceled)"
+ * cancels exactly that date. The list carries no start time, so none is
+ * claimed: the sitting is `DAY` precision (M59). Only dates before today,
+ * inside the served lookback, are emitted — the list is a record of meetings
+ * held, not a schedule.
+ */
+export function concludedSittingsFromPastAgendas(
+  entries: readonly PastAgendaEntry[],
+  boardName: string | null,
+  windowStart: Date,
+  now: Date,
+  timeZone: string,
+): PastAgendaSitting[] {
+  if (!boardName) return [];
+  const abbreviation = /\(([^)]+)\)\s*$/.exec(boardName)?.[1]?.trim();
+  const name = boardName.replace(/\s*\([^)]*\)\s*$/, "").trim();
+  const prefixes = [abbreviation, name].filter((p): p is string => Boolean(p)).map(escapeRegExp);
+  if (prefixes.length === 0) return [];
+  const own = new RegExp(
+    `^(?:${prefixes.join("|")})\\s+Agenda(?:\\s*\\(([^)]+)\\))?\\s+(\\d{1,2})-(\\d{1,2})-(\\d{2,4})$`,
+    "i",
+  );
+  const today = localDateKey(now, timeZone);
+  const earliest = localDateKey(windowStart, timeZone);
+  const byDate = new Map<string, PastAgendaSitting>();
+  for (const entry of entries) {
+    const m = own.exec(entry.title);
+    if (!m) continue;
+    const rawYear = Number(m[4]);
+    const sitting: PastAgendaSitting = {
+      y: rawYear < 100 ? 2000 + rawYear : rawYear,
+      mo: Number(m[2]),
+      d: Number(m[3]),
+      qualifier: m[1]?.trim() ?? null,
+      canceled: /cancel+ed/i.test(m[1] ?? ""),
+      pdfUrl: entry.pdfUrl,
+    };
+    if (sitting.mo < 1 || sitting.mo > 12 || sitting.d < 1 || sitting.d > 31) continue;
+    const key = `${sitting.y}-${String(sitting.mo).padStart(2, "0")}-${String(sitting.d).padStart(2, "0")}`;
+    if (key >= today || key < earliest) continue;
+    if (!byDate.has(key)) byDate.set(key, sitting); // newest-listed wins
+  }
+  return [...byDate.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, sitting]) => sitting);
+}
+
 export function makeClerksBoardsSource(
   wiringRows: BodySourceWiring[],
   fetchImpl?: typeof fetch,
+  /** The fetch-time clock that decides whether a schedule places a sitting; injectable for tests. */
+  clock: () => Date = () => new Date(),
 ): ReportingMeetingSource<ClerksBoardsRaw> {
   const normalizeWithDrops = (
     raw: ClerksBoardsRaw[],
@@ -543,24 +659,27 @@ export function makeClerksBoardsSource(
     let considered = 0;
     let cannotAssert = false;
 
-    for (const { wiring, html, collectedAt } of raw) {
+    for (const { wiring, html, pastAgendaHtml, collectedAt } of raw) {
       const page = parseBoardPage(html);
-      const boardUrl = `https://clerksboards.tucsonaz.gov/boards/?board=${wiring.config.boardId}`;
+      const boardUrl = boardPageUrl(wiring.config.boardId);
 
-      if (!page.scheduleText) {
+      const expanded = page.scheduleText ? expandSchedule(page.scheduleText, windowStart, windowEnd) : null;
+      // A schedule that places nothing in the window falls back to the
+      // sittings the board's own Past Agendas list dates (R8, 2026-09-25).
+      const pastSittings = (expanded === null || expanded.length === 0) && pastAgendaHtml !== undefined
+        ? concludedSittingsFromPastAgendas(parsePastAgendaList(pastAgendaHtml), page.boardName, windowStart, now, wiring.timeZone)
+        : [];
+      if (expanded === null) {
+        // No schedule, "Meets as required", or a format this parser does not
+        // know. One counted drop stands in for the unknowable number of
+        // FORWARD sittings, even where the past agendas date the held ones.
         drops.unplaceableInTime++;
         cannotAssert = true;
-        continue;
+        if (pastSittings.length === 0) continue;
       }
-      const instances = expandSchedule(page.scheduleText, windowStart, windowEnd);
-      if (instances === null) {
-        // "Meets as required", or a format this parser does not know. One
-        // counted drop stands in for the unknowable number of sittings.
-        drops.unplaceableInTime++;
-        cannotAssert = true;
-        continue;
-      }
-      considered += instances.length;
+      const instances = expanded ?? [];
+      const sittingCount = instances.length + pastSittings.length;
+      considered += sittingCount;
 
       const location = page.location?.trim() ?? "";
       /*
@@ -574,10 +693,10 @@ export function makeClerksBoardsSource(
         ? { label: location, joinUrl: null }
         : null;
       if (online) {
-        drops.placeless += instances.length;
+        drops.placeless += sittingCount;
         // A-002: these instances are all PRODUCED below (D18), so the tally is
         // not a drop and must not be summed as one.
-        keptButPlaceless += instances.length;
+        keptButPlaceless += sittingCount;
       }
       const venue = online || !location ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location) ?? null;
       /*
@@ -589,8 +708,8 @@ export function makeClerksBoardsSource(
        */
       const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
       if (venueGap) {
-        drops.unknownVenue += instances.length;
-        keptButPlaceless += instances.length;
+        drops.unknownVenue += sittingCount;
+        keptButPlaceless += sittingCount;
       }
 
       const canceled =
@@ -649,6 +768,41 @@ export function makeClerksBoardsSource(
           },
         });
       }
+
+      // Sittings the board's Past Agendas list dates, each citing its agenda
+      // PDF. No start time is published there, so none is claimed (M59).
+      for (const sitting of pastSittings) {
+        const qualifier = sitting.qualifier && !/revised|cancel+ed/i.test(sitting.qualifier) ? sitting.qualifier : null;
+        meetings.push({
+          id: `${SOURCE_NAME}:${wiring.config.boardId}:${sitting.y}-${String(sitting.mo).padStart(2, "0")}-${String(sitting.d).padStart(2, "0")}`,
+          ocdId: wiring.ocdId,
+          bodyId: wiring.bodyId,
+          bodyName,
+          title: qualifier ? `${bodyName} — ${qualifier}` : bodyName,
+          startsAt: toZonedIso(sitting.y, sitting.mo, sitting.d, 0, 0, wiring.timeZone),
+          startPrecision: "DAY",
+          timeZone: wiring.timeZone,
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
+          agendaUrl: sitting.pdfUrl,
+          jurisdiction: wiring.jurisdiction,
+          status: sitting.canceled ? "CANCELED" : "CONCLUDED",
+          provenance: {
+            sourceUrl: pastAgendaListUrl(wiring.config.boardId),
+            sourceOrg: wiring.publishingOrg,
+            collectedAt,
+            verifiedAt: null,
+          },
+        });
+      }
     }
 
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
@@ -663,16 +817,37 @@ export function makeClerksBoardsSource(
     async fetch(query?: MeetingQuery): Promise<ClerksBoardsRaw[]> {
       const collected: ClerksBoardsRaw[] = [];
       for (const wiring of wiringRows) {
-        const url = `https://clerksboards.tucsonaz.gov/boards/?board=${wiring.config.boardId}`;
+        const url = boardPageUrl(wiring.config.boardId);
         const { text } = await politeGetText(url, {
           fetchImpl,
           accept: "text/html",
           signal: query?.signal,
         });
+        // The Past Agendas list is read only for a board whose published
+        // schedule places no sitting in the served window (R8): one more
+        // request for those boards, none for the rest.
+        const now = clock();
+        const page = parseBoardPage(text);
+        const expanded = page.scheduleText
+          ? expandSchedule(
+              page.scheduleText,
+              new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000),
+              new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000),
+            )
+          : null;
+        let pastAgendaHtml: string | undefined;
+        if (expanded === null || expanded.length === 0) {
+          pastAgendaHtml = (await politeGetText(pastAgendaListUrl(wiring.config.boardId), {
+            fetchImpl,
+            accept: "text/html",
+            signal: query?.signal,
+          })).text;
+        }
         collected.push({
           wiring,
           html: text,
-          collectedAt: new Date().toISOString(),
+          ...(pastAgendaHtml !== undefined ? { pastAgendaHtml } : {}),
+          collectedAt: now.toISOString(),
         });
       }
       return collected;

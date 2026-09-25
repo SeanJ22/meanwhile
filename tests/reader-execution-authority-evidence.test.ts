@@ -988,7 +988,8 @@ interface FakeOptions {
   readonly admitWrite?: boolean;
   readonly writeErrorCode?: string;
   readonly repeatPointerCursor?: boolean;
-  readonly repeatCandidateCursor?: boolean;
+  /** A pointer whose named candidate the store does not hold. */
+  readonly missingCandidateId?: string;
   readonly repeatEventCursor?: boolean;
   readonly eventPageSize?: number;
 }
@@ -1071,14 +1072,14 @@ function fakeTransport(options: FakeOptions = {}): ReaderAuthoritySql & {
           : pointers.findIndex(({ key }) => String(key) > String(cursor));
         return index < 0 ? [] : pointers.slice(index, index + 1);
       }
-      if (statement.includes("select p.key as pointer_key")) {
-        assert.match(statement, /\blimit\s+1\s*$/);
-        const cursor = parameters[0];
-        if (options.repeatCandidateCursor && cursor !== null) return candidates.slice(0, 1);
-        const index = cursor === null
-          ? 0
-          : candidates.findIndex(({ pointer_key }) => String(pointer_key) > String(cursor));
-        return index < 0 ? [] : candidates.slice(index, index + 1);
+      if (statement.includes("as candidate_id") && statement.includes("where c.id = $1::text")) {
+        const versionId = String(parameters[0]);
+        if (options.missingCandidateId === versionId) return [];
+        const found = candidates.find(({ candidate_id }) => String(candidate_id) === versionId);
+        if (!found) return [];
+        // The candidate columns only: the pointer's own fields come from the pointer pass.
+        const { pointer_key: _key, current_version_id: _current, last_known_good_version_id: _lkg, pointer_promoted_at: _at, ...candidateColumns } = found;
+        return [candidateColumns];
       }
       if (statement.includes("from public.civic_data_candidates") && statement.includes("where id = $1::text")) {
         const predecessorId = String(parameters[0]);
@@ -1166,13 +1167,20 @@ test("the fake transport produces only sanitized, hash-bound rehearsal authority
   assert.equal(evidence.readOnly.attemptedWriteRefused, true);
   const pointerQueries = sql.queries.filter((statement) => statement.includes("select key, source_id"));
   const candidateQueries = sql.queries.filter((statement) =>
-    statement.includes("select p.key as pointer_key")
+    statement.includes("as candidate_id") && statement.includes("where c.id = $1::text")
   );
   const eventQueries = sql.queries.filter((statement) =>
     statement.includes("from public.civic_data_candidate_events")
   );
   assert.equal(pointerQueries.length, FINAL_AUTHORITY_COUNT + 1, "one pointer per response plus EOF");
-  assert.equal(candidateQueries.length, FINAL_AUTHORITY_COUNT + 1, "one candidate per response plus EOF");
+  assert.equal(candidateQueries.length, FINAL_AUTHORITY_COUNT, "one candidate per response, each the version its pointer named");
+  // The candidate pass reads each candidate by the version the pointer pass read, and never re-reads the live
+  // pointer: a runner promotion between the passes cannot pair a pointer with a candidate it did not name.
+  assert.equal(candidateQueries.every((statement) => !statement.includes("civic_data_promotions")), true);
+  const candidateParameters = sql.queries.flatMap((statement, index) =>
+    statement.includes("as candidate_id") && statement.includes("where c.id = $1::text") ? [String(sql.queryParameters[index]![0])] : []
+  );
+  assert.deepEqual(candidateParameters, pointerRows().map((row) => String(row.current_version_id)), "each candidate read names the version its pointer named, in pointer order");
   assert.equal(eventQueries.length, Math.ceil(eventRows(pointerRows()).length / 32) + 1);
   assert.equal(candidateQueries.every((statement) => !statement.includes("pointer_payload")), true);
   assert.equal(candidateQueries.every((statement) => !statement.includes("predecessor.candidate")), true);
@@ -1220,10 +1228,11 @@ test("Reader authority keyset cursors fail closed when a transport does not adva
       /pointer cursor did not advance/,
     );
   });
-  await t.test("candidate cursor repeats", async () => {
+  await t.test("a pointer names a candidate the store does not hold", async () => {
+    const named = String(pointerRows()[0]!.current_version_id);
     await assert.rejects(
-      buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ repeatCandidateCursor: true }) })),
-      /candidate cursor did not advance/,
+      buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ missingCandidateId: named }) })),
+      /do not have one durable candidate each/,
     );
   });
   await t.test("event cursor repeats", async () => {

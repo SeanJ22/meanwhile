@@ -1,0 +1,359 @@
+/**
+ * **ANY REGISTERED STATE'S GOVERNMENTS, AS THE JURISDICTION REGISTRY A SEND
+ * READS.** (2026-09-25. docs/rulings.md §1: Admin must support adding and
+ * tracking any geography through work creation, discovery, acquisition,
+ * verification and public delivery.)
+ *
+ * A Send (Admin → `expansion.scope.set`, or a DISPATCH) creates work only from
+ * a jurisdiction registry: who the governments are, and what each one owes
+ * (MW-028, `lib/control-plane/expansion/dispatch-work.ts`). The reviewed
+ * registries — the promoted operational reference — cover Arizona, New
+ * Hampshire and New Jersey, and they WIN wherever they exist. Every other
+ * state, DC and territory is registered already: REGISTRATION, one promoted
+ * version per state, from the 2022 Census of Governments (TIGER/Line 2023
+ * functional status for a territory). This module reads a state's registration
+ * as a registry in the shape dispatch-work needs, so a Send in any registered
+ * state creates work with no code change:
+ *
+ * ```
+ *   the governments   every government row of the committed reference the
+ *                     promoted version was built from (its referenceSha256),
+ *                     under the jurisdiction ids the reviewed registries use
+ *                     (`<st>:<class>:<slug>`, `-<pid6>` on a collision)
+ *   the body          the body that version minted for the government, on its
+ *                     Census division (`ocdId`, `bodyId`); none where
+ *                     registration pairs the government with no division
+ *   what it owes      its meetings, and nothing else: no statute routing is
+ *                     read for these states, so no campaign-finance, ballot or
+ *                     roster route is invented. Where the Census of Governments
+ *                     records the government's own web address, the own-site
+ *                     MEETINGS source (DISCOVERY_OWED: `own-site-meetings`);
+ *                     where it records none — every territory government —
+ *                     no source, so the need is `find-own-site`
+ * ```
+ *
+ * Only the promoted version is read: it is the one readers use, and the
+ * committed reference is read only as the exact input that version names (its
+ * `referenceSha256`), never in its place. A state with no promoted registration,
+ * a read that fails, or a promoted version built from another reference than
+ * the committed one refuses the state by name: nothing is guessed, and its
+ * governments are named as blocked rather than created.
+ *
+ * SERVER-ONLY (node:fs). Only the standing runner and tests read it; a request
+ * path never does.
+ */
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import {
+  installedRegistrationJurisdictionRegistries,
+  installRegistrationJurisdictionRegistries,
+  JURISDICTION_REFERENCE_STATES,
+} from "../civic-data/operational-references.ts";
+import type { CivicDataReadResult, PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import type {
+  Jurisdiction,
+  JurisdictionClass,
+  JurisdictionRegistry,
+  JurisdictionSource,
+} from "../hunt/jurisdiction-universe.ts";
+import { OWN_SITE_MEETINGS_SOURCE } from "../hunt/meetings-discovery.ts";
+import { dataPath, parseCsv } from "../reference/index.ts";
+import type { RegistrationReadModel } from "./candidate.ts";
+import { registrationTarget } from "./publication.ts";
+import { readRegistrationProjection } from "./reader.ts";
+import { loadRegistrationReference, type LoadedReference } from "./reference.ts";
+
+export const REGISTRATION_JURISDICTIONS_GENERATOR = "lib/registration/jurisdictions.ts" as const;
+
+/** The Census government types a reference names, as the registry's classes (the reviewed generator's CLASS_OF, and the territories'). */
+const CLASS_OF: Readonly<Record<string, JurisdictionClass>> = {
+  STATE: "STATE",
+  COUNTY: "COUNTY",
+  MUNICIPAL: "CITY_OR_TOWN",
+  TOWNSHIP: "CITY_OR_TOWN",
+  "SCHOOL DISTRICT": "SCHOOL_DISTRICT",
+  "SPECIAL DISTRICT": "SPECIAL_DISTRICT",
+  "DEPENDENT SCHOOL SYSTEM": "DEPENDENT_SCHOOL_SYSTEM",
+  "COUNTY-EQUIVALENT GOVERNMENT": "COUNTY",
+  "COUNTY SUBDIVISION GOVERNMENT": "CITY_OR_TOWN",
+  "PLACE GOVERNMENT": "CITY_OR_TOWN",
+};
+
+/* ------------------------------------------------------------ the Census file's own words */
+
+/** What the Census of Governments records about one government that its registration reference does not carry. */
+export interface CensusGovernmentFacts {
+  /** `web_address`, as recorded: self-reported, with minimal quality control (data/reference/*.md). Empty when blank. */
+  readonly web: string;
+  /** `county_area_name`. */
+  readonly county: string;
+}
+
+export interface CensusFacts {
+  readonly byPid: ReadonlyMap<string, CensusGovernmentFacts>;
+  /** The two files read, each with the sha256 the registration reference records it was built from. */
+  readonly source: string;
+}
+
+const CENSUS_FILES = [
+  { dataset: "census_govt_units_2022", file: "census_govt_units_2022.csv" },
+  { dataset: "census_govt_units_2022_dependent_school_systems", file: "census_govt_units_2022_dependent_school_systems.csv" },
+] as const;
+
+let censusFactsRead: CensusFacts | null = null;
+
+/**
+ * The web address and county of every Census of Governments unit, from the committed Census files, read once per
+ * process through the reference loader. Each file must hash to the sha256 the registration reference's index
+ * records it was built from (`data/derived/registration/index.json`): an address from another vintage than the
+ * governments it is attached to is refused by name.
+ */
+export function readCensusGovernmentFacts(root: string): CensusFacts {
+  if (censusFactsRead !== null) return censusFactsRead;
+  const index = JSON.parse(readFileSync(join(/* turbopackIgnore: true */ root, "data", "derived", "registration", "index.json"), "utf8")) as { readonly source?: string };
+  const byPid = new Map<string, CensusGovernmentFacts>();
+  const read: string[] = [];
+  for (const { dataset, file } of CENSUS_FILES) {
+    const text = readFileSync(dataPath(dataset), "utf8");
+    const sha256 = createHash("sha256").update(text).digest("hex");
+    const recorded = new RegExp(`${file.replace(/\./g, "\\.")} \\(sha256 ([a-f0-9]{64})\\)`).exec(index.source ?? "")?.[1] ?? null;
+    if (recorded !== sha256) {
+      throw new Error(
+        `REGISTRATION_CENSUS_FILE_DRIFT: data/reference/${file} hashes to ${sha256}, and the registration reference records ` +
+          `${recorded ?? "no sha256"} for it; a web address is never read from another vintage than its government`,
+      );
+    }
+    const [header = [], ...rows] = parseCsv(text);
+    const pid = header.indexOf("census_id_pid6");
+    const web = header.indexOf("web_address");
+    const county = header.indexOf("county_area_name");
+    if (pid < 0 || web < 0 || county < 0) throw new Error(`REGISTRATION_CENSUS_FILE_SHAPE: data/reference/${file} lacks census_id_pid6, web_address or county_area_name`);
+    for (const row of rows) {
+      const id = row[pid] ?? "";
+      if (id !== "") byPid.set(id, { web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim() });
+    }
+    read.push(`data/reference/${file} (sha256 ${sha256})`);
+  }
+  censusFactsRead = { byPid, source: read.join(" and ") };
+  return censusFactsRead;
+}
+
+/** The reviewed generator's rule for an address the Census recorded without a scheme (scripts/enumerate-jurisdictions.mts). */
+function ownWebAddress(web: string): string | null {
+  if (web === "") return null;
+  return /^https?:\/\//i.test(web) ? web : `http://${web}`;
+}
+
+/** The own-site MEETINGS source: discovery, never acquisition. Its catalog key is the reviewed registries' own. */
+export function registrationOwnSiteSource(census: string): JurisdictionSource {
+  return {
+    recordClass: "MEETINGS",
+    authority: "this government itself",
+    authorityBasis: "the government's own published web address, as the 2022 Census of Governments recorded it",
+    scope: "THIS_JURISDICTION",
+    routeId: null,
+    /* Per-government: it lives on the row as `ownWebAddress`, exactly as in the reviewed registries. */
+    url: null,
+    state: "DISCOVERY_OWED",
+    owed:
+      "walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and officeholder roster, " +
+      "under RULING 166's body-own-publication-first order. The address is the Census's self-reported record, read " +
+      "with minimal quality control; an address is not an acquisition.",
+    citation: `${census} — the 2022 Census of Governments files this state's registration reference was built from (web_address)`,
+  };
+}
+
+/* ------------------------------------------------------------ one state's registry */
+
+export interface RegistrationRegistryInput {
+  /** The committed reference the promoted version names by its sha256. */
+  readonly reference: LoadedReference;
+  /** The promoted registration version and its read model: the one readers use. */
+  readonly promoted: { readonly versionId: string; readonly model: RegistrationReadModel };
+  readonly census: CensusFacts;
+}
+
+/**
+ * One state's registration, as a jurisdiction registry. PURE. Throws by name when the promoted version was not
+ * built from this committed reference, or names another state.
+ */
+export function registrationJurisdictionRegistry(input: RegistrationRegistryInput): JurisdictionRegistry {
+  const { reference: loaded, promoted, census } = input;
+  const ref = loaded.reference;
+  const state = ref.state.toLowerCase();
+  const postal = state.toUpperCase();
+  if (promoted.model.state.toLowerCase() !== state) {
+    throw new Error(`REGISTRATION_STATE_MISMATCH:${postal}: the promoted version ${promoted.versionId} is ${promoted.model.state}'s`);
+  }
+  if (promoted.model.vintage.referenceSha256 !== loaded.sha256) {
+    throw new Error(
+      `REGISTRATION_REFERENCE_MISMATCH:${postal}: the promoted registration ${promoted.versionId} was built from reference ` +
+        `${promoted.model.vintage.referenceSha256}, and the committed reference is ${loaded.sha256}; neither is read until they agree`,
+    );
+  }
+
+  /* The body each government has: the one the promoted version minted, on its division. */
+  const bodyOf = new Map<string, { readonly id: string; readonly ocdId: string }>();
+  for (const body of promoted.model.bodies) {
+    if (body.jurisdictionId !== null && !bodyOf.has(body.jurisdictionId)) bodyOf.set(body.jurisdictionId, { id: body.id, ocdId: body.ocdId });
+  }
+
+  /* Each division's Census layer and GEOID: the key its sampled ZCTA shares are read by. */
+  const censusDivisionOf = new Map(ref.divisions.map(([ocdId, layer, geoid]) => [ocdId, `${layer}:${geoid}`] as const));
+  const ownSite = registrationOwnSiteSource(census.source);
+  let withSite = 0;
+  const rowsRead: Record<string, number> = {};
+  const jurisdictions: Jurisdiction[] = [];
+  for (const [pid6, jurisdictionId, name, govType, , how] of ref.governments) {
+    const govClass = CLASS_OF[govType];
+    if (govClass === undefined) continue;
+    const enumeratedFrom =
+      govType === "STATE"
+        ? "the-state-itself"
+        : how === "TIGER_FUNCSTAT"
+          ? "tiger-line-2023-functional-status"
+          : govType === "DEPENDENT SCHOOL SYSTEM"
+            ? "census-dependent-school-systems-2022"
+            : "census-govt-units-2022";
+    rowsRead[enumeratedFrom] = (rowsRead[enumeratedFrom] ?? 0) + 1;
+    /* A territory government has no Census of Governments row, so no address is recorded for it: none is invented. */
+    const facts = govType === "STATE" || how === "TIGER_FUNCSTAT" ? undefined : census.byPid.get(pid6);
+    const site = ownWebAddress(facts?.web ?? "");
+    if (site !== null) withSite += 1;
+    const body = govType === "STATE" ? undefined : bodyOf.get(jurisdictionId);
+    jurisdictions.push({
+      id: jurisdictionId,
+      stateCode: postal,
+      name,
+      govClass,
+      countyName: facts?.county ? facts.county : null,
+      enumeratedFrom,
+      ownWebAddress: site,
+      sourceIds: site === null ? [] : [OWN_SITE_MEETINGS_SOURCE],
+      ocdId: body?.ocdId ?? null,
+      bodyId: body?.id ?? null,
+      censusDivision: body === undefined ? null : (censusDivisionOf.get(body.ocdId) ?? null),
+      censusId: pid6,
+    });
+  }
+  if (jurisdictions.filter((j) => j.govClass !== "STATE").length === 0 && ref.functionalStatus === undefined) {
+    throw new Error(`REGISTRATION_REFERENCE_EMPTY:${postal}: the reference names no government, a failed extraction, never a state with none`);
+  }
+  const counts: Record<string, number> = {};
+  for (const j of jurisdictions) counts[j.govClass] = (counts[j.govClass] ?? 0) + 1;
+  const version = `promoted registration version ${promoted.versionId}`;
+  const enumerations: Record<string, { readonly describe: string; readonly path: string }> = {
+    "the-state-itself": { describe: "the state itself — the authority every STATEWIDE route belongs to", path: "(not an external enumeration)" },
+    "census-govt-units-2022": { describe: "U.S. Census Bureau, 2022 Census of Governments: Organization, as this state's registration reads it", path: `data/derived/registration/${state}.json` },
+    "census-dependent-school-systems-2022": { describe: "the same directory's DEPENDENT school systems, as this state's registration reads them", path: `data/derived/registration/${state}.json` },
+    "tiger-line-2023-functional-status": { describe: "TIGER/Line 2023 functional status: the divisions that govern in a territory the Census of Governments does not enumerate", path: `data/derived/registration/${state}.json` },
+  };
+  return {
+    formatVersion: 1,
+    stateCode: postal,
+    generatedBy: REGISTRATION_JURISDICTIONS_GENERATOR,
+    generatedOn: loaded.generatedAt,
+    _note: [
+      `READ FROM ${postal}'S REGISTRATION (${version}), NOT A REVIEWED REGISTRY. No reviewed registry exists for this state; the reviewed registry wins wherever one does.`,
+      "Every government registration names is here, under the same jurisdiction ids the reviewed registries use. What each owes is its meetings, and only that: no statute routing is read for this state, so no other route is defined.",
+      `${withSite} of ${jurisdictions.length} rows carry the web address the Census of Governments recorded; the rest owe finding their own site first. An address is never invented.`,
+    ],
+    enumerationSources: Object.entries(rowsRead)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([id, n]) => ({ id, describe: enumerations[id]!.describe, path: enumerations[id]!.path, rowsRead: n })),
+    counts,
+    disagreements: [],
+    sourceCatalog: withSite > 0 ? { [OWN_SITE_MEETINGS_SOURCE]: ownSite } : {},
+    jurisdictions,
+    registration: {
+      kind: "REGISTRATION",
+      versionId: promoted.versionId,
+      referenceSha256: loaded.sha256,
+      webAddresses: census.source,
+    },
+  };
+}
+
+/* ------------------------------------------------------------ the read, for the states a Send reaches */
+
+export type RegistrationRead = (state: string) => Promise<CivicDataReadResult<RegistrationReadModel>>;
+
+export interface RegistrationJurisdictionsLoad {
+  /** Lower-case state → its registry, read from its registration. */
+  readonly registries: ReadonlyMap<string, JurisdictionRegistry>;
+  /** Lower-case state → why its registration could not be read as a registry. */
+  readonly refused: ReadonlyMap<string, string>;
+}
+
+/**
+ * Read each named state's registration as a registry: the promoted version (the one readers use) through `read`.
+ * Every other outcome — no promoted version yet, an outage, a version built from another reference — refuses the
+ * state by name; the committed reference is never read in its place. The caller decides which states (never a
+ * reviewed one: the reviewed registry wins).
+ */
+export async function loadRegistrationJurisdictions(input: {
+  readonly root: string;
+  readonly states: Iterable<string>;
+  readonly read: RegistrationRead;
+}): Promise<RegistrationJurisdictionsLoad> {
+  const registries = new Map<string, JurisdictionRegistry>();
+  const refused = new Map<string, string>();
+  const states = [...new Set([...input.states].map((s) => s.trim().toLowerCase()).filter((s) => /^[a-z]{2}$/.test(s)))].sort();
+  let census: CensusFacts | null = null;
+  for (const state of states) {
+    try {
+      registrationTarget(state);
+      const reference = loadRegistrationReference(input.root, state);
+      const read = await input.read(state);
+      if (read.kind !== "PROMOTED") {
+        throw new Error(
+          read.kind === "NOT_RECORDED"
+            ? `REGISTRATION_NOT_PROMOTED:${state.toUpperCase()}: its registration has no promoted version yet, and the committed reference is never read in its place`
+            : `REGISTRATION_NOT_READ:${state.toUpperCase()}: ${read.kind}: ${"detail" in read ? read.detail : ""}`,
+        );
+      }
+      if (read.metadata.versionId === null) throw new Error(`REGISTRATION_VERSION_UNNAMED:${state.toUpperCase()}: the promoted pointer names no version`);
+      census ??= readCensusGovernmentFacts(input.root);
+      registries.set(state, registrationJurisdictionRegistry({ reference, promoted: { versionId: read.metadata.versionId, model: read.value }, census }));
+    } catch (error) {
+      refused.set(state, error instanceof Error ? error.message : String(error));
+    }
+  }
+  return { registries, refused };
+}
+
+/**
+ * **THE RUNNER'S READ.** Every named state that has no reviewed registry and is not installed yet this process is
+ * read from its registration and installed beside the reviewed bundle, with every refusal named
+ * (`installRegistrationJurisdictionRegistries`), so the providers, the territory index and the Send all read the
+ * same registry. Returns what this call read; a state already installed is not read again.
+ */
+export async function preloadRegistrationJurisdictions(input: {
+  readonly root: string;
+  readonly states: Iterable<string>;
+  readonly options?: PromotedCivicDataReadOptions;
+  /** Injected in tests; the runner reads the promoted pointer. */
+  readonly read?: RegistrationRead;
+}): Promise<RegistrationJurisdictionsLoad> {
+  const held = installedRegistrationJurisdictionRegistries();
+  const wanted = [...new Set([...input.states].map((s) => s.trim().toLowerCase()))].filter(
+    (s) => /^[a-z]{2}$/.test(s) && !(JURISDICTION_REFERENCE_STATES as readonly string[]).includes(s) && !held.registries.has(s),
+  );
+  if (wanted.length === 0) return { registries: new Map(), refused: new Map() };
+  const load = await loadRegistrationJurisdictions({
+    root: input.root,
+    states: wanted,
+    read: input.read ?? ((state) => readRegistrationProjection(state, input.options ?? {})),
+  });
+  installRegistrationJurisdictionRegistries(load.registries, load.refused);
+  return load;
+}
+
+/** The two-letter state of a jurisdiction id (`oh:city:city-of-columbus`) or an obligation id about one, or null. */
+export function stateOfJurisdictionId(id: string): string | null {
+  const rest = id.replace(/^freshness:[a-z-]+:/, "");
+  const m = /^([a-z]{2}):[a-z]+:/.exec(rest);
+  return m === null ? null : m[1]!;
+}

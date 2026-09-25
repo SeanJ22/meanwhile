@@ -456,6 +456,15 @@ export async function preloadCandidateEnrichmentAuthorities(
   };
 }
 
+/**
+ * The authorities this process preloaded, or null before the preload ran. The
+ * standing runner's campaign-site pass joins its leads to the same canonical
+ * candidacies this provider enumerates, from the same promoted pointers.
+ */
+export function candidateEnrichmentHoldings(): CandidateEnrichmentAuthorityHoldings | null {
+  return loadedAuthorities;
+}
+
 function ballotDocument(path: string, ballot: BallotSet): BallotDocument {
   return { path, contests: ballot.contests, candidacies: ballot.candidacies };
 }

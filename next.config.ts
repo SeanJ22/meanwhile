@@ -70,14 +70,21 @@ const nextConfig: NextConfig = {
   // absent: production resolves the canonical store and fails closed when its
   // pointer has not been recorded.
   outputFileTracingIncludes: {
-    "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": staticGeographyTrace,
+    // `/api/warm` resolves one place per published state on each instance it
+    // warms (C21, 2026-09-25), so it reads the same committed geometry the map
+    // routes do; untraced, that priming would fail on production and warm
+    // nothing while passing every local test.
+    "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites,warm}": staticGeographyTrace,
     "/{ballot,about-area}": staticGeographyTrace,
     "/api/meetings": [
       ...staticGeographyTrace,
-      // The coverage-tier ledger (RULING 6, Prompt B item 8). `/api/meetings`
-      // reaches it because every GET writes a search-log row and that row
-      // carries the tier.
-      "./data/derived/zip-coverage-tiers-runtime.json",
+      // The coverage-tier ledger is NOT traced here any more (C21, 2026-09-25).
+      // This route reached it only through its search-log row, and that row
+      // moved to the client's `/api/log` beacon (PDC-9; `/api/log` still
+      // traces the ledger below). Nothing this route imports reads it now —
+      // tests/coverage-tier.test.ts asserts that. The file still ships for the
+      // routes below, which share this site's one server function.
+      //
       // A ZIP IS AN AREA, on the map too (NJ Hunt 3 item 3.1): this route
       // widens a typed zip to its area with the national ZIP index. Its shards
       // are read from a literal folder (`lib/geo/zip-division-index.ts`), so the
@@ -112,6 +119,10 @@ const nextConfig: NextConfig = {
     // A ZIP IS AN AREA (NJ01): the ballot widens a ZIP with the national
     // index, traced by the tracer from its literal folder and proved present
     // by the postbuild reader-trace check (see `/api/meetings`).
+    // The warm call picks each state's place from the ZIP index's state map
+    // (`lowestZipByDivision`), read by path; named so the postbuild
+    // reader-trace check can hold it present (C21).
+    "/api/warm": ["./data/derived/zip-divisions/index.json"],
     "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],

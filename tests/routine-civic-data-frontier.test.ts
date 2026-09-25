@@ -467,9 +467,19 @@ test("C6: no production lane mixes sitting-window tasks with any other task, so 
   const mixed = [...kinds].filter(([, set]) => set.size > 1).map(([lane]) => lane);
   assert.deepEqual(mixed, []);
   const bound = routineFrontierPassBound();
-  const meetingLanes = [...kinds].filter(([, set]) => set.has(true)).length;
-  assert.equal(bound.commandCount, routineFailureDomainCount() + meetingLanes * (SITTING_WINDOW_LANE_SLOTS_PER_PASS - 1));
+  /* A meeting lane admits up to its slots and never more tasks than it holds: a one-task lane (a state's derived family) counts one. */
+  const sizes = new Map<string, number>();
+  for (const task of ROUTINE_SOURCE_TASKS) sizes.set(task.acquisitionFailureDomain, (sizes.get(task.acquisitionFailureDomain) ?? 0) + 1);
+  const extra = [...kinds]
+    .filter(([, set]) => set.has(true))
+    .reduce((sum, [lane]) => sum + Math.min(sizes.get(lane)!, SITTING_WINDOW_LANE_SLOTS_PER_PASS) - 1, 0);
+  assert.equal(bound.commandCount, routineFailureDomainCount() + extra);
   assert.equal(bound.largestFailureDomainSize, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+  assert.equal(
+    routineFrontierPassBound([{ acquisitionFailureDomain: "derived-family:US-OH", contract: { schedule: MEETING_SITTING_WINDOW } as never }]).commandCount,
+    1,
+    "one task on its own lane is one command, however many slots a meeting lane may take",
+  );
 });
 
 function simulateTucsonLane(recordedPasses: boolean): { misses: string[]; maxHotGap: number; maxBaseGap: number; peakHot: number } {

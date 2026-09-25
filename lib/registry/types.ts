@@ -119,7 +119,15 @@ export type BodyOrigin =
    * calendar. Unlike PROMOTED_FROM_CENSUS_OF_GOVERNMENTS, no reported website
    * was checked.
    */
-  | "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS";
+  | "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS"
+  /*
+   * **A TERRITORY'S GOVERNMENT, REGISTERED FROM ITS CENSUS STATUS
+   * (2026-09-25).** The Census of Governments does not enumerate the five
+   * territories; TIGER/Line 2023 gives this division a governing functional
+   * status (A, B, C or G: docs/state.md §4.6 M17), and nothing else about
+   * the government has been sourced.
+   */
+  | "REGISTERED_FROM_TIGER_FUNCSTAT";
 
 /**
  * Which adapter can read this body's agendas. Open-ended by design.
@@ -204,6 +212,22 @@ export type AgendaSourceType =
    * reconfiguration page (2026-09-23). See `lib/sources/official-page-events`.
    */
   | "OFFICIAL_PAGE_EVENTS"
+  /**
+   * Not a vendor — a shape. A body's own agendas-and-minutes page, one page
+   * per year, one link per document labelled with its sitting's kind and date
+   * ("Regular Meeting 9-9-2026") under an "Agendas" or "Minutes" heading. One
+   * sitting per kind per date, its agenda cited. First body: the City of
+   * Holbrook, AZ City Council (2026-09-25). See `lib/sources/document-listing`.
+   */
+  | "DOCUMENT_LISTING"
+  /**
+   * SuiteOne Media meeting management — a hosted agenda portal at
+   * `<tenant>.suiteonemedia.com` whose server-rendered home page lists the
+   * next ten meetings and each body's past meetings with agenda, packet,
+   * minutes and video. First tenant: the City of Winslow, AZ (2026-09-25).
+   * See `lib/sources/suiteone`.
+   */
+  | "SUITEONE"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"
@@ -246,7 +270,9 @@ export type SourceDataset =
    * (`scripts/lib/national-division-ids.mts`). Named for its own vintage
    * rather than filed under TIGER_GENZ2025.
    */
-  | "TIGER_CB2023";
+  | "TIGER_CB2023"
+  /** Full TIGER/Line 2023, read for its attribute table only: the territories' functional status. */
+  | "TIGER_LINE2023";
 
 /**
  * How well this repo's identifier matches the canonical OCD vocabulary.

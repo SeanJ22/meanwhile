@@ -21,6 +21,18 @@ test("the state comes off the identifier, never off a label", () => {
   assert.equal(stateOf("ocd-division/country:us/state:nj/place:new_hampshire"), "nj");
 });
 
+test("DC and the territories are read as their own jurisdictions, exactly as lib/ocd/fips.ts mints them (2026-09-25)", () => {
+  // Their registrations were promoted and never reached a reader: the state was read off `state:` alone.
+  assert.equal(stateOf("ocd-division/country:us/district:dc/county:district_of_columbia"), "dc");
+  assert.equal(stateOf("ocd-division/country:us/territory:pr/county:adjuntas_municipio/place:adjuntas_barrio_pueblo"), "pr");
+  assert.equal(stateOf("ocd-division/country:us/territory:vi"), "vi");
+  // Only the class the FIPS table gives: no `district:` or `territory:` segment names a state.
+  assert.equal(stateOf("ocd-division/country:us/district:az"), null);
+  assert.equal(stateOf("ocd-division/country:us/territory:dc"), null);
+  // A school district's segment is not a jurisdiction's.
+  assert.equal(stateOf("ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district"), "nh");
+});
+
 test("an exhausted New Hampshire search says the law does not require an agenda", () => {
   const note = agendaAbsenceNote(NH, "NO_SOURCE_FOUND")!;
   assert.match(note, /searched high and low/);

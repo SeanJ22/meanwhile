@@ -230,6 +230,51 @@ export async function containersOfCode(
   };
 }
 
+/* ------------------------------------------------------------------ registration */
+
+/** A government a state's promoted registration minted a body for, on its Census division. */
+export interface RegisteredGovernmentSlice {
+  readonly jurisdictionId: string;
+  readonly ocdId: string;
+  readonly bodyId: string;
+}
+
+const REGISTRATION_GOVERNMENTS =
+  "SELECT b->>'jurisdictionId' AS jurisdiction_id, b->>'ocdId' AS ocd_id, b->>'id' AS body_id" +
+  " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'bodies') b" +
+  " WHERE p.record_class = $1 AND p.scope = $2 AND b->>'jurisdictionId' IS NOT NULL AND b->>'ocdId' = ANY($3::text[])";
+
+/**
+ * The governments one state's promoted registration (`REGISTRATION`, `US-<ST>:registration:v1`) holds a body for
+ * on any of these divisions: the sliver the Send preview needs (2026-09-25), never the whole version.
+ */
+export async function registrationGovernments(
+  state: string,
+  ocdIds: readonly string[],
+  query: ReadOnlyQuery | null,
+): Promise<Slice<readonly RegisteredGovernmentSlice[]>> {
+  const st = state.toUpperCase();
+  if (query === null) return { kind: "UNREAD", detail: `${st}'s registration was not read: this deployment names no reader store.` };
+  const params = ["REGISTRATION", `US-${st}:registration:v1`];
+  try {
+    const [pointer, rows] = await query([
+      { text: POINTER, params },
+      { text: REGISTRATION_GOVERNMENTS, params: [...params, [...ocdIds]] },
+    ]);
+    const versionId = text(pointer?.[0]?.version_id);
+    if (versionId === null) return { kind: "NOT_PUBLISHED" };
+    const value = (rows ?? []).flatMap((row) => {
+      const jurisdictionId = text(row.jurisdiction_id);
+      const ocdId = text(row.ocd_id);
+      const bodyId = text(row.body_id);
+      return jurisdictionId === null || ocdId === null || bodyId === null ? [] : [{ jurisdictionId, ocdId, bodyId }];
+    });
+    return { kind: "HELD", versionId, value };
+  } catch (error) {
+    return { kind: "UNREAD", detail: `${st}'s registration could not be read (${error instanceof Error ? error.name : "error"}).` };
+  }
+}
+
 /* ------------------------------------------------------------------ registry */
 
 export interface RegistryBodyFields {

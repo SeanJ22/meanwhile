@@ -136,6 +136,8 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
     ICAL: "ical",
     PIMA_EDU: "pima-edu",
     OFFICIAL_PAGE_EVENTS: "official-page-events",
+    DOCUMENT_LISTING: "document-listing",
+    SUITEONE: "suiteone",
   };
   const route = routeByType[row.agendaSourceType];
   if (route) {
@@ -177,6 +179,11 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
  * the page between the old writer stopping and the new one's first version.
  * The first promotion supersedes it. A permission rule binds the next fetch,
  * never possession of what was already published (RULING 263).
+ *
+ * A route whose host is GONE (2026-09-25: Newbury's CivicWeb portal, NXDOMAIN)
+ * retires under the same rules. When its successor was already a wired route
+ * for the body (`successorAlreadyWired`), that successor has its own pointer,
+ * so nothing is held and the retired pointer simply stops being composed.
  */
 export interface RetiredMeetingRoute {
   /** The adapter route (partition `meetings:<meetingSource>:<bodyId>`) that no longer runs. */
@@ -191,6 +198,15 @@ export interface RetiredMeetingRoute {
   readonly replacedBy: string;
   /** What happens to the rows and documents the retired route already holds. */
   readonly held: string;
+  /**
+   * The successor was already a wired, promoting route for this body before
+   * this one retired — two routes for one body, one of them retired — so the
+   * successor has its own pointer from the start. Nothing is HELD in its place
+   * (`HELD_MEETING_PARTITIONS` omits the pair), and the Reader proof drops the
+   * retired identity's import disposition instead of handing it to a successor
+   * that already carries its own.
+   */
+  readonly successorAlreadyWired?: true;
 }
 
 export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
@@ -209,6 +225,25 @@ export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
       "2026-09-23T19:48Z) stays in the production store unchanged, composed as held rows until the pima-edu " +
       "partition's first promotion supersedes it; the college's own " +
       "links into the tenant are carried by pima-edu as links and never fetched",
+  },
+  {
+    // Not a permission cutover: the host is gone. Every read since 2026-09-14
+    // ended SOURCE_BLOCKED (~2,077 rows), recorded only as "fetch failed"
+    // until the composite kept the transport's own code (ENOTFOUND).
+    meetingSource: "diligent",
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+    hosts: ["newburynh.civicweb.net"],
+    retiredOn: "2026-09-25",
+    reason:
+      "newburynh.civicweb.net no longer resolves: DNS answers NXDOMAIN and fetch fails with ENOTFOUND " +
+      "(read 2026-09-25T17:37Z); every partition read since 2026-09-14 ended SOURCE_BLOCKED",
+    replacedBy: "ical",
+    held:
+      "the promoted meetings:diligent partition for this body stays in the production store unchanged and is no " +
+      "longer composed: the town's own calendar feed (newbury-ical-governing, wired 2026-08-20) already carries " +
+      "the Selectboard under its own pointer, and the portal links the retired rows carried lead to a host that " +
+      "no longer exists",
+    successorAlreadyWired: true,
   },
 ];
 
@@ -456,28 +491,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-14",
   },
-  {
-    bodyId:
-      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
-    ocdId:
-      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-    agendaSourceType: "CIVICWEB",
-    jurisdiction: "Newbury, NH",
-    publishingOrg: "Town of Newbury",
-    timeZone: "America/New_York",
-    config: {
-      slug: "newburynh",
-      serviceBase: "https://newburynh.civicweb.net",
-      // Verified live: /Portal/MeetingInformation.aspx?Id=3370 resolves to the
-      // Selectboard meeting of 2026-07-20 with its agenda PDF.
-      meetingPath: "/Portal/MeetingInformation.aspx?Id=",
-      // TypeId → body name, read off the portal's own MeetingTypeList.aspx
-      // (the h2 for type 10 reads "Selectboard"). A published name, not a
-      // minted one.
-      "typeName:10": "Selectboard",
-    },
-    verifiedAt: "2026-08-13",
-  },
+  // Newbury, NH's Selectboard was read here through its CivicWeb portal
+  // (newburynh.civicweb.net) until 2026-09-25. That host no longer resolves,
+  // so the route is retired in RETIRED_MEETING_ROUTES above and the town's own
+  // calendar feed (`newbury-ical-governing`, below) carries the Selectboard.
 
   // ── D28: Pima Community College Governing Board ─────────────────────────
   // No Census division: `ocdId` is null and the body is the curated registry
@@ -822,6 +839,78 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       titleMatch: "City Council",
     },
     verifiedAt: "2026-09-24",
+  },
+
+  // Holbrook, AZ — City Council (R21's replacement route, 2026-09-25). The
+  // iCal feed discovery found on the city's site stores local times as UTC and
+  // carries no council meeting, so it stays held for that reason; this row
+  // does not replace it and says nothing about it. The city's own "Agendas &
+  // Minutes" page publishes one page per year
+  // (holbrookaz.gov/government/council-agenda/<year>-agendas-minutes/, robots.txt
+  // `User-agent: *` with an empty `Disallow:`, read 2026-09-25) listing every
+  // Regular Meeting, Special Meeting and Work Session by its own date, each
+  // with its agenda and, once posted, its minutes. The body is the registered
+  // governing body of `az:city:city-of-holbrook` (Census place 0433280).
+  //
+  // The page states no hour and no room; the agendas that do sit on Google
+  // Drive, whose viewer is script-only and whose byte route robots.txt
+  // disallows. Every sitting ships date-only with its own agenda cited. The
+  // publisher's horizon: a sitting appears when the city posts its agenda.
+  {
+    bodyId: "ocd-division/country:us/state:az/place:holbrook#governing",
+    ocdId: "ocd-division/country:us/state:az/place:holbrook",
+    agendaSourceType: "DOCUMENT_LISTING",
+    jurisdiction: "Holbrook, AZ",
+    publishingOrg: "City of Holbrook",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "holbrook-city-council",
+      pageTemplate: "https://holbrookaz.gov/government/council-agenda/{year}-agendas-minutes/",
+      // The government's reviewed current website (C15,
+      // lib/civic-data/website-corrections.ts); a test holds the two equal.
+      officialHost: "holbrookaz.gov",
+      bodyName: "City Council",
+      // The kinds the page's own labels give the council's sittings. Any
+      // other dated label ("Statement of Legal Action") is a document of a
+      // sitting, never a sitting.
+      sittingKinds: "Regular Meeting|Special Meeting|Work Session",
+      agendaHeading: "Agendas",
+      minutesHeading: "Minutes",
+    },
+    verifiedAt: "2026-09-25",
+  },
+
+  // Winslow, AZ — City Council (R22, 2026-09-25). Discovery's "commission
+  // page" finds were a community-events list, not the council. The city
+  // publishes its council agendas, packets, minutes and video on its SuiteOne
+  // Media portal, winslowaz.suiteonemedia.com, which serves no robots.txt
+  // (HTTP 404, read 2026-09-25) and whose home page is server-rendered: the
+  // next ten meetings of every body, and a "City Council" panel of the current
+  // and previous year's sittings. The agendas name the city ("NOTICE OF
+  // REGULAR MEETING OF THE WINSLOW CITY COUNCIL"). The body is the registered
+  // governing body of `az:city:city-of-winslow` (Census place 0483930).
+  //
+  // The publisher's horizon: the home page lists only the next ten meetings
+  // across all of the city's bodies (through 19 November 2026 on the read).
+  {
+    bodyId: "ocd-division/country:us/state:az/place:winslow#governing",
+    ocdId: "ocd-division/country:us/state:az/place:winslow",
+    agendaSourceType: "SUITEONE",
+    jurisdiction: "Winslow, AZ",
+    publishingOrg: "City of Winslow",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "winslow-city-council",
+      // The portal's home page as its own `/web/` link lands on it.
+      portalUrl: "https://winslowaz.suiteonemedia.com/?embed=1",
+      // The past-meetings panel's own heading, exactly.
+      groupName: "City Council",
+      // Upcoming rows name no category; the city titles every council sitting
+      // "City Council …".
+      titleMatch: "City Council",
+      bodyName: "City Council",
+    },
+    verifiedAt: "2026-09-25",
   },
 
   // ── The browser rung (M79, 2026-08-15) ──────────────────────────────────
@@ -1266,6 +1355,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   // product should make, so both ship and the merge decides — see
   // `collapseDuplicateSittings` in `lib/sources/composite/index.ts`, which
   // keeps the row carrying the agenda and states how many it collapsed.
+  //
+  // 2026-09-25: the Selectboard's CivicWeb route is retired — its host no
+  // longer resolves — so this feed is now the Selectboard's only route
+  // (RETIRED_MEETING_ROUTES, `successorAlreadyWired`).
   //
   // **This wiring is only safe because that merge exists.** Before it, a second
   // route meant every shared sitting rendering twice.

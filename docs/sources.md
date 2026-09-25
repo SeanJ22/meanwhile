@@ -401,6 +401,53 @@ parse as data*, never *did the call succeed*.
   title must name the body or its committee. Anything else is HELD with a named
   reason, never guessed.
 
+### Document listing — a body's own agendas-and-minutes page
+- **Last walked:** 2026-09-25
+- **Status:** WIRED — `lib/sources/document-listing/` (AgendaSourceType
+  `DOCUMENT_LISTING`), first body the City of Holbrook, AZ City Council, its
+  own partition.
+- **Shape:** one page per year; one link per document, labelled with its
+  sitting's kind and date ("Regular Meeting 9-9-2026") under an "Agendas" or
+  "Minutes" heading. One sitting per kind per date, its agenda cited.
+- **Auth:** none. **Permission, read before the first fetch of every run:**
+
+| Page | robots.txt | Verdict | Read |
+| --- | --- | --- | --- |
+| `https://holbrookaz.gov/government/council-agenda/<year>-agendas-minutes/` (City of Holbrook — WIRED) | `User-agent: *` with an empty `Disallow:` (Yoast block) | **ALLOWED** | 2026-09-25 |
+| `https://drive.google.com/file/d/<id>/view` (Holbrook's agenda PDFs, linked from the page) | `Allow: /file` | **ALLOWED**, but the page is a script-only viewer carrying none of the agenda's text | 2026-09-25 |
+| `https://drive.google.com/uc?export=download&id=<id>` (the same PDFs' bytes) | `Disallow: /` is the longest match | **DISALLOWED — NOT READ** | 2026-09-25 |
+
+- **What is not known from this route:** the hour and room of each sitting,
+  which Holbrook prints only inside the agenda PDFs above. Sittings publish
+  date-only with their agenda link; nothing is inferred.
+- **Horizon:** a sitting appears when the city posts its agenda.
+- **Also on the city's site, not wired:** the Planning & Zoning Commission's
+  agendas and minutes page (`/government/council-agenda/planning-zoning-agendas-minutes/`);
+  the commission is not a registered body yet.
+
+### SuiteOne Media — hosted meeting portal
+- **Last walked:** 2026-09-25
+- **Status:** WIRED — `lib/sources/suiteone/` (AgendaSourceType `SUITEONE`),
+  first tenant the City of Winslow, AZ City Council, its own partition.
+- **Shape:** the tenant's server-rendered home page (`/?embed=1`, where
+  `/web/` lands): the next ten meetings of every body, and one panel per body
+  category of the current and previous year's meetings, each row with its
+  date and time, agenda, packet, minutes and video links.
+- **Auth:** none. **Permission, read before the first fetch of every run:**
+
+| Page | robots.txt | Verdict | Read |
+| --- | --- | --- | --- |
+| `https://winslowaz.suiteonemedia.com/?embed=1` (City of Winslow — WIRED) | none served (HTTP 404) | **NO_ROBOTS** — no restriction stated | 2026-09-25 |
+
+- **Not wired:** the page's own paging and older-years controls are POSTs
+  (`/Home/GetUpcomingEvents`, `/Home/GetRecentEventsGroup`); their GET forms
+  answer 404, so the robots-first research client could not verify them.
+  Until one is verified, council sittings later than the table's tenth row
+  appear only as the table rolls forward (the tenth row on the first read:
+  19 November 2026 <!-- expected-future: a scheduled meeting date -->).
+- **Place:** not on the portal's rows; each agenda states it ("the main hall of
+  the Winslow Visitor's Center, 523 West Second Street", 22 September 2026).
+
 ---
 
 ## Evaluated, not wired
@@ -634,6 +681,27 @@ the wall across four rungs.
 | `index.commoncrawl.org/CC-MAIN-2026-34-index` | does a host exist in the August 2026 crawl, and which URLs does it hold | Common Crawl, open | an impossible host returns **HTTP 404 `No Captures found`** — a real control | 2026-08-24 |
 | `api.marginalia.nu/public/search/<query>` | an independent keyword index of the non-commercial web | **CC-BY-NC-SA 4.0 — DISCOVERY ONLY.** The non-commercial clause means it may point at a URL and may never be a source of record here; the URL is then fetched from the origin and proved there, exactly as RULING 87 governs Wikipedia | returns a `license` field and a `results` array | 2026-08-24 |
 
+**Marginalia's answer shape, read from the runner's held responses on
+2026-09-25.** Beside `license` and `results` sit `page`, `pages` and `query`;
+each result carries `url`, `title`, `description`, `quality`, `format`,
+`resultsFromDomain` and `details`. `normalizeMarginaliaSearch`
+(`lib/control-plane/scheduler/promotion-tail.ts`) keeps only `url`, `title`,
+`format` and rank, as POINTER leads — never the licensed `description` — and
+names an empty `results` a NO_HIT rather than a failed normalization. Of the
+326 held candidate answers (4,647 results, none empty), 12 carry a lead whose
+own host, or the title the index gave it, names the candidate; the
+campaign-site verifier (`lib/candidates/campaign-site-verifier.ts`) reads those
+origins robots-first and refuses the rest by type. Read robots-first on
+2026-09-25: the 4,631 refused before any request are 2,132 hosts and titles
+that do not name the candidate, 974 government hosts, 804 files, 416 news
+outlets, 285 aggregators and 20 party or civic organizations; of the 16 leads,
+9 sit on the candidate's own campaign domain (6 domains) and 6 of those verify
+(Crane, Horne twice, Schweikert, Tang Williams twice), 3 are past-cycle sites
+(HISTORICAL_CYCLE), and the 7 on other hosts (a host name that merely contains a
+name token, or a title match) are refused on the page. The standing runner's
+campaign-site pass reads such leads every cycle and publishes what the chain
+approves through `candidate-campaign-sites-derived`.
+
 **Coverage measured rather than assumed.** Common Crawl's August 2026 index
 holds **6** URLs for `newjerseyglobe.com`, **98** for `morristowngreen.com`,
 **22** for `tapinto.net`, **77** for `patch.com` and **7** for
@@ -736,6 +804,7 @@ not the statistical one.
 | **Legistar InSite calendar — `pima.legistar.com`** | **WALKED — and it holds what the vendor API does NOT** | **14 FUTURE Pima Board sittings out to 2026-12-15 that the Web API returns zero of <!-- expected-future: 2026-12-15 is the last sitting Pima PUBLISHES, not a stamp -->** (This Year, not Next Month — the grid pages at 100 and a GUESSED page index returns the WRONG page with a clean 200 and 100 well-formed rows, so page targets must be read off the pager) | `robots.txt` HTTP 404 → `NO_ROBOTS`: the host publishes no restriction. `Calendar.aspx` defaults to This Month; the future rows come from an ASP.NET postback with `__EVENTTARGET=ctl00$ContentPlaceHolder1$lstYears` and `lstYears=Next Month`. It is the ONLY complete enumeration — the RSS feed drops location and meeting kind, and the iCal export needs an ID and GUID only the grid supplies | A | 2026-08-28 |
 | **City of Mesa — `www.mesaaz.gov`** | **WALKED — and it is the first-party check on Mesa's vendor** | `/Government/City-Council-Meetings` answers 200 at 159,373 bytes. Carries `<h1>City Council Meetings</h1>`, the council's own schedule sentence — *first and third Monday, 5:45 p.m., City Hall (upper level), 20 E. Main St.* — and a calendar publishing "City Council Meeting" and "City Council Study Session" | `robots.txt` HTTP 200, ONE `User-agent: *` block, 265 directives, **no bare `Disallow: /`**. It disallows only this page's own `/PublicComments` child, which was not fetched. Permission read BEFORE reachability (RULING 148) | A | 2026-08-28 |
 | **Legistar InSite calendar — `mesa.legistar.com`** | **WALKED — the second tenant, and the one that proves the union rule** | The grid and the Web API each carry sittings the other does not; on one "Next Month" filter the grid published 15 with 12 `meeting_NotViewable` while `/v1/mesa/events` returned exactly the other 3. `EventBodyName: "City Council"` independently confirms the body this tenant is wired to | `robots.txt` HTTP 404 → `NO_ROBOTS`: the host publishes no restriction | A | 2026-08-28 |
+| **Legistar InSite minutes — `mesa.legistar.com/View.ashx?M=M`** | **WALKED — where Mesa records its council's decisions (NH332)** | **8 sittings read, 29 motions, each with mover, seconder, the clerk's AYES/NAYS tabulation and the chair's result.** Mesa's clerk enters no action in the Web API (0 of 33 items on 2026-09-14), so the minutes are the record. The link is the grid's own `hypMinutes` cell (the portal's sitting id, not the API's EventId); it answers 200 `application/pdf`. The accessible-minutes cell read "Not available" on all 163 rows seen. The portal's "Minutes status" reads Draft on approved minutes too, so the document's title and the grid label ("Results" = the clerk's action minutes) mark a draft. Routine contract `mesa-legistar-minutes-outcomes` | `robots.txt` HTTP 404 → `NO_ROBOTS`, re-read 2026-09-25 by `pnpm research:fetch` | A | 2026-09-25 |
 | **Mesa's own dated council instances — `www.mesaaz.gov` calendar widget** | **REQUIRES_NEW_ADAPTER — permitted, reachable, and NOT YET PARSED** | The city does publish its own dated instance list. `parseClerkSchedule` is a TABLE parser written for Pima's table and this is a CMS widget, so pointing it here would return zero rows | **This is a rung nobody has climbed, not an absence.** A zero-row extraction is a FAILED extraction (RULING 100); run against this it would read forever as the city publishing no schedule of its own. `clerkScheduleUrl` stays null in the tenant and says so in those words | — | 2026-08-28 |
 | **Legistar Web API — `webapi.legistar.com`** | **WALKED — and its forward horizon is MEASURED, not assumed** | **`/v1/pima/events` 403 rows all-time, 0 in September 2026; `/v1/pima/EventDates/138?FutureDatesOnly=true` 0** | `robots.txt` HTTP 404 → `NO_ROBOTS`. The route returns only meetings whose InSite detail page is PUBLICLY VIEWABLE — the unreturned event ids 404 on the item endpoint (40 of 40 probed), so they have no API record at all rather than a hidden one. Re-measured 2026-08-29 <!-- expected-future: an observation timestamp in UTC; 2026-08-28 local -->: 403 rows all-time, latest EventDate 2026-08-25, ZERO future; `$top=2000` is HTTP 400. Lead time across 32 Pima 2026 events: max 5 days, median 0, min −2. **But on MESA the same route carries 20 future sittings the portal grid does not, so "the portal is the better route" is FALSE as a general rule — only the UNION survives both tenants.** **A zero here is a fact about this ROUTE and never about the body** | A | 2026-08-28 |
 | **Legistar apex — `legistar.com`** | **WALKED** | — | `User-agent: *` with `Crawl-delay: 2`, honoured. Disallows confined to `*?wtime`, `*?wmediaid`, `*?wchannelid`; `Allow: /` is stated for ClaudeBot | A | 2026-08-28 |

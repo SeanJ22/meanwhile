@@ -119,7 +119,9 @@ export function promotionChangeSummary(state: PipelineItemState): string {
         ? src.outcome === "ROUTE_CANDIDATE"
           ? `A way in, route ${src.routeId ?? "unnamed"}`
           : "The record itself, found by a Scout"
-        : `A method, route ${src.routeId} (${src.lifecycle.toLowerCase()})`;
+        : src.kind === "DISCOVERY_POINTER"
+          ? `A lead from a search index (route ${src.routeId}, result ${src.rank}), read at ${src.pointerUrl}`
+          : `A method, route ${src.routeId} (${src.lifecycle.toLowerCase()})`;
   const fact = state.byStage.CONFIRMED?.sameFact ?? null;
   const text = `${what}: ${scouted.summary}${scouted.canonicalUrl ? ` <${scouted.canonicalUrl}>` : ""}${fact ? `; the confirming read states ${fact}` : ""}`;
   return text.length <= CHANGE_SUMMARY_MAX ? text : `${text.slice(0, CHANGE_SUMMARY_MAX - 1)}…`;

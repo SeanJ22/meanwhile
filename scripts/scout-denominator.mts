@@ -106,8 +106,8 @@ const readStatus = <T,>(r: Reading<T>, rows: (v: T) => number): ReadStatus =>
 
 type ReadStatus = { readonly ok: true; readonly rows: number } | { readonly ok: false; readonly error: string };
 
-type OpenKind = "HTTP_GET" | "HTTP_POST" | "NOT_MACHINE_EXECUTABLE";
-const OPEN_KINDS: readonly OpenKind[] = ["HTTP_GET", "HTTP_POST", "NOT_MACHINE_EXECUTABLE"];
+type OpenKind = "HTTP_GET" | "HTTP_POST" | "NOT_MACHINE_EXECUTABLE" | "ROUTINE_READ";
+const OPEN_KINDS: readonly OpenKind[] = ["HTTP_GET", "HTTP_POST", "NOT_MACHINE_EXECUTABLE", "ROUTINE_READ"];
 
 type ScheduleState = "NOT_DURABLE" | "UNSCHEDULED" | "BACKED_OFF" | "DUE" | "NOT_DUE";
 
@@ -401,6 +401,7 @@ const byOpenKind = {
   HTTP_GET: readings.filter((r) => r.openKind === "HTTP_GET").length,
   HTTP_POST: readings.filter((r) => r.openKind === "HTTP_POST").length,
   NOT_MACHINE_EXECUTABLE: readings.filter((r) => r.openKind === "NOT_MACHINE_EXECUTABLE").length,
+  ROUTINE_READ: readings.filter((r) => r.openKind === "ROUTINE_READ").length,
 };
 console.log();
 line("registered units by DECLARED executor class (the descriptor's executorClass):");

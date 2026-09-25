@@ -57,7 +57,11 @@ const input = (over: Partial<DeliveryTrailInput> = {}): DeliveryTrailInput => ({
 });
 
 test("empty pipeline: every stage is a named gap, the blockers are named, promotions empty", () => {
-  const view = buildDeliveryTrail([], input());
+  /* A closed gate is named as a blocker; the live gate now opens campaign sites (2026-09-21), so it is not one. */
+  const open = buildDeliveryTrail([], input());
+  assert.ok(!open.blockers.some((b) => b.what === "Activation gate (publication)"));
+  const closedGate = { ...readActivationGate(""), promotionEnabled: false, openRecordClasses: [], openFields: {}, reason: "promotion OFF" };
+  const view = buildDeliveryTrail([], input({ activation: closedGate }));
   assert.equal(view.version, DELIVERY_TRAIL_VERSION);
   assert.equal(view.items, 0);
   for (const s of view.stages) assert.equal(s.reached.held, false, `${s.key} must be a gap when nothing has entered`);
@@ -150,4 +154,21 @@ test("MW-053: each approved row says what changed, from its own SCOUTED and CONF
   );
   // An item without its SCOUTED record says so rather than inventing a change.
   assert.equal(buildDeliveryTrail([base], input()).promotions[0]!.changeSummary, "What changed is not recorded: the item holds no SCOUTED record.");
+  // A campaign-site lead from a search index names its route, rank and the page it pointed at.
+  const pointer = {
+    ...base,
+    byStage: {
+      ...base.byStage,
+      SCOUTED: {
+        stage: "SCOUTED",
+        source: { kind: "DISCOVERY_POINTER", routeId: "candidate-marginalia-index", attemptId: "at", artifactId: "ar", pointerUrl: "https://lilytangwilliams.com/", rank: 2 },
+        summary: "Lily Tang Williams for Congress",
+        canonicalUrl: null,
+      },
+    },
+  } as unknown as PipelineItemState;
+  assert.equal(
+    buildDeliveryTrail([pointer], input()).promotions[0]!.changeSummary,
+    "A lead from a search index (route candidate-marginalia-index, result 2), read at https://lilytangwilliams.com/: Lily Tang Williams for Congress",
+  );
 });

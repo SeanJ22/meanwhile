@@ -24,7 +24,7 @@ import type { ReactNode } from "react";
 import { readDigests, readFleetSafety, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
-import { buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
+import { askGapCountWords, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import {
   instructionKey,
@@ -42,6 +42,7 @@ import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
 import { isAssignmentCycleReading } from "@/lib/control-plane/expansion/assignment-budget.ts";
+import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
@@ -168,6 +169,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       runnerPaused: pause ? { since: pause.since ?? null } : null,
       assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
       assignmentAt: sends?.at ?? null,
+      dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),
     }),
   );
 
@@ -212,18 +214,24 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const claims: CountClaim[] = [{ label: "your instructions", stated: base.selected.length, rendered: instructions.length }];
   if (view) {
     numbers.push({ label: "assignments listed", value: rows.length, denominator: view.summary.total, contract: "rows the published assignment list carries, of every assignment the control plane holds" });
+    if (view.summary.askGaps?.held) {
+      for (const c of view.summary.askGaps.value.byCode) numbers.push({ label: `open Ask gaps · ${c.code}`, value: c.count.value, denominator: c.count.denominator, contract: c.count.contract });
+    }
     for (const g of groups) claims.push({ label: `listed ${g.state}`, stated: g.listed.length, rendered: g.listed.length });
   }
   const na = auditRenderedNumbers(numbers);
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
-  /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — registered ones first. */
+  /*
+   * Every state and territory can be chosen — the Census lookup behind the geographies covers them all — the ones
+   * with a reviewed registry first. Every other one is registered too: a Send there reads its registration (2026-09-25).
+   */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
   const composerStates = [
     ...REGISTERED_STATE_CODES.map((code) => ({ code, name: stateName(code) })),
-    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — nothing registered` })),
+    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — from registration` })),
   ];
   const selected: Record<string, { priority: number; budgetUsd: number }> = {};
   for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
@@ -313,6 +321,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               <p className={s.note}>
                 {view!.selection.rule} {view!.selection.omitted > 0 ? `${view!.selection.omitted.toLocaleString("en-US")} rows are not carried on the published list; each group says how many it holds.` : ""}
               </p>
+              <p className={s.note}>{askGapCountWords(view!)}</p>
               <div className={s.rowCenter} style={{ gap: 8 }}>
                 {groups.map((g) => (
                   <Link key={g.state} href={`${here({ show: show === g.state ? null : g.state, open: null })}#assignments`} className={`${s.chip} ${show === g.state ? s.chipOn : ""}`}>

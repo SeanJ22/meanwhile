@@ -38,8 +38,8 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/e
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
-import { readOutcomeProjection } from "../lib/outcomes/store.ts";
-import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../lib/outcomes/data-plane.ts";
+import { combinedOutcomeVersionId, combineOutcomeProjections, readMesaOutcomeProjection, readOutcomeProjection } from "../lib/outcomes/store.ts";
+import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../lib/outcomes/data-plane.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -49,6 +49,8 @@ import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts"
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
+import { readerEdgeCarriesForward } from "./lib/reader-edge-current.ts";
+import { readerVerifierClosureAttestor } from "./lib/reader-verifier-attestation.ts";
 
 function safeFailure(value: string): string {
   return value
@@ -94,6 +96,10 @@ const store = stage
   : new PostgresRoutineDataStore();
 
 let failed = false;
+// A receipt from an earlier commit carries to this one when no typed Reader
+// code changed between them; otherwise the Reader re-reads (R31, 2026-09-25).
+// Every runner handoff once re-read every Reader (195.3 MB on an isolated copy).
+const attestor = readerVerifierClosureAttestor();
 if (meetingAggregate) {
   // One composition of every partition per pass, made only when something
   // needs it: the Reader readbacks of newly promoted versions and the prepared
@@ -115,7 +121,7 @@ if (meetingAggregate) {
     MEETING_PARTITION_CONTRACTS,
     observedAt,
     undefined,
-    { aggregate },
+    { aggregate, attestor },
   );
   for (const result of results) {
     const contract = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === result.contractId);
@@ -153,9 +159,24 @@ if (meetingAggregate) {
   // (unchanged data republishes nothing) and last-valid-safe (a failure leaves
   // the previous manifest serving). Degrades to SKIPPED when the runner has no
   // Netlify credentials — the reader then falls back to the DB prepared row.
+  //
+  // R28 (2026-09-25): the served manifest is read first, and the prepared row
+  // (about 7.5 MB) is read only when the publish could change something
+  // (scripts/lib/reader-edge-current.ts). Every pass once read the whole row to
+  // learn that the manifest was already current.
   try {
-    const readBack = await readPreparedMeetingsProjection({ store });
-    if (readBack.kind === "PROMOTED") {
+    // The runner write store, when this host has one; without it the publish
+    // is SKIPPED_NO_STORE whatever it is given, so nothing below is read.
+    const artifactStore = resolveReaderArtifactWriteStore();
+    if (artifactStore === null) {
+      console.log(JSON.stringify({ readerEdge: "SKIPPED_NO_STORE" }));
+    } else {
+      let servedManifest: ReaderManifest | null = null;
+      try {
+        servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
+      } catch {
+        servedManifest = null;
+      }
       // The other ready-to-display families the reader serves, read here (the
       // single clock, production DB) so the visitor never reads them from the DB.
       // A failed read leaves them out of the manifest; the reader then falls back
@@ -180,13 +201,6 @@ if (meetingAggregate) {
       // artifact was written from a proven read of the same immutable version.
       // Every pass once read every family whole (30.8 MB on 2026-09-23, 24 MB
       // of it registry-runtime) to learn that nothing had changed.
-      const artifactStore = resolveReaderArtifactWriteStore();
-      let servedManifest: ReaderManifest | null = null;
-      try {
-        servedManifest = artifactStore ? (await artifactStore.readManifest())?.manifest ?? null : null;
-      } catch {
-        servedManifest = null;
-      }
       const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
         const served = servedAuthorityVersion(servedManifest, family);
         if (served === null) return null;
@@ -274,11 +288,26 @@ if (meetingAggregate) {
       // 0.6–0.8 s). Each is carried forward while its pointer is still the served
       // version, and read whole only when it moved.
       try {
-        const carried = await servedIfCurrent("meeting-outcomes", pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope));
+        // Pima's and Mesa's pointers, combined (NH332): the artifact is Pima's
+        // alone while Mesa has no pointer, and names both versions once it does.
+        const carried = await servedIfCurrent("meeting-outcomes", async () => combinedOutcomeVersionId(
+          await pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope)(),
+          await pointerVersion(MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.recordClass, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.scope)(),
+        ));
         if (carried !== null) authority["meeting-outcomes"] = { versionId: carried, carried: true };
         else {
           const oc = await readOutcomeProjection();
-          if (oc.kind === "PROMOTED" && oc.metadata.versionId) authority["meeting-outcomes"] = { value: oc.value, versionId: oc.metadata.versionId };
+          const mesa = await readMesaOutcomeProjection();
+          // Complete or left out: a Mesa read that failed must not publish Pima
+          // alone as if Mesa had nothing; the reader then reads both from the database.
+          if (mesa.kind !== "PROMOTED" && mesa.kind !== "NOT_RECORDED") throw new Error(`mesa minutes outcomes read ${mesa.kind}`);
+          const combined = oc.kind === "PROMOTED" && oc.metadata.versionId
+            ? combineOutcomeProjections(
+                { value: oc.value, versionId: oc.metadata.versionId },
+                mesa.kind === "PROMOTED" && mesa.metadata.versionId ? { value: mesa.value, versionId: mesa.metadata.versionId } : null,
+              )
+            : null;
+          if (combined !== null) authority["meeting-outcomes"] = combined;
           else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes kind=${oc.kind}\n`);
         }
       } catch (error) {
@@ -315,31 +344,40 @@ if (meetingAggregate) {
         process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}
 `);
       }
-      const edge = await publishReaderEdgeArtifacts(
-        readBack.value,
-        {
-          sourceThrough: readBack.metadata.sourceThrough,
-          retrievedAt: readBack.metadata.retrievedAt,
-          promotedThrough: readBack.metadata.promotedAt,
-        },
-        {
-          store: artifactStore,
-          now: observedAt,
-          ...(extras ? { extras } : {}),
-          ...(Object.keys(authority).length > 0 ? { authority } : {}),
-          ...(registrations !== undefined ? { registrations } : {}),
-        },
-      );
-      if (edge.status === "FAILED") {
-        failed = true;
-        process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(edge.error)}\n`);
-      } else if (edge.status === "NOT_COMPOSABLE") {
-        process.stderr.write(`READER_EDGE_PUBLISH_NOT_COMPOSABLE: ${safeFailure(edge.detail)}\n`);
-      } else if (edge.status === "PUBLISHED") {
-        const purge = await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]);
-        console.log(JSON.stringify({ readerEdge: "PUBLISHED", sequence: edge.sequence, scopes: edge.scopes, meetings: edge.meetings, purged: purge.purged }));
+      const carry = readerEdgeCarriesForward({ prepared, servedManifest, extras, authority, registrations });
+      if (carry.current) {
+        // Exactly what the publish would answer, without the prepared row.
+        console.log(JSON.stringify({ readerEdge: "CURRENT", sequence: carry.sequence }));
       } else {
-        console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}) }));
+        const readBack = await readPreparedMeetingsProjection({ store });
+        if (readBack.kind === "PROMOTED") {
+          const edge = await publishReaderEdgeArtifacts(
+            readBack.value,
+            {
+              sourceThrough: readBack.metadata.sourceThrough,
+              retrievedAt: readBack.metadata.retrievedAt,
+              promotedThrough: readBack.metadata.promotedAt,
+            },
+            {
+              store: artifactStore,
+              now: observedAt,
+              ...(extras ? { extras } : {}),
+              ...(Object.keys(authority).length > 0 ? { authority } : {}),
+              ...(registrations !== undefined ? { registrations } : {}),
+            },
+          );
+          if (edge.status === "FAILED") {
+            failed = true;
+            process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(edge.error)}\n`);
+          } else if (edge.status === "NOT_COMPOSABLE") {
+            process.stderr.write(`READER_EDGE_PUBLISH_NOT_COMPOSABLE: ${safeFailure(edge.detail)}\n`);
+          } else if (edge.status === "PUBLISHED") {
+            const purge = await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]);
+            console.log(JSON.stringify({ readerEdge: "PUBLISHED", sequence: edge.sequence, scopes: edge.scopes, meetings: edge.meetings, purged: purge.purged }));
+          } else {
+            console.log(JSON.stringify({ readerEdge: edge.status, ...("sequence" in edge ? { sequence: edge.sequence } : {}) }));
+          }
+        }
       }
     }
   } catch (error) {
@@ -360,7 +398,7 @@ if (meetingAggregate) {
   }
   try {
     stage?.("readback repair started");
-    const result = await repairRoutineReaderProjectionReadback(store, contract, observedAt);
+    const result = await repairRoutineReaderProjectionReadback(store, contract, observedAt, undefined, { attestor });
     stage?.(`readback repair ${result.kind}`);
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,

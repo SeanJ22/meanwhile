@@ -116,16 +116,29 @@ import { campaignFinanceProvider } from "../lib/control-plane/scheduler/provider
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
+  candidateEnrichmentHoldings,
   candidateEnrichmentProvider,
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
+  CAMPAIGN_SITE_BUDGET_MS,
+  campaignSiteCycleLine,
+  campaignSiteSubjectsFromHoldings,
+  heldMarginaliaFromManifest,
+  runCampaignSiteCycle,
+  type CampaignSiteCycleReport,
+} from "../lib/control-plane/promotion/campaign-site-cycle.ts";
+import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
+import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
   paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
+import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
+import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
@@ -194,6 +207,7 @@ import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts"
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import {
   promotionLines,
+  readStagingManifest,
   stageOne,
   writeStagingManifest,
   type StagedEntry,
@@ -672,6 +686,10 @@ try {
 } catch (error) {
   materialized = { unreadable: error instanceof Error ? error.message : String(error) };
 }
+/* A state with created work and no reviewed registry is read from its registration first, so its providers keep that work (2026-09-25). */
+if ("ids" in materialized) {
+  await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => stateOfJurisdictionId(id) ?? []), options: { bypassCache: true } });
+}
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
@@ -679,6 +697,11 @@ const registry = buildRegistry(
     localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
+    /* The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded. */
+    (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
+      await pending.step("ask-gaps:held-reading", async () =>
+        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW })),
+    ),
   ],
   { root: ROOT, nowIso: NOW },
 );
@@ -855,10 +878,9 @@ const gapLedgerRead = (() => {
  */
 const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
-/* A dispatched need's address comes from the promoted jurisdiction reference; it carries that version (NH330). */
-const referenceAddress = { source: "OPERATIONAL_REFERENCE" as const, versionId: operationalReference?.metadata.versionId ?? null };
+/* A dispatched need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
 const dispatchedNeeds = new Map(
-  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: referenceAddress }]),
+  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: dispatchedAddressSource(e.reg, operationalReference?.metadata.versionId ?? null) }]),
 );
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
@@ -1141,6 +1163,11 @@ for (const pending of intents.pendingDispatch) {
  * A registry the reader refuses is named, never used.
  */
 const promoted = promotedRegistries();
+/** The registries as read now: the ones above, and every state's registration read since. */
+const registriesNow = (fallback: ReadonlyMap<string, JurisdictionRegistry>): ReadonlyMap<string, JurisdictionRegistry> => {
+  const now = promotedRegistries();
+  return "registries" in now ? now.registries : fallback;
+};
 if ("refused" in promoted) {
   for (const [state, why] of promoted.refused) {
     runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
@@ -1151,7 +1178,12 @@ const expansionLoad = await loadExpansionPlan({
   root: ROOT,
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
-  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...promoted.registries.values()]) } : {}),
+  /* Each scope state with no reviewed registry is read from its registration before the territory (2026-09-25). */
+  beforeTerritory: async (states) =>
+    [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } })).refused].map(
+      ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
+    ),
+  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1608,7 +1640,11 @@ let dispatchRecorded: NonNullable<DispatchWorkApplied["recorded"]> = [];
 if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
-    const registries = promoted.registries;
+    /* A DISPATCH's states with no reviewed registry are read from their registration, as a scope's were (2026-09-25). */
+    await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
+    const current = promotedRegistries();
+    const registries = "registries" in current ? current.registries : promoted.registries;
+    const refusedRegistries = "refused" in current ? current.refused : promoted.refused;
     let censusUnitsByState: Map<string, number> | null = null;
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
@@ -1633,7 +1669,7 @@ if (dispatchTargets.length > 0) {
         durable,
         meetingPartitions: UNREAD_MEETING_PARTITIONS,
         censusUnitsByState,
-        refusedRegistries: promoted.refused,
+        refusedRegistries,
       },
     });
     const applied = dispatchWorkWrites
@@ -2603,6 +2639,75 @@ console.log(
 finishPhase("meetings-discovery");
 
 /*
+ * **THE CAMPAIGN-SITE PASS: HELD RESEARCH REACHES THE PUBLICATION DOOR, FREE.**
+ * (2026-09-25; the design note and the bounds are in
+ * lib/control-plane/promotion/campaign-site-cycle.ts.)
+ *
+ * The held Scout findings and Marginalia answers go through the complete
+ * campaign-site chain: robots-first reads through this cycle's guarded seam
+ * and host spacer, at most 12 lead reads and 6 audit second reads in 60 s. It
+ * calls no model and no paid search, so it runs while the owner's pause keeps
+ * the paid lane closed; it is not gated on that lane. Its offers are pipeline
+ * records (Admin's delivery trail); its approvals publish through the derived
+ * routine contract `candidate-campaign-sites-derived` on the routine runner's
+ * own clock, with no owner step. Only a full standing cycle with the budget
+ * left runs it.
+ */
+let campaignSites: CampaignSiteCycleReport | null = null;
+let campaignSitesState: string;
+if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
+  campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
+} else if (intents.runnerPause.paused) {
+  campaignSitesState = "not run: the owner has paused the runner";
+} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS > DISPATCH_DEADLINE_MS) {
+  campaignSitesState = "not run: less of the cycle's admission window remains than the pass's budget";
+} else {
+  const leaveCampaignSites = pending.enter("campaign-sites");
+  try {
+    const holdings = candidateEnrichmentHoldings();
+    if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
+    const { subjects } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+    const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
+    /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
+    let stagingManifest: ReturnType<typeof readStagingManifest> = null;
+    try {
+      stagingManifest = readStagingManifest(ROOT);
+    } catch (error) {
+      runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
+    }
+    const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
+    const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+    campaignSites = await runCampaignSiteCycle({
+      repos,
+      subjects,
+      marginalia: held.responses,
+      gate: readActivationGate(ROOT),
+      now: nowIso(),
+      clock: () => Date.now(),
+      sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
+      open: async ({ url, headers, timeoutMs }) => {
+        const got = await openCampaignSite({ url, headers, timeoutMs });
+        return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+      },
+      spaceOut: spacer,
+      vaultRoot: join(ROOT, ...VAULT_DIR),
+      heldVault: vaultIndex,
+      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+    });
+    campaignSitesState =
+      `ran over ${subjects.size} canonical candidacies and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+      (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : "");
+  } catch (error) {
+    campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
+  } finally {
+    leaveCampaignSites();
+  }
+}
+console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
+finishPhase("campaign-sites");
+
+/*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
  * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
  * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
@@ -3072,6 +3177,7 @@ const lines = [
         ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
         (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "") +
         (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side` : "")),
+  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`,
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -3202,6 +3308,26 @@ const runRecord = {
         /* Walks that failed on something of ours, named; the pass went on without them and each need stays due. */
         walkFailures: meetingsDiscovery?.walkFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
+      },
+      /* The free campaign-site pass (2026-09-25): whether it ran, each lead it read, and every verdict by code. */
+      campaignSites: {
+        state: campaignSitesState,
+        report: campaignSites === null
+          ? null
+          : {
+              readsUsed: campaignSites.chain.readsUsed,
+              rereadsUsed: campaignSites.chain.rereadsUsed,
+              judgedFromVault: campaignSites.chain.judgedFromVault,
+              verdicts: campaignSites.verdicts,
+              byCode: campaignSites.byCode,
+              byStage: campaignSites.chain.byStage,
+              offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
+              approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
+              unjoined: campaignSites.chain.unjoined.length,
+              budgetSpent: campaignSites.budgetSpent,
+              elapsedMs: campaignSites.elapsedMs,
+              read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
+            },
       },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:

@@ -35,6 +35,7 @@ import {
   resolveMeetingBodies,
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
+import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import {
   readMeetingPartitionProjection,
   snapshotCounts,
@@ -256,35 +257,28 @@ function readThroughNoticePage(meeting: Meeting): boolean {
 }
 
 /**
- * A held document that is not this sitting's agenda (D1): another publisher's
- * notice page, or a wiring notice page, not the sitting's own link, that states
- * no agenda item. Production held 70 notice-page documents on 2026-09-24 and
- * not one yields an agenda item.
+ * A held document that is not this sitting's agenda (D1): a notice page that
+ * is neither the sitting's body's nor its publisher's, or a wiring notice
+ * page, not the sitting's own link, that states no agenda item. Production
+ * held 70 notice-page documents on 2026-09-24 and not one yields an agenda
+ * item.
+ *
+ * Ownership is the one rule every reader surface asks
+ * (`isAnotherBodysNoticePage`, lib/meetings/notice-pages.ts), by body id or
+ * publisher (R14, 2026-09-25). This file used to keep its own publisher-only
+ * copy, under which Tucson Unified's own notice page was "another's" — its
+ * sittings are published as "Tucson Unified School District", its wiring row
+ * as "… Governing Board" — and was set aside whatever it said.
  */
 export function heldNoticePageIsNotItsAgenda(
-  meeting: Pick<Meeting, "agendaUrl" | "provenance">,
+  meeting: Pick<Meeting, "agendaUrl" | "provenance" | "bodyId">,
   doc: Pick<AgendaDocument, "documentUrl" | "text">,
 ): boolean {
-  if (isAnotherPublishersNoticePage(meeting, doc.documentUrl)) return true;
+  // The sitting's own agenda link is never set aside.
   if (meeting.agendaUrl === doc.documentUrl) return false;
-  if (!SOURCE_WIRING.some((row) => row.noticeUrl === doc.documentUrl)) return false;
+  if (isAnotherBodysNoticePage(doc.documentUrl, { bodyId: meeting.bodyId, publisher: meeting.provenance?.sourceOrg })) return true;
+  if (!isWiredNoticePage(doc.documentUrl)) return false;
   return agendaItems(doc.text ?? "").length === 0;
-}
-
-/**
- * Whether a held document is a wiring notice page that the sitting's own
- * publisher does not publish: a page the division-wide fallback lent it before
- * the rule above. Its own agenda link is never one.
- */
-export function isAnotherPublishersNoticePage(
-  meeting: Pick<Meeting, "agendaUrl" | "provenance">,
-  url: string,
-): boolean {
-  if (meeting.agendaUrl === url) return false;
-  const rows = SOURCE_WIRING.filter((row) => row.noticeUrl === url);
-  if (rows.length === 0) return false;
-  const publisher = meeting.provenance?.sourceOrg ?? null;
-  return !rows.some((row) => row.publishingOrg === publisher);
 }
 
 /**
@@ -739,7 +733,12 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord): Promise<Fam
  * row; a SUSPENDED or failed member keeps its last verified sittings (`lib/civic-data/derived-meeting-family.ts`).
  * An unreadable wiring store builds nothing: a refused candidate is recorded and the family's last known good stays.
  */
-export async function promoteDerivedMeetingFamily(store: RoutineDataStore, partition: MeetingPartitionContract): Promise<void> {
+export async function promoteDerivedMeetingFamily(
+  store: RoutineDataStore,
+  partition: MeetingPartitionContract,
+  /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
+  prepare: () => Promise<void> = async () => {},
+): Promise<void> {
   const generatedAt = new Date().toISOString();
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
@@ -761,6 +760,7 @@ export async function promoteDerivedMeetingFamily(store: RoutineDataStore, parti
     await refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
     return;
   }
+  await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
   const reads: FamilyMemberRead[] = [];
   for (const member of members) {
@@ -800,7 +800,8 @@ export async function promoteDerivedMeetingFamily(store: RoutineDataStore, parti
     },
   });
   const candidate = derivedFamilyCandidate(partition, build);
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt);
+  // An unchanged family pass is receipted on the pointed version (R23).
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt, undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
 }
 
@@ -834,14 +835,21 @@ async function main() {
     ? selectedMeetingPartitions(process.argv.slice(3))
     : [];
 
+  /*
+   * A derived family (C16) reads its members from the promoted wiring, never from SOURCE_WIRING. It reads the wiring
+   * before anything else: every registered state has a family (2026-09-25), and one with no member yet refuses by
+   * name without the registry and venue preload (about 24 MB) a member's read needs.
+   */
+  if (promote && partitions.length === 1 && partitions[0]!.derivedFamily !== null) {
+    await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
+      await preloadCanonicalMeetingDependencies({ sourceName: name });
+      REGISTRY = getRegistryRuntimeReadModel().registry;
+    });
+    return;
+  }
   await preloadCanonicalMeetingDependencies({ sourceName: name });
   REGISTRY = getRegistryRuntimeReadModel().registry;
   const promotionStore = promote ? new PostgresRoutineDataStore() : null;
-  /* A derived family (C16) reads its members from the promoted wiring, never from SOURCE_WIRING. */
-  if (partitions.length === 1 && partitions[0]!.derivedFamily !== null && promotionStore) {
-    await promoteDerivedMeetingFamily(promotionStore, partitions[0]!);
-    return;
-  }
 
   const source = name === "composite"
     ? buildCompositeSource({

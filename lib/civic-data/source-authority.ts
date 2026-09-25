@@ -352,11 +352,16 @@ export const SOURCE_AUTHORITIES = {
     // Every state, DC and territory in the FIPS table: registration covers the country, never a chosen list.
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
-    competentFacts: ["The governments of each state (2022 Census of Governments)", "Census division identity and GEOID (2023 cartographic boundary files)", "OCD division id built from the Census names"],
+    competentFacts: [
+      "The governments of each state (2022 Census of Governments)",
+      "The functioning local governments of each territory, which the Census of Governments does not enumerate (TIGER/Line 2023 functional status, committed extract)",
+      "Census division identity and GEOID (2023 cartographic boundary files)",
+      "OCD division id built from the Census names",
+    ],
     expectedIdentifierKeys: ["ocd_id", "geoid"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics:
-      "Complete for the pinned Census vintage: every government the 2022 Census of Governments lists in the state, each on the Census division the Census ties it to or named as unpaired, and every Census division in the state. It never claims a government the Census does not list, and a different Census file is refused rather than substituted.",
+      "Complete for the pinned Census vintage: every government the 2022 Census of Governments lists in the state, each on the Census division the Census ties it to or named as unpaired, and every Census division in the state. For a territory, every division TIGER/Line 2023 gives a governing functional status (A, B, C, G), and a territory whose divisions all carry a non-governing status is registered with that record stated. It never claims a government the Census does not record, and a different Census file is refused rather than substituted.",
     parserVersion: REGISTRATION_PARSER_VERSION,
     freshnessExpectation: "Every 90 days a conditional request confirms census.gov still serves the pinned Census of Governments bytes (a 304 against the Last-Modified they were served with, or the bytes hashed); a new vintage waits for the reference to be rebuilt from it.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
@@ -398,7 +403,10 @@ export const SOURCE_AUTHORITIES = {
       "https://capaz.api.civicclerk.com/", "https://capaz.portal.civicclerk.com/", "https://govboard.tusd1.org/",
       "https://clerksboards.tucsonaz.gov/", "https://meetings.boardbook.org/", "https://mesa.legistar.com/",
       "https://webapi.legistar.com/v1/",
-      "https://morriscountynj.iqm2.com/", "https://newburynh.civicweb.net/", "https://newlondon.nh.gov/",
+      "https://morriscountynj.iqm2.com/", "https://newlondon.nh.gov/",
+      // Newbury's CivicWeb portal (newburynh.civicweb.net) is a retired route
+      // since 2026-09-25 — the host no longer resolves — and no longer inherits
+      // meetings authority; the town's own calendar feed carries its Selectboard.
       // Pima Community College's own permitted pages (2026-09-23); its Diligent
       // tenant pima.community.highbond.com is a retired route (robots.txt
       // Disallow: /) and no longer inherits meetings authority.
@@ -435,11 +443,19 @@ export const SOURCE_AUTHORITIES = {
       // writing a candidate or a receipt (measured 23:01Z and 23:06Z).
       "https://newburynhlibrary.net/feed/",
       "https://www.newburyenergynh.org/",
+      // Holbrook, AZ's own agendas-and-minutes year pages and their rules
+      // (document listing, 2026-09-25), scoped to the council-agenda path.
+      "https://holbrookaz.gov/robots.txt",
+      "https://holbrookaz.gov/government/council-agenda/",
+      // Winslow, AZ's SuiteOne Media portal home page (2026-09-25): the one
+      // page read, and the tenant's rules document.
+      "https://winslowaz.suiteonemedia.com/robots.txt",
+      "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
       "capaz.portal.civicclerk.com", "govboard.tusd1.org", "clerksboards.tucsonaz.gov", "meetings.boardbook.org",
-      "mesa.legistar.com", "morriscountynj.iqm2.com", "newburynh.civicweb.net",
+      "mesa.legistar.com", "morriscountynj.iqm2.com",
       "webapi.legistar.com",
       "newlondon.nh.gov", "www.pima.edu", "events.pima.edu", "www.susd12.org", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
       "www.pima.gov",
@@ -449,6 +465,7 @@ export const SOURCE_AUTHORITIES = {
       "www.tusd1.org",
       "www.chandleraz.gov",
       "newburynhlibrary.net", "www.newburyenergynh.org",
+      "holbrookaz.gov", "winslowaz.suiteonemedia.com",
     ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
@@ -473,11 +490,13 @@ export const SOURCE_AUTHORITIES = {
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
     allowedFinalHosts: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((t) => t.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "which reviewed calendar route publishes as which exact body, recomputed from promoted and vaulted inputs",
       "a connection suspended for review, the trigger and its evidence",
+      /* The automatic crosswalk (contract meeting-body-crosswalk-derived, 2026-09-25): C16 option A, the runner's deterministic reviewer. */
+      "which calendar on a government's attested own host is its registered body's or a printed sub-body's, accepted by the deterministic reviewer on vaulted bytes",
     ],
     expectedIdentifierKeys: ["record_id", "body_id"],
     expectedTemporalFields: ["verified_at", "reviewed_at"],
@@ -498,7 +517,8 @@ export const SOURCE_AUTHORITIES = {
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: [],
     allowedFinalHosts: [],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    /* Every registered state has a family (2026-09-25): a sitting in Ohio is inside this authority as one in Arizona is. */
+    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
     expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],
@@ -511,6 +531,36 @@ export const SOURCE_AUTHORITIES = {
     derivedPromotion: {
       inputKinds: ["PROMOTED_VERSION", "MEMBER_ACQUISITION"],
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z",
+    },
+  },
+  /*
+   * The verified campaign sites the standing runner's campaign-site chain approves (2026-09-25): each row is a site
+   * our own robots-first read verified, audited with measured controls and an independent second signal, and
+   * approved; the writer verifies its vaulted bytes again before it cites them. No route of its own: authentic only
+   * as its pipeline approvals, those vaulted bytes, and the promoted candidate-profiles version it was composed against.
+   */
+  "candidate-campaign-site-chain": {
+    id: "candidate-campaign-site-chain",
+    publisher: "The standing runner, from held and vaulted inputs only: the campaign-site chain's pipeline approvals, the vaulted bytes of each verifying robots-first read, and the promoted candidate-profiles version",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: [
+      "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
+    ],
+    expectedIdentifierKeys: ["record_id", "candidacy_id"],
+    expectedTemporalFields: ["read_at", "approved_at"],
+    horizonSemantics: "Each row is one approved site for one canonical candidacy, keyed by the Reader's own key. It never says a candidate has no site, and a candidate the version does not name is simply not yet verified.",
+    parserVersion: "candidate-campaign-site-chain/1",
+    freshnessExpectation: "Recomputed by the standing runner as the campaign-site chain approves sites; no tracked writer.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+    derivedPromotion: {
+      inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL"],
+      authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\" (RULING 292)",
     },
   },
   "nj-morris-county-clerk": {
@@ -663,6 +713,27 @@ export const SOURCE_AUTHORITIES = {
     horizonSemantics: "The events query bounds its date window; each changed sitting is an independent acquisition. Failed item or vote retrieval produces a refused durable candidate and cannot replace another sitting's LKG facts.",
     parserVersion: "pima-legistar-outcomes/2",
     freshnessExpectation: "The standing routine runner's clock under the pima-legistar-outcomes routine contract; each pass reads a rolling events window and re-walks only sittings whose publisher EventLastModifiedUtc moved. No owner or GitHub clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "mesa-legistar-minutes-outcomes": {
+    id: "mesa-legistar-minutes-outcomes",
+    publisher: "City of Mesa City Clerk, on the city's public Legistar portal",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "OFFICIAL_PLATFORM",
+    // The portal host only. robots.txt answered 404 (NO_ROBOTS) on 2026-08-28
+    // and 2026-09-25; the API's minutes host, legistar.granicus.com, disallows
+    // every agent and is never an allowed host here.
+    routePrefixes: ["https://mesa.legistar.com/"],
+    allowedFinalHosts: ["mesa.legistar.com"],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["MEETING_OUTCOME"],
+    competentFacts: ["recorded council motion", "mover and seconder", "recorded result", "verbatim tabulation of votes", "minutes document standing (action minutes, minutes, approval recorded)", "minutes not yet published"],
+    expectedIdentifierKeys: ["meeting_id", "event_id"],
+    expectedTemporalFields: ["observed_at", "source_through"],
+    horizonSemantics: "The calendar grid bounds the concluded sittings in a rolling window; each sitting's minutes document speaks only for that sitting. A sitting with no published minutes is recorded as not yet published and never as one without decisions; a failed read refuses the candidate and cannot replace another sitting's LKG facts.",
+    parserVersion: "mesa-legistar-minutes-outcomes/1",
+    freshnessExpectation: "The standing routine runner's clock under the mesa-legistar-minutes-outcomes routine contract, following the council's InSite sittings; each pass reads the calendar grid and re-reads only minutes whose link or label moved. No owner or GitHub clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },

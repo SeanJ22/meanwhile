@@ -8,6 +8,7 @@ import test from "node:test";
 import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
+  RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD,
   heldMeetingPartitionFor,
   meetingPartitionId,
   type MeetingPartitionContract,
@@ -149,9 +150,23 @@ async function promoteSuccessor(store: MemoryRoutineDataStore): Promise<string> 
 }
 
 test("every retired route is a held partition whose successor is registered and whose own identity is not", () => {
-  assert.equal(HELD_MEETING_PARTITIONS.length, RETIRED_MEETING_ROUTES.length);
+  // A route retired beside a successor that was already wired for the body
+  // (2026-09-25: Newbury's CivicWeb portal beside the town's calendar feed)
+  // has nothing to hold: the successor has had its own pointer all along.
+  const cutovers = RETIRED_MEETING_ROUTES.filter((route) => !route.successorAlreadyWired);
+  assert.equal(HELD_MEETING_PARTITIONS.length, cutovers.length);
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
-  for (const route of RETIRED_MEETING_ROUTES) {
+  for (const route of RETIRED_MEETING_ROUTES.filter((candidate) => candidate.successorAlreadyWired)) {
+    const id = meetingPartitionId(route.meetingSource, route.bodyId);
+    assert.equal(registered.has(id), false, "the retired identity has no contract, clock or writer");
+    assert.ok(registered.has(meetingPartitionId(route.replacedBy, route.bodyId)), "the already-wired successor is registered");
+    assert.equal(HELD_MEETING_PARTITIONS.some((row) => row.id === id), false, "nothing is held beside a successor that already promotes");
+    assert.deepEqual(
+      RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD.find((row) => row.id === id),
+      { id, successorId: meetingPartitionId(route.replacedBy, route.bodyId) },
+    );
+  }
+  for (const route of cutovers) {
     const id = meetingPartitionId(route.meetingSource, route.bodyId);
     const row = HELD_MEETING_PARTITIONS.find((candidate) => candidate.id === id);
     assert.ok(row, `${id} is held`);

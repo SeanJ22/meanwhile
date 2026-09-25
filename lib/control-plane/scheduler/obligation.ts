@@ -136,6 +136,12 @@ export interface FreshnessObligation {
    * before this field existed.
    */
   readonly assignments?: readonly ObligationAssignment[];
+  /**
+   * Set with `materializedBy`: which registry defined the government this row is about — a state's reviewed
+   * registry, or its REGISTRATION where it has none (2026-09-25, `lib/registration/jurisdictions.ts`), so Admin
+   * can say which. Runtime-owned like the mark: a registration pass never resets it.
+   */
+  readonly materializedFrom?: "REVIEWED_REGISTRY" | "REGISTRATION";
 }
 
 /** One owner Send, as it is recorded on an obligation it reached (MW-001). */

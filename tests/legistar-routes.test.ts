@@ -102,12 +102,18 @@ test("every information-bearing fact class is reachable through more than one ro
     const walked = routesBearing(fact).filter((r) => r.disposition === "WALKED");
     assert.equal(walked.length, 1, `${fact} was reported singly routed`);
   }
-  assert.ok(
-    singles.includes("PERSON_VOTE"),
-    "PERSON_VOTE is reachable only through WEBAPI_EVENTITEM_VOTES while the " +
-      "minutes routes are disallowed and the accessible-minutes route is unbuilt. " +
-      "That is a real single point of failure and it must stay visible.",
+  /*
+   * PERSON_VOTE was singly routed until the portal minutes route was walked
+   * (NH332, 2026-09-25): Mesa's minutes list the ayes and nays by surname. The
+   * minutes route is WALKED, so the count moves; the route's own note says the
+   * tabulation is held as text and not yet as per-member records.
+   */
+  assert.ok(!singles.includes("PERSON_VOTE"));
+  assert.deepEqual(
+    routesBearing("PERSON_VOTE").filter((r) => r.disposition === "WALKED").map((r) => r.id).sort(),
+    ["INSITE_ACCESSIBLE_MINUTES", "WEBAPI_EVENTITEM_VOTES"],
   );
+  assert.match(findRoute("INSITE_ACCESSIBLE_MINUTES")!.note, /not yet turned into per-member roll-call records/);
 });
 
 test("a DISALLOWED route keeps its facts OWED and is never SUGGESTED — a blocked route is not a blocked fact", () => {

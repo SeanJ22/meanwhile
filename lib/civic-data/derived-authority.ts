@@ -83,6 +83,17 @@ export type DerivedInputRef =
     }
   | {
       /**
+       * One item the control plane's promotion pipeline APPROVED (the campaign-site chain,
+       * lib/control-plane/promotion/campaign-site-chain.ts): the approval record a published row rests on. The
+       * writer reads it from the pipeline log and verifies its vaulted bytes again before citing it.
+       */
+      readonly kind: "PIPELINE_APPROVAL";
+      readonly itemId: string;
+      readonly recordId: string;
+      readonly approvedAt: string;
+    }
+  | {
+      /**
        * One read a derived meeting family made of one wired row's route. Not recomputable: it is the read itself,
        * authorized only by the promoted wiring version the candidate also names (checked at the door).
        */
@@ -104,6 +115,7 @@ export const DERIVED_INPUT_KINDS = [
   "DISCOVERY_ATTEMPT",
   "COMMITTED_ROUTE_HINT",
   "CROSSWALK_VERSION",
+  "PIPELINE_APPROVAL",
   "MEMBER_ACQUISITION",
 ] as const satisfies readonly DerivedInputKind[];
 
@@ -115,14 +127,22 @@ export type HostAttestation =
        * Where the walked address was recorded: the promoted operational
        * reference (dispatched needs) or the committed gap ledger (most walks),
        * whose versionId is data/derived/gap-ledger.json's sha256 at the
-       * runtime's commit.
+       * runtime's commit, or — for a state with no reviewed registry — its
+       * promoted registration (2026-09-25).
        */
-      readonly source: "OPERATIONAL_REFERENCE" | "GAP_LEDGER";
+      readonly source: "OPERATIONAL_REFERENCE" | "GAP_LEDGER" | "REGISTRATION";
       readonly versionId: string;
     }
   | { readonly kind: "REDIRECT_FROM_ATTESTED"; readonly fromUrl: string; readonly from: HostAttestation }
   | { readonly kind: "ROUTE_HINT"; readonly hintFingerprint: string }
   | { readonly kind: "LINKED_FROM_ATTESTED_PAGE"; readonly pageArtifactId: string; readonly page: HostAttestation };
+
+/** A promoted pointer cited as a derived input, or null while it has no promoted version. */
+export function promotedInputRef(recordClass: string, scope: string, versionId: string | null, value: unknown, promotedAt: string | null): DerivedInputRef | null {
+  return versionId === null || promotedAt === null
+    ? null
+    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex"), promotedAt };
+}
 
 /**
  * The reader adapter a row wires, pinned to the adapter's own closure digest,
@@ -419,7 +439,8 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
       input.kind === "PROMOTED_VERSION" ? input.promotedAt
         : input.kind === "VAULTED_EVIDENCE" || input.kind === "MEMBER_ACQUISITION" ? input.retrievedAt
           : input.kind === "DISCOVERY_ATTEMPT" ? input.recordedAt
-            : null)
+            : input.kind === "PIPELINE_APPROVAL" ? input.approvedAt
+              : null)
     .filter((time): time is string => time !== null && Number.isFinite(Date.parse(time)))
     .sort();
   return {

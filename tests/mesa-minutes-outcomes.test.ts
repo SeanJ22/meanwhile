@@ -1,0 +1,328 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+
+import { NEVER_READ } from "../lib/ops/freshness.ts";
+import {
+  applyMinutesApprovals,
+  concludedSittingRows,
+  minutesLinkFor,
+  minutesRefreshDecision,
+  minutesSitting,
+  notYetPublishedSitting,
+  readMinutesDocument,
+  type MinutesDocumentRead,
+} from "../lib/outcomes/minutes-ingest.ts";
+import { mergeSnapshot } from "../lib/outcomes/ingest.ts";
+import { outcomeEvidenceFor, outcomeGapWhose, resetOutcomeSnapshotCache, useOutcomeSnapshotForTests } from "../lib/outcomes/store.ts";
+import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
+import { parseCalendarRows, type InSiteCalendarRow } from "../lib/sources/legistar-insite/calendar.ts";
+import {
+  consentItems,
+  minutesBodyText,
+  minutesOutcomeRecords,
+  parseCouncilMinutes,
+  type MinutesPage,
+} from "../lib/sources/legistar-insite/minutes.ts";
+import { findTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
+
+/**
+ * NH332: Mesa's City Council decisions are in its minutes, not the vendor's
+ * API. Every document below is a real Mesa minutes document read robots-first
+ * (`pnpm research:fetch`, 2026-09-25; mesa.legistar.com/robots.txt answered
+ * 404): two as their exact PDF bytes, three as the text layer lib/extract
+ * extracted from bytes identified by sha256 (tests/fixtures/
+ * legistar-insite-mesa-minutes/*.pages.json). No test here touches the network.
+ */
+
+const DIR = "tests/fixtures/legistar-insite-mesa-minutes";
+const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
+const tenant = findTenant("mesa")!;
+const CALENDAR_URL = "https://mesa.legistar.com/Calendar.aspx";
+
+const freshRows = parseCalendarRows(readFileSync(`${DIR}/calendar-2026-09-25.html`, "utf8"));
+const thisYearRows = [
+  ...parseCalendarRows(readFileSync("tests/fixtures/legistar-insite-mesa-calendar-this-year-paged.html", "utf8")),
+  ...parseCalendarRows(readFileSync("tests/fixtures/legistar-insite-mesa-calendar-this-year-page2.html", "utf8")),
+];
+
+/** The recorded grid row for a portal id, preferring the reading that links minutes. */
+function row(insiteId: string): InSiteCalendarRow {
+  const readings = [...freshRows, ...thisYearRows].filter((candidate) => candidate.insiteId === insiteId);
+  const found = readings.find((candidate) => candidate.minutes.href) ?? readings[0];
+  assert.ok(found, `grid row ${insiteId} is in the recorded calendar`);
+  return found;
+}
+
+interface PagesFixture {
+  readonly url: string;
+  readonly sha256: string;
+  readonly byteCount: number;
+  readonly pageCount: number;
+  readonly pages: MinutesPage[];
+}
+
+function pagesFixture(insiteId: string): PagesFixture {
+  return JSON.parse(readFileSync(`${DIR}/minutes-${insiteId}.pages.json`, "utf8")) as PagesFixture;
+}
+
+function textDocument(insiteId: string): MinutesDocumentRead {
+  const fixture = pagesFixture(insiteId);
+  const link = minutesLinkFor(row(insiteId), tenant.host);
+  assert.ok(link, `${insiteId} publishes a minutes link`);
+  assert.equal(link.url, fixture.url, "the grid's link is the document the fixture was read from");
+  return { link, sha256: fixture.sha256, byteCount: fixture.byteCount, pageCount: fixture.pageCount, pages: fixture.pages, unreadable: null };
+}
+
+async function pdfDocument(insiteId: string): Promise<MinutesDocumentRead> {
+  const link = minutesLinkFor(row(insiteId), tenant.host);
+  assert.ok(link, `${insiteId} publishes a minutes link`);
+  return readMinutesDocument(link, new Uint8Array(readFileSync(`${DIR}/minutes-${insiteId}.pdf`)));
+}
+
+function sittingFrom(insiteId: string, document: MinutesDocumentRead): PersistedSittingOutcomes {
+  return minutesSitting({ tenant, row: row(insiteId), calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T18:00:00.000Z", document, readOn: NEVER_READ }).sitting;
+}
+
+function snapshotOf(sittings: readonly PersistedSittingOutcomes[]): OutcomeSnapshot {
+  return applyMinutesApprovals(mergeSnapshot({ generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] }, sittings, { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" }));
+}
+
+test("the 2026-07-27 council minutes: five motions, two split votes, the consent agenda and the items pulled from it", () => {
+  const fixture = pagesFixture("1336059");
+  const parsed = parseCouncilMinutes(fixture.pages);
+  assert.equal(parsed.title, "COUNCIL MINUTES");
+  assert.equal(parsed.kind, "MINUTES");
+  assert.equal(parsed.sittingDate, "2026-07-27");
+  assert.equal(parsed.bodyEndsAt, "ATTESTATION", "the attached presentations after the clerk's certification are not read");
+  assert.deepEqual(parsed.unreadMotions, []);
+  assert.deepEqual(parsed.motions.map((motion) => [motion.items.join(","), motion.disposition, motion.itemBasis]), [
+    ["1", "PASSED", "CONSENT_AGENDA"],
+    ["5-c", "PASSED", "NAMED_INSTRUMENT"],
+    ["6-e", "PASSED", "NAMED_INSTRUMENT"],
+    ["7-a,7-b", "PASSED", "NAMED_INSTRUMENT"],
+    ["8-a", "PASSED", "NAMED_INSTRUMENT"],
+  ]);
+
+  const landingFees = parsed.motions[1]!;
+  assert.equal(landingFees.mover, "Councilmember Adams");
+  assert.equal(landingFees.seconder, "Councilmember Heredia");
+  assert.equal(landingFees.motion, "that Resolution No. 12559 be adopted");
+  assert.equal(landingFees.tally, "AYES – Freeman–Somers–Adams–Duff–Heredia–Taylor NAYS – Goforth");
+  assert.equal(landingFees.result, "Mayor Freeman declared the motion carried by majority vote.");
+  assert.equal(landingFees.page, 4);
+
+  // The margin number "9." printed beside the last motion is not its item: the ordinance it names is.
+  const fleet = parsed.motions[4]!;
+  assert.equal(fleet.motion, "that Ordinance No. 6026 be adopted");
+  assert.deepEqual(fleet.items, ["8-a"]);
+  assert.equal(fleet.tally, "AYES - Freeman-Duff-Goforth-Heredia NAYS - Somers-Adams-Taylor");
+
+  assert.deepEqual(consentItems(parsed).map((item) => item.reference), ["2", "3-a", "4-a", "4-b", "5-a", "5-b", "6-a", "6-b", "6-c", "6-d"]);
+  assert.ok(parsed.items.some((item) => item.reference === "5-c" && item.removedFromConsent), "5-c was pulled from consent");
+  assert.ok(!consentItems(parsed).some((item) => item.reference === "5-c"), "a pulled item is never carried by the consent motion");
+
+  const records = minutesOutcomeRecords(parsed, { eventId: 1336059, sourceOrg: tenant.publishingOrg, documentUrl: fixture.url, readOn: NEVER_READ });
+  assert.equal(records.length, 5 + 10, "one record per motion and one per consent item the consent motion carried");
+  assert.deepEqual(records.map((record) => record.eventItemId), records.map((_, index) => index + 1));
+  const body = minutesBodyText(fixture.pages);
+  for (const record of records) {
+    assert.equal(record.recordClass, "ACTION_SUMMARY");
+    assert.equal(record.provenance.endpoint, fixture.url);
+    assert.equal(record.provenance.sourceOrg, "City of Mesa City Clerk");
+    assert.ok(record.quote && body.includes(record.quote), `record ${record.eventItemId}'s quote is verbatim minutes text`);
+    assert.match(record.quote!, /^It was moved by /);
+    assert.equal(record.rollCall, "NOT_RETRIEVED", "a surname tabulation is text, never a per-person roll");
+    assert.match(record.rollCallGap ?? "", /carried verbatim; it has not been turned into per-member roll-call records/);
+  }
+  const hotel = records.find((record) => record.itemReference === "5-a")!;
+  assert.equal(hotel.onConsentCalendar, true);
+  assert.equal(hotel.matterFile, "Resolution No. 12557");
+  assert.match(hotel.itemQuote ?? "", /AC Hotel by Marriott/);
+  assert.match(hotel.sectionQuote ?? "", /^5\. Take action on the following resolutions:/);
+  assert.equal(hotel.action, "that the consent agenda items be approved");
+  const tireShop = records.find((record) => record.itemReference === "7-a, 7-b")!;
+  assert.equal(tireShop.matterFile, "Resolution No. 12560, Ordinance No. 6023");
+  assert.equal(tireShop.tallyText, "AYES – Somers–Adams–Duff–Heredia NAYS – Freeman–Goforth–Taylor");
+});
+
+test("the 2026-07-20 council minutes, a signed scan read through its OCR text layer (real PDF bytes)", async () => {
+  const document = await pdfDocument("1336056");
+  assert.equal(document.sha256, "5c57f8d7416f93d621b7d8285cd796ee1e7170d87ecf739f1f908407d8fe630a", "the digest is of the bytes, taken before pdf.js takes the buffer");
+  assert.equal(document.byteCount, 325518);
+  assert.equal(document.unreadable, null);
+  const sitting = sittingFrom("1336056", document);
+  assert.equal(sitting.extraction, "RETRIEVED");
+  assert.equal(sitting.meetingId, "legistar-insite:mesa:1336056");
+  assert.equal(sitting.bodyId, MESA);
+  assert.equal(sitting.startsAt, "2026-07-20T17:45:00-07:00");
+  assert.deepEqual(sitting.routesWalked, ["INSITE_CALENDAR", "INSITE_ACCESSIBLE_MINUTES"]);
+  const motions = sitting.outcomes.filter((record) => !record.onConsentCalendar || record.itemReference === "1");
+  assert.deepEqual(motions.map((record) => record.itemReference), ["1", "5-b", "5-c", "6-d"]);
+  for (const record of motions) {
+    assert.equal(record.disposition, "PASSED");
+    assert.equal(record.dispositionRaw, "Vice Mayor Somers declared the motion carried unanimously by those present.");
+    assert.match(record.tallyText ?? "", /ABSENT\s*[–-]\s*Freeman\s*[–-]\s*Goforth$/, "the absent members stay in the clerk's own tabulation");
+  }
+  assert.equal(sitting.minutesDocument?.title, "COUNCIL MINUTES");
+  assert.equal(sitting.minutesDocument?.publisherLabel, "Minutes");
+  assert.equal(sitting.minutesDocument?.approval.state, "APPROVAL_NOT_SEEN");
+  assert.equal(sitting.minutesDocument?.approvalCarried, true);
+  assert.ok(sitting.minutesDocument?.approves.some((entry) => entry.kind === "REGULAR" && entry.date === "2026-06-08"));
+});
+
+test("action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken", async () => {
+  const document = await pdfDocument("1343177");
+  assert.equal(document.link.label, "Results");
+  const sitting = sittingFrom("1343177", document);
+  assert.equal(sitting.minutesDocument?.title, "COUNCIL STRATEGIC PLANNING ACTION MINUTES");
+  assert.equal(sitting.minutesDocument?.approval.state, "DRAFT_ACTION_MINUTES");
+  assert.match(sitting.minutesDocument?.approval.detail ?? "", /not the approved record/);
+  assert.equal(sitting.extraction, "RETRIEVED", "the minutes say, in their own words, that no formal action was taken");
+  assert.equal(sitting.outcomes.length, 0);
+
+  useOutcomeSnapshotForTests(snapshotOf([sitting]));
+  const evidence = outcomeEvidenceFor({ meetingId: sitting.meetingId, questionClass: "WHAT_WAS_DECIDED" });
+  assert.equal(evidence.state, "NO_ACTION_RECORDED");
+  assert.equal(outcomeGapWhose(evidence.state), "THEIRS");
+  assert.match(evidence.gap ?? "", /no formal action was taken/);
+  useOutcomeSnapshotForTests(null);
+
+  // The same document with that sentence gone is a failed extraction, never "nothing was decided".
+  const silent = { ...document, pages: document.pages.map((page) => ({ ...page, text: page.text.replace(/Presentation and discussion only; no formal action taken by the Council\./g, "") })) };
+  const refused = sittingFrom("1343177", silent);
+  assert.equal(refused.extraction, "ZERO_ROWS_FAILED");
+  assert.match(refused.extractionNote ?? "", /FAILED extraction/);
+});
+
+test("a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'", () => {
+  const council = freshRows.find((candidate) => candidate.insiteId === "1336069")!;
+  assert.equal(council.bodyName, "City Council");
+  assert.equal(council.date, "9/14/2026");
+  assert.equal(council.minutes.status, "Not available");
+  assert.equal(minutesLinkFor(council, tenant.host), null);
+  const sitting = notYetPublishedSitting({ tenant, row: council, calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T17:34:19.584Z" });
+  assert.equal(sitting.extraction, "NOT_YET_PUBLISHED");
+  assert.equal(sitting.outcomes.length, 0);
+  assert.match(sitting.extractionNote ?? "", /has not published minutes for this sitting yet: the portal's minutes cell read "Not available" at 2026-09-25T17:34:19\.584Z/);
+
+  useOutcomeSnapshotForTests(snapshotOf([sitting]));
+  for (const questionClass of ["WHAT_WAS_DECIDED", "HOW_DID_THEY_VOTE"] as const) {
+    const evidence = outcomeEvidenceFor({ meetingId: sitting.meetingId, questionClass });
+    assert.equal(evidence.state, "MINUTES_NOT_YET_PUBLISHED");
+    assert.equal(outcomeGapWhose(evidence.state), "THEIRS");
+    assert.deepEqual(evidence.openFailures, [], "an unpublished document is not a failure of ours");
+    assert.match(evidence.gap ?? "", /not a record that nothing was decided/);
+    assert.doesNotMatch(evidence.gap ?? "", /no action recorded|failed retrieval/i);
+  }
+  useOutcomeSnapshotForTests(null);
+});
+
+test("a later sitting's minutes approving these minutes marks them APPROVED, with its own words", async () => {
+  const july20 = sittingFrom("1336056", await pdfDocument("1336056"));
+  const july27 = sittingFrom("1336059", textDocument("1336059"));
+  const september17 = sittingFrom("1343177", await pdfDocument("1343177"));
+  const snapshot = snapshotOf([july20, july27, september17]);
+  const approved = snapshot.sittings.find((sitting) => sitting.meetingId === july20.meetingId)!;
+  assert.equal(approved.minutesDocument?.approval.state, "APPROVED");
+  assert.equal(approved.minutesDocument?.approval.approvedAt?.meetingId, "legistar-insite:mesa:1336059");
+  assert.match(approved.minutesDocument?.approval.approvedAt?.quote ?? "", /^\*2\. Approval of minutes of previous meetings as written\. Minutes from the Study Session meeting held on April 30, 2026, and the Regular Council meeting held on July 20, 2026\./);
+  assert.match(approved.minutesDocument?.approval.detail ?? "", /^Approved by the council at its sitting of 2026-07-27/);
+  const pending = snapshot.sittings.find((sitting) => sitting.meetingId === july27.meetingId)!;
+  assert.equal(pending.minutesDocument?.approval.state, "APPROVAL_NOT_SEEN", "no held sitting records approving the July 27 minutes yet");
+  assert.equal(snapshot.sittings.find((sitting) => sitting.meetingId === september17.meetingId)!.minutesDocument?.approval.state, "DRAFT_ACTION_MINUTES");
+  // Without the approving sitting, the same minutes are not described as approved.
+  assert.equal(snapshotOf([july20]).sittings[0]!.minutesDocument?.approval.state, "APPROVAL_NOT_SEEN");
+});
+
+test("the 2026-06-01 minutes: one motion adopting five resolutions and an ordinance reaches all six items", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1336065").pages);
+  const combined = parsed.motions.find((motion) => motion.instruments.length > 3)!;
+  assert.deepEqual(combined.instruments, ["Resolution No. 12525", "Resolution No. 12529", "Resolution No. 12530", "Resolution No. 12532", "Resolution No. 12538", "Ordinance No. 6015"]);
+  assert.deepEqual(combined.items, ["6-b", "6-f", "6-g", "6-i", "6-o", "7-d"]);
+  assert.equal(parsed.motions[0]!.motion, "that Jacob Brown be appointed as City Magistrate");
+  assert.deepEqual(parsed.approvals[0]?.sittings, [
+    { kind: "STUDY_SESSION", date: "2026-03-23" },
+    { kind: "STUDY_SESSION", date: "2026-04-06" },
+    { kind: "STUDY_SESSION", date: "2026-05-04" },
+    { kind: "REGULAR", date: "2026-05-18" },
+  ]);
+});
+
+test("the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found", () => {
+  const fixture = pagesFixture("1343128");
+  const parsed = parseCouncilMinutes(fixture.pages);
+  assert.equal(parsed.motions.length, 2);
+  const [appointments, receipt] = parsed.motions;
+  assert.deepEqual(appointments!.items, ["2-b"]);
+  assert.equal(receipt!.motion, "that receipt of the above listed minutes be acknowledged");
+  assert.deepEqual(receipt!.items, ["3", "3-a", "3-b", "3-c"], "'the above listed' minutes are the whole group under item 3");
+  assert.equal(receipt!.tally, "A YES - Freeman-Somers-Adams- Duff-Heredia-Goforth-Taylor NAYS -None");
+  assert.equal(receipt!.result, "Carried unanimously.");
+  assert.equal(receipt!.disposition, "PASSED");
+  assert.ok(minutesBodyText(fixture.pages).includes(receipt!.quote));
+});
+
+test("result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed", () => {
+  /*
+   * None of the 29 motions in the eight Mesa sittings read on 2026-09-25 failed,
+   * so these two cases take a real passage (7-27, item 5-c) and change only its
+   * result sentence. They are labelled synthetic for that reason.
+   */
+  const pages = pagesFixture("1336059").pages;
+  const failedPages = pages.map((page) => ({ ...page, text: page.text.replace("NAYS – Goforth Mayor Freeman declared the motion carried by majority vote.", "NAYS – Goforth Mayor Freeman declared the motion failed.") }));
+  const failed = parseCouncilMinutes(failedPages).motions[1]!;
+  assert.equal(failed.disposition, "FAILED");
+  assert.equal(failed.result, "Mayor Freeman declared the motion failed.");
+
+  const silentPages = pages.map((page) => ({ ...page, text: page.text.replace("NAYS – Goforth Mayor Freeman declared the motion carried by majority vote.", "NAYS – Goforth") }));
+  const parsed = parseCouncilMinutes(silentPages);
+  const silent = parsed.motions[1]!;
+  assert.equal(silent.disposition, "NOT_RECORDED");
+  assert.equal(silent.result, null);
+  const record = minutesOutcomeRecords(parsed, { eventId: 1336059, sourceOrg: tenant.publishingOrg, documentUrl: "https://mesa.legistar.com/x", readOn: NEVER_READ })
+    .find((row) => row.itemReference === "5-c")!;
+  assert.match(record.dispositionGap ?? "", /That is not a record of it failing/);
+});
+
+test("the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host", async () => {
+  const withPdf = row("1336059");
+  assert.deepEqual(minutesLinkFor(withPdf, tenant.host), { url: "https://mesa.legistar.com/View.ashx?M=M&ID=1336059&GUID=B0165E88-90A2-4E7C-80FE-0AA9E5A24F1A", format: "PDF", label: "Minutes" });
+  // Synthetic: no Mesa row has published an accessible-minutes rendering (0 of 163 seen).
+  const accessible = { ...withPdf, accessibleMinutes: { status: "Accessible Minutes", href: "View.ashx?M=MADA&ID=1336059&GUID=B0165E88-90A2-4E7C-80FE-0AA9E5A24F1A" } };
+  assert.equal(minutesLinkFor(accessible, tenant.host)?.format, "HTML");
+  const offHost = { ...withPdf, minutes: { status: "Minutes", href: "https://legistar.granicus.com/mesa/meetings/2026/7/x.pdf" } };
+  assert.equal(minutesLinkFor(offHost, tenant.host), null, "the vendor's document host refuses us in robots.txt and is never followed");
+
+  const html = new TextEncoder().encode(`<html><body><p>OFFICE OF THE CITY CLERK COUNCIL MINUTES July 27, 2026</p><p>5-c. A resolution extending Falcon Field Airport&#8217;s landing fee implementation date. – Resolution No. 12559</p><p>It was moved by Councilmember Adams, seconded by Councilmember Heredia, that Resolution No. 12559 be adopted.</p><p>Upon tabulation of votes, it showed: AYES – Freeman–Somers NAYS – Goforth</p><p>Mayor Freeman declared the motion carried by majority vote.</p></body></html>`);
+  const read = await readMinutesDocument(minutesLinkFor(accessible, tenant.host)!, html);
+  assert.equal(read.sha256, createHash("sha256").update(html).digest("hex"));
+  const parsed = parseCouncilMinutes(read.pages);
+  assert.equal(parsed.motions[0]?.disposition, "PASSED");
+  assert.deepEqual(parsed.motions[0]?.items, ["5-c"]);
+});
+
+test("which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link", async () => {
+  const july20 = sittingFrom("1336056", await pdfDocument("1336056"));
+  const link = minutesLinkFor(row("1336056"), tenant.host)!;
+  assert.deepEqual(minutesRefreshDecision(link, undefined), { walk: true, reason: "NEW" });
+  assert.deepEqual(minutesRefreshDecision(link, july20), { walk: false, reason: "UNCHANGED_SKIP" });
+  assert.deepEqual(minutesRefreshDecision({ ...link, label: "Results" }, july20), { walk: true, reason: "PUBLISHER_RELABELED" });
+  assert.deepEqual(minutesRefreshDecision(null, july20), { walk: false, reason: "LINK_WITHDRAWN_KEPT" });
+  const unpublished = notYetPublishedSitting({ tenant, row: row("1336069"), calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T17:34:19.584Z" });
+  assert.deepEqual(minutesRefreshDecision(null, unpublished), { walk: false, reason: "STILL_NOT_PUBLISHED" });
+  assert.deepEqual(minutesRefreshDecision(link, unpublished), { walk: true, reason: "MINUTES_PUBLISHED" });
+  assert.deepEqual(minutesRefreshDecision(link, { ...july20, extraction: "REQUEST_FAILED" }), { walk: true, reason: "PRIOR_EXTRACTION_FAILED" });
+});
+
+test("the concluded sittings a pass considers: the wired bodies, in the window, already held, one row per portal id", () => {
+  const rows = concludedSittingRows([...freshRows, ...thisYearRows], tenant, { from: "2026-07-28", to: "2026-09-24" }, new Date("2026-09-25T18:00:00.000Z"));
+  assert.ok(rows.every((candidate) => tenant.bodyNames.includes(candidate.bodyName)), "Planning and Zoning and the other boards are not this contract's body");
+  assert.equal(new Set(rows.map((candidate) => candidate.insiteId)).size, rows.length);
+  const strategic = rows.find((candidate) => candidate.insiteId === "1343177")!;
+  assert.equal(strategic.minutes.status, "Results", "the reading that carries the link wins over an older one without it");
+  assert.ok(!rows.some((candidate) => candidate.insiteId === "1336055"), "the 9/28 sitting has not happened yet");
+  assert.ok(!rows.some((candidate) => candidate.insiteId === "1336059"), "7/27 is outside this window");
+  resetOutcomeSnapshotCache();
+});

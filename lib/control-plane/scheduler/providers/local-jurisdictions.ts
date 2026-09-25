@@ -90,7 +90,7 @@
  */
 
 import { sourceOf, type Jurisdiction, type JurisdictionRegistry, type JurisdictionSource } from "../../../hunt/jurisdiction-universe.ts";
-import { requiredOperationalJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
+import { requiredJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
 import {
   NOTHING_MATERIALIZED,
   UNREAD_MEETING_PARTITIONS,
@@ -308,7 +308,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
         if (registries.has(stateCode)) return registries.get(stateCode) ?? null;
         let reg: JurisdictionRegistry | null = null;
         try {
-          reg = requiredOperationalJurisdictionRegistry(stateCode);
+          reg = requiredJurisdictionRegistry(stateCode);
           if (reg.jurisdictions.length === 0) {
             failures.push(
               `canonical operational-reference projection for ${stateCode} holds ZERO jurisdictions — a FAILED read, ` +

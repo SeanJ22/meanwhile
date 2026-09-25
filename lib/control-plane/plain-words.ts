@@ -131,6 +131,14 @@ export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
     words: "Not reached yet",
     means: "This was scheduled and its turn passed before a cycle got to it. It is still owed.",
   },
+  AWAITING_ADAPTER: {
+    words: "Waiting for a reader to be built",
+    means: "Nothing refused us. The code that reads this kind of record does not exist yet, so engineering owns the next step.",
+  },
+  AWAITING_ROUTINE_READ: {
+    words: "Waiting for its scheduled read",
+    means: "A routine read on its own clock carries this record and has not filled it yet. It is still owed.",
+  },
 
   /* -------------------------------------------- readiness cell states */
   CURRENT: { words: "Current", means: "Done and recently checked." },

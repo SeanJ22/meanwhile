@@ -2,8 +2,9 @@
  * **A DERIVED MEETING FAMILY: ONE STATE'S REVIEWED CALENDARS, EACH HELD TO
  * ITS OWN EVIDENCE.** (C16, 2026-09-24.)
  *
- * One static partition per covered state (`meetings:derived:US-AZ`) whose
- * members are the promoted meeting-source wiring's rows for that state. Its
+ * One partition per registered state (`meetings:derived:US-AZ`, every state
+ * since 2026-09-25) whose members are the promoted meeting-source wiring's rows
+ * for that state. Its
  * child reads each ACTIVE member on that member's own attested host, and
  * builds one candidate in which every member stands alone:
  *
@@ -33,6 +34,7 @@ import { sourceProjectionEvidence, type RoutineCandidate, type RoutineRemovalEvi
 import type { DerivedFamilyMemberReport, MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
 import { mark as markCarried } from "../meetings/carry-forward.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 
 export const DERIVED_FAMILY_SOURCE_ID = "meetings-derived-routes" as const;
 
@@ -278,7 +280,7 @@ export function derivedFamilyCandidate(partition: MeetingPartitionContract, buil
       missingRequiredFields: snapshot.meetings.some((m) => !m.id || !m.bodyId) ? ["meeting.id/bodyId"] : [],
     },
     identities: snapshot.meetings.map((m) => {
-      const state = /\/state:([a-z]{2})/.exec(m.ocdId ?? "")?.[1];
+      const state = ocdStateCode(m.ocdId);
       return {
         subjectId: m.id,
         jurisdiction: state ? `US-${state.toUpperCase()}` : "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION",

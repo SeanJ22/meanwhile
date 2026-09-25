@@ -65,7 +65,7 @@ import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
 import { refreshStateMoneyFromPromoted } from "@/lib/funding/state-snapshot";
 import { refreshAzPimaFinanceFromPromoted } from "@/lib/control-plane/campaign-finance/held-records";
-import { refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
+import { isRetiredStateRollCallScope, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
   officialStateRollCallTargetByScope,
   officialStateVoteScopeForOfficeholderId,
@@ -120,6 +120,7 @@ import {
 import { buildTopicTimeline, composeAreaTopicAnswer, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
+import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
 import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
 import {
   askAnswer,
@@ -649,16 +650,18 @@ export async function POST(request: Request) {
   // State-roll identity is established before any state pointer opens. Only
   // the state(s) named by the reader's divisions or exact source-namespaced
   // subject ids are eligible for this request; unrelated states are not
-  // touched and therefore cannot suppress or delay the answer.
+  // touched and therefore cannot suppress or delay the answer. A retired
+  // STATE_ROLL_CALL scope (New Hampshire, now per-legislator) is never opened:
+  // its pointer is a stale version nothing writes (R9).
   const stateVoteScopes = new Set<OfficialStateVoteScope>();
   for (const state of statesOf(ocdIds)) {
     const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
-    if (target) stateVoteScopes.add(target.jurisdiction);
+    if (target && !isRetiredStateRollCallScope(target.jurisdiction)) stateVoteScopes.add(target.jurisdiction);
   }
   for (const ref of [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]) {
     if (!ref.id) continue;
     const scope = officialStateVoteScopeForOfficeholderId(ref.id);
-    if (scope) stateVoteScopes.add(scope);
+    if (scope && !isRetiredStateRollCallScope(scope)) stateVoteScopes.add(scope);
   }
 
   /* Wall-clock per stage (2026-09-24): the time outside the model calls was
@@ -2214,8 +2217,21 @@ export async function POST(request: Request) {
        * **A REJECTED ANSWER IS DISCARDED, NOT REPAIRED.** The records are
        * still real and still render; only the prose goes. Degradation runs
        * grounded → structured → honest gap, and never grounded → plausible.
+       * An answer rejected ONLY for length is not a wrong answer: it falls
+       * back to prose code composes from the same evidence, else to the
+       * records, and is not reported as a rejection (R13, lib/ask/length-fallback.ts).
        */
-      mode = "REJECTED_FELL_BACK";
+      const settled = settleRejectedModelAnswer({
+        verdict,
+        composeFallback: () => topicTimeline
+          ? composeTopicAnswer(topicTimeline, selectionNow)
+          : areaTimelines.length > 0 ? composeAreaTopicAnswer(areaTimelines, selectionNow) : null,
+        validate: (text, urls) => validateAnswer(text, urls, pack, bodies),
+        structuredMode: mode,
+      });
+      mode = settled.mode;
+      answer = settled.answer;
+      if (settled.answer !== null) validationPassed = true;
     }
   } else if (synthesis) {
     /*

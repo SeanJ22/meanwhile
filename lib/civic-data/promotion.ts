@@ -584,10 +584,14 @@ export async function processRoutineCandidate(
       basis: candidate.normalization.normalizedHash === lkg.candidate.normalization.normalizedHash
         ? "READ_MODEL_RECOMPUTED"
         : "CHANGE_SET_UNCHANGED",
+      // A derived version fetched nothing: its status and final URL stay null
+      // and the receipt's shape rule admits that only for its own derived route.
       retrieval: {
         requestedUrl: candidate.retrieval.requestedUrl,
-        finalUrl: candidate.retrieval.finalUrl ?? candidate.retrieval.requestedUrl,
-        httpStatus: candidate.retrieval.httpStatus ?? 0,
+        finalUrl: candidate.retrieval.httpStatus === null
+          ? candidate.retrieval.finalUrl
+          : candidate.retrieval.finalUrl ?? candidate.retrieval.requestedUrl,
+        httpStatus: candidate.retrieval.httpStatus,
         rawHash: candidate.retrieval.rawHash ?? "",
         retrievedAt: candidate.retrieval.retrievedAt,
       },
@@ -623,6 +627,10 @@ export async function processRoutineCandidate(
   if (!candidate.retrieval.succeeded) {
     return { candidate: (await store.readCandidate(candidate.id))!, promoted: null, readerReadback: null };
   }
+  // The envelope this run created is the durable one: each transition verifies
+  // it against the row's hash columns and returns it, so no step reads the
+  // dataset back (R26).
+  const held = { candidate };
   if (!candidate.normalization.succeeded || validated.receipt.checks.find((check) => check.check === "SCHEMA_PARSE_VALIDITY")?.verdict !== "PASS") {
     const failed = failureOf(validated.receipt);
     // The receipt is ordered by the GOOD contract. If authenticity failed
@@ -630,14 +638,14 @@ export async function processRoutineCandidate(
     // terminal state must preserve that earlier cause instead of relabeling it
     // as a parser defect merely because the payload also failed to normalize.
     const terminal = validated.state === "VALIDATED" ? "PARSE_INVALID" : validated.state;
-    const record = await store.transition(candidate.id, terminal, transitionAt, failed.detail, validated.receipt, failed);
+    const record = await store.transition(candidate.id, terminal, transitionAt, failed.detail, validated.receipt, failed, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
 
-  await store.transition(candidate.id, "NORMALIZED", transitionAt, `Normalized ${candidate.normalization.outputRecords}/${candidate.normalization.inputRecords} records as ${candidate.normalization.normalizedHash}.`);
+  await store.transition(candidate.id, "NORMALIZED", transitionAt, `Normalized ${candidate.normalization.outputRecords}/${candidate.normalization.inputRecords} records as ${candidate.normalization.normalizedHash}.`, undefined, undefined, held);
   if (validated.state !== "VALIDATED") {
     const failed = failureOf(validated.receipt);
-    const record = await store.transition(candidate.id, validated.state, transitionAt, failed.detail, validated.receipt, failed);
+    const record = await store.transition(candidate.id, validated.state, transitionAt, failed.detail, validated.receipt, failed, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
   if (preloadedBaseChanged) {
@@ -647,7 +655,7 @@ export async function processRoutineCandidate(
       `to ${observedBaseVersionId ?? "no pointer"} before this candidate entered validation. ` +
       "The current LKG remains live; a stale merge cannot overwrite facts from a newer authority.";
     const receipt = invalidLkgReceipt(validated.receipt, code, detail);
-    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
+    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail }, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
   if (current !== null && lkgProofIssue !== null && !continuingExactLkg) {
@@ -657,10 +665,10 @@ export async function processRoutineCandidate(
     const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, {
       code,
       detail,
-    });
+    }, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt);
+  const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
     promoted = await store.promote(candidate.id, validated.receipt, transitionAt);
@@ -672,7 +680,7 @@ export async function processRoutineCandidate(
       `to ${error.actualVersionId ?? "no pointer"} after this candidate was validated. ` +
       "The current LKG remains live; this candidate did not overwrite an authority it was never checked against.";
     const receipt = invalidLkgReceipt(validated.receipt, code, detail);
-    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
+    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail }, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
   // The promoted row's columns, read after the move; its envelope is the

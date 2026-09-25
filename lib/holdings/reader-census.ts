@@ -28,6 +28,7 @@ import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } f
 import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type ManifestContext } from "./manifest.ts";
 import { nonRoutineDispositionForTrackedPath } from "../civic-data/non-routine-dispositions.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { parseValidationReceipt } from "../civic-data/receipt.ts";
 import { photoMayRender } from "../photos/review.ts";
 import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import { type StateMoneyRecord } from "../funding/state-money.ts";
@@ -304,7 +305,39 @@ function parsedAuthorityTime(value: unknown): number | null {
 export type ReaderAuthorityRelation<T> =
   | { readonly kind: "EXACT"; readonly record: T }
   | { readonly kind: "MONOTONIC_SUCCESSOR"; readonly record: T }
+  /** The same fact from a newer official edition the runner promoted and validated (R25). */
+  | { readonly kind: "PROMOTED_EDITION_SUCCESSOR"; readonly record: T; readonly versionId: string }
   | { readonly kind: "MISSING"; readonly record: null };
+
+/**
+ * The runner-promoted version a ballot proof actually reads, named by the
+ * canonical pointer's own validation receipt (R25). Absent — never assumed —
+ * when the Reader read a bundled bootstrap or any value that is not a
+ * validated runner promotion.
+ */
+export interface PromotedBallotEdition {
+  readonly versionId: string;
+  readonly sourceId: string;
+  readonly recordClass: string;
+  readonly scope: string;
+  /** The pointer's validation receipt, parsed here as evidence and never trusted as JSON. */
+  readonly receipt: unknown;
+}
+
+/** When the pointer's own GOOD receipt names exactly this version, the instant it was validated; else null. */
+function promotedEditionValidatedAt(edition: PromotedBallotEdition | null | undefined): number | null {
+  if (!edition) return null;
+  const receipt = parseValidationReceipt(edition.receipt);
+  if (
+    !receipt ||
+    receipt.decision !== "GOOD" ||
+    receipt.candidateId !== edition.versionId ||
+    receipt.sourceId !== edition.sourceId ||
+    receipt.recordClass !== edition.recordClass ||
+    receipt.scope !== edition.scope
+  ) return null;
+  return Date.parse(receipt.validatedAt);
+}
 
 function uniqueCanonicalRecords<T>(records: readonly T[]): T[] {
   return [...new Map(records.map((record) => [canonicalReaderAuthorityJson(record), record])).values()];
@@ -383,6 +416,30 @@ export function stateMoneyAuthorityRelation(
     : { kind: "MISSING", record: null };
 }
 
+/**
+ * The committed ballot holdings a runner-promoted routine contract supersedes,
+ * each with the version the Reader read this process — only when that read
+ * was a PROMOTED pointer (never the bundled bootstrap). Morris County's
+ * clerk list is the one ballot holding with a standing runner route today;
+ * the curated AZ and NH ballots are committed holdings with no promotion to
+ * supersede them, so they keep the exact/same-facts relation alone.
+ */
+async function promotedBallotEditionsByHolding(): Promise<ReadonlyMap<string, PromotedBallotEdition>> {
+  const { njMorrisFilingReadState } = await import("../sources/ballot-nj-morris/index.ts");
+  const read = njMorrisFilingReadState();
+  const editions = new Map<string, PromotedBallotEdition>();
+  if (read.kind === "PROMOTED" && read.metadata.versionId) {
+    editions.set("data/states/nj/ballot/nj-morris-2026.json", {
+      versionId: read.metadata.versionId,
+      sourceId: read.projection.sourceId,
+      recordClass: read.projection.recordClass,
+      scope: read.projection.scope,
+      receipt: read.projection.receipt,
+    });
+  }
+  return editions;
+}
+
 function ballotAbsenceWithoutObservationStamps(value: ObjectRow): ObjectRow {
   const copy = structuredClone(value);
   const provenance = object(copy.provenance);
@@ -394,10 +451,27 @@ function ballotAbsenceWithoutObservationStamps(value: ObjectRow): ObjectRow {
   return copy;
 }
 
-/** A later verification may supersede only the exact same ballot-absence fact. */
+/**
+ * A later verification may supersede only the exact same ballot-absence fact.
+ *
+ * **A NEWER OFFICIAL EDITION THE RUNNER PROMOTED IS THE SAME FACT'S SUCCESSOR.**
+ * (2026-09-25, R25.) A source URL is part of the fact, so when the Morris
+ * County Clerk published a new candidate list (`v/12/…/2026-general-candidates.pdf`)
+ * and the standing runner promoted it, every held absence citing the earlier
+ * edition went MISSING and every Reader reproof failed — while the Reader was
+ * serving exactly the promoted, validated authority it should. Meetings
+ * already take the runner-promoted version as the live authority (RULING
+ * 290). The same rule holds here, and only here: the frozen absence's
+ * division, vintage, statement and publisher are unchanged, its source
+ * edition and stamps are strictly later and no later than the promotion's
+ * validation, it is unique, and the version the Reader read is a runner
+ * promotion whose own GOOD receipt names it (`promoted`). A bootstrap, an
+ * unvalidated value or a hand edit has no such receipt and still fails.
+ */
 export function ballotAbsenceAuthorityRelation(
   frozen: ObjectRow,
   currentRows: readonly ObjectRow[],
+  promoted?: PromotedBallotEdition | null,
 ): ReaderAuthorityRelation<ObjectRow> {
   const current = uniqueCanonicalRecords(currentRows);
   const exact = current.filter((record) =>
@@ -422,8 +496,29 @@ export function ballotAbsenceAuthorityRelation(
       collectedAt >= frozenCollectedAt && verifiedAt >= frozenVerifiedAt &&
       (collectedAt > frozenCollectedAt || verifiedAt > frozenVerifiedAt);
   });
-  return successors.length === 1
-    ? { kind: "MONOTONIC_SUCCESSOR", record: successors[0]! }
+  if (successors.length === 1) return { kind: "MONOTONIC_SUCCESSOR", record: successors[0]! };
+  if (successors.length > 1) return { kind: "MISSING", record: null };
+
+  const validatedAt = promotedEditionValidatedAt(promoted);
+  if (validatedAt === null || !promoted) return { kind: "MISSING", record: null };
+  const editions = current.filter((record) => {
+    const provenance = object(record.provenance);
+    const collectedAt = parsedAuthorityTime(provenance.collectedAt);
+    const verifiedAt = parsedAuthorityTime(provenance.verifiedAt);
+    return string(record.ocdId) !== "" &&
+      record.ocdId === frozen.ocdId &&
+      record.divisionVintage === frozen.divisionVintage &&
+      string(record.statement) !== "" &&
+      record.statement === frozen.statement &&
+      string(provenance.sourceUrl) !== "" &&
+      provenance.sourceOrg === frozenProvenance.sourceOrg &&
+      collectedAt !== null && verifiedAt !== null &&
+      collectedAt >= frozenCollectedAt && verifiedAt >= frozenVerifiedAt &&
+      (collectedAt > frozenCollectedAt || verifiedAt > frozenVerifiedAt) &&
+      collectedAt <= validatedAt && verifiedAt <= validatedAt;
+  });
+  return editions.length === 1
+    ? { kind: "PROMOTED_EDITION_SUCCESSOR", record: editions[0]!, versionId: promoted.versionId }
     : { kind: "MISSING", record: null };
 }
 
@@ -2401,6 +2496,7 @@ export async function projectCanonicalReaderRecords(
   }));
   const ballotRows = sets.flatMap((set) => [...set.contests, ...set.candidacies, ...set.measures, ...set.absences, ...(set.removals ?? [])]);
   const ballotById = new Map(ballotRows.filter((r) => "id" in r).map((r) => [string(object(r).id), r]));
+  const promotedBallotEditions = await promotedBallotEditionsByHolding();
   const moneyIdentity = await import("../funding/campaign-money.ts");
   const currentBallotTargets = new Set<string>();
   const currentBallotHolderIds = new Set<string>();
@@ -2613,7 +2709,7 @@ export async function projectCanonicalReaderRecords(
             status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "lineupForContest / azLineupReconciliation"; reason = "Historical primary candidacy is not in this contest's certified current general-election lineup. Its source remains held; it cannot be presented as a current nominee.";
           } else setResult("BALLOT_SOURCES.fetch / normalize", ballotById.get(string(raw.id)));
         } else if (record.unit === "absences") {
-          const relation = ballotAbsenceAuthorityRelation(raw, ballotRows.map(object));
+          const relation = ballotAbsenceAuthorityRelation(raw, ballotRows.map(object), promotedBallotEditions.get(record.holdingPath));
           setResult("BALLOT_SOURCES.fetch / normalize", relation.record);
           if (relation.kind === "MONOTONIC_SUCCESSOR") {
             status = "PROJECTED";
@@ -2621,6 +2717,12 @@ export async function projectCanonicalReaderRecords(
             returned = [relation.record];
             const provenance = object(relation.record.provenance);
             reason = `The promoted ballot authority re-verified the exact same division/vintage/statement/source absence at ${string(provenance.verifiedAt)}, no earlier than the frozen observation. The frozen observation remains held lineage evidence; the Reader receives the later source verification.`;
+          } else if (relation.kind === "PROMOTED_EDITION_SUCCESSOR") {
+            status = "PROJECTED";
+            selector = "BALLOT_SOURCES.fetch / normalize → validated runner-promoted edition successor";
+            returned = [relation.record];
+            const provenance = object(relation.record.provenance);
+            reason = `The runner promoted and validated version ${relation.versionId} (its own GOOD receipt names it), a newer official edition (${string(provenance.sourceUrl)}, verified ${string(provenance.verifiedAt)}) carrying the same division/vintage/statement absence from the same publisher. The frozen observation remains held lineage evidence; the Reader receives the promoted edition.`;
           }
         }
         break;

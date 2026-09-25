@@ -5,6 +5,7 @@ import { test } from "node:test";
 
 import { ROOT, tsFilesUnder } from "./read-code.ts";
 import registryFile from "../lib/registry/registry.json" with { type: "json" };
+import { loadRegistrationReference, registeredGovernments } from "../lib/registration/reference.ts";
 import {
   checkTenantBodyBinding,
   formatBindingTable,
@@ -31,6 +32,22 @@ import {
 
 const REGISTRY: RegistryView = registryFile;
 
+/**
+ * What a serving tenant binds to at runtime: the reviewed registry plus the
+ * governments the committed registration reference registers
+ * (`registeredGovernments`), each added only where the reviewed registry does
+ * not already carry it, so a reviewed body is never counted twice.
+ */
+function runtimeRegistry(): RegistryView {
+  const bodyIds = new Set(REGISTRY.bodies.map((b) => b.id));
+  const divisionIds = new Set(REGISTRY.divisions.map((d) => d.ocdId));
+  const registered = ["az", "nh", "nj"].map((state) => registeredGovernments(loadRegistrationReference(ROOT, state), state));
+  return {
+    bodies: [...REGISTRY.bodies, ...registered.flatMap((r) => r.bodies).filter((b) => !bodyIds.has(b.id))],
+    divisions: [...REGISTRY.divisions, ...registered.flatMap((r) => r.divisions).filter((d) => !divisionIds.has(d.ocdId))],
+  };
+}
+
 /** The one place a fault set is turned into something a person can act on. */
 function report(tenants: ServingTenant[], registry: RegistryView) {
   const faults = checkTenantBodyBinding(tenants, registry);
@@ -41,7 +58,7 @@ function report(tenants: ServingTenant[], registry: RegistryView) {
 
 test("every serving source tenant binds to exactly one registry body", () => {
   const tenants = servingTenants();
-  const { faults, table } = report(tenants, REGISTRY);
+  const { faults, table } = report(tenants, runtimeRegistry());
 
   // Printed on every run, pass or fail. A guard that speaks only when it
   // fails cannot be told apart from one whose denominator went empty.

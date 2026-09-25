@@ -8,7 +8,29 @@ interface ListingWitnessGroup {
   uniqueMeetingCount: null;
 }
 
-export function validateListingWitnessReadback(actual: readonly ListingWitnessGroup[] | undefined, expected: readonly ListingWitnessGroup[]): void {
+/** What the reader rendered when no canonical listing group is ambiguous. */
+export interface ResolvedListingReadback {
+  heading: string;
+  countNote: string | null;
+  unresolvedNoticeCount: number;
+  renderedListingCount: number;
+}
+
+/**
+ * The ambiguous-listing groups must each be read back exactly. Once none is
+ * ambiguous (a publisher's identical relistings merge at the source, 7b3e5abb),
+ * an empty population is accepted only with a positive readback of the resolved
+ * render: the plain "Meetings" count, no unresolved note, no notice, and rows.
+ */
+export function validateListingWitnessReadback(actual: readonly ListingWitnessGroup[] | undefined, expected: readonly ListingWitnessGroup[], resolved?: ResolvedListingReadback): void {
+  if (expected.length === 0 && resolved) {
+    assert.deepEqual(actual, [], "No canonical listing group is ambiguous, so none may be rendered as one");
+    assert.equal(resolved.heading, "Meetings", "A resolved listing states a meeting count");
+    assert.equal(resolved.countNote, null, "A resolved listing carries no unresolved-count note");
+    assert.equal(resolved.unresolvedNoticeCount, 0, "A resolved listing shows no unresolved-listing notice");
+    assert.ok(resolved.renderedListingCount > 0, "The resolved listing readback rendered no rows");
+    return;
+  }
   assert.ok(expected.length, "The canonical ambiguous-listing witness population is empty");
   assert.ok(expected.every((group) => group.sourceIds.length >= 2 && group.sourceIds.length === group.sourceListingCount && group.uniqueMeetingCount === null), "The canonical listing ambiguity is not proved");
   assert.deepEqual(actual, expected, "Every current canonical ambiguous listing group requires its exact rendered identity readback");

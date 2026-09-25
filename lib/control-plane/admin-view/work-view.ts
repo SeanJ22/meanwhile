@@ -32,7 +32,8 @@ import {
 } from "../assignment-view.ts";
 import type { ExpansionCycleReading, ExpansionScopeReading } from "../expansion/reading.ts";
 import { SCOPE_TYPE_WORDS, scopeKeyOf, type ExpansionScopeDecision } from "../expansion/scopes.ts";
-import { assignmentsInScope, runnerViewFor, type ScopeAssignmentView } from "../expansion/view.ts";
+import type { DispatchWorkReading } from "../expansion/dispatch-work.ts";
+import { assignmentsInScope, runnerViewFor, scopeCreationSentence, scopeCreationView, type ScopeAssignmentView } from "../expansion/view.ts";
 import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { AssignmentReading } from "../expansion/assignment-budget.ts";
@@ -532,11 +533,14 @@ export function instructionView(input: {
   /** MW-001/MW-021: this instruction as the runner read it from the work (research state `assignments`); null when not recorded. */
   readonly assignment?: AssignmentReading | null;
   readonly assignmentAt?: string | null;
+  /** The research state's MW-028 reading: what the Send created here, and where its governments came from. */
+  readonly dispatchWork?: DispatchWorkReading | null;
 }): InstructionView {
   const d = input.decision;
   const rv = runnerViewFor(d, input.reading);
   const assignment = input.assignment ?? null;
   const sendBudget = assignment === null ? null : budgetOf(assignment, input.assignmentAt ?? null);
+  const creation = input.dispatchWork === undefined ? null : scopeCreationView(d, input.dispatchWork);
   const read = rv.kind === "READ" ? rv.reading : null;
   const inScope =
     read && read.work && input.rows ? assignmentsInScope(input.rows, new Set(read.work.subjectIds), input.totalAssignments, !read.work.subjectIdsComplete) : null;
@@ -557,6 +561,13 @@ export function instructionView(input: {
           at: input.reading?.at ?? null,
         }
       : { pill: "NOT YET PLACED", tone: "stone", text: "Placed once the runner has resolved this geography.", at: null },
+    ...(creation === null
+      ? []
+      : [
+          creation.kind === "READ"
+            ? { pill: creation.planOnly === null ? "CREATED" : "PLANNED ONLY", tone: "slate" as Tone, text: `${scopeCreationSentence(creation.target)}${creation.planOnly === null ? "" : ` Nothing was written: ${creation.planOnly}.`}`, at: creation.at }
+            : { pill: "NOT YET CREATED", tone: "stone" as Tone, text: creation.says, at: null },
+        ]),
     working > 0
       ? { pill: "RUNNING", tone: "teal", text: `${working} of the listed assignments here hold a worker now`, at: null }
       : { pill: "NOT RUNNING NOW", tone: "stone", text: "No listed assignment in this geography holds a worker at the moment. Queued is not running.", at: null },

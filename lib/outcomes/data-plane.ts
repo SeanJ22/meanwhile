@@ -28,6 +28,22 @@ export const PIMA_LEGISTAR_OUTCOMES_CONTRACT = {
   parserVersion: "pima-legistar-outcomes/2",
 } as const;
 
+/**
+ * Mesa City Council decisions read off the council's own minutes on the
+ * permitted portal host (NH332, 2026-09-25). Its own scope and pointer: a
+ * Mesa refusal never touches Pima's outcomes, and the Reader combines the two
+ * pointers (lib/outcomes/store.ts) with each tenant's provenance intact.
+ */
+export const MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT = {
+  contractId: "mesa-legistar-minutes-outcomes",
+  sourceId: "mesa-legistar-minutes-outcomes",
+  recordClass: "MEETING_OUTCOME",
+  scope: "US-AZ:place:mesa:legistar-minutes-outcomes",
+  parserVersion: "mesa-legistar-minutes-outcomes/1",
+  slug: "mesa",
+  calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
+} as const;
+
 function sha256(value: string | Uint8Array): string {
   return createHash("sha256").update(value).digest("hex");
 }
@@ -338,6 +354,8 @@ function sittingMembers(sitting: PersistedSittingOutcomes): CivicRecordMember[] 
         minutesPointer: sitting.minutesPointer,
         routesWalked: sitting.routesWalked,
         publicationObservations: sitting.publicationObservations,
+        // Minutes-route sittings only (NH332); absent, and so unchanged, on Pima's.
+        ...(sitting.minutesDocument ? { minutesDocument: sitting.minutesDocument } : {}),
       },
     },
     ...sitting.agenda.map((record) => ({ key: `agenda:${sitting.meetingId}:${record.eventItemId}`, record })),
@@ -465,5 +483,142 @@ export function pimaLegistarOutcomesCandidate(input: {
         detail: failure.reason,
       })),
     ],
+  };
+}
+
+const SHA256_HEX = /^[0-9a-f]{64}$/;
+
+/** Mesa's projection identity: the tenant's own slug and portal meeting ids, nothing else. */
+export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string | null {
+  const slug = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.slug;
+  if (snapshot.tenants.some((tenant) => tenant !== slug)) return "The Mesa minutes outcome contract names a different tenant.";
+  const stray = snapshot.sittings.find((sitting) => sitting.slug !== slug || sitting.meetingId !== `legistar-insite:${slug}:${sitting.eventId}`);
+  return stray ? `${stray.meetingId} crosses the Mesa tenant or its portal meeting-id scope.` : null;
+}
+
+/**
+ * A Mesa minutes-outcome candidate built only from exact HTTP-response
+ * receipts: the calendar grid read and each minutes document walked this run.
+ *
+ * A sitting whose minutes read failed refuses the candidate (the prior GOOD
+ * pointer stays live). A sitting whose minutes are not yet published is a
+ * valid, stated row — a fact about the publisher, never a failure of ours.
+ */
+export function mesaLegistarMinutesOutcomesCandidate(input: {
+  readonly snapshot: OutcomeSnapshot;
+  readonly acquisitions: readonly SourceAcquisitionEvidence[];
+  readonly retrievedAt: string;
+  readonly sourceThrough: string;
+  readonly failureDetail?: string;
+}): RoutineCandidate {
+  const { snapshot, acquisitions } = input;
+  const contract = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT;
+  const members = snapshot.sittings.flatMap(sittingMembers).sort((left, right) => left.key.localeCompare(right.key));
+  const violations: string[] = [];
+  const ids = snapshot.sittings.map((sitting) => sitting.meetingId);
+  if (new Set(ids).size !== ids.length) violations.push("Mesa sitting ids are duplicated.");
+  const scopeIssue = mesaMinutesOutcomeScopeIssue(snapshot);
+  if (scopeIssue) violations.push(scopeIssue);
+  const failed = snapshot.sittings.filter((sitting) => sitting.extraction === "REQUEST_FAILED" || sitting.extraction === "ZERO_ROWS_FAILED");
+  if (failed.length > 0) {
+    violations.push(`${failed.length} minutes read(s) failed (${failed.map((sitting) => sitting.meetingId).join(", ")}); the prior GOOD projection remains live.`);
+  }
+  if (snapshot.sittings.some((sitting) => !sitting.sourceOrg || !sitting.publication.observedAt)) {
+    violations.push("A sitting lacks its publisher or observation time.");
+  }
+  for (const sitting of snapshot.sittings.filter((row) => row.extraction === "RETRIEVED")) {
+    const document = sitting.minutesDocument;
+    if (!document || !SHA256_HEX.test(document.sha256) || !document.url.startsWith("https://mesa.legistar.com/")) {
+      violations.push(`${sitting.meetingId} carries outcomes without the exact minutes document they were read from.`);
+      continue;
+    }
+    if (sitting.outcomes.some((record) => record.provenance.endpoint !== document.url || !record.quote)) {
+      violations.push(`${sitting.meetingId} has a recorded action without its exact passage of ${document.url}.`);
+    }
+    const read = acquisitions.filter((row) => row.finalUrl === document.url || row.requestedUrl === document.url);
+    if (read.length > 0 && !read.some((row) => row.rawHash === document.sha256)) {
+      violations.push(`${sitting.meetingId}'s minutes digest does not match the bytes this run acquired from ${document.url}.`);
+    }
+  }
+  if (new Set(members.map((member) => member.key)).size !== members.length) {
+    violations.push("Outcome projection members do not have unique stable identities.");
+  }
+  const rawHash = acquisitions.length > 0 ? acquisitionHash(acquisitions) : null;
+  const normalizedPayload = { acquisitions, snapshot };
+  const projectionHash = sha256(canonicalCivicDataJson(snapshot));
+  const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
+  const primary = acquisitions[0];
+  return {
+    id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${rawHash ?? "failed"}\u001f${projectionHash}\u001f${input.failureDetail ?? "ok"}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    sourceId: contract.sourceId,
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
+    retrieval: {
+      succeeded: acquisitions.length > 0 && input.failureDetail === undefined,
+      requestedUrl: primary?.requestedUrl ?? contract.calendarUrl,
+      finalUrl: primary?.finalUrl ?? null,
+      httpStatus: primary?.httpStatus ?? null,
+      retrievedAt: input.retrievedAt,
+      rawHash,
+      failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : "No Mesa portal response bytes were acquired."),
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: contract.parserVersion,
+      schemaVersion: "legistar-outcomes/2",
+      normalizedHash: projectionHash,
+      normalizedPayloadHash,
+      inputRecords: members.length,
+      outputRecords: members.length,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
+    identities: snapshot.sittings.map((sitting) => ({
+      subjectId: sitting.meetingId,
+      jurisdiction: "US-AZ",
+      identifiers: { meeting_id: sitting.meetingId, event_id: String(sitting.eventId) },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+    })),
+    temporal: {
+      version: input.sourceThrough,
+      expectedVersion: input.sourceThrough,
+      sourceThrough: input.sourceThrough,
+      staleAtRetrieval: false,
+    },
+    semantics: { factKind: "Mesa City Council actions and their recorded results, read off the council's minutes", violations },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "Mesa's InSite calendar grid and each changed concluded sitting's minutes document on the portal host",
+      returnedRecords: members.length,
+      declaredTotal: null,
+      paginationComplete: true,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [
+      {
+        consumer: "lib/outcomes/store.ts",
+        passed: mesaMinutesOutcomeScopeIssue(snapshot) === null,
+        detail: "Every outcome joins to its sitting by the InSite adapter's exact portal meeting id.",
+      },
+      {
+        consumer: "Ask meeting outcomes and meeting Reader records",
+        passed: snapshot.sittings.every((sitting) => sitting.agenda.length === 0 && sitting.rollCalls.length === 0 &&
+          sitting.outcomes.every((record) => record.recordClass === "ACTION_SUMMARY" && Boolean(record.quote))),
+        detail: "Minutes yield action records with their exact passage; no agenda or per-person roll-call record is minted from them.",
+      },
+    ],
+    normalizedPayload,
+    readModel: snapshot,
+    civicRecords: members,
+    excludedFacts: snapshot.sittings
+      .filter((sitting) => sitting.extraction === "NOT_YET_PUBLISHED")
+      .map((sitting) => ({
+        key: `${sitting.meetingId}:minutes`,
+        code: "MINUTES_NOT_YET_PUBLISHED",
+        detail: sitting.extractionNote ?? "The publisher has not published minutes for this sitting yet.",
+      })),
   };
 }

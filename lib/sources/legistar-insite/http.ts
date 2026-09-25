@@ -148,6 +148,36 @@ export class InSiteSession {
   }
 
   /**
+   * A document's exact bytes (NH332, 2026-09-25): the minutes PDF on the
+   * portal host. Paced and identified like every other read here; a non-2xx
+   * status throws, and the caller judges the bytes (a PDF with no text layer
+   * is a failed extraction, never an empty document).
+   */
+  async getBytes(
+    url: string,
+    accept = "*/*",
+  ): Promise<{ status: number; contentType: string; finalUrl: string; bytes: Uint8Array }> {
+    await this.pace();
+    const response = await this.impl(url, {
+      headers: this.headers({ Accept: accept }),
+      signal: this.signal,
+      ...(this.followRedirects ? {} : { redirect: "manual" as const }),
+    });
+    this.store(response);
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
+    }
+    this.retrieved.push(url);
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    this.signal?.throwIfAborted();
+    if (bytes.byteLength === 0) {
+      throw new SourceHttpError(`HTTP ${response.status} for ${url} carried zero bytes`, response.status, url, 2);
+    }
+    return { status: response.status, contentType: response.headers.get("content-type") ?? "", finalUrl: response.url || url, bytes };
+  }
+
+  /**
    * The postback. `form` is sent verbatim: every field the page rendered, with
    * the caller's overrides already applied — an ASP.NET page that receives a
    * subset of its own fields answers with the page it already had, which is

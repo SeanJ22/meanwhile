@@ -79,6 +79,8 @@ export function meetingAcquisitionFailureDomain(
       case "civicclerk": return wiring.config.apiBase;
       case "pima-edu": return wiring.config.documentsUrl;
       case "official-page-events": return wiring.config.pageUrl;
+      case "document-listing": return wiring.config.pageTemplate;
+      case "suiteone": return wiring.config.portalUrl;
       default: throw new Error(`MEETING_FAILURE_DOMAIN_ADAPTER_UNKNOWN:${sourceName}`);
     }
   })()?.trim();
@@ -136,8 +138,9 @@ function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
     })),
   );
   /*
-   * **ONE STATIC DERIVED FAMILY PER COVERED STATE** (C16). Its membership is data: the promoted meeting-source
-   * wiring's ACTIVE rows, read by its own child at runtime, so a reviewed calendar publishes with no code release.
+   * **ONE DERIVED FAMILY PER REGISTERED STATE** (C16; every state since 2026-09-25). Its membership is data: the
+   * promoted meeting-source wiring's ACTIVE rows, read by its own child at runtime, so a reviewed calendar publishes
+   * with no code release, in a state no one has worked before as in Arizona.
    */
   const { readerConsumers: familyConsumers, ...familyPolicy } = DERIVED_MEETING_FAMILY_POLICY;
   for (const state of DERIVED_MEETING_FAMILY_STATES) {
@@ -217,7 +220,7 @@ export interface HeldMeetingPartition {
 
 function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
   const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
-  const held = RETIRED_MEETING_ROUTES.map((route) => {
+  const held = RETIRED_MEETING_ROUTES.flatMap((route) => {
     const id = meetingPartitionId(route.meetingSource, route.bodyId);
     const successorId = meetingPartitionId(route.replacedBy, route.bodyId);
     if (registered.has(id)) throw new Error(`MEETING_PARTITION_RETIRED_BUT_REGISTERED:${id}`);
@@ -225,7 +228,10 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
     if (!successor || successor.bodyId !== route.bodyId) {
       throw new Error(`MEETING_PARTITION_SUCCESSOR_NOT_REGISTERED:${id}->${successorId}`);
     }
-    return {
+    // A successor that was already a wired route for the body has its own
+    // pointer from before the retirement: there is no gap to hold across.
+    if (route.successorAlreadyWired) return [];
+    return [{
       id,
       scope: meetingPartitionScope(route.meetingSource, route.bodyId),
       meetingSource: route.meetingSource,
@@ -233,7 +239,7 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
       successorId,
       successorScope: successor.scope,
       retiredOn: route.retiredOn,
-    };
+    }];
   });
   const successors = new Set<string>();
   for (const row of held) {
@@ -244,6 +250,19 @@ function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
 }
 
 export const HELD_MEETING_PARTITIONS = buildHeldMeetingPartitions();
+
+/**
+ * Retired partitions that hold nothing: the successor was already a wired,
+ * promoting route for the body when the retired one stopped
+ * (`successorAlreadyWired`), so the successor's own pointer is the body's
+ * authority and the retired pointer is simply no longer composed. Validated
+ * with the held rows above (retired unregistered, successor registered).
+ */
+export const RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD: readonly { readonly id: string; readonly successorId: string }[] =
+  RETIRED_MEETING_ROUTES.filter((route) => route.successorAlreadyWired).map((route) => ({
+    id: meetingPartitionId(route.meetingSource, route.bodyId),
+    successorId: meetingPartitionId(route.replacedBy, route.bodyId),
+  }));
 
 /** The retired partition a registered successor holds until its first promotion, if any. */
 export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartition | null {

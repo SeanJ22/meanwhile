@@ -12,7 +12,11 @@
  * previously verified records through temporary outages."
  *
  * So every decision starts from a reviewed crosswalk row, never from a find:
- * a body and its filter are never derived from a name or a domain. For each
+ * a body and its filter are never derived from a name or a domain. A row the
+ * runner's deterministic reviewer accepted (C16 option A, 2026-09-25:
+ * `lib/control-plane/discovery/auto-crosswalk.ts`) is decided by exactly the
+ * same checks and triggers; it cites its own version, and where it and a
+ * reviewed row select the same sitting, only it meets the trigger. For each
  * active crosswalk row, against the latest walk of its government:
  *
  * - **PROMOTE** only when every check holds: the body is on a registered
@@ -57,6 +61,7 @@ import {
 } from "../../civic-data/derived-meeting-wiring.ts";
 import type { MeetingBodyCrosswalkRow } from "../../civic-data/meeting-body-crosswalk.ts";
 import type { DiscoveryFind, MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
+import { ocdStateCode } from "../../ocd/state-of.ts";
 
 export { derivedWiringKey };
 export type { DerivedWiringRow };
@@ -167,8 +172,17 @@ export type WiringVerification =
   | { readonly wrongAttribution: string };
 
 export interface DerivedWiringInputs {
-  /** The promoted crosswalk: its version and rows. */
-  readonly crosswalk: { readonly input: DerivedInputRef; readonly versionId: string; readonly rows: readonly MeetingBodyCrosswalkRow[] };
+  /**
+   * The promoted crosswalk: its version and rows. `automatic` names the rows the runner's deterministic reviewer
+   * accepted (`meeting-body-crosswalk-derived`, composed beside the manual rows by `composeCrosswalk`): each is
+   * decided exactly as a reviewed row, cites that version, and gives way to a reviewed row that selects its sittings.
+   */
+  readonly crosswalk: {
+    readonly input: DerivedInputRef;
+    readonly versionId: string;
+    readonly rows: readonly MeetingBodyCrosswalkRow[];
+    readonly automatic?: { readonly input: DerivedInputRef; readonly versionId: string; readonly rowIds: ReadonlySet<string> };
+  };
   /** The registration input a row's division rests on, or why the division is not registered. */
   readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef } | { readonly notRegistered: string };
   /** The latest walk of each government, with its log record id and time. */
@@ -205,10 +219,10 @@ export function sameRoute(a: string, b: string): boolean {
   }
 }
 
-/** The state a division lies in, `US-AZ`, from its OCD id. */
+/** The state a division lies in, `US-AZ`, from its OCD id: a state, DC or a territory (`US-PR`). */
 function stateOf(ocdId: string): string {
-  const code = /\/state:([a-z]{2})(\/|$)/.exec(ocdId)?.[1];
-  return code === undefined ? "" : `US-${code.toUpperCase()}`;
+  const code = ocdStateCode(ocdId);
+  return code === null ? "" : `US-${code.toUpperCase()}`;
 }
 
 /** The wiring row a crosswalk row becomes. */
@@ -254,10 +268,17 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
       ? { disposition: "SUSPEND", key, trigger: kind, detail, at: inputs.now, evidence }
       : hold(key, "REVIEW_TRIGGERED", `${kind}: ${detail}`, evidence);
 
+  const automatic = inputs.crosswalk.automatic;
+  const isAutomatic = (rowId: string): boolean => automatic?.rowIds.has(rowId) === true;
+  /* The crosswalk version a row rests on: the automatic one for a row its reviewer accepted, the reviewed one otherwise. */
+  const inputFor = (rowId: string): DerivedInputRef => (isAutomatic(rowId) ? automatic!.input : crosswalkInput);
+  const rowIdByKey = new Map<string, string>();
+
   for (const reviewed of active) {
     const key = derivedWiringKey(reviewed.kind, reviewed.bodyId);
     if (decisions.has(key)) continue;
-    const base: DerivedInputRef[] = [crosswalkInput];
+    rowIdByKey.set(key, reviewed.id);
+    const base: DerivedInputRef[] = [inputFor(reviewed.id)];
     const decide = (d: Decision): void => void decisions.set(key, d);
 
     const registration = inputs.registration(reviewed);
@@ -371,9 +392,12 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
       if (a.bodyId === b.bodyId) continue;
       const shared = [...a.selected].find((sitting) => b.selected.has(sitting));
       if (shared === undefined) continue;
-      for (const key of [keys[i]!, keys[j]!]) {
+      /* A reviewed row wins over an automatic one: only the automatic row meets the trigger. Two of a kind both do. */
+      const auto = [keys[i]!, keys[j]!].map((key) => isAutomatic(rowIdByKey.get(key) ?? ""));
+      const losers = auto[0] !== auto[1] ? [keys[auto[0] ? i : j]!] : [keys[i]!, keys[j]!];
+      for (const key of losers) {
         const promoted = decisions.get(key);
-        const evidence = promoted?.disposition === "PROMOTE" ? promoted.inputs : [crosswalkInput];
+        const evidence = promoted?.disposition === "PROMOTE" ? promoted.inputs : [inputFor(rowIdByKey.get(key) ?? "")];
         decisions.set(key, trigger(key, "CONFLICTING_EVIDENCE", `${a.bodyId} and ${b.bodyId} both select the sitting ${shared}`, evidence));
       }
     }
@@ -390,10 +414,10 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
         key,
         trigger: "CROSSWALK_WITHDRAWN",
         detail: reviewed === undefined
-          ? `the reviewed crosswalk ${inputs.crosswalk.versionId} no longer holds ${entry.row.crosswalkRowId}`
+          ? `the reviewed crosswalk ${inputs.crosswalk.versionId}${automatic ? ` and the automatic crosswalk ${automatic.versionId}` : ""} no longer hold ${entry.row.crosswalkRowId}`
           : `withdrawn by review: ${reviewed.withdrawal?.reason ?? "no reason recorded"}`,
         at: inputs.now,
-        evidence: [crosswalkInput],
+        evidence: automatic && automatic.input !== crosswalkInput ? [crosswalkInput, automatic.input] : [crosswalkInput],
       });
     }
   }

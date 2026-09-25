@@ -188,16 +188,26 @@ export const MEETING_PARTITION_POLICY = {
 /**
  * **THE DERIVED MEETING FAMILIES** (C16, the owner's decision recorded 2026-09-24T22:43Z).
  *
- * One static partition per covered state whose members are the promoted
+ * One partition per registered state whose members are the promoted
  * meeting-source wiring's ACTIVE rows for that state, read at runtime. A
  * reviewed crosswalk row plus a route discovery validated therefore publishes
  * through the standing runner with no code release. The family is its scope's
  * only writer; each member keeps its own last verified rows when it fails or
  * is suspended; an unreadable wiring store blocks the family's candidate and
  * keeps its last known good.
+ *
+ * **EVERY REGISTERED STATE HAS ONE** (2026-09-25). The list is registration's
+ * own (`REGISTRATION_TARGETS`: every state, DC and territory in the FIPS
+ * table), never a chosen subset, so a calendar connected in a state no one
+ * has worked before publishes with no code change. A family with no member yet
+ * makes no read of any publisher: its child reads the wiring first and records
+ * a named refusal, and it is asked again on the unpublished twice-daily clock.
  */
-export const DERIVED_MEETING_FAMILY_STATES = ["US-AZ", "US-NH", "US-NJ"] as const;
-export type DerivedMeetingFamilyState = (typeof DERIVED_MEETING_FAMILY_STATES)[number];
+export const DERIVED_MEETING_FAMILY_STATES: readonly DerivedMeetingFamilyState[] = REGISTRATION_TARGETS.map(
+  (target) => target.jurisdiction as DerivedMeetingFamilyState,
+);
+/** A covered state's family key, `US-OH`. */
+export type DerivedMeetingFamilyState = `US-${string}`;
 
 export const DERIVED_MEETING_FAMILY_POLICY = {
   sourceId: "meetings-derived-routes",
@@ -427,6 +437,50 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["data/states/az/outcomes/legistar-outcomes.json"],
   },
+  /*
+   * Mesa City Council decisions, read off the council's own minutes (NH332,
+   * 2026-09-25). Mesa's clerk enters no action in the Legistar Web API, so the
+   * route behind Pima's outcomes gives Mesa nothing; the minutes are published
+   * on the permitted portal host (`View.ashx?M=M`, linked from the calendar
+   * grid) while the API's minutes file sits on legistar.granicus.com, which
+   * robots.txt refuses us.
+   */
+  {
+    id: "mesa-legistar-minutes-outcomes",
+    sourceId: "mesa-legistar-minutes-outcomes",
+    recordClass: "MEETING_OUTCOME",
+    scope: "US-AZ:place:mesa:legistar-minutes-outcomes",
+    // One host, one lane: the calendar and the minutes are read from the same
+    // portal as the council's InSite meeting partition, one request at a time.
+    acquisitionFailureDomain: "meeting-upstream:mesa.legistar.com",
+    acquisitionAdapter: {
+      authorityMode: "SINGLE_ROUTE",
+      command: ["scripts/legistar-insite-minutes-ingest.mts", "--promote", "--slug", "mesa"],
+      requestedUrl: "https://mesa.legistar.com/Calendar.aspx",
+    },
+    parserNormalizerVersion: "mesa-legistar-minutes-outcomes/1",
+    // Reader freshness as Pima's outcomes: the twelve-hour re-read plus one
+    // failed retry lands inside it.
+    cadence: {
+      description: "fresh for fourteen hours through the 2026 general election, then a day",
+      defaultEveryMs: DAY,
+      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
+    },
+    // Re-reads follow the council's sittings, which its InSite partition carries.
+    schedule: {
+      ...MEETING_SITTING_WINDOW,
+      follows: [{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }],
+    },
+    retry: { afterMs: HOUR, description: "one hour after a failed calendar or minutes read" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "mesa-legistar-minutes-outcomes" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "mesa-legistar-minutes-outcomes", consumers: ["agenda", "Ask", "meeting Reader records", "map"] },
+    lkgBehavior: "A failed calendar or minutes read is stored as a refused candidate; prior GOOD outcomes remain live, and a sitting whose minutes are not yet published is recorded as such, never as a sitting without decisions.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
   {
     id: "dotgov",
     sourceId: "cisa-dotgov-registry",
@@ -479,6 +533,33 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   })),
+  /*
+   * AUTOMATIC CALENDAR-TO-BODY RECORDS (C16 option A: agents review; 2026-09-25). The runner's own deterministic
+   * reviewer (lib/control-plane/discovery/auto-crosswalk.ts) reads each discovery walk that found an iCal feed or an
+   * official events page on the government's attested own host, and accepts a row only when every C16 check passes
+   * on the vaulted bytes; everything else is held by name. It shares the wiring store's authority (the standing
+   * runner, from promoted and vaulted inputs only), and the wiring derive reads its rows beside the reviewed manual
+   * crosswalk, the manual rows winning.
+   */
+  {
+    id: "meeting-body-crosswalk-derived",
+    sourceId: "meeting-source-wiring",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:meeting-body-crosswalk-derived",
+    acquisitionFailureDomain: "derived:meeting-body-crosswalk",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-body-crosswalk.mts", "--promote"] },
+    parserNormalizerVersion: "meeting-source-wiring/1",
+    cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
+    retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-source-wiring" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "meeting-body-crosswalk-derived", consumers: ["derived meeting-source wiring", "Admin"] },
+    lkgBehavior: "A version with a malformed row, a conflicting pair, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD rows live; an accepted row is never dropped, and an outage or an absent walk carries it exactly as it was.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
   {
     id: "meeting-source-wiring",
     sourceId: "meeting-source-wiring",
@@ -494,6 +575,33 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     canonicalProductionStore: STORE,
     readerProjection: { id: "meeting-source-wiring", consumers: ["derived meeting families", "Admin"] },
     lkgBehavior: "A version with a refused decision, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD wiring live; no row is ever dropped, and a suspended row stays marked until a later review.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  /*
+   * VERIFIED CAMPAIGN SITES, PUBLISHED AUTOMATICALLY (Sean, 2026-09-21: "You may enable automatic promotion for
+   * qualifying results. Fix the gap, recover value already paid for."; RULING 292). The standing runner's
+   * campaign-site chain (lib/control-plane/promotion/campaign-site-chain.ts) approves a site only after our own
+   * robots-first read, five measured checks and an audit with an independent second signal. This DERIVED store is
+   * the one writer of its own pointer; the owner's `candidate-profiles` door stays the only writer of profiles, and
+   * the profile Reader composes the two, a reviewed campaign link always winning (lib/ballot/candidate-sites.ts).
+   */
+  {
+    id: "candidate-campaign-sites-derived",
+    sourceId: "candidate-campaign-site-chain",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:candidate-campaign-sites-derived",
+    acquisitionFailureDomain: "derived:candidate-campaign-sites",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", "--promote"] },
+    parserNormalizerVersion: "candidate-campaign-site-chain/1",
+    cadence: { description: "hourly, the research cycle's own rhythm", defaultEveryMs: HOUR },
+    retry: { afterMs: HOUR, description: "one hour after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "candidate-campaign-site-chain" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "candidate-verified-campaign-sites", consumers: ["/ballot", "Ask candidate profiles"] },
+    lkgBehavior: "A pass that cannot read the pipeline's approvals, the promoted candidate-profiles version or an approval's vaulted bytes records its refusal and leaves the prior GOOD sites live; an approval whose vaulted bytes no longer verify is held by name and not published.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],

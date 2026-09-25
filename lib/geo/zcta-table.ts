@@ -16,10 +16,11 @@
  *
  * ## What this changes, and what it deliberately does not
  *
- * The server keeps `lib/geo/zcta.ts` and its synchronous API. Nothing on a
- * server path pays for a dynamic import, `app/ballot/page.tsx` and
- * `app/api/meetings/route.ts` are untouched, and every script that resolves a
- * zip keeps working exactly as it did.
+ * The server keeps `lib/geo/zcta.ts` and its synchronous API for the pages and
+ * scripts that resolve a zip, and every script keeps working exactly as it did.
+ * `app/api/meetings/route.ts` moved here on 2026-09-25 (C21): it needs the
+ * table only for a panned map with no zip, and the static import made every
+ * cold start of the reader's busiest route parse the whole megabyte first.
  *
  * The client gets this: one dynamic `import()`, cached after the first call, so
  * the table becomes its own chunk that the browser fetches when a reader first

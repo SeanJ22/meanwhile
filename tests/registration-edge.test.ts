@@ -146,6 +146,37 @@ test("the reader composes a state's registration from the edge, and a state the 
   assert.equal(found[0]!.label, county.label);
 });
 
+test("a DC division and a Puerto Rico division reach their registrations on the reader (2026-09-25)", async () => {
+  await installRegistryRuntimeFirstSeeds();
+  const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
+  const dc = model("DC");
+  const pr = model("PR");
+  const loads: string[] = [];
+  const edge = {
+    registrations: {
+      states: new Set(["dc", "pr"]),
+      load: async (state: string) => {
+        loads.push(state);
+        return state === "dc" ? { value: dc, versionId: "reg-dc-1" } : state === "pr" ? { value: pr, versionId: "reg-pr-1" } : null;
+      },
+    },
+  };
+  enterReaderAuthorityEdge(edge);
+  // DC's ids root at `district:dc`, Puerto Rico's at `territory:pr`: until both were read as jurisdictions, neither was ever asked for.
+  const washington = "ocd-division/country:us/district:dc/place:washington";
+  const adjuntas = "ocd-division/country:us/territory:pr/county:adjuntas";
+  const found = await divisionsByOcdIds([washington, adjuntas]);
+  assert.deepEqual(found.map((d) => d.ocdId), [washington, adjuntas]);
+  assert.deepEqual(loads.sort(), ["dc", "pr"]);
+
+  // Adjuntas's municipal government reaches the coverage card, titled by its municipio.
+  enterReaderAuthorityEdge(edge);
+  const coverage = await coverageAt(18.16, -66.72, 0, await divisionsByOcdIds([adjuntas]));
+  const row = coverage.bodies.find((b) => b.bodyId === `${adjuntas}#governing`);
+  assert.ok(row, "the municipio's government is in the card");
+  assert.equal(row!.divisionLabel, "Adjuntas Municipio");
+});
+
 test("a registered body reaches the coverage card titled by its division, never as a nameless, labelless row", async () => {
   await installRegistryRuntimeFirstSeeds();
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");

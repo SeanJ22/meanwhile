@@ -10,6 +10,7 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
+import { validateOnce } from "../civic-data/validated-once.ts";
 import {
   REGISTRY_RUNTIME_SCOPE,
   REGISTRY_RUNTIME_SOURCE_ID,
@@ -166,9 +167,12 @@ export async function refreshRegistryRuntimeFromPromoted(options: PromotedCivicD
  * `lib/registry/runtime-edge.ts`) instead of `refreshRegistryRuntimeFromPromoted`
  * for ordinary visitors. It deliberately does NOT alter that DB reader, which
  * the standing runner and workers still use for the authoritative path.
+ *
+ * Validated once per edge object and version (C21, `validateOnce`): a request
+ * primes this several times from the same immutable value.
  */
 export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, versionId: string): void {
-  validate(value, versionId);
+  validateOnce("registry-runtime", value, versionId, () => validate(value, versionId));
   cache = value;
   // BOOTSTRAP, not PROMOTED: the serving copy carries the validated value and its
   // version, but not the full promotion receipt (that stays on the authoritative

@@ -109,7 +109,27 @@ export type RouteOpening =
       readonly body: string;
       readonly headers?: Readonly<Record<string, string>>;
     }
-  | { readonly kind: "NOT_MACHINE_EXECUTABLE"; readonly reason: string; readonly target: string };
+  | { readonly kind: "NOT_MACHINE_EXECUTABLE"; readonly reason: string; readonly target: string }
+  /*
+   * **CARRIED BY A ROUTINE READ, NEVER OPENED HERE.** (2026-09-25.) The record
+   * is read by routine civic-data contracts on their own clocks (the one clock
+   * per source, RULING 282/283), so this process sends nothing: opening the
+   * same feed here would be a second clock beside the partition. The
+   * obligation records that the record is still owed, which contracts carry
+   * it and when their next read is owed; `cadenceFailure` names a carrying read
+   * that has not succeeded within its required cadence. Executor class:
+   * DETERMINISTIC, and no model is ever spent on it.
+   */
+  | {
+      readonly kind: "ROUTINE_READ";
+      /** The routine contract ids whose reads close it. At least one. */
+      readonly contractIds: readonly string[];
+      readonly target: string;
+      /** Where the carrying reads stood when the provider read them, in one paragraph a digest can quote. */
+      readonly reason: string;
+      /** Non-null when a carrying read has not succeeded within its required cadence: the named failure. */
+      readonly cadenceFailure: string | null;
+    };
 
 /**
  * **WHAT A SUCCESSFUL RESPONSE FROM THIS ROUTE MUST CONTAIN.**

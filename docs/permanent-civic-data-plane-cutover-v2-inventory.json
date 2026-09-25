@@ -558,8 +558,8 @@
     {
       "source_id": "meeting-source-wiring",
       "record_class": "CURATED_READER_RECORD",
-      "authority": "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, registration, the discovery walk's attempts and vaulted evidence (owner decision C16, recorded 2026-09-24T22:43Z)",
-      "current_writer": "scripts/derive-meeting-source-wiring.mts (reads promoted versions, the attempt log and the vault read only; writes no tracked file)",
+      "authority": "The standing runner, from promoted and vaulted inputs only: the reviewed meeting-body crosswalk, the automatic crosswalk its deterministic reviewer accepts, registration, the discovery walk's attempts and vaulted evidence (owner decision C16, recorded 2026-09-24T22:43Z)",
+      "current_writer": "scripts/derive-meeting-body-crosswalk.mts (contract meeting-body-crosswalk-derived) and scripts/derive-meeting-source-wiring.mts (each reads promoted versions, the attempt log and the vault read only; writes no tracked file)",
       "current_scheduler": "standing routine civic-data runner",
       "current_canonical_store": "Postgres promotion pointer",
       "tracked_paths": [],
@@ -579,9 +579,9 @@
       "source_id": "meetings-derived-families",
       "record_class": "MEETING",
       "authority": "The public bodies whose calendars the promoted meeting-source wiring connects, each read on its own attested host",
-      "current_writer": "scripts/ingest.ts composite --promote --only-partition=meetings:derived:<state> (one static partition per covered state; writes no tracked file)",
+      "current_writer": "scripts/ingest.ts composite --promote --only-partition=meetings:derived:<state> (one partition per registered state; writes no tracked file)",
       "current_scheduler": "standing routine civic-data runner",
-      "current_canonical_store": "Postgres promotion pointer, one per covered state",
+      "current_canonical_store": "Postgres promotion pointer, one per registered state",
       "tracked_paths": [],
       "runtime_readers": [
         "lib/meetings/snapshot.ts",

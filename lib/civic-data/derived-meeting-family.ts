@@ -2,8 +2,9 @@
  * **A DERIVED MEETING FAMILY: ONE STATE'S REVIEWED CALENDARS, EACH HELD TO
  * ITS OWN EVIDENCE.** (C16, 2026-09-24.)
  *
- * One static partition per covered state (`meetings:derived:US-AZ`) whose
- * members are the promoted meeting-source wiring's rows for that state. Its
+ * One partition per registered state (`meetings:derived:US-AZ`, every state
+ * since 2026-09-25) whose members are the promoted meeting-source wiring's rows
+ * for that state. Its
  * child reads each ACTIVE member on that member's own attested host, and
  * builds one candidate in which every member stands alone:
  *

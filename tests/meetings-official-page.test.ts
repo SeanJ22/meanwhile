@@ -125,7 +125,20 @@ test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a 
   assert.deepEqual(identityNameTerms("CITY OF CHANDLER"), ["City of Chandler", "Chandler"], "two letters of initials name nothing");
   assert.deepEqual(identityNameTerms("CITY OF TUCSON"), ["City of Tucson", "Tucson"]);
   assert.notDeepEqual(identityNameTerms("TUCSON UNIFIED SCHOOL DISTRICT 1")[1], "Tucson", "a district's core name keeps Unified, so the city's events never verify for it");
-  assert.deepEqual(STATE_TIME_ZONES, { AZ: "America/Phoenix", NH: "America/New_York", NJ: "America/New_York", NM: "America/Denver" });
+  /* Every one-zone state and territory (2026-09-25), never a state a zone line crosses or one whose towns keep a neighbour's time. */
+  assert.deepEqual(Object.keys(STATE_TIME_ZONES).sort(), [
+    "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "GA", "GU", "HI", "IA", "IL", "LA", "MA", "MD", "ME", "MN", "MO", "MP", "MS", "MT",
+    "NC", "NH", "NJ", "NM", "NY", "OH", "OK", "PA", "PR", "RI", "SC", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY",
+  ]);
+  assert.deepEqual([STATE_TIME_ZONES.AZ, STATE_TIME_ZONES.NH, STATE_TIME_ZONES.NJ, STATE_TIME_ZONES.NM, STATE_TIME_ZONES.OH], ["America/Phoenix", "America/New_York", "America/New_York", "America/Denver", "America/New_York"]);
+  for (const split of ["AK", "AL", "FL", "ID", "IN", "KS", "KY", "MI", "ND", "NE", "NV", "OR", "SD", "TN", "TX"]) assert.equal(STATE_TIME_ZONES[split], undefined, `${split} is never guessed`);
+  /* A government's own events page in Ohio is confirmed by the free walk now; before, every Ohio page was TIME_ZONE_UNKNOWN. */
+  const ohio = verifyEndpointBody(
+    { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
+    { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
+    { bodyId: "oh:school:santa-fe-public-schools", name: "SANTA FE PUBLIC SCHOOLS", pageLabel: "Board of Education", officialHost: "www.sfps.info", stateCode: "OH", now: NOW },
+  );
+  assert.equal(ohio.verdict, "YIELDED", ohio.detail);
   const texas = verifyEndpointBody(
     { vendor: "official-page-events", url: "https://www.example-isd.org/board" },
     { status: 200, body: TUSD_PAGE, finalUrl: "https://www.example-isd.org/board" },

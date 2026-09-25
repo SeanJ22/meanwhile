@@ -201,6 +201,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    // The automatic crosswalk (C16 option A, 2026-09-25): the runner's own reviewer, on promoted and vaulted inputs.
+    "meeting-body-crosswalk-derived",
     // The derived meeting-source wiring (C16): recomputed from promoted and vaulted inputs, no route of its own.
     "meeting-source-wiring",
   ]);

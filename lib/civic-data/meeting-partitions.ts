@@ -136,8 +136,9 @@ function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
     })),
   );
   /*
-   * **ONE STATIC DERIVED FAMILY PER COVERED STATE** (C16). Its membership is data: the promoted meeting-source
-   * wiring's ACTIVE rows, read by its own child at runtime, so a reviewed calendar publishes with no code release.
+   * **ONE DERIVED FAMILY PER REGISTERED STATE** (C16; every state since 2026-09-25). Its membership is data: the
+   * promoted meeting-source wiring's ACTIVE rows, read by its own child at runtime, so a reviewed calendar publishes
+   * with no code release, in a state no one has worked before as in Arizona.
    */
   const { readerConsumers: familyConsumers, ...familyPolicy } = DERIVED_MEETING_FAMILY_POLICY;
   for (const state of DERIVED_MEETING_FAMILY_STATES) {

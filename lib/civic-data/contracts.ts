@@ -188,16 +188,26 @@ export const MEETING_PARTITION_POLICY = {
 /**
  * **THE DERIVED MEETING FAMILIES** (C16, the owner's decision recorded 2026-09-24T22:43Z).
  *
- * One static partition per covered state whose members are the promoted
+ * One partition per registered state whose members are the promoted
  * meeting-source wiring's ACTIVE rows for that state, read at runtime. A
  * reviewed crosswalk row plus a route discovery validated therefore publishes
  * through the standing runner with no code release. The family is its scope's
  * only writer; each member keeps its own last verified rows when it fails or
  * is suspended; an unreadable wiring store blocks the family's candidate and
  * keeps its last known good.
+ *
+ * **EVERY REGISTERED STATE HAS ONE** (2026-09-25). The list is registration's
+ * own (`REGISTRATION_TARGETS`: every state, DC and territory in the FIPS
+ * table), never a chosen subset, so a calendar connected in a state no one
+ * has worked before publishes with no code change. A family with no member yet
+ * makes no read of any publisher: its child reads the wiring first and records
+ * a named refusal, and it is asked again on the unpublished twice-daily clock.
  */
-export const DERIVED_MEETING_FAMILY_STATES = ["US-AZ", "US-NH", "US-NJ"] as const;
-export type DerivedMeetingFamilyState = (typeof DERIVED_MEETING_FAMILY_STATES)[number];
+export const DERIVED_MEETING_FAMILY_STATES: readonly DerivedMeetingFamilyState[] = REGISTRATION_TARGETS.map(
+  (target) => target.jurisdiction as DerivedMeetingFamilyState,
+);
+/** A covered state's family key, `US-OH`. */
+export type DerivedMeetingFamilyState = `US-${string}`;
 
 export const DERIVED_MEETING_FAMILY_POLICY = {
   sourceId: "meetings-derived-routes",
@@ -523,6 +533,33 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   })),
+  /*
+   * AUTOMATIC CALENDAR-TO-BODY RECORDS (C16 option A: agents review; 2026-09-25). The runner's own deterministic
+   * reviewer (lib/control-plane/discovery/auto-crosswalk.ts) reads each discovery walk that found an iCal feed or an
+   * official events page on the government's attested own host, and accepts a row only when every C16 check passes
+   * on the vaulted bytes; everything else is held by name. It shares the wiring store's authority (the standing
+   * runner, from promoted and vaulted inputs only), and the wiring derive reads its rows beside the reviewed manual
+   * crosswalk, the manual rows winning.
+   */
+  {
+    id: "meeting-body-crosswalk-derived",
+    sourceId: "meeting-source-wiring",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:meeting-body-crosswalk-derived",
+    acquisitionFailureDomain: "derived:meeting-body-crosswalk",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-body-crosswalk.mts", "--promote"] },
+    parserNormalizerVersion: "meeting-source-wiring/1",
+    cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
+    retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-source-wiring" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "meeting-body-crosswalk-derived", consumers: ["derived meeting-source wiring", "Admin"] },
+    lkgBehavior: "A version with a malformed row, a conflicting pair, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD rows live; an accepted row is never dropped, and an outage or an absent walk carries it exactly as it was.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
   {
     id: "meeting-source-wiring",
     sourceId: "meeting-source-wiring",

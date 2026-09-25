@@ -704,6 +704,28 @@ export async function POST(request: Request) {
       preloadMs[name] = Date.now() - started;
     }
   };
+  /*
+   * **ONLY WHAT READS THE AUTHORITY EDGE WAITS FOR IT, AND THE EDGE IS ENTERED
+   * HERE.** (2026-09-24, C20/C22.) The recorded outcomes and the comment-access
+   * rules read the database, so they start before the edge is fetched instead
+   * of after it (and comment access no longer waits for every other source).
+   * The edge itself is entered in THIS function's own execution:
+   * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`, and on Node 24
+   * a store entered inside a helper never reaches the reads chained on it
+   * ("none" against "EDGE", measured the same day; see
+   * tests/reader-edge-context.test.ts). Entered there, the registry and the
+   * federal directory would silently be read from the database again.
+   */
+  const outcomesRead = timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  // Observed here at once so a failure while the edge is fetched is never an
+  // unhandled rejection; the settle below still records it as a failed source.
+  outcomesRead.catch(() => undefined);
+  const commentAccessRead = process.env.NODE_ENV === "production"
+    // Public-comment rules are an independent optional family. Initialize its
+    // pointer, but do not let a store outage suppress meetings, ballots,
+    // officials, or any other source's answer.
+    ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
+    : null;
   const edgeManifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
   if (edgeManifest?.authorityArtifacts) {
     const authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
@@ -712,7 +734,8 @@ export async function POST(request: Request) {
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
     timed("federalDirectory", settleFederalDirectoryRead),
-    timed("outcomes", refreshOutcomeSnapshotFromPromoted),
+    () => outcomesRead,
+    ...(commentAccessRead ? [() => commentAccessRead] : []),
   ];
   const deferrablePreloads = [
     timed("funding", refreshFundingFromPromoted),
@@ -738,13 +761,6 @@ export async function POST(request: Request) {
       trace.preloadRetries = [...(trace.preloadRetries ?? []), "outcomes"];
     }
   }
-  if (process.env.NODE_ENV === "production") {
-    // Public-comment rules are an independent optional family. Initialize its
-    // pointer, but do not let a store outage suppress meetings, ballots,
-    // officials, or any other source's answer.
-    await timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))();
-  }
-
   lap("sourcePreloads");
   trace.preloads = preloadMs;
   let snapshot: MeetingsSnapshot | null = null;

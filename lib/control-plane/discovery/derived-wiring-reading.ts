@@ -1,0 +1,133 @@
+/**
+ * **THE DERIVED WIRING'S OWN READING OF A HELD CALENDAR, WITH THE READER'S ADAPTER.** (C16, 2026-09-24.)
+ *
+ * The wiring derive (`scripts/derive-meeting-source-wiring.mts`) confirms a reviewed row by reading the calendar
+ * bytes a walk vaulted, through the same adapter the family runs, with the row's reviewed filter. The adapter is
+ * served the held bytes for the row's route and a 404 for anything else.
+ *
+ * Both adapters resolve each sitting's venue through the synchronous venue-resolutions Reader projection
+ * (`lib/meetings/venue-cache.ts`), which answers only after its canonical pointer was read in this process. In
+ * production nothing falls back to the tracked seed. So the projection is read here, before any adapter reading, and
+ * a store that cannot answer refuses the whole reading by name. On 2026-09-24 the first production pass would have
+ * read no projection: every reading threw, and the throw was filed as a changed calendar.
+ *
+ * What one reading can say:
+ * - `verified`: the filter selects this body's sittings, and none names another reviewed body of the government;
+ * - `changed`: the held bytes are no longer a calendar of this kind, or the filter selects none of them. The
+ *   adapter says the second by throwing its zero-row extraction (`ZeroRowExtractionError`, RULING 43: documents
+ *   fetched, nothing extracted, nothing dropped) or by returning none of the body's sittings. Either is
+ *   CALENDAR_CHANGED, a review trigger;
+ * - `wrongAttribution`: a selected sitting names another reviewed body (WRONG_ATTRIBUTION);
+ * - `refused`: the bytes hold no event to read, or the adapter threw anything else. Such a throw is ours or the
+ *   serving's (an unread projection, bytes not served), never evidence about the calendar, so it holds the row
+ *   (ADAPTER_REFUSED) and triggers no review.
+ */
+
+import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
+import type { AdapterVerification, DerivedInputRef } from "../../civic-data/derived-authority.ts";
+import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringKind, type DerivedWiringRow } from "../../civic-data/derived-meeting-wiring.ts";
+import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
+import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../../meetings/constants.ts";
+import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
+import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
+import { makeOfficialPageEventsSource } from "../../sources/official-page-events/index.ts";
+import type { Meeting } from "../../sources/types.ts";
+import { sameRoute, type WiringVerification } from "./derived-wiring.ts";
+
+type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
+
+/** One held calendar to read for one reviewed row. */
+export interface HeldCalendarReading {
+  /** The caller's key for this reading. */
+  readonly key: string;
+  readonly row: DerivedWiringRow;
+  /** The held bytes as text, or why they could not be read. */
+  readonly held: { readonly text: string; readonly contentType: string } | { readonly unreadable: string };
+  readonly evidence: VaultedEvidence;
+  /** The names of the government's other reviewed bodies. */
+  readonly others: readonly string[];
+}
+
+export type HeldCalendarReadings =
+  | { readonly kind: "UNREADABLE"; readonly detail: string }
+  | { readonly kind: "READ"; readonly verifications: ReadonlyMap<string, WiringVerification> };
+
+const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
+
+/**
+ * What an adapter's throw says about a held calendar. Its zero-row extraction is the publisher's calendar selecting
+ * nothing for the reviewed filter: CALENDAR_CHANGED. Anything else is ours: ADAPTER_REFUSED, no review triggered.
+ */
+export function adapterThrowVerification(error: unknown, route: string): WiringVerification {
+  return error instanceof ZeroRowExtractionError
+    ? { changed: `the reviewed filter selects none of ${route}'s events: ${error.message}` }
+    : { refused: `the adapter could not read ${route}: ${message(error)}` };
+}
+
+/**
+ * Read every held calendar. The Reader projections the adapters resolve through are read first, so no adapter
+ * reading ever runs against an unread projection.
+ */
+export async function readHeldCalendars(input: {
+  readonly options: PromotedCivicDataReadOptions;
+  readonly now: string;
+  readonly adapterDigest: (kind: DerivedWiringKind) => string;
+  readonly readings: readonly HeldCalendarReading[];
+}): Promise<HeldCalendarReadings> {
+  if (input.readings.length === 0) return { kind: "READ", verifications: new Map() };
+  try {
+    await refreshVenueResolutionsFromPromoted(input.options);
+  } catch (error) {
+    return { kind: "UNREADABLE", detail: `The venue resolutions every adapter reading resolves through could not be read: ${message(error)}` };
+  }
+  const verifications = new Map<string, WiringVerification>();
+  for (const reading of input.readings) verifications.set(reading.key, await readOne(reading, input.now, input.adapterDigest));
+  return { kind: "READ", verifications };
+}
+
+async function readOne(reading: HeldCalendarReading, now: string, adapterDigest: (kind: DerivedWiringKind) => string): Promise<WiringVerification> {
+  const { row } = reading;
+  if ("unreadable" in reading.held) return { refused: `the vaulted bytes could not be read: ${reading.held.unreadable}` };
+  const { text, contentType } = reading.held;
+  const fetchImpl = (async (request: string | URL | Request) => {
+    const url = typeof request === "string" ? request : request instanceof URL ? request.toString() : request.url;
+    return sameRoute(url, row.route)
+      ? new Response(text, { status: 200, headers: { "content-type": contentType || "text/html" } })
+      : new Response("not held in the vault", { status: 404 });
+  }) as typeof fetch;
+  let total = 0;
+  if (row.kind === "ICAL") {
+    if (!/BEGIN:VCALENDAR/i.test(text)) return { changed: `${row.route} no longer reads as an iCal calendar` };
+    total = parseIcs(text).length;
+    if (total === 0) return { refused: `${row.route} holds no event in this read` };
+  }
+  let meetings: readonly Meeting[];
+  try {
+    const wiring = bodySourceWiringFor(row);
+    const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl);
+    const nowMs = Date.parse(now);
+    const raw = await source.fetch({
+      lat: 39.5, lng: -98.35, radiusKm: 5000,
+      startsAfter: new Date(nowMs - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
+      startsBefore: new Date(nowMs + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
+    });
+    meetings = source.normalizeWithDrops(raw as never[], new Date(nowMs)).meetings;
+  } catch (error) {
+    return adapterThrowVerification(error, row.route);
+  }
+  const own = meetings.filter((m) => m.bodyId === row.bodyId);
+  if (own.length === 0) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
+  const name = row.bodyName.toLowerCase();
+  const foreign = own.find((m) => !m.title.toLowerCase().includes(name) && reading.others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
+  if (foreign !== undefined) {
+    return { wrongAttribution: `"${foreign.title}" (${foreign.startsAt}) names another reviewed body of ${row.jurisdictionId}, not ${row.bodyName}` };
+  }
+  const verified: AdapterVerification = {
+    adapter: DERIVED_WIRING_SOURCE_NAMES[row.kind],
+    closureDigest: adapterDigest(row.kind),
+    verifiedAt: now,
+    sittings: own.length,
+    evidence: reading.evidence,
+  };
+  return { verified, selected: own.map((m) => `${m.startsAt}|${m.title}`) };
+}

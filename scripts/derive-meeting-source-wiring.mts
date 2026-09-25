@@ -14,7 +14,9 @@
  * - the discovery walk's newest attempt for each crosswalked government, from
  *   the control plane's attempt log (read only);
  * - the evidence vault, read only (`lib/control-plane/evidence/read-only-vault.ts`):
- *   the calendar bytes a walk confirmed, and the page naming each body.
+ *   the calendar bytes a walk confirmed, and the page naming each body;
+ * - the venue resolutions the reader adapters resolve each sitting through, read
+ *   before any adapter reading (`lib/control-plane/discovery/derived-wiring-reading.ts`).
  *
  * Each row is decided by `deriveWiringDecisions` (the four review triggers, and
  * every outage held as it is), planned by `planDerivedVersion`, and promoted
@@ -30,28 +32,22 @@ import { neon } from "@neondatabase/serverless";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
-import { planDerivedVersion, type AdapterVerification, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
-  bodySourceWiringFor,
   DERIVED_WIRING_SOURCE_NAMES,
   derivedWiringCandidate,
   derivedWiringEntries,
   derivedWiringFailedCandidate,
   readDerivedMeetingWiring,
   type DerivedWiringKind,
-  type DerivedWiringRow,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import {
-  deriveWiringDecisions,
-  sameRoute,
-  wiringRowFor,
-  type WiringVerification,
-} from "../lib/control-plane/discovery/derived-wiring.ts";
+import { deriveWiringDecisions, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
+import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
@@ -60,10 +56,6 @@ import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
-import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../lib/meetings/constants.ts";
-import { makeIcalSource, parseIcs } from "../lib/sources/ical/index.ts";
-import { makeOfficialPageEventsSource } from "../lib/sources/official-page-events/index.ts";
-import type { Meeting } from "../lib/sources/types.ts";
 
 const CONTRACT_ID = "meeting-source-wiring";
 
@@ -116,62 +108,13 @@ const adapterDigest = (kind: DerivedWiringKind): string => {
   return digest;
 };
 
-/**
- * The reader adapter's own reading of held bytes with the row's reviewed filter: the same adapter the family runs,
- * served the vaulted bytes for its route and nothing else.
- */
-async function readWithAdapter(row: DerivedWiringRow, held: HeldVaultArtifact, others: readonly string[]): Promise<WiringVerification> {
-  let text: string;
+/** The held bytes as text, or why they could not be read: the adapter reading refuses an unreadable body by name. */
+async function heldText(held: HeldVaultArtifact): Promise<HeldCalendarReading["held"]> {
   try {
-    text = new TextDecoder().decode(await readHeldBytes(held));
+    return { text: new TextDecoder().decode(await readHeldBytes(held)), contentType: held.contentType };
   } catch (error) {
-    return { refused: `the vaulted bytes could not be read: ${error instanceof Error ? error.message : String(error)}` };
+    return { unreadable: error instanceof Error ? error.message : String(error) };
   }
-  const fetchImpl = (async (input: string | URL | Request) => {
-    const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
-    return sameRoute(url, row.route)
-      ? new Response(text, { status: 200, headers: { "content-type": held.contentType || "text/html" } })
-      : new Response("not held in the vault", { status: 404 });
-  }) as typeof fetch;
-  let total = 0;
-  if (row.kind === "ICAL") {
-    if (!/BEGIN:VCALENDAR/i.test(text)) return { changed: `${row.route} no longer reads as an iCal calendar` };
-    total = parseIcs(text).length;
-    if (total === 0) return { refused: `${row.route} holds no event in this read` };
-  }
-  let meetings: readonly Meeting[] = [];
-  try {
-    const wiring = bodySourceWiringFor(row);
-    const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl);
-    const nowMs = Date.parse(now);
-    const raw = await source.fetch({
-      lat: 39.5, lng: -98.35, radiusKm: 5000,
-      startsAfter: new Date(nowMs - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
-      startsBefore: new Date(nowMs + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
-    });
-    meetings = source.normalizeWithDrops(raw as never[], new Date(nowMs)).meetings;
-  } catch (error) {
-    /* A read that yields nothing the filter selects is a changed calendar; anything else is ours to fix. */
-    const detail = error instanceof Error ? error.message : String(error);
-    return total > 0 || row.kind === "OFFICIAL_PAGE_EVENTS"
-      ? { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s): ${detail}` }
-      : { refused: detail };
-  }
-  const own = meetings.filter((m) => m.bodyId === row.bodyId);
-  if (own.length === 0) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
-  const name = row.bodyName.toLowerCase();
-  const foreign = own.find((m) => !m.title.toLowerCase().includes(name) && others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
-  if (foreign !== undefined) {
-    return { wrongAttribution: `"${foreign.title}" (${foreign.startsAt}) names another reviewed body of ${row.jurisdictionId}, not ${row.bodyName}` };
-  }
-  const verified: AdapterVerification = {
-    adapter: DERIVED_WIRING_SOURCE_NAMES[row.kind],
-    closureDigest: adapterDigest(row.kind),
-    verifiedAt: now,
-    sittings: own.length,
-    evidence: { kind: "VAULTED_EVIDENCE", artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" : "RAW", retrievedAt: held.retrievedAt ?? now },
-  };
-  return { verified, selected: own.map((m) => `${m.startsAt}|${m.title}`) };
 }
 
 async function main(): Promise<void> {
@@ -236,7 +179,7 @@ async function main(): Promise<void> {
     held === undefined || held.tier === "RESTRICTED_RAW"
       ? null
       : ({ kind: "VAULTED_EVIDENCE" as const, artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const, retrievedAt: held.retrievedAt ?? now });
-  const readings = new Map<string, WiringVerification>();
+  const pending: HeldCalendarReading[] = [];
   for (const reviewed of rows.filter((row) => row.status === "ACTIVE")) {
     const walk = attempts.find((a) => a.attempt.jurisdictionId === reviewed.jurisdictionId)?.attempt;
     if (walk === undefined) continue;
@@ -247,10 +190,18 @@ async function main(): Promise<void> {
     ].filter((id): id is string => id !== null);
     for (const artifactId of new Set(cited)) {
       const held = vault.byId.get(artifactId);
-      if (held === undefined || held.tier === "RESTRICTED_RAW") continue;
-      readings.set(`${reviewed.id}\u0000${artifactId}`, await readWithAdapter(wiringRowFor(reviewed), held, others));
+      const evidence = refOf(held);
+      if (held === undefined || evidence === null) continue;
+      pending.push({ key: `${reviewed.id}\u0000${artifactId}`, row: wiringRowFor(reviewed), held: await heldText(held), evidence, others });
     }
   }
+  /* The Reader projections the adapters resolve through are read before any reading; an unreadable one refuses the pass. */
+  const read = await readHeldCalendars({ options: { store, bypassCache: true, now }, now, adapterDigest, readings: pending });
+  if (read.kind === "UNREADABLE") {
+    await finish(derivedWiringFailedCandidate(now, read.detail));
+    return;
+  }
+  const readings = read.verifications;
 
   const decisions = deriveWiringDecisions({
     crosswalk: { input: crosswalkInput, versionId: crosswalk.metadata.versionId ?? "", rows },

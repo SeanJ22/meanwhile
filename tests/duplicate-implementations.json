@@ -94,6 +94,11 @@
       "reason": "The request-scoped edge counterparts of the refresh*FromPromoted bindings above: each seats a runner-published authority artifact into its OWN module cache for one reader request, binding a different type (RegistryRuntimeReadModel vs FederalDirectoryReadModel), domain validator, and isolated cache, and setting that module's read-state to BOOTSTRAP. A generic would take an untyped value into a caller-named cache — exactly the wrong-authority-through-a-string hazard the refresh group is kept separate to prevent — while duplicating no validation or cache policy."
     },
     {
+      "id": "shape:lib/outcomes/store.ts#settleOutcomeRead,lib/registry/server.ts#settleFederalDirectoryRead",
+      "disposition": "ALLOWED",
+      "reason": "Same edge-first shape over different typed families. A typed generic (settleEdgeFirst<T>, one T across edge accessor, prime and read) would serve all five settles; deferred because every call site is reader-bound and B6's reproof is running. Recorded follow-up."
+    },
+    {
       "id": "shape:lib/registry/runtime-read-model.ts#getRegistryRuntimeReadModel,lib/votes/key-votes-projection.ts#getFederalKeyVotesReadModel,lib/votes/snapshot.ts#getFederalVotesReadModel",
       "disposition": "ALLOWED",
       "reason": "Each synchronous accessor guards a different module-local cache and names the exact preload required. Their matching fail-closed shape is intentional; a shared accessor would need mutable cache parameters and could weaken the source-isolation boundary this cutover tests."
@@ -102,11 +107,6 @@
       "id": "shape:lib/control-plane/admin-data.ts#readFleetInputs,tests/readiness-authority.test.ts#promotedRows",
       "disposition": "ALLOWED",
       "reason": "This is a structural coincidence across unrelated work: Admin concurrently reads three durable repositories, while the test helper constructs candidate, event, and promotion fixture arrays. They share no semantics or callable production helper, and coupling the test fixture to Admin would be the wrong dependency direction."
-    },
-    {
-      "id": "shape:lib/officials/executive-actions.ts#readExecutiveActionsProjection,lib/outcomes/store.ts#readOutcomeProjection",
-      "disposition": "ALLOWED",
-      "reason": "These are source-specific adapters binding different contracts, test fixtures, validators, and isolated read states to the already shared promoted-data reader. Keeping the shells separate preserves failure isolation between executive actions and meeting outcomes; the canonical store and bootstrap policy are not duplicated."
     },
     {
       "id": "shape:lib/reference/index.ts#parseCsv,lib/sources/prl/index.ts#parseCsv",

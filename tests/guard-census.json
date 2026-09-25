@@ -5379,7 +5379,7 @@
         "KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parameter are refused, never quietly held",
         "KEEP-WARM · a marked call holds its instance for the hold asked, so overlapping calls occupy separate instances",
         "KEEP-WARM · an unmarked call answers at once, whatever hold it asks for, and is never cached",
-        "KEEP-WARM · every five minutes the pinger makes ten overlapping marked calls to the site's own warm route"
+        "KEEP-WARM · every five minutes the pinger makes fourteen overlapping marked calls to the site's own warm route"
       ],
       "dynamic": 0
     },

@@ -10,6 +10,7 @@ import { candidateProfileCensusHoldingPath, canonicalReaderAuthorityJson, civicC
 import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
 import { directFundingTargetPlan } from "../app/api/funding/[target]/route.ts";
 import { telHref } from "../lib/officials/phone-numbers.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { validateFullReproofComponentEvidence, validateFullReproofWitnesses, validateListingWitnessReadback } from "../scripts/lib/reader-full-reproof.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
@@ -87,10 +88,11 @@ test("contactless grounded bodies retain the routed topic and correctly attribut
 test("ballot keeps freshness for a federal none answer and leaves a current none answer empty", async () => {
   const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "CandidateFunding")!;
   const envelope = { kind: "ANSWER", holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
-  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "fundingFreshnessNote", "unavailableHolding", "FundingAbsence", "FundingDisplay", compile(`${fn.getText()}; return CandidateFunding;`));
+  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "fundingFreshnessNote", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", compile(`${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
-  const component = make(React, () => ({ kind: "none" }), async () => envelope, fundingFreshnessNote, unexpected, unexpected, unexpected);
-  const props = { targetKey: "congress:test", context: null, available: true };
+  // The settlement runs inside the page's reader edge (R30); with no edge it runs as it always did.
+  const component = make(React, () => ({ kind: "none" }), async () => envelope, fundingFreshnessNote, unexpected, unexpected, unexpected, withReaderAuthorityEdge);
+  const props = { targetKey: "congress:test", context: null, available: true, readerEdge: null };
   const markup = renderToStaticMarkup(await component(props));
   assert.match(markup, /funding-data-freshness/);
   assert.match(markup, /source through 2026-08-19/);

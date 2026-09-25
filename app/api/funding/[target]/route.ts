@@ -9,7 +9,8 @@ import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane"
 import { settleAzBallotRead } from "@/lib/civic-data/manual-read-models";
 import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
-import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderManifest } from "@/lib/meetings/edge-serving";
+import type { AuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { mayUseTestFixture, promotedVersionOrThrow, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 
@@ -230,17 +231,41 @@ export async function GET(
   const timings: ReadTimings = {};
   const startedAt = Date.now();
   const readers = defaultReadersFor(timings);
-  // What the target's own id decides starts first; none of it reads the edge.
-  const started = startDirectFundingReads(directFundingTargetPlan(target), readers);
-  // The reader authority edge is entered HERE, in this handler's own execution:
-  // it is AsyncLocalStorage.enterWith, which on Node 24 never reaches reads
-  // chained on a helper that entered it (tests/reader-edge-context.test.ts).
+  /*
+   * **THE EDGE IS ENTERED BEFORE ANY MONEY IS READ.** (2026-09-25.)
+   *
+   * What the target's own id decides (C22: a congress: target's FEC, a ballot
+   * key's state money and AZ identity) used to start before the manifest was
+   * read, so it read the database even once FEC, state money and the AZ
+   * ballot became proven pointers on the edge: 1-2 cold database reads for
+   * every ballot key and congress: target (tests/funding-reader-edge.test.ts).
+   * Now each read the manifest carries waits for the edge and is served from
+   * it; a read it does not carry still starts at once, beside the edge fetch,
+   * from the database. The edge is entered HERE, in this handler's own
+   * execution: it is AsyncLocalStorage.enterWith, which on Node 24 never
+   * reaches reads chained on a helper that entered it
+   * (tests/reader-edge-context.test.ts).
+   */
+  const direct = directFundingTargetPlan(target);
   const manifest = await timedRead(timings, "edgeManifest", () => readReaderManifest().catch(() => null));
+  const onEdge = (family: AuthorityFamily) => Boolean(manifest?.authorityArtifacts?.[family]);
+  const fromDatabase = startDirectFundingReads({
+    ...direct,
+    federal: direct.federal && !onEdge("federal-funding"),
+    state: onEdge("state-money") ? null : direct.state,
+    azIdentity: direct.azIdentity && !onEdge("ballot-az"),
+  }, readers);
   if (manifest?.authorityArtifacts) {
-    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest).catch(() => null));
+    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES).catch(() => null));
     if (edge) enterReaderAuthorityEdge(edge);
   }
-  const settled = await settleFundingHoldingAnswer(target, readers, started);
+  const fromEdge = startDirectFundingReads({
+    ...direct,
+    federal: direct.federal && fromDatabase.federal === undefined,
+    state: fromDatabase.state === undefined ? direct.state : null,
+    azIdentity: direct.azIdentity && fromDatabase.azIdentity === undefined,
+  }, readers);
+  const settled = await settleFundingHoldingAnswer(target, readers, { ...fromDatabase, ...fromEdge });
   timings.total = Date.now() - startedAt;
   const serverTiming = Object.entries(timings).map(([name, ms]) => `${name};dur=${ms}`).join(", ");
   if (settled.kind === "HOLDING_UNAVAILABLE") {

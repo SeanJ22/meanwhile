@@ -12,12 +12,18 @@ export const READER_VERIFIER_DEPENDENCY_MANIFESTS = ["package.json", "pnpm-lock.
 
 const EXACT_SHA = /^[0-9a-f]{40}$/;
 
+export interface GitAnswer {
+  /** The exit status, or null when git could not run. */
+  readonly status: number | null;
+  readonly stdout: string;
+}
+
 export interface ReaderVerifierAttestorOptions {
   readonly root?: string;
   /** Repository-relative paths of the verifier's import closure at the executing checkout. */
   readonly closure?: () => Promise<readonly string[]>;
-  /** Runs git in `root` and answers its exit status (null when it could not run). */
-  readonly git?: (args: readonly string[]) => number | null;
+  /** Runs git in `root`. */
+  readonly git?: (args: readonly string[]) => GitAnswer;
 }
 
 async function verifierImportClosure(root: string): Promise<readonly string[]> {
@@ -35,7 +41,8 @@ async function verifierImportClosure(root: string): Promise<readonly string[]> {
  * it dynamically imports, with their static and dynamic imports and JSON), plus
  * the dependency manifests. Three git questions, each fail-closed:
  *
- *  1. every closure file is tracked, so none can be missing from a commit;
+ *  1. every closure file is in the current commit's tree, so none of the code
+ *     executing here can be missing from what the commit names;
  *  2. the executing checkout's closure files are exactly the current commit's;
  *  3. every closure file is byte-identical at the prior and current commits.
  *
@@ -46,8 +53,10 @@ async function verifierImportClosure(root: string): Promise<readonly string[]> {
  */
 export function readerVerifierClosureAttestor(options: ReaderVerifierAttestorOptions = {}): ReaderVerifierClosureAttestor {
   const root = options.root ?? process.cwd();
-  const git = options.git ?? ((args: readonly string[]) =>
-    spawnSync("git", [...args], { cwd: root, stdio: "ignore", windowsHide: true }).status);
+  const git = options.git ?? ((args: readonly string[]): GitAnswer => {
+    const run = spawnSync("git", [...args], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], windowsHide: true });
+    return { status: run.status, stdout: run.stdout ?? "" };
+  });
   const closure = options.closure ?? (() => verifierImportClosure(root));
   let files: Promise<readonly string[]> | null = null;
   const answers = new Map<string, Promise<ReaderVerifierClosureAttestation>>();
@@ -66,13 +75,15 @@ export function readerVerifierClosureAttestor(options: ReaderVerifierAttestorOpt
     if (paths.length <= READER_VERIFIER_DEPENDENCY_MANIFESTS.length) {
       return { identical: false, detail: "the verifier closure is empty" };
     }
-    if (git(["ls-files", "--error-unmatch", "--", ...paths]) !== 0) {
-      return { identical: false, detail: "a verifier closure file is not tracked" };
+    const inCommit = git(["ls-tree", "-r", "--name-only", "-z", current, "--", ...paths]);
+    const named = new Set(inCommit.stdout.split("\0").filter(Boolean));
+    if (inCommit.status !== 0 || paths.some((path) => !named.has(path))) {
+      return { identical: false, detail: `a verifier closure file is not in commit ${current}` };
     }
-    if (git(["diff", "--quiet", current, "--", ...paths]) !== 0) {
+    if (git(["diff", "--quiet", current, "--", ...paths]).status !== 0) {
       return { identical: false, detail: `the executing checkout's verifier closure is not commit ${current}` };
     }
-    const between = git(["diff", "--quiet", prior, current, "--", ...paths]);
+    const between = git(["diff", "--quiet", prior, current, "--", ...paths]).status;
     if (between !== 0) {
       return {
         identical: false,

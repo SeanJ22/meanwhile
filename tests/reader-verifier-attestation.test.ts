@@ -50,7 +50,8 @@ test("R31: the attestor says identical only when every verifier closure file is 
       root: dir,
       git: (args) => {
         calls.push(args[0]!);
-        return spawnSync("git", [...args], { cwd: dir, stdio: "ignore" }).status;
+        const run = spawnSync("git", [...args], { cwd: dir, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
+        return { status: run.status, stdout: run.stdout ?? "" };
       },
     });
     const same = await counted(a, b);
@@ -84,15 +85,14 @@ test("R31: the attestor says identical only when every verifier closure file is 
     git(dir, ["checkout", "--quiet", "--", "lib/civic-data/helper.ts"]);
     assert.equal((await readerVerifierClosureAttestor({ root: dir })(d, e)).identical, true);
 
-    // A closure file git does not track is never vouched for.
-    const f = commit(dir, "import an untracked file", {
+    // A closure file the current commit does not hold is never vouched for.
+    const f = commit(dir, "import a file the commit does not hold", {
       [READER_VERIFIER_ENTRY]: 'import { helper } from "./helper.ts";\nimport "./local.ts";\nexport const v = helper;\n',
     });
     write(dir, "lib/civic-data/local.ts", "export {};\n");
-    git(dir, ["rm", "--cached", "--quiet", "--ignore-unmatch", "lib/civic-data/local.ts"]);
     const untracked = await readerVerifierClosureAttestor({ root: dir })(e, f);
     assert.equal(untracked.identical, false);
-    assert.match(untracked.detail, /not tracked/);
+    assert.match(untracked.detail, /not in commit/);
 
     // Malformed commits are refused before git runs.
     assert.equal((await readerVerifierClosureAttestor({ root: dir, git: () => { throw new Error("ran"); } })("HEAD", f)).identical, false);
@@ -110,7 +110,8 @@ test("R31: a closure that cannot be walked is not identical, and the next ask wa
       if (walks === 1) throw new Error("Reader source disappeared");
       return ["lib/civic-data/reader-verification.ts"];
     },
-    git: () => 0,
+    // Every git question answers "yes": the tree names every path asked about.
+    git: (args) => ({ status: 0, stdout: args[0] === "ls-tree" ? `${args.slice(args.indexOf("--") + 1).join("\0")}\0` : "" }),
   });
   const first = await attestor("a".repeat(40), "b".repeat(40));
   assert.equal(first.identical, false);

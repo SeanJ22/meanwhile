@@ -44,7 +44,7 @@ test("PC-8: the submission is one POST to /v1/messages/batches carrying {request
     calls.push({ url: String(url), init: init ?? {} });
     if (calls.length === 1) return jsonResponse(200, { id: "msgbatch_1", processing_status: "in_progress", request_counts: { processing: 1, succeeded: 0, errored: 0, canceled: 0, expired: 0 }, results_url: null });
     if (calls.length === 2) return jsonResponse(200, { id: "msgbatch_1", processing_status: "ended", request_counts: { processing: 0, succeeded: 1, errored: 0, canceled: 0, expired: 0 }, results_url: "https://api.anthropic.com/v1/messages/batches/msgbatch_1/results" });
-    return jsonResponse(200, `${JSON.stringify({ custom_id: "single", result: { type: "succeeded", message: { id: "msg_1", content: [{ type: "text", text: "{\"answer\":\"a\",\"citedUrls\":[]}" }], usage: { input_tokens: 10, output_tokens: 5, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } } } })}\n`, true);
+    return jsonResponse(200, `${JSON.stringify({ custom_id: "single", result: { type: "succeeded", message: { id: "msg_1", content: [{ type: "text", text: "{\"answer\":\"a\",\"citedSources\":[]}" }], usage: { input_tokens: 10, output_tokens: 5, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } } } })}\n`, true);
   };
   const params = { model: "claude-opus-5", max_tokens: 64, messages: [{ role: "user", content: "hello" }] };
   const out = await runSingleRequestBatch(params, { apiKey: "sk-test", fetchImpl, pollIntervalMs: 1, sleep: async () => undefined });
@@ -91,7 +91,7 @@ test("PC-8: the comparison seam routes through the batch only under the option, 
     today: "2026-09-06",
   };
   const urls: string[] = [];
-  const message = { content: [{ type: "text", text: JSON.stringify({ answer: "The board considers its capital schedule.", citedUrls: ["https://example.gov/agenda-0.pdf"] }) }], usage: { input_tokens: 900, output_tokens: 40, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
+  const message = { content: [{ type: "text", text: JSON.stringify({ answer: "The board considers its capital schedule.", citedSources: [1] }) }], usage: { input_tokens: 900, output_tokens: 40, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
   const fetchImpl: typeof fetch = async (url) => {
     urls.push(String(url));
     if (String(url) === MESSAGE_BATCHES_ENDPOINT) return jsonResponse(200, { id: "mb", processing_status: "ended", request_counts: { processing: 0, succeeded: 1, errored: 0, canceled: 0, expired: 0 }, results_url: "https://x/results" });

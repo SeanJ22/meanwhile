@@ -134,13 +134,13 @@ export function synthesisSchema(): Record<string, unknown> {
         description:
           "The answer to the reader's question, in plain language, using only the supplied records.",
       },
-      citedUrls: {
+      citedSources: {
         type: "array",
-        items: { type: "string" },
-        description: "The sourceUrl of every record the answer actually relied on.",
+        items: { type: "integer" },
+        description: "The n, from the sources list, of every source whose records the answer actually relied on.",
       },
     },
-    required: ["answer", "citedUrls"],
+    required: ["answer", "citedSources"],
     additionalProperties: false,
   };
 }
@@ -198,8 +198,47 @@ export function synthesisPrompt(pack: EvidencePack): string {
      */
     lengthRuleForPrompt(),
     "",
-    "Also report citedUrls: the sourceUrl of every record you actually relied on. Use the URLs exactly as given. Do not invent one.",
+    "Also report citedSources: the n, from the sources list, of every source whose records you actually relied on. Do not invent one.",
   ].join("\n");
+}
+
+/**
+ * **THE PACK'S SOURCES, NUMBERED ONCE, SO A CITATION COSTS TWO TOKENS.**
+ * (2026-09-25, the Ask latency repair.)
+ *
+ * The model used to cite by writing each source URL out in full after the
+ * answer. Measured on production data 2026-09-25, that list was 100-320 of
+ * the 276-486 output tokens a synthesis call produced — a Legistar link with
+ * its GUIDs is ~50-70 tokens — and output is generated at roughly 85 tokens a
+ * second, so the reader waited 1.2-3.7 s for a list nobody sees. The answer
+ * itself is generated first (it is the first property of the schema), so the
+ * citation format cannot change a word of it.
+ *
+ * Every distinct `sourceUrl` in the records, in first-appearance order,
+ * numbered from 1. The model cites the numbers; `citedUrlsFrom` turns them
+ * back into the URLs, and a number that names no source becomes a string no
+ * pack allows — so the validator's invented-source check fails closed on a
+ * made-up citation exactly as it did on a made-up URL.
+ */
+export function synthesisSources(pack: Pick<EvidencePack, "records">): { n: number; url: string }[] {
+  const urls: string[] = [];
+  for (const record of pack.records) {
+    if (record.sourceUrl && !urls.includes(record.sourceUrl)) urls.push(record.sourceUrl);
+  }
+  return urls.map((url, index) => ({ n: index + 1, url }));
+}
+
+/** The cited source numbers, as the URLs they name; an unknown number is never dropped. */
+export function citedUrlsFrom(pack: Pick<EvidencePack, "records">, cited: unknown): string[] {
+  if (!Array.isArray(cited)) return [];
+  const sources = synthesisSources(pack);
+  const out: string[] = [];
+  for (const value of cited) {
+    const source = typeof value === "number" && Number.isInteger(value) ? sources.find((entry) => entry.n === value) : undefined;
+    const url = source ? source.url : `unknown-source:${String(value).slice(0, 40)}`;
+    if (!out.includes(url)) out.push(url);
+  }
+  return out;
 }
 
 /**
@@ -219,6 +258,7 @@ function synthesisFields(pack: EvidencePack): Record<string, unknown> {
     timeframe: pack.temporal,
     subject: pack.subject,
     records: pack.records,
+    sources: synthesisSources(pack),
     /* Whose and the sentence only: a gap's machine code is never part of what the model reads. */
     namedGaps: pack.gaps.map(gapWords),
     whatWasSearched: pack.denominators,
@@ -232,6 +272,7 @@ function synthesisFields(pack: EvidencePack): Record<string, unknown> {
 export const SYNTHESIS_CONTEXT_FIELDS = [
   "subject",
   "records",
+  "sources",
   "namedGaps",
   "whatWasSearched",
 ] as const;
@@ -555,16 +596,14 @@ export async function synthesizeAnswer(
     if (!text) {
       return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "no text block" };
     }
-    const parsed = JSON.parse(text) as { answer?: unknown; citedUrls?: unknown };
+    const parsed = JSON.parse(text) as { answer?: unknown; citedSources?: unknown };
     if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0) {
       return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "no answer string" };
     }
     return {
       kind: "WROTE",
       answer: parsed.answer.trim(),
-      citedUrls: Array.isArray(parsed.citedUrls)
-        ? parsed.citedUrls.filter((u): u is string => typeof u === "string")
-        : [],
+      citedUrls: citedUrlsFrom(pack, parsed.citedSources),
       model,
       effort,
       ms: elapsed(),

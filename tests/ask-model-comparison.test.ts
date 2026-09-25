@@ -82,7 +82,7 @@ function recorder(): { calls: string[]; impl: typeof fetch } {
       ok: true,
       json: async () => ({
         content: [
-          { type: "text", text: JSON.stringify({ answer: "The board meets on 9 September.", citedUrls: [] }) },
+          { type: "text", text: JSON.stringify({ answer: "The board meets on 9 September.", citedSources: [] }) },
         ],
         usage: { input_tokens: 900, output_tokens: 40 },
       }),

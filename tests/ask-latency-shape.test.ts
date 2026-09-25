@@ -18,6 +18,7 @@ import {
   type SittingGap,
 } from "../lib/ask/sitting-answer.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
+import { citedUrlsFrom, synthesisPrompt, synthesisRequestBody, synthesisSources } from "../lib/ask/synthesize.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 
@@ -35,7 +36,9 @@ import type { BindableEntity } from "../lib/routing/named-entity.ts";
  * - anything else still reaches the model, exactly once per rung, and the two
  *   rungs are sequential only because the second needs the first's binding;
  * - an unchanged question over unchanged records is served from the cache;
- * - every composed answer faces the same validator, and a failure never ships.
+ * - every composed answer faces the same validator, and a failure never ships;
+ * - a model answer cites numbered sources instead of writing URLs out after
+ *   the answer, and an invented citation still fails closed.
  */
 
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
@@ -190,7 +193,7 @@ const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_dist
 
 interface Call { kind: "INTERPRET" | "SYNTHESIZE"; at: number }
 const calls: Call[] = [];
-let synthesisAnswer = { answer: "The board's next sitting is in the records below.", citedUrls: [] as string[] };
+let synthesisAnswer = { answer: "The board's next sitting is in the records below.", citedSources: [1] as unknown[] };
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
@@ -275,14 +278,56 @@ test("ROUTE: the same question over unchanged records is served from the cache, 
   assert.equal(second.payload.answer, first.payload.answer);
 });
 
-test("ROUTE: a model answer that fails validation still fails closed", { concurrency: false }, async () => {
-  synthesisAnswer = { answer: "See https://invented.example/agenda for the full list.", citedUrls: ["https://invented.example/agenda"] };
+test("ROUTE: a model answer that fails validation still fails closed — an invented citation or an invented link", { concurrency: false }, async () => {
   try {
-    const { payload } = await ask("What's on the Pima County Board of Supervisors agenda?", [AZ, PIMA]);
-    assert.equal(payload.mode, "REJECTED_FELL_BACK");
-    assert.equal(payload.answer, null);
-    assert.ok(payload.trace.validation.failed?.some((reason) => reason.startsWith("invented-source-url:")));
+    for (const answer of [
+      { answer: "The board lists every item in the records.", citedSources: [42] },
+      { answer: "See https://invented.example/agenda for the full list.", citedSources: [1] },
+    ]) {
+      synthesisAnswer = answer;
+      const { payload } = await ask("What's on the Pima County Board of Supervisors agenda?", [AZ, PIMA]);
+      assert.equal(payload.mode, "REJECTED_FELL_BACK", answer.answer);
+      assert.equal(payload.answer, null);
+      assert.ok(payload.trace.validation.failed?.some((reason) => reason.startsWith("invented-source-url:")));
+    }
   } finally {
-    synthesisAnswer = { answer: "The board's next sitting is in the records below.", citedUrls: [] };
+    synthesisAnswer = { answer: "The board's next sitting is in the records below.", citedSources: [1] };
   }
+});
+
+/* ── the citation format ─────────────────────────────────────────────────── */
+
+test("a citation is a source number, mapped back to the pack's own URL; an unknown number never passes", () => {
+  const records: EvidenceRecord[] = [
+    { kind: "MEETING", id: "m", text: "x", sourceUrl: "https://a.example/1" },
+    { kind: "AGENDA_ITEM", id: "i", text: "y", sourceUrl: "https://b.example/2" },
+    { kind: "AGENDA_ITEM", id: "j", text: "z", sourceUrl: "https://a.example/1" },
+    { kind: "BODY", id: "b", text: "w", sourceUrl: null },
+  ];
+  assert.deepEqual(synthesisSources({ records }), [{ n: 1, url: "https://a.example/1" }, { n: 2, url: "https://b.example/2" }], "each distinct source once, in first-appearance order");
+  assert.deepEqual(citedUrlsFrom({ records }, [2, 1, 2]), ["https://b.example/2", "https://a.example/1"]);
+  assert.deepEqual(citedUrlsFrom({ records }, [3, "1"]), ["unknown-source:3", "unknown-source:1"], "a number no source carries, or a non-number, is kept — never dropped");
+  const pack: EvidencePack = { question: "q", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records, gaps: [], denominators: {}, today: "2026-09-25" };
+  assert.equal(validateAnswer("An answer.", citedUrlsFrom({ records }, [1, 2]), pack).kind, "PASSED");
+  const refused = validateAnswer("An answer.", citedUrlsFrom({ records }, [3]), pack);
+  assert.ok(refused.kind === "FAILED" && refused.failed.some((reason) => reason.startsWith("invented-source-url:unknown-source:3")));
+});
+
+test("the synthesis request numbers the sources, asks for numbers, and still generates the answer FIRST", () => {
+  const pack: EvidencePack = {
+    question: "What's on the agenda?", intent: "UPCOMING_AGENDA", temporal: { kind: "NEXT" },
+    subject: { kind: "BODY", id: MESA, name: "Mesa" }, records: [RECORDS[0]], gaps: [], denominators: {}, today: "2026-09-25",
+  };
+  const body = synthesisRequestBody(pack, { model: "claude-opus-5", cached: true, effort: "medium" }) as {
+    output_config: { format: { schema: { properties: Record<string, unknown>; required: string[] } } };
+    messages: { content: { text: string }[] }[];
+  };
+  const schema = body.output_config.format.schema;
+  assert.deepEqual(Object.keys(schema.properties), ["answer", "citedSources"], "the answer is the first property, so the citation format cannot change a word of it");
+  assert.deepEqual(schema.required, ["answer", "citedSources"]);
+  assert.match(synthesisPrompt(pack), /citedSources: the n, from the sources list/);
+  assert.doesNotMatch(synthesisPrompt(pack), /citedUrls/);
+  const context = JSON.parse(body.messages[0].content[0].text) as { records: EvidenceRecord[]; sources: { n: number; url: string }[] };
+  assert.deepEqual(context.records, pack.records, "the records the model reads are unchanged");
+  assert.deepEqual(context.sources, [{ n: 1, url: "https://mesa.example.gov/m1" }]);
 });

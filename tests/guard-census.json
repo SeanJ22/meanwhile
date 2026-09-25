@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 825,
-    "named": 7956,
+    "files": 828,
+    "named": 7976,
     "dynamic": 31
   },
   "files": {
@@ -7891,6 +7891,19 @@
       ],
       "dynamic": 0
     },
+    "tests/plain-code-queue-order.test.ts": {
+      "names": [
+        "ADM-8: the owner's placed-first rows still go ahead of the longest wait",
+        "BOUND with two a cycle: waits stay within ⌈N / c⌉ − 1 = 4 cycles",
+        "BOUND: the never-tried row runs within ⌈(A + 1) / c⌉ cycles, and no row ever waits more than ⌈N / c⌉ − 1",
+        "NOT SLOWED: a row with no failing debt never has more rows ahead of it than under the old order",
+        "SEEDED STARVATION: ordered by next-due alone, a never-tried row waits forever behind rows that keep failing",
+        "a row due only as a retry (its next-due still ahead) stays behind every row due by the clock, as before",
+        "the plain-code reading names the longest WAIT, during the cycle and after it, not a failing row's first next-due",
+        "the replay is the dispatcher: runCycle runs exactly the replay's new order, cycle by cycle"
+      ],
+      "dynamic": 0
+    },
     "tests/plain-work.test.ts": {
       "names": [
         "HUMAN_REQUIRED is the one Scout outcome that needs the owner, and it names the act",
@@ -10078,6 +10091,17 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-queue-order.test.ts": {
+      "names": [
+        "BAND ORDER STANDS: a band-1 row whose backoff just ended still goes ahead of the longest-waiting band-2 row",
+        "BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles, and no row waits more than ⌈N / c⌉ − 1",
+        "NOT SLOWED: a row with no failing debt never has more rows ahead of it than under the old order, and no key is before its own due time",
+        "SEEDED STARVATION: within a band, ordered by next-due then id, a never-tried row waits forever behind Scouts that keep failing",
+        "the replay is the dispatcher: runCycle's Scout pool admits exactly the replay's new order, cycle by cycle",
+        "the standing runner builds BOTH the recorded queue and the live Scout pool through orderableDueRow with the debt it carried in, after placement"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-search.test.ts": {
       "names": [
         "Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers",
@@ -11220,6 +11244,17 @@
         "the calendar route reads exactly the forward window's months",
         "the partition publishes every forward sitting either source verifies, and portal ids stay put",
         "the portal's cancellation note is the sitting's status"
+      ],
+      "dynamic": 0
+    },
+    "tests/unchanged-confirmation-migration.test.ts": {
+      "names": [
+        "0029 replaces the event-insert rule and nothing else",
+        "R23: a derived version's receipt may omit its HTTP status only on its own derived route, in SQL and in TS alike",
+        "an untyped repeat is refused with the message the store reads as 'not yet migrated'",
+        "every 0026 event rule survives in 0029, line for line",
+        "the receipt branch binds the same facts the store's guarded insert checks",
+        "the sources event is admitted only directly after its own receipt, at the receipt's instant"
       ],
       "dynamic": 0
     },

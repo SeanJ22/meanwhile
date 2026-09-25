@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 785,
+    "named": 7679,
     "dynamic": 30
   },
   "files": {
@@ -640,9 +640,11 @@
     },
     "tests/agenda-notice-page-publisher.test.ts": {
       "names": [
+        "R14: Tucson Unified's own notice page is its own, whichever publisher name its sittings carry",
+        "R14: every held production case keeps its answer — each is set aside as before",
         "a body's own notice page, and its own publisher's shared page, still reach its sittings",
         "a division's only notice page is not lent to a sitting of another publisher",
-        "a lent page is recognized as another publisher's; a sitting's own link never is",
+        "a lent page is recognized as another body's; a sitting's own link never is",
         "held notice pages that are not their sitting's agenda are left out of the run's store"
       ],
       "dynamic": 0
@@ -1060,6 +1062,8 @@
         "PLANTED: a body named for a common question word cannot capture the question",
         "PLANTED: one government arriving under TWO id spaces is not a tie",
         "PLANTED: punctuation and interrogatives never become a government's name",
+        "R12: a topic word does not bind the body named for it; the question stays about the city",
+        "R12: saying what kind of body it is still names the authority",
         "THE DEFECT: a question naming Vail never answers about Sunnyside",
         "THE PROOF: deleting the name is what changes the answer, and it still defaults",
         "a government we do not hold is reported unresolved, never substituted",
@@ -1224,6 +1228,15 @@
         "readSubjectRefs refuses anything that is neither a name nor an id",
         "the grounded route prints sittings through the shared formatter",
         "the unified input's SEARCH half is untouched — an exact name still navigates"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-length-fallback.test.ts": {
+      "names": [
+        "R13: a 726-character model answer that fails only on length is not reported as a rejection",
+        "R13: a length-only rejection falls back to the code-composed answer when the evidence composes one",
+        "R13: a length-only rejection is recognised, and any other failure beside it is not excused",
+        "R13: the same answer with an invented source is still REJECTED_FELL_BACK"
       ],
       "dynamic": 0
     },
@@ -2644,7 +2657,7 @@
         "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
         "Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
-        "a Postgres transition moves the candidate envelope once and returns it with the written columns",
+        "a Postgres transition never reads the envelope the caller holds; it verifies it and returns it",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
         "a candidate summary is every row column but the envelope and identity set",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
@@ -2661,6 +2674,7 @@
         "every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database",
         "production NODE_ENV alone cannot open the permanent routine-data writer",
         "promotion accepts only the exact persisted GOOD receipt",
+        "promotion hands every transition the candidate it already holds",
         "terminal store exposes no one-time import or aggregate retirement door",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
@@ -2703,6 +2717,10 @@
         "D67: an exception parenthetical is never read as a month restriction",
         "D67: an override written for one year is not carried into another",
         "D67: the recurrence walks the WINDOW, and stops dropping its last sitting",
+        "R8: a board whose schedule places nothing yields its concluded sittings from the Past Agendas list",
+        "R8: only the board's own agendas date its sittings; committees and notices do not",
+        "R8: the Past Agendas list is requested only for a board whose schedule places nothing",
+        "R8: the recorded IDA and TCCC schedules place no sitting in the served window",
         "a body that publishes no schedule is still declined",
         "a virtual-only board is KEPT, with no place and no invented pin (D18)",
         "an unknown schedule format produces zero meetings and a counted drop",
@@ -2798,6 +2816,7 @@
         "a JOB failure detail says whose failure it is, once",
         "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
         "a challenge served with HTTP 200 is the same wall",
+        "a child rejected by a host that no longer resolves keeps the transport's code",
         "a real calendar we extract nothing from is still OUR zero-row JOB",
         "meeting partition receipts parse with and without the additive failureKind",
         "our own code and configuration failures are jobs, and so is an unknown",
@@ -8274,6 +8293,7 @@
     },
     "tests/reader-last-mile-census.test.ts": {
       "names": [
+        "R25: a newer official edition the runner promoted and validated succeeds the frozen absence; unpromoted drift fails",
         "Reader authority canonicalization ignores transport metadata and JSON key order only",
         "Reader authority counts a union predecessor only with authenticated disposition context",
         "Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production",
@@ -8523,6 +8543,7 @@
         "Reader proof authority binds the actual read-only connection without exposing it",
         "Reader proof authority permits a descendant only for an unchanged validated production merge",
         "a partition retired by a proved cutover hands its imported authority to its registered successor",
+        "a route retired beside an already-promoted successor leaves the authority; the successor keeps its own",
         "a successor served from its predecessor's held version keeps the body's authority; without it the loss is refused",
         "deployed Reader runtime closure admits documentary-only descendants and rejects source drift",
         "documentary Reader meeting authority fails closed before explicit phase admission",
@@ -9020,6 +9041,7 @@
     },
     "tests/retired-meeting-routes.test.ts": {
       "names": [
+        "Newbury's dead CivicWeb route is retired, and its already-wired calendar feed is the Selectboard's one clock",
         "a link into a retired host is recognised as held-as-link, and nothing else is",
         "agenda retrieval consults the retired-host rule before any request",
         "every retired route has exactly one wired successor for the same body, and no clock of its own",
@@ -10889,6 +10911,8 @@
     },
     "tests/vote-source-isolation.test.ts": {
       "names": [
+        "R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; the retired one is named",
+        "R9: the retired New Hampshire pointer is refused before any store opens",
         "a New Hampshire member opens only the exact New Hampshire authority",
         "a production process cannot reopen the retired aggregate through a test marker",
         "a requested New Jersey failure remains explicitly unavailable without opening AZ or NH",

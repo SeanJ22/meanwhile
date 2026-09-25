@@ -31,7 +31,7 @@ import {
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext } from "./runtime-edge.ts";
+import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted, refreshCommentAccessFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
@@ -344,32 +344,28 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
-/**
- * The federal reader, edge-aware: a reader request that primed a request-scoped
- * federal-directory edge value serves it WITHOUT reading Neon; the runner and
- * workers (which never set it) fall through to the authoritative database reader.
+/*
+ * **EDGE FIRST, DATABASE SECOND — EACH A BINDING OF `settleEdgeFirst`.** (R24,
+ * 2026-09-25.) A reader request that entered the reader authority edge primes
+ * the family from its edge value WITHOUT reading Neon; the standing runner and
+ * the workers never enter one, so they read the authoritative database pointer
+ * (`refresh*FromPromoted`, unchanged); an edge-only context (the keep-warm
+ * call) refuses instead. The five settles were five copies of that shape.
  */
-export async function settleFederalDirectoryRead(): Promise<void> {
-  const edge = currentFederalDirectoryEdge();
-  if (edge) { primeFederalDirectoryFromValue(edge.value, edge.versionId); return; }
-  refuseDatabaseInEdgeOnlyContext("The federal directory");
-  await refreshFederalDirectoryFromPromoted();
-}
+
+/** The federal directory, edge first. */
+export const settleFederalDirectoryRead = (): Promise<void> =>
+  settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
+
+/** The registry runtime (divisions, bodies, rosters), edge first. */
+const settleRegistryRuntimeRead = (): Promise<void> =>
+  settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
 
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
   scope: "REGISTRY" | "OFFICIALS",
   readers: RegistryAuthorityReaders = {
-    // Reader requests that primed a request-scoped registry-runtime edge value
-    // serve it WITHOUT reading Neon. The standing runner and workers never set
-    // that value, so they fall through to the authoritative database reader —
-    // `refreshRegistryRuntimeFromPromoted` is unchanged.
-    registry: async () => {
-      const edge = currentRegistryRuntimeEdge();
-      if (edge) { primeRegistryRuntimeFromValue(edge.value, edge.versionId); return; }
-      refuseDatabaseInEdgeOnlyContext("The registry runtime");
-      await refreshRegistryRuntimeFromPromoted();
-    },
+    registry: settleRegistryRuntimeRead,
     federal: settleFederalDirectoryRead,
   },
 ): Promise<void> {
@@ -378,20 +374,15 @@ export async function settleRegistryAuthorityReads(
 }
 
 /**
- * The comment-access rules, edge-aware (C20, 2026-09-24): a reader request that
- * entered the reader authority edge primes them from its comment-access artifact
- * without Neon (0.6–0.8 s from a cold database); otherwise the authoritative
- * database read, which the runner and the workers always take.
+ * The comment-access rules, edge first (C20, 2026-09-24): from its
+ * comment-access artifact without Neon (0.6–0.8 s from a cold database).
  */
-export async function settleCommentAccessRead(): Promise<void> {
-  const edge = currentCommentAccessEdge();
-  if (edge) {
-    primeCuratedReaderProjection("comment-access", edge.value, edge.versionId);
-    return;
-  }
-  refuseDatabaseInEdgeOnlyContext("The comment-access rules");
-  await refreshCommentAccessFromPromoted();
-}
+export const settleCommentAccessRead = (): Promise<void> =>
+  settleEdgeFirst(currentCommentAccessEdge, (value, versionId) => primeCuratedReaderProjection("comment-access", value, versionId), refreshCommentAccessFromPromoted, "The comment-access rules");
+
+/** The campaign-site URLs, edge first. */
+const settleCampaignSitesRead = (): Promise<void> =>
+  settleEdgeFirst(currentCampaignSitesEdge, (value, versionId) => primeCuratedReaderProjection("campaign-sites", value, versionId), refreshCampaignSitesFromPromoted, "The campaign-site URLs");
 
 async function currentRegistryAuthorityKey(): Promise<string> {
   await settleRegistryAuthorityReads("REGISTRY");
@@ -407,14 +398,7 @@ async function currentAuthorityKey(registryKey: string): Promise<string> {
   let campaign = "TEST_FIRST_SEED";
   if (process.env.NODE_ENV === "production") {
     try {
-      // Campaign URLs, edge-aware: a primed request-scoped value serves without
-      // Neon; otherwise the authoritative database read (runner/workers path).
-      const edge = currentCampaignSitesEdge();
-      if (edge) primeCuratedReaderProjection("campaign-sites", edge.value, edge.versionId);
-      else {
-        refuseDatabaseInEdgeOnlyContext("The campaign-site URLs");
-        await refreshCampaignSitesFromPromoted();
-      }
+      await settleCampaignSitesRead();
       const state = curatedReaderReadState("campaign-sites");
       campaign = `${state.kind}:${state.metadata.versionId ?? "none"}`;
     } catch {

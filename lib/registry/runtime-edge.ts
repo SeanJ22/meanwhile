@@ -91,6 +91,42 @@ export function refuseDatabaseInEdgeOnlyContext(what: string): void {
   if (edgeStore.getStore()?.edgeOnly) throw new ReaderEdgeOnlyRefusal(what);
 }
 
+/** One family's value as the edge serves it: the immutable value and the promoted version it copies. */
+export interface EdgeServedValue<T> {
+  readonly value: T;
+  readonly versionId: string;
+}
+
+/**
+ * **EDGE FIRST, DATABASE SECOND: THE ONE IMPLEMENTATION.** (R24, RULING 103,
+ * 2026-09-25.)
+ *
+ * The registry runtime, the federal directory, the campaign-site URLs, the
+ * comment-access rules and the recorded outcomes each settled the same way in
+ * five copies: serve the request's edge value if it entered one, else refuse in
+ * an edge-only context, else read the authoritative database pointer. One `T`
+ * runs through the edge accessor, the prime and the read, so a family cannot be
+ * primed with another family's value; the prime stays each family's own typed
+ * binding (its validator, its cache), which is why this takes it as an argument
+ * rather than naming a cache by string.
+ *
+ * `what` names the family in the edge-only refusal.
+ */
+export async function settleEdgeFirst<T>(
+  edge: () => EdgeServedValue<T> | null,
+  prime: (value: NoInfer<T>, versionId: string) => void,
+  refresh: () => Promise<unknown>,
+  what: string,
+): Promise<void> {
+  const served = edge();
+  if (served) {
+    prime(served.value, served.versionId);
+    return;
+  }
+  refuseDatabaseInEdgeOnlyContext(what);
+  await refresh();
+}
+
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
 
 /**
@@ -101,6 +137,7 @@ const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
 export function enterReaderAuthorityEdge(bundle: ReaderAuthorityEdgeBundle): void {
   edgeStore.enterWith(bundle);
 }
+
 
 export function currentReaderAuthorityEdge(): ReaderAuthorityEdgeBundle | null {
   return edgeStore.getStore() ?? null;

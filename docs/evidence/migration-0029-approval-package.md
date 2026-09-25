@@ -1,9 +1,23 @@
-# Migration 0029: approval package (not applied to production)
+# Migration 0029: approval package — APPROVED and applied to production
 
-Prepared 2026-09-25, Arizona MST. Branch `claude/migration-0029-r23` (not merged; no PR). The TypeScript half
-(R23) is on `claude/ac-r23-derived-confirm` and is safe to merge without the migration.
+Prepared 2026-09-25, Arizona MST. The TypeScript half (R23) shipped with batch B (#422, main 9d275798).
 
-## The decision needed
+## Decision and production apply
+
+**Approved by Sean on 2026-09-25** (pasted instructions to the Admin completion session: "Migration 0029 is
+approved. Proceed with the tested database change and recovery plan."), with these conditions: a failed request or
+stale cache must never count as a fresh check; changed information is still validated and published normally;
+verify the production result and measure the traffic reduction where possible, separating measured savings from
+estimates.
+
+- `pnpm db:apply --target=production --dry` (3:06 PM MST): 29 of 30 applied, exactly
+  `0029_unchanged_confirmation_receipts` pending.
+- `pnpm db:apply --target=production` (3:07:21 PM MST): 1 statement OK, journalled with hash 6cbae31f… (the hash
+  tested on the isolated copy); the journal holds 30 of 30.
+- Read-only readback: `enforce_civic_data_candidate_event_insert` carries both the receipt rule and the derived-route
+  rule. Recovery stays as below (the tested rollback SQL restores 0026's function).
+
+## The decision that was needed
 
 **Approve or decline applying migration 0029 to the production reader database.** Sean's rule: no database
 migration without his approval. Nothing is broken while it waits; readers get correct data either way.

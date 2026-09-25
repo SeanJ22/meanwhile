@@ -65,8 +65,24 @@ export interface CampaignSitePublicationPlan {
   readonly held: readonly { readonly key: string; readonly code: CampaignSiteHoldCode; readonly detail: string }[];
 }
 
-/** The evidence a published campaign link carries (`VerifiedLink.evidence`). */
-export type CampaignLinkEvidence = NonNullable<VerifiedLink["evidence"]>;
+/**
+ * The evidence a machine-verified campaign link carries beside the Reader's
+ * `VerifiedLink` fields: the verifier's robots-first read and the approval it
+ * passed. Carried in the projection for provenance; the Reader does not render
+ * it, so its type stays here rather than in `lib/ballot/candidate-sites.ts`.
+ */
+export interface CampaignLinkEvidence {
+  readonly verifierId: string;
+  /** sha256 (bare hex) of the exact vaulted bytes. */
+  readonly sha256: string;
+  /** The URL requested; the link's `url` is where it answered. */
+  readonly requestedUrl: string;
+  readonly readAt: string;
+  readonly approvalRecordId: string;
+}
+
+/** A campaign link as this writer publishes it. */
+export type EvidencedLink = VerifiedLink & { readonly evidence: CampaignLinkEvidence };
 
 function priorLinks(prior: ManualProjectionPrior | null): Readonly<Record<string, CandidateLinks>> {
   const links = (prior?.payload as CandidateProfilesProjection | undefined)?.links?.links;
@@ -136,10 +152,8 @@ export function planCampaignSitePublication(input: {
         readAt: site.evidence.readAt,
         approvalRecordId: chosen.recordId,
       };
-      links[key] = {
-        official,
-        campaign: { url: site.url, verification: site.verification, attemptedAt: site.evidence.readAt.slice(0, 10), evidence },
-      };
+      const campaign: EvidencedLink = { url: site.url, verification: site.verification, attemptedAt: site.evidence.readAt.slice(0, 10), evidence };
+      links[key] = { official, campaign };
       for (const source of officialSources) sources.set(`${source.finalUrl}\n${source.rawHash}`, source);
       const review: ManualSourceReview = {
         requestedUrl: site.evidence.requestedUrl,

@@ -15,7 +15,7 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { readManualProjectionPrior } from "../lib/civic-data/manual-projections.ts";
 import { refreshCandidateProfilesFromPromoted } from "../lib/civic-data/manual-read-models.ts";
 import { linksForCandidacy } from "../lib/ballot/candidate-sites.ts";
-import { planCampaignSitePublication } from "../lib/civic-data/campaign-site-publication.ts";
+import { planCampaignSitePublication, type EvidencedLink } from "../lib/civic-data/campaign-site-publication.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import type { CampaignSiteApprovedRecord } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import { CHIPPERSON, DUARTE, MAYES, subject } from "./helpers/campaign-sites.ts";
@@ -105,9 +105,9 @@ test("approved sites publish a validated successor that carries the prior versio
   assert.deepEqual(payload.cards.cards, before.cards.cards, "every prior card is carried byte-exactly");
   assert.deepEqual(payload.links.links[CHIPPERSON_KEY]?.official, before.links.links[CHIPPERSON_KEY]?.official, "the official link travels with its prior receipted bytes");
   assert.equal(payload.links.links[CHIPPERSON_KEY]?.campaign?.url, "https://www.chippersonforharding.com/");
-  const duarte = payload.links.links[DUARTE_KEY]!.campaign!;
-  assert.equal(duarte.evidence?.verifierId, "campaign-site-verifier/1");
-  assert.equal(duarte.evidence?.sha256, "d".repeat(64));
+  const duarte = payload.links.links[DUARTE_KEY]!.campaign! as EvidencedLink;
+  assert.equal(duarte.evidence.verifierId, "campaign-site-verifier/1");
+  assert.equal(duarte.evidence.sha256, "d".repeat(64));
   assert.equal(duarte.attemptedAt, "2026-09-24");
   assert.ok(payload.links.hunts.some((h) => h.key === DUARTE_KEY), "the dated hunt record stays; the new link does not erase history");
   const receipt = outcome.candidate.candidate.retrieval.manualSourceReceipt!;

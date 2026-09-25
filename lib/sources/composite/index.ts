@@ -514,7 +514,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
       }
 
       try {
-        const { meetings, drops, unreachableOcdIds, partialScopes, duplicateIdentity, recurrence } =
+        const { meetings, drops, unreachableOcdIds, partialScopes, duplicateIdentity, recurrence, accounting } =
           child.normalizeWithDrops(
           byChild.get(child.name) ?? [],
           now,
@@ -622,7 +622,11 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
             documentsInHand: fetched.fetched - refusedRows.length,
             produced: meetings.length,
             dropped: totalDropped(drops),
-            outOfWindow: 0,
+            // The adapter's own count of records it set aside as outside the
+            // served window (2026-09-25): the same term its own guard in
+            // accountedNormalize reads. Tucson's IDA publishes a schedule whose
+            // every date has passed; that is a counted clip, not a zero.
+            outOfWindow: accounting?.outOfWindow ?? 0,
           })
         ) {
           children.push({

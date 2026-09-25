@@ -318,6 +318,14 @@ export interface ScheduleInstance {
   mi: number;
 }
 
+/** What `expandSchedule` set aside, counted, so a schedule whose dates have all passed is never a silent zero. */
+export interface ScheduleTally {
+  /** Published dates outside the served window. */
+  outsideWindow: number;
+  /** Months the body named with no day ("July … TBD"): a sitting told of, never dated. */
+  tbdMonths: number;
+}
+
 /**
  * Expand the published schedule text into concrete dates.
  *
@@ -342,13 +350,29 @@ export function expandSchedule(
   scheduleText: string,
   windowStart: Date,
   windowEnd: Date,
+  /**
+   * What the expansion set aside, counted (2026-09-25): published dates that
+   * fall outside the window, and months the body named with no day ("July and
+   * October 2026 TBD"). Without it a board whose every published date had
+   * passed returned `[]` with nothing counted, and the pass read as a failed
+   * extraction — Tucson's Industrial Development Authority ("… 5/21, 6/18/2026")
+   * and Convention Center Commission ("January 22, April 16, 2026 and July and
+   * October 2026 TBD") failed every read that way until the Past Agendas
+   * fallback, and would again once those agendas age out of the lookback.
+   */
+  tally?: ScheduleTally,
 ): ScheduleInstance[] | null {
   const time = scheduleTime(scheduleText);
   if (!time) return null;
 
-  const inWindow = (inst: ScheduleInstance) => {
+  const inWindowRaw = (inst: ScheduleInstance) => {
     const t = Date.UTC(inst.y, inst.mo - 1, inst.d);
     return t >= windowStart.getTime() - 86_400_000 && t <= windowEnd.getTime();
+  };
+  const inWindow = (inst: ScheduleInstance) => {
+    const inside = inWindowRaw(inst);
+    if (!inside && tally) tally.outsideWindow += 1;
+    return inside;
   };
 
   const recur = new RegExp(
@@ -475,7 +499,11 @@ export function expandSchedule(
     for (let i = parsed.length - 1; i >= 0; i--) {
       const e = parsed[i];
       if (e.y) year = e.y;
-      if (e.d === null) continue; // TBD month — carries no date, by design
+      if (e.d === null) {
+        // TBD month — carries no date, by design, and is counted.
+        if (tally) tally.tbdMonths += 1;
+        continue;
+      }
       if (year === null) return null;
       const inst = { y: year, mo: e.mo, d: e.d, ...time };
       if (inWindow(inst)) out.unshift(inst);
@@ -657,13 +685,22 @@ export function makeClerksBoardsSource(
      * than a number nobody measured.
      */
     let considered = 0;
+    let outOfWindow = 0;
     let cannotAssert = false;
 
     for (const { wiring, html, pastAgendaHtml, collectedAt } of raw) {
       const page = parseBoardPage(html);
       const boardUrl = boardPageUrl(wiring.config.boardId);
 
-      const expanded = page.scheduleText ? expandSchedule(page.scheduleText, windowStart, windowEnd) : null;
+      const tally: ScheduleTally = { outsideWindow: 0, tbdMonths: 0 };
+      const expanded = page.scheduleText ? expandSchedule(page.scheduleText, windowStart, windowEnd, tally) : null;
+      if (expanded !== null) {
+        // What the schedule published and this window does not serve, counted
+        // rather than silently absent (2026-09-25).
+        considered += tally.outsideWindow + tally.tbdMonths;
+        outOfWindow += tally.outsideWindow;
+        drops.unplaceableInTime += tally.tbdMonths;
+      }
       // A schedule that places nothing in the window falls back to the
       // sittings the board's own Past Agendas list dates (R8, 2026-09-25).
       const pastSittings = (expanded === null || expanded.length === 0) && pastAgendaHtml !== undefined
@@ -807,6 +844,7 @@ export function makeClerksBoardsSource(
 
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
       logicalInput: cannotAssert ? null : considered,
+      outOfWindow,
       countedButProduced: keptButPlaceless,
     });
   };

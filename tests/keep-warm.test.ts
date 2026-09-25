@@ -7,9 +7,10 @@
  * makes those ten calls every five minutes. No live calls.
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { GET, KEEP_WARM_MARKER, MAX_HOLD_MS } from "../app/api/warm/route.ts";
+import { GET, KEEP_WARM_MARKER, MAX_HOLD_MS, primeReaderEdge } from "../app/api/warm/route.ts";
 import pinger, { HOLD_MS, WARM_INSTANCES, config, pingWarm } from "../netlify/functions/keep-warm.mts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
@@ -70,4 +71,16 @@ test("KEEP-WARM · a call that fails is counted as not answered and does not sto
   const { answered } = await pingWarm(flaky);
   assert.equal(n, 10);
   assert.equal(answered, 10 - 3 - 2, "calls 3, 6 and 9 threw; calls 5 and 10 answered 503");
+});
+
+test("KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask reads first, and never the database; an unmarked call loads nothing", async () => {
+  const marked = await (await call("?hold=0", true)).json();
+  assert.deepEqual(marked.primed, { manifest: false, authorityFamilies: 0, meetings: false }, "no edge store here, so nothing is loaded and nothing falls back");
+  const unmarked = await (await call("?hold=0", false)).json();
+  assert.equal(unmarked.primed, null);
+  assert.deepEqual(await primeReaderEdge(), { manifest: false, authorityFamilies: 0, meetings: false });
+  const source = readFileSync("app/api/warm/route.ts", "utf8");
+  assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
+  assert.match(source, /readReaderEdgeMeetings\(\{\s*manifest,\s*fallback: \(\) => Promise\.reject\(/, "the meetings read's database fallback is refused");
+  assert.doesNotMatch(source, /getDb|readPreparedMeetingsProjection|refreshOutcomeSnapshotFromPromoted/);
 });

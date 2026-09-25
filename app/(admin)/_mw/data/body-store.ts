@@ -36,6 +36,17 @@ import "server-only";
  * candidate's envelope once per change-set field (885 ms on the server; 220 ms
  * decoding it once). A load over three seconds is not a win (Sean, 2026-09-24).
  *
+ * The change history is most of what remains, and only one view draws it: a
+ * routine read opened on Work (its delivery trail). Measured on production
+ * 2026-09-25: the history statement is 920 ms of server time on its own — it
+ * walks each body's versions newest first, decoding every envelope (77 KB on
+ * average, 183 MB read in all) until it meets a change — beside 582 ms for the
+ * day tally and 260 ms for everything else; together, 2.3–2.7 s end to end, and
+ * the whole of every Admin page's first open. So the pages read the bodies
+ * WITHOUT it (`history: false`: the same figures, `changes: null`, every trail
+ * marked not read), and the opened routine read asks for it for its own body
+ * alone (`scopes`), where it costs one short walk.
+ *
  * The heavy observability read (every candidate's full envelope) is not used:
  * unbounded it returned 3.8 GB and it times out on an Admin render.
  * Any failure is thrown to the loader, which renders the section as unread —
@@ -375,14 +386,45 @@ function changesOf(rows: Rows): BodyChangeRow[] {
 
 /* ------------------------------------------------------------------ the reads */
 
-export async function readBodyStore(connection: string, nowIso: string): Promise<BodyStoreRead> {
+/**
+ * One statement's rows, only for these scopes. Every statement but the readback
+ * one answers a `scope` column, so it is filtered from outside and Postgres
+ * carries the filter down to the scope each one reads by (checked with EXPLAIN
+ * on production 2026-09-25: an index condition on each, never a filter after a
+ * full walk). The readback statement answers no scope, so it filters its join.
+ */
+function onScopes(statement: string, param: number): string {
+  return `SELECT * FROM (${statement}) narrowed WHERE narrowed.scope = ANY($${param}::text[])`;
+}
+const SCOPED_VERSION_READBACKS = `${VERSION_READBACKS} AND p.scope = ANY($2::text[])`;
+
+export interface BodyReadOptions {
+  /**
+   * Whether to read each body's latest change (its delivery trail). Without it
+   * `changes` is null, which every view reads as "not read", never as "none".
+   */
+  readonly history: boolean;
+  /** Only these scopes (a body's contracts), when given: the opened routine read's own body. */
+  readonly scopes?: readonly string[];
+}
+
+export async function readBodyStore(connection: string, nowIso: string, options: BodyReadOptions = { history: true }): Promise<BodyStoreRead> {
   const sql = neon(connection);
   const limit = `SET LOCAL statement_timeout = ${BODY_STORE_STATEMENT_TIMEOUT_MS}`;
   const readbackLike = `${READER_PROJECTION_READBACK_PREFIX}%`;
+  const scopes = options.scopes === undefined ? null : [...options.scopes];
+  const statement = (text: string, first: unknown) =>
+    scopes === null ? sql.query(text, [first]) : sql.query(onScopes(text, 2), [first, scopes]);
 
   /* The figures that must agree: one snapshot. */
   const snapshot = sql.transaction(
-    [sql.query(limit), sql.query(VERSIONS, [nowIso]), sql.query(ATTEMPTS, [nowIso]), sql.query(VERSION_READBACKS, [readbackLike]), sql.query(DAY, [nowIso])],
+    [
+      sql.query(limit),
+      statement(VERSIONS, nowIso),
+      statement(ATTEMPTS, nowIso),
+      scopes === null ? sql.query(VERSION_READBACKS, [readbackLike]) : sql.query(SCOPED_VERSION_READBACKS, [readbackLike, scopes]),
+      statement(DAY, nowIso),
+    ],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
 
@@ -393,16 +435,18 @@ export async function readBodyStore(connection: string, nowIso: string): Promise
    * still render, and each trail says its change history was not read rather
    * than borrowing one. Its own readbacks come with it.
    */
-  const history = sql
-    .transaction([sql.query(limit), sql.query(CHANGES, [readbackLike])], { readOnly: true })
-    .then((results) => results[1] as unknown as Rows)
-    .catch((error: unknown) => {
-      console.error(
-        "[admin] body change history not read",
-        error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error,
-      );
-      return null;
-    });
+  const history: Promise<Rows | null> = !options.history
+    ? Promise.resolve(null)
+    : sql
+        .transaction([sql.query(limit), statement(CHANGES, readbackLike)], { readOnly: true })
+        .then((results) => results[1] as unknown as Rows)
+        .catch((error: unknown) => {
+          console.error(
+            "[admin] body change history not read",
+            error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error,
+          );
+          return null;
+        });
 
   const [results, changeRows] = await Promise.all([snapshot, history]);
   const [, versionRows, attemptRows, versionReadbackRows, dayRows] = results as unknown as Rows[];

@@ -142,9 +142,42 @@ function pipelineItemIdsOf(results: readonly ScoutResult[]): string[] {
   return unique(ids);
 }
 
+/** The pipeline items a set of Scout results names, read by their derived ids, as item states. */
+async function pipelineOfScouts(repos: ControlPlaneRepositories, itemIds: readonly string[]): Promise<PipelineItemState[]> {
+  const lists = await inBatches(itemIds, (itemId) => repos.promotionPipeline.read(itemId));
+  return itemIds
+    .map((itemId, i) => ({ itemId, records: lists[i].filter(isPipelineRecord) }))
+    .filter((x) => x.records.length > 0)
+    .map((x) => deriveItemState(x.itemId, x.records));
+}
+
 /**
  * One assignment's records, by id: a standing obligation id, or a work item id.
  * NOT_RECORDED when neither exists; STORE_UNREACHABLE when a read failed.
+ *
+ * Each read starts as soon as the ids it is keyed by are known, so the reads
+ * form as few dependent round trips as the keys allow (Sean, 2026-09-24: a load
+ * over three seconds is not a win). Measured 2026-09-25 on production for
+ * `freshness:campaign-finance:ballot-az-pima:prop-423#AZ_PIMA_COUNTY_CAMPAIGN_FINANCE_PAGE`:
+ * 76 point reads in five dependent waves, 1.31 s from a workstation, the
+ * pipeline read waiting on the attempts it does not need. Now:
+ *
+ * ```
+ *   wave 1   everything keyed by the id itself: the obligation, its debt, its
+ *            Scout results (a work item id finds no debt and no Scout result
+ *            under its own key: two empty point reads, dropped)
+ *   wave 2   the obligation's rounds by their derived ids, beside the pipeline
+ *            items its Scout results name — or, for a work item id, the item
+ *   wave 3   the work items and route tasks the rounds name, and everything
+ *            keyed by them: artifacts, costs, worker results, disposition commits
+ *   wave 4   the attempts of those route tasks, beside any later route task a
+ *            work item lists that no round names
+ *   (wave 5) only when wave 4 found such a task or an open attempt: its
+ *            attempts and commits, and the leases of open attempts
+ * ```
+ *
+ * The answer is the same records, in the same order, as reading each wave only
+ * after the one before had fully finished.
  */
 export async function readAssignmentSourcesById(
   repos: ControlPlaneRepositories,
@@ -152,29 +185,31 @@ export async function readAssignmentSourcesById(
   base: AssignmentReadBase,
 ): Promise<ReadOutcome<AssignmentSources>> {
   try {
-    const obligationRow = await repos.obligations.read(id);
+    const [obligationRow, debtRow, scoutsById] = await Promise.all([repos.obligations.read(id), repos.debts.read(id), repos.scoutResults.read(id)]);
     let obligations: StandingObligation[] = [];
     let occurrences: FreshnessOccurrence[] = [];
     let debts: FreshnessDebt[] = [];
-    let scoutResults: ScoutResult[] = [];
-    let workItemIds: string[] = [];
-    let routeTaskIds: string[] = [];
-    let wholePipeline = false;
+    let workItemIds: string[];
+    let routeTaskIds: string[];
+    /* The work item a work-item drilldown already read, reused rather than read twice. */
+    let itemRows: (Persisted<WorkItem> | null)[] | null = null;
+    /* What wave 3 reads beside the rounds' records: nothing more for an obligation; for a work item, its Scout results and the pipeline. */
+    let wave3Extra: () => Promise<{ readonly scoutResults: ScoutResult[]; readonly pipeline: PipelineItemState[] }>;
 
     if (obligationRow !== null) {
       const ob = obligationRow.value;
       obligations = [ob];
-      const sequences = Array.from({ length: Math.max(0, ob.occurrenceCount) }, (_, i) => i + 1);
-      const [debtRow, scouts, occRows] = await Promise.all([
-        repos.debts.read(id),
-        repos.scoutResults.read(id),
-        inBatches(sequences, (n) => repos.occurrences.read(occurrenceId(id, n))),
-      ]);
       debts = debtRow === null ? [] : [debtRow.value];
-      scoutResults = [...scouts];
+      const scoutResults = [...scoutsById];
+      const sequences = Array.from({ length: Math.max(0, ob.occurrenceCount) }, (_, i) => i + 1);
+      const [occRows, pipeline] = await Promise.all([
+        inBatches(sequences, (n) => repos.occurrences.read(occurrenceId(id, n))),
+        pipelineOfScouts(repos, pipelineItemIdsOf(scoutResults)),
+      ]);
       occurrences = values(occRows);
       workItemIds = unique(occurrences.map((o) => o.workItemId));
       routeTaskIds = unique(occurrences.map((o) => o.routeTaskId));
+      wave3Extra = async () => ({ scoutResults, pipeline });
     } else {
       const itemRow = await repos.workItems.read(id);
       if (itemRow === null) {
@@ -183,52 +218,63 @@ export async function readAssignmentSourcesById(
           detail: `The control plane is reachable and holds no standing obligation or work item with the id ${id}.`,
         };
       }
+      itemRows = [itemRow];
       workItemIds = [id];
       routeTaskIds = [...itemRow.value.routeTaskIds];
       // A work item created against an obligation's clause keeps its Scout results under that obligation's key.
       const clause = itemRow.value.obligation;
-      if (clause.startsWith("freshness:")) {
-        scoutResults = (await repos.scoutResults.read(clause)).filter((r) => r.workItemId === id);
-      }
-      wholePipeline = true;
+      wave3Extra = async () => {
+        const [scouts, all] = await Promise.all([
+          clause.startsWith("freshness:") ? repos.scoutResults.read(clause) : Promise.resolve([] as readonly ScoutResult[]),
+          // A fleet extraction names its work item, not a derivable item id: the (small) log is read whole.
+          repos.promotionPipeline.readAll(),
+        ]);
+        return { scoutResults: scouts.filter((r) => r.workItemId === id), pipeline: pipelineStatesOf(all) };
+      };
     }
 
-    const [workItemRows, routeTaskRows] = await Promise.all([
-      inBatches(workItemIds, (wi) => repos.workItems.read(wi)),
+    const [workItemRows, routeTaskRows, artifactLists, costLists, workerLists, commitLists, extra] = await Promise.all([
+      itemRows !== null ? Promise.resolve(itemRows) : inBatches(workItemIds, (wi) => repos.workItems.read(wi)),
       inBatches(routeTaskIds, (rt) => repos.routeTasks.read(rt)),
-    ]);
-    const workItems: WorkItem[] = values(workItemRows);
-    // A work item may list route tasks an occurrence does not name (a created chain's later steps).
-    const moreTaskIds = unique(workItems.flatMap((w) => w.routeTaskIds)).filter((rt) => !routeTaskIds.includes(rt));
-    const routeTasks: RouteTask[] = [...values(routeTaskRows), ...values(await inBatches(moreTaskIds, (rt) => repos.routeTasks.read(rt)))];
-    const attemptIds = unique(routeTasks.flatMap((t) => t.attemptIds));
-    const allTaskIds = unique(routeTasks.map((t) => t.id));
-
-    const [attemptRows, artifactLists, costLists, workerLists, commitLists] = await Promise.all([
-      inBatches(attemptIds, (a) => repos.attempts.read(a)),
       inBatches(workItemIds, (wi) => repos.artifacts.read(wi)),
       inBatches(workItemIds, (wi) => repos.costs.read(wi)),
       inBatches(workItemIds, (wi) => repos.workerResults.read(wi)),
-      inBatches(allTaskIds, (rt) => repos.dispositions.read(rt)),
+      inBatches(routeTaskIds, (rt) => repos.dispositions.read(rt)),
+      wave3Extra(),
     ]);
-    const attempts: Attempt[] = values(attemptRows);
+    const workItems: WorkItem[] = values(workItemRows);
+    const namedTasks: RouteTask[] = values(routeTaskRows);
+    // A work item may list route tasks an occurrence does not name (a created chain's later steps).
+    const moreTaskIds = unique(workItems.flatMap((w) => w.routeTaskIds)).filter((rt) => !routeTaskIds.includes(rt));
+    const namedAttemptIds = unique(namedTasks.flatMap((t) => t.attemptIds));
+    const [moreTaskRows, namedAttemptRows] = await Promise.all([
+      inBatches(moreTaskIds, (rt) => repos.routeTasks.read(rt)),
+      inBatches(namedAttemptIds, (a) => repos.attempts.read(a)),
+    ]);
+    const routeTasks: RouteTask[] = [...namedTasks, ...values(moreTaskRows)];
+    const attemptIds = unique(routeTasks.flatMap((t) => t.attemptIds));
+    const allTaskIds = unique(routeTasks.map((t) => t.id));
+
+    const attemptById = new Map<string, Persisted<Attempt> | null>(namedAttemptIds.map((a, i) => [a, namedAttemptRows[i]]));
+    const commitsByTask = new Map<string, readonly DispositionCommit[]>(routeTaskIds.map((rt, i) => [rt, commitLists[i]]));
+    // A later task's attempts and commits (and any task whose id is not the key it was read by) are read once they are known.
+    const lateAttemptIds = attemptIds.filter((a) => !attemptById.has(a));
+    const lateTaskIds = allTaskIds.filter((rt) => !commitsByTask.has(rt));
+    if (lateAttemptIds.length + lateTaskIds.length > 0) {
+      const [lateAttempts, lateCommits] = await Promise.all([
+        inBatches(lateAttemptIds, (a) => repos.attempts.read(a)),
+        inBatches(lateTaskIds, (rt) => repos.dispositions.read(rt)),
+      ]);
+      lateAttemptIds.forEach((a, i) => attemptById.set(a, lateAttempts[i]));
+      lateTaskIds.forEach((rt, i) => commitsByTask.set(rt, lateCommits[i]));
+    }
+
+    const attempts: Attempt[] = values(attemptIds.map((a) => attemptById.get(a) ?? null));
     const artifacts: ArtifactRecord[] = artifactLists.flat();
     const costs: CostEntry[] = costLists.flat();
     const workerResults: WorkerResultRecord[] = workerLists.flat();
-    const dispositions: DispositionCommit[] = commitLists.flat();
-
-    let pipeline: PipelineItemState[];
-    if (wholePipeline) {
-      // A fleet extraction names its work item, not a derivable item id: the (small) log is read whole.
-      pipeline = pipelineStatesOf(await repos.promotionPipeline.readAll());
-    } else {
-      const itemIds = pipelineItemIdsOf(scoutResults);
-      const lists = await inBatches(itemIds, (itemId) => repos.promotionPipeline.read(itemId));
-      pipeline = itemIds
-        .map((itemId, i) => ({ itemId, records: lists[i].filter(isPipelineRecord) }))
-        .filter((x) => x.records.length > 0)
-        .map((x) => deriveItemState(x.itemId, x.records));
-    }
+    const dispositions: DispositionCommit[] = allTaskIds.flatMap((rt) => commitsByTask.get(rt) ?? []);
+    const { scoutResults, pipeline } = extra;
 
     return {
       kind: "HELD",

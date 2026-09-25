@@ -44,8 +44,11 @@ export function param(sp: SearchParams, key: string): string | null {
   return typeof one === "string" && one.trim() !== "" ? one.trim() : null;
 }
 
-export async function openPage(path: string, sp: SearchParams): Promise<PageBase> {
-  const nowIso = new Date().toISOString();
+/**
+ * `nowIso` lets a page start a read that needs only the instant (the body read)
+ * before this one, so the policy row's round trip is not added in front of it.
+ */
+export async function openPage(path: string, sp: SearchParams, nowIso: string = new Date().toISOString()): Promise<PageBase> {
   const scope = parseScope(sp.scope);
   const opened = await openControlPlane();
   let adminConfig: AdminConfig | null = null;

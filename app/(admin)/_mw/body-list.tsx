@@ -6,6 +6,13 @@
  * The views are built server-side by the pure model
  * (`lib/control-plane/admin-view/bodies.ts`); this island only opens and
  * closes them, so no number is computed in the browser.
+ *
+ * The page sends this island only the views it draws: the first few, or every
+ * one once "show all" (or a link to a body past the first few) asks for them.
+ * Every view it is sent travels in the page as data, and all 120 of them were
+ * 689 KB of the 1.1 MB Fleet · Now page on 2026-09-25 while twelve were drawn.
+ * "Show all" then asks the server for the rest (`showAllHref`); with every
+ * view in hand it opens and closes in place, as before.
  */
 import Link from "next/link";
 import { useState } from "react";
@@ -22,18 +29,26 @@ function when(iso: string): string {
 }
 
 export function BodyList(props: {
+  /** The views sent: the first `firstShown`, or every one of `total`. */
   readonly bodies: readonly BodyView[];
+  /** How many bodies the list holds, sent or not. */
+  readonly total: number;
   readonly stateNames: Readonly<Record<string, string>>;
   /** Where a body's routine work is followed on the assignment list. */
   readonly workHref: Readonly<Record<string, string>>;
   readonly firstShown: number;
   /** A body a link asked for (`?body=`): it opens, and the list shows it even past the first few. */
   readonly initiallyOpen?: string | null;
+  /** The list was asked for whole (`?bodies=all`): it starts with every body shown. */
+  readonly initiallyAll?: boolean;
+  /** The page that sends every view, followed when "show all" is asked for and they were not all sent. */
+  readonly showAllHref: string;
 }) {
   const asked = props.initiallyOpen ?? null;
   const askedAt = asked === null ? -1 : props.bodies.findIndex((b) => b.id === asked);
   const [open, setOpen] = useState<string | null>(askedAt >= 0 ? asked : null);
-  const [showAll, setShowAll] = useState(askedAt >= props.firstShown);
+  const [showAll, setShowAll] = useState(askedAt >= props.firstShown || props.initiallyAll === true);
+  const everySent = props.bodies.length >= props.total;
   const shown = showAll ? props.bodies : props.bodies.slice(0, props.firstShown);
   return (
     <div className={s.stack14}>
@@ -139,11 +154,16 @@ export function BodyList(props: {
           </div>
         );
       })}
-      {props.bodies.length > props.firstShown && (
-        <button type="button" className={s.btnSecondary} style={{ alignSelf: "flex-start" }} onClick={() => setShowAll((v) => !v)}>
-          {showAll ? `Show the first ${props.firstShown} only` : `Show all ${props.bodies.length} bodies`}
-        </button>
-      )}
+      {props.total > props.firstShown &&
+        (everySent ? (
+          <button type="button" className={s.btnSecondary} style={{ alignSelf: "flex-start" }} onClick={() => setShowAll((v) => !v)}>
+            {showAll ? `Show the first ${props.firstShown} only` : `Show all ${props.total} bodies`}
+          </button>
+        ) : (
+          <Link href={props.showAllHref} scroll={false} className={s.btnSecondary} style={{ alignSelf: "flex-start" }}>
+            {`Show all ${props.total} bodies`}
+          </Link>
+        ))}
     </div>
   );
 }

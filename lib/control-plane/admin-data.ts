@@ -188,6 +188,25 @@ export async function readDigests(
 }
 
 /**
+ * The newest digest alone: one row read from the tail of the log. A surface
+ * that shows only the latest digest (the runner card) reads this rather than
+ * the twenty-row history — 4.4 MB on 2026-09-25, of which it used 2.4 KB.
+ */
+export async function readLatestDigest(repos: ControlPlaneRepositories): Promise<ReadOutcome<OwnerDigestRecord>> {
+  try {
+    const [latest] = await repos.ownerDigests.readRecent(DIGEST_LOG_KEY, 1);
+    return latest === undefined
+      ? { kind: "NOT_RECORDED", detail: "The control plane is reachable and holds no digest yet." }
+      : { kind: "HELD", value: latest };
+  } catch (error) {
+    return {
+      kind: "STORE_UNREACHABLE",
+      detail: `Reading the digest log failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
+    };
+  }
+}
+
+/**
  * Every append-only MapTiler collection receipt, newest first.
  *
  * This deliberately does not reuse the bounded general digest view above. A

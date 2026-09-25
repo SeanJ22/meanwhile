@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 796,
-    "named": 7747,
+    "files": 798,
+    "named": 7758,
     "dynamic": 31
   },
   "files": {
@@ -479,6 +479,19 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-registration-standing.test.ts": {
+      "names": [
+        "a pointer read that fails, or has no store to ask, is UNREAD with its reason — never an empty list",
+        "a promoted pointer reads as that state's, with its version and promoted time",
+        "a promoted registration makes the state registered, not 'nothing registered', everywhere the scope select names it",
+        "one state's counts are cut out of its own row, and name what they count",
+        "the empty-scope card on a registered state says registered, with its counts and the Census sentence, and never 'Nothing is registered here'",
+        "the pointer read asks for every state's registration scope and reads no payload",
+        "the row words: registered with its promoted time, nothing registered, or not read — and the cells never say 'not registered' for a registered state",
+        "when the pointers were not read, no untracked state is called registered or unregistered"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-release-review.test.ts": {
       "names": [
         "AR-1: explicit reviewState fails closed; only an absent reviewState uses the legacy status",
@@ -584,6 +597,14 @@
         "§7: every obsolete refresh workflow definition is deleted",
         "§7: the terminal-zero workflow detector catches a planted cron",
         "§7: the wider capability registry never reconstructs a second routine clock"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-standard-in-force.test.ts": {
+      "names": [
+        "no Admin page hands the strip a hard-coded standard: each takes the page base's, or what its own readings were measured under",
+        "the standard in force is the manifest's current version, and is absent only when the manifest names none",
+        "the strip names the standard it is handed, and says 'not versioned yet' only for none"
       ],
       "dynamic": 0
     },

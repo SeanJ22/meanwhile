@@ -90,6 +90,22 @@ test("R28: an unchanged pass carries the served edge forward, exactly where the 
   assert.equal("sequence" in publish ? publish.sequence : null, manifest.sequence);
 });
 
+test("a family left out this pass that the manifest does not serve either changes nothing: the pass still carries, and the publish agrees", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-carry-")));
+  const without = <T extends PublishAuthority>(authority: T): PublishAuthority =>
+    Object.fromEntries(Object.entries(authority).filter(([family]) => family !== "pima-finance"));
+  const published = await publishReaderEdgeArtifacts(snapshot(), META, {
+    store, now: GENERATED_AT, extras: EXTRAS, authority: without(VALUES), registrations: REGISTRATION_VALUES,
+  });
+  assert.equal(published.status, "PUBLISHED");
+  const manifest = (await store.readManifest())!.manifest;
+  assert.equal(manifest.authorityArtifacts?.["pima-finance"], undefined);
+  const input = { prepared: CURRENT_PREPARED, servedManifest: manifest, extras: { ...EXTRAS }, authority: without(CARRIED), registrations: REGISTRATIONS_CARRIED };
+  assert.deepEqual(readerEdgeCarriesForward(input), { current: true, sequence: manifest.sequence });
+  const publish = await publishReaderEdgeArtifacts(snapshot(), META, { store, now: "2026-09-25T15:05:00.000Z", ...input });
+  assert.equal(publish.status, "CURRENT", "the publish would have changed the edge");
+});
+
 test("R28: every condition that could change the edge reads the prepared row and publishes", async () => {
   const { manifest } = await servedEdge();
   const base = {

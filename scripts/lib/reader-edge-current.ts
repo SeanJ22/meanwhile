@@ -43,7 +43,8 @@ function extrasFingerprint(extras: { readonly commentAccess?: unknown; readonly 
  *    is a pure function of the payload, so every scope's data is unchanged.
  *  - Extras. The families this pass read equal the manifest's embedded copies.
  *  - Authority. Every family is carried: its pointer still names the version
- *    the manifest serves.
+ *    the manifest serves. A family left out this pass that the manifest does
+ *    not serve either stays out, which the publish would not change.
  *  - Registrations. Every state is carried at the version the manifest serves,
  *    and the manifest serves no other state.
  *
@@ -73,6 +74,10 @@ export function readerEdgeCarriesForward(input: {
   }
   for (const family of AUTHORITY_FAMILIES) {
     const entry = authority[family];
+    // Left out this pass and not served either (2026-09-25): the publish leaves it out
+    // too, so it changes nothing. With thirteen proven-pointer families, one that
+    // cannot be read must not cost every pass the whole prepared row.
+    if (entry === undefined && manifest.authorityArtifacts?.[family] === undefined) continue;
     if (entry === undefined || !("carried" in entry)) return { current: false, reason: `${family} not carried` };
     if (manifest.authorityArtifacts?.[family]?.version !== entry.versionId) {
       return { current: false, reason: `${family} is not the served version` };

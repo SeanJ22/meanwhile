@@ -12,6 +12,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 /**
  * **WHAT AN OFFICEHOLDER HAS DONE, from the office's own publication.**
@@ -299,6 +300,10 @@ export async function refreshExecutiveActionsFromPromoted(
 ): Promise<string | null> {
   return promotedVersionOrThrow(await readExecutiveActionsProjection(options));
 }
+
+/** The executive-action preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+export const settleExecutiveActionsRead = (): Promise<string | null> =>
+  readPromotedEdgeFirst(AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, AZ_OFFICIAL_ACTIONS_CONTRACT.scope, refreshExecutiveActionsFromPromoted, "The Arizona executive actions");
 
 export const executiveActionsReadState = (): CivicDataReadResult<ExecutiveActionStore> => actionReadState;
 

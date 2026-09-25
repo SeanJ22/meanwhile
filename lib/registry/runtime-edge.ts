@@ -6,6 +6,8 @@ import type { CuratedReaderProjection } from "../civic-data/manual-projections.t
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
+import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
+import type { RoutineRecordClass } from "../civic-data/types.ts";
 
 /**
  * Request-scoped "reader authority" edge bundle: the large families the coverage
@@ -68,6 +70,16 @@ export interface ReaderAuthorityEdgeBundle {
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
   /**
+   * The proven pointers the edge carries whole (2026-09-25): the ballots, the
+   * candidate profiles and publications, campaign money and the federal and
+   * state records Ask reads, keyed by pointer (`RECORD_CLASS:scope`). Each is
+   * read through its own typed Reader (`readPromotedEdgeFirst`), so every
+   * validation it applies to a database read applies to this copy too.
+   */
+  readonly promoted?: ReadonlyMap<string, PromotedEdgeEntry>;
+  /** The proven-pointer families whose artifact this bundle loaded (a trace reports where each source came from). */
+  readonly promotedFamilies?: ReadonlySet<string>;
+  /**
    * The keep-warm call's promise (C21, 2026-09-25): it loads what a reader
    * reads, and never the database. A read this bundle cannot serve then fails
    * ({@link refuseDatabaseInEdgeOnlyContext}) instead of falling through to
@@ -110,21 +122,55 @@ export interface EdgeServedValue<T> {
  * binding (its validator, its cache), which is why this takes it as an argument
  * rather than naming a cache by string.
  *
- * `what` names the family in the edge-only refusal.
+ * `what` names the family in the edge-only refusal. A prime may be a typed
+ * Reader itself (`readPromotedEdgeFirst`), so it is awaited.
  */
 export async function settleEdgeFirst<T>(
   edge: () => EdgeServedValue<T> | null,
-  prime: (value: NoInfer<T>, versionId: string) => void,
+  prime: (value: NoInfer<T>, versionId: string) => void | Promise<unknown>,
   refresh: () => Promise<unknown>,
   what: string,
 ): Promise<void> {
   const served = edge();
   if (served) {
-    prime(served.value, served.versionId);
+    await prime(served.value, served.versionId);
     return;
   }
   refuseDatabaseInEdgeOnlyContext(what);
   await refresh();
+}
+
+/** The edge's copy of one pointer for this request, or null when it carries none. */
+export function currentPromotedEdge(recordClass: RoutineRecordClass, scope: string): EdgeServedValue<PromotedEdgeEntry> | null {
+  const entry = edgeStore.getStore()?.promoted?.get(`${recordClass}:${scope}`);
+  if (!entry) return null;
+  return { value: entry, versionId: entry.kind === "PROMOTED" ? entry.projection.versionId : "NOT_RECORDED" };
+}
+
+/**
+ * **ONE POINTER, EDGE FIRST, THROUGH ITS OWN TYPED READER.** (2026-09-25.)
+ *
+ * `read` is the family's own Reader (`readFundingSnapshot`,
+ * `readAzBallotProjection`, ...). With the edge's copy of the pointer it is
+ * handed `{ edge }` and answers from it, applying every validation, bootstrap
+ * rule and staleness bound it applies to a database read; without one it
+ * reads the database exactly as before, or refuses in an edge-only context.
+ * One settle (`settleEdgeFirst`), and the Reader's own result returned.
+ */
+export async function readPromotedEdgeFirst<R>(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  read: (options: PromotedCivicDataReadOptions) => Promise<R>,
+  what: string,
+): Promise<R> {
+  let result: { readonly value: R } | null = null;
+  await settleEdgeFirst(
+    () => currentPromotedEdge(recordClass, scope),
+    async (edge) => { result = { value: await read({ edge }) }; },
+    async () => { result = { value: await read({}) }; },
+    what,
+  );
+  return (result as { readonly value: R } | null)!.value;
 }
 
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();

@@ -1,7 +1,7 @@
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
-import type { AuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import type { AuthorityFamily, PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -13,7 +13,7 @@ import {
   actionText,
   executiveActionStore,
   monthsBefore,
-  refreshExecutiveActionsFromPromoted,
+  settleExecutiveActionsRead,
   undatedFor,
 } from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
@@ -62,27 +62,28 @@ import {
 } from "@/lib/ask/contacts";
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
-import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
-import { refreshStateMoneyFromPromoted } from "@/lib/funding/state-snapshot";
-import { refreshAzPimaFinanceFromPromoted } from "@/lib/control-plane/campaign-finance/held-records";
+import { settleFundingRead } from "@/lib/funding/snapshot";
+import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
+import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { isRetiredStateRollCallScope, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
   officialStateRollCallTargetByScope,
   officialStateVoteScopeForOfficeholderId,
   type OfficialStateVoteScope,
 } from "@/lib/state-rollcalls/authority";
-import { refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
-import { refreshFederalKeyVotesFromPromoted } from "@/lib/votes/key-votes-projection";
+import { settleFederalVotesRead } from "@/lib/votes/snapshot";
+import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 
 import {
-  refreshAzBallotFromPromoted,
-  refreshCandidateCorpusFromPromoted,
-  refreshCandidateProfilesFromPromoted,
+  settleAzBallotRead,
+  settleCandidateCorpusRead,
+  settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
+import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import {
   refreshCommentAccessFromPromoted,
 } from "@/lib/civic-data/curated-reader-read-model";
-import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
+import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
   absencesWithoutRemovals,
@@ -753,24 +754,47 @@ export async function POST(request: Request) {
       ? [() => commentAccessFromDatabase]
       : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
+  // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
+  const promotedSource = (family: PromotedAuthorityFamily): "EDGE" | "DATABASE" =>
+    authorityEdge?.promotedFamilies?.has(family) ? "EDGE" : "DATABASE";
   trace.preloadSources = {
     registry: authorityEdge?.registryRuntime ? "EDGE" : "DATABASE",
     federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
     outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
     ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
+    funding: promotedSource("federal-funding"),
+    stateMoney: promotedSource("state-money"),
+    azPimaFinance: promotedSource("pima-finance"),
+    federalVotes: promotedSource("federal-votes"),
+    federalKeyVotes: promotedSource("federal-key-votes"),
+    azBallot: promotedSource("ballot-az"),
+    candidateProfiles: promotedSource("candidate-profiles"),
+    candidateCorpus: promotedSource("candidate-publications"),
+    officeholderStatements: promotedSource("officeholder-statements"),
+    executiveActions: promotedSource("executive-actions"),
   };
+  /*
+   * **THE DEFERRABLE SOURCES, EDGE FIRST.** (2026-09-25.) A cold Mesa
+   * question spent 14.8 s here on production, every one of these a pointer
+   * read and a proof read from a cold database (Pima finance alone 6.4 MB of
+   * proof). Each is now a proven pointer on the reader edge, fetched with the
+   * authority families above, and read through its own Reader from that copy
+   * (`readPromotedEdgeFirst`); the database stays the fallback for a family
+   * the manifest does not carry. The state roll calls stay on the database:
+   * New Jersey's is 9.4 MB, read only for a New Jersey question.
+   */
   const deferrablePreloads = [
-    timed("funding", refreshFundingFromPromoted),
-    timed("stateMoney", refreshStateMoneyFromPromoted),
-    timed("azPimaFinance", refreshAzPimaFinanceFromPromoted),
+    timed("funding", settleFundingRead),
+    timed("stateMoney", settleStateMoneyReads),
+    timed("azPimaFinance", settleAzPimaFinanceRead),
     ...[...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))),
-    timed("federalVotes", refreshFederalVotesFromPromoted),
-    timed("federalKeyVotes", refreshFederalKeyVotesFromPromoted),
-    timed("azBallot", refreshAzBallotFromPromoted),
-    timed("candidateProfiles", refreshCandidateProfilesFromPromoted),
-    timed("candidateCorpus", refreshCandidateCorpusFromPromoted),
-    timed("officeholderStatements", refreshOfficeholderStatementsFromPromoted),
-    timed("executiveActions", refreshExecutiveActionsFromPromoted),
+    timed("federalVotes", settleFederalVotesRead),
+    timed("federalKeyVotes", settleFederalKeyVotesRead),
+    timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
+    timed("candidateProfiles", settleCandidateProfilesRead),
+    timed("candidateCorpus", settleCandidateCorpusRead),
+    timed("officeholderStatements", settleOfficeholderStatementsRead),
+    timed("executiveActions", settleExecutiveActionsRead),
   ];
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
   // The recorded outcomes are what a topic answer leads with. A cold read that

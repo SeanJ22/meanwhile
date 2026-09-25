@@ -12,7 +12,12 @@ import {
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
-import { refreshDerivedCampaignSites } from "./derived-campaign-sites.ts";
+import {
+  DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
+  DERIVED_CAMPAIGN_SITES_SCOPE,
+  refreshDerivedCampaignSites,
+} from "./derived-campaign-sites.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type {
   AzBallotProjection,
   CandidateProfilesProjection,
@@ -212,6 +217,29 @@ export async function readCandidateCorpusProjection(options: PromotedCivicDataRe
  */
 export async function refreshCandidateProfilesFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
   const [profiles] = await Promise.all([readCandidateProfilesProjection(options), refreshDerivedCampaignSites(options)]);
+  return promotedVersionOrThrow(profiles);
+}
+
+/*
+ * **EDGE FIRST, DATABASE SECOND** (2026-09-25): each pointer from the reader
+ * edge's proven copy when the request entered one, through the same Reader and
+ * validator (`readPromotedEdgeFirst`, lib/registry/runtime-edge.ts); from the
+ * database otherwise, exactly as before, and never in an edge-only context.
+ */
+export const settleAzBallotRead = (): Promise<CivicDataReadResult<AzBallotProjection>> =>
+  readPromotedEdgeFirst(AZ.recordClass, AZ.scope, readAzBallotProjection, "The Arizona ballot");
+export const settleNhBallotRead = (): Promise<CivicDataReadResult<NhBallotProjection>> =>
+  readPromotedEdgeFirst(NH.recordClass, NH.scope, readNhBallotProjection, "The New Hampshire ballot");
+export const settleCandidateCorpusRead = async (): Promise<string | null> =>
+  promotedVersionOrThrow(await readPromotedEdgeFirst(CORPUS.recordClass, CORPUS.scope, readCandidateCorpusProjection, "The candidate publications"));
+/** The profile preload, edge first: the profiles and, in their own failure domain, the derived campaign sites. */
+export async function settleCandidateProfilesRead(): Promise<string | null> {
+  const [profiles] = await Promise.all([
+    readPromotedEdgeFirst(PROFILES.recordClass, PROFILES.scope, readCandidateProfilesProjection, "The candidate profiles"),
+    // Their own failure domain, as in `refreshCandidateProfilesFromPromoted`: a refusal withholds only them.
+    readPromotedEdgeFirst(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, refreshDerivedCampaignSites, "The derived campaign sites")
+      .catch(() => undefined),
+  ]);
   return promotedVersionOrThrow(profiles);
 }
 

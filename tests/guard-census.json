@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 821,
-    "named": 7923,
+    "files": 824,
+    "named": 7935,
     "dynamic": 31
   },
   "files": {
@@ -1403,6 +1403,13 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-reader-edge.test.ts": {
+      "names": [
+        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left",
+        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-relevance.test.ts": {
       "names": [
         "CORPUS: a correct, grounded Prop 141 answer evaluates GREEN against the corpus expectation",
@@ -1800,9 +1807,11 @@
     "tests/ballot-reader-edge.test.ts": {
       "names": [
         "React renders the page's async components outside the page's context: they see its edge only when handed it",
-        "a cold /ballot?zip=85701 reads the registry, the federal directory and the state legislators from the edge, in the page and in every card",
+        "a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot edge reads its ballot and the General Court roster from it, and nothing from the database",
+        "a cold /ballot?zip=85701 with the whole ballot edge makes no database read at all, in the page or in any card",
         "one promoted version is one authority key, whether the edge primed it (BOOTSTRAP) or the database read it (PROMOTED)",
-        "with no edge published, the same render reads those families from the database: the fallback stays"
+        "with no edge published, the same render reads those families from the database: the fallback stays",
+        "with only the map's families on the edge (R30), a cold /ballot?zip=85701 reads exactly the six proven pointers this change moves, none from a card"
       ],
       "dynamic": 0
     },
@@ -3652,6 +3661,14 @@
         "each mutable curated Reader family promotes and reads from its own canonical pointer",
         "reference-publisher evidence is confined to venue coordinates",
         "store failure does not reopen any curated tracked first seed"
+      ],
+      "dynamic": 0
+    },
+    "tests/curated-reader-edge-selector.test.ts": {
+      "names": [
+        "/ballot's navigation links read from the reader edge in production, with no database",
+        "an edge-primed campaign-site projection names its campaign links in production",
+        "an edge-primed comment-access projection answers its rules in production"
       ],
       "dynamic": 0
     },
@@ -8138,6 +8155,15 @@
       ],
       "dynamic": 0
     },
+    "tests/promoted-edge.test.ts": {
+      "names": [
+        "an edge copy the database proof would refuse is refused as PROMOTION_PROOF_INVALID, never served",
+        "published, fetched and entered: a reader request reads the family from the edge; an edge-only context refuses a pointer the edge lacks without reading",
+        "the edge copy of a proven pointer reads exactly as the database read of it, through the family's own Reader",
+        "the runner carries a family whose pointers have not moved, re-reads it when a confirmation lands, and leaves out one its Reader refuses"
+      ],
+      "dynamic": 0
+    },
     "tests/promotion-pipeline.test.ts": {
       "names": [
         "APPROVED_FOR_PROMOTION carries the full chain by record id and refuses a chain the log does not hold",
@@ -8415,7 +8441,8 @@
       "names": [
         "R28: an unchanged pass carries the served edge forward, exactly where the publish would answer CURRENT",
         "R28: every condition that could change the edge reads the prepared row and publishes",
-        "R28: the aggregate child decides the carry before it reads the prepared row, and reads it only to publish"
+        "R28: the aggregate child decides the carry before it reads the prepared row, and reads it only to publish",
+        "a family left out this pass that the manifest does not serve either changes nothing: the pass still carries, and the publish agrees"
       ],
       "dynamic": 0
     },

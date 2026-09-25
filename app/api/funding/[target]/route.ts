@@ -1,17 +1,17 @@
 import { directFundingTargetPlan, stateFromContest, FEDERAL_CONTEST, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 import { campaignMoneyApiAnswer, type CampaignMoneyApiAnswer } from "@/lib/funding/campaign-money";
-import { readFundingSnapshot } from "@/lib/funding/snapshot";
+import { settleFundingSnapshotRead } from "@/lib/funding/snapshot";
 import {
-  refreshStateMoneyProjectionFromPromoted,
+  settleStateMoneyRead,
   stateMoneyForTarget,
 } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
+import { settleAzBallotRead } from "@/lib/civic-data/manual-read-models";
 import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { mayUseTestFixture, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
+import { mayUseTestFixture, promotedVersionOrThrow, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 
 export { directFundingTargetPlan, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 
@@ -91,13 +91,16 @@ async function currentFundingTargetPlan(target: string, timings?: ReadTimings): 
 function defaultReadersFor(timings?: ReadTimings): FundingHoldingReaders {
   return {
     identityPlan: (target) => currentFundingTargetPlan(target, timings),
+    // Each edge first (2026-09-25): a request that entered the reader edge
+    // (this route's GET, a /ballot card, Ask) reads the proven copy through the
+    // same Reader; the database otherwise.
     federal: () => timedRead(timings, "fec", async () => {
-      const result = await readFundingSnapshot();
+      const result = await settleFundingSnapshotRead();
       if (result.kind !== "PROMOTED" && result.kind !== "BOOTSTRAP") throw new Error(result.detail);
       return { kind: result.kind, metadata: result.metadata };
     }),
     state: (state) => timedRead(timings, `stateMoney_${state}`, async () => {
-      const result = await refreshStateMoneyProjectionFromPromoted(state);
+      const result = await settleStateMoneyRead(state);
       if (result.kind === "PROMOTED") return { kind: "PROMOTED" as const, metadata: result.metadata };
       // Deterministic tests can install the explicit fixture behind the exact
       // state cache. Touching a made-up key verifies that exact cache without
@@ -108,7 +111,7 @@ function defaultReadersFor(timings?: ReadTimings): FundingHoldingReaders {
       }
       throw new Error(result.detail);
     }),
-    azIdentity: () => timedRead(timings, "azBallot", async () => { await refreshAzBallotFromPromoted(); }),
+    azIdentity: () => timedRead(timings, "azBallot", async () => { promotedVersionOrThrow(await settleAzBallotRead()); }),
     answer: (target, contestId, selection) => campaignMoneyApiAnswer(target, contestId, selection),
   };
 }

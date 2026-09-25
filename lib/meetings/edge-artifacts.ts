@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { ocdStateCode } from "../ocd/state-of.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
+import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   snapshotCounts,
   type MeetingsSnapshot,
@@ -129,13 +130,63 @@ export interface ReaderManifest {
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
 }
 
+/**
+ * **THE PROVEN-POINTER FAMILIES** (2026-09-25). Each artifact carries one or
+ * more proven pointers whole (`PromotedEdgeEntry`, lib/civic-data/read-model.ts)
+ * and is read through each pointer's own typed Reader. A cold /ballot read the
+ * first eight from the database, in two stages (the ballot, then the rest);
+ * a cold Ask read all of them among its deferrable sources (14.8 s measured
+ * on production for one cold Mesa question, 2026-09-25).
+ */
+export type PromotedAuthorityFamily =
+  | "ballot-az"
+  | "ballot-nh"
+  | "candidate-profiles"
+  | "candidate-publications"
+  | "ballot-navigation"
+  | "nh-members"
+  | "federal-funding"
+  | "state-money"
+  | "pima-finance"
+  | "federal-votes"
+  | "federal-key-votes"
+  | "officeholder-statements"
+  | "executive-actions";
+
+export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
+  "ballot-az",
+  "ballot-nh",
+  "candidate-profiles",
+  "candidate-publications",
+  "ballot-navigation",
+  "nh-members",
+  "federal-funding",
+  "state-money",
+  "pima-finance",
+  "federal-votes",
+  "federal-key-votes",
+  "officeholder-statements",
+  "executive-actions",
+];
+
+/** A proven-pointer family's artifact value: every pointer the family names, each proven or answered absent. */
+export interface PromotedFamilyArtifactValue {
+  readonly kind: "PROMOTED_POINTERS";
+  readonly entries: readonly PromotedEdgeEntry[];
+}
+
+export function isPromotedAuthorityFamily(family: AuthorityFamily): family is PromotedAuthorityFamily {
+  return (PROMOTED_AUTHORITY_FAMILIES as readonly string[]).includes(family);
+}
+
 export type AuthorityFamily =
   | "registry-runtime"
   | "federal-directory"
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
-  | "comment-access";
+  | "comment-access"
+  | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",
@@ -144,6 +195,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
   "meeting-outcomes",
   "comment-access",
+  ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 
 export interface AuthorityArtifactRef {

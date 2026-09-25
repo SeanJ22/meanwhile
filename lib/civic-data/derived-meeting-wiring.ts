@@ -238,7 +238,8 @@ export function derivedWiringCandidate(
   const shapeIssue = derivedWiringProjectionIssue(readModel);
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
   return {
-    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${DERIVED_WIRING_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}`).slice(0, 32)}`,
+    /* Each pass is its own attempt: the same inputs may be read again after a refusal, so its time and the version it proposes name it too. */
+    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${DERIVED_WIRING_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: WIRING_SOURCE_ID,
     recordClass: DERIVED_WIRING_RECORD_CLASS,
     scope: DERIVED_WIRING_SCOPE,

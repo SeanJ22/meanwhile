@@ -250,7 +250,8 @@ export function derivedFamilyCandidate(partition: MeetingPartitionContract, buil
     .filter(Boolean).sort().at(-1) ?? snapshot.generatedAt;
   const retrievedAt = retrieval.retrievedAt ?? snapshot.generatedAt;
   return {
-    id: `cv-${sha256(`${DERIVED_FAMILY_SOURCE_ID}\u001f${partition.scope}\u001f${retrieval.rawHash}\u001f${retrievedAt}`).slice(0, 32)}`,
+    /* Each pass is its own attempt: a pass whose members were all held reads nothing new, so its time names it too. */
+    id: `cv-${sha256(`${DERIVED_FAMILY_SOURCE_ID}\u001f${partition.scope}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${snapshot.generatedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: DERIVED_FAMILY_SOURCE_ID,
     recordClass: "MEETING",
     scope: partition.scope,

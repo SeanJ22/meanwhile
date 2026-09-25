@@ -204,7 +204,7 @@ async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: s
   const previousRead = await store.readPromotion("MEETING", partition.scope);
   const previous = previousRead === null ? null : (await store.readCandidate(previousRead.versionId))!.candidate.readModel as never;
   const reads: FamilyMemberRead[] = members.filter((m) => m.status === "ACTIVE" && feed !== null).map((member) => {
-    const url = `https://${host}${new URL(ROUTE).pathname}${new URL(ROUTE).search}`;
+    const url = ROUTE.replace(HOST, host);
     return {
       member,
       acquisitions: [{ requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash: sha256(feed!), byteCount: feed!.length }],
@@ -289,4 +289,17 @@ test("C16: a suspended connection publishes nothing new and keeps its previously
   assert.match(held.build.snapshot.derivedMembers?.[0]?.detail ?? "", /suspended for review \(ROUTE_GONE\)/);
   const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
   assert.ok(reader.kind === "PROMOTED" && reader.value.meetings.some((m) => m.bodyId === BODY_ID), "the verified sitting is still what the reader sees");
+});
+
+test("C16: a wiring version that drops a row is refused by the door, and the last known good wiring stays", async () => {
+  const store = new MemoryRoutineDataStore();
+  const crosswalkInput = await promoteCrosswalk(store);
+  const first = await deriveWiring(store, crosswalkInput, FEED, T_WIRING);
+  assert.equal(first.outcome.candidate.state, "PROMOTED");
+  /* A plan that silently omits the promoted row: no trigger, no withdrawal, just gone. */
+  const dropped = derivedWiringCandidate({ ...first.plan, rows: [], promoted: [], carried: [] }, [crosswalkInput], "2026-09-24T21:10:00.000Z");
+  const outcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", dropped, "2026-09-24T21:10:00.000Z");
+  assert.equal(outcome.promoted, null, "a connection never disappears without its own evidence");
+  const live = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_SECOND });
+  assert.equal(live.kind === "PROMOTED" ? live.value.records.length : 0, 1);
 });

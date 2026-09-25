@@ -173,8 +173,9 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
   // pages, on `schedulepage`) is represented; only a route on a source the
   // fixture never held is missing.
   const fixtureSources = new Set(fixture.sources.map((source) => source.source));
+  // A derived state family (C16) is no SOURCE_WIRING row, so the wiring coverage never counts it.
   const postImport = MEETING_PARTITION_CONTRACTS.filter((p) =>
-    PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id) && !fixtureSources.has(p.meetingSource));
+    p.wiring !== null && PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id) && !fixtureSources.has(p.meetingSource));
   const expectedMissing = [
     ...WIRED_AFTER_FIXTURE,
     ...postImport.map((p) => `${p.bodyId}:${p.wiring!.agendaSourceType}`),

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 787,
-    "named": 7678,
+    "named": 7688,
     "dynamic": 30
   },
   "files": {
@@ -3685,7 +3685,8 @@
         "C16 END TO END: a reviewed crosswalk row plus a validated route publishes through the doors with no code release",
         "C16: a member read off its attested host is held on its verified sittings, and the door refuses a forged member read",
         "C16: a suspended connection publishes nothing new and keeps its previously verified sittings",
-        "C16: a wiring version that drops a row is refused by the door, and the last known good wiring stays"
+        "C16: a wiring version that drops a row is refused by the door, and the last known good wiring stays",
+        "R23: an unchanged derived pass is receipted on the pointed version, not re-promoted"
       ],
       "dynamic": 0
     },
@@ -6901,6 +6902,7 @@
     "tests/officeholder-lookup.test.ts": {
       "names": [
         "85641 now names its representative, which it could not before",
+        "DC and the territories are roots of the hierarchy too, as lib/ocd/fips.ts mints them (2026-09-25)",
         "a division electing several people keeps all of them",
         "a link pointing at no person is skipped, never rendered blank",
         "a seat with no record resolves to an empty list, never a placeholder",
@@ -8760,7 +8762,7 @@
         "2d: no module reads reference data from any path outside data/reference",
         "2d: the loader resolves every dataset inside data/reference",
         "Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976",
-        "data/reference holds 24 files: 12 data files and 12 provenance notes",
+        "data/reference holds 26 files: 13 data files and 13 provenance notes",
         "every provenance note says something about its data file",
         "every reference data file is paired with its provenance note, both ways",
         "every reference file holds the row count it is expected to",
@@ -8813,9 +8815,12 @@
     },
     "tests/registration-contract.test.ts": {
       "names": [
+        "Guam and the Virgin Islands register with the Census's own record of no local government; a state with none is still a failed extraction",
         "a 304 is authentic only as registration's pinned file; any other 304 is refused by name",
         "a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month promotes UNCHANGED",
+        "a territory registers a body only where TIGER/Line records a governing status, never from geography (2026-09-25)",
         "census.gov is asked conditionally: a 304 confirms the pinned file with no body, and a changed date is refused before its body is read",
+        "every county subdivision's parent is its county, read off its GEOID, and no committed id moves (2026-09-25)",
         "one registration contract per state, DC and territory in the FIPS table, each its own scope, command and state",
         "only the pinned Census bytes from census.gov over HTTPS are accepted; anything else is refused by name",
         "registration emits the registry's own shapes, so the reader composes it without translation",
@@ -8828,6 +8833,7 @@
     },
     "tests/registration-edge.test.ts": {
       "names": [
+        "a DC division and a Puerto Rico division reach their registrations on the reader (2026-09-25)",
         "a registered body reaches the coverage card titled by its division, never as a nameless, labelless row",
         "each state's registration is its own compressed artifact, read back losslessly and only when named",
         "the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all",
@@ -8838,8 +8844,11 @@
     },
     "tests/registration-reference.test.ts": {
       "names": [
+        "a consolidated city-county pairs to its county, and a town whose code merely missed never does (2026-09-25)",
         "a government pairs by Census code wherever the Census gives one, and nothing it does not tie to a place is guessed",
         "a government the committed registry knows lands on the id it keys, directly or through its alternate",
+        "a rebuild leaves an unchanged state's build date alone, so its records do not move",
+        "a territory's governments are exactly its divisions TIGER/Line gives a governing status, read from the committed extract (2026-09-25)",
         "every Census government sits in exactly one state's file, every file is what the index says, and every row pairs or says why not",
         "the jurisdiction ids are the operational reference's own, collision suffixes included"
       ],
@@ -11168,6 +11177,7 @@
     },
     "tests/wording.test.ts": {
       "names": [
+        "DC and the territories are read as their own jurisdictions, exactly as lib/ocd/fips.ts mints them (2026-09-25)",
         "F01 6.1: no reader surface calls an absence a gap in our research or data",
         "F01 6.2: the struck clause leaves the whose-gap attribution standing",
         "a body nobody searched never claims a search",

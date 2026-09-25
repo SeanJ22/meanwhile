@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 789,
-    "named": 7704,
-    "dynamic": 30
+    "files": 821,
+    "named": 7923,
+    "dynamic": 31
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -197,6 +197,19 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-dead-ends.test.ts": {
+      "names": [
+        "MW-015: an assignment is COMPLETE only when no member is refused or unsettled, and lists what remains",
+        "MW-016: a field the walk cannot answer stays null and names its gap",
+        "MW-016: a refused finish says what its walk ruled out and would try next",
+        "MW-016: a run of the same failed read rules out a one-off; our own failure rules out nothing about the site",
+        "MW-016: a walk's failed rungs are what it ruled out, its next rungs what would settle it, its outcome who moves",
+        "MW-016: an opened failed assignment reads its dead end from the latest walk, not the debt's backoff sentence",
+        "MW-031/MW-033: the Scout line states the class chosen, why, and an escalation's evidence and combined cost; the cost line counts escalations from the walks, never 'recorded nowhere'",
+        "MW-035: the Scout's 'why a paid model' is the executor decision's reason, not a fixed sentence"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-feedback-9-4-pm.test.ts": {
       "names": [
         "ADM-10: a role lead says what is happening, says plainly when nothing needs the owner, and names the work item when something does",
@@ -365,6 +378,13 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-paid-lane.test.ts": {
+      "names": [
+        "the paid lane line keeps the waiting count whichever closed reason the runner names first",
+        "the runner pause and an unreadable control each read in plain words, with the count"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-promoted-slices.test.ts": {
       "names": [
         "a code's memberships match the lookup's reverse index, and a code outside the universe says so",
@@ -375,6 +395,14 @@
         "one container carries the lookup's own codes and plan",
         "the registry slice carries each body's six fields and skips a row with no id",
         "the watched-bodies read opens no socket, runs read only, and decodes each change set once"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-publisher-horizon.test.ts": {
+      "names": [
+        "MW-017: only a bounded, fully paginated read that claims completeness names the publisher's own limit",
+        "MW-017: the body's schedule row uses the horizon, and the store reads five scalars off it, never the candidate",
+        "MW-017: the horizon columns parse to a slice; an unknown kind is no horizon, never bounded"
       ],
       "dynamic": 0
     },
@@ -640,9 +668,11 @@
     },
     "tests/agenda-notice-page-publisher.test.ts": {
       "names": [
+        "R14: Tucson Unified's own notice page is its own, whichever publisher name its sittings carry",
+        "R14: every held production case keeps its answer — each is set aside as before",
         "a body's own notice page, and its own publisher's shared page, still reach its sittings",
         "a division's only notice page is not lent to a sitting of another publisher",
-        "a lent page is recognized as another publisher's; a sitting's own link never is",
+        "a lent page is recognized as another body's; a sitting's own link never is",
         "held notice pages that are not their sitting's agenda are left out of the run's store"
       ],
       "dynamic": 0
@@ -1060,6 +1090,8 @@
         "PLANTED: a body named for a common question word cannot capture the question",
         "PLANTED: one government arriving under TWO id spaces is not a tie",
         "PLANTED: punctuation and interrogatives never become a government's name",
+        "R12: a topic word does not bind the body named for it; the question stays about the city",
+        "R12: saying what kind of body it is still names the authority",
         "THE DEFECT: a question naming Vail never answers about Sunnyside",
         "THE PROOF: deleting the name is what changes the answer, and it still defaults",
         "a government we do not hold is reported unresolved, never substituted",
@@ -1093,6 +1125,22 @@
         "the sibling body is still reachable under its OWN name"
       ],
       "dynamic": 1
+    },
+    "tests/ask-gap-work.test.ts": {
+      "names": [
+        "ADMIN: an Ask-gap obligation reads as an Ask gap, with the owner and the next step its own round names",
+        "ADMIN: open Ask gaps are counted by code, drawn with their denominators, and unknown is never zero",
+        "Ask and the provider agree: on every body of the committed meetings snapshot, the codes Ask holds are exactly the obligations the runner emits",
+        "Ask's gaps carry a closed code, body and record class, and the model and the reader get the same words as before",
+        "MESA: a concluded sitting with no decision and no outcomes route is ENGINEERING's, awaiting a named adapter — and the RUNNER's once Mesa's minutes reader is registered",
+        "PIMA: a concluded sitting with no outcome read is the RUNNER's routine outcomes re-read, carried and never re-fetched",
+        "a stale calendar is the RUNNER's, and a carrying read behind the owner's cadence is a named CADENCE_BROKEN failure",
+        "an unreadable outcome store is coded OUTCOMES_UNREADABLE, and OUTCOME_NOT_READ is not guessed beside it",
+        "gap gone: when a read holds the decision, the provider stops emitting it and the superseded path retires it by name",
+        "the route opening a routine contract carries is never a fetch: the descriptor type makes that a kind of its own",
+        "the runner's reading: the sitting window decides the cadence a carrying read owes, and a failed read is named, never an empty domain"
+      ],
+      "dynamic": 0
     },
     "tests/ask-grounded-route.test.ts": {
       "names": [
@@ -1224,6 +1272,15 @@
         "readSubjectRefs refuses anything that is neither a name nor an id",
         "the grounded route prints sittings through the shared formatter",
         "the unified input's SEARCH half is untouched — an exact name still navigates"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-length-fallback.test.ts": {
+      "names": [
+        "R13: a 726-character model answer that fails only on length is not reported as a rejection",
+        "R13: a length-only rejection falls back to the code-composed answer when the evidence composes one",
+        "R13: a length-only rejection is recognised, and any other failure beside it is not excused",
+        "R13: the same answer with an invented source is still REJECTED_FELL_BACK"
       ],
       "dynamic": 0
     },
@@ -1478,6 +1535,32 @@
       ],
       "dynamic": 0
     },
+    "tests/assignment-identity.test.ts": {
+      "names": [
+        "MW-015: a Send is complete only when every member is settled, and the instruction says which are not",
+        "Money splits paid charges by what each recorded it was for; older rows say so, and test runs are inside the total on their own line",
+        "REORDERED records share the per-cycle write budget after the creations, and the remainder is carried, not dropped",
+        "a Scout on a spent assignment is refused by the assignment's own name, with spent and held",
+        "a Send records itself on what it created and on what it found already on a clock — appended, never overwritten",
+        "a Send with no budget of its own adds no limit; work no Send reached passes",
+        "a created row whose creator is not on record is never guessed into a Send",
+        "a deployment may carry its own budget, kept on the DISPATCH intent",
+        "a policy row that is not a policy holds paid work, by name, instead of reading as no scope",
+        "a proof run charges under its own project, marked non-production — real money, kept apart",
+        "a round names its question from the obligation's own state, never from the job type, and none when that state is missing",
+        "an admitted Scout holds its worst case until it settles, and the next is refused on spent plus held",
+        "an assignment budget that cannot be checked holds the work, by name",
+        "an assignment's spend is its members' charges since they joined; a charge naming no obligation counts by its body",
+        "an instruction lists what it created and reordered from the work itself, and its own budget with the window",
+        "an opened piece of work names its question and the instructions recorded on it",
+        "every charge the dispatcher writes names its obligation, its Sends, its record class, its question and what it came to",
+        "syncObligations keeps the Sends a row records when a provider's signals move, and withAssignment only appends",
+        "the owner's questions travel typed through expansion.scope.set onto the decision, and onto every obligation the Send reaches",
+        "the runner's reading names what each Send reached and its budget — spent, held, left — with the window",
+        "work several Sends reached runs while any budgeted one has room — under the most recent — and is refused only when none does"
+      ],
+      "dynamic": 0
+    },
     "tests/assignment-view.test.ts": {
       "names": [
         "a Scout that says only a person can move it is BLOCKED on you, though the runner committed it as a wall",
@@ -1522,6 +1605,31 @@
         "the recorded Pima agenda splits into more than one acting body",
         "the summary counts unattributed items rather than hiding them",
         "the write boundary refuses a snapshot that attributes an unresolved heading to the host"
+      ],
+      "dynamic": 0
+    },
+    "tests/auto-crosswalk-expansion.test.ts": {
+      "names": [
+        "A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and refuses by name, with no preload and no publisher read",
+        "EVERY REGISTERED STATE HAS A FAMILY: registration's own state list, each family on its own lane, no code naming a state",
+        "EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why"
+      ],
+      "dynamic": 0
+    },
+    "tests/auto-crosswalk.test.ts": {
+      "names": [
+        "A REVIEWED ROW WINS A CONFLICT: where a manual and an automatic row select one sitting, only the automatic row meets the trigger",
+        "ACCEPTED: the registered governing body and a printed sub-body, each on its own exact filter, every C16 check passing",
+        "HELD, AMBIGUOUS TITLE: an event naming the body and another body holds the row; nothing is accepted for it",
+        "HELD: a calendar off the government's attested own host, and a name no saved page prints",
+        "HELD: bytes not vaulted, a government registration does not pair, a hand-wired body, and a find of another kind",
+        "HELD: robots not shown for a read, a UTC-stamped calendar, and a state whose clock is not one zone",
+        "HELD: two bodies selecting one event, and a category that is a body's name",
+        "MANUAL ROWS WIN: a reviewed row for the same body and kind, withdrawn or not, and one claiming the same calendar and filter",
+        "PRINTED NAMES: a run of capitalized words ending in a body noun, two bodies joined by 'and' are two",
+        "THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an outage never drops it, and only a later automatic review restores it",
+        "THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does",
+        "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused"
       ],
       "dynamic": 0
     },
@@ -1686,6 +1794,15 @@
         "the picks module never transmits — no fetch, no navigator.sendBeacon, no import of client APIs",
         "the transparency page discloses picks as device-local",
         "the transparency page says the card is drawn on-device"
+      ],
+      "dynamic": 0
+    },
+    "tests/ballot-reader-edge.test.ts": {
+      "names": [
+        "React renders the page's async components outside the page's context: they see its edge only when handed it",
+        "a cold /ballot?zip=85701 reads the registry, the federal directory and the state legislators from the edge, in the page and in every card",
+        "one promoted version is one authority key, whether the edge primed it (BOOTSTRAP) or the database read it (PROMOTED)",
+        "with no edge published, the same render reads those families from the database: the fallback stays"
       ],
       "dynamic": 0
     },
@@ -2192,6 +2309,60 @@
       ],
       "dynamic": 0
     },
+    "tests/campaign-site-chain.test.ts": {
+      "names": [
+        "a class opened for another field does not approve a campaign site",
+        "a held paid-research finding reaches APPROVED with every check measured, controls clean and an independent second read",
+        "with the gate closed (the state before this change) nothing is approved: the class burden refuses"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-site-gate.test.ts": {
+      "names": [
+        "gate open + owner pause: the paid lane stays CLOSED (PAUSED); the pause is what holds it",
+        "the campaign-site path is plain code: it never reaches the model lane, a Scout, a paid search or a model client",
+        "the gate opens candidate-enrichment for campaignSite only, and cites the owner's authorization",
+        "the window promotes-would only an approved item of an open class AND an open field"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-site-publication.test.ts": {
+      "names": [
+        "an official link with no receipted bytes holds its key rather than publish an unprovable member",
+        "approved sites publish a validated successor that carries the prior version forward, and the Reader renders them",
+        "nothing publishes while the gate is closed, and two verified hosts for one candidate are never chosen between"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-site-runner.test.ts": {
+      "names": [
+        "a refused lead publishes nothing and keeps its typed reason where Admin reads it",
+        "a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it",
+        "a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved",
+        "per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest",
+        "the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key",
+        "the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins",
+        "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-site-verifier.test.ts": {
+      "names": [
+        "a Marginalia-pointed page on the candidate's own host verifies like any other lead",
+        "a campaign site with no year is CYCLE_NOT_EVIDENCED: it cannot be told from a past cycle's",
+        "a current campaign site VERIFIES: the page names the candidate, the office and the 2026 election",
+        "a filed middle initial is omitted by a named rule, never by similarity",
+        "a page that names neither the office nor the district is OFFICE_NOT_NAMED",
+        "a party committee's page about the candidate is PARTY_OR_ORGANIZATION, not their site",
+        "a past-cycle campaign site is refused HISTORICAL_CYCLE and labelled historical",
+        "a surname alone never names the candidate",
+        "cycle evidence: the year must sit beside an election phrase or in the title",
+        "host classes are refused before any request, each with its own typed reason",
+        "the read is robots-first: a refused host is never asked anything, a disallowing robots.txt stops the page request",
+        "the same bytes on a host that is not the candidate's are refused: a page about them is not their site"
+      ],
+      "dynamic": 0
+    },
     "tests/candidate-cards.test.ts": {
       "names": [
         "2b: a card photo is a portrait judgment, never a banner/logo file left behind",
@@ -2644,7 +2815,7 @@
         "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
         "Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
-        "a Postgres transition moves the candidate envelope once and returns it with the written columns",
+        "a Postgres transition never reads the envelope the caller holds; it verifies it and returns it",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
         "a candidate summary is every row column but the envelope and identity set",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
@@ -2661,6 +2832,7 @@
         "every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database",
         "production NODE_ENV alone cannot open the permanent routine-data writer",
         "promotion accepts only the exact persisted GOOD receipt",
+        "promotion hands every transition the candidate it already holds",
         "terminal store exposes no one-time import or aggregate retirement door",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
@@ -2703,6 +2875,10 @@
         "D67: an exception parenthetical is never read as a month restriction",
         "D67: an override written for one year is not carried into another",
         "D67: the recurrence walks the WINDOW, and stops dropping its last sitting",
+        "R8: a board whose schedule places nothing yields its concluded sittings from the Past Agendas list",
+        "R8: only the board's own agendas date its sittings; committees and notices do not",
+        "R8: the Past Agendas list is requested only for a board whose schedule places nothing",
+        "R8: the recorded IDA and TCCC schedules place no sitting in the served window",
         "a body that publishes no schedule is still declined",
         "a virtual-only board is KEPT, with no place and no invented pin (D18)",
         "an unknown schedule format produces zero meetings and a counted drop",
@@ -2798,6 +2974,7 @@
         "a JOB failure detail says whose failure it is, once",
         "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
         "a challenge served with HTTP 200 is the same wall",
+        "a child rejected by a host that no longer resolves keeps the transport's code",
         "a real calendar we extract nothing from is still OUR zero-row JOB",
         "meeting partition receipts parse with and without the additive failureKind",
         "our own code and configuration failures are jobs, and so is an unknown",
@@ -3258,6 +3435,14 @@
       ],
       "dynamic": 0
     },
+    "tests/cost-by-model-split.test.ts": {
+      "names": [
+        "Money's cost-by-model gives each model its own part of an escalated charge, and the parts are counted once",
+        "a split that does not sum to the charge is not trusted: the row is read whole under its Attempt's model, never guessed",
+        "the dispatcher writes the worker's per-model split on the one ledger row — disposed and aborted alike — with the combined cost unchanged"
+      ],
+      "dynamic": 0
+    },
     "tests/cost-by-place.test.ts": {
       "names": [
         "a charge whose source names no place lands in a named overhead bucket, last",
@@ -3573,6 +3758,7 @@
     },
     "tests/delivery-trail.test.ts": {
       "names": [
+        "MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records",
         "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
         "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
         "empty pipeline: every stage is a named gap, the blockers are named, promotions empty"
@@ -3923,6 +4109,18 @@
       ],
       "dynamic": 0
     },
+    "tests/document-listing-source.test.ts": {
+      "names": [
+        "HOLBROOK · a sitting whose agenda is posted is upcoming until its day ends; two on one day stay two",
+        "HOLBROOK · every agenda and minutes link on the 2026 page is read as the sitting its label names",
+        "HOLBROOK · in-window sittings reach readers date-only, each citing its own agenda, with no time or place invented",
+        "HOLBROOK · labels: dates as a clerk writes them, minutes labelled only in the city's own words",
+        "HOLBROOK · the current year's page failing is the row failing, never an empty council",
+        "HOLBROOK · the serving window's years are read; next year's missing page is the city not having posted it",
+        "HOLBROOK · the wired body is Holbrook's registered governing body, on the city's reviewed site, in its own partition"
+      ],
+      "dynamic": 0
+    },
     "tests/dom-evaluation.test.ts": {
       "names": [
         "ABSENT and the counting assertions ARE answerable at zero matches",
@@ -4050,6 +4248,22 @@
         "SEEDED W3.E: the PERSISTED Attempt carries the deterministic worker, not the chosen lane's",
         "W3.E: a declared MODEL lane persists the model identity",
         "W3.E: agreement is recorded as agreement, so a mismatch means something"
+      ],
+      "dynamic": 0
+    },
+    "tests/expansion-any-state-surfaces.test.ts": {
+      "names": [
+        "Admin's instruction card says what a Send created and that its governments came from registration",
+        "Admin's preview: the registration slice, and the governments a Send must place and those at its edge",
+        "a DC or territory division lies in its own state code on every step of the meetings chain",
+        "the runner reads a state's registration before its providers run, before the territory, and for a DISPATCH"
+      ],
+      "dynamic": 0
+    },
+    "tests/expansion-any-state.test.ts": {
+      "names": [
+        "A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from registration, honestly find-own-site: no address is recorded, and none is invented",
+        "A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner creates, from registration, and Columbus's calendar reaches the Reader"
       ],
       "dynamic": 0
     },
@@ -4486,6 +4700,7 @@
         "Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and CIRCUIT BROKEN",
         "Saturday operational night is an explicit SCHEDULED BLACKOUT",
         "a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)",
+        "a closed paid lane's reason refuses every model request by name, and never calls the transport",
         "a hard Neon response is host-latched before any second database probe",
         "a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work",
         "an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds",
@@ -4498,6 +4713,7 @@
         "the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
+        "the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted",
         "the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
       ],
@@ -5111,6 +5327,16 @@
       ],
       "dynamic": 1
     },
+    "tests/ical-publisher-relisted.test.ts": {
+      "names": [
+        "RELISTED · only the publisher's record-keeping and the URL's own id are set aside",
+        "RELISTED · the answer does not depend on which listing the feed serves first",
+        "RELISTED · the listing the merge retires yields to the one kept, and is never carried as a second sitting",
+        "RELISTED · the town's seven twice-listed Selectboard sittings are seven sittings, each keeping both listings",
+        "RELISTED · two listings that differ in ANY published field stay two listings"
+      ],
+      "dynamic": 0
+    },
     "tests/ical-source.test.ts": {
       "names": [
         "A-007 · a valid zone is unaffected, including across a DST boundary",
@@ -5451,6 +5677,17 @@
       ],
       "dynamic": 0
     },
+    "tests/lane-accounting.test.ts": {
+      "names": [
+        "MW-014: each lane accounts for every due row by reason — dispatched + reasons = due",
+        "MW-014: reasons that do not add up produce a MISMATCH line naming the lane",
+        "MW-014: the coordinator's BLOCKED and STAGED decisions are counted, not silent",
+        "MW-014: the persisted reading's reasons sum to the skipped count on the runner card",
+        "MW-071: mid-cycle lanes count running Scouts as active and the oldest row neither started nor running",
+        "MW-071: the pulse carries the lane gauges from the research state it already reads"
+      ],
+      "dynamic": 0
+    },
     "tests/lead-adjudication.test.ts": {
       "names": [
         "a body may not be promoted straight from a lead",
@@ -5475,6 +5712,14 @@
         "triage rejects notices, assets and case records, each with its own reason",
         "unclassified counts leads AND the ones the method could not read",
         "verification without evidence is refused"
+      ],
+      "dynamic": 0
+    },
+    "tests/learning-trends.test.ts": {
+      "names": [
+        "MW-025: a handed door counts as used when its url matches a walked rung or its routeId a proposed candidate",
+        "MW-027: no rows means no weeks and no measured series, never a row of zeros",
+        "MW-027: the weeks run from the first record through now, and a week with no record is a gap in every series"
       ],
       "dynamic": 0
     },
@@ -5900,6 +6145,15 @@
       ],
       "dynamic": 0
     },
+    "tests/marginalia-normalizer.test.ts": {
+      "names": [
+        "a held Marginalia answer normalizes to POINTER rows — URL, title, format, rank — and never the index's licensed text",
+        "a pointer is a lead only when its host or its index title names the candidate; every other hit is refused with a type",
+        "an empty answer is a NAMED NO-HIT, not a failed normalization and never a statement about the candidate",
+        "the tail stages pointers for the verifier, where it used to stage NORMALIZER MISSING"
+      ],
+      "dynamic": 0
+    },
     "tests/marker-pool-ops.test.ts": {
       "names": [
         "P-001 · REVERSING the filter is another 20 writes, not 20 constructions",
@@ -6274,6 +6528,34 @@
       ],
       "dynamic": 0
     },
+    "tests/mesa-minutes-outcomes-routine.test.ts": {
+      "names": [
+        "Ask answers a Mesa council decision from the council's own minutes, with the exact passage, and never presents a tally as a roll call",
+        "Ask's topic timeline joins a Mesa decision to the topic from the minutes and composes the answer without a model",
+        "Mesa's minutes are one routine contract on the standing clock, following the council's InSite sittings",
+        "a failed minutes read is a held attempt that leaves the last good pointer live; a failed calendar read too",
+        "a routine pass reads the minutes the portal links, records the rest as not yet published, and promotes",
+        "the Reader combines Pima's and Mesa's pointers, each tenant's records and provenance intact, and Pima's answers unchanged",
+        "the rolling window ends today in Mesa and reaches back 120 days; one grid range covers it unless it crosses a year"
+      ],
+      "dynamic": 0
+    },
+    "tests/mesa-minutes-outcomes.test.ts": {
+      "names": [
+        "a later sitting's minutes approving these minutes marks them APPROVED, with its own words",
+        "a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'",
+        "action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken",
+        "result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed",
+        "the 2026-06-01 minutes: one motion adopting five resolutions and an ordinance reaches all six items",
+        "the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found",
+        "the 2026-07-20 council minutes, a signed scan read through its OCR text layer (real PDF bytes)",
+        "the 2026-07-27 council minutes: five motions, two split votes, the consent agenda and the items pulled from it",
+        "the concluded sittings a pass considers: the wired bodies, in the window, already held, one row per portal id",
+        "the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host",
+        "which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link"
+      ],
+      "dynamic": 0
+    },
     "tests/method-candidate-authority.test.ts": {
       "names": [
         "a malformed adopted aggregate is a broken lineage, not a store outage or an empty population",
@@ -6588,13 +6870,25 @@
       ],
       "dynamic": 0
     },
+    "tests/model-ladder-view.test.ts": {
+      "names": [
+        "a zero is honest: with paid research paused it says since when; with nothing run under the ladder, or nothing needing to move up, it says that",
+        "an escalation on record reads as the classes by name, the reason, the evidence, and what both tries cost together and each",
+        "every recorded reason and every refusal has owner words — the closed lists and the words cannot drift apart",
+        "one Scout result for an assignment's standing view: the class chosen, why, and for an escalated one the evidence and combined cost; a result before the ladder says it started at the top by the rule of the day"
+      ],
+      "dynamic": 0
+    },
     "tests/model-lane.test.ts": {
       "names": [
+        "PRODUCTION TODAY — research paused, delivery gate closed: the lane stays closed and now leads with the owner's pause",
+        "an owner control that could not be read holds the lane closed as if paused, names it, and says free work continues",
         "freshness-shadow derives modelLaneEnabled from modelLaneClosure and the activation gate",
         "promotion on with no record class open is still no delivery path",
-        "reasons are ordered: blackout, dry, no-model, credential, delivery, owner pause",
+        "reasons are ordered: blackout, dry, no-model, owner pause, runner pause, unreadable control, credential, delivery",
         "the lane is open only when nothing closes it and a delivery path is open",
         "the real activation gate decides: the lane is open exactly when a delivery path is",
+        "the runner-level PAUSE_RUNNER closes the paid lane, not only the research-lane PAUSE",
         "with promotion off, the lane closes and says why, and what keeps running"
       ],
       "dynamic": 0
@@ -7235,6 +7529,18 @@
         "R46: no ambiguous-extension JavaScript file has appeared",
         "R46: the package declares itself ESM",
         "R46: tracked source carries no CommonJS-only construct"
+      ],
+      "dynamic": 0
+    },
+    "tests/paid-work-fails-closed.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker",
+        "POSITIVE CONTROL: a runner that reads an unreadable log as silence, or never tells the child, fails its checker",
+        "PRODUCTION TODAY: routine intake, the free discovery walk and dispatch-work writes are gated exactly as before",
+        "an unreadable, invalid, or malformed-ceiling row holds paid work by name and never reaches the fallback",
+        "freshness-shadow.mts closes every paid path on an unreadable or ignored control (items 1, 3, 4, 5, 7, 8)",
+        "pilot-runner.mts never reads an unreadable intent log as 'not paused', and holds the next cycle's paid lane (item 2)",
+        "the config row for paid work: a clean read honors the owner's dial, and only a clean read with no override falls back"
       ],
       "dynamic": 0
     },
@@ -8323,6 +8629,7 @@
     },
     "tests/reader-last-mile-census.test.ts": {
       "names": [
+        "R25: a newer official edition the runner promoted and validated succeeds the frozen absence; unpromoted drift fails",
         "Reader authority canonicalization ignores transport metadata and JSON key order only",
         "Reader authority counts a union predecessor only with authenticated disposition context",
         "Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production",
@@ -8574,6 +8881,7 @@
         "Reader proof authority binds the actual read-only connection without exposing it",
         "Reader proof authority permits a descendant only for an unchanged validated production merge",
         "a partition retired by a proved cutover hands its imported authority to its registered successor",
+        "a route retired beside an already-promoted successor leaves the authority; the successor keeps its own",
         "a successor served from its predecessor's held version keeps the body's authority; without it the loss is refused",
         "deployed Reader runtime closure admits documentary-only descendants and rejects source drift",
         "documentary Reader meeting authority fails closed before explicit phase admission",
@@ -8778,6 +9086,15 @@
       ],
       "dynamic": 0
     },
+    "tests/readiness-standard.test.ts": {
+      "names": [
+        "MW-063: a snapshot measured under a superseded version stays readable and names that version",
+        "MW-063: every version is dated, exactly one is in force, and each superseded one hands over to the next",
+        "MW-063: the gates and taxonomy the code runs are exactly the manifest's current version",
+        "MW-063: the manifest's current version is the contract the code stamps and trusts"
+      ],
+      "dynamic": 0
+    },
     "tests/reference-data.test.ts": {
       "names": [
         "2c: the 13 Texas special districts with blank place are left as a stated gap",
@@ -8868,6 +9185,16 @@
       ],
       "dynamic": 0
     },
+    "tests/registration-jurisdictions.test.ts": {
+      "names": [
+        "Ohio's registration, read as a registry: every government under the reviewed ids, its body, and only the Census's own web address",
+        "Puerto Rico: every municipio is registered from TIGER functional status, with no web address recorded and none invented",
+        "a registration pass keeps which registry the owner's dispatch materialized a row from",
+        "only the promoted version is read: one built from another reference, none at all, or an outage refuses the state by name",
+        "the reviewed registry wins; a state is readable through the one accessor only once its registration is installed"
+      ],
+      "dynamic": 0
+    },
     "tests/registration-reference.test.ts": {
       "names": [
         "a consolidated city-county pairs to its county, and a town whose code merely missed never does (2026-09-25)",
@@ -8929,6 +9256,7 @@
         "an unchanged authority version carries its served artifact forward; the runner never re-reads it",
         "primeRegistryRuntimeFromValue serves the value synchronously with its version, no DB",
         "republishing the same authority version is idempotent; a new version advances the pointer",
+        "settleEdgeFirst (R24): the edge value is primed with no read; without one the database is read; an edge-only context refuses",
         "the registry-runtime edge value is request-scoped: absent by default (runner/workers keep the DB path)",
         "the runner publishes registry-runtime as a compressed artifact the reader reads back losslessly"
       ],
@@ -8939,6 +9267,13 @@
         "division and geometry authority never opens the unrelated federal roster",
         "federal directory scope is exact and excludes local/state-legislative divisions",
         "official lookup still fails closed when its required federal roster is unavailable"
+      ],
+      "dynamic": 0
+    },
+    "tests/replay-research-findings.test.ts": {
+      "names": [
+        "LIVE: the complete chain approves what verifies twice, and its package enters the door as a validated successor",
+        "OFFLINE: held findings are judged on held bytes; unread leads stay owed; the would-be links are named, never packaged"
       ],
       "dynamic": 0
     },
@@ -9085,6 +9420,7 @@
     },
     "tests/retired-meeting-routes.test.ts": {
       "names": [
+        "Newbury's dead CivicWeb route is retired, and its already-wired calendar feed is the Selectboard's one clock",
         "a link into a retired host is recognised as held-as-link, and nothing else is",
         "agenda retrieval consults the retired-host rule before any request",
         "every retired route has exactly one wired successor for the same body, and no clock of its own",
@@ -9564,7 +9900,8 @@
         "W3.5: a full cycle runs unattended and NEVER promotes to reader truth",
         "W3.5: a losing claim is normal concurrency, never debt",
         "W3.5: an obligation with no RouteTask is COUNTED, not skipped",
-        "W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason"
+        "W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason",
+        "a committed non-reading is named for what it is: only a wall is a host refusal"
       ],
       "dynamic": 0
     },
@@ -9622,10 +9959,10 @@
     },
     "tests/scout-context-bound.test.ts": {
       "names": [
-        "a result with no artifact mapping (finish / record_rung) is never elided",
-        "elision is stable: a second pass changes nothing",
-        "nothing is elided when the whole conversation fits",
-        "older tool results are elided until the retained content is within budget"
+        "nothing is over the budget when the whole conversation fits, and small older results are carried whole",
+        "the carried-forward block is a pure function of the record: the same conversation gives the same bytes",
+        "the carried-forward block lists every rung with its artifact ids, keeps the newest representation whole, and fits older ones in half the budget",
+        "the most recent turn's finish refusal and record_rung answer are carried whole; an older one is not"
       ],
       "dynamic": 0
     },
@@ -9655,9 +9992,33 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-model-ladder.test.ts": {
+      "names": [
+        "L1: the loop's first request goes to Sonnet 5 — the cheapest suitable class — with every cache breakpoint placed and a prefix that clears Sonnet's minimum",
+        "L2: a Sonnet attempt that produces an accepted typed result is the whole Attempt — no escalation, no reservation, one attempt's cost",
+        "L4: a provider overload (HTTP 529) is not the model's failing and never escalates — a dearer model is not a retry",
+        "L5 CEILING (positive control): under a ceiling that covers both attempts the real controller holds the escalation, and after it every cent of the hold is drawn or released",
+        "L5 CEILING: with the real FleetSafety controller, an escalation whose worst case the rolling ceiling cannot cover is refused before any frontier request, deferred by name, and recorded after the root cause",
+        "L5 FleetSafety.holdModelBudget: the hold counts against the rolling ceiling until drawn or released, and refuses over it",
+        "L5 WALL_CLOCK / UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request",
+        "L6: the pre-warm warms the model the loop STARTS on — byte-identical to the loop's first request — and is skipped by name when the prefix cannot be shown to cache",
+        "L7: Opus 5.5 remains the maximum the ladder can reach, a Fable is refused, the auditor stays on the frontier, and an escalation needs a recorded reason below the top"
+      ],
+      "dynamic": 1
+    },
+    "tests/scout-preserved-thinking.test.ts": {
+      "names": [
+        "PT-1: the conversation is append-only — each request extends the one before byte-for-byte, except a restart, which replays no earlier turn or thinking block — and the payload stays bounded",
+        "PT-2: the escalation appends to the same conversation — Sonnet's reply, thinking blocks included, reaches Opus 5.5 unchanged — and both models state drop_block",
+        "PT-3: a prefix-binding drop — our history changed under a block — is recorded on the result and named on the outcome",
+        "PT-4: the transport sends the thinking-binding beta header exactly when the body carries block_binding — a request without it sends none"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-prewarm.test.ts": {
       "names": [
         "PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule",
+        "PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts actually send — the search tool included, the same thinking and effort — and the runner feeds one switch to both",
         "PC-7: no admitted Scout, no pre-warm; and a failed pre-warm is recorded while the Attempts still run",
         "PC-7: the cycle pre-warms ONCE, before the first admitted Scout, and both concurrent Scouts start after the entry exists",
         "PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder"
@@ -9668,10 +10029,13 @@
       "names": [
         "Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers",
         "Exa request: POST, Bearer auth, type fast, numResults, and NO contents / outputSchema / answer",
+        "a budget that cannot be read sends no paid request at all",
         "an empty query returns an empty result without calling any provider",
         "combined: both providers queried, results deduped by URL, errors named without failing the call",
         "combined: one provider erroring is named, the other's hits still return",
-        "makeScoutSearch is null when neither key is set — the tool stays inert"
+        "every paid provider request is admitted by the budget first; a refused provider sends nothing and is named",
+        "makeScoutSearch is null when neither key is set — the tool stays inert",
+        "the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both"
       ],
       "dynamic": 0
     },
@@ -10513,6 +10877,16 @@
       ],
       "dynamic": 0
     },
+    "tests/suiteone-source.test.ts": {
+      "names": [
+        "WINSLOW · a portal that no longer carries the council's own panel is never read as a council with no meetings",
+        "WINSLOW · permission is asked first; a host with no robots.txt states no restriction",
+        "WINSLOW · the council's in-window sittings reach readers with their own time, agenda and cancellations",
+        "WINSLOW · the portal's two lists are read as printed, and each panel's own count is met",
+        "WINSLOW · the wired body is Winslow's registered governing body, read from its portal in its own partition"
+      ],
+      "dynamic": 0
+    },
     "tests/superseded-obligation-retirement.test.ts": {
       "names": [
         "PLAN: a provider that would suddenly retire more than the bound holds every row back for a person",
@@ -10957,6 +11331,8 @@
     },
     "tests/vote-source-isolation.test.ts": {
       "names": [
+        "R9: only scopes whose contract still promotes STATE_ROLL_CALL are read; the retired one is named",
+        "R9: the retired New Hampshire pointer is refused before any store opens",
         "a New Hampshire member opens only the exact New Hampshire authority",
         "a production process cannot reopen the retired aggregate through a test marker",
         "a requested New Jersey failure remains explicitly unavailable without opening AZ or NH",
@@ -11321,8 +11697,10 @@
     },
     "tests/worker-fleet-model-audit.test.ts": {
       "names": [
+        "Opus 5.5 request: no forced tool choice — auto, a strict record_audit schema strict mode accepts, and the system prompt naming the tool",
         "a valid grounded challenge survives beside a refused ungrounded challenge without certifying the whole response",
         "adaptive budget keeps five complete events and every exploratory route with eight large publisher surfaces",
+        "an answer without a record_audit call fails closed by name — even valid JSON saying SURVIVED — and missing usage remains null",
         "an injected transport cannot hang the review and the established bound cannot be enlarged",
         "an oversized primary projection is refused before transport instead of cutting through civic JSON",
         "first-party surface evidence is represented and exact surface quotes ground challenges",
@@ -11331,7 +11709,8 @@
         "malformed, truncated, mismatched and unsupported responses retain exact named validation failures and measured cost",
         "oversized response is bounded durably and never mistaken for a complete verdict",
         "provider outage is a named execution failure with no guessed usage or leaked transport body",
-        "strict JSON end_turn compatibility remains accepted and missing usage remains null",
+        "the auditor admits against the owner's ceiling in force, lowered or raised, not the static default",
+        "the standing runtime hands the auditor the ceiling in force",
         "typed record_audit output preserves grounded challenge, actual model usage and existing cost calculation"
       ],
       "dynamic": 0

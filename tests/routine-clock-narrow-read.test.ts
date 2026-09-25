@@ -12,6 +12,7 @@ import {
   candidateProofRead,
   candidateProofView,
   latestReaderReadbacksRead,
+  meetingPayloadSittingStarts,
   newestReaderReadback,
   pointerMoveEventsRead,
   POINTER_MOVE_DETAIL_PREFIX,
@@ -283,6 +284,9 @@ test("a MEETING clock reports its sitting starts, and the pointed success as its
   await store.transition(value.id, "NORMALIZED", observedAt, "persisted normalization");
   const receipt = { ...receiptFor(value), validatedAt: observedAt };
   await store.transition(value.id, "VALIDATED", observedAt, "persisted validation", receipt);
+  // Before any promotion the store reports no sitting list; the runner reads
+  // that as never published and retries on the base cadence (R20).
+  assert.equal("sittingStarts" in await store.clock(value.sourceId, value.recordClass, value.scope), false);
   await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), {
     lastAttemptedAt: observedAt,
@@ -296,6 +300,9 @@ test("a MEETING pointer's sitting starts are built in Postgres; the promoted pay
   const text = sittingStartsRead(drizzle.mock({ schema }), "source:x:body:y").toSQL().sql;
   const select = text.slice(0, text.indexOf(" from \"civic_data_promotions\""));
   assert.match(select, /jsonb_agg\(m->'startsAt'\)/);
+  assert.match(select, /'\[\]'::jsonb\)/, "a promoted scope with no sittings reports an empty list, never none (R20)");
+  assert.deepEqual(meetingPayloadSittingStarts({ meetings: [] }), []);
+  assert.deepEqual(meetingPayloadSittingStarts({}), []);
   assert.match(select, /jsonb_array_elements\(case when jsonb_typeof\((?:"civic_data_promotions"\.)?"payload"->'meetings'\) = 'array'/);
   assert.doesNotMatch(select, /select (?:"civic_data_promotions"\.)?"payload"[,\s]/, "the payload column is never selected whole");
   assert.doesNotMatch(select, /::timestamptz/, "no cast can fail the clock; the runner parses the strings");

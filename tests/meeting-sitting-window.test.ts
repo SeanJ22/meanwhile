@@ -8,7 +8,7 @@ import {
   sittingWindowDueAtMs,
   sittingWindowHot,
 } from "../lib/civic-data/contracts.ts";
-import { MEETING_PARTITION_CONTRACTS, meetingPartitionId, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, meetingPartitionId, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
 import {
   ROUTINE_SOURCE_TASKS,
   routineTaskDue,
@@ -125,11 +125,46 @@ test("the success is read in the attempt clock's own units, so a success is neve
   const failed: RoutineTaskClock = { ...clock, lastAttemptedAt: "2026-09-24T10:00:00.000Z" };
   assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T11:00:00.000Z") - 1, false), false);
   assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T11:00:00.000Z"), false), true);
-  // A source that never succeeded retries on its attempt; a never-run one is due at once.
-  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at }, base + HOUR - 1, false), false);
-  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at }, base + HOUR, false), true);
+  // A published source with no proven success retries on its attempt; a never-run one is due at once.
+  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR - 1, false), false);
+  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR, false), true);
   assert.equal(routineTaskDue(partition, undefined, base, false), true);
   assert.equal(routineTaskDue(partition, {}, base, false), true);
+});
+
+test("R20: a meeting partition never published is retried twice daily, not hourly; a published one keeps its retry", () => {
+  const partition = task(PIMA_LEGISTAR);
+  const at = "2026-09-24T09:00:00.000Z";
+  const base = Date.parse(at);
+  // The store reports no sitting list for a scope it holds no promotion for.
+  const never: RoutineTaskClock = { lastAttemptedAt: at };
+  for (const hot of [true, false, undefined]) {
+    assert.equal(routineTaskDue(partition, never, base + HOUR, hot), false, "not at the failure hour");
+    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - 1, hot), false);
+    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR, hot), true, "at the base cadence");
+  }
+  // A promoted scope reports its sitting list, even an empty one, so a read
+  // that has not proven a success keeps the one-hour retry.
+  for (const sittingStarts of [[], [at]]) {
+    const published: RoutineTaskClock = { lastAttemptedAt: at, sittingStarts };
+    assert.equal(routineTaskDue(partition, published, base + HOUR - 1, true), false);
+    assert.equal(routineTaskDue(partition, published, base + HOUR, true), true);
+  }
+  // A failed read after a proven success keeps the hour too.
+  const failed: RoutineTaskClock = { ...succeededAt(at, []), lastAttemptedAt: new Date(base + HOUR).toISOString() };
+  assert.equal(routineTaskDue(partition, failed, base + 2 * HOUR, false), true);
+  // A never-run partition is read at once.
+  assert.equal(routineTaskDue(partition, undefined, base, true), true);
+  assert.equal(routineTaskDue(partition, {}, base, true), true);
+  // A derived family never published waits the base cadence, not its six-hour retry.
+  const family = task(derivedMeetingFamilyId("US-AZ"));
+  assert.equal(family.retryMs, 6 * HOUR);
+  assert.equal(routineTaskDue(family, never, base + 6 * HOUR, true), false);
+  assert.equal(routineTaskDue(family, never, base + 12 * HOUR, true), true);
+  // Meeting outcomes carry no sitting list of their own, so they keep their retry.
+  const outcomes = task(OUTCOMES);
+  assert.ok(outcomes.retryMs < 12 * HOUR);
+  assert.equal(routineTaskDue(outcomes, never, base + outcomes.retryMs, true), true);
 });
 
 test("the window rolls: a sitting coming within seven days makes a twice-daily source due at that instant", () => {

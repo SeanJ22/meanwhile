@@ -14,6 +14,7 @@ import {
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { meetingPayloadSittingStarts } from "./store.ts";
+import { sittingWindowRetryMs } from "./sitting-window-retry.ts";
 import {
   MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   type ManualProductionSourceContract,
@@ -1198,6 +1199,7 @@ function nextDue(
   latestOrderIssue: string | null = null,
   sittingHot?: boolean,
   confirmation: UnchangedConfirmation | null = null,
+  published = true,
 ): Observation<string> {
   if (isManualContract(contract)) return notApplicable("Manual production contract: no next-due clock exists.");
   if (latest && authorityOrigin(latest) === "TRUSTED_LKG_IMPORT") {
@@ -1222,13 +1224,31 @@ function nextDue(
   const newestSuccess = Math.max(succeededAt?.kind === "MEASURED" ? Date.parse(succeededAt.value) : Number.NEGATIVE_INFINITY, confirmedMs);
   const succeeded = Number.isFinite(newestSuccess) ? newestSuccess : Number.NaN;
   if (!Number.isFinite(succeeded) || attempted > succeeded) {
-    return measured(new Date(attempted + contract.retry.afterMs).toISOString());
+    return measured(new Date(attempted + observedRetryMs(contract, published)).toISOString());
   }
   const schedule = "schedule" in contract ? contract.schedule : undefined;
   if (schedule?.kind === "SITTING_WINDOW") {
     return measured(new Date(sittingWindowDueAtMs(schedule, succeeded, sittingHot)).toISOString());
   }
   return measured(new Date(succeeded + cadenceMsAt(contract, nowMs)).toISOString());
+}
+
+/**
+ * The retry the runner admits on after a failed attempt. A meeting partition
+ * the store holds no pointer for has never been published and waits the base
+ * cadence (R20); every other contract keeps its own retry.
+ */
+function observedRetryMs(contract: RoutineSourceContract, published: boolean): number {
+  const schedule = contract.schedule;
+  if (schedule?.kind !== "SITTING_WINDOW" || contract.recordClass !== "MEETING") return contract.retry.afterMs;
+  return sittingWindowRetryMs(schedule, contract.retry.afterMs, published);
+}
+
+function observedRetryDescription(contract: RoutineSourceContract, published: boolean): string {
+  const retryMs = observedRetryMs(contract, published);
+  return retryMs === contract.retry.afterMs
+    ? contract.retry.description
+    : `${contract.retry.description}; never published, so ${Math.round(retryMs / 3_600_000)} hours after its last attempt (the base cadence)`;
 }
 
 /**
@@ -1319,7 +1339,7 @@ function operationalState(
           : `The latest owner-invoked attempt ended ${state}; canonical/LKG service is ${canonical.kind}: ${canonical.detail}`,
       };
     }
-    const retryAt = latestAt + contract.retry.afterMs;
+    const retryAt = latestAt + observedRetryMs(contract, canonical.kind !== "NOT_RECORDED");
     if (nowMs < retryAt) {
       return {
         state: "RETRYING",
@@ -2164,8 +2184,10 @@ function projectContract(
       clock: isManualContract(contract) ? "MANUAL" : "STANDING",
       description: isManualContract(contract) ? "explicit owner invocation only" : contract.cadence.description,
       activeEveryMs: isManualContract(contract) ? 0 : cadenceMsAt(contract, nowMs),
-      retryDescription: isManualContract(contract) ? "explicit owner rerun after inspecting the durable refusal" : contract.retry.description,
-      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot, confirmation),
+      retryDescription: isManualContract(contract)
+        ? "explicit owner rerun after inspecting the durable refusal"
+        : observedRetryDescription(contract, canonical.kind !== "NOT_RECORDED"),
+      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot, confirmation, canonical.kind !== "NOT_RECORDED"),
       operationalState: operation.state,
       operationalDetail: operation.detail,
       freshness: fresh.state,

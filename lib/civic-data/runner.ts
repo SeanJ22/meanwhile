@@ -9,6 +9,7 @@ import {
   type SittingWindowSchedule,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "./meeting-partitions.ts";
+import { sittingWindowRetryMs } from "./sitting-window-retry.ts";
 import { SOURCE_AUTHORITIES, authorityFor, sourceAuthority } from "./source-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import {
@@ -494,7 +495,8 @@ export function sittingWindowSignals(
  * A sitting-window task is due at `sittingWindowDueAtMs` after its last
  * success. Both instants are store-observed first events, so a success is
  * never mistaken for a later failed attempt. A failed later attempt keeps the
- * retry clock exactly, as every other task does.
+ * retry clock exactly, as every other task does. A meeting partition never
+ * published retries on the base cadence (`sittingWindowRetryMs`, R20).
  */
 function sittingWindowTaskDue(
   task: RoutineSourceTask,
@@ -508,8 +510,21 @@ function sittingWindowTaskDue(
   const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
   if (!Number.isFinite(attempted)) return true;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
-  if (!Number.isFinite(succeeded) || attempted > succeeded) return nowMs - attempted >= task.retryMs;
+  if (!Number.isFinite(succeeded)) {
+    return nowMs - attempted >= sittingWindowRetryMs(schedule, task.retryMs, sittingTaskPublished(task, clock));
+  }
+  if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
   return nowMs >= sittingWindowDueAtMs(schedule, succeeded, hot);
+}
+
+/**
+ * Whether a sitting-window task's own scope holds a promotion. The store
+ * reports a sitting list, empty or not, for every MEETING scope with a
+ * promotion and none for a scope never promoted. It reports none for other
+ * record classes, so those keep their contract's retry.
+ */
+function sittingTaskPublished(task: RoutineSourceTask, clock: RoutineTaskClock): boolean {
+  return task.recordClass !== "MEETING" || clock.sittingStarts !== undefined;
 }
 
 export function routineTaskDue(

@@ -509,14 +509,22 @@ test("R8: a board whose schedule places nothing yields its concluded sittings fr
   assert.equal(byId.get("clerksboards:43:2026-08-20")?.title, "Industrial Development Authority");
   assert.equal(byId.get("clerksboards:15:2026-07-16")?.bodyName, "Tucson Convention Center Commission");
   assert.equal(byId.get("clerksboards:15:2026-07-16")?.agendaUrl, "https://assets.tucsonaz.gov/share/bcc/42419.pdf");
-  assert.equal(accounting.logicalInput, 5, "the schedules parsed, so the count is exact");
+  // The schedules parsed, so the count is exact: the 5 sittings, and what the
+  // schedules published that the window does not serve (2026-09-25) — IDA's 8
+  // dates and the Commission's 2 dates before the window, and the Commission's
+  // "July and October 2026 TBD", two months told of and never dated.
+  assert.equal(accounting.logicalInput, 17);
+  assert.equal(accounting.outOfWindow, 10);
 
-  // Without the list the same pages extract nothing — the defect, which the
-  // zero-row guard refuses as a failed extraction on every read.
-  assert.throws(
-    () => source.normalizeWithDrops(raw.map(({ pastAgendaHtml: _list, ...row }) => row), R8_NOW),
-    /extracted 0 meeting/,
-  );
+  // Without the list the same pages extract nothing, and that is now a counted
+  // result — every published date is outside the window, two months are TBD —
+  // never an uncounted zero the guard has to refuse as a failed extraction.
+  // (Until 2026-09-25 this threw "extracted 0 meeting" on every read.)
+  const bare = source.normalizeWithDrops(raw.map(({ pastAgendaHtml: _list, ...row }) => row), R8_NOW);
+  assert.equal(bare.meetings.length, 0);
+  assert.equal(bare.accounting.outOfWindow, 10);
+  assert.equal(bare.drops.unplaceableInTime, 2, "the two TBD months are counted, never read as a board that meets twice a year");
+  assert.equal(bare.accounting.outcome, "CONSERVED");
 });
 
 test("R8: the Past Agendas list is requested only for a board whose schedule places nothing", async () => {

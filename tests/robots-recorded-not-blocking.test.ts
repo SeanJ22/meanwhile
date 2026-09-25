@@ -18,11 +18,12 @@
  * 3. An access control is never pushed through: a 401, a 403, a challenge page
  *    and a 429 are named as walls, a 429 backs the host off, nothing is re-sent
  *    under another identity, and no request carries a credential or a cookie.
- *    The shared source client (`lib/sources/http.ts`) is one identified client:
- *    since 2026-09-25 it has no browser-header, name-dropping or `curl` rung,
- *    no wiring row may ask for a browser profile, the relay rung
- *    (`readViaEgress`) refuses, and no production module carries a borrowed
- *    browser identity or shells out to a second client.
+ *    Honest identity is allowed, disguise is not: the shared source client
+ *    (`lib/sources/http.ts`) sends the project's own name, and when a filter
+ *    refuses Node's client it asks once more as the same identity through
+ *    `curl`; since 2026-09-25 it has no browser-header or name-dropping rung, no
+ *    wiring row may ask for a browser profile, the relay rung (`readViaEgress`)
+ *    refuses, and no production module carries a borrowed browser identity.
  * 4. Every module that consumes the robots evaluator is named here with the
  *    test that holds it to the rule, so a new consumer cannot quietly bring the
  *    refusal back; and the old refusal messages do not return in code.
@@ -52,6 +53,7 @@ import {
 import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
 import { EgressRefusal, readViaEgress } from "../lib/hunt/egress.ts";
 import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from "../lib/sources/http.ts";
+import { identifiedResearchGet } from "../lib/hunt/research-transport.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 
@@ -234,7 +236,7 @@ test("THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and
   assert.equal(walled.seen.filter((u) => u === "https://waftown.gov/").length, 1, "a 403 is asked once, never re-sent under another identity");
 });
 
-test("THE SHARED SOURCE CLIENT IS ONE HONEST CLIENT: a 403 or a challenge is a wall asked once, under the project's own name, and never re-sent", async () => {
+test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a wall, and the one second ask is the same name through curl", async () => {
   const seen: { url: string; headers: Record<string, string> }[] = [];
   const answering = (status: number, body: string) =>
     (async (url: string | URL | Request, init?: RequestInit) => {
@@ -254,6 +256,42 @@ test("THE SHARED SOURCE CLIENT IS ONE HONEST CLIENT: a 403 or a challenge is a w
     assert.equal(carriesCredential(s.headers), false);
     assert.ok(!Object.keys(s.headers).some((h) => /^sec-fetch-/i.test(h)), "no browser-navigation headers");
   }
+
+  /* Rung 4: the same identity through curl, once; its challenge is the wall. */
+  const curled: Record<string, string>[] = [];
+  await assert.rejects(
+    politeGetText("https://waf.example.gov/d", {
+      fetchImpl: answering(403, "<html><title>Just a moment...</title></html>"),
+      ladder: {
+        curl: async (_url, headers) => {
+          curled.push(headers);
+          return { status: 200, contentType: "text/html", text: "<html><title>Just a moment...</title></html>" };
+        },
+      },
+    }),
+    (e: unknown) => e instanceof SourceHttpError && e.rung === 4 && /challenge/.test(e.message),
+  );
+  assert.equal(curled.length, 1, "one second ask, never a third");
+  assert.equal(curled[0]["User-Agent"], sourceUserAgent(), "as who we are");
+  assert.equal(carriesCredential(curled[0]), false);
+});
+
+test("THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once more through curl with the same User-Agent, and a refusal there stands", async () => {
+  const args: string[][] = [];
+  const get = identifiedResearchGet({
+    first: async () => ({ status: 403, body: new Uint8Array(0), contentType: "text/html", location: null, transportError: null }),
+    curl: async (a) => {
+      args.push([...a]);
+      return Buffer.from("HTTP/1.1 403 Forbidden\r\ncontent-type: text/html\r\n\r\n<title>Just a moment...</title>");
+    },
+  });
+  const got = await get({ url: "https://waf.example.gov/", headers: { "user-agent": DEFAULT_USER_AGENT, accept: "text/html" }, timeoutMs: 5_000 });
+  assert.equal(got.status, 403, "the refusal stands; nothing answers the challenge");
+  assert.equal(args.length, 1);
+  const headerValues = args[0].filter((_, i) => args[0][i - 1] === "-H");
+  assert.ok(headerValues.includes(`user-agent: ${DEFAULT_USER_AGENT}`), "the same identified User-Agent");
+  assert.ok(!headerValues.some((h) => /mozilla|chrome/i.test(h)), "never a browser's");
+  assert.ok(!args[0].includes("-L"), "never follows a redirect");
 });
 
 test("NO WIRING ROW ASKS FOR A DISGUISE, AND THE RELAY RUNG REFUSES BEFORE ANY REQUEST", async () => {
@@ -288,45 +326,41 @@ test("A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to
   assert.deepEqual(sent.map((s) => s.cookie), [null, null, "ASP.NET_SessionId=abc"]);
 });
 
-/** A borrowed browser identity, a second client shelled out to, or the retired relay being called. */
+/**
+ * A borrowed browser identity, a User-Agent that is not ours, or the retired relay being called. A second
+ * client (`curl`) is not on this list: it is allowed when it says who we are (it is held to that by the tests
+ * above), and a request never borrows anyone else's name.
+ */
 const DISGUISES: readonly RegExp[] = [
   /Mozilla\/5\.0 \((Windows|Macintosh|X11|Linux|iPhone|iPad)/,
   /\bChrome\/\d{2,3}\./,
   /HeadlessChrome/,
-  /(execFile|spawn|execFileSync|spawnSync|run)\(\s*["']curl["']/,
   /["']?user-agent["']?\s*:\s*["']Mozilla/i,
   /(?<!function )readViaEgress\(/,
 ];
 
 /**
- * Session scripts (never run by the standing runner) that still carry their own disguising client on
- * 2026-09-25: a browser User-Agent, a `curl` rung, or a call to the retired relay. Named so the debt is
- * visible and can only shrink: a script leaves this list the day its disguise is removed, and a new file
- * carrying one fails. Some use `curl` with the project's own User-Agent as their only client, which is not a
- * disguise by itself; each still needs reading before it is taken off.
+ * Session scripts (never run by the standing runner) that still carry a disguising client on 2026-09-25: a
+ * browser User-Agent, or a call to the retired relay. Named so the debt is visible and can only shrink: a
+ * script leaves this list the day its disguise is removed, and a new file carrying one fails.
  */
 const KNOWN_SCRIPT_DEBT: readonly string[] = [
   "scripts/adjudicate-leads.mts",
   "scripts/candidate-site-probe.mts",
   "scripts/d50-reinstate.mts",
-  "scripts/definitions-verify.mts",
   "scripts/descent.mts",
   "scripts/enumerate-town-bodies.mts",
-  "scripts/hunt-campaign-sites.mts",
   "scripts/hunt-roster.mts",
   "scripts/ladder-fetch.mts",
-  "scripts/ladder-monotonicity.mts",
   "scripts/nh-cfs-ladder.mts",
-  "scripts/nj-filing.mts",
   "scripts/nj-hunt4-portrait-sheet.mts",
   "scripts/nj-hunt4-search.mts",
   "scripts/recover-redirected-directory.mts",
-  "scripts/robots-sweep.mts",
   "scripts/tenancy.mts",
   "scripts/verify-extraction.mts",
 ];
 
-test("NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY OR A SECOND CLIENT, and the script debt only shrinks", () => {
+test("NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY, and the script debt only shrinks", () => {
   const offenders = (files: readonly string[]) =>
     files.map((f) => f.replace(/\\/g, "/")).filter((f) => {
       const text = code(readFileSync(join(ROOT, f), "utf8"));

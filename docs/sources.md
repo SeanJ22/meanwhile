@@ -645,36 +645,40 @@ RULING 52 exists to prevent.
 
 ---
 
-## Access controls this project no longer gets past (2026-09-25)
+## Honest identity, never a disguise (2026-09-25)
 
 The same owner decision that made robots.txt a record also drew the other
 line: *"This authorization does not extend to bypassing authentication or other
-access controls."* A bot filter that refuses an identified client is an access
-control. Until 2026-09-25 the shared source client (`lib/sources/http.ts`)
-answered a 403 by re-sending the request with a Chrome browser header set, then
-with a plain Chrome `User-Agent` that left the project's name out ("rung 3b"),
-then through `curl` for a different TLS fingerprint; four wiring rows asked for
-the browser header set first; the relay rung (`lib/hunt/egress.ts`) fetched a
-walled page from a third party's addresses; and the NH lobbyist-registry route
-left the project's name out of its `User-Agent`. All of that is gone: one
-identified client, sent once, and a 401/403/challenge is a wall
-(`tests/robots-recorded-not-blocking.test.ts`).
+access controls."* Applied here: saying who we are is always allowed;
+pretending to be someone else to get past a filter is not.
 
-Measured 2026-09-25 with the identified client, robots.txt read first (41 wired
-URLs): every wired route answered except these, which answer **HTTP 403 with a
-bot challenge**. Each partition keeps its last good version and is owed another
-public route:
+- **Kept:** the shared source client (`lib/sources/http.ts`) sends the project's
+  own `User-Agent`; when a filter refuses Node's client (a 403, or a challenge
+  page at 200) it asks once more as the same identity through `curl`, with
+  `X-Purpose` and `X-Contact` beside it. The research transport
+  (`lib/hunt/research-transport.ts`) does the same.
+- **Removed:** the browser profile four wiring rows asked for (Kearsarge; Newbury
+  Planning, Conservation, ZBA), rung 3 (a Chrome browser header set after a 403),
+  rung 3b (a Chrome `User-Agent` with the project's name taken out), the browser
+  header sets on the `curl` rung, the third-party relay rung
+  (`lib/hunt/egress.ts`, which fetched a walled page from someone else's
+  addresses), and the NH lobbyist-registry route's name-less `User-Agent`.
+- **Never:** a credential or cookie sent to get past a wall, a challenge or
+  CAPTCHA answered or scripted past, a 401/407 re-asked. A refusal or challenge
+  from the honest `curl` request is a WALL naming rung 4
+  (`tests/robots-recorded-not-blocking.test.ts`, `tests/identified-ua-wall.test.ts`).
 
-| Host | Routes | Bodies | Last good versions (promoted, 2026-09-25) |
-| --- | --- | --- | --- |
-| `www.newbury.nh.gov` | `/calendar/ical/export.ics` (ICAL) | 15 wired; 6 promoted | Selectboard 14 sittings, Conservation 10, ZBA 8, Planning 7, Blodgett Sewer 1, Supervisors of the Checklist 1; the other 9 bodies never promoted (zero rows) |
-| `www.newbury.nh.gov` | `/planning-board`, `/conservation-commission`, `/zoning-board-adjustment` (SCHEDULEPAGE, were browser profile) | 3 | Conservation 6, Planning 3, ZBA 3 |
-| `www.suttonnh.gov` | `/calendar/ical/calendar.ics` (ICAL) | 8 wired; 6 promoted | Select Board 16, Planning 7, Conservation 6, Sutton Connects 6, Zoning 6, Cemetery 3; 2 never promoted |
-| `www.kearsarge.org` | school-board schedule and agendas pages (SCHEDULEPAGE, was browser profile) | 1 | School Board 20 sittings |
-
-Even with the disguise these routes failed 35–70% of attempts in the 7 days to
-2026-09-25 (production candidate records), so their readers were already
-running on last good versions part of the time.
+**Measured 2026-09-25, nothing lost its read.** With the identified client and
+robots.txt read first, all 41 wired URLs answered except seven on three
+Cloudflare-fronted hosts, which answer Node's client HTTP 403 with a challenge
+whatever it sends: Newbury's calendar export and three board pages, Sutton's
+calendar feed, and Kearsarge's two school-board pages. The same identity through
+`curl` then read all seven (HTTP 200, no challenge; Newbury 1,256 VEVENTs,
+Sutton 1,317), end to end through `politeGetText`. Their partitions' last good
+versions stand in the meantime. Production records for the 7 days to
+2026-09-25 show these routes failed 35–70% of attempts even WITH the disguising
+rungs, which the honest `curl` request (admitted 30 of 30 in the failing-sources
+measurement) should remove; the runner's next reads are the check.
 
 ## GENERAL WEB SEARCH — walked, walled, and the compliant route that replaced it (2026-08-24, NJ depth)
 

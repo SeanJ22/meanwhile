@@ -413,3 +413,56 @@ test("A-007 · an unreadable zone is counted as unplaceableInTime, not dropped s
   );
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
+
+
+/*
+ * WARNER, 2026-09-25: the river committee off the library's "Warner Events" calendar, and the
+ * Village Water District's commissioners off the town's calendar.
+ *
+ * warner-events-2026-09-25-trimmed.ics is the library calendar as read at 22:25Z, kept to the
+ * events whose titles are the river committee's and the ones that once stopped every rule in the
+ * feed from being expanded (a book club split "this and following", a Zumba series entered
+ * twice, a bible study split the same way). DESCRIPTION lines are removed: they carried private
+ * contact details. Every other byte is as served.
+ */
+const WARNER_EVENTS = readFileSync(join(import.meta.dirname, "fixtures", "ical", "warner-events-2026-09-25-trimmed.ics"), "utf8");
+const WARNER_TOWN = readFileSync(join(import.meta.dirname, "fixtures", "ical", "warner-2026-09-23-full.ics"), "utf8");
+const warnerRow = (slug: string) => {
+  const row = wiringForTypes(["ICAL"]).find((w) => w.config.slug === slug);
+  assert.ok(row, slug + " is wired");
+  return row;
+};
+
+test("the river committee's every-other-month series is expanded: another body's split series is no evidence about this one", () => {
+  const row = warnerRow("warner-warner-river-local-advisory-committee");
+  assert.match(row.config.feedUrl ?? "", /mq5sbbdfvg3le9ddpc76qpo5d8/, "the library's calendar, not the town's");
+  const readAt = "2026-09-25T22:25:56.000Z";
+  const { meetings } = makeIcalSource([row]).normalizeWithDrops(
+    [{ wiring: row, ics: WARNER_EVENTS, collectedAt: readAt, sourceUrl: row.config.feedUrl ?? "" }],
+    new Date(readAt),
+  );
+  assert.deepEqual(
+    meetings.map((m) => new Date(m.startsAt).toISOString()),
+    ["2026-07-22T23:00:00.000Z", "2026-09-23T23:00:00.000Z", "2026-11-19T00:00:00.000Z"],
+    "22 July and 23 September at 7 PM from the series, and 25 November as the library moved it to 18 November",
+  );
+  assert.ok(meetings.every((m) => m.bodyId === row.bodyId && m.title === "WRLAC"));
+  assert.match(JSON.stringify(meetings[0].location ?? meetings[0].venueGap), /Pillsbury Free Library/, "the library's own place, never the town hall");
+});
+
+test("the Village Water District's commissioners sit at the treatment plant, never pinned at the town hall", () => {
+  const row = warnerRow("warner-warner-village-water-district");
+  const readAt = "2026-09-23T17:30:01.000Z";
+  const { meetings } = makeIcalSource([row]).normalizeWithDrops(
+    [{ wiring: row, ics: WARNER_TOWN, collectedAt: readAt, sourceUrl: row.config.feedUrl ?? "" }],
+    new Date(readAt),
+  );
+  const commissioners = meetings.filter((m) => m.title === "Precinct Commissioners");
+  assert.ok(commissioners.length >= 10, "the 2nd- and 4th-Wednesday series, " + commissioners.length + " in the window");
+  for (const m of commissioners) {
+    assert.equal(m.location, null, "no pin at Warner Town Hall");
+    assert.match(JSON.stringify(m.venueGap), /55 West Joppa/, "the feed's own words for the place");
+  }
+  const upcoming = commissioners.filter((m) => Date.parse(m.startsAt) > Date.parse(readAt)).map((m) => new Date(m.startsAt).toISOString().slice(0, 10));
+  assert.deepEqual(upcoming.slice(0, 3), ["2026-09-23", "2026-10-14", "2026-10-28"]);
+});

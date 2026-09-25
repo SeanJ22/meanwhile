@@ -12,7 +12,7 @@ import { makeCivicClerkSource, type CivicClerkEvent } from "../lib/sources/civic
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { makeClerksBoardsSource } from "../lib/sources/clerksboards/index.ts";
 import { makeDiligentSource, type DiligentMeeting } from "../lib/sources/diligent/index.ts";
-import { makeIcalSource, type IcalRaw } from "../lib/sources/ical/index.ts";
+import { makeIcalSource, namesNoPlace, type IcalRaw } from "../lib/sources/ical/index.ts";
 import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { makePimaEduSource, type PimaEduRaw } from "../lib/sources/pima-edu/index.ts";
@@ -264,6 +264,26 @@ test("ical: with a standing venue that has no reviewed row, the feed's words sti
   assert.equal(at("2026-08-20")!.location?.name, "Wilmot Town Office");
   assert.ok(drops.unknownVenue >= 2);
   assert.equal(accounting.outcome, "CONSERVED");
+});
+
+test("ical: a standing venue stands in only for a LOCATION that names no place, never for another building (2026-09-25)", () => {
+  // Measured that day over every ICAL row's live feed: 15 sittings whose feed
+  // named another place (a treatment plant, a library, a highway garage) were
+  // pinned at Warner Town Hall by the row's standing venue.
+  const select = row(["ICAL"], (w) => w.config.slug === "wilmot-selectboard");
+  assert.ok(select.config.venueMatch, "the row states a standing venue");
+  const ics = wilmotIcs((uid, block) => (uid.startsWith("10001057-") ? block.replace(/^LOCATION:.*$/m, "LOCATION:Wilmot Public Library") : block));
+  const { meetings, accounting } = makeIcalSource([select]).normalizeWithDrops(icalRaw(select, ics), ICAL_NOW);
+  const at = (day: string) => meetings.find((m) => m.startsAt.startsWith(day));
+  assertStated(at("2026-09-16"), "Wilmot Public Library", select.publishingOrg);
+  assert.ok(at("2026-08-19")?.location, "'LOCATION:NH' names no building, so the Selectboard's own standing statement places it, as before");
+  assert.equal(accounting.outcome, "CONSERVED");
+  assert.equal(namesNoPlace(""), true);
+  assert.equal(namesNoPlace("NH"), true);
+  assert.equal(namesNoPlace("New Hampshire."), true);
+  assert.equal(namesNoPlace("55 West Joppa Rd. Warner, NH 03278"), false);
+  assert.equal(namesNoPlace("pillsbury library"), false);
+  assert.equal(namesNoPlace("TH"), false, "two letters that are no state are somebody's words for a room");
 });
 
 // ── IQM2 ───────────────────────────────────────────────────────────────────

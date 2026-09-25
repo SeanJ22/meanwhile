@@ -5,7 +5,11 @@
  * (`pnpm research:fetch`, robots.txt read first). No live calls.
  *
  * Every Chandler agenda, result and minutes set is published only on
- * destinyhosted.com, which reads as disallow-all and is never requested. The
+ * destinyhosted.com. Until 2026-09-25 it was never requested (its robots.txt
+ * reads as disallow-all); since the owner's decision that robots.txt no longer
+ * blocks public pages, the Council's Destiny month lists (recorded that day,
+ * 22:3xZ) join each agenda, result and video to the sitting the city dated —
+ * see the DESTINY tests at the end. The
  * city's own page publishes the year's sittings as the "2026 City Council
  * Meeting Dates" table (Resolution No. 5937, Exhibit A). What these tests
  * hold: the section scope reads the table's 33 dates and nothing else on a page
@@ -20,6 +24,7 @@ import { test } from "node:test";
 
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { makeSchedulePageSource, parseDatedList, parseDayEvents, parseStatedTime, scheduledOfDay, sliceSection } from "../lib/sources/schedulepage/index.ts";
+import { destinyMonthUrl, destinyMonthsBetween, joinDestinyRows, parseDestinyMonth } from "../lib/sources/schedulepage/destiny-agenda.ts";
 
 const PAGE = readFileSync(new URL("./fixtures/schedulepage/chandler-city-council-meetings.html", import.meta.url), "utf8");
 const NOW = new Date("2026-09-24T12:00:00-07:00");
@@ -137,4 +142,131 @@ test("FETCH: one day file per scheduled date inside the window, and a refused da
   const dayRequests = asked.filter((u) => u.startsWith(DAY_URL)).map((u) => u.slice(DAY_URL.length));
   assert.deepEqual(dayRequests.filter((d, i, all) => all.indexOf(d) === i), ["20260914", "20260917", "20261012", "20261015"], "only the table's dates in the window");
   assert.deepEqual(raw.days?.map((d) => d.date), ["2026-09-14", "2026-10-12", "2026-10-15"], "the refused day is absent, so its sitting stays date-only");
+});
+
+/*
+ * DESTINY — the Council's agendas, results and videos from its Destiny Agenda list (2026-09-25).
+ * Recorded from public.destinyhosted.com on 2026-09-25 (~22:30Z): September 2026 (seven Council rows) and
+ * October 2026 (the list's own "No agendas or minutes were found" sentence).
+ */
+const DESTINY = (m: string) => readFileSync(new URL(`./fixtures/schedulepage/chandler-destiny-cc-${m}.html`, import.meta.url), "utf8");
+const DESTINY_BASE = "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC";
+const destinyMonth = (m: string) => {
+  const [y, mo] = m.split("-").map(Number);
+  return { month: m, url: destinyMonthUrl(DESTINY_BASE, y, mo), html: DESTINY(m) };
+};
+
+test("DESTINY: the September list is seven Council sittings, each with its agenda page, and the results and video where posted", () => {
+  const month = parseDestinyMonth(DESTINY("2026-09"), destinyMonthUrl(DESTINY_BASE, 2026, 9));
+  assert.equal(month.read, true);
+  assert.equal(month.undated, 0);
+  assert.deepEqual(
+    month.rows.map((r) => [r.date, r.title]),
+    [
+      ["2026-09-17", "City Council Regular Meeting"],
+      ["2026-09-17", "City Council Special Meeting Executive Session"],
+      ["2026-09-17", "City Council Work Session"],
+      ["2026-09-14", "City Council Regular Meeting"],
+      ["2026-09-14", "City Council Special Meeting Executive Session"],
+      ["2026-09-14", "City Council Study Session"],
+      ["2026-09-14", "City Council Work Session"],
+    ],
+  );
+  const regular = month.rows[0];
+  assert.equal(regular.agendaUrl, "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2440", "the encoded href decodes to the agenda page");
+  assert.deepEqual(regular.links, [
+    { label: "Results", href: "https://public.destinyhosted.com/chanddocs/2026/CC/20260917_2444/2440_City-of-Chandler-City-Council-Regular-Meeting-Results-September-17-2026.pdf" },
+    { label: "Video", href: "https://chandleraz.new.swagit.com/videos/401450" },
+  ]);
+  assert.deepEqual(month.rows[1].links, [], "an empty minutes cell is no link");
+});
+
+test("DESTINY: a month the list says is empty is read and empty; a page that is not the list is unread, never empty", () => {
+  const october = parseDestinyMonth(DESTINY("2026-10"), destinyMonthUrl(DESTINY_BASE, 2026, 10));
+  assert.deepEqual(october, { read: true, rows: [], undated: 0 });
+  assert.equal(parseDestinyMonth("[]", DESTINY_BASE).read, false);
+  assert.equal(parseDestinyMonth(PAGE, DESTINY_BASE).read, false, "the city's own page is not the Destiny list");
+  const months = new Map([["2026-10", october]]);
+  assert.equal(joinDestinyRows(months, "2026-10-12", null), "EMPTY");
+  assert.equal(joinDestinyRows(months, "2026-11-09", null), null, "a month not read says nothing");
+});
+
+test("DESTINY: the months read run from the window's start to 35 days ahead, across a year's end", () => {
+  assert.deepEqual(destinyMonthsBetween(Date.parse("2026-09-18T00:00:00Z"), Date.parse("2026-10-30T00:00:00Z")), [
+    { year: 2026, month: 9 },
+    { year: 2026, month: 10 },
+  ]);
+  assert.deepEqual(
+    destinyMonthsBetween(Date.parse("2026-11-28T00:00:00Z"), Date.parse("2027-01-05T00:00:00Z")).map((m) => `${m.year}-${m.month}`),
+    ["2026-11", "2026-12", "2027-1"],
+  );
+  assert.deepEqual(destinyMonthsBetween(2, 1), []);
+  assert.equal(destinyMonthUrl(DESTINY_BASE, 2026, 9), `${DESTINY_BASE}&get_month=9&get_year=2026`);
+});
+
+test("NORMALIZE with DESTINY: each dated sitting carries its own agenda, results and video; a month read with nothing marks the slot empty", () => {
+  const row = wiring();
+  assert.equal(row.config.destinyAgenda, DESTINY_BASE);
+  const { meetings } = makeSchedulePageSource([row]).normalizeWithDrops(
+    [
+      {
+        wiring: row,
+        schedule: PAGE,
+        days: ["2026-09-14", "2026-09-17", "2026-10-12", "2026-10-15"].map(dayFile),
+        destiny: [destinyMonth("2026-09"), destinyMonth("2026-10")],
+        collectedAt: NOW.toISOString(),
+      },
+    ],
+    NOW,
+  );
+  const on = (date: string, title: string) => meetings.find((m) => m.id.includes(`:${date}`) && m.title === title);
+  const agendaSeq = (m: { agendaUrl: string | null } | undefined) => /seq=(\d+)$/.exec(m?.agendaUrl ?? "")?.[1];
+  assert.equal(agendaSeq(on("2026-09-14", "City Council Regular Meeting")), "2410");
+  assert.equal(agendaSeq(on("2026-09-14", "City Council Work Session")), "2409");
+  assert.equal(agendaSeq(on("2026-09-14", "City Council Study Session")), "2373");
+  assert.equal(agendaSeq(on("2026-09-14", "City Council Special Meeting Executive Session")), "2425");
+  assert.equal(agendaSeq(on("2026-09-17", "City Council Regular Meeting")), "2440");
+  const regular = on("2026-09-17", "City Council Regular Meeting")!;
+  assert.deepEqual(regular.publishedLinks?.map((l) => l.label), ["Results", "Video"]);
+  assert.match(regular.provenance.sourceUrl ?? "", /^https:\/\/www\.chandleraz\.gov\/events\/city-council-regular-meeting/, "the sitting is still the city's own; Destiny adds documents, not the sitting");
+  for (const date of ["2026-10-12", "2026-10-15"]) {
+    const only = meetings.filter((m) => m.id.includes(`:${date}`));
+    assert.equal(only.length, 1);
+    assert.equal(only[0].agendaUrl, null);
+    assert.equal(only[0].agendaSlotObservedEmpty, true, `${date}: the Council's October list was read and names nothing yet`);
+  }
+});
+
+test("NORMALIZE with DESTINY: a date-only sitting joins only a date the list gives one row; four rows on a date join none", () => {
+  const row = wiring();
+  const { meetings } = makeSchedulePageSource([row]).normalizeWithDrops(
+    [{ wiring: row, schedule: PAGE, destiny: [destinyMonth("2026-09")], collectedAt: NOW.toISOString() }],
+    NOW,
+  );
+  const sept14 = meetings.filter((m) => m.id.includes(":2026-09-14"));
+  assert.equal(sept14.length, 1, "without the day file the table's date is one date-only sitting");
+  assert.equal(sept14[0].agendaUrl, null, "four Council rows on 14 September: which agenda is this sitting's is not known");
+  assert.equal(sept14[0].agendaSlotObservedEmpty, undefined, "an ambiguous date is not an empty slot");
+});
+
+test("FETCH with DESTINY: one list request per month in reach, and a refused month keeps the schedule", async () => {
+  const row = wiring();
+  const asked: string[] = [];
+  const fetchImpl = (async (input: string | URL) => {
+    const url = String(input);
+    asked.push(url);
+    if (url === row.config.schedulePage) return new Response(PAGE, { status: 200, headers: { "content-type": "text/html" } });
+    if (url.startsWith(DESTINY_BASE)) {
+      if (url.includes("get_month=10")) return new Response("Not Found", { status: 404 });
+      return new Response(DESTINY("2026-09"), { status: 200, headers: { "content-type": "text/html" } });
+    }
+    return new Response("[]", { status: 200, headers: { "content-type": "application/json" } });
+  }) as typeof fetch;
+  const [raw] = await makeSchedulePageSource([row], fetchImpl).fetch({ startsAfter: "2026-09-10T00:00:00Z", startsBefore: "2026-10-20T00:00:00Z" } as never);
+  assert.deepEqual(
+    asked.filter((u) => u.startsWith(DESTINY_BASE)),
+    [`${DESTINY_BASE}&get_month=9&get_year=2026`, `${DESTINY_BASE}&get_month=10&get_year=2026`],
+  );
+  assert.equal(raw.error, undefined, "a refused Destiny month is not the row refused");
+  assert.deepEqual(raw.destiny?.map((m) => m.month), ["2026-09"]);
 });

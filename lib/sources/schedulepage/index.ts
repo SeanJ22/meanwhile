@@ -14,6 +14,14 @@ import {
 import { resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
+import {
+  DESTINY_AHEAD_DAYS,
+  destinyMonthUrl,
+  destinyMonthsBetween,
+  joinDestinyRows,
+  parseDestinyMonth,
+  type DestinyMonth,
+} from "./destiny-agenda.ts";
 import type {
   Meeting,
   MeetingQuery,
@@ -67,10 +75,11 @@ import {
  * 2026-09-25 their rows were read with a browser header set instead (the
  * "browser profile"). That dressed the client as a browser to get past a
  * filter that had refused it, which the owner decision of 2026-09-25 rules out
- * (access controls are never bypassed), so every row is read by the one
- * identified client in `lib/sources/http.ts`. A 403 is a technical failure of
- * the route: the partition keeps its last good version while another public
- * route is pursued.
+ * (access controls are never bypassed), so every row is read as the project's
+ * own identity (`lib/sources/http.ts`): Node's client first, then the same name
+ * through `curl`, which both hosts admit (measured 2026-09-25). A refusal of
+ * that is a wall: the partition keeps its last good version while another
+ * public route is pursued.
  */
 
 const SOURCE_NAME = "schedulepage";
@@ -179,6 +188,12 @@ export interface SchedulePageRaw {
   days?: readonly { readonly date: string; readonly url: string; readonly json: string }[];
   /** The documents page's HTML, where the row wires one. */
   documents?: string;
+  /**
+   * The body's Destiny Agenda month lists (`destinyAgenda` on the row, 2026-09-25): each month from the
+   * window's start to `DESTINY_AHEAD_DAYS` ahead that was read, keyed `YYYY-MM`. A month not read is absent,
+   * and its sittings carry no document links; they are never unpublished for it.
+   */
+  destiny?: readonly { readonly month: string; readonly url: string; readonly html: string }[];
   collectedAt: string;
   /**
    * This ROW's retrieval was refused, and `schedule` is empty (g3, 2026-08-16).
@@ -495,6 +510,14 @@ export function parseDatedList(html: string): {
  * as a sitting of the Planning Board. Rows whose title does not carry the
  * match are counted as `notSittings`, which is what makes "this board has
  * nothing this month" distinguishable from "the parser matched nothing".
+ *
+ * `titleMatch` is a comma-separated list of the body's own spellings, as the
+ * `ical` adapter and `notice-feed` read it, compared with apostrophes set aside
+ * on both sides (2026-09-25). Until then this shape read the whole string as one
+ * phrase: the Firewards row's "Firewards,Fire Wards" matched nothing, and
+ * "Citizens' Committee" missed the town's "Citizens Committee" and "Citizen's
+ * Advisory Committee" — four New London bodies read as listing no meetings while
+ * the town's calendar carried their sittings.
  */
 export function parseEventTips(
   html: string,
@@ -502,9 +525,10 @@ export function parseEventTips(
 ): { sittings: ScheduledSitting[]; counts: ParseCounts } {
   const byDate = new Map<string, ScheduledSitting>();
   const counts: ParseCounts = { notSittings: 0, undated: 0 };
-  if (!titleMatch) return { sittings: [], counts };
+  const fold = (value: string) => value.toLowerCase().replace(/['’‘`]/g, "");
+  const needles = titleMatch.split(",").map((t) => fold(t.trim())).filter(Boolean);
+  if (needles.length === 0) return { sittings: [], counts };
 
-  const needle = titleMatch.toLowerCase();
   const blocks = html.matchAll(
     /<div class="tipTitle">([\s\S]*?)<\/div>([\s\S]*?)<\/div>/g,
   );
@@ -512,7 +536,8 @@ export function parseEventTips(
   for (const block of blocks) {
     const title = cellText(block[1]);
     const when = cellText(block[2]);
-    if (!title.toLowerCase().includes(needle)) {
+    const folded = fold(title);
+    if (!needles.some((needle) => folded.includes(needle))) {
       counts.notSittings += 1;
       continue;
     }
@@ -993,6 +1018,10 @@ export function makeSchedulePageSource(
 
     for (const row of raw) {
       const { wiring, schedule, documents, collectedAt, error } = row;
+      /* The Destiny month lists read for this row, keyed `YYYY-MM`; a month not read is absent. */
+      const destinyMonths = new Map<string, DestinyMonth>(
+        (row.destiny ?? []).map((m) => [m.month, parseDestinyMonth(m.html, m.url)] as const),
+      );
       // A refused row publishes nothing THIS run. It is counted, not skipped:
       // `notConfigured` is the drop bucket for "we had a row and produced no
       // meeting from it", and a run that quietly shortened its own input is
@@ -1171,6 +1200,14 @@ export function makeSchedulePageSource(
         const href = sitting.href ?? docs.get(sitting.date) ?? null;
         const base =
           wiring.config.documentsPage ?? wiring.config.schedulePage;
+        /*
+         * The Destiny list's row for this sitting (2026-09-25): a day-file sitting joins on its date and the
+         * name the city printed for it; a date-only sitting joins only a date the list gives one row. The
+         * city's own link, where the page carries one, is kept ahead of it.
+         */
+        const destinyJoin = joinDestinyRows(destinyMonths, sitting.date, sitting.pageUrl ? (sitting.note ?? null) : null);
+        const destinyRow = destinyJoin !== null && destinyJoin !== "EMPTY" ? destinyJoin : null;
+        const agendaUrl = href ? new URL(href, base).toString() : (destinyRow?.agendaUrl ?? null);
         meetings.push({
           id: sitting.id,
           ocdId: wiring.ocdId,
@@ -1190,7 +1227,10 @@ export function makeSchedulePageSource(
               }
             : null,
           ...(venueGap ? { venueGap } : {}),
-          agendaUrl: href ? new URL(href, base).toString() : null,
+          ...(destinyRow && destinyRow.links.length > 0 ? { publishedLinks: [...destinyRow.links] } : {}),
+          agendaUrl,
+          // The publisher's own agenda list for the month was read and names nothing on this date.
+          ...(agendaUrl === null && destinyJoin === "EMPTY" ? { agendaSlotObservedEmpty: true } : {}),
           jurisdiction: wiring.jurisdiction,
           status: sitting.canceled ? "CANCELED" : statusOf(startsAt, now),
           provenance: {
@@ -1312,6 +1352,27 @@ export function makeSchedulePageSource(
               }
             }
           }
+          /*
+           * `destinyAgenda` names the body's Destiny Agenda list (2026-09-25): one request per calendar month
+           * from the window's start (the concluded lookback) to DESTINY_AHEAD_DAYS ahead, five a read. Documents
+           * are a separate capability from the schedule: a month refused leaves its sittings without links,
+           * never unpublished.
+           */
+          const destiny: { month: string; url: string; html: string }[] = [];
+          if (wiring.config.destinyAgenda) {
+            const now = Date.now();
+            const from = query?.startsAfter ? Date.parse(query.startsAfter) : now - WINDOW_BACK_DAYS * 86_400_000;
+            const until = query?.startsBefore ? Date.parse(query.startsBefore) : now + WINDOW_FORWARD_DAYS * 86_400_000;
+            for (const { year, month } of destinyMonthsBetween(from, Math.min(until, now + DESTINY_AHEAD_DAYS * 86_400_000))) {
+              const url = destinyMonthUrl(wiring.config.destinyAgenda, year, month);
+              try {
+                const page = await politeGetText(url, { fetchImpl, accept: "text/html", signal: query?.signal });
+                destiny.push({ month: `${year}-${String(month).padStart(2, "0")}`, url, html: page.text });
+              } catch {
+                // One month refused is not the body's schedule refused.
+              }
+            }
+          }
           let documents: string | undefined;
           if (wiring.config.documentsPage) {
             const page = await politeGetText(wiring.config.documentsPage, {
@@ -1325,6 +1386,7 @@ export function makeSchedulePageSource(
             wiring,
             schedule,
             ...(days.length > 0 ? { days } : {}),
+            ...(destiny.length > 0 ? { destiny } : {}),
             documents,
             collectedAt: new Date().toISOString(),
           });

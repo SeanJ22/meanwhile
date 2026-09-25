@@ -164,6 +164,12 @@ export type MinutesRefreshReason =
   /** The link or its label moved ("Results" → "Minutes"): a new document. */
   | "PUBLISHER_RELABELED"
   | "PRIOR_EXTRACTION_FAILED"
+  /**
+   * Held, but its note names "It was moved" passages the parser could not read (2026-09-25): read again, so a
+   * parser that now reads them reaches readers without a forced pass. The 2026-08-13 study session held three
+   * motions and named its fourth this way until the parser learned the clerk's infinitive form.
+   */
+  | "UNREAD_PASSAGES_HELD"
   | "FORCED"
   /** Held and unchanged. */
   | "UNCHANGED_SKIP"
@@ -174,6 +180,10 @@ export type MinutesRefreshReason =
    * a link withdrawn is not a decision reversed, and the pass says so.
    */
   | "LINK_WITHDRAWN_KEPT";
+
+/** The words `minutesSitting` writes when a document leaves "It was moved" passages unread. */
+const UNREAD_PASSAGES_PHRASE = "were not in the clerk's usual form and were not read";
+const UNREAD_PASSAGES_NOTE = /passage\(s\) beginning "It was moved" were not in the clerk's usual form and were not read/;
 
 export function minutesRefreshDecision(
   link: MinutesLink | null,
@@ -189,6 +199,7 @@ export function minutesRefreshDecision(
   if (!document || document.url !== link.url || document.publisherLabel !== link.label) {
     return { walk: true, reason: "PUBLISHER_RELABELED" };
   }
+  if (UNREAD_PASSAGES_NOTE.test(held.extractionNote ?? "")) return { walk: true, reason: "UNREAD_PASSAGES_HELD" };
   return { walk: false, reason: "UNCHANGED_SKIP" };
 }
 
@@ -419,7 +430,7 @@ export function minutesSitting(
 
   const empty = outcomes.length === 0;
   const unread = parsed.unreadMotions.length > 0
-    ? ` ${parsed.unreadMotions.length} passage(s) beginning "It was moved" were not in the clerk's usual form and were not read: ` +
+    ? ` ${parsed.unreadMotions.length} passage(s) beginning "It was moved" ${UNREAD_PASSAGES_PHRASE}: ` +
       parsed.unreadMotions.map((passage) => `"${passage}"`).join("; ")
     : "";
   if (empty && !parsed.statesNoFormalAction) {

@@ -14,6 +14,7 @@ export const CURATED_READER_CONTRACT_IDS = [
   "ballot-navigation",
   "campaign-sites",
   "venue-resolutions",
+  "meeting-body-crosswalk",
 ] as const;
 export type CuratedReaderContractId = (typeof CURATED_READER_CONTRACT_IDS)[number];
 

@@ -180,6 +180,25 @@ export interface MeetingsSnapshot {
   meetings: Meeting[];
   /** Retrieved agenda documents, append-only across refreshes. */
   agendaDocuments: AgendaDocument[];
+  /**
+   * Present only on a derived meeting family's version (C16): the wiring rows whose sittings it holds, each read
+   * on its own attested host. Every meeting in the version belongs to exactly one of them.
+   */
+  derivedMembers?: DerivedFamilyMemberReport[];
+}
+
+/** One member of a derived meeting family, as its version accounts for it. */
+export interface DerivedFamilyMemberReport {
+  /** The wiring key: `${source}:${bodyId}`. */
+  id: string;
+  /** The adapter its sittings came from, the namespace of their ids. */
+  source: string;
+  bodyId: string;
+  /** ACTIVE: read this pass; SUSPENDED: a review trigger fired, and nothing new is read from it. */
+  status: "ACTIVE" | "SUSPENDED";
+  /** FRESH: its sittings were read this version; HELD: its last verified sittings are carried, and `detail` says why. */
+  outcome: "FRESH" | "HELD";
+  detail?: string;
 }
 
 const SNAPSHOT_RELATIVE = join("data", "meetings-snapshot.json");
@@ -646,7 +665,7 @@ export async function readMeetingPartitionProjection(
 }
 
 function validateMeetingPartitionProjection(
-  partition: Pick<MeetingPartitionContract | HeldMeetingPartition, "id" | "meetingSource" | "bodyId">,
+  partition: Pick<MeetingPartitionContract | HeldMeetingPartition, "id" | "meetingSource" | "bodyId"> & { readonly derivedFamily?: string | null },
   result: CivicDataReadResult<MeetingsSnapshot>,
 ): CivicDataReadResult<MeetingsSnapshot> {
   if (result.kind !== "PROMOTED") return result;
@@ -660,6 +679,21 @@ function validateMeetingPartitionProjection(
         allowAllSourcesFailedForDurableTransfer: true,
       });
       validatedProjectionValues.add(result.value);
+    }
+    if (partition.derivedFamily) {
+      /* A derived family (C16): every sitting belongs to exactly one member it accounts for, under that member's source. */
+      const members = result.value.derivedMembers;
+      if (!Array.isArray(members) || members.length === 0) throw new Error(`MEETING_FAMILY_MEMBERS_MISSING:${partition.id}`);
+      const memberSources = new Set(members.map((member) => member.source));
+      if (result.value.sources.some((source) => !memberSources.has(source.source))) {
+        throw new Error(`MEETING_FAMILY_SOURCE_NOT_A_MEMBER:${partition.id}`);
+      }
+      for (const meeting of result.value.meetings) {
+        if (!members.some((member) => member.bodyId === meeting.bodyId && meeting.id.startsWith(`${member.source}:`))) {
+          throw new Error(`MEETING_FAMILY_ROW_NOT_A_MEMBER:${partition.id}:${meeting.id}`);
+        }
+      }
+      return result;
     }
     if (result.value.sources.length !== 1 || result.value.sources[0]?.source !== partition.meetingSource) {
       throw new Error(`MEETING_PARTITION_SOURCE_MISMATCH:${partition.id}`);
@@ -839,7 +873,8 @@ export async function readMeetingsProjection(
     for (const { result } of promoted) {
       meetings.push(...result.value.meetings);
       agendaDocuments.push(...result.value.agendaDocuments);
-      sources.push(result.value.sources[0]!);
+      /* One source per partition; a derived family accounts for one per member adapter. */
+      sources.push(...result.value.sources);
     }
     for (const { partition } of reads) {
       if (promoted.some((row) => row.partition.id === partition.id)) continue;

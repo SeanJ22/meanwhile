@@ -31,9 +31,9 @@
 
 import { createHash } from "node:crypto";
 
-import { RECORDED_WALLS } from "../control-plane/discovery/meetings-discovery-executor.ts";
+import { RECORDED_WALLS } from "./recorded-walls.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
-import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/route-executor.ts";
+import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import { assertPublicUrl } from "./egress.ts";
 
 /** Hosts whose use waits on the owner's decision. Nothing is requested from them, robots.txt included. */
@@ -243,6 +243,23 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
   }
   return { outcome: "REFUSED", url: start, refusedUrl: current, reason: `not requested: more than ${maxHops} redirects`, redirects, permissions };
 }
+
+/** The one HTTP request this module sends from Node: never follows a redirect, never throws for a site. */
+export const nodeResearchGet: ResearchGet = async ({ url, headers, timeoutMs }) => {
+  try {
+    const response = await fetch(url, { headers, redirect: "manual", signal: AbortSignal.timeout(timeoutMs) });
+    return {
+      status: response.status,
+      body: new Uint8Array(await response.arrayBuffer()),
+      contentType: response.headers.get("content-type") ?? "",
+      location: response.headers.get("location"),
+      transportError: null,
+    };
+  } catch (error) {
+    const cause = error instanceof Error && error.cause instanceof Error ? `: ${error.cause.message}` : "";
+    return { status: null, body: new Uint8Array(0), contentType: "", location: null, transportError: `${error instanceof Error ? error.message : String(error)}${cause}` };
+  }
+};
 
 /** Research memory held in process: for tests, and for one CLI run. */
 export function memoryInProcess(): ResearchMemory & { readonly snapshot: () => { robots: Record<string, RobotsMemo>; requests: Record<string, number> } } {

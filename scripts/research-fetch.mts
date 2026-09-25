@@ -24,7 +24,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { researchFetch, type ResearchMemory, type RobotsMemo } from "../lib/hunt/robots-first-fetch.ts";
+import { nodeResearchGet, researchFetch, type ResearchMemory, type RobotsMemo } from "../lib/hunt/robots-first-fetch.ts";
 
 function arg(name: string): string | null {
   const i = process.argv.indexOf(name);
@@ -63,21 +63,7 @@ const result = await researchFetch(target, {
   now: () => Date.now(),
   sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   log: logPath === null ? undefined : (e) => appendFileSync(logPath, `${e.at}\t${e.purpose}\t${e.url}\t${e.status ?? ""}\t${e.transportError ?? ""}\t${e.bytes}\n`),
-  get: async ({ url, headers, timeoutMs }) => {
-    try {
-      const response = await fetch(url, { headers, redirect: "manual", signal: AbortSignal.timeout(timeoutMs) });
-      return {
-        status: response.status,
-        body: new Uint8Array(await response.arrayBuffer()),
-        contentType: response.headers.get("content-type") ?? "",
-        location: response.headers.get("location"),
-        transportError: null,
-      };
-    } catch (error) {
-      const cause = error instanceof Error && error.cause instanceof Error ? `: ${error.cause.message}` : "";
-      return { status: null, body: new Uint8Array(0), contentType: "", location: null, transportError: `${error instanceof Error ? error.message : String(error)}${cause}` };
-    }
-  },
+  get: nodeResearchGet,
 });
 
 const out = arg("--out");

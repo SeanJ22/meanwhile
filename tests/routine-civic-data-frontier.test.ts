@@ -400,6 +400,7 @@ test("each Google calendar is its own lane; every other host keeps one lane per 
   // A calendar's own partitions still share its one lane.
   const byFeed = new Map<string, Set<string>>();
   for (const p of google) {
+    assert.ok(p.wiring, `${p.id} is a wiring row`);
     const feed = String(p.wiring.config.feedUrl);
     byFeed.set(feed, new Set([...(byFeed.get(feed) ?? []), p.acquisitionFailureDomain]));
   }

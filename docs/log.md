@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-24 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **195 sessions.**
+Newest first. **196 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -30,6 +30,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 **What it started.** 1 row(s) opened, 1 still open.
 
 - **NH332** — When a reader asks what the Mesa City Council decided, the product cannot say. Mesa's clerk does not record the council's actions in the Legistar API: none of the 33 items on the council’s 14 September sitting carried an action or a pass flag when measured on 2026-09-24. The route that now answers Pima's questions therefore gives Mesa nothing. The decisions are in the council's minutes, which Mesa publishes on its own portal, and that portal permits us. Reading those minutes into dated decisions would give Mesa, and every Legistar body like it, the answers Pima now gets. *(open)*
+
+**Needs Sean.** Nothing.
+
+## 2026-09-24 · RouteTask agent session (B5: C15 and C16)
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **NH333** — When the Census address on record for a government's website is dead or wrong, it is corrected only when the government's own homepage and its own federal .gov registry entry name the same government, or, where that cannot hold, when another government's own page names the site. Eight of the nine named governments are corrected; Sutton, NH stays on its Census address, named unresolved with what would resolve it. *(open)*
+- **NH334** — A reviewed record connects a government's calendar to the exact body whose meetings it carries, on the government's own saved pages; agents promote it through the verified door, and the standing runner then publishes that body's meetings with no code release. A connection is suspended for review when its page is gone, its events name another body, the evidence conflicts, or the calendar changes; an outage keeps the last verified meetings. *(open)*
 
 **Needs Sean.** Nothing.
 

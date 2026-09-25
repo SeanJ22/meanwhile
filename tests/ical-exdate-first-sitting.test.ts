@@ -28,12 +28,12 @@ const FIRST_SLOT = "20211116T220000Z";
 const STATED_BY = ";TZID=America/New_York:20211116T170000";
 
 const energyCommittee = MEETING_PARTITION_CONTRACTS.find(
-  (row) => row.meetingSource === "ical" && row.wiring.config.slug === "bradford-energy-committee",
+  (row) => row.meetingSource === "ical" && row.wiring!.config.slug === "bradford-energy-committee",
 );
 
 function read(ics: string) {
   assert.ok(energyCommittee, "no bradford-energy-committee partition is wired; this guard is stale");
-  const wiring = energyCommittee.wiring;
+  const wiring = energyCommittee.wiring!;
   return makeIcalSource([wiring]).normalizeWithDrops(
     [{ wiring, ics, collectedAt: READ_AT, sourceUrl: wiring.config.feedUrl ?? "" }],
     new Date(READ_AT),
@@ -61,7 +61,7 @@ test("an expanded series whose EXDATE is its first sitting publishes from the se
   assert.ok(!ids.includes(`${ORIGINAL}/${FIRST_SLOT}`), "the struck first sitting was published");
   assert.ok(ids.includes(`${ORIGINAL}/20211221T220000Z`), "the next third Tuesday was not published");
   assert.deepEqual(result.recurrence?.exclusions, [{
-    bodyId: energyCommittee!.wiring.bodyId,
+    bodyId: energyCommittee!.wiring!.bodyId,
     seriesId: ORIGINAL,
     slot: FIRST_SLOT,
     meetingId: `${ORIGINAL}/${FIRST_SLOT}`,

@@ -9,7 +9,8 @@ import {
   type SittingWindowSchedule,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "./meeting-partitions.ts";
-import { SOURCE_AUTHORITIES, authorityFor } from "./source-authority.ts";
+import { SOURCE_AUTHORITIES, authorityFor, sourceAuthority } from "./source-authority.ts";
+import { derivedRequestedUrl } from "./derived-door.ts";
 import {
   parseRoutineRunnerReceipt,
   successfulRoutineRunnerReceiptIssue,
@@ -62,6 +63,16 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
   if (!contract.autoPromotable) throw new Error(`ROUTINE_CONTRACT_NOT_AUTO_PROMOTABLE:${contract.id}`);
   const authority = contract.acquisitionAdapter.authorityMode === "SINGLE_ROUTE"
     ? authorityFor(contract.sourceId, contract.recordClass, contract.acquisitionAdapter.requestedUrl)
+    : contract.acquisitionAdapter.authorityMode === "DERIVED"
+    ? (() => {
+        /* A DERIVED authority has no route of its own; it must declare the inputs that authorize it. */
+        const registered = sourceAuthority(contract.sourceId);
+        return registered !== null && registered.derivedPromotion !== undefined &&
+            (registered.recordClasses as readonly RoutineRecordClass[]).includes(contract.recordClass) &&
+            registered.routePrefixes.length === 0 && registered.allowedFinalHosts.length === 0
+          ? { ok: true as const, contract: registered }
+          : { ok: false as const, code: "DERIVED_AUTHORITY_INVALID" };
+      })()
     : (() => {
         const registered = SOURCE_AUTHORITIES[contract.sourceId];
         return (registered.recordClasses as readonly RoutineRecordClass[]).includes(contract.recordClass) && registered.routePrefixes.length > 0
@@ -85,7 +96,9 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
     scope: contract.scope,
     requestedUrl: contract.acquisitionAdapter.authorityMode === "SINGLE_ROUTE"
       ? contract.acquisitionAdapter.requestedUrl
-      : "",
+      : contract.acquisitionAdapter.authorityMode === "DERIVED"
+        ? derivedRequestedUrl(contract.sourceId, contract.scope)
+        : "",
     authorityMode: contract.acquisitionAdapter.authorityMode,
     parserVersion: contract.parserNormalizerVersion,
     command: contract.acquisitionAdapter.command,

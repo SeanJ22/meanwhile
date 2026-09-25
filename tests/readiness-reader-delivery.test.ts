@@ -231,16 +231,18 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // 159 from 2026-09-23: + meetings:official-page-events for Tucson Unified's own page.
   // 161 from 2026-09-24: + the Newbury Library Trustees' and Energy Committee's own pages (C9).
   // 162 from 2026-09-24: + meetings:schedulepage for Chandler's City Council schedule table (C14).
-  assert.equal(contracts.length, 162 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
+  // 167 from 2026-09-24: + the meeting-source wiring, three derived state families and the meeting-body crosswalk (C16).
+  assert.equal(contracts.length, 167 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
   assert.deepEqual(
     ROUTINE_SOURCE_CONTRACTS.map(({ id }) => id),
     [
       "fec-funding", "nh-members", "az-state-legislators", "nj-state-legislators", "az-state-rollcalls", "nh-state-rollcalls", "nj-state-rollcalls", "census-acs-population", "census-geography-overlaps", "nj-morris-filing", "pima-legistar-outcomes", "dotgov",
       ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+      "meeting-source-wiring",
     ],
     "the guard must move when the canonical contract denominator moves",
   );
-  assert.equal(MEETING_PARTITION_CONTRACTS.length, 128);
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, 131);
   assert.equal(contracts.some(({ id }) => id === "meetings"), false);
   assert.deepEqual(readinessAuthorityCoverageIssues(), []);
   assert.deepEqual(

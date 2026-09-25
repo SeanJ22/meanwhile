@@ -11,6 +11,8 @@ import type { HistoricalWindowRun } from "../lib/control-plane/fleet-delivery.ts
 const AT = "2026-09-05T18:00:00.000Z";
 const LATER = "2026-09-05T18:01:00.000Z";
 const LATEST = "2026-09-05T18:02:00.000Z";
+/** The gate as these historical receipts were recorded under: promotion OFF. The live gate now opens campaign sites only (2026-09-21). */
+const closedGate = () => ({ ...readActivationGate(process.cwd()), promotionEnabled: false, openRecordClasses: [], openFields: {}, reason: "SHADOW; promotion OFF (historical fixture)" });
 
 async function removeFixtureRoot(root: string, prefix: string) {
   const target = resolve(root);
@@ -20,7 +22,7 @@ async function removeFixtureRoot(root: string, prefix: string) {
 }
 
 function windowFor(receipt: PromotionReceipt): HistoricalWindowRun {
-  const gate = readActivationGate(process.cwd());
+  const gate = closedGate();
   return { formatVersion: 1, windowId: receipt.windowId!, localDate: "2026-09-05", zone: "America/New_York", scheduledFor: AT,
     trigger: "MANUAL", mode: "SHADOW", startedAt: AT, finishedAt: LATER, host: "fixture", testedSha: null, provider: "fixture",
     caughtUp: [], lock: { leaseId: "fixture", holder: "fixture", claimedAt: AT, expiresAt: LATEST, releasedAt: LATER },
@@ -34,7 +36,7 @@ function windowFor(receipt: PromotionReceipt): HistoricalWindowRun {
 async function fixture(t: { after: (fn: () => Promise<void>) => void }) {
   const root = await mkdtemp(join(tmpdir(), "fleet-receipt-loader-"));
   t.after(() => removeFixtureRoot(root, "fleet-receipt-loader-"));
-  const receipt = await promoteFacts({ target: { kind: "SHADOW", root }, authority: liveAuthority(readActivationGate(process.cwd())),
+  const receipt = await promoteFacts({ target: { kind: "SHADOW", root }, authority: liveAuthority(closedGate()),
     verdicts: [{ itemId: "fixture-item", recordClass: "meeting-times", stage: null, verdict: "REFUSE_WOULD", reason: "isolated loader fixture" }],
     facts: new Map(), now: AT, windowId: "fixture-window" });
   assert.ok(receipt.receiptPath);
@@ -164,7 +166,7 @@ test("count bounds cover file reads, returned receipts/statuses and historical c
   const contradictory = await store.read([{ ...f.window, promotionReceipts: [summary, { ...summary, refused: 99 }] }], LATEST);
   assert.equal(contradictory.entries[0].state, "RETAINED");
   assert.ok(contradictory.entries[0].gaps.includes("WINDOW_RECEIPT_SUMMARIES_CONTRADICT"));
-  const second = await promoteFacts({ target: { kind: "SHADOW", root: f.root }, authority: liveAuthority(readActivationGate(process.cwd())),
+  const second = await promoteFacts({ target: { kind: "SHADOW", root: f.root }, authority: liveAuthority(closedGate()),
     verdicts: [{ itemId: "fixture-item-2", recordClass: "meeting-times", stage: null, verdict: "REFUSE_WOULD", reason: "second isolated loader fixture" }],
     facts: new Map(), now: LATER, windowId: "fixture-window-2" });
   assert.equal((await store.read([windowFor(second)], LATEST)).entries[0].state, "LOADED");

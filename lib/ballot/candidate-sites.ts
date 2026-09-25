@@ -41,6 +41,21 @@ export interface VerifiedLink {
    * of those would be words a reader has to read for nothing.
    */
   label?: string;
+  /**
+   * The read a machine-verified link rests on (2026-09-25): the deterministic
+   * campaign-site verifier's robots-first read and the pipeline approval it
+   * passed (`lib/civic-data/campaign-site-publication.ts`). Absent on links a
+   * reviewing session recorded by hand. Carried for provenance; not rendered.
+   */
+  evidence?: {
+    verifierId: string;
+    /** sha256 (bare hex) of the exact vaulted bytes. */
+    sha256: string;
+    /** The URL requested; `url` is where it answered. */
+    requestedUrl: string;
+    readAt: string;
+    approvalRecordId: string;
+  };
 }
 
 export interface CandidateLinks {

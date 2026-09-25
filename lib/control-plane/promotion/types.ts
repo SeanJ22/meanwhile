@@ -158,6 +158,23 @@ export type ScoutedSource =
       readonly sourceKey: string;
       /** The instant the fact is about: the meeting start. */
       readonly applicableAt: string;
+    }
+  | {
+      /**
+       * 2026-09-25: one POINTER a deterministic discovery route returned — a
+       * Marginalia search result, held as the vaulted index response. The item
+       * is a lead, never a record: it is confirmed only by reading the pointed
+       * origin with our own Attempt (campaign-site-chain.ts).
+       */
+      readonly kind: "DISCOVERY_POINTER";
+      readonly routeId: string;
+      /** The Attempt that ran the discovery route and vaulted the index response. */
+      readonly attemptId: string;
+      readonly artifactId: string;
+      /** The pointed URL, exactly as the index returned it. */
+      readonly pointerUrl: string;
+      /** 1-based position in the index's answer. */
+      readonly rank: number;
     };
 
 export interface ScoutedRecord extends RecordBase {
@@ -259,6 +276,8 @@ export interface ApprovedRecord extends RecordBase {
   readonly recordClass: string;
   /** PRDY-3/5: measured at offer time; absent on approvals written before the burdens existed. */
   readonly burdens?: readonly ApprovalBurden[];
+  /** The one field of the class this approval is for (`campaignSite`), where the gate opens a class by field. */
+  readonly field?: string;
 }
 
 export interface RefusedRecord extends RecordBase {
@@ -370,9 +389,13 @@ export interface WindowLockFacts {
 }
 
 export interface ActivationGateReading {
-  readonly promotionEnabled: false;
+  /** True only while at least one record class is open by the owner's decision (activation-gate.ts). */
+  readonly promotionEnabled: boolean;
+  /** The nightly window's own mode: it evaluates and promotes nothing; an open class publishes through its own door. */
   readonly mode: "SHADOW";
   readonly openRecordClasses: readonly string[];
+  /** Within an open class, the only fields that may be approved. Absent on readings recorded before 2026-09-25. */
+  readonly openFields?: Readonly<Record<string, readonly string[]>>;
   readonly contracts: Readonly<Record<"READER" | "TRUTH" | "FRESHNESS", string>>;
   readonly independentlyReproduced: boolean;
   /** Where the contract states were read from, by path. Null when nothing could be read. */

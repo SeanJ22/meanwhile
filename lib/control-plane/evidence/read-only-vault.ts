@@ -40,6 +40,11 @@ export interface HeldVaultArtifact {
   readonly httpStatus: number | null;
   readonly sourceId: string | null;
   readonly workItemId: string | null;
+  /** The Attempt that retrieved the bytes, and the route it ran, as the sidecar recorded them. */
+  readonly attemptId: string | null;
+  readonly methodRouteId: string | null;
+  /** The robots verdict the retrieval ran under (`ALLOWED`…), as the sidecar recorded it. */
+  readonly permission: string | null;
   readonly bodyPath: string;
   readonly bodySha256: string;
 }
@@ -101,6 +106,9 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
         httpStatus: Number.isInteger(status) ? status : null,
         sourceId: meta.custom?.sourceId ?? null,
         workItemId: meta.custom?.workItemId ?? null,
+        attemptId: meta.custom?.attemptId ?? null,
+        methodRouteId: meta.custom?.methodRouteId ?? null,
+        permission: meta.custom?.permission ?? null,
         bodyPath: path.slice(0, -SIDECAR_SUFFIX.length),
         bodySha256: sidecar.bodySha256,
       };

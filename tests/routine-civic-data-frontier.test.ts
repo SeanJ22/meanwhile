@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -8,8 +9,10 @@ import {
   routineFailureDomainCount,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
+  routineTaskDue,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSourceTask,
+  type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
@@ -408,4 +411,84 @@ test("each Google calendar is its own lane; every other host keeps one lane per 
   // A small-town host is still one lane for all its bodies.
   const newLondon = MEETING_PARTITION_CONTRACTS.filter((p) => p.acquisitionFailureDomain === "meeting-upstream:newlondon.nh.gov");
   assert.ok(newLondon.length > 1);
+});
+
+test("R20: a hot body goes first on its lane, ahead of older twice-daily re-reads and never-published retries", () => {
+  const shared = largestRealDomain().slice(0, 3);
+  assert.equal(shared.length, 3);
+  const [base, never, hot] = shared as [RoutineSourceTask, RoutineSourceTask, RoutineSourceTask];
+  const candidates = [
+    { task: base, lastConsideredAt: "2026-09-08T00:00:00.000Z", hot: false },
+    { task: never, lastConsideredAt: null },
+    { task: hot, lastConsideredAt: "2026-09-08T11:05:00.000Z", hot: true },
+  ];
+  assert.deepEqual(routineFailureDomainFrontier(candidates).map(({ task }) => task.id), [hot.id]);
+  // With no hot task due, the least-recently-considered order is unchanged.
+  assert.deepEqual(routineFailureDomainFrontier(candidates.slice(0, 2)).map(({ task }) => task.id), [never.id]);
+  // Between hot tasks, the least recently considered goes first.
+  const twoHot = [
+    { task: base, lastConsideredAt: "2026-09-08T11:00:00.000Z", hot: true },
+    { task: hot, lastConsideredAt: "2026-09-08T11:05:00.000Z", hot: true },
+  ];
+  assert.deepEqual(routineFailureDomainFrontier(twoHot).map(({ task }) => task.id), [base.id]);
+});
+
+test("R20: on a lane as crowded as Tucson's, every hot body keeps its hour through a burst of twice-daily re-reads, and none starves", () => {
+  // Tucson clerksboards, 2026-09-25: 8 bodies in the window, 17 outside it, 2 never published, one read per 5-minute pass.
+  const HOUR = 3_600_000;
+  const model = ROUTINE_SOURCE_TASKS.find((task) => task.contract.schedule?.kind === "SITTING_WINDOW" && task.recordClass === "MEETING");
+  assert.ok(model);
+  const lane = (kind: string, count: number) => Array.from({ length: count }, (_, index) => ({
+    ...model,
+    id: `sim:${kind}:${index}`,
+    acquisitionFailureDomain: "meeting-upstream:sim.example",
+  }) as RoutineSourceTask);
+  const hot = lane("hot", 8);
+  const base = lane("base", 17);
+  const never = lane("never", 2);
+  const start = Date.parse("2026-09-25T10:40:00.000Z");
+  const iso = (ms: number) => new Date(ms).toISOString();
+  const clocks = new Map<string, RoutineTaskClock>();
+  const readAt = (task: RoutineSourceTask, at: number) => clocks.set(task.id, never.includes(task)
+    ? { lastAttemptedAt: iso(at) }
+    : {
+        lastAttemptedAt: iso(at),
+        lastSucceededAt: iso(at - 2_500),
+        lastSucceededObservedAt: iso(at),
+        sittingStarts: hot.includes(task) ? [iso(start + 2 * 24 * HOUR)] : [],
+      });
+  // Hot bodies were read in the last 40 minutes; every twice-daily body and
+  // every never-published retry falls due at once: the worst burst.
+  hot.forEach((task, index) => readAt(task, start - (index + 1) * ROUTINE_DATA_ADMISSION_MS));
+  base.forEach((task) => readAt(task, start - 12 * HOUR));
+  never.forEach((task) => readAt(task, start - 12 * HOUR));
+  const reads = new Map<string, number[]>([...hot, ...base, ...never].map((task) => [task.id, []]));
+  for (let pass = 0; pass < 96; pass += 1) {
+    const now = start + pass * ROUTINE_DATA_ADMISSION_MS;
+    const signal = (task: RoutineSourceTask) => hot.includes(task) ? true : base.includes(task) ? false : undefined;
+    const due = [...hot, ...base, ...never].filter((task) => routineTaskDue(task, clocks.get(task.id), now, signal(task)));
+    const admitted = routineFailureDomainFrontier(due.map((task) => ({
+      task,
+      lastConsideredAt: clocks.get(task.id)?.lastAttemptedAt ?? null,
+      hot: signal(task) === true,
+    })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
+    assert.ok(admitted.length <= 1);
+    for (const { task } of admitted) {
+      readAt(task, now);
+      reads.get(task.id)!.push(now);
+    }
+  }
+  hot.forEach((task, index) => {
+    const times = [start - (index + 1) * ROUTINE_DATA_ADMISSION_MS, ...reads.get(task.id)!];
+    const gaps = times.slice(1).map((at, i) => at - times[i]!);
+    assert.ok(Math.max(...gaps) <= HOUR, `${task.id}: every hot read within the hour (${gaps.map((gap) => gap / 60_000).join(", ")} min)`);
+  });
+  for (const task of [...base, ...never]) assert.ok(reads.get(task.id)!.length >= 1, `${task.id} is read within eight hours of falling due`);
+});
+
+test("R20: the runner hands the frontier each due task's hot signal from the same pass", () => {
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const call = runner.slice(runner.indexOf("const admitted = routineFailureDomainFrontier("));
+  assert.match(call.slice(0, call.indexOf("ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS")), /hot: sittingSignals\.get\(pending\.task\.id\) === true,/);
+  assert.ok(runner.indexOf("const sittingSignals = sittingWindowSignals(") < runner.indexOf("const admitted = routineFailureDomainFrontier("));
 });

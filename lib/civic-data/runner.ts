@@ -135,6 +135,13 @@ export interface RoutineTaskAdmissionCandidate {
    * means this task has never been considered and therefore goes first.
    */
   readonly lastConsideredAt: string | null;
+  /**
+   * The task's sitting window is hot: a sitting within seven days is on record,
+   * so the owner's rule reads it hourly. A hot task goes ahead of every other
+   * due task on its lane, so a burst of twice-daily re-reads or never-published
+   * retries cannot push an hourly body past its hour (R20, C6).
+   */
+  readonly hot?: boolean;
 }
 
 function consideredAtMs(candidate: RoutineTaskAdmissionCandidate): number {
@@ -178,6 +185,7 @@ export function routineFailureDomainFrontier(
     const rotation = rotationSeed % group.length;
     group
       .sort((left, right) =>
+        Number(right.hot === true) - Number(left.hot === true) ||
         consideredAtMs(left) - consideredAtMs(right) ||
         (
           (groupIndex.get(left.task.id)! - rotation + group.length) % group.length -

@@ -219,6 +219,10 @@ export async function readReaderManifest(
  * or the comment-access artifact (the meetings route takes those rules from the
  * manifest). Fetching and parsing those two on a cold instance sat on the
  * critical path of every first map request for nothing.
+ *
+ * `/ballot` reads the same four (R30, 2026-09-25): divisions, the federal
+ * officeholders, the campaign-site URLs that key the officeholder graph, and
+ * the state legislators incumbency asks about.
  */
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",

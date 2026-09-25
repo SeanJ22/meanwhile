@@ -6,7 +6,7 @@
  * mapping (tsconfig paths: at-slash to repo root) for the test runner,
  * nothing more.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -18,13 +18,17 @@ let typescript;
 export function resolve(specifier, context, nextResolve) {
   if (specifier.startsWith("@/")) {
     const base = join(root, specifier.slice(2));
+    // A FILE, never a directory: `@/lib/sources/ballot-nj-morris` names a
+    // folder whose module is its index.ts, as the bundler resolves it. Node
+    // refuses a directory import outright, so a directory match here could
+    // only fail (it did, the first time a test imported app/ballot/page.tsx).
     for (const candidate of [
       base,
       `${base}.ts`,
       `${base}.tsx`,
       join(base, "index.ts"),
     ]) {
-      if (existsSync(candidate)) {
+      if (existsSync(candidate) && statSync(candidate).isFile()) {
         return nextResolve(pathToFileURL(candidate).href, context);
       }
     }
@@ -57,6 +61,25 @@ export function resolve(specifier, context, nextResolve) {
     const bare = join(root, "node_modules", specifier);
     if (!existsSync(bare) && existsSync(`${bare}.js`)) {
       return nextResolve(pathToFileURL(`${bare}.js`).href, context);
+    }
+  }
+
+  /*
+   * **EXTENSIONLESS RELATIVE IMPORTS, THE SAME WAY** (R30, 2026-09-25).
+   * `components/ask/ballot-ask.tsx` imports `./body-confirmation`, which the
+   * bundler finds as `body-confirmation.tsx` and Node does not, so no test
+   * could import `app/ballot/page.tsx` to render it. Tried only when the
+   * specifier as written names no file, so nothing that resolves today
+   * resolves differently.
+   */
+  if ((specifier.startsWith("./") || specifier.startsWith("../")) && context.parentURL?.startsWith("file:")) {
+    const base = fileURLToPath(new URL(specifier, context.parentURL));
+    if (!(existsSync(base) && statSync(base).isFile())) {
+      for (const candidate of [`${base}.ts`, `${base}.tsx`, join(base, "index.ts"), join(base, "index.tsx")]) {
+        if (existsSync(candidate) && statSync(candidate).isFile()) {
+          return nextResolve(pathToFileURL(candidate).href, context);
+        }
+      }
     }
   }
 

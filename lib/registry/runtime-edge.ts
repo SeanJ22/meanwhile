@@ -138,6 +138,19 @@ export function enterReaderAuthorityEdge(bundle: ReaderAuthorityEdgeBundle): voi
   edgeStore.enterWith(bundle);
 }
 
+/**
+ * Run `read` inside the bundle's context, and only it (AsyncLocalStorage.run).
+ *
+ * For a React server component (2026-09-25, R30): React calls each async
+ * component from its own render loop, never from the page function that
+ * entered the edge, so a component's reads do not see the page's
+ * `enterReaderAuthorityEdge` (tests/ballot-reader-edge.test.ts). The page hands
+ * the bundle down and each component runs its reads here. A null bundle (no
+ * manifest, a failed fetch) runs `read` unchanged: the database path.
+ */
+export function withReaderAuthorityEdge<T>(bundle: ReaderAuthorityEdgeBundle | null, read: () => T): T {
+  return bundle ? edgeStore.run(bundle, read) : read();
+}
 
 export function currentReaderAuthorityEdge(): ReaderAuthorityEdgeBundle | null {
   return edgeStore.getStore() ?? null;

@@ -384,10 +384,27 @@ export const settleCommentAccessRead = (): Promise<void> =>
 const settleCampaignSitesRead = (): Promise<void> =>
   settleEdgeFirst(currentCampaignSitesEdge, (value, versionId) => primeCuratedReaderProjection("campaign-sites", value, versionId), refreshCampaignSitesFromPromoted, "The campaign-site URLs");
 
+/**
+ * **ONE VERSION, ONE KEY, WHICHEVER PATH SERVED IT.** (R30, 2026-09-25.)
+ *
+ * An edge prime records its family as BOOTSTRAP (the serving copy carries the
+ * value and version, not the promotion receipt) and a database read of the
+ * same promoted version records PROMOTED. The cache keys below used to include
+ * that kind, so an instance serving one request from the edge and the next
+ * from the database (a route that does not enter the edge, or a failed edge
+ * fetch) saw two keys for one version and rebuilt the registry and the whole
+ * officeholder graph each time it alternated. The edge copies exactly the
+ * promoted version it names, so a served value is keyed by its version alone;
+ * a first seed carries its own `bootstrap:` version id and stays distinct.
+ */
+export function authorityVersionKey(state: { readonly kind: string; readonly metadata: { readonly versionId: string | null } }): string {
+  const served = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP";
+  return `${served ? "SERVED" : state.kind}:${state.metadata.versionId ?? "none"}`;
+}
+
 async function currentRegistryAuthorityKey(): Promise<string> {
   await settleRegistryAuthorityReads("REGISTRY");
-  const registry = registryRuntimeReadState();
-  return `registry:${registry.kind}:${registry.metadata.versionId ?? "none"}`;
+  return `registry:${authorityVersionKey(registryRuntimeReadState())}`;
 }
 
 async function currentAuthorityKey(registryKey: string): Promise<string> {
@@ -399,8 +416,7 @@ async function currentAuthorityKey(registryKey: string): Promise<string> {
   if (process.env.NODE_ENV === "production") {
     try {
       await settleCampaignSitesRead();
-      const state = curatedReaderReadState("campaign-sites");
-      campaign = `${state.kind}:${state.metadata.versionId ?? "none"}`;
+      campaign = authorityVersionKey(curatedReaderReadState("campaign-sites"));
     } catch {
       // Campaign URLs are an optional, separately promoted projection. A
       // store failure withholds those URLs but cannot make the registry,
@@ -408,9 +424,8 @@ async function currentAuthorityKey(registryKey: string): Promise<string> {
       campaign = "UNAVAILABLE";
     }
   }
-  const federal = federalDirectoryReadState();
   return [
-    `federal:${federal.kind}:${federal.metadata.versionId ?? "none"}`,
+    `federal:${authorityVersionKey(federalDirectoryReadState())}`,
     registryKey,
     `campaign:${campaign}`,
   ].join("|");

@@ -27,6 +27,8 @@
  * disagree about what "changed" means.
  */
 
+import type { LaneGauge } from "./scheduler/lane-reading.ts";
+
 /** The small body the live endpoint returns. */
 export interface LivePulse {
   /** Changes exactly when something the console renders has moved. */
@@ -48,6 +50,12 @@ export interface LivePulse {
     readonly obligations: number | null;
     readonly agentJobsRunning: number | null;
   };
+  /**
+   * MW-029 / MW-071: each lane's running and waiting work and its own blocking
+   * reason, taken from the research state the pulse already reads — never a
+   * second read. Null when that state was not read or records no lanes.
+   */
+  readonly lanes: { readonly at: string; readonly final: boolean; readonly gauges: readonly LaneGauge[] } | null;
   /** A read we could not make, named. Never rendered as a zero. */
   readonly unread: readonly string[];
 }

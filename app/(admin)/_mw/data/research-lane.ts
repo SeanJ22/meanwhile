@@ -21,13 +21,21 @@ export function paidLaneOf(state: ResearchState | null): PaidLane {
   const waiting = typeof state.queue?.modelClassDeferredForLane === "number" ? state.queue.modelClassDeferredForLane : null;
   if (state.modelLaneEnabled) return { open: true, closedBecause: null, recorded: null, waiting };
   const raw = state.modelLaneDisabledReason ?? "";
+  // The waiting count belongs to every closed reason, not only the one the
+  // runner happened to name first: the owner's pause now outranks the
+  // delivery gate, and the count must not vanish with the reordering.
+  const waitingClause = waiting !== null && waiting > 0 ? `; ${waiting.toLocaleString("en-US")} paid items wait` : "";
   let plain: string;
   if (raw.startsWith("no delivery path is open")) {
-    plain = `closed: no delivery path is open — promotion to readers is off, so paid work would only pile up unread${waiting !== null && waiting > 0 ? `; ${waiting.toLocaleString("en-US")} paid items wait for it` : ""}.`;
+    plain = `closed: no delivery path is open — promotion to readers is off, so paid work would only pile up unread${waitingClause}.`;
   } else if (raw.startsWith("SCHEDULED BLACKOUT")) {
     plain = "closed for the weekend blackout (Saturday 6 PM to Sunday 6 AM, Phoenix time).";
   } else if (raw.startsWith("paused")) {
-    plain = "paused by you.";
+    plain = `paused by you${waitingClause}.`;
+  } else if (raw.startsWith("the owner paused the runner")) {
+    plain = `paused: you paused the runner${waitingClause}.`;
+  } else if (raw.startsWith("held closed as if paused")) {
+    plain = `held closed: a spending control could not be read, so paid work waits until it can be${waitingClause}.`;
   } else if (raw === "") {
     plain = "closed; the runner recorded no reason.";
   } else {

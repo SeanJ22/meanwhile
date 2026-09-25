@@ -139,6 +139,38 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   }
 });
 
+/*
+ * 2026-09-25: FleetSafety's `paused` flag was display-only — a model request
+ * was reserved under the owner's runner pause. Both locks below refuse the PAID
+ * request and leave the free fetch seam admitting.
+ */
+test("the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted", () => {
+  const paused = new FleetSafetyController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
+  assert.throws(() => paused.reserveModelRequest("anthropic", "scout-under-pause", REQUEST), (error: unknown) =>
+    error instanceof FleetSafetyRefusal && error.code === "OWNER_PAUSED");
+  assert.doesNotThrow(() => paused.admitProviderRequest("discovery-web", "free-walk"), "a free walk's fetch is not paid work");
+  assert.deepEqual(paused.admitDispatch("deterministic-refresh"), { admit: true });
+  assert.equal(paused.snapshot(NIGHT).status, "PAUSED");
+});
+
+test("a closed paid lane's reason refuses every model request by name, and never calls the transport", async () => {
+  const why = "held closed as if paused, because an owner spending control could not be read: the owner's research intents could not be read (reset)";
+  const held = new FleetSafetyController({ now: NIGHT, costs: [], modelHold: why, clock: () => Date.parse(NIGHT) });
+  assert.throws(() => held.reserveModelRequest("anthropic", "prewarm", REQUEST), (error: unknown) =>
+    error instanceof FleetSafetyRefusal && error.code === "MODEL_LANE_CLOSED" && error.message.includes("research intents could not be read"));
+  let called = 0;
+  const transport = held.guardedModelTransport("anthropic", "auditor", async () => { called += 1; return RESPONSE; });
+  await assert.rejects(transport(REQUEST), (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "MODEL_LANE_CLOSED");
+  assert.equal(called, 0, "no paid request left the process");
+  assert.doesNotThrow(() => held.admitProviderRequest("public-web", "plain-code refresh"));
+  const snapshot = held.snapshot(NIGHT);
+  assert.equal(snapshot.status, "ACTIVE", "a held lane is not the owner's runner pause, and the card must not say it is");
+  assert.ok(snapshot.stoppedBecause.some((line) => line.startsWith("MODEL_LANE_CLOSED: held closed as if paused")));
+
+  const open = new FleetSafetyController({ now: NIGHT, costs: [], modelHold: null, clock: () => Date.parse(NIGHT) });
+  assert.doesNotThrow(() => open.reserveModelRequest("anthropic", "open-lane", REQUEST), "an open lane reserves as before");
+});
+
 test("an unmetered Scout cost row fails closed instead of disappearing from aggregate spend", () => {
   const row = cost(null, "2026-09-05T02:00:00.000Z");
   const unmeteredScout: CostEntry = {

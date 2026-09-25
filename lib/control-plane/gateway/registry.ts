@@ -95,6 +95,7 @@ import {
   type ExpansionScopeGeography,
 } from "../expansion/scopes.ts";
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
+import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -250,9 +251,11 @@ async function appendIntent(
   action: "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
+  /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */
+  budgetUsd: number | null = null,
 ): Promise<ActionResult> {
   const requestedAt = context.at;
-  const intent = buildResearchIntent(action, requestedAt, context.request.actorRef, note);
+  const intent = buildResearchIntent(action, requestedAt, context.request.actorRef, note, undefined, budgetUsd);
   const wrote = await appendResearchIntent(deps.repos, intent, requestedAt);
   if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
   return {
@@ -487,16 +490,31 @@ const REGISTRY: readonly RegisteredAction[] = [
       // A DISPATCH with no words is refused by the canonical validator: "deploy
       // the fleet" to nowhere is not an instruction.
       const note = validateIntentNote("DISPATCH", input.note);
-      return note.ok && note.note !== null ? { ok: true, value: { note: note.note } } : bad(note.ok ? "say what the fleet should go do" : note.detail);
+      if (!note.ok || note.note === null) return bad(note.ok ? "say what the fleet should go do" : note.detail);
+      /* MW-021: an optional budget of its own — the same dollar rule, and the same $0-holds-everything meaning, as a geography's. */
+      if (input.budgetUsd === undefined || input.budgetUsd === null || input.budgetUsd === "") return { ok: true, value: { note: note.note } };
+      const budget = validateScopeBudget(input.budgetUsd);
+      return budget.ok ? { ok: true, value: { note: note.note, budgetUsd: budget.value } } : bad(budget.why);
     },
     execute(deps, context, input) {
-      return appendIntent(deps, context, "DISPATCH", String(input.note), {
-        says:
-          "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there. " +
-          `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_BOUNDS} instruction), ` +
-          "and its acknowledgement counts what it created, what it reordered and what missing data blocked. Work that needs a model waits for the paid lane.",
-        undo: "Send it somewhere else; the later instruction is the one the next cycle reads.",
-      });
+      const budgetUsd = typeof input.budgetUsd === "number" ? input.budgetUsd : null;
+      return appendIntent(
+        deps,
+        context,
+        "DISPATCH",
+        String(input.note),
+        {
+          says:
+            "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there. " +
+            `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_BOUNDS} instruction), ` +
+            "and its acknowledgement counts what it created, what it reordered and what missing data blocked. Work that needs a model waits for the paid lane." +
+            (budgetUsd === null
+              ? " It carries no budget of its own, so only the Fleet ceiling bounds paid work on it."
+              : ` Paid work on what it reaches may spend $${budgetUsd.toFixed(2)} in any rolling 24 hours; the runner holds it back there once that is spent, and the Fleet ceiling still binds first.`),
+          undo: "Send it somewhere else; the later instruction is the one the next cycle reads.",
+        },
+        budgetUsd,
+      );
     },
   },
 
@@ -824,12 +842,16 @@ const REGISTRY: readonly RegisteredAction[] = [
       if (!budget.ok) return bad(budget.why);
       const note = validateScopeNote(input.note);
       if (!note.ok) return bad(note.why);
-      return { ok: true, value: { geography: geography.value, priority: priority.value, budgetUsd: budget.value, note: note.value } };
+      /* MW-002: the owner's questions travel typed, never folded into the note. */
+      const questions = validateWorkQuestions(input.questions);
+      if (!questions.ok) return bad(questions.why);
+      return { ok: true, value: { geography: geography.value, priority: priority.value, budgetUsd: budget.value, note: note.value, questions: questions.value } };
     },
     async execute(deps, context, input) {
       const geography = input.geography as ExpansionScopeGeography;
       const priority = Number(input.priority);
       const budgetUsd = Number(input.budgetUsd);
+      const questions = (Array.isArray(input.questions) ? input.questions : []) as readonly WorkQuestion[];
       const at = context.at;
       let previous: { readonly priority: number; readonly budgetUsd: number } | null = null;
       let ceilingUsd: number;
@@ -849,6 +871,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           priority,
           budgetUsd,
           note: input.note === null ? null : String(input.note),
+          questions,
           decidedAt: at,
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
@@ -871,7 +894,10 @@ const REGISTRY: readonly RegisteredAction[] = [
           "Recording it starts nothing itself. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
           `(${CREATION_BOUNDS} geography) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
           "Work that needs a model waits: the paid lane stays exactly as it is, " +
-          `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.`,
+          `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.` +
+          (questions.length > 0
+            ? ` Your questions are kept on it and on every piece of work it reaches: ${questions.map((q) => WORK_QUESTION_WORDS[q]).join(" ")}`
+            : ""),
         openedWork: [],
         readBackAt: "/admin/work",
         undo:

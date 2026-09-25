@@ -31,7 +31,7 @@
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
-import { MODEL_WORKER_MODEL } from "../model-cost.ts";
+import { MODEL_FOR_CLASS, SCOUT_STEPS } from "./model-routing.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
 import type { FleetSafetySnapshot } from "../fleet-safety.ts";
 
@@ -192,6 +192,13 @@ export interface ResearchState {
     readonly modelClassDeferredForLane: number;
     readonly deterministicDue: number;
     readonly deterministicDispatchedThisCycle: number;
+    /**
+     * MW-014 / MW-071: each lane's due, started, running and waiting rows, every
+     * reason a due row was not started (summing to the rows skipped), and the
+     * oldest waiting row's next-due. Absent on states written before it; read
+     * as "not recorded", never as nothing skipped.
+     */
+    readonly lanes?: import("./lane-reading.ts").QueueLanes | null;
   };
   readonly running: readonly RunningScout[];
   /** Named runtime conditions preventing eligible Scout work from dispatching. Empty when none. */
@@ -231,6 +238,14 @@ export interface ResearchState {
    * measured", never as zero.
    */
   readonly dispatchWork?: import("../expansion/dispatch-work.ts").DispatchWorkReading | null;
+  /**
+   * MW-001/MW-021: every owner Send as the obligations themselves record it —
+   * what it created and reordered — and its budget as the runner holds it:
+   * spent, held and left in the rolling window. Absent on states written
+   * before Sends were kept on the row, and null when no Send stands: both read
+   * as "nothing measured", never as zero.
+   */
+  readonly assignments?: import("../expansion/assignment-budget.ts").AssignmentCycleReading | null;
 }
 
 /**
@@ -303,6 +318,12 @@ export type ResearchIntent =
       readonly adminSessionRef: string;
       /** The owner's words: a DISPATCH target or a PAUSE_RUNNER reason. Null otherwise. */
       readonly note: string | null;
+      /**
+       * MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it
+       * reaches, in USD. Absent when the owner sent it without one (only the
+       * Fleet ceiling bounds it) and on every other action.
+       */
+      readonly budgetUsd?: number;
     }
   | {
       readonly formatVersion: number;
@@ -608,5 +629,10 @@ export function deriveLevel1(input: {
   };
 }
 
-/** The model the Scout lane runs, for records that must name it. */
-export const SCOUT_MODEL = MODEL_WORKER_MODEL;
+/**
+ * The model the Scout lane STARTS on, for records that must name it: the
+ * research loop's base class in the step registry (Sonnet 5 since MW-033,
+ * 2026-09-25; the frontier before). A loop that escalates names the higher
+ * model on its own result (`ScoutResult.modelClass`, `modelAttempts`).
+ */
+export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].modelClass];

@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { scoutExecutor, type ModelTransport } from "../scheduler/scout-executor.ts";
+import { scoutExecutor, type ModelTransport, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import { buildScoutToolkit } from "../scheduler/scout-tools.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import { hostSpacer } from "../scheduler/http-executor.ts";
@@ -19,6 +19,7 @@ import {
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
   scoutStateHint,
+  usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../scheduler/field-manual-scout.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
@@ -32,7 +33,11 @@ import { researchVaultResolver } from "./vault-object.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
-  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
+  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
+  /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
+  auditCeilingUsd?:number;
+  /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
+  reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"]}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
@@ -57,6 +62,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     } });
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,
+      ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id})}),
       contextFor:()=>{
         const history=(currentHistory??prior).filter(p=>p.workItemId===item.id);
@@ -110,7 +116,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,fieldManualKnown);
         const doors=inheritedFieldManualDoors.get(result.workItemId);
         recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting,
-          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines}:{})};
+          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines,
+            // MW-025: which handed doors this walk actually went through.
+            usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.entryIds,fieldManual)}:{})};
         if(result.refusal===null&&result.candidates.length>0){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};

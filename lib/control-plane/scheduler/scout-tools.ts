@@ -151,6 +151,18 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
   },
 };
 
+/**
+ * **THE RESEARCH TOOL LIST, FOR ONE SETTING OF THE SEARCH SWITCH — the one
+ * answer the toolkit and the pre-warm both read.** (2026-09-25.) The tool list
+ * is the first part of the cached prefix, so a pre-warm built from the list
+ * WITHOUT `search` while the Attempts send the list WITH it warms an entry no
+ * Attempt reads — a paid write and a miss every cycle the owner's paid-search
+ * switch is on.
+ */
+export function scoutToolSpecsFor(search: boolean): readonly ScoutToolSpec[] {
+  return search ? [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC] : SCOUT_TOOL_SPECS;
+}
+
 /* ------------------------------------------------------------ transport */
 
 /** The runtime's bytes opener. One request; text is decoded by the toolkit. */
@@ -1069,7 +1081,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     query: string,
     includeDomains: readonly string[] | undefined,
   ): Promise<ScoutToolCallResult> {
-    if (ctx.search === undefined) return refusal("search is not configured in this runtime (no provider key).");
+    if (ctx.search === undefined) return refusal("search is not available in this runtime (no provider key, or the owner's paid-search switch is off).");
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     let res;
     try {
@@ -1146,7 +1158,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   }
 
   return {
-    specs: ctx.search ? [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC] : SCOUT_TOOL_SPECS,
+    specs: scoutToolSpecsFor(Boolean(ctx.search)),
     call,
     get vaultedArtifactIds(): ReadonlySet<string> {
       return vaulted;

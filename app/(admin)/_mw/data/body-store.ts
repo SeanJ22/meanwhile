@@ -44,6 +44,7 @@ import "server-only";
 import { neon } from "@neondatabase/serverless";
 
 import { READER_PROJECTION_READBACK_PREFIX, parseReaderProjectionReadback } from "@/lib/civic-data/reader-readback.ts";
+import { horizonFromColumns, type PublisherHorizon } from "@/lib/control-plane/admin-view/bodies.ts";
 
 export const BODY_STORE_STATEMENT_TIMEOUT_MS = 4_000;
 
@@ -68,6 +69,13 @@ export interface BodyVersionRow {
   readonly changed: number;
   readonly removed: number;
   readonly held: number;
+  /**
+   * MW-017: the promoted candidate's own horizon evidence — whether the read
+   * was bounded, paginated to its end, and claims it holds everything the
+   * publisher lists. Five scalars read off the candidate, never the candidate.
+   * Null when the candidate records no horizon.
+   */
+  readonly horizon: PublisherHorizon | null;
 }
 
 export interface BodyAttemptRow {
@@ -179,15 +187,21 @@ const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
         (SELECT max((m->>'startsAt')::timestamptz) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m) AS furthest,
         p.payload->'meetings'->0->>'bodyName' AS body_name,
         p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,
-        cs.outcome, cs.added, cs.changed, cs.removed, cs.held
+        cs.outcome, cs.added, cs.changed, cs.removed, cs.held,
+        cs.horizon_kind, cs.horizon_returned, cs.horizon_declared, cs.horizon_paginated, cs.horizon_complete
    FROM civic_data_promotions p
    LEFT JOIN LATERAL (
      SELECT x.cs->>'outcome' AS outcome,
             jsonb_array_length(COALESCE(x.cs->'added', '[]'::jsonb)) AS added,
             jsonb_array_length(COALESCE(x.cs->'changed', '[]'::jsonb)) AS changed,
             jsonb_array_length(COALESCE(x.cs->'removed', '[]'::jsonb)) AS removed,
-            jsonb_array_length(COALESCE(x.cs->'held', '[]'::jsonb)) AS held
-       FROM (SELECT cd.candidate->'changeSet' AS cs FROM civic_data_candidates cd WHERE cd.id = p.current_version_id OFFSET 0) x
+            jsonb_array_length(COALESCE(x.cs->'held', '[]'::jsonb)) AS held,
+            x.hz->>'kind' AS horizon_kind,
+            x.hz->>'returnedRecords' AS horizon_returned,
+            x.hz->>'declaredTotal' AS horizon_declared,
+            x.hz->>'paginationComplete' AS horizon_paginated,
+            x.hz->>'claimsComplete' AS horizon_complete
+       FROM (SELECT cd.candidate->'changeSet' AS cs, cd.candidate->'horizon' AS hz FROM civic_data_candidates cd WHERE cd.id = p.current_version_id OFFSET 0) x
    ) cs ON true
   WHERE p.record_class = 'MEETING'`;
 
@@ -290,6 +304,7 @@ function versionsOf(rows: Rows): BodyVersionRow[] {
     changed: int(r.changed),
     removed: int(r.removed),
     held: int(r.held),
+    horizon: horizonFromColumns(r),
   }));
 }
 

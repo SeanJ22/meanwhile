@@ -26,6 +26,7 @@ import {
   type Measured,
   type RenderedNumber,
 } from "./owner-surface.ts";
+import { formatEastern } from "./eastern-time.ts";
 import { stageCounts, type StageCounts } from "./promotion/pipeline.ts";
 import {
   PIPELINE_STAGES,
@@ -68,7 +69,16 @@ export interface DeliveryBlocker {
   readonly says: string;
 }
 
-/** MW-054: one promoted record's complete history — evidence, time, version, destination. */
+/**
+ * MW-053 / MW-054: one approved record's complete history — what changed, its
+ * evidence, time, version and destination.
+ *
+ * The time is when the pipeline APPROVED it for promotion (its last stage),
+ * not when a reader could first see it: nothing records a pipeline item
+ * reaching readers yet. Snapshots published before 2026-09-25 carry the same
+ * instant as `promotedAt`, a name that overstated it; they stay readable, and
+ * the card labels either one as the approval time.
+ */
 export interface DeliveryPromotionRow {
   readonly subjectId: string | null;
   readonly recordClass: string;
@@ -78,10 +88,43 @@ export interface DeliveryPromotionRow {
     readonly verified: string;
     readonly audited: string;
   };
-  readonly promotedAt: string;
+  /** When the record was approved for promotion. Absent only on snapshots published before it was named truthfully. */
+  readonly approvedAt?: string;
+  /** The approval time under its old name, on snapshots published before 2026-09-25. Never written now. */
+  readonly promotedAt?: string;
+  /** What the record changed or adds, from its own pipeline records. Absent on snapshots published before it. */
+  readonly changeSummary?: string;
   readonly version: string;
   readonly destination: string;
   readonly checkedAt: string | null;
+}
+
+const CHANGE_SUMMARY_MAX = 240;
+
+/**
+ * What an approved record changes, from its pipeline records: the kind of
+ * fact (a meeting time, an agenda, a way in, a method, a record a Scout found)
+ * from the SCOUTED source, its own summary and URL, and the fact a second
+ * acquisition confirmed when the CONFIRMED record names one. Never invented:
+ * an item without a SCOUTED record says so.
+ */
+export function promotionChangeSummary(state: PipelineItemState): string {
+  const scouted = state.byStage.SCOUTED;
+  if (scouted === undefined) return "What changed is not recorded: the item holds no SCOUTED record.";
+  const src = scouted.source;
+  const what =
+    src.kind === "FLEET_EXTRACTION"
+      ? `${src.factKey.includes("#agenda@") ? "An agenda" : "A meeting time"} (${src.factKey}) from ${src.sourceKey}, for ${formatEastern(src.applicableAt, { year: true })}`
+      : src.kind === "SCOUT_RESULT"
+        ? src.outcome === "ROUTE_CANDIDATE"
+          ? `A way in, route ${src.routeId ?? "unnamed"}`
+          : "The record itself, found by a Scout"
+        : src.kind === "DISCOVERY_POINTER"
+          ? `A lead from a search index (route ${src.routeId}, result ${src.rank}), read at ${src.pointerUrl}`
+          : `A method, route ${src.routeId} (${src.lifecycle.toLowerCase()})`;
+  const fact = state.byStage.CONFIRMED?.sameFact ?? null;
+  const text = `${what}: ${scouted.summary}${scouted.canonicalUrl ? ` <${scouted.canonicalUrl}>` : ""}${fact ? `; the confirming read states ${fact}` : ""}`;
+  return text.length <= CHANGE_SUMMARY_MAX ? text : `${text.slice(0, CHANGE_SUMMARY_MAX - 1)}…`;
 }
 
 export interface DeliveryTrailView {
@@ -220,7 +263,9 @@ export function buildDeliveryTrail(
       subjectId: s.subjectId,
       recordClass: approved.recordClass,
       evidenceChain: approved.chain,
-      promotedAt: approved.at,
+      /* The APPROVED_FOR_PROMOTION record's own time: approval, not reader visibility (MW-053). */
+      approvedAt: approved.at,
+      changeSummary: promotionChangeSummary(s),
       version: approved.recordId,
       destination:
         input.servedReader === null

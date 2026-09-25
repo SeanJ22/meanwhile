@@ -14,7 +14,8 @@ session supplies the evidence for the capabilities it delivers; a row names its 
   `owner` (waits on a decision only Sean can make).
 - **Owners:** *Redesign* — this session. *Backend* — Admin worker and cost visibility (backend
   operations, the merge train). *RouteTask* — stop redispatching. *Vault* — pre-split vault.
-  *Census* — the Census geography lookup (delivered). *Sean* — owner decisions.
+  *Census* — the Census geography lookup (delivered). *Admin completion* — the session that finished
+  the original work the others left open (2026-09-25). *Sean* — owner decisions.
 - **Limits that stand:** paid research stays paused until Sean authorises it (his pause from Admin,
   `PAUSE:2026-09-23T17:25:04.443Z`, was honored by the runner at 17:33:06Z; the latest paid model
   charge is 2026-09-22T20:06:54Z — Backend's evidence); no expansion is demonstrated without Sean's
@@ -51,12 +52,12 @@ paused.
 | 1.3 | Budget: the panel says whether it is enforced and by what | built | Enforced before each paid Scout (membership admission); paid work is paused anyway | Redesign |
 | 1.4 | Send: created / reordered / blocked counts | built (partial) | Says plainly it creates no new work (MW-028 not built) and reorders registered work | Backend (MW-028) |
 | 1.5 | Acknowledgement: five facts, five times | built | Saved, read by the runner, placed first, running, blocked/paused — each with its own time or "not yet" | Redesign |
-| 1.6 | Concurrency: lanes with active/waiting/oldest; independence proven | needs recording | Lanes shown per body; no waiting/oldest gauge per lane (MW-029) | Backend |
-| 1.7 | Inherited knowledge: exact text given at dispatch, and whether used | needs recording | Recorded on each Scout result since 2026-09-19; "whether used" is not (MW-025) | Backend |
-| 1.8 | Model routing: class, why, one escalation with evidence and combined cost | needs recording | No step has ever escalated; the reason is recorded nowhere (MW-031) | Backend |
-| 1.9 | Budget enforcement per assignment | needs recording | Per-geography budget enforced; per-assignment does not exist (MW-021) | Backend |
+| 1.6 | Concurrency: lanes with active/waiting/oldest; independence proven | deployed | Per-lane active / waiting / oldest (MW-029). #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 1.7 | Inherited knowledge: exact text given at dispatch, and whether used | deployed | The handed text was already recorded; whether each door was used is now recorded too (MW-025). #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 1.8 | Model routing: class, why, one escalation with evidence and combined cost | deployed (offline-verified) | Class, reason and combined cost recorded (MW-031/033); no real escalation can happen while paid research is paused. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 1.9 | Budget enforcement per assignment | deployed | Per-assignment budget enforced (MW-021). #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 1.10 | One new or changed record reaches the public site, with its audit trail | demonstrated (routine) | Morris County, NJ, 2026-09-23. The county withdrew the agenda for its Board of County Commissioners' 7:00 PM regular meeting (its own page now reads "The meeting is not available at this time"). On the deployed Admin, Work → the routine assignment shows: IQM2 portal; retrieved 9:53 AM ET; 1 meeting changed, named; validation passed 9:53 AM ET; promoted as version `cv-362cbf555009…` at 9:53 AM ET; public destination meanwhileusa.com/?zip=07005; checked 9:53 AM ET through the Reader's projection; served now by a later version that changed nothing. On the reader's path, the public meetings API for 07005 lists the same 24 meetings for that board and serves `iqm2:morriscountynj:2248` with no agenda link, while the 5:00 PM work session keeps its agenda. One search-log row written. The owner-assignment form of this test (a selected geography) waits on Sean's approved scope and budget | Redesign |
-| 1.11 | Not finished: refused/unsettled visible with three dead-end fields | built (partial) | Three fields shown or named missing (MW-016); refusals roll up per assignment only in part (MW-015) | Backend (MW-015/016) |
+| 1.11 | Not finished: refused/unsettled visible with three dead-end fields | deployed | Refused and unsettled members roll up per assignment (MW-015), with three dead-end fields (MW-016). #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 2 | Unknown is never zero; empty state gives sentences; unanswerable period refused | built | Dashed pills and floors throughout; a state with nothing registered gives two sentences; every figure names its own window (no period selector exists — MW-023) | Redesign |
 | 3.1 | A readiness gap opens the assignment that addresses it | built (partial) | A container opens Work with the geography chosen, or the assignment already covering it; gaps are not yet linked to requirement instances by id (MW-063) | Redesign / Backend |
 | 3.2 | An assignment lists the requirement instances it addresses | needs recording | No requirement-instance ids exist (MW-063) | Backend |
@@ -65,7 +66,7 @@ paused.
 | 3.5 | One queue, one ledger, one status vocabulary | built | The old decision queue and the fleet Decisions tab are deleted; one assignment view; one charge ledger | Redesign |
 | 4 | Cost: every provider, bill ≠ ledger, balance ≠ usage, three ceilings, refused rates, test spend | built | Money · Overall spending and Cost of work; manual entry path (`billing.fact.record`); test spend is inside totals and not yet separated (MW-024) | Redesign / Backend (MW-024) |
 | 5 | Maintenance does not become a paid re-read | partly shown | Routine re-reads are plain code: $0 model spend by construction. In the 24 hours to 20:12Z on 2026-09-23 the runner made 2,603 routine meeting reads (1,355 got in) and the ledger gained no charge with dollars — the last is 2026-09-22 20:06:54Z. The test as written deploys an assignment against a current body, which is an expansion and waits on Sean's approved scope and budget | Redesign (demo) / Sean |
-| 6 | Readiness arithmetic: no sixth number; a gate blocks its own lane; a body counted once; blocked stays unsatisfied; versioned bar | built (partial) | First four hold on the Readiness screens; the standard is code, not versioned data (MW-063) | Backend (MW-063) |
+| 6 | Readiness arithmetic: no sixth number; a gate blocks its own lane; a body counted once; blocked stays unsatisfied; versioned bar | deployed | The bar is versioned data (MW-063); the first four already held. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 
 ---
 
@@ -73,32 +74,32 @@ paused.
 
 | MW | Requirement | Status | Evidence | Owner |
 | --- | --- | --- | --- | --- |
-| 001 | An assignment is a thing the system knows about | partly | Every unit of work has an id and a full chain (assignment view); an instruction id is not carried onto the work it moves | Backend |
-| 002 | Every piece of work names its question | needs recording | Composer keeps the chosen questions in the owner's words only | Backend |
+| 001 | An assignment is a thing the system knows about | deployed | A Send is recorded on every obligation it creates or reorders (`assignments[]`), and each charge carries its obligation. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 002 | Every piece of work names its question | deployed | Each work item carries the question it answers; an older round that recorded none says so. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 003 | Bodies are the unit of attribution | partly | Bodies attributed in the UI from the registry and ZIP index; charges are not attributed to bodies | Backend |
 | 004 | Container membership per code | built | Census lookup (Census, merged #346/#363); per-code coverage computed at request time | Census / Redesign |
 | 011 | Public delivery is a readback | partly | Routine meetings read back through the reader's projection; paid research reaches no reader while promotion is off | Backend / Sean |
 | 012 | Changed versus unchanged | partly | Change sets on every routine promotion; re-keyed agenda documents and iCal series still count as changes (fixes in the Backend batch) | Backend |
-| 013 | Every charge records what the work was for | needs recording | Money splits paid spend by each attempt's own recorded result instead | Backend |
-| 014 | Skipped work explains itself | needs recording | — | Backend |
-| 015 | Visited is not finished | needs recording | — | Backend |
-| 016 | No unexplained dead ends | partly | Three fields shown or named missing | Backend |
-| 017 | Publishing limit ≠ failed check | needs recording | — | Backend |
-| 021 | Per-assignment budget | partly | Per-geography budget enforced | Backend |
+| 013 | Every charge records what the work was for | deployed | Each charge records its obligation, record class, question and result kind; older rows are labelled as not recording it. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 014 | Skipped work explains itself | deployed | The runner card's skip reasons sum to the skipped count, or the card says MISMATCH. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 015 | Visited is not finished | deployed | A Send reads COMPLETE only when every member is settled, from each member's own record; otherwise NOT COMPLETE with examples (refused, not yet settled). #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 016 | No unexplained dead ends | deployed | Each dead end states what was ruled out, what would settle it and who moves next, from the Scout's own rungs. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 017 | Publishing limit ≠ failed check | deployed | A publisher's stated horizon is shown only when it is bounded and complete; an unfinished check says so and is never read as the publisher's limit. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 021 | Per-assignment budget | deployed | Per-assignment budgets are enforced before each paid Scout and shown as spent / held / left, apart from the shared ceiling. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 022 | Every reading narrows to one scope | partly | Bodies, readiness and paid spend narrow; bills, ledger-by-model and decisions say they do not | Redesign |
 | 023 | Periods are real or refused | partly | Every figure names its window; no period comparison | Backend |
-| 024 | Test runs are separable | partly | Proof lane counted apart; dollars not separated | Backend |
-| 025 | What a worker was given, verbatim | partly | Recorded on Scout results since 2026-09-19; "used" not recorded | Backend |
+| 024 | Test runs are separable | deployed | Test and proof spend is separated from production spend in dollars. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 025 | What a worker was given, verbatim | deployed | Each Scout result records which handed field-manual doors it actually used. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 026 | Runner acknowledgement is five facts | built | Work · instruction acknowledgement | Redesign |
-| 027 | Learning measured over time | partly | One reading per question on Is it learning; no trends | Backend |
+| 027 | Learning measured over time | deployed | Weekly trends from the Scout record; a week with no record is a gap, never a zero; escalations counted only from walks that recorded their ladder. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 028 | Deploy creates missing work | needs recording | Send reorders only, and says so | Backend |
-| 029 | Concurrent lanes never serialise | works (verify) | Two lanes run together; no per-lane gauge | Backend |
+| 029 | Concurrent lanes never serialise | deployed | Per-lane active / waiting / oldest gauges from the one research-state read. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 030 | Answer in your own words | built | Recorded verbatim through `decision.record`; applied by a person | Redesign |
-| 031 | Escalation reason recorded | needs recording | Ladder never used | Backend |
+| 031 | Escalation reason recorded | deployed (offline-verified) | Escalation happens only for a typed reason, recorded with both attempts' costs. Verified with fake transports; no paid call has run while paid research is paused (trace: `docs/evidence/model-routing-trace-2026-09-25.md`). #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 032 | Which model is better | partly | Ask comparison ran once (not measured); fleet not compared | Backend |
-| 033 | Cheapest suitable first | needs recording | — | Backend |
+| 033 | Cheapest suitable first | deployed (offline-verified) | The Scout loop starts on Sonnet 5 and escalates to Opus 5.5 only after winning a ceiling hold. Whether Sonnet 5 is good enough on real tasks is unmeasured until Sean resumes paid research. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 034 | The ceiling is a guard | done | Module-load guard in `model-routing.ts` | Backend (done) |
-| 035 | Expensive planning is selective | needs recording | — | Backend |
+| 035 | Expensive planning is selective | deployed (offline-verified) | The expensive model is used only on a recorded escalation reason. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 041 | Every provider in one place | built | Money: every provider; manual entry and CSV import; no automated bill read (no billing credential held). Verified signed in on production 2026-09-24 at Money → Overall spending → "Enter a figure the system cannot read": providers include Neon, Netlify, GitHub and Anthropic, the figure kinds depend on the provider, a CSV export can be imported, and the button is "Record this figure" | Redesign / Sean (access) |
 | 042 | Credits bought ≠ usage | built | Balance and purchase are separate kinds | Redesign |
 | 043 | Three kinds of ceiling | built | Money ceilings | Redesign |
@@ -106,15 +107,15 @@ paused.
 | 045 | Reconciliation is explicit | built | Generated reconciliation lines | Redesign |
 | 051 | Maintenance is cheap and scheduled | works | Routine reads are plain code; before/after charge proof is part of acceptance 5 | Redesign (demo) |
 | 052 | Meetings coverage states six things | built | Six cells per body | Redesign |
-| 053 | Four stages with failures between | partly | Body and assignment chains | Backend |
-| 054 | Promotion history is complete | partly | Routine promotions carry version, time and change set | Backend |
+| 053 | Four stages with failures between | deployed | Each promotion row says what changed, from its own SCOUTED and CONFIRMED records. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
+| 054 | Promotion history is complete | deployed | Promotion history carries version, time, change set and what changed; approval time named truthfully. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 061 | Five readings, five denominators | built | Readiness state screen | Redesign |
 | 062 | Blocked and never-attempted stay unsatisfied | built | Grid counts keep them in the denominator | Redesign |
-| 063 | The checklist is versioned data | needs recording | What counts as done says so | Backend / Sean |
+| 063 | The checklist is versioned data | deployed | The readiness standard is versioned data: each result names the version it was measured under; a superseded version is not shown until re-measured. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 | 064 | A blocker stops only its own lane | built | Collection status | Redesign |
 | 065 | Anything a check can answer is queued | works (verify) | — | RouteTask |
 | 066 | Could-govern ≠ confirmed representation | works | Coverage keeps registry membership apart from way-in | Redesign |
-| 071 | Live status for active work | partly | Pulse route drives decision staleness; no live strip | Backend |
+| 071 | Live status for active work | deployed | Live status for active work from the same research-state read as the lane gauges. #421, deployed 2026-09-25 12:42 PM MST (f8c7c74b); signed-in view pending | Admin completion |
 
 ---
 

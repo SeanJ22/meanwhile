@@ -33,6 +33,7 @@ import type { FleetNamedDeferral, FleetSafetySnapshot } from "./fleet-safety.ts"
 import { ageWords, count, plainCode, plainMeaning } from "./plain-words.ts";
 import type { RunnerStanding } from "./runner-standing.ts";
 import type { RunnerHeartbeat } from "./owner-surface.ts";
+import { skippedWork, type QueueLanes, type SkippedWork } from "./scheduler/lane-reading.ts";
 
 /** Whether the card needs the owner, and what he should do. */
 export interface RunnerNeeds {
@@ -68,8 +69,19 @@ export interface RunnerFace {
   readonly stopReasons: readonly { readonly words: string; readonly means: string | null }[];
   /** The circuit-breaker line, always a sentence and never a bare "none". */
   readonly circuits: string;
-  /** The deferred work, as a count and a sentence — never a list of thousands. */
+  /**
+   * The named deferrals the Fleet safety instrument kept, as a count and a
+   * sentence — never a list of thousands. They are deduped by (work, reason),
+   * so they name reasons and cannot be summed; `skipped` is the count that sums.
+   */
   readonly deferred: { readonly total: number; readonly says: string; readonly groups: readonly DeferralGroup[] } | null;
+  /**
+   * MW-014: what each lane did not start this cycle, by reason, from the
+   * research state's lane accounting — reasons that add up to the skipped
+   * count, or a MISMATCH line naming the lane where they do not. Null when the
+   * runner recorded no lane accounting (a state written before it).
+   */
+  readonly skipped: SkippedWork | null;
   readonly needs: RunnerNeeds;
 }
 
@@ -167,6 +179,8 @@ export function runnerFace(input: {
   readonly stoppedAtWords: string | null;
   /** Dispatches this cycle and what came of them, from the digest. */
   readonly didThisCycle: string | null;
+  /** The research state's lane accounting (`queue.lanes`); absent or null when not recorded. */
+  readonly lanes?: QueueLanes | null;
 }): RunnerFace {
   const safety = input.safety;
   const codes = safety ? stopCodesIn(safety.stoppedBecause) : [];
@@ -199,13 +213,17 @@ export function runnerFace(input: {
           .join(", ")}. Each retries by itself once its pause ends.`;
 
   const deferrals = safety?.deferred ?? [];
+  const groups = groupDeferrals(deferrals);
+  /* The sentence names the reasons the groups hold, never one assumed reason for all of them. */
   const deferred =
     deferrals.length === 0
       ? null
       : {
           total: deferrals.length,
-          says: `${count(deferrals.length)} item${deferrals.length === 1 ? " was" : "s were"} moved to a later cycle because this one ran out of budget. Nothing was dropped; each keeps its place in line.`,
-          groups: groupDeferrals(deferrals),
+          says: `${count(deferrals.length)} named deferral${deferrals.length === 1 ? "" : "s"} (one per item and reason) moved work to a later cycle — ${groups
+            .map((g) => `${count(g.items)} ${g.words.toLowerCase()}`)
+            .join(", ")}. Nothing was dropped; each keeps its place in line.`,
+          groups,
         };
 
   const needs = runnerNeeds(input.standing, safety);
@@ -218,6 +236,7 @@ export function runnerFace(input: {
     stopReasons,
     circuits,
     deferred,
+    skipped: skippedWork(input.lanes),
     needs,
   };
 }

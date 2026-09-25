@@ -53,6 +53,7 @@ import { pulseRevision, type LivePulse } from "../live-pulse.ts";
 import { ADMIN_RECEIPT_LOG_KEY } from "./contract.ts";
 import { AGENT_JOB_LOG_KEY, liveJobCount } from "./agent-job.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
+import { pulseLanesOf } from "../scheduler/lane-reading.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 
 /**
@@ -189,6 +190,8 @@ export async function readPulse(
       // both land in `unread` above with the count left null.
       agentJobsRunning: jobCount === null || jobCount.unreadable > 0 ? null : jobCount.running,
     },
+    /* The lane strip rides on the research state already read above: one read serves both. */
+    lanes: pulseLanesOf(research.value?.value ?? null),
     unread,
   };
 }

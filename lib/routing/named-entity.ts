@@ -411,6 +411,47 @@ const NON_NAMING_WORDS: ReadonlySet<string> = new Set([
 ]);
 
 /**
+ * **A TOPIC WORD IS NOT A BODY'S NAME.** (2026-09-25, R12.)
+ *
+ * *"What is Tucson doing about housing?"* bound Tucson's **Public Housing
+ * Authority Board of Commissioners** over Mayor and Council. The authority's
+ * own name identifies it only by "housing", a common question noun, so
+ * `nameAReaderCanSay` qualified it as "Tucson Public Housing Authority …" —
+ * and the reader's "Tucson" plus their topic "housing" then matched two
+ * identifying tokens against Mayor and Council's one. The reader named a city
+ * and asked about a subject; they did not name the authority.
+ *
+ * True for a name whose only identification besides common question nouns is
+ * a LEADING place qualifier — "Tucson Public Housing Authority …", "Warner
+ * Planning Board". Such a body binds only when the reader also used one of its
+ * own class words (`bodyClassWords`): "Tucson Housing Authority" still names
+ * the authority. A name with an identifying word of its own after the topic
+ * word — "Tucson Parks and Recreation Commission" ("recreation"), "Park Tucson
+ * Commission" — is untouched, and so is a person ("Jane Contact") or any name
+ * carrying no class word a reader could add.
+ */
+function namedOnlyByPlaceAndTopic(name: string): boolean {
+  const all = tokens(name);
+  const firstTopic = all.findIndex((t) => !GENERIC_CIVIC_TOKENS.has(t) && COMMON_QUESTION_NOUNS.has(t));
+  if (firstTopic <= 0) return false;
+  return all.every((t, i) => i < firstTopic || GENERIC_CIVIC_TOKENS.has(t) || COMMON_QUESTION_NOUNS.has(t));
+}
+
+/** Generic words that say nothing about what KIND of body this is. */
+const NOT_A_BODY_CLASS_WORD: ReadonlySet<string> = new Set([
+  "the", "of", "and", "for", "a", "an", "at", "in", "on",
+  "public", "general", "state", "united", "us",
+  /* place classes belong to the qualifier, not to the body */
+  "county", "counties", "city", "cities", "town", "township", "borough",
+  "village", "place", "municipal", "municipality",
+]);
+
+/** The words in a body's own name that say what kind of body it is: "authority", "board", "commission". */
+function bodyClassWords(name: string): string[] {
+  return tokens(name).filter((t) => GENERIC_CIVIC_TOKENS.has(t) && !NOT_A_BODY_CLASS_WORD.has(t));
+}
+
+/**
  * Resolve the government the reader named, against what this product holds.
  *
  * `entities` is the inventory the caller can actually answer about. A smaller
@@ -451,6 +492,12 @@ export function bindNamedEntity(
     if (distinctive.every((t) => COMMON_QUESTION_NOUNS.has(t))) continue;
     /* EVERY identifying token must be present. A partial name is not a name. */
     if (!distinctive.every((t) => questionTokens.has(t))) continue;
+    /* A place word and a topic word are not this body's name unless the reader
+     * also said what kind of body it is. See `namedOnlyByPlaceAndTopic`. */
+    if (entity.nameClass !== "person" && namedOnlyByPlaceAndTopic(entity.name)) {
+      const classWords = bodyClassWords(entity.name);
+      if (classWords.length > 0 && !classWords.some((t) => questionTokens.has(t))) continue;
+    }
 
     /* Generic overlap is TIE-BREAK EVIDENCE ONLY, read off the reader's own
      * words: "school" and "district" in the question are why a school district

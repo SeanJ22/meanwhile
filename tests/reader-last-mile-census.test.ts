@@ -6,6 +6,8 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { applyReaderApplicability, ballotAbsenceAuthorityRelation, buildReaderCensus, canonicalReaderAuthorityJson, classifyReaderEligibility, compareFrozenBodyRosterAuthority, compareFrozenBodyRosterAuthorityUniverse, compareFrozenOfficeholderStatementAuthority, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, stateMoneyAuthorityRelation, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { stateMoneyForTarget, resetStateMoneyCache } from "../lib/funding/state-snapshot.ts";
 import { currentOfficeholderStatements } from "../lib/corpus/data-plane.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../lib/registry/body-rosters.ts";
@@ -658,6 +660,68 @@ test("ballot absence supersession permits only a unique later verification of th
     successor,
     { ...structuredClone(successor), provenance: shifted(3) },
   ]).kind, "MISSING", "two later observations cannot be resolved by array order");
+});
+
+test("R25: a newer official edition the runner promoted and validated succeeds the frozen absence; unpromoted drift fails", () => {
+  /*
+   * 2026-09-24: the Morris County Clerk published a new candidate list and the
+   * runner promoted it. The source URL is part of the fact, so every held
+   * absence citing the older edition went MISSING and every reproof failed
+   * while the Reader served exactly the validated promotion it should.
+   */
+  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/nj/ballot/nj-morris-2026.json"), "utf8")) as { absences: Record<string, unknown>[] };
+  const frozen = structuredClone(snapshot.absences[0]!);
+  const provenance = frozen.provenance as Record<string, unknown>;
+  const day = (days: number) => new Date(Date.parse(`${String(provenance.collectedAt)}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
+  const edition = {
+    ...structuredClone(frozen),
+    provenance: {
+      ...provenance,
+      sourceUrl: String(provenance.sourceUrl).replace(/\/v\/\d+\//, "/v/99/"),
+      collectedAt: day(3),
+      verifiedAt: day(3),
+    },
+  };
+  assert.notEqual((edition.provenance as Record<string, unknown>).sourceUrl, provenance.sourceUrl, "precondition: a different edition's URL");
+  const contract = requiredRoutineContract("nj-morris-filing");
+  const versionId = "cv-nj-morris-newer-edition";
+  const receipt = (over: Record<string, unknown> = {}) => ({
+    contractVersion: 2,
+    decision: "GOOD",
+    candidateId: versionId,
+    sourceId: contract.sourceId,
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    validatedAt: `${day(3)}T14:00:00.000Z`,
+    checks: VALIDATION_CHECKS.map((check) => ({ check, verdict: "PASS", code: "PASS", detail: "passed" })),
+    excludedFacts: [],
+    ...over,
+  });
+  const promoted = { versionId, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope, receipt: receipt() };
+
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [edition]).kind, "MISSING", "unpromoted drift fails: no validated promotion names this edition");
+  const relation = ballotAbsenceAuthorityRelation(frozen, [edition], promoted);
+  assert.equal(relation.kind, "PROMOTED_EDITION_SUCCESSOR");
+  assert.equal(relation.record, edition);
+  if (relation.kind === "PROMOTED_EDITION_SUCCESSOR") assert.equal(relation.versionId, versionId);
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [structuredClone(frozen)], promoted).kind, "EXACT", "an exact holding stays exact");
+
+  const failBecause = (label: string, rows: Record<string, unknown>[], authority: Parameters<typeof ballotAbsenceAuthorityRelation>[2]) =>
+    assert.equal(ballotAbsenceAuthorityRelation(frozen, rows, authority).kind, "MISSING", label);
+  failBecause("a bootstrap or hand-edited holding carries no promotion", [edition], null);
+  failBecause("a receipt that is not GOOD proves nothing", [edition], {
+    ...promoted,
+    receipt: receipt({ decision: "FAIL", checks: VALIDATION_CHECKS.map((check, index) => ({ check, verdict: index === 0 ? "FAIL" : "PASS", code: "X", detail: "x" })) }),
+  });
+  failBecause("a receipt naming another version proves nothing", [edition], { ...promoted, receipt: receipt({ candidateId: "cv-another" }) });
+  failBecause("a receipt for another contract proves nothing", [edition], { ...promoted, receipt: receipt({ scope: "US-NJ-other" }) });
+  failBecause("an unparseable receipt proves nothing", [edition], { ...promoted, receipt: { decision: "GOOD" } });
+  failBecause("a changed statement is a different fact", [{ ...edition, statement: `${String(frozen.statement)} (amended)` }], promoted);
+  failBecause("another publisher is not a newer edition", [{ ...edition, provenance: { ...(edition.provenance as object), sourceOrg: "Some Other Clerk" } }], promoted);
+  failBecause("an edition no later than the frozen one is not a successor", [{ ...edition, provenance: { ...(edition.provenance as object), collectedAt: provenance.collectedAt, verifiedAt: provenance.verifiedAt } }], promoted);
+  failBecause("an edition stamped after its own validation is not what was validated", [{ ...edition, provenance: { ...(edition.provenance as object), collectedAt: day(5), verifiedAt: day(5) } }], promoted);
+  failBecause("another division is not this absence", [{ ...edition, ocdId: `${String(frozen.ocdId)}-other` }], promoted);
+  failBecause("two editions cannot be resolved by array order", [edition, { ...structuredClone(edition), provenance: { ...(edition.provenance as object), sourceUrl: "https://www.morriscountyclerk.org/other.pdf" } }], promoted);
 });
 
 test("committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens", () => {

@@ -8,6 +8,7 @@ import registryFile from "../lib/registry/registry.json" with { type: "json" };
 import {
   SOURCE_WIRING,
   wiringForTypes,
+  type BodySourceWiring,
 } from "../lib/registry/source-wiring.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import {
@@ -435,10 +436,27 @@ test("diligent: TUSD meetings normalize, Zoom sittings are kept with no place", 
 });
 
 test("civicweb: Newbury Selectboard names from the cited type map", () => {
+  // The route is retired (2026-09-25: newburynh.civicweb.net no longer
+  // resolves), so the row is no longer wired; the adapter's CivicWeb type-map
+  // path is exercised on the row exactly as it was wired, against its recording.
   const rows = wiringForTypes(["DILIGENT", "CIVICWEB"]);
-  const source = makeDiligentSource(rows);
-  const newbury = rows.find((r) => r.config.slug === "newburynh");
-  assert.ok(newbury);
+  assert.equal(rows.some((r) => r.config.slug === "newburynh"), false, "the retired route is not wired");
+  const newbury: BodySourceWiring = {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "CIVICWEB",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Town of Newbury",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newburynh",
+      serviceBase: "https://newburynh.civicweb.net",
+      meetingPath: "/Portal/MeetingInformation.aspx?Id=",
+      "typeName:10": "Selectboard",
+    },
+    verifiedAt: "2026-08-13",
+  };
+  const source = makeDiligentSource([...rows, newbury]);
 
   const raw = [
     {

@@ -177,6 +177,11 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
  * the page between the old writer stopping and the new one's first version.
  * The first promotion supersedes it. A permission rule binds the next fetch,
  * never possession of what was already published (RULING 263).
+ *
+ * A route whose host is GONE (2026-09-25: Newbury's CivicWeb portal, NXDOMAIN)
+ * retires under the same rules. When its successor was already a wired route
+ * for the body (`successorAlreadyWired`), that successor has its own pointer,
+ * so nothing is held and the retired pointer simply stops being composed.
  */
 export interface RetiredMeetingRoute {
   /** The adapter route (partition `meetings:<meetingSource>:<bodyId>`) that no longer runs. */
@@ -191,6 +196,15 @@ export interface RetiredMeetingRoute {
   readonly replacedBy: string;
   /** What happens to the rows and documents the retired route already holds. */
   readonly held: string;
+  /**
+   * The successor was already a wired, promoting route for this body before
+   * this one retired — two routes for one body, one of them retired — so the
+   * successor has its own pointer from the start. Nothing is HELD in its place
+   * (`HELD_MEETING_PARTITIONS` omits the pair), and the Reader proof drops the
+   * retired identity's import disposition instead of handing it to a successor
+   * that already carries its own.
+   */
+  readonly successorAlreadyWired?: true;
 }
 
 export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
@@ -209,6 +223,25 @@ export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
       "2026-09-23T19:48Z) stays in the production store unchanged, composed as held rows until the pima-edu " +
       "partition's first promotion supersedes it; the college's own " +
       "links into the tenant are carried by pima-edu as links and never fetched",
+  },
+  {
+    // Not a permission cutover: the host is gone. Every read since 2026-09-14
+    // ended SOURCE_BLOCKED (~2,077 rows), recorded only as "fetch failed"
+    // until the composite kept the transport's own code (ENOTFOUND).
+    meetingSource: "diligent",
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+    hosts: ["newburynh.civicweb.net"],
+    retiredOn: "2026-09-25",
+    reason:
+      "newburynh.civicweb.net no longer resolves: DNS answers NXDOMAIN and fetch fails with ENOTFOUND " +
+      "(read 2026-09-25T17:37Z); every partition read since 2026-09-14 ended SOURCE_BLOCKED",
+    replacedBy: "ical",
+    held:
+      "the promoted meetings:diligent partition for this body stays in the production store unchanged and is no " +
+      "longer composed: the town's own calendar feed (newbury-ical-governing, wired 2026-08-20) already carries " +
+      "the Selectboard under its own pointer, and the portal links the retired rows carried lead to a host that " +
+      "no longer exists",
+    successorAlreadyWired: true,
   },
 ];
 
@@ -456,28 +489,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-14",
   },
-  {
-    bodyId:
-      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
-    ocdId:
-      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-    agendaSourceType: "CIVICWEB",
-    jurisdiction: "Newbury, NH",
-    publishingOrg: "Town of Newbury",
-    timeZone: "America/New_York",
-    config: {
-      slug: "newburynh",
-      serviceBase: "https://newburynh.civicweb.net",
-      // Verified live: /Portal/MeetingInformation.aspx?Id=3370 resolves to the
-      // Selectboard meeting of 2026-07-20 with its agenda PDF.
-      meetingPath: "/Portal/MeetingInformation.aspx?Id=",
-      // TypeId → body name, read off the portal's own MeetingTypeList.aspx
-      // (the h2 for type 10 reads "Selectboard"). A published name, not a
-      // minted one.
-      "typeName:10": "Selectboard",
-    },
-    verifiedAt: "2026-08-13",
-  },
+  // Newbury, NH's Selectboard was read here through its CivicWeb portal
+  // (newburynh.civicweb.net) until 2026-09-25. That host no longer resolves,
+  // so the route is retired in RETIRED_MEETING_ROUTES above and the town's own
+  // calendar feed (`newbury-ical-governing`, below) carries the Selectboard.
 
   // ── D28: Pima Community College Governing Board ─────────────────────────
   // No Census division: `ocdId` is null and the body is the curated registry
@@ -1266,6 +1281,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   // product should make, so both ship and the merge decides — see
   // `collapseDuplicateSittings` in `lib/sources/composite/index.ts`, which
   // keeps the row carrying the agenda and states how many it collapsed.
+  //
+  // 2026-09-25: the Selectboard's CivicWeb route is retired — its host no
+  // longer resolves — so this feed is now the Selectboard's only route
+  // (RETIRED_MEETING_ROUTES, `successorAlreadyWired`).
   //
   // **This wiring is only safe because that merge exists.** Before it, a second
   // route meant every shared sitting rendering twice.

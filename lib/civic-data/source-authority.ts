@@ -403,7 +403,10 @@ export const SOURCE_AUTHORITIES = {
       "https://capaz.api.civicclerk.com/", "https://capaz.portal.civicclerk.com/", "https://govboard.tusd1.org/",
       "https://clerksboards.tucsonaz.gov/", "https://meetings.boardbook.org/", "https://mesa.legistar.com/",
       "https://webapi.legistar.com/v1/",
-      "https://morriscountynj.iqm2.com/", "https://newburynh.civicweb.net/", "https://newlondon.nh.gov/",
+      "https://morriscountynj.iqm2.com/", "https://newlondon.nh.gov/",
+      // Newbury's CivicWeb portal (newburynh.civicweb.net) is a retired route
+      // since 2026-09-25 — the host no longer resolves — and no longer inherits
+      // meetings authority; the town's own calendar feed carries its Selectboard.
       // Pima Community College's own permitted pages (2026-09-23); its Diligent
       // tenant pima.community.highbond.com is a retired route (robots.txt
       // Disallow: /) and no longer inherits meetings authority.
@@ -444,7 +447,7 @@ export const SOURCE_AUTHORITIES = {
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
       "capaz.portal.civicclerk.com", "govboard.tusd1.org", "clerksboards.tucsonaz.gov", "meetings.boardbook.org",
-      "mesa.legistar.com", "morriscountynj.iqm2.com", "newburynh.civicweb.net",
+      "mesa.legistar.com", "morriscountynj.iqm2.com",
       "webapi.legistar.com",
       "newlondon.nh.gov", "www.pima.edu", "events.pima.edu", "www.susd12.org", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
       "www.pima.gov",

@@ -9,6 +9,7 @@ import {
   officialStateRollCallTargetByScope,
   type OfficialStateVoteScope,
 } from "../../state-rollcalls/authority.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../../civic-data/contracts.ts";
 import {
   CivicDataStoreUnavailableError,
   mayUseTestFixture,
@@ -33,9 +34,43 @@ type PromotedStateVotesRead = Extract<
   { readonly kind: "PROMOTED" }
 >;
 
-export const OFFICIAL_STATE_VOTE_SCOPES = OFFICIAL_STATE_ROLL_CALL_TARGETS.map(
-  ({ jurisdiction }) => jurisdiction,
-);
+/**
+ * **ONLY A SCOPE SOMETHING STILL WRITES IS READ.** (2026-09-25, R9.)
+ *
+ * The official state scopes whose registered routine contract promotes a
+ * `STATE_ROLL_CALL` projection — derived from `ROUTINE_SOURCE_CONTRACTS`, the
+ * way `tests/state-rollcalls-reader-visibility.test.ts` derives the reader
+ * render gate, so a state migrated off the per-jurisdiction pointer leaves this
+ * list with its contract. This used to be every official target: New Hampshire
+ * moved to the per-legislator fan-out (`nh-state-rollcalls`,
+ * `STATE_LEGISLATOR_VOTES`), nothing has written its `STATE_ROLL_CALL` pointer
+ * since, and every proof enumeration and Reader read still opened that stale
+ * version.
+ */
+export const OFFICIAL_STATE_VOTE_SCOPES: readonly OfficialStateVoteScope[] = OFFICIAL_STATE_ROLL_CALL_TARGETS
+  .filter((target) => ROUTINE_SOURCE_CONTRACTS.some((contract) =>
+    contract.id === target.contractId &&
+    contract.recordClass === "STATE_ROLL_CALL" &&
+    contract.scope === target.jurisdiction
+  ))
+  .map(({ jurisdiction }) => jurisdiction);
+
+/**
+ * Official state scopes whose `STATE_ROLL_CALL` pointer is retired, by name.
+ * The pointer and its versions stay in the store as written; nothing reads
+ * them. `tests/vote-source-isolation.test.ts` holds this list equal to the
+ * official targets the contracts no longer promote per jurisdiction.
+ */
+export const RETIRED_STATE_ROLL_CALL_SCOPES: readonly {
+  readonly scope: OfficialStateVoteScope;
+  readonly movedTo: string;
+}[] = [
+  { scope: "US-NH", movedTo: "nh-state-rollcalls per-legislator fan-out (STATE_LEGISLATOR_VOTES)" },
+];
+
+export function isRetiredStateRollCallScope(scope: OfficialStateVoteScope): boolean {
+  return !OFFICIAL_STATE_VOTE_SCOPES.includes(scope);
+}
 export type { OfficialStateVoteScope } from "../../state-rollcalls/authority.ts";
 
 function stateForScope(scope: OfficialStateVoteScope): string {
@@ -158,6 +193,9 @@ export async function readOfficialStateVotesProjection(
   scope: OfficialStateVoteScope,
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<StateVotesSnapshot>> {
+  // A retired scope's pointer is a stale version nothing writes (R9): refused
+  // before the store opens, never served as current votes.
+  if (isRetiredStateRollCallScope(scope)) throw new Error(`STATE_ROLL_CALL_SCOPE_RETIRED:${scope}`);
   const result = await readPromotedCivicData<StateVotesSnapshot>("STATE_ROLL_CALL", scope, options);
   if (result.kind === "PROMOTED") validateOfficialStateVoteProjection(scope, result);
   return result;

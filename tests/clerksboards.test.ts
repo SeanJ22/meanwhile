@@ -4,9 +4,12 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
+  concludedSittingsFromPastAgendas,
   expandSchedule,
   makeClerksBoardsSource,
   parseBoardPage,
+  parsePastAgendaList,
+  pastAgendaListUrl,
   type ClerksBoardsRaw,
 } from "../lib/sources/clerksboards/index.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
@@ -434,4 +437,111 @@ test("D67: the recurrence walks the WINDOW, and stops dropping its last sitting"
       `${inst.mo}/${inst.d} is outside the serving window`,
     );
   }
+});
+
+/*
+ * R8 (2026-09-25): a board whose published schedule places no sitting in the
+ * served window still dates the sittings it held, in its own Past Agendas
+ * list. Recorded 2026-09-25 through `pnpm research:fetch` (the host serves no
+ * robots.txt): board 43 (Industrial Development Authority; schedule ends
+ * 6/18/2026) and board 15 (Convention Center Commission; "July and October
+ * 2026 TBD"), each page and its `?run=pastagenda` list.
+ */
+const R8_NOW = new Date("2026-09-25T10:00:00-07:00");
+const IDA = wiringFor("43", "industrial-development-authority");
+const TCCC = wiringFor("15", "tucson-convention-center-commission");
+
+test("R8: the recorded IDA and TCCC schedules place no sitting in the served window", () => {
+  const start = new Date(R8_NOW.getTime() - 90 * 86_400_000);
+  const end = new Date(R8_NOW.getTime() + 120 * 86_400_000);
+  for (const name of ["b43.html", "b15.html"]) {
+    const parsed = parseBoardPage(page(name));
+    assert.ok(parsed.scheduleText, `${name} publishes a schedule`);
+    assert.deepEqual(expandSchedule(parsed.scheduleText!, start, end), [], `${name}: zero in-window sittings from the schedule`);
+  }
+});
+
+test("R8: only the board's own agendas date its sittings; committees and notices do not", () => {
+  const entries = parsePastAgendaList(page("b43-pastagenda.html"));
+  assert.ok(entries.length >= 40, `the recorded IDA list holds ${entries.length} documents`);
+  assert.equal(entries[0].title, "IDA Agenda (Canceled) 09-17-26");
+  assert.equal(entries[0].pdfUrl, "https://assets.tucsonaz.gov/share/bcc/43004.pdf");
+  const start = new Date(R8_NOW.getTime() - 90 * 86_400_000);
+  const sittings = concludedSittingsFromPastAgendas(entries, "Industrial Development Authority (IDA)", start, R8_NOW, "America/Phoenix");
+  assert.deepEqual(
+    sittings.map((s) => `${s.y}-${s.mo}-${s.d}|${s.qualifier ?? ""}|${s.canceled}|${s.pdfUrl.split("/").at(-1)}`),
+    [
+      "2026-7-16||false|42448.pdf",
+      "2026-7-28|Special Meeting|false|42558.pdf",
+      "2026-8-20|Revised|false|42774.pdf",
+      // The newest-listed document for the date is the cancellation, not the notice.
+      "2026-9-17|Canceled|true|43004.pdf",
+    ],
+    "the Property Committee (08-05) and the Public Notice are other documents, and 06-18 is before the window",
+  );
+});
+
+test("R8: a board whose schedule places nothing yields its concluded sittings from the Past Agendas list", () => {
+  const source = makeClerksBoardsSource([IDA, TCCC]);
+  const raw: ClerksBoardsRaw[] = [
+    { wiring: IDA, html: page("b43.html"), pastAgendaHtml: page("b43-pastagenda.html"), collectedAt: R8_NOW.toISOString() },
+    { wiring: TCCC, html: page("b15.html"), pastAgendaHtml: page("b15-pastagenda.html"), collectedAt: R8_NOW.toISOString() },
+  ];
+  const { meetings, accounting } = source.normalizeWithDrops(raw, R8_NOW);
+  assert.deepEqual(meetings.map((m) => m.id), [
+    "clerksboards:43:2026-07-16",
+    "clerksboards:43:2026-07-28",
+    "clerksboards:43:2026-08-20",
+    "clerksboards:43:2026-09-17",
+    "clerksboards:15:2026-07-16",
+  ]);
+  for (const m of meetings) {
+    assert.equal(m.startPrecision, "DAY", `${m.id}: the list publishes no start time, and none is claimed`);
+    assert.match(m.startsAt, /T00:00:00-07:00$/);
+    assert.match(m.agendaUrl ?? "", /^https:\/\/assets\.tucsonaz\.gov\/share\/bcc\/\d+\.pdf$/, `${m.id} cites its agenda PDF`);
+    assert.equal(m.provenance.sourceUrl, pastAgendaListUrl(m.id.split(":")[1]));
+    assert.notEqual(m.status, "SCHEDULED");
+  }
+  const byId = new Map(meetings.map((m) => [m.id, m]));
+  assert.equal(byId.get("clerksboards:43:2026-09-17")?.status, "CANCELED");
+  assert.equal(byId.get("clerksboards:43:2026-07-16")?.status, "CONCLUDED");
+  assert.equal(byId.get("clerksboards:43:2026-07-28")?.title, "Industrial Development Authority — Special Meeting");
+  assert.equal(byId.get("clerksboards:43:2026-08-20")?.title, "Industrial Development Authority");
+  assert.equal(byId.get("clerksboards:15:2026-07-16")?.bodyName, "Tucson Convention Center Commission");
+  assert.equal(byId.get("clerksboards:15:2026-07-16")?.agendaUrl, "https://assets.tucsonaz.gov/share/bcc/42419.pdf");
+  assert.equal(accounting.logicalInput, 5, "the schedules parsed, so the count is exact");
+
+  // Without the list the same pages extract nothing — the defect, which the
+  // zero-row guard refuses as a failed extraction on every read.
+  assert.throws(
+    () => source.normalizeWithDrops(raw.map(({ pastAgendaHtml: _list, ...row }) => row), R8_NOW),
+    /extracted 0 meeting/,
+  );
+});
+
+test("R8: the Past Agendas list is requested only for a board whose schedule places nothing", async () => {
+  const requested: string[] = [];
+  const bodies = new Map([
+    ["https://clerksboards.tucsonaz.gov/boards/?board=43", page("b43.html")],
+    ["https://clerksboards.tucsonaz.gov/boards/?run=pastagenda&board=43", page("b43-pastagenda.html")],
+    ["https://clerksboards.tucsonaz.gov/boards/?board=38", page("b38.html")],
+  ]);
+  const fetchImpl: typeof fetch = async (input) => {
+    const url = String(input instanceof Request ? input.url : input);
+    requested.push(url);
+    const body = bodies.get(url);
+    return body === undefined
+      ? new Response("not recorded", { status: 404 })
+      : new Response(body, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+  };
+  const source = makeClerksBoardsSource([IDA, wiringFor("38", "planning-commission")], fetchImpl, () => R8_NOW);
+  // Tucson; the adapter reads its wired boards whatever the point.
+  const raw = await source.fetch({ lat: 32.22, lng: -110.97, radiusKm: 25 } as Parameters<typeof source.fetch>[0]);
+  assert.deepEqual(requested, [
+    "https://clerksboards.tucsonaz.gov/boards/?board=43",
+    "https://clerksboards.tucsonaz.gov/boards/?run=pastagenda&board=43",
+    "https://clerksboards.tucsonaz.gov/boards/?board=38",
+  ], "the Planning Commission's schedule still places sittings, so its list is not read");
+  assert.equal(raw[0].pastAgendaHtml?.includes("IDA Agenda 07-16-26"), true);
+  assert.equal(raw[1].pastAgendaHtml, undefined);
 });

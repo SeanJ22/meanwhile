@@ -691,7 +691,16 @@ names an empty `results` a NO_HIT rather than a failed normalization. Of the
 326 held candidate answers (4,647 results, none empty), 12 carry a lead whose
 own host, or the title the index gave it, names the candidate; the
 campaign-site verifier (`lib/candidates/campaign-site-verifier.ts`) reads those
-origins robots-first and refuses the rest by type.
+origins robots-first and refuses the rest by type. Read robots-first on
+2026-09-25: the 4,631 refused before any request are 2,132 hosts and titles
+that do not name the candidate, 974 government hosts, 804 files, 416 news
+outlets, 285 aggregators and 20 party or civic organizations; of the 16 leads,
+9 sit on the candidate's own campaign domain (6 domains) and 6 of those verify
+(Crane, Horne twice, Schweikert, Tang Williams twice), 3 are past-cycle sites
+(HISTORICAL_CYCLE), and the 7 on other hosts (a host name that merely contains a
+name token, or a title match) are refused on the page. The standing runner's
+campaign-site pass reads such leads every cycle and publishes what the chain
+approves through `candidate-campaign-sites-derived`.
 
 **Coverage measured rather than assumed.** Common Crawl's August 2026 index
 holds **6** URLs for `newjerseyglobe.com`, **98** for `morristowngreen.com`,

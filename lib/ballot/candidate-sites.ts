@@ -1,4 +1,9 @@
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
+import {
+  composeCampaignLinks,
+  currentDerivedCampaignSiteRecords,
+  type DerivedCampaignSiteRecord,
+} from "../civic-data/derived-campaign-sites.ts";
 
 /**
  * Hunted-and-verified links for ballot candidates (session 2026-08-16, 2b).
@@ -65,8 +70,32 @@ export interface CandidateLinksFile {
   readonly hunts: readonly RecordedHunt[];
 }
 
+/*
+ * VERIFIED CAMPAIGN SITES THE STANDING RUNNER PUBLISHED (2026-09-25) join the
+ * reviewed links here, and only here, so /ballot and Ask read one set: a site
+ * the campaign-site chain verified fills a candidate's campaign slot only when
+ * no reviewed campaign link is held for them (lib/civic-data/derived-campaign-sites.ts).
+ */
+let composedFrom: { readonly profiles: CandidateLinksFile; readonly derived: readonly DerivedCampaignSiteRecord[] } | null = null;
+let composed: { readonly file: CandidateLinksFile; readonly derivedKeys: ReadonlySet<string> } | null = null;
+
+function composedLinks(): { readonly file: CandidateLinksFile; readonly derivedKeys: ReadonlySet<string> } {
+  const profiles = currentCandidateProfilesProjection().links;
+  const derived = currentDerivedCampaignSiteRecords();
+  if (composed !== null && composedFrom?.profiles === profiles && composedFrom.derived === derived) return composed;
+  const { links, derivedKeys } = composeCampaignLinks(profiles.links, derived);
+  composed = { file: derivedKeys.size === 0 ? profiles : { ...profiles, links }, derivedKeys };
+  composedFrom = { profiles, derived };
+  return composed;
+}
+
 function load(): CandidateLinksFile {
-  return currentCandidateProfilesProjection().links;
+  return composedLinks().file;
+}
+
+/** Whether this key's campaign link is a verified site the runner published, not a reviewed link. */
+export function campaignLinkIsDerived(key: string): boolean {
+  return composedLinks().derivedKeys.has(key);
 }
 
 export function linksForCandidacy(candidacyId: string): CandidateLinks | null {

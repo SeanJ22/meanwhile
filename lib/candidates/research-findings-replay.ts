@@ -30,6 +30,7 @@ import { appendTransition, contextFromRepositories, scoutResultItemId } from "..
 import { PROMOTION_PIPELINE_FORMAT_VERSION, type ActivationGateReading, type ScoutedRecord } from "../control-plane/promotion/types.ts";
 import {
   CAMPAIGN_SITE_FIELD,
+  CAMPAIGN_SITE_PUBLICATION_DOOR,
   CAMPAIGN_SITE_RECORD_CLASS,
   marginaliaLeads,
   projectCampaignSiteChains,
@@ -251,10 +252,12 @@ export async function replayResearchFindings(input: {
           stage: "APPROVED_FOR_PROMOTION", chain: { scouted: "replay", confirmed: "replay", verified: "replay", audited: "replay" },
           recordClass: CAMPAIGN_SITE_RECORD_CLASS, field: CAMPAIGN_SITE_FIELD,
           campaignSite: {
-            field: CAMPAIGN_SITE_FIELD, candidacyId, candidateName: candidateDisplayName(subject), readerKeys: subject.readerKeys,
+            field: CAMPAIGN_SITE_FIELD, candidacyId, candidateName: candidateDisplayName(subject),
+            identity: { candidacyId, givenName: subject.givenName, familyName: subject.familyName, officeTitle: subject.officeTitle, ocdId: subject.ocdId, stateCode: subject.stateCode, cycle: subject.cycle },
+            readerKeys: subject.readerKeys,
             url: row.url, host: siteHost(row.url) ?? "", verification: row.verification ?? "",
             evidence: { verifierId: "campaign-site-verifier/1", artifactId: "replay", attemptId: "replay", sha256: "0".repeat(64), requestedUrl: row.url, finalUrl: row.url, httpStatus: 200, contentType: "text/html", readAt: input.now },
-            audit: { startedFrom: [], secondSignal: "" }, publicationDoor: "CANDIDATE_PROFILES_MANUAL_CONTRACT",
+            audit: { startedFrom: [], secondSignal: "" }, publicationDoor: CAMPAIGN_SITE_PUBLICATION_DOOR,
           },
         });
       }

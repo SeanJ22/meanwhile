@@ -58,12 +58,14 @@ function approval(candidacyId: string, url: string, sha: string): CampaignSiteAp
     actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: "campaign-site-approver/1@test" }, stage: "APPROVED_FOR_PROMOTION",
     chain: { scouted: "s", confirmed: "c", verified: "v", audited: "a" }, recordClass: "candidate-enrichment", field: "campaignSite",
     campaignSite: {
-      field: "campaignSite", candidacyId, candidateName: `${s.givenName} ${s.familyName}`, readerKeys: s.readerKeys, url, host,
+      field: "campaignSite", candidacyId, candidateName: `${s.givenName} ${s.familyName}`,
+      identity: { candidacyId, givenName: s.givenName, familyName: s.familyName, officeTitle: s.officeTitle, ocdId: s.ocdId, stateCode: s.stateCode, cycle: s.cycle },
+      readerKeys: s.readerKeys, url, host,
       verification: `Fetched 2026-09-24 (campaign-site-verifier/1): '${host}' — names ${s.givenName} ${s.familyName}, the office ("township committee"), and the 2026 election.`,
       evidence: { verifierId: "campaign-site-verifier/1", artifactId: `ar-${sha.slice(0, 8)}`, attemptId: "at-reader", sha256: sha.repeat(64).slice(0, 64), requestedUrl: url, finalUrl: url,
         httpStatus: 200, contentType: "text/html; charset=utf-8", readAt: "2026-09-24T11:00:05.000Z" },
       audit: { startedFrom: ["EVIDENCE_VAULT", "CANONICAL_SUBJECT_IDENTITY"], secondSignal: "SECOND_READ: test" },
-      publicationDoor: "CANDIDATE_PROFILES_MANUAL_CONTRACT",
+      publicationDoor: "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT",
     },
   };
 }

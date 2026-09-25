@@ -1,27 +1,35 @@
 /**
- * **APPROVED CAMPAIGN SITES → THE CANDIDATE-PROFILES PROJECTION, THROUGH THE ONE
- * DOOR.** (2026-09-25.)
+ * **APPROVED CAMPAIGN SITES → READERS: AUTOMATICALLY THROUGH THE DERIVED DOOR,
+ * AND AS AN OWNER PACKAGE THROUGH THE MANUAL ONE.** (2026-09-25.)
  *
- * ## Why the manual `candidate-profiles` contract, not a new derived contract
+ * ## The automatic path: `candidate-campaign-sites-derived`
  *
- * The Reader already renders `links[key].campaign` from the promoted
- * `candidate-profiles` projection (`lib/ballot/candidate-sites.ts`, /ballot and
- * Ask), so a verified site published there reaches readers with no Reader
- * change. That contract is SOURCE-ISOLATED: `manualProjectionCandidate` with
- * the prior GOOD version as its base admits each current member only when every
- * URL it cites is supported by exact receipted bytes, and carries every prior
- * member forward byte-exactly, so a successor that names only the new sites
- * cannot drop or overwrite anything the owner reviewed. Its validator, typed
- * Reader verification and LKG are the ones every candidate profile already
- * passes. A C16-style DERIVED contract would need a second profile store, a
- * second Reader and a runner clock to reach the same card; it adds a writer
- * and a Reader change to publish what this contract already publishes.
+ * Sean, 2026-09-21: "You may enable automatic promotion for qualifying
+ * results. Fix the gap, recover value already paid for." (RULING 292.) The
+ * `candidate-profiles` contract is EXPLICIT_OWNER_INVOCATION_ONLY and its
+ * pointer has one writer, the owner's door; a routine adapter may not reach a
+ * manual door (the civic-data firewall), and a clocked second writer of that
+ * pointer would race the owner's reviewed packages. So the standing runner
+ * publishes approved sites to a pointer of its own, the DERIVED routine
+ * contract `candidate-campaign-sites-derived`, the C16 door pattern: a version
+ * is authentic only as its named inputs (every pipeline approval it read, the
+ * vaulted bytes of each published site's verifying read, and the promoted
+ * `candidate-profiles` version it was composed against), checked by the
+ * validator and, for the promoted version, at the door.
+ * `lib/civic-data/derived-campaign-site-writer.ts` plans it and
+ * `scripts/derive-candidate-campaign-sites.mts` is the runner's child: its
+ * import closure holds no filesystem writer, so this module (which reaches the
+ * chain's types) is not in it. Before citing an approval the writer verifies its vaulted
+ * bytes again for the approval's own canonical identity, so what publishes is
+ * what the vault proves today. The profile Reader composes the two stores, a
+ * reviewed campaign link always winning (`lib/civic-data/derived-campaign-sites.ts`).
  *
- * What this module does NOT do is choose when to run. The contract is
- * EXPLICIT_OWNER_INVOCATION_ONLY: this builds the package and, given a store,
- * enters `processRegisteredManualCandidate`; the production invocation is the
- * installed-runtime `manual-promote --contract=candidate-profiles` door with
- * the package this writes (scripts/replay-research-findings.mts).
+ * ## The owner's path: a `candidate-profiles` successor package
+ *
+ * `planCampaignSitePublication` builds a source-isolated successor for the
+ * owner's installed-runtime `manual-promote --contract=candidate-profiles`
+ * door (scripts/replay-research-findings.mts writes it). That door stays the
+ * only writer of profiles; nothing on a clock invokes it.
  *
  * ## The rules the package obeys
  *

@@ -17,10 +17,12 @@
  * `campaign-site-chain.ts`: a robots-first re-read by our own deterministic
  * Attempt, the five measured checks, an audit with measured controls and an
  * independent second signal, and the deterministic approval burdens. It then
- * publishes only through the ONE civic-data door — the `candidate-profiles`
- * manual contract's validator and typed Reader verification — carrying the
- * prior GOOD version forward. Photos, contact, positions and bios stay closed:
- * no field outside `openFields` is approvable, whatever its chain says.
+ * publishes automatically through the civic-data door the standing runner may
+ * use — the DERIVED routine contract `candidate-campaign-sites-derived`, its
+ * validator and typed Reader verification — beside the owner's
+ * `candidate-profiles` door, which stays the only writer of profiles. Photos,
+ * contact, positions and bios stay closed: no field outside `openFields` is
+ * approvable, whatever its chain says.
  *
  * **OPENING A CLASS DOES NOT OPEN THE PAID LANE WHILE THE OWNER'S PAUSE STANDS.**
  * `model-lane.ts` reads this gate as a delivery path, and its ordered closure
@@ -33,13 +35,10 @@
  * code, and no file on disk changes it.
  */
 import type { ActivationGateReading } from "./types.ts";
+import { ACTIVATION_GATE, classFieldOpen } from "./activation-policy.ts";
 
-export const ACTIVATION_GATE = {
-  promotionEnabled: true,
-  openRecordClasses: ["candidate-enrichment"] as readonly string[],
-  /** Within an open class, the only fields that may be approved. A class absent here has no field restriction. */
-  openFields: { "candidate-enrichment": ["campaignSite"] } as Readonly<Record<string, readonly string[]>>,
-} as const;
+/* The decision itself is data in `activation-policy.ts`, which imports nothing, so the runner's publication child may read it. */
+export { ACTIVATION_GATE, classFieldOpen };
 
 /** Candidates for the FIRST classes to open, for a later decision. Not open. */
 export const LOW_RISK_CANDIDATE_CLASSES: readonly string[] = [
@@ -59,21 +58,6 @@ export const OWNER_APPROVED_CLASSES: readonly string[] = [
   "ballot",
   "votes",
 ];
-
-/**
- * Whether one field of one class is open. A class that is open with no field
- * list is open for every field; a class with a field list is open for those
- * fields only; a closed class is open for nothing.
- */
-export function classFieldOpen(
-  gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields">,
-  recordClass: string,
-  field: string,
-): boolean {
-  if (!gate.promotionEnabled || !gate.openRecordClasses.includes(recordClass)) return false;
-  const fields = gate.openFields?.[recordClass];
-  return fields === undefined || fields.includes(field);
-}
 
 /**
  * Read the software policy. `root` is retained for API stability, but no
@@ -100,7 +84,7 @@ export function readActivationGate(root: string): ActivationGateReading {
     reason:
       `CLASS-SCOPED — ${ACTIVATION_GATE.openRecordClasses.length} record class(es) open: ${open}, on the owner's ` +
       "2026-09-21 authorization for automatic promotion of qualifying results (RULING 292). An open item still " +
-      "passes its complete chain and publishes only through the candidate-profiles civic-data door; every other " +
+      "passes its complete chain and publishes only through the derived candidate-campaign-sites civic-data door; every other " +
       "class stays closed. The nightly window itself promotes nothing (SHADOW), and local freshness-shadow run " +
       "records are non-authoritative diagnostics after PDC",
   };

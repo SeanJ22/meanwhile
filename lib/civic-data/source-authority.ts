@@ -533,6 +533,36 @@ export const SOURCE_AUTHORITIES = {
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z",
     },
   },
+  /*
+   * The verified campaign sites the standing runner's campaign-site chain approves (2026-09-25): each row is a site
+   * our own robots-first read verified, audited with measured controls and an independent second signal, and
+   * approved; the writer verifies its vaulted bytes again before it cites them. No route of its own: authentic only
+   * as its pipeline approvals, those vaulted bytes, and the promoted candidate-profiles version it was composed against.
+   */
+  "candidate-campaign-site-chain": {
+    id: "candidate-campaign-site-chain",
+    publisher: "The standing runner, from held and vaulted inputs only: the campaign-site chain's pipeline approvals, the vaulted bytes of each verifying robots-first read, and the promoted candidate-profiles version",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: [
+      "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
+    ],
+    expectedIdentifierKeys: ["record_id", "candidacy_id"],
+    expectedTemporalFields: ["read_at", "approved_at"],
+    horizonSemantics: "Each row is one approved site for one canonical candidacy, keyed by the Reader's own key. It never says a candidate has no site, and a candidate the version does not name is simply not yet verified.",
+    parserVersion: "candidate-campaign-site-chain/1",
+    freshnessExpectation: "Recomputed by the standing runner as the campaign-site chain approves sites; no tracked writer.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+    derivedPromotion: {
+      inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL"],
+      authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\" (RULING 292)",
+    },
+  },
   "nj-morris-county-clerk": {
     id: "nj-morris-county-clerk",
     publisher: "Morris County Clerk",

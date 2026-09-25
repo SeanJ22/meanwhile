@@ -169,9 +169,11 @@ test("a cold /ballot?zip=85701 reads the registry, the federal directory and the
   assert.equal(federalDirectoryReadState().metadata?.versionId, FEDERAL_VERSION, "the federal directory was not served from the edge");
 
   // What still reads the database is exactly what the edge does not publish, once each, and none of it from a card.
+  // CURATED_READER_RECORD is the verified campaign sites the standing runner publishes (candidate-campaign-sites-derived,
+  // 2026-09-25), read beside the candidate profiles by the same preload.
   assert.deepEqual(
     databaseReads.map((read) => read.recordClass).sort(),
-    ["BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"],
+    ["BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"],
   );
   assert.deepEqual(databaseReads.filter((read) => read.phase === "components"), [], "a card read the database");
 });

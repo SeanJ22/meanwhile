@@ -48,9 +48,7 @@ import {
   type DerivedWiringKind,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
+import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { deriveWiringDecisions, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
@@ -85,13 +83,7 @@ async function finish(candidate: RoutineCandidate): Promise<void> {
   // An unchanged wiring re-check is receipted on the pointed version instead of
   // re-promoted (R23); the receipt then names that version, never the unwritten
   // re-check candidate.
-  const outcome = await processRegisteredRoutineCandidate(store, CONTRACT_ID, candidate, now, undefined, { confirmUnchanged: true });
-  console.log("RCD_RECEIPT=" + JSON.stringify({
-    source: CONTRACT_ID,
-    ...routineReceiptFields(candidate, outcome),
-    structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
-  if (!outcome.promoted) process.exitCode = 2;
+  await promoteDerivedCandidate(store, CONTRACT_ID, candidate, now);
 }
 
 /* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */

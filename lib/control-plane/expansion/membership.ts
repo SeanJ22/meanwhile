@@ -60,7 +60,7 @@
 
 import type { CostEntry } from "../cost.ts";
 import { aggregateModelSpend } from "../fleet-safety.ts";
-import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
+import type { Jurisdiction, JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   MEMBERSHIP_METHOD,
   READING_LIST_CAP,
@@ -68,6 +68,7 @@ import {
   type ExpansionScopeReading,
   type ScopeCoverageReading,
 } from "./reading.ts";
+import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { stateOfSubject } from "./subjects.ts";
 
@@ -95,13 +96,8 @@ export interface Territory {
   readonly shares: ReadonlyMap<string, number>;
 }
 
-/**
- * The margin a partial-ZCTA overlap must clear to count as certain: the
- * government's sampled share plus the scope's exact area share must exceed the
- * whole ZCTA by this much. Sampled and exact areas differ by a few percent at
- * a border; 5% keeps neighbours that merely share a border ZCTA out.
- */
-export const OVERLAP_CERTAINTY_MARGIN = 0.05;
+/* The certain-overlap rule itself lives in `overlap.ts` (so Admin's Send preview can apply it alone); re-exported here. */
+export { OVERLAP_CERTAINTY_MARGIN, certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 
 /**
  * The sampled-overlap key a unit's ZCTAs were derived from (`county:04019`,
@@ -179,11 +175,20 @@ export interface TerritoryIndex {
  * a state no registry covers can still say which governments it holds.
  * `sharesFor` answers a unit's per-ZCTA share by its `unitShareKey`; a unit
  * with none still joins, and can then only be placed by a whole-inside ZCTA.
+ *
+ * A registry read from a state's registration (2026-09-25) places each
+ * government by the Census division registration minted its body on
+ * (`divisionTerritory`: the same sampled overlap, read by the division's own
+ * layer and GEOID, so it works for a territory the Census of Governments does
+ * not enumerate), and still claims the Census unit its id joins, so no unit of
+ * that state is named as missing from its registry. A government registration
+ * pairs with no division is unplaced, by that name.
  */
 export function buildTerritoryIndex(
   registries: readonly JurisdictionRegistry[],
   units: readonly CensusUnitTerritory[],
   sharesFor: (key: string) => ReadonlyMap<string, number> | undefined = () => undefined,
+  divisionTerritory: (j: Jurisdiction) => DivisionTerritory | undefined = () => undefined,
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const unitsByKey = new Map<string, CensusUnitTerritory[]>();
@@ -209,12 +214,14 @@ export function buildTerritoryIndex(
   const claimed = new Set<CensusUnitTerritory>();
   for (const registry of registries) {
     const ids = new Set(registry.jurisdictions.map((j) => j.id));
+    const fromRegistration = registry.registration?.kind === "REGISTRATION";
     for (const j of registry.jurisdictions) {
       if (j.govClass === "STATE") {
         statewide.add(j.id);
         continue;
       }
       let unit: CensusUnitTerritory | null = null;
+      let why: string | null = null;
       const hits = unitsByKey.get(j.id) ?? [];
       if (hits.length === 1) unit = hits[0];
       else if (hits.length > 1) {
@@ -222,13 +229,30 @@ export function buildTerritoryIndex(
         // unsuffixed id is the one unit no suffixed sibling claimed.
         const unclaimed = hits.filter((u) => !ids.has(`${j.id}-${u.pid6}`));
         unit = unclaimed.length === 1 ? unclaimed[0] : null;
-        if (unit === null) unplaced.set(j.id, `${hits.length} Census units share this name and none is uniquely this one`);
+        if (unit === null) why = `${hits.length} Census units share this name and none is uniquely this one`;
       } else {
         const suffixed = /^(.*)-(\d{3,})$/.exec(j.id);
         const base = suffixed === null ? [] : (unitsByKey.get(suffixed[1]) ?? []);
         unit = suffixed === null ? null : (base.find((u) => u.pid6 === suffixed[2]) ?? null);
-        if (unit === null) unplaced.set(j.id, "no Census of Governments unit with a territory matches this registry id");
+        if (unit === null) why = "no Census of Governments unit with a territory matches this registry id";
       }
+      if (fromRegistration) {
+        /* Registration: the unit is claimed, and the government is placed by the division its body sits on. */
+        if (unit !== null) claimed.add(unit);
+        const t = j.ocdId ? divisionTerritory(j) : undefined;
+        if (t === undefined || t.zctas.size === 0) {
+          unplaced.set(
+            j.id,
+            j.ocdId
+              ? "its Census division carries no ZCTA territory in the sampled overlap"
+              : "registration pairs it with no Census division (TIGER publishes none for it, or none is uniquely its), so no body is minted for it",
+          );
+          continue;
+        }
+        bySubject.set(j.id, { subjectId: j.id, name: j.name, govClass: j.govClass, stateCode: j.stateCode.toUpperCase(), zctas: t.zctas, shares: t.shares });
+        continue;
+      }
+      if (why !== null) unplaced.set(j.id, why);
       if (unit === null) continue;
       claimed.add(unit);
       if (unit.zips.length === 0) {
@@ -301,25 +325,6 @@ export type ResolvedScope =
 
 /** The scope geometry the overlap rule reads. */
 export type ScopeZctas = Pick<Extract<ResolvedScope, { kind: "RESOLVED" }>, "zctas" | "whole" | "fractions">;
-
-/**
- * Whether a government CERTAINLY overlaps the scope inside some ZCTA (the rule
- * in the header): it touches a ZCTA wholly inside the scope, or inside one
- * shared ZCTA its share and the scope's share sum past the whole by the margin.
- */
-export function certainlyOverlaps(
-  territory: { readonly zctas: ReadonlySet<string>; readonly shares: ReadonlyMap<string, number> },
-  scope: ScopeZctas,
-): boolean {
-  for (const z of territory.zctas) {
-    if (!scope.zctas.has(z)) continue;
-    if (scope.whole.has(z)) return true;
-    const mine = territory.shares.get(z);
-    const theirs = scope.fractions.get(z);
-    if (mine !== undefined && theirs !== undefined && mine + theirs > 1 + OVERLAP_CERTAINTY_MARGIN) return true;
-  }
-  return false;
-}
 
 /** The subjects (of those given) whose government certainly overlaps the scope. */
 export function scopeMembers(

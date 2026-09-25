@@ -27,6 +27,7 @@ import {
   type RoutineCandidate,
   type RoutineRecordClass,
 } from "./types.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 
 export function sha256(value: string | Uint8Array): string {
   return createHash("sha256").update(value).digest("hex");
@@ -1423,8 +1424,8 @@ export function meetingsCandidate(input: {
     },
     identities: snapshot.meetings.map((meeting) => ({
       subjectId: meeting.id,
-      jurisdiction: /\/state:([a-z]{2})/.exec(meeting.ocdId ?? "")?.[1]
-        ? `US-${/\/state:([a-z]{2})/.exec(meeting.ocdId ?? "")![1]!.toUpperCase()}`
+      jurisdiction: ocdStateCode(meeting.ocdId) !== null
+        ? `US-${ocdStateCode(meeting.ocdId)!.toUpperCase()}`
         : "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION",
       identifiers: { meeting_id: meeting.id, body_id: meeting.bodyId ?? "missing", source_route: meeting.provenance?.sourceUrl ?? "missing" },
       matchBasis: "OFFICIAL_ID" as const,

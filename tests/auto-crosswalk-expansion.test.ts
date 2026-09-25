@@ -76,6 +76,7 @@ import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
+import { ics, localStart as localStartFrom, reviewedIds } from "./helpers/expansion-fixtures.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -101,18 +102,7 @@ const COUNTY_BODY = "ocd-division/country:us/state:oh/county:franklin#governing"
 const ALLOW: RecordedReply = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
 
 /** `DTSTART;TZID=America/New_York` a whole number of days from now, at a wall-clock hour. */
-function localStart(days: number, hour: number): string {
-  const d = new Date(BASE + days * 24 * HOUR);
-  const ymd = `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}`;
-  return `${ymd}T${String(hour).padStart(2, "0")}0000`;
-}
-function ics(events: readonly { uid: string; summary: string; start: string }[]): string {
-  return [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "X-WR-TIMEZONE:America/New_York",
-    ...events.flatMap((e) => ["BEGIN:VEVENT", `UID:${e.uid}`, `SUMMARY:${e.summary}`, `DTSTART;TZID=America/New_York:${e.start}`, "END:VEVENT"]),
-    "END:VCALENDAR", "",
-  ].join("\r\n");
-}
+const localStart = (days: number, hour: number): string => localStartFrom(BASE, days, hour);
 const COUNTY_FEED = ics([
   { uid: "boc-1@franklin", summary: "Board of Commissioners General Session", start: localStart(3, 10) },
   { uid: "boc-2@franklin", summary: "Franklin County Board of Commissioners Briefing", start: localStart(10, 9) },
@@ -138,17 +128,6 @@ function ohioRegistry(): JurisdictionRegistry {
     stateCode: "OH",
     sourceCatalog: { [meetings]: az.sourceCatalog[meetings]! },
     jurisdictions: [row(COUNTY, "COUNTY OF FRANKLIN", "COUNTY", `https://${COUNTY_HOST}/`), row(CITY, "CITY OF FRANKLIN", "CITY_OR_TOWN", `https://${CITY_HOST}/`)],
-  };
-}
-
-/** The reviewed registry's ids, from its committed first seed, as registration derives against them. */
-function reviewedIds() {
-  const registry = JSON.parse(readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8")) as { divisions: { ocdId: string }[]; bodies: { id: string; ocdId: string | null }[] };
-  return {
-    versionId: "cv-reviewed-first-seed",
-    divisionIds: new Set(registry.divisions.map((d) => d.ocdId)),
-    bodyIds: new Set(registry.bodies.map((b) => b.id)),
-    bodyDivisionIds: new Set(registry.bodies.map((b) => b.ocdId).filter((id): id is string => typeof id === "string")),
   };
 }
 
@@ -258,7 +237,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     target: registrationTarget("OH"),
     reference: loadRegistrationReference(ROOT, "OH"),
     receipt: { requestedUrl: REGISTRATION_SOURCE_URL, finalUrl: REGISTRATION_SOURCE_URL, httpStatus: 200, retrievedAt: T_REGISTRATION, sha256: REGISTRATION_SOURCE_SHA256, bytes: REGISTRATION_SOURCE_BYTES, confirmedBy: "BYTES_HASHED" },
-    reviewed: reviewedIds(),
+    reviewed: reviewedIds(ROOT),
   });
   assert.equal((await processRegisteredRoutineCandidate(store, "registration-oh", registration, T_REGISTRATION)).candidate.state, "PROMOTED");
   await promoteVenues(store);

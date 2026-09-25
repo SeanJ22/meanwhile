@@ -41,6 +41,7 @@ import {
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
+import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
@@ -159,6 +160,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       totalAssignments: view?.summary.total ?? null,
       paidLaneClosedBecause: lane.open ? null : lane.closedBecause,
       runnerPaused: pause ? { since: pause.since ?? null } : null,
+      dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),
     }),
   );
 
@@ -207,12 +209,15 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
-  /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — registered ones first. */
+  /*
+   * Every state and territory can be chosen — the Census lookup behind the geographies covers them all — the ones
+   * with a reviewed registry first. Every other one is registered too: a Send there reads its registration (2026-09-25).
+   */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
   const composerStates = [
     ...REGISTERED_STATE_CODES.map((code) => ({ code, name: stateName(code) })),
-    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — nothing registered` })),
+    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — from registration` })),
   ];
   const selected: Record<string, { priority: number; budgetUsd: number }> = {};
   for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };

@@ -77,8 +77,12 @@ export interface MeetingsDiscoveryNeed {
 }
 
 export interface DiscoveryAddressSource {
-  readonly source: "GAP_LEDGER" | "OPERATIONAL_REFERENCE";
-  /** GAP_LEDGER: the sha256 (bare hex) of the ledger file read. OPERATIONAL_REFERENCE: the promoted version id. */
+  readonly source: "GAP_LEDGER" | "OPERATIONAL_REFERENCE" | "REGISTRATION";
+  /**
+   * GAP_LEDGER: the sha256 (bare hex) of the ledger file read. OPERATIONAL_REFERENCE: the promoted version id.
+   * REGISTRATION (a state with no reviewed registry, 2026-09-25): the promoted registration version id, or
+   * `reference-sha256:<hex>` for a state read from its committed reference before its first promotion.
+   */
   readonly versionId: string | null;
 }
 

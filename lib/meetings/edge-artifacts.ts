@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 
+import { ocdStateCode } from "../ocd/state-of.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
 import {
@@ -35,11 +36,9 @@ export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
 /** The scope for meetings whose OCD division names no state (online/unresolved). */
 export const NATIONAL_SCOPE = "us";
 
-/** The 2-letter state of an OCD division id, or null when it names none. */
+/** The 2-letter state (or DC, or territory: `lib/ocd/state-of.ts`) of an OCD division id, or null when it names none. */
 export function stateOfOcdId(ocdId: string | null | undefined): string | null {
-  if (typeof ocdId !== "string") return null;
-  const match = /\/state:([a-z]{2})(?:\/|$)/.exec(ocdId);
-  return match ? match[1] : null;
+  return ocdStateCode(ocdId);
 }
 
 /** The geographic serving scope a meeting belongs to (its state, else `us`). */

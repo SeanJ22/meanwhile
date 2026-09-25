@@ -163,6 +163,8 @@ const RUNTIME_OWNED = [
   /* The owner's dispatch materialized this row (MW-028). A provider that
      re-emits it without the mark must not erase the mark that keeps it owed. */
   "materializedBy",
+  /* Which registry the dispatch materialized it from (2026-09-25): kept with the mark. */
+  "materializedFrom",
 ] as const;
 
 /**
@@ -262,6 +264,7 @@ export async function syncObligations(
       lastWorkedAt: held.lastWorkedAt,
       absentUntil: held.absentUntil,
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
+      ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
       updatedAt: now,
     };
 

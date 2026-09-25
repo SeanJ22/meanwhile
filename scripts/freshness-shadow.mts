@@ -116,11 +116,14 @@ import {
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
+  dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
   paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
+import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
+import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
@@ -647,6 +650,10 @@ try {
 } catch (error) {
   materialized = { unreadable: error instanceof Error ? error.message : String(error) };
 }
+/* A state with created work and no reviewed registry is read from its registration first, so its providers keep that work (2026-09-25). */
+if ("ids" in materialized) {
+  await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => stateOfJurisdictionId(id) ?? []), options: { bypassCache: true } });
+}
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
@@ -835,10 +842,9 @@ const gapLedgerRead = (() => {
  */
 const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
-/* A dispatched need's address comes from the promoted jurisdiction reference; it carries that version (NH330). */
-const referenceAddress = { source: "OPERATIONAL_REFERENCE" as const, versionId: operationalReference?.metadata.versionId ?? null };
+/* A dispatched need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
 const dispatchedNeeds = new Map(
-  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: referenceAddress }]),
+  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: dispatchedAddressSource(e.reg, operationalReference?.metadata.versionId ?? null) }]),
 );
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
@@ -1107,6 +1113,11 @@ for (const pending of intents.pendingDispatch) {
  * A registry the reader refuses is named, never used.
  */
 const promoted = promotedRegistries();
+/** The registries as read now: the ones above, and every state's registration read since. */
+const registriesNow = (fallback: ReadonlyMap<string, JurisdictionRegistry>): ReadonlyMap<string, JurisdictionRegistry> => {
+  const now = promotedRegistries();
+  return "registries" in now ? now.registries : fallback;
+};
 if ("refused" in promoted) {
   for (const [state, why] of promoted.refused) {
     runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
@@ -1117,7 +1128,12 @@ const expansionLoad = await loadExpansionPlan({
   root: ROOT,
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
-  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...promoted.registries.values()]) } : {}),
+  /* Each scope state with no reviewed registry is read from its registration before the territory (2026-09-25). */
+  beforeTerritory: async (states) =>
+    [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } })).refused].map(
+      ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
+    ),
+  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1507,7 +1523,11 @@ let dispatchWork: DispatchWorkReading | null = null;
 if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
-    const registries = promoted.registries;
+    /* A DISPATCH's states with no reviewed registry are read from their registration, as a scope's were (2026-09-25). */
+    await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
+    const current = promotedRegistries();
+    const registries = "registries" in current ? current.registries : promoted.registries;
+    const refusedRegistries = "refused" in current ? current.refused : promoted.refused;
     let censusUnitsByState: Map<string, number> | null = null;
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
@@ -1532,7 +1552,7 @@ if (dispatchTargets.length > 0) {
         durable,
         meetingPartitions: UNREAD_MEETING_PARTITIONS,
         censusUnitsByState,
-        refusedRegistries: promoted.refused,
+        refusedRegistries,
       },
     });
     const applied = dispatchWorkWrites

@@ -61,6 +61,7 @@ import {
 } from "../../civic-data/derived-meeting-wiring.ts";
 import type { MeetingBodyCrosswalkRow } from "../../civic-data/meeting-body-crosswalk.ts";
 import type { DiscoveryFind, MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
+import { ocdStateCode } from "../../ocd/state-of.ts";
 
 export { derivedWiringKey };
 export type { DerivedWiringRow };
@@ -218,10 +219,10 @@ export function sameRoute(a: string, b: string): boolean {
   }
 }
 
-/** The state a division lies in, `US-AZ`, from its OCD id. */
+/** The state a division lies in, `US-AZ`, from its OCD id: a state, DC or a territory (`US-PR`). */
 function stateOf(ocdId: string): string {
-  const code = /\/state:([a-z]{2})(\/|$)/.exec(ocdId)?.[1];
-  return code === undefined ? "" : `US-${code.toUpperCase()}`;
+  const code = ocdStateCode(ocdId);
+  return code === null ? "" : `US-${code.toUpperCase()}`;
 }
 
 /** The wiring row a crosswalk row becomes. */

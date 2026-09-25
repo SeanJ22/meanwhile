@@ -155,7 +155,39 @@ export interface Jurisdiction {
    * one route used by 300 governments, which is what it is.
    */
   readonly sourceIds: readonly string[];
+  /**
+   * A row read from a state's REGISTRATION (`lib/registration/jurisdictions.ts`) only: the Census division its
+   * government is paired with, and the body registration minted there (`<ocdId>#governing`, `#board` for a
+   * school district). Null when registration pairs the government with no division, so no body is minted for it.
+   * Absent on every row of a reviewed registry.
+   */
+  readonly ocdId?: string | null;
+  readonly bodyId?: string | null;
+  /**
+   * Registration rows only: that division's Census layer and GEOID (`county:39049`, `place:3918000`), the key its
+   * sampled share of each ZCTA is read by (`data/derived/zip-governments.json`). Null with `ocdId`.
+   */
+  readonly censusDivision?: string | null;
+  /** Registration rows only: the Census of Governments id (`pid6`), or `<layer>:<GEOID>` for a territory government. */
+  readonly censusId?: string;
 }
+
+/**
+ * Where a registry read from a state's registration came from (`lib/registration/jurisdictions.ts`). A reviewed
+ * registry — the promoted operational reference, which wins wherever it exists — carries none.
+ */
+export interface RegistrationRegistryOrigin {
+  readonly kind: "REGISTRATION";
+  /** The promoted REGISTRATION version, the one readers use; null when read from the committed reference before its first promotion. */
+  readonly versionId: string | null;
+  /** sha256 of the committed reference (`data/derived/registration/<st>.json`) the version was built from. */
+  readonly referenceSha256: string;
+  /** The Census file each web address was read from, with its sha256 as the reference's index records it. */
+  readonly webAddresses: string;
+}
+
+/** Which kind of registry a row of work came from, in the words Admin prints. */
+export type JurisdictionRegistrySource = "REVIEWED_REGISTRY" | "REGISTRATION";
 
 /**
  * A count from one enumeration that DISAGREES with another.
@@ -190,6 +222,13 @@ export interface JurisdictionRegistry {
   /** Every distinct route, once. Jurisdictions reference these by key. */
   readonly sourceCatalog: Readonly<Record<string, JurisdictionSource>>;
   readonly jurisdictions: readonly Jurisdiction[];
+  /** Present only on a registry read from a state's registration; a reviewed registry carries none. */
+  readonly registration?: RegistrationRegistryOrigin;
+}
+
+/** Whether a registry is a state's reviewed registry or was read from its registration. */
+export function registrySourceOf(reg: Pick<JurisdictionRegistry, "registration">): JurisdictionRegistrySource {
+  return reg.registration?.kind === "REGISTRATION" ? "REGISTRATION" : "REVIEWED_REGISTRY";
 }
 
 /* -------------------------------------------------------------- arithmetic */

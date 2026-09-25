@@ -20,7 +20,7 @@
 import type { AssignmentListRow, AssignmentState } from "../assignment-view.ts";
 import type { RenderedNumber } from "../owner-surface.ts";
 import type { DispatchWorkReading, DispatchWorkTargetReading } from "./dispatch-work.ts";
-import type { ExpansionCycleReading, ExpansionScopeReading } from "./reading.ts";
+import { isVersionedCycleReading, type ExpansionCycleReading, type ExpansionScopeReading } from "./reading.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { subjectOfObligationId } from "./subjects.ts";
 
@@ -49,6 +49,32 @@ export function scopeCreationView(decision: ExpansionScopeDecision, reading: Dis
   return { kind: "READ", target, at: reading.at, planOnly: reading.writes === "PLAN_ONLY" ? reading.planOnlyWhy : null };
 }
 
+/**
+ * The research state's MW-028 reading, or null. The same check `isDispatchWorkReading` makes (format version 1,
+ * a `targets` list), here so a page need not load the planner to read its receipt.
+ */
+export function dispatchWorkReadingOf(value: unknown): DispatchWorkReading | null {
+  return isVersionedCycleReading(value, 1, "targets") ? (value as DispatchWorkReading) : null;
+}
+
+/**
+ * One sentence of what a Send created here, naming where the governments came from: the reviewed registry, or
+ * their state's registration where it has none (2026-09-25).
+ */
+export function scopeCreationSentence(target: DispatchWorkTargetReading): string {
+  const r = target.requirements;
+  const fromRegistration = target.units.fromRegistration ?? 0;
+  const source =
+    target.units.placed === 0
+      ? ""
+      : fromRegistration === 0
+        ? ` All ${target.units.placed} governments here come from the reviewed registry.`
+        : fromRegistration === target.units.placed
+          ? ` All ${target.units.placed} governments here come from registration (the 2022 Census of Governments): their state has no reviewed registry.`
+          : ` ${fromRegistration} of the ${target.units.placed} governments here come from registration (the 2022 Census of Governments), the rest from the reviewed registry.`;
+  return `Created ${r.created} of the ${r.defined} requirements defined here (${r.createdThisCycle} that cycle), for the governments placed here.${source}`;
+}
+
 /** Every number a surface draws for one target's creation receipt, each with its denominator and contract. */
 export function scopeCreationNumbers(target: DispatchWorkTargetReading): RenderedNumber[] {
   const r = target.requirements;
@@ -61,6 +87,14 @@ export function scopeCreationNumbers(target: DispatchWorkTargetReading): Rendere
     { label: `${label} requirements deferred`, value: r.deferred, denominator: r.defined, contract: "requirements here still owed and not yet written: the per-cycle write budget ran out" },
     { label: `${label} requirements beyond the cap`, value: r.capped, denominator: r.defined, contract: `requirements here beyond this geography's cap of ${target.cap}` },
   ];
+  if (target.units.fromRegistration !== undefined && target.units.fromRegistration > 0) {
+    out.push({
+      label: `${label} governments from registration`,
+      value: target.units.fromRegistration,
+      denominator: target.units.placed,
+      contract: "governments placed here that were read from their state's registration (the 2022 Census of Governments) because the state has no reviewed registry, of every government placed here",
+    });
+  }
   if (target.units.blocked !== null) {
     out.push({
       label: `${label} governments blocked`,

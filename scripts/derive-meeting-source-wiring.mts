@@ -63,6 +63,7 @@ import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 
@@ -101,7 +102,8 @@ function promotedInput(recordClass: string, scope: string, versionId: string | n
     : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: sha256(canonicalCivicDataJson(value)), promotedAt };
 }
 
-const stateOf = (ocdId: string): string | null => /\/state:([a-z]{2})(\/|$)/.exec(ocdId)?.[1]?.toUpperCase() ?? null;
+/* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */
+const stateOf = (ocdId: string): string | null => ocdStateCode(ocdId)?.toUpperCase() ?? null;
 const ADAPTER_ENTRY: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "lib/sources/ical/index.ts",
   OFFICIAL_PAGE_EVENTS: "lib/sources/official-page-events/index.ts",

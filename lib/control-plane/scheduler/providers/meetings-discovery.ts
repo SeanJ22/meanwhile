@@ -45,10 +45,11 @@ import type { JurisdictionRegistry } from "../../../hunt/jurisdiction-universe.t
 import {
   meetingsDiscoveryNeeds,
   OWN_SITE_MEETINGS_SOURCE,
+  type DiscoveryAddressSource,
   type MeetingsDiscoveryBasis,
   type MeetingsDiscoveryNeed,
 } from "../../../hunt/meetings-discovery.ts";
-import { requiredOperationalJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
+import { requiredJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
 import { NOTHING_MATERIALIZED, type FreeDiscoveryWalks, type MaterializedReading } from "../provider-inputs.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderYield, RouteDescriptor } from "../registry.ts";
 
@@ -109,7 +110,9 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
     },
     citation:
       source?.citation ??
-      `the promoted ${need.stateCode} jurisdiction registry names this government and records no MEETINGS source for it (gap ledger basis NO_MEETINGS_SOURCE_RECORDED)`,
+      (reg.registration === undefined
+        ? `the promoted ${need.stateCode} jurisdiction registry names this government and records no MEETINGS source for it (gap ledger basis NO_MEETINGS_SOURCE_RECORDED)`
+        : `${need.stateCode.toUpperCase()}'s registration names this government (${reg.registration.versionId === null ? "its committed reference, not yet promoted" : `promoted version ${reg.registration.versionId}`}), and the Census records no web address for it, so none is invented (basis NO_MEETINGS_SOURCE_RECORDED)`),
     awaitingAdapter: "the meetings discovery executor",
   };
 }
@@ -165,7 +168,7 @@ export function paidDiscoveryHold(
  */
 export function materializedDiscoveryNeeds(
   ids: Iterable<string>,
-  registryFor: (stateCode: string) => JurisdictionRegistry = requiredOperationalJurisdictionRegistry,
+  registryFor: (stateCode: string) => JurisdictionRegistry = requiredJurisdictionRegistry,
 ): {
   readonly entries: readonly { readonly need: MeetingsDiscoveryNeed; readonly reg: JurisdictionRegistry }[];
   readonly failures: readonly string[];
@@ -197,6 +200,16 @@ export function materializedDiscoveryNeeds(
     entries.push({ need, reg: held.reg });
   }
   return { entries, failures };
+}
+
+/**
+ * Where a dispatched need's address was recorded, so a route the walk finds from it can be attested (NH330): the
+ * promoted reviewed reference, or — for a state with no reviewed registry — its registration (2026-09-25).
+ */
+export function dispatchedAddressSource(reg: JurisdictionRegistry, reviewedVersionId: string | null): DiscoveryAddressSource {
+  return reg.registration === undefined
+    ? { source: "OPERATIONAL_REFERENCE", versionId: reviewedVersionId }
+    : { source: "REGISTRATION", versionId: reg.registration.versionId ?? `reference-sha256:${reg.registration.referenceSha256}` };
 }
 
 export interface MeetingsDiscoveryInput {

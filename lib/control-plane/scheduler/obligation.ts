@@ -127,6 +127,12 @@ export interface FreshnessObligation {
    * Absent on every row a standing provider registered on its own.
    */
   readonly materializedBy?: typeof OWNER_DISPATCH;
+  /**
+   * Set with `materializedBy`: which registry defined the government this row is about — a state's reviewed
+   * registry, or its REGISTRATION where it has none (2026-09-25, `lib/registration/jurisdictions.ts`), so Admin
+   * can say which. Runtime-owned like the mark: a registration pass never resets it.
+   */
+  readonly materializedFrom?: "REVIEWED_REGISTRY" | "REGISTRATION";
 }
 
 /** The one value `FreshnessObligation.materializedBy` carries. */

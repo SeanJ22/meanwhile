@@ -72,10 +72,12 @@ export const DEBT_CAUSES = [
  * and naming it so would send the owner after a block that does not exist.
  */
 export function debtCauseForDisposition(disposition: string): DebtCause {
-  if (disposition === "REQUIRES_NEW_ADAPTER") return "AWAITING_ADAPTER";
-  if (disposition === "DISCOVERED") return "AWAITING_ROUTINE_READ";
-  return "REFUSED_BY_HOST";
+  return DEBT_CAUSE_BY_DISPOSITION[disposition] ?? "REFUSED_BY_HOST";
 }
+const DEBT_CAUSE_BY_DISPOSITION: Readonly<Record<string, DebtCause>> = {
+  REQUIRES_NEW_ADAPTER: "AWAITING_ADAPTER",
+  DISCOVERED: "AWAITING_ROUTINE_READ",
+};
 export type DebtCause = (typeof DEBT_CAUSES)[number];
 
 /** First retry after 15 minutes. Short enough that a blip is invisible. */

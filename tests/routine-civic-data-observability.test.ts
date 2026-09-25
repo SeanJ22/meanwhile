@@ -1874,3 +1874,63 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
   assert.equal(countValue(day.counts.successfulAcquisitions), 1, "and as a successful acquisition");
   assert.deepEqual(day.attempts.map((item) => [item.candidateId, item.canonicalOutcome]), [[row.id, { kind: "MEASURED", value: "UNCHANGED" }]]);
 });
+
+test("R20: Admin shows the retry the runner admits on; a meeting partition never published is next due at the base cadence", () => {
+  const contract = MEETING_PARTITION_CONTRACTS[0];
+  const blockedAt = "2026-09-08T11:30:00.000Z";
+  const code = "SOURCE_UNAVAILABLE";
+  const detail = "The official meeting page was unavailable before bytes arrived.";
+  const receipt: ValidationReceipt = {
+    ...validationReceipt(contract, "meeting-outage", blockedAt),
+    decision: "FAIL",
+    checks: VALIDATION_CHECKS.map((check) => check === "SOURCE_AUTHENTICITY"
+      ? { check, verdict: "FAIL" as const, code, detail }
+      : { check, verdict: "PASS" as const, code: `${check}_PASS`, detail: `${check} passed.` }),
+  };
+  const outage = (lastKnownGoodVersionId: string | null) => candidateRow(contract, {
+    id: "meeting-outage",
+    at: blockedAt,
+    state: "SOURCE_BLOCKED",
+    acquisitionSucceeded: false,
+    receipt,
+    changeSet: null,
+    promotedVersionId: null,
+    lastKnownGoodVersionId,
+    failureCode: code,
+    failureDetail: detail,
+  });
+  const blockedEvent = (row: RoutineCandidateRow): RoutineCandidateEventRow => ({
+    id: `${row.id}:1`,
+    candidateId: row.id,
+    sequence: 1,
+    state: "SOURCE_BLOCKED",
+    at: row.retrievedAt,
+    detail,
+  });
+
+  const never = outage(null);
+  const unpublished = projectRoutineDataObservability(
+    { candidates: [never], events: [blockedEvent(never)], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
+  assert.equal(unpublished.canonicalPromotion.kind, "NOT_RECORDED");
+  // Owed twelve hours after the attempt, admitted 2 hours before (C6).
+  assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T21:30:00.000Z" });
+  assert.equal(unpublished.cadence.operationalState, "RETRYING");
+  assert.match(unpublished.cadence.operationalDetail, /retry is due 2026-09-08T21:30:00\.000Z/);
+  assert.match(unpublished.cadence.retryDescription, /never published, so 12 hours after its last attempt/);
+
+  const lkg = candidateRow(contract, { id: "meeting-lkg", at: "2026-09-08T09:00:00.000Z" });
+  const failed = outage(lkg.id);
+  const published = projectRoutineDataObservability(
+    { candidates: [lkg, failed], events: [...sourceHistory(lkg), blockedEvent(failed)], promotions: [promotion(contract, lkg)] },
+    NOW,
+    [contract],
+  ).contracts[0];
+  // Owed an hour after the failed attempt, admitted 25 minutes before.
+  assert.deepEqual(published.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:05:00.000Z" });
+  assert.equal(published.cadence.operationalState, "RETRYING");
+  assert.ok(published.cadence.retryDescription.startsWith(contract.retry.description));
+  assert.doesNotMatch(published.cadence.retryDescription, /never published/);
+});

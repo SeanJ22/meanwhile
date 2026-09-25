@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -8,9 +9,17 @@ import {
   routineFailureDomainCount,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
+  routineFrontierPassBound,
+  routineTaskDeadlineMs,
+  routineTaskDue,
   routineUnreceiptedSupervisorAttemptHistory,
+  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   type RoutineSourceTask,
+  type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
+import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
+import { sittingWindowHotByConclusion } from "../lib/civic-data/sitting-window-admission.ts";
+import { ROUTINE_SAME_DOMAIN_CHILD_GAP_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
   ROUTINE_SUPERVISOR_HISTORY_FIELDS,
@@ -408,4 +417,198 @@ test("each Google calendar is its own lane; every other host keeps one lane per 
   // A small-town host is still one lane for all its bodies.
   const newLondon = MEETING_PARTITION_CONTRACTS.filter((p) => p.acquisitionFailureDomain === "meeting-upstream:newlondon.nh.gov");
   assert.ok(newLondon.length > 1);
+});
+
+test("C6: a meeting lane is read earliest deadline first, up to three a pass; every other lane keeps one least-recently-considered", () => {
+  const meetingLanes = new Map<string, RoutineSourceTask[]>();
+  for (const task of ROUTINE_SOURCE_TASKS) {
+    if (task.contract.schedule?.kind !== "SITTING_WINDOW") continue;
+    meetingLanes.set(task.acquisitionFailureDomain, [...(meetingLanes.get(task.acquisitionFailureDomain) ?? []), task]);
+  }
+  const lane = [...meetingLanes.values()].sort((left, right) => right.length - left.length)[0]!;
+  assert.ok(lane.length >= 5);
+  const [a, b, c, d, e] = lane as [RoutineSourceTask, RoutineSourceTask, RoutineSourceTask, RoutineSourceTask, RoutineSourceTask];
+  assert.equal(SITTING_WINDOW_LANE_SLOTS_PER_PASS, 3);
+  // The oldest-considered task has the latest deadline: deadline order wins.
+  const admitted = routineFailureDomainFrontier([
+    { task: a, lastConsideredAt: "2026-09-08T00:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:00:00.000Z") },
+    { task: b, lastConsideredAt: "2026-09-08T11:05:00.000Z", deadlineMs: Date.parse("2026-09-08T12:05:00.000Z") },
+    { task: c, lastConsideredAt: "2026-09-08T11:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:00:30.000Z") },
+    { task: d, lastConsideredAt: null, deadlineMs: Date.parse("2026-09-08T11:59:00.000Z") },
+    { task: e, lastConsideredAt: "2026-09-08T10:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:10:00.000Z") },
+  ]);
+  assert.deepEqual(admitted.map(({ task }) => task.id).sort(), [a.id, c.id, d.id].sort());
+  // A task owed at once (never run) goes first.
+  const never = routineFailureDomainFrontier([
+    { task: a, lastConsideredAt: null, deadlineMs: Number.NEGATIVE_INFINITY },
+    { task: b, lastConsideredAt: "2026-09-08T11:05:00.000Z", deadlineMs: Date.parse("2026-09-08T11:00:00.000Z") },
+    { task: c, lastConsideredAt: "2026-09-08T11:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:00:00.000Z") },
+    { task: d, lastConsideredAt: "2026-09-08T10:00:00.000Z", deadlineMs: Date.parse("2026-09-08T12:30:00.000Z") },
+  ]);
+  assert.deepEqual(never.map(({ task }) => task.id).sort(), [a.id, b.id, c.id].sort());
+  // A lane of tasks without deadlines keeps one a pass, least recently considered.
+  const shared = largestRealDomain().filter((task) => task.contract.schedule?.kind !== "SITTING_WINDOW");
+  if (shared.length >= 2) {
+    const plain = routineFailureDomainFrontier([
+      { task: shared[0]!, lastConsideredAt: "2026-09-08T12:00:00.000Z" },
+      { task: shared[1]!, lastConsideredAt: "2026-09-08T11:00:00.000Z" },
+    ]);
+    assert.deepEqual(plain.map(({ task }) => task.id), [shared[1]!.id]);
+  }
+});
+
+test("C6: no production lane mixes sitting-window tasks with any other task, so deadline order and the extra slots touch meeting lanes only", () => {
+  const kinds = new Map<string, Set<boolean>>();
+  for (const task of ROUTINE_SOURCE_TASKS) {
+    const set = kinds.get(task.acquisitionFailureDomain) ?? new Set<boolean>();
+    set.add(task.contract.schedule?.kind === "SITTING_WINDOW");
+    kinds.set(task.acquisitionFailureDomain, set);
+  }
+  const mixed = [...kinds].filter(([, set]) => set.size > 1).map(([lane]) => lane);
+  assert.deepEqual(mixed, []);
+  const bound = routineFrontierPassBound();
+  const meetingLanes = [...kinds].filter(([, set]) => set.has(true)).length;
+  assert.equal(bound.commandCount, routineFailureDomainCount() + meetingLanes * (SITTING_WINDOW_LANE_SLOTS_PER_PASS - 1));
+  assert.equal(bound.largestFailureDomainSize, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+});
+
+function simulateTucsonLane(recordedPasses: boolean): { misses: string[]; maxHotGap: number; maxBaseGap: number; peakHot: number } {
+  const HOUR = 3_600_000;
+  const DAY = 24 * HOUR;
+  const MIN = 60_000;
+  const model = ROUTINE_SOURCE_TASKS.find((task) => task.recordClass === "MEETING" && task.contract.schedule?.kind === "SITTING_WINDOW");
+  assert.ok(model);
+  // The 196 passes production ran on 2026-09-24 (5:00 AM to 11:00 PM MST): each
+  // pass lasts as long as its slowest child, reader repairs and every other
+  // family included (p50 1:34, p99 10:58, max 15:52).
+  const recorded = JSON.parse(readFileSync("tests/fixtures/routine-pass-durations-2026-09-24.json", "utf8")) as { durationSeconds: number[] };
+  assert.equal(recorded.durationSeconds.length, 196);
+  assert.equal(Math.max(...recorded.durationSeconds), 952);
+  let seed = 20260925;
+  const rand = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 2 ** 32; };
+  const start = Date.parse("2026-09-25T07:00:00.000Z");
+  const end = start + 30 * DAY;
+  // 27 bodies on one host, as Tucson's board site: 2 never published, 3 meeting
+  // twice a month (always hourly) and 22 monthly, meeting across 24 days of the
+  // month, so up to 19 are hourly at once: more than Tucson's projected peak of
+  // 16 (2026-10-14, counting conclusion as a day after start).
+  type Body = { readonly task: RoutineSourceTask; readonly starts: readonly string[] | undefined };
+  const bodies: Body[] = Array.from({ length: 27 }, (_, index) => {
+    const task = { ...model, id: `sim:${index}`, acquisitionFailureDomain: "meeting-upstream:sim.tucson.example" } as RoutineSourceTask;
+    if (index < 2) return { task, starts: undefined };
+    const every = index < 5 ? 15 * DAY : 30 * DAY;
+    const first = start - 45 * DAY + Math.floor(rand() * 24) * DAY + Math.floor(rand() * 10 + 8) * HOUR;
+    const starts: string[] = [];
+    for (let at = first; at < end + 30 * DAY; at += every) starts.push(new Date(at).toISOString());
+    return { task, starts };
+  });
+  const hot = (body: Body, at: number) =>
+    body.starts === undefined ? undefined : sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [body.starts], at);
+  let peakHot = 0;
+  for (let at = start; at < end; at += HOUR) peakHot = Math.max(peakHot, bodies.filter((body) => hot(body, at) === true).length);
+
+  const clocks = new Map<string, RoutineTaskClock>();
+  const reads = new Map<string, number[]>(bodies.map(({ task }) => [task.id, []]));
+  const record = (body: Body, at: number) => {
+    const iso = new Date(at).toISOString();
+    clocks.set(body.task.id, body.starts === undefined
+      ? { lastAttemptedAt: iso }
+      : { lastAttemptedAt: iso, lastSucceededAt: new Date(at - 2_500).toISOString(), lastSucceededObservedAt: iso, sittingStarts: body.starts });
+    reads.get(body.task.id)!.push(at);
+  };
+  // Twice-daily bodies fall due over the first two hours, one every five
+  // minutes, as Tucson's did after the B3 switch; hourly ones were read within
+  // the last 40 minutes.
+  bodies.forEach((body, index) => record(body, hot(body, start) === true ? start - (index % 8 + 1) * 5 * MIN : start - 12 * HOUR + 30 * MIN + index * 5 * MIN));
+
+  // A pass starts on the first one-minute tick at least five minutes after the
+  // last one started and after it ended. Its duration is a recorded production
+  // pass, or this lane's own reads if longer: each read 10-60 s, the second
+  // after the first plus the same-host gap. The runner is down 8 minutes for a
+  // release handoff on day 3.
+  const TICK = MIN;
+  let at = start;
+  let pass = 0;
+  let longest = 0;
+  while (at < end) {
+    const due = bodies.filter((body) => routineTaskDue(body.task, clocks.get(body.task.id), at, hot(body, at)));
+    const admitted = routineFailureDomainFrontier(due.map((body) => ({
+      task: body.task,
+      lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
+      deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), hot(body, at)),
+    })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
+    assert.ok(admitted.length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+    let laneAt = at + 20_000;
+    admitted.forEach(({ task }, index) => {
+      if (index > 0) laneAt += ROUTINE_SAME_DOMAIN_CHILD_GAP_MS;
+      laneAt += 10_000 + Math.floor(rand() * 50_000);
+      record(bodies.find((body) => body.task.id === task.id)!, laneAt);
+    });
+    const sampled = recorded.durationSeconds[Math.floor(rand() * recorded.durationSeconds.length)]! * 1000;
+    const duration = Math.max(recordedPasses ? sampled : 0, laneAt - at);
+    longest = Math.max(longest, duration);
+    const handoff = at >= start + 3 * DAY && at < start + 3 * DAY + 10 * MIN ? 8 * MIN : 0;
+    at = Math.ceil((Math.max(at + ROUTINE_DATA_ADMISSION_MS, at + duration) + handoff) / TICK) * TICK;
+    pass += 1;
+  }
+  assert.ok(pass > 7_000);
+  if (recordedPasses) assert.ok(longest >= 952_000, "the simulation ran the longest recorded pass");
+
+  // Each gap is judged minute by minute against the owner's rule: while a body
+  // is hourly, a read is owed within 60 minutes of the later of its last read
+  // and the minute it turned hourly; every body is owed one within 12 hours.
+  const misses: string[] = [];
+  let hotGaps = 0;
+  let maxHotGap = 0;
+  let maxBaseGap = 0;
+  for (const body of bodies) {
+    const times = [...reads.get(body.task.id)!, end];
+    for (let index = 1; index < times.length; index += 1) {
+      const from = times[index - 1]!;
+      const to = times[index]!;
+      maxBaseGap = Math.max(maxBaseGap, to - from);
+      if (to - from > 12 * HOUR) misses.push(`${body.task.id} twice-daily ${((to - from) / HOUR).toFixed(2)} h at ${new Date(to).toISOString()}`);
+      let owedFrom = hot(body, from) === true ? from : undefined;
+      for (let minute = from + MIN; minute < to; minute += MIN) {
+        if (hot(body, minute) !== true) { owedFrom = undefined; continue; }
+        owedFrom ??= minute;
+        if (minute - owedFrom >= HOUR) {
+          misses.push(`${body.task.id} hourly, unread ${((to - owedFrom) / MIN).toFixed(2)} min from ${new Date(owedFrom).toISOString()}`);
+          break;
+        }
+      }
+      if (hot(body, from) === true && hot(body, to) === true) {
+        hotGaps += 1;
+        maxHotGap = Math.max(maxHotGap, to - from);
+      }
+    }
+  }
+  assert.ok(hotGaps > 5_000);
+  return { misses, maxHotGap, maxBaseGap, peakHot };
+}
+
+test("C6: 30 days on a lane shaped like Tucson's, passes of normal length, the same-host gap and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00", () => {
+  const { misses, maxHotGap, maxBaseGap, peakHot } = simulateTucsonLane(false);
+  assert.ok(peakHot >= 19, `the simulated peak (${peakHot} hourly bodies) is heavier than Tucson's projected 16`);
+  assert.deepEqual(misses, [], `${misses.length} late reads; longest hourly gap ${(maxHotGap / 60_000).toFixed(2)} min`);
+  assert.ok(maxHotGap <= 3_600_000 && maxBaseGap <= 12 * 3_600_000);
+});
+
+test("C6 residual, open: with production's recorded passes (up to 15:52, drawn at random) a Tucson-shaped lane still misses the hour, rarely and by at most two minutes", () => {
+  // Passes held open by reader repairs and other families (2026-09-24) are not
+  // meeting scheduling; until they are bounded, this is the residual C6 carries.
+  const { misses, maxBaseGap } = simulateTucsonLane(true);
+  assert.ok(misses.length <= 3, `${misses.length} late reads: ${misses.slice(0, 5).join(" | ")}`);
+  for (const miss of misses) assert.match(miss, /hourly, unread 6[01]\.\d\d min/, miss);
+  assert.ok(maxBaseGap <= 12 * 3_600_000, "no twice-daily read is late");
+});
+
+test("C6: the runner hands the frontier each due task's deadline from the same pass's clocks and sitting signals", () => {
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const call = runner.slice(runner.indexOf("const admitted = routineFailureDomainFrontier("));
+  assert.match(
+    call.slice(0, call.indexOf("ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS")),
+    /deadlineMs: routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/,
+  );
+  assert.ok(runner.indexOf("const sittingSignals = sittingWindowSignals(") < runner.indexOf("const admitted = routineFailureDomainFrontier("));
 });

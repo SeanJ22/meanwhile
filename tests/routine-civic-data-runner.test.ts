@@ -13,6 +13,8 @@ import {
   ROUTINE_SOURCE_TASKS,
   readRoutineTaskClocks,
   routineFailureDomainCount,
+  routineFrontierPassBound,
+  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineSupervisorCycleId,
   routineTaskDue,
   routineTaskFromContract,
@@ -42,6 +44,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_TIMEOUT_MS,
+  ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
   ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS,
   ROUTINE_RUNNER_OUTER_GRACE_MS,
   largestFailureDomainCardinality,
@@ -888,8 +891,12 @@ test("a killed Reader child is an exact delivery repair fault and cannot mutate 
   assert.deepEqual(await store.events(candidateId), before.events);
 });
 
-test("the pilot outer bound contains the one-per-provider frontier, not a failed provider tail", () => {
-  const admittedCommands = routineFailureDomainCount();
+test("the pilot outer bound contains the frontier (one a pass, two on a meeting lane), not a failed provider tail", () => {
+  const passBound = routineFrontierPassBound();
+  const admittedCommands = passBound.commandCount;
+  const largestDomain = passBound.largestFailureDomainSize;
+  assert.equal(largestDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+  assert.ok(admittedCommands > routineFailureDomainCount(), "meeting lanes take a second read a pass");
   const readerDomains = routineReaderRepairDomains();
   const bounds = {
     neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
@@ -897,7 +904,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
     clockTaskCount: ROUTINE_SOURCE_TASKS.length,
     clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
     clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    coordinationRequests: 2,
+    coordinationRequests: 3,
     readerSingleDomains: readerDomains.filter(({ mode }) => mode === "SINGLE").length,
     readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
     readerMeetingDomains: readerDomains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,
@@ -906,19 +913,18 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
   } as const;
   const outerTimeoutMs = routineRunnerOuterTimeoutMs(
     admittedCommands,
-    ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+    largestDomain,
     bounds,
   );
   const boundedPassMs = routineChildPassWorstCaseMs(
     admittedCommands,
     ROUTINE_CHILD_TIMEOUT_MS,
     ROUTINE_CHILD_CONCURRENCY,
-    ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+    largestDomain,
   );
-  assert.equal(
-    boundedPassMs,
-    Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS,
-  );
+  // A meeting lane's two reads run one after the other; the pass bound covers that chain.
+  assert.ok(boundedPassMs >= Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS);
+  assert.ok(boundedPassMs >= largestDomain * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(admittedCommands < ROUTINE_SOURCE_TASKS.length, "shared-provider tails are outside one pass");
   assert.equal(ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, 1);
   assert.equal(ROUTINE_DATA_ADMISSION_MS, 5 * 60_000);
@@ -926,7 +932,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
     routineRunnerOuterTimeoutCompatible(
       outerTimeoutMs,
       admittedCommands,
-      ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+      largestDomain,
       bounds,
     ),
     true,
@@ -935,7 +941,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
     outerTimeoutMs,
     routineRunnerBoundedWorkMs(
       admittedCommands,
-      ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+      largestDomain,
       bounds,
     ) + ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS +
       ROUTINE_RUNNER_OUTER_GRACE_MS,
@@ -952,7 +958,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
   assert.match(runner, /discardOutputAfterSettlement:\s*true/);
   assert.doesNotMatch(runner, /waveStart|pendingWave/);
   assert.doesNotMatch(runner, /spawnSync/);
-  assert.match(pilot, /ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\([\s\S]*routineFailureDomainCount\(\)[\s\S]*ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS[\s\S]*settlementRequestsPerCommand:[\s\S]*clockTaskCount:[\s\S]*readerSingleDomains:[\s\S]*readerMeetingDomains:/);
+  assert.match(pilot, /ROUTINE_PASS_BOUND = routineFrontierPassBound\(\);[\s\S]*ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\([\s\S]*ROUTINE_PASS_BOUND\.commandCount[\s\S]*ROUTINE_PASS_BOUND\.largestFailureDomainSize[\s\S]*settlementRequestsPerCommand:[\s\S]*clockTaskCount:[\s\S]*readerSingleDomains:[\s\S]*readerMeetingDomains:/);
   assert.match(pilot, /ROUTINE_DATA_ADMISSION_MS,[\s\S]*from "\.\.\/lib\/civic-data\/runner\.ts"/);
   assert.match(pilot, /id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS/);
   assert.match(pilot, /timeoutMs:\s*ROUTINE_DATA_TIMEOUT_MS/);
@@ -1142,10 +1148,13 @@ test("the routine runner derives its clock from durable candidate history", () =
   assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
-  // Sitting windows are decided once, at the frozen instant, from the same reads.
-  const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs)");
+  // Sitting windows are decided once, at the frozen instant, from the same reads
+  // and the publisher-stated ends read in the same pass (C6).
+  const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
+  const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
   const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot)");
-  assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < sittingSignals && sittingSignals < dueDecision);
+  assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < statedEnds && statedEnds < sittingSignals && sittingSignals < dueDecision);
+  assert.match(source, /STATED_ENDS_READ_FAILED/, "an unreadable end set is reported, and the day bound stands");
   assert.doesNotMatch(source, /routine-civic-data-runner\.json|readState\(|writeState\(/);
 });
 
@@ -1618,4 +1627,33 @@ test("the supervisor proves the registry once for two or more meeting children a
   assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
   assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
   assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);
+});
+
+test("C6: two reads of one host in one pass start at least the gap apart; other hosts do not wait, and the outer bound counts the gap", async () => {
+  const events: { id: string; phase: "start" | "end"; at: number }[] = [];
+  const done = (id: string): BoundedChildResult => ({ id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null });
+  const results = await runBoundedChildPass([
+    { id: "tucson-1", failureDomain: "meeting-upstream:clerksboards.example", executable: "ignored", args: [] },
+    { id: "tucson-2", failureDomain: "meeting-upstream:clerksboards.example", executable: "ignored", args: [] },
+    { id: "pima", failureDomain: "meeting-upstream:legistar.example", executable: "ignored", args: [] },
+  ], { cwd: process.cwd(), env: process.env, timeoutMs: 1_000, maxBufferBytes: 1, sameDomainGapMs: 120 }, async (command) => {
+    events.push({ id: command.id, phase: "start", at: Date.now() });
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    events.push({ id: command.id, phase: "end", at: Date.now() });
+    return done(command.id);
+  });
+  assert.deepEqual(results.map(({ id }) => id), ["tucson-1", "tucson-2", "pima"]);
+  const at = (id: string, phase: "start" | "end") => events.find((event) => event.id === id && event.phase === phase)!.at;
+  assert.ok(at("tucson-2", "start") - at("tucson-1", "end") >= 115, "the host's second read waits the gap after its first");
+  assert.ok(at("pima", "start") - at("tucson-1", "start") < 60, "another host is not held by that gap");
+  assert.equal(ROUTINE_SAME_DOMAIN_CHILD_GAP_MS, 60_000);
+  await assert.rejects(runBoundedChildPass([], { cwd: process.cwd(), env: process.env, sameDomainGapMs: -1 }), /DOMAIN_GAP_INVALID/);
+  const bounds = {
+    neonRequestDeadlineMs: 1_000, settlementRequestsPerCommand: 1, clockTaskCount: 1, clockConcurrency: 1,
+    clockRequestsPerTask: 1, coordinationRequests: 1, readerSingleDomains: 0, readerSingleTimeoutMs: 0,
+    readerMeetingDomains: 0, readerMeetingTimeoutMs: 0, readerConcurrency: 1,
+  } as const;
+  const chain = routineRunnerBoundedWorkMs(6, 3, bounds);
+  const noGapChain = routineChildPassWorstCaseMs(6, ROUTINE_CHILD_TIMEOUT_MS + 1_000, ROUTINE_CHILD_CONCURRENCY, 3);
+  assert.equal(chain, noGapChain + 2 * ROUTINE_SAME_DOMAIN_CHILD_GAP_MS + 1 * 1_000 + 1 * 1_000, "two gaps in a chain of three, plus the clock and coordination requests");
 });

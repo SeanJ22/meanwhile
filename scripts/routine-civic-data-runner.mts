@@ -24,12 +24,14 @@ import {
 } from "../lib/civic-data/supervisor-history.ts";
 import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   readRoutineTaskClocks,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
   routineSupervisorCycleId,
+  routineTaskDeadlineMs,
   routineTaskDue,
   routineTaskSelection,
   sittingWindowSignals,
@@ -51,9 +53,11 @@ import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
   ROUTINE_CHILD_TIMEOUT_MS,
+  ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
   runBoundedChildPass,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
+import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -83,6 +87,7 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
+import { getDb } from "../lib/db/index.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
@@ -354,8 +359,22 @@ const clockReads = FORCE
       (task) => store.clock(task.sourceId, task.recordClass, task.scope),
     );
 // Meeting sources follow their bodies' sittings; the window is decided once,
-// at the same frozen instant, from this pass's own clock reads.
-const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs);
+// at the same frozen instant, from this pass's own clock reads. A sitting's
+// publisher-stated end, where one exists, decides when it concluded (C6); an
+// unreadable end set falls back to the day bound and is reported.
+let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
+if (!FORCE) {
+  try {
+    const byScope = statedSittingEndsByScope(await statedSittingEndsRead(getDb()));
+    statedEndsByTask = new Map(selectedTasks.flatMap((task) =>
+      task.recordClass === "MEETING" && byScope.has(task.scope) ? [[task.id, byScope.get(task.scope)!] as const] : []));
+  } catch (error) {
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    supervisorFailures.push({ taskId: "routine-civic-data-stated-sitting-ends", code: "STATED_ENDS_READ_FAILED", detail });
+    console.error(`RCD_TASK routine-civic-data-stated-sitting-ends: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+  }
+}
+const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask);
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -410,9 +429,11 @@ try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
+// A meeting lane is read earliest deadline first, up to two a pass (C6).
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
   task: pending.task,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
+  deadlineMs: routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)),
 })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
 for (const candidate of dueCandidates) {
@@ -420,7 +441,7 @@ for (const candidate of dueCandidates) {
   else {
     console.log(
       `RCD_DEFER ${candidate.pending.id}: provider frontier ` +
-        `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS})`,
+        `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`,
     );
   }
 }
@@ -454,7 +475,7 @@ if (meetingPartitionRuns >= 2) {
 console.log(
   `RCD_PASS launching ${pendingRuns.length} isolated command(s) through a bounded pool; ` +
     `concurrency=${ROUTINE_CHILD_CONCURRENCY}; ` +
-    `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}; ` +
+    `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS} (meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS}); ` +
     `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
 );
 step = "running the source pass";
@@ -482,6 +503,8 @@ const childRuns = await runBoundedChildPass(
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: ROUTINE_CHILD_CONCURRENCY,
+    // Two reads of one host in this pass start at least a minute apart (C6).
+    sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onSettled: async (run, index) => settlePendingRun(pendingRuns[index]!, run),
     // Classification consumes the exact receipt before this worker advances.
     // Retaining only the small result summary bounds memory across the full portfolio.

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 775,
-    "named": 7589,
+    "files": 776,
+    "named": 7594,
     "dynamic": 30
   },
   "files": {
@@ -5328,6 +5328,16 @@
         "JUR-4: UNKNOWN is counted and never named as partial",
         "JUR-4: the full pill no longer renders per contest on the ballot page",
         "JUR-4: the page-level block names bodies, never offices"
+      ],
+      "dynamic": 0
+    },
+    "tests/keep-warm.test.ts": {
+      "names": [
+        "KEEP-WARM · a call that fails is counted as not answered and does not stop the others",
+        "KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parameter are refused, never quietly held",
+        "KEEP-WARM · a marked call holds its instance for the hold asked, so overlapping calls occupy separate instances",
+        "KEEP-WARM · an unmarked call answers at once, whatever hold it asks for, and is never cached",
+        "KEEP-WARM · every five minutes the pinger makes ten overlapping marked calls to the site's own warm route"
       ],
       "dynamic": 0
     },

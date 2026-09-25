@@ -1,13 +1,20 @@
 import assert from "node:assert/strict";
-import { realpathSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import {
   admittedRuntimeChildEnvironment,
+  GIT_READ_ATTEMPTS,
+  inspectRuntimeCheckout,
   runtimeAuthorityEnvelope,
   runtimeAuthorityIssue,
+  type GitRun,
   type RuntimeAuthorityEnvelope,
   type RuntimeCheckoutFacts,
+  type RuntimeCheckoutReads,
 } from "../lib/civic-data/runtime-authority.ts";
 
 const ROOT = realpathSync(process.cwd());
@@ -99,4 +106,112 @@ test("retired importer capability is refused at the raw environment parser", () 
   };
   assert.equal(runtimeAuthorityEnvelope(retired), null);
   assert.match(issue(runtimeAuthorityEnvelope(retired)) ?? "", /absent or malformed/);
+});
+
+/*
+ * 2026-09-25T23:01Z: the registration-nc, -nd and -oh Reader repair children
+ * were refused as "runtime checkout facts are unreadable" and passed the pass
+ * before and after on the same code. The runtime checkout is a worktree of the
+ * development repository, and a read that opens the shared .git/config while
+ * an agent's branch command rewrites it exits 128. These are the exact Git
+ * words from a controlled reproduction on the runner host.
+ */
+const CONFIG_RACE = Object.assign(new Error("Command failed: git status --porcelain=v1 --untracked-files=all"), {
+  status: 128,
+  stderr: "warning: unable to access 'C:/Users/seanj/dev/we-the-people/.git/config': Permission denied\n" +
+    "fatal: unknown error occurred while reading the configuration files\n",
+});
+const answered = (value: string): GitRun => () => value;
+const exited = (status: number): GitRun => () => { throw Object.assign(new Error(`exit ${status}`), { status, stderr: "" }); };
+const counted = (runs: readonly GitRun[]) => {
+  let calls = 0;
+  const run: GitRun = () => runs[Math.min(calls++, runs.length - 1)]!();
+  return { run, calls: () => calls };
+};
+function reads(overrides: Partial<RuntimeCheckoutReads> = {}): RuntimeCheckoutReads {
+  return {
+    repositoryRoot: answered(ROOT),
+    head: answered(SHA),
+    status: answered(""),
+    branch: exited(1),
+    isAncestorOfOriginMain: () => answered(""),
+    ...overrides,
+  };
+}
+const noPause = () => undefined;
+
+test("a read that fails to answer during a shared-config rewrite is read again and admits on the answer", () => {
+  const status = counted([() => { throw CONFIG_RACE; }, answered("")]);
+  const facts = inspectRuntimeCheckout(ROOT, { reads: reads({ status: status.run }), pause: noPause });
+  assert.equal(status.calls(), 2);
+  assert.equal(facts.readable, true);
+  assert.equal(facts.clean, true);
+  assert.equal(issue(envelope(), facts), null);
+  assert.equal(facts.recoveredReads?.length, 1, "the first failure is kept, not swallowed");
+  assert.match(facts.recoveredReads![0]!, /git status exited 128 \(.*unknown error occurred while reading the configuration files\) on attempt 1/);
+});
+
+test("a read that never answers refuses and names the read, its exit and Git's words", () => {
+  const status = counted([() => { throw CONFIG_RACE; }]);
+  const facts = inspectRuntimeCheckout(ROOT, { reads: reads({ status: status.run }), pause: noPause });
+  assert.equal(status.calls(), GIT_READ_ATTEMPTS);
+  assert.equal(facts.readable, false);
+  const refused = issue(envelope(), facts) ?? "";
+  assert.match(refused, /^runtime checkout facts are unreadable: git status exited 128 \(/);
+  assert.match(refused, new RegExp(`on ${GIT_READ_ATTEMPTS} of ${GIT_READ_ATTEMPTS} attempts`));
+  // A spawn that never ran and a stopped read are failures to answer too.
+  const spawn = inspectRuntimeCheckout(ROOT, { pause: noPause, reads: reads({
+    head: () => { throw Object.assign(new Error("spawnSync git EAGAIN"), { code: "EAGAIN" }); } }) });
+  assert.match(issue(envelope(), spawn) ?? "", /git rev-parse HEAD did not run \(EAGAIN\)/);
+  const stopped = inspectRuntimeCheckout(ROOT, { pause: noPause, reads: reads({
+    head: () => { throw Object.assign(new Error("spawnSync git ETIMEDOUT"), { status: null, signal: "SIGTERM" }); } }) });
+  assert.match(issue(envelope(), stopped) ?? "", /git rev-parse HEAD was stopped by SIGTERM/);
+});
+
+test("an answer is a fact and is never read again: dirty, attached and off origin/main still refuse at once", () => {
+  const dirty = counted([answered(" M lib/x.ts")]);
+  const dirtyFacts = inspectRuntimeCheckout(ROOT, { reads: reads({ status: dirty.run }), pause: noPause });
+  assert.equal(dirty.calls(), 1);
+  assert.match(issue(envelope(), dirtyFacts) ?? "", /not clean/);
+
+  const attached = counted([answered("main")]);
+  assert.match(issue(envelope(), inspectRuntimeCheckout(ROOT, { reads: reads({ branch: attached.run }), pause: noPause })) ?? "", /attached/);
+  assert.equal(attached.calls(), 1);
+
+  const detached = counted([exited(1)]);
+  assert.equal(inspectRuntimeCheckout(ROOT, { reads: reads({ branch: detached.run }), pause: noPause }).detached, true);
+  assert.equal(detached.calls(), 1, "symbolic-ref's exit 1 is the detached answer");
+
+  const offMain = counted([exited(1)]);
+  const offFacts = inspectRuntimeCheckout(ROOT, { reads: reads({ isAncestorOfOriginMain: () => offMain.run }), pause: noPause });
+  assert.equal(offMain.calls(), 1, "merge-base's exit 1 is the not-an-ancestor answer");
+  assert.equal(offFacts.readable, true);
+  assert.match(issue(envelope(), offFacts) ?? "", /not proven on origin\/main/);
+
+  const brokenAncestry = inspectRuntimeCheckout(ROOT, { reads: reads({ isAncestorOfOriginMain: () => exited(128) }), pause: noPause });
+  assert.match(issue(envelope(), brokenAncestry) ?? "", /unreadable: git merge-base --is-ancestor HEAD origin\/main exited 128/,
+    "an ancestry read that failed is unreadable, not a claim about origin/main");
+});
+
+test("the real Git reads of a clean detached worktree answer on the first attempt", (t) => {
+  const base = realpathSync(mkdtempSync(join(tmpdir(), "runtime-authority-git-")));
+  t.after(() => rmSync(base, { recursive: true, force: true }));
+  const main = join(base, "main");
+  const git = (cwd: string, ...args: string[]) => execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+  execFileSync("git", ["init", "-q", main]);
+  writeFileSync(join(main, "a.txt"), "a\n");
+  git(main, "add", "a.txt");
+  git(main, "-c", "user.email=test@example.invalid", "-c", "user.name=test", "commit", "-qm", "c");
+  git(main, "update-ref", "refs/remotes/origin/main", "HEAD");
+  const runtime = join(base, "runtime");
+  git(main, "worktree", "add", "-q", "--detach", runtime, "HEAD");
+  const facts = inspectRuntimeCheckout(runtime);
+  assert.deepEqual(
+    { readable: facts.readable, clean: facts.clean, detached: facts.detached, onMain: facts.headOnOriginMain, head: facts.headSha },
+    { readable: true, clean: true, detached: true, onMain: true, head: git(main, "rev-parse", "HEAD") },
+  );
+  assert.deepEqual(facts.recoveredReads, []);
+  assert.equal(facts.unreadable, null);
+  writeFileSync(join(runtime, "stray.txt"), "x\n");
+  assert.equal(inspectRuntimeCheckout(runtime).clean, false, "an untracked file is still a dirty runtime");
 });

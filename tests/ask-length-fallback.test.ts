@@ -132,7 +132,9 @@ async function askWithModelAnswer(modelAnswer: { answer: string; citedSources: n
 
 test("R13: a 726-character model answer that fails only on length is not reported as a rejection", { concurrency: false }, async () => {
   const { payload, synthesisCalls } = await askWithModelAnswer({ answer: modelAnswerOf726(), citedSources: [] });
-  assert.equal(synthesisCalls, 1, "the model path ran (from the stub)");
+  /* Two writers (2026-09-25): the fast writer's over-length answer fails validation, so the frontier
+     writer is asked; the stub answers it the same, and that final length-only failure is settled here. */
+  assert.equal(synthesisCalls, 2, "the model path ran (from the stub), on both writers of the ladder");
   assert.equal(payload.trace.validation.ran, true);
   assert.deepEqual(payload.trace.validation.failed, ["too-long:726-characters-over-700"], "length is the only failure");
   assert.ok(payload.records.length > 0, "precondition: the records a reader sees are held");

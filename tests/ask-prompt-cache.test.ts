@@ -476,11 +476,13 @@ test("H1: the system prompt is one string with every rule, and its size is pinne
    *
    * 2026-09-25 (the Ask latency repair): the citation line now asks for source
    * NUMBERS (`citedSources`) instead of full URLs — 2,325 → 2,327 characters,
-   * two characters, so the block stays well above the floor.
+   * two characters, so the block stays well above the floor. The same day the
+   * length rule gained its target ("Aim for 3 sentences or fewer and about 450
+   * characters.", `ANSWER_LENGTH_CONTRACT.target*`) — 2,327 → 2,382.
    */
   assert.doesNotMatch(prompt, /Today is/, "the date is no longer in the system prompt");
   assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
-  assert.equal(prompt.length, 2327, "the system prompt changed size — re-measure the cache floor");
+  assert.equal(prompt.length, 2382, "the system prompt changed size — re-measure the cache floor");
 });
 
 test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system block and the civic context — and the date and the question sit after both", async () => {

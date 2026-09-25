@@ -1,6 +1,6 @@
 import { formatDateLong } from "../text/format-date.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
-import type { LexicalShape } from "./lexical-reading.ts";
+import type { SittingShape } from "./lexical-reading.ts";
 import { overLengthBudget } from "./length-contract.ts";
 import { localDate, localTime, localWeekday, startTimePosted, zoneOf } from "./meeting-time.ts";
 import type { ValidationVerdict } from "./validate.ts";
@@ -77,7 +77,7 @@ const CONTENT_KINDS: ReadonlySet<EvidenceRecord["kind"]> = new Set([
 ]);
 
 export interface SittingAnswerInput {
-  shape: LexicalShape;
+  shape: SittingShape;
   subjectName: string;
   /** The chosen sitting FIRST, then any other sitting the body holds that local day. */
   sittings: readonly ComposableSitting[];
@@ -86,6 +86,77 @@ export interface SittingAnswerInput {
   /** The gaps the route attached to these sittings, in the order it attached them. */
   sittingGaps: readonly SittingGap[];
   now: number;
+  /** The route's own reading of an outcome question (`outcomeQuestionClass`), when it made one. */
+  questionClass?: string | null;
+}
+
+/** `On "<title>", <member> voted <value>.` — the text `lib/ask/meeting-outcomes.ts` mints for a member-vote row. */
+const MEMBER_VOTE_TEXT = /^On "([\s\S]+)", (.+) voted (.+)\.$/;
+
+/**
+ * A clerk's item title, quoted from its start with its line breaks read as
+ * spaces, cut at a word under ~110 characters. Not the first line alone: a
+ * Legistar title's first line is often a section heading ("UNFINISHED
+ * BUSINESS (6/23/26)") or a class ("Board of Supervisors Policy") that two
+ * items share.
+ */
+function titleQuote(title: string): string {
+  const line = title.replace(/\s+/g, " ").trim();
+  if (line.length <= 110) return line;
+  const cut = line.slice(0, 110);
+  return `${cut.slice(0, cut.lastIndexOf(" ") > 50 ? cut.lastIndexOf(" ") : 110)}…`;
+}
+
+function joined(names: readonly string[]): string {
+  return names.length <= 2 ? names.join(" and ") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
+}
+
+/**
+ * **HOW EACH MEMBER VOTED, READ OFF THE PUBLISHER'S OWN ROLL CALLS.**
+ * (2026-09-25, the Ask latency repair.)
+ *
+ * Measured that day on the Pima County Board of Supervisors' September 22
+ * sitting (48 roll calls): the fast model writer took 2.8-3.7 s and, on one
+ * draw, wrote that a member "voted no" on an item the roll call records him
+ * as "Recused". A vote is the one fact a reader asks this question for, and
+ * the rows already say it exactly. So a "how did they vote" question is
+ * answered from the member-vote rows the route retrieved, in their order —
+ * the items the question names, then split votes, first — each member's
+ * value in the publisher's own word ("Aye", "Nay", "Recused", "Not
+ * Present"), never mapped and never totalled. Every row stays in the records
+ * the reader sees. Null when a row's text is not the shape
+ * `lib/ask/meeting-outcomes.ts` mints, or nothing fits the length contract.
+ */
+function composeVoteAnswer(input: SittingAnswerInput, chosen: ComposableSitting, meetingUrls: readonly string[]): { answer: string; citedUrls: string[] } | null {
+  const rows = input.records.filter((record) => record.kind === "MEETING_MEMBER_VOTE");
+  const items: { key: string; title: string; url: string | null; values: Map<string, string[]> }[] = [];
+  for (const row of rows) {
+    const match = MEMBER_VOTE_TEXT.exec(row.text);
+    if (!match) return null;
+    const key = row.id.slice(0, row.id.lastIndexOf("#"));
+    let item = items.find((entry) => entry.key === key);
+    if (!item) {
+      item = { key, title: match[1], url: row.sourceUrl ?? null, values: new Map() };
+      items.push(item);
+    }
+    item.values.set(match[3], [...(item.values.get(match[3]) ?? []), match[2]]);
+  }
+  if (items.length === 0) return null;
+  const sentences: string[] = [];
+  const cited = [...meetingUrls];
+  const fits = (next: string) => overLengthBudget(`${[...sentences, next].join(". ")}.`) === null;
+  const lead = `At its ${dayOf(chosen)} meeting, the ${proseName(input.subjectName)} recorded each member's vote on ${items.length} item${items.length === 1 ? "" : "s"}`;
+  if (!fits(lead)) return null;
+  sentences.push(lead);
+  for (const item of items) {
+    const votes = [...item.values].map(([value, names]) => `${joined(names)}: ${value}`).join("; ");
+    const sentence = `On "${titleQuote(item.title).replace(/"/g, "'")}": ${votes}`;
+    if (!fits(sentence)) break;
+    sentences.push(sentence);
+    if (item.url && !cited.includes(item.url)) cited.push(item.url);
+  }
+  if (sentences.length < 2) return null;
+  return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
 }
 
 function dayOf(sitting: ComposableSitting): string {
@@ -149,6 +220,17 @@ export function settleSittingComposition(
  * note for exactly when each applies.
  */
 export function composeSittingAnswer(input: SittingAnswerInput): { answer: string; citedUrls: string[] } | null {
+  if (input.shape === "MEETING_OUTCOME" && input.questionClass === "HOW_DID_THEY_VOTE" &&
+    input.records.some((record) => record.kind === "MEETING_MEMBER_VOTE")) {
+    const [chosen] = input.sittings;
+    if (!chosen || Date.parse(chosen.startsAt) >= input.now) return null;
+    if (input.sittings.some((sitting) => sitting.status === "CANCELED" || !zoneOf(sitting).known)) return null;
+    if (input.records.some((record) => record.kind === "MEETING" && record.meetingListingIdentity)) return null;
+    const meetings = input.records.filter((record) => record.kind === "MEETING");
+    if (!input.sittings.every((sitting) => meetings.some((record) => record.id === sitting.id))) return null;
+    const urls = [...new Set(input.sittings.flatMap((sitting) => meetings.find((record) => record.id === sitting.id)?.sourceUrl ?? []))];
+    return composeVoteAnswer(input, chosen, urls);
+  }
   const summarisable = input.records.some((record) => CONTENT_KINDS.has(record.kind));
   if (input.shape !== "MEETING_TIME" && summarisable) return null;
   /* An agenda or outcome question about a sitting is answered by the gap that

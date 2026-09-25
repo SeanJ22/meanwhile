@@ -26,6 +26,12 @@
  * production entry point reads no model from its options and has no field that
  * could carry one.
  *
+ * **Since 2026-09-25 the answer-writing rung has a second, declared rung**
+ * (`ASK_FAST_WRITER_MODEL` below): the three-second bar could not be met with
+ * the frontier model writing every answer. It is still one declaration per
+ * rung, compiled in and deployment-wide — never chosen per caller or per
+ * request — and the model that wrote each delivered answer is recorded.
+ *
  * ## The override, and the two conditions it is allowed under
  *
  * `WTP_ASK_MODEL` exists so an experiment can run without a deploy. It is
@@ -172,9 +178,55 @@ export const ASK_SYNTHESIS_MODEL = "claude-opus-5";
  */
 export const ASK_SYNTHESIS_EFFORT: AskEffort = "medium";
 
+/**
+ * Does this model take adaptive thinking and `output_config.effort`?
+ *
+ * Every model of the Claude 4.6 generation onward does. Haiku 4.5 does not:
+ * `thinking: {type: "adaptive"}` and `effort` are both a 400 there (the
+ * claude-api reference, 2026-09-25), so a request to it carries neither.
+ */
+export function askModelTakesEffort(model: string): boolean {
+  return !/^claude-haiku-4-5\b/.test(model);
+}
+
+/**
+ * **THE FAST WRITER — THE ANSWER-WRITING RUNG'S FIRST MODEL.** (2026-09-25,
+ * the Ask latency repair.)
+ *
+ * The owner's standing bar (docs/rulings.md §6) is three seconds from the
+ * question to a usable answer. Measured that day on production read-only
+ * evidence packs, `claude-opus-5` took 3.4-5.6 s to write an answer (first
+ * answer token 1.3-2.5 s); `claude-haiku-4-5` took 1.6-4.5 s (0.8-2.5 s) and
+ * `claude-sonnet-5` 3.2-6.6 s. Haiku 4.5 passed the grounding validator on
+ * every pack Opus 5 did.
+ *
+ * So the synthesis rung — and ONLY that rung — writes with this model first,
+ * and the constant above writes only when this answer fails validation or
+ * cannot be had, the reason recorded in the trace (`lib/ask/synthesize.ts`,
+ * `synthesizeWithLadder`). The validator is the same for both and fails closed
+ * exactly as before. Interpretation, the topic classifier and the refusal of
+ * off-subject questions stay on `ASK_SYNTHESIS_MODEL`: this changes who writes
+ * a grounded answer, never who decides what was asked.
+ *
+ * The model that wrote the delivered answer is recorded on the trace and the
+ * stored answer, as every Ask model always has been. Dateless alias, the id
+ * the fleet's cost and routing modules use (`claude-haiku-4-5-20251001` is the
+ * same model).
+ */
+export const ASK_FAST_WRITER_MODEL = "claude-haiku-4-5";
+
 /** The two override names. Declared once so the log and the docs agree. */
 export const ASK_MODEL_ENV = "WTP_ASK_MODEL";
 export const ASK_EFFORT_ENV = "WTP_ASK_EFFORT";
+/** `off` (or `none`) turns the fast writer off without a deploy; any other value names it. */
+export const ASK_FAST_WRITER_ENV = "WTP_ASK_FAST_MODEL";
+
+/** The fast writer this process will use, or null when it is switched off. */
+export function resolveAskFastWriter(env: AskModelEnv = process.env): string | null {
+  const raw = typeof env[ASK_FAST_WRITER_ENV] === "string" ? env[ASK_FAST_WRITER_ENV]!.trim() : "";
+  if (raw === "off" || raw === "none") return null;
+  return raw.length > 0 ? raw : ASK_FAST_WRITER_MODEL;
+}
 
 /**
  * The model this process will actually send.
@@ -234,9 +286,11 @@ export function askModelOverrides(env: AskModelEnv = process.env): {
  */
 export function askModelStartupLine(env: AskModelEnv = process.env): string {
   const o = askModelOverrides(env);
+  const fast = resolveAskFastWriter(env);
   const parts = [
     `ask · model ${resolveAskModel(env)}${o.model ? ` (overridden by ${ASK_MODEL_ENV})` : ""}`,
     `effort ${resolveAskEffort(env)}${o.effort ? ` (overridden by ${ASK_EFFORT_ENV})` : ""}`,
+    `fast writer ${fast ?? "off"}${fast !== ASK_FAST_WRITER_MODEL ? ` (overridden by ${ASK_FAST_WRITER_ENV})` : ""}`,
   ];
   if (o.effortRefused) {
     parts.push(

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 828,
-    "named": 7976,
+    "files": 839,
+    "named": 8087,
     "dynamic": 31
   },
   "files": {
@@ -407,6 +407,20 @@
         "the Sources panel's execution clock for a meeting source is the sitting-window schedule; other contracts keep their cadence",
         "the rule is worded from the schedule's own numbers",
         "the watched meeting partitions all carry the runner's sitting-window schedule, and the loader passes it on"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-narrow-reads.test.ts": {
+      "names": [
+        "Fleet · Now's decision cards are the snapshot's, in the snapshot read's words when there is none",
+        "Readiness and Done read the grids; Readiness starts every read before the policy row and each grid beside its counties",
+        "a state's grid is its snapshot without the ZIP rows, with the same outcome in every case",
+        "readNarrowed in Postgres narrows in the database, reads no value for a revision, and refuses an unsafe key",
+        "readNarrowed narrows alike in the file provider",
+        "readNarrowed narrows alike in the memory provider",
+        "the day tally runs beside the body snapshot, and the snapshot keeps the figures that must agree",
+        "the pulse from the narrowed rows is the pulse from the whole rows, field for field",
+        "the pulse reads the snapshot and the research state only narrowed, and only the fields it declares"
       ],
       "dynamic": 0
     },
@@ -1179,6 +1193,23 @@
       ],
       "dynamic": 1
     },
+    "tests/ask-gap-observation.test.ts": {
+      "names": [
+        "ADMIN: Work states how often readers were told each open Ask gap — per body and gap — and every number it draws carries its denominator",
+        "CREATES: a body readers were told we hold no meeting of gets its own work, owned by engineering, and it retires once a meeting is held",
+        "END TO END: a reader told Pima's September 22 agenda is not held is counted, the runner puts that gap first, the routine door promotes the record, and the same Ask answers from it",
+        "PRIVACY: an Ask stores nothing of the question, the reader, their place or their request — only the body, the gap, the day and the count",
+        "PRIVACY: the route hands the plan the stated gaps and the run class — no question, request, place or key reaches it",
+        "a store that fails never reaches the reader: the same answer is delivered and the failure is named",
+        "a synthetic run, an edge-only context, and an answer with no coded gap record nothing — by name",
+        "an observation is exactly a body, a gap code, its record class, a UTC day and a count — and the id says the same",
+        "repeated asks raise one row's count, the stored stamp is the day's start, and a lost race is retried rather than dropped",
+        "stated gaps: a coded sentence counts, a timeline's 'outcome not read' counts when an entry says it, and each body and code counts once",
+        "the Postgres sink sends one bounded atomic upsert per observation, and refuses a non-observation before any SQL is sent",
+        "the window: the last 30 days fold into asks and days per body and gap, and a malformed row is counted as refused, never as an ask"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-gap-work.test.ts": {
       "names": [
         "ADMIN: an Ask-gap obligation reads as an Ask gap, with the owner and the next step its own round names",
@@ -1328,6 +1359,35 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-latency-shape.test.ts": {
+      "names": [
+        "ROUTE: 'how did they vote' is answered from the publisher's roll calls — no model call, every value in its own word",
+        "ROUTE: a large outcome sitting sends the writer a bounded selection; the reader's records and counts stay whole",
+        "ROUTE: a meeting-time question is read in code and answered from the sitting — no model call at all",
+        "ROUTE: a named-subject question is read in code too — one writing call, no reading call",
+        "ROUTE: a settled question whose records need writing makes ONE call — the fast writer, no reading call, no thinking",
+        "ROUTE: any other question reaches the model exactly as before — one reading, then one answer that depends on it",
+        "ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded",
+        "ROUTE: the same question over unchanged records is served from the cache, with no new call",
+        "ROUTE: when every writer fails validation the answer still fails closed — an invented citation or an invented link",
+        "a citation is a source number, mapped back to the pack's own URL; an unknown number never passes",
+        "a composed answer ships only on a passing verdict, against the SAME validator",
+        "a date-only posting is stated as its date, never as the midnight it is stored at",
+        "a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap",
+        "composition steps aside whenever there is something to summarise or a fact it cannot state",
+        "gap wording is kept; only a machine timestamp is spelled out in the body's zone",
+        "named-subject shapes read the subject kind they ask about, with the intent the models returned, and no tense",
+        "the canonical shapes are read, and anything with more in it is not",
+        "the declared ladder: the fast writer first (no thinking, no effort), then the frontier; one switch turns the fast writer off",
+        "the ladder stops at once on a structural refusal — the next writer would meet the same one",
+        "the lexical reading binds exactly what every binder binds, with the tense the model returned",
+        "the lexical reading refuses what it cannot settle, so the model reads it as before",
+        "the synthesis request numbers the sources, asks for numbers, and still generates the answer FIRST",
+        "the writer is sent every record but member-vote rows past the bound, cut by WHOLE roll call; the proof sees exactly that",
+        "with no sitting, the named gap is the whole answer"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-length-fallback.test.ts": {
       "names": [
         "R13: a 726-character model answer that fails only on length is not reported as a rejection",
@@ -1407,11 +1467,11 @@
     },
     "tests/ask-model-economics.test.ts": {
       "names": [
-        "H2: ONE MODEL FOR ALL ASK TRAFFIC — every Ask call site names the same model",
         "H2: ONE question not holding blocks the switch, however many held",
         "H2: a comparison that never ran is NOT_MEASURED, and NOT_MEASURED is never a switch",
         "H2: an empty challenger set is NOT_MEASURED, never a vacuous SWITCH",
         "H2: both candidates' rates carry a date and a source",
+        "H2: every Ask call site reads its model from the ONE declaring module — the frontier model and, since 2026-09-25, the fast writer",
         "H2: every question holding is the ONLY path to a switch",
         "H2: the incumbent is read from the code, never from a constant that can drift",
         "RULING 230 seeded: BOTH ARMS FAILING one question yields HOLD, never SWITCH",
@@ -1453,6 +1513,13 @@
         "H1: the two payloads are a PARTITION of the pre-caching payload",
         "H1: usage is read from the API's own usage block, absent fields as zero",
         "PC-5 (2026-09-06): the request carries TWO breakpoints — the system block and the civic context — and the date and the question sit after both"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-reader-edge.test.ts": {
+      "names": [
+        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left",
+        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads"
       ],
       "dynamic": 0
     },
@@ -1853,9 +1920,11 @@
     "tests/ballot-reader-edge.test.ts": {
       "names": [
         "React renders the page's async components outside the page's context: they see its edge only when handed it",
-        "a cold /ballot?zip=85701 reads the registry, the federal directory and the state legislators from the edge, in the page and in every card",
+        "a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot edge reads its ballot and the General Court roster from it, and nothing from the database",
+        "a cold /ballot?zip=85701 with the whole ballot edge makes no database read at all, in the page or in any card",
         "one promoted version is one authority key, whether the edge primed it (BOOTSTRAP) or the database read it (PROMOTED)",
-        "with no edge published, the same render reads those families from the database: the fallback stays"
+        "with no edge published, the same render reads those families from the database: the fallback stays",
+        "with only the map's families on the edge (R30), a cold /ballot?zip=85701 reads exactly the six proven pointers this change moves, none from a card"
       ],
       "dynamic": 0
     },
@@ -3026,6 +3095,7 @@
       "names": [
         "a JOB failure detail says whose failure it is, once",
         "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
+        "a calendar whose every sitting falls outside the window is a counted clip, never our zero-row JOB (2026-09-25)",
         "a challenge served with HTTP 200 is the same wall",
         "a child rejected by a host that no longer resolves keeps the transport's code",
         "a real calendar we extract nothing from is still OUR zero-row JOB",
@@ -3209,6 +3279,7 @@
         "createPgRepositories refuses an empty connection string",
         "schema v10 places live method candidates in every canonical provider",
         "schema v12 declares the meetings-discovery attempt log, and every provider bundle carries it",
+        "schema v13 declares the Ask-gap observations aggregate; every provider bundle adds a count, and Postgres's atomic add agrees with the repository's",
         "schema v5 declares the four nightly-door logs, and every provider bundle carries them",
         "schema v9 declares the Action Gateway's three tables, and every provider bundle carries them",
         "the advisory lock key is STABLE — two machines computing it must agree",
@@ -3705,6 +3776,14 @@
         "each mutable curated Reader family promotes and reads from its own canonical pointer",
         "reference-publisher evidence is confined to venue coordinates",
         "store failure does not reopen any curated tracked first seed"
+      ],
+      "dynamic": 0
+    },
+    "tests/curated-reader-edge-selector.test.ts": {
+      "names": [
+        "/ballot's navigation links read from the reader edge in production, with no database",
+        "an edge-primed campaign-site projection names its campaign links in production",
+        "an edge-primed comment-access projection answers its rules in production"
       ],
       "dynamic": 0
     },
@@ -4877,6 +4956,14 @@
       ],
       "dynamic": 0
     },
+    "tests/funding-reader-edge.test.ts": {
+      "names": [
+        "as production runs it (NODE_ENV=production, no test fixtures), the same cold requests read nothing from the database and answer PROMOTED money",
+        "with FEC, state money and the AZ ballot on the edge, a cold /api/funding for every pilot target makes no database read, and answers the same money",
+        "with only the registry and the federal directory on the edge, a cold /api/funding reads FEC, state money and the AZ ballot from the database"
+      ],
+      "dynamic": 0
+    },
     "tests/funding-source-isolation.test.ts": {
       "names": [
         "a failed federal holding cannot erase an independently held state answer",
@@ -5409,15 +5496,21 @@
         "ICAL: line folding is unfolded before the address is read",
         "ICAL: the Wilmot fixture reaches Wilmot's rows and only those",
         "ICAL: the fixture parses to the events it actually contains",
-        "ICAL: the wired boards produce meetings, and the counts are stated"
+        "ICAL: the wired boards produce meetings, and the counts are stated",
+        "the Village Water District's commissioners sit at the treatment plant, never pinned at the town hall",
+        "the river committee's every-other-month series is expanded: another body's split series is no evidence about this one"
       ],
       "dynamic": 0
     },
     "tests/identified-ua-wall.test.ts": {
       "names": [
+        "a Cloudflare-style host that challenges Node and refuses the old rung-4 set is read with our own name",
         "a host that refuses our name is walked at rung 3b, not recorded as a wall",
+        "a set refused with a challenge page is set aside and the next set is asked",
+        "every set refused is a WALL on rung 4, and a 404 is an answer that stops the walk",
         "identificationHeaders names the project without a User-Agent at all",
         "rung 3b keeps the identification and moves it out of the User-Agent",
+        "rung 4's header sets: our own name with X-Purpose first, the old set second, the clean browser set last",
         "the identification still travels in the User-Agent on the early rungs"
       ],
       "dynamic": 0
@@ -6336,6 +6429,14 @@
       ],
       "dynamic": 0
     },
+    "tests/meeting-fresh-checks.test.ts": {
+      "names": [
+        "controlled clock, the composing reader: a receipt-only period advances Last checked and the re-read listings; a failed check does not; changed information publishes as before",
+        "controlled clock, the prepared serving copy and the edge: a receipt republishes the manifest alone, reads no row, and every reader path says when it was checked",
+        "the check rule: only a confirmation of the pointed version, of a version that read a source, and never a carried row"
+      ],
+      "dynamic": 0
+    },
     "tests/meeting-list-attribution.test.ts": {
       "names": [
         "F01 3.1: every meetings list renders the three groups, not a raw array",
@@ -6414,6 +6515,17 @@
         "production membership and scopes are one-to-one and the global disposition is absent",
         "the batched Reader bounds database calls and isolates a corrupt partition",
         "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-refresh-schedule-clock.test.ts": {
+      "names": [
+        "a failed read never waits longer than the schedule it failed: a published derived family retries within the hour while hourly",
+        "a pass starts the read owed soonest first; tasks without a deadline keep their registry place at the front",
+        "controlled clock through the real store: a Pima-shaped body read across cold, an upcoming meeting, its conclusion and cooling, with changed versions, unchanged confirmations, failed reads and a dead child",
+        "controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52): prioritising hourly bodies never pushes any body past 12 hours",
+        "controlled clock, whole registry: every sitting-window task on its real lane shares the four-child pool, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00",
+        "rehearsal of the accelerated production test: a due request brings a cold partition forward, the ordinary pass reads it, and the next due is the normal rule's"
       ],
       "dynamic": 0
     },
@@ -6587,7 +6699,9 @@
         "Ask's topic timeline joins a Mesa decision to the topic from the minutes and composes the answer without a model",
         "Mesa's minutes are one routine contract on the standing clock, following the council's InSite sittings",
         "a failed minutes read is a held attempt that leaves the last good pointer live; a failed calendar read too",
+        "a held failed extraction's bytes are read again after a week, whatever the check would say",
         "a routine pass reads the minutes the portal links, records the rest as not yet published, and promotes",
+        "minutes whose extraction fails are held as a failed extraction and not downloaded again until they change (2026-09-25)",
         "the Reader combines Pima's and Mesa's pointers, each tenant's records and provenance intact, and Pima's answers unchanged",
         "the rolling window ends today in Mesa and reaches back 120 days; one grid range covers it unless it crosses a year"
       ],
@@ -6595,16 +6709,28 @@
     },
     "tests/mesa-minutes-outcomes.test.ts": {
       "names": [
+        "a continuation that is not a motion's own words stays an unread passage, never a guessed motion",
+        "a document read whose extraction failed is held with the identity of the bytes it failed on",
+        "a failure over verified minutes keeps the verified reading and remembers the failed document beside it; a success clears it",
+        "a held failed extraction is read again at once when the parser changes, when its link changes, and after a week",
+        "a held sitting whose note names unread passages is read again once a newer parser is in force, and never again under the same one",
         "a later sitting's minutes approving these minutes marks them APPROVED, with its own words",
+        "a motion written as an infinitive is read: the 2026-08-13 study session's direction to the City Attorney",
+        "a motion written without 'that' is read: the 2026-06-04 study session acknowledges its boards' minutes",
+        "a reader asking what the 2026-05-28 session decided is told we could not read it, never that nothing was decided",
         "a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'",
         "action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken",
+        "minutes that record no motion and do not say no action was taken stay a failed extraction: the 2026-05-28 strategic planning session",
         "result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed",
         "the 2026-06-01 minutes: one motion adopting five resolutions and an ordinance reaches all six items",
         "the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found",
         "the 2026-07-20 council minutes, a signed scan read through its OCR text layer (real PDF bytes)",
         "the 2026-07-27 council minutes: five motions, two split votes, the consent agenda and the items pulled from it",
+        "the Mesa candidate admits a held failed extraction, names it, and still refuses a failure with no document identity",
         "the concluded sittings a pass considers: the wired bodies, in the window, already held, one row per portal id",
         "the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host",
+        "the next pass asks the portal first: an unchanged document is not downloaded, a changed one is read at once",
+        "the parser's revision is pinned to its source: an edit to the minutes parser has to decide whether held readings are re-read",
         "which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link"
       ],
       "dynamic": 0
@@ -8204,6 +8330,15 @@
       ],
       "dynamic": 0
     },
+    "tests/promoted-edge.test.ts": {
+      "names": [
+        "an edge copy the database proof would refuse is refused as PROMOTION_PROOF_INVALID, never served",
+        "published, fetched and entered: a reader request reads the family from the edge; an edge-only context refuses a pointer the edge lacks without reading",
+        "the edge copy of a proven pointer reads exactly as the database read of it, through the family's own Reader",
+        "the runner carries a family whose pointers have not moved, re-reads it when a confirmation lands, and leaves out one its Reader refuses"
+      ],
+      "dynamic": 0
+    },
     "tests/promotion-pipeline.test.ts": {
       "names": [
         "APPROVED_FOR_PROMOTION carries the full chain by record id and refuses a chain the log does not hold",
@@ -8481,7 +8616,8 @@
       "names": [
         "R28: an unchanged pass carries the served edge forward, exactly where the publish would answer CURRENT",
         "R28: every condition that could change the edge reads the prepared row and publishes",
-        "R28: the aggregate child decides the carry before it reads the prepared row, and reads it only to publish"
+        "R28: the aggregate child decides the carry before it reads the prepared row, and reads it only to publish",
+        "a family left out this pass that the manifest does not serve either changes nothing: the pass still carries, and the publish agrees"
       ],
       "dynamic": 0
     },
@@ -9412,6 +9548,15 @@
       ],
       "dynamic": 0
     },
+    "tests/research-transport.test.ts": {
+      "names": [
+        "a 403 is asked once more through curl, with the same User-Agent and our purpose and contact, never following a redirect",
+        "a host that refuses the second client too is recorded as refusing, and a curl that cannot run leaves the first answer",
+        "an answered read is returned as it came, and curl is never run",
+        "curl's included headers are read for the status, the type and a redirect's target"
+      ],
+      "dynamic": 0
+    },
     "tests/reset-registry.test.ts": {
       "names": [
         "every UiState field is either a registered control or declared non-control",
@@ -9788,6 +9933,18 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-due-request.test.ts": {
+      "names": [
+        "a due request names one registered meeting partition with a sitting window, due within the hour, gone within two",
+        "a request only brings a read forward: on its lane it goes by deadline, never ahead of a read owed sooner",
+        "a stored request is durable input: malformed rows are named and ignored, never trusted",
+        "controlled clock: a request brings a cold partition's read forward; the partition's own next read spends it and the normal rule owns the next due",
+        "one open request at a time on the owner's config row; withdrawn and expired ones stay as inert history",
+        "the owner door records a request and runs nothing: no child command, no --force, no --only",
+        "the runner honours a request only in its ordinary pass: the same due check, frontier, launch order and outcome"
+      ],
+      "dynamic": 0
+    },
     "tests/routine-observability-bounded.test.ts": {
       "names": [
         "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
@@ -9903,7 +10060,13 @@
     },
     "tests/schedulepage-chandler.test.ts": {
       "names": [
+        "DESTINY: a month the list says is empty is read and empty; a page that is not the list is unread, never empty",
+        "DESTINY: the September list is seven Council sittings, each with its agenda page, and the results and video where posted",
+        "DESTINY: the months read run from the window's start to 35 days ahead, across a year's end",
+        "FETCH with DESTINY: one list request per month in reach, and a refused month keeps the schedule",
         "FETCH: one day file per scheduled date inside the window, and a refused day keeps its sitting date-only",
+        "NORMALIZE with DESTINY: a date-only sitting joins only a date the list gives one row; four rows on a date join none",
+        "NORMALIZE with DESTINY: each dated sitting carries its own agenda, results and video; a month read with nothing marks the slot empty",
         "NORMALIZE: a scheduled date the day file answers becomes its Council sittings with time and place; one it does not stays date-only",
         "THE DAY FILE: each Council sitting the city posted for a scheduled date, with its own start and street address; the city's other events are not the Council's",
         "no time is claimed: the table states none, and the page's 'usually' sentence is not the section's",
@@ -9930,10 +10093,12 @@
         "documents join by the date the body wrote in the link text",
         "event-tip: a band concert is not a meeting of the Planning Board",
         "event-tip: a board's own sittings come out of a town-wide calendar",
+        "event-tip: a sitting in the Syd Crook Room or at the Fire Department is its own room, never the hall",
         "event-tip: an empty titleMatch matches NOTHING rather than everything",
         "event-tip: fetch asks the calendar for every month in the window it was given, behind and ahead",
         "event-tip: four New London boards are wired, each with its own match",
         "event-tip: the time comes off the event's own line",
+        "event-tip: titleMatch is a list of the body's spellings, and apostrophes do not decide a match (2026-09-25)",
         "monthsAhead stays a floor when the window asked for is shorter than it",
         "normalize windows the year, times it from the page, and cites its source",
         "the Conservation Commission's two shapes union by date",
@@ -11281,6 +11446,7 @@
         "clerksboards: a Meeting Location with no reviewed row publishes every instance in the Clerk's words",
         "diligent: a portal row naming an unreviewed room, or none, is published with the gap the portal states",
         "ical: a LOCATION with no reviewed row, a blank one, and an online one are all published",
+        "ical: a standing venue stands in only for a LOCATION that names no place, never for another building (2026-09-25)",
         "ical: with a standing venue that has no reviewed row, the feed's words still render, and a blank keeps our own gap",
         "iqm2: an unreviewed room, a blank tooltip venue and a virtual sitting are all published",
         "onbase: an unmatched meeting name still drops, counted — the name key is its only body filter",

@@ -28,7 +28,8 @@ import {
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { decideExecutor, dispatchOne, type DeclaredExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
-import { scheduleObligation, isScheduled, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import {
   cacheTtlOrderProblems,
@@ -105,12 +106,6 @@ const OBLIGATION: FreshnessObligation = {
   observedChangeRateHours: null,
   lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString(),
 };
-
-function scheduled(o: FreshnessObligation = OBLIGATION): ScheduledObligation {
-  const row = scheduleObligation(o, NOW_MS);
-  if (!isScheduled(row)) throw new Error("fixture obligation did not schedule");
-  return row;
-}
 
 async function registered(repos = createMemoryRepositories(), o: FreshnessObligation = OBLIGATION) {
   const item = createWorkItem({
@@ -361,7 +356,7 @@ test("2. SEEDED: a model that called no tool and wrote prose is REFUSED", async 
   ]);
   const { exec, results } = executorWith(transport, fakeToolkit());
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -428,7 +423,7 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
   ]);
   const { exec, results } = executorWith(transport, toolkit, { bound: { maxTurns: 3 } });
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -462,7 +457,7 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
   ]);
   const { exec, results } = executorWith(transport, toolkit, { bound: { maxToolCalls: 2 } });
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -517,7 +512,7 @@ test("EARLY STOP: a walk that stalls past minRungs finishes early instead of run
   ) as ModelTransport & { requests: ModelRequest[] };
   const { exec, results } = executorWith(transport, toolkit, { minRungs: 2, bound: { maxTurns: 20, maxToolCalls: 20 } });
   await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -654,7 +649,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   ]);
   const { exec, results } = executorWith(transport, toolkit);
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -750,7 +745,7 @@ test("9. SEEDED (measured live): an artifact the log refuses does not leave the 
   ]);
   const { exec } = executorWith(transport, colliding);
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -776,7 +771,7 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   };
   const { exec, results } = executorWith(overloaded, fakeToolkit());
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -804,7 +799,7 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   };
   const second = await registered();
   const { exec: exec2, results: results2 } = executorWith(failsSecond, fakeToolkit());
-  await dispatchOne(second.repos, { obligation: scheduled(), routeTaskId: second.task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec2 });
+  await dispatchOne(second.repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: second.task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec2 });
   assert.equal(results2[0].usage.turns, 1);
   assert.ok((results2[0].usd ?? 0) > 0, "the one served turn is the charge");
 });
@@ -831,7 +826,7 @@ const candidateWith = (over: Record<string, unknown> = {}) => ({
 
 async function dispatchScout(exec: DeclaredExecutor) {
   const { repos, task } = await registered();
-  const result = await dispatchOne(repos, { obligation: scheduled(), routeTaskId: task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+  const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
   return { repos, task, result };
 }
 

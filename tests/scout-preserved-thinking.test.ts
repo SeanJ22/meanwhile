@@ -25,7 +25,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { isScheduled, scheduleObligation, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { RESEARCH_BOUNDS, type ScoutBound } from "../lib/control-plane/scheduler/research-policy.ts";
 import type { ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import {
@@ -63,12 +64,6 @@ const OBLIGATION: FreshnessObligation = {
   observedChangeRateHours: null,
   lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString(),
 };
-
-function scheduled(): ScheduledObligation {
-  const row = scheduleObligation(OBLIGATION, NOW_MS);
-  if (!isScheduled(row)) throw new Error("fixture obligation did not schedule");
-  return row;
-}
 
 /** Every fetch vaults one artifact and hands back a large representation, so the context bound is exercised. */
 function bigPageToolkit(): ScoutToolkit {
@@ -179,7 +174,7 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
     },
   });
   const outcome = await exec.run({
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: "rt-pt",
     workItemId: "wi-pt",
     attemptId: "at-pt",

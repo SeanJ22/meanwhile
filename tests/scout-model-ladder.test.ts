@@ -40,7 +40,8 @@ import {
   modelCeilingViolation,
   type ModelEscalationReason,
 } from "../lib/control-plane/scheduler/model-routing.ts";
-import { isScheduled, scheduleObligation, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { RESEARCH_BOUNDS, SCOUT_MODEL, type ScoutBound } from "../lib/control-plane/scheduler/research-policy.ts";
 import type { InheritedEvidence, ScoutToolContext, ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import {
@@ -78,12 +79,6 @@ const OBLIGATION: FreshnessObligation = {
   observedChangeRateHours: null,
   lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString(),
 };
-
-function scheduled(): ScheduledObligation {
-  const row = scheduleObligation(OBLIGATION, NOW_MS);
-  if (!isScheduled(row)) throw new Error("fixture obligation did not schedule");
-  return row;
-}
 
 /** A toolkit whose fetch_public / read_permission vault one artifact per call; it enforces the Attempt's tool-call bound like the real one. */
 function fakeToolkit(bound: ScoutBound): ScoutToolkit {
@@ -225,7 +220,7 @@ async function runLadder(input: {
     },
   });
   const outcome = await exec.run({
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: "rt-ladder",
     workItemId: "wi-ladder",
     attemptId: "at-ladder",
@@ -537,7 +532,7 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
     contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
     now: () => NOW,
   });
-  await exec.run({ obligation: scheduled(), routeTaskId: "rt", workItemId: "wi", attemptId: "at", holder: "h", executor: "BOUNDED_MODEL_WORKER", bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 } } as never);
+  await exec.run({ obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: "rt", workItemId: "wi", attemptId: "at", holder: "h", executor: "BOUNDED_MODEL_WORKER", bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 } } as never);
   assert.equal(captured.length, 1, "a null-status transport failure is not a capability error: one request, no escalation");
   assert.equal(captured[0].model, plan.request.model, "the pre-warm and the loop start on the same model");
   assert.equal(JSON.stringify(captured[0].tools), JSON.stringify(plan.request.tools), "byte-identical tools");

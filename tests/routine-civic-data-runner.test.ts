@@ -13,6 +13,8 @@ import {
   ROUTINE_SOURCE_TASKS,
   readRoutineTaskClocks,
   routineFailureDomainCount,
+  routineFrontierPassBound,
+  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineSupervisorCycleId,
   routineTaskDue,
   routineTaskFromContract,
@@ -888,8 +890,12 @@ test("a killed Reader child is an exact delivery repair fault and cannot mutate 
   assert.deepEqual(await store.events(candidateId), before.events);
 });
 
-test("the pilot outer bound contains the one-per-provider frontier, not a failed provider tail", () => {
-  const admittedCommands = routineFailureDomainCount();
+test("the pilot outer bound contains the frontier (one a pass, two on a meeting lane), not a failed provider tail", () => {
+  const passBound = routineFrontierPassBound();
+  const admittedCommands = passBound.commandCount;
+  const largestDomain = passBound.largestFailureDomainSize;
+  assert.equal(largestDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+  assert.ok(admittedCommands > routineFailureDomainCount(), "meeting lanes take a second read a pass");
   const readerDomains = routineReaderRepairDomains();
   const bounds = {
     neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
@@ -906,19 +912,18 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
   } as const;
   const outerTimeoutMs = routineRunnerOuterTimeoutMs(
     admittedCommands,
-    ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+    largestDomain,
     bounds,
   );
   const boundedPassMs = routineChildPassWorstCaseMs(
     admittedCommands,
     ROUTINE_CHILD_TIMEOUT_MS,
     ROUTINE_CHILD_CONCURRENCY,
-    ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+    largestDomain,
   );
-  assert.equal(
-    boundedPassMs,
-    Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS,
-  );
+  // A meeting lane's two reads run one after the other; the pass bound covers that chain.
+  assert.ok(boundedPassMs >= Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS);
+  assert.ok(boundedPassMs >= largestDomain * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(admittedCommands < ROUTINE_SOURCE_TASKS.length, "shared-provider tails are outside one pass");
   assert.equal(ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, 1);
   assert.equal(ROUTINE_DATA_ADMISSION_MS, 5 * 60_000);
@@ -926,7 +931,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
     routineRunnerOuterTimeoutCompatible(
       outerTimeoutMs,
       admittedCommands,
-      ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+      largestDomain,
       bounds,
     ),
     true,
@@ -935,7 +940,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
     outerTimeoutMs,
     routineRunnerBoundedWorkMs(
       admittedCommands,
-      ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+      largestDomain,
       bounds,
     ) + ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS +
       ROUTINE_RUNNER_OUTER_GRACE_MS,
@@ -952,7 +957,7 @@ test("the pilot outer bound contains the one-per-provider frontier, not a failed
   assert.match(runner, /discardOutputAfterSettlement:\s*true/);
   assert.doesNotMatch(runner, /waveStart|pendingWave/);
   assert.doesNotMatch(runner, /spawnSync/);
-  assert.match(pilot, /ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\([\s\S]*routineFailureDomainCount\(\)[\s\S]*ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS[\s\S]*settlementRequestsPerCommand:[\s\S]*clockTaskCount:[\s\S]*readerSingleDomains:[\s\S]*readerMeetingDomains:/);
+  assert.match(pilot, /ROUTINE_PASS_BOUND = routineFrontierPassBound\(\);[\s\S]*ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\([\s\S]*ROUTINE_PASS_BOUND\.commandCount[\s\S]*ROUTINE_PASS_BOUND\.largestFailureDomainSize[\s\S]*settlementRequestsPerCommand:[\s\S]*clockTaskCount:[\s\S]*readerSingleDomains:[\s\S]*readerMeetingDomains:/);
   assert.match(pilot, /ROUTINE_DATA_ADMISSION_MS,[\s\S]*from "\.\.\/lib\/civic-data\/runner\.ts"/);
   assert.match(pilot, /id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS/);
   assert.match(pilot, /timeoutMs:\s*ROUTINE_DATA_TIMEOUT_MS/);

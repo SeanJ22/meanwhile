@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 783,
-    "named": 7638,
+    "named": 7645,
     "dynamic": 30
   },
   "files": {
@@ -6085,7 +6085,9 @@
     },
     "tests/meeting-sitting-window.test.ts": {
       "names": [
+        "C6: a body is hourly for a meeting in the next seven days or one that concluded in the previous seven",
         "Pima outcomes follow both Board partitions; an unreadable partition never cools them",
+        "R20: a meeting partition never published is retried twice daily, not hourly; a published one keeps its retry",
         "a meeting partition is re-read hourly when hot and twice daily otherwise, never drifting past the hour",
         "a sitting within seven days on either side makes a body hot, to the millisecond",
         "no other data family's schedule is changed: only meeting partitions and meeting outcomes carry a sitting window",
@@ -9086,6 +9088,10 @@
     },
     "tests/routine-civic-data-frontier.test.ts": {
       "names": [
+        "C6: 30 days on a lane shaped like Tucson's, with late passes and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00",
+        "C6: a meeting lane is read earliest deadline first, up to two a pass; every other lane keeps one least-recently-considered",
+        "C6: no production lane mixes sitting-window tasks with any other task, so deadline order and two slots touch meeting lanes only",
+        "C6: the runner hands the frontier each due task's deadline from the same pass's clocks and sitting signals",
         "a corrupt supervisor row is explicit and cannot erase valid fairness clocks",
         "a malformed exact receipt cannot suppress a valid prior supervisor attempt",
         "an all-unavailable provider rotates deterministically across frozen admission slots",
@@ -9154,6 +9160,7 @@
         "PDC-13: the exact 30d window does not truncate the full meeting-partition volume",
         "PDC-13: the pure source-state classifier refuses skipped, revived, and repeated dispositions",
         "PDC-13: tied latest attempts cannot be ordered by UUID or database return order",
+        "R20: Admin shows the retry the runner admits on; a meeting partition never published is next due at the base cadence",
         "a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion"
       ],
       "dynamic": 0
@@ -9253,7 +9260,7 @@
         "the durable receipt check proves exactly one pointer through the full proof and reads nothing else whole",
         "the fixed pool caps host load and drains queued siblings after timeout and launcher failure",
         "the pilot awaits independently bounded routine and intake children without overlapping ticks",
-        "the pilot outer bound contains the one-per-provider frontier, not a failed provider tail",
+        "the pilot outer bound contains the frontier (one a pass, two on a meeting lane), not a failed provider tail",
         "the pilot surfaces Reader failures without converting them into source or software failures",
         "the real child boundary enforces both timeout and per-stream output limits",
         "the routine runner derives its clock from durable candidate history",

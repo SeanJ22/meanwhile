@@ -10,7 +10,14 @@ import {
 } from "../lib/civic-data/contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, meetingPartitionId, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
 import {
+  SITTING_CONCLUSION_BOUND_MS,
+  SITTING_WINDOW_ADMISSION_LEAD_MS,
+  SITTING_WINDOW_BASE_ADMISSION_LEAD_MS,
+  sittingWindowHotByConclusion,
+} from "../lib/civic-data/sitting-window-admission.ts";
+import {
   ROUTINE_SOURCE_TASKS,
+  routineTaskDeadlineMs,
   routineTaskDue,
   sittingWindowSignals,
   type RoutineSourceTask,
@@ -28,6 +35,8 @@ import {
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
 const PASS = ROUTINE_DATA_ADMISSION_MS;
+const LEAD = SITTING_WINDOW_ADMISSION_LEAD_MS;
+const BASE_LEAD = SITTING_WINDOW_BASE_ADMISSION_LEAD_MS;
 const PIMA = "ocd-division/country:us/state:az/county:pima#governing";
 const PIMA_LEGISTAR = meetingPartitionId("legistar", PIMA);
 const PIMA_INSITE = meetingPartitionId("legistar-insite", PIMA);
@@ -102,13 +111,35 @@ test("a meeting partition is re-read hourly when hot and twice daily otherwise, 
   const at = "2026-09-24T09:00:00.000Z";
   const base = Date.parse(at);
   const clock = succeededAt(at);
-  assert.equal(routineTaskDue(partition, clock, base + HOUR - PASS - 1, true), false);
-  assert.equal(routineTaskDue(partition, clock, base + HOUR - PASS, true), true);
-  assert.equal(routineTaskDue(partition, clock, base + 12 * HOUR - PASS - 1, false), false);
-  assert.equal(routineTaskDue(partition, clock, base + 12 * HOUR - PASS, false), true);
-  assert.equal(routineTaskDue(partition, clock, base + HOUR - PASS, undefined), true, "unknown reads as hot");
+  // The next read is owed exactly an hour (hot) or twelve hours after the last.
+  // An hourly read is admitted 15 minutes before it is owed, so it lands inside
+  // the hour; a twice-daily read 2 hours before, so it fills free slots.
+  assert.equal(LEAD, 15 * 60_000);
+  assert.equal(BASE_LEAD, 2 * HOUR);
+  assert.equal(routineTaskDeadlineMs(partition, clock, true), base + HOUR);
+  assert.equal(routineTaskDeadlineMs(partition, clock, false), base + 12 * HOUR);
+  assert.equal(routineTaskDue(partition, clock, base + HOUR - LEAD - 1, true), false);
+  assert.equal(routineTaskDue(partition, clock, base + HOUR - LEAD, true), true);
+  assert.equal(routineTaskDue(partition, clock, base + 12 * HOUR - BASE_LEAD - 1, false), false);
+  assert.equal(routineTaskDue(partition, clock, base + 12 * HOUR - BASE_LEAD, false), true);
+  assert.equal(routineTaskDue(partition, clock, base + HOUR - LEAD, undefined), true, "unknown reads as hot");
+  // The registry's own due instant is unchanged; the runner no longer admits on it.
   assert.equal(sittingWindowDueAtMs(MEETING_SITTING_WINDOW, base, true), base + HOUR - PASS);
   assert.equal(sittingWindowDueAtMs(MEETING_SITTING_WINDOW, base, false), base + 12 * HOUR - PASS);
+});
+
+test("C6: a body is hourly for a meeting in the next seven days or one that concluded in the previous seven", () => {
+  const now = Date.parse("2026-09-25T06:00:00.000Z");
+  const hot = (startMs: number) => sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [[new Date(startMs).toISOString()]], now);
+  assert.equal(SITTING_CONCLUSION_BOUND_MS, DAY, "a sitting without an end time counts as concluded up to a day after it starts");
+  assert.equal(hot(now + 7 * DAY), true, "starts seven days ahead");
+  assert.equal(hot(now + 7 * DAY + 1), false);
+  assert.equal(hot(now - 7 * DAY), true, "started seven days ago");
+  assert.equal(hot(now - 7 * DAY - 23 * HOUR), true, "started almost eight days ago, so it may have concluded within seven");
+  assert.equal(hot(now - 8 * DAY), true);
+  assert.equal(hot(now - 8 * DAY - 1), false, "concluded more than seven days ago by the bound");
+  assert.equal(sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [undefined], now), undefined, "an unreadable list stays unknown");
+  assert.equal(sittingWindowHotByConclusion(MEETING_SITTING_WINDOW, [[]], now), false);
 });
 
 test("the success is read in the attempt clock's own units, so a success is never mistaken for a failure", () => {
@@ -121,13 +152,15 @@ test("the success is read in the attempt clock's own units, so a success is neve
   const clock = succeededAt(at);
   assert.ok(Date.parse(clock.lastSucceededAt!) < Date.parse(clock.lastAttemptedAt!));
   assert.equal(routineTaskDue(partition, clock, base + HOUR, false), false, "base: not re-read at the retry hour");
-  // A genuinely failed later attempt keeps its one-hour retry exactly.
+  // A genuinely failed later attempt owes its retry an hour later, admitted 15 minutes early.
   const failed: RoutineTaskClock = { ...clock, lastAttemptedAt: "2026-09-24T10:00:00.000Z" };
-  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T11:00:00.000Z") - 1, false), false);
-  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T11:00:00.000Z"), false), true);
+  assert.equal(routineTaskDeadlineMs(partition, failed, false), Date.parse("2026-09-24T11:00:00.000Z"));
+  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T10:45:00.000Z") - 1, false), false);
+  assert.equal(routineTaskDue(partition, failed, Date.parse("2026-09-24T10:45:00.000Z"), false), true);
   // A published source with no proven success retries on its attempt; a never-run one is due at once.
-  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR - 1, false), false);
-  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR, false), true);
+  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR - LEAD - 1, false), false);
+  assert.equal(routineTaskDue(partition, { lastAttemptedAt: at, sittingStarts: [] }, base + HOUR - LEAD, false), true);
+  assert.equal(routineTaskDeadlineMs(partition, undefined, false), Number.NEGATIVE_INFINITY, "never run: owed at once");
   assert.equal(routineTaskDue(partition, undefined, base, false), true);
   assert.equal(routineTaskDue(partition, {}, base, false), true);
 });
@@ -139,32 +172,34 @@ test("R20: a meeting partition never published is retried twice daily, not hourl
   // The store reports no sitting list for a scope it holds no promotion for.
   const never: RoutineTaskClock = { lastAttemptedAt: at };
   for (const hot of [true, false, undefined]) {
+    assert.equal(routineTaskDeadlineMs(partition, never, hot), base + 12 * HOUR);
     assert.equal(routineTaskDue(partition, never, base + HOUR, hot), false, "not at the failure hour");
-    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - 1, hot), false);
-    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR, hot), true, "at the base cadence");
+    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - BASE_LEAD - 1, hot), false);
+    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - BASE_LEAD, hot), true, "admitted 2 hours before twelve hours");
   }
   // A promoted scope reports its sitting list, even an empty one, so a read
   // that has not proven a success keeps the one-hour retry.
   for (const sittingStarts of [[], [at]]) {
     const published: RoutineTaskClock = { lastAttemptedAt: at, sittingStarts };
-    assert.equal(routineTaskDue(partition, published, base + HOUR - 1, true), false);
-    assert.equal(routineTaskDue(partition, published, base + HOUR, true), true);
+    assert.equal(routineTaskDue(partition, published, base + HOUR - LEAD - 1, true), false);
+    assert.equal(routineTaskDue(partition, published, base + HOUR - LEAD, true), true);
   }
   // A failed read after a proven success keeps the hour too.
   const failed: RoutineTaskClock = { ...succeededAt(at, []), lastAttemptedAt: new Date(base + HOUR).toISOString() };
-  assert.equal(routineTaskDue(partition, failed, base + 2 * HOUR, false), true);
+  assert.equal(routineTaskDue(partition, failed, base + 2 * HOUR - LEAD - 1, false), false);
+  assert.equal(routineTaskDue(partition, failed, base + 2 * HOUR - LEAD, false), true);
   // A never-run partition is read at once.
   assert.equal(routineTaskDue(partition, undefined, base, true), true);
   assert.equal(routineTaskDue(partition, {}, base, true), true);
-  // A derived family never published waits the base cadence, not its six-hour retry.
+  // A derived family never published is owed twice daily, not on its six-hour retry.
   const family = task(derivedMeetingFamilyId("US-AZ"));
   assert.equal(family.retryMs, 6 * HOUR);
   assert.equal(routineTaskDue(family, never, base + 6 * HOUR, true), false);
-  assert.equal(routineTaskDue(family, never, base + 12 * HOUR, true), true);
+  assert.equal(routineTaskDue(family, never, base + 12 * HOUR - BASE_LEAD, true), true);
   // Meeting outcomes carry no sitting list of their own, so they keep their retry.
   const outcomes = task(OUTCOMES);
   assert.ok(outcomes.retryMs < 12 * HOUR);
-  assert.equal(routineTaskDue(outcomes, never, base + outcomes.retryMs, true), true);
+  assert.equal(routineTaskDue(outcomes, never, base + outcomes.retryMs - LEAD, true), true);
 });
 
 test("the window rolls: a sitting coming within seven days makes a twice-daily source due at that instant", () => {
@@ -179,8 +214,8 @@ test("the window rolls: a sitting coming within seven days makes a twice-daily s
   assert.equal(routineTaskDue(partition, clock, entersWindow - 1, hotAt(entersWindow - 1)), false);
   assert.equal(hotAt(entersWindow), true);
   assert.equal(routineTaskDue(partition, clock, entersWindow, hotAt(entersWindow)), true);
-  // And it cools seven days after the sitting.
-  const leavesWindow = Date.parse(sitting) + 7 * DAY;
+  // And it cools seven days after the sitting concludes, bounded at a day after it starts.
+  const leavesWindow = Date.parse(sitting) + SITTING_CONCLUSION_BOUND_MS + 7 * DAY;
   assert.equal(hotAt(leavesWindow), true);
   assert.equal(hotAt(leavesWindow + 1), false);
 });
@@ -203,7 +238,7 @@ test("Pima outcomes follow both Board partitions; an unreadable partition never 
   const outcomes = task(OUTCOMES);
   const clock = succeededAt("2026-09-24T09:00:00.000Z");
   const base = Date.parse("2026-09-24T09:00:00.000Z");
-  assert.equal(routineTaskDue(outcomes, clock, base + 12 * HOUR - PASS - 1, false), false);
-  assert.equal(routineTaskDue(outcomes, clock, base + 12 * HOUR - PASS, false), true);
-  assert.equal(routineTaskDue(outcomes, clock, base + HOUR - PASS, true), true);
+  assert.equal(routineTaskDue(outcomes, clock, base + 12 * HOUR - BASE_LEAD - 1, false), false);
+  assert.equal(routineTaskDue(outcomes, clock, base + 12 * HOUR - BASE_LEAD, false), true);
+  assert.equal(routineTaskDue(outcomes, clock, base + HOUR - LEAD, true), true);
 });

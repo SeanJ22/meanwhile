@@ -24,12 +24,14 @@ import {
 } from "../lib/civic-data/supervisor-history.ts";
 import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   readRoutineTaskClocks,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
   routineSupervisorCycleId,
+  routineTaskDeadlineMs,
   routineTaskDue,
   routineTaskSelection,
   sittingWindowSignals,
@@ -410,11 +412,11 @@ try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
-// A body with a sitting on record within seven days goes first on its lane (R20).
+// A meeting lane is read earliest deadline first, up to two a pass (C6).
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
   task: pending.task,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
-  hot: sittingSignals.get(pending.task.id) === true,
+  deadlineMs: routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)),
 })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
 for (const candidate of dueCandidates) {
@@ -422,7 +424,7 @@ for (const candidate of dueCandidates) {
   else {
     console.log(
       `RCD_DEFER ${candidate.pending.id}: provider frontier ` +
-        `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS})`,
+        `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`,
     );
   }
 }
@@ -456,7 +458,7 @@ if (meetingPartitionRuns >= 2) {
 console.log(
   `RCD_PASS launching ${pendingRuns.length} isolated command(s) through a bounded pool; ` +
     `concurrency=${ROUTINE_CHILD_CONCURRENCY}; ` +
-    `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}; ` +
+    `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS} (meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS}); ` +
     `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
 );
 step = "running the source pass";

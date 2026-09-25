@@ -342,8 +342,9 @@ test("one meeting source/body failure retains only its LKG while another partiti
   // its body has no sitting within seven days, hourly when it does.
   assert.equal(healthyClock.lastSucceededObservedAt, SECOND);
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000, false), false);
-  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 55 * 60_000 - 1, true), false);
-  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 55 * 60_000, true), true);
+  // Hourly is owed 60 minutes after the success and admitted 15 minutes before (C6).
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 45 * 60_000 - 1, true), false);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 45 * 60_000, true), true);
 });
 
 test("meeting Reader repair composes the shared aggregate once and correlates exact partition receipts", async () => {

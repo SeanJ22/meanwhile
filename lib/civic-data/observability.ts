@@ -8,13 +8,17 @@
  */
 import {
   cadenceMsAt,
-  sittingWindowDueAtMs,
-  sittingWindowHot,
   type RoutineSourceContract,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { meetingPayloadSittingStarts } from "./store.ts";
-import { sittingWindowRetryMs } from "./sitting-window-retry.ts";
+import {
+  SITTING_WINDOW_ADMISSION_LEAD_MS,
+  SITTING_WINDOW_BASE_ADMISSION_LEAD_MS,
+  sittingWindowHotByConclusion,
+  sittingWindowObligation,
+  sittingWindowRetryMs,
+} from "./sitting-window-admission.ts";
 import {
   MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   type ManualProductionSourceContract,
@@ -1223,32 +1227,55 @@ function nextDue(
   const succeededAt = lastPromoted ? sourceAttemptTime(lastPromoted, events, nowMs) : null;
   const newestSuccess = Math.max(succeededAt?.kind === "MEASURED" ? Date.parse(succeededAt.value) : Number.NEGATIVE_INFINITY, confirmedMs);
   const succeeded = Number.isFinite(newestSuccess) ? newestSuccess : Number.NaN;
-  if (!Number.isFinite(succeeded) || attempted > succeeded) {
-    return measured(new Date(attempted + observedRetryMs(contract, published)).toISOString());
-  }
   const schedule = "schedule" in contract ? contract.schedule : undefined;
   if (schedule?.kind === "SITTING_WINDOW") {
-    return measured(new Date(sittingWindowDueAtMs(schedule, succeeded, sittingHot)).toISOString());
+    const { eligibleAtMs } = sittingWindowObligation(
+      schedule,
+      contract.retry.afterMs,
+      { attemptedMs: attempted, succeededMs: succeeded, published: runnerSeesPublished(contract, published) },
+      sittingHot,
+    );
+    return measured(new Date(eligibleAtMs).toISOString());
+  }
+  if (!Number.isFinite(succeeded) || attempted > succeeded) {
+    return measured(new Date(attempted + contract.retry.afterMs).toISOString());
   }
   return measured(new Date(succeeded + cadenceMsAt(contract, nowMs)).toISOString());
 }
 
 /**
- * The retry the runner admits on after a failed attempt. A meeting partition
- * the store holds no pointer for has never been published and waits the base
- * cadence (R20); every other contract keeps its own retry.
+ * The runner reads publication from a MEETING scope's sitting list, which the
+ * store reports only for MEETING scopes; every other record class keeps its
+ * contract's retry, and so does its Admin row.
  */
-function observedRetryMs(contract: RoutineSourceContract, published: boolean): number {
+function runnerSeesPublished(contract: RoutineSourceContract, published: boolean): boolean {
+  return published || contract.recordClass !== "MEETING";
+}
+
+/**
+ * The instant the runner admits a retry of an attempt made at `attemptedMs`.
+ * A sitting-window retry is owed on the contract clock, or twice daily for a
+ * meeting partition never published (R20), and admitted 15 minutes early (C6).
+ */
+function observedRetryAtMs(contract: RoutineSourceContract, attemptedMs: number, published: boolean): number {
   const schedule = contract.schedule;
-  if (schedule?.kind !== "SITTING_WINDOW" || contract.recordClass !== "MEETING") return contract.retry.afterMs;
-  return sittingWindowRetryMs(schedule, contract.retry.afterMs, published);
+  if (schedule?.kind !== "SITTING_WINDOW") return attemptedMs + contract.retry.afterMs;
+  return sittingWindowObligation(
+    schedule,
+    contract.retry.afterMs,
+    { attemptedMs, succeededMs: Number.NaN, published: runnerSeesPublished(contract, published) },
+    undefined,
+  ).eligibleAtMs;
 }
 
 function observedRetryDescription(contract: RoutineSourceContract, published: boolean): string {
-  const retryMs = observedRetryMs(contract, published);
+  const schedule = contract.schedule;
+  if (schedule?.kind !== "SITTING_WINDOW") return contract.retry.description;
+  const retryMs = sittingWindowRetryMs(schedule, contract.retry.afterMs, runnerSeesPublished(contract, published));
+  const lead = `; an hourly read or retry is admitted up to ${SITTING_WINDOW_ADMISSION_LEAD_MS / 60_000} minutes before it is owed, a twice-daily read up to ${SITTING_WINDOW_BASE_ADMISSION_LEAD_MS / 3_600_000} hours`;
   return retryMs === contract.retry.afterMs
-    ? contract.retry.description
-    : `${contract.retry.description}; never published, so ${Math.round(retryMs / 3_600_000)} hours after its last attempt (the base cadence)`;
+    ? `${contract.retry.description}${lead}`
+    : `${contract.retry.description}; never published, so ${Math.round(retryMs / 3_600_000)} hours after its last attempt (the base cadence)${lead}`;
 }
 
 /**
@@ -1269,7 +1296,7 @@ function sittingWindowSignalsFromPromotions(
   for (const contract of contracts) {
     const schedule = "schedule" in contract ? contract.schedule : undefined;
     if (schedule?.kind !== "SITTING_WINDOW") continue;
-    signals.set(contract.id, sittingWindowHot(schedule, sittingWindowSourceIds(contract.id).map((id) => startsById.get(id)), nowMs));
+    signals.set(contract.id, sittingWindowHotByConclusion(schedule, sittingWindowSourceIds(contract.id).map((id) => startsById.get(id)), nowMs));
   }
   return signals;
 }
@@ -1339,7 +1366,7 @@ function operationalState(
           : `The latest owner-invoked attempt ended ${state}; canonical/LKG service is ${canonical.kind}: ${canonical.detail}`,
       };
     }
-    const retryAt = latestAt + observedRetryMs(contract, canonical.kind !== "NOT_RECORDED");
+    const retryAt = observedRetryAtMs(contract, latestAt, canonical.kind !== "NOT_RECORDED");
     if (nowMs < retryAt) {
       return {
         state: "RETRYING",

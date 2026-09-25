@@ -1915,9 +1915,10 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
     [contract],
   ).contracts[0];
   assert.equal(unpublished.canonicalPromotion.kind, "NOT_RECORDED");
-  assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T23:30:00.000Z" });
+  // Owed twelve hours after the attempt, admitted 2 hours before (C6).
+  assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T21:30:00.000Z" });
   assert.equal(unpublished.cadence.operationalState, "RETRYING");
-  assert.match(unpublished.cadence.operationalDetail, /retry is due 2026-09-08T23:30:00\.000Z/);
+  assert.match(unpublished.cadence.operationalDetail, /retry is due 2026-09-08T21:30:00\.000Z/);
   assert.match(unpublished.cadence.retryDescription, /never published, so 12 hours after its last attempt/);
 
   const lkg = candidateRow(contract, { id: "meeting-lkg", at: "2026-09-08T09:00:00.000Z" });
@@ -1927,7 +1928,9 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
     NOW,
     [contract],
   ).contracts[0];
-  assert.deepEqual(published.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:30:00.000Z" });
+  // Owed an hour after the failed attempt, admitted 15 minutes before.
+  assert.deepEqual(published.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:15:00.000Z" });
   assert.equal(published.cadence.operationalState, "RETRYING");
-  assert.equal(published.cadence.retryDescription, contract.retry.description);
+  assert.ok(published.cadence.retryDescription.startsWith(contract.retry.description));
+  assert.doesNotMatch(published.cadence.retryDescription, /never published/);
 });

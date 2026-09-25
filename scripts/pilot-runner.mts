@@ -141,10 +141,9 @@ import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
-  routineFailureDomainCount,
+  routineFrontierPassBound,
   routineSupervisorCycleId,
 } from "../lib/civic-data/runner.ts";
 import {
@@ -236,9 +235,11 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 /** Loaded-code identity, captured before a handoff can move the checkout. */
 const RUNNING_CODE_SHA = headSha(ROOT);
 const ROUTINE_READER_DOMAINS = routineReaderRepairDomains();
+// Meeting lanes take up to two reads a pass (C6), so the limit is sized for that pass.
+const ROUTINE_PASS_BOUND = routineFrontierPassBound();
 const ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs(
-  routineFailureDomainCount(),
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+  ROUTINE_PASS_BOUND.commandCount,
+  ROUTINE_PASS_BOUND.largestFailureDomainSize,
   {
     neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
     settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,

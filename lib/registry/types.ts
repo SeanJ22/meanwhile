@@ -119,7 +119,15 @@ export type BodyOrigin =
    * calendar. Unlike PROMOTED_FROM_CENSUS_OF_GOVERNMENTS, no reported website
    * was checked.
    */
-  | "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS";
+  | "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS"
+  /*
+   * **A TERRITORY'S GOVERNMENT, REGISTERED FROM ITS CENSUS STATUS
+   * (2026-09-25).** The Census of Governments does not enumerate the five
+   * territories; TIGER/Line 2023 gives this division a governing functional
+   * status (A, B, C or G: docs/state.md §4.6 M17), and nothing else about
+   * the government has been sourced.
+   */
+  | "REGISTERED_FROM_TIGER_FUNCSTAT";
 
 /**
  * Which adapter can read this body's agendas. Open-ended by design.
@@ -246,7 +254,9 @@ export type SourceDataset =
    * (`scripts/lib/national-division-ids.mts`). Named for its own vintage
    * rather than filed under TIGER_GENZ2025.
    */
-  | "TIGER_CB2023";
+  | "TIGER_CB2023"
+  /** Full TIGER/Line 2023, read for its attribute table only: the territories' functional status. */
+  | "TIGER_LINE2023";
 
 /**
  * How well this repo's identifier matches the canonical OCD vocabulary.

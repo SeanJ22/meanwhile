@@ -81,6 +81,25 @@ export const FIPS_TO_STATE: Readonly<Record<string, FipsEntry>> = {
   "78": { postal: "VI", prefix: "territory" },
 };
 
+/** `district:dc`, `territory:pr` …: the jurisdiction segments this table gives a class other than `state:`. */
+const NON_STATE_SEGMENTS = new Set(
+  Object.values(FIPS_TO_STATE)
+    .filter((entry) => entry.prefix !== "state")
+    .map((entry) => `${entry.prefix}:${entry.postal.toLowerCase()}`),
+);
+
+/**
+ * Whether `<prefix>:<postal>` is how this table names a state, DC or territory
+ * at the root of an OCD id. `state:` is every state's; `district:` and
+ * `territory:` count only for the postal codes the table gives that class, so
+ * a reader of an id's jurisdiction recognizes `district:dc` and `territory:pr`
+ * exactly as they are minted here, and never a `district:` segment that names
+ * something else.
+ */
+export function isJurisdictionSegment(prefix: string, postal: string): boolean {
+  return prefix === "state" || NON_STATE_SEGMENTS.has(`${prefix}:${postal}`);
+}
+
 /**
  * Congressional district codes that carry no district.
  *

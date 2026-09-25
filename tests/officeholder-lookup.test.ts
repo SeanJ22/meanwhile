@@ -33,6 +33,22 @@ test("state identifier is read from the hierarchy, not from a name", () => {
   assert.equal(stateOcdIdFrom("ocd-division/country:us"), null);
 });
 
+test("DC and the territories are roots of the hierarchy too, as lib/ocd/fips.ts mints them (2026-09-25)", () => {
+  assert.equal(
+    stateOcdIdFrom("ocd-division/country:us/district:dc/place:washington"),
+    "ocd-division/country:us/district:dc",
+  );
+  assert.equal(
+    stateOcdIdFrom("ocd-division/country:us/territory:pr/county:adjuntas"),
+    "ocd-division/country:us/territory:pr",
+  );
+  assert.equal(stateOcdIdFrom("ocd-division/country:us/territory:gu"), "ocd-division/country:us/territory:gu");
+  assert.equal(stateOcdIdFrom("ocd-division/country:us/territory:az"), null, "only the class the FIPS table gives");
+  // No senator sits on a territory's root, so a division there answers with nobody, never another state's.
+  const index = indexByDivision([roster as unknown as OfficeholderSet]);
+  assert.deepEqual(senatorsFor(index, ["ocd-division/country:us/territory:pr/county:adjuntas"]), []);
+});
+
 test("a division electing several people keeps all of them", () => {
   const set: OfficeholderSet = {
     scope: "test",

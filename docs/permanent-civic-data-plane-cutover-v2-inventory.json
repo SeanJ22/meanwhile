@@ -692,7 +692,7 @@
       "current_writer": "intentional source-version adoption and deterministic generators",
       "current_scheduler": "none",
       "current_canonical_store": "versioned Git",
-      "tracked_paths": ["data/reference/census_govt_units_2022*.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
+      "tracked_paths": ["data/reference/census_govt_units_2022*.csv", "data/reference/census_tiger_2023_territory_functional_status.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
       "runtime_readers": ["registry, coverage, and selected Reader definition inputs"],
       "current_promotion_door": "reviewed source-version bump",
       "cadence": "per named published vintage",

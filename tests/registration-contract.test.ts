@@ -291,6 +291,100 @@ test("the reader composes a state's registration beside the reviewed registry it
   assert.equal(after.bodies.length, oh.bodies.length - 2);
 });
 
+test("a territory registers a body only where TIGER/Line records a governing status, never from geography (2026-09-25)", async () => {
+  const reviewed = reviewedFromFirstSeed();
+  const target = registrationTarget("PR");
+  const reference = loadRegistrationReference(ROOT, "PR");
+  const pr = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed });
+  assert.deepEqual(pr.semantics.violations, [], "Puerto Rico registers: the Census of Governments' silence is no longer read as its only word");
+  const model = pr.readModel as RegistrationReadModel;
+  assert.equal(model.vintage.governments, "2023 TIGER/Line functional status");
+  assert.equal(model.bodies.length, 78, "the 78 municipios, FUNCSTAT A");
+  const municipios = new Set(model.divisions.filter((d) => d.divisionType === "county").map((d) => d.ocdId));
+  for (const b of model.bodies) {
+    assert.ok(municipios.has(b.ocdId) && b.id === `${b.ocdId}#governing`, `${b.id} is a municipio's government`);
+    assert.equal(b.bodyOrigin, "REGISTERED_FROM_TIGER_FUNCSTAT");
+    assert.equal(b.sourceDataset, "TIGER_LINE2023");
+    assert.equal(b.provenance.sourceUrl, "https://www2.census.gov/geo/tiger/TIGER2023/COUNTY/tl_2023_us_county.zip");
+    assert.equal(b.censusId, undefined, "no Census of Governments id is claimed for it");
+    assert.match(b.jurisdictionId ?? "", /^pr:county:[a-z0-9-]+$/);
+  }
+  // The barrios (N), the zonas urbanas (S), the Department of Education's school district and the territory itself: geography only.
+  assert.equal(model.bodies.some((b) => b.ocdId === "ocd-division/country:us/territory:pr" || b.id.endsWith("#board")), false);
+  const barrio = model.divisions.find((d) => d.ocdId === "ocd-division/country:us/territory:pr/county:adjuntas_municipio/place:adjuntas_barrio_pueblo")!;
+  assert.deepEqual([barrio.lsad, barrio.funcstat, barrio.classfp], ["41", "N", "Z1"], "the division records its Census status");
+  assert.deepEqual(model.functionalStatus?.divisionsByStatus, { A: 78, N: 901, S: 292 });
+  assert.equal(model.functionalStatus?.noLocalGovernment, null);
+  const promoted = await processRegisteredRoutineCandidate(new MemoryRoutineDataStore(), target.contractId, pr, RECEIPT.retrievedAt);
+  assert.equal(promoted.promoted?.versionId, pr.id, `PR promoted: ${promoted.candidate.failureCode ?? ""} ${promoted.candidate.failureDetail ?? ""}`);
+
+  // A government row that claims a status its division does not carry mints nothing, and says so.
+  const forged = { ...reference.reference, governments: [...reference.reference.governments, ["cousub:7200100401", "pr:city:forged", "Adjuntas barrio-pueblo", "COUNTY SUBDIVISION GOVERNMENT", reference.reference.divisions.findIndex((d) => d[0] === barrio.ocdId), "TIGER_FUNCSTAT", -1] as const] };
+  const refused = registrationCandidate({ target, reference: { ...reference, reference: forged }, receipt: RECEIPT, reviewed });
+  assert.equal((refused.readModel as RegistrationReadModel).bodies.some((b) => b.ocdId === barrio.ocdId), false);
+  assert.match(refused.semantics.violations.join(" "), /carries N status: no government is minted from geography/);
+
+  const as = registrationCandidate({ target: registrationTarget("AS"), reference: loadRegistrationReference(ROOT, "AS"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
+  const mp = registrationCandidate({ target: registrationTarget("MP"), reference: loadRegistrationReference(ROOT, "MP"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
+  assert.deepEqual([as.bodies.length, mp.bodies.length], [94, 4], "American Samoa's districts, counties and villages (A); the Northern Marianas' four municipalities (A, B)");
+});
+
+test("Guam and the Virgin Islands register with the Census's own record of no local government; a state with none is still a failed extraction", async () => {
+  const reviewed = reviewedFromFirstSeed();
+  for (const [state, name, divisions] of [["GU", "Guam", 77], ["VI", "U.S. Virgin Islands", 33]] as const) {
+    const target = registrationTarget(state);
+    const candidate = registrationCandidate({ target, reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT, reviewed });
+    const model = candidate.readModel as RegistrationReadModel;
+    assert.deepEqual(candidate.semantics.violations, [], `${state} is not refused`);
+    assert.equal(model.bodies.length, 0, `${state}: no body, not even its department of education's`);
+    assert.match(model.functionalStatus?.noLocalGovernment ?? "", new RegExp(`^No local government recorded by the Census for ${name}: none of its ${divisions} county`));
+    assert.equal(candidate.dependentChecks[0].passed, true);
+    const promoted = await processRegisteredRoutineCandidate(new MemoryRoutineDataStore(), target.contractId, candidate, RECEIPT.retrievedAt);
+    assert.equal(promoted.promoted?.versionId, candidate.id, `${state} promoted: ${promoted.candidate.failureCode ?? ""} ${promoted.candidate.failureDetail ?? ""}`);
+  }
+  // Without its statuses, the same territory's silence is a failed extraction again: zero is never evidence by itself.
+  const gu = loadRegistrationReference(ROOT, "GU");
+  const unstated = registrationCandidate({
+    target: registrationTarget("GU"),
+    reference: { ...gu, reference: { ...gu.reference, divisions: gu.reference.divisions.map((d) => [d[0], d[1], d[2], d[3]] as const) } },
+    receipt: RECEIPT,
+    reviewed,
+  });
+  assert.match(unstated.semantics.violations.join(" "), /carry no TIGER\/Line functional status/);
+  assert.match(unstated.semantics.violations.join(" "), /lists no government in GU, and its TIGER\/Line functional status does not show that none governs/);
+  // A state keeps the Census of Governments rule exactly: its statuses are never read, so zero is always a failure.
+  const oh = loadRegistrationReference(ROOT, "OH");
+  const hollow = registrationCandidate({ target: registrationTarget("OH"), reference: { ...oh, reference: { ...oh.reference, governments: oh.reference.governments.filter((g) => g[3] === "STATE") } }, receipt: RECEIPT, reviewed });
+  assert.match(hollow.semantics.violations.join(" "), /lists no government in OH: a failed extraction, never a state with no government/);
+});
+
+test("every county subdivision's parent is its county, read off its GEOID, and no committed id moves (2026-09-25)", () => {
+  const reviewed = reviewedFromFirstSeed();
+  let cousubs = 0;
+  for (const target of REGISTRATION_TARGETS) {
+    const reference = loadRegistrationReference(ROOT, target.state);
+    const ids = new Set(reference.reference.divisions.map((d) => d[0]));
+    const model = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
+    // The reference's ids are the registration's ids, unchanged: parents are resolved, never rewritten into the ids.
+    assert.ok(model.divisions.every((d) => ids.has(d.ocdId)), `${target.state}: every registered id is the reference's`);
+    const dangling = model.divisions.filter((d) => d.parentOcdId !== null && !ids.has(d.parentOcdId));
+    assert.deepEqual(dangling.map((d) => d.ocdId).slice(0, 3), [], `${target.state}: every parent is a division of the state`);
+    for (const d of model.divisions) {
+      if (!/\/county:[^/]+\/place:[^/]+$/.test(d.ocdId)) continue;
+      cousubs++;
+      const county = reference.reference.divisions.find((c) => c[1] === "county" && c[2] === d.geoid!.slice(0, 5));
+      assert.equal(d.parentOcdId, county?.[0], `${d.ocdId} sits in the county its GEOID names`);
+    }
+  }
+  assert.ok(cousubs > 30_000, `${cousubs} county subdivisions checked`);
+  const pr = registrationCandidate({ target: registrationTarget("PR"), reference: loadRegistrationReference(ROOT, "PR"), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
+  assert.equal(
+    pr.divisions.find((d) => d.ocdId === "ocd-division/country:us/territory:pr/county:adjuntas_municipio/place:adjuntas_barrio_pueblo")?.parentOcdId,
+    "ocd-division/country:us/territory:pr/county:adjuntas",
+    "the barrio keeps its committed id and resolves to the municipio's",
+  );
+});
+
 test("registration never mints a body on a Census placeholder division, in any state; the division stays as geography", async () => {
   const { isCensusPlaceholderDivision } = await import("../lib/registry/census-placeholders.ts");
   const reviewed = reviewedFromFirstSeed();

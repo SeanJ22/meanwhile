@@ -172,7 +172,7 @@ test("A-005 · both counters are reported as ZEROES when nothing collapsed", () 
     ],
     new Date("2026-08-24T12:00:00.000Z"),
   );
-  assert.deepEqual(result.duplicateIdentity, { exact: 0, weakIdCollision: 0 });
+  assert.deepEqual(result.duplicateIdentity, { exact: 0, weakIdCollision: 0, publisherRelisted: 0 });
 });
 
 /* -------------------------------------------------------- the helper ---- */

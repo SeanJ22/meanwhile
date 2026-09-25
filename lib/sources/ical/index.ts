@@ -238,6 +238,58 @@ export interface IcalEvent {
   rdates: string[];
   /** The `RECURRENCE-ID` carries a `RANGE` parameter (this-and-future). */
   recurrenceRange: boolean;
+  /**
+   * Every property the feed published for this event, as served and in the
+   * order served, less the publisher's own record-keeping — see
+   * `publishedFieldsOf`. Absent on an event built by hand rather than parsed,
+   * which is never merged with anything (`collapsePublisherRelistings`).
+   */
+  publishedFields?: string;
+}
+
+/**
+ * The lines of an event that are the publisher's RECORD-KEEPING about its own
+ * calendar entry, not anything it published about the sitting: the entry's id,
+ * when the entry was stamped, created and last edited, and its revision number.
+ */
+const RECORD_KEEPING = new Set(["UID", "DTSTAMP", "CREATED", "LAST-MODIFIED", "SEQUENCE"]);
+
+/**
+ * **WHAT AN EVENT PUBLISHED, WITH ITS OWN ID TAKEN OUT.** (2026-09-25.)
+ *
+ * Every unfolded property line of the event, in the order served — `SUMMARY`,
+ * `DTSTART` with its `TZID`, `DTEND`, `LOCATION`, `DESCRIPTION`, `STATUS`,
+ * `URL`, `CATEGORIES`, any rule, and anything else the publisher wrote — less
+ * the `RECORD_KEEPING` lines. In a `URL`, a path segment or query value that
+ * IS the `UID`'s own number is written `{uid}`: the Town of Newbury's
+ * `URL:https://www.newbury.nh.gov/home/events/42976` beside
+ * `UID:calendar.42976.field_date_and_time.0@www.newbury.nh.gov` is the entry's
+ * id again, not a different page about a different sitting. Only a token that
+ * carries a digit is treated so, so a word both happen to contain
+ * ("calendar") is never erased from a URL.
+ *
+ * Two events whose strings are equal published the same thing in every field
+ * a reader could see. One character of difference anywhere keeps them apart.
+ */
+export function publishedFieldsOf(body: string, uid: string | null): string {
+  const idTokens = new Set((uid ?? "").split(/[^A-Za-z0-9]+/).filter((t) => t.length >= 3 && /\d/.test(t)));
+  const kept: string[] = [];
+  for (const raw of body.split(/\r?\n/)) {
+    const line = raw.trimEnd();
+    if (!line) continue;
+    const name = (/^([A-Za-z0-9-]+)/.exec(line)?.[1] ?? "").toUpperCase();
+    if (RECORD_KEEPING.has(name)) continue;
+    if (name === "URL" && idTokens.size > 0) {
+      const colon = line.indexOf(":", name.length);
+      const head = colon < 0 ? line : line.slice(0, colon + 1);
+      const value = colon < 0 ? "" : line.slice(colon + 1);
+      kept.push(head + value.replace(/([/=?&])([A-Za-z0-9]+)(?=$|[/?&#.])/g, (whole, sep: string, token: string) =>
+        idTokens.has(token) ? `${sep}{uid}` : whole));
+      continue;
+    }
+    kept.push(line);
+  }
+  return kept.join("\n");
 }
 
 /** `EXDATE;TZID=X:a,b` → [`;TZID=X:a`, `;TZID=X:b`]. */
@@ -294,6 +346,7 @@ export function parseIcs(ics: string): IcalEvent[] {
       recurs: /^(?:RRULE|RDATE)[;:]/im.test(body),
       sequence: Number.isFinite(sequence) ? sequence : null,
       lastModified: prop("LAST-MODIFIED"),
+      publishedFields: publishedFieldsOf(body, prop("UID")),
     });
   }
   return events;
@@ -472,7 +525,7 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
 }
 
 /** One event's claim on a meeting id, with the event that made it. */
-interface IdentityClaim {
+export interface IdentityClaim {
   readonly meeting: Meeting;
   readonly event: IcalEvent;
 }
@@ -515,6 +568,93 @@ function preferredClaim(held: IdentityClaim, incoming: IdentityClaim): IdentityC
       meeting.provenance.sourceUrl,
     ]);
   return content(incoming) < content(held) ? incoming : held;
+}
+
+/** How a reader is told a sitting was listed more than once by its own publisher. */
+export function relistedNote(listings: number): string {
+  return `listed ${listings === 2 ? "twice" : `${listings} times`} in the publisher's own calendar`;
+}
+
+/**
+ * **ONE SITTING THE PUBLISHER'S OWN CALENDAR LISTS TWICE IS ONE SITTING.**
+ * (2026-09-25.)
+ *
+ * ## What was wrong
+ *
+ * The Town of Newbury's Drupal calendar carries some sittings under two
+ * recurring series at once: its Selectboard of 26 October 2026 at 18:00 is
+ * `calendar.42976…` (created 2026-03-31) and `calendar.44076…` (created
+ * 2026-09-22), each its own `UID` and its own event page, every published
+ * field the same. Keyed on the `UID`, each became a meeting, and readers saw
+ * seven Selectboard, three Conservation Commission and two Zoning Board
+ * sittings twice. The listing-identity notice (`lib/meetings/listing-identity.ts`,
+ * f676aa9b) flagged every pair and, by design, merged none, and the
+ * cross-source collapse (`collapseDuplicateSittings`) leaves one source's own
+ * catalogue alone.
+ *
+ * ## The rule
+ *
+ * Within ONE wiring row (one body, one feed), two or more claims merge only
+ * when the events they came from published exactly the same thing
+ * (`IcalEvent.publishedFields`: title, start with its zone, end, place,
+ * description, status, URL, categories, rule, every other property, in the
+ * order served) and state the same sitting instant. Only the publisher's
+ * record-keeping may differ: the `UID`, the `UID`'s own number where the `URL`
+ * repeats it, and the created / modified / stamped / sequence lines. Anything
+ * else that differs — one word of a title ("Selectboard Meeting Public
+ * Hearing" beside "Selectboard Meeting" on 13 April 2026), a room, a
+ * description — keeps both listings, each with the listing-identity notice.
+ *
+ * The survivor is the lowest id, so the answer does not depend on feed order,
+ * and it carries every listing's id and page (`provenance.publisherListings`).
+ * A prior version that held the other id yields to the survivor as a re-issued
+ * sitting (`reissuesSitting`), never as an unexplained disappearance.
+ *
+ * ## Whose decision this is
+ *
+ * Merging these was first framed as an owner decision. It is recorded here as
+ * an ENGINEERING correctness rule — agents own engineering choices, and
+ * `docs/rulings.md` §9 keeps an engineering choice from being recorded as
+ * Sean's decision — and it is stated so the owner can reverse it: remove the
+ * one call in `normalizeWithDrops` and every pair returns as two listings,
+ * each flagged by the notice as before.
+ */
+export function collapsePublisherRelistings(
+  claims: readonly IdentityClaim[],
+): { readonly survivor: IdentityClaim; readonly merged: readonly string[] }[] {
+  const groups = new Map<string, IdentityClaim[]>();
+  for (const claim of claims) {
+    const fields = claim.event.publishedFields;
+    // An event with no published record (built by hand, never parsed) states
+    // nothing to compare, so it is never merged with anything.
+    if (fields === undefined || !claim.event.uid) continue;
+    const key = JSON.stringify([claim.meeting.bodyId ?? null, claim.meeting.startsAt, claim.meeting.startPrecision ?? "MINUTE", fields]);
+    groups.set(key, [...(groups.get(key) ?? []), claim]);
+  }
+  const out: { survivor: IdentityClaim; merged: string[] }[] = [];
+  for (const group of groups.values()) {
+    if (new Set(group.map(({ meeting }) => meeting.id)).size < 2) continue;
+    const ordered = [...group].sort((a, b) => (a.meeting.id < b.meeting.id ? -1 : a.meeting.id > b.meeting.id ? 1 : 0));
+    const [keep, ...rest] = ordered;
+    out.push({
+      survivor: {
+        event: keep.event,
+        meeting: {
+          ...keep.meeting,
+          provenance: {
+            ...keep.meeting.provenance,
+            publisherListings: {
+              note: relistedNote(ordered.length),
+              sourceIds: ordered.map(({ meeting }) => meeting.id),
+              sourceUrls: ordered.map(({ meeting }) => meeting.provenance.sourceUrl),
+            },
+          },
+        },
+      },
+      merged: rest.map(({ meeting }) => meeting.id),
+    });
+  }
+  return out;
 }
 
 /** One sitting a series states: its instant and its recurrence slot. */
@@ -763,6 +903,14 @@ export function makeIcalSource(
      */
     let weakIdCollisions = 0;
     /**
+     * Listings the publisher's own calendar carried a second (or third) time
+     * under another id, every published field identical, and merged into the
+     * one sitting they list (`collapsePublisherRelistings`). Counted apart from
+     * the two above: neither the same id twice nor a judgement about UID-less
+     * records, but two ids the feed itself gave to one sitting.
+     */
+    let publisherRelisted = 0;
+    /**
      * A-004 · divisions whose ARCHIVE feed refused while their upcoming feed
      * answered. Collected per cause so the report says what refused, not only
      * that something did.
@@ -861,6 +1009,8 @@ export function makeIcalSource(
        */
       const restated = ruleRestatedOnSittings(events);
       let restatedSeriesEvents = 0;
+      /** Every id THIS row produced, in the order first claimed: the scope `collapsePublisherRelistings` merges within. */
+      const rowIds: string[] = [];
       /** Does this row's own rule name this event, read from its own fields? */
       const namesThisBody = (event: IcalEvent): boolean => {
         const cats = (event.categories ?? "")
@@ -1182,7 +1332,17 @@ export function makeIcalSource(
             continue;
           }
           claims.set(id, claim);
+          rowIds.push(id);
         }
+      }
+      // One sitting the publisher's own calendar lists under two ids, every
+      // published field identical, is one sitting (`collapsePublisherRelistings`).
+      const relisted = collapsePublisherRelistings(rowIds.map((id) => claims.get(id)!));
+      for (const { survivor, merged } of relisted) {
+        claims.set(survivor.meeting.id, survivor);
+        for (const id of merged) claims.delete(id);
+        duplicates += merged.length;
+        publisherRelisted += merged.length;
       }
       if (restated && restatedSeriesEvents > 0) {
         recurrence.notExpanded.push({
@@ -1216,7 +1376,7 @@ export function makeIcalSource(
         ...(unreachable.length > 0 ? { unreachableOcdIds: unreachable } : {}),
         // A-005 · reported always, including as zeroes. A counter that only
         // appears when it fires cannot be read as "we looked and it was none".
-        duplicateIdentity: { exact: exactDuplicates, weakIdCollision: weakIdCollisions },
+        duplicateIdentity: { exact: exactDuplicates, weakIdCollision: weakIdCollisions, publisherRelisted },
         // Reported always, like the duplicate counts: a series that was not
         // expanded is named here, never left for a short calendar to imply.
         recurrence,

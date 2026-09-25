@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 821,
-    "named": 7923,
+    "files": 822,
+    "named": 7948,
     "dynamic": 31
   },
   "files": {
@@ -2973,6 +2973,7 @@
       "names": [
         "a JOB failure detail says whose failure it is, once",
         "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
+        "a calendar whose every sitting falls outside the window is a counted clip, never our zero-row JOB (2026-09-25)",
         "a challenge served with HTTP 200 is the same wall",
         "a child rejected by a host that no longer resolves keeps the transport's code",
         "a real calendar we extract nothing from is still OUR zero-row JOB",
@@ -5356,15 +5357,21 @@
         "ICAL: line folding is unfolded before the address is read",
         "ICAL: the Wilmot fixture reaches Wilmot's rows and only those",
         "ICAL: the fixture parses to the events it actually contains",
-        "ICAL: the wired boards produce meetings, and the counts are stated"
+        "ICAL: the wired boards produce meetings, and the counts are stated",
+        "the Village Water District's commissioners sit at the treatment plant, never pinned at the town hall",
+        "the river committee's every-other-month series is expanded: another body's split series is no evidence about this one"
       ],
       "dynamic": 0
     },
     "tests/identified-ua-wall.test.ts": {
       "names": [
+        "a Cloudflare-style host that challenges Node and refuses the old rung-4 set is read with our own name",
         "a host that refuses our name is walked at rung 3b, not recorded as a wall",
+        "a set refused with a challenge page is set aside and the next set is asked",
+        "every set refused is a WALL on rung 4, and a 404 is an answer that stops the walk",
         "identificationHeaders names the project without a User-Agent at all",
         "rung 3b keeps the identification and moves it out of the User-Agent",
+        "rung 4's header sets: our own name with X-Purpose first, the old set second, the clean browser set last",
         "the identification still travels in the User-Agent on the early rungs"
       ],
       "dynamic": 0
@@ -6542,9 +6549,14 @@
     },
     "tests/mesa-minutes-outcomes.test.ts": {
       "names": [
+        "a continuation that is not a motion's own words stays an unread passage, never a guessed motion",
+        "a held sitting whose note names unread passages is read again, so a parser that now reads them reaches readers",
         "a later sitting's minutes approving these minutes marks them APPROVED, with its own words",
+        "a motion written as an infinitive is read: the 2026-08-13 study session's direction to the City Attorney",
+        "a motion written without 'that' is read: the 2026-06-04 study session acknowledges its boards' minutes",
         "a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'",
         "action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken",
+        "minutes that record no motion and do not say no action was taken stay a failed extraction: the 2026-05-28 strategic planning session",
         "result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed",
         "the 2026-06-01 minutes: one motion adopting five resolutions and an ordinance reaches all six items",
         "the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found",
@@ -9346,6 +9358,15 @@
       ],
       "dynamic": 0
     },
+    "tests/research-transport.test.ts": {
+      "names": [
+        "a 403 is asked once more through curl, with the same User-Agent and our purpose and contact, never following a redirect",
+        "a host that refuses the second client too is recorded as refusing, and a curl that cannot run leaves the first answer",
+        "an answered read is returned as it came, and curl is never run",
+        "curl's included headers are read for the status, the type and a redirect's target"
+      ],
+      "dynamic": 0
+    },
     "tests/reset-registry.test.ts": {
       "names": [
         "every UiState field is either a registered control or declared non-control",
@@ -9837,7 +9858,13 @@
     },
     "tests/schedulepage-chandler.test.ts": {
       "names": [
+        "DESTINY: a month the list says is empty is read and empty; a page that is not the list is unread, never empty",
+        "DESTINY: the September list is seven Council sittings, each with its agenda page, and the results and video where posted",
+        "DESTINY: the months read run from the window's start to 35 days ahead, across a year's end",
+        "FETCH with DESTINY: one list request per month in reach, and a refused month keeps the schedule",
         "FETCH: one day file per scheduled date inside the window, and a refused day keeps its sitting date-only",
+        "NORMALIZE with DESTINY: a date-only sitting joins only a date the list gives one row; four rows on a date join none",
+        "NORMALIZE with DESTINY: each dated sitting carries its own agenda, results and video; a month read with nothing marks the slot empty",
         "NORMALIZE: a scheduled date the day file answers becomes its Council sittings with time and place; one it does not stays date-only",
         "THE DAY FILE: each Council sitting the city posted for a scheduled date, with its own start and street address; the city's other events are not the Council's",
         "no time is claimed: the table states none, and the page's 'usually' sentence is not the section's",
@@ -9864,10 +9891,12 @@
         "documents join by the date the body wrote in the link text",
         "event-tip: a band concert is not a meeting of the Planning Board",
         "event-tip: a board's own sittings come out of a town-wide calendar",
+        "event-tip: a sitting in the Syd Crook Room or at the Fire Department is its own room, never the hall",
         "event-tip: an empty titleMatch matches NOTHING rather than everything",
         "event-tip: fetch asks the calendar for every month in the window it was given, behind and ahead",
         "event-tip: four New London boards are wired, each with its own match",
         "event-tip: the time comes off the event's own line",
+        "event-tip: titleMatch is a list of the body's spellings, and apostrophes do not decide a match (2026-09-25)",
         "monthsAhead stays a floor when the window asked for is shorter than it",
         "normalize windows the year, times it from the page, and cites its source",
         "the Conservation Commission's two shapes union by date",
@@ -11193,6 +11222,7 @@
         "clerksboards: a Meeting Location with no reviewed row publishes every instance in the Clerk's words",
         "diligent: a portal row naming an unreviewed room, or none, is published with the gap the portal states",
         "ical: a LOCATION with no reviewed row, a blank one, and an online one are all published",
+        "ical: a standing venue stands in only for a LOCATION that names no place, never for another building (2026-09-25)",
         "ical: with a standing venue that has no reviewed row, the feed's words still render, and a blank keeps our own gap",
         "iqm2: an unreviewed room, a blank tooltip venue and a virtual sitting are all published",
         "onbase: an unmatched meeting name still drops, counted — the name key is its only body filter",

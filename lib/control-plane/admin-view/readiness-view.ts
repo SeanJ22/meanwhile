@@ -249,8 +249,12 @@ const FAMILY_CODE: Readonly<Record<CapabilityDomain, string>> = {
   "Meetings and agendas": "MTG",
 };
 
-/** The requirement families: the five capability domains, each counted over its gate checks. */
-export function familyRows(snapshots: readonly ReadinessStateSnapshot[]): FamilyRow[] {
+/**
+ * The requirement families: the five capability domains, each counted over its
+ * gate checks. Only each state's code and capability rows are read, so a grid
+ * (the snapshot without its ZIP rows) is enough.
+ */
+export function familyRows(snapshots: readonly Pick<ReadinessStateSnapshot, "state" | "capabilities">[]): FamilyRow[] {
   return CAPABILITY_DOMAINS.map((domain) => {
     const perState = snapshots.map((s) => {
       const rows = s.capabilities.filter((c) => c.domain === domain);

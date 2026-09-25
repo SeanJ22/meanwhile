@@ -21,7 +21,7 @@
  * denominator and a stated meaning, and every stated count equals the rows
  * drawn. A failed audit replaces the numbers with the reason.
  */
-import { readDecisions, readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { readDecisionCards, readDecisions } from "@/lib/control-plane/admin-data.ts";
 import { nowFigures, type BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
 import { SYNC_CADENCE, receiptHeadline, splitDecided } from "@/lib/control-plane/decision-receipt.ts";
@@ -130,7 +130,8 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
   const repos = base.repos;
   const container = base.scope.kind === "geo" ? loadContainer(base.scope.type, base.scope.geoid) : null;
   const [snapshotOut, decisionsOut, pulse, bodiesRead, containerRead] = await Promise.all([
-    readSnapshot(repos),
+    // The one field of the snapshot this page draws, narrowed by the store: 88 KB of the 449 KB row (2026-09-25).
+    readDecisionCards(repos),
     readDecisions(repos),
     readPulse(repos, base.nowIso),
     bodiesEarly ?? loadWatchedBodies(base.nowIso),

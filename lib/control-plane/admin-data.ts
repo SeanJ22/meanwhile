@@ -143,6 +143,20 @@ export async function readSnapshot(
   );
 }
 
+/**
+ * The published decision cards alone: the one field of the snapshot Fleet · Now
+ * draws from it (88 KB of the 449 KB row on 2026-09-25), narrowed by the store.
+ * The same three answers, in the same words, as `readSnapshot`.
+ */
+export async function readDecisionCards(
+  repos: ControlPlaneRepositories,
+): Promise<ReadOutcome<Pick<OwnerSnapshot, "decisionCards">>> {
+  return readAggregate(repos, "control-centre snapshot", async () => {
+    const row = await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, { decisionCards: true });
+    return row === null ? null : { value: row.value as Pick<OwnerSnapshot, "decisionCards"> };
+  });
+}
+
 export async function readHeartbeat(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<RunnerHeartbeat>> {

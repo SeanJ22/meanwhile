@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **416 open**, 544 resolved.
+- **418 open**, 544 resolved.
 - **77 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -564,7 +564,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**105 open · 123 resolved.**
+**107 open · 123 resolved.**
 
 ### P1
 
@@ -646,6 +646,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH332** — When a reader asks what the Mesa City Council decided, the product cannot say. Mesa's clerk does not record the council's actions in the Legistar API: none of the 33 items on the council’s 14 September sitting carried an action or a pass flag when measured on 2026-09-24. The route that now answers Pima's questions therefore gives Mesa nothing. The decisions are in the council's minutes, which Mesa publishes on its own portal, and that portal permits us. Reading those minutes into dated decisions would give Mesa, and every Legistar body like it, the answers Pima now gets.
 
+**NH333** — When the Census address on record for a government's website is dead or wrong, it is corrected only when the government's own homepage and its own federal .gov registry entry name the same government, or, where that cannot hold, when another government's own page names the site. Eight of the nine named governments are corrected; Sutton, NH stays on its Census address, named unresolved with what would resolve it.
+
 **NH46** — One of the three coverageNotes in data/states/nh/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 
 **NH75** — Playwright's extraHTTPHeaders applies to EVERY request a context makes, third parties included. MapTiler's CORS preflight does not allow x-wtp-synthetic-run, so the basemap style request was refused in every capture and every walk. That is why NJ Hunt 5's captures showed BASEMAP UNAVAILABLE against a production site serving readers a working map. Fixed at the shared path in scripts/browser.mts. This row is open for the QUESTION IT RAISES rather than the fix: what else has an instrument of ours been breaking while measuring it? The shape - a synthetic marker leaking into a third-party request - is worth sweeping for beyond the browser.
@@ -685,6 +687,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
   Waiting on the 03255 depth sweep across the full body universe (HUNT01).
 
 **M123** — Six towns around Newbury hold meetings inside the radius a reader at 03255 sees. The routes to their calendars have been walked and written down; none of them is wired, so those meetings do not appear.
+
+**NH334** — A reviewed record connects a government's calendar to the exact body whose meetings it carries, on the government's own saved pages; agents promote it through the verified door, and the standing runner then publishes that body's meetings with no code release. A connection is suspended for review when its page is gone, its events name another body, the evidence conflicts, or the calendar changes; an outage keeps the last verified meetings.
+
+  Waiting on stage 2: wire a discovered meetings route into production without a code change (NH330).
 
 **PB03** — A reader for agenda data hidden inside a page's HTML rather than published at an address. Without it, whole families of school and municipal sites come back empty and look like places with no meetings.
 

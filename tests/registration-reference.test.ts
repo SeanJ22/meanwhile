@@ -26,20 +26,24 @@ type Government = [pid6: string, jurisdictionId: string, name: string, govType: 
 interface StateFile {
   readonly formatVersion: number;
   readonly state: string;
-  readonly divisions: readonly [ocdId: string, layer: string, geoid: string, censusName: string][];
+  readonly functionalStatus?: { readonly dataset: string; readonly sha256: string; readonly sources: Readonly<Record<string, string>> };
+  readonly divisions: readonly [ocdId: string, layer: string, geoid: string, censusName: string, lsad?: string, funcstat?: string, classfp?: string][];
   readonly governments: readonly Government[];
 }
 const index = JSON.parse(readFileSync(join(DIR, "index.json"), "utf8")) as {
   readonly counts: { readonly states: number; readonly governments: number; readonly placedByStateFipsForABlankPostalCode: number; readonly byTypeAndPairing: Readonly<Record<string, number>> };
-  readonly states: Readonly<Record<string, { readonly sha256: string; readonly divisions: number; readonly governments: number; readonly paired: number }>>;
+  readonly states: Readonly<Record<string, { readonly sha256: string; readonly divisions: number; readonly governments: number; readonly paired: number; readonly generatedAt: string }>>;
 };
+const FUNCSTAT_EXTRACT = "data/reference/census_tiger_2023_territory_functional_status.csv";
+const TERRITORIES = ["as", "gu", "mp", "pr", "vi"];
+const GOVERNING = new Set(["A", "B", "C", "G"]);
 const states = new Map<string, StateFile>();
 for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json") && f !== "index.json")) {
   states.set(file.replace(/\.json$/, ""), JSON.parse(readFileSync(join(DIR, file), "utf8")) as StateFile);
 }
 /** The one id the committed geometry already gives two governments (the ZIP index names it too). */
 const inherited = new Set(Object.keys((JSON.parse(readFileSync(join(ROOT, "data", "derived", "zip-divisions", "index.json"), "utf8")) as { inheritedSharedIds: Record<string, unknown> }).inheritedSharedIds));
-const PAIRED = new Set(["STATE", "COUNTY_FIPS", "PLACE_FIPS", "COUSUB_FIPS", "SCHOOL_NAME", "SCHOOL_NAME_LOOSE"]);
+const PAIRED = new Set(["STATE", "COUNTY_FIPS", "PLACE_FIPS", "COUSUB_FIPS", "SCHOOL_NAME", "SCHOOL_NAME_LOOSE", "CONSOLIDATED_COUNTY_FIPS", "TIGER_FUNCSTAT"]);
 const UNPAIRED = new Set(["NO_CENSUS_GEOGRAPHY", "NO_CENSUS_SCHOOL_GEOGRAPHY", "NO_DIVISION_FOR_FIPS", "NO_OCD_ID_FOR_DIVISION", "SCHOOL_NAME_AMBIGUOUS", "SCHOOL_NAME_NOT_FOUND", "STATE_CODES_DISAGREE"]);
 
 function censusRows(path: string): number {
@@ -58,7 +62,8 @@ test("every Census government sits in exactly one state's file, every file is wh
   assert.equal(states.size, index.counts.states);
   assert.equal(states.size, 56, "every state, DC and the territories the Census files carry");
   const governments = [...states.values()].reduce((n, s) => n + s.governments.length, 0);
-  assert.equal(governments, census + states.size, "each Census row once, plus each state itself");
+  const territoryGovernments = [...states.values()].reduce((n, s) => n + s.governments.filter((g) => g[5] === "TIGER_FUNCSTAT").length, 0);
+  assert.equal(governments, census + states.size + territoryGovernments, "each Census row once, plus each state itself, plus each territory government TIGER/Line records");
   assert.equal(index.counts.governments, governments);
   assert.equal(index.counts.placedByStateFipsForABlankPostalCode, 13, "13 Texas special districts carry FIPS 48 and no postal code, and are placed by name of it");
 
@@ -127,4 +132,65 @@ test("a government the committed registry knows lands on the id it keys, directl
   assert.equal(columbus.division, "ocd-division/country:us/state:oh/place:columbus");
   assert.equal(columbus.row[1], "oh:city:city-of-columbus");
   assert.equal(government("oh", "COLUMBUS CITY SCH DIST").division, "ocd-division/country:us/state:oh/school_district:columbus_city_school_district");
+});
+
+test("a consolidated city-county pairs to its county, and a town whose code merely missed never does (2026-09-25)", () => {
+  // Filed MUNICIPAL under a consolidated-city place code no boundary layer carries, in a county with no COUNTY government.
+  const consolidated: [string, string, string][] = [
+    ["ky", "METRO GOVERNMENT OF LOUISVILLE-JEFFERSON COUNTY", "state:ky/county:jefferson"],
+    ["tn", "METROPOLITAN GOVERNMENT OF NASHVILLE-DAVIDSON COUNTY", "state:tn/county:davidson"],
+    ["ga", "UNIFIED GOVERNMENT OF ATHENS-CLARKE COUNTY", "state:ga/county:clarke"],
+    ["hi", "CITY AND COUNTY OF HONOLULU", "state:hi/county:honolulu"],
+    ["mt", "CITY AND COUNTY OF BUTTE-SILVER BOW", "state:mt/county:silver_bow"],
+    ["ks", "UNIFIED GOVERNMENT OF GREELEY COUNTY", "state:ks/county:greeley"],
+  ];
+  for (const [state, name, division] of consolidated) {
+    const g = government(state, name);
+    assert.equal(g.row[5], "CONSOLIDATED_COUNTY_FIPS", `${name} pairs as a consolidated government`);
+    assert.equal(g.division, `ocd-division/country:us/${division}`, `${name} governs its county`);
+    assert.ok(!states.get(state)!.governments.some((o) => o[3] === "COUNTY" && o[4] === g.row[4]), `${name}'s county has no separate county government`);
+  }
+  // Also unmatched, also in counties with no county government; neither name carries its county's, so neither takes it.
+  assert.equal(government("ct", "TOWN OF POMFRET").row[5], "NO_DIVISION_FOR_FIPS");
+  assert.equal(government("ma", "CITY OF GREENFIELD").row[5], "NO_DIVISION_FOR_FIPS");
+  assert.equal(index.counts.byTypeAndPairing["MUNICIPAL:CONSOLIDATED_COUNTY_FIPS"], 6, "exactly the six, nationally");
+});
+
+test("a territory's governments are exactly its divisions TIGER/Line gives a governing status, read from the committed extract (2026-09-25)", () => {
+  const extract = readFileSync(join(ROOT, FUNCSTAT_EXTRACT), "utf8");
+  const [header, ...rows] = parseCsv(extract).filter((r) => r.length > 1);
+  const status = new Map(rows.map((r) => [`${r[header.indexOf("layer")]}:${r[header.indexOf("geoid")]}`, r[header.indexOf("funcstat")]]));
+  const expected: Record<string, number> = { as: 94, gu: 0, mp: 4, pr: 78, vi: 0 };
+  for (const code of TERRITORIES) {
+    const s = states.get(code)!;
+    assert.equal(s.functionalStatus?.dataset, FUNCSTAT_EXTRACT, `${code}: its governments' source is named`);
+    assert.equal(s.functionalStatus?.sha256, createHash("sha256").update(extract).digest("hex"), `${code}: and bound to the committed extract's bytes`);
+    const governing: number[] = [];
+    s.divisions.forEach((d, i) => {
+      if (d[1] !== "county" && d[1] !== "cousub" && d[1] !== "place") return;
+      assert.equal(d.length, 7, `${code}: ${d[0]} carries LSAD, FUNCSTAT and CLASSFP`);
+      assert.equal(d[5], status.get(`${d[1]}:${d[2]}`), `${code}: ${d[0]}'s status is the extract's`);
+      if (GOVERNING.has(d[5]!)) governing.push(i);
+    });
+    const rowsFromStatus = s.governments.filter((g) => g[5] === "TIGER_FUNCSTAT");
+    assert.deepEqual(rowsFromStatus.map((g) => g[4]).sort((a, b) => a - b), governing, `${code}: one government per governing division, and none elsewhere`);
+    assert.equal(rowsFromStatus.length, expected[code], `${code}: ${expected[code]} governments`);
+    for (const g of rowsFromStatus) {
+      assert.equal(g[2], s.divisions[g[4]][3], `${code}: ${g[0]} keeps the Census legal name`);
+      assert.equal(g[0], `${s.divisions[g[4]][1]}:${s.divisions[g[4]][2]}`, `${code}: its Census id is its division's layer and GEOID`);
+    }
+    // The Census of Governments lists nothing here, and the territory itself is never a government row beyond its STATE line.
+    assert.deepEqual(s.governments.filter((g) => g[5] !== "TIGER_FUNCSTAT").map((g) => g[3]), ["STATE"], `${code}: no other government row`);
+  }
+  // A state's divisions carry no status: nothing is read for them, so nothing is claimed.
+  for (const [code, s] of states) if (!TERRITORIES.includes(code)) assert.ok(s.functionalStatus === undefined && s.divisions.every((d) => d.length === 4), `${code}: no functional status`);
+  assert.equal(government("pr", "Adjuntas Municipio").division, "ocd-division/country:us/territory:pr/county:adjuntas");
+  assert.equal(government("as", "Aasu village").division, "ocd-division/country:us/territory:as/place:aasu");
+});
+
+test("a rebuild leaves an unchanged state's build date alone, so its records do not move", async () => {
+  const { loadRegistrationReference } = await import("../lib/registration/reference.ts");
+  for (const code of states.keys()) {
+    assert.equal(loadRegistrationReference(ROOT, code).generatedAt, index.states[code].generatedAt, `${code}: its records carry its own file's date`);
+  }
 });

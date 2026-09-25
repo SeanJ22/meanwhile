@@ -76,6 +76,16 @@ export const REFERENCE_DATASETS = [
    */
   "acs5_2024_b01003_zcta",
   "acs5_2024_b01003_state",
+  /*
+   * 2026-09-25. The Census of Governments does not enumerate the five
+   * territories, so their registration reads TIGER/Line 2023's functional
+   * status (FUNCSTAT, docs/state.md §4.6 M17) for their county-equivalents,
+   * county subdivisions and places: the attribute tables only, extracted by
+   * scripts/extract-territory-functional-status.mts. It is the evidence behind
+   * each territory government registered, and behind "none recorded" in Guam
+   * and the Virgin Islands.
+   */
+  "census_tiger_2023_territory_functional_status",
 ] as const;
 
 export type ReferenceDataset = (typeof REFERENCE_DATASETS)[number];
@@ -112,6 +122,13 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
    */
   acs5_2024_b01003_zcta: 33_772,
   acs5_2024_b01003_state: 52,
+  /*
+   * Every territory row of the 2023 TIGER/Line county file (91) and of the
+   * five territories' county-subdivision (1,010, of which 46 are the "not
+   * defined" water placeholders the cartographic files omit) and place (571)
+   * files. Moves only with a new TIGER/Line vintage.
+   */
+  census_tiger_2023_territory_functional_status: 1_672,
 };
 
 export function dataPath(dataset: ReferenceDataset): string {

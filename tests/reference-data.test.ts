@@ -43,19 +43,19 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /* ---- 2a / 2d.4: the inventory and its pairings ---------------------------- */
 
-test("data/reference holds 24 files: 12 data files and 12 provenance notes", () => {
+test("data/reference holds 26 files: 13 data files and 13 provenance notes", () => {
   const files = referenceFiles();
   const data = files.filter((f) => f.endsWith(".csv"));
   const notes = files.filter((f) => f.endsWith(".md"));
 
   assert.equal(
     files.length,
-    24,
-    `expected 24 files, found ${files.length}: ${files.join(", ")} — a file going ` +
+    26,
+    `expected 26 files, found ${files.length}: ${files.join(", ")} — a file going ` +
       "missing narrows a denominator, and a narrowed denominator flatters our coverage",
   );
-  assert.equal(data.length, 12, `expected 12 data files, found ${data.length}`);
-  assert.equal(notes.length, 12, `expected 12 provenance notes, found ${notes.length}`);
+  assert.equal(data.length, 13, `expected 13 data files, found ${data.length}`);
+  assert.equal(notes.length, 13, `expected 13 provenance notes, found ${notes.length}`);
 });
 
 test("every reference data file is paired with its provenance note, both ways", () => {

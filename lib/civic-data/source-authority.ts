@@ -352,11 +352,16 @@ export const SOURCE_AUTHORITIES = {
     // Every state, DC and territory in the FIPS table: registration covers the country, never a chosen list.
     jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
     recordClasses: ["REGISTRATION"],
-    competentFacts: ["The governments of each state (2022 Census of Governments)", "Census division identity and GEOID (2023 cartographic boundary files)", "OCD division id built from the Census names"],
+    competentFacts: [
+      "The governments of each state (2022 Census of Governments)",
+      "The functioning local governments of each territory, which the Census of Governments does not enumerate (TIGER/Line 2023 functional status, committed extract)",
+      "Census division identity and GEOID (2023 cartographic boundary files)",
+      "OCD division id built from the Census names",
+    ],
     expectedIdentifierKeys: ["ocd_id", "geoid"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics:
-      "Complete for the pinned Census vintage: every government the 2022 Census of Governments lists in the state, each on the Census division the Census ties it to or named as unpaired, and every Census division in the state. It never claims a government the Census does not list, and a different Census file is refused rather than substituted.",
+      "Complete for the pinned Census vintage: every government the 2022 Census of Governments lists in the state, each on the Census division the Census ties it to or named as unpaired, and every Census division in the state. For a territory, every division TIGER/Line 2023 gives a governing functional status (A, B, C, G), and a territory whose divisions all carry a non-governing status is registered with that record stated. It never claims a government the Census does not record, and a different Census file is refused rather than substituted.",
     parserVersion: REGISTRATION_PARSER_VERSION,
     freshnessExpectation: "Every 90 days a conditional request confirms census.gov still serves the pinned Census of Governments bytes (a 304 against the Last-Modified they were served with, or the bytes hashed); a new vintage waits for the reference to be rebuilt from it.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },

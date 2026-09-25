@@ -1,0 +1,1673 @@
+layer,statefp,geoid,name,namelsad,lsad,classfp,funcstat
+county,60,60010,Eastern,Eastern District,07,H1,A
+county,60,60020,Manu'a,Manu'a District,07,H1,A
+county,60,60030,Rose Island,Rose Island,00,H4,N
+county,60,60040,Swains Island,Swains Island,00,H4,N
+county,60,60050,Western,Western District,07,H1,A
+county,66,66010,Guam,Guam,00,H4,F
+county,69,69085,Northern Islands,Northern Islands Municipality,12,H1,B
+county,69,69100,Rota,Rota Municipality,12,H1,A
+county,69,69110,Saipan,Saipan Municipality,12,H1,A
+county,69,69120,Tinian,Tinian Municipality,12,H1,A
+county,72,72001,Adjuntas,Adjuntas Municipio,13,H1,A
+county,72,72003,Aguada,Aguada Municipio,13,H1,A
+county,72,72005,Aguadilla,Aguadilla Municipio,13,H1,A
+county,72,72007,Aguas Buenas,Aguas Buenas Municipio,13,H1,A
+county,72,72009,Aibonito,Aibonito Municipio,13,H1,A
+county,72,72011,Añasco,Añasco Municipio,13,H1,A
+county,72,72013,Arecibo,Arecibo Municipio,13,H1,A
+county,72,72015,Arroyo,Arroyo Municipio,13,H1,A
+county,72,72017,Barceloneta,Barceloneta Municipio,13,H1,A
+county,72,72019,Barranquitas,Barranquitas Municipio,13,H1,A
+county,72,72021,Bayamón,Bayamón Municipio,13,H1,A
+county,72,72023,Cabo Rojo,Cabo Rojo Municipio,13,H1,A
+county,72,72025,Caguas,Caguas Municipio,13,H1,A
+county,72,72027,Camuy,Camuy Municipio,13,H1,A
+county,72,72029,Canóvanas,Canóvanas Municipio,13,H1,A
+county,72,72031,Carolina,Carolina Municipio,13,H1,A
+county,72,72033,Cataño,Cataño Municipio,13,H1,A
+county,72,72035,Cayey,Cayey Municipio,13,H1,A
+county,72,72037,Ceiba,Ceiba Municipio,13,H1,A
+county,72,72039,Ciales,Ciales Municipio,13,H1,A
+county,72,72041,Cidra,Cidra Municipio,13,H1,A
+county,72,72043,Coamo,Coamo Municipio,13,H1,A
+county,72,72045,Comerío,Comerío Municipio,13,H1,A
+county,72,72047,Corozal,Corozal Municipio,13,H1,A
+county,72,72049,Culebra,Culebra Municipio,13,H1,A
+county,72,72051,Dorado,Dorado Municipio,13,H1,A
+county,72,72053,Fajardo,Fajardo Municipio,13,H1,A
+county,72,72054,Florida,Florida Municipio,13,H1,A
+county,72,72055,Guánica,Guánica Municipio,13,H1,A
+county,72,72057,Guayama,Guayama Municipio,13,H1,A
+county,72,72059,Guayanilla,Guayanilla Municipio,13,H1,A
+county,72,72061,Guaynabo,Guaynabo Municipio,13,H1,A
+county,72,72063,Gurabo,Gurabo Municipio,13,H1,A
+county,72,72065,Hatillo,Hatillo Municipio,13,H1,A
+county,72,72067,Hormigueros,Hormigueros Municipio,13,H1,A
+county,72,72069,Humacao,Humacao Municipio,13,H1,A
+county,72,72071,Isabela,Isabela Municipio,13,H1,A
+county,72,72073,Jayuya,Jayuya Municipio,13,H1,A
+county,72,72075,Juana Díaz,Juana Díaz Municipio,13,H1,A
+county,72,72077,Juncos,Juncos Municipio,13,H1,A
+county,72,72079,Lajas,Lajas Municipio,13,H1,A
+county,72,72081,Lares,Lares Municipio,13,H1,A
+county,72,72083,Las Marías,Las Marías Municipio,13,H1,A
+county,72,72085,Las Piedras,Las Piedras Municipio,13,H1,A
+county,72,72087,Loíza,Loíza Municipio,13,H1,A
+county,72,72089,Luquillo,Luquillo Municipio,13,H1,A
+county,72,72091,Manatí,Manatí Municipio,13,H1,A
+county,72,72093,Maricao,Maricao Municipio,13,H1,A
+county,72,72095,Maunabo,Maunabo Municipio,13,H1,A
+county,72,72097,Mayagüez,Mayagüez Municipio,13,H1,A
+county,72,72099,Moca,Moca Municipio,13,H1,A
+county,72,72101,Morovis,Morovis Municipio,13,H1,A
+county,72,72103,Naguabo,Naguabo Municipio,13,H1,A
+county,72,72105,Naranjito,Naranjito Municipio,13,H1,A
+county,72,72107,Orocovis,Orocovis Municipio,13,H1,A
+county,72,72109,Patillas,Patillas Municipio,13,H1,A
+county,72,72111,Peñuelas,Peñuelas Municipio,13,H1,A
+county,72,72113,Ponce,Ponce Municipio,13,H1,A
+county,72,72115,Quebradillas,Quebradillas Municipio,13,H1,A
+county,72,72117,Rincón,Rincón Municipio,13,H1,A
+county,72,72119,Río Grande,Río Grande Municipio,13,H1,A
+county,72,72121,Sabana Grande,Sabana Grande Municipio,13,H1,A
+county,72,72123,Salinas,Salinas Municipio,13,H1,A
+county,72,72125,San Germán,San Germán Municipio,13,H1,A
+county,72,72127,San Juan,San Juan Municipio,13,H1,A
+county,72,72129,San Lorenzo,San Lorenzo Municipio,13,H1,A
+county,72,72131,San Sebastián,San Sebastián Municipio,13,H1,A
+county,72,72133,Santa Isabel,Santa Isabel Municipio,13,H1,A
+county,72,72135,Toa Alta,Toa Alta Municipio,13,H1,A
+county,72,72137,Toa Baja,Toa Baja Municipio,13,H1,A
+county,72,72139,Trujillo Alto,Trujillo Alto Municipio,13,H1,A
+county,72,72141,Utuado,Utuado Municipio,13,H1,A
+county,72,72143,Vega Alta,Vega Alta Municipio,13,H1,A
+county,72,72145,Vega Baja,Vega Baja Municipio,13,H1,A
+county,72,72147,Vieques,Vieques Municipio,13,H1,A
+county,72,72149,Villalba,Villalba Municipio,13,H1,A
+county,72,72151,Yabucoa,Yabucoa Municipio,13,H1,A
+county,72,72153,Yauco,Yauco Municipio,13,H1,A
+county,78,78010,St. Croix,St. Croix Island,10,H4,N
+county,78,78020,St. John,St. John Island,10,H4,N
+county,78,78030,St. Thomas,St. Thomas Island,10,H4,N
+cousub,60,6001037700,Ituau,Ituau county,26,T1,A
+cousub,60,6001051300,Ma'oputasi,Ma'oputasi county,26,T1,A
+cousub,60,6001067300,Sa'ole,Sa'ole county,26,T1,A
+cousub,60,6001072100,Sua,Sua county,26,T1,A
+cousub,60,6001086500,Vaifanua,Vaifanua county,26,T1,A
+cousub,60,6002031300,Faleasao,Faleasao county,26,T1,A
+cousub,60,6002034500,Fitiuta,Fitiuta county,26,T1,A
+cousub,60,6002059300,Ofu,Ofu county,26,T1,A
+cousub,60,6002060900,Olosega,Olosega county,26,T1,A
+cousub,60,6002078500,Ta'u,Ta'u county,26,T1,A
+cousub,60,6003065700,Rose Island,Rose Island,00,Z1,N
+cousub,60,6004073700,Swains Island,Swains Island,00,Z1,N
+cousub,60,6005042500,Lealataua,Lealataua county,26,T1,A
+cousub,60,6005043300,Leasina,Leasina county,26,T1,A
+cousub,60,6005080100,Tualatai,Tualatai county,26,T1,A
+cousub,60,6005080900,Tualauta,Tualauta county,26,T1,A
+cousub,66,6601000000,County subdivision not defined,County subdivision not defined,00,Z9,F
+cousub,66,6601004650,Agana Heights,Agana Heights municipality,37,Z1,N
+cousub,66,6601013100,Asan,Asan municipality,37,Z1,N
+cousub,66,6601017650,Barrigada,Barrigada municipality,37,Z1,N
+cousub,66,6601026100,Chalan Pago-Ordot,Chalan Pago-Ordot municipality,37,Z1,N
+cousub,66,6601028050,Dededo,Dededo municipality,37,Z1,N
+cousub,66,6601034653,Hågat,Hågat municipality,37,Z1,N
+cousub,66,6601034800,Hagåtña,Hagåtña municipality,37,Z1,N
+cousub,66,6601035503,Inalåhan,Inalåhan municipality,37,Z1,N
+cousub,66,6601035528,Humåtak,Humåtak municipality,37,Z1,N
+cousub,66,6601044403,Malesso',Malesso' municipality,37,Z1,N
+cousub,66,6601046250,Mangilao,Mangilao municipality,37,Z1,N
+cousub,66,6601051450,Mongmong-Toto-Maite,Mongmong-Toto-Maite municipality,37,Z1,N
+cousub,66,6601059250,Piti,Piti municipality,37,Z1,N
+cousub,66,6601062828,Sånta Rita-Sumai,Sånta Rita-Sumai municipality,37,Z1,N
+cousub,66,6601065750,Sinajana,Sinajana municipality,37,Z1,N
+cousub,66,6601069650,Talo'fo'fo,Talo'fo'fo municipality,37,Z1,N
+cousub,66,6601071600,Tamuning,Tamuning municipality,37,Z1,N
+cousub,66,6601083300,Yigo,Yigo municipality,37,Z1,N
+cousub,66,6601084600,Yona,Yona municipality,37,Z1,N
+cousub,69,6908500000,Municipality subdivision not defined,Municipality subdivision not defined,00,Z9,F
+cousub,69,6908514075,4,District 4,28,Z1,N
+cousub,69,6910000000,Municipality subdivision not defined,Municipality subdivision not defined,00,Z9,F
+cousub,69,6910014290,7,District 7,28,Z1,N
+cousub,69,6911000000,Municipality subdivision not defined,Municipality subdivision not defined,00,Z9,F
+cousub,69,6911013750,1,District 1,28,Z1,N
+cousub,69,6911013900,2,District 2,28,Z1,N
+cousub,69,6911014050,3,District 3,28,Z1,N
+cousub,69,6911014150,4,District 4,28,Z1,N
+cousub,69,6911014200,5,District 5,28,Z1,N
+cousub,69,6912000000,Municipality subdivision not defined,Municipality subdivision not defined,00,Z9,F
+cousub,69,6912014270,6,District 6,28,Z1,N
+cousub,72,7200100401,Adjuntas,Adjuntas barrio-pueblo,41,Z1,N
+cousub,72,7200113645,Capáez,Capáez barrio,20,Z1,N
+cousub,72,7200130458,Garzas,Garzas barrio,20,Z1,N
+cousub,72,7200132049,Guayabo Dulce,Guayabo Dulce barrio,20,Z1,N
+cousub,72,7200132608,Guayo,Guayo barrio,20,Z1,N
+cousub,72,7200132780,Guilarte,Guilarte barrio,20,Z1,N
+cousub,72,7200139273,Juan González,Juan González barrio,20,Z1,N
+cousub,72,7200145422,Limaní,Limaní barrio,20,Z1,N
+cousub,72,7200160773,Pellejas,Pellejas barrio,20,Z1,N
+cousub,72,7200163955,Portillo,Portillo barrio,20,Z1,N
+cousub,72,7200163998,Portugués,Portugués barrio,20,Z1,N
+cousub,72,7200174963,Saltillo,Saltillo barrio,20,Z1,N
+cousub,72,7200181714,Tanamá,Tanamá barrio,20,Z1,N
+cousub,72,7200185584,Vegas Abajo,Vegas Abajo barrio,20,Z1,N
+cousub,72,7200185627,Vegas Arriba,Vegas Arriba barrio,20,Z1,N
+cousub,72,7200187949,Yahuecas,Yahuecas barrio,20,Z1,N
+cousub,72,7200188250,Yayales,Yayales barrio,20,Z1,N
+cousub,72,7200300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7200300659,Aguada,Aguada barrio-pueblo,41,Z1,N
+cousub,72,7200304185,Asomante,Asomante barrio,20,Z1,N
+cousub,72,7200304400,Atalaya,Atalaya barrio,20,Z1,N
+cousub,72,7200314591,Carrizal,Carrizal barrio,20,Z1,N
+cousub,72,7200317085,Cerro Gordo,Cerro Gordo barrio,20,Z1,N
+cousub,72,7200321772,Cruces,Cruces barrio,20,Z1,N
+cousub,72,7200327233,Espinar,Espinar barrio,20,Z1,N
+cousub,72,7200330931,Guanábano,Guanábano barrio,20,Z1,N
+cousub,72,7200331318,Guaniquilla,Guaniquilla barrio,20,Z1,N
+cousub,72,7200331963,Guayabo,Guayabo barrio,20,Z1,N
+cousub,72,7200337596,Jagüey,Jagüey barrio,20,Z1,N
+cousub,72,7200340907,Lagunas,Lagunas barrio,20,Z1,N
+cousub,72,7200349421,Mal Paso,Mal Paso barrio,20,Z1,N
+cousub,72,7200349550,Mamey,Mamey barrio,20,Z1,N
+cousub,72,7200351098,Marías,Marías barrio,20,Z1,N
+cousub,72,7200356215,Naranjo,Naranjo barrio,20,Z1,N
+cousub,72,7200361719,Piedras Blancas,Piedras Blancas barrio,20,Z1,N
+cousub,72,7200370921,Río Grande,Río Grande barrio,20,Z1,N
+cousub,72,7200500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7200500530,Aguacate,Aguacate barrio,20,Z1,N
+cousub,72,7200500788,Aguadilla,Aguadilla barrio-pueblo,41,Z1,N
+cousub,72,7200503626,Arenales,Arenales barrio,20,Z1,N
+cousub,72,7200508313,Borinquen,Borinquen barrio,20,Z1,N
+cousub,72,7200510592,Caimital Alto,Caimital Alto barrio,20,Z1,N
+cousub,72,7200510635,Caimital Bajo,Caimital Bajo barrio,20,Z1,N
+cousub,72,7200511237,Camaceyes,Camaceyes barrio,20,Z1,N
+cousub,72,7200516225,Ceiba Alta,Ceiba Alta barrio,20,Z1,N
+cousub,72,7200516268,Ceiba Baja,Ceiba Baja barrio,20,Z1,N
+cousub,72,7200520955,Corrales,Corrales barrio,20,Z1,N
+cousub,72,7200532694,Guerrero,Guerrero barrio,20,Z1,N
+cousub,72,7200549292,Maleza Alta,Maleza Alta barrio,20,Z1,N
+cousub,72,7200549335,Maleza Baja,Maleza Baja barrio,20,Z1,N
+cousub,72,7200554108,Montaña,Montaña barrio,20,Z1,N
+cousub,72,7200557935,Palmar,Palmar barrio,20,Z1,N
+cousub,72,7200585842,Victoria,Victoria barrio,20,Z1,N
+cousub,72,7200700917,Aguas Buenas,Aguas Buenas barrio-pueblo,41,Z1,N
+cousub,72,7200704529,Bairoa,Bairoa barrio,20,Z1,N
+cousub,72,7200706894,Bayamoncito,Bayamoncito barrio,20,Z1,N
+cousub,72,7200710506,Cagüitas,Cagüitas barrio,20,Z1,N
+cousub,72,7200737682,Jagüeyes,Jagüeyes barrio,20,Z1,N
+cousub,72,7200739230,Juan Asencio,Juan Asencio barrio,20,Z1,N
+cousub,72,7200755441,Mula,Mula barrio,20,Z1,N
+cousub,72,7200755527,Mulita,Mulita barrio,20,Z1,N
+cousub,72,7200780467,Sonadora,Sonadora barrio,20,Z1,N
+cousub,72,7200780811,Sumidero,Sumidero barrio,20,Z1,N
+cousub,72,7200901261,Aibonito,Aibonito barrio-pueblo,41,Z1,N
+cousub,72,7200901605,Algarrobo,Algarrobo barrio,20,Z1,N
+cousub,72,7200904271,Asomante,Asomante barrio,20,Z1,N
+cousub,72,7200913344,Caonillas,Caonillas barrio,20,Z1,N
+cousub,72,7200922890,Cuyón,Cuyón barrio,20,Z1,N
+cousub,72,7200945895,Llanos,Llanos barrio,20,Z1,N
+cousub,72,7200960042,Pasto,Pasto barrio,20,Z1,N
+cousub,72,7200962536,Plata,Plata barrio,20,Z1,N
+cousub,72,7200971867,Robles,Robles barrio,20,Z1,N
+cousub,72,7201100000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7201102637,Añasco,Añasco barrio-pueblo,41,Z1,N
+cousub,72,7201102723,Añasco Abajo,Añasco Abajo barrio,20,Z1,N
+cousub,72,7201102766,Añasco Arriba,Añasco Arriba barrio,20,Z1,N
+cousub,72,7201110248,Caguabo,Caguabo barrio,20,Z1,N
+cousub,72,7201113989,Caracol,Caracol barrio,20,Z1,N
+cousub,72,7201114462,Carreras,Carreras barrio,20,Z1,N
+cousub,72,7201114978,Casey Abajo,Casey Abajo barrio,20,Z1,N
+cousub,72,7201115021,Casey Arriba,Casey Arriba barrio,20,Z1,N
+cousub,72,7201117128,Cerro Gordo,Cerro Gordo barrio,20,Z1,N
+cousub,72,7201118031,Cidra,Cidra barrio,20,Z1,N
+cousub,72,7201120439,Corcovada,Corcovada barrio,20,Z1,N
+cousub,72,7201123148,Dagüey,Dagüey barrio,20,Z1,N
+cousub,72,7201127276,Espino,Espino barrio,20,Z1,N
+cousub,72,7201133253,Hatillo,Hatillo barrio,20,Z1,N
+cousub,72,7201135661,Humatas,Humatas barrio,20,Z1,N
+cousub,72,7201151141,Marías,Marías barrio,20,Z1,N
+cousub,72,7201153463,Miraflores,Miraflores barrio,20,Z1,N
+cousub,72,7201157591,Ovejas,Ovejas barrio,20,Z1,N
+cousub,72,7201161934,Piñales,Piñales barrio,20,Z1,N
+cousub,72,7201162665,Playa,Playa barrio,20,Z1,N
+cousub,72,7201167567,Quebrada Larga,Quebrada Larga barrio,20,Z1,N
+cousub,72,7201170147,Río Arriba,Río Arriba barrio,20,Z1,N
+cousub,72,7201170534,Río Cañas,Río Cañas barrio,20,Z1,N
+cousub,72,7201300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7201303411,Arecibo,Arecibo barrio-pueblo,41,Z1,N
+cousub,72,7201303540,Arenalejos,Arenalejos barrio,20,Z1,N
+cousub,72,7201304056,Arrozal,Arrozal barrio,20,Z1,N
+cousub,72,7201311323,Cambalache,Cambalache barrio,20,Z1,N
+cousub,72,7201314505,Carreras,Carreras barrio,20,Z1,N
+cousub,72,7201323750,Domingo Ruíz,Domingo Ruíz barrio,20,Z1,N
+cousub,72,7201323836,Dominguito,Dominguito barrio,20,Z1,N
+cousub,72,7201327061,Esperanza,Esperanza barrio,20,Z1,N
+cousub,72,7201327835,Factor,Factor barrio,20,Z1,N
+cousub,72,7201330329,Garrochales,Garrochales barrio,20,Z1,N
+cousub,72,7201333511,Hato Abajo,Hato Abajo barrio,20,Z1,N
+cousub,72,7201333554,Hato Arriba,Hato Arriba barrio,20,Z1,N
+cousub,72,7201334199,Hato Viejo,Hato Viejo barrio,20,Z1,N
+cousub,72,7201336865,Islote,Islote barrio,20,Z1,N
+cousub,72,7201353549,Miraflores,Miraflores barrio,20,Z1,N
+cousub,72,7201370190,Río Arriba,Río Arriba barrio,20,Z1,N
+cousub,72,7201373759,Sabana Hoyos,Sabana Hoyos barrio,20,Z1,N
+cousub,72,7201378704,Santana,Santana barrio,20,Z1,N
+cousub,72,7201381757,Tanamá,Tanamá barrio,20,Z1,N
+cousub,72,7201500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7201502809,Ancones,Ancones barrio,20,Z1,N
+cousub,72,7201503970,Arroyo,Arroyo barrio-pueblo,41,Z1,N
+cousub,72,7201531748,Guásimas,Guásimas barrio,20,Z1,N
+cousub,72,7201558408,Palmas,Palmas barrio,20,Z1,N
+cousub,72,7201562192,Pitahaya,Pitahaya barrio,20,Z1,N
+cousub,72,7201588164,Yaurel,Yaurel barrio,20,Z1,N
+cousub,72,7201700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7201705389,Barceloneta,Barceloneta barrio-pueblo,41,Z1,N
+cousub,72,7201729039,Florida Afuera,Florida Afuera barrio,20,Z1,N
+cousub,72,7201730415,Garrochales,Garrochales barrio,20,Z1,N
+cousub,72,7201758580,Palmas Altas,Palmas Altas barrio,20,Z1,N
+cousub,72,7201905604,Barrancas,Barrancas barrio,20,Z1,N
+cousub,72,7201905733,Barranquitas,Barranquitas barrio-pueblo,41,Z1,N
+cousub,72,7201912097,Cañabón,Cañabón barrio,20,Z1,N
+cousub,72,7201934500,Helechal,Helechal barrio,20,Z1,N
+cousub,72,7201934887,Honduras,Honduras barrio,20,Z1,N
+cousub,72,7201958795,Palo Hincado,Palo Hincado barrio,20,Z1,N
+cousub,72,7201967309,Quebrada Grande,Quebrada Grande barrio,20,Z1,N
+cousub,72,7201967997,Quebradillas,Quebradillas barrio,20,Z1,N
+cousub,72,7202106636,Bayamón,Bayamón barrio-pueblo,41,Z1,N
+cousub,72,7202109130,Buena Vista,Buena Vista barrio,20,Z1,N
+cousub,72,7202117171,Cerro Gordo,Cerro Gordo barrio,20,Z1,N
+cousub,72,7202123191,Dajaos,Dajaos barrio,20,Z1,N
+cousub,72,7202131619,Guaraguao Abajo,Guaraguao Abajo barrio,20,Z1,N
+cousub,72,7202131662,Guaraguao Arriba,Guaraguao Arriba barrio,20,Z1,N
+cousub,72,7202134156,Hato Tejas,Hato Tejas barrio,20,Z1,N
+cousub,72,7202139402,Juan Sánchez,Juan Sánchez barrio,20,Z1,N
+cousub,72,7202153162,Minillas,Minillas barrio,20,Z1,N
+cousub,72,7202156774,Nuevo,Nuevo barrio,20,Z1,N
+cousub,72,7202157763,Pájaros,Pájaros barrio,20,Z1,N
+cousub,72,7202178790,Santa Olaya,Santa Olaya barrio,20,Z1,N
+cousub,72,7202300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7202304787,Bajura,Bajura barrio,20,Z1,N
+cousub,72,7202308012,Boquerón,Boquerón barrio,20,Z1,N
+cousub,72,7202309818,Cabo Rojo,Cabo Rojo barrio-pueblo,41,Z1,N
+cousub,72,7202331017,Guanajibo,Guanajibo barrio,20,Z1,N
+cousub,72,7202346067,Llanos Costa,Llanos Costa barrio,20,Z1,N
+cousub,72,7202346153,Llanos Tuna,Llanos Tuna barrio,20,Z1,N
+cousub,72,7202353377,Miradero,Miradero barrio,20,Z1,N
+cousub,72,7202354409,Monte Grande,Monte Grande barrio,20,Z1,N
+cousub,72,7202360601,Pedernales,Pedernales barrio,20,Z1,N
+cousub,72,7202504615,Bairoa,Bairoa barrio,20,Z1,N
+cousub,72,7202507152,Beatriz,Beatriz barrio,20,Z1,N
+cousub,72,7202508356,Borinquen,Borinquen barrio,20,Z1,N
+cousub,72,7202510377,Caguas,Caguas barrio-pueblo,41,Z1,N
+cousub,72,7202512140,Cañabón,Cañabón barrio,20,Z1,N
+cousub,72,7202512226,Cañaboncito,Cañaboncito barrio,20,Z1,N
+cousub,72,7202570577,Río Cañas,Río Cañas barrio,20,Z1,N
+cousub,72,7202575651,San Antonio,San Antonio barrio,20,Z1,N
+cousub,72,7202577371,San Salvador,San Salvador barrio,20,Z1,N
+cousub,72,7202582918,Tomás de Castro,Tomás de Castro barrio,20,Z1,N
+cousub,72,7202583950,Turabo,Turabo barrio,20,Z1,N
+cousub,72,7202700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7202700100,Abra Honda,Abra Honda barrio,20,Z1,N
+cousub,72,7202711968,Camuy,Camuy barrio-pueblo,41,Z1,N
+cousub,72,7202712011,Camuy Arriba,Camuy Arriba barrio,20,Z1,N
+cousub,72,7202717859,Cibao,Cibao barrio,20,Z1,N
+cousub,72,7202718375,Ciénagas,Ciénagas barrio,20,Z1,N
+cousub,72,7202752990,Membrillo,Membrillo barrio,20,Z1,N
+cousub,72,7202761633,Piedra Gorda,Piedra Gorda barrio,20,Z1,N
+cousub,72,7202765116,Puente,Puente barrio,20,Z1,N
+cousub,72,7202765847,Puertos,Puertos barrio,20,Z1,N
+cousub,72,7202766707,Quebrada,Quebrada barrio,20,Z1,N
+cousub,72,7202779349,Santiago,Santiago barrio,20,Z1,N
+cousub,72,7202788336,Yeguada,Yeguada barrio,20,Z1,N
+cousub,72,7202788508,Zanja,Zanja barrio,20,Z1,N
+cousub,72,7202912850,Canóvanas,Canóvanas barrio,20,Z1,N
+cousub,72,7202912871,Canóvanas,Canóvanas barrio-pueblo,41,Z1,N
+cousub,72,7202922202,Cubuy,Cubuy barrio,20,Z1,N
+cousub,72,7202933812,Hato Puerco,Hato Puerco barrio,20,Z1,N
+cousub,72,7202946669,Lomas,Lomas barrio,20,Z1,N
+cousub,72,7202983047,Torrecilla Alta,Torrecilla Alta barrio,20,Z1,N
+cousub,72,7203100000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7203105819,Barrazas,Barrazas barrio,20,Z1,N
+cousub,72,7203109150,Buena Vista,Buena Vista barrio,20,Z1,N
+cousub,72,7203109947,Cacao,Cacao barrio,20,Z1,N
+cousub,72,7203112699,Cangrejo Arriba,Cangrejo Arriba barrio,20,Z1,N
+cousub,72,7203113086,Canovanillas,Canovanillas barrio,20,Z1,N
+cousub,72,7203114333,Carolina,Carolina barrio-pueblo,41,Z1,N
+cousub,72,7203114763,Carruzos,Carruzos barrio,20,Z1,N
+cousub,72,7203115709,Cedro,Cedro barrio,20,Z1,N
+cousub,72,7203151571,Martín González,Martín González barrio,20,Z1,N
+cousub,72,7203173286,Sabana Abajo,Sabana Abajo barrio,20,Z1,N
+cousub,72,7203175479,San Antón,San Antón barrio,20,Z1,N
+cousub,72,7203177973,Santa Cruz,Santa Cruz barrio,20,Z1,N
+cousub,72,7203183735,Trujillo Bajo,Trujillo Bajo barrio,20,Z1,N
+cousub,72,7203315236,Cataño,Cataño barrio-pueblo,41,Z1,N
+cousub,72,7203358451,Palmas,Palmas barrio,20,Z1,N
+cousub,72,7203507238,Beatriz,Beatriz barrio,20,Z1,N
+cousub,72,7203515537,Cayey,Cayey barrio-pueblo,41,Z1,N
+cousub,72,7203515752,Cedro,Cedro barrio,20,Z1,N
+cousub,72,7203516913,Cercadillo,Cercadillo barrio,20,Z1,N
+cousub,72,7203522718,Culebras Alto,Culebras Alto barrio,20,Z1,N
+cousub,72,7203522761,Culebras Bajo,Culebras Bajo barrio,20,Z1,N
+cousub,72,7203528093,Farallón,Farallón barrio,20,Z1,N
+cousub,72,7203531834,Guavate,Guavate barrio,20,Z1,N
+cousub,72,7203537854,Jájome Alto,Jájome Alto barrio,20,Z1,N
+cousub,72,7203537897,Jájome Bajo,Jájome Bajo barrio,20,Z1,N
+cousub,72,7203541638,Lapa,Lapa barrio,20,Z1,N
+cousub,72,7203552087,Matón Abajo,Matón Abajo barrio,20,Z1,N
+cousub,72,7203552130,Matón Arriba,Matón Arriba barrio,20,Z1,N
+cousub,72,7203554452,Monte Llano,Monte Llano barrio,20,Z1,N
+cousub,72,7203560300,Pasto Viejo,Pasto Viejo barrio,20,Z1,N
+cousub,72,7203560644,Pedro Avila,Pedro Avila barrio,20,Z1,N
+cousub,72,7203561676,Piedras,Piedras barrio,20,Z1,N
+cousub,72,7203567051,Quebrada Arriba,Quebrada Arriba barrio,20,Z1,N
+cousub,72,7203569459,Rincón,Rincón barrio,20,Z1,N
+cousub,72,7203580854,Sumido,Sumido barrio,20,Z1,N
+cousub,72,7203582746,Toíta,Toíta barrio,20,Z1,N
+cousub,72,7203585498,Vegas,Vegas barrio,20,Z1,N
+cousub,72,7203700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7203715967,Ceiba,Ceiba barrio-pueblo,41,Z1,N
+cousub,72,7203717644,Chupacallos,Chupacallos barrio,20,Z1,N
+cousub,72,7203723019,Daguao,Daguao barrio,20,Z1,N
+cousub,72,7203732178,Guayacán,Guayacán barrio,20,Z1,N
+cousub,72,7203748260,Machos,Machos barrio,20,Z1,N
+cousub,72,7203767825,Quebrada Seca,Quebrada Seca barrio,20,Z1,N
+cousub,72,7203769846,Río Abajo,Río Abajo barrio,20,Z1,N
+cousub,72,7203774490,Saco,Saco barrio,20,Z1,N
+cousub,72,7203917730,Ciales,Ciales barrio-pueblo,41,Z1,N
+cousub,72,7203917816,Cialitos,Cialitos barrio,20,Z1,N
+cousub,72,7203920568,Cordillera,Cordillera barrio,20,Z1,N
+cousub,72,7203929684,Frontón,Frontón barrio,20,Z1,N
+cousub,72,7203934285,Hato Viejo,Hato Viejo barrio,20,Z1,N
+cousub,72,7203937338,Jaguas,Jaguas barrio,20,Z1,N
+cousub,72,7203961375,Pesas,Pesas barrio,20,Z1,N
+cousub,72,7203964170,Pozas,Pozas barrio,20,Z1,N
+cousub,72,7203982961,Toro Negro,Toro Negro barrio,20,Z1,N
+cousub,72,7204103755,Arenas,Arenas barrio,20,Z1,N
+cousub,72,7204106722,Bayamón,Bayamón barrio,20,Z1,N
+cousub,72,7204107281,Beatriz,Beatriz barrio,20,Z1,N
+cousub,72,7204116010,Ceiba,Ceiba barrio,20,Z1,N
+cousub,72,7204117417,Certenejas,Certenejas barrio,20,Z1,N
+cousub,72,7204118117,Cidra,Cidra barrio-pueblo,41,Z1,N
+cousub,72,7204134930,Honduras,Honduras barrio,20,Z1,N
+cousub,72,7204154495,Monte Llano,Monte Llano barrio,20,Z1,N
+cousub,72,7204168341,Rabanal,Rabanal barrio,20,Z1,N
+cousub,72,7204169502,Rincón,Rincón barrio,20,Z1,N
+cousub,72,7204169889,Río Abajo,Río Abajo barrio,20,Z1,N
+cousub,72,7204175006,Salto,Salto barrio,20,Z1,N
+cousub,72,7204180725,Sud,Sud barrio,20,Z1,N
+cousub,72,7204182789,Toíta,Toíta barrio,20,Z1,N
+cousub,72,7204318762,Coamo,Coamo barrio-pueblo,41,Z1,N
+cousub,72,7204318848,Coamo Arriba,Coamo Arriba barrio,20,Z1,N
+cousub,72,7204322933,Cuyón,Cuyón barrio,20,Z1,N
+cousub,72,7204334371,Hayales,Hayales barrio,20,Z1,N
+cousub,72,7204347056,Los Llanos,Los Llanos barrio,20,Z1,N
+cousub,72,7204358021,Palmarejo,Palmarejo barrio,20,Z1,N
+cousub,72,7204360085,Pasto,Pasto barrio,20,Z1,N
+cousub,72,7204360687,Pedro García,Pedro García barrio,20,Z1,N
+cousub,72,7204366062,Pulguillas,Pulguillas barrio,20,Z1,N
+cousub,72,7204376253,San Ildefonso,San Ildefonso barrio,20,Z1,N
+cousub,72,7204377801,Santa Catalina,Santa Catalina barrio,20,Z1,N
+cousub,72,7204515666,Cedrito,Cedrito barrio,20,Z1,N
+cousub,72,7204516397,Cejas,Cejas barrio,20,Z1,N
+cousub,72,7204519708,Comerío,Comerío barrio-pueblo,41,Z1,N
+cousub,72,7204523879,Doña Elena,Doña Elena barrio,20,Z1,N
+cousub,72,7204556301,Naranjo,Naranjo barrio,20,Z1,N
+cousub,72,7204559010,Palomas,Palomas barrio,20,Z1,N
+cousub,72,7204562020,Piñas,Piñas barrio,20,Z1,N
+cousub,72,7204571265,Río Hondo,Río Hondo barrio,20,Z1,N
+cousub,72,7204585412,Vega Redonda,Vega Redonda barrio,20,Z1,N
+cousub,72,7204700143,Abras,Abras barrio,20,Z1,N
+cousub,72,7204717945,Cibuco,Cibuco barrio,20,Z1,N
+cousub,72,7204720826,Corozal,Corozal barrio-pueblo,41,Z1,N
+cousub,72,7204722288,Cuchillas,Cuchillas barrio,20,Z1,N
+cousub,72,7204724094,Dos Bocas,Dos Bocas barrio,20,Z1,N
+cousub,72,7204748905,Magueyes,Magueyes barrio,20,Z1,N
+cousub,72,7204750066,Maná,Maná barrio,20,Z1,N
+cousub,72,7204756516,Negros,Negros barrio,20,Z1,N
+cousub,72,7204757677,Padilla,Padilla barrio,20,Z1,N
+cousub,72,7204758107,Palmarejo,Palmarejo barrio,20,Z1,N
+cousub,72,7204758322,Palmarito,Palmarito barrio,20,Z1,N
+cousub,72,7204759096,Palos Blancos,Palos Blancos barrio,20,Z1,N
+cousub,72,7204764557,Pueblo,Pueblo barrio,20,Z1,N
+cousub,72,7204922632,Culebra,Culebra barrio-pueblo,41,Z1,N
+cousub,72,7204928566,Flamenco,Flamenco barrio,20,Z1,N
+cousub,72,7204929426,Fraile,Fraile barrio,20,Z1,N
+cousub,72,7204963396,Playa Sardinas I,Playa Sardinas I barrio,20,Z1,N
+cousub,72,7204963439,Playa Sardinas II,Playa Sardinas II barrio,20,Z1,N
+cousub,72,7204976382,San Isidro,San Isidro barrio,20,Z1,N
+cousub,72,7205100000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7205124051,Dorado,Dorado barrio-pueblo,41,Z1,N
+cousub,72,7205127448,Espinosa,Espinosa barrio,20,Z1,N
+cousub,72,7205134758,Higuillar,Higuillar barrio,20,Z1,N
+cousub,72,7205148819,Maguayo,Maguayo barrio,20,Z1,N
+cousub,72,7205149808,Mameyal,Mameyal barrio,20,Z1,N
+cousub,72,7205171480,Río Lajas,Río Lajas barrio,20,Z1,N
+cousub,72,7205309732,Cabezas,Cabezas barrio,20,Z1,N
+cousub,72,7205323406,Demajagua,Demajagua barrio,20,Z1,N
+cousub,72,7205328007,Fajardo,Fajardo barrio-pueblo,41,Z1,N
+cousub,72,7205328695,Florencio,Florencio barrio,20,Z1,N
+cousub,72,7205356344,Naranjo,Naranjo barrio,20,Z1,N
+cousub,72,7205367223,Quebrada Fajardo,Quebrada Fajardo barrio,20,Z1,N
+cousub,72,7205367868,Quebrada Vueltas,Quebrada Vueltas barrio,20,Z1,N
+cousub,72,7205370233,Río Arriba,Río Arriba barrio,20,Z1,N
+cousub,72,7205379779,Sardinera,Sardinera barrio,20,Z1,N
+cousub,72,7205428996,Florida Adentro,Florida Adentro barrio,20,Z1,N
+cousub,72,7205500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7205503454,Arena,Arena barrio,20,Z1,N
+cousub,72,7205512785,Caño,Caño barrio,20,Z1,N
+cousub,72,7205514032,Carenero,Carenero barrio,20,Z1,N
+cousub,72,7205518246,Ciénaga,Ciénaga barrio,20,Z1,N
+cousub,72,7205526760,Ensenada,Ensenada barrio,20,Z1,N
+cousub,72,7205531232,Guánica,Guánica barrio-pueblo,41,Z1,N
+cousub,72,7205554022,Montalva,Montalva barrio,20,Z1,N
+cousub,72,7205581112,Susúa Baja,Susúa Baja barrio,20,Z1,N
+cousub,72,7205700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7205701691,Algarrobo,Algarrobo barrio,20,Z1,N
+cousub,72,7205710549,Caimital,Caimital barrio,20,Z1,N
+cousub,72,7205714075,Carite,Carite barrio,20,Z1,N
+cousub,72,7205714161,Carmen,Carmen barrio,20,Z1,N
+cousub,72,7205730845,Guamaní,Guamaní barrio,20,Z1,N
+cousub,72,7205732264,Guayama,Guayama barrio-pueblo,41,Z1,N
+cousub,72,7205738714,Jobos,Jobos barrio,20,Z1,N
+cousub,72,7205748217,Machete,Machete barrio,20,Z1,N
+cousub,72,7205758494,Palmas,Palmas barrio,20,Z1,N
+cousub,72,7205764256,Pozo Hondo,Pozo Hondo barrio,20,Z1,N
+cousub,72,7205900000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7205905905,Barrero,Barrero barrio,20,Z1,N
+cousub,72,7205907840,Boca,Boca barrio,20,Z1,N
+cousub,72,7205915795,Cedro,Cedro barrio,20,Z1,N
+cousub,72,7205920052,Consejo,Consejo barrio,20,Z1,N
+cousub,72,7205932350,Guayanilla,Guayanilla barrio-pueblo,41,Z1,N
+cousub,72,7205936220,Indios,Indios barrio,20,Z1,N
+cousub,72,7205937252,Jagua Pasto,Jagua Pasto barrio,20,Z1,N
+cousub,72,7205937381,Jaguas,Jaguas barrio,20,Z1,N
+cousub,72,7205945852,Llano,Llano barrio,20,Z1,N
+cousub,72,7205948088,Macaná,Macaná barrio,20,Z1,N
+cousub,72,7205948518,Magas,Magas barrio,20,Z1,N
+cousub,72,7205960128,Pasto,Pasto barrio,20,Z1,N
+cousub,72,7205962708,Playa,Playa barrio,20,Z1,N
+cousub,72,7205967438,Quebrada Honda,Quebrada Honda barrio,20,Z1,N
+cousub,72,7205967696,Quebradas,Quebradas barrio,20,Z1,N
+cousub,72,7205972813,Rufina,Rufina barrio,20,Z1,N
+cousub,72,7205980209,Sierra Baja,Sierra Baja barrio,20,Z1,N
+cousub,72,7206111280,Camarones,Camarones barrio,20,Z1,N
+cousub,72,7206129469,Frailes,Frailes barrio,20,Z1,N
+cousub,72,7206131490,Guaraguao,Guaraguao barrio,20,Z1,N
+cousub,72,7206132565,Guaynabo,Guaynabo barrio-pueblo,41,Z1,N
+cousub,72,7206133726,Hato Nuevo,Hato Nuevo barrio,20,Z1,N
+cousub,72,7206149593,Mamey,Mamey barrio,20,Z1,N
+cousub,72,7206165073,Pueblo Viejo,Pueblo Viejo barrio,20,Z1,N
+cousub,72,7206169717,Río,Río barrio,20,Z1,N
+cousub,72,7206179048,Santa Rosa,Santa Rosa barrio,20,Z1,N
+cousub,72,7206180510,Sonadora,Sonadora barrio,20,Z1,N
+cousub,72,7206316483,Celada,Celada barrio,20,Z1,N
+cousub,72,7206332866,Gurabo,Gurabo barrio-pueblo,41,Z1,N
+cousub,72,7206333769,Hato Nuevo,Hato Nuevo barrio,20,Z1,N
+cousub,72,7206337295,Jaguar,Jaguar barrio,20,Z1,N
+cousub,72,7206337424,Jaguas,Jaguas barrio,20,Z1,N
+cousub,72,7206349636,Mamey,Mamey barrio,20,Z1,N
+cousub,72,7206351786,Masa,Masa barrio,20,Z1,N
+cousub,72,7206356473,Navarro,Navarro barrio,20,Z1,N
+cousub,72,7206367524,Quebrada Infierno,Quebrada Infierno barrio,20,Z1,N
+cousub,72,7206369545,Rincón,Rincón barrio,20,Z1,N
+cousub,72,7206500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7206501347,Aibonito,Aibonito barrio,20,Z1,N
+cousub,72,7206507066,Bayaney,Bayaney barrio,20,Z1,N
+cousub,72,7206509216,Buena Vista,Buena Vista barrio,20,Z1,N
+cousub,72,7206511624,Campo Alegre,Campo Alegre barrio,20,Z1,N
+cousub,72,7206513688,Capáez,Capáez barrio,20,Z1,N
+cousub,72,7206514677,Carrizales,Carrizales barrio,20,Z1,N
+cousub,72,7206520525,Corcovado,Corcovado barrio,20,Z1,N
+cousub,72,7206533339,Hatillo,Hatillo barrio,20,Z1,N
+cousub,72,7206533382,Hatillo,Hatillo barrio-pueblo,41,Z1,N
+cousub,72,7206556086,Naranjito,Naranjito barrio,20,Z1,N
+cousub,72,7206707453,Benavente,Benavente barrio,20,Z1,N
+cousub,72,7206731060,Guanajibo,Guanajibo barrio,20,Z1,N
+cousub,72,7206735075,Hormigueros,Hormigueros barrio,20,Z1,N
+cousub,72,7206735102,Hormigueros,Hormigueros barrio-pueblo,41,Z1,N
+cousub,72,7206737768,Jaguitas,Jaguitas barrio,20,Z1,N
+cousub,72,7206745035,Lavadero,Lavadero barrio,20,Z1,N
+cousub,72,7206900000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7206903239,Antón Ruíz,Antón Ruíz barrio,20,Z1,N
+cousub,72,7206909302,Buena Vista,Buena Vista barrio,20,Z1,N
+cousub,72,7206912570,Candelero Abajo,Candelero Abajo barrio,20,Z1,N
+cousub,72,7206912656,Candelero Arriba,Candelero Arriba barrio,20,Z1,N
+cousub,72,7206915279,Cataño,Cataño barrio,20,Z1,N
+cousub,72,7206919106,Collores,Collores barrio,20,Z1,N
+cousub,72,7206935575,Humacao,Humacao barrio-pueblo,41,Z1,N
+cousub,72,7206948002,Mabú,Mabú barrio,20,Z1,N
+cousub,72,7206949507,Mambiche,Mambiche barrio,20,Z1,N
+cousub,72,7206950883,Mariana,Mariana barrio,20,Z1,N
+cousub,72,7206966535,Punta Santiago,Punta Santiago barrio,20,Z1,N
+cousub,72,7206969975,Río Abajo,Río Abajo barrio,20,Z1,N
+cousub,72,7206981800,Tejas,Tejas barrio,20,Z1,N
+cousub,72,7207100000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7207103669,Arenales Altos,Arenales Altos barrio,20,Z1,N
+cousub,72,7207103712,Arenales Bajos,Arenales Bajos barrio,20,Z1,N
+cousub,72,7207104805,Bajura,Bajura barrio,20,Z1,N
+cousub,72,7207107324,Bejucos,Bejucos barrio,20,Z1,N
+cousub,72,7207121084,Coto,Coto barrio,20,Z1,N
+cousub,72,7207129899,Galateo Alto,Galateo Alto barrio,20,Z1,N
+cousub,72,7207129985,Galateo Bajo,Galateo Bajo barrio,20,Z1,N
+cousub,72,7207132092,Guayabos,Guayabos barrio,20,Z1,N
+cousub,72,7207132737,Guerrero,Guerrero barrio,20,Z1,N
+cousub,72,7207136521,Isabela,Isabela barrio-pueblo,41,Z1,N
+cousub,72,7207138757,Jobos,Jobos barrio,20,Z1,N
+cousub,72,7207145809,Llanadas,Llanadas barrio,20,Z1,N
+cousub,72,7207154925,Mora,Mora barrio,20,Z1,N
+cousub,72,7207162407,Planas,Planas barrio,20,Z1,N
+cousub,72,7207318676,Coabey,Coabey barrio,20,Z1,N
+cousub,72,7207319192,Collores,Collores barrio,20,Z1,N
+cousub,72,7207338198,Jauca,Jauca barrio,20,Z1,N
+cousub,72,7207338413,Jayuya,Jayuya barrio-pueblo,41,Z1,N
+cousub,72,7207338542,Jayuya Abajo,Jayuya Abajo barrio,20,Z1,N
+cousub,72,7207349937,Mameyes Arriba,Mameyes Arriba barrio,20,Z1,N
+cousub,72,7207361461,Pica,Pica barrio,20,Z1,N
+cousub,72,7207371007,Río Grande,Río Grande barrio,20,Z1,N
+cousub,72,7207374748,Saliente,Saliente barrio,20,Z1,N
+cousub,72,7207385670,Veguitas,Veguitas barrio,20,Z1,N
+cousub,72,7207388465,Zamas,Zamas barrio,20,Z1,N
+cousub,72,7207500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7207502551,Amuelas,Amuelas barrio,20,Z1,N
+cousub,72,7207510979,Callabo,Callabo barrio,20,Z1,N
+cousub,72,7207513903,Capitanejo,Capitanejo barrio,20,Z1,N
+cousub,72,7207518504,Cintrona,Cintrona barrio,20,Z1,N
+cousub,72,7207519278,Collores,Collores barrio,20,Z1,N
+cousub,72,7207526588,Emajagual,Emajagual barrio,20,Z1,N
+cousub,72,7207531920,Guayabal,Guayabal barrio,20,Z1,N
+cousub,72,7207536994,Jacaguas,Jacaguas barrio,20,Z1,N
+cousub,72,7207539015,Juana Díaz,Juana Díaz barrio-pueblo,41,Z1,N
+cousub,72,7207546712,Lomas,Lomas barrio,20,Z1,N
+cousub,72,7207570749,Río Cañas Abajo,Río Cañas Abajo barrio,20,Z1,N
+cousub,72,7207570835,Río Cañas Arriba,Río Cañas Arriba barrio,20,Z1,N
+cousub,72,7207573845,Sabana Llana,Sabana Llana barrio,20,Z1,N
+cousub,72,7207582316,Tijeras,Tijeras barrio,20,Z1,N
+cousub,72,7207710678,Caimito,Caimito barrio,20,Z1,N
+cousub,72,7207716311,Ceiba Norte,Ceiba Norte barrio,20,Z1,N
+cousub,72,7207716354,Ceiba Sur,Ceiba Sur barrio,20,Z1,N
+cousub,72,7207732952,Gurabo Abajo,Gurabo Abajo barrio,20,Z1,N
+cousub,72,7207732995,Gurabo Arriba,Gurabo Arriba barrio,20,Z1,N
+cousub,72,7207739617,Juncos,Juncos barrio-pueblo,41,Z1,N
+cousub,72,7207745723,Lirios,Lirios barrio,20,Z1,N
+cousub,72,7207749679,Mamey,Mamey barrio,20,Z1,N
+cousub,72,7207784810,Valenciano Abajo,Valenciano Abajo barrio,20,Z1,N
+cousub,72,7207784853,Valenciano Arriba,Valenciano Arriba barrio,20,Z1,N
+cousub,72,7207900000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7207912398,Candelaria,Candelaria barrio,20,Z1,N
+cousub,72,7207921041,Costa,Costa barrio,20,Z1,N
+cousub,72,7207940993,Lajas,Lajas barrio,20,Z1,N
+cousub,72,7207941036,Lajas,Lajas barrio-pueblo,41,Z1,N
+cousub,72,7207941165,Lajas Arriba,Lajas Arriba barrio,20,Z1,N
+cousub,72,7207945981,Llanos,Llanos barrio,20,Z1,N
+cousub,72,7207958193,Palmarejo,Palmarejo barrio,20,Z1,N
+cousub,72,7207959526,Parguera,Parguera barrio,20,Z1,N
+cousub,72,7207959569,París,París barrio,20,Z1,N
+cousub,72,7207962579,Plata,Plata barrio,20,Z1,N
+cousub,72,7207974318,Sabana Yeguas,Sabana Yeguas barrio,20,Z1,N
+cousub,72,7207979091,Santa Rosa,Santa Rosa barrio,20,Z1,N
+cousub,72,7208106378,Bartolo,Bartolo barrio,20,Z1,N
+cousub,72,7208109517,Buenos Aires,Buenos Aires barrio,20,Z1,N
+cousub,72,7208111022,Callejones,Callejones barrio,20,Z1,N
+cousub,72,7208127319,Espino,Espino barrio,20,Z1,N
+cousub,72,7208142541,Lares,Lares barrio,20,Z1,N
+cousub,72,7208142584,Lares,Lares barrio-pueblo,41,Z1,N
+cousub,72,7208144777,La Torre,La Torre barrio,20,Z1,N
+cousub,72,7208153721,Mirasol,Mirasol barrio,20,Z1,N
+cousub,72,7208161418,Pezuela,Pezuela barrio,20,Z1,N
+cousub,72,7208161848,Piletas,Piletas barrio,20,Z1,N
+cousub,72,7208164600,Pueblo,Pueblo barrio,20,Z1,N
+cousub,72,7208171609,Río Prieto,Río Prieto barrio,20,Z1,N
+cousub,72,7208302379,Alto Sano,Alto Sano barrio,20,Z1,N
+cousub,72,7208303110,Anones,Anones barrio,20,Z1,N
+cousub,72,7208308829,Bucarabones,Bucarabones barrio,20,Z1,N
+cousub,72,7208309345,Buena Vista,Buena Vista barrio,20,Z1,N
+cousub,72,7208317386,Cerrote,Cerrote barrio,20,Z1,N
+cousub,72,7208317472,Chamorro,Chamorro barrio,20,Z1,N
+cousub,72,7208327362,Espino,Espino barrio,20,Z1,N
+cousub,72,7208329770,Furnias,Furnias barrio,20,Z1,N
+cousub,72,7208343831,Las Marías,Las Marías barrio-pueblo,41,Z1,N
+cousub,72,7208350539,Maravilla Este,Maravilla Este barrio,20,Z1,N
+cousub,72,7208350582,Maravilla Norte,Maravilla Norte barrio,20,Z1,N
+cousub,72,7208350600,Maravilla Sur,Maravilla Sur barrio,20,Z1,N
+cousub,72,7208355957,Naranjales,Naranjales barrio,20,Z1,N
+cousub,72,7208357892,Palma Escrita,Palma Escrita barrio,20,Z1,N
+cousub,72,7208366621,Purísima Concepción,Purísima Concepción barrio,20,Z1,N
+cousub,72,7208370663,Río Cañas,Río Cañas barrio,20,Z1,N
+cousub,72,7208508141,Boquerón,Boquerón barrio,20,Z1,N
+cousub,72,7208516096,Ceiba,Ceiba barrio,20,Z1,N
+cousub,72,7208519321,Collores,Collores barrio,20,Z1,N
+cousub,72,7208526158,El Río,El Río barrio,20,Z1,N
+cousub,72,7208544433,Las Piedras,Las Piedras barrio-pueblo,41,Z1,N
+cousub,72,7208554710,Montones,Montones barrio,20,Z1,N
+cousub,72,7208566793,Quebrada Arenas,Quebrada Arenas barrio,20,Z1,N
+cousub,72,7208581843,Tejas,Tejas barrio,20,Z1,N
+cousub,72,7208700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7208713043,Canóvanas,Canóvanas barrio,20,Z1,N
+cousub,72,7208746411,Loíza,Loíza barrio-pueblo,41,Z1,N
+cousub,72,7208752732,Medianía Alta,Medianía Alta barrio,20,Z1,N
+cousub,72,7208752775,Medianía Baja,Medianía Baja barrio,20,Z1,N
+cousub,72,7208783090,Torrecilla Alta,Torrecilla Alta barrio,20,Z1,N
+cousub,72,7208783133,Torrecilla Baja,Torrecilla Baja barrio,20,Z1,N
+cousub,72,7208900000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7208939316,Juan Martín,Juan Martín barrio,20,Z1,N
+cousub,72,7208947830,Luquillo,Luquillo barrio-pueblo,41,Z1,N
+cousub,72,7208949980,Mameyes I,Mameyes I barrio,20,Z1,N
+cousub,72,7208951872,Mata de Plátano,Mata de Plátano barrio,20,Z1,N
+cousub,72,7208962364,Pitahaya,Pitahaya barrio,20,Z1,N
+cousub,72,7208973071,Sabana,Sabana barrio,20,Z1,N
+cousub,72,7209100000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7209104873,Bajura Adentro,Bajura Adentro barrio,20,Z1,N
+cousub,72,7209104916,Bajura Afuera,Bajura Afuera barrio,20,Z1,N
+cousub,72,7209121342,Coto Norte,Coto Norte barrio,20,Z1,N
+cousub,72,7209121471,Coto Sur,Coto Sur barrio,20,Z1,N
+cousub,72,7209150195,Manatí,Manatí barrio-pueblo,41,Z1,N
+cousub,72,7209170319,Río Arriba Poniente,Río Arriba Poniente barrio,20,Z1,N
+cousub,72,7209170362,Río Arriba Saliente,Río Arriba Saliente barrio,20,Z1,N
+cousub,72,7209182230,Tierras Nuevas Poniente,Tierras Nuevas Poniente barrio,20,Z1,N
+cousub,72,7209182273,Tierras Nuevas Saliente,Tierras Nuevas Saliente barrio,20,Z1,N
+cousub,72,7209308872,Bucarabones,Bucarabones barrio,20,Z1,N
+cousub,72,7209336091,Indiera Alta,Indiera Alta barrio,20,Z1,N
+cousub,72,7209336134,Indiera Baja,Indiera Baja barrio,20,Z1,N
+cousub,72,7209336156,Indiera Fría,Indiera Fría barrio,20,Z1,N
+cousub,72,7209351313,Maricao,Maricao barrio-pueblo,41,Z1,N
+cousub,72,7209351399,Maricao Afuera,Maricao Afuera barrio,20,Z1,N
+cousub,72,7209354753,Montoso,Montoso barrio,20,Z1,N
+cousub,72,7209500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7209511108,Calzada,Calzada barrio,20,Z1,N
+cousub,72,7209526545,Emajagua,Emajagua barrio,20,Z1,N
+cousub,72,7209545766,Lizas,Lizas barrio,20,Z1,N
+cousub,72,7209552173,Matuyas Alto,Matuyas Alto barrio,20,Z1,N
+cousub,72,7209552216,Matuyas Bajo,Matuyas Bajo barrio,20,Z1,N
+cousub,72,7209552302,Maunabo,Maunabo barrio-pueblo,41,Z1,N
+cousub,72,7209559182,Palo Seco,Palo Seco barrio,20,Z1,N
+cousub,72,7209566836,Quebrada Arenas,Quebrada Arenas barrio,20,Z1,N
+cousub,72,7209581370,Talante,Talante barrio,20,Z1,N
+cousub,72,7209583798,Tumbao,Tumbao barrio,20,Z1,N
+cousub,72,7209700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7209701820,Algarrobos,Algarrobos barrio,20,Z1,N
+cousub,72,7209706464,Bateyes,Bateyes barrio,20,Z1,N
+cousub,72,7209731103,Guanajibo,Guanajibo barrio,20,Z1,N
+cousub,72,7209736650,Isla de Mona e Islote Monito,Isla de Mona e Islote Monito barrio,20,Z1,N
+cousub,72,7209739101,Juan Alonso,Juan Alonso barrio,20,Z1,N
+cousub,72,7209745250,Leguísamo,Leguísamo barrio,20,Z1,N
+cousub,72,7209745551,Limón,Limón barrio,20,Z1,N
+cousub,72,7209749378,Malezas,Malezas barrio,20,Z1,N
+cousub,72,7209752474,Mayagüez,Mayagüez barrio-pueblo,41,Z1,N
+cousub,72,7209752560,Mayagüez Arriba,Mayagüez Arriba barrio,20,Z1,N
+cousub,72,7209753420,Miradero,Miradero barrio,20,Z1,N
+cousub,72,7209754796,Montoso,Montoso barrio,20,Z1,N
+cousub,72,7209756000,Naranjales,Naranjales barrio,20,Z1,N
+cousub,72,7209767352,Quebrada Grande,Quebrada Grande barrio,20,Z1,N
+cousub,72,7209768126,Quemado,Quemado barrio,20,Z1,N
+cousub,72,7209770792,Río Cañas Abajo,Río Cañas Abajo barrio,20,Z1,N
+cousub,72,7209770878,Río Cañas Arriba,Río Cañas Arriba barrio,20,Z1,N
+cousub,72,7209771308,Río Hondo,Río Hondo barrio,20,Z1,N
+cousub,72,7209772340,Rosario,Rosario barrio,20,Z1,N
+cousub,72,7209772899,Sábalos,Sábalos barrio,20,Z1,N
+cousub,72,7209774361,Sabanetas,Sabanetas barrio,20,Z1,N
+cousub,72,7209900229,Aceitunas,Aceitunas barrio,20,Z1,N
+cousub,72,7209913602,Capá,Capá barrio,20,Z1,N
+cousub,72,7209916698,Centro,Centro barrio,20,Z1,N
+cousub,72,7209917257,Cerro Gordo,Cerro Gordo barrio,20,Z1,N
+cousub,72,7209921858,Cruz,Cruz barrio,20,Z1,N
+cousub,72,7209922331,Cuchillas,Cuchillas barrio,20,Z1,N
+cousub,72,7209951184,Marías,Marías barrio,20,Z1,N
+cousub,72,7209956387,Naranjo,Naranjo barrio,20,Z1,N
+cousub,72,7209962622,Plata,Plata barrio,20,Z1,N
+cousub,72,7209964643,Pueblo,Pueblo barrio,20,Z1,N
+cousub,72,7209971953,Rocha,Rocha barrio,20,Z1,N
+cousub,72,7209987648,Voladoras,Voladoras barrio,20,Z1,N
+cousub,72,7210105260,Barahona,Barahona barrio,20,Z1,N
+cousub,72,7210122374,Cuchillas,Cuchillas barrio,20,Z1,N
+cousub,72,7210129598,Fránquez,Fránquez barrio,20,Z1,N
+cousub,72,7210154538,Monte Llano,Monte Llano barrio,20,Z1,N
+cousub,72,7210155140,Morovis,Morovis barrio-pueblo,41,Z1,N
+cousub,72,7210155183,Morovis Norte,Morovis Norte barrio,20,Z1,N
+cousub,72,7210155226,Morovis Sud,Morovis Sud barrio,20,Z1,N
+cousub,72,7210160214,Pasto,Pasto barrio,20,Z1,N
+cousub,72,7210161160,Perchas,Perchas barrio,20,Z1,N
+cousub,72,7210171050,Río Grande,Río Grande barrio,20,Z1,N
+cousub,72,7210176984,San Lorenzo,San Lorenzo barrio,20,Z1,N
+cousub,72,7210183219,Torrecillas,Torrecillas barrio,20,Z1,N
+cousub,72,7210183993,Unibón,Unibón barrio,20,Z1,N
+cousub,72,7210184638,Vaga,Vaga barrio,20,Z1,N
+cousub,72,7210300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7210323105,Daguao,Daguao barrio,20,Z1,N
+cousub,72,7210324438,Duque,Duque barrio,20,Z1,N
+cousub,72,7210335489,Húcares,Húcares barrio,20,Z1,N
+cousub,72,7210349163,Maizales,Maizales barrio,20,Z1,N
+cousub,72,7210350969,Mariana,Mariana barrio,20,Z1,N
+cousub,72,7210355871,Naguabo,Naguabo barrio-pueblo,41,Z1,N
+cousub,72,7210360988,Peña Pobre,Peña Pobre barrio,20,Z1,N
+cousub,72,7210369803,Río,Río barrio,20,Z1,N
+cousub,72,7210370491,Río Blanco,Río Blanco barrio,20,Z1,N
+cousub,72,7210379521,Santiago y Lima,Santiago y Lima barrio,20,Z1,N
+cousub,72,7210500315,Achiote,Achiote barrio,20,Z1,N
+cousub,72,7210503153,Anones,Anones barrio,20,Z1,N
+cousub,72,7210515838,Cedro Abajo,Cedro Abajo barrio,20,Z1,N
+cousub,72,7210515881,Cedro Arriba,Cedro Arriba barrio,20,Z1,N
+cousub,72,7210530673,Guadiana,Guadiana barrio,20,Z1,N
+cousub,72,7210546755,Lomas,Lomas barrio,20,Z1,N
+cousub,72,7210556172,Naranjito,Naranjito barrio-pueblo,41,Z1,N
+cousub,72,7210556817,Nuevo,Nuevo barrio,20,Z1,N
+cousub,72,7210701433,Ala de la Piedra,Ala de la Piedra barrio,20,Z1,N
+cousub,72,7210706335,Barros,Barros barrio,20,Z1,N
+cousub,72,7210706507,Bauta Abajo,Bauta Abajo barrio,20,Z1,N
+cousub,72,7210706550,Bauta Arriba,Bauta Arriba barrio,20,Z1,N
+cousub,72,7210707625,Bermejales,Bermejales barrio,20,Z1,N
+cousub,72,7210708614,Botijas,Botijas barrio,20,Z1,N
+cousub,72,7210710205,Cacaos,Cacaos barrio,20,Z1,N
+cousub,72,7210719364,Collores,Collores barrio,20,Z1,N
+cousub,72,7210723234,Damián Abajo,Damián Abajo barrio,20,Z1,N
+cousub,72,7210723277,Damián Arriba,Damián Arriba barrio,20,Z1,N
+cousub,72,7210730501,Gato,Gato barrio,20,Z1,N
+cousub,72,7210751829,Mata de Cañas,Mata de Cañas barrio,20,Z1,N
+cousub,72,7210757333,Orocovis,Orocovis barrio,20,Z1,N
+cousub,72,7210757376,Orocovis,Orocovis barrio-pueblo,41,Z1,N
+cousub,72,7210760816,Pellejas,Pellejas barrio,20,Z1,N
+cousub,72,7210773114,Sabana,Sabana barrio,20,Z1,N
+cousub,72,7210775178,Saltos,Saltos barrio,20,Z1,N
+cousub,72,7210900000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7210903282,Apeadero,Apeadero barrio,20,Z1,N
+cousub,72,7210904744,Bajo,Bajo barrio,20,Z1,N
+cousub,72,7210910119,Cacao Alto,Cacao Alto barrio,20,Z1,N
+cousub,72,7210910162,Cacao Bajo,Cacao Bajo barrio,20,Z1,N
+cousub,72,7210924481,Egozcue,Egozcue barrio,20,Z1,N
+cousub,72,7210931705,Guardarraya,Guardarraya barrio,20,Z1,N
+cousub,72,7210936908,Jacaboa,Jacaboa barrio,20,Z1,N
+cousub,72,7210937123,Jagual,Jagual barrio,20,Z1,N
+cousub,72,7210949722,Mamey,Mamey barrio,20,Z1,N
+cousub,72,7210951442,Marín,Marín barrio,20,Z1,N
+cousub,72,7210955484,Mulas,Mulas barrio,20,Z1,N
+cousub,72,7210955699,Muñoz Rivera,Muñoz Rivera barrio,20,Z1,N
+cousub,72,7210960515,Patillas,Patillas barrio-pueblo,41,Z1,N
+cousub,72,7210963740,Pollos,Pollos barrio,20,Z1,N
+cousub,72,7210967094,Quebrada Arriba,Quebrada Arriba barrio,20,Z1,N
+cousub,72,7210971695,Ríos,Ríos barrio,20,Z1,N
+cousub,72,7211100000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7211105862,Barreal,Barreal barrio,20,Z1,N
+cousub,72,7211121127,Coto,Coto barrio,20,Z1,N
+cousub,72,7211122460,Cuebas,Cuebas barrio,20,Z1,N
+cousub,72,7211126631,Encarnación,Encarnación barrio,20,Z1,N
+cousub,72,7211137510,Jaguas,Jaguas barrio,20,Z1,N
+cousub,72,7211148174,Macaná,Macaná barrio,20,Z1,N
+cousub,72,7211161117,Peñuelas,Peñuelas barrio-pueblo,41,Z1,N
+cousub,72,7211167137,Quebrada Ceiba,Quebrada Ceiba barrio,20,Z1,N
+cousub,72,7211172770,Rucio,Rucio barrio,20,Z1,N
+cousub,72,7211179607,Santo Domingo,Santo Domingo barrio,20,Z1,N
+cousub,72,7211181499,Tallaboa Alta,Tallaboa Alta barrio,20,Z1,N
+cousub,72,7211181585,Tallaboa Poniente,Tallaboa Poniente barrio,20,Z1,N
+cousub,72,7211181628,Tallaboa Saliente,Tallaboa Saliente barrio,20,Z1,N
+cousub,72,7211300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7211303067,Anón,Anón barrio,20,Z1,N
+cousub,72,7211308786,Bucaná,Bucaná barrio,20,Z1,N
+cousub,72,7211312312,Canas,Canas barrio,20,Z1,N
+cousub,72,7211312355,Canas Urbano,Canas Urbano barrio,20,Z1,N
+cousub,72,7211313946,Capitanejo,Capitanejo barrio,20,Z1,N
+cousub,72,7211317042,Cerrillos,Cerrillos barrio,20,Z1,N
+cousub,72,7211321256,Coto Laurel,Coto Laurel barrio,20,Z1,N
+cousub,72,7211321901,Cuarto,Cuarto barrio,20,Z1,N
+cousub,72,7211331576,Guaraguao,Guaraguao barrio,20,Z1,N
+cousub,72,7211348389,Machuelo Abajo,Machuelo Abajo barrio,20,Z1,N
+cousub,72,7211348432,Machuelo Arriba,Machuelo Arriba barrio,20,Z1,N
+cousub,72,7211349034,Magueyes,Magueyes barrio,20,Z1,N
+cousub,72,7211349077,Magueyes Urbano,Magueyes Urbano barrio,20,Z1,N
+cousub,72,7211350453,Maragüez,Maragüez barrio,20,Z1,N
+cousub,72,7211351743,Marueño,Marueño barrio,20,Z1,N
+cousub,72,7211354581,Monte Llano,Monte Llano barrio,20,Z1,N
+cousub,72,7211362751,Playa,Playa barrio,20,Z1,N
+cousub,72,7211364041,Portugués,Portugués barrio,20,Z1,N
+cousub,72,7211364084,Portugués Urbano,Portugués Urbano barrio,20,Z1,N
+cousub,72,7211364299,Primero,Primero barrio,20,Z1,N
+cousub,72,7211367610,Quebrada Limón,Quebrada Limón barrio,20,Z1,N
+cousub,72,7211368298,Quinto,Quinto barrio,20,Z1,N
+cousub,72,7211368900,Real,Real barrio,20,Z1,N
+cousub,72,7211374447,Sabanetas,Sabanetas barrio,20,Z1,N
+cousub,72,7211375565,San Antón,San Antón barrio,20,Z1,N
+cousub,72,7211377242,San Patricio,San Patricio barrio,20,Z1,N
+cousub,72,7211379908,Segundo,Segundo barrio,20,Z1,N
+cousub,72,7211380080,Sexto,Sexto barrio,20,Z1,N
+cousub,72,7211381929,Tercero,Tercero barrio,20,Z1,N
+cousub,72,7211382058,Tibes,Tibes barrio,20,Z1,N
+cousub,72,7211385068,Vayas,Vayas barrio,20,Z1,N
+cousub,72,7211500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7211510076,Cacao,Cacao barrio,20,Z1,N
+cousub,72,7211517515,Charcas,Charcas barrio,20,Z1,N
+cousub,72,7211518934,Cocos,Cocos barrio,20,Z1,N
+cousub,72,7211530716,Guajataca,Guajataca barrio,20,Z1,N
+cousub,72,7211568083,Quebradillas,Quebradillas barrio-pueblo,41,Z1,N
+cousub,72,7211575823,San Antonio,San Antonio barrio,20,Z1,N
+cousub,72,7211576597,San José,San José barrio,20,Z1,N
+cousub,72,7211581972,Terranova,Terranova barrio,20,Z1,N
+cousub,72,7211700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7211704443,Atalaya,Atalaya barrio,20,Z1,N
+cousub,72,7211705948,Barrero,Barrero barrio,20,Z1,N
+cousub,72,7211711065,Calvache,Calvache barrio,20,Z1,N
+cousub,72,7211721815,Cruces,Cruces barrio,20,Z1,N
+cousub,72,7211726846,Ensenada,Ensenada barrio,20,Z1,N
+cousub,72,7211737639,Jagüey,Jagüey barrio,20,Z1,N
+cousub,72,7211764686,Pueblo,Pueblo barrio,20,Z1,N
+cousub,72,7211766449,Puntas,Puntas barrio,20,Z1,N
+cousub,72,7211769631,Rincón,Rincón barrio-pueblo,41,Z1,N
+cousub,72,7211771093,Río Grande,Río Grande barrio,20,Z1,N
+cousub,72,7211900000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7211918289,Ciénaga Alta,Ciénaga Alta barrio,20,Z1,N
+cousub,72,7211918332,Ciénaga Baja,Ciénaga Baja barrio,20,Z1,N
+cousub,72,7211933081,Guzmán Abajo,Guzmán Abajo barrio,20,Z1,N
+cousub,72,7211933124,Guzmán Arriba,Guzmán Arriba barrio,20,Z1,N
+cousub,72,7211934543,Herreras,Herreras barrio,20,Z1,N
+cousub,72,7211938585,Jiménez,Jiménez barrio,20,Z1,N
+cousub,72,7211950023,Mameyes II,Mameyes II barrio,20,Z1,N
+cousub,72,7211971179,Río Grande,Río Grande barrio-pueblo,41,Z1,N
+cousub,72,7211988637,Zarzal,Zarzal barrio,20,Z1,N
+cousub,72,7212148346,Machuchal,Machuchal barrio,20,Z1,N
+cousub,72,7212168857,Rayo,Rayo barrio,20,Z1,N
+cousub,72,7212169674,Rincón,Rincón barrio,20,Z1,N
+cousub,72,7212173587,Sabana Grande,Sabana Grande barrio-pueblo,41,Z1,N
+cousub,72,7212178747,Santana,Santana barrio,20,Z1,N
+cousub,72,7212181026,Susúa,Susúa barrio,20,Z1,N
+cousub,72,7212181327,Tabonuco,Tabonuco barrio,20,Z1,N
+cousub,72,7212183004,Torre,Torre barrio,20,Z1,N
+cousub,72,7212300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7212301175,Aguirre,Aguirre barrio,20,Z1,N
+cousub,72,7212341681,Lapa,Lapa barrio,20,Z1,N
+cousub,72,7212358537,Palmas,Palmas barrio,20,Z1,N
+cousub,72,7212367911,Quebrada Yeguas,Quebrada Yeguas barrio,20,Z1,N
+cousub,72,7212371394,Río Jueyes,Río Jueyes barrio,20,Z1,N
+cousub,72,7212374920,Salinas,Salinas barrio-pueblo,41,Z1,N
+cousub,72,7212502852,Ancones,Ancones barrio,20,Z1,N
+cousub,72,7212510807,Caín Alto,Caín Alto barrio,20,Z1,N
+cousub,72,7212510850,Caín Bajo,Caín Bajo barrio,20,Z1,N
+cousub,72,7212521514,Cotuí,Cotuí barrio,20,Z1,N
+cousub,72,7212524309,Duey Alto,Duey Alto barrio,20,Z1,N
+cousub,72,7212524352,Duey Bajo,Duey Bajo barrio,20,Z1,N
+cousub,72,7212530802,Guamá,Guamá barrio,20,Z1,N
+cousub,72,7212534801,Hoconuco Alto,Hoconuco Alto barrio,20,Z1,N
+cousub,72,7212534844,Hoconuco Bajo,Hoconuco Bajo barrio,20,Z1,N
+cousub,72,7212550625,Maresúa,Maresúa barrio,20,Z1,N
+cousub,72,7212553248,Minillas,Minillas barrio,20,Z1,N
+cousub,72,7212569244,Retiro,Retiro barrio,20,Z1,N
+cousub,72,7212572426,Rosario Alto,Rosario Alto barrio,20,Z1,N
+cousub,72,7212572469,Rosario Bajo,Rosario Bajo barrio,20,Z1,N
+cousub,72,7212572512,Rosario Peñón,Rosario Peñón barrio,20,Z1,N
+cousub,72,7212573415,Sabana Eneas,Sabana Eneas barrio,20,Z1,N
+cousub,72,7212573673,Sabana Grande Abajo,Sabana Grande Abajo barrio,20,Z1,N
+cousub,72,7212576210,San Germán,San Germán barrio-pueblo,41,Z1,N
+cousub,72,7212583821,Tuna,Tuna barrio,20,Z1,N
+cousub,72,7212700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7212710721,Caimito,Caimito barrio,20,Z1,N
+cousub,72,7212722847,Cupey,Cupey barrio,20,Z1,N
+cousub,72,7212724868,El Cinco,El Cinco barrio,20,Z1,N
+cousub,72,7212730587,Gobernador Piñero,Gobernador Piñero barrio,20,Z1,N
+cousub,72,7212733984,Hato Rey Central,Hato Rey Central barrio,20,Z1,N
+cousub,72,7212734027,Hato Rey Norte,Hato Rey Norte barrio,20,Z1,N
+cousub,72,7212734070,Hato Rey Sur,Hato Rey Sur barrio,20,Z1,N
+cousub,72,7212753893,Monacillo,Monacillo barrio,20,Z1,N
+cousub,72,7212753936,Monacillo Urbano,Monacillo Urbano barrio,20,Z1,N
+cousub,72,7212757247,Oriente,Oriente barrio,20,Z1,N
+cousub,72,7212764729,Pueblo,Pueblo barrio,20,Z1,N
+cousub,72,7212766879,Quebrada Arenas,Quebrada Arenas barrio,20,Z1,N
+cousub,72,7212774017,Sabana Llana Norte,Sabana Llana Norte barrio,20,Z1,N
+cousub,72,7212774060,Sabana Llana Sur,Sabana Llana Sur barrio,20,Z1,N
+cousub,72,7212776812,San Juan Antiguo,San Juan Antiguo barrio,20,Z1,N
+cousub,72,7212779693,Santurce,Santurce barrio,20,Z1,N
+cousub,72,7212783348,Tortugo,Tortugo barrio,20,Z1,N
+cousub,72,7212784079,Universidad,Universidad barrio,20,Z1,N
+cousub,72,7212915451,Cayaguas,Cayaguas barrio,20,Z1,N
+cousub,72,7212917300,Cerro Gordo,Cerro Gordo barrio,20,Z1,N
+cousub,72,7212927405,Espino,Espino barrio,20,Z1,N
+cousub,72,7212928910,Florida,Florida barrio,20,Z1,N
+cousub,72,7212933425,Hato,Hato barrio,20,Z1,N
+cousub,72,7212937209,Jagual,Jagual barrio,20,Z1,N
+cousub,72,7212966750,Quebrada,Quebrada barrio,20,Z1,N
+cousub,72,7212966922,Quebrada Arenas,Quebrada Arenas barrio,20,Z1,N
+cousub,72,7212967481,Quebrada Honda,Quebrada Honda barrio,20,Z1,N
+cousub,72,7212968212,Quemados,Quemados barrio,20,Z1,N
+cousub,72,7212977070,San Lorenzo,San Lorenzo barrio-pueblo,41,Z1,N
+cousub,72,7213101390,Aibonito,Aibonito barrio,20,Z1,N
+cousub,72,7213102422,Alto Sano,Alto Sano barrio,20,Z1,N
+cousub,72,7213104486,Bahomamey,Bahomamey barrio,20,Z1,N
+cousub,72,7213110893,Calabazas,Calabazas barrio,20,Z1,N
+cousub,72,7213117902,Cibao,Cibao barrio,20,Z1,N
+cousub,72,7213118203,Cidral,Cidral barrio,20,Z1,N
+cousub,72,7213122804,Culebrinas,Culebrinas barrio,20,Z1,N
+cousub,72,7213126674,Eneas,Eneas barrio,20,Z1,N
+cousub,72,7213130630,Guacio,Guacio barrio,20,Z1,N
+cousub,72,7213130759,Guajataca,Guajataca barrio,20,Z1,N
+cousub,72,7213131791,Guatemala,Guatemala barrio,20,Z1,N
+cousub,72,7213133640,Hato Arriba,Hato Arriba barrio,20,Z1,N
+cousub,72,7213135274,Hoya Mala,Hoya Mala barrio,20,Z1,N
+cousub,72,7213139488,Juncal,Juncal barrio,20,Z1,N
+cousub,72,7213148776,Magos,Magos barrio,20,Z1,N
+cousub,72,7213153334,Mirabales,Mirabales barrio,20,Z1,N
+cousub,72,7213161246,Perchas 1,Perchas 1 barrio,20,Z1,N
+cousub,72,7213161289,Perchas 2,Perchas 2 barrio,20,Z1,N
+cousub,72,7213161805,Piedras Blancas,Piedras Blancas barrio,20,Z1,N
+cousub,72,7213164213,Pozas,Pozas barrio,20,Z1,N
+cousub,72,7213171910,Robles,Robles barrio,20,Z1,N
+cousub,72,7213175049,Salto,Salto barrio,20,Z1,N
+cousub,72,7213177543,San Sebastián,San Sebastián barrio-pueblo,41,Z1,N
+cousub,72,7213180424,Sonador,Sonador barrio,20,Z1,N
+cousub,72,7213300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7213307926,Boca Velázquez,Boca Velázquez barrio,20,Z1,N
+cousub,72,7213323492,Descalabrado,Descalabrado barrio,20,Z1,N
+cousub,72,7213328179,Felicia 1,Felicia 1 barrio,20,Z1,N
+cousub,72,7213328222,Felicia 2,Felicia 2 barrio,20,Z1,N
+cousub,72,7213338284,Jauca 1,Jauca 1 barrio,20,Z1,N
+cousub,72,7213338327,Jauca 2,Jauca 2 barrio,20,Z1,N
+cousub,72,7213362794,Playa,Playa barrio,20,Z1,N
+cousub,72,7213378188,Santa Isabel,Santa Isabel barrio-pueblo,41,Z1,N
+cousub,72,7213520267,Contorno,Contorno barrio,20,Z1,N
+cousub,72,7213529856,Galateo,Galateo barrio,20,Z1,N
+cousub,72,7213555398,Mucarabones,Mucarabones barrio,20,Z1,N
+cousub,72,7213557548,Ortíz,Ortíz barrio,20,Z1,N
+cousub,72,7213562063,Piñas,Piñas barrio,20,Z1,N
+cousub,72,7213566965,Quebrada Arenas,Quebrada Arenas barrio,20,Z1,N
+cousub,72,7213567180,Quebrada Cruz,Quebrada Cruz barrio,20,Z1,N
+cousub,72,7213571523,Río Lajas,Río Lajas barrio,20,Z1,N
+cousub,72,7213582531,Toa Alta,Toa Alta barrio-pueblo,41,Z1,N
+cousub,72,7213700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7213712484,Candelaria,Candelaria barrio,20,Z1,N
+cousub,72,7213752646,Media Luna,Media Luna barrio,20,Z1,N
+cousub,72,7213759268,Palo Seco,Palo Seco barrio,20,Z1,N
+cousub,72,7213774232,Sabana Seca,Sabana Seca barrio,20,Z1,N
+cousub,72,7213782660,Toa Baja,Toa Baja barrio-pueblo,41,Z1,N
+cousub,72,7213914376,Carraízo,Carraízo barrio,20,Z1,N
+cousub,72,7213922546,Cuevas,Cuevas barrio,20,Z1,N
+cousub,72,7213924137,Dos Bocas,Dos Bocas barrio,20,Z1,N
+cousub,72,7213940606,La Gloria,La Gloria barrio,20,Z1,N
+cousub,72,7213967395,Quebrada Grande,Quebrada Grande barrio,20,Z1,N
+cousub,72,7213967653,Quebrada Negrito,Quebrada Negrito barrio,20,Z1,N
+cousub,72,7213974670,St. Just,St. Just barrio,20,Z1,N
+cousub,72,7213983649,Trujillo Alto,Trujillo Alto barrio-pueblo,41,Z1,N
+cousub,72,7214102981,Angeles,Angeles barrio,20,Z1,N
+cousub,72,7214103884,Arenas,Arenas barrio,20,Z1,N
+cousub,72,7214110291,Caguana,Caguana barrio,20,Z1,N
+cousub,72,7214112742,Caníaco,Caníaco barrio,20,Z1,N
+cousub,72,7214113387,Caonillas Abajo,Caonillas Abajo barrio,20,Z1,N
+cousub,72,7214113473,Caonillas Arriba,Caonillas Arriba barrio,20,Z1,N
+cousub,72,7214120095,Consejo,Consejo barrio,20,Z1,N
+cousub,72,7214123922,Don Alonso,Don Alonso barrio,20,Z1,N
+cousub,72,7214131404,Guaonico,Guaonico barrio,20,Z1,N
+cousub,72,7214144304,Las Palmas,Las Palmas barrio,20,Z1,N
+cousub,72,7214145594,Limón,Limón barrio,20,Z1,N
+cousub,72,7214149894,Mameyes Abajo,Mameyes Abajo barrio,20,Z1,N
+cousub,72,7214159827,Paso Palma,Paso Palma barrio,20,Z1,N
+cousub,72,7214170018,Río Abajo,Río Abajo barrio,20,Z1,N
+cousub,72,7214172082,Roncador,Roncador barrio,20,Z1,N
+cousub,72,7214173630,Sabana Grande,Sabana Grande barrio,20,Z1,N
+cousub,72,7214175092,Salto Abajo,Salto Abajo barrio,20,Z1,N
+cousub,72,7214175135,Salto Arriba,Salto Arriba barrio,20,Z1,N
+cousub,72,7214178231,Santa Isabel,Santa Isabel barrio,20,Z1,N
+cousub,72,7214179134,Santa Rosa,Santa Rosa barrio,20,Z1,N
+cousub,72,7214182015,Tetuán,Tetuán barrio,20,Z1,N
+cousub,72,7214184552,Utuado,Utuado barrio-pueblo,41,Z1,N
+cousub,72,7214187562,Viví Abajo,Viví Abajo barrio,20,Z1,N
+cousub,72,7214187605,Viví Arriba,Viví Arriba barrio,20,Z1,N
+cousub,72,7214300000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7214304830,Bajura,Bajura barrio,20,Z1,N
+cousub,72,7214312527,Candelaria,Candelaria barrio,20,Z1,N
+cousub,72,7214318418,Cienegueta,Cienegueta barrio,20,Z1,N
+cousub,72,7214327534,Espinosa,Espinosa barrio,20,Z1,N
+cousub,72,7214351356,Maricao,Maricao barrio,20,Z1,N
+cousub,72,7214352388,Mavilla,Mavilla barrio,20,Z1,N
+cousub,72,7214373157,Sabana,Sabana barrio,20,Z1,N
+cousub,72,7214385240,Vega Alta,Vega Alta barrio-pueblo,41,Z1,N
+cousub,72,7214500000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7214501734,Algarrobo,Algarrobo barrio,20,Z1,N
+cousub,72,7214502121,Almirante Norte,Almirante Norte barrio,20,Z1,N
+cousub,72,7214502164,Almirante Sur,Almirante Sur barrio,20,Z1,N
+cousub,72,7214509775,Cabo Caribe,Cabo Caribe barrio,20,Z1,N
+cousub,72,7214516182,Ceiba,Ceiba barrio,20,Z1,N
+cousub,72,7214517988,Cibuco,Cibuco barrio,20,Z1,N
+cousub,72,7214565503,Puerto Nuevo,Puerto Nuevo barrio,20,Z1,N
+cousub,72,7214565933,Pugnado Adentro,Pugnado Adentro barrio,20,Z1,N
+cousub,72,7214566019,Pugnado Afuera,Pugnado Afuera barrio,20,Z1,N
+cousub,72,7214567008,Quebrada Arenas,Quebrada Arenas barrio,20,Z1,N
+cousub,72,7214570104,Río Abajo,Río Abajo barrio,20,Z1,N
+cousub,72,7214570276,Río Arriba,Río Arriba barrio,20,Z1,N
+cousub,72,7214585369,Vega Baja,Vega Baja barrio-pueblo,41,Z1,N
+cousub,72,7214588379,Yeguada,Yeguada barrio,20,Z1,N
+cousub,72,7214700000,Municipio subdivision not defined,Municipio subdivision not defined,00,Z9,F
+cousub,72,7214728953,Florida,Florida barrio,20,Z1,N
+cousub,72,7214736564,Isabel II,Isabel II barrio-pueblo,41,Z1,N
+cousub,72,7214746196,Llave,Llave barrio,20,Z1,N
+cousub,72,7214755312,Mosquito,Mosquito barrio,20,Z1,N
+cousub,72,7214765331,Puerto Diablo,Puerto Diablo barrio,20,Z1,N
+cousub,72,7214765374,Puerto Ferro,Puerto Ferro barrio,20,Z1,N
+cousub,72,7214765675,Puerto Real,Puerto Real barrio,20,Z1,N
+cousub,72,7214766148,Punta Arenas,Punta Arenas barrio,20,Z1,N
+cousub,72,7214913430,Caonillas Abajo,Caonillas Abajo barrio,20,Z1,N
+cousub,72,7214913516,Caonillas Arriba,Caonillas Arriba barrio,20,Z1,N
+cousub,72,7214933855,Hato Puerco Abajo,Hato Puerco Abajo barrio,20,Z1,N
+cousub,72,7214933898,Hato Puerco Arriba,Hato Puerco Arriba barrio,20,Z1,N
+cousub,72,7214984595,Vacas,Vacas barrio,20,Z1,N
+cousub,72,7214986874,Villalba,Villalba barrio-pueblo,41,Z1,N
+cousub,72,7214986917,Villalba Abajo,Villalba Abajo barrio,20,Z1,N
+cousub,72,7214986960,Villalba Arriba,Villalba Arriba barrio,20,Z1,N
+cousub,72,7215100573,Aguacate,Aguacate barrio,20,Z1,N
+cousub,72,7215110936,Calabazas,Calabazas barrio,20,Z1,N
+cousub,72,7215111452,Camino Nuevo,Camino Nuevo barrio,20,Z1,N
+cousub,72,7215132135,Guayabota,Guayabota barrio,20,Z1,N
+cousub,72,7215137080,Jácanas,Jácanas barrio,20,Z1,N
+cousub,72,7215139359,Juan Martín,Juan Martín barrio,20,Z1,N
+cousub,72,7215145680,Limones,Limones barrio,20,Z1,N
+cousub,72,7215162837,Playa,Playa barrio,20,Z1,N
+cousub,72,7215181886,Tejas,Tejas barrio,20,Z1,N
+cousub,72,7215187906,Yabucoa,Yabucoa barrio-pueblo,41,Z1,N
+cousub,72,7215300831,Aguas Blancas,Aguas Blancas barrio,20,Z1,N
+cousub,72,7215301777,Algarrobo,Algarrobo barrio,20,Z1,N
+cousub,72,7215301949,Almácigo Alto,Almácigo Alto barrio,20,Z1,N
+cousub,72,7215302035,Almácigo Bajo,Almácigo Bajo barrio,20,Z1,N
+cousub,72,7215305432,Barina,Barina barrio,20,Z1,N
+cousub,72,7215310764,Caimito,Caimito barrio,20,Z1,N
+cousub,72,7215319407,Collores,Collores barrio,20,Z1,N
+cousub,72,7215323621,Diego Hernández,Diego Hernández barrio,20,Z1,N
+cousub,72,7215324266,Duey,Duey barrio,20,Z1,N
+cousub,72,7215329512,Frailes,Frailes barrio,20,Z1,N
+cousub,72,7215337037,Jácana,Jácana barrio,20,Z1,N
+cousub,72,7215356430,Naranjo,Naranjo barrio,20,Z1,N
+cousub,72,7215367739,Quebradas,Quebradas barrio,20,Z1,N
+cousub,72,7215368814,Ranchera,Ranchera barrio,20,Z1,N
+cousub,72,7215371652,Río Prieto,Río Prieto barrio,20,Z1,N
+cousub,72,7215372684,Rubias,Rubias barrio,20,Z1,N
+cousub,72,7215380166,Sierra Alta,Sierra Alta barrio,20,Z1,N
+cousub,72,7215381069,Susúa Alta,Susúa Alta barrio,20,Z1,N
+cousub,72,7215381155,Susúa Baja,Susúa Baja barrio,20,Z1,N
+cousub,72,7215385541,Vegas,Vegas barrio,20,Z1,N
+cousub,72,7215388078,Yauco,Yauco barrio-pueblo,41,Z1,N
+cousub,78,7801000000,Island subdivision not defined,Island subdivision not defined,00,Z9,F
+cousub,78,7801004600,Anna's Hope Village,Anna's Hope Village subdistrict,24,Z5,N
+cousub,78,7801020800,Christiansted,Christiansted subdistrict,24,Z5,N
+cousub,78,7801031600,East End,East End subdistrict,24,Z5,N
+cousub,78,7801038800,Frederiksted,Frederiksted subdistrict,24,Z5,N
+cousub,78,7801059500,Northcentral,Northcentral subdistrict,24,Z5,N
+cousub,78,7801062200,Northwest,Northwest subdistrict,24,Z5,N
+cousub,78,7801071200,Sion Farm,Sion Farm subdistrict,24,Z5,N
+cousub,78,7801073900,Southcentral,Southcentral subdistrict,24,Z5,N
+cousub,78,7801075700,Southwest,Southwest subdistrict,24,Z5,N
+cousub,78,7802000000,Island subdivision not defined,Island subdivision not defined,00,Z9,F
+cousub,78,7802015400,Central,Central subdistrict,24,Z5,N
+cousub,78,7802027100,Coral Bay,Coral Bay subdistrict,24,Z5,N
+cousub,78,7802028900,Cruz Bay,Cruz Bay subdistrict,24,Z5,N
+cousub,78,7802033400,East End,East End subdistrict,24,Z5,N
+cousub,78,7803000000,Island subdivision not defined,Island subdivision not defined,00,Z9,F
+cousub,78,7803017200,Charlotte Amalie,Charlotte Amalie subdistrict,24,Z5,N
+cousub,78,7803034300,East End,East End subdistrict,24,Z5,N
+cousub,78,7803061300,Northside,Northside subdistrict,24,Z5,N
+cousub,78,7803074800,Southside,Southside subdistrict,24,Z5,N
+cousub,78,7803078400,Tutu,Tutu subdistrict,24,Z5,N
+cousub,78,7803082000,Water Island,Water Island subdistrict,24,Z5,N
+cousub,78,7803082900,West End,West End subdistrict,24,Z5,N
+place,60,6000100,Aasu,Aasu village,47,C1,A
+place,60,6002500,Afao,Afao village,47,C1,A
+place,60,6003300,Afono,Afono village,47,C1,A
+place,60,6004500,Agugulu,Agugulu village,47,C1,A
+place,60,6004900,Alao,Alao village,47,C1,A
+place,60,6006500,Alega,Alega village,47,C1,A
+place,60,6007300,Alofau,Alofau village,47,C1,A
+place,60,6008100,Amaluia,Amaluia village,47,C1,A
+place,60,6008900,Amanave,Amanave village,47,C1,A
+place,60,6009700,Amaua,Amaua village,47,C1,A
+place,60,6010500,Amouli,Amouli village,47,C1,A
+place,60,6011300,Anua,Anua village,47,C1,A
+place,60,6012100,Aoa,Aoa village,47,C1,A
+place,60,6012800,Aoloau,Aoloau village,47,C1,A
+place,60,6013700,Asili,Asili village,47,C1,A
+place,60,6014500,Atu'u,Atu'u village,47,C1,A
+place,60,6015300,Aua,Aua village,47,C1,A
+place,60,6016100,Auasi,Auasi village,47,C1,A
+place,60,6016900,Auma,Auma village,47,C1,A
+place,60,6017700,Aumi,Aumi village,47,C1,A
+place,60,6018500,Aunu'u,Aunu'u village,47,C1,A
+place,60,6020100,Auto,Auto village,47,C1,A
+place,60,6020900,Avaio,Avaio village,47,C1,A
+place,60,6022500,Faga'alu,Faga'alu village,47,C1,A
+place,60,6023300,Faga'itua,Faga'itua village,47,C1,A
+place,60,6024900,Fagali'i,Fagali'i village,47,C1,A
+place,60,6025700,Fagamalo,Fagamalo village,47,C1,A
+place,60,6026500,Faganeanea,Faganeanea village,47,C1,A
+place,60,6027300,Fagasa,Fagasa village,47,C1,A
+place,60,6028900,Fagatogo,Fagatogo village,47,C1,A
+place,60,6029700,Failolo,Failolo village,47,C1,A
+place,60,6030500,Faleasao,Faleasao village,47,C1,A
+place,60,6032100,Faleniu,Faleniu village,47,C1,A
+place,60,6032900,Fatumafuti,Fatumafuti village,47,C1,A
+place,60,6036100,Futiga,Futiga village,47,C1,A
+place,60,6036900,Ili'ili,Ili'ili village,47,C1,A
+place,60,6040800,Lauli'i,Lauli'i village,47,C1,A
+place,60,6044100,Leloaloa,Leloaloa village,47,C1,A
+place,60,6044900,Leone,Leone village,47,C1,A
+place,60,6045700,Leusoali'i,Leusoali'i village,47,C1,A
+place,60,6046500,Luma,Luma village,47,C1,A
+place,60,6047300,Maia,Maia village,47,C1,A
+place,60,6048100,Malaeimi,Malaeimi village,47,C1,A
+place,60,6048920,Malaeloa/Aitulagi,Malaeloa/Aitulagi village,47,C1,A
+place,60,6049400,Malaeloa/Ituau,Malaeloa/Ituau village,47,C1,A
+place,60,6050500,Maloata,Maloata village,47,C1,A
+place,60,6052900,Mapusagafou,Mapusagafou village,47,C1,A
+place,60,6053700,Masausi,Masausi village,47,C1,A
+place,60,6054500,Masefau,Masefau village,47,C1,A
+place,60,6055300,Matu'u,Matu'u village,47,C1,A
+place,60,6056100,Mesepa,Mesepa village,47,C1,A
+place,60,6056900,Nua,Nua village,47,C1,A
+place,60,6057700,Nu'uuli,Nu'uuli village,47,C1,A
+place,60,6058500,Ofu,Ofu village,47,C1,A
+place,60,6060100,Olosega,Olosega village,47,C1,A
+place,60,6061700,Onenoa,Onenoa village,47,C1,A
+place,60,6062230,Pagai,Pagai village,47,C1,A
+place,60,6062500,Pago Pago,Pago Pago village,47,C1,A
+place,60,6064100,Pava'ia'i,Pava'ia'i village,47,C1,A
+place,60,6064900,Poloa,Poloa village,47,C1,A
+place,60,6065300,Puapua,Puapua village,47,C1,A
+place,60,6066500,Sa'ilele,Sa'ilele village,47,C1,A
+place,60,6068100,Satala,Satala village,47,C1,A
+place,60,6068900,Se'etaga,Se'etaga village,47,C1,A
+place,60,6069700,Sili,Sili village,47,C1,A
+place,60,6071300,Si'ufaga,Si'ufaga village,47,C1,A
+place,60,6072900,Swains,Swains village,47,C1,A
+place,60,6075300,Tafuna,Tafuna village,47,C1,A
+place,60,6076900,Taputimu,Taputimu village,47,C1,A
+place,60,6081700,Tula,Tula village,47,C1,A
+place,60,6082500,Utulei,Utulei village,47,C1,A
+place,60,6083300,Utumea East,Utumea East village,47,C1,A
+place,60,6084100,Utumea West,Utumea West village,47,C1,A
+place,60,6084900,Utusia,Utusia village,47,C1,A
+place,60,6087300,Vailoatai,Vailoatai village,47,C1,A
+place,60,6088100,Vaitogi,Vaitogi village,47,C1,A
+place,60,6089700,Vatia,Vatia village,47,C1,A
+place,66,6600100,Adacao,Adacao CDP,57,U1,S
+place,66,6600850,Afame,Afame CDP,57,U2,S
+place,66,6604000,Agana Heights,Agana Heights CDP,57,U1,S
+place,66,6607600,Anao,Anao CDP,57,U2,S
+place,66,6607900,Andersen AFB,Andersen AFB CDP,57,M2,S
+place,66,6609500,Apotgan,Apotgan CDP,57,U2,S
+place,66,6609850,Apra Harbor,Apra Harbor CDP,57,M2,S
+place,66,6612450,Asan,Asan CDP,57,U1,S
+place,66,6615800,Astumbo,Astumbo CDP,57,U1,S
+place,66,6617000,Barrigada,Barrigada CDP,57,U1,S
+place,66,6618300,Barrigada Heights,Barrigada Heights CDP,57,U1,S
+place,66,6624500,Chaguian,Chaguian CDP,57,U2,S
+place,66,6625450,Chalan Pago,Chalan Pago CDP,57,U1,S
+place,66,6627400,Dededo,Dededo CDP,57,U1,S
+place,66,6629350,Finegayan Station,Finegayan Station CDP,57,M2,S
+place,66,6634650,Hågat,Hågat CDP,57,U1,S
+place,66,6634750,Hagåtña,Hagåtña CDP,57,U1,S
+place,66,6635000,Harmon Industrial Park,Harmon Industrial Park CDP,57,U2,S
+place,66,6635500,Inalåhan,Inalåhan CDP,57,U1,S
+place,66,6635525,Humåtak,Humåtak CDP,57,U1,S
+place,66,6636600,Ipan,Ipan CDP,57,U2,S
+place,66,6641300,Liguan,Liguan CDP,57,U2,S
+place,66,6642470,Machananao East,Machananao East CDP,57,U2,S
+place,66,6642480,Machananao West,Machananao West CDP,57,U2,S
+place,66,6642490,Machanao,Machanao CDP,57,U2,S
+place,66,6643300,Macheche,Macheche CDP,57,U2,S
+place,66,6643650,Maina,Maina CDP,57,U1,S
+place,66,6644300,Maite,Maite CDP,57,U1,S
+place,66,6644400,Malesso',Malesso' CDP,57,U1,S
+place,66,6644500,Malojloj,Malojloj CDP,57,U2,S
+place,66,6645600,Mangilao,Mangilao CDP,57,U1,S
+place,66,6647800,Mataguac,Mataguac CDP,57,U2,S
+place,66,6650500,Mogfog,Mogfog CDP,57,U2,S
+place,66,6650800,Mongmong,Mongmong CDP,57,U1,S
+place,66,6652200,Naval Hospital,Naval Hospital CDP,57,M2,S
+place,66,6652500,Nimitz Hill,Nimitz Hill CDP,57,U2,S
+place,66,6652750,Nimitz Hill Annex,Nimitz Hill Annex CDP,57,U2,S
+place,66,6653000,North Gayinero,North Gayinero CDP,57,U2,S
+place,66,6654800,Oka,Oka CDP,57,U1,S
+place,66,6655350,Ordot,Ordot CDP,57,U1,S
+place,66,6656300,Pagat,Pagat CDP,57,U1,S
+place,66,6658600,Piti,Piti CDP,57,U1,S
+place,66,6662825,Sånta Rita-Sumai,Sånta Rita-Sumai CDP,57,U1,S
+place,66,6665100,Sinajana,Sinajana CDP,57,U1,S
+place,66,6666800,South Gayinero,South Gayinero CDP,57,U2,S
+place,66,6669000,Talo'fo'fo,Talo'fo'fo CDP,57,U1,S
+place,66,6670950,Tamuning,Tamuning CDP,57,U1,S
+place,66,6673550,Toto,Toto CDP,57,U1,S
+place,66,6675500,Tumon,Tumon CDP,57,U1,S
+place,66,6677200,Ukudu,Ukudu CDP,57,U2,S
+place,66,6679600,University of Guam,University of Guam CDP,57,U1,S
+place,66,6680100,Upper Tumon,Upper Tumon CDP,57,U2,S
+place,66,6681600,Windward Hills,Windward Hills CDP,57,U2,S
+place,66,6681850,Wusstig,Wusstig CDP,57,U2,S
+place,66,6683950,Yona,Yona CDP,57,U1,S
+place,66,6685000,Y Papao,Y Papao CDP,57,U2,S
+place,66,6686000,Y Sengsong,Y Sengsong CDP,57,U2,S
+place,69,6900300,Achugao,Achugao village,47,C9,N
+place,69,6900400,Afatung,Afatung village,47,C9,N
+place,69,6900450,Afetnas,Afetnas village,47,C9,N
+place,69,6900500,Agatasi (Payapai),Agatasi (Payapai) village,47,C9,N
+place,69,6900600,Agingan,Agingan village,47,C9,N
+place,69,6901100,Agrihan,Agrihan village,47,C9,N
+place,69,6901150,Aguijan,Aguijan village,47,C9,N
+place,69,6901170,Agusan,Agusan village,47,C9,N
+place,69,6901200,Alaguan,Alaguan village,47,C9,N
+place,69,6901220,Alamagan,Alamagan village,47,C9,N
+place,69,6901250,American Memorial Park,American Memorial Park village,47,C9,N
+place,69,6901280,Anatahan,Anatahan village,47,C9,N
+place,69,6901300,Annex F,Annex F village,47,C9,N
+place,69,6901350,Apanon,Apanon village,47,C9,N
+place,69,6901400,As Akina,As Akina village,47,C9,N
+place,69,6901450,As Akoddo,As Akoddo village,47,C9,N
+place,69,6901500,As Dudo,As Dudo village,47,C9,N
+place,69,6901600,As Falipe,As Falipe village,47,C9,N
+place,69,6901650,As Gonna,As Gonna village,47,C9,N
+place,69,6901700,As Lito,As Lito village,47,C9,N
+place,69,6901750,As Mahetog,As Mahetog village,47,C9,N
+place,69,6901800,As Matuis,As Matuis village,47,C9,N
+place,69,6901850,As Niebes (Nieves),As Niebes (Nieves) village,47,C9,N
+place,69,6901900,As Palacios,As Palacios village,47,C9,N
+place,69,6901950,As Perdido,As Perdido village,47,C9,N
+place,69,6902000,As Rabagau,As Rabagau village,47,C9,N
+place,69,6902500,As Teo,As Teo village,47,C9,N
+place,69,6903000,As Terlaje,As Terlaje village,47,C9,N
+place,69,6903100,Asuncion,Asuncion village,47,C9,N
+place,69,6903500,Banaderu,Banaderu village,47,C9,N
+place,69,6904000,Bird Island,Bird Island village,47,C9,N
+place,69,6906000,Capitol Hill,Capitol Hill village,47,C9,N
+place,69,6906500,Carolinas,Carolinas village,47,C9,N
+place,69,6907000,Carolinas Heights,Carolinas Heights village,47,C9,N
+place,69,6907500,Chacha,Chacha village,47,C9,N
+place,69,6908000,Chalan Galaide,Chalan Galaide village,47,C9,N
+place,69,6911820,Chalan Kanoa I,Chalan Kanoa I village,47,C9,N
+place,69,6911850,Chalan Kanoa II,Chalan Kanoa II village,47,C9,N
+place,69,6911860,Chalan Kanoa III,Chalan Kanoa III village,47,C9,N
+place,69,6911870,Chalan Kanoa IV,Chalan Kanoa IV village,47,C9,N
+place,69,6912000,Chalan Kiya,Chalan Kiya village,47,C9,N
+place,69,6913000,Chalan Laulau,Chalan Laulau village,47,C9,N
+place,69,6913500,Chalan Piao,Chalan Piao village,47,C9,N
+place,69,6913600,Chalan Rueda,Chalan Rueda village,47,C9,N
+place,69,6913610,China Town,China Town village,47,C9,N
+place,69,6913620,Dagu,Dagu village,47,C9,N
+place,69,6913690,Dandan,Dandan village,47,C9,N
+place,69,6914550,Duge,Duge village,47,C9,N
+place,69,6914650,Eastern Tinian (Marpo Valley),Eastern Tinian (Marpo Valley) village,47,C9,N
+place,69,6914700,Fananganan,Fananganan village,47,C9,N
+place,69,6914750,Fanlagon,Fanlagon village,47,C9,N
+place,69,6914800,Fanonchuluyan,Fanonchuluyan village,47,C9,N
+place,69,6914850,Farallon de Medinilla,Farallon de Medinilla village,47,C9,N
+place,69,6914900,Finasisu,Finasisu village,47,C9,N
+place,69,6914950,Finata,Finata village,47,C9,N
+place,69,6915000,Forbidden Island,Forbidden Island village,47,C9,N
+place,69,6915500,Gagani,Gagani village,47,C9,N
+place,69,6915550,Gampapa,Gampapa village,47,C9,N
+place,69,6916000,Gaonan,Gaonan village,47,C9,N
+place,69,6917750,Garapan,Garapan village,47,C9,N
+place,69,6917800,Gayaugan (Kaan),Gayaugan (Kaan) village,47,C9,N
+place,69,6917850,Ginalangan (Chudan),Ginalangan (Chudan) village,47,C9,N
+place,69,6917900,Gualo Rai,Gualo Rai village,47,C9,N
+place,69,6917950,Guguan,Guguan village,47,C9,N
+place,69,6918000,Hilaihai,Hilaihai village,47,C9,N
+place,69,6918020,I Akgak,I Akgak village,47,C9,N
+place,69,6918050,I Chenchon,I Chenchon village,47,C9,N
+place,69,6918100,I Denni,I Denni village,47,C9,N
+place,69,6918150,I Fadang,I Fadang village,47,C9,N
+place,69,6918200,I Koridot,I Koridot village,47,C9,N
+place,69,6918250,I Liyang,I Liyang village,47,C9,N
+place,69,6918300,I Maddok,I Maddok village,47,C9,N
+place,69,6918350,I Naftan,I Naftan village,47,C9,N
+place,69,6918400,I Pitot,I Pitot village,47,C9,N
+place,69,6919510,Kagman,Kagman village,47,C9,N
+place,69,6919520,Kagman I,Kagman I village,47,C9,N
+place,69,6919530,Kagman II,Kagman II village,47,C9,N
+place,69,6919540,Kagman III,Kagman III village,47,C9,N
+place,69,6919550,Kagman IV,Kagman IV village,47,C9,N
+place,69,6919560,Kalabera,Kalabera village,47,C9,N
+place,69,6919570,Kannat Tabla,Kannat Tabla village,47,C9,N
+place,69,6919580,Koblerville,Koblerville village,47,C9,N
+place,69,6919650,Laulau Bay,Laulau Bay village,47,C9,N
+place,69,6919700,Lempanai,Lempanai village,47,C9,N
+place,69,6919750,Liyu,Liyu village,47,C9,N
+place,69,6919800,Lower Base,Lower Base village,47,C9,N
+place,69,6919850,Makmak,Makmak village,47,C9,N
+place,69,6919900,Managaha,Managaha village,47,C9,N
+place,69,6919950,Mananana,Mananana village,47,C9,N
+place,69,6922430,Marpi,Marpi village,47,C9,N
+place,69,6922440,Marpo Heights,Marpo Heights village,47,C9,N
+place,69,6922450,Matansa,Matansa village,47,C9,N
+place,69,6922460,Matpo,Matpo village,47,C9,N
+place,69,6922470,Maturana Hill,Maturana Hill village,47,C9,N
+place,69,6922500,Maug,Maug village,47,C9,N
+place,69,6922530,Mochong,Mochong village,47,C9,N
+place,69,6922550,Mount Sabana (Minachage),Mount Sabana (Minachage) village,47,C9,N
+place,69,6922575,Mount Taipingot,Mount Taipingot village,47,C9,N
+place,69,6922600,Nanasu,Nanasu village,47,C9,N
+place,69,6922650,Navy Hill,Navy Hill village,47,C9,N
+place,69,6923100,Northern Tinian,Northern Tinian village,47,C9,N
+place,69,6923900,Opyan,Opyan village,47,C9,N
+place,69,6923950,Pagan,Pagan village,47,C9,N
+place,69,6923980,Papago,Papago village,47,C9,N
+place,69,6923990,Pekngasu,Pekngasu village,47,C9,N
+place,69,6924000,Pidos Kahalo,Pidos Kahalo village,47,C9,N
+place,69,6924100,Puerto Rico,Puerto Rico village,47,C9,N
+place,69,6925100,Sabaneta,Sabaneta village,47,C9,N
+place,69,6925200,Sadog Tasi,Sadog Tasi village,47,C9,N
+place,69,6925300,Sailigai Papa,Sailigai Papa village,47,C9,N
+place,69,6942000,San Antonio,San Antonio village,47,C9,N
+place,69,6947205,San Jose (Oleai),San Jose (Oleai) village,47,C9,N
+place,69,6947210,San Jose (Tinian Municipality),San Jose (Tinian Municipality) village,47,C9,N
+place,69,6953100,San Roque,San Roque village,47,C9,N
+place,69,6959000,San Vicente,San Vicente village,47,C9,N
+place,69,6960500,Sarigan,Sarigan village,47,C9,N
+place,69,6961000,Sayan Gigani,Sayan Gigani village,47,C9,N
+place,69,6962000,Sinapalo,Sinapalo village,47,C9,N
+place,69,6964900,Songsong,Songsong village,47,C9,N
+place,69,6970800,Susupe,Susupe village,47,C9,N
+place,69,6970900,Tagolo Ogso,Tagolo Ogso village,47,C9,N
+place,69,6971000,Taimama,Taimama village,47,C9,N
+place,69,6972000,Talafofo,Talafofo village,47,C9,N
+place,69,6973000,Talakhaya,Talakhaya village,47,C9,N
+place,69,6974000,Talo,Talo village,47,C9,N
+place,69,6976700,Tanapag,Tanapag village,47,C9,N
+place,69,6976900,Tangke,Tangke village,47,C9,N
+place,69,6977000,Tapochao,Tapochao village,47,C9,N
+place,69,6977100,Tatachok,Tatachok village,47,C9,N
+place,69,6977200,Tatgua,Tatgua village,47,C9,N
+place,69,6977300,Tenetu,Tenetu village,47,C9,N
+place,69,6989000,Tottotville,Tottotville village,47,C9,N
+place,69,6989100,Ugis,Ugis village,47,C9,N
+place,69,6989200,Uracus (Farallon de Pajaros),Uracus (Farallon de Pajaros) village,47,C9,N
+place,69,6989300,Western Tinian,Western Tinian village,47,C9,N
+place,72,7200186,Aceitunas,Aceitunas comunidad,55,U1,S
+place,72,7200358,Adjuntas,Adjuntas zona urbana,62,U1,S
+place,72,7200616,Aguada,Aguada zona urbana,62,U1,S
+place,72,7200745,Aguadilla,Aguadilla zona urbana,62,U1,S
+place,72,7200874,Aguas Buenas,Aguas Buenas zona urbana,62,U1,S
+place,72,7201003,Aguas Claras,Aguas Claras comunidad,55,U1,S
+place,72,7201089,Aguilita,Aguilita comunidad,55,U1,S
+place,72,7201218,Aibonito,Aibonito zona urbana,62,U1,S
+place,72,7201863,Alianza,Alianza comunidad,55,U1,S
+place,72,7202680,Añasco,Añasco zona urbana,62,U1,S
+place,72,7203024,Animas,Animas comunidad,55,U1,S
+place,72,7203174,Anon Raices,Anon Raices comunidad,55,U2,S
+place,72,7203196,Antón Ruíz,Antón Ruíz comunidad,55,U1,S
+place,72,7203368,Arecibo,Arecibo zona urbana,62,U1,S
+place,72,7203927,Arroyo,Arroyo zona urbana,62,U1,S
+place,72,7204620,Bairoa La Veinticinco,Bairoa La Veinticinco comunidad,55,U2,S
+place,72,7204658,Bajadero,Bajadero comunidad,55,U1,S
+place,72,7204701,Bajandas,Bajandas comunidad,55,U1,S
+place,72,7205217,Barahona,Barahona comunidad,55,U1,S
+place,72,7205346,Barceloneta,Barceloneta zona urbana,62,U1,S
+place,72,7205690,Barranquitas,Barranquitas zona urbana,62,U1,S
+place,72,7206421,Bartolo,Bartolo comunidad,55,U1,S
+place,72,7206593,Bayamón,Bayamón zona urbana,62,U1,S
+place,72,7206679,Bayamón,Bayamón comunidad,55,U1,S
+place,72,7207496,Benítez,Benítez comunidad,55,U1,S
+place,72,7207668,Betances,Betances comunidad,55,U1,S
+place,72,7207969,Boquerón,Boquerón comunidad,55,U1,S
+place,72,7208099,Boquerón,Boquerón comunidad,55,U1,S
+place,72,7208700,Breñas,Breñas comunidad,55,U1,S
+place,72,7208722,Brisas del Campanero,Brisas del Campanero comunidad,55,U1,S
+place,72,7209087,Buena Vista,Buena Vista comunidad,55,U1,S
+place,72,7209250,Buena Vista,Buena Vista comunidad,55,U1,S
+place,72,7209603,Búfalo,Búfalo comunidad,55,U1,S
+place,72,7209689,Cabán,Cabán comunidad,55,U1,S
+place,72,7209861,Cabo Rojo,Cabo Rojo zona urbana,62,U1,S
+place,72,7210048,Cacao,Cacao comunidad,55,U1,S
+place,72,7210334,Caguas,Caguas zona urbana,62,U1,S
+place,72,7211151,Calzada,Calzada comunidad,55,U1,S
+place,72,7211345,Cambalache,Cambalache comunidad,55,U1,S
+place,72,7211581,Campanilla,Campanilla comunidad,55,U1,S
+place,72,7211597,Campanillas,Campanillas comunidad,55,U1,S
+place,72,7211710,Campo Rico,Campo Rico comunidad,55,U1,S
+place,72,7211925,Camuy,Camuy zona urbana,62,U1,S
+place,72,7212441,Candelaria,Candelaria comunidad,55,U1,S
+place,72,7212560,Candelaria Arenas,Candelaria Arenas comunidad,55,U1,S
+place,72,7212568,Candelero Abajo,Candelero Abajo comunidad,55,U1,S
+place,72,7212613,Candelero Arriba,Candelero Arriba comunidad,55,U1,S
+place,72,7212806,Caño Martin Peña,Caño Martin Peña comunidad,55,U1,S
+place,72,7212828,Canóvanas,Canóvanas zona urbana,62,U1,S
+place,72,7213065,Canovanillas,Canovanillas comunidad,55,U1,S
+place,72,7213925,Capitanejo,Capitanejo comunidad,55,U1,S
+place,72,7214290,Carolina,Carolina zona urbana,62,U1,S
+place,72,7214634,Carrizales,Carrizales comunidad,55,U1,S
+place,72,7215193,Cataño,Cataño zona urbana,62,U1,S
+place,72,7215494,Cayey,Cayey zona urbana,62,U1,S
+place,72,7215623,Cayuco,Cayuco comunidad,55,U1,S
+place,72,7215924,Ceiba,Ceiba zona urbana,62,U1,S
+place,72,7216139,Ceiba,Ceiba comunidad,55,U1,S
+place,72,7216440,Celada,Celada comunidad,55,U1,S
+place,72,7216526,Central Aguirre,Central Aguirre comunidad,55,U1,S
+place,72,7217050,Cerrillos Hoyos,Cerrillos Hoyos comunidad,55,U2,S
+place,72,7217773,Ciales,Ciales zona urbana,62,U1,S
+place,72,7218074,Cidra,Cidra zona urbana,62,U1,S
+place,72,7218719,Coamo,Coamo zona urbana,62,U1,S
+place,72,7218891,Coco,Coco comunidad,55,U1,S
+place,72,7219665,Comerío,Comerío zona urbana,62,U1,S
+place,72,7219837,Comunas,Comunas comunidad,55,U1,S
+place,72,7220310,Coquí,Coquí comunidad,55,U1,S
+place,72,7220353,Corazón,Corazón comunidad,55,U1,S
+place,72,7220482,Corcovado,Corcovado comunidad,55,U1,S
+place,72,7220783,Corozal,Corozal zona urbana,62,U1,S
+place,72,7220998,Corral Viejo,Corral Viejo comunidad,55,U1,S
+place,72,7221213,Coto Laurel,Coto Laurel comunidad,55,U1,S
+place,72,7221385,Coto Norte,Coto Norte comunidad,55,U1,S
+place,72,7222589,Culebra,Culebra zona urbana,62,U1,S
+place,72,7223062,Daguao,Daguao comunidad,55,U1,S
+place,72,7223341,Del Carmen,Del Carmen comunidad,55,U1,S
+place,72,7224008,Dorado,Dorado zona urbana,62,U1,S
+place,72,7224395,Duque,Duque comunidad,55,U1,S
+place,72,7224954,El Combate,El Combate comunidad,55,U1,S
+place,72,7225556,El Mangó,El Mangó comunidad,55,U1,S
+place,72,7225685,El Negro,El Negro comunidad,55,U1,S
+place,72,7225771,El Ojo,El Ojo comunidad,55,U1,S
+place,72,7225835,El Paraiso,El Paraiso comunidad,55,U1,S
+place,72,7226287,El Tumbao,El Tumbao comunidad,55,U1,S
+place,72,7226362,El Veintiséis,El Veintiséis comunidad,55,U1,S
+place,72,7226502,Emajagua,Emajagua comunidad,55,U1,S
+place,72,7227190,Esperanza,Esperanza comunidad,55,U1,S
+place,72,7227263,Espino,Espino comunidad,55,U1,S
+place,72,7227964,Fajardo,Fajardo zona urbana,62,U1,S
+place,72,7228367,Ferrer,Ferrer comunidad,55,U1,S
+place,72,7228824,Florida,Florida zona urbana,62,U1,S
+place,72,7229555,Fránquez,Fránquez comunidad,55,U1,S
+place,72,7229682,Frontón,Frontón comunidad,55,U1,S
+place,72,7229727,Fuig,Fuig comunidad,55,U1,S
+place,72,7229813,Galateo,Galateo comunidad,55,U1,S
+place,72,7230372,Garrochales,Garrochales comunidad,55,U1,S
+place,72,7230544,G. L. García,G. L. García comunidad,55,U1,S
+place,72,7231189,Guánica,Guánica zona urbana,62,U1,S
+place,72,7231877,Guayabal,Guayabal comunidad,55,U1,S
+place,72,7232221,Guayama,Guayama zona urbana,62,U1,S
+place,72,7232307,Guayanilla,Guayanilla zona urbana,62,U1,S
+place,72,7232522,Guaynabo,Guaynabo zona urbana,62,U1,S
+place,72,7232823,Gurabo,Gurabo zona urbana,62,U1,S
+place,72,7233184,Hacienda San José,Hacienda San José comunidad,55,U1,S
+place,72,7233296,Hatillo,Hatillo zona urbana,62,U1,S
+place,72,7233597,Hato Arriba,Hato Arriba comunidad,55,U1,S
+place,72,7233683,Hato Candal,Hato Candal comunidad,55,U1,S
+place,72,7234242,Hato Viejo,Hato Viejo comunidad,55,U1,S
+place,72,7234914,Honduras,Honduras comunidad,55,U1,S
+place,72,7235059,Hormigueros,Hormigueros zona urbana,62,U1,S
+place,72,7235403,H. Rivera Colón,H. Rivera Colón comunidad,55,U1,S
+place,72,7235532,Humacao,Humacao zona urbana,62,U1,S
+place,72,7235962,Imbéry,Imbéry comunidad,55,U1,S
+place,72,7236177,Indios,Indios comunidad,55,U1,S
+place,72,7236263,Ingenio,Ingenio comunidad,55,U1,S
+place,72,7236478,Isabela,Isabela zona urbana,62,U1,S
+place,72,7236779,Isleta,Isleta comunidad,55,U1,S
+place,72,7237166,Jagual,Jagual comunidad,55,U1,S
+place,72,7237336,Jaguas,Jaguas comunidad,55,U1,S
+place,72,7238241,Jauca,Jauca comunidad,55,U1,S
+place,72,7238370,Jayuya,Jayuya zona urbana,62,U1,S
+place,72,7238671,Jobos,Jobos comunidad,55,U1,S
+place,72,7238972,Juana Díaz,Juana Díaz zona urbana,62,U1,S
+place,72,7239470,Juncal,Juncal comunidad,55,U1,S
+place,72,7239574,Juncos,Juncos zona urbana,62,U1,S
+place,72,7239875,La Alianza,La Alianza comunidad,55,U1,S
+place,72,7240348,La Dolores,La Dolores comunidad,55,U1,S
+place,72,7240563,La Fermina,La Fermina comunidad,55,U1,S
+place,72,7240950,Lajas,Lajas zona urbana,62,U1,S
+place,72,7241274,La Liga,La Liga comunidad,55,U2,S
+place,72,7241294,La Luisa,La Luisa comunidad,55,U1,S
+place,72,7241466,Lamboglia,Lamboglia comunidad,55,U1,S
+place,72,7241767,La Parguera,La Parguera comunidad,55,U1,S
+place,72,7241810,La Pica,La Pica comunidad,55,U1,S
+place,72,7242068,La Playa,La Playa comunidad,55,U1,S
+place,72,7242197,La Plena,La Plena comunidad,55,U1,S
+place,72,7242498,Lares,Lares zona urbana,62,U1,S
+place,72,7242842,Las Carolinas,Las Carolinas comunidad,55,U1,S
+place,72,7243057,Las Croabas,Las Croabas comunidad,55,U1,S
+place,72,7243294,Las Gaviotas,Las Gaviotas comunidad,55,U1,S
+place,72,7243702,Las Marías,Las Marías comunidad,55,U1,S
+place,72,7243788,Las Marías,Las Marías zona urbana,62,U1,S
+place,72,7244003,Las Ochenta,Las Ochenta comunidad,55,U1,S
+place,72,7244089,Las Ollas,Las Ollas comunidad,55,U1,S
+place,72,7244390,Las Piedras,Las Piedras zona urbana,62,U1,S
+place,72,7244507,Lassalle,Lassalle comunidad,55,U1,S
+place,72,7245170,La Yuca,La Yuca comunidad,55,U2,S
+place,72,7245379,Liborio Negrón Torres,Liborio Negrón Torres comunidad,55,U1,S
+place,72,7246282,Lluveras,Lluveras comunidad,55,U1,S
+place,72,7246368,Loíza,Loíza zona urbana,62,U1,S
+place,72,7246626,Lomas,Lomas comunidad,55,U1,S
+place,72,7246800,Lomas Verdes,Lomas Verdes comunidad,55,U1,S
+place,72,7246960,Los Héroes,Los Héroes comunidad,55,U1,S
+place,72,7247013,Los Llanos,Los Llanos comunidad,55,U1,S
+place,72,7247336,Los Panes,Los Panes comunidad,55,U2,S
+place,72,7247422,Los Prados,Los Prados comunidad,55,U1,S
+place,72,7247615,Luis Lloréns Torres,Luis Lloréns Torres comunidad,55,U1,S
+place,72,7247701,Luis M. Cintrón,Luis M. Cintrón comunidad,55,U1,S
+place,72,7247787,Luquillo,Luquillo zona urbana,62,U1,S
+place,72,7247873,Luyando,Luyando comunidad,55,U1,S
+place,72,7248604,Magas Arriba,Magas Arriba comunidad,55,U1,S
+place,72,7248862,Maguayo,Maguayo comunidad,55,U1,S
+place,72,7250152,Manatí,Manatí zona urbana,62,U1,S
+place,72,7250260,Mansión del Mar,Mansión del Mar comunidad,55,U1,S
+place,72,7250270,Mansión del Sol,Mansión del Sol comunidad,55,U1,S
+place,72,7250754,María Antonia,María Antonia comunidad,55,U1,S
+place,72,7251055,Mariano Colón,Mariano Colón comunidad,55,U1,S
+place,72,7251270,Maricao,Maricao zona urbana,62,U1,S
+place,72,7251657,Martorell,Martorell comunidad,55,U1,S
+place,72,7251700,Marueño,Marueño comunidad,55,U1,S
+place,72,7252345,Maunabo,Maunabo zona urbana,62,U1,S
+place,72,7252431,Mayagüez,Mayagüez zona urbana,62,U1,S
+place,72,7253678,Miranda,Miranda comunidad,55,U1,S
+place,72,7253807,Moca,Moca zona urbana,62,U1,S
+place,72,7253979,Monserrate,Monserrate comunidad,55,U1,S
+place,72,7254366,Monte Grande,Monte Grande comunidad,55,U1,S
+place,72,7254688,Monte Verde,Monte Verde comunidad,55,U2,S
+place,72,7254882,Mora,Mora comunidad,55,U1,S
+place,72,7255097,Morovis,Morovis zona urbana,62,U1,S
+place,72,7255355,Mucarabones,Mucarabones comunidad,55,U1,S
+place,72,7255828,Naguabo,Naguabo zona urbana,62,U1,S
+place,72,7256129,Naranjito,Naranjito zona urbana,62,U1,S
+place,72,7257075,Olimpo,Olimpo comunidad,55,U1,S
+place,72,7257290,Orocovis,Orocovis zona urbana,62,U1,S
+place,72,7257612,Pabellones,Pabellones comunidad,55,U1,S
+place,72,7257806,Pájaros,Pájaros comunidad,55,U1,S
+place,72,7257862,Pajonal,Pajonal comunidad,55,U1,S
+place,72,7257978,Palmarejo,Palmarejo comunidad,55,U1,S
+place,72,7258064,Palmarejo,Palmarejo comunidad,55,U1,S
+place,72,7258150,Palmarejo,Palmarejo comunidad,55,U1,S
+place,72,7258365,Palmas,Palmas comunidad,55,U1,S
+place,72,7258602,Palmas del Mar,Palmas del Mar comunidad,55,U1,S
+place,72,7258613,Palma Sola,Palma Sola comunidad,55,U1,S
+place,72,7258666,Palmer,Palmer comunidad,55,U1,S
+place,72,7258967,Palomas,Palomas comunidad,55,U1,S
+place,72,7259053,Palomas,Palomas comunidad,55,U1,S
+place,72,7259139,Palo Seco,Palo Seco comunidad,55,U1,S
+place,72,7259386,Parcelas de Navarro,Parcelas de Navarro comunidad,55,U1,S
+place,72,7259420,Parcelas La Milagrosa,Parcelas La Milagrosa comunidad,55,U1,S
+place,72,7259422,Parcelas Mandry,Parcelas Mandry comunidad,55,U2,S
+place,72,7259425,Parcelas Nuevas,Parcelas Nuevas comunidad,55,U1,S
+place,72,7259440,Parcelas Peñuelas,Parcelas Peñuelas comunidad,55,U1,S
+place,72,7259450,Parcelas Viejas Borinquen,Parcelas Viejas Borinquen comunidad,55,U1,S
+place,72,7260257,Pastos,Pastos comunidad,55,U1,S
+place,72,7260472,Patillas,Patillas zona urbana,62,U1,S
+place,72,7260945,Peña Pobre,Peña Pobre comunidad,55,U1,S
+place,72,7261074,Peñuelas,Peñuelas zona urbana,62,U1,S
+place,72,7261545,Piedra Aguza,Piedra Aguza comunidad,55,U2,S
+place,72,7261590,Piedra Gorda,Piedra Gorda comunidad,55,U1,S
+place,72,7261977,Piñas,Piñas comunidad,55,U1,S
+place,72,7263310,Playa Fortuna,Playa Fortuna comunidad,55,U1,S
+place,72,7263503,Playita,Playita comunidad,55,U1,S
+place,72,7263525,Playita,Playita comunidad,55,U1,S
+place,72,7263568,Playita Cortada,Playita Cortada comunidad,55,U1,S
+place,72,7263697,Pole Ojea,Pole Ojea comunidad,55,U1,S
+place,72,7263820,Ponce,Ponce zona urbana,62,U1,S
+place,72,7264127,Potala Pastillo,Potala Pastillo comunidad,55,U1,S
+place,72,7264400,Pueblito del Carmen,Pueblito del Carmen comunidad,55,U2,S
+place,72,7264500,Pueblito del Río,Pueblito del Río comunidad,55,U1,S
+place,72,7265589,Puerto Real,Puerto Real comunidad,55,U1,S
+place,72,7266492,Punta Santiago,Punta Santiago comunidad,55,U1,S
+place,72,7266660,Quebrada,Quebrada comunidad,55,U1,S
+place,72,7267200,Quebrada del Agua,Quebrada del Agua comunidad,55,U2,S
+place,72,7267675,Quebrada Prieta,Quebrada Prieta comunidad,55,U1,S
+place,72,7268040,Quebradillas,Quebradillas zona urbana,62,U1,S
+place,72,7268513,Rafael Capó,Rafael Capó comunidad,55,U1,S
+place,72,7268556,Rafael González,Rafael González comunidad,55,U1,S
+place,72,7268599,Rafael Hernández,Rafael Hernández comunidad,55,U1,S
+place,72,7268771,Ramos,Ramos comunidad,55,U1,S
+place,72,7269488,Rincón,Rincón comunidad,55,U1,S
+place,72,7269588,Rincón,Rincón zona urbana,62,U1,S
+place,72,7270448,Río Blanco,Río Blanco comunidad,55,U1,S
+place,72,7270706,Río Cañas Abajo,Río Cañas Abajo comunidad,55,U1,S
+place,72,7271136,Río Grande,Río Grande zona urbana,62,U1,S
+place,72,7271437,Río Lajas,Río Lajas comunidad,55,U1,S
+place,72,7271996,Rodríguez Hevia,Rodríguez Hevia comunidad,55,U1,S
+place,72,7272555,Rosa Sánchez,Rosa Sánchez comunidad,55,U1,S
+place,72,7273200,Sabana,Sabana comunidad,55,U1,S
+place,72,7273372,Sabana Eneas,Sabana Eneas comunidad,55,U1,S
+place,72,7273544,Sabana Grande,Sabana Grande zona urbana,62,U1,S
+place,72,7273716,Sabana Hoyos,Sabana Hoyos comunidad,55,U1,S
+place,72,7274189,Sabana Seca,Sabana Seca comunidad,55,U1,S
+place,72,7274877,Salinas,Salinas zona urbana,62,U1,S
+place,72,7275608,San Antonio,San Antonio comunidad,55,U1,S
+place,72,7275694,San Antonio,San Antonio comunidad,55,U1,S
+place,72,7275780,San Antonio,San Antonio comunidad,55,U1,S
+place,72,7276167,San Germán,San Germán zona urbana,62,U1,S
+place,72,7276339,San Isidro,San Isidro comunidad,55,U1,S
+place,72,7276683,San José,San José comunidad,55,U1,S
+place,72,7276770,San Juan,San Juan zona urbana,62,U1,S
+place,72,7277027,San Lorenzo,San Lorenzo zona urbana,62,U1,S
+place,72,7277500,San Sebastián,San Sebastián zona urbana,62,U1,S
+place,72,7277672,Santa Bárbara,Santa Bárbara comunidad,55,U1,S
+place,72,7277826,Santa Clara,Santa Clara comunidad,55,U1,S
+place,72,7278145,Santa Isabel,Santa Isabel zona urbana,62,U1,S
+place,72,7278317,Santa María,Santa María comunidad,55,U1,S
+place,72,7279564,Santo Domingo,Santo Domingo comunidad,55,U1,S
+place,72,7280596,Stella,Stella comunidad,55,U1,S
+place,72,7280639,Suárez,Suárez comunidad,55,U1,S
+place,72,7281413,Tallaboa,Tallaboa comunidad,55,U1,S
+place,72,7281456,Tallaboa Alta,Tallaboa Alta comunidad,55,U1,S
+place,72,7282055,Tibes,Tibes comunidad,55,U2,S
+place,72,7282125,Tiburones,Tiburones comunidad,55,U1,S
+place,72,7282187,Tierras Nuevas Poniente,Tierras Nuevas Poniente comunidad,55,U1,S
+place,72,7282488,Toa Alta,Toa Alta zona urbana,62,U1,S
+place,72,7282617,Toa Baja,Toa Baja zona urbana,62,U1,S
+place,72,7282692,Toaville,Toaville comunidad,55,U1,S
+place,72,7282875,Tomás de Castro,Tomás de Castro comunidad,55,U1,S
+place,72,7283606,Trujillo Alto,Trujillo Alto zona urbana,62,U1,S
+place,72,7284509,Utuado,Utuado zona urbana,62,U1,S
+place,72,7284917,Valle Hill,Valle Hill comunidad,55,U1,S
+place,72,7285025,Vayas,Vayas comunidad,55,U1,S
+place,72,7285111,Vázquez,Vázquez comunidad,55,U1,S
+place,72,7285197,Vega Alta,Vega Alta zona urbana,62,U1,S
+place,72,7285326,Vega Baja,Vega Baja zona urbana,62,U1,S
+place,72,7285971,Vieques,Vieques comunidad,55,U1,S
+place,72,7286014,Vieques,Vieques zona urbana,62,U1,S
+place,72,7286250,Villa Calma,Villa Calma comunidad,55,U1,S
+place,72,7286509,Villa de Sabana,Villa de Sabana comunidad,55,U1,S
+place,72,7286584,Villa Esperanza,Villa Esperanza comunidad,55,U1,S
+place,72,7286788,Villa Hugo I,Villa Hugo I comunidad,55,U1,S
+place,72,7286796,Villa Hugo II,Villa Hugo II comunidad,55,U1,S
+place,72,7286831,Villalba,Villalba zona urbana,62,U1,S
+place,72,7287240,Villa Quintero,Villa Quintero comunidad,55,U1,S
+place,72,7287272,Villas del Sol,Villas del Sol comunidad,55,U1,S
+place,72,7287282,Villa Sin Miedo,Villa Sin Miedo comunidad,55,U1,S
+place,72,7287638,Voladoras,Voladoras comunidad,55,U1,S
+place,72,7287863,Yabucoa,Yabucoa zona urbana,62,U1,S
+place,72,7288035,Yauco,Yauco zona urbana,62,U1,S
+place,72,7288121,Yaurel,Yaurel comunidad,55,U1,S
+place,72,7288293,Yeguada,Yeguada comunidad,55,U1,S
+place,78,7816300,Charlotte Amalie,Charlotte Amalie town,43,C9,N
+place,78,7818100,Charlotte Amalie East,Charlotte Amalie East CDP,57,U2,S
+place,78,7819000,Charlotte Amalie West,Charlotte Amalie West CDP,57,U2,S
+place,78,7819900,Christiansted,Christiansted town,43,C9,N
+place,78,7827000,Coral Bay,Coral Bay CDP,57,U1,S
+place,78,7828000,Cruz Bay,Cruz Bay CDP,57,U1,S
+place,78,7837900,Frederiksted,Frederiksted town,43,C9,N
+place,78,7839700,Frederiksted Southeast,Frederiksted Southeast CDP,57,U2,S
+place,78,7865530,Red Hook,Red Hook CDP,57,U2,S
+place,78,7878300,Tutu,Tutu CDP,57,U1,S

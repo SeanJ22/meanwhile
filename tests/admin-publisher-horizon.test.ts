@@ -37,7 +37,7 @@ test("MW-017: only a bounded, fully paginated read that claims completeness name
   assert.match(publishesAheadWords({ furthestAhead: THROUGH, horizon: { ...complete, kind: "OPEN_FACT_SET" } }, null, NOW_MS), /^Not checked/);
   assert.match(publishesAheadWords({ furthestAhead: THROUGH, horizon: null }, null, NOW_MS), /^Unknown — the read records no horizon/);
   assert.match(publishesAheadWords({ furthestAhead: THROUGH }, null, NOW_MS), /^Unknown — whether the read holds everything the publisher lists was not read/);
-  assert.match(publishesAheadWords({ furthestAhead: THROUGH, horizon: complete }, { state: "HORIZON_UNRESOLVED" }, NOW_MS), /^Not checked — the last read could not complete our check .*a check we failed to make, not a limit the publisher set/);
+  assert.match(publishesAheadWords({ furthestAhead: THROUGH, horizon: complete }, { state: "HORIZON_UNRESOLVED" }, NOW_MS), /^Not checked — the last read could not complete our check .*our check is incomplete; this is not a limit the publisher set/);
   assert.equal(publishesAheadWords(null, null, NOW_MS), "Unknown — nothing has been read from this source");
 });
 

@@ -895,7 +895,7 @@ export function publishesAheadWords(
         ? `the version we hold lists meetings through ${fmtDate(version.furthestAhead)}, ${furthest} days ahead`
         : `the latest meeting in the version we hold was ${fmtDate(version.furthestAhead)}`;
   if (last?.state === "HORIZON_UNRESOLVED") {
-    return `Not checked — the last read could not complete our check of how far ahead the publisher lists (a check we failed to make, not a limit the publisher set); ${held}`;
+    return `Not checked — the last read could not complete our check of how far ahead the publisher lists (our check is incomplete; this is not a limit the publisher set); ${held}`;
   }
   const h = version.horizon;
   if (horizonIsPublishersLimit(h)) {

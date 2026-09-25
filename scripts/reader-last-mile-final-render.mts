@@ -340,7 +340,35 @@ try {
       // unresolved Newbury group, each disclosing a null distinct count over
       // multiple source listings — not the volatile total. Data completeness is
       // the import/census gate's job, never this render sample's.
-      assert.ok(groups.length >= 1, `expected at least one unresolved-count Newbury listing group; got ${groups.length}`);
+      // Newbury's identical twice-listed sittings now merge at the source (7b3e5abb),
+      // so the held projection can carry no ambiguous group. The honest render is
+      // then a plain meeting count with no unresolved note and no notice; that is
+      // read positively below instead of passing on an empty set.
+      if (groups.length === 0) {
+        const stat = page.locator('[data-stat="meetings"]').first();
+        if (!(await stat.isVisible())) {
+          const menu = page.getByRole("button", { name: "Open menu", exact: true });
+          if (await menu.isVisible()) await menu.click();
+        }
+        await stat.waitFor({ state: "visible" });
+        await stat.getByText("Meetings", { exact: true }).waitFor({ state: "visible" });
+        assert.ok(!(await stat.innerText()).includes("Distinct meeting count unresolved."), "A resolved listing carries no unresolved-count note");
+        const stated = Number(await stat.locator(".num").innerText());
+        const screenshot = await capture(stat, "03255-newbury-listings-resolved");
+        await stat.click();
+        await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
+        while (await page.locator(".al-more").count()) {
+          const before = await page.locator(".al-row").count();
+          await page.locator(".al-more").click();
+          await page.waitForFunction((count) => document.querySelectorAll(".al-row").length > count || !document.querySelector(".al-more"), before);
+        }
+        const renderedListingRows = await page.locator(".al-row").count();
+        assert.ok(renderedListingRows > 0 && renderedListingRows === stated, "Every stated meeting is an accessible row");
+        assert.equal(await page.locator('.al-panel [data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]').count(), 0, "No unresolved-listing notice without an ambiguous group");
+        const disclosure = freshnessDisclosureProblems(await page.locator("body").innerText(), served.snapshot);
+        assert.deepEqual(disclosure.problems, [], "the footer does not disclose what the served snapshot requires");
+        results.push({ id: "newbury-listings-resolved", result: "PASS", groups, renderedListingRows, failedRefreshDisclosure: disclosure.required, screenshot });
+      } else {
       assert.ok(
         groups.every(
           (group) =>
@@ -378,6 +406,7 @@ try {
       assert.deepEqual(disclosure.problems, [], "the footer does not disclose what the served snapshot requires");
       const screenshot = await capture(notice, "03255-newbury-unresolved-listings");
       results.push({ id: "newbury-unresolved-listings", result: "PASS", groups, renderedListingRows: await page.locator(".al-row").count(), failedRefreshDisclosure: disclosure.required, screenshot });
+      }
     } finally { await context.close(); }
   }
   if (!refreshBaseline) {

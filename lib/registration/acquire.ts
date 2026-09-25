@@ -51,7 +51,8 @@ export interface RegistrationSourceReceipt {
 
 const LABEL = "Census of Governments (2022)";
 
-function userAgent(): string {
+/** The identified User-Agent that registration reads, and the reference extractors behind them, send. */
+export function registrationUserAgent(): string {
   const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
   return `we-the-people registration (${contact ? `contact: ${contact}` : "https://github.com/SeanJ22/we-the-people"})`;
 }
@@ -69,7 +70,7 @@ export async function acquireRegistrationSource(options: { readonly signal: Abor
   const fetchImpl = options.fetchImpl ?? fetch;
   const response = await requestPublisher(LABEL, () =>
     fetchImpl(REGISTRATION_SOURCE_URL, {
-      headers: { "user-agent": userAgent(), "if-modified-since": REGISTRATION_SOURCE_LAST_MODIFIED },
+      headers: { "user-agent": registrationUserAgent(), "if-modified-since": REGISTRATION_SOURCE_LAST_MODIFIED },
       signal: options.signal,
     }),
   );

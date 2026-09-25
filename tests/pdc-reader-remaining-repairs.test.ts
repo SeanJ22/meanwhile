@@ -10,6 +10,7 @@ import { candidateProfileCensusHoldingPath, canonicalReaderAuthorityJson, civicC
 import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
 import { directFundingTargetPlan } from "../app/api/funding/[target]/route.ts";
 import { telHref } from "../lib/officials/phone-numbers.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { validateFullReproofComponentEvidence, validateFullReproofWitnesses, validateListingWitnessReadback } from "../scripts/lib/reader-full-reproof.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
@@ -19,6 +20,15 @@ test("listing witnesses bind the complete current group set rather than a histor
   validateListingWitnessReadback([one], [one]);
   validateListingWitnessReadback([one, two], [one, two]);
   assert.throws(() => validateListingWitnessReadback([], []), /population is empty/);
+  // No ambiguous group left: accepted only with a positive resolved readback.
+  const resolved = { heading: "Meetings", countNote: null, unresolvedNoticeCount: 0, renderedListingCount: 12 };
+  validateListingWitnessReadback([], [], resolved);
+  assert.throws(() => validateListingWitnessReadback([one], [], resolved), /none may be rendered/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, heading: "Calendar listings" }), /meeting count/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, countNote: "Distinct meeting count unresolved." }), /unresolved-count note/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, unresolvedNoticeCount: 1 }), /no unresolved-listing notice/);
+  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, renderedListingCount: 0 }), /no rows/);
+  assert.throws(() => validateListingWitnessReadback([], [one], resolved), /Every current/, "a resolved readback never excuses a present ambiguous group");
   assert.throws(() => validateListingWitnessReadback([one], [one, two]), /Every current/);
   assert.throws(() => validateListingWitnessReadback([{ ...one, sourceIds: ["listing:a", "listing:other"] }], [one]), /Every current/);
   assert.throws(() => validateListingWitnessReadback([{ ...one, sourceListingCount: 3 }], [one]), /Every current/);
@@ -78,10 +88,11 @@ test("contactless grounded bodies retain the routed topic and correctly attribut
 test("ballot keeps freshness for a federal none answer and leaves a current none answer empty", async () => {
   const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "CandidateFunding")!;
   const envelope = { kind: "ANSWER", holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
-  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "fundingFreshnessNote", "unavailableHolding", "FundingAbsence", "FundingDisplay", compile(`${fn.getText()}; return CandidateFunding;`));
+  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "fundingFreshnessNote", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", compile(`${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
-  const component = make(React, () => ({ kind: "none" }), async () => envelope, fundingFreshnessNote, unexpected, unexpected, unexpected);
-  const props = { targetKey: "congress:test", context: null, available: true };
+  // The settlement runs inside the page's reader edge (R30); with no edge it runs as it always did.
+  const component = make(React, () => ({ kind: "none" }), async () => envelope, fundingFreshnessNote, unexpected, unexpected, unexpected, withReaderAuthorityEdge);
+  const props = { targetKey: "congress:test", context: null, available: true, readerEdge: null };
   const markup = renderToStaticMarkup(await component(props));
   assert.match(markup, /funding-data-freshness/);
   assert.match(markup, /source through 2026-08-19/);

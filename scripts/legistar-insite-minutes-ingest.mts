@@ -64,6 +64,7 @@ import {
 } from "../lib/outcomes/minutes-ingest.ts";
 import { readMesaOutcomeProjection } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
+import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
 import { captureSourceAcquisitions, type SourceAcquisitionEvidence } from "../lib/sources/acquisition-trace.ts";
 import {
   dateRangePostback,
@@ -84,8 +85,6 @@ export const MINUTES_ROUTINE_WINDOW_DAYS = 120;
 const DEFAULT_MAX_DOCUMENTS = 25;
 /** The InSite adapter's own page budget per range (lib/sources/legistar-insite/index.ts MAX_GRID_PAGES). */
 const MAX_GRID_PAGES = 6;
-const DAY_MS = 24 * 60 * 60 * 1_000;
-const CALENDAR_DAY = /^\d{4}-\d{2}-\d{2}$/;
 const CONTRACT = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT;
 
 export interface MinutesIngestArgs {
@@ -116,33 +115,13 @@ export function parseMinutesIngestArgs(argv: readonly string[]): MinutesIngestAr
   };
 }
 
-function calendarDayIn(timeZone: string, at: Date): string {
-  const parts = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(at);
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((entry) => entry.type === type)?.value ?? "";
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
-
-function exactCalendarDay(flag: string, day: string): string {
-  const at = Date.parse(`${day}T00:00:00.000Z`);
-  if (!CALENDAR_DAY.test(day) || !Number.isFinite(at) || new Date(at).toISOString().slice(0, 10) !== day) {
-    throw new Error(`MINUTES_OUTCOME_WINDOW_INVALID: ${flag} must be an exact YYYY-MM-DD calendar day, got ${JSON.stringify(day)}.`);
-  }
-  return day;
-}
-
 /** Today in the body's zone back MINUTES_ROUTINE_WINDOW_DAYS; `--from`/`--to` override. */
 export function minutesOutcomeWindow(
   args: Pick<MinutesIngestArgs, "from" | "to">,
   timeZone: string,
   at: Date,
-): { readonly from: string; readonly to: string } {
-  const to = exactCalendarDay("--to", args.to ?? calendarDayIn(timeZone, at));
-  const from = exactCalendarDay(
-    "--from",
-    args.from ?? new Date(Date.parse(`${to}T00:00:00.000Z`) - MINUTES_ROUTINE_WINDOW_DAYS * DAY_MS).toISOString().slice(0, 10),
-  );
-  if (from > to) throw new Error(`MINUTES_OUTCOME_WINDOW_INVALID: --from ${from} is after --to ${to}.`);
-  return { from, to };
+): OutcomeWindow {
+  return rollingOutcomeWindow(args, timeZone, at, MINUTES_ROUTINE_WINDOW_DAYS, "MINUTES_OUTCOME_WINDOW_INVALID");
 }
 
 /** The grid ranges that cover the window: this year, and last year when the window reaches into it. */

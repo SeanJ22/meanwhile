@@ -26,13 +26,11 @@
  * leaves the last known good rows live. The wiring derive reads these rows
  * beside the reviewed crosswalk on its next pass.
  */
-import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
-import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
   DERIVED_CROSSWALK_CONTRACT_ID,
   DERIVED_CROSSWALK_RECORD_CLASS,
@@ -69,7 +67,6 @@ assertWriteAllowed("a routine civic data candidate/version promotion");
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
 /** The reviewer is named by its own code: a change to the review re-keys every row it accepts from then on. */
 const REVIEWER = autoCrosswalkReviewerId(digestValueClosure(process.cwd(), "lib/control-plane/discovery/auto-crosswalk.ts").digest);
 /** The vendors whose finds the reviewer reads; a walk whose finds are all others still has them held by name. */
@@ -90,12 +87,6 @@ async function finish(candidate: RoutineCandidate): Promise<void> {
   if (!outcome.promoted) process.exitCode = 2;
 }
 
-function promotedInput(recordClass: string, scope: string, versionId: string | null, value: unknown, promotedAt: string | null): DerivedInputRef | null {
-  return versionId === null || promotedAt === null
-    ? null
-    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: sha256(canonicalCivicDataJson(value)), promotedAt };
-}
-
 async function main(): Promise<void> {
   const lkg = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
   if (lkg.kind === "STORE_UNREACHABLE") {
@@ -104,7 +95,7 @@ async function main(): Promise<void> {
   }
   const previous = lkg.kind === "PROMOTED" ? lkg.value.records : [];
   const lkgInput = lkg.kind === "PROMOTED"
-    ? promotedInput(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
+    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
     : null;
 
   /* Every government whose newest walk found a route, read only. An older find behind a newer walk is not reviewed: the wiring reads the newest. */
@@ -132,7 +123,7 @@ async function main(): Promise<void> {
   for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
     try {
       const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
-      const input = read.kind === "PROMOTED" ? promotedInput("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
+      const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
       if (read.kind !== "PROMOTED" || input === null) {
         registrations.set(state, { unread: `${state} registration is ${read.kind}` });
         continue;

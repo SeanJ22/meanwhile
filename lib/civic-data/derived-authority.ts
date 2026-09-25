@@ -136,6 +136,13 @@ export type HostAttestation =
   | { readonly kind: "ROUTE_HINT"; readonly hintFingerprint: string }
   | { readonly kind: "LINKED_FROM_ATTESTED_PAGE"; readonly pageArtifactId: string; readonly page: HostAttestation };
 
+/** A promoted pointer cited as a derived input, or null while it has no promoted version. */
+export function promotedInputRef(recordClass: string, scope: string, versionId: string | null, value: unknown, promotedAt: string | null): DerivedInputRef | null {
+  return versionId === null || promotedAt === null
+    ? null
+    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex"), promotedAt };
+}
+
 /**
  * The reader adapter a row wires, pinned to the adapter's own closure digest,
  * so a parser change re-keys the row instead of silently re-validating it.

@@ -41,6 +41,7 @@ import {
   runPimaLegistarOutcomeIngest,
   type PimaOutcomeIngestArgs,
 } from "../scripts/legistar-outcomes-ingest.mts";
+import { withFetch } from "./helpers/with-fetch.ts";
 
 /**
  * Pima County's official Legistar outcomes (recorded actions, pass/fail, and
@@ -129,16 +130,6 @@ function recordedLegistar(routes: {
   return { requests, fetchImpl };
 }
 
-async function withLegistar<T>(stub: ReturnType<typeof recordedLegistar>, run: () => Promise<T>): Promise<T> {
-  const original = globalThis.fetch;
-  globalThis.fetch = stub.fetchImpl as typeof fetch;
-  try {
-    return await run();
-  } finally {
-    globalThis.fetch = original;
-  }
-}
-
 function steppedClock(startIso: string): () => string {
   let at = Date.parse(startIso);
   return () => {
@@ -174,7 +165,7 @@ async function routinePass(
   const client = findClient("pima");
   assert.ok(client);
   const lines: string[] = [];
-  const result = await withLegistar(stub, () => runPimaLegistarOutcomeIngest({
+  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
     store,
     client,
     args: ROUTINE_ARGS,
@@ -511,7 +502,7 @@ test("a dry run reads the events route and writes nothing", async () => {
   assert.ok(client);
   const stub = recordedLegistar({ events: [recordedEvent(1825, "2026-09-20T18:00:00.12")] });
   const lines: string[] = [];
-  const result = await withLegistar(stub, () => runPimaLegistarOutcomeIngest({
+  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
     store,
     client,
     args: parsePimaOutcomeIngestArgs(["--dry-run", "--slug", "pima"]),

@@ -66,12 +66,11 @@ import {
 } from "../lib/outcomes/data-plane.ts";
 import { readOutcomeProjection } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
+import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
 
 /** Outcomes exist only for held sittings; the routine window looks back this far. */
 export const OUTCOME_ROUTINE_WINDOW_DAYS = 120;
 const DEFAULT_MAX_SITTINGS = 40;
-const DAY_MS = 24 * 60 * 60 * 1_000;
-const CALENDAR_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 export interface PimaOutcomeIngestArgs {
   readonly slug: string;
@@ -104,30 +103,7 @@ export function parsePimaOutcomeIngestArgs(argv: readonly string[]): PimaOutcome
   };
 }
 
-/** Legistar's `EventDate` is the body's local calendar date, so "today" is too. */
-function calendarDayIn(timeZone: string, at: Date): string {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(at);
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((entry) => entry.type === type)?.value ?? "";
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
-
-function exactCalendarDay(flag: string, day: string): string {
-  const at = Date.parse(`${day}T00:00:00.000Z`);
-  if (!CALENDAR_DAY.test(day) || !Number.isFinite(at) || new Date(at).toISOString().slice(0, 10) !== day) {
-    throw new Error(`PIMA_OUTCOME_WINDOW_INVALID: ${flag} must be an exact YYYY-MM-DD calendar day, got ${JSON.stringify(day)}.`);
-  }
-  return day;
-}
-
-export interface OutcomeWindow {
-  readonly from: string;
-  readonly to: string;
-}
+export type { OutcomeWindow };
 
 /**
  * The rolling routine window: today in the body's zone back
@@ -138,13 +114,7 @@ export function pimaOutcomeWindow(
   timeZone: string,
   at: Date,
 ): OutcomeWindow {
-  const to = exactCalendarDay("--to", args.to ?? calendarDayIn(timeZone, at));
-  const from = exactCalendarDay(
-    "--from",
-    args.from ?? new Date(Date.parse(`${to}T00:00:00.000Z`) - OUTCOME_ROUTINE_WINDOW_DAYS * DAY_MS).toISOString().slice(0, 10),
-  );
-  if (from > to) throw new Error(`PIMA_OUTCOME_WINDOW_INVALID: --from ${from} is after --to ${to}.`);
-  return { from, to };
+  return rollingOutcomeWindow(args, timeZone, at, OUTCOME_ROUTINE_WINDOW_DAYS, "PIMA_OUTCOME_WINDOW_INVALID");
 }
 
 /**

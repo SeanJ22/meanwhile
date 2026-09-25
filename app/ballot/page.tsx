@@ -88,8 +88,16 @@ import { refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "@/
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { fundingFreshnessNote } from "@/lib/funding/freshness";
 import { directFundingTargetPlan, settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import {
+  ensureReaderAuthorityEdge,
+  READER_MAP_AUTHORITY_FAMILIES,
+  readReaderManifest,
+} from "@/lib/meetings/edge-serving";
+import {
+  enterReaderAuthorityEdge,
+  withReaderAuthorityEdge,
+  type ReaderAuthorityEdgeBundle,
+} from "@/lib/registry/runtime-edge";
 import {
   refreshCandidateCorpusFromPromoted,
   refreshCandidateProfilesFromPromoted,
@@ -125,7 +133,12 @@ import { groupAbsences } from "@/lib/ballot/absence-grouping";
 import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { readerContestScope } from "@/lib/ballot/reader-scope";
 import { resolveZip } from "@/lib/geo/zcta";
-import { divisionsAt } from "@/lib/registry/server";
+import {
+  divisionsAt,
+  prefetchReaderGeography,
+  settleFederalDirectoryRead,
+  settleRegistryAuthorityReads,
+} from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import { tierForOcdId } from "@/lib/ocd/tiers";
@@ -322,14 +335,17 @@ async function IncumbentName({
   targetKey,
   name,
   context,
+  readerEdge,
 }: {
   targetKey: string;
   name: string;
   context: { zip: string; lat: number; lng: number } | null;
+  /** The page's reader edge: React renders this component outside the page's own context. */
+  readerEdge: ReaderAuthorityEdgeBundle | null;
 }) {
   let holder: SeatHolder | null = null;
   try {
-    holder = await incumbentHolderFor(targetKey);
+    holder = await withReaderAuthorityEdge(readerEdge, () => incumbentHolderFor(targetKey));
   } catch {
     // The page-level canonical holding notice names this failure. The filed
     // ballot name remains valid and must not disappear with an optional
@@ -351,10 +367,12 @@ async function CandidateFunding({
   targetKey,
   context,
   available,
+  readerEdge,
 }: {
   targetKey: string;
   context: { zip: string; lat: number; lng: number } | null;
   available: boolean;
+  readerEdge: ReaderAuthorityEdgeBundle | null;
 }) {
   if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
@@ -382,7 +400,7 @@ async function CandidateFunding({
    */
   let freshness: string | null = null;
   try {
-    const settled = await settleFundingHoldingAnswer(targetKey);
+    const settled = await withReaderAuthorityEdge(readerEdge, () => settleFundingHoldingAnswer(targetKey));
     if (settled.kind === "ANSWER") freshness = fundingFreshnessNote(settled);
   } catch {
     freshness = null;
@@ -473,6 +491,7 @@ async function BallotBattlecard({
   contestVoteFor,
   context,
   authorityAvailability,
+  readerEdge,
 }: {
   name: string;
   partyLine: React.ReactNode;
@@ -518,6 +537,12 @@ async function BallotBattlecard({
   contestVoteFor: number;
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
+  /**
+   * The page's reader edge (R30, 2026-09-25). React renders this card from its
+   * own render loop, outside the page function that entered the edge, so every
+   * read below runs inside it explicitly or it would wake the database.
+   */
+  readerEdge: ReaderAuthorityEdgeBundle | null;
 }) {
   /*
    * ONE lookup, used for three things: whether the record section has content,
@@ -529,7 +554,7 @@ async function BallotBattlecard({
   let holder: SeatHolder | null = null;
   if (authorityAvailability.officeholders && authorityAvailability.funding) {
     try {
-      holder = await incumbentHolderFor(targetKey);
+      holder = await withReaderAuthorityEdge(readerEdge, () => incumbentHolderFor(targetKey));
     } catch {
       holder = null;
     }
@@ -550,7 +575,7 @@ async function BallotBattlecard({
   let resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null = null;
   if (authorityAvailability.officeholders) {
     try {
-      resolvedStanding = await contestIncumbency(
+      resolvedStanding = await withReaderAuthorityEdge(readerEdge, () => contestIncumbency(
         {
           id: contestId,
           title: contestTitle,
@@ -560,7 +585,7 @@ async function BallotBattlecard({
           voteFor: contestVoteFor,
         },
         authorityAvailability.funding ? incumbentHolderFor : async () => null,
-      );
+      ));
     } catch {
       resolvedStanding = null;
     }
@@ -745,7 +770,7 @@ async function BallotBattlecard({
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
-          <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} />
+          <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} />
         ) : stateMoneyUnavailable ? (
           unavailableHolding("state campaign-finance")
         ) : stateCandidateFunding(targetKey, stateMoney),
@@ -833,6 +858,22 @@ function unavailableHolding(family: string) {
 }
 
 
+/**
+ * The reader authority edge for this render, fetched and NOT entered: an entry
+ * made inside a helper never reaches its caller's later reads on Node 24
+ * (tests/reader-edge-context.test.ts), so the page enters what this returns.
+ * The four families the map's routes read are the four this page reads:
+ * divisions, the federal officeholders, the campaign-site URLs that key the
+ * officeholder graph in production, and the state legislators incumbency asks
+ * about. Null when nothing is published or the fetch failed; never reads the
+ * database.
+ */
+async function readBallotReaderEdge(): Promise<ReaderAuthorityEdgeBundle | null> {
+  const manifest = await readReaderManifest().catch(() => null);
+  if (!manifest?.authorityArtifacts) return null;
+  return ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null);
+}
+
 export default async function BallotPage({
   searchParams,
 }: {
@@ -869,9 +910,31 @@ export default async function BallotPage({
    * our committed geometry — in which case nothing is called certain, because
    * a render default may never manufacture a claim out of an unmeasured thing.
    */
+  // The reader edge and the committed geometry start before anything waits (R30).
+  const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve(null);
+  if (centroid) prefetchReaderGeography();
   const certainty = await zipCertainty(zip);
 
+  /*
+   * **THE READER EDGE IS ENTERED HERE, IN THE PAGE'S OWN FUNCTION.** (R30,
+   * 2026-09-25.)
+   *
+   * A cold /ballot read about 50 MB from the database (measured on an isolated
+   * copy, 2026-09-24): the registry runtime alone is ~24 MB, and it and the
+   * federal directory are already published on the reader edge. Entered here,
+   * every read this function awaits after this line (divisions, the
+   * officeholder preloads) primes those families from the edge instead. The
+   * async components React renders later run outside this function's context,
+   * so each is handed `readerEdge` and runs its reads inside it. Families the
+   * edge does not publish (the ballot itself, candidate profiles and
+   * publications, ballot navigation, NH members, FEC and state money) still
+   * read the database. No manifest, or a failed fetch: no edge, and the page
+   * reads everything from the database as before.
+   */
+  let readerEdge: ReaderAuthorityEdgeBundle | null = null;
   if (centroid) {
+    readerEdge = await readerEdgeRead;
+    if (readerEdge) enterReaderAuthorityEdge(readerEdge);
     attempted = true;
     let pointDivisionIds: string[] = [];
     try {
@@ -916,8 +979,11 @@ export default async function BallotPage({
   if (set && matched) {
     auxiliaryPreloads.set("candidate-profiles", refreshCandidateProfilesFromPromoted);
     auxiliaryPreloads.set("candidate-publications", refreshCandidateCorpusFromPromoted);
-    auxiliaryPreloads.set("registry-runtime", refreshRegistryRuntimeFromPromoted);
-    auxiliaryPreloads.set("federal-directory", refreshFederalDirectoryFromPromoted);
+    // Edge first (R30): the same settles `divisionsAt` and the officeholder
+    // graph use, so an edge-served version is never read again from the
+    // database in the same render.
+    auxiliaryPreloads.set("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
+    auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
     if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
       // Incumbency completeness comes from the General Court's own whole
       // membership projection. It must be established before the synchronous
@@ -2137,6 +2203,7 @@ export default async function BallotPage({
                                 ? { zip, lat: centroid.lat, lng: centroid.lng }
                                 : null
                             }
+                            readerEdge={readerEdge}
                           />
                         }
                         /* ITEM 12 (2026-08-19): the long sections moved off
@@ -2173,6 +2240,7 @@ export default async function BallotPage({
                                 : null
                             }
                             authorityAvailability={authorityAvailability}
+                            readerEdge={readerEdge}
                           />
                         }
                       />
@@ -2313,6 +2381,7 @@ export default async function BallotPage({
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
                                   : null
                               }
+                              readerEdge={readerEdge}
                             />
                           }
                           /* ITEM 12: the identical move on the filed-candidate
@@ -2345,6 +2414,7 @@ export default async function BallotPage({
                                   : null
                               }
                               authorityAvailability={authorityAvailability}
+                              readerEdge={readerEdge}
                             />
                           }
                         />

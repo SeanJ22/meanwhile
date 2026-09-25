@@ -35,6 +35,7 @@ import { join } from "node:path";
 
 import { readBoundaryAttributes } from "../lib/geo/shapefile.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
+import { registrationUserAgent } from "../lib/registration/acquire.ts";
 
 const ROOT = process.cwd();
 const CACHE = process.argv.find((a) => a.startsWith("--tiger="))?.slice(8) ?? join(ROOT, ".cache", "tiger");
@@ -67,11 +68,6 @@ interface Receipt {
   readonly sha256: string;
 }
 
-function userAgent(): string {
-  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
-  return `we-the-people registration (${contact ? `contact: ${contact}` : "https://github.com/SeanJ22/we-the-people"})`;
-}
-
 async function archive(file: string, url: string): Promise<{ readonly bytes: Buffer; readonly receipt: Receipt }> {
   const dest = join(CACHE, file);
   const receiptPath = `${dest}.receipt.json`;
@@ -86,7 +82,7 @@ async function archive(file: string, url: string): Promise<{ readonly bytes: Buf
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), BATCH_TIMEOUT_MS);
   try {
-    const response = await fetch(url, { headers: { "user-agent": userAgent() }, signal: controller.signal });
+    const response = await fetch(url, { headers: { "user-agent": registrationUserAgent() }, signal: controller.signal });
     const retrievedAt = new Date().toISOString();
     if (!response.ok) throw new Error(`census.gov answered HTTP ${response.status} for ${url}`);
     const finalUrl = response.url || url;

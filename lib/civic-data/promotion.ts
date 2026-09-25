@@ -584,10 +584,14 @@ export async function processRoutineCandidate(
       basis: candidate.normalization.normalizedHash === lkg.candidate.normalization.normalizedHash
         ? "READ_MODEL_RECOMPUTED"
         : "CHANGE_SET_UNCHANGED",
+      // A derived version fetched nothing: its status and final URL stay null
+      // and the receipt's shape rule admits that only for its own derived route.
       retrieval: {
         requestedUrl: candidate.retrieval.requestedUrl,
-        finalUrl: candidate.retrieval.finalUrl ?? candidate.retrieval.requestedUrl,
-        httpStatus: candidate.retrieval.httpStatus ?? 0,
+        finalUrl: candidate.retrieval.httpStatus === null
+          ? candidate.retrieval.finalUrl
+          : candidate.retrieval.finalUrl ?? candidate.retrieval.requestedUrl,
+        httpStatus: candidate.retrieval.httpStatus,
         rawHash: candidate.retrieval.rawHash ?? "",
         retrievedAt: candidate.retrieval.retrievedAt,
       },

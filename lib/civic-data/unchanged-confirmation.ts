@@ -1,4 +1,5 @@
 import { canonicalCivicDataJson } from "./changes.ts";
+import { derivedRequestedUrl } from "./derived-door.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
 /**
@@ -34,12 +35,27 @@ export const UNCHANGED_CONFIRMATION_PREFIX = "UNCHANGED_CONFIRMATION_V1 ";
  */
 export type UnchangedBasis = "READ_MODEL_RECOMPUTED" | "CHANGE_SET_UNCHANGED" | "PUBLISHER_STAMPS_UNCHANGED";
 
+/**
+ * A fetched version names its 2xx status and final URL. A derived version (a
+ * meeting family or the source wiring, built from already-promoted inputs)
+ * fetched nothing, so it has neither: its status is null, and its requested URL
+ * is its own `derived:<sourceId>:<scope>` route (R23). Migration 0029's event
+ * rule admits exactly this pair and nothing looser.
+ */
 export interface UnchangedConfirmationRetrieval {
   readonly requestedUrl: string;
-  readonly finalUrl: string;
-  readonly httpStatus: number;
+  readonly finalUrl: string | null;
+  readonly httpStatus: number | null;
   readonly rawHash: string;
   readonly retrievedAt: string;
+}
+
+/** Whether `retrieval` is the named version's own derived retrieval (no fetch, no status). */
+function isOwnDerivedRetrieval(retrieval: Record<string, unknown>, sourceId: unknown, scope: unknown): boolean {
+  return retrieval.httpStatus === null &&
+    typeof sourceId === "string" && typeof scope === "string" &&
+    retrieval.requestedUrl === derivedRequestedUrl(sourceId, scope) &&
+    (retrieval.finalUrl === null || retrieval.finalUrl === retrieval.requestedUrl);
 }
 
 /** One held record's publisher stamps, as held and as fetched now. */
@@ -105,10 +121,13 @@ export function unchangedConfirmationShapeIssue(value: unknown): string | null {
   if (row.basis !== "READ_MODEL_RECOMPUTED" && row.basis !== "CHANGE_SET_UNCHANGED" && row.basis !== "PUBLISHER_STAMPS_UNCHANGED") return "unknown basis";
   if (!isInstant(row.observedAt)) return "observedAt is not an instant";
   const retrieval = row.retrieval as Record<string, unknown> | null | undefined;
+  const fetched = (value: Record<string, unknown>): boolean =>
+    typeof value.finalUrl === "string" &&
+    typeof value.httpStatus === "number" && value.httpStatus >= 200 && value.httpStatus <= 299;
   if (
     !retrieval || typeof retrieval !== "object" ||
-    typeof retrieval.requestedUrl !== "string" || typeof retrieval.finalUrl !== "string" ||
-    typeof retrieval.httpStatus !== "number" || retrieval.httpStatus < 200 || retrieval.httpStatus > 299 ||
+    typeof retrieval.requestedUrl !== "string" ||
+    !(fetched(retrieval) || isOwnDerivedRetrieval(retrieval, row.sourceId, row.scope)) ||
     typeof retrieval.rawHash !== "string" || !SHA256.test(retrieval.rawHash) ||
     !isInstant(retrieval.retrievedAt)
   ) return "the retrieval is not a successful acquisition";

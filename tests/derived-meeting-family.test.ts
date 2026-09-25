@@ -155,7 +155,7 @@ async function walk(feed: string, feedStatus = 200) {
   });
 }
 
-async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: DerivedInputRef, feed: string, now: string, feedStatus = 200) {
+async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: DerivedInputRef, feed: string, now: string, feedStatus = 200, options: { readonly confirmUnchanged?: boolean } = {}) {
   const attempt = await walk(feed, feedStatus);
   const previousRead = await readDerivedMeetingWiring({ store, bypassCache: true, now });
   const previous = previousRead.kind === "PROMOTED" ? derivedWiringEntries(previousRead.value) : [];
@@ -182,7 +182,7 @@ async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: Deriv
   const plan = planDerivedVersion(previous, decisions);
   assert.deepEqual(plan.refusals, []);
   const candidate = derivedWiringCandidate(plan, [crosswalkInput], now);
-  return { decisions, plan, outcome: await processRegisteredRoutineCandidate(store, "meeting-source-wiring", candidate, now) };
+  return { decisions, plan, candidate, outcome: await processRegisteredRoutineCandidate(store, "meeting-source-wiring", candidate, now, undefined, options) };
 }
 
 function readFeed(feed: string, now: string): Meeting[] {
@@ -195,7 +195,7 @@ function readFeed(feed: string, now: string): Meeting[] {
   return makeIcalSource([wiring]).normalizeWithDrops([{ wiring, ics: feed, collectedAt: now, sourceUrl: ROUTE }], new Date(now)).meetings;
 }
 
-async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: string | null, host = HOST) {
+async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: string | null, host = HOST, options: { readonly confirmUnchanged?: boolean } = {}) {
   const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") throw new Error("no wiring");
@@ -220,7 +220,7 @@ async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: s
     reconcile: (read) => ({ meetings: read.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
   });
   const candidate = derivedFamilyCandidate(partition, build);
-  return { build, outcome: await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, now) };
+  return { build, candidate, outcome: await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, now, undefined, options) };
 }
 
 test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes through the doors with no code release", async () => {
@@ -302,4 +302,35 @@ test("C16: a wiring version that drops a row is refused by the door, and the las
   assert.equal(outcome.promoted, null, "a connection never disappears without its own evidence");
   const live = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_SECOND });
   assert.equal(live.kind === "PROMOTED" ? live.value.records.length : 0, 1);
+});
+
+test("R23: an unchanged derived pass is receipted on the pointed version, not re-promoted", async () => {
+  const store = new MemoryRoutineDataStore();
+  const crosswalkInput = await promoteCrosswalk(store);
+  const first = await deriveWiring(store, crosswalkInput, FEED, T_WIRING);
+  assert.equal(first.outcome.candidate.state, "PROMOTED", first.outcome.candidate.failureDetail ?? "");
+  const family = await promoteFamily(store, T_FAMILY, FEED);
+  assert.equal(family.outcome.candidate.state, "PROMOTED", family.outcome.candidate.failureDetail ?? "");
+  const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
+  const familyPointer = await store.readPromotionIdentity("MEETING", partition.scope);
+
+  // The same crosswalk and the same feed a pass later: nothing a reader sees changed.
+  const wiringAgain = await deriveWiring(store, crosswalkInput, FEED, T_SECOND, 200, { confirmUnchanged: true });
+  assert.equal(wiringAgain.outcome.confirmed?.versionId, first.outcome.candidate.candidate.id, "the wiring re-check confirms the pointed version");
+  assert.equal(await store.readCandidateSummary(wiringAgain.candidate.id), null, "no wiring candidate is written for an unchanged pass");
+  assert.equal(wiringAgain.candidate.retrieval.httpStatus, null, "a derived version fetched nothing and names no status");
+
+  const familyAgain = await promoteFamily(store, "2026-09-24T22:30:00.000Z", FEED, HOST, { confirmUnchanged: true });
+  assert.equal(familyAgain.outcome.confirmed?.versionId, familyPointer?.versionId, "the family re-check confirms the pointed version");
+  assert.equal((await store.readPromotionIdentity("MEETING", partition.scope))?.versionId, familyPointer?.versionId, "readers keep their version");
+  assert.equal(await store.readCandidateSummary(familyAgain.candidate.id), null, "no family candidate is written for an unchanged pass");
+
+  // A real change still promotes a new version.
+  const next = ics([
+    { uid: "h1", summary: "Housing Commission", start: "20261008T160000" },
+    { uid: "h2", summary: "Housing Commission", start: "20261105T160000" },
+  ]);
+  const changed = await promoteFamily(store, "2026-09-24T23:30:00.000Z", next, HOST, { confirmUnchanged: true });
+  assert.equal(changed.outcome.confirmed, undefined);
+  assert.equal(changed.outcome.candidate.state, "PROMOTED", changed.outcome.candidate.failureDetail ?? "");
 });

@@ -800,7 +800,8 @@ export async function promoteDerivedMeetingFamily(store: RoutineDataStore, parti
     },
   });
   const candidate = derivedFamilyCandidate(partition, build);
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt);
+  // An unchanged family pass is receipted on the pointed version (R23).
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt, undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
 }
 

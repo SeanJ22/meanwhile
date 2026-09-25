@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 822,
-    "named": 7948,
+    "named": 7957,
     "dynamic": 31
   },
   "files": {
@@ -6541,7 +6541,9 @@
         "Ask's topic timeline joins a Mesa decision to the topic from the minutes and composes the answer without a model",
         "Mesa's minutes are one routine contract on the standing clock, following the council's InSite sittings",
         "a failed minutes read is a held attempt that leaves the last good pointer live; a failed calendar read too",
+        "a held failed extraction's bytes are read again after a week, whatever the check would say",
         "a routine pass reads the minutes the portal links, records the rest as not yet published, and promotes",
+        "minutes whose extraction fails are held as a failed extraction and not downloaded again until they change (2026-09-25)",
         "the Reader combines Pima's and Mesa's pointers, each tenant's records and provenance intact, and Pima's answers unchanged",
         "the rolling window ends today in Mesa and reaches back 120 days; one grid range covers it unless it crosses a year"
       ],
@@ -6550,10 +6552,14 @@
     "tests/mesa-minutes-outcomes.test.ts": {
       "names": [
         "a continuation that is not a motion's own words stays an unread passage, never a guessed motion",
-        "a held sitting whose note names unread passages is read again, so a parser that now reads them reaches readers",
+        "a document read whose extraction failed is held with the identity of the bytes it failed on",
+        "a failure over verified minutes keeps the verified reading and remembers the failed document beside it; a success clears it",
+        "a held failed extraction is read again at once when the parser changes, when its link changes, and after a week",
+        "a held sitting whose note names unread passages is read again once a newer parser is in force, and never again under the same one",
         "a later sitting's minutes approving these minutes marks them APPROVED, with its own words",
         "a motion written as an infinitive is read: the 2026-08-13 study session's direction to the City Attorney",
         "a motion written without 'that' is read: the 2026-06-04 study session acknowledges its boards' minutes",
+        "a reader asking what the 2026-05-28 session decided is told we could not read it, never that nothing was decided",
         "a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'",
         "action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken",
         "minutes that record no motion and do not say no action was taken stay a failed extraction: the 2026-05-28 strategic planning session",
@@ -6562,8 +6568,11 @@
         "the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found",
         "the 2026-07-20 council minutes, a signed scan read through its OCR text layer (real PDF bytes)",
         "the 2026-07-27 council minutes: five motions, two split votes, the consent agenda and the items pulled from it",
+        "the Mesa candidate admits a held failed extraction, names it, and still refuses a failure with no document identity",
         "the concluded sittings a pass considers: the wired bodies, in the window, already held, one row per portal id",
         "the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host",
+        "the next pass asks the portal first: an unchanged document is not downloaded, a changed one is read at once",
+        "the parser's revision is pinned to its source: an edit to the minutes parser has to decide whether held readings are re-read",
         "which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link"
       ],
       "dynamic": 0

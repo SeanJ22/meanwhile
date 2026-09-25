@@ -550,3 +550,22 @@ other continuation stays a named unread passage. A scan of all 21 documents the
 promoted projection cites found no other missed motion. The 2026-05-28
 strategic planning session records no motion and does not say no action was
 taken; it stays a failed extraction by rule.
+
+### A minutes document that fails by rule is not downloaded again every hour (2026-09-25)
+
+Mesa's 2026-05-28 strategic planning minutes (18,779,714 bytes) record no motion
+and do not say no action was taken, so every read is a failed extraction by
+rule. Each failure refused the candidate; the contract retries a failed pass
+after an hour; each retry downloaded the same 18.8 MB and failed again. Now the
+failure is HELD in the projection as `ZERO_ROWS_FAILED` with the identity of the
+bytes it failed on (`failedMinutesRead`: URL, label, sha256, length, type, any
+ETag/Last-Modified, parser revision, read time), named on every candidate as
+`MINUTES_EXTRACTION_FAILED_HELD`, and the pass promotes. Later passes send one
+paced HEAD first: Mesa's portal answers it with the length and type and no
+validators (measured). Unchanged: nothing is downloaded. Changed length, type
+or validator, a new link or label, or a new `MINUTES_PARSER_REVISION`: read at
+once. A week old: the bytes are re-read once to catch a same-length
+replacement. A failed REQUEST still refuses the candidate and retries in an
+hour; a failure over verified minutes keeps the verified reading. The same
+HEAD-before-GET rule fits any large document route whose extraction can fail
+deterministically.

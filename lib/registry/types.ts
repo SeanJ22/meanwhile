@@ -212,6 +212,22 @@ export type AgendaSourceType =
    * reconfiguration page (2026-09-23). See `lib/sources/official-page-events`.
    */
   | "OFFICIAL_PAGE_EVENTS"
+  /**
+   * Not a vendor — a shape. A body's own agendas-and-minutes page, one page
+   * per year, one link per document labelled with its sitting's kind and date
+   * ("Regular Meeting 9-9-2026") under an "Agendas" or "Minutes" heading. One
+   * sitting per kind per date, its agenda cited. First body: the City of
+   * Holbrook, AZ City Council (2026-09-25). See `lib/sources/document-listing`.
+   */
+  | "DOCUMENT_LISTING"
+  /**
+   * SuiteOne Media meeting management — a hosted agenda portal at
+   * `<tenant>.suiteonemedia.com` whose server-rendered home page lists the
+   * next ten meetings and each body's past meetings with agenda, packet,
+   * minutes and video. First tenant: the City of Winslow, AZ (2026-09-25).
+   * See `lib/sources/suiteone`.
+   */
+  | "SUITEONE"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

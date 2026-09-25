@@ -232,12 +232,13 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // 161 from 2026-09-24: + the Newbury Library Trustees' and Energy Committee's own pages (C9).
   // 162 from 2026-09-24: + meetings:schedulepage for Chandler's City Council schedule table (C14).
   // 167 from 2026-09-24: + the meeting-source wiring, three derived state families and the meeting-body crosswalk (C16).
-  // 167 from 2026-09-25: − meetings:diligent for Newbury's Selectboard (its CivicWeb host no longer resolves),
-  // + Mesa's council decisions read off its minutes (NH332); + the automatic crosswalk (C16 option A),
-  // and a derived family for every registered state (53 more than AZ, NH, NJ).
+  // 169 from 2026-09-25: − meetings:diligent for Newbury's Selectboard (its CivicWeb host no longer resolves),
+  // + Mesa's council decisions read off its minutes (NH332), + Holbrook's (document listing) and Winslow's
+  // (SuiteOne) City Council partitions; + the automatic crosswalk (C16 option A), and a derived family for every
+  // registered state (53 more than AZ, NH, NJ).
   assert.equal(
     contracts.length,
-    167 + 56 + 1 + (REGISTRATION_TARGETS.length - 3),
+    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3),
     "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)",
   );
   assert.deepEqual(
@@ -250,8 +251,9 @@ test("PDC: readiness authority coverage accounts for every production contract",
     ],
     "the guard must move when the canonical contract denominator moves",
   );
-  // 127 source/body partitions (Newbury's CivicWeb route retired) and one derived family per registered state.
-  assert.equal(MEETING_PARTITION_CONTRACTS.length, 127 + REGISTRATION_TARGETS.length);
+  // 129 source/body partitions (Newbury's CivicWeb route retired; Holbrook's and Winslow's councils added)
+  // and one derived family per registered state.
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, 129 + REGISTRATION_TARGETS.length);
   assert.equal(contracts.some(({ id }) => id === "meetings"), false);
   assert.deepEqual(readinessAuthorityCoverageIssues(), []);
   assert.deepEqual(

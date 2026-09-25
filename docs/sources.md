@@ -401,6 +401,53 @@ parse as data*, never *did the call succeed*.
   title must name the body or its committee. Anything else is HELD with a named
   reason, never guessed.
 
+### Document listing — a body's own agendas-and-minutes page
+- **Last walked:** 2026-09-25
+- **Status:** WIRED — `lib/sources/document-listing/` (AgendaSourceType
+  `DOCUMENT_LISTING`), first body the City of Holbrook, AZ City Council, its
+  own partition.
+- **Shape:** one page per year; one link per document, labelled with its
+  sitting's kind and date ("Regular Meeting 9-9-2026") under an "Agendas" or
+  "Minutes" heading. One sitting per kind per date, its agenda cited.
+- **Auth:** none. **Permission, read before the first fetch of every run:**
+
+| Page | robots.txt | Verdict | Read |
+| --- | --- | --- | --- |
+| `https://holbrookaz.gov/government/council-agenda/<year>-agendas-minutes/` (City of Holbrook — WIRED) | `User-agent: *` with an empty `Disallow:` (Yoast block) | **ALLOWED** | 2026-09-25 |
+| `https://drive.google.com/file/d/<id>/view` (Holbrook's agenda PDFs, linked from the page) | `Allow: /file` | **ALLOWED**, but the page is a script-only viewer carrying none of the agenda's text | 2026-09-25 |
+| `https://drive.google.com/uc?export=download&id=<id>` (the same PDFs' bytes) | `Disallow: /` is the longest match | **DISALLOWED — NOT READ** | 2026-09-25 |
+
+- **What is not known from this route:** the hour and room of each sitting,
+  which Holbrook prints only inside the agenda PDFs above. Sittings publish
+  date-only with their agenda link; nothing is inferred.
+- **Horizon:** a sitting appears when the city posts its agenda.
+- **Also on the city's site, not wired:** the Planning & Zoning Commission's
+  agendas and minutes page (`/government/council-agenda/planning-zoning-agendas-minutes/`);
+  the commission is not a registered body yet.
+
+### SuiteOne Media — hosted meeting portal
+- **Last walked:** 2026-09-25
+- **Status:** WIRED — `lib/sources/suiteone/` (AgendaSourceType `SUITEONE`),
+  first tenant the City of Winslow, AZ City Council, its own partition.
+- **Shape:** the tenant's server-rendered home page (`/?embed=1`, where
+  `/web/` lands): the next ten meetings of every body, and one panel per body
+  category of the current and previous year's meetings, each row with its
+  date and time, agenda, packet, minutes and video links.
+- **Auth:** none. **Permission, read before the first fetch of every run:**
+
+| Page | robots.txt | Verdict | Read |
+| --- | --- | --- | --- |
+| `https://winslowaz.suiteonemedia.com/?embed=1` (City of Winslow — WIRED) | none served (HTTP 404) | **NO_ROBOTS** — no restriction stated | 2026-09-25 |
+
+- **Not wired:** the page's own paging and older-years controls are POSTs
+  (`/Home/GetUpcomingEvents`, `/Home/GetRecentEventsGroup`); their GET forms
+  answer 404, so the robots-first research client could not verify them.
+  Until one is verified, council sittings later than the table's tenth row
+  appear only as the table rolls forward (the tenth row on the first read:
+  19 November 2026 <!-- expected-future: a scheduled meeting date -->).
+- **Place:** not on the portal's rows; each agenda states it ("the main hall of
+  the Winslow Visitor's Center, 523 West Second Street", 22 September 2026).
+
 ---
 
 ## Evaluated, not wired

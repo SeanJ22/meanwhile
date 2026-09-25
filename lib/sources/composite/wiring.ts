@@ -16,6 +16,8 @@ import { makePimaEduSource } from "../pima-edu/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
 import { makeSchedulePageSource } from "../schedulepage/index.ts";
 import { makeOfficialPageEventsSource } from "../official-page-events/index.ts";
+import { makeDocumentListingSource } from "../document-listing/index.ts";
+import { makeSuiteOneSource } from "../suiteone/index.ts";
 import {
   makeLegistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -214,6 +216,21 @@ export const CAPABILITIES: Array<{
     types: ["OFFICIAL_PAGE_EVENTS"],
     make: (rows) =>
       makeOfficialPageEventsSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    // Not a vendor: a body's own agendas-and-minutes page, whose dated
+    // document links ARE its list of sittings. Asks robots.txt every run.
+    name: "document-listing",
+    types: ["DOCUMENT_LISTING"],
+    make: (rows) =>
+      makeDocumentListingSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    // SuiteOne Media's hosted meeting portal: its server-rendered home page.
+    // Asks robots.txt every run.
+    name: "suiteone",
+    types: ["SUITEONE"],
+    make: (rows) => makeSuiteOneSource(rows) as ReportingMeetingSource<unknown>,
   },
 ];
 

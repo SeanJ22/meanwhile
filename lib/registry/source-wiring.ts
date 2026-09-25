@@ -136,6 +136,8 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
     ICAL: "ical",
     PIMA_EDU: "pima-edu",
     OFFICIAL_PAGE_EVENTS: "official-page-events",
+    DOCUMENT_LISTING: "document-listing",
+    SUITEONE: "suiteone",
   };
   const route = routeByType[row.agendaSourceType];
   if (route) {
@@ -837,6 +839,78 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       titleMatch: "City Council",
     },
     verifiedAt: "2026-09-24",
+  },
+
+  // Holbrook, AZ — City Council (R21's replacement route, 2026-09-25). The
+  // iCal feed discovery found on the city's site stores local times as UTC and
+  // carries no council meeting, so it stays held for that reason; this row
+  // does not replace it and says nothing about it. The city's own "Agendas &
+  // Minutes" page publishes one page per year
+  // (holbrookaz.gov/government/council-agenda/<year>-agendas-minutes/, robots.txt
+  // `User-agent: *` with an empty `Disallow:`, read 2026-09-25) listing every
+  // Regular Meeting, Special Meeting and Work Session by its own date, each
+  // with its agenda and, once posted, its minutes. The body is the registered
+  // governing body of `az:city:city-of-holbrook` (Census place 0433280).
+  //
+  // The page states no hour and no room; the agendas that do sit on Google
+  // Drive, whose viewer is script-only and whose byte route robots.txt
+  // disallows. Every sitting ships date-only with its own agenda cited. The
+  // publisher's horizon: a sitting appears when the city posts its agenda.
+  {
+    bodyId: "ocd-division/country:us/state:az/place:holbrook#governing",
+    ocdId: "ocd-division/country:us/state:az/place:holbrook",
+    agendaSourceType: "DOCUMENT_LISTING",
+    jurisdiction: "Holbrook, AZ",
+    publishingOrg: "City of Holbrook",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "holbrook-city-council",
+      pageTemplate: "https://holbrookaz.gov/government/council-agenda/{year}-agendas-minutes/",
+      // The government's reviewed current website (C15,
+      // lib/civic-data/website-corrections.ts); a test holds the two equal.
+      officialHost: "holbrookaz.gov",
+      bodyName: "City Council",
+      // The kinds the page's own labels give the council's sittings. Any
+      // other dated label ("Statement of Legal Action") is a document of a
+      // sitting, never a sitting.
+      sittingKinds: "Regular Meeting|Special Meeting|Work Session",
+      agendaHeading: "Agendas",
+      minutesHeading: "Minutes",
+    },
+    verifiedAt: "2026-09-25",
+  },
+
+  // Winslow, AZ — City Council (R22, 2026-09-25). Discovery's "commission
+  // page" finds were a community-events list, not the council. The city
+  // publishes its council agendas, packets, minutes and video on its SuiteOne
+  // Media portal, winslowaz.suiteonemedia.com, which serves no robots.txt
+  // (HTTP 404, read 2026-09-25) and whose home page is server-rendered: the
+  // next ten meetings of every body, and a "City Council" panel of the current
+  // and previous year's sittings. The agendas name the city ("NOTICE OF
+  // REGULAR MEETING OF THE WINSLOW CITY COUNCIL"). The body is the registered
+  // governing body of `az:city:city-of-winslow` (Census place 0483930).
+  //
+  // The publisher's horizon: the home page lists only the next ten meetings
+  // across all of the city's bodies (through 19 November 2026 on the read).
+  {
+    bodyId: "ocd-division/country:us/state:az/place:winslow#governing",
+    ocdId: "ocd-division/country:us/state:az/place:winslow",
+    agendaSourceType: "SUITEONE",
+    jurisdiction: "Winslow, AZ",
+    publishingOrg: "City of Winslow",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "winslow-city-council",
+      // The portal's home page as its own `/web/` link lands on it.
+      portalUrl: "https://winslowaz.suiteonemedia.com/?embed=1",
+      // The past-meetings panel's own heading, exactly.
+      groupName: "City Council",
+      // Upcoming rows name no category; the city titles every council sitting
+      // "City Council …".
+      titleMatch: "City Council",
+      bodyName: "City Council",
+    },
+    verifiedAt: "2026-09-25",
   },
 
   // ── The browser rung (M79, 2026-08-15) ──────────────────────────────────

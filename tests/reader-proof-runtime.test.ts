@@ -466,17 +466,18 @@ function admissionPromotedCount(): number {
 
 test("meeting proof derives the exact 83/41 authority from admitted import membership", () => {
   const authority = readerProofMeetingsAuthorityFromImport(frozenImportAdmission());
-  // 124 imported (83 promoted / 41 zero-LKG) + 60 registered after the import
+  // 124 imported (83 promoted / 41 zero-LKG) + 62 registered after the import
   // (PDC_V2_POST_IMPORT_MEETING_PARTITIONS: Tucson Unified's own page, C9's two
-  // Newbury pages, C14's Chandler schedule table and C16's derived family for
-  // each of the 56 registered states), NOT_RECORDED until the runner gains them — less
-  // Newbury's CivicWeb route, retired 2026-09-25 beside the town's already-promoted
-  // calendar feed: imported as one of the 83, it leaves the authority.
+  // Newbury pages, C14's Chandler schedule table, C16's derived family for
+  // each of the 56 registered states, and Holbrook's and Winslow's councils),
+  // NOT_RECORDED until the runner gains them — less Newbury's CivicWeb route,
+  // retired 2026-09-25 beside the town's already-promoted calendar feed: imported
+  // as one of the 83, it leaves the authority.
   assert.equal(frozenRetiredBesideWiredSuccessor().length, 1);
   assert.equal(admissionPromotedCount(), 83, "the frozen import itself still promoted 83");
-  assert.equal(authority.partitions.length, 183);
+  assert.equal(authority.partitions.length, 185);
   assert.equal(authority.meetingPartitionsWithLkg, 82);
-  assert.equal(authority.meetingPartitionsWithoutLkg, 101);
+  assert.equal(authority.meetingPartitionsWithoutLkg, 103);
   assert.deepEqual(authority, frozenMeetingAuthority());
 
   const admission = frozenImportAdmission();
@@ -541,11 +542,11 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
   const input = meetingProofInput();
   assert.equal(input.kind, "PROMOTED");
   if (input.kind !== "PROMOTED") return;
-  assert.equal(input.partitions.length, 183);
+  assert.equal(input.partitions.length, 185);
   assert.equal(input.partitions.filter(({ kind }) => kind === "PROMOTED").length, 82);
-  assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 101);
+  assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 103);
   assert.equal(expected.meetingPartitionsWithLkg, 82);
-  assert.equal(expected.meetingPartitionsWithoutLkg, 101);
+  assert.equal(expected.meetingPartitionsWithoutLkg, 103);
   assert.equal(requireReaderProofMeetingsProjection(input, expected), input.value);
   const identity = readerProofMeetingPartitionIdentity(input, expected);
   const reversed = meetingProofInput([...input.partitions].reverse());

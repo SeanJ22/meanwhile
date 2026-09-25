@@ -443,6 +443,14 @@ export const SOURCE_AUTHORITIES = {
       // writing a candidate or a receipt (measured 23:01Z and 23:06Z).
       "https://newburynhlibrary.net/feed/",
       "https://www.newburyenergynh.org/",
+      // Holbrook, AZ's own agendas-and-minutes year pages and their rules
+      // (document listing, 2026-09-25), scoped to the council-agenda path.
+      "https://holbrookaz.gov/robots.txt",
+      "https://holbrookaz.gov/government/council-agenda/",
+      // Winslow, AZ's SuiteOne Media portal home page (2026-09-25): the one
+      // page read, and the tenant's rules document.
+      "https://winslowaz.suiteonemedia.com/robots.txt",
+      "https://winslowaz.suiteonemedia.com/?embed=1",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
@@ -457,6 +465,7 @@ export const SOURCE_AUTHORITIES = {
       "www.tusd1.org",
       "www.chandleraz.gov",
       "newburynhlibrary.net", "www.newburyenergynh.org",
+      "holbrookaz.gov", "winslowaz.suiteonemedia.com",
     ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],

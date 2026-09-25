@@ -79,6 +79,8 @@ export function meetingAcquisitionFailureDomain(
       case "civicclerk": return wiring.config.apiBase;
       case "pima-edu": return wiring.config.documentsUrl;
       case "official-page-events": return wiring.config.pageUrl;
+      case "document-listing": return wiring.config.pageTemplate;
+      case "suiteone": return wiring.config.portalUrl;
       default: throw new Error(`MEETING_FAILURE_DOMAIN_ADAPTER_UNKNOWN:${sourceName}`);
     }
   })()?.trim();

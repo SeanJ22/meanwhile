@@ -18,6 +18,7 @@ import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from 
 import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
+  publishReaderEdgeChecks,
   purgeReaderCacheTags,
   READER_MANIFEST_CACHE_TAG,
   servedAuthorityVersion,
@@ -361,7 +362,26 @@ if (meetingAggregate) {
 `);
       }
       const carry = readerEdgeCarriesForward({ prepared, servedManifest, extras, authority, registrations });
-      if (carry.current) {
+      // The composition and its quiet re-checks, stated in the manifest (lib/meetings/fresh-checks.ts).
+      const checks = prepared.status === "CURRENT" || prepared.status === "PUBLISHED"
+        ? { composition: prepared.composition, freshChecks: prepared.freshChecks }
+        : undefined;
+      // Only re-checked since the served composition: the manifest alone moves.
+      const checksOnly = !carry.current && carry.checksOnly === true && prepared.status === "CURRENT" && checks !== undefined
+        ? await publishReaderEdgeChecks(
+            { generatedAt: prepared.servedGeneratedAt ?? prepared.generatedAt ?? observedAt, retrievedAt: prepared.checkedAt, checks },
+            { store: artifactStore },
+          )
+        : null;
+      if (checksOnly?.status === "PUBLISHED") {
+        const purge = await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]);
+        console.log(JSON.stringify({ readerEdge: "PUBLISHED_CHECKS", sequence: checksOnly.sequence, lastChecked: prepared.status === "CURRENT" ? prepared.servedGeneratedAt : null, purged: purge.purged }));
+      } else if (checksOnly?.status === "CURRENT" || checksOnly?.status === "RACED") {
+        console.log(JSON.stringify({ readerEdge: `CHECKS_${checksOnly.status}`, sequence: checksOnly.sequence }));
+      } else if (checksOnly?.status === "FAILED") {
+        failed = true;
+        process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(checksOnly.error)}\n`);
+      } else if (carry.current) {
         // Exactly what the publish would answer, without the prepared row.
         console.log(JSON.stringify({ readerEdge: "CURRENT", sequence: carry.sequence }));
       } else {
@@ -380,6 +400,7 @@ if (meetingAggregate) {
               ...(extras ? { extras } : {}),
               ...(Object.keys(authority).length > 0 ? { authority } : {}),
               ...(registrations !== undefined ? { registrations } : {}),
+              ...(checks !== undefined ? { checks } : {}),
             },
           );
           if (edge.status === "FAILED") {

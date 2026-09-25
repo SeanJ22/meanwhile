@@ -32,6 +32,7 @@ import {
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
   routineSupervisorCycleId,
+  routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
   routineTaskSelection,
@@ -68,6 +69,13 @@ import {
   runHotReadCatchUp,
 } from "../lib/civic-data/hot-read-catch-up.ts";
 import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
+import {
+  parseRoutineDueRequests,
+  routineDueRequestDeadlineMs,
+  routineDueRequestFor,
+  type RoutineDueRequest,
+} from "../lib/civic-data/routine-due-request.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -252,6 +260,19 @@ async function latestUnreceiptedSupervisorAttempts(): Promise<RoutineSupervisorA
   return routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds);
 }
 
+/**
+ * The owner's open due requests (lib/civic-data/routine-due-request.ts): one
+ * small aggregate read. A request only brings a partition's read forward, so a
+ * failed read leaves every task on its normal schedule, and says so.
+ */
+async function readRoutineDueRequests(): Promise<{ readonly requests: readonly RoutineDueRequest[]; readonly issues: readonly string[] }> {
+  const connection = controlPlaneUrlFromEnv();
+  if (connection === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured`);
+  const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+  const row = await withControlPlaneConnectRetry(() => repos.adminConfig.read(ADMIN_CONFIG_ID));
+  return parseRoutineDueRequests(row?.value.routineDueRequests);
+}
+
 function newestConsideredAt(
   clock: RoutineTaskClock | undefined,
   supervisorAttemptAt: string | undefined,
@@ -268,6 +289,8 @@ async function persistSupervisorOutcome(input: {
   readonly verifiedSourceFailures: number;
   readonly finishedAt: string;
   readonly taskReceipts: readonly RoutineCivicDataTaskReceiptReference[];
+  /** Owner due requests this pass honoured or deferred, one line each. */
+  readonly dueRequestLines: readonly string[];
   readonly readerReadback: {
     readonly denominator: number;
     readonly recordedPass: number;
@@ -313,6 +336,7 @@ async function persistSupervisorOutcome(input: {
       `${input.readerReadback.recordedPass} Reader PASS receipt(s) recorded; ` +
         `${input.readerReadback.recordedFail + input.readerReadback.currentFail} Reader failure receipt(s) ` +
         `recorded/current; ${input.readerReadback.repairFailures} Reader repair mechanism failure(s).`,
+      ...input.dueRequestLines,
       ...input.failures.map((failure) => `${failure.taskId}: ${failure.code} — ${failure.detail}`),
       "Source outcomes were attributed only from exact durable receipts; the supervisor neither fabricated nor altered candidates, pointers, or LKG.",
     ],
@@ -388,6 +412,20 @@ if (!FORCE) {
   }
 }
 const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask);
+// An owner due request brings one meeting partition's read forward; the pass
+// then treats it exactly as any due task (lib/civic-data/routine-due-request.ts).
+step = "reading the owner's due requests";
+let dueRequests: readonly RoutineDueRequest[] = [];
+if (!FORCE) {
+  try {
+    const read = await readRoutineDueRequests();
+    dueRequests = read.requests;
+    for (const issue of read.issues) console.log(`RCD_DUE_REQUEST ignored — ${safeFailure(issue)}`);
+  } catch (error) {
+    console.log(`RCD_DUE_REQUEST CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
+  }
+}
+const honouredDueRequests = new Map<string, RoutineDueRequest>();
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -398,11 +436,21 @@ for (const read of clockReads) {
   }
   const durableClock: RoutineTaskClock | undefined = read.clock;
   const sittingHot = sittingSignals.get(task.id);
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot)) {
+  const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
     continue;
+  }
+  if (dueRequest !== null) {
+    honouredDueRequests.set(task.id, dueRequest);
+    const normal = routineTaskDeadlineMs(task, durableClock, sittingHot);
+    console.log(
+      `RCD_DUE_REQUEST ${dueRequest.id} ${task.id}: due by owner request at ${dueRequest.dueAt} ` +
+        `(requested ${dueRequest.requestedAt}; normal deadline ${normal !== undefined && Number.isFinite(normal) ? new Date(normal).toISOString() : "at once"}); ` +
+        "offered to the normal frontier",
+    );
   }
   dueCandidates.push({
     clock: durableClock,
@@ -442,22 +490,30 @@ try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
-// A meeting lane is read earliest deadline first, up to two a pass (C6).
+// A meeting lane is read earliest deadline first, up to three a pass (C6); a
+// requested partition's deadline is the earlier of its own and the request's.
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
   task: pending.task,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
-  deadlineMs: routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)),
+  deadlineMs: routineDueRequestDeadlineMs(
+    routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)),
+    honouredDueRequests.get(pending.task.id) ?? null,
+  ),
 })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
 for (const candidate of dueCandidates) {
-  if (admittedIds.has(candidate.pending.id)) pendingRuns.push(candidate.pending);
-  else {
-    console.log(
-      `RCD_DEFER ${candidate.pending.id}: provider frontier ` +
-        `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`,
-    );
-  }
+  if (admittedIds.has(candidate.pending.id)) continue;
+  console.log(
+    `RCD_DEFER ${candidate.pending.id}: provider frontier ` +
+      `(domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`,
+  );
 }
+// The pool starts the read owed soonest first (routinePassLaunchOrder).
+const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
+for (const { task } of routinePassLaunchOrder(admitted)) pendingRuns.push(pendingByTaskId.get(task.id)!);
+const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
+  ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
+  : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`);
 attempted = pendingRuns.length;
 
 // Every meeting partition child proves the registry-runtime pointer before it
@@ -880,6 +936,7 @@ try {
     verifiedSourceFailures,
     finishedAt: new Date().toISOString(),
     taskReceipts: [...verifiedTaskReceipts].sort((left, right) => left.taskId.localeCompare(right.taskId)),
+    dueRequestLines,
     readerReadback: {
       denominator: readerContracts.length,
       recordedPass: readerReadbacksRecordedPass,

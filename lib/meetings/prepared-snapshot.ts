@@ -23,6 +23,15 @@ import {
   type MeetingsSnapshot,
 } from "./snapshot.ts";
 import { activeReaderProofMeetingPin } from "./proof-pin.ts";
+import {
+  applyMeetingFreshChecks,
+  confirmationCheckedAt,
+  laterCheck,
+  meetingCompositionId,
+  meetingFreshChecks,
+  type FreshCheckCoupling,
+} from "./fresh-checks.ts";
+import type { PromotedPointerIdentity } from "../civic-data/types.ts";
 
 /**
  * **The prepared reader snapshot (PDC-8b, 2026-09-15).**
@@ -49,10 +58,60 @@ function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): s
     .join("|");
 }
 
+/** Each coupled version's scope: a registered partition's own, or a retired route's held one. */
+const SCOPE_BY_CONTRACT: ReadonlyMap<string, string> = new Map([
+  ...MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition.scope] as const),
+  ...HELD_MEETING_PARTITIONS.map((held) => [held.id, held.scope] as const),
+]);
+
+/**
+ * The coupled versions with each one's newest successful fresh check brought up
+ * to date from the pointer identities (their newest confirmation detail, one
+ * narrow read): only a version that reads a source (`routes`), and only a
+ * confirmation of the version the entry names (lib/meetings/fresh-checks.ts).
+ */
+function withCurrentChecks(
+  couplings: readonly FreshCheckCoupling[],
+  identityByScope: ReadonlyMap<string, Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation">>,
+): FreshCheckCoupling[] {
+  return couplings.map((coupling) => {
+    if (coupling.routes === undefined) return coupling;
+    const scope = SCOPE_BY_CONTRACT.get(coupling.contractId);
+    const identity = scope === undefined ? undefined : identityByScope.get(scope);
+    const checkedAt = laterCheck(coupling.checkedAt ?? null, confirmationCheckedAt(identity?.latestConfirmation, coupling.versionId, true));
+    return checkedAt === (coupling.checkedAt ?? null) ? coupling : { ...coupling, checkedAt };
+  });
+}
+
+/**
+ * What the serving copy's readers are told about its checks this pass:
+ * `servedGeneratedAt` is "Last checked" (the composition's own generation or a
+ * later successful fresh check of any coupled version), `freshChecks` the newest
+ * check of each route, and `composition` the version set the rows came from.
+ * The edge republishes its manifest when these move, and nothing else.
+ */
+export interface PreparedMeetingChecks {
+  readonly servedGeneratedAt: string | null;
+  /** The newest successful fresh check of any coupled version that found nothing new; null when none. */
+  readonly checkedAt: string | null;
+  readonly freshChecks: Readonly<Record<string, string>>;
+  readonly composition: string;
+}
+
+function preparedChecks(generatedAt: string | null, couplings: readonly FreshCheckCoupling[]): PreparedMeetingChecks {
+  const checks = meetingFreshChecks(couplings);
+  return {
+    servedGeneratedAt: laterCheck(generatedAt, checks.checkedAt),
+    checkedAt: checks.checkedAt,
+    freshChecks: checks.routes,
+    composition: meetingCompositionId(couplings),
+  };
+}
+
 /** The outcome of one prepare pass — surfaced to admin so failure and lag are never silent. */
 export type PrepareMeetingSnapshotResult =
-  | { readonly status: "CURRENT"; readonly sequence: number; readonly coupledPartitions: number; readonly generatedAt: string | null }
-  | { readonly status: "PUBLISHED"; readonly sequence: number; readonly coupledPartitions: number; readonly generatedAt: string }
+  | ({ readonly status: "CURRENT"; readonly sequence: number; readonly coupledPartitions: number; readonly generatedAt: string | null } & PreparedMeetingChecks)
+  | ({ readonly status: "PUBLISHED"; readonly sequence: number; readonly coupledPartitions: number; readonly generatedAt: string } & PreparedMeetingChecks)
   | { readonly status: "RACED"; readonly sequence: number; readonly coupledPartitions: number }
   | { readonly status: "FAILED"; readonly error: string; readonly lastValidGeneratedAt: string | null }
   | { readonly status: "NOT_COMPOSABLE"; readonly detail: string; readonly lastValidGeneratedAt: string | null };
@@ -90,11 +149,14 @@ export async function preparePublishedMeetingSnapshot(
 ): Promise<PrepareMeetingSnapshotResult> {
   const scopes = MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope);
   const versionByScope = new Map<string, string>();
+  const identityByScope = new Map<string, PromotedPointerIdentity>();
   try {
     // Every pass asks only which versions are current: identity, not the
-    // partitions' payloads (7.8 MB per pass on 2026-09-23).
+    // partitions' payloads (7.8 MB per pass on 2026-09-23). Each identity
+    // carries its version's newest confirmation detail, the pass's checks.
     for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes)) {
       versionByScope.set(promotion.scope, promotion.versionId);
+      identityByScope.set(promotion.scope, promotion);
     }
     // A retired route's held pointer is asked for only while its successor
     // has none (HELD_MEETING_PARTITIONS); once superseded it costs nothing.
@@ -103,6 +165,7 @@ export async function preparePublishedMeetingSnapshot(
     if (awaiting.length > 0) {
       for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, awaiting.map((held) => held.scope))) {
         versionByScope.set(promotion.scope, promotion.versionId);
+        identityByScope.set(promotion.scope, promotion);
       }
     }
   } catch (error) {
@@ -124,7 +187,16 @@ export async function preparePublishedMeetingSnapshot(
   // composed payload (7.5 MB), which this decision does not read.
   const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
   if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
-    return { status: "CURRENT", sequence: prepared.sequence, coupledPartitions: currentCoupling.length, generatedAt: prepared.generatedAt };
+    // The same versions: nothing is recomposed or rewritten. A quiet re-check
+    // (a confirmation) moves only what readers are told about checks, which the
+    // edge carries in its manifest (lib/meetings/fresh-checks.ts).
+    return {
+      status: "CURRENT",
+      sequence: prepared.sequence,
+      coupledPartitions: currentCoupling.length,
+      generatedAt: prepared.generatedAt,
+      ...preparedChecks(prepared.generatedAt, withCurrentChecks(prepared.composedFrom as readonly FreshCheckCoupling[], identityByScope)),
+    };
   }
 
   let aggregate: MeetingsProjectionReadResult;
@@ -143,11 +215,16 @@ export async function preparePublishedMeetingSnapshot(
     };
   }
 
-  const composedFrom: PreparedProjectionCoupling[] = aggregate.partitions.flatMap((partition) =>
+  // Each coupled version records the routes of its fresh rows and its newest
+  // check, so a later quiet re-check is applied by route without a recompose.
+  const freshCheckOf = (partition: (typeof aggregate.partitions)[number]) => partition.freshCheck
+    ? { routes: partition.freshCheck.routes, ...(partition.freshCheck.checkedAt ? { checkedAt: partition.freshCheck.checkedAt } : {}) }
+    : {};
+  const composedFrom: FreshCheckCoupling[] = aggregate.partitions.flatMap((partition) =>
     partition.kind === "PROMOTED" && typeof partition.versionId === "string"
-      ? [{ contractId: partition.contractId, versionId: partition.versionId }]
+      ? [{ contractId: partition.contractId, versionId: partition.versionId, ...freshCheckOf(partition) }]
       : partition.heldFrom
-        ? [{ contractId: partition.heldFrom.contractId, versionId: partition.heldFrom.versionId }]
+        ? [{ contractId: partition.heldFrom.contractId, versionId: partition.heldFrom.versionId, ...freshCheckOf(partition) }]
         : [],
   );
   let factSha256: string;
@@ -170,7 +247,13 @@ export async function preparePublishedMeetingSnapshot(
   };
   const result = await store.writePreparedReaderProjection(input, prepared?.sequence ?? null);
   return result.published
-    ? { status: "PUBLISHED", sequence: result.sequence, coupledPartitions: composedFrom.length, generatedAt: aggregate.value.generatedAt }
+    ? {
+        status: "PUBLISHED",
+        sequence: result.sequence,
+        coupledPartitions: composedFrom.length,
+        generatedAt: aggregate.value.generatedAt,
+        ...preparedChecks(aggregate.value.generatedAt, withCurrentChecks(composedFrom, identityByScope)),
+      }
     : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
 }
 
@@ -257,6 +340,46 @@ async function readPreparedRowOnceUnchanged(
 /** Forget every held prepared row (tests; a store swap). */
 export function clearPreparedMeetingsProjectionCache(): void {
   preparedRows = new WeakMap();
+  servedChecks = new WeakMap();
+}
+
+/**
+ * How long a serving process reuses the checks it last read for a prepared row.
+ * The edge manifest the reader normally reads is held at the CDN for the same
+ * minute; within it the stated "Last checked" can only lag a newer check, never
+ * claim one that did not happen.
+ */
+export const PREPARED_CHECKS_TTL_MS = 60_000;
+let servedChecks = new WeakMap<object, { readonly sequence: number; readonly readAtMs: number; readonly couplings: readonly FreshCheckCoupling[] }>();
+
+/**
+ * The prepared row's coupled versions with their newest checks: its recorded
+ * ones, brought up to date from the pointer identities (one narrow read, reused
+ * for a minute). A failed read keeps the recorded checks: the served time is
+ * then older than the newest check, never newer.
+ */
+async function servedPreparedChecks(
+  store: RoutineDataStore,
+  scope: object,
+  prepared: PreparedReaderProjectionRow,
+  nowMs: number,
+): Promise<readonly FreshCheckCoupling[]> {
+  const couplings = prepared.composedFrom as readonly FreshCheckCoupling[];
+  const checkable = couplings.filter((coupling) => coupling.routes !== undefined);
+  if (checkable.length === 0) return couplings;
+  const held = servedChecks.get(scope);
+  if (held !== undefined && held.sequence === prepared.sequence && nowMs >= held.readAtMs && nowMs < held.readAtMs + PREPARED_CHECKS_TTL_MS) return held.couplings;
+  try {
+    const identities = await store.readPromotionIdentities(
+      MEETINGS_RECORD_CLASS,
+      [...new Set(checkable.flatMap((coupling) => SCOPE_BY_CONTRACT.get(coupling.contractId) ?? []))],
+    );
+    const checked = withCurrentChecks(couplings, new Map(identities.map((identity) => [identity.scope, identity])));
+    servedChecks.set(scope, { sequence: prepared.sequence, readAtMs: nowMs, couplings: checked });
+    return checked;
+  } catch {
+    return couplings;
+  }
 }
 
 /**
@@ -272,18 +395,19 @@ export async function readPreparedMeetingsProjection(
   options: { readonly store?: RoutineDataStore; readonly now?: string } = {},
 ): Promise<MeetingsProjectionReadResult> {
   let prepared: PreparedReaderProjectionRow | null;
+  let store: RoutineDataStore | null = null;
   try {
     // Construct the store INSIDE the try: PostgresRoutineDataStore binds getDb()
     // in a field initializer, which throws when DATABASE_URL is unset. That must
     // fall through to the composing reader — which first-seeds under a test
     // fixture and returns STORE_UNREACHABLE in a misconfigured prod — never
     // escape as an unhandled throw the route turns into a 503.
-    const store = options.store ?? new PostgresRoutineDataStore();
+    store = options.store ?? new PostgresRoutineDataStore();
     prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE);
   } catch {
     prepared = null;
   }
-  if (prepared === null) {
+  if (prepared === null || store === null) {
     return readMeetingsProjection(options);
   }
   // Proof-only (lib/meetings/proof-pin.ts; null in every deployed build): the
@@ -305,9 +429,14 @@ export async function readPreparedMeetingsProjection(
   // in the coupling is a retired route's, not a registered partition's.
   const ownComposed = new Set(prepared.composedFrom.map((entry) => entry.contractId));
   const allComposed = MEETING_PARTITION_CONTRACTS.every((partition) => ownComposed.has(partition.id));
+  // A quiet re-check since the composition confirmed a version without
+  // rewriting this row: "Last checked" and the re-read rows say so
+  // (lib/meetings/fresh-checks.ts). No check: the payload is served verbatim.
+  const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
+  const checks = meetingFreshChecks(await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
   return {
     kind: "PROMOTED",
-    value: prepared.payload as MeetingsSnapshot,
+    value: applyMeetingFreshChecks(prepared.payload as MeetingsSnapshot, checks),
     metadata: {
       recordClass: MEETINGS_RECORD_CLASS,
       scope: MEETINGS_SCOPE,
@@ -316,7 +445,7 @@ export async function readPreparedMeetingsProjection(
       versionId: null,
       lastKnownGoodVersionId: null,
       sourceThrough: prepared.sourceThrough,
-      retrievedAt: prepared.retrievedAt,
+      retrievedAt: laterCheck(prepared.retrievedAt, checks.checkedAt),
       promotedAt: prepared.promotedThrough,
       stale: allComposed ? "CURRENT" : "UNKNOWN",
       staleAt: null,

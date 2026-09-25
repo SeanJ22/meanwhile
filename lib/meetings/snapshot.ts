@@ -25,6 +25,13 @@ import {
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
+import {
+  applyPartitionFreshCheck,
+  confirmationCheckedAt,
+  meetingVersionReadsASource,
+  meetingVersionRoutes,
+  type MeetingPartitionFreshCheck,
+} from "./fresh-checks.ts";
 
 export const MEETINGS_RECORD_CLASS = "MEETING" as const;
 /** Reader composition scope; no canonical pointer is ever written at this key. */
@@ -627,6 +634,13 @@ export interface MeetingPartitionReadback {
    * NOT_RECORDED — and this names exactly which version the rows came from.
    */
   readonly heldFrom?: MeetingPartitionHeldFrom;
+  /**
+   * The composed version's fresh-row routes and its newest successful fresh
+   * check that found nothing new (lib/meetings/fresh-checks.ts). Present only
+   * for a composed version that reads a source; the prepared serving copy
+   * records it so a later check is applied without reading any payload.
+   */
+  readonly freshCheck?: MeetingPartitionFreshCheck;
 }
 
 export interface MeetingPartitionHeldFrom {
@@ -846,7 +860,22 @@ export async function readMeetingsProjection(
     for (const owner of new Set(owners)) invalid.set(owner, `MEETING_PARTITION_DOCUMENT_COLLISION:${id}`);
   }
 
-  const promoted = rawPromoted.filter(({ partition }) => !invalid.has(partition.id));
+  // A version's newest successful fresh check that found nothing new is applied
+  // to its own fresh rows and to "Last checked" (lib/meetings/fresh-checks.ts):
+  // since migration 0029 a quiet re-check is a confirmation, not a new version.
+  const promoted = rawPromoted
+    .filter(({ partition }) => !invalid.has(partition.id))
+    .map((read) => {
+      const readsASource = meetingVersionReadsASource(read.result.value.sources);
+      const checkedAt = confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource);
+      const routes = meetingVersionRoutes(read.result.value);
+      return {
+        ...read,
+        value: applyPartitionFreshCheck(read.result.value, checkedAt),
+        freshCheck: routes === null ? undefined : { routes, checkedAt } satisfies MeetingPartitionFreshCheck,
+      };
+    });
+  const freshChecks = new Map(promoted.flatMap(({ partition, freshCheck }) => freshCheck ? [[partition.id, freshCheck] as const] : []));
   const partitionReadbacks: MeetingPartitionReadback[] = reads.map(({ partition, result, held }) => {
     const heldFrom = held && !invalid.has(partition.id) && held.result.metadata.versionId
       ? { contractId: held.partition.id, scope: held.partition.scope, versionId: held.result.metadata.versionId }
@@ -863,6 +892,7 @@ export async function readMeetingsProjection(
           `(retired ${held!.partition.retiredOn}) is composed in its place until this partition's first promotion.`
         : "detail" in result ? result.detail : null),
       ...(heldFrom ? { heldFrom } : {}),
+      ...(freshChecks.has(partition.id) ? { freshCheck: freshChecks.get(partition.id)! } : {}),
     };
   });
 
@@ -870,11 +900,11 @@ export async function readMeetingsProjection(
     const meetings: Meeting[] = [];
     const agendaDocuments: AgendaDocument[] = [];
     const sources: SnapshotSourceReport[] = [];
-    for (const { result } of promoted) {
-      meetings.push(...result.value.meetings);
-      agendaDocuments.push(...result.value.agendaDocuments);
+    for (const { value } of promoted) {
+      meetings.push(...value.meetings);
+      agendaDocuments.push(...value.agendaDocuments);
       /* One source per partition; a derived family accounts for one per member adapter. */
-      sources.push(...result.value.sources);
+      sources.push(...value.sources);
     }
     for (const { partition } of reads) {
       if (promoted.some((row) => row.partition.id === partition.id)) continue;
@@ -899,7 +929,7 @@ export async function readMeetingsProjection(
     const collapsed = collapseDuplicateSittings(meetings);
     const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
     const retainedDocuments = agendaDocuments.filter((document) => retainedIds.has(document.meetingId));
-    const generatedAt = promoted.map(({ result }) => result.value.generatedAt).sort().at(-1) ?? now;
+    const generatedAt = promoted.map(({ value }) => value.generatedAt).sort().at(-1) ?? now;
     const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const promotedAt = promoted.map(({ result }) => result.metadata.promotedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;

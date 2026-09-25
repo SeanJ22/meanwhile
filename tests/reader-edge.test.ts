@@ -102,10 +102,21 @@ test("republishing an unchanged composition is idempotent (CURRENT), a changed o
   const first = await publishReaderEdgeArtifacts(snap, META, { store });
   assert.equal(first.status, "PUBLISHED");
 
-  // Same data (only the generatedAt stamp differs) → nothing republished.
+  // The same data and the same "Last checked" → nothing republished.
+  const same = await publishReaderEdgeArtifacts(snap, META, { store });
+  assert.equal(same.status, "CURRENT");
+  if (same.status === "CURRENT") assert.equal(same.sequence, 1);
+
+  // The same data checked again later (2026-09-25: a quiet re-check is a
+  // receipt, lib/meetings/fresh-checks.ts) → the manifest alone advances, so
+  // "Last checked" moves; every scope artifact it points at is the one served.
+  const scopesBefore = (await store.readManifest())!.manifest.scopes;
   const again = await publishReaderEdgeArtifacts({ ...snap, generatedAt: "2026-09-15T13:00:00.000Z" }, META, { store });
-  assert.equal(again.status, "CURRENT");
-  if (again.status === "CURRENT") assert.equal(again.sequence, 1);
+  assert.equal(again.status, "PUBLISHED");
+  if (again.status === "PUBLISHED") assert.equal(again.sequence, 2);
+  const rechecked = (await store.readManifest())!.manifest;
+  assert.equal(rechecked.generatedAt, "2026-09-15T13:00:00.000Z");
+  assert.deepEqual(rechecked.scopes, scopesBefore, "no artifact is rewritten for a check");
 
   // Changed data → new immutable sequence.
   const changed = snapshot([
@@ -114,7 +125,7 @@ test("republishing an unchanged composition is idempotent (CURRENT), a changed o
   ]);
   const advanced = await publishReaderEdgeArtifacts(changed, META, { store });
   assert.equal(advanced.status, "PUBLISHED");
-  if (advanced.status === "PUBLISHED") assert.equal(advanced.sequence, 2, "monotonic advance");
+  if (advanced.status === "PUBLISHED") assert.equal(advanced.sequence, 3, "monotonic advance");
 });
 
 test("a stale publisher that read an older manifest cannot regress the pointer (monotonic CAS)", async () => {

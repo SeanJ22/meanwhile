@@ -202,7 +202,7 @@ export function routinePassWorkDeadlineMs(
     clockTaskCount: tasks.length,
     clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
     clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    coordinationRequests: 3,
+    coordinationRequests: 4,
     readerSingleDomains: readerDomains.filter(({ mode }) => mode === "SINGLE").length,
     readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
     readerMeetingDomains: readerDomains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,

@@ -618,7 +618,8 @@ test("C6: the runner hands the frontier each due task's deadline from the same p
   const call = runner.slice(runner.indexOf("const admitted = routineFailureDomainFrontier("));
   assert.match(
     call.slice(0, call.indexOf("ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS")),
-    /deadlineMs: routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/,
+    // An owner due request (routine-due-request.ts) can only make the deadline earlier.
+    /deadlineMs: routineDueRequestDeadlineMs\(\s+routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/,
   );
   assert.ok(runner.indexOf("const sittingSignals = sittingWindowSignals(") < runner.indexOf("const admitted = routineFailureDomainFrontier("));
 });

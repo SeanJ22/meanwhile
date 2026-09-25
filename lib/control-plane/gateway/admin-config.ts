@@ -73,6 +73,13 @@ export const ADMIN_CONFIG_NEVER_WRITTEN = "1970-01-01T00:00:00.000Z";
 
 export interface AdminConfig {
   readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
+  /**
+   * Scoped, expiring requests that bring one meeting partition's next read
+   * forward for the standing runner's ordinary pass (`lib/civic-data/routine-due-request.ts`).
+   * An engineering control for verifying the refresh schedule, not a policy;
+   * optional because a config written before it existed holds none.
+   */
+  readonly routineDueRequests?: readonly import("../../civic-data/routine-due-request.ts").RoutineDueRequest[];
   readonly formatVersion: 1;
   readonly apiFallback: {
     /** May paid API fallback be used at all. Defaults false and stays false through a restart. */

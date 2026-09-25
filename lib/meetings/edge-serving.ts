@@ -241,6 +241,20 @@ export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
  * the navigation links, the NH roster, FEC and state money. Never the
  * Ask-only records (Pima finance, votes, statements, executive actions).
  */
+/**
+ * What a cold `/api/funding` reads (2026-09-25): the registry and the federal
+ * directory that plan a target, and the money itself — FEC, state money, and
+ * the AZ ballot that carries Arizona's candidacy identity. Nothing else: the
+ * route used to fetch every family, Ask's records included.
+ */
+export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "registry-runtime",
+  "federal-directory",
+  "federal-funding",
+  "state-money",
+  "ballot-az",
+];
+
 export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   ...READER_MAP_AUTHORITY_FAMILIES,
   "ballot-az",

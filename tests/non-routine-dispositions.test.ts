@@ -12,6 +12,7 @@ import {
   PDC7_MIGRATION_BLOCKERS,
   PDC7_RESOLVED_SPLIT_BINDINGS,
   ROUTINE_INVENTORY_BINDINGS,
+  boundContractSourceId,
   pdc7ClosureProblems,
   validatePdc7DispositionRegistry,
 } from "../lib/civic-data/non-routine-dispositions.ts";
@@ -90,7 +91,7 @@ test("six direct routine rows plus the retired LegiScan row resolve every standi
   const replacements = NON_ROUTINE_DISPOSITIONS.flatMap((row) => [...(row.replacementRoutineContracts ?? [])]);
   assert.deepEqual(
     byId([
-      ...ROUTINE_INVENTORY_BINDINGS.flatMap(({ contractIds, contractSourceId }) => contractIds.map((contractId) => ({ contractId, contractSourceId }))),
+      ...ROUTINE_INVENTORY_BINDINGS.flatMap((binding) => binding.contractIds.map((contractId) => ({ contractId, contractSourceId: boundContractSourceId(binding, contractId) }))),
       ...replacements,
     ]),
     byId(observableRoutineContracts().map(({ id: contractId, sourceId: contractSourceId }) => ({ contractId, contractSourceId }))),

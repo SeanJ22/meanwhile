@@ -196,6 +196,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "census-geography-overlaps",
     "nj-morris-filing",
     "pima-legistar-outcomes",
+    // Mesa's council decisions, read off its minutes on the portal host (NH332).
+    "mesa-legistar-minutes-outcomes",
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
@@ -1199,6 +1201,7 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/acs-population-promote.mts", "census-acs-population"],
     ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
     ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
+    ["scripts/legistar-insite-minutes-ingest.mts", "mesa-legistar-minutes-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
   ] as const;
   for (const [path, contractId] of fixedChildren) {

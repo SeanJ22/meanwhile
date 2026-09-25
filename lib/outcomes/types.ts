@@ -174,7 +174,65 @@ export type OutcomeExtractionState =
    */
   | "ZERO_ROWS_FAILED"
   /** The request itself failed. Retryable, and it stays open — never absence. */
-  | "REQUEST_FAILED";
+  | "REQUEST_FAILED"
+  /**
+   * **The publisher has not published minutes for this concluded sitting yet**
+   * (NH332, 2026-09-25). A fact about THEM, read off the portal's own minutes
+   * cell ("Not available"), and never "no decision": Mesa's council minutes
+   * appear weeks after the sitting, once the council approves them. Only the
+   * minutes route writes it; nothing about the sitting's outcomes is claimed.
+   */
+  | "NOT_YET_PUBLISHED";
+
+/**
+ * Where a minutes document stands on its way to being the body's approved
+ * record. The publisher's own "Minutes status" field cannot say: it reads
+ * "Draft" on Mesa's approved council minutes and on its action minutes alike.
+ */
+export type MinutesApprovalState =
+  /**
+   * The clerk's action minutes ("Results", titled "… ACTION MINUTES"),
+   * published before the council approves its minutes. Not the approved record.
+   */
+  | "DRAFT_ACTION_MINUTES"
+  /** Published as the body's minutes; no later sitting we hold records approving them. */
+  | "APPROVAL_NOT_SEEN"
+  /** A later sitting's minutes we hold record the body approving these minutes. */
+  | "APPROVED";
+
+/**
+ * The minutes document a minutes-route sitting was read from. Present only on
+ * sittings the minutes route wrote; the Web API route never sets it.
+ */
+export interface PersistedMinutesDocument {
+  /** The exact URL read, on the tenant's permitted portal host. */
+  readonly url: string;
+  readonly format: "PDF" | "HTML";
+  /** The portal grid cell's own label, verbatim: "Minutes", "Results". */
+  readonly publisherLabel: string;
+  /** The document's own title: "COUNCIL MINUTES", "COUNCIL STRATEGIC PLANNING ACTION MINUTES". */
+  readonly title: string | null;
+  readonly sha256: string;
+  readonly byteCount: number;
+  readonly pageCount: number | null;
+  /** The grid's meeting-kind line ("Special Council Meeting"), or null for a regular sitting. */
+  readonly sittingKind: string | null;
+  readonly approval: {
+    readonly state: MinutesApprovalState;
+    /** A sentence a reader may be shown. */
+    readonly detail: string;
+    /** The sitting whose minutes record the approval, and its words. */
+    readonly approvedAt: { readonly meetingId: string; readonly startsAt: string | null; readonly quote: string } | null;
+  };
+  /**
+   * The sittings THIS document's minutes approve, as its approval item names
+   * them, and whether that item carried. Read by later passes to mark those
+   * sittings APPROVED; never inferred.
+   */
+  readonly approves: readonly { readonly kind: string; readonly date: string }[];
+  readonly approvesQuote: string | null;
+  readonly approvalCarried: boolean;
+}
 
 /** One item whose votes request failed. Open, retryable, never an empty roll. */
 export interface PersistedVoteRequestFailure {
@@ -245,6 +303,9 @@ export interface PersistedSittingOutcomes {
    * a winner. See `lib/outcomes/publication.ts`.
    */
   readonly publicationObservations: readonly AgendaPublicationObservation[];
+
+  /** The minutes document read, on sittings the InSite minutes route wrote (NH332). */
+  readonly minutesDocument?: PersistedMinutesDocument;
 }
 
 /** The committed store. One file, every tenant. */
@@ -256,4 +317,10 @@ export interface OutcomeSnapshot {
   /** Tenant slugs this store holds anything for. */
   readonly tenants: readonly string[];
   readonly sittings: readonly PersistedSittingOutcomes[];
+  /**
+   * Set only on the Reader's COMBINED view (lib/outcomes/store.ts): the
+   * promoted pointer each tenant's sittings came from, by contract id. Each
+   * contract's own projection never carries it.
+   */
+  readonly pointers?: readonly { readonly contractId: string; readonly tenant: string; readonly versionId: string }[];
 }

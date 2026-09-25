@@ -273,10 +273,16 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - LEAD, undefined), true, "an unreadable window is read as hot");
   assert.equal(routineTaskDue(task, undefined, succeededAt), true, "a never-run task is due at once");
 
-  // Its frozen inventory row now binds the standing clock and nothing else.
+  // Its frozen inventory row now binds the standing clock and nothing else;
+  // Mesa's minutes route (NH332) shares the row under its own source authority.
   assert.deepEqual(
     ROUTINE_INVENTORY_BINDINGS.find(({ inventorySourceId }) => inventorySourceId === "legistar-outcomes"),
-    { inventorySourceId: "legistar-outcomes", contractIds: [CONTRACT_ID], contractSourceId: "pima-legistar-outcomes" },
+    {
+      inventorySourceId: "legistar-outcomes",
+      contractIds: [CONTRACT_ID, "mesa-legistar-minutes-outcomes"],
+      contractSourceId: "pima-legistar-outcomes",
+      contractSourceIds: { "mesa-legistar-minutes-outcomes": "mesa-legistar-minutes-outcomes" },
+    },
   );
   assert.ok(!MANUAL_PRODUCTION_INVENTORY_BINDINGS.some(({ contractId }) => contractId === CONTRACT_ID));
 });

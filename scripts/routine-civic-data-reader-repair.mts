@@ -38,8 +38,8 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/e
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
-import { readOutcomeProjection } from "../lib/outcomes/store.ts";
-import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../lib/outcomes/data-plane.ts";
+import { combinedOutcomeVersionId, combineOutcomeProjections, readMesaOutcomeProjection, readOutcomeProjection } from "../lib/outcomes/store.ts";
+import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../lib/outcomes/data-plane.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -288,11 +288,26 @@ if (meetingAggregate) {
       // 0.6–0.8 s). Each is carried forward while its pointer is still the served
       // version, and read whole only when it moved.
       try {
-        const carried = await servedIfCurrent("meeting-outcomes", pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope));
+        // Pima's and Mesa's pointers, combined (NH332): the artifact is Pima's
+        // alone while Mesa has no pointer, and names both versions once it does.
+        const carried = await servedIfCurrent("meeting-outcomes", async () => combinedOutcomeVersionId(
+          await pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope)(),
+          await pointerVersion(MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.recordClass, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.scope)(),
+        ));
         if (carried !== null) authority["meeting-outcomes"] = { versionId: carried, carried: true };
         else {
           const oc = await readOutcomeProjection();
-          if (oc.kind === "PROMOTED" && oc.metadata.versionId) authority["meeting-outcomes"] = { value: oc.value, versionId: oc.metadata.versionId };
+          const mesa = await readMesaOutcomeProjection();
+          // Complete or left out: a Mesa read that failed must not publish Pima
+          // alone as if Mesa had nothing; the reader then reads both from the database.
+          if (mesa.kind !== "PROMOTED" && mesa.kind !== "NOT_RECORDED") throw new Error(`mesa minutes outcomes read ${mesa.kind}`);
+          const combined = oc.kind === "PROMOTED" && oc.metadata.versionId
+            ? combineOutcomeProjections(
+                { value: oc.value, versionId: oc.metadata.versionId },
+                mesa.kind === "PROMOTED" && mesa.metadata.versionId ? { value: mesa.value, versionId: mesa.metadata.versionId } : null,
+              )
+            : null;
+          if (combined !== null) authority["meeting-outcomes"] = combined;
           else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes kind=${oc.kind}\n`);
         }
       } catch (error) {

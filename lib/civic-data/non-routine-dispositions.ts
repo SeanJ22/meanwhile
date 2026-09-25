@@ -250,6 +250,17 @@ export interface RoutineInventoryBinding {
   readonly inventorySourceId: string;
   readonly contractIds: readonly string[];
   readonly contractSourceId: string;
+  /**
+   * A bound contract whose own source authority differs from the row's first
+   * writer, by contract id: one frozen family, read from another permitted
+   * route. Every other bound contract carries `contractSourceId`.
+   */
+  readonly contractSourceIds?: Readonly<Record<string, string>>;
+}
+
+/** The source authority a binding requires of one bound contract. */
+export function boundContractSourceId(binding: RoutineInventoryBinding, contractId: string): string {
+  return binding.contractSourceIds?.[contractId] ?? binding.contractSourceId;
 }
 
 /**
@@ -270,7 +281,14 @@ export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "census-geography-relationships", contractIds: ["census-geography-overlaps"], contractSourceId: "census-geography-relationships" },
   // Formerly an explicit-owner contract; the standing runner is now its only
   // clock and writer, so it carries no manual binding below.
-  { inventorySourceId: "legistar-outcomes", contractIds: ["pima-legistar-outcomes"], contractSourceId: "pima-legistar-outcomes" },
+  // NH332 (2026-09-25): the same official Legistar body records, read for Mesa
+  // off the council's minutes on its permitted portal host, under its own authority.
+  {
+    inventorySourceId: "legistar-outcomes",
+    contractIds: ["pima-legistar-outcomes", "mesa-legistar-minutes-outcomes"],
+    contractSourceId: "pima-legistar-outcomes",
+    contractSourceIds: { "mesa-legistar-minutes-outcomes": "mesa-legistar-minutes-outcomes" },
+  },
   // One registration contract per state, DC and territory, from the FIPS table (lib/registration/publication.ts).
   { inventorySourceId: "census-governments-registration", contractIds: REGISTRATION_TARGETS.map(({ contractId }) => contractId), contractSourceId: "census-governments-registration" },
 ] as const satisfies readonly RoutineInventoryBinding[];
@@ -518,7 +536,7 @@ export function validatePdc7DispositionRegistry(
     for (const contractId of binding.contractIds) {
       const contract = routineContracts.get(contractId);
       if (!contract) problems.push(`${binding.inventorySourceId}: routine production contract ${contractId} is absent`);
-      else if (contract.sourceId !== binding.contractSourceId) problems.push(`${binding.inventorySourceId}: routine production authority differs from ${binding.contractSourceId}`);
+      else if (contract.sourceId !== boundContractSourceId(binding, contractId)) problems.push(`${binding.inventorySourceId}: routine production authority differs from ${boundContractSourceId(binding, contractId)}`);
       if (boundRoutineContracts.has(contractId)) problems.push(`routine production contract has multiple frozen inventory bindings: ${contractId}`);
       boundRoutineContracts.add(contractId);
     }

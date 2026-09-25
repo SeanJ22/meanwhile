@@ -95,6 +95,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "prl": return "lib/sources/prl/snapshot.ts#readPrlProjection";
     case "az-official-actions": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
     case "pima-legistar-outcomes": return "lib/outcomes/store.ts#readOutcomeProjection";
+    case "mesa-legistar-minutes-outcomes": return "lib/outcomes/store.ts#readMesaOutcomeProjection";
     case "comment-access":
     case "ballot-navigation":
     case "campaign-sites":
@@ -277,6 +278,10 @@ export async function verifyRoutineReaderProjection(
       case "pima-legistar-outcomes": {
         const { readOutcomeProjection } = await import("../outcomes/store.ts");
         return verifyExactVersion(verifierId, await readOutcomeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Pima meeting-outcomes");
+      }
+      case "mesa-legistar-minutes-outcomes": {
+        const { readMesaOutcomeProjection } = await import("../outcomes/store.ts");
+        return verifyExactVersion(verifierId, await readMesaOutcomeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
       }
       case "comment-access":
       case "ballot-navigation":

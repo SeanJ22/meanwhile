@@ -674,6 +674,27 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
+  "mesa-legistar-minutes-outcomes": {
+    id: "mesa-legistar-minutes-outcomes",
+    publisher: "City of Mesa City Clerk, on the city's public Legistar portal",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "OFFICIAL_PLATFORM",
+    // The portal host only. robots.txt answered 404 (NO_ROBOTS) on 2026-08-28
+    // and 2026-09-25; the API's minutes host, legistar.granicus.com, disallows
+    // every agent and is never an allowed host here.
+    routePrefixes: ["https://mesa.legistar.com/"],
+    allowedFinalHosts: ["mesa.legistar.com"],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["MEETING_OUTCOME"],
+    competentFacts: ["recorded council motion", "mover and seconder", "recorded result", "verbatim tabulation of votes", "minutes document standing (action minutes, minutes, approval recorded)", "minutes not yet published"],
+    expectedIdentifierKeys: ["meeting_id", "event_id"],
+    expectedTemporalFields: ["observed_at", "source_through"],
+    horizonSemantics: "The calendar grid bounds the concluded sittings in a rolling window; each sitting's minutes document speaks only for that sitting. A sitting with no published minutes is recorded as not yet published and never as one without decisions; a failed read refuses the candidate and cannot replace another sitting's LKG facts.",
+    parserVersion: "mesa-legistar-minutes-outcomes/1",
+    freshnessExpectation: "The standing routine runner's clock under the mesa-legistar-minutes-outcomes routine contract, following the council's InSite sittings; each pass reads the calendar grid and re-reads only minutes whose link or label moved. No owner or GitHub clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
   "az-legislature": {
     id: "az-legislature",
     publisher: "Arizona State Legislature",

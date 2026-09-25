@@ -78,10 +78,10 @@ export const FIX_ITEMS: readonly FixItem[] = [
   {
     id: "MW-031",
     title: "See the cheapest suitable model tried first, and why anything went higher",
-    status: "NEEDS NEW RECORDING",
+    status: "PARTLY IN PLACE",
     body: "Each step names its cheapest class and its escalation target, and the ladder tops out at the frontier. What is missing is the evidence that triggered a move up, and the combined cost of both attempts.",
-    checkFirst: "assertStepMayInvokeModel(step, escalated) takes escalation as a yes-or-no, so the reason cannot be persisted by that call. Keep it with the model attempt and its charge, not with the owner's escalations.",
-    standing: "The ladder has never moved: every production call runs its step's base class, and the Scout loop and the audit start at the frontier by design. Nothing records a reason, because nothing has escalated.",
+    checkFirst: "Each Scout result now keeps the class, the reason (one of four), a short evidence line and every attempt's cost (scout-result.ts); Fleet · Money reads them. The assignment view does not join them yet.",
+    standing: "Since Sep 25 the Scout loop starts on Sonnet 5 and moves up to Opus 5.5 only for a recorded reason, and the audit stays on Opus by design. Checked with a stand-in provider only: no paid call has run under it, because paid research has been paused since Sep 22.",
     provenance: "was f16 · x10",
     defaultMark: "MUST",
   },

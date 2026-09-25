@@ -380,7 +380,7 @@ export interface AssignmentCost {
    * discharged round is not a retry. Null when it cannot be told.
    */
   readonly retries: number | null;
-  /** Model-routing escalations: a named gap (recorded nowhere yet), or null where the lane uses no model at all. */
+  /** Model-routing escalations: a named gap (recorded on each Scout result since 2026-09-25, not yet joined here), or null where the lane uses no model at all. */
   readonly escalations: { readonly toOwner: number; readonly modelRouting: Gap | null };
   /** Requests, bytes and time from the cost rows; null where the lane writes no cost rows at all. */
   readonly nonDollar: { readonly requests: number; readonly bytes: number; readonly durationMs: number } | null;
@@ -1859,7 +1859,7 @@ function costOf(g: Gathered, idx: Index, denominatorUsd: number | null): Assignm
       toOwner,
       modelRouting: {
         whose: "OURS",
-        says: "model-routing escalations are recorded nowhere yet, so they are not counted — not zero",
+        says: "model-routing escalations are recorded on each Scout result (since Sep 25) but not yet joined to this view, so they are not counted here — not zero",
       },
     },
     nonDollar: { requests, bytes, durationMs },

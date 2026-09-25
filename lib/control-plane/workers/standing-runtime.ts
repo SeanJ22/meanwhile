@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { scoutExecutor, type ModelTransport } from "../scheduler/scout-executor.ts";
+import { scoutExecutor, type ModelTransport, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import { buildScoutToolkit } from "../scheduler/scout-tools.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import { hostSpacer } from "../scheduler/http-executor.ts";
@@ -32,7 +32,9 @@ import { researchVaultResolver } from "./vault-object.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
-  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
+  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
+  /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
+  reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"]}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
@@ -57,6 +59,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     } });
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,
+      ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id})}),
       contextFor:()=>{
         const history=(currentHistory??prior).filter(p=>p.workItemId===item.id);

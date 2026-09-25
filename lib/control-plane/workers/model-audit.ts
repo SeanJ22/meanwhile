@@ -224,6 +224,16 @@ async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, ti
 
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
   options: { readonly timeoutMs?: number } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
+  /*
+   * THE AUDITOR STAYS ON THE FRONTIER (MW-033/MW-035, 2026-09-25). MW-035 lets
+   * an expensive step run only when it is selective, and this one is: it runs
+   * once per record the parser and validator already passed, on its way to
+   * promotion (workers/runtime.ts, ADVERSARIAL_AUDITOR) — never per page or rung.
+   * Its whole job is to break what the cheaper passes produced, so a cheaper
+   * auditor would share the blind spots it exists to catch; the registry gives
+   * it no cheaper class and no escalation (`adversarial-audit` in
+   * model-routing.ts), and the Scout loop's Sonnet-first ladder does not apply.
+   */
   const route = assertStepMayInvokeModel("adversarial-audit");
   const timeoutMs = options.timeoutMs ?? AUDIT_REVIEW_TIMEOUT_MS;
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > AUDIT_REVIEW_TIMEOUT_MS) throw new Error("AUDIT_REVIEW_BOUND_INVALID");

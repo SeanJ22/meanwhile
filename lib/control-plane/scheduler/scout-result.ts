@@ -72,7 +72,7 @@
 
 import type { PermissionState } from "../../workstate/types.ts";
 import type { ArtifactProvenance } from "./scout-contract.ts";
-import type { ModelEffort } from "./model-routing.ts";
+import type { ModelClass, ModelEffort, ModelEscalationReason, ModelEscalationRefusal } from "./model-routing.ts";
 
 /** The typed outcomes. The closest canonical equivalents are noted on each. */
 export const SCOUT_OUTCOMES = [
@@ -279,6 +279,32 @@ export interface ScoutRepresentationOverrun {
   readonly artifactIds: readonly string[];
 }
 
+/**
+ * **ONE MODEL ATTEMPT INSIDE THE ATTEMPT.** (MW-031, 2026-09-25.) The loop
+ * starts on its cheapest suitable class; when it escalates, the second attempt
+ * continues the same conversation on the higher class. Each attempt's cost is
+ * the sum of its own turns at its own model's rate; the result's `usd` is the
+ * combined cost of all of them.
+ */
+export interface ScoutModelAttempt {
+  readonly modelClass: ModelClass;
+  readonly model: string;
+  /** Provider turns this attempt made. */
+  readonly turns: number;
+  /** This attempt's cost at its model's rate; null when a turn reported no usage. */
+  readonly usd: number | null;
+  /** Whether this attempt produced the accepted typed result. */
+  readonly accepted: boolean;
+}
+
+/** An escalation the ladder called for and did not run, and why (closed list). */
+export interface ScoutEscalationRefused {
+  readonly code: ModelEscalationRefusal;
+  readonly detail: string;
+  /** The class it would have moved up to. */
+  readonly wouldEscalateTo: ModelClass;
+}
+
 /** The typed result, as persisted. */
 export interface ScoutResult {
   readonly formatVersion: 1;
@@ -344,6 +370,21 @@ export interface ScoutResult {
   readonly inheritedFieldManualEntryIds?: readonly string[];
   /** The exact rendered field-manual brief lines that led this walk's inherited context, captured at dispatch alongside `inheritedFieldManualEntryIds`. Absent on older results. */
   readonly inheritedFieldManualLines?: readonly string[];
+  /* ---- MW-031 / MW-033 model routing (2026-09-25). Absent on results before: those ran the frontier only and never escalated. ---- */
+  /** The class whose attempt produced this result — the last one that ran. `worker.model` is its model. */
+  readonly modelClass?: ModelClass;
+  /** Why the loop STARTED on its class: the step registry's stated reason. */
+  readonly modelClassWhy?: string;
+  /** The cheaper class the loop moved up from; null when it did not move. */
+  readonly escalatedFrom?: ModelClass | null;
+  /** The recorded reason the cheaper attempt showed — set when it escalated AND when an escalation was refused. */
+  readonly escalationReason?: ModelEscalationReason | null;
+  /** A short, machine-written line of what the cheaper attempt showed. Never the model's words about itself. */
+  readonly escalationEvidence?: string | null;
+  /** Non-null when the ladder called for an escalation and it was refused; the Attempt then ends on the cheaper attempt's outcome. */
+  readonly escalationRefused?: ScoutEscalationRefused | null;
+  /** Every model attempt that ran, cheapest first, each with its own cost. `usd` above is their combined cost. */
+  readonly modelAttempts?: readonly ScoutModelAttempt[];
 }
 
 /* ------------------------------------------------------------- validation */
@@ -375,6 +416,13 @@ export const SCOUT_REFUSALS = [
   "SCOUT_PROVENANCE_UNDERIVABLE",
   /** RULING 244: the executor decision was DETERMINISTIC (a graduated or declared route) and the model executor was reached anyway. */
   "SCOUT_GRADUATED_ROUTE",
+  /**
+   * MW-033 (2026-09-25): the cheaper attempt showed a recorded escalation
+   * reason and the escalation was refused (ceiling, unmeasured spend, wall
+   * clock, or no reservation). Always AFTER the cheaper attempt's own refusal,
+   * which stays first as the root cause.
+   */
+  "SCOUT_ESCALATION_REFUSED",
 ] as const;
 export type ScoutRefusal = (typeof SCOUT_REFUSALS)[number];
 

@@ -21,6 +21,9 @@ import "server-only";
  *   top        the six costliest assignments in each state, with what they
  *              produced
  *   ledger     the reconciliation: attempts on both records, on one only
+ *   ladder     the class each result started on, and every model escalation
+ *              (or refused one) with its reason, evidence and combined cost
+ *              (MW-031/MW-033, 2026-09-25)
  * ```
  *
  * A failure is thrown to the loader, which renders the section as unread —
@@ -29,6 +32,7 @@ import "server-only";
 import { Pool } from "@neondatabase/serverless";
 
 import { CONTROL_PLANE_URL_VAR } from "@/lib/control-plane/repository/pg-store.ts";
+import type { EscalationFact, LadderFacts } from "@/lib/control-plane/admin-view/model-ladder-view.ts";
 
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
 
@@ -83,6 +87,8 @@ export interface SpendFacts {
   /** The six costliest assignments in each state, so the six costliest overall are among them. */
   readonly top: readonly TopWorkRow[];
   readonly ledger: LedgerCheck;
+  /** The model ladder (MW-031/MW-033): the class each result started on, and every escalation on record. */
+  readonly ladder: LadderFacts;
 }
 
 // A CASE, not an AND: SQL does not promise to short-circuit, and jsonb_array_length of a null refusal throws.
@@ -168,6 +174,30 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
     const lastPaid = await client.query(`
       select max(record->>'recordedAt') as last from cp_log_costs where (record->'cost'->>'usd')::numeric > 0`);
 
+    /*
+     * The model ladder (MW-031/MW-033, 2026-09-25): the class each result
+     * STARTED on — the class it moved up from, else its own — with results
+     * recorded before the ladder counted apart; then every escalation, and
+     * every refused one, newest first. Aggregates and six rows, never the log.
+     */
+    const startedOn = await client.query(`
+      select case when record ? 'modelClass' then coalesce(record->>'escalatedFrom', record->>'modelClass') else 'BEFORE_LADDER' end as cls,
+        count(*)::int as n
+      from cp_log_scout_results group by 1`);
+    const escalations = await client.query(`
+      select count(*) filter (where record->>'escalatedFrom' is not null)::int as escalated,
+        count(*) filter (where jsonb_typeof(record->'escalationRefused') = 'object')::int as refused
+      from cp_log_scout_results`);
+    const latestEscalations = await client.query(`
+      select record->>'startedAt' as at, record->>'obligationId' as id, record->>'subjectId' as subject,
+        coalesce(record->>'escalatedFrom', record->>'modelClass') as from_class,
+        case when record->>'escalatedFrom' is not null then record->>'modelClass' end as to_class,
+        record->>'escalationReason' as reason, record->>'escalationEvidence' as evidence,
+        record->'escalationRefused'->>'code' as refused, record->>'usd' as usd,
+        (select jsonb_agg(a->'usd') from jsonb_array_elements(case when jsonb_typeof(record->'modelAttempts') = 'array' then record->'modelAttempts' else '[]'::jsonb end) a) as attempts
+      from cp_log_scout_results where record->>'escalationReason' is not null
+      order by record->>'startedAt' desc limit 6`);
+
     await client.query("ROLLBACK");
 
     const l = (ledger.rows[0] ?? {}) as Record<string, unknown>;
@@ -207,6 +237,24 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
         ledgerOnlyPrewarm: num(l.ledger_only_prewarm),
         differenceUsd: num(l.difference_usd),
         lastPaidAt: str((lastPaid.rows[0] as Record<string, unknown> | undefined)?.last),
+      },
+      ladder: {
+        startedOn: startedOn.rows.map((r: Record<string, unknown>) => ({ modelClass: String(r.cls ?? "BEFORE_LADDER"), attempts: num(r.n) })),
+        escalated: num((escalations.rows[0] as Record<string, unknown> | undefined)?.escalated),
+        escalationsRefused: num((escalations.rows[0] as Record<string, unknown> | undefined)?.refused),
+        latest: latestEscalations.rows.map((r: Record<string, unknown>): EscalationFact => ({
+          at: str(r.at),
+          obligationId: String(r.id ?? ""),
+          subjectId: str(r.subject),
+          from: String(r.from_class ?? ""),
+          to: str(r.to_class),
+          reason: String(r.reason ?? ""),
+          evidence: str(r.evidence),
+          refused: str(r.refused),
+          attemptsUsd: Array.isArray(r.attempts) ? (r.attempts as unknown[]).map((u) => (typeof u === "number" && Number.isFinite(u) ? u : null)) : [],
+          // An unpriced result is unmeasured, never $0 — `num` would coerce it.
+          combinedUsd: r.usd === null || r.usd === undefined ? null : num(r.usd),
+        })),
       },
     };
   } catch (error) {

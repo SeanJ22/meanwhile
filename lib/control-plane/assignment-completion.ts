@@ -59,6 +59,9 @@ export type AssignmentCompletion =
       /** Members the evaluator passed. */
       readonly settled: number;
       readonly exceptions: readonly CompletionException[];
+      /** Whole counts when `exceptions` is capped; absent means the list is whole. */
+      readonly refusedCount?: number;
+      readonly unsettledCount?: number;
     }
   | { readonly kind: "NO_MEMBERS"; readonly assignmentKey: string; readonly says: string };
 
@@ -125,10 +128,87 @@ export function evaluateAssignmentCompletion(input: {
 export function assignmentCompletionWords(c: AssignmentCompletion): string {
   if (c.kind === "NO_MEMBERS") return c.says;
   if (c.kind === "COMPLETE") return `Complete: all ${c.members.toLocaleString("en-US")} member obligations passed the completion check.`;
-  const refused = c.exceptions.filter((e) => e.kind === "REFUSED").length;
-  const unsettled = c.exceptions.length - refused;
+  const refused = c.refusedCount ?? c.exceptions.filter((e) => e.kind === "REFUSED").length;
+  const unsettled = c.unsettledCount ?? c.exceptions.length - c.exceptions.filter((e) => e.kind === "REFUSED").length;
   return (
     `Not complete: ${c.settled.toLocaleString("en-US")} of ${c.members.toLocaleString("en-US")} member obligations passed the completion check; ` +
     `${refused.toLocaleString("en-US")} refused and ${unsettled.toLocaleString("en-US")} not yet settled remain.`
   );
+}
+
+/**
+ * **WHAT THE RUNNER CAN SAY EVERY CYCLE: EACH MEMBER'S OWN RECORD.** (MW-015, 2026-09-25.)
+ *
+ * `evaluateAssignmentCompletion` needs each member's full completion snapshot
+ * (work item, route tasks, validations, audits), which the runner does not hold
+ * per cycle. What it does hold is each member obligation's own record and its
+ * freshness debt, and that is enough to keep "visited" from reading as
+ * "finished": a member is settled only when it has been worked to a
+ * disposition, has no open failure, no recorded absence standing in for a
+ * record, and nothing in progress. Everything else is an exception, named.
+ * The result is the same shape, so the page renders both the same way.
+ */
+export interface MemberRecord {
+  readonly id: string;
+  readonly assignments?: readonly AssignmentMembership[] | null;
+  readonly lastWorkedAt?: string | null;
+  readonly openOccurrenceId?: string | null;
+  readonly absentUntil?: string | null;
+}
+
+export interface MemberDebt {
+  readonly consecutiveFailures: number;
+  readonly detail: string;
+  readonly retryAt: string;
+}
+
+/** At most this many exceptions ride on a reading; the count is always whole. */
+export const COMPLETION_EXCEPTION_CAP = 12;
+
+export function evaluateAssignmentFromRecords(input: {
+  readonly assignmentKey: string;
+  readonly obligations: readonly MemberRecord[];
+  readonly debtFor: (obligationId: string) => MemberDebt | null;
+  readonly now: string;
+}): AssignmentCompletion {
+  const members = memberObligations(input.obligations, input.assignmentKey);
+  if (members.length === 0) {
+    return {
+      kind: "NO_MEMBERS",
+      assignmentKey: input.assignmentKey,
+      says: "No obligation names this assignment, so nothing can be shown finished. An empty set of work is not evidence that the work is done.",
+    };
+  }
+  const exceptions: CompletionException[] = [];
+  let settled = 0;
+  for (const member of members) {
+    const debt = input.debtFor(member.id);
+    if (debt !== null && debt.consecutiveFailures > 0) {
+      exceptions.push({
+        obligationId: member.id,
+        kind: "REFUSED",
+        codes: [],
+        says: `its last ${debt.consecutiveFailures} ${debt.consecutiveFailures === 1 ? "attempt" : "attempts"} failed (${debt.detail.slice(0, 160)}); the next try is at ${debt.retryAt}`,
+      });
+    } else if (member.absentUntil && Date.parse(member.absentUntil) > Date.parse(input.now)) {
+      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: `recorded as absent until ${member.absentUntil}; an argued absence is not a record held` });
+    } else if (!member.lastWorkedAt) {
+      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "not worked yet" });
+    } else if (member.openOccurrenceId) {
+      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "a round of work is open on it now" });
+    } else {
+      settled += 1;
+    }
+  }
+  return exceptions.length === 0
+    ? { kind: "COMPLETE", assignmentKey: input.assignmentKey, members: members.length, satisfied: [] }
+    : {
+        kind: "NOT_COMPLETE",
+        assignmentKey: input.assignmentKey,
+        members: members.length,
+        settled,
+        exceptions: exceptions.slice(0, COMPLETION_EXCEPTION_CAP),
+        refusedCount: exceptions.filter((e) => e.kind === "REFUSED").length,
+        unsettledCount: exceptions.filter((e) => e.kind === "UNSETTLED").length,
+      };
 }

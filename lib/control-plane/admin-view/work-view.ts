@@ -38,6 +38,7 @@ import { formatEastern } from "../eastern-time.ts";
 import type { AssignmentReading } from "../expansion/assignment-budget.ts";
 import { modelName } from "../plain-words.ts";
 import { WORK_QUESTION_WORDS } from "../work-question.ts";
+import { assignmentCompletionWords } from "../assignment-completion.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { BodyView } from "./bodies.ts";
 import { latestScout, scoutDeadEnd, type DeadEndGaps } from "./dead-ends.ts";
@@ -540,7 +541,19 @@ export function instructionView(input: {
     });
   }
   if (input.runnerPaused) ack.push({ pill: "PAUSED", tone: "stone", text: "The runner is paused by you; nothing here moves until you resume it.", at: input.runnerPaused.since });
-  ack.push({ pill: "NOT COMPLETE", tone: "gold", text: "No completion rule exists for a geography yet, so this is never shown as finished (MW-015).", at: null });
+  /* MW-015: visited is not finished. The runner evaluates each Send from its members' own records;
+     until it has, the instruction is never shown as finished. */
+  const completion = assignment?.completion ?? null;
+  if (completion === null) {
+    ack.push({ pill: "NOT COMPLETE", tone: "gold", text: "Not evaluated yet: the runner has not recorded whether the work this instruction reached is finished, so it is never shown as finished.", at: null });
+  } else if (completion.kind === "COMPLETE") {
+    ack.push({ pill: "COMPLETE", tone: "teal", text: assignmentCompletionWords(completion), at: input.assignmentAt ?? null });
+  } else {
+    const named = completion.kind === "NOT_COMPLETE"
+      ? completion.exceptions.slice(0, 3).map((e) => `${e.obligationId}: ${e.says}`).join("; ")
+      : "";
+    ack.push({ pill: "NOT COMPLETE", tone: "gold", text: `${assignmentCompletionWords(completion)}${named ? ` For example — ${named}.` : ""}`, at: input.assignmentAt ?? null });
+  }
 
   const lanes: LaneCard[] = read
     ? [

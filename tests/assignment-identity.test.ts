@@ -672,3 +672,49 @@ test("a policy row that is not a policy holds paid work, by name, instead of rea
   assert.equal(kept.plan?.malformedScopes, 1);
   assert.match(kept.conditions.join(" "), /1 scope\(s\) on it were still readable/);
 });
+
+test("MW-015: a Send is complete only when every member is settled, and the instruction says which are not", async () => {
+  const { evaluateAssignmentFromRecords, COMPLETION_EXCEPTION_CAP } = await import("../lib/control-plane/assignment-completion.ts");
+  const member = (id: string, extra: Record<string, unknown> = {}) => ({ id, assignments: [{ assignmentKey: A.key, relation: "CREATED", at: JOINED }], lastWorkedAt: JOINED, openOccurrenceId: null, absentUntil: null, ...extra });
+  const debts = new Map([["ob-failing", { consecutiveFailures: 2, detail: "HTTP 503 from the county", retryAt: T0 }]]);
+  const evaluate = (obligations: readonly ReturnType<typeof member>[]) =>
+    evaluateAssignmentFromRecords({ assignmentKey: A.key, obligations, debtFor: (id) => debts.get(id) ?? null, now: T0 });
+
+  assert.equal(evaluate([]).kind, "NO_MEMBERS", "no members is never complete");
+  assert.equal(evaluate([member("ob-a"), member("ob-b")]).kind, "COMPLETE");
+
+  const open = evaluate([
+    member("ob-a"),
+    member("ob-failing"),
+    member("ob-never", { lastWorkedAt: null }),
+    member("ob-absent", { absentUntil: "2099-01-01T00:00:00.000Z" }),
+    member("ob-running", { openOccurrenceId: "occ-9" }),
+    member("ob-other", { assignments: [{ assignmentKey: "dispatch:elsewhere", relation: "CREATED", at: JOINED }] }),
+  ]);
+  assert.equal(open.kind, "NOT_COMPLETE", "visited is not finished");
+  if (open.kind !== "NOT_COMPLETE") return;
+  assert.equal(open.members, 5, "only this Send's members count");
+  assert.equal(open.settled, 1);
+  assert.deepEqual(open.exceptions.map((e) => [e.obligationId, e.kind]), [
+    ["ob-absent", "UNSETTLED"], ["ob-failing", "REFUSED"], ["ob-never", "UNSETTLED"], ["ob-running", "UNSETTLED"],
+  ]);
+  assert.match(open.exceptions.find((e) => e.obligationId === "ob-failing")!.says, /last 2 attempts failed \(HTTP 503/);
+
+  // Capped list, whole counts.
+  const many = evaluate(Array.from({ length: COMPLETION_EXCEPTION_CAP + 5 }, (_, i) => member(`ob-n${String(i).padStart(2, "0")}`, { lastWorkedAt: null })));
+  assert.equal(many.kind === "NOT_COMPLETE" ? many.exceptions.length : -1, COMPLETION_EXCEPTION_CAP);
+  assert.equal(many.kind === "NOT_COMPLETE" ? many.unsettledCount : -1, COMPLETION_EXCEPTION_CAP + 5);
+
+  // The instruction view shows the recorded evaluation, never a fixed pill.
+  const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }]);
+  const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs: [], worstCaseUsd: 0.6, intentsReadable: true });
+  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => open });
+  const view = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: reading.assignments[0], assignmentAt: T0 });
+  const pill = view.ack.find((f) => f.pill === "NOT COMPLETE");
+  assert.match(pill?.text ?? "", /^Not complete: 1 of 5 member obligations passed the completion check; 1 refused and 3 not yet settled remain\. For example — ob-absent: recorded as absent until/);
+  const done = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => evaluate([member("ob-a")]) });
+  const finished = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: done.assignments[0], assignmentAt: T0 });
+  assert.equal(finished.ack.find((f) => f.pill === "COMPLETE")?.text, "Complete: all 1 member obligations passed the completion check.");
+  const unevaluated = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null });
+  assert.match(unevaluated.ack.find((f) => f.pill === "NOT COMPLETE")?.text ?? "", /^Not evaluated yet/);
+});

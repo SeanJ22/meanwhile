@@ -45,6 +45,7 @@
  * assignment. PURE: no store, no clock, no environment.
  */
 
+import type { AssignmentCompletion } from "../assignment-completion.ts";
 import type { CostEntry } from "../cost.ts";
 import { aggregateModelSpend } from "../fleet-safety.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
@@ -410,6 +411,8 @@ export interface AssignmentReading {
   /** Null when no budget is in force for it; `budgetWhyNot` says why. */
   readonly budget: AssignmentBudgetReading | null;
   readonly budgetWhyNot: string | null;
+  /** MW-015: visited is not finished; evaluated from each member's own record. Absent on readings written before 2026-09-25. */
+  readonly completion?: AssignmentCompletion | null;
 }
 
 export interface AssignmentCycleReading {
@@ -437,6 +440,8 @@ export function assignmentCycleReading(input: {
   readonly intentsReadable: boolean;
   /** Labels for Sends with members and no budget in force (from this cycle's targets). */
   readonly labels?: ReadonlyMap<string, string>;
+  /** MW-015: the completion of one assignment, or null when it cannot be evaluated this cycle. */
+  readonly completionFor?: (key: string) => AssignmentCompletion | null;
 }): AssignmentCycleReading {
   const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
   const specs = new Map(input.specs.map((s) => [s.key, s]));
@@ -484,6 +489,7 @@ export function assignmentCycleReading(input: {
               ? "sent without a budget of its own, so only the Fleet ceiling bounds paid work on it"
               : "the owner's instructions could not be read, so whether it carries a budget is not known; paid work it reached is held"
             : "this geography is no longer selected, so no budget of its stands",
+      completion: input.completionFor?.(key) ?? null,
     };
   });
   return { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.costs !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE, assignments };

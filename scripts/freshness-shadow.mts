@@ -309,6 +309,7 @@ import {
   type AssignmentBudgetGate,
   type AssignmentCycleReading,
 } from "../lib/control-plane/expansion/assignment-budget.ts";
+import { evaluateAssignmentFromRecords } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import {
@@ -1693,6 +1694,17 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
   intentsReadable: intentLogUnreadable === null,
 });
 const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
+/* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
+   read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
+const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
+const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
+const assignmentCompletion = (key: string) =>
+  evaluateAssignmentFromRecords({
+    assignmentKey: key,
+    obligations: assignmentObligations,
+    debtFor: (id) => debtByObligation.get(id) ?? null,
+    now: NOW,
+  });
 const assignmentsReading = (): AssignmentCycleReading | null =>
   assignmentSpecs.length === 0 && assignmentMembers.byKey.size === 0
     ? null
@@ -1705,6 +1717,7 @@ const assignmentsReading = (): AssignmentCycleReading | null =>
         costs: ledgerUnreadable === null ? costLedger : null,
         intentsReadable: intentLogUnreadable === null,
         labels: assignmentLabels,
+        completionFor: assignmentCompletion,
       });
 
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */

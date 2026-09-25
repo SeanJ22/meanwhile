@@ -103,6 +103,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   jsonTextAtPath,
+  projectAggregate,
   projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
@@ -391,6 +392,12 @@ export function fileAggregateRepository<T>(
 
   return {
     read,
+
+    /* A file holds the whole row, so this reads it and narrows it in process, exactly as the Postgres read narrows it in the database. */
+    readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
+      const row = await read(id);
+      return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };
+    },
 
     mustRead: async (id: string): Promise<Persisted<T>> => {
       const row = await read(id);

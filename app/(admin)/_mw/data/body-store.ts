@@ -6,10 +6,10 @@ import "server-only";
  * A body we watch is a public body with a registered meeting source: one
  * routine meeting contract per (source, body) in the production data plane.
  * The Fleet · Now screen shows each one's standing, so this reads only what
- * that needs, under a statement limit, in two read-only transactions sent at
- * once over HTTP (one round trip each, no socket to open): the figures that
- * must agree with each other in one MVCC snapshot, and the change history,
- * which may fail alone, in the other:
+ * that needs, under a statement limit, in read-only transactions sent at once
+ * over HTTP (one round trip each, no socket to open): the figures that must
+ * agree with each other (versions, attempts, readbacks) in one MVCC snapshot,
+ * the day tally beside it, and the change history, which may fail alone:
  *
  * ```
  *   versions   each body's CURRENT promoted version: how many meetings it
@@ -473,10 +473,22 @@ export async function readBodyStore(connection: string, nowIso: string, options:
       statement(VERSIONS_WITH_CLOCK, [nowIso, CONFIRMATION_LIKE]),
       statement(ATTEMPTS, [nowIso]),
       scopes === null ? sql.query(VERSION_READBACKS, [readbackLike]) : sql.query(SCOPED_VERSION_READBACKS, [readbackLike, scopes]),
-      statement(DAY, [nowIso]),
     ],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
+
+  /*
+   * The last 24 hours, in its own transaction beside the snapshot rather than
+   * after its statements in it. It is the slowest statement (515 ms of server
+   * time on production 2026-09-25, decoding every version promoted that day,
+   * against 261 ms for the snapshot's three), so inside the snapshot it was
+   * added to them; beside it, the body read takes the longer of the two. The
+   * day is its own window, stated as the last 24 hours and never reconciled
+   * against a version or a read: both transactions start at the same instant,
+   * so they differ only if a read commits in the milliseconds between their
+   * starts, as they would a moment later. A failure still fails the body read.
+   */
+  const day = sql.transaction([sql.query(limit), statement(DAY, [nowIso])], { readOnly: true }).then((results) => results[1] as unknown as Rows);
 
   /*
    * The latest changing version of each source serving readers, found by
@@ -498,8 +510,8 @@ export async function readBodyStore(connection: string, nowIso: string, options:
           return null;
         });
 
-  const [results, changeRows] = await Promise.all([snapshot, history]);
-  const [, versionRows, attemptRows, versionReadbackRows, dayRows] = results as unknown as Rows[];
+  const [results, dayRows, changeRows] = await Promise.all([snapshot, day, history]);
+  const [, versionRows, attemptRows, versionReadbackRows] = results as unknown as Rows[];
   return {
     asOf: nowIso,
     versions: versionsOf(versionRows),

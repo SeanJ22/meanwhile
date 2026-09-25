@@ -20,7 +20,7 @@ import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type 
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { noFiguresCell, registrationWords } from "@/lib/control-plane/admin-view/registration-standing.ts";
-import { readReadinessSnapshot } from "@/lib/control-plane/readiness/read.ts";
+import { readReadinessGrid } from "@/lib/control-plane/readiness/read.ts";
 
 import { AuditFooter, NotAsked } from "../_mw/blocks.tsx";
 import { censusEntryOf } from "../_mw/data/census-universe.ts";
@@ -61,7 +61,27 @@ function nextThing(name: string, counties: readonly { readonly label: string; re
 
 export default async function ReadinessAllStatesPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
-  const base = await openPage("/readiness", sp);
+  const nowIso = new Date().toISOString();
+  const states = TRACKED_STATE_CODES;
+  /*
+   * Every read this page draws needs only the instant, so all of them start
+   * before the policy row is read rather than after it: the body read (the
+   * longest), the registry, and each state's grid (its snapshot without the
+   * ZIP rows this page never draws: 870 KB of 989 KB on 2026-09-25) beside its
+   * counties, not after them. Handled here so a page that stops early at an
+   * unopened control plane leaves nothing unobserved; the await below still
+   * sees any failure.
+   */
+  const reads = Promise.all([
+    loadRegistryBodies(),
+    loadWatchedBodies(nowIso),
+    ...states.map(async (code) => {
+      const [readiness, counties] = await Promise.all([readReadinessGrid(code), loadContainersWithCodes(code.toUpperCase(), "county")]);
+      return { code, readiness, counties };
+    }),
+  ]);
+  reads.catch(() => undefined);
+  const base = await openPage("/readiness", sp, nowIso);
   const shellProps = {
     area: "readiness" as const,
     tab: "readiness" as const,
@@ -80,12 +100,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     );
   }
 
-  const states = TRACKED_STATE_CODES;
-  const [registry, bodiesRead, ...perState] = await Promise.all([
-    loadRegistryBodies(),
-    loadWatchedBodies(base.nowIso),
-    ...states.map(async (code) => ({ code, readiness: await readReadinessSnapshot(code), counties: await loadContainersWithCodes(code.toUpperCase(), "county") })),
-  ]);
+  const [registry, bodiesRead, ...perState] = await reads;
 
   // The standard every state here is measured against, when they share one (they are published under one derivation contract); with none read, the standard in force.
   const contracts = [...new Set(perState.flatMap((p) => (p.readiness.kind === "HELD" ? [p.readiness.snapshot.derivationContract] : [])))];

@@ -354,6 +354,19 @@ export function reconcileIdempotentAppend<T>(
 export interface AggregateRepository<T> {
   /** The aggregate, or null when it genuinely is not there. Never null on a failed read. */
   read(id: string): Promise<Persisted<T> | null>;
+  /**
+   * The aggregate narrowed to `projection` by the store before it leaves the
+   * store (the aggregate mirror of `readRecentWhere`'s projection), with its
+   * revision and write time; null when it genuinely is not there. An EMPTY
+   * projection keeps no field: the value is `{}`, and only the revision and the
+   * write time are read. For a page that needs a few fields of a large
+   * document row, or only whether it moved (measured 2026-09-25: the owner
+   * snapshot is 449 KB and the research state 1.16 MB, and the Fleet · Now pulse
+   * read both whole for two revision numbers, some counts and 782 bytes of lane
+   * gauges). The value is narrowed, so it is `unknown`: a caller validates what
+   * it reads, as it would a whole row.
+   */
+  readNarrowed(id: string, projection: RecordProjection): Promise<Persisted<unknown> | null>;
   /** The aggregate, or `UnknownAggregate`. For callers that cannot proceed without it. */
   mustRead(id: string): Promise<Persisted<T>>;
   /** Idempotent create. Identical re-put is a no-op success; a different value refuses. */
@@ -467,6 +480,15 @@ export function projectRecord(record: unknown, projection: RecordProjection): un
     );
   }
   return out;
+}
+
+/**
+ * `AggregateRepository.readNarrowed`'s value, in process: `projectRecord`, and
+ * `{}` for an empty projection (the revision alone). The file and memory
+ * providers' mirror of the Postgres read, so every provider narrows alike.
+ */
+export function projectAggregate(value: unknown, projection: RecordProjection): unknown {
+  return Object.keys(projection).length === 0 ? {} : projectRecord(value, projection);
 }
 
 /**

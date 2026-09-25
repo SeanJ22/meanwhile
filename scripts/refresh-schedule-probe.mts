@@ -62,6 +62,7 @@ import {
   type RoutineDueRequest,
 } from "../lib/civic-data/routine-due-request.ts";
 import { SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
+import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 const HOUR = 3_600_000;
@@ -70,17 +71,7 @@ type Verdict = "PASS" | "FAIL" | "WAITING";
 
 const args = process.argv.slice(2);
 const arg = (name: string): string | undefined => args.find((value) => value.startsWith(`--${name}=`))?.slice(name.length + 3);
-const contractId = arg("contract");
-const since = arg("since");
-const requestId = arg("request");
-const edge = args.includes("--edge");
-const task = ROUTINE_SOURCE_TASKS.find(({ id }) => id === contractId);
-if (!task || task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW" || !since || !Number.isFinite(Date.parse(since))) {
-  console.error("refresh-schedule-probe · usage: --contract=<registered meeting partition id> --since=<ISO instant> [--request=<routine-due:id>] [--edge]");
-  process.exit(2);
-}
-const sinceMs = Date.parse(since);
-const redact = (text: string): string => text.replace(/postgres(?:ql)?:\/\/\S+/gi, "<connection string redacted>");
+const redact =(text: string): string => text.replace(/postgres(?:ql)?:\/\/\S+/gi, "<connection string redacted>");
 const mst = (value: string | number | null | undefined): string => {
   if (value === null || value === undefined) return "—";
   const ms = typeof value === "number" ? value : Date.parse(value);
@@ -106,6 +97,122 @@ async function readOnly(url: string, queries: readonly { readonly name: string; 
   const results = await sql.transaction(queries.map((query) => sql.query(query.sql, [...query.params])), { readOnly: true });
   return Object.fromEntries(queries.map((query, index) => [query.name, results[index] as Row[]]));
 }
+
+/**
+ * `--all [--from=<ISO>]`: every meeting partition's live gaps by the owner's
+ * rule, the natural-interval observation. Reads are candidate first events
+ * and unchanged confirmations since `from` less 13 hours; a partition is hot
+ * by its current promoted sittings (and stated ends) under the runner's own
+ * rule. An hourly gap is late when a read was owed 60 minutes after the later
+ * of the previous read and the instant the body turned hourly; a twice-daily
+ * gap is late past 12 hours, the open gap to now included.
+ */
+async function wholeRegistryGaps(fromArg: string | undefined): Promise<void> {
+  const nowMs = Date.now();
+  const fromMs = fromArg && Number.isFinite(Date.parse(fromArg)) ? Date.parse(fromArg) : nowMs - 12 * HOUR;
+  const lookbackIso = new Date(fromMs - 13 * HOUR).toISOString();
+  const rows = await readOnly(urlOf("WTP_PRODUCTION_DATABASE_URL_READONLY"), [
+    {
+      name: "reads",
+      sql: `select c.scope, e.at from civic_data_candidates c
+              join civic_data_candidate_events e on e.candidate_id = c.id
+             where c.record_class = 'MEETING' and e.at >= $1::timestamptz
+               and (e.sequence = 1 or left(e.detail, 26) = 'UNCHANGED_CONFIRMATION_V1 ')`,
+      params: [lookbackIso],
+    },
+    {
+      name: "sittings",
+      sql: `select scope, (select coalesce(jsonb_agg(jsonb_build_array(m->'startsAt', m->'endsAt')), '[]'::jsonb)
+                 from jsonb_array_elements(case when jsonb_typeof(payload->'meetings') = 'array' then payload->'meetings' else '[]'::jsonb end) m
+                where jsonb_typeof(m->'startsAt') = 'string') as pairs
+              from civic_data_promotions where record_class = 'MEETING'`,
+      params: [],
+    },
+  ]);
+  const byScope = new Map<string, number[]>();
+  for (const row of rows.reads!) byScope.set(text(row.scope), [...(byScope.get(text(row.scope)) ?? []), Date.parse(text(row.at))]);
+  const sittings = new Map(rows.sittings!.map((row) => [text(row.scope), (Array.isArray(row.pairs) ? row.pairs : []) as unknown[]]));
+  const partitions = ROUTINE_SOURCE_TASKS.filter((row) => row.recordClass === "MEETING" && row.contract.schedule?.kind === "SITTING_WINDOW");
+  const late: string[] = [];
+  let judgedGaps = 0;
+  let lateGapTotal = 0;
+  let hourlyGaps = 0;
+  let hourlyOnTime = 0;
+  let twiceDailyGaps = 0;
+  let twiceDailyOnTime = 0;
+  let longestHourly = 0;
+  let longestTwiceDaily = 0;
+  for (const partition of partitions) {
+    const pairs = sittings.get(partition.scope);
+    const starts = pairs?.flatMap((pair) => (Array.isArray(pair) && typeof pair[0] === "string" ? [pair[0]] : []));
+    const ends = new Map<string, number>();
+    for (const pair of pairs ?? []) {
+      if (Array.isArray(pair) && typeof pair[0] === "string" && typeof pair[1] === "string" && Number.isFinite(Date.parse(pair[1]))) ends.set(pair[0], Date.parse(pair[1]));
+    }
+    // A partition never published has no meeting on record: twice daily (R20).
+    const hotAt = (ms: number) => starts !== undefined && sittingWindowSignals(
+      [{ task: partition, ok: true, clock: { sittingStarts: starts } }], ms, new Map([[partition.id, ends]]),
+    ).get(partition.id) === true;
+    const times = [...(byScope.get(partition.scope) ?? [])].sort((left, right) => left - right);
+    times.push(nowMs);
+    for (let index = 1; index < times.length; index += 1) {
+      const from = times[index - 1]!;
+      const to = times[index]!;
+      if (to <= fromMs) continue;
+      judgedGaps += 1;
+      const lateBefore = late.length;
+      const hotFrom = hotAt(from);
+      if (to - from > 12 * HOUR) late.push(`${partition.id} twice daily: ${((to - from) / HOUR).toFixed(2)} h from ${mst(from)}${to === nowMs ? " (still unread)" : ""}`);
+      if (!hotFrom && !hotAt(to)) {
+        twiceDailyGaps += 1;
+        if (to - from <= 12 * HOUR) twiceDailyOnTime += 1;
+        longestTwiceDaily = Math.max(longestTwiceDaily, to - from);
+      }
+      // The hourly rule is judged only for gaps that began inside the window.
+      if (from >= fromMs) {
+        let owedFrom = hotFrom ? from : undefined;
+        for (let minute = from + 60_000; minute < to; minute += 60_000) {
+          if (!hotAt(minute)) { owedFrom = undefined; continue; }
+          owedFrom ??= minute;
+          if (minute - owedFrom >= HOUR) { late.push(`${partition.id} hourly: unread ${((to - owedFrom) / 60_000).toFixed(1)} min from ${mst(owedFrom)}`); break; }
+        }
+        if (hotFrom && hotAt(to)) {
+          hourlyGaps += 1;
+          if (to - from <= HOUR) hourlyOnTime += 1;
+          longestHourly = Math.max(longestHourly, to - from);
+        }
+      }
+      if (late.length > lateBefore) lateGapTotal += 1;
+    }
+  }
+  const lateGaps = floored("late gaps", "meeting partition read gaps judged by the owner's rule", judgedGaps, lateGapTotal, judgedGaps === 0 ? "no gap in the window" : undefined);
+  console.log(`refresh-schedule-probe --all · ${mst(fromMs)} to ${mst(nowMs)}`);
+  console.log(`  ${floorLine(floored("hourly-body gaps within 60:00", "gaps between reads of an hourly body", hourlyGaps, hourlyOnTime, hourlyGaps === 0 ? "no hourly gap in the window" : undefined))}; longest ${(longestHourly / 60_000).toFixed(1)} min`);
+  console.log(`  ${floorLine(floored("twice-daily-body gaps within 12:00:00", "gaps between reads of a twice-daily body", twiceDailyGaps, twiceDailyOnTime, twiceDailyGaps === 0 ? "no twice-daily gap in the window" : undefined))}; longest ${(longestTwiceDaily / HOUR).toFixed(2)} h`);
+  console.log(`  ${floorLine(lateGaps)}`);
+  for (const line of late) console.log(`  LATE ${line}`);
+  process.exitCode = late.length > 0 ? 1 : 0;
+}
+
+if (args.includes("--all")) {
+  try {
+    await wholeRegistryGaps(arg("from"));
+  } catch (error) {
+    console.error(`refresh-schedule-probe · a read failed: ${redact(error instanceof Error ? error.message : String(error))}`);
+    process.exitCode = 2;
+  }
+  process.exit();
+}
+const contractId = arg("contract");
+const since = arg("since");
+const requestId = arg("request");
+const edge = args.includes("--edge");
+const task = ROUTINE_SOURCE_TASKS.find(({ id }) => id === contractId);
+if (!task || task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW" || !since || !Number.isFinite(Date.parse(since))) {
+  console.error("refresh-schedule-probe · usage: --contract=<registered meeting partition id> --since=<ISO instant> [--request=<routine-due:id>] [--edge], or --all [--from=<ISO instant>]");
+  process.exit(2);
+}
+const sinceMs = Date.parse(since);
 
 const productionUrl = urlOf("WTP_PRODUCTION_DATABASE_URL_READONLY");
 const controlPlaneUrl = urlOf("WTP_CONTROL_PLANE_DATABASE_URL");

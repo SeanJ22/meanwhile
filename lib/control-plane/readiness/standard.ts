@@ -61,6 +61,16 @@ export function standardVersion(id: string | null | undefined): StandardVersion 
   return READINESS_STANDARD.versions.find((v) => v.id === id) ?? null;
 }
 
+/**
+ * The id of the version in force, for a page to name — or null only when the
+ * manifest's `current` names no version on its list, the one case where
+ * "not versioned yet" is true. Read from the manifest, never a second copy of
+ * the id.
+ */
+export function standardInForce(standard: ReadinessStandard = READINESS_STANDARD): string | null {
+  return standard.versions.some((v) => v.id === standard.current) ? standard.current : null;
+}
+
 /** The version in force. Throws when the manifest's `current` names no version with gates and capabilities: a standard the code cannot run. */
 export function currentStandard(): StandardVersion & { readonly gates: readonly StandardGate[]; readonly capabilities: readonly StandardCapability[] } {
   const v = standardVersion(READINESS_STANDARD.current);

@@ -4,12 +4,14 @@ import "server-only";
  * What every redesigned page does first: read the scope from the URL, open the
  * control plane, read the owner's policy row (for the selected geographies the
  * scope filter lists) and which states have a promoted registration (for what
- * the filter calls each state), and stamp the one instant the page reads at.
+ * the filter calls each state), name the readiness standard in force (for the
+ * strip), and stamp the one instant the page reads at.
  */
 import { openControlPlane, readAdminConfig } from "@/lib/control-plane/admin-data.ts";
 import type { RegistrationPointers } from "@/lib/control-plane/admin-view/promoted-slices.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
 import type { AdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
+import { standardInForce } from "@/lib/control-plane/readiness/standard.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 
 import { loadContainer } from "./data/geography.ts";
@@ -29,6 +31,12 @@ interface PageBaseCommon {
   readonly malformedScopes: number;
   /** Which states have a promoted registration, as this page read it. */
   readonly registration: RegistrationPointers;
+  /**
+   * The readiness standard in force, from its versioned manifest — what every
+   * page's strip names, unless a page says what its own readings were measured
+   * under. Null only when the manifest names no version in force.
+   */
+  readonly standard: string | null;
   /** The page's own path with its query, for the scope select. */
   readonly here: string;
 }
@@ -82,6 +90,7 @@ export async function openPage(path: string, sp: SearchParams): Promise<PageBase
     selected: scopes,
     malformedScopes: malformed,
     registration,
+    standard: standardInForce(),
     here: withScope(q === "" ? path : `${path}?${q}`, scope),
   };
   return opened.ok ? { ...common, repos: opened.repos, controlPlaneGap: null } : { ...common, repos: null, controlPlaneGap: opened.detail };

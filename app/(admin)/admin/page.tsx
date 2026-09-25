@@ -98,7 +98,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
 
   if (!base.shell.tracked) {

@@ -76,7 +76,7 @@ export async function LearningScreen(props: { readonly searchParams: Promise<Sea
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
   if (base.repos === null) {
     return (

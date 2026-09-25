@@ -38,7 +38,7 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: READINESS_DERIVATION_CONTRACT,
+    standard: base.standard,
   };
   if (!base.shell.tracked) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);

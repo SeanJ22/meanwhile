@@ -112,7 +112,7 @@ export default async function ReadinessStatePage({
     scopeGroups: shell.groups,
     here: withScope(`/readiness/${code}`, scope, { by: param(sp, "by"), c: openGeoid, code: openCode }),
     observedAt: base.nowIso,
-    standard: null as string | null,
+    standard: base.standard,
   };
 
   const crumbs = (extra: readonly { label: string; href: string | null }[]) => (
@@ -179,8 +179,9 @@ export default async function ReadinessStatePage({
   ]);
 
   const snapshot = readiness.kind === "HELD" ? readiness.snapshot : null;
-  // A grid worked out under an older contract still names the standard in force — and says the grid predates it.
-  shellProps.standard = snapshot !== null ? snapshot.derivationContract : readiness.kind === "REQUIRES_REPUBLISH" ? `${readiness.currentContract} — the grid on file predates it` : null;
+  // A grid worked out under an older contract still names the standard in force — and says the grid predates it. With no grid read, the standard in force is still the standard.
+  shellProps.standard =
+    snapshot !== null ? snapshot.derivationContract : readiness.kind === "REQUIRES_REPUBLISH" ? `${readiness.currentContract} — the grid on file predates it` : base.standard;
   const watched: readonly BodyView[] = bodiesRead.kind === "HELD" ? bodiesRead.views.filter((b) => b.stateCode === code) : [];
   const stateBodies: readonly RegistryBody[] = registry.kind === "HELD" ? registry.bodies.filter((b) => b.stateCode === code) : [];
   const index: BodyIndex = indexBodies(stateBodies);

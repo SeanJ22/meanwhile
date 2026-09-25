@@ -114,7 +114,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
   if (!base.shell.tracked) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);

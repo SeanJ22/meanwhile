@@ -70,7 +70,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null as string | null,
+    standard: base.standard,
   };
   if (base.repos === null) {
     return (
@@ -87,9 +87,9 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     ...states.map(async (code) => ({ code, readiness: await readReadinessSnapshot(code), counties: await loadContainersWithCodes(code.toUpperCase(), "county") })),
   ]);
 
-  // The standard every state here is measured against, when they share one (they are published under one derivation contract).
+  // The standard every state here is measured against, when they share one (they are published under one derivation contract); with none read, the standard in force.
   const contracts = [...new Set(perState.flatMap((p) => (p.readiness.kind === "HELD" ? [p.readiness.snapshot.derivationContract] : [])))];
-  shellProps.standard = contracts.length === 1 ? contracts[0] : null;
+  shellProps.standard = contracts.length === 1 ? contracts[0] : base.standard;
 
   const rows: StateRow[] = perState.map(({ code, readiness, counties }) => {
     const name = US_STATES.find((x) => x.code === code)?.name ?? code.toUpperCase();

@@ -96,7 +96,7 @@
     {
       "id": "shape:lib/outcomes/store.ts#settleOutcomeRead,lib/registry/server.ts#settleFederalDirectoryRead",
       "disposition": "ALLOWED",
-      "reason": "The request-scoped edge readers of two different authority families (C20, 2026-09-24): each primes its OWN module from the runner-published artifact the request entered (the meeting-outcomes projection with its own validator and read state; the federal directory's typed read model), and otherwise falls through to that module's authoritative database refresh. The same three steps over different typed accessors, primes and caches, like the prime*FromValue pair above; a generic would take an untyped value into a caller-named cache, the wrong-authority-through-a-string hazard that keeps these separate."
+      "reason": "Same edge-first shape over different typed families. A typed generic (settleEdgeFirst<T>, one T across edge accessor, prime and read) would serve all five settles; deferred because every call site is reader-bound and B6's reproof is running. Recorded follow-up."
     },
     {
       "id": "shape:lib/registry/runtime-read-model.ts#getRegistryRuntimeReadModel,lib/votes/key-votes-projection.ts#getFederalKeyVotesReadModel,lib/votes/snapshot.ts#getFederalVotesReadModel",

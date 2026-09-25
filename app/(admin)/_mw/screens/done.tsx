@@ -22,7 +22,7 @@ import { standardHistory, standardVersion } from "@/lib/control-plane/readiness/
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
-import { REGISTERED_STATE_CODES, stateName } from "../load-shell.ts";
+import { TRACKED_STATE_CODES, stateName } from "../load-shell.ts";
 import { openPage, type SearchParams } from "../page-base.ts";
 import { MwShell } from "../shell.tsx";
 import { Dash, Pill, Refusal, Section, mw as s } from "../ui.tsx";
@@ -38,13 +38,13 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: READINESS_DERIVATION_CONTRACT,
+    standard: base.standard,
   };
-  if (!base.shell.registered) {
+  if (!base.shell.tracked) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
-        <EmptyScope name={name} scope={base.scope} />
+        <EmptyScope name={name} scope={base.scope} standing={base.shell.standing} />
       </MwShell>
     );
   }
@@ -56,7 +56,7 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
     );
   }
 
-  const states = base.scope.kind === "all" ? REGISTERED_STATE_CODES : [base.scope.state];
+  const states = base.scope.kind === "all" ? TRACKED_STATE_CODES : [base.scope.state];
   const [bodiesRead, ...reads] = await Promise.all([loadWatchedBodies(base.nowIso), ...states.map(async (code) => ({ code, read: await readReadinessSnapshot(code) }))]);
   const held: ReadinessStateSnapshot[] = reads.flatMap((r) => (r.read.kind === "HELD" ? [r.read.snapshot] : []));
   const unread = reads.filter((r) => r.read.kind !== "HELD").map((r) => stateName(r.code));

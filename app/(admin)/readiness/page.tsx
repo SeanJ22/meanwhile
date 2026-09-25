@@ -1,12 +1,14 @@
 /**
  * **READINESS · ALL STATES.** (Admin redesign, 2026-09-23.)
  *
- * One row per state and territory. A state with registered coverage carries its own figures:
+ * One row per state and territory. A state tracked with coverage carries its own figures:
  * how many of its registered bodies have a way in, how much of its
  * requirement grid is satisfied, how many of its published meeting versions a
  * reader was confirmed able to open, and the next thing to do — generated
- * from its largest county gap. Every other state says what the Census knows is
- * there (its governments and ZIP codes), never a row of zeros.
+ * from its largest county gap. Every other state says whether its Census
+ * governments are registered (its promoted REGISTRATION pointer, and when)
+ * and what the Census knows is there (its governments and ZIP codes), never a
+ * row of zeros.
  */
 import Link from "next/link";
 
@@ -17,6 +19,7 @@ import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
+import { noFiguresCell, registrationWords } from "@/lib/control-plane/admin-view/registration-standing.ts";
 import { readReadinessSnapshot } from "@/lib/control-plane/readiness/read.ts";
 
 import { AuditFooter, NotAsked } from "../_mw/blocks.tsx";
@@ -24,7 +27,7 @@ import { censusEntryOf } from "../_mw/data/census-universe.ts";
 import { loadContainersWithCodes } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { loadRegistryBodies } from "../_mw/data/registry.ts";
-import { REGISTERED_STATE_CODES } from "../_mw/load-shell.ts";
+import { TRACKED_STATE_CODES, statesByStanding } from "../_mw/load-shell.ts";
 import { openPage, type SearchParams } from "../_mw/page-base.ts";
 import { withScope } from "../_mw/scope.ts";
 import { MwShell } from "../_mw/shell.tsx";
@@ -67,7 +70,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null as string | null,
+    standard: base.standard,
   };
   if (base.repos === null) {
     return (
@@ -77,16 +80,16 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     );
   }
 
-  const states = REGISTERED_STATE_CODES;
+  const states = TRACKED_STATE_CODES;
   const [registry, bodiesRead, ...perState] = await Promise.all([
     loadRegistryBodies(),
     loadWatchedBodies(base.nowIso),
     ...states.map(async (code) => ({ code, readiness: await readReadinessSnapshot(code), counties: await loadContainersWithCodes(code.toUpperCase(), "county") })),
   ]);
 
-  // The standard every state here is measured against, when they share one (they are published under one derivation contract).
+  // The standard every state here is measured against, when they share one (they are published under one derivation contract); with none read, the standard in force.
   const contracts = [...new Set(perState.flatMap((p) => (p.readiness.kind === "HELD" ? [p.readiness.snapshot.derivationContract] : [])))];
-  shellProps.standard = contracts.length === 1 ? contracts[0] : null;
+  shellProps.standard = contracts.length === 1 ? contracts[0] : base.standard;
 
   const rows: StateRow[] = perState.map(({ code, readiness, counties }) => {
     const name = US_STATES.find((x) => x.code === code)?.name ?? code.toUpperCase();
@@ -112,20 +115,33 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
   });
 
   /*
-   * Every other state and territory, one row each from the Census universe —
-   * tracked everywhere, not only where something is registered (Sean,
-   * 2026-09-23). Its figures are what exists there, never a zero for what we
-   * hold: nothing is registered, so there is nothing of ours to count.
+   * Every other state and territory, one row each — tracked everywhere, not
+   * only where the product has figures (Sean, 2026-09-23). A state whose
+   * REGISTRATION pointer is promoted says so, with when; one with none says
+   * nothing is registered; and when the pointers were not read, neither is
+   * claimed. Each then says what the Census knows is there, never a zero for
+   * what we hold: nothing of ours is measured there, so there is nothing of
+   * ours to count.
    */
-  const unregisteredRows = US_STATES.filter((st) => !states.includes(st.code)).map((st) => {
-    const entry = censusEntryOf(st.code);
-    return { code: st.code, name: st.name, words: `Nothing registered yet. ${censusUniverseWords(st.name, entry)}` };
-  });
+  const otherRows = statesByStanding(base.registration)
+    .filter((st) => st.standing.kind !== "TRACKED")
+    .map((st) => ({
+      code: st.code,
+      name: st.name,
+      standing: st.standing,
+      words: `${registrationWords(st.name, st.standing)} ${censusUniverseWords(st.name, censusEntryOf(st.code))}`,
+    }));
+  const registeredCount = otherRows.filter((r) => r.standing.kind === "REGISTERED").length;
+  const unregisteredCount = otherRows.filter((r) => r.standing.kind === "NOT_REGISTERED").length;
+  const othersWords =
+    base.registration.kind === "HELD"
+      ? `The other ${otherRows.length} states and territories have no figures of ours: ${registeredCount} of them are registered from the 2022 Census of Governments but not measured yet, and ${unregisteredCount} have nothing registered. Each says what the Census knows is there instead, because a zero would claim we measured.`
+      : `The other ${otherRows.length} states and territories have no figures of ours, and whether they are registered was not read just now: ${base.registration.detail} Each says what the Census knows is there instead, because a zero would claim we measured.`;
 
   const numbers: RenderedNumber[] = [];
   const claims: CountClaim[] = [
-    { label: "registered states", stated: states.length, rendered: rows.length },
-    { label: "states and territories", stated: US_STATES.length, rendered: rows.length + unregisteredRows.length },
+    { label: "tracked states", stated: states.length, rendered: rows.length },
+    { label: "states and territories", stated: US_STATES.length, rendered: rows.length + otherRows.length },
   ];
   for (const r of rows) {
     if (r.coverage) numbers.push({ label: `${r.code} way in`, value: r.coverage.wayIn, denominator: r.coverage.bodies, contract: "registered bodies with a way in, of every registered body in the state" });
@@ -142,7 +158,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
       </nav>
       <Section
         title="All states"
-        lede="Every state and territory. Those with registered coverage carry the figures that decide whether work there is worth dispatching; the rest say what the Census knows is there. Opening one goes to its readings and its gaps; the figures are its own or they are absent."
+        lede="Every state and territory. Those tracked with coverage carry the figures that decide whether work there is worth dispatching; the rest say whether their Census governments are registered and what the Census knows is there. Opening one goes to its readings and its gaps; the figures are its own or they are absent."
       />
       {!na.ok || !ca.ok ? (
         <Refusal title="This page refused to draw its own numbers.">{!na.ok ? na.detail : ca.detail}</Refusal>
@@ -179,16 +195,16 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
                 <div className={`${s.td} ${s.tdSmall}`}>{r.next}</div>
               </div>
             ))}
-            {unregisteredRows.map((r) => (
+            {otherRows.map((r) => (
               <div key={r.code} className={s.contents}>
                 <div className={s.td}>
                   <Link href={withScope(`/readiness/${r.code}`, { kind: "state", state: r.code })} className={s.linkStrong}>
                     {r.name}
                   </Link>
                 </div>
-                <div className={`${s.td} ${s.tdMono}`}>not registered</div>
-                <div className={`${s.td} ${s.tdMono}`}>not registered</div>
-                <div className={`${s.td} ${s.tdMono}`}>not registered</div>
+                <div className={`${s.td} ${s.tdMono}`}>{noFiguresCell(r.standing)}</div>
+                <div className={`${s.td} ${s.tdMono}`}>{noFiguresCell(r.standing)}</div>
+                <div className={`${s.td} ${s.tdMono}`}>{noFiguresCell(r.standing)}</div>
                 <div className={`${s.td} ${s.tdSmall}`}>{r.words}</div>
               </div>
             ))}
@@ -197,8 +213,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
       )}
       <p className={s.note} style={{ fontSize: 14, maxWidth: "76ch", marginTop: 16 }}>
         Coverage is registered bodies with a way in for meetings; Requirements is the state&rsquo;s published grid checks that are satisfied and current; Delivery is
-        published meeting versions the typed Reader read back. The other {unregisteredRows.length} states and territories have nothing registered, so they have no
-        figures of ours — each says what the Census knows is there instead, because a zero would claim we looked.
+        published meeting versions the typed Reader read back. {othersWords}
       </p>
       <AuditFooter numbers={numbers} claims={claims} readAt={formatEastern(base.nowIso, { year: true })} />
     </MwShell>

@@ -109,7 +109,12 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     /data[\\/]health[\\/](?:reader-suite-runs|reader-questions\.json)|openRedReaderQuestions|latestReaderRun/,
     "tracked software-suite evidence cannot change standing Scout ordering or runtime health",
   );
-  assert.match(executableFreshness, /readerImpactAt/);
+  /* The canonical reader impact reaches the order through `orderableDueRow` (2026-09-25), which reads the obligation's own readerImpactAt. */
+  assert.match(executableFreshness, /orderableDueRow\(/);
+  assert.match(
+    readFileSync(join(ROOT, "lib", "control-plane", "research-metrics.ts"), "utf8"),
+    /readerImpactAt: row\.obligation\.readerImpactAt/,
+  );
   assert.match(
     executableFreshness,
     /compareModelRows:\s*compareScoutRows/,

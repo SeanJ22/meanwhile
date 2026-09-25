@@ -10,7 +10,9 @@
  * fields of each registry body. So Postgres cuts the sliver out of the
  * promoted pointer row and only that crosses the wire. Measured on production
  * 2026-09-24: Arizona's 95 containers with their codes in 48 ms, Pima County
- * in 239 ms.
+ * in 239 ms. Registration (2026-09-25) is fifty-odd pointers of 1-5 MB each:
+ * which states have one is read from the pointer columns alone, and a state's
+ * counts from inside its own row.
  *
  * ```
  *   the row     civic_data_promotions, the promoted pointer itself: its current
@@ -27,6 +29,7 @@
  */
 import type { CbsaClass, GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "@/lib/census-geography/publication.ts";
+import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "@/lib/registration/publication.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "@/lib/registry/runtime-data-plane.ts";
 
 export type Row = Readonly<Record<string, unknown>>;
@@ -323,5 +326,108 @@ export async function registryBodies(query: ReadOnlyQuery | null): Promise<Slice
     return { kind: "HELD", versionId, value };
   } catch (error) {
     return { kind: "UNREAD", detail: `The registry could not be read (${error instanceof Error ? error.name : "error"}).` };
+  }
+}
+
+/* ------------------------------------------------------------------ registration */
+
+/**
+ * One state's promoted REGISTRATION pointer, as its metadata alone: which
+ * version is live and when it was promoted. The registration itself (1-5 MB a
+ * state) is never read for this.
+ */
+export interface RegistrationPointer {
+  /** Lower-case USPS code: "oh". */
+  readonly state: string;
+  readonly versionId: string;
+  /** ISO instant the pointer was promoted. */
+  readonly promotedAt: string;
+}
+
+export type RegistrationPointers =
+  | { readonly kind: "HELD"; readonly pointers: readonly RegistrationPointer[] }
+  | { readonly kind: "UNREAD"; readonly detail: string };
+
+/**
+ * Every state's registration pointer in one indexed read of three small
+ * columns. Measured against production 2026-09-25: 51 rows, 6.8 KB, 0.13 ms
+ * in Postgres (42 buffers, none of them the payload).
+ */
+const REGISTRATION_POINTERS =
+  "SELECT scope, current_version_id AS version_id, promoted_at FROM civic_data_promotions WHERE record_class = $1 AND scope = ANY($2::text[])";
+
+function instant(value: unknown): string | null {
+  const ms = value instanceof Date ? value.getTime() : typeof value === "string" ? Date.parse(value) : NaN;
+  return Number.isFinite(ms) ? new Date(ms).toISOString() : null;
+}
+
+export async function registrationPointers(query: ReadOnlyQuery | null): Promise<RegistrationPointers> {
+  if (query === null) return { kind: "UNREAD", detail: "Registration was not read: this deployment names no reader store." };
+  const stateOfScope = new Map(REGISTRATION_TARGETS.map((t) => [t.scope, t.state.toLowerCase()]));
+  try {
+    const [rows] = await query([{ text: REGISTRATION_POINTERS, params: [REGISTRATION_RECORD_CLASS, [...stateOfScope.keys()]] }]);
+    const pointers = (rows ?? []).flatMap((row): RegistrationPointer[] => {
+      const scope = text(row.scope);
+      const state = scope === null ? undefined : stateOfScope.get(scope);
+      const versionId = text(row.version_id);
+      const promotedAt = instant(row.promoted_at);
+      return state === undefined || versionId === null || promotedAt === null ? [] : [{ state, versionId, promotedAt }];
+    });
+    return { kind: "HELD", pointers };
+  } catch (error) {
+    return { kind: "UNREAD", detail: `Registration could not be read (${error instanceof Error ? error.name : "error"}).` };
+  }
+}
+
+/** What one state's promoted registration holds, counted by Postgres inside the row. */
+export interface RegistrationCounts {
+  readonly promotedAt: string;
+  /** Governments the Census of Governments lists in the state (the state government itself excluded). */
+  readonly governments: number;
+  /** Of those, the ones placed on a Census division. */
+  readonly pairedGovernments: number;
+  /** Bodies the registration holds (a government's, or a school district's board). */
+  readonly bodies: number;
+  /** Census divisions the registration holds. */
+  readonly divisions: number;
+}
+
+/**
+ * One state's counts: the counts object and two array lengths, cut out of the
+ * pointer row so ~300 bytes cross the wire. Measured against production
+ * 2026-09-25 on the largest state, Pennsylvania: 9.7 ms in Postgres.
+ */
+const REGISTRATION_COUNTS =
+  "SELECT current_version_id AS version_id, promoted_at, (payload->'counts'->>'governments')::int AS governments," +
+  " (payload->'counts'->>'pairedGovernments')::int AS paired, jsonb_array_length(payload->'bodies') AS bodies," +
+  " jsonb_array_length(payload->'divisions') AS divisions FROM civic_data_promotions WHERE record_class = $1 AND scope = $2";
+
+function count(value: unknown): number | null {
+  const n = typeof value === "number" ? value : typeof value === "string" && value.trim() !== "" ? Number(value) : NaN;
+  return Number.isInteger(n) && n >= 0 ? n : null;
+}
+
+/** One state's registration counts, or NOT_PUBLISHED when no registration is promoted for it. */
+export async function registrationCounts(state: string, query: ReadOnlyQuery | null): Promise<Slice<RegistrationCounts>> {
+  const target = REGISTRATION_TARGETS.find((t) => t.state === state.toUpperCase());
+  // A code outside the FIPS table has no registration contract, so it has nothing promoted.
+  if (target === undefined) return { kind: "NOT_PUBLISHED" };
+  if (query === null) return { kind: "UNREAD", detail: `${target.state}'s registration was not read: this deployment names no reader store.` };
+  try {
+    const [rows] = await query([{ text: REGISTRATION_COUNTS, params: [REGISTRATION_RECORD_CLASS, target.scope] }]);
+    const row = rows?.[0];
+    const versionId = text(row?.version_id);
+    if (row === undefined || versionId === null) return { kind: "NOT_PUBLISHED" };
+    const promotedAt = instant(row.promoted_at);
+    const governments = count(row.governments);
+    const pairedGovernments = count(row.paired);
+    const bodies = count(row.bodies);
+    const divisions = count(row.divisions);
+    if (promotedAt === null || governments === null || pairedGovernments === null || bodies === null || divisions === null) {
+      return { kind: "UNREAD", detail: `${target.state}'s registration was read, but its counts are not in the shape this page reads.` };
+    }
+    return { kind: "HELD", versionId, value: { promotedAt, governments, pairedGovernments, bodies, divisions } };
+  } catch (error) {
+    return { kind: "UNREAD", detail: `${target.state}'s registration could not be read (${error instanceof Error ? error.name : "error"}).` };
   }
 }

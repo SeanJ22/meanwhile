@@ -17,9 +17,26 @@ import {
   type RoutineHistoryWindow,
   type RoutineObservabilityRead,
 } from "@/lib/civic-data/observability.ts";
+import { observableRoutineContracts } from "@/lib/civic-data/meeting-partitions.ts";
+import { sittingWindowRuleWords } from "@/lib/control-plane/admin-view/bodies.ts";
 import type { ReaderEdgeObservation } from "@/lib/meetings/edge-observability.ts";
 import { Band, When } from "../../console-ui.tsx";
 import { Code, NeedsYouLine, StatusBlock } from "../../status-ui.tsx";
+
+/*
+ * A contract the runner re-reads on its sitting-window schedule (C6: every
+ * meeting source) is not read on its `cadence`, which is how old a Reader may
+ * see a record before it reads stale. Its execution clock is the schedule.
+ */
+const SITTING_WINDOWS = new Map(
+  observableRoutineContracts().flatMap((c) => (c.schedule?.kind === "SITTING_WINDOW" ? [[c.id, c.schedule] as const] : [])),
+);
+
+export function executionClockWords(row: Pick<RoutineContractObservation, "contractId" | "cadence">): string {
+  const window = SITTING_WINDOWS.get(row.contractId);
+  if (window) return `${sittingWindowRuleWords(window)}, on the runner's sitting-window schedule`;
+  return `${row.cadence.description}${row.cadence.clock === "STANDING" ? ` (${row.cadence.activeEveryMs / 3_600_000} active hours)` : ""}`;
+}
 
 function exactJson(value: unknown): string {
   try {
@@ -255,7 +272,7 @@ function Contract({ row }: { readonly row: RoutineContractObservation }) {
         <dt>Last validation</dt><dd><TimeEvidence value={row.lastValidation} /></dd>
         <dt>Last promotion</dt><dd><TimeEvidence value={row.lastPromotion} /></dd>
         <dt>Canonical source-through / as-of</dt><dd><Evidence value={row.sourceThrough}>{(value) => <code>{value}</code>}</Evidence></dd>
-        <dt>Execution clock</dt><dd><Code raw={row.cadence.clock} /> — {row.cadence.description}{row.cadence.clock === "STANDING" ? ` (${row.cadence.activeEveryMs / 3_600_000} active hours)` : ""}; retry {row.cadence.retryDescription}.</dd>
+        <dt>Execution clock</dt><dd><Code raw={row.cadence.clock} /> — {executionClockWords(row)}; retry {row.cadence.retryDescription}.</dd>
         <dt>Next due</dt><dd><TimeEvidence value={row.cadence.nextDue} /></dd>
         <dt>Latest canonical outcome</dt><dd><Evidence value={row.latestCanonicalOutcome}>{(outcome) => <Code raw={outcome} withMeaning />}</Evidence></dd>
         <dt>LKG</dt><dd><Evidence value={row.lkg}>{(lkg) => <><code>{lkg.versionId}</code> — {lkg.state === "TRUSTED_LKG_IMPORT" ? "serving from an explicit frozen-LKG import" : lkg.state === "SERVING_AFTER_LATER_ATTEMPT" ? "serving after a later attempt" : "the current promotion"}. {lkg.detail}</>}</Evidence></dd>

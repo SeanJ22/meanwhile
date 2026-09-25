@@ -38,6 +38,7 @@ import {
   type RegistryBody,
 } from "@/lib/control-plane/admin-view/coverage.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
+import { registrationCountWords } from "@/lib/control-plane/admin-view/registration-standing.ts";
 import { bodyFreshness, collectionStatus, gridCounts, readingCards, type ReadingCard } from "@/lib/control-plane/admin-view/readiness-view.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
@@ -51,7 +52,8 @@ import { loadContainersWithCodes, membershipsOfCode, type ContainerWithCodes } f
 import { loadWatchedBodies } from "../../_mw/data/load-bodies.ts";
 import { loadRegistryBodies } from "../../_mw/data/registry.ts";
 import { paidLaneOf } from "../../_mw/data/research-lane.ts";
-import { isRegisteredState, shellScope, stateName } from "../../_mw/load-shell.ts";
+import { loadRegistrationCounts } from "../../_mw/data/registration.ts";
+import { isTrackedState, shellScope, stateName } from "../../_mw/load-shell.ts";
 import { openPage, param, type SearchParams } from "../../_mw/page-base.ts";
 import { GEO_TYPE_WORDS, geographyShortLabel, withScope, type MwScope } from "../../_mw/scope.ts";
 import { MwShell } from "../../_mw/shell.tsx";
@@ -93,10 +95,12 @@ export default async function ReadinessStatePage({
   const { state: rawState } = await params;
   const code = rawState.trim().toLowerCase();
   const sp = await searchParams;
+  // An untracked state's registration counts are asked for beside the page's opening reads, not after them (one ~300-byte row; NOT_PUBLISHED when none is promoted).
+  const countsRead = isTrackedState(code) ? null : loadRegistrationCounts(code);
   const base = await openPage(`/readiness/${code}`, sp);
   /* The path names the state; a scope elsewhere yields to it, a geography inside it is kept. */
   const scope: MwScope = base.scope.kind !== "all" && base.scope.state === code ? base.scope : { kind: "state", state: code };
-  const shell = base.scope === scope ? base.shell : shellScope(scope, base.selected);
+  const shell = base.scope === scope ? base.shell : shellScope(scope, base.selected, base.registration);
   const name = stateName(code);
   const by = parseBy(param(sp, "by") ?? (scope.kind === "geo" ? TYPE_BY[scope.type] ?? null : null));
   const openGeoid = param(sp, "c") ?? (scope.kind === "geo" && TYPE_BY[scope.type] === by ? scope.geoid : null);
@@ -110,7 +114,7 @@ export default async function ReadinessStatePage({
     scopeGroups: shell.groups,
     here: withScope(`/readiness/${code}`, scope, { by: param(sp, "by"), c: openGeoid, code: openCode }),
     observedAt: base.nowIso,
-    standard: null as string | null,
+    standard: base.standard,
   };
 
   const crumbs = (extra: readonly { label: string; href: string | null }[]) => (
@@ -141,11 +145,20 @@ export default async function ReadinessStatePage({
     </nav>
   );
 
-  if (!isRegisteredState(code)) {
+  if (!isTrackedState(code)) {
+    // A registered state's own counts: one state's row, counted inside Postgres (~300 bytes), never the registration itself.
+    const standing = shell.standing;
+    const counts = standing !== null && standing.kind === "REGISTERED" && countsRead !== null ? await countsRead : null;
     return (
       <MwShell {...shellProps}>
         {crumbs([])}
-        <EmptyScope name={name} scope={scope} census={censusUniverseWords(name, censusEntryOf(code))} />
+        <EmptyScope
+          name={name}
+          scope={scope}
+          standing={standing}
+          counts={counts === null ? null : counts.kind === "HELD" ? registrationCountWords(name, counts.value) : counts.kind === "UNREAD" ? counts.detail : null}
+          census={censusUniverseWords(name, censusEntryOf(code))}
+        />
       </MwShell>
     );
   }
@@ -168,8 +181,9 @@ export default async function ReadinessStatePage({
   ]);
 
   const snapshot = readiness.kind === "HELD" ? readiness.snapshot : null;
-  // A grid worked out under an older contract still names the standard in force — and says the grid predates it.
-  shellProps.standard = snapshot !== null ? snapshot.derivationContract : readiness.kind === "REQUIRES_REPUBLISH" ? `${readiness.currentContract} — the grid on file predates it` : null;
+  // A grid worked out under an older contract still names the standard in force — and says the grid predates it. With no grid read, the standard in force is still the standard.
+  shellProps.standard =
+    snapshot !== null ? snapshot.derivationContract : readiness.kind === "REQUIRES_REPUBLISH" ? `${readiness.currentContract} — the grid on file predates it` : base.standard;
   const watched: readonly BodyView[] = bodiesRead.kind === "HELD" ? bodiesRead.views.filter((b) => b.stateCode === code) : [];
   const stateBodies: readonly RegistryBody[] = registry.kind === "HELD" ? registry.bodies.filter((b) => b.stateCode === code) : [];
   const index: BodyIndex = indexBodies(stateBodies);

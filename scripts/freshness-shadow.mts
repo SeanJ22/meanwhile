@@ -266,6 +266,7 @@ import {
   graduationFunnel,
   modelShareTrend,
   orderByReaderImpact,
+  orderableDueRow,
   scoutCapacity,
   compareReaderImpact,
   type DispatchOrdering,
@@ -986,6 +987,8 @@ const debtsIn = (canary
       .map((row) => row.value)
   : await loadDebts(repos)
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
+/* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
+const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
@@ -1210,7 +1213,7 @@ if (expansionPlan !== null) {
   }
 }
 
-/* OLDEST FIRST for the deterministic lane, which is the dispatcher's own order — behind the owner's dispatch. */
+/* Oldest next-due first, behind the owner's dispatch. This order only classifies and counts the rows. The dispatcher orders the plain-code lane by `plainCodeQueueOrder` (2026-09-25). */
 dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
 const dueOrdered = expansionPlan === null
   ? placeFirstRows(dueThisCycle, dispatchPriority)
@@ -1223,8 +1226,9 @@ const dueDeterministic = dueDeterministicRows.length;
  * **READER IMPACT FIRST for the Scout lane.** (Work Item 5, 2026-09-02.
  * RULING 229.) Oldest-first answered what had waited longest; the Scout
  * ceiling is three a cycle, so WHICH three matters. Band 1 feeds a pilot
- * surface, band 2 completes a source universe, band 3 is the tail; oldest due
- * first within a band. Runtime reader impact is the obligation's canonical
+ * surface, band 2 completes a source universe, band 3 is the tail; the longest
+ * wait first within a band, where a row that failed waits from the end of its
+ * backoff (2026-09-25). Runtime reader impact is the obligation's canonical
  * `readerImpactAt`; the installed release's pilot ZIP list is configuration.
  *
  * The retired implementation also selected the newest tracked
@@ -1237,13 +1241,10 @@ const dueDeterministic = dueDeterministicRows.length;
 const orderingInputs: OrderingInputs = {
   pilotZips: PILOT_ZIPS,
 };
+/* Both the recorded queue and the live pool read each row through `orderableDueRow`, with the debt it carried in: longest wait first within a band (2026-09-25). */
 const modelOrder = orderByReaderImpact(
   dueModel.map((d) => ({
-    id: d.obligation.id,
-    subjectId: d.obligation.subjectId,
-    readerImpactAt: d.obligation.readerImpactAt,
-    providerId: registry.providerOf(d.obligation.id),
-    nextDueAt: d.nextDueAt,
+    ...orderableDueRow(d, registry.providerOf(d.obligation.id), debtAtCycleStart.get(d.obligation.id)),
     entry: d,
   })),
   orderingInputs,
@@ -1261,13 +1262,8 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
   const leftRank = placementRank(left.obligation.id) ?? Number.POSITIVE_INFINITY;
   const rightRank = placementRank(right.obligation.id) ?? Number.POSITIVE_INFINITY;
   if (leftRank !== rightRank) return leftRank < rightRank ? -1 : 1;
-  const orderable = (row: ScheduledObligation) => ({
-    id: row.obligation.id,
-    subjectId: row.obligation.subjectId,
-    readerImpactAt: row.obligation.readerImpactAt,
-    providerId: registry.providerOf(row.obligation.id),
-    nextDueAt: row.nextDueAt,
-  });
+  const orderable = (row: ScheduledObligation) =>
+    orderableDueRow(row, registry.providerOf(row.obligation.id), debtAtCycleStart.get(row.obligation.id));
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
 /* Plain-code intake: an unreadable intent log does not stop it (the paid lane is what fails closed, above). */
@@ -2056,6 +2052,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
           modelDispatched: laneCounts.modelDispatched,
           startedIds: startedThisCycle,
           runningIds: new Set(running.map((r) => r.obligationId)),
+          debtFor: (id) => debtAtCycleStart.get(id),
         }),
     },
     running: [...running],

@@ -63,7 +63,9 @@ import {
 } from "./durable.ts";
 import {
   dueNow,
+  plainCodeQueueOrder,
   scheduleAll,
+  waitingSince,
   type FreshnessObligation,
   type ScheduledObligation,
   type SchedulePass,
@@ -190,7 +192,9 @@ export interface CycleInput {
    * lanes, with their relative order otherwise untouched. A dispatch reorders
    * and nothing else: it does not add a row, does not make an undue row due,
    * does not lift a debt backoff, and does not change any ceiling or budget.
-   * Absent or empty, the due set is exactly the oldest-first order it was.
+   * Absent or empty, each lane keeps its own order: the Scout lane's
+   * `compareModelRows`, and the plain-code lane's longest wait first
+   * (`plainCodeQueueOrder`).
    */
   readonly placeFirst?: ReadonlySet<string>;
   /**
@@ -279,8 +283,11 @@ export type PrewarmOutcome =
  * deferred under one code, or recovered with a disposition an interrupted
  * cycle already committed. So `dispatched + Σ deferredBy + recovered = due`
  * for each lane, and a reader of the counts can check it rather than trust it.
- * `oldestWaitingDueAt` is the earliest next-due among the rows the lane did not
- * reach — how long the oldest waiting work has been owed.
+ * `oldestWaitingDueAt` is how long the oldest waiting work has been owed, among
+ * the rows the lane did not reach. In the model lane, it is the earliest
+ * next-due. In the plain-code lane, it is the earliest time a row joined the
+ * queue, which is also the queue's order (`waitingSince`). That is the row's
+ * next-due, or the end of its backoff if its last attempt failed.
  */
 export interface LaneCounts {
   readonly deterministic: {
@@ -290,7 +297,7 @@ export interface LaneCounts {
     readonly deferredBy: Readonly<Record<string, number>>;
     /** Rows recovered with an already-committed disposition: neither dispatched nor deferred. */
     readonly recovered: number;
-    /** The earliest next-due among the deferred rows; null when none was deferred. */
+    /** The earliest time a deferred row joined the queue (`waitingSince`); null when none was deferred. */
     readonly oldestWaitingDueAt: string | null;
   };
   readonly model: {
@@ -665,10 +672,23 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
      * set after lane classification and before admission. Sorting this existing
      * array cannot add, remove, or duplicate an obligation; it only determines
      * which due row reaches a scarce Scout slot first. The deterministic lane
-     * deliberately remains oldest-first.
+     * is ordered below, by how long each row has waited.
      */
     if (research.compareModelRows !== undefined) modelRows.sort(research.compareModelRows);
   }
+  /*
+   * **THE PLAIN-CODE LANE SERVES THE LONGEST WAIT FIRST.** (2026-09-25.) The
+   * lane is ordered by `waitingSince`, using the debt carried into the cycle.
+   * A row whose last attempt failed rejoins behind every row already waiting.
+   * It does not keep its first next-due and jump back to the head each time
+   * its backoff ends, as it did before. Then the owner's placed-first rows go
+   * to the front, in the same order (ADM-8). Sorting this array can reorder
+   * rows. It cannot add, drop or duplicate one, and it changes no cadence and
+   * no backoff.
+   */
+  const debtAtCycleStart = new Map(input.debts.map((d) => [d.obligationId, d] as const));
+  const debtOf = (obligationId: string) => debtAtCycleStart.get(obligationId);
+  const plainCodeQueue = placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst);
   const deferredBy: Record<string, number> = {};
   let modelDispatched = 0;
   let modelDeferred = 0;
@@ -683,7 +703,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   /* The deterministic lane's one deferral tally: every hold below names its code here, so its reasons sum. */
   const holdDeterministic = (row: ScheduledObligation, code: string): void => {
     deterministicDeferredBy[code] = (deterministicDeferredBy[code] ?? 0) + 1;
-    deterministicOldestWaiting = earlier(deterministicOldestWaiting, row);
+    const since = waitingSince(row, debtOf(row.obligation.id));
+    if (deterministicOldestWaiting === null || since < deterministicOldestWaiting) deterministicOldestWaiting = since;
   };
   const holdModel = (row: ScheduledObligation, code: string): void => {
     modelDeferred += 1;
@@ -720,10 +741,10 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     }
   };
 
-  /* THE DETERMINISTIC LANE — the serial queue, exactly as before. */
+  /* THE DETERMINISTIC LANE — the serial queue, longest wait first. */
   const deterministicLane = async (): Promise<void> => {
     let admitted = 0;
-    for (const row of deterministicRows) {
+    for (const row of plainCodeQueue) {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdDeterministic(row, "NO_OPEN_OCCURRENCE");

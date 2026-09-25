@@ -16,7 +16,13 @@ import "server-only";
  *              holds, how many the last read re-confirmed ("fresh") versus
  *              carried forward, how many it held back, the change it made,
  *              and the furthest meeting it lists — counts only, never the
- *              payload (measured 2026-09-23: 84 bodies in ~180 ms)
+ *              payload (measured 2026-09-23: 84 bodies in ~180 ms). Beside
+ *              them, on the full read only, what the runner schedules the
+ *              next read from (C6): the version's first event, its newest
+ *              unchanged confirmation, whether it is a trusted-LKG import,
+ *              and each sitting's start and stated end, built in Postgres as
+ *              the runner's own clock reads build them (894 sittings over 102
+ *              scopes on 2026-09-25; the snapshot's time did not move)
  *   attempts   the last five reads per body in the last seven days, from
  *              the local attempt event (never the adapter's claimed time)
  *   changes    each body's LATEST version that changed something readers are
@@ -36,6 +42,17 @@ import "server-only";
  * candidate's envelope once per change-set field (885 ms on the server; 220 ms
  * decoding it once). A load over three seconds is not a win (Sean, 2026-09-24).
  *
+ * The change history is most of what remains, and only one view draws it: a
+ * routine read opened on Work (its delivery trail). Measured on production
+ * 2026-09-25: the history statement is 920 ms of server time on its own — it
+ * walks each body's versions newest first, decoding every envelope (77 KB on
+ * average, 183 MB read in all) until it meets a change — beside 582 ms for the
+ * day tally and 260 ms for everything else; together, 2.3–2.7 s end to end, and
+ * the whole of every Admin page's first open. So the pages read the bodies
+ * WITHOUT it (`history: false`: the same figures, `changes: null`, every trail
+ * marked not read), and the opened routine read asks for it for its own body
+ * alone (`scopes`), where it costs one short walk.
+ *
  * The heavy observability read (every candidate's full envelope) is not used:
  * unbounded it returned 3.8 GB and it times out on an Admin render.
  * Any failure is thrown to the loader, which renders the section as unread —
@@ -44,7 +61,9 @@ import "server-only";
 import { neon } from "@neondatabase/serverless";
 
 import { READER_PROJECTION_READBACK_PREFIX, parseReaderProjectionReadback } from "@/lib/civic-data/reader-readback.ts";
-import { horizonFromColumns, type PublisherHorizon } from "@/lib/control-plane/admin-view/bodies.ts";
+import { isTrustedLkgImportCandidate } from "@/lib/civic-data/trusted-lkg-import.ts";
+import { UNCHANGED_CONFIRMATION_PREFIX } from "@/lib/civic-data/unchanged-confirmation.ts";
+import { horizonFromColumns, type PublisherHorizon, type SittingFacts, type VersionClockFacts } from "@/lib/control-plane/admin-view/bodies.ts";
 
 export const BODY_STORE_STATEMENT_TIMEOUT_MS = 4_000;
 
@@ -76,6 +95,8 @@ export interface BodyVersionRow {
    * Null when the candidate records no horizon.
    */
   readonly horizon: PublisherHorizon | null;
+  /** What the runner schedules this source's next read from (C6); the standing read leaves it out. */
+  readonly clock?: VersionClockFacts;
 }
 
 export interface BodyAttemptRow {
@@ -158,14 +179,41 @@ function intOrNull(value: unknown): number | null {
 function textOrNull(value: unknown): string | null {
   return typeof value === "string" && value.trim() !== "" ? value : null;
 }
+/** Each [start, end] pair as stored; a pair without a string start is not a sitting the runner reads. */
+function sittingsOf(value: unknown): SittingFacts[] {
+  return (Array.isArray(value) ? value : []).flatMap((pair: unknown) =>
+    Array.isArray(pair) && typeof pair[0] === "string" ? [{ startsAt: pair[0], endsAt: typeof pair[1] === "string" ? pair[1] : null }] : [],
+  );
+}
+
+/** The confirmation prefix as a LIKE pattern: `_` is a wildcard, so it is matched literally, as the runner's clock read matches it. */
+const CONFIRMATION_LIKE = `${UNCHANGED_CONFIRMATION_PREFIX.replaceAll("_", "\\_")}%`;
+
 function meetingsOf(value: unknown): { readonly title: string | null; readonly startsAt: string | null }[] {
   return (Array.isArray(value) ? (value as Record<string, unknown>[]) : []).map((m) => ({ title: textOrNull(m.title), startsAt: textOrNull(m.startsAt) }));
 }
 
 /* ------------------------------------------------------------------ the statements */
 
-/** Each body's current promoted version: counts only, never the payload. */
-const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
+/**
+ * What the runner schedules each source's next read from (C6): the version's
+ * store-observed first event, its newest unchanged confirmation ($2), whether
+ * it is a trusted-LKG import (one scalar off the candidate), and each sitting's
+ * start and stated end, built in Postgres. Only the full read carries them: the
+ * preview's standing read never shows a schedule.
+ */
+const VERSIONS_CLOCK = `
+        (SELECT cd.candidate->'bootstrapImport'->>'kind' FROM civic_data_candidates cd WHERE cd.id = p.current_version_id) AS import_kind,
+        (SELECT e.at FROM civic_data_candidate_events e
+          WHERE e.candidate_id = p.current_version_id AND e.sequence = 1) AS observed_at,
+        (SELECT max(e.at) FROM civic_data_candidate_events e
+          WHERE e.candidate_id = p.current_version_id AND e.detail LIKE $2) AS confirmed_at,
+        (SELECT jsonb_agg(jsonb_build_array(m->'startsAt', m->'endsAt'))
+           FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.payload->'meetings') = 'array' THEN p.payload->'meetings' ELSE '[]'::jsonb END) m
+          WHERE jsonb_typeof(m->'startsAt') = 'string') AS sittings,`;
+
+/** Each body's current promoted version: counts only, never the payload; with its clock, VERSIONS_CLOCK beside them. */
+const versionsStatement = (clock: boolean) => `SELECT p.scope, p.current_version_id, p.promoted_at,
         jsonb_array_length(COALESCE(p.payload->'meetings', '[]'::jsonb)) AS meetings,
         (p.payload->'counts'->>'fresh')::int AS fresh,
         (p.payload->'counts'->>'carried')::int AS carried,
@@ -186,7 +234,7 @@ const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
           WHERE (m->>'startsAt')::timestamptz > $1::timestamptz) AS upcoming,
         (SELECT max((m->>'startsAt')::timestamptz) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m) AS furthest,
         p.payload->'meetings'->0->>'bodyName' AS body_name,
-        p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,
+        p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,${clock ? VERSIONS_CLOCK : ""}
         cs.outcome, cs.added, cs.changed, cs.removed, cs.held,
         cs.horizon_kind, cs.horizon_returned, cs.horizon_declared, cs.horizon_paginated, cs.horizon_complete
    FROM civic_data_promotions p
@@ -204,6 +252,8 @@ const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
        FROM (SELECT cd.candidate->'changeSet' AS cs, cd.candidate->'horizon' AS hz FROM civic_data_candidates cd WHERE cd.id = p.current_version_id OFFSET 0) x
    ) cs ON true
   WHERE p.record_class = 'MEETING'`;
+const VERSIONS = versionsStatement(false);
+const VERSIONS_WITH_CLOCK = versionsStatement(true);
 
 /** The last five reads per body in the last seven days, from the local attempt event. */
 const ATTEMPTS = `SELECT scope, candidate_id, state, failure_code, failure_detail, acquisition_succeeded, attempted_at FROM (
@@ -305,6 +355,17 @@ function versionsOf(rows: Rows): BodyVersionRow[] {
     removed: int(r.removed),
     held: int(r.held),
     horizon: horizonFromColumns(r),
+    // Only the full read selects the clock; a row without it says so by leaving it out.
+    ...("observed_at" in r
+      ? {
+          clock: {
+            observedAt: isoOrNull(r.observed_at),
+            confirmedAt: isoOrNull(r.confirmed_at),
+            imported: isTrustedLkgImportCandidate({ bootstrapImport: { kind: r.import_kind } }),
+            sittings: sittingsOf(r.sittings),
+          },
+        }
+      : {}),
   }));
 }
 
@@ -375,14 +436,45 @@ function changesOf(rows: Rows): BodyChangeRow[] {
 
 /* ------------------------------------------------------------------ the reads */
 
-export async function readBodyStore(connection: string, nowIso: string): Promise<BodyStoreRead> {
+/**
+ * One statement's rows, only for these scopes. Every statement but the readback
+ * one answers a `scope` column, so it is filtered from outside and Postgres
+ * carries the filter down to the scope each one reads by (checked with EXPLAIN
+ * on production 2026-09-25: an index condition on each, never a filter after a
+ * full walk). The readback statement answers no scope, so it filters its join.
+ */
+function onScopes(statement: string, param: number): string {
+  return `SELECT * FROM (${statement}) narrowed WHERE narrowed.scope = ANY($${param}::text[])`;
+}
+const SCOPED_VERSION_READBACKS = `${VERSION_READBACKS} AND p.scope = ANY($2::text[])`;
+
+export interface BodyReadOptions {
+  /**
+   * Whether to read each body's latest change (its delivery trail). Without it
+   * `changes` is null, which every view reads as "not read", never as "none".
+   */
+  readonly history: boolean;
+  /** Only these scopes (a body's contracts), when given: the opened routine read's own body. */
+  readonly scopes?: readonly string[];
+}
+
+export async function readBodyStore(connection: string, nowIso: string, options: BodyReadOptions = { history: true }): Promise<BodyStoreRead> {
   const sql = neon(connection);
   const limit = `SET LOCAL statement_timeout = ${BODY_STORE_STATEMENT_TIMEOUT_MS}`;
   const readbackLike = `${READER_PROJECTION_READBACK_PREFIX}%`;
+  const scopes = options.scopes === undefined ? null : [...options.scopes];
+  const statement = (text: string, params: readonly unknown[]) =>
+    scopes === null ? sql.query(text, [...params]) : sql.query(onScopes(text, params.length + 1), [...params, scopes]);
 
-  /* The figures that must agree: one snapshot. */
+  /* The figures that must agree: one snapshot. The versions carry each source's sitting clock facts. */
   const snapshot = sql.transaction(
-    [sql.query(limit), sql.query(VERSIONS, [nowIso]), sql.query(ATTEMPTS, [nowIso]), sql.query(VERSION_READBACKS, [readbackLike]), sql.query(DAY, [nowIso])],
+    [
+      sql.query(limit),
+      statement(VERSIONS_WITH_CLOCK, [nowIso, CONFIRMATION_LIKE]),
+      statement(ATTEMPTS, [nowIso]),
+      scopes === null ? sql.query(VERSION_READBACKS, [readbackLike]) : sql.query(SCOPED_VERSION_READBACKS, [readbackLike, scopes]),
+      statement(DAY, [nowIso]),
+    ],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
 
@@ -393,16 +485,18 @@ export async function readBodyStore(connection: string, nowIso: string): Promise
    * still render, and each trail says its change history was not read rather
    * than borrowing one. Its own readbacks come with it.
    */
-  const history = sql
-    .transaction([sql.query(limit), sql.query(CHANGES, [readbackLike])], { readOnly: true })
-    .then((results) => results[1] as unknown as Rows)
-    .catch((error: unknown) => {
-      console.error(
-        "[admin] body change history not read",
-        error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error,
-      );
-      return null;
-    });
+  const history: Promise<Rows | null> = !options.history
+    ? Promise.resolve(null)
+    : sql
+        .transaction([sql.query(limit), statement(CHANGES, [readbackLike])], { readOnly: true })
+        .then((results) => results[1] as unknown as Rows)
+        .catch((error: unknown) => {
+          console.error(
+            "[admin] body change history not read",
+            error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error,
+          );
+          return null;
+        });
 
   const [results, changeRows] = await Promise.all([snapshot, history]);
   const [, versionRows, attemptRows, versionReadbackRows, dayRows] = results as unknown as Rows[];

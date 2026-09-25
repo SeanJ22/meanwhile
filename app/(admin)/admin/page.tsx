@@ -12,8 +12,9 @@
  *                    narrowly from the production data plane (body-store.ts)
  *   the decisions    the published decision cards, minus those already decided
  *                    on the owner's decision log
- *   the scope        everywhere, a state, or a selected geography; a scope with
- *                    nothing registered answers in sentences
+ *   the scope        everywhere, a state, or a selected geography; a scope in a
+ *                    state not tracked with figures answers in sentences that
+ *                    say whether its registration is promoted
  * ```
  *
  * The page audits itself before it shows anything: every figure carries a
@@ -43,10 +44,10 @@ import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
 import { censusEntryOf } from "../_mw/data/census-universe.ts";
 import { divisionsOf, loadContainer } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
-import { stateName } from "../_mw/load-shell.ts";
+import { isTrackedState, stateName } from "../_mw/load-shell.ts";
 import { NextSteps, type StepCard } from "../_mw/next-steps.tsx";
 import { openPage, type SearchParams } from "../_mw/page-base.ts";
-import { withScope } from "../_mw/scope.ts";
+import { parseScope, withScope } from "../_mw/scope.ts";
 import { MwShell } from "../_mw/shell.tsx";
 import { Dash, FigList, Pill, Refusal, Section, mw as s, type FigLine } from "../_mw/ui.tsx";
 
@@ -57,6 +58,7 @@ export const runtime = "nodejs";
 const ACTION_ROUTE = "/api/admin/action";
 const LIVE_ROUTE = "/api/admin/live";
 const PRIORITY_ORDER: Readonly<Record<string, number>> = { P0: 0, P1: 1, P2: 2, P3: 3 };
+const FIRST_BODIES_SHOWN = 12;
 
 function stepsFrom(waiting: readonly OwnerDecisionCard[]): StepCard[] {
   const kindOrder = { DECISION: 0, ACKNOWLEDGE: 1, BLOCKED_WHILE: 2 } as const;
@@ -88,7 +90,11 @@ function stepsFrom(waiting: readonly OwnerDecisionCard[]): StepCard[] {
 
 export default async function FleetNowPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
-  const base = await openPage("/admin", sp);
+  // The body read is the longest one a first open waits for (all of it database work), so it starts before the policy row is read.
+  const nowIso = new Date().toISOString();
+  const asked = parseScope(sp.scope);
+  const bodiesEarly = asked.kind === "all" || isTrackedState(asked.state) ? loadWatchedBodies(nowIso) : null;
+  const base = await openPage("/admin", sp, nowIso);
   const shellProps = {
     area: "fleet" as const,
     tab: "now" as const,
@@ -97,14 +103,19 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
 
-  if (!base.shell.registered) {
+  if (!base.shell.tracked) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
-        <EmptyScope name={name} scope={base.scope} census={base.scope.kind === "all" ? undefined : censusUniverseWords(name, censusEntryOf(base.scope.state))} />
+        <EmptyScope
+          name={name}
+          scope={base.scope}
+          standing={base.shell.standing}
+          census={base.scope.kind === "all" ? undefined : censusUniverseWords(name, censusEntryOf(base.scope.state))}
+        />
       </MwShell>
     );
   }
@@ -122,7 +133,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     readSnapshot(repos),
     readDecisions(repos),
     readPulse(repos, base.nowIso),
-    loadWatchedBodies(base.nowIso),
+    bodiesEarly ?? loadWatchedBodies(base.nowIso),
     container,
   ]);
 
@@ -268,8 +279,18 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     : [];
 
   const stateNames: Record<string, string> = Object.fromEntries(US_STATES.map((st) => [st.code, st.name]));
+  /*
+   * The body list is sent only the views it draws: the first few, or every one
+   * when the list was asked for whole or a link names a body past the first
+   * few. Each view sent travels in the page as data (689 KB for all 120 on
+   * 2026-09-25, twelve of them drawn), so the rest come when "show all" asks.
+   */
+  const askedBody = typeof sp.body === "string" ? sp.body : null;
+  const askedAll = sp.bodies === "all";
+  const every = askedAll || (askedBody !== null && bodies.findIndex((b) => b.id === askedBody) >= FIRST_BODIES_SHOWN);
+  const bodyList = { sent: every ? bodies : bodies.slice(0, FIRST_BODIES_SHOWN), every, asked: askedBody, askedAll };
   const workHref: Record<string, string> = {};
-  for (const b of bodies) for (const id of b.contractIds) workHref[id] = withScope(`/admin/work?open=${encodeURIComponent(routineAssignmentId(id))}`, base.scope);
+  for (const b of bodyList.sent) for (const id of b.contractIds) workHref[id] = withScope(`/admin/work?open=${encodeURIComponent(routineAssignmentId(id))}`, base.scope);
 
   return (
     <MwShell {...shellProps} extraStrip={[{ label: "BODIES READ", value: bodiesRead.kind === "HELD" ? formatEastern(bodiesRead.asOf) : "not read", warn: bodiesRead.kind !== "HELD" }]}>
@@ -383,7 +404,18 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
             </div>
           </div>
         ) : (
-          <BodyList bodies={bodies} stateNames={stateNames} workHref={workHref} firstShown={12} initiallyOpen={typeof sp.body === "string" ? sp.body : null} />
+          // Keyed by what was sent, so the island starts over (showing every body) when "show all" brings the rest.
+          <BodyList
+            key={bodyList.every ? "every" : "first"}
+            bodies={bodyList.sent}
+            total={bodies.length}
+            stateNames={stateNames}
+            workHref={workHref}
+            firstShown={FIRST_BODIES_SHOWN}
+            initiallyOpen={bodyList.asked}
+            initiallyAll={bodyList.askedAll}
+            showAllHref={withScope("/admin", base.scope, { bodies: "all", body: bodyList.asked })}
+          />
         ))}
 
       <AuditFooter numbers={numbers} claims={claims} readAt={formatEastern(base.nowIso, { year: true })} />

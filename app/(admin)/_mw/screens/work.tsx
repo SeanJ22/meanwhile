@@ -21,7 +21,7 @@ import "server-only";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { readDigests, readFleetSafety, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { readFleetSafety, readHeartbeat, readLatestDigest, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
 import { askGapCountWords, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
@@ -46,6 +46,7 @@ import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
+import { standingLabel } from "@/lib/control-plane/admin-view/registration-standing.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { PILOT_ZIPS } from "@/lib/health/owner-corpus-compile.ts";
@@ -58,9 +59,9 @@ import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
 import { censusEntryOf } from "../data/census-universe.ts";
 import { listContainers } from "../data/geography.ts";
-import { loadWatchedBodies } from "../data/load-bodies.ts";
+import { loadWatchedBodies, loadWatchedBody } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
-import { REGISTERED_STATE_CODES, stateName } from "../load-shell.ts";
+import { TRACKED_STATE_CODES, stateName, statesByStanding } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
 import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
@@ -91,7 +92,10 @@ type Opened =
 export async function WorkScreen(props: { readonly area: MwArea; readonly searchParams: Promise<SearchParams> }) {
   const sp = await props.searchParams;
   const path = props.area === "fleet" ? "/admin/work" : "/readiness/work";
-  const base = await openPage(path, sp);
+  // The body read is the longest one a first open waits for (all of it database work), so it starts before the policy row is read.
+  const nowIso = new Date().toISOString();
+  const bodiesEarly = loadWatchedBodies(nowIso);
+  const base = await openPage(path, sp, nowIso);
   const shellProps = {
     area: props.area,
     tab: "work" as const,
@@ -100,7 +104,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     scopeGroups: base.shell.groups,
     here: base.here,
     observedAt: base.nowIso,
-    standard: null,
+    standard: base.standard,
   };
   if (base.repos === null) {
     return (
@@ -111,7 +115,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   }
 
   /* ------------------------------------------------------------ what the composer offers */
-  const composerState = (param(sp, "st") ?? (base.scope.kind === "all" ? REGISTERED_STATE_CODES[0] ?? US_STATES[0].code : base.scope.state)).toLowerCase();
+  const composerState = (param(sp, "st") ?? (base.scope.kind === "all" ? TRACKED_STATE_CODES[0] ?? US_STATES[0].code : base.scope.state)).toLowerCase();
   const geoParam = param(sp, "geo");
   const initialGeo = (() => {
     if (!geoParam) {
@@ -124,15 +128,30 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   })();
   const openId = param(sp, "open");
   const show = param(sp, "show");
+  /*
+   * An opened assignment is read beside the page's other reads, not after
+   * them: it needs nothing they return. A piece of standing work is read by its
+   * id, and the published activation reading is joined to it once both are in
+   * (measured 2026-09-25: the drilldown behind prop-423 is 76 point reads, and
+   * waiting for the rest of the page first put it on top of the body read). A
+   * routine read is its own body read whole, trail included. An instruction's
+   * id starts "scope:" and reads nothing more.
+   */
+  const openedContract = openId === null ? null : routineContractIdOf(openId);
+  const standingId = openId !== null && !openId.startsWith("scope:") && openedContract === null ? openId : null;
 
-  const [containers, snapshotOut, researchOut, heartbeatOut, bodiesRead, intentsOut, digestsOut] = await Promise.all([
+  const [containers, snapshotOut, researchOut, heartbeatOut, bodiesRead, intentsOut, digestOut, standingRead, routineRead] = await Promise.all([
     listContainers(composerState.toUpperCase(), TYPES),
     readSnapshot(base.repos),
     readFleetSafety(base.repos),
     readHeartbeat(base.repos),
-    loadWatchedBodies(base.nowIso),
+    bodiesEarly,
     readResearchIntents(base.repos),
-    props.area === "fleet" ? readDigests(base.repos) : Promise.resolve(null),
+    // The runner card shows the newest digest alone: one row, not the twenty-row history (4.4 MB on 2026-09-25).
+    props.area === "fleet" ? readLatestDigest(base.repos) : Promise.resolve(null),
+    standingId === null ? Promise.resolve(null) : readAssignmentSourcesById(base.repos, standingId, { nowIso: base.nowIso, activation: null, pilotZips: PILOT_ZIPS }),
+    // An opened routine read draws its body's delivery trail, which the list's body read leaves out: that one body is read whole, now.
+    openedContract === null ? Promise.resolve(null) : loadWatchedBody(base.nowIso, openedContract),
   ]);
 
   const geographies: Record<string, GeoOption[]> = {};
@@ -154,7 +173,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const published = snapshotOut.kind === "HELD" ? snapshotOut.value.assignments ?? null : null;
   const view: AssignmentView | null = published && published.kind === "BUILT" ? published.view : null;
   const rows: readonly AssignmentListRow[] = view?.rows ?? [];
-  const bodies: readonly BodyView[] = bodiesRead.kind === "HELD" ? bodiesRead.views : [];
+  // The opened routine read's body is drawn from its own fresh read, so its card and its detail say the same thing.
+  const bodies: readonly BodyView[] =
+    bodiesRead.kind === "HELD" ? bodiesRead.views.map((v) => (routineRead?.kind === "HELD" && v.id === routineRead.view.id ? routineRead.view : v)) : [];
   const scopeState = base.scope.kind === "all" ? null : base.scope.state;
   const inScopeBodies = scopeState === null ? bodies : bodies.filter((b) => b.stateCode === scopeState);
 
@@ -180,16 +201,18 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     const contractId = routineContractIdOf(openId);
     if (instruction) opened = { kind: "INSTRUCTION", view: instruction };
     else if (openId.startsWith("scope:")) opened = { kind: "MISSING", id: openId, says: "This geography is not on your list any more, or its change has not been read yet." };
-    else if (contractId !== null) {
-      const body = bodies.find((b) => b.contractIds.includes(contractId));
-      opened = body
-        ? { kind: "DETAIL", id: openId, detail: routineDetail(body), says: `read from the production data plane at ${bodiesRead.kind === "HELD" ? formatEastern(bodiesRead.asOf) : "no time"}` }
-        : { kind: "MISSING", id: openId, says: bodiesRead.kind === "HELD" ? `No routine meeting contract has the id ${contractId}.` : bodiesRead.detail };
-    } else {
-      const read = await readAssignmentSourcesById(base.repos, openId, { nowIso: base.nowIso, activation: view?.activation ?? null, pilotZips: PILOT_ZIPS });
+    else if (contractId !== null && routineRead !== null) {
+      opened =
+        routineRead.kind === "HELD"
+          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
+          : { kind: "MISSING", id: openId, says: routineRead.detail };
+    } else if (standingRead !== null) {
+      const read = standingRead;
       if (read.kind === "HELD") {
+        // The drilldown was read beside the snapshot, so the activation reading it is projected with is joined here.
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
-        const row = buildAssignments(read.value, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
+        const sources = { ...read.value, activation: view?.activation ?? null };
+        const row = buildAssignments(sources, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
           ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
           : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
@@ -223,16 +246,10 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
-  /*
-   * Every state and territory can be chosen — the Census lookup behind the geographies covers them all — the ones
-   * with a reviewed registry first. Every other one is registered too: a Send there reads its registration (2026-09-25).
-   */
+  /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — tracked ones first, then registered ones, each named for where it stands. */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
-  const composerStates = [
-    ...REGISTERED_STATE_CODES.map((code) => ({ code, name: stateName(code) })),
-    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — from registration` })),
-  ];
+  const composerStates = statesByStanding(base.registration).map((st) => ({ code: st.code, name: standingLabel(st.name, st.standing) }));
   const selected: Record<string, { priority: number; budgetUsd: number }> = {};
   for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
 
@@ -258,8 +275,13 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
 
   return (
     <MwShell {...shellProps} extraStrip={[{ label: "LIST PUBLISHED", value: snapshotOut.kind === "HELD" ? formatEastern(snapshotOut.value.publishedAt) : "not read", warn: snapshotOut.kind !== "HELD" }]}>
-      {base.scope.kind !== "all" && !base.shell.registered ? (
-        <EmptyScope name={stateName(base.scope.state)} scope={base.scope} census={censusUniverseWords(stateName(base.scope.state), censusEntryOf(base.scope.state))} />
+      {base.scope.kind !== "all" && !base.shell.tracked ? (
+        <EmptyScope
+          name={stateName(base.scope.state)}
+          scope={base.scope}
+          standing={base.shell.standing}
+          census={censusUniverseWords(stateName(base.scope.state), censusEntryOf(base.scope.state))}
+        />
       ) : null}
       <Composer
         states={composerStates}
@@ -386,8 +408,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           standing={runnerStanding(heartbeatOut.kind === "HELD" ? heartbeatOut.value : null, intentsOut.kind === "HELD" ? intentsOut.value : [], base.nowIso, research?.fleetSafety ?? null)}
           heartbeat={heartbeatOut.kind === "HELD" ? heartbeatOut.value : null}
           safety={research?.fleetSafety ?? null}
-          digest={digestsOut && digestsOut.kind === "HELD" && digestsOut.value.length > 0 ? digestsOut.value[0] : null}
-          digestNote={digestsOut && digestsOut.kind !== "HELD" ? digestsOut.detail : null}
+          digest={digestOut && digestOut.kind === "HELD" ? digestOut.value : null}
+          digestNote={digestOut && digestOut.kind !== "HELD" ? digestOut.detail : null}
           returnTo={base.here}
           lanes={queueLanesOf(research)}
         />

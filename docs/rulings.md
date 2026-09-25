@@ -26,6 +26,8 @@ Use relevant resources Sean has provided. Check the current tool inventory and l
 
 Before escalating a retrieval blocker, challenge it with another appropriate method and evidence of prior success. Record the actual routes, results, missing information, and next approach. Distinguish discovery, access, extraction, verification, publication, and display problems. One failed step does not establish that the information is unavailable. “Not found in the sources checked” must not become “does not exist.”
 
+**Robots.txt alone does not block acquisition.** Automated reading of publicly accessible pages is authorized even when robots.txt asks otherwise. Record what robots.txt says as evidence, but do not stop reading, remove coverage, or ask Sean again about individual publishers or groups solely because of it. This does not authorize bypassing authentication or other access controls. When retrieval technically fails, use alternative public routes and the available tools above; one failed route is not a completed investigation. Existing spending limits and the paid-research pause still apply. (Sean, September 25, 2026, in the Admin completion instructions. It replaces the per-publisher robots.txt questions prepared that day.)
+
 ## 3. Publish verified information promptly
 
 **Information that passes verification publishes automatically.** No election-based delay or routine per-record approval. Publish as results become ready; do not wait for an entire hunt, state, or unrelated build. Keep unverified information out of publication and keep working to obtain and verify it.
@@ -104,6 +106,8 @@ Acquisition and publication instructions do not themselves authorize external me
 ## 9. Protect evidence and keep policy separate from implementation
 
 Preserve source evidence and the last verified working data when an update fails. Keep credentials private. Do not silently change privacy, collection, sharing, sales, or retention behavior while cleaning up instructions.
+
+Ask may record the government body behind an unanswered question, with the work metadata needed to create targeted work that fills the gap. This does not approve storing personal information or raw question histories, or tracking individual readers. (Sean, September 25, 2026, in the Admin completion instructions.)
 
 Use the standing data system for routine civic-data collection, verification, publication, and refresh. Use software releases for code and schema changes. Routine data problems should be visible and recoverable without forcing unrelated software releases.
 

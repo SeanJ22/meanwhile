@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 821,
-    "named": 7923,
+    "files": 828,
+    "named": 7976,
     "dynamic": 31
   },
   "files": {
@@ -328,6 +328,21 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-first-open.test.ts": {
+      "names": [
+        "Fleet · Now sends the body list only the views it draws until the whole list is asked for",
+        "Work reads an opened piece of standing work beside its other reads, and the newest digest alone",
+        "a work item's drilldown reuses the item it read and reads its Scout results and the pipeline beside its tasks",
+        "an id that names nothing is NOT_RECORDED after two round trips, never an empty assignment",
+        "an ordinary drilldown is four dependent round trips, and the pipeline no longer waits behind the attempts",
+        "one body read whole, narrowed to its own sources, is the view the whole read built for it",
+        "the body read every page makes without the change history draws every figure the whole read drew, and marks each trail not read",
+        "the drilldown returns the same records, in the same order, however its reads are scheduled",
+        "the pages read the bodies without the history; only the opened routine read asks for it, for its own body",
+        "the runner card's digest is one row from the tail of the log, the newest"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-google-signin.test.ts": {
       "names": [
         "BAD_SIGNATURE: another key under the same kid, a tampered payload, alg=none, and an unknown kid",
@@ -375,6 +390,23 @@
         "the start route reports NOT_CONFIGURED by class when a variable is absent — no cookie, no 500, no Google",
         "the state cookie round-trips under the session key",
         "with the flag on, an unreachable incident log REFUSES the break-glass — a correct secret issues nothing"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-meeting-cadence.test.ts": {
+      "names": [
+        "Pima's card: hourly while its Sep 22 sitting is within seven days behind, owed within the hour — not daily, not tomorrow",
+        "a body read through two sources names each source's clock when they differ",
+        "a contract without a sitting window keeps its cadence words, unchanged",
+        "a read that published nothing after the last good one is retried an hour after that read",
+        "a sitting ahead within seven days holds it hourly; none within seven days makes it twice a day, owed twelve hours after the last good read",
+        "a sitting counts as concluded at its stated end, else a day after it starts — the runner's reading, not a second copy",
+        "a source with nothing published waits twelve hours between attempts, and every sentence on the card says so (R20)",
+        "a trusted-LKG import is never a success: only a live read after it counts, and with none the runner owes one at once",
+        "an overdue read says overdue, and a reading without the clock facts says so rather than guessing",
+        "the Sources panel's execution clock for a meeting source is the sitting-window schedule; other contracts keep their cadence",
+        "the rule is worded from the schedule's own numbers",
+        "the watched meeting partitions all carry the runner's sitting-window schedule, and the loader passes it on"
       ],
       "dynamic": 0
     },
@@ -476,6 +508,19 @@
         "SEEDED: a request whose URL names the public host, arriving on the admin host, is sent back to the admin host",
         "each redirecting route builds exactly its redirects on ADMIN_ORIGIN",
         "no admin route builds a URL on request.url, except a named in-process forward"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-registration-standing.test.ts": {
+      "names": [
+        "a pointer read that fails, or has no store to ask, is UNREAD with its reason — never an empty list",
+        "a promoted pointer reads as that state's, with its version and promoted time",
+        "a promoted registration makes the state registered, not 'nothing registered', everywhere the scope select names it",
+        "one state's counts are cut out of its own row, and name what they count",
+        "the empty-scope card on a registered state says registered, with its counts and the Census sentence, and never 'Nothing is registered here'",
+        "the pointer read asks for every state's registration scope and reads no payload",
+        "the row words: registered with its promoted time, nothing registered, or not read — and the cells never say 'not registered' for a registered state",
+        "when the pointers were not read, no untracked state is called registered or unregistered"
       ],
       "dynamic": 0
     },
@@ -584,6 +629,14 @@
         "§7: every obsolete refresh workflow definition is deleted",
         "§7: the terminal-zero workflow detector catches a planted cron",
         "§7: the wider capability registry never reconstructs a second routine clock"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-standard-in-force.test.ts": {
+      "names": [
+        "no Admin page hands the strip a hard-coded standard: each takes the page base's, or what its own readings were measured under",
+        "the standard in force is the manifest's current version, and is absent only when the manifest names none",
+        "the strip names the standard it is handed, and says 'not versioned yet' only for none"
       ],
       "dynamic": 0
     },
@@ -7838,6 +7891,19 @@
       ],
       "dynamic": 0
     },
+    "tests/plain-code-queue-order.test.ts": {
+      "names": [
+        "ADM-8: the owner's placed-first rows still go ahead of the longest wait",
+        "BOUND with two a cycle: waits stay within ⌈N / c⌉ − 1 = 4 cycles",
+        "BOUND: the never-tried row runs within ⌈(A + 1) / c⌉ cycles, and no row ever waits more than ⌈N / c⌉ − 1",
+        "NOT SLOWED: a row with no failing debt never has more rows ahead of it than under the old order",
+        "SEEDED STARVATION: ordered by next-due alone, a never-tried row waits forever behind rows that keep failing",
+        "a row due only as a retry (its next-due still ahead) stays behind every row due by the clock, as before",
+        "the plain-code reading names the longest WAIT, during the cycle and after it, not a failing row's first next-due",
+        "the replay is the dispatcher: runCycle runs exactly the replay's new order, cycle by cycle"
+      ],
+      "dynamic": 0
+    },
     "tests/plain-work.test.ts": {
       "names": [
         "HUMAN_REQUIRED is the one Scout outcome that needs the owner, and it names the act",
@@ -10025,6 +10091,17 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-queue-order.test.ts": {
+      "names": [
+        "BAND ORDER STANDS: a band-1 row whose backoff just ended still goes ahead of the longest-waiting band-2 row",
+        "BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles, and no row waits more than ⌈N / c⌉ − 1",
+        "NOT SLOWED: a row with no failing debt never has more rows ahead of it than under the old order, and no key is before its own due time",
+        "SEEDED STARVATION: within a band, ordered by next-due then id, a never-tried row waits forever behind Scouts that keep failing",
+        "the replay is the dispatcher: runCycle's Scout pool admits exactly the replay's new order, cycle by cycle",
+        "the standing runner builds BOTH the recorded queue and the live Scout pool through orderableDueRow with the debt it carried in, after placement"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-search.test.ts": {
       "names": [
         "Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers",
@@ -11167,6 +11244,17 @@
         "the calendar route reads exactly the forward window's months",
         "the partition publishes every forward sitting either source verifies, and portal ids stay put",
         "the portal's cancellation note is the sitting's status"
+      ],
+      "dynamic": 0
+    },
+    "tests/unchanged-confirmation-migration.test.ts": {
+      "names": [
+        "0029 replaces the event-insert rule and nothing else",
+        "R23: a derived version's receipt may omit its HTTP status only on its own derived route, in SQL and in TS alike",
+        "an untyped repeat is refused with the message the store reads as 'not yet migrated'",
+        "every 0026 event rule survives in 0029, line for line",
+        "the receipt branch binds the same facts the store's guarded insert checks",
+        "the sources event is admitted only directly after its own receipt, at the receipt's instant"
       ],
       "dynamic": 0
     },

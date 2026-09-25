@@ -30,17 +30,24 @@
  *                           deduped (local-jurisdictions.ts), and its meetings
  *                           discovery need in the gap ledger's shape
  *                           (lib/hunt/meetings-discovery.ts, the same derivation
- *                           that writes data/derived/gap-ledger.json)
+ *                           that writes data/derived/gap-ledger.json). A state
+ *                           with no reviewed registry is read from its promoted
+ *                           REGISTRATION (2026-09-25,
+ *                           lib/registration/jurisdictions.ts): every government
+ *                           it names owes its meetings discovery and nothing
+ *                           else, and each row created from it says so
+ *                           (`materializedFrom: REGISTRATION`)
  *   what already exists     this cycle's registry corpus and the durable
  *                           obligation rows (cp_obligations)
  * ```
  *
  * No state list, no county list and no body list is written here or anywhere
- * this module reaches. A geography in a state whose registry is not promoted
- * has governments the Census names and no requirement definitions, so it is
- * BLOCKED by name: a Census unit is a government, but a requirement no registry
- * defines is a lead, never work (RULING 251). Registering the state — its
- * registry in the promoted bundle — is the whole change needed to unblock it.
+ * this module reaches. A geography in a state with neither a promoted registry
+ * nor a registration this cycle could read has governments the Census names and
+ * no requirement definitions, so it is BLOCKED by name: a Census unit is a
+ * government, but a requirement no registry defines is a lead, never work
+ * (RULING 251). Every state, DC and territory is registered, so in practice a
+ * state is blocked only while its registration cannot be read, and says why.
  *
  * ## The state machine
  *
@@ -122,7 +129,7 @@ import {
   meetingsDiscoveryRoute,
 } from "../scheduler/providers/meetings-discovery.ts";
 import { meetingsDiscoveryNeeds, type MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
-import type { Jurisdiction, JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
+import { registrySourceOf, type Jurisdiction, type JurisdictionRegistry, type JurisdictionRegistrySource } from "../../hunt/jurisdiction-universe.ts";
 import {
   certainlyOverlaps,
   unitsCertainlyIn,
@@ -145,11 +152,14 @@ export const DATASET = {
   lookup: "the published Census geography lookup (CENSUS_GEOGRAPHY / US:zcta-geography-overlaps)",
   territory: "data/derived/census-unit-zips.json and data/derived/zip-governments.json",
   registry: (state: string) =>
-    `the promoted ${state.toUpperCase()} jurisdiction registry (OPERATIONAL_REFERENCE / US:covered-jurisdiction-routing:v1)`,
+    `the promoted ${state.toUpperCase()} jurisdiction registry (OPERATIONAL_REFERENCE / US:covered-jurisdiction-routing:v1), ` +
+    `or its registration (REGISTRATION / US-${state.toUpperCase()}:registration:v1)`,
   unitTerritory: "data/derived/census-unit-zips.json (no ZCTA territory: TIGER publishes no boundary for it)",
   wiring: "the promoted meeting-partition source wiring",
   instruction: "a geography in the instruction (a state named in the words, or a geography sent from the Census lookup)",
-  reader: "the operational-reference registry reader (lib/civic-data/operational-references.ts, the states it reads)",
+  reader:
+    "the operational-reference registry reader (lib/civic-data/operational-references.ts, the states it reads: the reviewed " +
+    "registries, and every other state's registration, read by lib/registration/jurisdictions.ts)",
 } as const;
 
 /* ----------------------------------------------------------------- targets */
@@ -222,7 +232,7 @@ export interface RequirementInstance {
   readonly carriage: "OWED" | "MEETING_PARTITION" | "HELD_UNREAD_WIRING";
 }
 
-function obligationOf(id: string, recordClass: string, subjectId: string, routeId: string): FreshnessObligation {
+function obligationOf(id: string, recordClass: string, subjectId: string, routeId: string, from: JurisdictionRegistrySource): FreshnessObligation {
   return {
     id,
     recordClass,
@@ -233,6 +243,7 @@ function obligationOf(id: string, recordClass: string, subjectId: string, routeI
     observedChangeRateHours: null,
     lastWorkedAt: null,
     materializedBy: OWNER_DISPATCH,
+    materializedFrom: from,
   };
 }
 
@@ -249,9 +260,10 @@ export function requirementsFor(
   meetingPartitions: MeetingPartitionOwnership,
 ): RequirementInstance[] {
   const out: RequirementInstance[] = [];
+  const from = registrySourceOf(reg);
   for (const r of jurisdictionRequirements(reg, j, meetingPartitions)) {
     out.push({
-      obligation: obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId),
+      obligation: obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from),
       kind: "REGISTRY_ROUTE",
       executor: r.route.executorClass,
       carriage: r.carriage === "HERE" ? "OWED" : r.carriage,
@@ -260,7 +272,7 @@ export function requirementsFor(
   if (need !== null) {
     const route = meetingsDiscoveryRoute(reg, need);
     out.push({
-      obligation: obligationOf(meetingsDiscoveryObligationId(need), MEETINGS_DISCOVERY_RECORD_CLASS, j.id, route.routeId),
+      obligation: obligationOf(meetingsDiscoveryObligationId(need), MEETINGS_DISCOVERY_RECORD_CLASS, j.id, route.routeId, from),
       kind: "MEETINGS_DISCOVERY",
       executor: route.executorClass,
       carriage: "OWED",
@@ -370,7 +382,8 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
         dataset: DATASET.registry(state),
         why:
           `${unregistered.length} Census of Governments unit(s) in ${state} lie in this geography, and ${state} has no promoted ` +
-          "jurisdiction registry, so nothing defines what they owe. Promoting its registry is the whole change that unblocks them",
+          "jurisdiction registry, and no registration of it was read this cycle, so nothing defines what they owe. Promoting its " +
+          "registry is the whole change that unblocks them, or its registration, read at the next cycle",
         units: unregistered.length,
         states: [state],
         sample: unregistered.slice(0, READING_LIST_CAP).map((u) => u.name),
@@ -457,8 +470,9 @@ function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): Target
         code: "NO_JURISDICTION_REGISTRY",
         dataset: DATASET.registry(code),
         why:
-          `${target.stateNames[target.states.indexOf(code)] ?? code.toUpperCase()} has no promoted jurisdiction registry, so nothing defines ` +
-          `what its governments owe${count === null ? "" : `; the Census of Governments names ${count} of them`}. Promoting its registry is the whole change that unblocks it`,
+          `${target.stateNames[target.states.indexOf(code)] ?? code.toUpperCase()} has no promoted jurisdiction registry, and no registration of it ` +
+          `was read this cycle, so nothing defines what its governments owe${count === null ? "" : `; the Census of Governments names ${count} of them`}. ` +
+          "Promoting its registry is the whole change that unblocks it, or its registration, read at the next cycle",
         units: count,
         states: [code.toUpperCase()],
         sample: [],
@@ -704,6 +718,7 @@ export async function applyDispatchWork(
               nextDueAt: held.value.active ? held.value.nextDueAt : null,
               materializedBy: OWNER_DISPATCH,
               assignments: withAssignment(held.value.assignments, created),
+              ...(entry.instance.obligation.materializedFrom === undefined ? {} : { materializedFrom: entry.instance.obligation.materializedFrom }),
               updatedAt: input.now,
             },
             input.now,
@@ -771,6 +786,8 @@ export interface DispatchWorkRequirementCounts {
   readonly createdModel: number;
   /** Of `created`, how many are meetings discovery: the free discovery walk takes them first. */
   readonly createdMeetingsDiscovery: number;
+  /** Of `created`, how many belong to a government read from its state's registration. Absent on an older reading. */
+  readonly createdFromRegistration?: number;
 }
 
 export interface DispatchWorkTargetReading {
@@ -782,6 +799,11 @@ export interface DispatchWorkTargetReading {
   readonly units: {
     /** Governments placed in the target that the registry gives requirements to. */
     readonly placed: number;
+    /**
+     * Of `placed`, how many were read from their state's registration because the state has no reviewed registry
+     * (2026-09-25); the rest are the reviewed registries'. Absent on a reading taken before it was counted.
+     */
+    readonly fromRegistration?: number;
     /** Governments the target holds that a missing dataset blocks; null when that count cannot be taken. */
     readonly blocked: number | null;
     /** Governments of the target's states that no territory can place in or out (registry rows and Census-only units alike). */
@@ -854,6 +876,7 @@ export function dispatchWorkReading(
     let createdDeterministic = 0;
     let createdModel = 0;
     let createdMeetingsDiscovery = 0;
+    let createdFromRegistration = 0;
     for (const p of t.instances) {
       const id = p.instance.obligation.id;
       const isCreated = p.state === "CREATED" || (p.state === "MISSING" && written.has(id));
@@ -863,6 +886,7 @@ export function dispatchWorkReading(
         if (p.instance.executor === "DETERMINISTIC") createdDeterministic += 1;
         else createdModel += 1;
         if (p.instance.kind === "MEETINGS_DISCOVERY") createdMeetingsDiscovery += 1;
+        if (p.instance.obligation.materializedFrom === "REGISTRATION") createdFromRegistration += 1;
       } else if (p.state === "CARRIED") carried += 1;
       else if (p.state === "HELD") held += 1;
       else if (p.state === "CAPPED") capped += 1;
@@ -873,6 +897,18 @@ export function dispatchWorkReading(
     const blocked = blockedCounts.some((n) => n === null) ? null : blockedCounts.reduce<number>((a, n) => a + (n ?? 0), 0);
     const says: string[] = [];
     if (context.writes === "PLAN_ONLY") says.push(`Planned only, nothing written this cycle: ${context.planOnlyWhy ?? "this cycle may not write"}.`);
+    /* Where the governments came from: the reviewed registries, or a state's registration (2026-09-25). */
+    const fromRegistration = t.units.placed.filter((u) => registrySourceOf(u.reg) === "REGISTRATION");
+    if (fromRegistration.length > 0) {
+      const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? ""])).entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([st, v]) => `${st.toUpperCase()} version ${v}`);
+      says.push(
+        `${fromRegistration.length} of the ${t.units.placed.length} governments here come from registration (the 2022 Census of Governments; ` +
+          `${versions.join("; ")}), not a reviewed registry: no reviewed registry exists for ${versions.length === 1 ? "that state" : "those states"}. ` +
+          "Each owes its meetings discovery: on its own site where the Census recorded one, otherwise finding that site first.",
+      );
+    }
     if (createdMeetingsDiscovery > 0) {
       says.push(
         `${createdMeetingsDiscovery} of the created obligations are meetings discovery: the free discovery walk takes them first, and a paid Scout ` +
@@ -910,7 +946,8 @@ export function dispatchWorkReading(
     if (t.units.unplaced > 0) {
       says.push(
         `${t.units.unplaced} government(s) in ${t.target.kind === "SCOPE" ? t.target.scope.states.join(", ") : "these states"} cannot be placed in or out of ` +
-          `any geography — most have no ZCTA territory (${DATASET.unitTerritory}), the rest join no single Census unit — so they are counted here and never guessed in.`,
+          `any geography — most have no ZCTA territory (${DATASET.unitTerritory}; for a state read from its registration, no Census division), ` +
+          "the rest join no single Census unit — so they are counted here and never guessed in.",
       );
     }
     const planMarks = plan.marks.filter((m) => m.target.key === t.target.key).length;
@@ -933,6 +970,7 @@ export function dispatchWorkReading(
       ref: t.target.ref,
       units: {
         placed: t.units.placed.length,
+        fromRegistration: fromRegistration.length,
         blocked,
         unplaced: t.units.unplaced,
         placedSample: t.units.placed.slice(0, READING_LIST_CAP).map((u) => u.jurisdiction.name),
@@ -950,6 +988,7 @@ export function dispatchWorkReading(
         createdDeterministic,
         createdModel,
         createdMeetingsDiscovery,
+        createdFromRegistration,
       },
       reordered: { obligations: t.reordered, of: plan.corpusSize },
       assignment,

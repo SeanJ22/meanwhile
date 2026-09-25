@@ -167,6 +167,8 @@ const RUNTIME_OWNED = [
   /* The owner's Sends that reached this row (MW-001). The runner appends them;
      no provider emits them, and a registration pass must never drop them. */
   "assignments",
+  /* Which registry the dispatch materialized it from (2026-09-25): kept with the mark. */
+  "materializedFrom",
 ] as const;
 
 /**
@@ -267,6 +269,7 @@ export async function syncObligations(
       absentUntil: held.absentUntil,
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
+      ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
       updatedAt: now,
     };
 

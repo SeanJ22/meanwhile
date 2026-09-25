@@ -19,7 +19,10 @@
  *                              registry has been promoted. Data, not code
  *   promotedRegistries()       every promoted registry, read through the one
  *                              accessor the providers use, and each one that
- *                              accessor refuses, by name
+ *                              accessor refuses, by name — the reviewed
+ *                              registries, and every other state a Send
+ *                              reached, read from its registration
+ *                              (2026-09-25)
  *   MeetingPartitionOwnership  whether a production meeting partition (the
  *                              one meetings clock, RULING 282/283) carries a
  *                              government's meetings. Was a blanket strip of
@@ -49,6 +52,7 @@
  */
 
 import {
+  installedRegistrationJurisdictionRegistries,
   requiredOperationalJurisdictionRegistry,
   requiredOperationalReferenceBundle,
 } from "../../civic-data/operational-references.ts";
@@ -123,6 +127,14 @@ export function promotedRegistries():
       refused.set(state, error instanceof Error ? error.message : String(error));
     }
   }
+  /*
+   * Every other state a Send reached, read from its registration (2026-09-25): what the providers read through
+   * `requiredJurisdictionRegistry`, so the work a Send creates there is kept in the corpus.
+   * A reviewed state is never among them; a state whose registration could not be read is named, never used.
+   */
+  const registration = installedRegistrationJurisdictionRegistries();
+  for (const [state, registry] of registration.registries) if (!registries.has(state)) registries.set(state, registry);
+  for (const [state, why] of registration.refused) if (!registries.has(state)) refused.set(state, why);
   return { registries, refused };
 }
 

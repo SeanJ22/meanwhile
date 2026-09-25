@@ -615,7 +615,7 @@ test("local-jurisdictions schedules the tracked states it is handed, keeps every
   assert.equal(two.units.some((u) => u.obligation.subjectId.startsWith("nj:")), false, "an untracked state has no standing clock");
 
   const withCo = buildRegistry([localJurisdictionsProvider({ trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") })], { root: ROOT, nowIso: T0 });
-  assert.match(withCo.byProvider[0].readFailure ?? "", /co could not be read .*OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:co/, "a tracked state with no registry is named");
+  assert.match(withCo.byProvider[0].readFailure ?? "", /co could not be read .*JURISDICTION_REGISTRY_NOT_READ:co: no reviewed registry, and its registration was not read/, "a tracked state with no registry is named");
   assert.ok(withCo.units.some((u) => u.obligation.subjectId.startsWith("az:")), "and the rest still schedule");
 
   const none = buildRegistry([localJurisdictionsProvider({ trackedStates: trackedStatesFrom([], "an empty coverage set") })], { root: ROOT, nowIso: T0 });

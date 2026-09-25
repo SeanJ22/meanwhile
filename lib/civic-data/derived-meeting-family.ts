@@ -34,6 +34,7 @@ import { sourceProjectionEvidence, type RoutineCandidate, type RoutineRemovalEvi
 import type { DerivedFamilyMemberReport, MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
 import { mark as markCarried } from "../meetings/carry-forward.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 
 export const DERIVED_FAMILY_SOURCE_ID = "meetings-derived-routes" as const;
 
@@ -279,7 +280,7 @@ export function derivedFamilyCandidate(partition: MeetingPartitionContract, buil
       missingRequiredFields: snapshot.meetings.some((m) => !m.id || !m.bodyId) ? ["meeting.id/bodyId"] : [],
     },
     identities: snapshot.meetings.map((m) => {
-      const state = /\/state:([a-z]{2})/.exec(m.ocdId ?? "")?.[1];
+      const state = ocdStateCode(m.ocdId);
       return {
         subjectId: m.id,
         jurisdiction: state ? `US-${state.toUpperCase()}` : "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION",

@@ -231,6 +231,7 @@ import {
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
   scoutStateHint,
+  usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
@@ -2059,7 +2060,10 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           ...amended,
           inheritedFieldManual: pair.inheritedCount,
           rebuiltExistingRoutes: pair.rebuiltExisting,
-          ...(doors ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines } : {}),
+          /* MW-025: beside what was handed, which handed doors the walk went through, matched against the manual it was handed from. */
+          ...(doors
+            ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines, usedFieldManualEntryIds: usedFieldManualEntryIds(result, doors.entryIds, fieldManual) }
+            : {}),
         };
         if (result.refusal === null && result.candidates.length > 0) {
           const written = await writeFieldManualDiscoveries(

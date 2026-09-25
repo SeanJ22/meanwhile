@@ -19,6 +19,7 @@ import {
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
   scoutStateHint,
+  usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../scheduler/field-manual-scout.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
@@ -110,7 +111,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,fieldManualKnown);
         const doors=inheritedFieldManualDoors.get(result.workItemId);
         recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting,
-          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines}:{})};
+          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines,
+            // MW-025: which handed doors this walk actually went through.
+            usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.entryIds,fieldManual)}:{})};
         if(result.refusal===null&&result.candidates.length>0){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};

@@ -52,23 +52,26 @@ floored("governance:open current law", "the compiled current authority", current
 console.log("=".repeat(72));
 console.log(`SESSION START — governance snapshot ${snapshot}`);
 console.log("=".repeat(72));
-console.log(`task domain            ${task ?? "(none given — pass --task <domain>)"}`);
-console.log(`current law            ${law.length} rule(s) in force`);
-console.log(`active decisions       ${decisions.length}`);
-console.log(`historical records     ${index.records.length - current.length} (NOT loaded — ask why)`);
+// Since 2026-09-25 Sean's standing decisions are docs/rulings.md and CLAUDE.md
+// is the working guide that applies them; everything this script prints from
+// the ledger is historical evidence (docs/rulings.md §9), not current law.
+console.log("AUTHORITY");
+console.log("  1 Sean's current explicit instructions");
+console.log("  2 docs/rulings.md — Sean's standing decisions, the single source for owner policy");
+console.log("  3 CLAUDE.md (AGENTS.md for Codex) — the working guide that applies them");
+console.log("  Everything below is the governance ledger: historical evidence, not an");
+console.log("  independently active instruction.");
 console.log("");
-console.log("AUTHORITY PRECEDENCE (RULING 185)");
-console.log("  1 explicit current author directive");
-console.log("  2 CLAUDE.md — the root constitution");
-console.log("  3 the delegated current policy for this domain");
-console.log("  4 active current non-law decisions");
-console.log("  5 the session brief / tracker scope");
-console.log("  6 operational state and current measurements");
-console.log("  7 the historical ledger — explains, never overrides");
+console.log(`task domain            ${task ?? "(none given — pass --task <domain>)"}`);
+console.log(`ledger law records     ${law.length} ACTIVE in the ledger`);
+console.log(`ledger decisions       ${decisions.length}`);
+console.log(`historical records     ${index.records.length - current.length} (NOT loaded — ask why)`);
 console.log("");
 
 console.log("READ NOW");
+console.log("  docs/rulings.md");
 console.log("  CLAUDE.md");
+console.log("LEDGER VIEWS FOR THIS TASK (historical evidence)");
 if (task) console.log(`  docs/governance/policies/${task}.md   (${law.filter((r) => r.domain === task).length} rules)`);
 else for (const d of DOMAINS) console.log(`  docs/governance/policies/${d}.md`);
 if (decisions.length) console.log("  docs/governance/current-decisions.md");
@@ -141,5 +144,5 @@ if (wantWork) {
 console.log("");
 console.log("HISTORY IS NOT LOADED. Ask for it by name when you need to know WHY:");
 console.log("  docs/governance/history.md      full narrative, all records");
-console.log("  docs/rulings.md                 the RULING n compatibility view");
+console.log("  docs/governance/rulings-index.md  the historical RULING n index");
 console.log("  docs/governance/ledger.jsonl    canonical store");

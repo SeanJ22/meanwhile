@@ -264,11 +264,11 @@ test("the rule is written where a session reads it, not only in a brief", () => 
   assert.match(types, /A session does not measure itself|cannot measure its own/i);
   assert.match(types, /Persisted resumability is not permission to stop/i);
 
-  // The one-line form is in the constitution; the full vocabulary (the five
-  // statuses, merge cadence) is in current law through the meta-governance and
-  // shipping policies (RULING 273, 266). Both are what a session reads.
-  const claude = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  assert.match(claude.replace(/\s+/g, " "), /A session does not measure itself/i);
+  // Since 2026-09-25 the rule a session reads first is Sean's adopted wording
+  // in docs/rulings.md; the full vocabulary (the five statuses, merge cadence)
+  // is still in the ledger's meta-governance and shipping policy views.
+  const rulings = readFileSync(join(ROOT, "docs/rulings.md"), "utf8").replace(/\s+/g, " ");
+  assert.match(rulings, /Do not stop just to report progress while useful work remains/);
   const law = currentLawText(ROOT).replace(/\s+/g, " ");
   assert.match(law, /EARLY_HANDOFF/);
   assert.match(law, /Merge cadence is not session cadence/i);

@@ -1,215 +1,41 @@
-# CLAUDE.md — the root constitution
+# Meanwhile — working guide for Claude
 
-Civic app, two halves. The consumer side shows a resident who governs them —
-governing bodies, elected officials, ballots, candidates, meetings, campaign
-finance — by address and ZIP, with sourced positions, plain-language measures,
-and meeting alerts. The data side captures anonymous reader reactions and
-licenses aggregates. Consumers never pay. The consumer app is the sensor
-network; the data business is the company. Hard deadline: 2026-11-03. <!-- expected-future: 2026-11-03 general election day; verified against lib/ballot/election-dates.ts. -->
+Adopted September 25, 2026. This guide applies Sean's standing decisions in `docs/rulings.md`; it does not create a second policy source.
 
----
+## Start with the right instructions
 
-## How to read this file
+Read Sean's current request and `docs/rulings.md` in the intended working copy. Identify the repository, branch, and revision. Read current project state and the technical documents needed for this task; do not reread all history without a specific reason.
 
-- **Session organization and physical closeout (RULING 291):** Claude Code and Codex use one registered temporary worktree, consolidate useful material and verified references into existing permanent homes, leave the checkout, and complete the guarded external closeout before reporting fully done; see the shipping policy and [procedure](docs/session-closeout.md). Unresolved ownership, runtime, knowledge or approval dependencies block only the affected resources.
+Apply the decision and approval rules in rulings §8–9. Check previous answers before asking again. Use actual scripts, configuration, and code for implementation facts. Another worktree's old instructions or a historical ACTIVE label does not establish current policy.
 
-**This file is current cross-cutting law and nothing else.** One line per rule,
-citing the ruling that carries it. The rule itself lives in the policy; the
-reason it exists lives in history. Nothing is written in two places.
+## Define and keep the objective
 
-Open a session on the task, not on the archive:
+Apply rulings §1. State the requested result and work backward through every required connection. Identify missing dependencies before building. Keep the original objective until completion, a fatal error derails it, or Sean changes it; ordinary obstacles require further work.
 
-```bash
-pnpm governance:open --task <domain>
-```
+For expansion, trace the new place through work creation, discovery, acquisition, verification, status tracking, and public delivery. A completed screen or successful handoff is not proof that the connected workflow works.
 
-That prints this file, the domain policy, active decisions, unresolved
-conflicts, the governance snapshot, and — for long-running work — the canonical
-workstream state and exact resume cursor. It does not print history. Ask for
-history when you need to know *why*.
+## Execute without avoidable waiting
 
----
+Apply rulings §5. Keep a brief plan with remaining tasks, one owner per task or shared check, real dependencies, justified durations, and earliest starts. Start ready work now, parallelize independent work, and challenge delays across active sessions before repeating their estimates.
 
-## Authority precedence (RULING 272)
+Reuse valid evidence, remove duplicate work, and verify the version that ships. Use direct tests and equivalent measurements to remove idle waits. Keep working through build, testing, repair, promotion, and reader verification. Do not stop at a progress report or use optional polishing to delay delivery.
 
-1. Explicit current author directive.
-2. This file.
-3. The delegated current policy for the domain.
-4. Active non-law author decisions — `docs/governance/current-decisions.md`.
-5. The session brief.
-6. Operational state and current measurements.
-7. History.
+If an actual owner action is needed, follow rulings §8: prepare the executable step, ask for only that dependency, and continue independent work. Preserve current spending controls and explicit pauses.
 
-History explains. History never overrides. A brief that conflicts with law
-does not silently win; the conflict is represented, not resolved by whichever
-document was read last.
+## Acquire, publish, and learn
 
----
+Apply rulings §2–4 and §7. Check prior successful routes, held evidence, learned methods, and available resources. Search broadly beyond connected feeds and compare findings with the reader. Follow evidence through retrieval, parsing, verification, and publication.
 
-## The policy index
+Use the exact meeting coverage and refresh requirements in §4; do not copy separate thresholds into this guide. Preserve independent verified information while pursuing missing details. Register both successful sources and transferable methods, learn from failures, and apply those lessons to later work.
 
-The canonical store is `docs/governance/ledger.jsonl`. Every file below is a
-generated view of it (`pnpm governance:compile`), never hand-edited.
+## Verify before declaring completion
 
-| Policy | Governs | Rulings |
-| --- | --- | --- |
-| `docs/governance/policies/discovery.md` | Finding and acquiring public records | 248–253 |
-| `docs/governance/policies/rendering-neutrality.md` | What reaches a reader, and what may never be inferred | 254–258 |
-| `docs/governance/policies/data-privacy.md` | The collection stores and the identity boundary | 259–260 |
-| `docs/governance/policies/business.md` | What is sold, to whom, under what constraints | 261 |
-| `docs/governance/policies/visual-feedback.md` | Captures as evidence and as specification | 262 |
-| `docs/governance/policies/sources-licensing.md` | Sources, permission, evidence, secrets | 263–265 |
-| `docs/governance/policies/shipping-ci.md` | Merges, gates, freshness, the single door | 266–269 |
-| `docs/governance/policies/tracker-workflow.md` | The tracker and Needs Sean | 270–271 |
-| `docs/governance/policies/meta-governance.md` | How law is made, how sessions run, data conventions | 247, 272–276 |
+Apply rulings §6. Test the full result, including actual connections, first-use performance, and the original failing conditions. Inspect visible changes. Investigate contradictions and second-attempt successes; fix causes rather than merely explaining them.
 
-`docs/governance/constitution.md` is the autonomous-system constitution, a
-generated view pasted whole into every autonomous brief; this file is superior
-wherever they touch. `docs/governance/session-efficiency.md` is the owner's
-Session Efficiency Law, adopted verbatim (RULING 237, carried by 273).
-`docs/rulings.md` is an index of every ruling number ever issued and its
-status. `docs/governance/history.md` is the append-only archive of full ruling
-text. `docs/frontier.md` is priorities only — never law, never a governance
-input.
+Keep required proof ahead of “all clear.” Identify which evidence proves each requirement and what later changes invalidate it. Later monitoring cannot replace unfinished verification. Preserve evidence and working data under §9; use the project's actual data-publishing and software-release processes.
 
----
+## Finish and report
 
-## The order of every trade (RULING 273)
+Apply rulings §10. Give a verified win its own space and explain why it matters. Then briefly report what changed, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English and Arizona MST for schedules.
 
-**Correct first. Fast second. Nothing third.** A fast wrong answer is a false
-claim about a government, the one failure this product cannot survive. Never
-ship partial data as complete, never let green stand in for verified, never
-trade an honest gap for a plausible guess.
-
-## The transparency mandate (RULING 248)
-
-> Get out of my way. This public information is mine and I need to read it.
-
-These are public bodies and public people. Their records, meetings, money and
-votes are already owed to the reader. Difficulty of access is frequently
-deliberate, and this product exists to defeat it. Find every avenue. Absence is
-never asserted; a wall never renders as an emptiness. Two prohibitions, and
-neither is caution: no residential-proxy spoofing, and nothing fabricated.
-
-```
-IT EXISTS = GET IT
-ROUTE FAILED / BLOCKED = TRY ANOTHER PATH
-EXTRACTION FAILED = TRY ANOTHER EXTRACTION PATH
-API/CREDENTIAL REQUEST = PARALLEL ESCALATION + CONTINUED HUNT
-VENDOR != RECORD        URL != RECORD
-ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE
-NEEDS SEAN != STOP
-EFFORT != EVIDENCE      EXHAUSTION != DISPOSITION
-THE WORKER MAY STOP; THE OBLIGATION DOES NOT
-```
-
----
-
-## The non-negotiables
-
-One line each. The clauses are in the policy named.
-
-**Discovery**
-- If a public record exists, get it — the whole chain, and no upstream success implies a downstream one. (248)
-- The vendor is not the record; one route never collapses the source universe; acquire to the source authority's universe and project to the reader. (248)
-- Acquisition without promotion is inventory, not product. Held data with no live promotion tail is a defect. (248)
-- Tiers are walked in order — the body's own bulk publication first, per-entity search last — and every key you already hold is a Tier A route. (249)
-- Absence is argued, never asserted: every route walked and named, the five-move stuck protocol recorded, an expiry date attached. Blocked is a real state. A finite attempt count never earns an absence. (250)
-- Every twig is named; coverage is counted from the tier above; a lead is not a body. (251)
-- Method knowledge is typed, written through one governed path, and inherited. Provenance is machine-owned. (252)
-
-**Rendering and neutrality**
-- Show everything we find. Collection state never governs display. No suppression path may exist in the codebase. (254)
-- The page says one thing about completeness: *"What we have found, we are displaying here."* Nothing else, anywhere. (254)
-- A null renders as its named gap, and the name says whose gap it is. The product never announces its own failure. (254)
-- Stated N equals rendered rows, everywhere, always. (254)
-- Equal effort per candidate and per side, in the hunt; explained absence in the rendering; record volume never reads as merit. (255)
-- Never generate a candidate position. The product never tells anyone how to vote. (255)
-- A measure is done at seven fields; both sides of the money ship at equal depth or neither ships. (255)
-- Campaign finance renders for readers and never enters anything sold; donors render in aggregate only. (255)
-- Before a confirmed address the scope is the ZIP; after one, the scope is the address. (256)
-- A fix is proved on the reader's path against a case it did not come from. (257)
-- Reader surfaces speak plain language; reader friction is a defect with exactly three exceptions. (258)
-
-**Data and privacy**
-- Collect the minimum: ZIP or address, and an email. Adding a field is an ask-before. (259)
-- The collection stores never join, proven over value spaces. Aggregate-only is the boundary at exposure; anonymous rows may exist at rest. (259)
-- No user-to-user surface; nothing ever renders back, including in aggregate. Incumbent and challenger reactions are bucketed apart. (259)
-- Nothing collected before the line in the sand is ever sold. (259)
-
-**Business**
-- Never exclusive. Solicit equally, by contest. Published uniform rates. No bespoke cuts. Every export reports its confidence mix. (261)
-
-**Shipping**
-- Verify locally, ship once, name the deploy. One integration owner, one combined head, one merge at the end. (266)
-- A gate is real or it is not a gate: run the exact set CI requires, name each, and a check that cannot run says so. (287)
-- Reader-facing routine civic truth changes through exactly one door: validated candidate/version promotion in the production data plane, scheduled only by the standing runner; bounded source shadows may compare, but two authoritative writers may never persist. (282)
-- An operation that can return nothing is asked what it returned; a zero-row extraction is a failed extraction. (269)
-- A session checks a prerequisite once and never polls; an unmet proof blocks activation, not merge, when the code is inert and guarded; one session at a time touches shared infrastructure. (277)
-- GitHub Actions has no runtime path-cost tier: draft PR activity gets deterministic structural checks; ready PRs and ordinary pushes get full normal certification; exact-tree reuse stays fail-closed, and deploy classification never suppresses Build Check. (285)
-- Cheap deterministic checks run first and all report; a head that fails them does not buy the browser, the suite or the builds; the corrected head runs the full verification, and a withheld tier fails loudly rather than skipping quietly. (279)
-- Runtime freshness is typed durable local stages: acquisition is its own sealed failure domain, certification runs only proofs that depend on the changed holding, and promotion atomically advances a production data pointer or durably receipts a validated no-change with zero Git commits, software builds or deploys. (283)
-- One clock: the standing runner is the sole routine civic-data freshness clock. A proved source cutover disables its old writer in the same transaction; neither two authoritative clocks nor none is lawful. (283)
-- One logical change is one shipping transaction with one expensive certification; the head freezes before the spend and reopens only on a named invalidation with evidence. (288)
-- The subject of a correctness proof is a tree, not a SHA: a shipped tree proven identical to the certified candidate attests rather than re-runs, fails closed in every direction, and never rests on another attestation. (288)
-
-**Sessions**
-- A session runs unattended; nothing it runs may ask it a question; a decision that is the author's becomes a row and the session continues. (271)
-- The denominator is finite and stated at the start; discovery does not enlarge it; discretion covers how, never what. (273)
-- A session does not measure itself. Do the work; keep working while authorized work remains; stop only when complete, redirected, or actually prevented. UNFINISHED is a lawful ending and not a failure. (273)
-- Independent work runs in parallel by default; a paragraph is not a contract. (273)
-- A tracker row is a record of work, never a substitute for it: if executable now, execute now. (273)
-- Every report leads in reader terms. (273)
-- Every named instance is a class-wide defect; the fix closes the class; an annotated image is the spec. (262)
-
-**Governance**
-- The ledger is canonical; every view is generated; a generated artifact is never hand-edited. Binding authority requires author provenance. (272)
-- A rule is written once. A ruling that restates an existing rule for a new incident is a history note, not a ruling. (247)
-- An agent does not know today's date; every stamp comes from `pnpm stamp`. (270)
-
----
-
-## Stack (RULING 275 for conventions; this section names decisions, never versions)
-
-Next.js App Router + TypeScript + React. Tailwind + shadcn/ui; tokens in
-`docs/DESIGN.md` and `app/globals.css`. Postgres on Neon through Drizzle;
-schema changes only through migrations (`pnpm db:apply`). Deployed on Netlify,
-never Vercel; the build is the command in `netlify.toml`. GitHub Actions is
-software CI only; the standing runner is the sole routine civic-data freshness clock. Auth.js
-email magic link only; owner admin through Sign in with Google. MapLibre GL
-with a vector tile provider. Mobile is responsive web first. What is installed
-lives in `package.json` and `pnpm-lock.yaml`; routine civic-data timing derives
-from the one typed source-contract registry executed by the standing runner.
-
-## Repo layout
-
-The tree is the tree; `docs/code-manifest.md` is authoritative. The placement
-rules that are decisions: `lib/sources/<name>/` is one adapter per source
-exporting `fetch()`, `normalize()`, `upsert()` — adding a source is adding a
-directory, never editing shared ingestion. `lib/db/` schema and queries.
-`lib/governance/` the ledger, compiler and validator. `lib/workstate/`
-canonical work state. `lib/method/` discovery knowledge. `tests/fixtures/`
-recorded responses — no live calls in tests. `docs/` policy and the standing
-record.
-
-## Commands a rule depends on
-
-`pnpm stamp` · `pnpm gates` · `pnpm governance:open --task <domain>` ·
-`pnpm governance:check` · `pnpm governance:compile` · `pnpm workstream:status`
-/ `:close` · `pnpm method:check` · `pnpm walk:all` · `pnpm db:apply` ·
-`pnpm protection:verify` · `pnpm agents:sync`. The full list is `pnpm run`.
-
-## Ask before
-
-Adding a user data field. Adding an external source. Anything that ranks,
-scores or orders candidates. Anything that renders any user's input, or any
-aggregate of it, back to users. Anything that changes how reactions are
-bucketed or exported.
-
-## Changing this file (RULING 272)
-
-A ruling is amendable only by a later-dated ruling that names the number it
-supersedes and states what changed and what survives. Never edited in place,
-never silently dropped, numbers never reused. A governance change is atomic:
-the ledger event, the policy, the regenerated views, and a passing
-`governance:check` land together, or it has not happened.
+Update current state and shared learning with the result. Record engineering choices as engineering choices. Change standing rulings only for an actual owner decision, preserving its source and scope. Do not create another rule merely because an existing one applies to this incident.

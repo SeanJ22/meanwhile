@@ -40,17 +40,17 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 /* ================================================================ FINDING 1 */
 
 test("FINDING 1 — the compatibility view contains no RULING undefined", () => {
-  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
+  const text = readFileSync(join(ROOT, "docs", "governance", "rulings-index.md"), "utf8");
   assert.equal(
     (text.match(/RULING undefined/g) ?? []).length,
     0,
-    "docs/rulings.md renders a heading that resolves to no record",
+    "docs/governance/rulings-index.md renders a heading that resolves to no record",
   );
 });
 
 test("FINDING 1 — every RULING n row names a real numeric record, and none is omitted", () => {
   const index = loadIndex();
-  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
+  const text = readFileSync(join(ROOT, "docs", "governance", "rulings-index.md"), "utf8");
 
   // The view is a one-line-per-ruling index now, so a ruling is a table ROW
   // (`| RULING n | ...`) rather than an `## RULING n` heading. The property is
@@ -77,7 +77,7 @@ test("FINDING 1 — every RULING n row names a real numeric record, and none is 
 
 test("FINDING 1 — un-numbered records keep their namespace and are not dropped", () => {
   const index = loadIndex();
-  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
+  const text = readFileSync(join(ROOT, "docs", "governance", "rulings-index.md"), "utf8");
   const unnumbered = index.records.filter((r) => !/^R-0*\d+$/.test(r.id));
   assert.ok(unnumbered.length > 20, "the un-numbered namespaces are populated");
 

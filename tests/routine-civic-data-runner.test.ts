@@ -1110,11 +1110,11 @@ test("the pilot awaits independently bounded routine and intake children without
   assert.match(pilot, /id:\s*"intake-runtime"[\s\S]*timeoutMs:\s*PUBLISH_TIMEOUT_MS/);
   assert.match(pilot, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run:\s*runRoutineCivicData[\s\S]*run:\s*runIntakeRuntime/);
   assert.match(pilot, /standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/);
-  assert.match(pilot, /async function runOneCycle\(\): Promise</);
-  assert.match(pilot, /const result = await runOneCycle\(\)/);
+  assert.match(pilot, /async function runOneCycle\(owner: \{ readonly ownerIntentsUnreadable: boolean \}\): Promise</);
+  assert.match(pilot, /const result = await runOneCycle\(owner\)/);
   assert.doesNotMatch(pilot, /spawnSync/);
   assert.ok(
-    pilot.indexOf("standingRuntimeTimer = setInterval(") < pilot.indexOf("const result = await runOneCycle()"),
+    pilot.indexOf("standingRuntimeTimer = setInterval(") < pilot.indexOf("const result = await runOneCycle(owner)"),
     "the independent clock starts before research can remain pending",
   );
   assert.match(pilot, /clearInterval\(standingRuntimeTimer\)/);

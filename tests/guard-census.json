@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 785,
+    "named": 7677,
     "dynamic": 30
   },
   "files": {
@@ -4484,6 +4484,7 @@
         "Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and CIRCUIT BROKEN",
         "Saturday operational night is an explicit SCHEDULED BLACKOUT",
         "a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)",
+        "a closed paid lane's reason refuses every model request by name, and never calls the transport",
         "a hard Neon response is host-latched before any second database probe",
         "a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work",
         "an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds",
@@ -4496,6 +4497,7 @@
         "the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
+        "the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted",
         "the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
       ],
@@ -6575,11 +6577,14 @@
     },
     "tests/model-lane.test.ts": {
       "names": [
+        "PRODUCTION TODAY — research paused, delivery gate closed: the lane stays closed and now leads with the owner's pause",
+        "an owner control that could not be read holds the lane closed as if paused, names it, and says free work continues",
         "freshness-shadow derives modelLaneEnabled from modelLaneClosure and the activation gate",
         "promotion on with no record class open is still no delivery path",
-        "reasons are ordered: blackout, dry, no-model, credential, delivery, owner pause",
+        "reasons are ordered: blackout, dry, no-model, owner pause, runner pause, unreadable control, credential, delivery",
         "the lane is open only when nothing closes it and a delivery path is open",
         "the real activation gate decides: the lane is open exactly when a delivery path is",
+        "the runner-level PAUSE_RUNNER closes the paid lane, not only the research-lane PAUSE",
         "with promotion off, the lane closes and says why, and what keeps running"
       ],
       "dynamic": 0
@@ -7219,6 +7224,18 @@
         "R46: no ambiguous-extension JavaScript file has appeared",
         "R46: the package declares itself ESM",
         "R46: tracked source carries no CommonJS-only construct"
+      ],
+      "dynamic": 0
+    },
+    "tests/paid-work-fails-closed.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker",
+        "POSITIVE CONTROL: a runner that reads an unreadable log as silence, or never tells the child, fails its checker",
+        "PRODUCTION TODAY: routine intake, the free discovery walk and dispatch-work writes are gated exactly as before",
+        "an unreadable, invalid, or malformed-ceiling row holds paid work by name and never reaches the fallback",
+        "freshness-shadow.mts closes every paid path on an unreadable or ignored control (items 1, 3, 4, 5, 7, 8)",
+        "pilot-runner.mts never reads an unreadable intent log as 'not paused', and holds the next cycle's paid lane (item 2)",
+        "the config row for paid work: a clean read honors the owner's dial, and only a clean read with no override falls back"
       ],
       "dynamic": 0
     },
@@ -9600,10 +9617,13 @@
       "names": [
         "Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers",
         "Exa request: POST, Bearer auth, type fast, numResults, and NO contents / outputSchema / answer",
+        "a budget that cannot be read sends no paid request at all",
         "an empty query returns an empty result without calling any provider",
         "combined: both providers queried, results deduped by URL, errors named without failing the call",
         "combined: one provider erroring is named, the other's hits still return",
-        "makeScoutSearch is null when neither key is set — the tool stays inert"
+        "every paid provider request is admitted by the budget first; a refused provider sends nothing and is named",
+        "makeScoutSearch is null when neither key is set — the tool stays inert",
+        "the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both"
       ],
       "dynamic": 0
     },
@@ -11263,6 +11283,8 @@
         "oversized response is bounded durably and never mistaken for a complete verdict",
         "provider outage is a named execution failure with no guessed usage or leaked transport body",
         "strict JSON end_turn compatibility remains accepted and missing usage remains null",
+        "the auditor admits against the owner's ceiling in force, lowered or raised, not the static default",
+        "the standing runtime hands the auditor the ceiling in force",
         "typed record_audit output preserves grounded challenge, actual model usage and existing cost calculation"
       ],
       "dynamic": 0

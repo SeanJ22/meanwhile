@@ -205,7 +205,8 @@ export interface ScoutToolContext {
   readonly timeoutMs?: number;
   /**
    * The search seam (2026-09-19). Present only when a compliant search-index
-   * key is configured; absent leaves the `search` tool out of the toolkit's
+   * key is configured and the owner's paid-search switch is on, with that
+   * switch's budget admitting every request (2026-09-25); absent leaves the `search` tool out of the toolkit's
    * specs entirely, so a runtime with no key never offers it. It returns
    * POINTERS ONLY — the model opens each hit with fetch_public/browse, which
    * enforce robots and vault with provenance. The tool itself fetches no page

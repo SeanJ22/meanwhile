@@ -5,7 +5,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { makeScoutSearch, braveSearch, exaSearch, type FetchLike } from "../lib/control-plane/scheduler/scout-search.ts";
+import { SEARCH_HOSTS } from "../lib/control-plane/discovery/search-runtime.ts";
+import { makeScoutSearch, braveSearch, exaSearch, SCOUT_SEARCH_HOSTS, type FetchLike, type ScoutSearchBudget } from "../lib/control-plane/scheduler/scout-search.ts";
+
+/** A budget that admits everything — for the tests about request shape, not spend. */
+const OPEN_BUDGET: ScoutSearchBudget = { take: async () => null, done: async () => {} };
 
 interface SeenCall {
   url: string;
@@ -37,10 +41,10 @@ const EXA_BODY = { results: [
 ] };
 
 test("makeScoutSearch is null when neither key is set — the tool stays inert", () => {
-  assert.equal(makeScoutSearch({}), null);
-  assert.equal(makeScoutSearch({ braveKey: "  ", exaKey: "" }), null);
-  assert.notEqual(makeScoutSearch({ braveKey: "k" }), null);
-  assert.notEqual(makeScoutSearch({ exaKey: "k" }), null);
+  assert.equal(makeScoutSearch({ budget: OPEN_BUDGET }), null);
+  assert.equal(makeScoutSearch({ braveKey: "  ", exaKey: "", budget: OPEN_BUDGET }), null);
+  assert.notEqual(makeScoutSearch({ braveKey: "k", budget: OPEN_BUDGET }), null);
+  assert.notEqual(makeScoutSearch({ exaKey: "k", budget: OPEN_BUDGET }), null);
 });
 
 test("Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers", async () => {
@@ -77,7 +81,7 @@ test("combined: both providers queried, results deduped by URL, errors named wit
     { match: "api.search.brave.com", body: BRAVE_BODY },
     { match: "api.exa.ai", body: EXA_BODY },
   ]);
-  const search = makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl });
+  const search = makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl, budget: OPEN_BUDGET });
   assert.notEqual(search, null);
   const res = await search!({ query: "Sarah Rogers for Merrimack County Attorney" });
   assert.deepEqual([...res.providersUsed].sort(), ["brave", "exa"]);
@@ -93,7 +97,7 @@ test("combined: one provider erroring is named, the other's hits still return", 
     { match: "api.search.brave.com", status: 429, body: "rate limited" },
     { match: "api.exa.ai", body: EXA_BODY },
   ]);
-  const search = makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl });
+  const search = makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl, budget: OPEN_BUDGET });
   const res = await search!({ query: "q" });
   assert.deepEqual(res.providersUsed, ["exa"]);
   assert.equal(res.errors.length, 1);
@@ -103,8 +107,50 @@ test("combined: one provider erroring is named, the other's hits still return", 
 
 test("an empty query returns an empty result without calling any provider", async () => {
   const { fetchImpl, calls } = fakeFetch([{ match: "api", body: {} }]);
-  const search = makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl });
+  const search = makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl, budget: OPEN_BUDGET });
   const res = await search!({ query: "   " });
   assert.equal(res.hits.length, 0);
   assert.equal(calls.length, 0);
+});
+
+/*
+ * 2026-09-25: the Scout `search` tool spent paid Brave/Exa requests outside the
+ * owner's switch and its budget. Now every provider request is admitted first.
+ */
+test("every paid provider request is admitted by the budget first; a refused provider sends nothing and is named", async () => {
+  const { fetchImpl, calls } = fakeFetch([
+    { match: "api.search.brave.com", body: BRAVE_BODY },
+    { match: "api.exa.ai", body: EXA_BODY },
+  ]);
+  const taken: string[] = [];
+  const released: string[] = [];
+  const budget: ScoutSearchBudget = {
+    take: async (host) => {
+      taken.push(host);
+      return host === SCOUT_SEARCH_HOSTS.exa ? "the cycle's 50-request search budget is spent" : null;
+    },
+    done: async (host) => { released.push(host); },
+  };
+  const res = await makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl, budget })!({ query: "q" });
+  assert.deepEqual(taken, [SCOUT_SEARCH_HOSTS.brave, SCOUT_SEARCH_HOSTS.exa], "one admission per provider, in turn");
+  assert.equal(calls.length, 1, "the refused provider was never called");
+  assert.ok(calls[0].url.includes("api.search.brave.com"));
+  assert.equal(res.requestCount, 1, "only the request sent is counted");
+  assert.deepEqual(res.providersUsed, ["brave"]);
+  assert.ok(res.errors.some((e) => e.startsWith("exa: not sent,") && e.includes("search budget is spent")));
+  assert.deepEqual(released, [SCOUT_SEARCH_HOSTS.brave], "the slot taken is returned; none is returned that was not taken");
+});
+
+test("a budget that cannot be read sends no paid request at all", async () => {
+  const { fetchImpl, calls } = fakeFetch([{ match: "api", body: {} }]);
+  const unreadable: ScoutSearchBudget = { take: async () => { throw new Error("budget ledger unreadable"); }, done: async () => {} };
+  const res = await makeScoutSearch({ braveKey: "b", exaKey: "e", fetchImpl, budget: unreadable })!({ query: "q" });
+  assert.equal(calls.length, 0);
+  assert.equal(res.requestCount, 0);
+  assert.equal(res.errors.length, 2);
+  assert.ok(res.errors.every((e) => e.includes("the paid-search budget could not be read (budget ledger unreadable)")));
+});
+
+test("the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both", () => {
+  assert.deepEqual({ ...SCOUT_SEARCH_HOSTS }, { ...SEARCH_HOSTS });
 });

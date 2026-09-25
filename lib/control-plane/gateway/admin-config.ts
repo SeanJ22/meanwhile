@@ -333,6 +333,46 @@ export function isAdminConfig(value: unknown): value is AdminConfig {
   );
 }
 
+/** One read of the config row: the row (null when never written), or why it could not be read. */
+export type AdminConfigRead =
+  | { readonly row: { readonly value: unknown } | null }
+  | { readonly unreadable: string };
+
+/**
+ * The config row as the runner may use it for PAID work (2026-09-25).
+ *
+ * `config` is the row only when it can be trusted: it was read, it is a
+ * config, and any spend ceiling it carries is a positive finite number. A row
+ * never written is trusted as the defaults — no override, paid search OFF,
+ * nothing held. Anything else returns `config: null`, so every switch on the
+ * row reads OFF, and `holdPaidWork` names why. The caller holds paid work on
+ * that sentence rather than fall back to the built-in ceiling: the owner's dial
+ * may be set BELOW the fallback, so an unreadable or corrupt row falling back
+ * could raise the ceiling in force, and "not readable" is not "allowed".
+ */
+export function adminConfigForPaidWork(read: AdminConfigRead): {
+  readonly config: AdminConfig | null;
+  readonly holdPaidWork: string | null;
+} {
+  if ("unreadable" in read) {
+    return { config: null, holdPaidWork: `the owner's config row (spend ceiling and paid-search switch) could not be read: ${read.unreadable}` };
+  }
+  if (read.row === null) return { config: null, holdPaidWork: null };
+  const value = read.row.value;
+  if (!isAdminConfig(value)) {
+    return { config: null, holdPaidWork: "the owner's config row (spend ceiling and paid-search switch) is not a valid config" };
+  }
+  const ceiling = value.fleetSpendCeiling;
+  if (ceiling !== null && ceiling !== undefined && fleetSpendCeilingOverrideUsd(value) === null) {
+    const stated = typeof ceiling === "object" ? (ceiling as { rollingCeilingUsd?: unknown }).rollingCeilingUsd : ceiling;
+    return {
+      config: null,
+      holdPaidWork: `the owner's spend ceiling on the config row is malformed (${String(stated).slice(0, 40)} is not a positive dollar amount)`,
+    };
+  }
+  return { config: value, holdPaidWork: null };
+}
+
 /**
  * What the console may claim about the toggle today.
  *

@@ -1069,7 +1069,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     query: string,
     includeDomains: readonly string[] | undefined,
   ): Promise<ScoutToolCallResult> {
-    if (ctx.search === undefined) return refusal("search is not configured in this runtime (no provider key).");
+    if (ctx.search === undefined) return refusal("search is not available in this runtime (no provider key, or the owner's paid-search switch is off).");
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     let res;
     try {

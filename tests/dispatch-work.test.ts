@@ -490,6 +490,9 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
     activation: readActivationGate(ROOT),
     paused: true,
     pauseIntentId: pause.intentId,
+    runnerPaused: false,
+    runnerPauseIntentId: null,
+    unreadableControls: [],
   });
   assert.notEqual(closure, null, "the paid lane is closed");
 

@@ -1,11 +1,11 @@
 # SESSION EFFICIENCY LAW — OWNER DIRECTIVE
 
-*Adopted verbatim as an owner directive, effective immediately for this session
-and every future session, by RULING 237. This document is the law text itself
-and carries no aging factual claims; the adoption record in the ledger carries
-the adoption date and context. The root constitution (`CLAUDE.md`) and the
-generated `docs/governance/constitution.md` remain superior law wherever they
-and this text touch.*
+*Adopted verbatim as an owner directive by RULING 237; the adoption record in the
+ledger carries the adoption date and context. Since 2026-09-25 Sean's standing
+decisions are `docs/rulings.md` (carried into autonomous-system briefs by the
+generated `docs/governance/constitution.md`), and this directive, like every
+older ruling, is historical evidence rather than an independently active
+instruction. The text below the line is unchanged.*
 
 ---
 

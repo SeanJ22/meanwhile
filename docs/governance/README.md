@@ -45,6 +45,8 @@ the 169/170 mismatch was one visible instance of it.
 ```
 docs/rulings.md                        SEAN'S STANDING DECISIONS (since 2026-09-25). Hand-maintained; not generated.
 CLAUDE.md                              WORKING GUIDE that applies docs/rulings.md; AGENTS.md mirrors it.
+docs/governance/constitution.md        GENERATED. The autonomous-system brief: docs/rulings.md verbatim under a header.
+                                       Run `pnpm governance:compile` after any edit to docs/rulings.md.
 docs/governance/ledger.jsonl           CANONICAL. One typed record per line; new records append.
 docs/governance/policies/*.md          GENERATED. The ledger's policy view, per domain (historical evidence).
 docs/governance/current-decisions.md   GENERATED. The ledger's non-law decisions, by domain (historical evidence).
@@ -53,12 +55,13 @@ docs/governance/index.json             GENERATED. Ids, aliases, relations, point
 docs/governance/rulings-index.md       GENERATED. Historical index so `RULING n` resolves (was docs/rulings.md).
 docs/governance/legacy/*.md            PINNED pre-remediation snapshots, byte-verified.
 docs/governance/migration-manifest.json  The preservation receipt.
-docs/governance/session-efficiency.md  OWNER DIRECTIVE, committed VERBATIM (RULING 237). Hand-authored law text;
-                                       not generated, not a compiler input; changes only by a later ruling.
+docs/governance/session-efficiency.md  OWNER DIRECTIVE, committed VERBATIM (RULING 237); historical evidence since
+                                       2026-09-25. Not generated, not a compiler input.
 ```
 
-**Only `ledger.jsonl` is an input to the governance compiler.** The former
-adoption/classification overlays were folded into it at the 2026-09-03
+**The governance compiler's inputs are `ledger.jsonl`, for every ledger view,
+and `docs/rulings.md`, for the autonomous-system brief alone.** The former
+adoption/classification overlays were folded into the ledger at the 2026-09-03
 consolidation and are not compiler inputs. `CLAUDE.md`, the pinned legacy
 sources, the preservation receipt and the verbatim owner directive have the
 separate roles named above; the generated views are output and are never

@@ -95,6 +95,13 @@ export const GENERATED: GeneratedArtifact[] = [
     pure: true,
   },
   {
+    /*
+     * The autonomous-system brief. Since 2026-09-25 it is `docs/rulings.md`
+     * (Sean's standing decisions) verbatim under a fixed header, so autonomous
+     * briefs follow the same decisions as Claude and Codex. Pure: it reads the
+     * committed `docs/rulings.md` and nothing else, so an edit to that file
+     * without a recompile shows here as a stale artifact.
+     */
     path: "docs/governance/constitution.md",
     command: "corepack pnpm governance:compile",
     pure: true,

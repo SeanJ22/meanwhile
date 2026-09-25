@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 784,
-    "named": 7658,
+    "named": 7660,
     "dynamic": 30
   },
   "files": {
@@ -4807,9 +4807,11 @@
       "names": [
         "PDC current law cannot keep the retired runtime Git pusher as an instruction",
         "a hand-edited generated view is caught by governance:check",
+        "an edit to docs/rulings.md reaches the brief on regeneration, and a skipped regeneration is caught",
         "every generated governance view reproduces byte-for-byte",
         "no superseded operative text sits in current authority",
         "shortening the constitution cannot delete law from the ledger",
+        "the autonomous-system brief is docs/rulings.md verbatim and presents no ledger authority model",
         "the constitution cannot claim a ruling the canonical ledger does not contain",
         "the constitution stays a ROOT constitution, not a second copy of the policies",
         "the final governance acceptance gate passes",

@@ -56,4 +56,8 @@ test("C16: the derived wiring child's closure reaches no filesystem writer", () 
   assert.doesNotMatch(vault, /durable-store/);
   const child = readFileSync("scripts/derive-meeting-source-wiring.mts", "utf8");
   assert.doesNotMatch(child, /durable-store|DurableEvidenceStore|writeFile|appendFile/);
+  /* The automatic crosswalk's child (C16 option A, 2026-09-25) reads the same vault, the same way. */
+  const reviewer = readFileSync("scripts/derive-meeting-body-crosswalk.mts", "utf8");
+  assert.doesNotMatch(reviewer, /durable-store|DurableEvidenceStore|writeFile|appendFile/);
+  assert.match(reviewer, /read-only-vault\.ts/);
 });

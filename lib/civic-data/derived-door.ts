@@ -6,7 +6,10 @@
  *
  * - `meeting-source-wiring` computes the wiring version only from what is
  *   already promoted or vaulted: the reviewed crosswalk, registration, the
- *   discovery walks and their vaulted evidence.
+ *   discovery walks and their vaulted evidence. Its authority also keeps the
+ *   automatic crosswalk (`meeting-body-crosswalk-derived`, 2026-09-25): rows
+ *   the runner's deterministic reviewer accepted from the same walks, the
+ *   same vault and registration, checked here the same way.
  * - `meetings-derived-routes` is each state's derived meeting family. Its
  *   members' reads are real HTTP reads, and what authorizes each is the
  *   promoted wiring version's ACTIVE row for that member, on that row's

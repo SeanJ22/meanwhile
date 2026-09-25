@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 786,
+    "named": 7675,
     "dynamic": 30
   },
   "files": {
@@ -1522,6 +1522,31 @@
         "the recorded Pima agenda splits into more than one acting body",
         "the summary counts unattributed items rather than hiding them",
         "the write boundary refuses a snapshot that attributes an unresolved heading to the host"
+      ],
+      "dynamic": 0
+    },
+    "tests/auto-crosswalk-expansion.test.ts": {
+      "names": [
+        "A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and refuses by name, with no preload and no publisher read",
+        "EVERY REGISTERED STATE HAS A FAMILY: registration's own state list, each family on its own lane, no code naming a state",
+        "EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why"
+      ],
+      "dynamic": 0
+    },
+    "tests/auto-crosswalk.test.ts": {
+      "names": [
+        "A REVIEWED ROW WINS A CONFLICT: where a manual and an automatic row select one sitting, only the automatic row meets the trigger",
+        "ACCEPTED: the registered governing body and a printed sub-body, each on its own exact filter, every C16 check passing",
+        "HELD, AMBIGUOUS TITLE: an event naming the body and another body holds the row; nothing is accepted for it",
+        "HELD: a calendar off the government's attested own host, and a name no saved page prints",
+        "HELD: bytes not vaulted, a government registration does not pair, a hand-wired body, and a find of another kind",
+        "HELD: robots not shown for a read, a UTC-stamped calendar, and a state whose clock is not one zone",
+        "HELD: two bodies selecting one event, and a category that is a body's name",
+        "MANUAL ROWS WIN: a reviewed row for the same body and kind, withdrawn or not, and one claiming the same calendar and filter",
+        "PRINTED NAMES: a run of capitalized words ending in a body noun, two bodies joined by 'and' are two",
+        "THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an outage never drops it, and only a later automatic review restores it",
+        "THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does",
+        "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused"
       ],
       "dynamic": 0
     },

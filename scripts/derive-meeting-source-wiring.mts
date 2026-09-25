@@ -9,7 +9,9 @@
  *
  * - the promoted wiring version it succeeds (its rows, suspensions and all);
  * - the promoted meeting-body crosswalk: the reviewed rows connecting a calendar
- *   to its exact body (`lib/civic-data/meeting-body-crosswalk.ts`);
+ *   to its exact body (`lib/civic-data/meeting-body-crosswalk.ts`), composed
+ *   with the rows the runner's own reviewer accepted
+ *   (`lib/civic-data/derived-crosswalk.ts`), the reviewed rows winning;
  * - each covered state's promoted registration: which division a government is;
  * - the discovery walk's newest attempt for each crosswalked government, from
  *   the control plane's attempt log (read only);
@@ -32,6 +34,12 @@ import { neon } from "@neondatabase/serverless";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import {
+  DERIVED_CROSSWALK_RECORD_CLASS,
+  DERIVED_CROSSWALK_SCOPE,
+  composeCrosswalk,
+  readDerivedMeetingBodyCrosswalk,
+} from "../lib/civic-data/derived-crosswalk.ts";
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
   DERIVED_WIRING_SOURCE_NAMES,
@@ -128,20 +136,44 @@ async function main(): Promise<void> {
     ? promotedInput("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
     : null;
 
+  /*
+   * Two crosswalks, composed (C16 option A, 2026-09-25): the reviewed manual one and the rows the runner's own
+   * reviewer accepted (meeting-body-crosswalk-derived). A reviewed row wins over an automatic one for the same body,
+   * and either alone connects calendars. An unreadable one refuses the pass; neither promoted is no connection yet.
+   */
   const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
   const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now });
-  if (crosswalk.kind !== "PROMOTED") {
-    await finish(derivedWiringFailedCandidate(now, crosswalk.kind === "NOT_RECORDED"
-      ? "No reviewed meeting-body crosswalk is promoted yet, so no calendar is connected to a body."
-      : `The meeting-body crosswalk could not be read (${crosswalk.kind}): ${"detail" in crosswalk ? crosswalk.detail : ""}`));
+  const automaticRead = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
+  for (const read of [crosswalk, automaticRead]) {
+    if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") {
+      await finish(derivedWiringFailedCandidate(now, `A meeting-body crosswalk could not be read (${read.kind}): ${"detail" in read ? read.detail : ""}`));
+      return;
+    }
+  }
+  if (crosswalk.kind !== "PROMOTED" && automaticRead.kind !== "PROMOTED") {
+    await finish(derivedWiringFailedCandidate(now, "No reviewed or automatic meeting-body crosswalk is promoted yet, so no calendar is connected to a body."));
     return;
   }
-  const crosswalkInput = promotedInput(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt);
-  if (crosswalkInput === null) {
-    await finish(derivedWiringFailedCandidate(now, "The promoted crosswalk carries no version id or promotion time."));
+  const manualInput = crosswalk.kind === "PROMOTED"
+    ? promotedInput(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt)
+    : null;
+  const automaticInput = automaticRead.kind === "PROMOTED"
+    ? promotedInput(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, automaticRead.metadata.versionId, automaticRead.value, automaticRead.metadata.promotedAt)
+    : null;
+  if ((crosswalk.kind === "PROMOTED" && manualInput === null) || (automaticRead.kind === "PROMOTED" && automaticInput === null)) {
+    await finish(derivedWiringFailedCandidate(now, "A promoted crosswalk carries no version id or promotion time."));
     return;
   }
-  const rows = (crosswalk.value.records as unknown as MeetingBodyCrosswalkRow[]).filter((row) => crosswalkRowIssue(row) === null);
+  const composed = composeCrosswalk(
+    crosswalk.kind === "PROMOTED" ? crosswalk.value.records as unknown as MeetingBodyCrosswalkRow[] : null,
+    automaticRead.kind === "PROMOTED" ? automaticRead.value.records : null,
+  );
+  for (const s of composed.shadowed) console.log(`  automatic row ${s.id} not used: ${s.why}`);
+  const crosswalkInput = (manualInput ?? automaticInput)!;
+  const automatic = automaticInput === null
+    ? undefined
+    : { input: automaticInput, versionId: automaticRead.metadata.versionId ?? "", rowIds: composed.automaticIds };
+  const rows = composed.rows.filter((row) => crosswalkRowIssue(row) === null);
 
   /* Registration: which division each crosswalked government is, per covered state. */
   const registrations = new Map<string, { readonly input: DerivedInputRef; readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[] } | { readonly unread: string }>();
@@ -204,7 +236,12 @@ async function main(): Promise<void> {
   const readings = read.verifications;
 
   const decisions = deriveWiringDecisions({
-    crosswalk: { input: crosswalkInput, versionId: crosswalk.metadata.versionId ?? "", rows },
+    crosswalk: {
+      input: crosswalkInput,
+      versionId: (crosswalk.kind === "PROMOTED" ? crosswalk.metadata.versionId : automaticRead.metadata.versionId) ?? "",
+      rows,
+      ...(automatic === undefined ? {} : { automatic }),
+    },
     registration: (row) => {
       const state = stateOf(row.ocdId);
       const reg = state === null ? undefined : registrations.get(state);
@@ -232,7 +269,7 @@ async function main(): Promise<void> {
     console.log(`  ${d.key}: ${d.disposition === "HOLD" ? `HOLD ${d.reason}: ${d.detail}` : d.disposition === "SUSPEND" ? `SUSPEND ${d.trigger}: ${d.detail}` : d.disposition}`);
   }
   for (const r of plan.refusals) console.error(`  refused ${r.key}: ${r.code}: ${r.detail}`);
-  await finish(derivedWiringCandidate(plan, [crosswalkInput, ...(lkgInput === null ? [] : [lkgInput])], now));
+  await finish(derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is DerivedInputRef => i !== null), now));
 }
 
 await main();

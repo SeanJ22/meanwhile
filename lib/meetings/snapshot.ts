@@ -879,6 +879,12 @@ export async function readMeetingsProjection(
     for (const { partition } of reads) {
       if (promoted.some((row) => row.partition.id === partition.id)) continue;
       const readback = partitionReadbacks.find((row) => row.contractId === partition.id)!;
+      /*
+       * A derived family never promoted is a state with no connected calendar yet (every registered state has a
+       * family, 2026-09-25): no body's sittings are missing from it, so it is no failed source. Its readback still
+       * names it NOT_RECORDED; a family that holds a version and fails to read is reported like any partition.
+       */
+      if (partition.derivedFamily !== null && readback.kind === "NOT_RECORDED") continue;
       sources.push({
         source: partition.meetingSource,
         ok: false,

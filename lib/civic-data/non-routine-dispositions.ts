@@ -260,7 +260,8 @@ export interface RoutineInventoryBinding {
 export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "meetings-composite", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily === null).map(({ id }) => id), contractSourceId: "meetings-public-bodies" },
   // C16 (owner decision recorded 2026-09-24T22:43Z): the derived wiring store and the per-state derived meeting families.
-  { inventorySourceId: "meeting-source-wiring", contractIds: ["meeting-source-wiring"], contractSourceId: "meeting-source-wiring" },
+  // + the automatic crosswalk (C16 option A, 2026-09-25), the same authority's second derived store.
+  { inventorySourceId: "meeting-source-wiring", contractIds: ["meeting-body-crosswalk-derived", "meeting-source-wiring"], contractSourceId: "meeting-source-wiring" },
   { inventorySourceId: "meetings-derived-families", contractIds: MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily !== null).map(({ id }) => id), contractSourceId: "meetings-derived-routes" },
   { inventorySourceId: "nj-morris-clerk-ballot", contractIds: ["nj-morris-filing"], contractSourceId: "nj-morris-county-clerk" },
   { inventorySourceId: "dotgov", contractIds: ["dotgov"], contractSourceId: "cisa-dotgov-registry" },

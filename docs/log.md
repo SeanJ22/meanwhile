@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-24 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-25 (America/Phoenix, from `pnpm stamp`).
 
 Newest first. **196 sessions.**
 

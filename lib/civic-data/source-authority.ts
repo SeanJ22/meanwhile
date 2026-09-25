@@ -473,11 +473,13 @@ export const SOURCE_AUTHORITIES = {
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [],
     allowedFinalHosts: [],
-    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    jurisdictions: ["US", ...REGISTRATION_TARGETS.map((t) => t.jurisdiction)],
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "which reviewed calendar route publishes as which exact body, recomputed from promoted and vaulted inputs",
       "a connection suspended for review, the trigger and its evidence",
+      /* The automatic crosswalk (contract meeting-body-crosswalk-derived, 2026-09-25): C16 option A, the runner's deterministic reviewer. */
+      "which calendar on a government's attested own host is its registered body's or a printed sub-body's, accepted by the deterministic reviewer on vaulted bytes",
     ],
     expectedIdentifierKeys: ["record_id", "body_id"],
     expectedTemporalFields: ["verified_at", "reviewed_at"],
@@ -498,7 +500,8 @@ export const SOURCE_AUTHORITIES = {
     sourceClass: "OFFICIAL_PLATFORM",
     routePrefixes: [],
     allowedFinalHosts: [],
-    jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    /* Every registered state has a family (2026-09-25): a sitting in Ohio is inside this authority as one in Arizona is. */
+    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],
     competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
     expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],

@@ -247,18 +247,38 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@35d2bc22497d";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@967903d46fd2";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
  * state that spans zones is absent, so its wall clocks are never guessed and a
  * page for one of its bodies is not confirmed.
+ *
+ * **EVERY ONE-ZONE STATE, NOT ONLY THE PILOT FOUR** (2026-09-25). A walk of a
+ * government in Ohio could never confirm an official events page, because the
+ * table named only the states the pilot had worked. It now names every state
+ * and territory that lies wholly in one zone. Left out, so their wall clocks
+ * are still never guessed: the states a zone line crosses (AK, FL, ID, IN, KS,
+ * KY, MI, ND, NE, OR, SD, TN, TX), and two whose towns keep a neighbour's time
+ * by local practice (AL's Phenix City keeps Eastern; NV's West Wendover keeps
+ * Mountain).
  */
 export const STATE_TIME_ZONES: Readonly<Record<string, string>> = {
   AZ: "America/Phoenix",
   NH: "America/New_York",
   NJ: "America/New_York",
   NM: "America/Denver",
+  ...Object.fromEntries(["CT", "DC", "DE", "GA", "MA", "MD", "ME", "NC", "NY", "OH", "PA", "RI", "SC", "VA", "VT", "WV"].map((s) => [s, "America/New_York"])),
+  ...Object.fromEntries(["AR", "IA", "IL", "LA", "MN", "MO", "MS", "OK", "WI"].map((s) => [s, "America/Chicago"])),
+  ...Object.fromEntries(["CO", "MT", "UT", "WY"].map((s) => [s, "America/Denver"])),
+  CA: "America/Los_Angeles",
+  WA: "America/Los_Angeles",
+  HI: "Pacific/Honolulu",
+  PR: "America/Puerto_Rico",
+  VI: "America/St_Thomas",
+  GU: "Pacific/Guam",
+  MP: "Pacific/Saipan",
+  AS: "Pacific/Pago_Pago",
 };
 
 /** Words that name a government's class, not the government itself. */

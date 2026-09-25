@@ -739,7 +739,12 @@ async function readDerivedFamilyMember(member: DerivedWiringRecord): Promise<Fam
  * row; a SUSPENDED or failed member keeps its last verified sittings (`lib/civic-data/derived-meeting-family.ts`).
  * An unreadable wiring store builds nothing: a refused candidate is recorded and the family's last known good stays.
  */
-export async function promoteDerivedMeetingFamily(store: RoutineDataStore, partition: MeetingPartitionContract): Promise<void> {
+export async function promoteDerivedMeetingFamily(
+  store: RoutineDataStore,
+  partition: MeetingPartitionContract,
+  /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
+  prepare: () => Promise<void> = async () => {},
+): Promise<void> {
   const generatedAt = new Date().toISOString();
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
@@ -761,6 +766,7 @@ export async function promoteDerivedMeetingFamily(store: RoutineDataStore, parti
     await refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
     return;
   }
+  await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
   const reads: FamilyMemberRead[] = [];
   for (const member of members) {
@@ -834,14 +840,21 @@ async function main() {
     ? selectedMeetingPartitions(process.argv.slice(3))
     : [];
 
+  /*
+   * A derived family (C16) reads its members from the promoted wiring, never from SOURCE_WIRING. It reads the wiring
+   * before anything else: every registered state has a family (2026-09-25), and one with no member yet refuses by
+   * name without the registry and venue preload (about 24 MB) a member's read needs.
+   */
+  if (promote && partitions.length === 1 && partitions[0]!.derivedFamily !== null) {
+    await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
+      await preloadCanonicalMeetingDependencies({ sourceName: name });
+      REGISTRY = getRegistryRuntimeReadModel().registry;
+    });
+    return;
+  }
   await preloadCanonicalMeetingDependencies({ sourceName: name });
   REGISTRY = getRegistryRuntimeReadModel().registry;
   const promotionStore = promote ? new PostgresRoutineDataStore() : null;
-  /* A derived family (C16) reads its members from the promoted wiring, never from SOURCE_WIRING. */
-  if (partitions.length === 1 && partitions[0]!.derivedFamily !== null && promotionStore) {
-    await promoteDerivedMeetingFamily(promotionStore, partitions[0]!);
-    return;
-  }
 
   const source = name === "composite"
     ? buildCompositeSource({

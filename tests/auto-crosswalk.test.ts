@@ -207,8 +207,12 @@ test("HELD: bytes not vaulted, a government registration does not pair, a hand-w
 
 test("HELD: robots not shown for a read, a UTC-stamped calendar, and a state whose clock is not one zone", async () => {
   const { attempt, bodies } = await walk(SITE());
-  const unpermitted = { ...attempt, steps: attempt.steps.map((s) => (s.purpose === "robots" ? { ...s, permission: "CANNOT_TELL" as const } : s)) };
-  assert.deepEqual(reasons(review(unpermitted, bodies)), ["PERMISSION_NOT_SHOWN:-"]);
+  /* Robots.txt is read first and recorded, whatever it says: a walk that recorded no reading of it holds the row. */
+  const unread = { ...attempt, steps: attempt.steps.filter((s) => s.purpose !== "robots") };
+  assert.deepEqual(reasons(review(unread, bodies)), ["ROBOTS_NOT_READ:-"]);
+  /* A verdict other than ALLOWED is evidence, never a hold (owner decision 2026-09-25). */
+  const cannotTell = { ...attempt, steps: attempt.steps.map((s) => (s.purpose === "robots" ? { ...s, permission: "CANNOT_TELL" as const } : s)) };
+  assert.deepEqual(reasons(review(cannotTell, bodies)), reasons(review(attempt, bodies)));
 
   const utc = ics([{ uid: "c1", summary: "City Council Regular Meeting", start: "20261005T230000", tz: null }]);
   const stamped = await walk(SITE(utc));
@@ -224,6 +228,32 @@ test("HELD: robots not shown for a read, a UTC-stamped calendar, and a state who
 
   const eastern = await walk(SITE(ics([{ uid: "c1", summary: "City Council Regular Meeting", start: "20261005T190000", tz: "America/Chicago" }])));
   assert.ok(review(eastern.attempt, eastern.bodies).held.some((h) => h.reason === "TIME_ZONE_CONFLICT"), "an Ohio calendar keeping Central time is a conflict");
+});
+
+test("ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, or cannot be read, holds no row; an access control on the naming page does", async () => {
+  const robots = `https://${HOST}/robots.txt`;
+  for (const [label, reply] of [
+    ["a disallow-all robots.txt", { status: 200, body: "User-agent: *\nDisallow: /\n", contentType: "text/plain" }],
+    ["a robots.txt that answered 500", { status: 500, body: "server error" }],
+    ["a robots.txt behind a 403", { status: 403, body: "forbidden" }],
+  ] as const) {
+    const walked = await walk({ ...SITE(), [robots]: reply });
+    assert.equal(walked.attempt.outcome, "FOUND", `${label}: the walk reads the public pages anyway`);
+    const recorded = walked.attempt.steps.filter((s) => s.purpose !== "robots").map((s) => s.permission);
+    assert.ok(recorded.length > 0 && recorded.every((p) => p !== "ALLOWED" && p !== "NO_ROBOTS"), `${label}: the verdict travels on every read (${recorded.join(", ")})`);
+    const r = review(walked.attempt, walked.bodies);
+    assert.deepEqual(r.accepted.map((a) => a.row.bodyName).sort(), ["City Council", "Housing Commission"], `${label}: accepted on the same checks as any read`);
+    assert.ok(r.held.every((h) => h.reason !== "PERMISSION_NOT_SHOWN" && h.reason !== "ROBOTS_NOT_READ"), `${label}: ${reasons(r).join(", ")}`);
+  }
+
+  /* A bot challenge answered in place of the naming page is an access control: never read as the government's page. */
+  const { attempt, bodies } = await walk(SITE());
+  const home = attempt.steps.find((s) => s.purpose === "homepage" && s.status === 200)!;
+  const challenged = new Map(bodies);
+  challenged.set(home.artifactId!, { ...bodies.get(home.artifactId!)!, text: `<html><head><title>Just a moment...</title></head><body>${HOME}</body></html>` });
+  const r = review(attempt, challenged);
+  assert.deepEqual(r.accepted, []);
+  assert.ok(r.held.some((h) => h.reason === "NAME_NOT_PRINTED_ON_OWN_PAGE" && h.bodyName === "City Council"), reasons(r).join(", "));
 });
 
 test("HELD: two bodies selecting one event, and a category that is a body's name", async () => {

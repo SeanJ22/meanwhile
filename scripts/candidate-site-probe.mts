@@ -42,7 +42,7 @@
  * photo only after a HEAD proves it is an image; doing it here would spend a
  * request on every candidate photo of the wrong person.
  */
-import { browserProfileHeaders, challengeIn, sourceUserAgent } from "../lib/sources/http.ts";
+import { challengeIn, sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 import { EGRESS_SPACING_MS, readViaEgress } from "../lib/hunt/egress.ts";
 
 interface Probe {
@@ -130,7 +130,7 @@ async function read(url: string): Promise<{ html: string; status: number; rung: 
         "-A",
         sourceUserAgent(),
         "-H",
-        `Accept: ${browserProfileHeaders().Accept ?? "text/html,*/*"}`,
+        `Accept: ${sourceRequestHeaders("text/html,*/*").Accept}`,
         "-w",
         "\n__WTP__%{http_code}__%{url_effective}",
         url,

@@ -29,7 +29,7 @@
 
 import {
   FIRST_PARTY_ROUTES,
-  GRANICUS_LIVE_PROCEEDINGS_WALL,
+  GRANICUS_LIVE_PROCEEDINGS_ROUTE,
   type FirstPartyRoute,
 } from "../../sources/legistar-insite/horizon.ts";
 import type { Jurisdiction } from "../../method/portability.ts";
@@ -87,7 +87,7 @@ const ROUTE_TARGETS: Record<FirstPartyRoute, { label: string; target: string }> 
   },
   GRANICUS_VIEW_PUBLISHER: {
     label: "Granicus ViewPublisher live proceedings",
-    target: GRANICUS_LIVE_PROCEEDINGS_WALL.host,
+    target: GRANICUS_LIVE_PROCEEDINGS_ROUTE.host,
   },
 };
 
@@ -164,20 +164,24 @@ export function pimaFutureMeetingsWorkItem(now: string): WorkItem {
 }
 
 /**
- * The Granicus route's disposition, which is a PERMISSION verdict.
+ * The Granicus route's robots.txt reading — EVIDENCE, not a verdict.
  *
- * `pima.granicus.com` serves `User-agent: * / Disallow: /`. That is a fact
- * about what we may do, and the adapter is explicit that it carries no claim
- * whatever about the content behind it (`claimAboutContent: null`). The route
- * is therefore disposed `BLOCKED_CURRENTLY` — an OPEN state — and the
- * obligation stays open on it rather than counting it as walked-and-empty.
+ * `pima.granicus.com` serves `User-agent: * / Disallow: /`. Until 2026-09-25
+ * that disposed the route `BLOCKED_CURRENTLY` as a permission wall. Since the
+ * owner decision of 2026-09-25 robots.txt is recorded and blocks nothing
+ * (`robotsBlocks: false`), and the true state is ours: no adapter reads the
+ * route yet. It is disposed `REQUIRES_NEW_ADAPTER` — an OPEN state — and the
+ * obligation stays open on it rather than counting it as walked-and-empty. The
+ * adapter still carries no claim about the content behind it
+ * (`claimAboutContent: null`).
  *
  * This is the case that would be easiest to get wrong, and getting it wrong
- * would convert "we are not allowed to look" into "there is nothing there".
+ * would convert "we have not looked" into "there is nothing there".
  */
 export const PIMA_GRANICUS_PERMISSION = {
-  host: GRANICUS_LIVE_PROCEEDINGS_WALL.host,
-  rule: GRANICUS_LIVE_PROCEEDINGS_WALL.rule,
-  readAt: GRANICUS_LIVE_PROCEEDINGS_WALL.readAt,
-  claimAboutContent: GRANICUS_LIVE_PROCEEDINGS_WALL.claimAboutContent,
+  host: GRANICUS_LIVE_PROCEEDINGS_ROUTE.host,
+  rule: GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule,
+  readAt: GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt,
+  robotsBlocks: GRANICUS_LIVE_PROCEEDINGS_ROUTE.robotsBlocks,
+  claimAboutContent: GRANICUS_LIVE_PROCEEDINGS_ROUTE.claimAboutContent,
 } as const;

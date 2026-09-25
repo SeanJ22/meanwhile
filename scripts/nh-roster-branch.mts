@@ -133,9 +133,7 @@ async function main(): Promise<void> {
   /* ── Branch 1: the House roster's own name index ───────────────────────── */
   let options: { pid: string; entry: string }[] = [];
   try {
-    const roster = await politeGetText(HOUSE_ROSTER, {
-      profile: "browser",
-      expect: { label: "the House roster", marker: "<option" },
+    const roster = await politeGetText(HOUSE_ROSTER, { expect: { label: "the House roster", marker: "<option" },
     });
     options = parseRosterOptions(roster.text);
   } catch (error) {
@@ -175,7 +173,7 @@ async function main(): Promise<void> {
       continue;
     }
     try {
-      const page = await politeGetText(url, { profile: "browser" });
+      const page = await politeGetText(url, {});
       members.push({
         name: nameIn(page.text) ?? rosterNameToNatural(o.entry),
         chamber: "House",
@@ -194,7 +192,7 @@ async function main(): Promise<void> {
     for (let d = 1; d <= SENATE_DISTRICTS; d++) {
       const url = senateDistrict(d);
       try {
-        const page = await politeGetText(url, { profile: "browser" });
+        const page = await politeGetText(url, {});
         const found = nameIn(page.text);
         if (!found || !norm(found).includes(WANTED)) continue;
         members.push({

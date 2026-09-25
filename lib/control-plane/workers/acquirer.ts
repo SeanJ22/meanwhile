@@ -1,3 +1,4 @@
+import { ACCESS_CONTROL_STATUSES, type AccessControlKind } from "../../hunt/access-control.ts";
 import type { WorkerRef } from "../attempt.ts";
 import { requireCapability, type CapabilityGrant } from "../capability.ts";
 import { artifactId, type Artifact } from "../evidence/artifact.ts";
@@ -44,6 +45,15 @@ function exactSpan(held: VaultedResearchEvidence, span: ResearchSpan): string {
 function responseStatus(call: ScoutToolCallResult): number | null {
   if (call.rung?.httpStatus !== undefined) return call.rung.httpStatus;
   return Number(/\bHTTP (\d{3})\b/.exec(call.rung?.observed ?? "")?.[1]) || null;
+}
+/**
+ * The access control the retrieval met, from the machine-written rung: a 401/402/403/407/429/451 answer, or the kind
+ * the toolkit names when a bot challenge answered in place of the page (`HTTP 200 (CHALLENGE)`). Null when none.
+ */
+function accessControlOf(call: ScoutToolCallResult, status: number | null): AccessControlKind | null {
+  const named = /\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)/.exec(call.rung?.observed ?? "")?.[1];
+  if (named !== undefined) return named as AccessControlKind;
+  return status === null ? null : ACCESS_CONTROL_STATUSES[status] ?? null;
 }
 function responseTransport(call: ScoutToolCallResult): TransportState | "NOT_ATTEMPTED" {
   if (call.rung?.transport !== undefined) return call.rung.transport;
@@ -155,11 +165,12 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
   // Exhausting the supplied alternatives preserves the existing fail-closed
   // boundary: an integrity failure does not authorize another network fetch.
   if (blockers.length) return result("BLOCKED");
-  if (permission === "DISALLOWED" || permission === "CANNOT_TELL") {
-    block(permission === "DISALLOWED" ? "PERMISSION_DENIED" : "PERMISSION_UNKNOWN", "The current route permission does not permit source retrieval.", permission === "CANNOT_TELL");
-    addStep("permission", `Current permission ${permission}; no request sent.`, "BLOCKED", [...artifactIds], "NOT_ATTEMPTED");
-    return result("BLOCKED");
-  }
+  /*
+   * The route's recorded robots.txt verdict (DISALLOWED, CANNOT_TELL or any other) never blocks it: robots.txt is read
+   * and recorded, and a public page is read over it (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION is false).
+   * What blocks a route is an access control on the page itself, judged from the retrieval's own answer below.
+   * PERMISSION_DENIED / PERMISSION_UNKNOWN remain in the blocker vocabulary only for results recorded before then.
+   */
   try {
     requireCapability(input.grant, "NETWORK_PUBLIC_READ"); requireCapability(input.grant, "VAULT_WRITE");
     if (route.retrieval === "browse") requireCapability(input.grant, "BROWSER_DRIVE");
@@ -176,11 +187,9 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     const transport = responseTransport(call);
     const status = responseStatus(call);
     if (tool === "read_permission") {
-      addStep("permission", call.rung?.observed ?? "Permission tool was unable to run.", call.ok ? "WALKED_AND_FOUND" : "BLOCKED", call.artifacts.map(a => a.artifactId), transport);
-      if (!call.ok || permission === "DISALLOWED" || permission === "CANNOT_TELL") {
-        block(permission === "DISALLOWED" ? "PERMISSION_DENIED" : "PERMISSION_UNKNOWN", "The shared permission reader did not authorize this exact path.", permission !== "DISALLOWED");
-        return result("BLOCKED");
-      }
+      /* Recorded, never a gate: whatever the verdict, the retrieval tool runs next and its own answer decides. */
+      addStep("permission", call.rung?.observed ?? `robots.txt was not read: ${call.forModel.slice(0, 200)}`,
+        call.ok ? "WALKED_AND_FOUND" : "NOT_WALKED", call.artifacts.map(a => a.artifactId), transport);
       continue;
     }
     for (const offered of call.artifacts.filter(a => a.canonicalUrl === route.url)) {
@@ -198,9 +207,11 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
       verdict === "EMPTY" || emptyRead ? "WALKED_AND_EMPTY" : verdict === "BLOCKED" ? "BLOCKED" : "WALKED_AND_FOUND",
       call.artifacts.map(a => a.artifactId), transport, verdict === "EMPTY" || emptyRead ? 0 : artifacts.length || null);
     if (verdict === "BLOCKED" && !blockers.length) {
-      block(status === 429 ? "RATE_LIMITED" : status === 401 || status === 403 ? "PUBLISHER_AUTHENTICATION" :
+      /* An access control is a wall: recorded, never bypassed, and another public route is still owed. */
+      const control = accessControlOf(call, status);
+      block(control === "RATE_LIMIT" ? "RATE_LIMITED" : control !== null ? "PUBLISHER_AUTHENTICATION" :
         transport === "REACHABLE" ? "DOCUMENT_INACCESSIBLE" : "TRANSPORT_FAILED",
-      "The exact public record was not acquired; the machine-recorded rung preserves the permission and transport outcome.", true);
+      "The exact public record was not acquired; the machine-recorded rung preserves the robots.txt verdict and the transport outcome.", true);
     }
     return result(blockers.length ? "BLOCKED" : verdict);
   }

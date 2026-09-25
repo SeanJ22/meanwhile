@@ -310,8 +310,14 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
       const evidence = stepEvidence === null ? base : [...base, stepEvidence];
       if (step.status === 404 || step.status === 410) {
         decide(trigger(key, "ROUTE_GONE", `${reviewed.route} answered ${step.status}`, evidence));
-      } else if (step.permission === "DISALLOWED" || step.permission === "RECORDED_WALL") {
-        decide(hold(key, "ROBOTS_REFUSED", `${reviewed.route}: ${step.note}`, base));
+      } else if (step.accessControl !== undefined) {
+        /* A bot challenge answered in place of the calendar: an access control holds the row; it never suspends it. */
+        decide(hold(key, "CHALLENGED", `${reviewed.route}: ${step.accessControl}`, base));
+      } else if (step.status === null && step.permission === "RECORDED_WALL") {
+        decide(hold(key, "CHALLENGED", `${reviewed.route}: a recorded access-control wall; ${step.note}`, base));
+      } else if (step.status === null && step.permission === "DISALLOWED") {
+        /* Only a walk made before the owner decision of 2026-09-25 skipped a route for robots.txt; the next walk reads it. */
+        decide(hold(key, "ROBOTS_REFUSED", `${reviewed.route}: skipped for robots.txt by a walk before 2026-09-25; the next walk reads it. ${step.note}`, base));
       } else if (step.status === null) {
         decide(hold(key, step.transportError !== null ? "TRANSPORT_FAILED" : "WALK_ABSENT", `${reviewed.route}: ${step.transportError ?? step.note}`, base));
       } else if (step.status === 401 || step.status === 403 || step.status === 429) {

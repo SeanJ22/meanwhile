@@ -45,21 +45,25 @@
  * `tests/legistar-routes.test.ts` fails if the portfolio collapses back toward a
  * single preferred representation.
  *
- * ## Permission is a property of the ROUTE, and a wall is not a discharge
+ * ## robots.txt is recorded on a route, and is never its disposition
  *
- * Two of the highest-value routes in this portfolio are DISALLOWED: every Pima
- * and Mesa agenda and minutes URL resolves to `legistar.granicus.com`, which
- * answers `User-agent: *` with `Disallow: /` (read three ways by three clients,
- * `docs/sources.md`, 2026-08-29). They stay in the portfolio, declared, with the
- * facts they would carry and the reason they are not walked.
+ * Every Pima and Mesa agenda and minutes URL the Web API names resolves to
+ * `legistar.granicus.com`, which answers `User-agent: *` with `Disallow: /`
+ * (read three ways by three clients, `docs/sources.md`, 2026-08-29). That
+ * made the two document routes DISALLOWED, and from 2026-09-24 the ingest
+ * refused the host. Since the owner decision of 2026-09-25 ("Robots.txt alone
+ * must not block acquisition"), the reading is kept in each route's note as
+ * evidence and decides nothing: a route is WALKED or not built yet. Only an
+ * access control (a login, a 403, a challenge, a 429) stops a read, and it is
+ * a technical failure of that route, never a disposition here.
  *
- * **A blocked route may never become a blocked fact (RULING 184).** Deleting the
- * minutes routes from this map because we cannot walk them would silently
- * convert "we are not permitted to read the minutes" into "there are no minutes",
- * which is the exact substitution this product cannot make. So NARRATIVE_MINUTES
- * remains permanently owed on every tenant whose minutes sit behind that host,
- * and {@link factClassesOwedAfter} keeps returning it however many JSON routes
- * come back 200.
+ * **An unwalked route may never become a missing fact.** Deleting a route from
+ * this map because nothing reads it yet would silently convert "we have not
+ * read the minutes" into "there are no minutes", which is the exact
+ * substitution this product cannot make. So NARRATIVE_MINUTES stays owed on
+ * every tenant until a route that carries it is walked there, and
+ * {@link factClassesOwedAfter} keeps returning it however many JSON routes come
+ * back 200.
  */
 
 /**
@@ -133,26 +137,27 @@ export type LegistarRouteClass = (typeof LEGISTAR_ROUTE_CLASSES)[number];
 
 /**
  * How a route is reached. The transport matters on its own: a fact available
- * only as PDF bytes behind a `Disallow` is in a different position from the same
- * fact in a JSON field, and "we have it in one transport" is the assumption that
- * makes a portfolio collapse.
+ * only as PDF bytes is in a different position from the same fact in a JSON
+ * field, and "we have it in one transport" is the assumption that makes a
+ * portfolio collapse.
  */
 export type LegistarTransport = "JSON_API" | "HTML" | "PDF" | "XML" | "ICS";
 
 /**
- * Whether this repository may ask, and whether it has.
- *
- * `DISALLOWED` is a permission state and `NOT_BUILT` is a tooling state, and
- * RULING 182 keeps them apart from each other and from absence: neither is
+ * Whether this repository has built and exercised the route. Neither value is
  * evidence about what the route holds.
+ *
+ * There is no permission value. Until 2026-09-25 a third member, `DISALLOWED`,
+ * held the two `legistar.granicus.com` document routes out of reach because
+ * that host's robots.txt reads `Disallow: /`. Since the owner decision of
+ * 2026-09-25 robots.txt is recorded in a route's note and blocks nothing, so
+ * the member is gone. Nothing outside this file stored it.
  */
 export type LegistarRouteDisposition =
-  /** Built, permitted, and exercised against at least one tenant. */
+  /** Built and exercised against at least one tenant. */
   | "WALKED"
-  /** Permitted, and no adapter has been written. A gap in US, not in them. */
-  | "REQUIRES_NEW_ADAPTER"
-  /** The host says do not ask. Never re-walked on a clock (RULING 148). */
-  | "DISALLOWED";
+  /** No adapter reads it yet. A gap in US, not in them. */
+  | "REQUIRES_NEW_ADAPTER";
 
 export interface LegistarRoute {
   readonly id: string;
@@ -278,8 +283,9 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
       "links, neither of which any JSON route in this portfolio can see. Its URL is " +
       "already held on every event as EventInSiteURL. The ingest reads one thing off " +
       "it (2026-09-24): the sitting's agenda link on the portal host (`_hypAgenda`), " +
-      "used when the API's agenda file sits on the DISALLOWED document host " +
-      "(lib/sources/legistar/portal-agenda-link.ts). The item text is still unparsed.",
+      "read first when the API's agenda file sits on the vendor document host, with " +
+      "the vendor file as the fallback (lib/sources/legistar/portal-agenda-link.ts, " +
+      "scripts/ingest.ts). The item text is still unparsed.",
   },
   {
     id: "INSITE_ACCESSIBLE_AGENDA",
@@ -290,9 +296,9 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     disposition: "REQUIRES_NEW_ADAPTER",
     note:
       "The accessible HTML rendering Legistar publishes beside the agenda PDF, on " +
-      "the PORTAL host rather than the disallowed document host. It is the highest " +
-      "-value unbuilt route in this portfolio: it is permitted, it is text, and it " +
-      "carries what the API structurally cannot. `M=AADA`, as the recorded calendar " +
+      "the PORTAL host rather than the vendor document host. It is the highest " +
+      "-value unbuilt route in this portfolio: it is text, and it carries what the " +
+      "API structurally cannot. `M=AADA`, as the recorded calendar " +
       "grids and detail pages link it. `M=A` on the same host is the agenda PDF " +
       "itself (measured 2026-09-24: 200 application/pdf, no redirect), and {portalId} " +
       "is the portal's own sitting id, not the API's EventId.",
@@ -305,7 +311,7 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     bears: ["NARRATIVE_MINUTES", "ACTION_TAKEN", "PERSON_VOTE"],
     disposition: "WALKED",
     note:
-      "The minutes on the permitted portal host rather than the disallowed document " +
+      "The minutes on the tenant's portal host rather than the vendor document " +
       "host, linked from the calendar grid's minutes cell ({portalId} is the portal's " +
       "own sitting id). `M=M` answers 200 application/pdf (Mesa, 2026-09-25); the " +
       "grid's accessible-minutes HTML cell is read first when a tenant publishes it, " +
@@ -330,15 +336,18 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     transport: "PDF",
     urlShape: "https://legistar.granicus.com/{slug}/meetings/{path}_Agenda.pdf",
     bears: ["AGENDA_ITEM_LIST", "ITEM_FULL_TEXT", "SUPPORTING_DOCUMENT"],
-    disposition: "DISALLOWED",
+    disposition: "WALKED",
     note:
-      "`legistar.granicus.com` answers `User-agent: *` with `Disallow: /` — read " +
-      "2026-08-29 by three clients under three user agents, so a RULE and not a " +
-      "RULING 182 transport artefact. Recorded here, never fetched. It stays in the " +
-      "portfolio because deleting it would convert a permission wall into an " +
-      "absence of documents (RULING 184). The same agenda is published on the " +
-      "tenant's portal host as `View.ashx?M=A`, linked from the sitting's detail " +
-      "page, and the ingest reads it there (2026-09-24).",
+      "The agenda file the Web API names (EventAgendaFile). The ingest's agenda " +
+      "retrieval read it for Pima until 2026-09-24 and reads it again since the " +
+      "owner decision of 2026-09-25: the sitting's own portal link " +
+      "(`View.ashx?M=A`, off its detail page) is read first, because the sitting " +
+      "already holds its versions under that URL, and this file is the fallback " +
+      "when the portal page links no agenda or cannot be read (scripts/ingest.ts). " +
+      "Read 2026-09-25: HTTP 200 application/pdf with a text layer. The host's " +
+      "robots.txt answers `User-agent: *` with `Disallow: /` (read 2026-08-29 by " +
+      "three clients under three user agents, and again 2026-09-25): recorded, " +
+      "not blocking.",
   },
   {
     id: "GRANICUS_MINUTES_PDF",
@@ -346,11 +355,15 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     transport: "PDF",
     urlShape: "https://legistar.granicus.com/{slug}/meetings/{path}_Meeting_Summary.pdf",
     bears: ["NARRATIVE_MINUTES", "ACTION_TAKEN", "PERSON_VOTE"],
-    disposition: "DISALLOWED",
+    disposition: "REQUIRES_NEW_ADAPTER",
     note:
-      "Same host, same rule. `minutesPointerFor` in outcomes.ts records this as a " +
-      "LEAD WITH NO RECORD CLASS precisely so a document nobody has opened can " +
-      "never be offered as evidence of what a body decided.",
+      "The minutes file the Web API names (EventMinutesFile). No adapter reads it " +
+      "yet: `minutesPointerFor` in outcomes.ts records it as a LEAD WITH NO RECORD " +
+      "CLASS, so a document nobody has opened is never offered as evidence of what " +
+      "a body decided, and the Mesa minutes routine reads the portal's own copy " +
+      "(INSITE_ACCESSIBLE_MINUTES). Same host as GRANICUS_AGENDA_PDF, whose " +
+      "robots.txt reads `Disallow: /`: recorded, not blocking since the owner " +
+      "decision of 2026-09-25. What is missing is the reader, not permission.",
   },
   {
     id: "INSITE_RSS",
@@ -389,29 +402,35 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
 ];
 
 /**
- * **A HOST THIS CATALOGUE RECORDS AS DISALLOWED IS NEVER REQUESTED.**
- * (2026-09-24.)
+ * **THE VENDOR'S DOCUMENT HOSTS: where a tenant's agenda and minutes FILES sit,
+ * as opposed to its portal.** (2026-09-25.)
  *
- * `GRANICUS_AGENDA_PDF` and `GRANICUS_MINUTES_PDF` say "recorded here, never
- * fetched", but the ingest's agenda retrieval refused only retired routes'
- * hosts, so Pima's agenda PDFs were still requested from legistar.granicus.com
- * (robots `Disallow: /`) on 2026-09-02. The hosts are derived from the
- * catalogue itself — a concrete host in a DISALLOWED route's URL shape — so a
- * route recorded DISALLOWED later is refused the moment it is recorded. A
- * link into one is kept on the meeting as a link; the document is not read.
+ * Derived from the catalogue itself: the concrete host of every agenda-packet
+ * or minutes route whose URL shape names one (today `legistar.granicus.com`).
+ * A templated host (`{insiteHost}`) is a tenant's portal and never one of
+ * these.
+ *
+ * This replaces `DISALLOWED_LEGISTAR_HOSTS` (2026-09-24), which the ingest used
+ * to refuse these hosts because their robots.txt reads `Disallow: /`. Since the
+ * owner decision of 2026-09-25 they are read: the ingest reads a sitting's
+ * portal agenda link first and the vendor file as the fallback, and the minutes
+ * routine follows a grid link onto these hosts as it does onto the portal.
  */
-export const DISALLOWED_LEGISTAR_HOSTS: readonly string[] = [
+export const LEGISTAR_DOCUMENT_HOSTS: readonly string[] = [
   ...new Set(
-    LEGISTAR_ROUTES.filter((route) => route.disposition === "DISALLOWED").flatMap((route) => {
+    LEGISTAR_ROUTES.filter(
+      (route) => route.routeClass === "DOCUMENT_PACKET" || route.routeClass === "MINUTES",
+    ).flatMap((route) => {
       const host = /^https?:\/\/([^/{}]+)\//.exec(route.urlShape)?.[1]?.toLowerCase();
       return host ? [host] : [];
     }),
   ),
 ];
 
-export function isDisallowedLegistarHost(url: string): boolean {
+/** Is this URL on one of the vendor's document hosts? False for anything that does not parse. */
+export function isLegistarDocumentHost(url: string): boolean {
   try {
-    return DISALLOWED_LEGISTAR_HOSTS.includes(new URL(url).hostname.toLowerCase());
+    return LEGISTAR_DOCUMENT_HOSTS.includes(new URL(url).hostname.toLowerCase());
   } catch {
     return false;
   }
@@ -457,9 +476,9 @@ export function factsBorneBy(
  * Accessible Agenda is not an optional extra it may skip because the JSON
  * parsed.
  *
- * A fact borne only by DISALLOWED routes stays owed forever, and that is
- * correct: we are not permitted to read it, we do not hold it, and the honest
- * state is a permanent named gap rather than a quiet removal from the map.
+ * A fact borne only by routes nobody has walked stays owed until one is, and
+ * that is correct: we do not hold it, and the honest state is a named gap
+ * rather than a quiet removal from the map.
  */
 export function factClassesOwedAfter(
   succeededRouteIds: readonly string[],
@@ -469,32 +488,30 @@ export function factClassesOwedAfter(
 }
 
 /**
- * Routes worth asking next for a fact, given what has already succeeded.
+ * Routes worth asking next for a fact, given what has already succeeded: every
+ * route that can carry it and has not.
  *
- * Excludes DISALLOWED routes from the SUGGESTION — we do not tell a caller to go
- * and break a permission rule — while {@link factClassesOwedAfter} keeps
- * reporting the fact as owed. That pair is the RULING 184 distinction made
- * operational: the route is closed, the fact is not answered, and neither
- * statement is allowed to stand in for the other.
+ * A route's robots.txt reading is never a reason to leave it out. Until
+ * 2026-09-25 this excluded the DISALLOWED `legistar.granicus.com` routes; since
+ * the owner decision of that day robots.txt is recorded and blocks nothing, so
+ * the vendor's minutes file is offered beside the portal's own copy.
  */
 export function routesStillWorthAsking(
   factClass: LegistarFactClass,
   succeededRouteIds: readonly string[],
 ): readonly LegistarRoute[] {
   const done = new Set(succeededRouteIds);
-  return routesBearing(factClass).filter(
-    (route) => !done.has(route.id) && route.disposition !== "DISALLOWED",
-  );
+  return routesBearing(factClass).filter((route) => !done.has(route.id));
 }
 
 /**
  * A fact class this portfolio can reach TODAY through exactly one route.
  *
  * **Counted over WALKED routes only, and the choice matters.** An earlier
- * version counted every route that was not `DISALLOWED`, which credited
+ * version counted every route that was not then `DISALLOWED`, which credited
  * `REQUIRES_NEW_ADAPTER` routes as live paths and reported PERSON_VOTE as
  * comfortably multiply-routed on the strength of an accessible-minutes parser
- * nobody has written. That is the same error class as a permission wall reading
+ * nobody had written. That is the same error class as an unread route reading
  * as an absence, pointed the other way: an unbuilt route is a gap in US, and a
  * gap in us cannot be counted as coverage.
  *

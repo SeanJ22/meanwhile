@@ -1,6 +1,8 @@
 /**
  * **RUNG 5, MADE AVAILABLE TO A HUNT** — a different EGRESS for a page this
- * network is refused. (Built 2026-08-21, NH Hunt 2.)
+ * network is refused. (Built 2026-08-21, NH Hunt 2. RETIRED 2026-09-25: see
+ * `readViaEgress` below. `assertPublicUrl` is the part every fetcher still
+ * uses.)
  *
  * ## The wall this exists for, and the two walls it does not
  *
@@ -108,73 +110,29 @@ export function assertPublicUrl(raw: string): URL {
 }
 
 /**
- * Read one public page through the different-egress rung.
+ * **RETIRED 2026-09-25: a different egress to get past a refusal is bypassing an
+ * access control.**
  *
- * Throws on anything but a 2xx, because a rung that returns an empty string on
- * a refusal is the zero-row shape `CLAUDE.md` spent six sightings learning to
- * refuse: a wall would render as a document with nothing in it.
+ * This rung sent a public URL to a third-party reader service so the page was
+ * fetched from that service's addresses instead of ours. It was built for hosts
+ * that answer this project with a bot-management challenge (`kearsarge.org`,
+ * `hopkinton-nh.gov`), and it worked because the challenge was aimed at where
+ * the request came from. Sean's decision of 2026-09-25 authorizes reading
+ * public pages whatever robots.txt says and "does not extend to bypassing
+ * authentication or other access controls": a bot challenge and an IP-based
+ * refusal are access controls, and fetching from someone else's address to
+ * clear one is bypassing it. So every call now refuses, before any request,
+ * and names why; the signature stays so a script that still calls it reports
+ * the rung as refused instead of failing to build. A walled host is pursued by
+ * other public routes (`lib/hunt/access-control.ts`).
  */
 export async function readViaEgress(
   rawUrl: string,
-  options: { signal?: AbortSignal; fetchImpl?: typeof fetch; timeoutMs?: number } = {},
+  _options: { signal?: AbortSignal; fetchImpl?: typeof fetch; timeoutMs?: number } = {},
 ): Promise<EgressResult> {
   const url = assertPublicUrl(rawUrl);
-  const readerUrl = READER + url.toString();
-  const impl = options.fetchImpl ?? fetch;
-
-  const controller = options.signal ? undefined : new AbortController();
-  const timer = controller
-    ? setTimeout(() => controller.abort(), options.timeoutMs ?? 90_000)
-    : undefined;
-  try {
-    const response = await impl(readerUrl, {
-      signal: options.signal ?? controller?.signal,
-      headers: { Accept: "text/plain, text/markdown, */*" },
-    });
-    const text = await response.text();
-    if (!response.ok) {
-      throw new EgressRefusal(
-        `rung 5 refused ${url} with HTTP ${response.status} — this is a WALL at the ` +
-          `egress rung, not an empty document (${text.slice(0, 200)})`,
-      );
-    }
-    if (!text.trim()) {
-      throw new EgressRefusal(
-        `rung 5 returned 200 and ZERO BYTES for ${url}. A zero-row extraction is a ` +
-          "failed extraction, never an empty document — the next rung is owed.",
-      );
-    }
-    /*
-     * **THE RELAY'S 200 IS THE RELAY'S, NOT THE ORIGIN'S.**
-     *
-     * The reader service answers HTTP 200 for a page the origin refused, and
-     * puts the origin's status in the BODY: `Warning: Target URL returned
-     * error 404: Not Found`. The first version of this returned that as a
-     * successful read, and `pnpm probe:site` duly printed "HTTP 200 via rung 5"
-     * for a New Hampshire Executive Council page that does not exist.
-     *
-     * That is the exact shape `CLAUDE.md` forbids twice over — a wall rendering
-     * as an emptiness, and a failed retrieval reported as a success — arriving
-     * through a rung built to defeat walls. So the origin's own status is read
-     * out of the relay's annotation and a 4xx/5xx is raised as the refusal it
-     * is, naming the origin status rather than the relay's.
-     */
-    const relayed = /^Warning:\s*Target URL returned error\s*(\d{3})\s*:?\s*(.*)$/im.exec(text);
-    if (relayed) {
-      throw new EgressRefusal(
-        `rung 5 relayed ${url} and the ORIGIN answered HTTP ${relayed[1]} ${(relayed[2] ?? "").trim()}. ` +
-          "The relay's own 200 is not the document — this is a failed read at the origin.",
-      );
-    }
-    return {
-      url: url.toString(),
-      readerUrl,
-      status: response.status,
-      text,
-      bytes: text.length,
-      viaEgress: true,
-    };
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
+  throw new EgressRefusal(
+    `rung 5 is retired (2026-09-25): relaying ${url} through ${READER} to get past a refusal aimed at this client ` +
+      "would bypass an access control. Nothing was requested; pursue another public route.",
+  );
 }

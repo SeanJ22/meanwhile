@@ -20,6 +20,12 @@ import { isSourceAcquisitionFailure } from "../../civic-data/source-acquisition-
  * transport signature in the message. Everything else, including an unknown,
  * is a `JOB`. Either way the affected partition keeps its last-known-good
  * pointer; the kind decides diagnosis and alarm, never what readers see.
+ *
+ * A robots.txt line is not the publisher's wall. Since the owner decision of
+ * 2026-09-25 ("Robots.txt alone must not block acquisition") no fetcher stops
+ * on one, so a failure that names only robots.txt is our own code stopping
+ * where it should have read: a `JOB`, and it alarms. An access control (a
+ * 401, 403 or 429, a bot challenge, a login) stays a `WALL`.
  */
 export type FetchFailureKind = "WALL" | "JOB";
 
@@ -42,8 +48,7 @@ const TRANSPORT_SIGNATURES: readonly RegExp[] = [
   /\bUND_ERR_[A-Z_]+\b/,
   /\b(?:socket|TLS|SSL|certificate)\b/i,
   /\babort(?:ed)?\b/i,
-  /\b(?:challenge page|captcha|access denied|forbidden|too many requests|rate.?limit)\b/i,
-  /\brobots\.txt\b|\bdisallow/i,
+  /\b(?:challenge page|bot challenge|access control|captcha|access denied|forbidden|too many requests|rate.?limit)\b/i,
   /\bpublisher\b/i,
   /\bnetwork\b/i,
   // A publisher answering HTML where JSON was promised is the publisher's

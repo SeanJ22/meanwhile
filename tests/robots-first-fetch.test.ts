@@ -1,21 +1,26 @@
 /**
- * **A RESEARCH FETCH SENDS NOTHING BEFORE ROBOTS.TXT, TO ANY ORIGIN.** (2026-09-24, R15.)
+ * **A RESEARCH FETCH READS ROBOTS.TXT FIRST, TO EVERY ORIGIN, AND RECORDS IT.**
+ * (2026-09-24, R15; robots made a record rather than a refusal by the owner
+ * decision of 2026-09-25.)
  *
  * `lib/hunt/robots-first-fetch.ts` against a recorded fake transport; no test
  * reaches the network. On 2026-09-24 a research agent's own script read an
- * unread robots.txt redirect as "no robots file" and sent four homepage
- * requests first. These tests hold the construction that makes that impossible:
- * robots.txt is the first request to every origin, a redirect's new origin is
- * asked again, a chain that ends unread refuses, a disallow refuses, walls and
- * hosts awaiting the owner are never asked anything, every path is evaluated
- * for itself, and one host is spaced.
+ * unread robots.txt redirect as "no robots file". These tests hold the
+ * construction: robots.txt is the first request to every origin, a redirect's
+ * new origin is read again, a chain that ends unread is recorded CANNOT_TELL
+ * (never "no robots file"), a disallow is recorded with its rule and the public
+ * page is still read, recorded walls are never asked anything, an access
+ * control on the page is named and never pushed through, and one host is
+ * spaced.
  */
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+import { carriesCredential } from "../lib/hunt/access-control.ts";
 import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../lib/hunt/robots-first-fetch.ts";
+import { DEFAULT_USER_AGENT } from "../lib/control-plane/scheduler/user-agent.ts";
 
 type Reply = { readonly status: number; readonly body?: string; readonly contentType?: string; readonly location?: string } | { readonly transportError: string };
 
@@ -62,54 +67,99 @@ test("ROBOTS FIRST, EVERY ORIGIN: a redirect onto a new origin asks that origin'
   assert.match(got.sha256 ?? "", /^[0-9a-f]{64}$/);
 });
 
-test("A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five redirects, a 5xx and a transport failure all refuse, and nothing else is requested", async () => {
+test("A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five redirects, a 5xx, a transport failure and a 403 are recorded CANNOT_TELL, and the public page is still read", async () => {
   const chain: Record<string, Reply> = {};
   for (let i = 0; i < 7; i += 1) chain[i === 0 ? "https://loop.gov/robots.txt" : `https://loop.gov/r${i}.txt`] = { status: 301, location: `https://loop.gov/r${i + 1}.txt` };
-  const cases: [string, Readonly<Record<string, Reply>>][] = [
+  const cases: [string, Record<string, Reply>][] = [
     ["https://loop.gov/", chain],
     ["https://down.gov/", { "https://down.gov/robots.txt": { status: 503, body: "down" } }],
     ["https://gone.gov/", { "https://gone.gov/robots.txt": { transportError: "getaddrinfo ENOTFOUND gone.gov" } }],
     ["https://walled.gov/", { "https://walled.gov/robots.txt": { status: 403, body: "Forbidden" } }],
   ];
   for (const [url, map] of cases) {
-    const { runtime, seen } = fakeRuntime(map);
+    const { runtime, seen } = fakeRuntime({ ...map, [url]: { status: 200, body: "<title>Town</title>" } });
     const got = await researchFetch(url, runtime);
-    assert.equal(got.outcome, "REFUSED", url);
-    if (got.outcome !== "REFUSED") continue;
-    assert.match(got.reason, /robots\.txt CANNOT_TELL/, url);
-    assert.ok(seen.every((u) => u.includes("robots.txt") || /\/r\d+\.txt$/.test(u)), `${url}: only the rules were ever requested: ${seen.join(", ")}`);
+    assert.equal(got.outcome, "FETCHED", url);
+    if (got.outcome !== "FETCHED") continue;
+    assert.equal(got.permissions[0]?.verdict, "CANNOT_TELL", `${url}: recorded as unread, never as no robots file`);
+    assert.ok(seen.indexOf(url) > 0 && seen.slice(0, seen.indexOf(url)).every((u) => u.includes("robots.txt") || /\/r\d+\.txt$/.test(u)), `${url}: the rules were asked first: ${seen.join(", ")}`);
   }
   const { runtime } = fakeRuntime({ "https://nofile.gov/robots.txt": { status: 404, body: "not found" }, "https://nofile.gov/": { status: 200, body: "home" } });
-  assert.equal((await researchFetch("https://nofile.gov/", runtime)).outcome, "FETCHED", "a robots.txt that answers 404 is a host with no rules");
+  const nofile = await researchFetch("https://nofile.gov/", runtime);
+  assert.equal(nofile.outcome, "FETCHED", "a robots.txt that answers 404 is a host with no rules");
+  if (nofile.outcome === "FETCHED") assert.equal(nofile.permissions[0]?.verdict, "NO_ROBOTS");
 });
 
-test("A DISALLOW REFUSES, AND EVERY PATH IS EVALUATED FOR ITSELF against the one reading of its origin", async () => {
+test("A DISALLOW IS RECORDED, NOT OBEYED AS A REFUSAL (owner decision 2026-09-25), AND EVERY PATH IS EVALUATED FOR ITSELF against the one reading of its origin", async () => {
   const { runtime, seen } = fakeRuntime({
     "https://mixed.gov/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /private\n", contentType: "text/plain" },
     "https://mixed.gov/public": { status: 200, body: "public" },
+    "https://mixed.gov/private/minutes": { status: 200, body: "minutes" },
   });
   const open = await researchFetch("https://mixed.gov/public", runtime);
-  const closed = await researchFetch("https://mixed.gov/private/minutes", runtime);
+  const named = await researchFetch("https://mixed.gov/private/minutes", runtime);
   assert.equal(open.outcome, "FETCHED");
-  assert.equal(closed.outcome, "REFUSED");
-  if (closed.outcome === "REFUSED") assert.match(closed.reason, /robots\.txt DISALLOWED/);
-  assert.deepEqual(seen, ["https://mixed.gov/robots.txt", "https://mixed.gov/public"], "robots.txt read once, and the disallowed path never requested");
+  assert.equal(named.outcome, "FETCHED", "robots.txt alone never blocks a public page");
+  if (open.outcome === "FETCHED") assert.equal(open.permissions[0]?.verdict, "ALLOWED");
+  if (named.outcome === "FETCHED") {
+    const reading = named.permissions[0];
+    assert.equal(reading?.verdict, "DISALLOWED", "the disallow is recorded");
+    assert.equal(reading?.matchedRule, "Disallow: /private", "with the rule that named the path");
+    assert.match(reading?.robotsSha256 ?? "", /^[0-9a-f]{64}$/, "and the bytes it was read from");
+    assert.equal(reading?.readAt, "2026-09-24T20:00:00.000Z", "and when it was read");
+  }
+  assert.deepEqual(
+    seen,
+    ["https://mixed.gov/robots.txt", "https://mixed.gov/public", "https://mixed.gov/private/minutes"],
+    "robots.txt read once, first, and both public paths requested",
+  );
 });
 
-test("WALLS AND HOSTS AWAITING THE OWNER ARE NEVER ASKED ANYTHING, not even robots.txt, and not by a redirect", async () => {
+test("RECORDED WALLS ARE NEVER ASKED ANYTHING, not even robots.txt, and not by a redirect; destinyhosted.com no longer waits on the owner", async () => {
   const { runtime, seen } = fakeRuntime({
     "https://city.gov/robots.txt": ALLOW,
-    "https://city.gov/agendas": { status: 302, location: "https://public.destinyhosted.com/agenda_publish.cfm?id=1" },
+    "https://city.gov/agendas": { status: 302, location: "https://go.boarddocs.com/az/x/Board.nsf/Public" },
+    "https://public.destinyhosted.com/robots.txt": { status: 200, body: "User-agent: * Disallow: /", contentType: "text/plain" },
+    "https://public.destinyhosted.com/agenda_publish.cfm?id=1": { status: 200, body: "<title>Agenda</title>" },
   });
-  const direct = await researchFetch("https://public.destinyhosted.com/agenda_publish.cfm?id=1", runtime);
-  assert.equal(direct.outcome, "REFUSED");
-  if (direct.outcome === "REFUSED") assert.match(direct.reason, /waits on the owner/);
-  const viaRedirect = await researchFetch("https://city.gov/agendas", runtime);
-  assert.equal(viaRedirect.outcome, "REFUSED");
   const wall = await researchFetch("https://go.boarddocs.com/az/x/Board.nsf/Public", runtime);
   assert.equal(wall.outcome, "REFUSED");
-  if (wall.outcome === "REFUSED") assert.match(wall.reason, /a recorded wall/);
-  assert.ok(!seen.some((u) => /destinyhosted\.com|boarddocs\.com/.test(u)), `nothing was sent to either: ${seen.join(", ")}`);
+  if (wall.outcome === "REFUSED") assert.match(wall.reason, /a recorded wall: HTTP 403/);
+  const viaRedirect = await researchFetch("https://city.gov/agendas", runtime);
+  assert.equal(viaRedirect.outcome, "REFUSED");
+  assert.ok(!seen.some((u) => /boarddocs\.com/.test(u)), `nothing was sent to the walled host: ${seen.join(", ")}`);
+  const destiny = await researchFetch("https://public.destinyhosted.com/agenda_publish.cfm?id=1", runtime);
+  assert.equal(destiny.outcome, "FETCHED", "a disallow-all robots.txt was destinyhosted.com's only hold, and robots.txt alone no longer blocks");
+  assert.ok(seen.indexOf("https://public.destinyhosted.com/robots.txt") < seen.indexOf("https://public.destinyhosted.com/agenda_publish.cfm?id=1"), "its rules were still read first");
+});
+
+test("AN ACCESS CONTROL IS NAMED AND NEVER PUSHED THROUGH: 401, 403, a challenge at 200, and a 429 that backs the host off; no credential or cookie is ever sent", async () => {
+  const headersSeen: Record<string, string>[] = [];
+  const replies: Record<string, Reply> = {
+    "https://guarded.gov/robots.txt": ALLOW,
+    "https://guarded.gov/login": { status: 401, body: "Unauthorized" },
+    "https://guarded.gov/waf": { status: 403, body: "Forbidden" },
+    "https://guarded.gov/cf": { status: 200, body: "<html><head><title>Just a moment...</title></head></html>" },
+    "https://guarded.gov/busy": { status: 429, body: "Too Many Requests" },
+    "https://guarded.gov/after": { status: 200, body: "ok" },
+  };
+  const { runtime, seen, slept } = fakeRuntime(replies);
+  const inner = runtime.get;
+  const watched = { ...runtime, get: async (input: Parameters<ResearchGet>[0]) => (headersSeen.push({ ...input.headers }), inner(input)) };
+  const kinds: string[] = [];
+  for (const path of ["login", "waf", "cf", "busy"]) {
+    const got = await researchFetch(`https://guarded.gov/${path}`, watched);
+    assert.equal(got.outcome, "FETCHED", path);
+    if (got.outcome === "FETCHED") kinds.push(got.accessControl?.kind ?? "none");
+  }
+  assert.deepEqual(kinds, ["AUTHENTICATION", "FORBIDDEN", "CHALLENGE", "RATE_LIMIT"]);
+  assert.equal(seen.filter((u) => u === "https://guarded.gov/waf").length, 1, "a 403 is asked once, never re-sent");
+  await researchFetch("https://guarded.gov/after", watched);
+  assert.ok(slept.at(-1)! >= 60_000, `a 429 backs the host off before anything else is asked of it: ${slept.join(", ")}`);
+  for (const headers of headersSeen) {
+    assert.ok(!carriesCredential(headers), `no credential, cookie or session is sent: ${JSON.stringify(headers)}`);
+    assert.equal(headers["user-agent"], DEFAULT_USER_AGENT, "every request carries the project's own identity, never a borrowed one");
+  }
 });
 
 test("ONE HOST IS SPACED: two seconds between its requests, or its own Crawl-delay when it asks for more", async () => {

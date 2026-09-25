@@ -119,7 +119,7 @@ for (const executive of STATEWIDE_EXECUTIVES) {
   let html = "";
   let status: number | null = null;
   try {
-    const res = await politeGetText(page, { profile: "browser" });
+    const res = await politeGetText(page, {});
     html = res.text;
     status = res.status;
     walked += 1;

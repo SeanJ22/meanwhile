@@ -1511,7 +1511,6 @@ export function makeIcalSource(
           const res = await politeGetText(url, {
             fetchImpl,
             accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
-            profile: wiring.config.profile === "browser" ? "browser" : undefined,
             signal: query.signal,
             // A 200 with no VCALENDAR in it is not this town's empty calendar;
             // it is a retrieval that failed while looking like a success. See
@@ -1541,8 +1540,6 @@ export function makeIcalSource(
               const past = await politeGetText(wiring.config.pastFeedUrl, {
                 fetchImpl,
                 accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
-                profile:
-                  wiring.config.profile === "browser" ? "browser" : undefined,
                 signal: query.signal,
                 expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
               });

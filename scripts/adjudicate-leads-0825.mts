@@ -205,7 +205,7 @@ console.log(`  candidates tested per host      ${ballot.candidacies.length} — 
 const bodies = new Map<string, string>();
 const fetcher = async (url: string): Promise<ProbeResponse> => {
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     bodies.set(url, r.text);
     return { status: r.status, length: r.text.length };
   } catch {

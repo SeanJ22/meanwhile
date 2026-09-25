@@ -24,6 +24,8 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/typ
 import { createRouteTask } from "../route-task.ts";
 import { createWorkItem } from "../work-item.ts";
 import { FLEET_POLICY_VERSION } from "../workers/runtime.ts";
+import { verdictOfRecordedPermission } from "../scheduler/robots.ts";
+import type { PermissionState } from "../../workstate/types.ts";
 import {
   CAMPAIGN_SITE_VERIFIER_ID,
   heldPageRead,
@@ -87,7 +89,7 @@ export function campaignSiteReadRecorder(input: {
       methodRouteId: CAMPAIGN_SITE_READ_ROUTE,
       workItemId: item.id,
       attemptId: attempt.id,
-      permission: "ALLOWED",
+      permission: permissionStateOf(read),
       transport: "REACHABLE",
     }, read.body);
     await putArtifact(store, CAMPAIGN_SITE_READ_PROJECT, artifact, Buffer.from(read.body, "utf8"));
@@ -101,8 +103,8 @@ export function campaignSiteReadRecorder(input: {
       routeTaskId: task.id, attemptId: attempt.id, expectedTaskRevision: (await input.repos.routeTasks.mustRead(task.id)).revision,
       artifactIds: [artifact.id], now: at,
       disposition: { disposition: "INGESTED", attemptId: attempt.id, at, artifactIds: [artifact.id], observation: null,
-        permission: "ALLOWED", transport: "REACHABLE",
-        note: `${CAMPAIGN_SITE_VERIFIER_ID} read ${lead.url} robots-first (${read.permissions.map((p) => `${p.origin} ${p.verdict}`).join("; ") || "no origin recorded"}) and vaulted ${artifact.contentHash}.` },
+        permission: artifact.permission, transport: "REACHABLE",
+        note: `${CAMPAIGN_SITE_VERIFIER_ID} read ${lead.url} robots-first (${read.permissions.map((p) => `${p.origin} ${p.verdict}`).join("; ") || "no origin recorded"}; recorded, never a refusal: owner decision 2026-09-25) and vaulted ${artifact.contentHash}.` },
     });
     /* The verdict is re-made from what was vaulted: the vault's own hash, never the transport's. */
     made.set(artifact.id, { ...read, sha256: artifact.contentHash.replace(/^sha256-/, "") });
@@ -123,13 +125,39 @@ export function campaignSiteReadRecorder(input: {
       retrievedAt: held.retrievedAt ?? artifact.recordedAt,
       sha256: held.contentHash.replace(/^sha256-/, ""),
     });
-    /* The robots verdict the retrieval ran under travels on the sidecar; an unrecorded one is never assumed. */
+    /*
+     * The robots verdict the retrieval ran under travels on the sidecar, whatever it was: recorded evidence, never a
+     * refusal (owner decision 2026-09-25). An unrecorded one is never assumed.
+     */
     let origin = artifact.canonicalUrl;
     try { origin = new URL(artifact.canonicalUrl).origin; } catch { /* the URL is kept as written */ }
-    return held.permission === "ALLOWED"
-      ? { ...page, permissions: [{ origin, verdict: "ALLOWED" as const, detail: `recorded on the vaulted sidecar of ${held.id}` }] }
-      : page;
+    const verdict = verdictOfRecordedPermission(held.permission);
+    return verdict === null
+      ? page
+      : { ...page, permissions: [{ origin, verdict, detail: `${held.permission} recorded on the vaulted sidecar of ${held.id}` }] };
   };
 
   return { recordRead, heldPage };
 }
+
+/**
+ * The robots verdict a read ran under, as the artifact records it: the final page's origin (the last reading when
+ * none names that origin), recorded whatever it said. A read with no robots reading at all is CANNOT_TELL, never
+ * ALLOWED.
+ */
+function permissionStateOf(read: Pick<CampaignSitePageRead, "finalUrl" | "permissions">): PermissionState {
+  let finalOrigin: string | null = null;
+  try { finalOrigin = new URL(read.finalUrl).origin; } catch { /* no origin to match */ }
+  const reading = read.permissions.find((p) => p.origin === finalOrigin) ?? read.permissions.at(-1);
+  switch (reading?.verdict) {
+    case "ALLOWED":
+    case "DISALLOWED":
+    case "CANNOT_TELL":
+      return reading.verdict;
+    case "NO_ROBOTS":
+      return "NOT_APPLICABLE";
+    default:
+      return "CANNOT_TELL";
+  }
+}
+

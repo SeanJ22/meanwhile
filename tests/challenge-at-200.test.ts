@@ -73,8 +73,8 @@ test("0C: a long document quoting the phrase is still a document", () => {
 });
 
 test("0C: a 200 carrying a challenge is a FAILURE, not an empty page", async () => {
-  // `fetchImpl` is supplied, which keeps the curl escalation out of a test —
-  // the suite never touches the network.
+  // `fetchImpl` is supplied, so the suite never touches the network. Since
+  // 2026-09-25 there is no escalation to keep out: a challenge is a wall.
   const fetchImpl = (async () =>
     new Response(CLIENT_CHALLENGE, {
       status: 200,
@@ -82,7 +82,7 @@ test("0C: a 200 carrying a challenge is a FAILURE, not an empty page", async () 
     })) as unknown as typeof fetch;
 
   await assert.rejects(
-    () => politeGetText("https://example.gov/page", { profile: "browser", fetchImpl }),
+    () => politeGetText("https://example.gov/page", { fetchImpl }),
     (err: unknown) => {
       assert.ok(err instanceof SourceHttpError, "must be a SourceHttpError");
       assert.match(err.message, /Client Challenge|client challenge/i);
@@ -100,10 +100,7 @@ test("0C: an ordinary 200 still comes back exactly as before", async () => {
       headers: { "content-type": "text/html" },
     })) as unknown as typeof fetch;
 
-  const res = await politeGetText("https://example.gov/page", {
-    profile: "browser",
-    fetchImpl,
-  });
+  const res = await politeGetText("https://example.gov/page", { fetchImpl });
   assert.equal(res.status, 200);
   assert.ok(res.text.includes("John Carruth"));
 });

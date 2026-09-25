@@ -4,6 +4,7 @@ import type { PipelineItemState } from "./types.ts";
 import type { MeetingPartitionContract } from "../../civic-data/meeting-partitions.ts";
 import { snapshotCounts, validateSnapshot, type MeetingsSnapshot } from "../../meetings/snapshot.ts";
 import type { Artifact } from "../evidence/artifact.ts";
+import { PERMISSION_STATES } from "../../workstate/types.ts";
 
 export const RESEARCH_MEETING_ACTIVATION = "VERIFIED_RESEARCH_TO_REGISTERED_MEETING_PARTITION/1";
 
@@ -39,9 +40,11 @@ export function approvedResearchMeetingPartition(input: {
   for (const chain of chains) {
     const source = chain.bridge.source;
     const acquisition = input.acquisitionByArtifact.get(chain.artifact.artifactId);
+    // Any recorded robots.txt verdict is admissible (a record, never a gate: owner decision 2026-09-25); a walled,
+    // unreached or non-2xx capture never is.
     if (!acquisition || acquisition.contentHash !== chain.artifact.contentHash ||
         acquisition.canonicalUrl !== chain.artifact.canonicalUrl || acquisition.byteLength !== chain.artifact.byteLength ||
-        acquisition.permission !== "ALLOWED" || acquisition.transport !== "REACHABLE" ||
+        !(PERMISSION_STATES as readonly string[]).includes(acquisition.permission) || acquisition.transport !== "REACHABLE" ||
         acquisition.httpStatus === null || acquisition.httpStatus < 200 || acquisition.httpStatus >= 300) continue;
     if (!source || source.sourceId !== partition.meetingSource || source.body?.bodyId !== partition.bodyId ||
         !source.meetings.length || !chain.validator || !chain.auditor ||

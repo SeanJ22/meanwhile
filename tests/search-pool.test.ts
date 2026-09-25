@@ -1,19 +1,13 @@
 /**
- * **PERMISSION BEFORE REACHABILITY — the search pool, guarded.**
+ * **THE SEARCH POOL, GUARDED: ROBOTS.TXT IS RECORDED, AN ACCESS CONTROL KEEPS AN
+ * ENGINE OUT.**
  *
- * This module was first written with Mojeek and Brave in the pool. Both answer,
- * both pass a control query, and **both carry `Disallow: /search` in their
- * `robots.txt` — which is exactly the path a query goes to.** They were removed
- * the same session.
- *
- * `CLAUDE.md` names four limits on an otherwise unrestricted mandate, and one is
- * that an access control is never circumvented. RULING 52 puts it in the tree's
- * vocabulary: a `robots.txt` disallow gets a COMPLIANT ROUTE to the same
- * information. And `docs/sources.md` had already recorded both hosts as *not
- * walked at any rung* on 2026-08-24, for this exact reason — the record was
- * right and a later session walked them anyway.
- *
- * A guard, therefore, rather than a memory.
+ * Mojeek and Brave were kept out of the pool from 2026-08-25 for their
+ * `Disallow: /search` alone. Since the owner decision of 2026-09-25 robots.txt
+ * alone never excludes a route; each engine's robots reading is recorded, and an
+ * exclusion names a real reason — an access control on the query page (never
+ * bypassed) or a failed control. Re-measured 2026-09-25: Mojeek answers a
+ * CAPTCHA, Brave a 429.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -30,38 +24,31 @@ import {
 
 const ROOT = join(import.meta.dirname, "..");
 
-describe("the search pool asks permission before it asks anything else", () => {
-  it("no engine in the pool is one this project recorded as DISALLOWED", () => {
-    const disallowed = SEARCH_POOL_EXCLUDED.filter((e) => e.kind === "DISALLOWED").map((e) => e.id);
-    const offenders = SEARCH_POOL.filter((e) => disallowed.includes(e.id)).map((e) => e.id);
-    assert.deepEqual(
-      offenders,
-      [],
-      "an engine whose robots.txt disallows the query path is in the pool. A disallow is a host " +
-        "telling us not to ask, and it is honoured — it is not a wall to be re-walked on a clock.",
-    );
+describe("the search pool records robots.txt and excludes only for an access control or a failed control", () => {
+  it("no engine is excluded for robots.txt alone, and none in the pool is one this project recorded as excluded", () => {
+    for (const e of SEARCH_POOL_EXCLUDED) {
+      assert.ok(["WALLED", "FAILS_CONTROL"].includes(e.kind), `${e.id} is excluded as ${e.kind}; robots.txt alone never excludes (owner decision 2026-09-25)`);
+    }
+    const excluded = SEARCH_POOL_EXCLUDED.map((e) => e.id);
+    assert.deepEqual(SEARCH_POOL.filter((e) => excluded.includes(e.id)).map((e) => e.id), []);
   });
 
-  it("mojeek and brave are named as DISALLOWED, not as walls — they answered fine", () => {
-    /*
-     * The distinction this whole file is about. Both hosts return 200 and name
-     * the subject; recording them as walls would put them on RULING 53's
-     * fourteen-day clock, and a future session would re-walk them as a matter
-     * of course. A disallow gets the opposite treatment.
-     */
-    for (const id of ["mojeek", "brave"]) {
+  it("mojeek and brave are walled by access controls, re-measured 2026-09-25 — their robots.txt lines are recorded, not the reason", () => {
+    for (const [id, control] of [["mojeek", /CAPTCHA/], ["brave", /HTTP 429/]] as const) {
       const row = SEARCH_POOL_EXCLUDED.find((e) => e.id === id);
       if (!row) {
         assert.fail(`${id} must stay in the record rather than being deleted`);
         return;
       }
-      assert.equal(row.kind, "DISALLOWED", `${id} is recorded as ${row.kind}, which invites a re-walk`);
-      assert.match(row.why, /Disallow/, `${id}'s reason must quote the robots.txt line`);
-      assert.match(row.measuredOn, /^\d{4}-\d{2}-\d{2}$/, `${id} carries no measurement date`);
+      assert.equal(row.kind, "WALLED", `${id} is kept out by an access control`);
+      assert.match(row.why, control, `${id}'s reason names the access control measured`);
+      assert.match(row.why, /never|honoured/, `${id}'s reason says the access control is not bypassed`);
+      assert.match(row.why, /Disallow: \/search` is recorded and is not the reason/, `${id} records its robots line as evidence`);
+      assert.equal(row.measuredOn, "2026-09-25");
     }
   });
 
-  it("every engine in the pool quotes the robots.txt line that permits its path", () => {
+  it("every engine in the pool records its robots.txt reading with a date", () => {
     assert.ok(SEARCH_POOL.length > 0, "an empty pool would pass every other test here");
     for (const e of SEARCH_POOL) {
       assert.match(e.robots, /robots|Disallow|Allow/i, `${e.id} does not quote its robots.txt`);

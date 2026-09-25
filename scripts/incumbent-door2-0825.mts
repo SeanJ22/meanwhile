@@ -207,7 +207,7 @@ for (const c of incumbents) {
   let status = 0;
   let text = "";
   try {
-    const r = await politeGetText(page, { profile: "browser" });
+    const r = await politeGetText(page, {});
     status = r.status;
     text = r.text;
   } catch {

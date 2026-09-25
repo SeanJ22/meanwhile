@@ -81,7 +81,7 @@ if (["PENDING", "RECLAIMABLE"].includes(observationTask.state)) {
         const r = await toolkit.call(tool, { url: target.seed, rung: "primary-site-navigation", why: "Observe the official publisher and its actual bulk publication links." }, "primary-site-navigation");
         artifacts.push(...r.artifacts);
         if (r.rung) rungs.push({ ...r.rung, index: rungs.length, note: null, at: now() });
-        if (r.rung?.permission === "DISALLOWED" || r.rung?.permission === "CANNOT_TELL") break;
+        /* robots.txt is recorded on the rung and never stops the read (owner decision 2026-09-25); fetch_public walls on an access control itself. */
       }
       const useful = artifacts.filter(a => !a.canonicalUrl.endsWith("/robots.txt"));
       const result: ScoutResult = { formatVersion: 1, attemptId: ctx.attemptId, obligationId: ctx.obligation.obligation.id,

@@ -235,7 +235,7 @@ export function assertResearchWalk(walk: readonly EvidenceWalkStep[], state: Res
     [...allowed].some(id => !walk.some(s => s.routeId === id && s.pass === "INITIAL") || !terminal.some(s => s.routeId === id)) ||
     state.terminalRepassOutcome !== "NO_FURTHER_APPLICABLE_ROUTE" ||
     terminal.some(s => !["WALKED_AND_EMPTY", "DOES_NOT_EXIST"].includes(s.outcome) || s.transport !== "REACHABLE" || s.artifactIds.length === 0 ||
-      Date.parse(s.at) < lastInitialAt || ["DISALLOWED", "CANNOT_TELL"].includes(s.permission) ||
+      Date.parse(s.at) < lastInitialAt ||
       Date.parse(s.at) > Date.parse(state.terminalRepassAt)) ||
     state.supportingArtifactIds.some(id => !walk.some(s => s.artifactIds.includes(id))) ||
     state.stuckProtocolStepSequences.length !== 5 || new Set(state.stuckProtocolStepSequences).size !== 5 ||

@@ -118,3 +118,29 @@ test("a projection never exceeds its limit — a worker inherits a page, not the
   assert.equal(projection.lines.length, 30);
   assert.equal(projection.total, 200);
 });
+
+test("a dead door recorded for robots.txt alone is not a wall: the brief says so and marks it walkable; an access-control dead door stays a wall (owner decision 2026-09-25)", () => {
+  const door = (id: string, summary: string, outcome: "BLOCKED" | "YIELDED" = "BLOCKED") => ({
+    id, role: "SCOUT" as const, kind: "DEAD_DOOR", title: id, summary, states: ["az"], recordClasses: ["meetings"], platforms: [],
+    outcome, url: `https://${id}.example.gov/`, source: "cp_log_discovery_attempts", observedAt: "2026-09-20", tier: null, payload: {},
+  });
+  const store = { formatVersion: 1 as const, updatedOn: null, entries: [
+    door("robots", "az:pima: the site's own origins refused this client (DISALLOWED)."),
+    door("unread", "az:x: the site's own origins refused this client (CANNOT_TELL)."),
+    door("forbidden", "az:y: the site's own origins refused this client (HTTP 403)."),
+    door("mixed", "az:z: the site's own origins refused this client (DISALLOWED, HTTP 429)."),
+  ] };
+  const lines = fieldManualBriefLines(projectFieldManual(store, { role: "SCOUT", state: "az", recordClass: "meetings" }));
+  assert.ok(lines[0]!.includes("inherited door"));
+  assert.match(lines[1]!, /wall only when an access control stopped it/);
+  assert.match(lines[1]!, /robots\.txt alone is NOT a wall/);
+  const line = (id: string) => lines.find((l) => l.includes(`${id}.example.gov`)) ?? "";
+  assert.match(line("robots"), /\[robots\.txt only — not a wall; walk it\]$/);
+  assert.match(line("unread"), /\[robots\.txt only — not a wall; walk it\]$/);
+  assert.doesNotMatch(line("forbidden"), /not a wall/, "a 403 is an access control: still a wall");
+  assert.doesNotMatch(line("mixed"), /not a wall/, "a door that also met a 429 is still a wall");
+  /* A manual with no dead door carries no dead-door note. */
+  const live = fieldManualBriefLines(projectFieldManual({ ...store, entries: [door("open", "a yielded route", "YIELDED")] }, { role: "SCOUT", state: "az" }));
+  assert.equal(live.length, 2);
+  assert.doesNotMatch(live.join("\n"), /not a wall/);
+});

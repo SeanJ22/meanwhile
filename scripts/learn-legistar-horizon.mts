@@ -22,14 +22,15 @@
  * `--record` writes the retrieved documents into `tests/fixtures/` so the
  * suite keeps running against real recorded responses and never a live call.
  *
- * ## What it will not do
+ * ## What it does not do yet
  *
- * `pima.granicus.com` publishes `User-agent: * / Disallow: /`. It is printed as
- * a wall with its verdict, the date the rule was read and a null claim about
- * its content, and **it is not fetched, at any rung**. RULING 148: a disallow
- * is never re-walked on a clock. If a route is unreachable the honest output is
- * the wall and the instances we could not confirm — never a fetch anyway, and
- * never an absence claim.
+ * `pima.granicus.com`'s Live Proceedings page (`ViewPublisher.php`) has no
+ * reader here. It is printed as `NOT_BUILT` with the robots.txt reading kept as
+ * evidence (`User-agent: * / Disallow: /`, which since the owner decision of
+ * 2026-09-25 blocks nothing), the date it was read and a null claim about its
+ * content. If a route is unreachable the honest output is the failure and the
+ * instances we could not confirm — never an absence claim — and an access
+ * control (a login, a 403, a challenge, a 429) is never worked around.
  *
  * The legistar.com apex publishes `Crawl-delay: 2`; `InSiteSession` paces every
  * vendor request at it. `www.pima.gov` publishes no delay for `User-agent: *`.
@@ -51,7 +52,7 @@ import {
 } from "../lib/sources/legistar-insite/calendar.ts";
 import { parseClerkSchedule } from "../lib/sources/legistar-insite/clerk-schedule.ts";
 import {
-  granicusWallObservation,
+  granicusRouteObservation,
   intersectionOfRoutes,
   summarizeRoute,
   timelessInstances,
@@ -494,9 +495,9 @@ observations.push(
 );
 
 // -------------------------------------------------------------------------
-// Route 8 — NOT FETCHED. A permission wall, stated as one.
+// Route 8 — NOT BUILT. No adapter reads it yet; its robots.txt is recorded, not blocking.
 // -------------------------------------------------------------------------
-observations.push(granicusWallObservation());
+observations.push(granicusRouteObservation());
 
 // -------------------------------------------------------------------------
 // The table, the union, and the counterfactual that is forbidden.
@@ -543,11 +544,11 @@ for (const i of timeless) console.log(`  ${i.date}  ${i.route}  "${i.publishedTe
  * identically, and only one of them is a fact about a county.
  *
  * So the run REFUSES rather than reports when every retrievable route came back
- * empty and not one of them was a publisher's own zero. `PERMISSION_DISALLOWED`
- * does not count as an answer — we never asked — and `PUBLISHER_STATED_EMPTY`
+ * empty and not one of them was a publisher's own zero. `NOT_BUILT` does not
+ * count as an answer — no adapter asked — and `PUBLISHER_STATED_EMPTY`
  * does, because the page said so in its own words.
  */
-const answering = observations.filter((o) => o.enumeration !== "PERMISSION_DISALLOWED");
+const answering = observations.filter((o) => o.enumeration !== "NOT_BUILT");
 const spoke = answering.filter(
   (o) => o.rawFutureCount > 0 || o.enumeration === "PUBLISHER_STATED_EMPTY",
 );

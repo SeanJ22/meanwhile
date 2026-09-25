@@ -1063,10 +1063,11 @@ function fromScout(s: ScoutResult, clipAt: number): RoundOutcome {
       return {
         state: "FAILED",
         code: s.outcome,
-        says: `Every route the hunter tried hit a wall or a disallow (${walked}).`,
+        says: `Every route the hunter tried was walled (${walked}).`,
         at: s.recordedAt,
         owner: "RUNNER",
-        nextAction: "Walls can lift: the runner tries again on its backoff; a compliant alternate route is still owed.",
+        nextAction:
+          "Walls can lift: the runner tries again on its backoff. An access control (a login, a bot check, a rate limit) is never bypassed, and another public route is still owed; a robots file no longer counts as a wall.",
       };
     case "NEEDS_ADAPTER":
       return {
@@ -1106,7 +1107,7 @@ function fromWorkerResult(r: WorkerResultRecord, clipAt: number): RoundOutcome {
           says: `The acquirer was blocked${blocker ? `: ${clip(blocker, clipAt)}` : finding()}`,
           at,
           owner: "ENGINEERING",
-          nextAction: "Clear the named blocker (a permission reading, an adapter or a decision), then acquire again.",
+          nextAction: "Clear the named blocker (an access control met by another public route, an adapter or a decision), then acquire again.",
         };
       }
       return {

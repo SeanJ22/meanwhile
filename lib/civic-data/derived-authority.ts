@@ -25,9 +25,11 @@
  * - A row is promoted only with its inputs, its host attestation, its adapter
  *   binding and the reader adapter's own verification for that body.
  * - A row the writer holds by name is never removed: an absent walk, a
- *   transport failure, a server error, a robots refusal or a challenge holds
- *   it. An outage never suspends or removes a connection; what was verified
- *   stays served.
+ *   transport failure, a server error, or an access control (a 401, 403 or
+ *   429, a bot challenge, a recorded wall) holds it. An outage never suspends
+ *   or removes a connection; what was verified stays served. A robots.txt
+ *   verdict is recorded evidence and holds nothing by itself (owner decision
+ *   2026-09-25); only a walk made before that decision skipped a route for it.
  * - A promoted row is SUSPENDED, never silently kept publishing, when its
  *   evidence says the connection may be wrong (the owner's decision C16,
  *   recorded 2026-09-24T22:43Z): the route answered 404 or 410; its events
@@ -169,7 +171,6 @@ export const DERIVED_HELD_REASONS = [
   "NO_REVIEWED_BODY_IDENTITY",
   "BODY_NOT_REGISTERED",
   "HOST_NOT_ATTESTED",
-  "PERMISSION_NOT_ALLOWED",
   "ADAPTER_REFUSED",
   "ADAPTER_CONFIG_INCOMPLETE",
   "BODY_FILTER_NOT_ESTABLISHED",
@@ -179,7 +180,12 @@ export const DERIVED_HELD_REASONS = [
   "LEAD_ONLY",
   "WALK_ABSENT",
   "TRANSPORT_FAILED",
+  /**
+   * Historical cause: a walk made before the owner decision of 2026-09-25 skipped the route for robots.txt, so the
+   * latest walk has no read of it. Held only until the next walk, which reads it; never produced for a current walk.
+   */
   "ROBOTS_REFUSED",
+  /** An access control answered in place of the route (a recorded wall, a 401, 403 or 429, a bot challenge). Never bypassed. */
   "CHALLENGED",
   /** The latest walk read the reviewed route but did not confirm it; nothing new is published from it. */
   "ROUTE_NOT_CONFIRMED",

@@ -428,10 +428,12 @@ export interface LegistarRollCallRecord {
  * PDF nobody has opened is not a MINUTES record, and stamping it as one would
  * let "there is a minutes file" answer "what did they decide".
  *
- * It is also unreadable by us: every Pima and Mesa `EventMinutesFile` resolves
- * to `legistar.granicus.com`, which answers `User-agent: *` with `Disallow: /`
- * (docs/sources.md, 2026-08-29). This is a discovery LEAD, recorded so the
- * route is known, and it is not walked.
+ * Every Pima and Mesa `EventMinutesFile` resolves to `legistar.granicus.com`,
+ * the vendor's document host. This is a discovery LEAD, recorded so the route
+ * is known (GRANICUS_MINUTES_PDF, routes.ts), and no adapter reads it yet. The
+ * host's robots.txt reads `Disallow: /` (docs/sources.md, 2026-08-29); since
+ * the owner decision of 2026-09-25 that is recorded and blocks nothing, so
+ * what is missing is a reader, not permission.
  */
 export interface LegistarMinutesPointer {
   readonly url: string | null;
@@ -618,12 +620,15 @@ export function rollCallRecordFrom(
   };
 }
 
-const DISALLOWED_DOCUMENT_HOSTS = new Set([
-  "legistar.granicus.com",
-  "pima.granicus.com",
-]);
-
-/** The minutes lead for one sitting. Recorded, never walked. */
+/**
+ * The minutes lead for one sitting. Recorded; this adapter does not read it.
+ *
+ * Until 2026-09-25 the note said a `legistar.granicus.com` or
+ * `pima.granicus.com` file was not retrieved because the host's robots.txt
+ * reads `Disallow: /`. Since the owner decision of that day robots.txt blocks
+ * nothing, and the true reason is ours: no minutes adapter reads the vendor's
+ * file yet. Sittings stored before then keep the note they were written with.
+ */
 export function minutesPointerFor(event: LegistarEvent): LegistarMinutesPointer {
   const url = event.EventMinutesFile?.trim() || null;
   let host: string | null = null;
@@ -638,11 +643,9 @@ export function minutesPointerFor(event: LegistarEvent): LegistarMinutesPointer 
   const retrievalNote =
     url === null
       ? "The publisher names no minutes document for this sitting."
-      : host !== null && DISALLOWED_DOCUMENT_HOSTS.has(host)
-        ? `Not retrieved. ${host} answers "User-agent: *" with "Disallow: /" ` +
-          "(docs/sources.md, 2026-08-29), so this route is not walked. The document " +
-          "is known to exist and its contents are not held."
-        : "Not retrieved. This adapter records the pointer and does not fetch documents.";
+      : `Not retrieved. No minutes adapter reads the file on ${host ?? "this host"} yet: this ` +
+        "adapter records the pointer and does not fetch documents. The document is known to " +
+        "exist and its contents are not held.";
 
   return {
     url,

@@ -296,14 +296,30 @@ test("result wording: a failed motion reads FAILED, and a motion with no readabl
   assert.match(record.dispositionGap ?? "", /That is not a record of it failing/);
 });
 
-test("the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host", async () => {
+test("the minutes link: the accessible HTML first, the PDF second, on the portal or the vendor's document host, never a third host", async () => {
   const withPdf = row("1336059");
   assert.deepEqual(minutesLinkFor(withPdf, tenant.host), { url: "https://mesa.legistar.com/View.ashx?M=M&ID=1336059&GUID=B0165E88-90A2-4E7C-80FE-0AA9E5A24F1A", format: "PDF", label: "Minutes" });
   // Synthetic: no Mesa row has published an accessible-minutes rendering (0 of 163 seen).
   const accessible = { ...withPdf, accessibleMinutes: { status: "Accessible Minutes", href: "View.ashx?M=MADA&ID=1336059&GUID=B0165E88-90A2-4E7C-80FE-0AA9E5A24F1A" } };
   assert.equal(minutesLinkFor(accessible, tenant.host)?.format, "HTML");
-  const offHost = { ...withPdf, minutes: { status: "Minutes", href: "https://legistar.granicus.com/mesa/meetings/2026/7/x.pdf" } };
-  assert.equal(minutesLinkFor(offHost, tenant.host), null, "the vendor's document host refuses us in robots.txt and is never followed");
+  // The vendor's document host answers robots.txt with `Disallow: /`. Since the
+  // owner decision of 2026-09-25 that is recorded and blocks nothing: its
+  // public minutes file is followed like the portal's.
+  const vendorHost = { ...withPdf, minutes: { status: "Minutes", href: "https://legistar.granicus.com/mesa/meetings/2026/7/x.pdf" } };
+  assert.deepEqual(minutesLinkFor(vendorHost, tenant.host), { url: "https://legistar.granicus.com/mesa/meetings/2026/7/x.pdf", format: "PDF", label: "Minutes" });
+  // Still guarded: a third host, plain http, or credentials in the URL are never followed.
+  const thirdHost = { ...withPdf, minutes: { status: "Minutes", href: "https://example.com/mesa/x.pdf" } };
+  assert.equal(minutesLinkFor(thirdHost, tenant.host), null, "a link to a third host is not this tenant's publication");
+  const plainHttp = { ...withPdf, minutes: { status: "Minutes", href: "http://legistar.granicus.com/mesa/meetings/2026/7/x.pdf" } };
+  assert.equal(minutesLinkFor(plainHttp, tenant.host), null, "https only");
+  const credentialed = { ...withPdf, minutes: { status: "Minutes", href: "https://user:secret@legistar.granicus.com/mesa/meetings/2026/7/x.pdf" } };
+  assert.equal(minutesLinkFor(credentialed, tenant.host), null, "a URL carrying credentials is never followed");
+  // A minutes document read from the vendor's host names that host on its pointer.
+  const vendorLink = minutesLinkFor(vendorHost, tenant.host)!;
+  const fromVendor = sittingFrom("1336059", { ...textDocument("1336059"), link: vendorLink });
+  assert.equal(fromVendor.minutesPointer.host, "legistar.granicus.com");
+  assert.equal(fromVendor.minutesDocument?.url, vendorLink.url);
+  assert.equal(sittingFrom("1336059", textDocument("1336059")).minutesPointer.host, tenant.host, "a portal document names the portal");
 
   const html = new TextEncoder().encode(`<html><body><p>OFFICE OF THE CITY CLERK COUNCIL MINUTES July 27, 2026</p><p>5-c. A resolution extending Falcon Field Airport&#8217;s landing fee implementation date. – Resolution No. 12559</p><p>It was moved by Councilmember Adams, seconded by Councilmember Heredia, that Resolution No. 12559 be adopted.</p><p>Upon tabulation of votes, it showed: AYES – Freeman–Somers NAYS – Goforth</p><p>Mayor Freeman declared the motion carried by majority vote.</p></body></html>`);
   const read = await readMinutesDocument(minutesLinkFor(accessible, tenant.host)!, html);

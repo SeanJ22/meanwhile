@@ -218,7 +218,7 @@ export interface ScoutToolContext {
    * switch's budget admitting every request (2026-09-25); absent leaves the `search` tool out of the toolkit's
    * specs entirely, so a runtime with no key never offers it. It returns
    * POINTERS ONLY — the model opens each hit with fetch_public/browse, which
-   * enforce robots and vault with provenance. The tool itself fetches no page
+   * read and record robots.txt (never a gate) and vault with provenance. The tool itself fetches no page
    * content and vaults nothing.
    */
   readonly search?: ScoutSearch;
@@ -244,9 +244,8 @@ export interface SearchProvidersResult {
 
 /**
  * A compliant search-index lookup returning POINTERS ONLY. It is authorized API
- * access (a key we pay for), not a crawl, so it does not pass through the robots
- * gate — but nothing it returns is opened here: the model must fetch_public or
- * browse each hit, and THOSE enforce robots and vault with provenance. No page
+ * access (a key we pay for), not a crawl, so it does not read robots.txt — but nothing it returns is opened here: the model must fetch_public or
+ * browse each hit, and THOSE read and record robots.txt (never a gate) and vault with provenance. No page
  * content is requested from any provider (Exa's `contents` is omitted; Brave's
  * default pointer response carries nothing to strip).
  */

@@ -87,7 +87,7 @@ const NOT_A_MUNICIPAL_SITE =
 
 async function get(url: string): Promise<{ status: number; text: string } | { wall: string }> {
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     return { status: r.status, text: r.text };
   } catch (e) {
     return { wall: (e as Error).message };

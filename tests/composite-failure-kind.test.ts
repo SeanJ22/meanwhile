@@ -40,6 +40,19 @@ test("our own code and configuration failures are jobs, and so is an unknown", (
 });
 
 /*
+ * Owner decision 2026-09-25: "Robots.txt alone must not block acquisition." No fetcher stops on a robots line, so a
+ * failure that names only robots.txt is our code stopping where it should have read; an access control stays a wall.
+ */
+test("a robots.txt line is never the publisher's wall; an access control still is", () => {
+  assert.equal(fetchFailureKind(new Error("robots.txt disallows /Calendar.aspx for we-the-people")), "JOB", "a robots refusal is ours: it alarms");
+  assert.equal(fetchFailureKind("permission DISALLOWED: Disallow: / (no request sent)"), "JOB");
+  assert.equal(fetchFailureKind(new Error("HTTP 403: the host forbids this client; a wall to investigate by another public route, never to defeat")), "WALL");
+  assert.equal(fetchFailureKind(new Error("a bot challenge (Cloudflare 'just a moment') answered in place of the page; a challenge is an access control and is never solved or evaded")), "WALL");
+  assert.equal(fetchFailureKind(new Error("HTTP 429 too many requests")), "WALL");
+  assert.equal(fetchFailureKind(new Error("robots.txt could not be read: fetch failed")), "WALL", "the transport's failure is still the transport's");
+});
+
+/*
  * 2026-09-25: Newbury's CivicWeb host stopped resolving on 2026-09-14 and
  * ~2,077 SOURCE_BLOCKED rows recorded only "fetch failed". Node's fetch puts
  * the resolver's answer on `cause.code`; the stored error keeps it.

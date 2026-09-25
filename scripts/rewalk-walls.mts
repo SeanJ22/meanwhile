@@ -40,7 +40,7 @@
  * fabricated, no access control touched. Every URL below is a page the body
  * already publishes to the public.
  */
-import { politeGetText, browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
+import { politeGetText, sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 import { today } from "./doc-dates.mjs";
 
 const AS_OF = today();
@@ -190,7 +190,8 @@ async function rung3(url: string): Promise<Rung> {
   try {
     // The browser header set, with our identification still appended to the
     // User-Agent — the step up the ladder does not cost the contact address.
-    const res = await fetch(url, { headers: browserProfileHeaders() });
+    /* Since 2026-09-25 the browser header set is retired (it disguised the client); this is the one identified client. */
+    const res = await fetch(url, { headers: sourceRequestHeaders("text/html,*/*") });
     const text = await res.text();
     return {
       rung: 3,

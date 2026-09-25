@@ -92,7 +92,7 @@ async function read(outlet: (typeof PRESS_OUTLETS)[number], url: string, municip
   let status = 0;
   let text = "";
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     status = r.status;
     text = r.text;
   } catch (e) {

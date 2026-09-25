@@ -136,7 +136,7 @@ test("WINSLOW · a portal that no longer carries the council's own panel is neve
   assert.equal(read.accounting.outcome, "CONSERVED");
 });
 
-test("WINSLOW · permission is asked first; a host with no robots.txt states no restriction", async () => {
+test("WINSLOW · robots.txt is read first and recorded; a host with no robots.txt states no restriction, and a Disallow never stops the read", async () => {
   const requested: string[] = [];
   const served: typeof fetch = (async (input: string | URL | Request) => {
     const url = String(input);
@@ -150,9 +150,17 @@ test("WINSLOW · permission is asked first; a host with no robots.txt states no 
   assert.equal(rows[0].error, undefined);
   assert.equal(rows[0].html, HTML);
 
-  const walled: typeof fetch = (async (input: string | URL | Request) => {
-    if (String(input).endsWith("/robots.txt")) return new Response("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain" } });
-    throw new Error("nothing past the permission document may be requested");
+  /* Owner decision 2026-09-25: robots.txt alone never blocks a public page. The rules are still read first. */
+  const disallowedAsked: string[] = [];
+  const disallowed: typeof fetch = (async (input: string | URL | Request) => {
+    const url = String(input);
+    disallowedAsked.push(url);
+    if (url.endsWith("/robots.txt")) return new Response("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain" } });
+    if (url === PORTAL) return new Response(HTML, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+    throw new Error(`unexpected request ${url}`);
   }) as typeof fetch;
-  await assert.rejects(() => makeSuiteOneSource([WIRING], walled).fetch({ lat: 35.02, lng: -110.7, radiusKm: 25 }), /PERMISSION DISALLOWED/);
+  const read = await makeSuiteOneSource([WIRING], disallowed).fetch({ lat: 35.02, lng: -110.7, radiusKm: 25 });
+  assert.deepEqual(disallowedAsked, [at("/robots.txt"), PORTAL], "the rules first, then the page they name");
+  assert.equal(read[0].error, undefined);
+  assert.equal(read[0].html, HTML);
 });

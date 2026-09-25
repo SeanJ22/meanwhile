@@ -170,13 +170,15 @@ export function makeDiligentSource(
       const portal: { id: string; key: string }[] = [];
       const taken = new Set<string>();
       /*
-       * **A CONCLUDED SITTING'S AGENDA RECORD FROM THE BODY'S OWN PERMITTED
-       * HOST.** (2026-09-23.)
+       * **A CONCLUDED SITTING'S AGENDA RECORD FROM THE BODY'S OWN HOST.**
+       * (2026-09-23.)
        *
        * The portal's meeting page is not the agenda — the agenda is a linked
-       * document on the same tenant host, and the tenants' robots.txt refuses
-       * this client. Tucson Unified publishes, for every Governing Board
-       * sitting, a Board Actions PDF on govboard.tusd1.org (permitted): the
+       * document on the same tenant host (`/document/…`), which nothing here
+       * follows yet. (The tenants' robots.txt disallows this client; that is
+       * recorded, and has blocked nothing since the owner decision of
+       * 2026-09-25.) Tucson Unified publishes, for every Governing Board
+       * sitting, a Board Actions PDF on govboard.tusd1.org: the
        * agenda's numbered items with the action taken on each. Where the
        * wiring row names that index (`agendaRecordsUrl`) and the portal type
        * ids it covers (`agendaRecordsTypeIds`, read off the portal's own

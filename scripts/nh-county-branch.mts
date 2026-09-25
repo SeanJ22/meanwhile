@@ -157,9 +157,7 @@ const walls: string[] = [];
 for (const o of OFFICES) {
   const url = `${BASE}/${o.path}`;
   try {
-    const page = await politeGetText(url, {
-      profile: "browser",
-      expect: { label: "a county office page", marker: "<" },
+    const page = await politeGetText(url, { expect: { label: "a county office page", marker: "<" },
     });
     const text = contentRegion(page.text);
     if (text === null) {

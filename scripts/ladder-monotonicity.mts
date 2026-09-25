@@ -64,7 +64,7 @@ import { promisify } from "node:util";
 import { learnRoute, recordRouteOutcome, type MethodKnowledge } from "../lib/method/knowledge.ts";
 import { unknownApplicability } from "../lib/method/portability.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
+import { sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 import { present, repeated } from "./cli-args.mts";
 import { today } from "./doc-dates.mjs";
 
@@ -96,7 +96,7 @@ async function nodeRung(url: string, rung: 2 | 3 | 0): Promise<Verdict> {
     rung === 2
       ? { "User-Agent": sourceUserAgent(), Accept: "*/*" }
       : rung === 3
-        ? browserProfileHeaders()
+        ? sourceRequestHeaders("text/html,application/xhtml+xml,*/*;q=0.8") /* Since 2026-09-25 the browser header set is retired (it disguised the client); this is the one identified client. */
         : {};
   const name = rung === 2 ? "node + project UA" : rung === 3 ? "node + browser headers" : "node, NO headers";
   try {
@@ -121,7 +121,7 @@ async function curlRung(url: string): Promise<Verdict> {
         "-w",
         "%{http_code} %{size_download}",
         "-A",
-        browserProfileHeaders()["User-Agent"] ?? "Mozilla/5.0",
+        sourceUserAgent(),
         url,
       ],
       { timeout: 35_000 },

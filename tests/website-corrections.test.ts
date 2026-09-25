@@ -189,15 +189,43 @@ test("C15: an outage keeps the reviewed evidence, and says which source was not 
     [DOTGOV_REGISTRY_URL]: { status: 200, body: REGISTRY_CSV },
     "https://cottonwoodaz.gov/": { status: 200, body: "<html><title>Just a moment...</title></html>" },
   });
-  assert.equal((await acquireWebsiteCorrections([COTTONWOOD], challenged.runtime)).outcomes[0]?.disposition, "APPLIED_ON_REVIEWED_EVIDENCE");
+  const challengedOutcome = (await acquireWebsiteCorrections([COTTONWOOD], challenged.runtime)).outcomes[0];
+  assert.equal(challengedOutcome?.disposition, "APPLIED_ON_REVIEWED_EVIDENCE");
+  assert.match(challengedOutcome!.detail, /an access control answered in place of the page \(a bot challenge/);
 
-  const refusedByRobots = runtime({
+  /* A 403 to this client is an access control: not a reading, never pushed past, and never a contradiction. */
+  const forbidden = runtime({
+    [DOTGOV_REGISTRY_URL]: { status: 200, body: REGISTRY_CSV },
+    "https://cottonwoodaz.gov/": { status: 403, body: "<html><title>Forbidden</title></html>" },
+  });
+  const forbiddenOutcome = (await acquireWebsiteCorrections([COTTONWOOD], forbidden.runtime)).outcomes[0];
+  assert.equal(forbiddenOutcome?.disposition, "APPLIED_ON_REVIEWED_EVIDENCE");
+  assert.match(forbiddenOutcome!.detail, /HTTP 403: the host forbids this client/);
+  assert.equal(forbidden.requested.filter((u) => u === "https://cottonwoodaz.gov/").length, 1, "the forbidden page is asked once, never re-sent");
+});
+
+test("C15: a public page read over a robots.txt that disallows it is a reading (owner decision 2026-09-25), robots.txt still read first", async () => {
+  const overRobots = runtime({
     "https://cottonwoodaz.gov/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
     [DOTGOV_REGISTRY_URL]: { status: 200, body: REGISTRY_CSV },
+    "https://cottonwoodaz.gov/": { status: 200, body: HOMEPAGE },
   });
-  const read = await acquireWebsiteCorrections([COTTONWOOD], refusedByRobots.runtime);
-  assert.equal(read.outcomes[0]?.disposition, "APPLIED_ON_REVIEWED_EVIDENCE");
-  assert.ok(!refusedByRobots.requested.includes("https://cottonwoodaz.gov/"), "a page robots.txt refuses is never requested");
+  const read = await acquireWebsiteCorrections([COTTONWOOD], overRobots.runtime);
+  assert.equal(read.outcomes[0]?.disposition, "APPLIED_VERIFIED", "robots.txt alone never keeps a source from being read again");
+  assert.ok(overRobots.requested.includes("https://cottonwoodaz.gov/"), "the public page is requested");
+  assert.ok(
+    overRobots.requested.indexOf("https://cottonwoodaz.gov/robots.txt") < overRobots.requested.indexOf("https://cottonwoodaz.gov/"),
+    "robots.txt is read first",
+  );
+  assert.deepEqual(read.receipts.map((r) => r.sourceId), ["website-correction:dotgov-registry", "website-correction:az:city:city-of-cottonwood:homepage"]);
+
+  /* A robots.txt that could not be read is recorded as unread and the page is read all the same. */
+  const unreadable = runtime({
+    "https://cottonwoodaz.gov/robots.txt": "TIMEOUT",
+    [DOTGOV_REGISTRY_URL]: { status: 200, body: REGISTRY_CSV },
+    "https://cottonwoodaz.gov/": { status: 200, body: HOMEPAGE },
+  });
+  assert.equal((await acquireWebsiteCorrections([COTTONWOOD], unreadable.runtime)).outcomes[0]?.disposition, "APPLIED_VERIFIED");
 });
 
 test("C15: a source that now contradicts the review, or was withdrawn, refuses the correction", async () => {

@@ -163,7 +163,7 @@ for (const party of PARTIES) {
     let status = 0;
     let bytes = 0;
     try {
-      const r = await politeGetText(party.home, { profile: "browser" });
+      const r = await politeGetText(party.home, {});
       status = r.status;
       bytes = r.text.length;
     } catch {
@@ -199,7 +199,7 @@ for (const party of PARTIES) {
     let status = 0;
     let text = "";
     try {
-      const r = await politeGetText(url, { profile: "browser" });
+      const r = await politeGetText(url, {});
       status = r.status;
       text = r.text;
     } catch {

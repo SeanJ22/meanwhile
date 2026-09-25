@@ -70,13 +70,16 @@ import {
  * right most of the time and wrong exactly on the special sitting somebody
  * wanted to attend.
  *
- * **Two of these hosts refuse this pipeline's ordinary client**, which is what
- * kept them at `NOT_ATTEMPTED` for a day: `kearsarge.org` and
- * `newbury.nh.gov` answer 403 to the civic-index profile. They answer 200 to
- * a browser, and the browser rung in `lib/sources/http.ts` is how these rows
- * are retrieved — same pacing, same contact address, one rung further up the
- * ladder. See `profile: "browser"` there for why that is negotiation and not
- * circumvention.
+ * **Two of these hosts refuse this pipeline's identified client**:
+ * `kearsarge.org` and `newbury.nh.gov` answer 403 to it. From 2026-08-15 to
+ * 2026-09-25 their rows were read with a browser header set instead (the
+ * "browser profile"). That dressed the client as a browser to get past a
+ * filter that had refused it, which the owner decision of 2026-09-25 rules out
+ * (access controls are never bypassed), so every row is read as the project's
+ * own identity (`lib/sources/http.ts`): Node's client first, then the same name
+ * through `curl`, which both hosts admit (measured 2026-09-25). A refusal of
+ * that is a wall: the partition keeps its last good version while another
+ * public route is pursued.
  */
 
 const SOURCE_NAME = "schedulepage";
@@ -1271,15 +1274,10 @@ export function makeSchedulePageSource(
     async fetch(query?: MeetingQuery): Promise<SchedulePageRaw[]> {
       const collected: SchedulePageRaw[] = [];
       for (const wiring of wiringRows) {
-        const profile =
-          wiring.config.profile === "browser"
-            ? ("browser" as const)
-            : ("index" as const);
         try {
           const { text } = await politeGetText(wiring.config.schedulePage, {
             fetchImpl,
             accept: "text/html",
-            profile,
             signal: query?.signal,
           });
           /*
@@ -1322,7 +1320,6 @@ export function makeSchedulePageSource(
                 const monthPage = await politeGetText(next.toString(), {
                   fetchImpl,
                   accept: "text/html",
-                  profile,
                   signal: query?.signal,
                 });
                 schedule += monthPage.text;
@@ -1348,7 +1345,7 @@ export function makeSchedulePageSource(
               if (!(at >= from - 86_400_000 && at <= to + 86_400_000)) continue;
               const url = `${wiring.config.dayJson}${sitting.date.replace(/-/g, "")}`;
               try {
-                const day = await politeGetText(url, { fetchImpl, accept: "application/json", profile, signal: query?.signal });
+                const day = await politeGetText(url, { fetchImpl, accept: "application/json", signal: query?.signal });
                 days.push({ date: sitting.date, url, json: day.text });
               } catch {
                 // One day refused is not the body's calendar refused: that sitting stays date-only.
@@ -1381,7 +1378,6 @@ export function makeSchedulePageSource(
             const page = await politeGetText(wiring.config.documentsPage, {
               fetchImpl,
               accept: "text/html",
-              profile,
               signal: query?.signal,
             });
             documents = page.text;

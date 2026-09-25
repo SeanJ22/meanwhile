@@ -538,8 +538,11 @@ test("the minutes pointer has NO record class, so it cannot be offered as eviden
     "a minutes document nobody has read is not a MINUTES record; stamping a class " +
       "on it would let 'a minutes file exists' answer 'what did they decide'",
   );
-  // And the reason it was not walked is stated on the record itself.
-  assert.match(pointer.retrievalNote, /Disallow: \//);
+  // And the reason it was not walked is stated on the record itself: ours (no
+  // minutes adapter reads the vendor's file yet), never robots.txt, which
+  // blocks nothing since the owner decision of 2026-09-25.
+  assert.match(pointer.retrievalNote, /No minutes adapter reads the file on legistar\.granicus\.com yet/);
+  assert.doesNotMatch(pointer.retrievalNote, /Disallow/);
   assert.match(pointer.retrievalNote, /contents are not held/);
 });
 

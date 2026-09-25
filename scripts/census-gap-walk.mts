@@ -197,9 +197,10 @@ interface Fetched {
  * holds either way; the specific 403 is this client on this platform.
  */
 async function get(url: string): Promise<Fetched | null> {
-  for (const profile of ["browser", "index"] as const) {
+  /* One identified client (2026-09-25): the browser profile disguised it and is retired. */
+  {
     try {
-      const res = await politeGetText(url, { profile, accept: "text/html,*/*" });
+      const res = await politeGetText(url, { accept: "text/html,*/*" });
       const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(res.text);
       const title = m ? decodeEntities(m[1].replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim() : "";
       return { status: res.status, title, challenged: false, finalUrl: url };
@@ -211,10 +212,9 @@ async function get(url: string): Promise<Fetched | null> {
       if (/WALL|challenge/i.test(msg)) {
         return { status: 200, title: "", challenged: true, finalUrl: url };
       }
-      if (profile === "index") return null;
+      return null;
     }
   }
-  return null;
 }
 
 /** Does the page name this government? Distinctive words, not a substring. */

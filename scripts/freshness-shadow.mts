@@ -1560,7 +1560,7 @@ const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
   },
   now: nowIso,
 });
-/* Pointers only: the model still opens each hit with fetch_public/browse, which enforce robots and vault. */
+/* Pointers only: the model still opens each hit with fetch_public/browse, which read and record robots.txt (never a refusal, owner decision 2026-09-25), wall on an access control, and vault. */
 const scoutSearch = searchBudget === null ? null : makeScoutSearch({
   braveKey: process.env.BRAVE_SEARCH_API_KEY,
   exaKey: process.env.EXA_API_KEY,
@@ -1570,7 +1570,7 @@ console.log(
   scoutSearch === null
     ? `  scout search: OFF (${discoverySearchOn ? "no Brave or Exa key in this process" : configHold !== null ? "held: the owner's config row could not be trusted" : "the owner's paid-search switch is off"})`
     : `  scout search: ON under the owner's switch (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}; ` +
-        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots enforced downstream`,
+        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots.txt recorded downstream`,
 );
 
 /*
@@ -1840,7 +1840,8 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     );
   }
   for (const d of dispositions) {
-    lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (permission ${d.permission}, transport ${d.transport}) — ${d.note.slice(0, 300)}`);
+    /* The robots.txt verdict is a record, never a reason to stop (owner decision 2026-09-25); the transport says whether a wall stood. */
+    lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (robots.txt ${d.permission}, recorded, never a refusal; transport ${d.transport}) — ${d.note.slice(0, 300)}`);
   }
   if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
   /* A dispatched discovery row starts from what the free walk saw: its outcome and the leads it could not confirm. */

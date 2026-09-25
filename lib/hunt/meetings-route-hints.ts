@@ -104,9 +104,11 @@ const NH_LEDGER: HintObservation = { at: "2026-09-24T04:33:00Z", by: "Backend se
 /**
  * Chandler's own publications, found by the RouteTask session's research on 2026-09-24 (robots.txt read first on
  * every host; about 90 requests, none to destinyhosted.com). Every agenda, result and set of minutes is published
- * only on destinyhosted.com, whose robots.txt reads as disallow-all and which is never requested: that is the
- * owner's decision. The city's own pages date the sittings. The official-page-events check reads no dated event
- * from them yet, so the walk records them as leads until it does; then they are finds with no change here.
+ * only on destinyhosted.com, whose robots.txt reads as disallow-all. On 2026-09-24 that host waited on the owner;
+ * since the owner decision of 2026-09-25 (robots.txt alone must not block acquisition) it may be read, and what
+ * is missing is an adapter that follows the city's Destiny agenda links. The city's own pages date the sittings.
+ * The official-page-events check reads no dated event from them yet, so the walk records them as leads until it
+ * does; then they are finds with no change here. The observation strings below are the 2026-09-24 record as made.
  */
 const CHANDLER_RESEARCH: HintObservation = { at: "2026-09-24T18:24:00Z", by: "RouteTask session research, robots-checked, destinyhosted.com never requested" };
 

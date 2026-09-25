@@ -79,8 +79,13 @@ export const AUTO_CROSSWALK_HOLD_REASONS = [
   "HOST_NOT_ATTESTED",
   /** The calendar is not on the host the walk attested as the government's own. */
   "HOST_NOT_OWN",
-  /** A read the proposal rests on has no robots permission recorded. */
+  /**
+   * Historical: before the owner decision of 2026-09-25 a read whose robots verdict was not ALLOWED or NO_ROBOTS held
+   * the row. A stored hold may still carry it; the reviewer never produces it now (robots.txt is recorded, never a hold).
+   */
   "PERMISSION_NOT_SHOWN",
+  /** The walk recorded no robots.txt reading for the calendar's host before reading it: robots is read first, whatever it says. */
+  "ROBOTS_NOT_READ",
   /** The calendar's or the naming page's bytes are not held in the vault. */
   "EVIDENCE_NOT_VAULTED",
   /** The state's registration pairs this government with no body. */

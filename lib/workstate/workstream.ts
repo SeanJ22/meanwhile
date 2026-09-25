@@ -188,11 +188,10 @@ export function completion(
     blockedBy.push(`${unclassified.length} discovery candidate(s) unclassified`);
   }
 
-  const unresolvedPermission = w.permissions.filter((p) => p.permission === "CANNOT_TELL");
-  if (unresolvedPermission.length > 0) {
-    blockedBy.push(
-      `${unresolvedPermission.length} host(s) with permission unread — CANNOT_TELL is neither allowed nor disallowed`,
-    );
+  /* An unread robots.txt blocks nothing (owner decision 2026-09-25); a host walling this client does. */
+  const walled = w.permissions.filter((p) => !mayWalk(p).allowed);
+  if (walled.length > 0) {
+    blockedBy.push(`${walled.length} host(s) walling this client by an access control — investigate another public route`);
   }
 
   // An unmaterialized obligation is work the project OWES and cannot currently
@@ -291,7 +290,7 @@ export function generateHandoff(
       .filter((i) => i.disposition === "RECHECK_DUE")
       .map((i) => `${i.id} (due ${i.recheckOn ?? "date unrecorded"})`),
     permissionUnresolved: w.permissions
-      .filter((p) => !mayWalk(p).allowed && p.permission === "CANNOT_TELL")
+      .filter((p) => !mayWalk(p).allowed)
       .map((p) => `${p.host} (${p.transport}${p.failure ? `: ${p.failure}` : ""})`),
     candidates: accountCandidates(w.candidates),
     unmaterialized: {

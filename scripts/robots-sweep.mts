@@ -1,30 +1,27 @@
 /**
- * PERMISSION BEFORE REACHABILITY, AT SCALE.
- * (2026-08-26, the sources-and-incumbency session. RULING 148, RULING 166.)
+ * ROBOTS.TXT READ AND RECORDED, AT SCALE.
+ * (2026-08-26, the sources-and-incumbency session; made a record rather than a
+ * gate by the owner decision of 2026-09-25.)
  *
- * RULING 148 says the may-we-walk verdict is enforced by the fetcher and never
- * remembered by a session. Today it is enforced for exactly one population —
- * the general search indexes in `lib/hunt/search-pool.ts` — and for every other
- * host in this project the question is asked by a person reading
- * `docs/sources.md`, which is the reading failure that ruling was adopted over.
- *
- * This is the instrument that makes the question cheap to ask about MANY hosts
- * at once, so a session enumerating a state's sources (RULING 86) can answer the
- * permission column for every one of them before it walks any of them.
+ * This is the instrument that makes the robots column cheap to fill for MANY
+ * hosts at once, so a session enumerating a state's sources can record what
+ * each host's rules say before it walks them.
  *
  * It reads each host's own `robots.txt` and reports, per (host, path):
  *
  *   ALLOWED       no `User-agent: *` rule disallows the path
- *   DISALLOWED    a `Disallow` rule covers it. NOT a wall (RULING 148): a
- *                 disallow is a host saying do not ask, and it is never
- *                 re-walked on a RULING 53 clock
- *   NO_ROBOTS     the host serves no robots.txt, so nothing forbids the path
+ *   DISALLOWED    a `Disallow` rule covers it — RECORDED, and not blocking
+ *   NO_ROBOTS     the host serves no robots.txt
  *   CANNOT_TELL   robots.txt could not be read at all. RULING 24: a check that
- *                 cannot reach its subject never prints like a pass, and this
- *                 verdict REFUSES the walk
+ *                 cannot reach its subject never prints like a pass, so it is
+ *                 reported as unread, never as "no robots file"
  *
- * FAIL CLOSED. `CANNOT_TELL` refuses, exactly as `unknown` refuses in RULING
- * 148. That direction costs a lookup; the other costs an apology.
+ * **No verdict refuses a walk.** Sean, 2026-09-25: "Robots.txt alone must not
+ * block acquisition. I explicitly authorize automated reading of publicly
+ * accessible pages even when robots.txt requests otherwise." A robots.txt that
+ * answered 401, 403 or 429, or a challenge page, is reported as what it is: a
+ * sign the host walls this client by an access control, which the walk must
+ * never bypass (`lib/hunt/access-control.ts`).
  *
  * RULING 159 — the run FAILS when it has nothing to report. A sweep of zero
  * hosts is a sweep that did not run, not a clean board.
@@ -296,8 +293,9 @@ async function readRobots(origin: string): Promise<RobotsRead> {
    * that can only ask over https cannot answer the permission question for
    * them. That is a gap in the instrument, not a fact about the publisher.
    *
-   * The verdict still fails safe: if http answers nothing either, the origin
-   * stays `CANNOT_TELL` and the walk stays refused.
+   * If http answers nothing either, the origin stays `CANNOT_TELL`: recorded
+   * as unread, never as "no robots file", and not blocking (owner decision
+   * 2026-09-25).
    */
   if (out.status === null && origin.startsWith("https://")) {
     const plain = origin.replace(/^https:/, "http:");
@@ -309,7 +307,7 @@ async function readRobots(origin: string): Promise<RobotsRead> {
       });
       settle(res.status, res.ok ? await res.text() : null, 4);
     } catch {
-      /* Nothing at either scheme. CANNOT_TELL stands, and it refuses. */
+      /* Nothing at either scheme. CANNOT_TELL stands, recorded as unread. */
     }
   }
 
@@ -340,7 +338,7 @@ export async function judgeUrl(url: string): Promise<HostVerdict> {
       host: u.host,
       path: u.pathname,
       verdict: "CANNOT_TELL",
-      basis: "robots.txt could not be fetched at all, so the permission question is unanswered and the walk is refused",
+      basis: "robots.txt could not be fetched at all: recorded as unread, and not blocking (owner decision 2026-09-25)",
       robotsStatus: null,
       robotsRung: rung,
     };
@@ -419,7 +417,9 @@ if (invokedDirectly) {
         `             ${r.basis}${r.robotsStatus === null ? "" : ` (robots.txt HTTP ${r.robotsStatus}${rung})`}`,
       );
     }
-    const refused = results.filter((r) => r.verdict === "DISALLOWED" || r.verdict === "CANNOT_TELL");
-    console.log(`\n${results.length} judged · ${refused.length} refused · ${results.length - refused.length} walkable`);
+    /* Recorded, never a refusal (owner decision 2026-09-25): every public path is walkable; an access control is not. */
+    const disallowed = results.filter((r) => r.verdict === "DISALLOWED").length;
+    const unread = results.filter((r) => r.verdict === "CANNOT_TELL").length;
+    console.log(`\n${results.length} recorded · ${disallowed} named by a Disallow (recorded, not blocking) · ${unread} unread`);
   }
 }

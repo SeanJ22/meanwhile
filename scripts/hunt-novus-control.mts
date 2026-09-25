@@ -64,17 +64,12 @@ for (const tenant of TENANTS) {
   const base = `https://${tenant}.novusagenda.com/agendapublic`;
   const entry: Record<string, unknown> = { tenant, base };
   try {
-    /* PERMISSION FIRST, per host, before a single page is read. */
+    /* robots.txt first, per host, before a single page is read — recorded, never a refusal (owner decision 2026-09-25). */
     const robots = await page.request.get(`https://${tenant}.novusagenda.com/robots.txt`, {
       timeout: 20_000,
     });
     const robotsBody = robots.status() === 200 ? (await robots.text()).slice(0, 400) : null;
-    entry.robots = { status: robots.status(), body: robotsBody };
-    if (robotsBody && /Disallow:\s*\/\s*$/m.test(robotsBody)) {
-      entry.skipped = "blanket disallow — not read";
-      results.push(entry);
-      continue;
-    }
+    entry.robots = { status: robots.status(), body: robotsBody, blanketDisallow: robotsBody !== null && /Disallow:\s*\/\s*$/m.test(robotsBody) };
 
     const opened = await page.goto(`${base}/MeetingsResponsive.aspx`, {
       waitUntil: "networkidle",

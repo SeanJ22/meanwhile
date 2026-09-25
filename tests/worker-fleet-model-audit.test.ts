@@ -7,6 +7,8 @@ import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-r
 import { ModelTransportError, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContext, modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
+import { standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import type { CostEntry } from "../lib/control-plane/cost.ts";
 
 const NOW = "2026-09-03T10:00:00.000Z";
 const MODEL = assertStepMayInvokeModel("adversarial-audit").model;
@@ -175,6 +177,44 @@ test("adaptive budget keeps five complete events and every exploratory route wit
     assert.ok(surface.excerpts.some((excerpt: { text: string }) => excerpt.text.includes(`Official agendas route ${index}`)));
     for (const excerpt of surface.excerpts) assert.equal(input.surfaceEvidence![index].text.slice(excerpt.start, excerpt.end), excerpt.text);
   }
+});
+
+/*
+ * 2026-09-25: the auditor admitted against the static RESEARCH_BOUNDS default
+ * ($100), so the owner's dial did not bind it. It now admits against the
+ * ceiling in force, and the standing runtime carries that number to it.
+ */
+async function reposWithAuditSpend(usd: number) {
+  const repos = createMemoryRepositories();
+  const cost: CostEntry = {
+    attemptId: "earlier-audit", workItemId: "audit-work", routeTaskId: null, routeId: null, source: null, jurisdiction: null,
+    project: "fleet", role: "ADVERSARIAL_AUDITOR", recordedAt: "2026-09-03T09:00:00.000Z",
+    cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false },
+  };
+  await repos.costs.append(cost.workItemId, cost.attemptId, cost, NOW);
+  return repos;
+}
+
+test("the auditor admits against the owner's ceiling in force, lowered or raised, not the static default", async () => {
+  let requests = 0;
+  const transport: ModelTransport = async () => { requests += 1; return response({ verdict: "SURVIVED", challenges: [] }); };
+  // $60 spent under a $50 dial: refused before any request. The $100 default would have admitted it.
+  await assert.rejects(modelAuditReasoner(await reposWithAuditSpend(60), transport, () => NOW, { ceilingUsd: 50 }).review(context(), "lowered"),
+    /DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; the rolling daily research ceiling is reached: \$60\.0000 of \$50/);
+  assert.equal(requests, 0);
+  // $102 spent under a $150 dial: admitted. The $100 default would have refused it.
+  const raised = await modelAuditReasoner(await reposWithAuditSpend(102), transport, () => NOW, { ceilingUsd: 150 }).review(context(), "raised");
+  assert.equal(raised.review.verdict, "SURVIVED");
+  assert.equal(requests, 1);
+  assert.throws(() => modelAuditReasoner(createMemoryRepositories(), transport, () => NOW, { ceilingUsd: 0 }), /AUDIT_CEILING_INVALID/);
+});
+
+test("the standing runtime hands the auditor the ceiling in force", async () => {
+  let requests = 0;
+  const transport: ModelTransport = async () => { requests += 1; return response({ verdict: "SURVIVED", challenges: [] }); };
+  const runtime = standingFleetRuntime({ root: process.cwd(), repos: await reposWithAuditSpend(60), transport, now: () => NOW, auditCeilingUsd: 50 });
+  await assert.rejects(runtime.auditReasoner!.review(context(), "standing"), /AUDIT_ROLLING_COST_CEILING/);
+  assert.equal(requests, 0);
 });
 
 test("an oversized primary projection is refused before transport instead of cutting through civic JSON", async () => {

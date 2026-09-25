@@ -54,8 +54,10 @@ export const FLEET_SAFETY_BOUNDS = {
   // The FALLBACK rolling 24-hour model-spend ceiling. The value in force is the
   // owner's console override (`AdminConfig.fleetSpendCeiling`), read at the start
   // of every cycle through `resolveRollingCeiling`; this constant governs only
-  // when no override stands or the row cannot be read — "a ceiling that
-  // disappears must not become no ceiling". Restored to $100 (the pre-2026-09-19
+  // when the row was read and carries no override — "a ceiling that disappears
+  // must not become no ceiling". A row that cannot be read or is malformed does
+  // not reach this fallback: the runner holds paid work instead, because the
+  // owner's dial may be set below it (2026-09-25). Restored to $100 (the pre-2026-09-19
   // value) now the console dial can move it with no deploy and no restart; the
   // interim $25 brake is retired into the dial.
   rolling24HourModelUsd: 100,
@@ -72,10 +74,12 @@ export const FLEET_SPEND_CEILING_MAX_USD = 10_000;
 
 /**
  * The rolling 24-hour model-spend ceiling in force, given the owner's override
- * (or null when none stands / it could not be read).
+ * (or null when none stands).
  *
- * The fallback is the built-in {@link FLEET_SAFETY_BOUNDS} value, so a missing or
- * unreadable override is still a real ceiling and never "no ceiling". A
+ * The fallback is the built-in {@link FLEET_SAFETY_BOUNDS} value, so a missing
+ * override is still a real ceiling and never "no ceiling". The runner calls this
+ * only for a row it read cleanly; an unreadable or malformed row holds paid work
+ * rather than fall back (`adminConfigForPaidWork` in gateway/admin-config.ts). A
  * non-positive or non-finite override is treated as no override, for the same
  * reason — a corrupt row must not read as "spend nothing" or "spend without
  * limit". `source` lets a surface show a live override apart from the fallback.
@@ -101,7 +105,9 @@ export type FleetStopCode =
   | "WALL_CLOCK_CEILING"
   | "UNMEASURED_MODEL_SPEND"
   | "SCHEDULED_BLACKOUT"
-  | "PROVIDER_CIRCUIT_BROKEN";
+  | "PROVIDER_CIRCUIT_BROKEN"
+  | "OWNER_PAUSED"
+  | "MODEL_LANE_CLOSED";
 
 export interface OperationalNight {
   readonly active: boolean;
@@ -322,6 +328,7 @@ export class FleetSafetyController {
   private readonly historicalRollingUsd: number | null;
   private readonly night: OperationalNight;
   private readonly paused: boolean;
+  private readonly modelHold: string | null;
   private readonly clock: () => number;
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
@@ -337,7 +344,15 @@ export class FleetSafetyController {
   constructor(input: {
     readonly now: string;
     readonly costs: readonly CostEntry[];
+    /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
+    /**
+     * Why the cycle's paid model lane is closed, or null/undefined while it is
+     * open. Every model request is refused with this reason: the lane already
+     * builds no paid caller while closed, and this is the second lock, so a
+     * caller added later cannot spend past a pause or an unreadable control.
+     */
+    readonly modelHold?: string | null;
     readonly circuits?: readonly ProviderCircuit[];
     readonly lastSuccessfulActivity?: string | null;
     readonly costLedgerReadable?: boolean;
@@ -359,6 +374,7 @@ export class FleetSafetyController {
     this.startedMs = Date.parse(input.now);
     this.night = operationalNightAt(input.now);
     this.paused = input.paused ?? false;
+    this.modelHold = input.modelHold ?? null;
     this.clock = input.clock ?? Date.now;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now);
@@ -440,6 +456,10 @@ export class FleetSafetyController {
   }
 
   reserveModelRequest(provider: string, work: string, request: ModelRequest): Reservation {
+    // Paid work only: a pause or a closed lane refuses model requests, while
+    // free fetches (`admitProviderRequest`, `guardedOpenBytes`) keep running.
+    if (this.paused) this.refuse(work, "OWNER_PAUSED", "the owner paused the runner; no model request is sent under the pause");
+    if (this.modelHold !== null) this.refuse(work, "MODEL_LANE_CLOSED", this.modelHold);
     if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
     const bodyBytes = Buffer.byteLength(JSON.stringify(request));
     const rate = rateFor(request.model);

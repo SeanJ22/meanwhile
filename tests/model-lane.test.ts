@@ -26,6 +26,9 @@ function facts(over: Partial<ModelLaneFacts> = {}): ModelLaneFacts {
     activation: OPEN_GATE,
     paused: false,
     pauseIntentId: null,
+    runnerPaused: false,
+    runnerPauseIntentId: null,
+    unreadableControls: [],
     ...over,
   };
 }
@@ -53,23 +56,48 @@ test("the real activation gate decides: the lane is open exactly when a delivery
   assert.equal(modelLaneClosure(facts({ activation: gate })) === null, deliveryPathOpen(gate));
 });
 
-test("reasons are ordered: blackout, dry, no-model, credential, delivery, owner pause", () => {
-  const all = facts({ scheduledBlackout: true, dry: true, noModel: true, credentialConfigured: false, activation: CLOSED_GATE, paused: true, pauseIntentId: "ri-1" });
+test("reasons are ordered: blackout, dry, no-model, owner pause, runner pause, unreadable control, credential, delivery", () => {
+  const all = facts({
+    scheduledBlackout: true, dry: true, noModel: true, credentialConfigured: false, activation: CLOSED_GATE,
+    paused: true, pauseIntentId: "ri-1", runnerPaused: true, runnerPauseIntentId: "PAUSE_RUNNER:x", unreadableControls: ["the log could not be read"],
+  });
   assert.equal(modelLaneClosure(all)?.code, "SCHEDULED_BLACKOUT");
   assert.match(modelLaneClosure({ ...all, scheduledBlackout: false })!.reason, /^--dry/);
   assert.match(modelLaneClosure({ ...all, scheduledBlackout: false, dry: false })!.reason, /^--no-model/);
-  assert.match(
-    modelLaneClosure({ ...all, scheduledBlackout: false, dry: false, noModel: false })!.reason,
-    /ANTHROPIC_API_KEY is not set/,
-  );
-  assert.match(
-    modelLaneClosure({ ...all, scheduledBlackout: false, dry: false, noModel: false, credentialConfigured: true })!.reason,
-    /no delivery path is open/,
-  );
-  assert.deepEqual(
-    modelLaneClosure({ ...all, scheduledBlackout: false, dry: false, noModel: false, credentialConfigured: true, activation: OPEN_GATE }),
-    { code: "PAUSED", reason: "paused by owner intent ri-1" },
-  );
+  const invocation = { scheduledBlackout: false, dry: false, noModel: false };
+  assert.deepEqual(modelLaneClosure({ ...all, ...invocation }), { code: "PAUSED", reason: "paused by owner intent ri-1" });
+  assert.match(modelLaneClosure({ ...all, ...invocation, paused: false })!.reason, /^the owner paused the runner \(intent PAUSE_RUNNER:x\)/);
+  assert.match(modelLaneClosure({ ...all, ...invocation, paused: false, runnerPaused: false })!.reason, /^held closed as if paused.*the log could not be read/);
+  const noOwnerFact = { ...all, ...invocation, paused: false, runnerPaused: false, unreadableControls: [] };
+  assert.match(modelLaneClosure(noOwnerFact)!.reason, /ANTHROPIC_API_KEY is not set/);
+  assert.match(modelLaneClosure({ ...noOwnerFact, credentialConfigured: true })!.reason, /no delivery path is open/);
+  assert.equal(modelLaneClosure({ ...noOwnerFact, credentialConfigured: true, activation: OPEN_GATE }), null);
+});
+
+/*
+ * 2026-09-25: the owner's controls fail closed. Each case below left the lane
+ * OPEN before (the old rule read only the research-lane PAUSE).
+ */
+test("the runner-level PAUSE_RUNNER closes the paid lane, not only the research-lane PAUSE", () => {
+  const closed = modelLaneClosure(facts({ runnerPaused: true, runnerPauseIntentId: "PAUSE_RUNNER:2026-09-25T15:00:00.000Z" }));
+  assert.equal(closed?.code, "PAUSED");
+  assert.match(closed!.reason, /the owner paused the runner \(intent PAUSE_RUNNER:2026-09-25T15:00:00\.000Z\); no paid model work runs under it/);
+});
+
+test("an owner control that could not be read holds the lane closed as if paused, names it, and says free work continues", () => {
+  const closed = modelLaneClosure(facts({
+    unreadableControls: ["the owner's research intents could not be read (connection reset)", "the owner's spend ceiling on the config row is malformed (0 is not a positive dollar amount)"],
+  }));
+  assert.equal(closed?.code, "PAUSED", "counted with the pauses (modelClassDeferredForLane), never as a spent ceiling");
+  assert.match(closed!.reason, /research intents could not be read \(connection reset\); the owner's spend ceiling on the config row is malformed/);
+  assert.match(closed!.reason, /Plain-code work, routine publication and free discovery walks continue/);
+});
+
+test("PRODUCTION TODAY — research paused, delivery gate closed: the lane stays closed and now leads with the owner's pause", () => {
+  // Before 2026-09-25 this read LANE_DISABLED (no delivery path); either way no paid model work runs.
+  const today = modelLaneClosure(facts({ activation: CLOSED_GATE, paused: true, pauseIntentId: "PAUSE:2026-09-22" }));
+  assert.deepEqual(today, { code: "PAUSED", reason: "paused by owner intent PAUSE:2026-09-22" });
+  assert.notEqual(modelLaneClosure(facts({ activation: readActivationGate("."), paused: true, pauseIntentId: "p" })), null);
 });
 
 /*

@@ -32,8 +32,9 @@ import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers
  * ```
  *
  * The Scout lane is ADMITTED per row or DEFERRED BY CODE: `LANE_DISABLED`
- * (no credential in this process, `--dry`, `--no-model`), `PAUSED` (an owner
- * intent), `CEILING` (the rolling $/day ceiling, RULING 241), `CYCLE_MAX`
+ * (no credential in this process, `--dry`, `--no-model`, no delivery path),
+ * `PAUSED` (the owner's lane PAUSE or runner PAUSE_RUNNER, or an owner control
+ * that could not be read), `CEILING` (the rolling $/day ceiling, RULING 241), `CYCLE_MAX`
  * (the per-cycle Scout maximum), `BUDGET` (it could not finish inside the
  * dispatch budget). A deferred row keeps its next-due; nothing is dropped and
  * nothing is reported complete.
@@ -67,6 +68,10 @@ import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers
  *   --max=N               the stated deterministic dispatch ceiling for this cycle
  *   --scout-max=N         the stated Scout ceiling for this cycle (default RESEARCH_BOUNDS)
  *   --no-model            hold the Scout lane closed for this cycle (a diagnostic)
+ *   --owner-intents-unreadable
+ *                         the runner could not read the owner's intents before
+ *                         starting this cycle: the paid lane stays closed, free
+ *                         work runs (pilot-runner.mts passes it)
  *   --interval=N          the runner's minutes between cycles, so the heartbeat
  *                         can state when the next cycle is due
  *   --only=<prefix>       work only obligations whose id starts with <prefix>.
@@ -275,7 +280,13 @@ import {
   scheduledBlackoutAt,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
-import { ADMIN_CONFIG_ID, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import {
+  ADMIN_CONFIG_ID,
+  adminConfigForPaidWork,
+  discoverySearchEnabled,
+  fleetSpendCeilingOverrideUsd,
+  type AdminConfigRead,
+} from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -425,6 +436,8 @@ if (wantsPostgres) {
 }
 const dry = argv.includes("--dry");
 const noModel = argv.includes("--no-model");
+/* The runner could not read the owner's intents before starting this cycle; the paid lane stays closed (2026-09-25). */
+const ownerIntentsUnreadableByRunner = argv.includes("--owner-intents-unreadable");
 const canary = argv.includes("--canary");
 const boundedNumber = (raw: string | undefined, fallback: number, maximum: number): number => {
   const parsed = raw === undefined ? fallback : Number(raw);
@@ -967,16 +980,30 @@ for (const o of sync.all) {
  * READ ONCE, BEFORE ANY ORDER IS DECIDED. The owner's DISPATCH (ADM-8)
  * reorders both lanes, so the intent log is read before the deterministic
  * sort and the reader-impact bands below. A log that cannot be read is a
- * named runtime condition and the cycle proceeds as if the owner said
- * nothing — an intent nobody can read is not an intent nobody sent, so the
- * failure is on the record rather than in a guess.
+ * named runtime condition — an intent nobody can read is not an intent nobody
+ * sent, so the failure is on the record rather than in a guess.
+ *
+ * **UNREADABLE FAILS CLOSED FOR PAID WORK ONLY (2026-09-25).** Before this an
+ * unreadable log read as "not paused" and the paid lane could open over a
+ * pause nobody could see. Now `intentLogUnreadable` holds the model lane
+ * closed as if paused (model-lane.ts), and FleetSafety refuses every model
+ * request on the same reason. Each other reader of `intents` was weighed:
+ * RUN_CYCLE_NOW / DISPATCH / lane PAUSE-RESUME honoring have nothing to honor
+ * from an empty log; routine meeting intake and the dispatch-work writes are
+ * plain-code work behind `runnerPause`, and they continue — "free work
+ * continues" is the owner's rule for an unreadable control, and anything model-
+ * class they create waits behind the closed lane. `pausedByOwner` is not set:
+ * the record says the log was unreadable, never that the owner paused.
  */
 let intentLog: ResearchIntent[] = [];
+let intentLogUnreadable: string | null = null;
 try {
   intentLog = [...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))];
 } catch (error) {
+  intentLogUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(
-    `research intents could not be read (${error instanceof Error ? error.message : String(error)}); the lane treats the owner as not paused`,
+    `research intents could not be read (${intentLogUnreadable}); the paid model lane stays closed this cycle as if paused, ` +
+      "and plain-code work, routine intake and free discovery walks continue",
   );
 }
 const intents = readIntents(intentLog);
@@ -1199,6 +1226,7 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
   });
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
+/* Plain-code intake: an unreadable intent log does not stop it (the paid lane is what fails closed, above). */
 if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
   try {
     const retained = await retainRecentRoutineMeetingEvidence({ repos,
@@ -1299,27 +1327,80 @@ finishPhase("open-occurrences");
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
 const credentialConfigured = workerKey.length > 0;
 
-/* Compliant search-index discovery (RULING 248: find every avenue). Null when
-   neither BRAVE_SEARCH_API_KEY nor EXA_API_KEY is set — the `search` tool is
-   then left out of the toolkit entirely and the lane behaves exactly as before.
-   Pointers only: the model still opens each hit with fetch_public/browse, which
-   enforce robots and vault. */
-const scoutSearch = makeScoutSearch({
-  braveKey: process.env.BRAVE_SEARCH_API_KEY,
-  exaKey: process.env.EXA_API_KEY,
-});
-if (scoutSearch !== null) {
-  console.log(
-    `  scout search: ENABLED (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}) — pointers only, robots enforced downstream`,
+/*
+ * THE ROLLING CEILING IN FORCE — the owner's console override, read at cycle
+ * start from the control plane (`AdminConfig.fleetSpendCeiling`), or the built-in
+ * fallback when the row was read and no override stands. Read HERE, not at
+ * module import, so a change Sean makes in the console governs this very cycle
+ * with no deploy and no restart. One number drives BOTH scout-admission gates —
+ * the FleetSafety rolling ceiling (`rollingCeilingReached`, which admitScout
+ * reads) and the research daily ceiling (`ceilingPermits`) — the auditor's
+ * admission, and the per-request reservation through the controller's bounds,
+ * so a lane paused at the old ceiling resumes on this cycle and there is no
+ * second ceiling that silently binds when the dial is raised.
+ *
+ * A row that cannot be read or is malformed HOLDS paid work (2026-09-25): the
+ * owner's dial may be set below the built-in fallback, so falling back could
+ * raise the ceiling in force. `configHold` closes the model lane below and turns
+ * paid search off; the cycle's free work is untouched. Read before the lane is
+ * decided, which is why this sits above `modelLaneClosure`.
+ *
+ * The owner's switch for PAID discovery search (`AdminConfig.discoverySearch`)
+ * is read from the same row at the same moment, so a change in the console
+ * governs this cycle. Absent, malformed or unreadable reads OFF.
+ */
+let discoverySearchOn = false;
+/* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
+let discoverySearchReceiptId: string | null = null;
+let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
+let configRead: AdminConfigRead;
+try {
+  configRead = { row: await repos.adminConfig.read(ADMIN_CONFIG_ID) };
+} catch (error) {
+  configRead = { unreadable: error instanceof Error ? error.message : String(error) };
+}
+const { config, holdPaidWork: configHold } = adminConfigForPaidWork(configRead);
+const ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
+discoverySearchOn = discoverySearchEnabled(config);
+if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
+  discoverySearchReceiptId = config.discoverySearch.receiptId;
+  discoverySearchDecision =
+    `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
+}
+if (configHold !== null) {
+  discoverySearchDecision = `OFF: ${configHold}`;
+  runtimeConditions.push(
+    `${configHold}; paid work is held this cycle (no Scout, pre-warm, auditor or paid search) rather than fall back to the built-in ` +
+      `$${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)}, which could be above the owner's dial`,
   );
 }
+const rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
+const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
+/*
+ * Every owner spending control this cycle could not read, as a sentence. The
+ * runner passes `--owner-intents-unreadable` when its own read before starting
+ * this cycle failed (pilot-runner.mts `ownerSays`): it could not tell whether
+ * the runner itself is paused, so this cycle's paid lane stays closed even when
+ * the read above succeeds.
+ */
+const unreadableControls: string[] = [
+  ...(intentLogUnreadable === null ? [] : [`the owner's research intents could not be read (${intentLogUnreadable})`]),
+  ...(ownerIntentsUnreadableByRunner
+    ? ["the runner could not read the owner's intents before it started this cycle, so it cannot know the runner is not paused"]
+    : []),
+  ...(configHold === null ? [] : [configHold]),
+];
+
 /* One ordered answer for why the model lane is closed (model-lane.ts). It also
    closes the lane while no delivery path is open: with promotion off, paid
-   Scout and auditor output could only accumulate unread (owner, 2026-09-22). */
+   Scout and auditor output could only accumulate unread (owner, 2026-09-22).
+   Either owner pause closes it — the research-lane PAUSE and the runner-level
+   PAUSE_RUNNER Admin's runner card issues — and so does any control above that
+   could not be read (2026-09-25). */
 const laneClosure = modelLaneClosure({
   scheduledBlackout,
   dry,
@@ -1329,6 +1410,9 @@ const laneClosure = modelLaneClosure({
   activation: readActivationGate(ROOT),
   paused: intents.paused,
   pauseIntentId: intents.pauseIntentId ?? null,
+  runnerPaused: intents.runnerPause.paused,
+  runnerPauseIntentId: intents.runnerPause.intent?.intentId ?? null,
+  unreadableControls,
 });
 const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
@@ -1384,52 +1468,15 @@ try {
 } catch (error) {
   runtimeConditions.push(`prior Fleet safety state could not be read: ${error instanceof Error ? error.message : String(error)}`);
 }
-/*
- * THE ROLLING CEILING IN FORCE — the owner's console override, read at cycle
- * start from the control plane (`AdminConfig.fleetSpendCeiling`), or the built-in
- * fallback when no override stands or the row cannot be read. Read HERE, not at
- * module import, so a change Sean makes in the console governs this very cycle
- * with no deploy and no restart. One number drives BOTH scout-admission gates —
- * the FleetSafety rolling ceiling (`rollingCeilingReached`, which admitScout
- * reads) and the research daily ceiling (`ceilingPermits`) — and the per-request
- * reservation through the controller's bounds, so a lane paused at the old
- * ceiling resumes on this cycle and there is no second ceiling that silently
- * binds when the dial is raised.
- */
-let ceilingOverrideUsd: number | null = null;
-/*
- * The owner's switch for PAID discovery search (`AdminConfig.discoverySearch`),
- * read from the same row at the same moment, so a change in the console
- * governs this cycle. Absent, malformed or unreadable reads OFF.
- */
-let discoverySearchOn = false;
-/* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
-let discoverySearchReceiptId: string | null = null;
-let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
-try {
-  const cfg = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  ceilingOverrideUsd = cfg !== null && isAdminConfig(cfg.value) ? fleetSpendCeilingOverrideUsd(cfg.value) : null;
-  const config = cfg !== null && isAdminConfig(cfg.value) ? cfg.value : null;
-  discoverySearchOn = discoverySearchEnabled(config);
-  if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
-    discoverySearchReceiptId = config.discoverySearch.receiptId;
-    discoverySearchDecision =
-      `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
-  }
-} catch (error) {
-  discoverySearchDecision = `OFF: the owner's switch could not be read (${error instanceof Error ? error.message : String(error)})`;
-  runtimeConditions.push(
-    `the Fleet spend-ceiling override could not be read (${error instanceof Error ? error.message : String(error)}); the built-in fallback $${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)} governs this cycle`,
-  );
-}
-const rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
-const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
+/* The ceiling in force and the paid-search switch were read above the lane closure. */
 
 const fleetSafety = new FleetSafetyController({
   now: NOW,
   costs: costLedger,
   costLedgerReadable: ledgerUnreadable === null,
   paused: intents.runnerPause.paused,
+  /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
+  modelHold: laneDisabledReason,
   circuits: priorCircuits,
   lastSuccessfulActivity: priorLastSuccessfulActivity,
   rollingCeilingUsd: effectiveCeilingUsd,
@@ -1437,6 +1484,50 @@ const fleetSafety = new FleetSafetyController({
 if (ledgerUnreadable !== null) {
   fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
 }
+
+/*
+ * PAID SEARCH: ONE SWITCH, ONE BUDGET, BOTH CALLERS (2026-09-25). The Scout
+ * `search` tool and the discovery walk's search rung send the same paid Brave
+ * and Exa requests. Before this the Scout tool was built from the env keys
+ * alone — outside the owner's switch, the per-cycle and per-day caps and
+ * FleetSafety admission. Now neither exists unless the switch is on (an
+ * unreadable or malformed row reads OFF, above), and both draw on this one
+ * budget: the cycle's cap here, the day's cap in the durable shared ledger
+ * under the `discovery-search` vendor, and FleetSafety on its own provider key.
+ * The Scout tool is reached only inside the paid model lane besides.
+ */
+const searchCap = (name: string, fallback: number): number => {
+  const raw = Number(process.env[name]);
+  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
+};
+const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
+const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
+const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
+  repos,
+  perCycle: SEARCH_PER_CYCLE,
+  perDay: SEARCH_PER_DAY,
+  admit: () => {
+    try {
+      fleetSafety.admitProviderRequest("discovery-search", "paid-search");
+      return null;
+    } catch (error) {
+      return error instanceof Error ? error.message : String(error);
+    }
+  },
+  now: nowIso,
+});
+/* Pointers only: the model still opens each hit with fetch_public/browse, which enforce robots and vault. */
+const scoutSearch = searchBudget === null ? null : makeScoutSearch({
+  braveKey: process.env.BRAVE_SEARCH_API_KEY,
+  exaKey: process.env.EXA_API_KEY,
+  budget: searchBudget,
+});
+console.log(
+  scoutSearch === null
+    ? `  scout search: OFF (${discoverySearchOn ? "no Brave or Exa key in this process" : configHold !== null ? "held: the owner's config row could not be trusted" : "the owner's paid-search switch is off"})`
+    : `  scout search: ON under the owner's switch (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}; ` +
+        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots enforced downstream`,
+);
 
 /*
  * THE EXPANSION-SCOPE BUDGETS, armed from the same ledger the Fleet ceiling
@@ -1474,6 +1565,7 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
  * work waits behind the same lane, the same Fleet ceiling and the same scope
  * budgets as every other row. Only a full standing cycle writes.
  */
+/* Obligation rows only, no spend: an unreadable intent log does not stop them; what they create waits behind the closed lane. */
 const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !scheduledBlackout && !intents.runnerPause.paused;
 const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
   ? null
@@ -2319,17 +2411,12 @@ const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
 const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
 /*
- * The search rung's caps (Brave and Exa combined, pointers only): per cycle
- * here, per day in the durable shared budget ledger. The defaults are the
+ * The search rung's caps (Brave and Exa combined, pointers only) are
+ * SEARCH_PER_CYCLE / SEARCH_PER_DAY, set with the one paid-search budget at
+ * cycle start and shared with the Scout `search` tool. The defaults are the
  * conservative dial agreed with the data-plane owner; an env value may lower or
  * raise them within 0..1000.
  */
-const searchCap = (name: string, fallback: number): number => {
-  const raw = Number(process.env[name]);
-  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
-};
-const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
-const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState: string;
 if (!MEETINGS_DISCOVERY_ENABLED) {
@@ -2352,22 +2439,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
      * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
      * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
      * no refusal, no budget-ledger write. When it is on, the env caps bind it per cycle and per day, on FleetSafety's
-     * own key, and every request sent is charged.
+     * own key, and every request sent is charged. `searchBudget` is the one budget the Scout tool also draws on.
      */
-    const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
-      repos,
-      perCycle: SEARCH_PER_CYCLE,
-      perDay: SEARCH_PER_DAY,
-      admit: () => {
-        try {
-          fleetSafety.admitProviderRequest("discovery-search", "meetings-discovery-search");
-          return null;
-        } catch (error) {
-          return error instanceof Error ? error.message : String(error);
-        }
-      },
-      now: nowIso,
-    });
     const discoverySearch = searchBudget === null ? null : makeDiscoverySearch({
       braveKey: process.env.BRAVE_SEARCH_API_KEY,
       exaKey: process.env.EXA_API_KEY,
@@ -2480,7 +2553,9 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
-      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) } : {}) });
+      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) } : {}),
+      /* The auditor admits against the ceiling in force, the same one admitScout reads — not the static default. */
+      auditCeilingUsd: effectiveCeilingUsd });
     // Retained civic bytes get one guaranteed stage before open-ended discovery.
     // Both queues consume the same aggregate counter; unused shares are lent
     // back within the existing ten-dispatch and wall limits.
@@ -2850,7 +2925,7 @@ const researchLines = [
   `  candidates         ${candidateReports.reduce((n, r) => n + r.proposed.length, 0)} method candidate(s) proposed and validated (never admitted here)`,
   `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
   `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · ${honoredDispatch.length} of ${intents.pendingDispatch.length} pending DISPATCH honored · ` +
-    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intents.paused ? "yes" : "no"}`,
+    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intentLogUnreadable !== null ? "UNKNOWN (log unreadable; paid lane held closed)" : intents.paused ? "yes" : "no"}`,
   ...ownerDispatches.map(
     (d) => `  owner dispatch     ${d.intentId}: "${d.target}" -> ${d.matched} of ${d.registered} registered unit(s) placed first in both lanes`,
   ),

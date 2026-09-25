@@ -222,16 +222,24 @@ async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, ti
   } finally { if (timer !== undefined) clearTimeout(timer); }
 }
 
+/**
+ * `ceilingUsd` is the rolling ceiling IN FORCE — the owner's console override,
+ * the same number the Scout admission reads (2026-09-25). Before this the
+ * auditor admitted against the static `RESEARCH_BOUNDS` default, so a dial set
+ * below $100 did not bind it. Absent (a manual proof), the default stands.
+ */
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
-  options: { readonly timeoutMs?: number } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
+  options: { readonly timeoutMs?: number; readonly ceilingUsd?: number } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
   const route = assertStepMayInvokeModel("adversarial-audit");
   const timeoutMs = options.timeoutMs ?? AUDIT_REVIEW_TIMEOUT_MS;
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > AUDIT_REVIEW_TIMEOUT_MS) throw new Error("AUDIT_REVIEW_BOUND_INVALID");
+  const ceilingUsd = options.ceilingUsd ?? RESEARCH_BOUNDS.dailyCeilingUsd;
+  if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
   return { workerProvider: "anthropic", workerVersion: route.model, review: async (context) => withinBound(async (signal) => {
     const started = performance.now();
     const spend = researchSpendInWindow(await repos.costs.readAll(), now());
     signal.throwIfAborted();
-    const admission = ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd);
+    const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
     const body = auditReasoningContext(context);
     const request: ModelRequest = { model: route.model, max_tokens: 2_048, output_config: { effort: route.effort },

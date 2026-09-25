@@ -32,7 +32,9 @@ import { researchVaultResolver } from "./vault-object.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
-  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
+  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
+  /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
+  auditCeilingUsd?:number}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());

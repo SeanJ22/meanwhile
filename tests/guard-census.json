@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 786,
+    "named": 7678,
     "dynamic": 30
   },
   "files": {
@@ -6256,6 +6256,34 @@
         "OUTCOME: found beats lead beats a read homepage; walled everywhere is BLOCKED, unreadable rules are not a wall; a redirect is a hop, not an answer",
         "VERIFY: Legistar, CivicPlus, IQM2 and CivicClerk yield only by their own content",
         "VERIFY: an iCal route yields only with a VEVENT; an empty calendar is EMPTY, and an HTML shell at a feed URL is not a calendar"
+      ],
+      "dynamic": 0
+    },
+    "tests/mesa-minutes-outcomes-routine.test.ts": {
+      "names": [
+        "Ask answers a Mesa council decision from the council's own minutes, with the exact passage, and never presents a tally as a roll call",
+        "Ask's topic timeline joins a Mesa decision to the topic from the minutes and composes the answer without a model",
+        "Mesa's minutes are one routine contract on the standing clock, following the council's InSite sittings",
+        "a failed minutes read is a held attempt that leaves the last good pointer live; a failed calendar read too",
+        "a routine pass reads the minutes the portal links, records the rest as not yet published, and promotes",
+        "the Reader combines Pima's and Mesa's pointers, each tenant's records and provenance intact, and Pima's answers unchanged",
+        "the rolling window ends today in Mesa and reaches back 120 days; one grid range covers it unless it crosses a year"
+      ],
+      "dynamic": 0
+    },
+    "tests/mesa-minutes-outcomes.test.ts": {
+      "names": [
+        "a later sitting's minutes approving these minutes marks them APPROVED, with its own words",
+        "a sitting whose minutes are not published yet is 'not yet published' — the publisher's state, never 'no decision'",
+        "action minutes are not approved minutes: the 2026-09-17 'Results' are the clerk's draft, and they say no formal action was taken",
+        "result wording: a failed motion reads FAILED, and a motion with no readable result is NOT_RECORDED, never failed",
+        "the 2026-06-01 minutes: one motion adopting five resolutions and an ordinance reaches all six items",
+        "the 2026-06-08 study session's scrambled OCR: displaced margin numbers stay out of the motion and the result is still found",
+        "the 2026-07-20 council minutes, a signed scan read through its OCR text layer (real PDF bytes)",
+        "the 2026-07-27 council minutes: five motions, two split votes, the consent agenda and the items pulled from it",
+        "the concluded sittings a pass considers: the wired bodies, in the window, already held, one row per portal id",
+        "the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host",
+        "which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link"
       ],
       "dynamic": 0
     },

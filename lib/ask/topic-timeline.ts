@@ -80,8 +80,12 @@ export interface TopicTimelineEntry {
   readonly sourceUrl: string | null;
   readonly sourceOrg: string | null;
   readonly retrievedAt: string | null;
-  /** Where the entry came from: the structured agenda record, or a line in a held agenda document. */
-  readonly basis: "STRUCTURED_AGENDA_RECORD" | "AGENDA_DOCUMENT_LINE";
+  /**
+   * Where the entry came from: the structured agenda record, a line in a held
+   * agenda document, or an item and its recorded result in the body's own
+   * minutes (a body whose clerk records decisions only there, NH332).
+   */
+  readonly basis: "STRUCTURED_AGENDA_RECORD" | "AGENDA_DOCUMENT_LINE" | "MINUTES_RECORD";
 }
 
 export interface UnreadSitting {
@@ -358,6 +362,57 @@ export function buildTopicTimeline(input: {
         });
       }
     }
+
+    /*
+     * 1b. A sitting read off its MINUTES (NH332): no structured agenda, and
+     * each recorded action carries the item as the minutes print it and the
+     * exact passage recording its result. Minutes list every item the body
+     * reached, so a read sitting is not an unread one.
+     */
+    if (sitting.agenda.length > 0 || sitting.extraction !== "RETRIEVED") continue;
+    if (sitting.outcomes.some((outcome) => outcome.quote)) readDays.add(day);
+    for (const outcome of sitting.outcomes) {
+      if (!outcome.quote || !outcome.itemQuote || !matchesTopic(outcome.itemQuote, topic)) continue;
+      structuredDays.add(day);
+      const past = Date.parse(sitting.startsAt) < now;
+      const status: TopicEntryStatus = !past
+        ? "SCHEDULED"
+        : outcome.disposition === "PASSED" ? "PASSED" : outcome.disposition === "FAILED" ? "FAILED" : "ACTED";
+      const sourceUrl = outcome.provenance.endpoint || sitting.sourceUrl;
+      const retrievedAt = outcome.provenance.readOn === "NEVER_READ" ? null : outcome.provenance.readOn;
+      entries.push({
+        key: `${sitting.meetingId}#${outcome.eventItemId}`,
+        meetingId: sitting.meetingId,
+        startsAt: sitting.startsAt,
+        localDay: day,
+        // One motion can carry several items: the words around the topic, windowed as a document line is.
+        itemText: topicWindow(outcome.itemQuote, topic),
+        agendaNumber: outcome.itemReference ?? null,
+        matterFile: outcome.matterFile,
+        status,
+        action: outcome.action,
+        tallyText: outcome.tallyText,
+        sourceUrl,
+        sourceOrg: sitting.sourceOrg,
+        retrievedAt,
+        basis: "MINUTES_RECORD",
+      });
+      records.push({
+        kind: "MEETING_ACTION",
+        id: `${outcome.eventItemId}#action`,
+        bodyId: input.bodyId,
+        meetingId: sitting.meetingId,
+        text: [
+          `Item ${outcome.itemReference ?? ""}${outcome.sectionQuote ? ` (under "${outcome.sectionQuote}")` : ""}: "${outcome.itemQuote}".`,
+          `The minutes record: "${outcome.quote}"`,
+          sitting.minutesDocument ? sitting.minutesDocument.approval.detail : null,
+        ].filter(Boolean).join(" "),
+        occurredAt: sitting.startsAt,
+        sourceUrl,
+        sourceOrg: sitting.sourceOrg,
+        retrievedAt,
+      });
+    }
   }
 
   // 2. Lines in held agenda documents, for sittings the structured records did not cover.
@@ -492,6 +547,7 @@ export function buildTopicTimeline(input: {
     topicTimelineEntries: entries.length,
     topicStructuredAgendaItems: entries.filter((entry) => entry.basis === "STRUCTURED_AGENDA_RECORD").length,
     topicAgendaDocumentLines: entries.filter((entry) => entry.basis === "AGENDA_DOCUMENT_LINE").length,
+    topicMinutesRecords: entries.filter((entry) => entry.basis === "MINUTES_RECORD").length,
     topicItemsScheduled: count("SCHEDULED"),
     topicItemsPassed: count("PASSED"),
     topicItemsFailed: count("FAILED"),
@@ -513,9 +569,9 @@ function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
 function itemPhrase(entry: TopicTimelineEntry): string {
   const label = entry.agendaNumber ? `agenda item ${entry.agendaNumber}` : "an agenda item";
   const file = entry.matterFile ? ` (${entry.matterFile})` : "";
-  // A document line is already windowed on the topic (topicWindow); a
-  // structured title is quoted to its first sentence.
-  const quote = entry.basis === "AGENDA_DOCUMENT_LINE" ? entry.itemText : quotable(entry.itemText, 150);
+  // A document line and a minutes item are already windowed on the topic
+  // (topicWindow); a structured title is quoted to its first sentence.
+  const quote = entry.basis === "STRUCTURED_AGENDA_RECORD" ? quotable(entry.itemText, 150) : entry.itemText;
   return `${label}${file}, "${quote}"`;
 }
 

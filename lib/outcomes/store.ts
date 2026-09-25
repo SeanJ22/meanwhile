@@ -30,9 +30,10 @@
  * | `EXTRACTION_FAILED` | Ingest ran and the route returned nothing. OURS, and RETRYABLE. |
  * | `NO_ACTION_RECORDED` | Ingest succeeded; the publisher recorded no action. THEIRS. |
  * | `ACTION_WITHOUT_ROLL_CALL` | Actions held; no per-person roll exists. THEIRS. |
+ * | `MINUTES_NOT_YET_PUBLISHED` | The sitting concluded; its minutes are not published yet. THEIRS. |
  *
- * The last two are the only ones that are facts about a government, and they are
- * the two the render default must never let the others impersonate. `CLAUDE.md`:
+ * Those last three are the only ones that are facts about a government, and they are
+ * the ones the render default must never let the others impersonate. `CLAUDE.md`:
  * *"We haven't recorded this yet" is a fact about us; "not in this chamber for
  * this vote" is a fact about them. They may never render as the same sentence.*
  *
@@ -74,7 +75,11 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
-import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "./data-plane.ts";
+import {
+  MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT,
+  mesaMinutesOutcomeScopeIssue,
+  PIMA_LEGISTAR_OUTCOMES_CONTRACT,
+} from "./data-plane.ts";
 import { currentMeetingOutcomesEdge } from "../registry/runtime-edge.ts";
 
 /** Where the committed store lives, relative to the repo root. */
@@ -94,6 +99,22 @@ let outcomeReadState: CivicDataReadResult<OutcomeSnapshot> = civicDataReadNotIni
 );
 /** The edge version the current state was primed from, or null when it came from the database. */
 let edgePrimedVersion: string | null = null;
+
+/*
+ * **MESA'S POINTER, HELD BESIDE PIMA'S** (NH332, 2026-09-25). Mesa's council
+ * decisions are a separate routine contract with its own scope and pointer
+ * (`mesa-legistar-minutes-outcomes`), so a Mesa refusal never moves Pima's
+ * facts and a Pima refusal never moves Mesa's. The Reader combines the two
+ * into the one snapshot every consumer already reads (`getOutcomeSnapshot`),
+ * each sitting keeping its own publisher and provenance.
+ *
+ * Mesa has no bundled seed: before its first promotion it is simply not
+ * recorded, and a Mesa read that fails leaves Pima's answers untouched.
+ */
+const MESA = MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT;
+const mesaNotInitialized = (): CivicDataReadResult<OutcomeSnapshot> =>
+  civicDataReadNotInitialized(MESA.recordClass, MESA.scope, "The Mesa minutes outcome pointer has not been read for this process.");
+let mesaReadState: CivicDataReadResult<OutcomeSnapshot> = mesaNotInitialized();
 
 /**
  * The committed store, read once per process.
@@ -142,6 +163,7 @@ export function useOutcomeSnapshotForTests(snapshot: OutcomeSnapshot | null): vo
     PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
     "The Pima Legistar outcome pointer has not been read for this process.",
   );
+  mesaReadState = mesaNotInitialized();
 }
 
 function testSeed(): OutcomeSnapshot | null {
@@ -202,13 +224,121 @@ export async function readOutcomeProjection(
   return outcomeReadState;
 }
 
+function validateMesaOutcomeProjection(value: OutcomeSnapshot, version: string): void {
+  if (!Array.isArray(value.sittings) || !Array.isArray(value.tenants)) {
+    throw new Error(`Mesa minutes outcome projection ${version} is malformed.`);
+  }
+  if (mesaMinutesOutcomeScopeIssue(value) !== null) {
+    throw new Error(`Mesa minutes outcome projection ${version} crosses its tenant or meeting-id scope.`);
+  }
+}
+
+/** Read Mesa's exact GOOD pointer. Its own scope; never Pima's. */
+export async function readMesaOutcomeProjection(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<OutcomeSnapshot>> {
+  const read = await readPromotedCivicData<OutcomeSnapshot>(MESA.recordClass, MESA.scope, options);
+  if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+    validateMesaOutcomeProjection(read.value, read.metadata.versionId ?? "unknown");
+  }
+  mesaReadState = read;
+  return read;
+}
+
+/**
+ * Read both pointers. Returns Pima's version, as it always has (the reader
+ * proof and its callers key on it); Mesa's read is settled beside it and a
+ * Mesa store failure is recorded in its own state rather than thrown, so it
+ * can never cost a reader Pima's answers.
+ */
 export async function refreshOutcomeSnapshotFromPromoted(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<string | null> {
-  return promotedVersionOrThrow(await readOutcomeProjection(options));
+  const [pima] = await Promise.all([
+    readOutcomeProjection(options),
+    readMesaOutcomeProjection(options).catch((error: unknown) => {
+      mesaReadState = civicDataReadNotInitialized(MESA.recordClass, MESA.scope, `The Mesa minutes outcome read failed: ${error instanceof Error ? error.message : String(error)}`);
+      return mesaReadState;
+    }),
+  ]);
+  return promotedVersionOrThrow(pima);
+}
+
+/** Mesa's version alone, for its own reader verification and proof. */
+export async function refreshMesaOutcomeSnapshotFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  return promotedVersionOrThrow(await readMesaOutcomeProjection(options));
 }
 
 export const outcomeProjectionReadState = (): CivicDataReadResult<OutcomeSnapshot> => outcomeReadState;
+export const mesaOutcomeProjectionReadState = (): CivicDataReadResult<OutcomeSnapshot> => mesaReadState;
+
+function edgeMetadata(contract: { readonly recordClass: typeof PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass; readonly scope: string; readonly sourceId: string }, versionId: string) {
+  return {
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    sourceId: contract.sourceId,
+    version: null,
+    versionId,
+    lastKnownGoodVersionId: versionId,
+    sourceThrough: null,
+    retrievedAt: null,
+    promotedAt: null,
+    stale: "CURRENT" as const,
+    staleAt: null,
+  };
+}
+
+/** One tenant's part of a combined snapshot. */
+function tenantPart(value: OutcomeSnapshot, tenant: string): OutcomeSnapshot {
+  return {
+    generatedOn: value.generatedOn,
+    generatedAt: value.generatedAt,
+    tenants: value.tenants.filter((slug) => slug === tenant),
+    sittings: value.sittings.filter((sitting) => sitting.slug === tenant),
+  };
+}
+
+/**
+ * The version string of the COMBINED edge artifact: Pima's version alone while
+ * Mesa has no pointer (so the artifact carried before this change stays
+ * current), and both, named, once it does.
+ */
+export function combinedOutcomeVersionId(pimaVersionId: string | null, mesaVersionId: string | null): string | null {
+  if (mesaVersionId === null) return pimaVersionId;
+  return [pimaVersionId, `${MESA.contractId}=${mesaVersionId}`].filter((part): part is string => part !== null).join("|");
+}
+
+/**
+ * Combine the tenants' promoted projections into the one snapshot the Reader
+ * reads and the edge serves. Each sitting keeps its own tenant, publisher and
+ * provenance; `pointers` names the promoted version each tenant came from.
+ */
+export function combineOutcomeProjections(
+  pima: { readonly value: OutcomeSnapshot; readonly versionId: string } | null,
+  mesa: { readonly value: OutcomeSnapshot; readonly versionId: string } | null,
+): { readonly value: OutcomeSnapshot; readonly versionId: string } | null {
+  const versionId = combinedOutcomeVersionId(pima?.versionId ?? null, mesa?.versionId ?? null);
+  if (versionId === null) return null;
+  if (mesa === null) return { value: pima!.value, versionId };
+  const parts = [pima, mesa].filter((part): part is { value: OutcomeSnapshot; versionId: string } => part !== null);
+  const stamp = (key: "generatedOn" | "generatedAt") =>
+    parts.map(({ value }) => value[key]).filter((stamped) => stamped !== "UNKNOWN").sort().at(-1) ?? "UNKNOWN";
+  return {
+    versionId,
+    value: {
+      generatedOn: stamp("generatedOn"),
+      generatedAt: stamp("generatedAt"),
+      tenants: [...new Set(parts.flatMap(({ value }) => value.tenants))].sort(),
+      sittings: parts.flatMap(({ value }) => value.sittings).sort((a, b) => a.meetingId.localeCompare(b.meetingId)),
+      pointers: [
+        ...(pima ? [{ contractId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId, tenant: "pima", versionId: pima.versionId }] : []),
+        { contractId: MESA.contractId, tenant: MESA.slug, versionId: mesa.versionId },
+      ],
+    },
+  };
+}
 
 /**
  * Prime the outcome projection from a validated EDGE serving artifact, with no
@@ -216,27 +346,52 @@ export const outcomeProjectionReadState = (): CivicDataReadResult<OutcomeSnapsho
  * curated projections' edge primes are: the serving copy carries the validated
  * value and its version, not the promotion receipt, which stays on the
  * authoritative database path the runner reads.
+ *
+ * The artifact is either Pima's projection alone (no `pointers`) or the
+ * combined Pima + Mesa view (NH332); each tenant's part is validated against
+ * its own scope and primed into its own state.
  */
 export function primeOutcomeProjection(value: OutcomeSnapshot, versionId: string): void {
-  validateOutcomeProjection(value, versionId);
-  outcomeReadState = {
-    kind: "BOOTSTRAP",
-    value,
-    metadata: {
-      recordClass: PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
-      scope: PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
-      sourceId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
-      version: null,
-      versionId,
-      lastKnownGoodVersionId: versionId,
-      sourceThrough: null,
-      retrievedAt: null,
-      promotedAt: null,
-      stale: "CURRENT",
-      staleAt: null,
-    },
-    detail: `Served from the meeting-outcomes edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
-  };
+  const pointers = value.pointers;
+  const pimaPointer = pointers?.find((pointer) => pointer.contractId === PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId) ?? null;
+  const mesaPointer = pointers?.find((pointer) => pointer.contractId === MESA.contractId) ?? null;
+  const pimaValue = pointers ? tenantPart(value, "pima") : value;
+  const pimaVersion = pointers ? pimaPointer?.versionId ?? null : versionId;
+  if (pimaVersion !== null) {
+    validateOutcomeProjection(pimaValue, pimaVersion);
+    outcomeReadState = {
+      kind: "BOOTSTRAP",
+      value: pimaValue,
+      metadata: edgeMetadata(PIMA_LEGISTAR_OUTCOMES_CONTRACT, pimaVersion),
+      detail: `Served from the meeting-outcomes edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
+    };
+  } else {
+    outcomeReadState = {
+      kind: "NOT_RECORDED",
+      value: null,
+      metadata: { ...edgeMetadata(PIMA_LEGISTAR_OUTCOMES_CONTRACT, ""), versionId: null, lastKnownGoodVersionId: null, stale: "UNKNOWN" },
+      detail: `The meeting-outcomes edge artifact (version ${versionId}) carries no Pima pointer.`,
+    };
+  }
+  if (mesaPointer !== null) {
+    const mesaValue = tenantPart(value, MESA.slug);
+    validateMesaOutcomeProjection(mesaValue, mesaPointer.versionId);
+    mesaReadState = {
+      kind: "BOOTSTRAP",
+      value: mesaValue,
+      metadata: edgeMetadata(MESA, mesaPointer.versionId),
+      detail: `Served from the meeting-outcomes edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
+    };
+  } else {
+    // The publisher combines every promoted tenant; an artifact without Mesa
+    // is one published while Mesa had no promoted pointer.
+    mesaReadState = {
+      kind: "NOT_RECORDED",
+      value: null,
+      metadata: { ...edgeMetadata(MESA, ""), versionId: null, lastKnownGoodVersionId: null, stale: "UNKNOWN" },
+      detail: `The meeting-outcomes edge artifact (version ${versionId}) carries no Mesa pointer.`,
+    };
+  }
   edgePrimedVersion = versionId;
 }
 
@@ -256,12 +411,32 @@ export async function settleOutcomeRead(): Promise<void> {
   await refreshOutcomeSnapshotFromPromoted();
 }
 
-export function getOutcomeSnapshot(): OutcomeSnapshot {
-  if (injected !== null) return injected;
+function pimaSnapshot(): OutcomeSnapshot {
   if (outcomeReadState.kind === "PROMOTED" || outcomeReadState.kind === "BOOTSTRAP") return outcomeReadState.value;
   return outcomeReadState.kind === "STORE_UNREACHABLE" && outcomeReadState.code === "READ_NOT_INITIALIZED"
     ? testSeed() ?? EMPTY
     : EMPTY;
+}
+
+let combinedMemo: { pima: OutcomeSnapshot; mesa: OutcomeSnapshot; value: OutcomeSnapshot } | null = null;
+
+/**
+ * The snapshot every Reader consumer reads: Pima's projection, plus Mesa's
+ * once it has one. Pima alone is returned as the very object it was read as.
+ */
+export function getOutcomeSnapshot(): OutcomeSnapshot {
+  if (injected !== null) return injected;
+  const pima = pimaSnapshot();
+  const mesa = mesaReadState.kind === "PROMOTED" || mesaReadState.kind === "BOOTSTRAP" ? mesaReadState.value : null;
+  if (mesa === null || mesa.sittings.length === 0) return pima;
+  if (combinedMemo?.pima === pima && combinedMemo.mesa === mesa) return combinedMemo.value;
+  const pimaVersion = outcomeReadState.metadata.versionId;
+  const combined = combineOutcomeProjections(
+    pima.sittings.length > 0 || pimaVersion ? { value: pima, versionId: pimaVersion ?? "unversioned" } : null,
+    { value: mesa, versionId: mesaReadState.metadata.versionId ?? "unversioned" },
+  )!.value;
+  combinedMemo = { pima, mesa, value: combined };
+  return combined;
 }
 
 /** Drop the process cache. For tests and for a run that has just written. */
@@ -272,15 +447,17 @@ export function resetOutcomeSnapshotCache(): void {
     PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
     "The Pima Legistar outcome pointer has not been read for this process.",
   );
+  mesaReadState = mesaNotInitialized();
+  combinedMemo = null;
 }
 
 /** Did a real file back the current snapshot, or is this the empty store? */
 export function loadedFrom(): "DATA_PLANE" | "TEST_FIXTURE" | "EMPTY_STORE" {
   if (injected !== null) return injected.sittings.length === 0 && injected.generatedAt === "UNKNOWN" ? "EMPTY_STORE" : "TEST_FIXTURE";
-  if (outcomeReadState.kind === "PROMOTED") return "DATA_PLANE";
+  if (outcomeReadState.kind === "PROMOTED" || mesaReadState.kind === "PROMOTED") return "DATA_PLANE";
   // An edge-primed state is the promoted data plane's own validated value.
-  if (outcomeReadState.kind === "BOOTSTRAP" && edgePrimedVersion !== null) return "DATA_PLANE";
-  if (outcomeReadState.kind === "BOOTSTRAP") return "TEST_FIXTURE";
+  if ((outcomeReadState.kind === "BOOTSTRAP" || mesaReadState.kind === "BOOTSTRAP") && edgePrimedVersion !== null) return "DATA_PLANE";
+  if (outcomeReadState.kind === "BOOTSTRAP" || mesaReadState.kind === "BOOTSTRAP") return "TEST_FIXTURE";
   const snapshot = getOutcomeSnapshot();
   return snapshot.sittings.length === 0 && snapshot.generatedAt === "UNKNOWN"
     ? "EMPTY_STORE"
@@ -299,7 +476,13 @@ export type OutcomeEvidenceState =
   | "NOT_YET_INGESTED"
   | "EXTRACTION_FAILED"
   | "NO_ACTION_RECORDED"
-  | "ACTION_WITHOUT_ROLL_CALL";
+  | "ACTION_WITHOUT_ROLL_CALL"
+  /**
+   * The sitting concluded and its publisher has not published minutes for it
+   * yet (NH332). THEIRS, and never "no decision": the decisions exist and are
+   * not yet in the public record we read.
+   */
+  | "MINUTES_NOT_YET_PUBLISHED";
 
 /**
  * **The states that are facts about a GOVERNMENT, as data rather than prose.**
@@ -318,7 +501,18 @@ export type OutcomeEvidenceState =
 export const OUTCOME_STATES_ABOUT_THEM: readonly OutcomeEvidenceState[] = [
   "NO_ACTION_RECORDED",
   "ACTION_WITHOUT_ROLL_CALL",
+  // Read off the publisher's own minutes cell ("Not available"), with the instant it was read.
+  "MINUTES_NOT_YET_PUBLISHED",
 ];
+
+/**
+ * A sitting the InSite minutes route wrote (its id is the portal's, as only
+ * that route writes into this store): its records come from minutes, never an
+ * agenda, and its tabulations are text, never a per-person roll.
+ */
+export function isMinutesRouteSitting(sitting: Pick<PersistedSittingOutcomes, "meetingId">): boolean {
+  return sitting.meetingId.startsWith("legistar-insite:");
+}
 
 /** Whose gap a state names. Derived from the list above, never restated. */
 export function outcomeGapWhose(state: OutcomeEvidenceState): "OURS" | "THEIRS" {
@@ -447,9 +641,29 @@ export function outcomeEvidenceFor(
     };
   }
 
+  /*
+   * Minutes not yet published is the publisher's state, not a failure of
+   * ours, and it is never "no decision" (NH332). Named before the failure
+   * checks so it cannot be read as a failed extraction or as an empty sitting.
+   */
+  if (sittings.every((sitting) => sitting.extraction === "NOT_YET_PUBLISHED")) {
+    return {
+      state: "MINUTES_NOT_YET_PUBLISHED",
+      answerable: false,
+      records: [],
+      sittings,
+      refused: [],
+      gap:
+        sittings[0]!.extractionNote ??
+        "The body has not published minutes for that sitting yet, so its decisions are not yet in " +
+          "the public record we read. That is not a record that nothing was decided.",
+      openFailures: [],
+    };
+  }
+
   const openFailures: string[] = [];
   for (const sitting of sittings) {
-    if (sitting.extraction !== "RETRIEVED") {
+    if (sitting.extraction !== "RETRIEVED" && sitting.extraction !== "NOT_YET_PUBLISHED") {
       openFailures.push(
         `${sitting.meetingId}: ${sitting.extraction} — ${sitting.extractionNote ?? "no reason recorded"}`,
       );
@@ -473,7 +687,7 @@ export function outcomeEvidenceFor(
    * has zero outcome records and would otherwise be indistinguishable from a
    * sitting where the body genuinely acted on nothing.
    */
-  const allFailed = sittings.every((s) => s.extraction !== "RETRIEVED");
+  const allFailed = sittings.every((s) => s.extraction !== "RETRIEVED" && s.extraction !== "NOT_YET_PUBLISHED");
   if (allFailed) {
     return {
       state: "EXTRACTION_FAILED",
@@ -497,6 +711,30 @@ export function outcomeEvidenceFor(
   const held: OutcomeEvidenceRecord[] = [];
   for (const sitting of sittings) {
     held.push(...sitting.agenda, ...sitting.outcomes, ...sitting.rollCalls);
+  }
+
+  /*
+   * Minutes read, and they record no motion because — in their own words — no
+   * formal action was taken (a study or strategic planning session). That is a
+   * fact about the body, read off its record; any other empty minutes read
+   * was refused as a failed extraction before it could reach this store.
+   */
+  if (
+    held.length === 0 &&
+    sittings.some((s) => s.extraction === "RETRIEVED" && isMinutesRouteSitting(s)) &&
+    sittings.every((s) => !isMinutesRouteSitting(s) || s.extraction !== "RETRIEVED" || s.outcomes.length === 0)
+  ) {
+    return {
+      state: "NO_ACTION_RECORDED",
+      answerable: false,
+      records: [],
+      sittings,
+      refused: [],
+      gap:
+        "We read that sitting's minutes. They record no motion or vote, and say that no formal action " +
+        "was taken. That is what the body's own record says, not a gap in our retrieval of it.",
+      openFailures,
+    };
   }
 
   if (held.length === 0) {
@@ -551,6 +789,31 @@ export function outcomeEvidenceFor(
    * transparency mandate.
    */
   const anyOutcome = sittings.some((s) => s.outcomes.length > 0);
+  /*
+   * Minutes that list the ayes and nays by surname are NOT a record without a
+   * roll call (NH332). We carry that tabulation as text and have not turned it
+   * into per-member records, which is OUR gap — never "the body did not record
+   * how its members voted".
+   */
+  if (
+    anyOutcome &&
+    query.questionClass === "HOW_DID_THEY_VOTE" &&
+    sittings.every((s) => isMinutesRouteSitting(s)) &&
+    sittings.some((s) => s.outcomes.some((record) => record.tallyText !== null))
+  ) {
+    return {
+      state: "NOT_YET_INGESTED",
+      answerable: false,
+      records: [],
+      sittings,
+      refused: refusedSummary,
+      gap:
+        "The body's minutes for this sitting list how its members voted, by surname, and we carry " +
+        "that tabulation only as the clerk's text. We have not turned it into per-member vote " +
+        "records yet. That is a gap in our collection, not in the body's record.",
+      openFailures,
+    };
+  }
   if (anyOutcome && query.questionClass === "HOW_DID_THEY_VOTE") {
     return {
       state: "ACTION_WITHOUT_ROLL_CALL",

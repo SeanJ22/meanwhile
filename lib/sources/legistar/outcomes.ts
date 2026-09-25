@@ -358,6 +358,27 @@ export interface LegistarOutcomeRecord {
   readonly rollCall: RollCallState;
   readonly rollCallGap: string | null;
   readonly provenance: LegistarRecordProvenance;
+  /*
+   * The fields below are set only on records read off a sitting's MINUTES
+   * (lib/sources/legistar-insite/minutes.ts, NH332), where there is no
+   * EventItemId and the record's authority is a passage of the document.
+   * `eventItemId` is then the record's 1-based position among the actions the
+   * minutes record, and `provenance.endpoint` is the minutes document itself.
+   */
+  /** The minutes' own item number(s): "5-c", "7-a, 7-b". */
+  readonly itemReference?: string | null;
+  /** The item as the minutes print it, verbatim (bounded, elision marked "…"). */
+  readonly itemQuote?: string | null;
+  /**
+   * The section header a sub-item sits under, verbatim: "6. Introduction of the
+   * following ordinances and setting July 27, 2026 as the date of the public
+   * hearing…" — what approving the sub-item did (introduce, not adopt).
+   */
+  readonly sectionQuote?: string | null;
+  /** The exact passage the record was read from: "It was moved by … Carried unanimously." */
+  readonly quote?: string | null;
+  /** The page of the minutes the passage starts on. */
+  readonly page?: number | null;
 }
 
 /** One named member's cast value. Verbatim, and never derived. */

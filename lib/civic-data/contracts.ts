@@ -427,6 +427,50 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["data/states/az/outcomes/legistar-outcomes.json"],
   },
+  /*
+   * Mesa City Council decisions, read off the council's own minutes (NH332,
+   * 2026-09-25). Mesa's clerk enters no action in the Legistar Web API, so the
+   * route behind Pima's outcomes gives Mesa nothing; the minutes are published
+   * on the permitted portal host (`View.ashx?M=M`, linked from the calendar
+   * grid) while the API's minutes file sits on legistar.granicus.com, which
+   * robots.txt refuses us.
+   */
+  {
+    id: "mesa-legistar-minutes-outcomes",
+    sourceId: "mesa-legistar-minutes-outcomes",
+    recordClass: "MEETING_OUTCOME",
+    scope: "US-AZ:place:mesa:legistar-minutes-outcomes",
+    // One host, one lane: the calendar and the minutes are read from the same
+    // portal as the council's InSite meeting partition, one request at a time.
+    acquisitionFailureDomain: "meeting-upstream:mesa.legistar.com",
+    acquisitionAdapter: {
+      authorityMode: "SINGLE_ROUTE",
+      command: ["scripts/legistar-insite-minutes-ingest.mts", "--promote", "--slug", "mesa"],
+      requestedUrl: "https://mesa.legistar.com/Calendar.aspx",
+    },
+    parserNormalizerVersion: "mesa-legistar-minutes-outcomes/1",
+    // Reader freshness as Pima's outcomes: the twelve-hour re-read plus one
+    // failed retry lands inside it.
+    cadence: {
+      description: "fresh for fourteen hours through the 2026 general election, then a day",
+      defaultEveryMs: DAY,
+      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
+    },
+    // Re-reads follow the council's sittings, which its InSite partition carries.
+    schedule: {
+      ...MEETING_SITTING_WINDOW,
+      follows: [{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }],
+    },
+    retry: { afterMs: HOUR, description: "one hour after a failed calendar or minutes read" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "mesa-legistar-minutes-outcomes" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "mesa-legistar-minutes-outcomes", consumers: ["agenda", "Ask", "meeting Reader records", "map"] },
+    lkgBehavior: "A failed calendar or minutes read is stored as a refused candidate; prior GOOD outcomes remain live, and a sitting whose minutes are not yet published is recorded as such, never as a sitting without decisions.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
   {
     id: "dotgov",
     sourceId: "cisa-dotgov-registry",

@@ -1169,7 +1169,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "newbury-advisory-budget-committee",
       feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
-      titleMatch: "Advisory Budget Committee",
+      // "Budget Advisory Committee" (2026-09-25): the feed's 22 September 2025
+      // sitting, which the committee's own minutes list. The feed's bare
+      // "Budget Committee Meeting" is not claimed: it names no advisory body.
+      titleMatch: "Advisory Budget Committee,Budget Advisory Committee",
       bodyName: "2026 Advisory Budget Committee",
       // Every event on this feed publishes an EMPTY `LOCATION`, so every row
       // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
@@ -1754,7 +1757,9 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       [
         "ad-hoc-fire-safety-municipal-building-committee",
         "Ad Hoc Fire Safety Municipal Building Committee",
-        "Fire Safety Municipal Building",
+        // Since 2025-10-16 the feed writes "Ad Hoc Fire Safety Municipal Bldg
+        // Comm Mtg" (six sittings to 2026-04-02), read 2026-09-25.
+        "Fire Safety Municipal Building,Fire Safety Municipal Bldg",
         "Joint",
       ],
       [
@@ -2424,26 +2429,37 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     noticeUrl: "https://warnernh.gov/calendar/",
     verifiedAt: "2026-08-21",
   },
-  // Warner, NH — Warner River Local Advisory Committee: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  // Warner, NH — Warner River Local Advisory Committee, off the "Warner Events"
+  // calendar (2026-09-25). The town's own feed carried only three of its
+  // sittings (2025-11-19, 2026-03-25, 2026-05-27) and none after May. The
+  // Pillsbury Free Library's public Google calendar — embedded with the town's
+  // on library.warnernh.gov/news-and-events and reached from the town's
+  // "Calendar - Warner Events" menu — carries the committee's series: every
+  // other month on the 4th Wednesday at 7 PM at the library from 2026-01-28,
+  // with 25 November moved to 18 November. The committee's own site
+  // (wrlac.com) and its 22 July 2026 agenda state the same 23 September and
+  // 18 November sittings. One feed, so no sitting is listed twice. The library
+  // writes the committee "Warner River LAC" and "WRLAC"; entries it prefixes
+  // "NO"/"NOT" (2020-2021) are the library saying a sitting will not happen.
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-river-local-advisory-committee",
     ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
     agendaSourceType: "ICAL",
     jurisdiction: "Warner, NH",
-    publishingOrg: "Town of Warner",
+    publishingOrg: "Pillsbury Free Library (Warner, NH)",
     timeZone: "America/New_York",
     config: {
       slug: "warner-warner-river-local-advisory-committee",
-      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-      titleMatch: "Warner River Local Advisory,WRLAC",
+      feedUrl: "https://calendar.google.com/calendar/ical/mq5sbbdfvg3le9ddpc76qpo5d8%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "WRLAC,Warner River LAC,Warner River Local Advisory,Warner Local River Advisory",
+      titleExclude: "NO Warner River,NOT Warner River",
       bodyName: "Warner River Local Advisory Committee",
-      // The hall the Select Board's own page gives as its address, and the
-      // building this calendar names on 47 of its board sittings. Reached only
-      // when the event itself carried no location at all.
+      // Reached only when the event itself carried no location at all; the
+      // library's events name the library.
       venueMatch: "Warner Town Hall",
     },
     noticeUrl: "https://warnernh.gov/calendar/",
-    verifiedAt: "2026-08-21",
+    verifiedAt: "2026-09-25",
   },
   // Warner, NH — Warner Village Water District: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
   {
@@ -2456,7 +2472,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "warner-warner-village-water-district",
       feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-      titleMatch: "Warner Village Water,WVWD",
+      // "Precinct Commissioners" (2026-09-25): the district's commissioners'
+      // two standing series on this feed, the 2nd and 4th Wednesday at 3:30 PM
+      // at 55 West Joppa Rd. The town's notices page states the same schedule
+      // for the WVWD Commissioners at the treatment plant there, and the
+      // district's page calls its area "the Precinct".
+      titleMatch: "Warner Village Water,WVWD,Precinct Commissioners",
       titleExclude: "Budget Comm",
       bodyName: "Warner Village Water District",
       // The hall the Select Board's own page gives as its address, and the
@@ -2516,7 +2537,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "lake-todd-village-district-newbury",
       feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-      titleMatch: "Lake Todd",
+      // "LTVD Annual Mtg" (2025-09-06) is the district's own abbreviation
+      // (read 2026-09-25). Its 2026 budget and annual meetings sit in the feed
+      // as "1st Fl Reserved" with the district named only in the description,
+      // which this adapter does not read; the district meets in spring, so no
+      // sitting falls in the current window either way.
+      titleMatch: "Lake Todd,LTVD",
       bodyName: "Lake Todd Village District",
     },
     // Read 2026-08-21: the district's own page is HTTP 404 at every rung and

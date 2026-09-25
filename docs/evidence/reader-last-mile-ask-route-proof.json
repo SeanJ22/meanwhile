@@ -1,13 +1,13 @@
 {
   "purpose": "Executed canonical Ask POST proof for each current quotable snapshot, selecting a known-answer query whose canonical selector returns a verbatim passage from that exact snapshot. Unreadable or unquotable snapshots remain explicitly unexecuted. This proves source retrieval and attribution, not that every possible question can be answered.",
   "modelDisabled": true,
-  "exactHead": "ae0e18f5ca12129b92ce3d40050b956237a21c9c",
+  "exactHead": "92f2c370662127b74ab2ee1b1b795f22510b3c73",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "sourceHashScope": "Working-tree source bytes; not a deployed build proof",
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "b6bc0a4a6d1356982e0bd2acdc1acff32819b6a571aca93f32bda74f48d871f0"
+      "sha256": "64dcfc0821d9d9a76554779fe1b1072d0cff000de0fbbb2049e892caaf589692"
     },
     {
       "path": "lib/ask/statements.ts",
@@ -109,7 +109,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|Lupe Diaz",
-      "payloadSha256": "4119bd3488843605656b4de56d8a48547d06eb3671d0e3e898f3733c801c4d89",
+      "payloadSha256": "4841d39cd5f7c192565aa87b34b82fee37e2b2f096443778998190520edb8d17",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19:diaz-lupe|https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2100|20018a302e269d047ce33ca33690d14440c37b525bae9f952f73d0d0cc4b5032"
@@ -297,7 +297,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|David Gowan",
-      "payloadSha256": "e410adb953a50d849131f268570276a96b5179abc84e471812f47c18a92f6ec9",
+      "payloadSha256": "aa40d20c759cc8537ea7b04885ab8527a5cfe64c39a84433173bbd1769a864cd",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19:gowan-david|https://www.azleg.gov/senate-member/?legislature=55&legislator=1968|ad66f1a52c06f525e128dccc18c7ec74c9c040c76abd3c6405e8c82c76236787"
@@ -455,7 +455,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Sally Ann Gonzales",
-      "payloadSha256": "267b369fa17f5abb9a83b4f6599b8848d838214d4e0091060662a75c480d37a5",
+      "payloadSha256": "9862aac10bbf0f307f0b5e57130876e9c10f539e6860b84d46d0820a5889fcf8",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20:gonzales-sally-ann|https://www.azleg.gov/senate-member/?legislature=55&legislator=1957|7d8ae16f03fb9612eaeadb06c2441cbce8d3f5252c3bce46eac84fc5b165bd46"
@@ -579,7 +579,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Betty Villegas",
-      "payloadSha256": "99edab1186532f9d586eaadf51de0317c927cbaec41027c8f0625513ab4e0a0f",
+      "payloadSha256": "c4045aaa27b33966fa60436d588b05573890ec2bbb5bbba286074d440dcf973a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20:villegas-betty|https://bettyvillegasaz.com|50f58d8e9d0212f49fbeea68a80dbb0f425bbcfa07bd71512664495916f613d4"
@@ -757,7 +757,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Betty Villegas",
-      "payloadSha256": "a8cff6b9174f7625af7227c27a564e588d23cec10830beb714ea3ee264c3e88d",
+      "payloadSha256": "12b127aa8291930d4a0cb33272c68f82a3b91f6d259c8cb1e847355eaa1ec908",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20:villegas-betty|https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2274|19e8e0f8bf49085367185a92928774a4fdbde25422c837a27cb21be5fb4028c9"
@@ -935,7 +935,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-19|Gail Griffin",
-      "payloadSha256": "8a50461ee1dfa6ced667b7d9f25c346bd133bb408eb3bd292fa083b451b13d71",
+      "payloadSha256": "5ce87b9b772276a51d0a1f13fd9d6d62fb17168a2dec4e96386a3ce17152cd83",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-19:griffin-gail|https://www.azleg.gov/house-member/?legislature=55&legislator=2053|bbf53484bea3f7fd56e912149a3c8c33b9c6164a22560aee52d70ac4e9354109"
@@ -1123,7 +1123,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-20|Alma Hernandez",
-      "payloadSha256": "8e0d142f4339a39d5b2598873bcd22dfcd2c7ae8f29e98e39d661efe3b2cd018",
+      "payloadSha256": "f918a91705eee51bd6d76736318da3d68650789aa52aef9db4b112088074ce0c",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-20:hernandez-alma|https://www.azleg.gov/house-member/?legislature=55&legislator=2033|9694cf8d6215d19704f90141171ddf4a1970a42f996bf061a0456083096b9541"
@@ -1309,7 +1309,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-      "payloadSha256": "208c55eceb442e0bc32b4c542d1817c88f227d71a83aa53697d6b5bf1c1ff579",
+      "payloadSha256": "41e571b229f84ed22f768dd931d84519cd56e5918fbfa9431a902287fae14174",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth|https://gc.nh.gov/house/members/member.aspx?member=377093|ce01b501b0d11edc066b1e1c696ac3f80ce2c144be735ad8f33f97a6e43093ac"
@@ -1501,7 +1501,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-      "payloadSha256": "3b95fcfdc7ef239cf394d0decd3f567c8e817c9c70e7eb2126192fc91580f500",
+      "payloadSha256": "c8ea1fee55a9b248f5f0bb6c01bd8e91b845815eed11b8bd21eb467f7ebd6e2a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-|https://gc.nh.gov/house/members/member.aspx?pid=10832|bcea8da79e82e3a87612c3cefaea9e5e6057767f180c389ca5106c0acd4f28e6"
@@ -2067,7 +2067,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-      "payloadSha256": "7bab572d12d2cae94232c04d96573268fd041221d29de139e472273ca10547ac",
+      "payloadSha256": "0c94de9d76ea695af99517c15116143cd997c5b14971309a4dc6c79694e0f8d9",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-senate-7:innis-daniel-e-|https://gc.nh.gov/senate/members/webpages/district07.aspx|f33d5e7ad55cefd2c1f6cd400ae0cb8514c4d069e97c25706e8f582ccfe6201e"
@@ -2269,7 +2269,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:booker",
-      "payloadSha256": "e03d242a465c05067c62479feb539e0ee728359338ffa07eded98d3630f13dba",
+      "payloadSha256": "0ff7551e1d2a7d8a1bce23b721204f5d98a8f46dcb95294b12248c46fd3f609e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:B001288|https://corybooker.com|b924a9b71819c9f51d721eac630768120e06c0a6f27ac9a20974e8915e98d2a6"
@@ -3964,7 +3964,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:booker",
-      "payloadSha256": "98d088e38e35bdc84933fb094832ac5f8b3b820f38ebd224c7bea67be1fbef18",
+      "payloadSha256": "390dac60d813cf639ff810c16e60a4572ce96098fdad76e48f6aab5ee6622a71",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:B001288|https://www.booker.senate.gov|477b31516e4d944aed5cbfc420443ba7093f124e1af498e51eda421c546f845e"
@@ -5663,7 +5663,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:C001133",
-      "payloadSha256": "a1780912136e113b8b2c594e09276cbcc55e886939e142fb955d2acf90799d8d",
+      "payloadSha256": "7c16af187c49a0c5892ba60bfd590988b190f4831dec4683854282c6c497e94c",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:C001133|https://ciscomani.house.gov|49fdaf745e2c279056912e4cc8ff30281aa4c5834ce5ec812ae6a91220dd2ad3"
@@ -6841,7 +6841,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:C001133",
-      "payloadSha256": "b58a978c667d18d96fcd2d154908ed9af6db57f40bb43c7b782e1061141d2e03",
+      "payloadSha256": "1aac9be5baea77d8305ae00ea1a1fb9641c4dbb3ab48298a1d2096ed1e13fff8",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:C001133|https://juanciscomani.com|f1c6d18fac4e3e38b70d20873f279bb93def9c2ddc7a8a6c68d65d9250950f72"
@@ -8002,7 +8002,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000574",
-      "payloadSha256": "ff55e392d457a2ce589468d2a781bbdbd14b70e7c7a1e124a3e427ef848792ed",
+      "payloadSha256": "b1af0f735b5f0f9262fd2a6f7e105f02d1a19042650aee7d4dce0d422d730ef4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000574|https://gallegoforarizona.com|8592dd13e8ae298b29dc671c5b9b571bf4f7788b8dd5aca757b50fc6e9c68f50"
@@ -9204,7 +9204,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000574",
-      "payloadSha256": "d6565f0c46920c2f13590c94e6dce01dffab566f0e1679510e1d3bf24c24f9b4",
+      "payloadSha256": "2e10da95fbd325130d993b62725a893b7c1b60676f5bc3488b2ddf20a9df44ff",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000574|https://www.gallego.senate.gov|0e98f2e5f64e1709c6db5756f56ae47e76a585c7a90028203662786e53e8f180"
@@ -10326,7 +10326,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000604",
-      "payloadSha256": "e2f765b9b82241feb5cc11bf4734042d41033769f2675b1e5712bb1f6ad1a11a",
+      "payloadSha256": "cadc717aeb04a9af9642160c9f7513c6a965cd181af7eac53a34724a6c792857",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000604|https://goodlander.house.gov|6d522f7dfe4e50ab143fb22f065937da70b6b06cc5da5faf275981d28550a529"
@@ -11410,7 +11410,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000604",
-      "payloadSha256": "d5cd455324a25482a4f262cc2a98804191ec35a0162f0de0a0fb1c73f61e7d7c",
+      "payloadSha256": "06d03a560fbc774422fd68d4beda8ee556df00f7b1a164524809d0115209fdcf",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000604|https://maggiefornh.com|c72ebab0ecc9b01d4bd872b1ec17e351c5a7963f3d4ae6d8e0402c6b28cfa1d9"
@@ -12490,7 +12490,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000606",
-      "payloadSha256": "70d3af42e72ff337842a07797d210fbf349681f0778cd49d17af0a7d80149f53",
+      "payloadSha256": "1b31aa10195db26da0d50d7408ef5b318c9ed14c1efa78e913e854b67c1f4fa0",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000606|https://grijalva.house.gov|f94909b2b7bc789e43218197d5183e9af167ea66c62e28580324446bd5267644"
@@ -13453,7 +13453,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:G000606",
-      "payloadSha256": "eb4772481d4f5bca0d87eaf6b844f2b8924b8a725ee96c80e873a78fd10f5aee",
+      "payloadSha256": "49abb01ff3cb84d043ac7bee3f3e81b57bf4e7e6f0b84823268b07eee4bf47e2",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:G000606|https://www.adelitaforcongress.com|a115b554505d8c9050b7213d8986c8cf1cd6f2033b0706ffb3af46c2ee641046"
@@ -14389,7 +14389,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:H001076",
-      "payloadSha256": "0bd57d187fdbac99fe9fa31d8f71fe13d2a58fd4beb3d00397d3a18bbbc03313",
+      "payloadSha256": "4de0a954856e3fa5b5001920cd567d879be31a5410cb71f3ac01deb7ff5b8efe",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:H001076|https://www.hassan.senate.gov|edd0f446a1f914a9cffea82bd106b77519032cbd6e644291adea263220192594"
@@ -15940,7 +15940,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:K000377",
-      "payloadSha256": "54b3bf77ed53c3a7bda952ba4403d5b8afdafd0026e950d56bb07621fb8c99b4",
+      "payloadSha256": "c7b29a2664f8422efa5cce43e9833d81333e36cd9786ba601469ac486109e823",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:K000377|https://www.kelly.senate.gov|8bb755b4be96146cced8b769d75b0f3125c229c2f2d4878f264b5975f15d747c"
@@ -17456,7 +17456,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:K000394",
-      "payloadSha256": "742c85b3040774d7426253eec7cda9821166701ff7fc1baa3e4fcb54622691f3",
+      "payloadSha256": "0a29df08e27f4d07e7af0f2ba13b64823db69d3dad1d3cfb81465a5d36aaf967",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:K000394|https://www.andykim.com|6440a0ef06bd2fe85920116f6f712ba30c64d04fddf2a2f2d5b22306b1693f6e"
@@ -18655,7 +18655,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:K000394",
-      "payloadSha256": "0a4f88c99de9b4c4470ebbfc187989a30b4362014fad0716f548063cc0c9700e",
+      "payloadSha256": "9ace47888b512565ebf352032b70a18fccd0ac1fd694179a7ea78bf3f7765f41",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:K000394|https://www.kim.senate.gov|139d9942d4224141334400a7c669641a2c5dea4646f50e7ff0a0488fc5bc8d5e"
@@ -19836,7 +19836,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:M001246",
-      "payloadSha256": "1d6506db78acb26087935e20b283531f868bcd8d94d92ca541d372a340fc8602",
+      "payloadSha256": "c7382575ccdcfc9b38bc8e1f55723a40e94f974f54a2475a05f848417245ef43",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:M001246|https://mejia.house.gov|51d753290c83b225f5b5decb5e96312d0fe686ae3327cc11f35d86b64318f6fa"
@@ -20836,7 +20836,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:M001246",
-      "payloadSha256": "8eec12a3b35dc90082f538a2376c8565ed16c7bf14d508610a72bf5c57aa191f",
+      "payloadSha256": "f5b2c806df32aad352b96fb4aefdc190739b45d7f1fa76f07c79e355811bef92",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:M001246|https://www.analiliafornj.com|5b385f1a14c427dff257312cc9c05f0944dc61dfab072a4878ec340cacca3a74"
@@ -21875,7 +21875,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "congress:S001181",
-      "payloadSha256": "0c78150641281860ad4ba636ebdc40b8ec841076ac0f8230afd9f5cde7cbb24f",
+      "payloadSha256": "ee62a910c578ec55df9e5d93615149873e0177c30816cded50741c04988c3598",
       "modelAnswer": null,
       "expectedRecordIds": [
         "congress:S001181|https://www.shaheen.senate.gov|5021efbfb663889481b6aa2b22a96a632a1a83e1f06ed84c429127d1f693ad7e"
@@ -23418,7 +23418,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:attorney-general|Kris Mayes",
-      "payloadSha256": "20cf86745ba014f199d66f8e6bf36b12689f14a676fc66abcdea9a8610ee0488",
+      "payloadSha256": "88edfce72181f30b694e4196956983063f0587ecbcecf5c01c7033a2789a9638",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:attorney-general|Kris Mayes@8e58da83b2f14301d34f1b07f29a3a5f6074839fb0792b23d3149566d8f7d2f9"
@@ -23594,7 +23594,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:attorney-general|Kris Mayes",
-      "payloadSha256": "4fb7e41c392b7eb9139c84bd191417bdc4e9ec6a39784c96077b49c055fb75f2",
+      "payloadSha256": "d17e8aeb112d52f5c08ad3e4abb9b64af2ef61f08744eec2c09df4f164b5a2a4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:attorney-general|Kris Mayes@a596a2b0cba1a401d3c28557196c978ae8e3c443a5e7a3344a406087e7bf6e44"
@@ -23770,7 +23770,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:attorney-general|Warren Petersen",
-      "payloadSha256": "98e6080cd5f136ee4dabe2852709bedec20c8e0afac913aa465f760c82da9d87",
+      "payloadSha256": "8f3b866381e81607a07479ce0f9d1cef860aad9b4f2b7d03b04e32e22e33ef28",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:attorney-general|Warren Petersen@73db6c3ad8e2b48990c36e7ef2e423c03f5353798308432b2685fb7fd1d14505"
@@ -23946,7 +23946,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Andy Biggs",
-      "payloadSha256": "e3361c3e6a289ab6f749877d9f72d7a127f81bbcd1dfe8001901e94ac705fc1f",
+      "payloadSha256": "74a3311dcee8df0beb76dcb122aba05c8e476351b4b9b43d4cb9c73cf7145194",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Andy Biggs@2b16a66b183861edc71d9e25a4fdefc914e599c5c08acae2cc14f32bd3e78907"
@@ -25357,7 +25357,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Andy Biggs",
-      "payloadSha256": "de401ab5f2c01eeec26af1c341090a9eaf3619f1b5ccc311dee60170d7c56533",
+      "payloadSha256": "398fd7e2099bc73a489a1848593265ed3c227e945d50f3e2cf2076bf4a9899aa",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Andy Biggs@a7e8f65fb2442b3787fbd178ecb14985d6fae6c87dd3033aeb13e65a77150528"
@@ -26691,7 +26691,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Katie Hobbs",
-      "payloadSha256": "136604a4430d877bebe073adc1ac47f1dc470029410e8f3ba0acb45f7cb678ba",
+      "payloadSha256": "3b103e5eba5b888efc5a8fbb473c14be9aeab2fc05a8c00e3298061e9ea3616b",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Katie Hobbs@b77927d187092f65f8dca088415929b2c981a8ea8f12e1a1bb920ecb2a398a23"
@@ -27383,7 +27383,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Katie Hobbs",
-      "payloadSha256": "576a16a4264bfe9f8c61f53efe7b6efdfd536414353694815a30162ed06c8705",
+      "payloadSha256": "711e80752974a8411c439141d2c11d57d1adce81e6438702a9a88a5d8bf0e7b4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Katie Hobbs@f203f93f845519e214ee8586f4df09911bb39d87dc974eae13f0f902bc415b19"
@@ -28076,7 +28076,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:governor|Teri Ann Hourihan",
-      "payloadSha256": "a3d1d768c3e34daab7750ab5b89d743e41f0c10e2a762e25cf63cb281bba3ae3",
+      "payloadSha256": "d4b68fc40acf1d361c5f863aad467ea3f9a059c444e151d1f2980cafffa3b29a",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:governor|Teri Ann Hourihan@302e1d83328c053be95c932d90133428339b9174464e10e7e0264ca0a7cfc043"
@@ -28727,7 +28727,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
-      "payloadSha256": "02a7aeb08ef60f78c27a20f45c4753ddfdb96a14f732512202522697228215c4",
+      "payloadSha256": "a25047f047f873c42c2b5b681e4fc5a38d915f0916eee235611c8540fa6ee2b3",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk@e4a8446994168c761748cc44345b1116ab95d701a15c783698c4730cafc223a0"
@@ -28907,7 +28907,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:secretary-of-state|Adrian Fontes",
-      "payloadSha256": "3c608a35fda708203d3dbffd3bed851501aa46f04983a21cf62184ca804b7c03",
+      "payloadSha256": "a29f8d9a2fca1ddc4ae3aaddc2a7f41a162a6594be4d3e3eb11b2dc65c72822f",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:secretary-of-state|Adrian Fontes@1aacf8aeffbb8321baf4bc7b79e3aac1c1d633daa436acf5d4734ca7ebad51c7"
@@ -29075,7 +29075,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:secretary-of-state|Adrian Fontes",
-      "payloadSha256": "8882a4aa1bc8de03ddb8c43aafbe92b213ac85ce95dcfb06122a4a8a47118d96",
+      "payloadSha256": "7af47a8aa45bc67973a90ea57608a756422038d3365da338356daab4d34af0f0",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:secretary-of-state|Adrian Fontes@6017f010dac1b3be4402f83270f74477993ef2f08d6d1f5927386e21814f49e8"
@@ -29280,7 +29280,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:secretary-of-state|Alexander Kolodin",
-      "payloadSha256": "bb64250c1891702eb4620aea352d6728a87d30774f78bd5a68d7826282f676db",
+      "payloadSha256": "466b78ce20554f4466f9bf328bd8526c00ea98791a97f56130921e4d2e83a366",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:secretary-of-state|Alexander Kolodin@c2086be8f0fe6a764063c6a544fd01d875ed83a2996c199795dcd82428286a98"
@@ -29437,7 +29437,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|Aiden Nicholette Swallow",
-      "payloadSha256": "83bb3dd37196b8621fbd6908e03ec8d8fc1176e398fcaf285a256fc1133a5707",
+      "payloadSha256": "2fd18065451b7bc4a82501be41a3c0e607cc98a5fdfb194c04b2b843e47037ad",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19|Aiden Nicholette Swallow@dc455aac3bd696630dbf2344997e7fe1848be52fb8c46fa32cfd6fc34787e090"
@@ -29655,7 +29655,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-19|Lupe Diaz",
-      "payloadSha256": "eb11967348738e59a9caadc91089b7fd6c8ea97cf5865de0d81754992353533b",
+      "payloadSha256": "4b0189ecec6ff2c4eea9eb7c4f7e314ed7a31013468453f08c38912865250f5b",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-19|Lupe Diaz@72cfe08450999c8e3370af6032a89df64b0379d01e17a9505cfc1a0cf071486f"
@@ -29862,7 +29862,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-house-20|Betty Villegas",
-      "payloadSha256": "20fd6b6d486d644b0939496f5c11336d7f4bc429147b2cac3a087fba843605cd",
+      "payloadSha256": "bf798615734779c47582e551070250c387f2d4749d39688ca3ac78e78ffff453",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-house-20|Betty Villegas@5470bfbc3f4cb7a3186e52da8811d1febb41bdd68ac3b5aabb83be781bb2fae1"
@@ -30064,7 +30064,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-19|Bob Karp",
-      "payloadSha256": "5087b7ae401012ba85eea0dd79f4013541f7e9d8c26ed6cc1c5abcd45a488a5d",
+      "payloadSha256": "8fc820bece84b78e14651f67328731aed1dea8e52d86829348c76fdd27d9fe21",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-19|Bob Karp@a5a4397d781a1f84977ec1531b5d09c2173cbcab59b4ad704837c7ce31b03742"
@@ -30200,7 +30200,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-senate-20|Alma Hernandez",
-      "payloadSha256": "46470e990b68efb12a996c0d02fd8b268a9131db67f2f2c99222ae4d795db327",
+      "payloadSha256": "44dfd4c886c9ad36610ba2cc67c7e10a7643531584a11578528532ec2a8e72bb",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-senate-20|Alma Hernandez@9bb951bea7187cd09862790c0016f86bd471e05a0627016e7d4bb4c851207f2b"
@@ -30385,7 +30385,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-treasurer|Elijah Norton",
-      "payloadSha256": "5fac2ba2caf2d63691f3a46ebb0e276f6655d7d8312dc84a25bae5deb94aeb4e",
+      "payloadSha256": "d7ca362e4a5c3cc86ff948fb78ebc865913a33e839f0f5dedf7642ca177abff4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-treasurer|Elijah Norton@4b504d6944e057a0212d9fd71d65598a2991c67f5e59056510ed97ab0059126f"
@@ -30546,7 +30546,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:state-treasurer|Nick Mansour",
-      "payloadSha256": "e17ac2566887fb41b3829d24f24051df344dba689e2d71d2e4497dfbe8f22d2e",
+      "payloadSha256": "56580808d41a574fd79561b564afb775a81693130bf5a82f17c51c4c391c74b8",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:state-treasurer|Nick Mansour@61904e763c8fcfb39eb85a9a077b6d91f2416e8336150db93fc59354f52f51d4"
@@ -30684,7 +30684,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:superintendent|Kimberly Yee",
-      "payloadSha256": "f521be80e73eb27052822f03f26bec7198317bd583be6bb083e2657aa16711c1",
+      "payloadSha256": "204feb56449c55e2410217f1e8bafcaa13ec9fc5e17d8de181c0f31030839fa0",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:superintendent|Kimberly Yee@c7342133e401bd75792894b31efa7f069f5e6a13ea440dc1ae4687cdbcadd5e3"
@@ -30942,7 +30942,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:superintendent|Kimberly Yee",
-      "payloadSha256": "36c6c8c3dd8668152473b85a2069588b1b3e2ede4724d863b160bc0c461d32d3",
+      "payloadSha256": "a21883fce04867680166d1b1efe4b487a59c66eaf525275651e5a8a26b70467b",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:superintendent|Kimberly Yee@edcd98930dfee01a6be5da04b1b370c337c0454701c6a1039267d492173017f7"
@@ -31186,7 +31186,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
-      "payloadSha256": "14ae531bae1102fbc49f0345dcf5a8ce317737cd0d27df45d2b6ba8b59eef8af",
+      "payloadSha256": "ec20c92f2c7f141cf4d400558481ba796a64b07898753833ca300af7db54e993",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:superintendent|Teresa Leyba Ruiz@9e4cc50b52417bf37127a71bf706b690503eb105ea0fb358c5a66b1c89b2af44"
@@ -31326,7 +31326,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-6|Gary Swing",
-      "payloadSha256": "28c061479658a38c17603d328ec216ae250dd600d49a2cf09ecae142a2fe9881",
+      "payloadSha256": "a84a63e9462f4de98ef76a32e701b1fc99c519f76c2af4ad8499a16c48a79286",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-6|Gary Swing@81c35990921e938673ae0112144015d7126a580eae56a4e7b529128d9826b8e3"
@@ -31465,7 +31465,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-6|JoAnna Mendoza",
-      "payloadSha256": "a5d583d05af9dc05697015edc8e52c541a7278625f89ad58172ddcc04b0dbdaf",
+      "payloadSha256": "77311c3bec95058046c0b355ae559113c7267b4b5f5f4b2fc4b8e9e92de3df7e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-6|JoAnna Mendoza@70830914ebe8633d2b8dff184d158ab60935307e17d44c39639ae4d3d480a718"
@@ -31659,7 +31659,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-6|Juan Ciscomani",
-      "payloadSha256": "594915b38c76d49375610e0d5bb13d8a1a9b72f48ddc434700c88802f769beb5",
+      "payloadSha256": "d27978dcc603348305bed16cdfeb9e2f722cb419a2667d1581a6d3748f52c7e1",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-6|Juan Ciscomani@72efdcf7b26d811626eadd0d93da0c601ef732ecb7512f6cb05ccc7d0123d6e3"
@@ -32862,7 +32862,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-7|Adelita Grijalva",
-      "payloadSha256": "05599afb561443e1f019a10ffc4022aea4970be54b7452c472fd0e34b6eaff77",
+      "payloadSha256": "109986f62f4c6f1a3b6070a0de0fbe82b99bd386180de0c4308dbbdf4a08c96b",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-7|Adelita Grijalva@0782bb039c63e10c46f23c23fd42d226493b46939d06fe8bb4fb98a88b3af2f6"
@@ -33838,7 +33838,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-7|Adelita Grijalva",
-      "payloadSha256": "2aeaa7b144ce5e9e3eb40ef8e84d6366d6ad5fbbcb6b486d76827c300bcb9177",
+      "payloadSha256": "8350b161f9b0fb64858d23b95c569eb42e46f9cc180dd4e6257330d9d10cb799",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-7|Adelita Grijalva@dbf9709f311e6b5302352bed3379b5437269b4c8c015019857ccc12621ceecf9"
@@ -34804,7 +34804,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
-      "payloadSha256": "89984825eb8150222fb1716b7c053018ad20a72cc8c9ef8a290996f0265f59f0",
+      "payloadSha256": "c4e9e29241e1023a65a650b2328e0da02e1860c5d0535301c687857d473ac7d6",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.@3fd4e49c4d8b8caf79cbf116e6b385100460f3c051753bf798794dfccfdd2559"
@@ -34959,7 +34959,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
-      "payloadSha256": "56609ee5e92d9f2a1c0d0187fb402365d637352090cf99eb6ee8fc30e76eca23",
+      "payloadSha256": "2ec831f1c12bfdc5cec1f8d1e7557de7ef66834654eb3bb141b81e84ea1d6ff4",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:executive-council-2:liot-hill-karen@9566bb0b9239975471b595e2cf1d4cf68df8bfca7cfdecf2482fbed67fcc5d46"
@@ -35248,7 +35248,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:governor:ayotte-kelly",
-      "payloadSha256": "b71a8c39f54ccaf29cb399272c4e77840c0412b0735152f9548e56c2f835d8ee",
+      "payloadSha256": "5b536c63fba3ab1063f7b8906bfc21055af54bd182af655c312022503b004814",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:governor:ayotte-kelly@c03ee4a5f55dca7b3bfbea52a1f306cd1b8b4750e40e40b23a88d8ea3c2655e0"
@@ -35471,7 +35471,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:governor:warmington-cinde",
-      "payloadSha256": "75ae831e5f409d73204041e89fadd96f024df50f81d2de06020e0863dbca897d",
+      "payloadSha256": "67e03f65ebe6b5670a076b3526b7996c1316d869a3430f400d954b9a0e6e4788",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:governor:warmington-cinde@d38b61de8c9d2208e36465e1dd75c1c50ed1928593905c1fae315a42daf55c8c"
@@ -35699,7 +35699,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-      "payloadSha256": "8b5c592e4232af9481dc786e0e7144de46e55d5236660776050e8c605b51a1ca",
+      "payloadSha256": "7feb5a5fe518927dde2df59d6f3fde18db330599ad45d06238ed270205a319a7",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-@2433d93f72d1b08884799e50d7f6acef8c1a04271cfa775286691e40e2022f14"
@@ -36433,7 +36433,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
-      "payloadSha256": "88ee0728d0d4de301c4ed96f60880ef15600726a40cc41bc2cb04cd3f497dd96",
+      "payloadSha256": "d686764e27b9cf2c3eb6bc1a801f59009660a18e877206126f8ed11b2204403b",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:state-senate-7:harned-rebecca@189d0e39f7d708adb741f6c920aad381b25003a985fb13474bc3a08b7b59331d"
@@ -36597,7 +36597,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
-      "payloadSha256": "659e0c71e49386a869437094153d282d981fc4cb11f21978ac697713e3bbd3b2",
+      "payloadSha256": "fbaeab3722cbbcbe9e5e2a47d99ade5b8296bcd763d3d79dbeae4c5df9d0643d",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:beauchemin-paige@bbbd8b81c671c9c95547d05850fbdbfc9195d845758f6851f12b1fab9438e5de"
@@ -36800,7 +36800,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
-      "payloadSha256": "b7e25a1f25113bfcfacdabe6dccd453b642eb16049b932b4e64bbdcd7c22309c",
+      "payloadSha256": "8dfb87e73a6c13ea46c7ab8857a809d03829ece27b5b294fdb801f65ae358ffe",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:goodlander-maggie@85be3bb1f0fe18e4a9583c722efda73233afed6608c8bb6f7e8bb6878da77716"
@@ -37903,7 +37903,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
-      "payloadSha256": "d92a577b641af2122ef7582cacbefb5d3275943f04dec287adb431cf9cf23940",
+      "payloadSha256": "27b0e9aba46488136631508d1128b671fea3b89d7e9376627a47674fea9db018",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:goodlander-maggie@896adcebc161c16d09dbbf8cb0dff37d78ca1cb6b9ac0ece1f04c9e9dbb77f88"
@@ -39003,7 +39003,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
-      "payloadSha256": "0d7b4aa2161caea27c9fc30221067e7077548dd1a3f69b5e45ff2c51edfc3164",
+      "payloadSha256": "3067398c2d8db7a38303b43aa3795ef739580e3541fc857c3e49e5146fc638ea",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-house-2:tang-williams-lily@36e833f73bc3ec2246b48a81d2f57804583d9f0e2353b1a79dbd652601405158"
@@ -39201,7 +39201,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:brown-scott-p-",
-      "payloadSha256": "932413ddb112e59ec6a265be9206345e2b97d16cee2d799c6709093083811b24",
+      "payloadSha256": "3b1b0a3e2c3d47b77a9d984a905b787e5b2bee32ecb8e2324f46f9be37437035",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:brown-scott-p-@ee3c110f65963b038f7b48c5a927153cc2f47fc75920ec24b6c3ba7b8415002d"
@@ -39384,7 +39384,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
-      "payloadSha256": "fc24d689b0a264dd94f6824944920b4017369deebf542f4ef91691585d071015",
+      "payloadSha256": "220175ba72e6f038f97e93b9d6405311f4d4f0f46352517750b558ddc2968e14",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:pappas-chris@3bc980ccafa08d96ca1b2155e3b1db125499e006ea18a12516d3c811c75f5f4f"
@@ -40749,7 +40749,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
-      "payloadSha256": "900db33ad89e87b8874d90f4a233410eeedfce3ae972e5a96aa13b1fb7f7be7d",
+      "payloadSha256": "9546f9d6b44cb0c514f0ec45ed3275edc54295a543beeac2ee4036ca665fde6e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:pappas-chris@652d9c7595ae75409b0c58eda328808efa13b922956fdcf44a8ad0cd94e6ce89"
@@ -42114,7 +42114,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nh-merrimack:us-senate:sununu-john-e-",
-      "payloadSha256": "482940d60763b945d1ee6961760912ad3b03b4dfcf65701b0a61685d9d2a1a87",
+      "payloadSha256": "1b586ae9c428c5c47ec5bafc48111091549b472eff781e14cfd135ef1f9467be",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nh-merrimack:us-senate:sununu-john-e-@0c15ad592ecd5d76970156c7915f38c638485075cb06a1b15543d2f3b13395bc"
@@ -42358,7 +42358,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:county-commissioner:selen",
-      "payloadSha256": "49a7c7fc5dd09e594d6de5cbc08f2af63290af8135404f5cd395296a25688cd6",
+      "payloadSha256": "c3d0a6cef3c7883c2127d6b68be17c52aa991406ae624525306f54f1acd10dbb",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:county-commissioner:selen@4a08209929658b753feacbad6464feda37019bca18ef67e300effe79ef96a435"
@@ -42705,7 +42705,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:county-commissioner:selen",
-      "payloadSha256": "786d13f52e5d53f5acc327fa3f1c807a13350f2a01f4a2831c4a599f60673101",
+      "payloadSha256": "209690936446ffaf4e5f506e8dddc1639e89787d74039521bdb613113731ab5e",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:county-commissioner:selen@cf521fbee83128271a8080617185118a593d57887eca3c23b2310aa405d7348c"
@@ -43002,7 +43002,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-house-11:hathaway",
-      "payloadSha256": "95276d5a6db5a1d05f8af50fba1fbda73669153488a7a2e7485983001baafe0c",
+      "payloadSha256": "08eda7d2c31297f80a8abb7a2e435a4be7708065c3d09ecf5fbb064a3929d571",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-house-11:hathaway@b8b9fffc9786883783e912e439eb3ebe34d5cb4d7118854737d22f6fa72da626"
@@ -43247,7 +43247,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-house-11:mejia",
-      "payloadSha256": "c52c0cc15cce852b7276b4000b7162584766345478ff00975bdf0639a9703598",
+      "payloadSha256": "63aca9851470b2dd77b02dd5ff161ed7e134b16330d53f6726b1c2c98ac76c08",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-house-11:mejia@232b73a29b12d33ec546ce4056fec6af8abd6bdea6249ec6ba37a4ae3d7e6d55"
@@ -44249,7 +44249,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-house-11:mejia",
-      "payloadSha256": "73333e6632ef84edede7d50f2c5179db62f647c3d1faf302d83a5e1824c66078",
+      "payloadSha256": "19784186ea3ae432d4fb76d627d805fd3b527635e809c0e9ba833beaa27daea1",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-house-11:mejia@ba7255b9f4bd1ba07fefa28fd57ee081095c8df7b55869bad5596ef8330c3d7d"
@@ -45326,7 +45326,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:booker",
-      "payloadSha256": "582530a5b622c043c96a6b5273f1494099bddb257f9bcb7731c8166161a754fc",
+      "payloadSha256": "8ff73658586f23fbea1e3b60fa6a7e38230427afb9b2566a247839323d40b076",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-senate:booker@254d0cceeab19591c9de0ebbd1f4eac1e19429069cb41c1ad1d136da1a0edb2e"
@@ -47020,7 +47020,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:fernandez",
-      "payloadSha256": "88bd7824365cce941665189e2c032be83692137d4e41304cd551869a4c5c5db0",
+      "payloadSha256": "d1552178f9c3bbec8663e05c5f54052d36b58d37aacea7939f2c004dc1477083",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-senate:fernandez@63257be248c6b417ec6814a1c2d0d84a0f3ffaec7f038e0e9ef2138e6cb510ac"
@@ -47192,7 +47192,7 @@
       "httpStatus": 200,
       "mode": "STRUCTURED_GROUNDED",
       "resolvedSubjectId": "ballot-nj-morris:us-senate:murphy",
-      "payloadSha256": "864ed37bb1d9ffeb3882fcb6c238bc635345d2c313728838279bb5651f5823e2",
+      "payloadSha256": "f97547476cf1eb128cce96cb6bc011375ff53f83c141f47c7f1123c998135738",
       "modelAnswer": null,
       "expectedRecordIds": [
         "ballot-nj-morris:us-senate:murphy@23c6cb8dec680ff8128c9228994cc21bf47c161c22dde6c9c50afcf4c10d857d"

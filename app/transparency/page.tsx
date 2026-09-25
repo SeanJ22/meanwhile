@@ -129,6 +129,16 @@ export default function TransparencyPage() {
             street address is automatically blanked out first. Even so, please
             don&apos;t put personal details in a question.
           </p>
+          {/* Ask gap counts (Sean, 2026-09-25; docs/rulings.md §9). Ships in the
+              same release as the recorder, per the coupling rule above. */}
+          <p>
+            When an answer tells you we are missing something about a specific
+            government body — for example, that we don&apos;t yet hold its
+            meetings or an agenda — the site adds one to a daily count for that
+            body and that kind of gap, so we know what to go find first. The
+            count holds only the body, the kind of gap and the day: not your
+            question, your zip, or anything about you.
+          </p>
           <p>
             {/*
               **ASK-12 (2026-08-25).** The ripcord doctrine's fourth clause: the

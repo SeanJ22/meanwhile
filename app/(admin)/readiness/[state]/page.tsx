@@ -95,6 +95,8 @@ export default async function ReadinessStatePage({
   const { state: rawState } = await params;
   const code = rawState.trim().toLowerCase();
   const sp = await searchParams;
+  // An untracked state's registration counts are asked for beside the page's opening reads, not after them (one ~300-byte row; NOT_PUBLISHED when none is promoted).
+  const countsRead = isTrackedState(code) ? null : loadRegistrationCounts(code);
   const base = await openPage(`/readiness/${code}`, sp);
   /* The path names the state; a scope elsewhere yields to it, a geography inside it is kept. */
   const scope: MwScope = base.scope.kind !== "all" && base.scope.state === code ? base.scope : { kind: "state", state: code };
@@ -146,7 +148,7 @@ export default async function ReadinessStatePage({
   if (!isTrackedState(code)) {
     // A registered state's own counts: one state's row, counted inside Postgres (~300 bytes), never the registration itself.
     const standing = shell.standing;
-    const counts = standing !== null && standing.kind === "REGISTERED" ? await loadRegistrationCounts(code) : null;
+    const counts = standing !== null && standing.kind === "REGISTERED" && countsRead !== null ? await countsRead : null;
     return (
       <MwShell {...shellProps}>
         {crumbs([])}

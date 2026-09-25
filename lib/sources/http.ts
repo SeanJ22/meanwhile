@@ -535,6 +535,95 @@ export function readValidatedResponse(
 }
 
 /**
+ * **RUNG 4's HEADER SETS, OUR OWN NAME FIRST.** (2026-09-25, the failing-sources pass.)
+ *
+ * Rung 4 re-issues a refused request through `curl`, a different client. It
+ * used to carry ONE header set: a Chrome `User-Agent` with the project's name
+ * appended. Measured on 2026-09-25 (22:05-22:20Z) against the three
+ * Cloudflare-fronted New Hampshire hosts the runner reads — the Sutton and
+ * Newbury calendar feeds and Kearsarge's school-board schedule — Node's own
+ * client is challenged on every header set (403, `cf-mitigated: challenge`),
+ * and through `curl`:
+ *
+ * ```
+ * Chrome UA + project suffix (the old rung 4)     about 7 in 10 admitted
+ * project UA alone                                about 6 in 10 admitted
+ * project UA + X-Purpose / X-Contact              30 of 30 admitted
+ * clean Chrome UA + X-Purpose / X-Contact         15 of 15 admitted
+ * ```
+ *
+ * The refusals were the runner's intermittent "HTTP 403" reads: Sutton's feed
+ * since 2026-09-24T22:48Z (it answered Node at rung 2 until then), Newbury's
+ * about one read in eight since at least 2026-09-14, and Kearsarge's about two
+ * reads in three. The first set here is the MOST honest request this project
+ * can send — its own name in the `User-Agent` and its purpose and contact in
+ * the fields built for them — and it is the one the filter admits. Nothing here
+ * answers or evades a challenge: a set the host challenges is set aside, and
+ * when every set is refused the read fails as a WALL naming rung 4.
+ *
+ * Order: our own name everywhere; the old rung-4 set, unchanged, for a host
+ * that admits only it; then the clean browser set, for the `*.nh.gov` family
+ * that refuses our name inside a `User-Agent` (see `identificationHeaders`).
+ */
+export function curlRungHeaderSets(
+  rungHeaders: Record<string, string>,
+  accept?: string,
+): Record<string, string>[] {
+  return [
+    { "User-Agent": sourceUserAgent(), Accept: accept ?? "*/*", ...identificationHeaders() },
+    rungHeaders,
+    { ...identifiedBrowserHeaders(), ...(accept ? { Accept: accept } : {}) },
+  ];
+}
+
+/** A rung-4 transport answer the filter refused (a 403). A challenge served with a 2xx is read in `curlRung`. */
+function refusedByFilter(error: unknown): boolean {
+  return error instanceof SourceHttpError && error.status === 403;
+}
+
+/**
+ * Rung 4, walked over `curlRungHeaderSets`: the first set the host answers with
+ * a document wins, through the one finalizer. A refusal (403 or a challenge
+ * page) moves to the next set after the usual spacing; any other failure — a
+ * 404, a blank body, a page that is not the format — is the answer and stops
+ * the walk. When every set is refused the last refusal is thrown, naming rung 4.
+ */
+async function curlRung(
+  url: string,
+  sets: readonly Record<string, string>[],
+  curl: NonNullable<NonNullable<HttpOptions["ladder"]>["curl"]>,
+  signal: AbortSignal | undefined,
+  expect: HttpOptions["expect"],
+): Promise<{ status: number; contentType: string; text: string }> {
+  let refusal: unknown = null;
+  for (let i = 0; i < sets.length; i++) {
+    if (i > 0) await sourceAcquisitionSleep(REQUEST_SPACING_MS, signal);
+    let response: Awaited<ReturnType<typeof curl>>;
+    try {
+      response = await curl(url, sets[i], signal);
+    } catch (error) {
+      if (!refusedByFilter(error)) throw error;
+      refusal = error;
+      continue;
+    }
+    const wall = challengeIn(response.text);
+    if (wall !== null && i < sets.length - 1) {
+      refusal = new SourceHttpError(`${wall} at ${url} on rung 4`, response.status, url, 4);
+      continue;
+    }
+    return readValidatedResponse(url, 4, response, expect);
+  }
+  const last = refusal instanceof SourceHttpError ? refusal : null;
+  throw new SourceHttpError(
+    `HTTP ${last?.status ?? 403} for ${url} — refused on rung 4 with each of ${sets.length} header sets ` +
+      "(our own name, the browser set with our name, the clean browser set). This is a WALL on rung 4.",
+    last?.status ?? 403,
+    url,
+    4,
+  );
+}
+
+/**
  * One polite GET returning the body as text. Retries 429 and 5xx a small
  * number of times, honouring `Retry-After`; everything else fails immediately.
  */
@@ -587,13 +676,9 @@ export async function politeGetText(
         // Rung 4 answers on its own terms and gets the same question asked of
         // it, by the same function. A document check that only guarded one of
         // two return paths would be a guard with a door beside it — which is
-        // exactly what A-003 found on the 403 path below.
-        return readValidatedResponse(
-          url,
-          4,
-          await curl(url, headers, options.signal),
-          options.expect,
-        );
+        // exactly what A-003 found on the 403 path below. `curlRung` returns
+        // only through `readValidatedResponse`.
+        return await curlRung(url, curlRungHeaderSets(headers, options.accept), curl, options.signal, options.expect);
       }
       throw new SourceHttpError(
         `${wall} at ${url} — HTTP 200 carrying a challenge page rather than the ` +
@@ -711,15 +796,13 @@ export async function politeGetText(
 
       // Rung 4, and it used to be returned RAW — neither `challengeIn` nor
       // `notADocument` ever saw it. A different client's 200 is a status like
-      // any other status (A-003).
-      return readValidatedResponse(
+      // any other status (A-003). It walks `curlRungHeaderSets`, our own name
+      // first (2026-09-25), and returns only through `readValidatedResponse`.
+      return await curlRung(
         url,
-        4,
-        await curl(
-          url,
-          browser ? headers : browserProfileHeaders(),
-          options.signal,
-        ),
+        curlRungHeaderSets(browser ? headers : browserProfileHeaders(), options.accept),
+        curl,
+        options.signal,
         options.expect,
       );
     }

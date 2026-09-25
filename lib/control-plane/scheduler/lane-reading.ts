@@ -24,6 +24,7 @@
  * (`skippedBy: null`); the cycle's end writes them. PURE.
  */
 import type { LaneCounts } from "./shadow-loop.ts";
+import { waitingSince, type QueueDebt } from "./obligation.ts";
 import { plainCode } from "../plain-words.ts";
 
 /** One lane's reading. Small numbers only. */
@@ -42,7 +43,11 @@ export interface QueueLaneReading {
    * is still running: the reasons are counted when it ends.
    */
   readonly skippedBy: Readonly<Record<string, number>> | null;
-  /** The earliest next-due among the waiting rows; null when none waits or it was not recorded. */
+  /**
+   * How long the oldest waiting row has been owed; null when none waits or it was not recorded.
+   * Paid Scout: the earliest next-due. Plain code: the earliest time a waiting row joined the
+   * queue (`waitingSince`), which is its next-due, or its retry after a failed attempt.
+   */
   readonly oldestWaitingDueAt: string | null;
 }
 
@@ -100,7 +105,10 @@ export interface DueRow {
  * The reading while the cycle runs: the Scout lane's running rows are active,
  * the plain-code lane runs one row at a time and records none in flight
  * (`active: null`), and no reason is counted yet. The oldest waiting row is the
- * earliest-due row that is neither started nor running.
+ * one neither started nor running that has been owed longest. The plain-code
+ * lane uses its queue key for this (`waitingSince`, from the debt carried into
+ * the cycle), so the reading during the cycle and the one after it use the same
+ * measure.
  */
 export function lanesInFlight(input: {
   readonly at: string;
@@ -112,15 +120,20 @@ export function lanesInFlight(input: {
   readonly startedIds: ReadonlySet<string>;
   /** Obligation ids of the Scouts running now. */
   readonly runningIds: ReadonlySet<string>;
+  /** The debt carried into the cycle, by obligation id. Absent, every plain-code row reads as having none. */
+  readonly debtFor?: (obligationId: string) => QueueDebt | null | undefined;
 }): QueueLanes {
-  const oldest = (rows: readonly DueRow[]): string | null => {
+  const oldest = (rows: readonly DueRow[], since: (row: DueRow) => string): string | null => {
     let held: string | null = null;
     for (const row of rows) {
       if (input.startedIds.has(row.obligation.id) || input.runningIds.has(row.obligation.id)) continue;
-      if (held === null || row.nextDueAt < held) held = row.nextDueAt;
+      const at = since(row);
+      if (held === null || at < held) held = at;
     }
     return held;
   };
+  const nextDue = (row: DueRow): string => row.nextDueAt;
+  const queuedSince = (row: DueRow): string => waitingSince(row, input.debtFor?.(row.obligation.id));
   const running = input.modelRows.filter((r) => input.runningIds.has(r.obligation.id)).length;
   return {
     at: input.at,
@@ -131,7 +144,7 @@ export function lanesInFlight(input: {
       active: null,
       waiting: Math.max(0, input.deterministicRows.length - input.deterministicDispatched),
       skippedBy: null,
-      oldestWaitingDueAt: oldest(input.deterministicRows),
+      oldestWaitingDueAt: oldest(input.deterministicRows, queuedSince),
     },
     model: {
       due: input.modelRows.length,
@@ -139,7 +152,7 @@ export function lanesInFlight(input: {
       active: running,
       waiting: Math.max(0, input.modelRows.length - input.modelDispatched - running),
       skippedBy: null,
-      oldestWaitingDueAt: oldest(input.modelRows),
+      oldestWaitingDueAt: oldest(input.modelRows, nextDue),
     },
     autonomous: null,
   };

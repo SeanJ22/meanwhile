@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 796,
-    "named": 7747,
+    "files": 797,
+    "named": 7754,
     "dynamic": 31
   },
   "files": {
@@ -7621,6 +7621,18 @@
         "a routine pass promotes every changed sitting, including one modified earlier than a sitting walked before it",
         "an unchanged day costs one events request and ends in a validated no-change receipt",
         "the rolling routine window ends today where the Board sits and reaches back 120 days"
+      ],
+      "dynamic": 0
+    },
+    "tests/plain-code-queue-order.test.ts": {
+      "names": [
+        "ADM-8: the owner's placed-first rows still go ahead of the longest wait",
+        "BOUND with two a cycle: waits stay within ⌈N / c⌉ − 1 = 4 cycles",
+        "BOUND: the never-tried row runs within ⌈(A + 1) / c⌉ cycles, and no row ever waits more than ⌈N / c⌉ − 1",
+        "NOT SLOWED: a row with no failing debt never has more rows ahead of it than under the old order",
+        "SEEDED STARVATION: ordered by next-due alone, a never-tried row waits forever behind rows that keep failing",
+        "the plain-code reading names the longest WAIT, during the cycle and after it, not a failing row's first next-due",
+        "the replay is the dispatcher: runCycle runs exactly the replay's new order, cycle by cycle"
       ],
       "dynamic": 0
     },

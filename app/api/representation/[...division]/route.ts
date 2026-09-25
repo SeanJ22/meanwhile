@@ -1,5 +1,13 @@
+import { stageTimer } from "@/lib/api/server-timing";
+import {
+  ensureReaderAuthorityEdge,
+  readReaderManifest,
+  READER_MANIFEST_CACHE_TAG,
+  READER_MAP_AUTHORITY_FAMILIES,
+} from "@/lib/meetings/edge-serving";
 import { governingRosterHoldersForDivision, rosterGapsForDivision } from "@/lib/registry/body-rosters";
-import { divisionsByOcdIds, seatHoldersForDivision } from "@/lib/registry/server";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
 
 /**
  * GET /api/representation/ocd-division/country:us/state:az/sldl:21
@@ -37,9 +45,31 @@ import { divisionsByOcdIds, seatHoldersForDivision } from "@/lib/registry/server
  * The label comes off the same committed boundary registry every other
  * surface reads. `null` where the registry does not hold the division — an
  * honest absence, never a placeholder, and the caller renders its named gap.
+ *
+ * ## C21 (2026-09-25) — READ FROM THE READER EDGE, HELD BY THE CDN
+ *
+ * The coverage card calls this right after `/api/meetings`, and it never
+ * entered the reader edge: on a cold instance the registry, the federal
+ * directory and the district's state legislators were read from Neon, waking
+ * it for a visitor. It now enters the edge exactly as `/api/meetings` does —
+ * in this handler, never in a helper (AsyncLocalStorage.enterWith; see
+ * tests/reader-edge-context.test.ts) — and falls back to the database only for
+ * a family the manifest does not carry.
+ *
+ * The answer is public and keyed by the path, so the CDN holds it on the same
+ * terms as `/api/meetings`: five minutes, purged with the `reader-manifest` tag
+ * the runner purges on every publication, the browser revalidating each time.
+ * A read that fails throws and is never answered, so only a computed answer is
+ * held, as before; the refused shape below stays `no-store`.
  */
 
 export const runtime = "nodejs";
+
+const CDN_HELD = {
+  "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
+  "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
+  "Cache-Control": "public, max-age=0, must-revalidate",
+} as const;
 
 /** The identifier shape, refused rather than guessed at. */
 const OCD_ID = /^ocd-division\/country:us(\/[a-z_]+:[A-Za-z0-9~._-]+)+$/;
@@ -60,15 +90,28 @@ export async function GET(
     );
   }
 
+  const timing = stageTimer();
+  // The registry load reads the committed geometry too; start it beside the edge fetch.
+  prefetchReaderGeography();
+  // C21: the reader authority edge, entered in this handler's own execution
+  // before any edge-aware read below (see the header note).
+  const manifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+  if (manifest?.authorityArtifacts) {
+    const edge = await timing.time("authority", () =>
+      ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+    );
+    if (edge) enterReaderAuthorityEdge(edge);
+  }
+
   // Both stores, the same two the shared resolver reads: legislative seats
   // off the officeholder index, local governing bodies off the curated
   // rosters. Asked by division key, so neither depends on where the reader is.
-  const seats = await seatHoldersForDivision(ocdId);
+  const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
   const holders = seats.length > 0 ? seats : governingRosterHoldersForDivision(ocdId);
 
   // The division's own facts, off the same committed registry the map draws
   // from. Absent rather than invented when the registry does not hold it.
-  const [known] = await divisionsByOcdIds([ocdId]);
+  const [known] = await timing.time("division", () => divisionsByOcdIds([ocdId]));
 
   return Response.json(
     {
@@ -85,9 +128,7 @@ export async function GET(
       rosterGaps: rosterGapsForDivision(ocdId),
     },
     {
-      headers: {
-        "Cache-Control": "public, max-age=300, s-maxage=300",
-      },
+      headers: { ...CDN_HELD, "Server-Timing": timing.header() },
     },
   );
 }

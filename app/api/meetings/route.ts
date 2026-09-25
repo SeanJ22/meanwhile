@@ -1,7 +1,8 @@
 import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
-import { nearestZcta } from "@/lib/geo/zcta";
+import { nearestZctaAsync } from "@/lib/geo/zcta-table";
+import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import {
@@ -10,7 +11,15 @@ import {
   snapshotClientMeta,
   type SnapshotClientMeta,
 } from "@/lib/meetings/snapshot";
-import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import {
+  ensureReaderAuthorityEdge,
+  prefetchReaderEdgeStates,
+  readReaderEdgeMeetings,
+  readReaderManifest,
+  READER_MANIFEST_CACHE_TAG,
+  READER_MAP_AUTHORITY_FAMILIES,
+  servedWholeFromReaderEdge,
+} from "@/lib/meetings/edge-serving";
 import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
@@ -18,9 +27,10 @@ import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { WIRED_STATUSES } from "@/lib/registry/coverage";
-import { coverageAt, divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
+import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, prepareCoverage } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
+import { stageTimer } from "@/lib/api/server-timing";
 import { currentCommentAccess, type CommentAccess } from "@/lib/registry/comment-access";
 import { refreshCommentAccessFromPromoted } from "@/lib/civic-data/curated-reader-read-model";
 import {
@@ -45,78 +55,63 @@ import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
 
+/**
+ * **A COMPLETE ANSWER IS SERVED FROM THE CDN.** (C21, 2026-09-25.)
+ *
+ * A fresh server instance spent 2-4.5 s answering this route (production,
+ * 2026-09-25: median 3.8 s, five of ten over the 3 s bar), and every first
+ * visit after a deploy or beyond the warm pool paid it. The answer is a pure
+ * function of the query and the published reader data — nothing in it comes
+ * from a cookie, a header or the visitor — so one computation can serve every
+ * reader who asks the same question, and a CDN hit never starts a function.
+ *
+ * - `s-maxage=300`: a held answer is at most five minutes old, and the runner
+ *   purges the `reader-manifest` tag the moment it publishes
+ *   (`scripts/routine-civic-data-reader-repair.mts`), so new data does not
+ *   wait for it. `stale-while-revalidate` covers only an answer nothing has
+ *   been published over, since a purge removes the object outright. Both sit
+ *   far inside the hourly refresh rule (docs/rulings.md §4).
+ * - `durable`: shared across Netlify's edge nodes, as the manifest is.
+ * - `Netlify-Vary: query` keys the object on EVERY query parameter (order does
+ *   not matter). The D40 incident was this CDN dropping a query string from
+ *   the key; the Next runtime keys route handlers on its own parameters only
+ *   unless told otherwise. Every parameter rather than the four this route
+ *   reads, because a request carrying a fifth is refused below, and a key that
+ *   ignored it would answer that request from the cache instead.
+ * - The browser revalidates every time (`max-age=0`), so a purge reaches it.
+ *
+ * Only a 200 built whole from the published edge is held: a refusal, a 503, a
+ * database-fallback or partial meetings read, and any answer carrying a failed
+ * lookup (divisions, coverage, comment access, routing) says `no-store`, so a
+ * transient failure is never handed to every reader for five minutes.
+ */
+const CDN_HELD = {
+  "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
+  "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
+  "Netlify-Vary": "query",
+  "Cache-Control": "public, max-age=0, must-revalidate",
+} as const;
+const NOT_HELD = { "Cache-Control": "no-store" } as const;
+
+/**
+ * The states a request will most likely read, known before its divisions are
+ * (C21): those of the typed ZIP's area, or of the nearest ZIP within 60 km.
+ * Only a prefetch hint — the meetings and registrations the request actually
+ * reads are chosen from the divisions it resolves, exactly as before.
+ */
+async function hintedStates(zip: string | null): Promise<string[]> {
+  const entry = await zipDivisionEntry(zip).catch(() => null);
+  return [...new Set((entry?.ids ?? []).map((id) => stateOfOcdId(id)).filter((s): s is string => s !== null))];
+}
+
+/** The nearest ZCTA to a point, capped at 60 km: a centre in open water or deep wilderness honestly has no zip. */
+async function nearestZipWithin60Km(lat: number, lng: number): Promise<string | null> {
+  const near = await nearestZctaAsync(lat, lng);
+  return near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
+}
+
 export async function GET(request: Request) {
-  // PDC-9: one edge read serves the whole ready-to-display bundle. The manifest
-  // (CDN-cached, no database) carries meetings (via its scope artifacts) AND the
-  // comment-access + everyday-routing families, so a normal visit never wakes the
-  // database. Each family below prefers the embedded edge value and falls back to
-  // its own database read only when the edge has not published it yet.
-  const edgeManifest = await readReaderManifest().catch(() => null);
-
-  // PDC-9: bind the reader-authority edge bundle (registry-runtime division/
-  // coverage/roster bindings, the federal directory, and campaign-site URLs)
-  // request-scoped, so divisionsAt/coverageAt below serve them from the edge and
-  // never wake Neon. Each family is fetched at most once per version per process.
-  // Any family the manifest omits (rollout) falls through to the DB reader.
-  if (edgeManifest?.authorityArtifacts) {
-    const authorityEdge = await ensureReaderAuthorityEdge(edgeManifest).catch(() => null);
-    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  }
-
-  let commentAccess: readonly CommentAccess[] = [];
-  let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
-  let commentAccessDataDetail: string | null = null;
-  try {
-    if (edgeManifest?.commentAccess !== undefined) {
-      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
-      commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
-    } else {
-      if (process.env.NODE_ENV === "production") {
-        const version = await refreshCommentAccessFromPromoted();
-        commentAccessDataState = "PROMOTED";
-        commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
-      }
-      commentAccess = currentCommentAccess();
-    }
-  } catch (error) {
-    // Comment rules are independent of meeting acquisition. Withhold only
-    // this optional family and let the canonical meetings projection answer.
-    commentAccessDataState = "STORE_UNREACHABLE";
-    commentAccessDataDetail = error instanceof Error ? error.message : "The comment-access projection could not be read.";
-  }
-  let everydayRouting: EverydayRoutingProjection | null = null;
-  let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
-  let everydayRoutingDataDetail: string | null = null;
-  try {
-    if (edgeManifest?.everydayRouting !== undefined) {
-      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
-      everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
-      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
-    } else if (process.env.NODE_ENV === "production") {
-      const read = await readEverydayRoutingProjection();
-      if (read.kind === "PROMOTED") {
-        everydayRouting = read.value;
-        everydayRoutingDataState = "PROMOTED";
-        everydayRoutingDataDetail = `Canonical everyday-routing projection ${read.metadata.versionId} was read.`;
-      } else if (read.kind === "NOT_RECORDED" || read.kind === "STORE_UNREACHABLE") {
-        everydayRoutingDataState = read.kind;
-        everydayRoutingDataDetail = read.detail;
-      } else {
-        everydayRoutingDataState = "INVALID";
-        everydayRoutingDataDetail = "The everyday-routing pointer did not resolve to a promoted projection.";
-      }
-    } else {
-      everydayRouting = currentEverydayRoutingProjection();
-    }
-  } catch (error) {
-    // Direct-owner routing is independent of meetings and every other source.
-    // Withhold only this optional projection; never reopen the tracked seed.
-    everydayRoutingDataState = "INVALID";
-    everydayRoutingDataDetail = error instanceof Error
-      ? error.message
-      : "The everyday-routing projection could not be read.";
-  }
+  const timing = stageTimer();
   const params = new URL(request.url).searchParams;
 
   /*
@@ -181,6 +176,113 @@ export async function GET(request: Request) {
   if (!zipRead.ok) return refuse(zipRead.error);
 
   /*
+   * **THE COLD CHAIN, STARTED AT ONCE.** (C21, 2026-09-25.)
+   *
+   * A cold instance used to do this one step after another: the manifest, then
+   * six authority families, then ~25 geometry files, then the ZIP's shard and
+   * registration, then the meetings, then the coverage build. Now everything
+   * that reads neither the database nor the request's edge context starts
+   * here, before the authority families arrive: the committed geography, the
+   * ZIP index shard, the nearest ZIP for a panned map, and — once the manifest
+   * names them — the meetings and registrations of the states the ZIP points
+   * at. None of that is an answer; each is a read the steps below would make
+   * anyway, now already in flight or done when they make it.
+   */
+  prefetchReaderGeography();
+  const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
+  const statesHinted = nearZipRead.then(hintedStates);
+
+  // PDC-9: one edge read serves the whole ready-to-display bundle. The manifest
+  // (CDN-cached, no database) carries meetings (via its scope artifacts) AND the
+  // comment-access + everyday-routing families, so a normal visit never wakes the
+  // database. Each family below prefers the embedded edge value and falls back to
+  // its own database read only when the edge has not published it yet.
+  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+
+  // PDC-9: bind the reader-authority edge bundle (registry-runtime division/
+  // coverage/roster bindings, the federal directory, and campaign-site URLs)
+  // request-scoped, so divisionsAt/coverageAt below serve them from the edge and
+  // never wake Neon. Each family is fetched at most once per version per process.
+  // Any family the manifest omits (rollout) falls through to the DB reader.
+  //
+  // C21: only the families this route reads (`READER_MAP_AUTHORITY_FAMILIES` —
+  // not Ask's recorded outcomes, not the comment-access artifact the manifest
+  // already embeds). The edge is entered HERE, in this handler's own execution:
+  // it is AsyncLocalStorage.enterWith, which on Node 24 never reaches reads
+  // chained on a helper that entered it (tests/reader-edge-context.test.ts).
+  if (edgeManifest?.authorityArtifacts) {
+    const entering = timing.time("authority", () =>
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+    );
+    prefetchReaderEdgeStates(edgeManifest, await statesHinted);
+    const authorityEdge = await entering;
+    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+  } else if (edgeManifest) {
+    prefetchReaderEdgeStates(edgeManifest, await statesHinted);
+  }
+
+  let commentAccess: readonly CommentAccess[] = [];
+  let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
+  let commentAccessDataDetail: string | null = null;
+  try {
+    if (edgeManifest?.commentAccess !== undefined) {
+      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
+      commentAccessDataState = "PROMOTED";
+      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+    } else {
+      if (process.env.NODE_ENV === "production") {
+        const version = await refreshCommentAccessFromPromoted();
+        commentAccessDataState = "PROMOTED";
+        commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
+      }
+      commentAccess = currentCommentAccess();
+    }
+  } catch (error) {
+    // Comment rules are independent of meeting acquisition. Withhold only
+    // this optional family and let the canonical meetings projection answer.
+    commentAccessDataState = "STORE_UNREACHABLE";
+    commentAccessDataDetail = error instanceof Error ? error.message : "The comment-access projection could not be read.";
+  }
+  let everydayRouting: EverydayRoutingProjection | null = null;
+  let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
+  let everydayRoutingDataDetail: string | null = null;
+  try {
+    if (edgeManifest?.everydayRouting !== undefined) {
+      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
+      everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
+      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+    } else if (process.env.NODE_ENV === "production") {
+      const read = await readEverydayRoutingProjection();
+      if (read.kind === "PROMOTED") {
+        everydayRouting = read.value;
+        everydayRoutingDataState = "PROMOTED";
+        everydayRoutingDataDetail = `Canonical everyday-routing projection ${read.metadata.versionId} was read.`;
+      } else if (read.kind === "NOT_RECORDED" || read.kind === "STORE_UNREACHABLE") {
+        everydayRoutingDataState = read.kind;
+        everydayRoutingDataDetail = read.detail;
+      } else {
+        everydayRoutingDataState = "INVALID";
+        everydayRoutingDataDetail = "The everyday-routing pointer did not resolve to a promoted projection.";
+      }
+    } else {
+      everydayRouting = currentEverydayRoutingProjection();
+    }
+  } catch (error) {
+    // Direct-owner routing is independent of meetings and every other source.
+    // Withhold only this optional projection; never reopen the tracked seed.
+    everydayRoutingDataState = "INVALID";
+    everydayRoutingDataDetail = error instanceof Error
+      ? error.message
+      : "The everyday-routing projection could not be read.";
+  }
+
+  // C21: the coverage graph (rosters, photos, officeholder indexes) builds from
+  // here, beside the division lookup and the meetings read, rather than after
+  // them. Started after the edge is entered, so it reads the edge; a failure is
+  // not held and `coverageAt` below meets it on its own terms.
+  const coverageReady = timing.time("coverageGraph", () => prepareCoverage()).catch(() => undefined);
+
+  /*
    * D18: which divisions actually contain this point.
    *
    * The cascade filters by distance, and a meeting held online has none — so
@@ -208,7 +310,7 @@ export async function GET(request: Request) {
    */
   let resolvedDivisions: Division[] | null = null;
   try {
-    resolvedDivisions = await divisionsAt(lat, lng);
+    resolvedDivisions = await timing.time("divisions", () => divisionsAt(lat, lng));
     divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
   } catch (error) {
     console.error("division lookup failed; online meetings fall back to body-in-view", error);
@@ -254,11 +356,13 @@ export async function GET(request: Request) {
    */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
+    const widening = timing.start("widen");
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
     );
     const widened = await divisionsByOcdIds(areaIds);
+    widening();
     if (widened.length >= resolvedDivisions.length) {
       resolvedDivisions = widened;
       divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
@@ -274,6 +378,9 @@ export async function GET(request: Request) {
   const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
   let snapshotMeta: SnapshotClientMeta | null = null;
+  // Whether the meetings came whole from the published edge: the first of the
+  // conditions for letting the CDN hold this answer (`CDN_HELD`).
+  let meetingsWholeFromEdge = false;
   try {
     if (meetingSourceName === "snapshot") {
       // PDC-9: read the runner-published GEOGRAPHIC edge artifacts for this
@@ -290,19 +397,20 @@ export async function GET(request: Request) {
               .filter((s): s is string => s !== null),
           )]
         : [];
-      const read = await readReaderEdgeMeetings({
+      const read = await timing.time("meetings", () => readReaderEdgeMeetings({
         manifest: edgeManifest,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
-      });
+      }));
+      meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
-      result = await searchMeetings(
+      result = await timing.time("search", () => searchMeetings(
         lat,
         lng,
         radiusKm,
         new Date(),
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
-      );
+      ));
       snapshotMeta =
         read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
           ? snapshotClientMeta(read.value, read)
@@ -320,7 +428,7 @@ export async function GET(request: Request) {
           code: error.result.code,
           detail: error.result.detail,
         },
-        { status: 503 },
+        { status: 503, headers: { ...NOT_HELD, "Server-Timing": timing.header() } },
       );
     }
     return Response.json(
@@ -330,7 +438,7 @@ export async function GET(request: Request) {
         code: "MEETINGS_PROJECTION_INVALID",
         detail: error instanceof Error ? error.message : "unknown meetings projection error",
       },
-      { status: 503 },
+      { status: 503, headers: { ...NOT_HELD, "Server-Timing": timing.header() } },
     );
   }
 
@@ -339,12 +447,13 @@ export async function GET(request: Request) {
   // than failing the whole request or guessing.
   let coverage = null;
   try {
-    coverage = await coverageAt(
+    await coverageReady;
+    coverage = await timing.time("coverage", () => coverageAt(
       lat,
       lng,
       result.meetings.length,
       resolvedDivisions ?? undefined,
-    );
+    ));
   } catch (error) {
     console.error("coverage lookup failed", error);
   }
@@ -494,22 +603,16 @@ export async function GET(request: Request) {
       }
     : null;
 
-  // The search log row: what was asked and where, never who. Fire-and-forget
-  // — a logging failure or an absent DATABASE_URL must never cost the reader
-  // their answer. Disclosed on /transparency, which ships with this code.
-  const zip = zipRead.value;
-
   // The settled-viewport fetch (2i) carries no zip — the reader panned, they
   // didn't type. Resolve the nearest ZCTA centroid so the notices and the
   // ballot bubble can name the area, and cap it: a center more than 60 km
   // from every centroid (open water, deep wilderness) honestly has no zip.
   // Same orientation-only status as a typed zip — never district truth.
-  let nearZip: string | null = zip;
-  if (!nearZip) {
-    const near = nearestZcta(lat, lng);
-    nearZip =
-      near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
-  }
+  //
+  // C21: started at the top (`nearZipRead`), from the table loaded on demand
+  // (`lib/geo/zcta-table.ts`) rather than a 961 KB module every cold start of
+  // this route parsed whether or not the request carried a zip.
+  const nearZip: string | null = await nearZipRead;
   /*
    * PDC-9: THE SEARCH LOG NO LONGER WRITES ON THE RESPONSE PATH.
    *
@@ -564,6 +667,17 @@ export async function GET(request: Request) {
    */
   const partialOcdIds = (await zipCertainty(nearZip))?.partial ?? null;
 
+  // The CDN holds only a whole answer (see `CDN_HELD`): meetings served whole
+  // from the published edge, divisions and coverage resolved, and neither
+  // optional family withheld for a failed read.
+  const held =
+    meetingsWholeFromEdge &&
+    resolvedDivisions !== null &&
+    coverage !== null &&
+    commentAccessDataState !== "STORE_UNREACHABLE" &&
+    everydayRoutingDataState !== "STORE_UNREACHABLE" &&
+    everydayRoutingDataState !== "INVALID";
+
   return Response.json({
     ...result,
     commentAccess,
@@ -578,5 +692,7 @@ export async function GET(request: Request) {
     nearZip,
     governingOcdIds,
     partialOcdIds,
+  }, {
+    headers: { ...(held ? CDN_HELD : NOT_HELD), "Server-Timing": timing.header() },
   });
 }

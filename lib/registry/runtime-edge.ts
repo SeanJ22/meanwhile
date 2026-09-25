@@ -67,6 +67,28 @@ export interface ReaderAuthorityEdgeBundle {
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
+  /**
+   * The keep-warm call's promise (C21, 2026-09-25): it loads what a reader
+   * reads, and never the database. A read this bundle cannot serve then fails
+   * ({@link refuseDatabaseInEdgeOnlyContext}) instead of falling through to
+   * Neon, so a manifest missing a family costs the warm call that place, never
+   * a database wake every five minutes on every instance. Reader requests never
+   * set it: their fallback to the database is the point.
+   */
+  readonly edgeOnly?: true;
+}
+
+/** A read an edge-only context could not serve from the edge; it was refused rather than sent to the database. */
+export class ReaderEdgeOnlyRefusal extends Error {
+  constructor(what: string) {
+    super(`${what} is not on the reader edge, and this context never reads the database`);
+    this.name = "ReaderEdgeOnlyRefusal";
+  }
+}
+
+/** Called immediately before a database fallback: throws in an edge-only context, otherwise does nothing. */
+export function refuseDatabaseInEdgeOnlyContext(what: string): void {
+  if (edgeStore.getStore()?.edgeOnly) throw new ReaderEdgeOnlyRefusal(what);
 }
 
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();

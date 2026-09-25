@@ -41,6 +41,9 @@ import { campaignSiteSubjects, type FilingChannels, type LineupContest } from ".
 import { replayResearchFindings, type HeldRead, type HeldScoutFinding } from "../lib/candidates/research-findings-replay.ts";
 import { deriveCandidateUniverse, type BallotDocument, type EnrichmentStores } from "../lib/hunt/candidate-universe.ts";
 import type { ManualProjectionPrior } from "../lib/civic-data/manual-projections.ts";
+import { METHOD_STORE } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { readMethodStore } from "../lib/method/candidate.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { assignment, present } from "./cli-args.mts";
 
 const ROOT = resolve(process.cwd());
@@ -72,13 +75,14 @@ const az = committed("data", "states", "az", "ballot", "az-pima-2026.json") as u
 const azFilings = committed("data", "states", "az", "candidates", "az-2026-sos-candidate-filings.json") as unknown as Partial<BallotDocument>;
 const nh = committed("data", "states", "nh", "ballot", "nh-merrimack-2026.json") as unknown as BallotDocument;
 const nj = committed("data", "states", "nj", "ballot", "nj-morris-2026.json") as unknown as BallotDocument;
-const universe = (stateCode: string, documents: BallotDocument[]) => deriveCandidateUniverse({ stateCode, cycle: 2026, generatedBy: "replay-research-findings (committed first seed)", generatedOn: now.slice(0, 10), documents, stores });
+/* The three first-seed ballot states, keyed as the candidate-enrichment provider keys them. */
+const universe = (state: "az" | "nh" | "nj", documents: BallotDocument[]) => deriveCandidateUniverse({ stateCode: state.toUpperCase(), cycle: 2026, generatedBy: "replay-research-findings (committed first seed)", generatedOn: now.slice(0, 10), documents, stores });
 const azDocs = [doc("az-pima-2026", az)];
 if (Array.isArray(azFilings.contests) && Array.isArray(azFilings.candidacies)) azDocs.push(doc("az-2026-sos-candidate-filings", azFilings as BallotDocument));
 const lineup = committed("data", "states", "az", "ballot", "az-general-lineup-2026.json") as { contests: LineupContest[] };
 const njContacts = committed("data", "states", "nj", "ballot", "nj-morris-2026-contacts.json") as { contacts: Record<string, FilingChannels> | FilingChannels[] };
 const subjects = campaignSiteSubjects({
-  universes: [universe("AZ", azDocs), universe("NH", [doc("nh-merrimack-2026", nh)]), universe("NJ", [doc("nj-morris-2026", nj)])],
+  universes: [universe("az", azDocs), universe("nh", [doc("nh-merrimack-2026", nh)]), universe("nj", [doc("nj-morris-2026", nj)])],
   lineups: lineup.contests,
   filings: Array.isArray(njContacts.contacts) ? njContacts.contacts : Object.values(njContacts.contacts),
 });
@@ -184,13 +188,15 @@ const report = await replayResearchFindings({
     ? {
         runtime: { get: nodeResearchGet, memory: memoryInProcess(), now: () => Date.now(), sleep: (ms) => new Promise((done) => setTimeout(done, ms)) },
         vaultRoot: join(outDir, "vault"),
-        methodVersion: json<{ version: number }>(join(ROOT, "data", "method", "knowledge.json")).version,
+        methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
         maxReads: Number(assignment(argv, "max-reads") ?? 200),
       }
     : null,
 });
 writeFileSync(join(outDir, "replay-report.json"), `${JSON.stringify({ findingsBasis, priorSupplied: prior !== null, ...report, plan: report.plan ? { published: report.plan.published, held: report.plan.held } : null }, null, 1)}\n`);
 if (report.plan?.package) writeFileSync(join(outDir, "candidate-profiles.package.json"), `${JSON.stringify(report.plan.package, null, 1)}\n`);
+// The denominator a green replay stands on: the candidates the committed first seed names. Empty, it judged nobody.
+console.log(floorLine(floored("candidates with a verified campaign site to publish", "the committed first-seed candidates", subjects.size, new Set(report.wouldPublish.map((row) => row.candidacyId)).size)));
 console.log(JSON.stringify({
   mode: report.mode,
   findingsBasis,

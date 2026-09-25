@@ -51,3 +51,28 @@ export function loadRegistrationReference(root: string, state: string): LoadedRe
   // A rebuild that left this state's bytes alone left its date alone, so its records promote UNCHANGED.
   return { reference, sha256, generatedAt: entry.generatedAt ?? index.generatedAt };
 }
+
+/**
+ * The governments a state's committed reference pairs to a division, with the
+ * body id the registration writer mints for each (lib/registration/candidate.ts:
+ * `<division>#governing`, `#board` for a school district). The runtime registry
+ * is the reviewed registry plus these, so a check against the frozen
+ * registry.json alone refuses a registered government (Holbrook and Winslow,
+ * AZ, 2026-09-25). The state is upper-case, as the registry's divisions carry it.
+ */
+export function registeredGovernments(loaded: LoadedReference, state: string): {
+  readonly bodies: readonly { readonly id: string; readonly ocdId: string }[];
+  readonly divisions: readonly { readonly ocdId: string; readonly state: string }[];
+} {
+  const { reference } = loaded;
+  const bodies: { id: string; ocdId: string }[] = [];
+  const divisions = new Map<string, { ocdId: string; state: string }>();
+  for (const [, , , govType, division] of reference.governments) {
+    if (govType === "STATE" || division < 0) continue;
+    const ocdId = reference.divisions[division][0];
+    const school = govType === "SCHOOL DISTRICT" || govType === "DEPENDENT SCHOOL SYSTEM";
+    bodies.push({ id: `${ocdId}#${school ? "board" : "governing"}`, ocdId });
+    divisions.set(ocdId, { ocdId, state: state.toUpperCase() });
+  }
+  return { bodies, divisions: [...divisions.values()] };
+}

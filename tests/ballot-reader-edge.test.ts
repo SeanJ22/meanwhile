@@ -124,9 +124,9 @@ test("React renders the page's async components outside the page's context: they
   const runtimeEdge = pathToFileURL(join(process.cwd(), "lib", "registry", "runtime-edge.ts")).href;
   const script = `
     import { createRequire } from "node:module";
-    const require = createRequire(${JSON.stringify(pathToFileURL(join(process.cwd(), "package.json")).href)});
-    const React = require("react");
-    const { renderToPipeableStream } = require("next/dist/compiled/react-server-dom-webpack/server.node.js");
+    const load = createRequire(${JSON.stringify(pathToFileURL(join(process.cwd(), "package.json")).href)});
+    const React = load("react");
+    const { renderToPipeableStream } = load("next/dist/compiled/react-server-dom-webpack/server.node.js");
     const { enterReaderAuthorityEdge, withReaderAuthorityEdge, currentRegistryRuntimeEdge } = await import(${JSON.stringify(runtimeEdge)});
     const bundle = { registryRuntime: { value: {}, versionId: "flight-probe" } };
     const seen = () => currentRegistryRuntimeEdge()?.versionId ?? "none";

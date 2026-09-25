@@ -63,7 +63,7 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/typ
 import type { RouteDisposition } from "../route-task.ts";
 import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
 import { PolicyRefusal } from "../capability.ts";
-import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry } from "../cost.ts";
+import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
 
 import type { FreshnessObligation, ScheduledObligation } from "./obligation.ts";
@@ -336,6 +336,13 @@ export interface WorkOutcome {
   readonly artifacts?: readonly WorkArtifact[];
   /** Measured. `ZERO_COST` is a measurement of nothing, not an absent one. */
   readonly cost?: AttemptCost;
+  /**
+   * The per-model split of `cost` when the worker ran more than one model
+   * (MW-031, 2026-09-25: a Scout that escalated). Written onto the ledger row
+   * as `byModel`, so a cost-by-model view gives each model its own part of
+   * the ONE charge instead of all of it to the model the Attempt started on.
+   */
+  readonly costByModel?: readonly CostModelShare[];
   readonly detail: string;
 }
 
@@ -688,7 +695,7 @@ export async function dispatchOne(
   const purpose = chargePurposeOf(input.obligation.obligation);
   const project = input.costProject ?? "freshness";
   const proof = input.nonProduction === true ? { nonProduction: true as const } : {};
-  const ledgerCost = async (cost: AttemptCost, resultKind: CostResultWithoutDisposition): Promise<void> => {
+  const ledgerCost = async (cost: AttemptCost, resultKind: CostResultWithoutDisposition, byModel?: readonly CostModelShare[]): Promise<void> => {
     let source: string | null = null;
     try {
       source = (await repos.routeTasks.read(claimedRouteTaskId))?.value.target ?? null;
@@ -711,6 +718,7 @@ export async function dispatchOne(
         ...purpose,
         resultKind,
         ...proof,
+        ...(byModel !== undefined && byModel.length > 0 ? { byModel } : {}),
       },
       input.now,
     ).catch(() => undefined);
@@ -792,7 +800,7 @@ export async function dispatchOne(
       now: input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
-    if (outcome.cost) await ledgerCost(outcome.cost, "LANE_MISMATCH");
+    if (outcome.cost) await ledgerCost(outcome.cost, "LANE_MISMATCH", outcome.costByModel);
     return {
       ...base,
       ...ran(),
@@ -887,7 +895,7 @@ export async function dispatchOne(
       now: outcome.endedAt ?? input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     });
-    if (outcome.cost) await ledgerCost(outcome.cost, simulated ? "SIMULATED" : "NO_DISPOSITION");
+    if (outcome.cost) await ledgerCost(outcome.cost, simulated ? "SIMULATED" : "NO_DISPOSITION", outcome.costByModel);
     return {
       ...base,
       ...ran(),
@@ -944,7 +952,7 @@ export async function dispatchOne(
       now: input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
-    if (outcome.cost) await ledgerCost(outcome.cost, "DISPOSITION_REFUSED");
+    if (outcome.cost) await ledgerCost(outcome.cost, "DISPOSITION_REFUSED", outcome.costByModel);
     return {
       ...base,
       ...ran(),
@@ -974,6 +982,8 @@ export async function dispatchOne(
         ...purpose,
         resultKind: disposition.disposition,
         ...proof,
+        /* MW-031: an escalated Scout's one charge, split by the model each part was for. */
+        ...(outcome.costByModel !== undefined && outcome.costByModel.length > 0 ? { byModel: outcome.costByModel } : {}),
       },
       input.now,
     );

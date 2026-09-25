@@ -38,7 +38,7 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.review.validationError, null);
   assert.deepEqual(result.review.challenges, [challenge]);
   assert.match(result.review.responseText ?? "", /record_audit/);
-  assert.deepEqual(request?.tool_choice, { type: "tool", name: "record_audit" });
+  assert.deepEqual(request?.tool_choice, { type: "auto" });
   assert.equal(request?.tools.length, 1);
   assert.equal(request?.model, MODEL);
   assert.equal(result.usage.inputTokens, 100);
@@ -49,19 +49,48 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.review.contextHash, contentHash(String(request?.messages[0].content)));
 });
 
-test("strict JSON end_turn compatibility remains accepted and missing usage remains null", async () => {
+test("Opus 5.5 request: no forced tool choice — auto, a strict record_audit schema strict mode accepts, and the system prompt naming the tool", async () => {
+  let request: ModelRequest | undefined;
+  const transport: ModelTransport = async (value) => { request = value; return response({ verdict: "SURVIVED", challenges: [] }); };
+  await modelAuditReasoner(createMemoryRepositories(), transport, () => NOW).review(context(), "auditor-attempt");
+  assert.equal(MODEL, "claude-opus-5-5", "the auditor runs on the model that rejects a forced tool choice");
+  assert.deepEqual(request?.tool_choice, { type: "auto" }, "a forced {type:'tool'} is HTTP 400 on Claude Opus 5.5");
+  const tool = request?.tools[0];
+  assert.equal(tool?.name, "record_audit");
+  assert.equal(tool?.strict, true, "strict tool use keeps the schema-valid arguments the forced call gave");
+  const schema = JSON.stringify(tool?.input_schema);
+  assert.doesNotMatch(schema, /maxItems|minLength|maxLength|minimum|maximum/, "strict mode takes no length or numeric constraints; the 24-challenge limit is enforced client-side");
+  const objects = [tool?.input_schema, (tool?.input_schema as { properties: { challenges: { items: unknown } } }).properties.challenges.items] as { additionalProperties?: unknown }[];
+  for (const o of objects) assert.equal(o.additionalProperties, false, "strict mode requires additionalProperties:false on every object");
+  assert.match(request?.system[0].text ?? "", /Answer only by calling the record_audit tool, exactly once/);
+  assert.match(request?.system[0].text ?? "", /not recorded, and the audit fails closed/);
+});
+
+test("an answer without a record_audit call fails closed by name — even valid JSON saying SURVIVED — and missing usage remains null", async () => {
   const json = JSON.stringify({ verdict: "SURVIVED", challenges: [] });
   const result = await run(response(null, { stop_reason: "end_turn", content: [{ type: "text", text: json }], usage: {} }));
-  assert.equal(result.review.verdict, "SURVIVED");
-  assert.equal(result.review.validationError, null);
-  assert.equal(result.review.responseText, json);
+  assert.equal(result.review.verdict, "INCONCLUSIVE", "a text verdict is never read: the record is not approved");
+  assert.equal(result.review.validationError, "AUDIT_MODEL_NO_TOOL_CALL:end_turn");
+  assert.deepEqual(result.review.challenges, []);
+  assert.equal(result.review.responseText, json, "what the model said is kept as the response, not as a verdict");
   assert.equal(result.usd, null);
   assert.ok(Object.values(result.usage).every((value) => value === null));
+  /* The stop reason is named: thinking that ran to max_tokens, or a refusal, is not a verdict either. */
+  const cut = await run(response(null, { stop_reason: "max_tokens", content: [{ type: "thinking", thinking: "", signature: "sig" }] }));
+  assert.equal(cut.review.validationError, "AUDIT_MODEL_NO_TOOL_CALL:max_tokens");
+  assert.equal(cut.review.verdict, "INCONCLUSIVE");
+  const refused = await run(response(null, { stop_reason: "refusal", content: [] }));
+  assert.equal(refused.review.validationError, "AUDIT_MODEL_NO_TOOL_CALL:refusal");
+  /* The other outcome: a thinking block beside the record_audit call does not disturb the recorded verdict. */
+  const called = await run(response({ verdict: "SURVIVED", challenges: [] }, { content: [{ type: "thinking", thinking: "", signature: "sig" }, { type: "tool_use", id: "audit-call", name: "record_audit", input: { verdict: "SURVIVED", challenges: [] } }] }));
+  assert.equal(called.review.verdict, "SURVIVED");
+  assert.equal(called.review.validationError, null);
 });
 
 test("malformed, truncated, mismatched and unsupported responses retain exact named validation failures and measured cost", async () => {
   const cases: readonly [ModelResponse, string][] = [
-    [response(null, { stop_reason: "end_turn", content: [{ type: "text", text: "not JSON" }] }), "AUDIT_MODEL_JSON_INVALID"],
+    [response(null, { stop_reason: "end_turn", content: [{ type: "text", text: "not JSON" }] }), "AUDIT_MODEL_NO_TOOL_CALL:end_turn"],
+    [response({ verdict: "SURVIVED", challenges: Array.from({ length: 25 }, () => challenge) }), "AUDIT_MODEL_RESPONSE_SCHEMA_INVALID"],
     [response({ verdict: "SURVIVED", challenges: [] }, { stop_reason: "max_tokens" }), "AUDIT_MODEL_STOP_REASON_INVALID:max_tokens"],
     [response({ verdict: "SURVIVED", challenges: [] }, { model: "unapproved-model" }), "AUDIT_MODEL_IDENTITY_MISMATCH"],
     [response({ verdict: "PASS", challenges: [] }), "AUDIT_MODEL_RESPONSE_SCHEMA_INVALID"],

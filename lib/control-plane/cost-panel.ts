@@ -36,6 +36,7 @@ import {
   DISCOVERY_SEARCH_ROLE,
   SEARCH_SOURCE_NOT_ON_RECORD,
   cacheMeteringOf,
+  costPortionsByModel,
   entriesInWindow,
   sumMetric,
   utcMonthWindow,
@@ -318,11 +319,16 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([role, entries]) => usdRow(role, entries, grandTotal, modelOf));
 
-  /* ---- by model, joined through the Attempt's worker version ---- */
+  /*
+   * ---- by model, joined through the Attempt's worker version — and, for an
+   * Attempt that ran more than one model (an escalated Scout), split by the
+   * row's own `byModel` so each model carries its own part (MW-031) ----
+   */
   const byModel = new Map<string, CostEntry[]>();
   for (const e of input.costs) {
-    const key = modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD;
-    byModel.set(key, [...(byModel.get(key) ?? []), e]);
+    for (const part of costPortionsByModel(e, modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD)) {
+      byModel.set(part.model, [...(byModel.get(part.model) ?? []), part.entry]);
+    }
   }
   const costByModel = [...byModel.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
@@ -923,7 +929,13 @@ export interface MonthlySpendView {
   readonly asOf: string;
   readonly total: MeasuredTotal;
   readonly byProvider: readonly MonthlyBreakdownRow[];
-  /** Model charges by model. Search charges (`DISCOVERY_SEARCH`) are not model charges and are not here. */
+  /**
+   * Model charges by model. Search charges (`DISCOVERY_SEARCH`) are not model
+   * charges and are not here. A charge that ran more than one model (an
+   * escalated Scout, `CostEntry.byModel`) is a row under each model it paid,
+   * with that model's part of its dollars and tokens: its dollars are counted
+   * once across the rows, its row count once per model.
+   */
   readonly byModel: readonly MonthlyBreakdownRow[];
   readonly byRole: readonly MonthlyBreakdownRow[];
   /**
@@ -1035,6 +1047,15 @@ function breakdown(
     .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
 }
 
+/** `breakdown` over parts already keyed by model (`costPortionsByModel`): one part of a split charge per model, each counted once. */
+function breakdownParts(
+  parts: readonly { readonly model: string; readonly entry: CostEntry }[],
+  savingFor?: (key: string, tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>) => number | null,
+): readonly MonthlyBreakdownRow[] {
+  const keyOf = new Map<CostEntry, string>(parts.map((p) => [p.entry, p.model]));
+  return breakdown(parts.map((p) => p.entry), (e) => keyOf.get(e) ?? ATTEMPT_NOT_ON_RECORD, savingFor);
+}
+
 /* Search money is not model money: broken down by host on its own and kept out of `byModel`, where a row with no model would read as the cache pre-warm. */
 const isSearchCharge = (e: CostEntry): boolean => String(e.role) === DISCOVERY_SEARCH_ROLE;
 
@@ -1066,10 +1087,15 @@ export function buildMonthlySpend(input: {
       providerReportedNothing += 1;
       continue;
     }
-    const model = modelOf.get(e.attemptId) ?? NO_MODEL_KEY;
-    const saved = model === NO_MODEL_KEY ? null : cacheSavingUsd(metering.cacheReadInputTokens, model);
-    if (saved !== null && metering.cacheReadInputTokens > 0) {
-      cacheSaving += saved;
+    /* Each part of an escalated charge saved at its own model's cache-read rate (MW-031). */
+    let savedHere: number | null = null;
+    for (const part of costPortionsByModel(e, modelOf.get(e.attemptId) ?? NO_MODEL_KEY)) {
+      const reads = part.entry.cost.cacheReadInputTokens;
+      const saved = part.model === NO_MODEL_KEY || reads === null || reads <= 0 ? null : cacheSavingUsd(reads, part.model);
+      if (saved !== null) savedHere = (savedHere ?? 0) + saved;
+    }
+    if (savedHere !== null) {
+      cacheSaving += savedHere;
       cacheSavingRows += 1;
     }
     if (metering.batch) {
@@ -1105,9 +1131,9 @@ export function buildMonthlySpend(input: {
     asOf: input.nowIso,
     total: { ...total, total: total.total === null ? null : round(total.total) },
     byProvider: breakdown(rows, (e) => providerOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD),
-    byModel: breakdown(
-      rows.filter((e) => !isSearchCharge(e)),
-      (e) => modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD,
+    /* An escalated Scout's one charge counts once, split by the model each part was for (MW-031). */
+    byModel: breakdownParts(
+      rows.filter((e) => !isSearchCharge(e)).flatMap((e) => costPortionsByModel(e, modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD)),
       /* Per-model saving needs the model's own list price; `cacheSavingUsd`
          returns null for an unpriced or unknown key, so a stray non-model key
          yields null rather than a wrong number. */

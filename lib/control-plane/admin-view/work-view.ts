@@ -42,6 +42,7 @@ import { assignmentCompletionWords } from "../assignment-completion.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { BodyView } from "./bodies.ts";
 import { latestScout, scoutDeadEnd, type DeadEndGaps } from "./dead-ends.ts";
+import { scoutModelLine } from "./model-ladder-view.ts";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 
@@ -185,6 +186,39 @@ function scoutDecisionWords(scouts: readonly ScoutResult[] | null, latest: Scout
 }
 
 /**
+ * MW-031/MW-033: which class the latest Scout walk started on, why, and — when
+ * it moved up or was refused a move — the evidence and what the tries cost
+ * together, in the ladder's own words (`scoutModelLine`). Never a fixed claim
+ * about where the loop starts.
+ */
+function scoutClassWords(scouts: readonly ScoutResult[] | null, latest: ScoutResult | null): string {
+  if (scouts === null) return "Which class it started on was not read with it.";
+  if (latest === null) return "";
+  const line = scoutModelLine(latest);
+  /* A walk recorded before the ladder carries no class of its own; say when it ran, not a rule as though it still held. */
+  if (latest.modelClass === undefined) return `Ran on ${line.chosen}: this walk was recorded before the ladder (Sep 25), when the research loop always started on the most capable class.`;
+  return `Started on ${line.chosen}: ${line.why.replace(/\.$/, "")}. ${line.escalation ?? "It did not move up a class."}`;
+}
+
+/** MW-031: the model-routing escalations this work's Scout walks recorded, counted from the walks themselves. */
+function routingEscalationWords(scouts: readonly ScoutResult[] | null): string {
+  if (scouts === null) return "Model-routing escalations: not read with this work.";
+  if (scouts.length === 0) return "Model-routing escalations: none — no Scout walk is on record for this work.";
+  const moved = scouts.filter((s) => s.escalatedFrom !== null && s.escalatedFrom !== undefined && !s.escalationRefused);
+  const refused = scouts.filter((s) => s.escalationRefused !== null && s.escalationRefused !== undefined);
+  if (moved.length === 0 && refused.length === 0) {
+    return `Model-routing escalations: none — ${scouts.length === 1 ? "its Scout walk" : `all ${scouts.length} Scout walks`} finished on the class ${scouts.length === 1 ? "it" : "they"} started on.`;
+  }
+  const newest = latestScout([...moved, ...refused]);
+  const said = newest === null ? null : scoutModelLine(newest).escalation;
+  return (
+    `Model-routing escalations: ${moved.length} on record for this work` +
+    (refused.length > 0 ? `, and ${refused.length} more called for and refused` : "") +
+    `.${said ? ` Latest: ${said}` : ""}`
+  );
+}
+
+/**
  * The opened standing assignment, from its full row (read live by id), and
  * the Scout results read with it. Those results say why the work reached a
  * paid model (MW-035) and what its dead ends ruled out and would settle
@@ -253,7 +287,7 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
       cost: isModel ? (measuredUsd !== null ? money(measuredUsd) : "not reported") : "no cost",
       why: isModel
         ? w.role === "SCOUT"
-          ? `${scoutDecisionWords(scouts, latest)} ${w.attempts ?? "An uncounted number of"} attempts.`
+          ? [scoutDecisionWords(scouts, latest), scoutClassWords(scouts, latest), `${w.attempts ?? "An uncounted number of"} attempts.`].filter((s) => s !== "").join(" ")
           : `${w.attempts ?? "An uncounted number of"} attempts.`
         : `Plain code can do this, so it cannot reach a model at all. ${w.attempts ?? "An uncounted number of"} attempts.`,
     };
@@ -330,7 +364,7 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
   const c = row.cost;
   const costLine =
     c.dollars.kind === "MEASURED"
-      ? `${money(c.dollars.amount)} measured across ${c.attempts ?? "an uncounted number of"} attempts in ${c.rounds ?? "an uncounted number of"} rounds; ${c.retries ?? "an uncounted number of"} retries. ${c.unmeasured + c.attemptsWithoutCostRow > 0 ? `${c.unmeasured + c.attemptsWithoutCostRow} model attempts reported no cost — unknown, not zero. ` : ""}Escalations to you: ${c.escalations.toOwner}. Model-routing escalations are recorded nowhere yet (MW-031).`
+      ? `${money(c.dollars.amount)} measured across ${c.attempts ?? "an uncounted number of"} attempts in ${c.rounds ?? "an uncounted number of"} rounds; ${c.retries ?? "an uncounted number of"} retries. ${c.unmeasured + c.attemptsWithoutCostRow > 0 ? `${c.unmeasured + c.attemptsWithoutCostRow} model attempts reported no cost — unknown, not zero. ` : ""}Escalations to you: ${c.escalations.toOwner}. ${routingEscalationWords(scouts)}`
       : c.dollars.kind === "PLAIN_CODE"
         ? `${c.dollars.says} ${c.attempts ?? "An uncounted number of"} attempts, ${c.retries ?? "uncounted"} retries.`
         : c.dollars.kind === "UNMEASURED"
@@ -381,7 +415,7 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
     modelsNote:
       models.length === 0
         ? "No worker has taken it yet, so no model — or plain code — has run."
-        : "Where a job reaches a model, its class and model are the ones recorded on its attempts. Why a job moved up a class is recorded nowhere yet (MW-031).",
+        : "Where a job reaches a model, its class and model are the ones recorded on its attempts. A Scout walk also records the class it started on and why, and any move up a class with the evidence for it and what both tries cost (MW-031).",
     outcomes,
     promoted: promotedTrail,
     promotedNote,

@@ -88,11 +88,24 @@
  * result records the class, why, the reason, a short evidence line and every
  * attempt's cost; `usd` is their sum. A refused escalation is recorded too.
  *
+ * ## Preserved thinking — the conversation is append-only (Claude Opus 5.5, 2026-09-25)
+ *
+ * On Claude Opus 5.5 a thinking block is bound to the model and to the
+ * conversation before it; replaying one after an edit of the system, the
+ * tools or an earlier message is HTTP 400 on accounts created on or after
+ * 2026-08-31. Nothing already sent is edited here: turns are appended, the
+ * payload bound RESTARTS the conversation from the machine's record instead
+ * of eliding old results in place (`scoutCarriedForward`), and the escalation
+ * appends to the same conversation (why that is valid: the comment where it
+ * happens). Every request states `drop_block` under the beta header
+ * (`SCOUT_THINKING`) and every reported drop is recorded on the result.
+ *
  * No secret is read here. The transport is injected; the runner builds it
  * from the workers' dedicated credential by NAME.
  */
 
 import type { AttemptCost } from "../attempt.ts";
+import type { CostModelShare } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
 import {
   CACHE_RATE_MULTIPLIERS,
@@ -147,6 +160,7 @@ import {
   type ScoutFinding,
   type ScoutFinishInput,
   type ScoutGuardRefusal,
+  type ScoutInputTransformation,
   type ScoutIssue,
   type ScoutModelAttempt,
   type ScoutOutcome,
@@ -171,21 +185,80 @@ export type ContentBlock =
   | { readonly type: "tool_use"; readonly id: string; readonly name: string; readonly input: unknown }
   | { readonly type: string; readonly [key: string]: unknown };
 
+/**
+ * One entry of the response's `input_transformations` (beta
+ * `thinking-binding-controls-2026-08-01`): a thinking block the API dropped
+ * before the model saw it. `reason` is `prefix_binding_mismatch` (our history
+ * changed under the block — a defect of our request assembly) or
+ * `model_binding_mismatch` (the conversation moved to a model that cannot read
+ * it — expected after an escalation). Later checks add values, so both fields
+ * are open strings.
+ */
+export interface InputTransformation {
+  readonly type: string;
+  readonly path?: string;
+  readonly reason?: string;
+}
+
 export interface ModelResponse {
   readonly model: string;
   readonly stop_reason: string | null;
   readonly content: readonly ContentBlock[];
   readonly usage: ModelUsage;
+  /** Present when the request sent the thinking-binding beta header; empty when nothing was dropped. */
+  readonly input_transformations?: readonly InputTransformation[];
 }
 
 export type CacheControl = { readonly type: "ephemeral"; readonly ttl?: "5m" | "1h" };
+
+/**
+ * **PRESERVED THINKING — THE SETTING EVERY SCOUT REQUEST STATES.** (2026-09-25;
+ * claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
+ * breaking change 3, and "Migrating to Claude Fable 5.1 from Claude Fable 5",
+ * breaking changes 2 and 3.)
+ *
+ * On Claude Opus 5.5 a thinking block is bound to the model that produced it
+ * and to the conversation prefix before it (system, tools, every earlier
+ * message). Accounts created on or after 2026-08-31 reject a replayed block
+ * after an edit of that prefix with HTTP 400; older accounts only record it.
+ * The Scout conversation is append-only (see `scoutCarriedForward`), so no
+ * block is ever invalidated — and the skill's three-step check says to set the
+ * production behaviour EXPLICITLY rather than rely on either default: with
+ * `drop_block` a mismatch degrades (the block and every later one are dropped
+ * for that request, reported in `input_transformations`) instead of failing
+ * the Attempt, and the executor records every entry on the result. Models that
+ * do not enforce the check (Sonnet 5) accept the field and report only
+ * model-binding drops, so one request body serves both rungs of the ladder.
+ * `adaptive` is what both models run when `thinking` is omitted — stating it
+ * changes nothing but lets `block_binding` ride on it. The field requires the
+ * beta header (`anthropicBetasFor`); without it the API answers 400.
+ */
+export const SCOUT_THINKING = {
+  type: "adaptive",
+  block_binding: { prefix_mismatch_behavior: "drop_block" },
+} as const;
+
+/** The beta header value `thinking.block_binding` requires. */
+export const THINKING_BINDING_BETA = "thinking-binding-controls-2026-08-01";
 
 export interface ModelRequest {
   readonly model: string;
   readonly max_tokens: number;
   readonly system: readonly { readonly type: "text"; readonly text: string; readonly cache_control?: CacheControl }[];
   readonly tools: readonly ScoutToolSpec[];
-  readonly tool_choice?: { readonly type: "auto" } | { readonly type: "tool"; readonly name: string };
+  /**
+   * `auto` only. A forced `{type:"tool"}` / `{type:"any"}` is HTTP 400 on
+   * Claude Opus 5.5 (claude-api skill, model-migration.md, "Migrating to
+   * Claude Opus 5.5", breaking change 2) and on `max_tokens: 0`; steer from the
+   * prompt and use `strict: true` on the tool instead. Narrowed here so a
+   * forced choice cannot compile.
+   */
+  readonly tool_choice?: { readonly type: "auto" };
+  /** Adaptive thinking with the preserved-thinking behaviour stated (`SCOUT_THINKING`). */
+  readonly thinking?: {
+    readonly type: "adaptive";
+    readonly block_binding?: { readonly prefix_mismatch_behavior: "error" | "drop_block" };
+  };
   /** Effort per role (`ROLE_EFFORT`); the cap is economic, never a truth judgement. */
   readonly output_config?: { readonly effort: ModelEffort };
   readonly messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[];
@@ -209,6 +282,16 @@ export class ModelTransportError extends Error {
 }
 
 /**
+ * The beta headers a request body needs, derived from the body itself so a
+ * field that requires a beta can never be sent without it (2026-09-25).
+ * `thinking.block_binding` without `thinking-binding-controls-2026-08-01` is
+ * HTTP 400 ("block_binding: Extra inputs are not permitted").
+ */
+export function anthropicBetasFor(request: ModelRequest): string[] {
+  return request.thinking?.block_binding !== undefined ? [THINKING_BINDING_BETA] : [];
+}
+
+/**
  * The real transport, against the Messages API. `apiKey` is passed in by the
  * runner, which read it by NAME; it is never logged and never placed in a
  * record. A non-2xx answer throws with the status and the first bytes of the
@@ -220,12 +303,14 @@ export function anthropicTransport(
   endpoint = "https://api.anthropic.com/v1/messages",
 ): ModelTransport {
   return async (request) => {
+    const betas = anthropicBetasFor(request);
     const response = await fetchImpl(endpoint, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
+        ...(betas.length > 0 ? { "anthropic-beta": betas.join(",") } : {}),
       },
       body: JSON.stringify(request),
     });
@@ -601,69 +686,129 @@ export function withCacheBreakpoints(
  * 2026-09-15 on. `fitRepresentation` bounds a SINGLE tool result; nothing
  * bounded their ACCUMULATION across turns.
  *
- * So the tool-result representations are held under a byte budget here,
- * newest-first, and everything older is elided in place to a compact pointer
- * that keeps the rung header and the vaulted artifact id(s). The model reasons
- * over its own rung notes or cites the artifact id; it never re-fetches (a
- * re-read is refused by the executor's `guard`). The newest result is always
- * kept whole, so the model always sees what it just retrieved. Elision is
- * monotonic — oldest first, and an elided block stays elided — so the cached
- * prefix restabilises after each elision rather than churning turn over turn.
+ * So the representations a conversation carries are held under a byte budget.
+ * Until 2026-09-25 that was done by eliding the OLDEST tool results IN PLACE —
+ * an edit of earlier messages. On Claude Opus 5.5 every thinking block is bound
+ * to the conversation prefix before it, and an edit invalidates every later
+ * block: HTTP 400 on accounts created on or after 2026-08-31 (claude-api
+ * skill, model-migration.md, "Migrating to Claude Opus 5.5", breaking change
+ * 3; the append-only replacements table under "Migrating to Claude Fable 5.1
+ * from Claude Fable 5", breaking change 3).
  *
- * This is a NEW floor on context, never a raised cap: with tool results held
- * under ~100 KB a scout request is ~150-200 KB, so both concurrent scouts across
- * the full turn bound stay well under the cycle's payload ceiling and leave room
- * for the deterministic lane.
+ * The budget is now kept WITHOUT an edit. The conversation only ever grows;
+ * when its representations pass the budget the executor RESTARTS it — the
+ * skill's "simple compaction": the next request is the brief plus one
+ * carried-forward block written from the machine's own record (every rung with
+ * what it returned, the model's note and its artifact ids; the newest results
+ * whole), and nothing else is replayed — no earlier turn, no thinking block —
+ * so nothing sent is tied to the old transcript. Server-side context editing
+ * (`clear_tool_uses_20250919`) was not used: it clears what the MODEL reads,
+ * but the request body — what the payload budget counts — still carries every
+ * byte, and every clearing pass rewrites the cached conversation (skill,
+ * cost-optimization.md §2.3).
+ *
+ * This is a NEW floor on context, never a raised cap: with representations
+ * held under ~100 KB a scout request is ~150-200 KB, so both concurrent scouts
+ * across the full turn bound stay well under the cycle's payload ceiling and
+ * leave room for the deterministic lane.
  */
 export const SCOUT_CONTEXT_TOOL_RESULT_BUDGET = 100_000;
 
-/** The sentinel a stub carries, so an already-elided block is left alone on later turns. */
-export const SCOUT_CONTEXT_ELISION_MARK = "[REPRESENTATION ELIDED to bound this cycle's payload";
+/** The first words of a carried-forward block; how the byte count recognises it on later turns. */
+export const SCOUT_CARRIED_FORWARD_MARK = "INVESTIGATION SO FAR — CARRIED FORWARD";
 
-function elideToolResult(content: string, artifactIds: readonly string[]): string {
-  const firstLine = content.split("\n", 1)[0]?.slice(0, 300) ?? "";
-  return (
-    `${firstLine}\n${SCOUT_CONTEXT_ELISION_MARK}; the vaulted artifact(s) ` +
-    `${artifactIds.join(", ") || "(none recorded)"} hold the full representation. Reason over your ` +
-    "rung notes or cite the artifact id — do not re-fetch it (a re-read is refused).]"
-  );
-}
+type Turn = { readonly role: "user" | "assistant"; readonly content: unknown };
 
-/**
- * Elide the OLDEST tool-result representations, in place, until the retained
- * tool-result content is within `budgetBytes`. The newest result is always kept
- * whole. A `tool_use` id absent from `artifactIdsByToolUse` (a finish or
- * record_rung result) is never elided — those are small and carry no
- * representation to point at.
- */
-export function boundToolResultContext(
-  messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[],
-  budgetBytes: number,
-  artifactIdsByToolUse: ReadonlyMap<string, readonly string[]>,
-): void {
-  const results: Record<string, unknown>[] = [];
+/** The representation bytes a conversation carries: every tool result's text, plus a carried-forward block. */
+export function representationBytesIn(messages: readonly Turn[]): number {
+  let bytes = 0;
   for (const m of messages) {
     if (m.role !== "user" || !Array.isArray(m.content)) continue;
     for (const b of m.content as Record<string, unknown>[]) {
-      if (b && b.type === "tool_result" && typeof b.content === "string" && typeof b.tool_use_id === "string") {
-        results.push(b);
+      if (b?.type === "tool_result" && typeof b.content === "string") bytes += Buffer.byteLength(b.content, "utf8");
+      else if (b?.type === "text" && typeof b.text === "string" && b.text.startsWith(SCOUT_CARRIED_FORWARD_MARK)) bytes += Buffer.byteLength(b.text, "utf8");
+    }
+  }
+  return bytes;
+}
+
+/**
+ * **THE CARRIED-FORWARD BLOCK A RESTART STARTS FROM.** Built from the machine's
+ * record and the conversation being retired, never from what the model said
+ * about itself. Every rung walked is listed with what it returned, the model's
+ * note and its artifact ids. The most recent turn's results are repeated whole —
+ * a refused finish or an error included, so the model sees what it must fix —
+ * and older representations follow newest-first while they fit in HALF the
+ * budget, so the restarted conversation has room to grow for some turns before
+ * the next restart. The newest representation is always whole. A result not
+ * repeated is its rung line: the vaulted artifact holds it, and a re-read is
+ * refused.
+ */
+export function scoutCarriedForward(input: {
+  readonly messages: readonly Turn[];
+  readonly rungs: readonly ScoutRung[];
+  readonly artifactIdsByToolUse: ReadonlyMap<string, readonly string[]>;
+  readonly budgetBytes: number;
+  /** 1 for the Attempt's first restart. */
+  readonly restart: number;
+  /** Where the Attempt stands: bounds used, and a bound notice when one is in force. */
+  readonly state: string;
+}): string {
+  const calls = new Map<string, string>();
+  const results: { readonly id: string; readonly content: string; readonly isError: boolean; readonly turn: number }[] = [];
+  input.messages.forEach((m, turn) => {
+    if (!Array.isArray(m.content)) return;
+    for (const b of m.content as Record<string, unknown>[]) {
+      if (m.role === "assistant" && b?.type === "tool_use" && typeof b.id === "string") calls.set(b.id, String(b.name ?? "tool"));
+      if (m.role === "user" && b?.type === "tool_result" && typeof b.tool_use_id === "string" && typeof b.content === "string") {
+        results.push({ id: b.tool_use_id, content: b.content, isError: b.is_error === true, turn });
       }
     }
-  }
-  let kept = 0;
+  });
+  const newestTurn = results.at(-1)?.turn ?? -1;
+  const half = Math.floor(input.budgetBytes / 2);
+  const kept = new Set<string>();
+  let keptBytes = 0;
+  let newestRepresentationSeen = false;
   for (let i = results.length - 1; i >= 0; i -= 1) {
-    const block = results[i];
-    const content = block.content as string;
-    if (content.includes(SCOUT_CONTEXT_ELISION_MARK)) continue; // already a stub; nothing to reclaim
-    const id = block.tool_use_id as string;
-    const size = Buffer.byteLength(content, "utf8");
-    const newest = i === results.length - 1;
-    if (newest || kept + size <= budgetBytes || !artifactIdsByToolUse.has(id)) {
-      kept += size;
+    const r = results[i];
+    const isRepresentation = input.artifactIdsByToolUse.has(r.id);
+    const size = Buffer.byteLength(r.content, "utf8");
+    if (!isRepresentation) {
+      /* A finish refusal, a record_rung answer, an error: only the most recent turn's are still news. */
+      if (r.turn === newestTurn) kept.add(r.id);
       continue;
     }
-    block.content = elideToolResult(content, artifactIdsByToolUse.get(id) ?? []);
+    if (!newestRepresentationSeen || keptBytes + size <= half) {
+      kept.add(r.id);
+      keptBytes += size;
+    }
+    newestRepresentationSeen = true;
   }
+  const omitted = results.filter((r) => !kept.has(r.id) && input.artifactIdsByToolUse.has(r.id)).length;
+  const rungLines = input.rungs.map(
+    (r) =>
+      `- [${r.index}] ${r.tool} ${r.rung} → ${r.target} · ${r.observed}` +
+      (r.note ? ` · your note: ${r.note}` : "") +
+      ` · artifacts ${r.artifactIds.join(", ") || "(none)"}`,
+  );
+  const shown = results
+    .filter((r) => kept.has(r.id))
+    .map((r) => `--- ${calls.get(r.id) ?? "tool"} · call ${r.id}${r.isError ? " · error" : ""} ---\n${r.content}`);
+  return [
+    `${SCOUT_CARRIED_FORWARD_MARK} (restart ${input.restart} of this Attempt)`,
+    "This conversation was restarted to keep every request under the cycle's payload budget. Nothing is lost: every artifact " +
+      "is vaulted, and the executor still holds every rung, the no-re-read set and the bounds. Continue from here; do not " +
+      "re-fetch a URL already walked (a re-read is refused and hands back the artifact id).",
+    "",
+    `RUNGS WALKED (${input.rungs.length}; index · tool · rung → target · what it returned · your note · artifact ids)`,
+    ...(rungLines.length > 0 ? rungLines : ["(none yet)"]),
+    "",
+    `RESULTS OF YOUR MOST RECENT TOOL CALLS${omitted > 0 ? ` (${omitted} earlier result${omitted === 1 ? " is" : "s are"} not repeated; each is its rung above)` : ""}`,
+    ...(shown.length > 0 ? shown : ["(none)"]),
+    "",
+    input.state,
+  ].join("\n");
 }
 
 /** The tool list with the breakpoint on its LAST definition, so tools + system cache as one prefix. */
@@ -735,6 +880,15 @@ export const SCOUT_PREWARM_PLACEHOLDER = "warmup";
  * A forced `tool_choice` is refused with `max_tokens: 0` (HTTP 400,
  * "tool_choice: type \"tool\" or \"any\" cannot be used when max_tokens is 0"),
  * which is why the bound turn's forced finish never pre-warms.
+ *
+ * It sends the Attempts' `thinking` setting too (2026-09-25): thinking and
+ * effort are rendered into the prompt, so a pre-warm with different settings
+ * can write an entry real traffic never reads (claude-api skill,
+ * prompt-caching.md, "Pre-warming the cache"). Adaptive thinking is accepted
+ * with `max_tokens: 0`; only `thinking.type: "enabled"` is refused there.
+ * `toolkitSpecs` must be the Attempts' own list — with the search tool when the
+ * owner's paid-search switch is on (`scoutToolSpecsFor`) — or the entry
+ * written is for a prefix no Attempt sends.
  */
 export function scoutPrewarmRequest(input: {
   readonly model: string;
@@ -750,6 +904,7 @@ export function scoutPrewarmRequest(input: {
     system: prefix.system,
     tools: prefix.tools,
     tool_choice: { type: "auto" },
+    thinking: SCOUT_THINKING,
     output_config: { effort: input.effort },
     messages: [{ role: "user", content: [{ type: "text", text: SCOUT_PREWARM_PLACEHOLDER }] }],
   };
@@ -991,9 +1146,20 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs });
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
+      const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited);
+      /*
+       * APPEND-ONLY (2026-09-25). Nothing already sent in this array is ever
+       * changed: turns are pushed, and the only other move is a RESTART that
+       * replaces the whole conversation with a fresh start
+       * (`scoutCarriedForward`). An edit would invalidate every later thinking
+       * block on Claude Opus 5.5 — see `SCOUT_THINKING`.
+       */
       const messages: { role: "user" | "assistant"; content: unknown }[] = [
-        { role: "user", content: [{ type: "text", text: scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited) }] satisfies UserContent },
+        { role: "user", content: [{ type: "text", text: brief }] satisfies UserContent },
       ];
+      let contextRestarts = 0;
+      /** Every thinking block the provider reported dropping, with the turn and model. */
+      const inputTransformations: ScoutInputTransformation[] = [];
       const usage = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, reported: false };
       /** Every turn's metered usage, in order; the ledger fields are their sum. */
       const meteredTurns: MeteredUsage[] = [];
@@ -1090,7 +1256,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         if (already !== undefined) {
           const detail =
             `RE-READ REFUSED: ${tool} already opened ${url} in this investigation and vaulted it as ARTIFACT ${already.join(", ") || "(nothing stored)"}. ` +
-            "That representation is in this conversation; reason over it, or open a materially different representation (the page's own API, a linked document, another host).";
+            "That representation is in this conversation or carried forward as its rung; reason over it, or open a materially different representation (the page's own API, a linked document, another host).";
           guardRefusals.push({ kind: "RE_READ", tool, target: url, detail });
           return detail;
         }
@@ -1169,6 +1335,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                * cache cost.
                */
               tool_choice: { type: "auto" },
+              /* Preserved thinking, stated on every turn of both models (`SCOUT_THINKING`); the pre-warm sends the same. */
+              thinking: SCOUT_THINKING,
               output_config: { effort: step.effort },
               messages: withCacheBreakpoints(messages),
               ...(SCOUT_CACHE_POLICY.movingBreakpoint === "TOP_LEVEL" ? { cache_control: SCOUT_CACHE_POLICY.cacheControl } : {}),
@@ -1185,6 +1353,15 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           attemptTurns += 1;
           modelReported = response.model ?? modelReported;
           lastStopReason = response.stop_reason ?? lastStopReason;
+          for (const t of response.input_transformations ?? []) {
+            inputTransformations.push({
+              turn: turns,
+              model: response.model ?? current.model,
+              type: String(t.type),
+              path: typeof t.path === "string" ? t.path : null,
+              reason: typeof t.reason === "string" ? t.reason : null,
+            });
+          }
           /* The provider's usage block, through the one parser every lane reads it with. */
           const metered = readMeteredUsage(response.usage ?? {});
           if (metered.uncachedInputTokens !== null || metered.outputTokens !== null) usage.reported = true;
@@ -1338,11 +1515,34 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           }
           messages.push({ role: "user", content: results });
           /*
-           * Bound the accumulated tool-result context so this turn's re-sent
-           * conversation cannot drive the cycle's PAYLOAD_BYTE_CEILING (2026-09-17).
-           * Newest results stay whole; older ones become artifact-id pointers.
+           * Bound the accumulated representations so the next re-sent
+           * conversation cannot drive the cycle's PAYLOAD_BYTE_CEILING
+           * (2026-09-17) — by a RESTART from the machine's record, never by
+           * editing what was already sent (2026-09-25, `scoutCarriedForward`).
+           * It happens here, after a whole tool round, so no tool call is left
+           * waiting on its result.
            */
-          boundToolResultContext(messages, SCOUT_CONTEXT_TOOL_RESULT_BUDGET, artifactIdsByToolUse);
+          if (representationBytesIn(messages) > SCOUT_CONTEXT_TOOL_RESULT_BUDGET) {
+            contextRestarts += 1;
+            const carried = scoutCarriedForward({
+              messages,
+              rungs,
+              artifactIdsByToolUse,
+              budgetBytes: SCOUT_CONTEXT_TOOL_RESULT_BUDGET,
+              restart: contextRestarts,
+              state:
+                `WHERE THE ATTEMPT STANDS: ${attemptTurns} of ${bound.maxTurns} turns used by this model; ` +
+                `${toolkit.toolCalls} of ${bound.maxToolCalls} research tool calls used.` +
+                (boundNotice !== null ? ` BOUND REACHED: ${boundNotice}. Call finish NOW with the typed result; no research tool will run.` : ""),
+            });
+            messages.splice(0, messages.length, {
+              role: "user",
+              content: [
+                { type: "text", text: brief },
+                { type: "text", text: carried },
+              ] satisfies UserContent,
+            });
+          }
 
           /*
            * EARLY STOP: once the minRungs floor is met, if STALL_TURNS consecutive
@@ -1506,6 +1706,35 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           };
           resetForSecondAttempt();
           const toolsLeft = Math.max(0, bound.maxToolCalls - toolkit.toolCalls);
+          /*
+           * THE FRONTIER CONTINUES THE SAME CONVERSATION, APPENDED TO — NOT A
+           * FRESH ONE, AND NO SONNET BLOCK IS STRIPPED (2026-09-25). Why this is
+           * valid on an enforced account (created on or after 2026-08-31) and on
+           * an older one alike, from the claude-api skill, model-migration.md:
+           *
+           *   - model binding ("Migrating to Claude Opus 5.5", breaking change 3):
+           *     Claude Opus 5.5 reads thinking blocks from earlier Opus, Sonnet and
+           *     Haiku models — "a conversation that moves onto claude-opus-5-5
+           *     keeps its reasoning"; a block a model cannot read is dropped
+           *     before it sees it, unbilled, never a 400, and "keep passing blocks
+           *     back unchanged when you switch models; don't strip them yourself"
+           *     ("Migrating to Claude Fable 5.1 from Claude Fable 5", breaking
+           *     change 2);
+           *   - conversation binding (same section, breaking change 3): the check
+           *     compares system, tools and every earlier message to when each
+           *     block was produced. The escalation only APPENDS this message; the
+           *     system and tools are the same `prefix`; history is never edited
+           *     (`scoutCarriedForward`). So every Sonnet block is still valid.
+           *
+           * A fresh seeded conversation would forfeit the representations the
+           * cheaper attempt paid for and the frontier's reading of Sonnet's
+           * reasoning, for no validity gain; stripping blocks is the skill's
+           * one-time recovery, not a steady state. The prompt cache is per model,
+           * so the frontier's first turn writes this conversation once either
+           * way, and every later frontier turn reads it. Every request states
+           * `drop_block` (`SCOUT_THINKING`), so an assembly defect degrades and
+           * is recorded in `inputTransformations` instead of failing the Attempt.
+           */
           messages.push({
             role: "user",
             content: [
@@ -1599,6 +1828,33 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         requestCount: turns + toolkit.requestCount,
         ...metering,
       };
+      /*
+       * THE CHARGE BY MODEL (MW-031, 2026-09-25). `cost` is the Attempt's ONE
+       * charge — both attempts combined — and the Attempt's worker is the model
+       * it started on, so a by-model view gave Sonnet the frontier's dollars.
+       * When more than one model ran, each attempt's part is carried to the
+       * ledger (`WorkOutcome.costByModel` → `CostEntry.byModel`): its dollars
+       * are the attempt's own (`modelAttempts`), its tokens the attempt's own
+       * turns, and the parts sum to `cost`. An attempt that made no completed
+       * request billed nothing: a measured zero, as a provider error before any
+       * completion is above.
+       */
+      const costByModel: CostModelShare[] | null =
+        modelAttempts.length > 1 && usage.reported
+          ? modelAttempts.map((a, i) => {
+              const first = attemptFirstTurns[i] ?? 1;
+              if (a.turns === 0) {
+                return { model: a.model, requestCount: 0, usd: a.usd ?? 0, inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0 };
+              }
+              const own = sumMeteredUsage(meteredTurns.slice(first - 1, first - 1 + a.turns));
+              const whole =
+                own.uncachedInputTokens === null || own.cacheReadInputTokens === null || own.cacheCreationInputTokens === null
+                  ? null
+                  : own.uncachedInputTokens + own.cacheReadInputTokens + own.cacheCreationInputTokens;
+              const { batch: _batch, ...fields } = meteredCostFields(own);
+              return { model: a.model, requestCount: a.turns, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
+            })
+          : null;
       /*
        * The two cache-defect signatures, read over the recorded turns
        * (`cache-defects.ts`): the stationary breakpoint the 2026-09-02
@@ -1716,6 +1972,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         escalationEvidence,
         escalationRefused,
         modelAttempts,
+        inputTransformations,
+        contextRestarts,
       };
 
       /*
@@ -1741,10 +1999,13 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
 
       /* One artifact per content id: a body served identically by two hosts is one artifact. */
       const distinctArtifacts = artifacts.filter((a, i) => artifacts.findIndex((b) => b.artifactId === a.artifactId) === i);
+      /* A drop because OUR history changed is a defect of request assembly, named like a cache defect; a model-binding drop after an escalation is not. */
+      const prefixDrops = inputTransformations.filter((t) => t.reason === "prefix_binding_mismatch");
       const common = {
         ranAs: "BOUNDED_MODEL_WORKER" as const,
         artifacts: distinctArtifacts,
         cost,
+        ...(costByModel !== null ? { costByModel } : {}),
         endedAt: clock(),
       };
       if (persisted.refusal !== null) {
@@ -1777,7 +2038,10 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             ? ` · ESCALATED ${escalatedFrom} → ${last.modelClass} (${escalationReason}); per attempt ` +
               modelAttempts.map((a) => `${a.modelClass} ${a.usd === null ? "UNMEASURED" : a.usd.toFixed(4)}`).join(" + ")
             : "") +
-          (cacheDefect ? ` · CACHE DEFECT on turn(s) ${cacheDefect.turns.join(", ")}` : ""),
+          (cacheDefect ? ` · CACHE DEFECT on turn(s) ${cacheDefect.turns.join(", ")}` : "") +
+          (prefixDrops.length > 0
+            ? ` · THINKING DROPPED (prefix_binding_mismatch: our history changed under a block) on turn(s) ${[...new Set(prefixDrops.map((t) => t.turn))].join(", ")}`
+            : ""),
       };
     },
   };

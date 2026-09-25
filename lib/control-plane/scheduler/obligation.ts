@@ -417,3 +417,63 @@ export function dueNow(
     .filter((row) => Date.parse(row.nextDueAt) <= nowMs)
     .sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
 }
+
+/** What the plain-code queue reads from a debt row: whether the last attempt failed, and when its backoff ends. */
+export interface QueueDebt {
+  readonly consecutiveFailures: number;
+  readonly retryAt: string;
+}
+
+/**
+ * **WHEN A DUE ROW JOINED THE PLAIN-CODE QUEUE.** (2026-09-25.)
+ *
+ * A row's next-due advances only when a reading DISCHARGES it. A row whose
+ * attempts keep failing keeps its first next-due forever, so ordering by
+ * next-due alone put it back at the HEAD of the queue each time its backoff
+ * (at most six hours) ended. On production, 2026-09-25, 133 such rows sat ahead
+ * of 1,360 rows that share one next-due (2026-09-15T17:58:43.627Z). Of 1,882
+ * plain-code dispatches in the 81 cycles since 2026-09-23, 1,361 failed. The
+ * failed ones were mostly repeat tries of rows that return zero Wikipedia
+ * results. Those 1,882 dispatches were more than enough to reach every one of
+ * the lane's ~1,190 rows once. Still, 144 rows waiting since 2026-09-15 were
+ * never tried. That is starvation caused by queue order, not by lack of
+ * capacity.
+ *
+ * So a row whose last attempt failed rejoins the queue when its backoff ends,
+ * behind every row already waiting. Precisely, it rejoins at the later of its
+ * backoff's end and its next-due, so a row due only as a retry still comes after
+ * every row due by the clock, as before. Any other row joins at its next-due,
+ * as before. A row's key never moves earlier than its next-due, so a row
+ * without failing debt never has more rows ahead of it than it did. Nothing
+ * about a row's cadence or backoff changes here. This only orders rows that are
+ * already due.
+ */
+export function waitingSince(row: { readonly nextDueAt: string }, debt: QueueDebt | null | undefined): string {
+  if (debt === null || debt === undefined || debt.consecutiveFailures <= 0) return row.nextDueAt;
+  return debt.retryAt > row.nextDueAt ? debt.retryAt : row.nextDueAt;
+}
+
+/**
+ * The plain-code lane's order: the longest-waiting row first (`waitingSince`).
+ * Ties keep their input order. The sort is stable, and a copy is returned.
+ *
+ * **THE BOUND.** A dispatch that ends in a reading or a failure puts its row
+ * back behind the cycle that ran it. A discharged row rejoins at its next-due,
+ * at least 15 minutes after the cycle started. A failed row rejoins no earlier
+ * than its retry, and every backoff is at least 15 minutes. So a row that was dispatched
+ * cannot pass a waiting row again. If A rows were waiting ahead of a row when it
+ * joined, and the lane runs c ≥ 1 rows a cycle, the row is dispatched within
+ * ⌈(A + 1) / c⌉ cycles. A row appears in the queue at most once, so A is
+ * smaller than the lane's population. Two things are outside the bound. First,
+ * a row a live foreign lease holds (NOT_CLAIMED) keeps its place until that
+ * lease ends. Second, the owner's placed-first rows (ADM-8 DISPATCH, selected
+ * expansion scopes) still go first, in the owner's order.
+ */
+export function plainCodeQueueOrder<T extends { readonly obligation: { readonly id: string }; readonly nextDueAt: string }>(
+  rows: readonly T[],
+  debtFor: (obligationId: string) => QueueDebt | null | undefined,
+): T[] {
+  const keyed = rows.map((row, at) => ({ row, at, since: waitingSince(row, debtFor(row.obligation.id)) }));
+  keyed.sort((a, b) => (a.since < b.since ? -1 : a.since > b.since ? 1 : a.at - b.at));
+  return keyed.map((k) => k.row);
+}

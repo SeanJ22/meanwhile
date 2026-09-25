@@ -986,6 +986,8 @@ const debtsIn = (canary
       .map((row) => row.value)
   : await loadDebts(repos)
 ).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
+/* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
+const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
@@ -1210,7 +1212,7 @@ if (expansionPlan !== null) {
   }
 }
 
-/* OLDEST FIRST for the deterministic lane, which is the dispatcher's own order — behind the owner's dispatch. */
+/* Oldest next-due first, behind the owner's dispatch. This order only classifies and counts the rows. The dispatcher orders the plain-code lane by `plainCodeQueueOrder` (2026-09-25). */
 dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
 const dueOrdered = expansionPlan === null
   ? placeFirstRows(dueThisCycle, dispatchPriority)
@@ -2056,6 +2058,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
           modelDispatched: laneCounts.modelDispatched,
           startedIds: startedThisCycle,
           runningIds: new Set(running.map((r) => r.obligationId)),
+          debtFor: (id) => debtAtCycleStart.get(id),
         }),
     },
     running: [...running],

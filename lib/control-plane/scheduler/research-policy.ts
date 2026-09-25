@@ -31,7 +31,7 @@
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
-import { MODEL_WORKER_MODEL } from "../model-cost.ts";
+import { MODEL_FOR_CLASS, SCOUT_STEPS } from "./model-routing.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
 import type { FleetSafetySnapshot } from "../fleet-safety.ts";
 
@@ -629,5 +629,10 @@ export function deriveLevel1(input: {
   };
 }
 
-/** The model the Scout lane runs, for records that must name it. */
-export const SCOUT_MODEL = MODEL_WORKER_MODEL;
+/**
+ * The model the Scout lane STARTS on, for records that must name it: the
+ * research loop's base class in the step registry (Sonnet 5 since MW-033,
+ * 2026-09-25; the frontier before). A loop that escalates names the higher
+ * model on its own result (`ScoutResult.modelClass`, `modelAttempts`).
+ */
+export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].modelClass];

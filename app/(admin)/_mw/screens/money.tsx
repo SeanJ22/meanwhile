@@ -63,6 +63,7 @@ import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { divisionsOf, loadContainer } from "../data/geography.ts";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { loadSpendFacts } from "../data/spend-store.ts";
+import { ladderHeadline } from "@/lib/control-plane/admin-view/model-ladder-view.ts";
 import { stateName } from "../load-shell.ts";
 import { MapTilerSection } from "../maptiler-panel.tsx";
 import { BillingEntry, CeilingDial, DiscoverySearchSwitch, RemoveFact } from "../money-controls.tsx";
@@ -603,6 +604,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
             ))}
           </div>
         </div>
+        <p className={s.footnote}>{ladderHeadline({ ladder: facts2?.ladder ?? null, lastPaidAt: facts2?.ledger.lastPaidAt ?? null, pausedByOwner: safetyOut.kind === "HELD" ? safetyOut.value.pausedByOwner : null })}</p>
 
         <Section
           title="The assignments that cost the most"

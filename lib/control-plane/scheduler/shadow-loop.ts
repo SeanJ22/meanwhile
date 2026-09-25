@@ -267,7 +267,9 @@ export type PrewarmOutcome =
       readonly usd: number | null;
       readonly durationMs: number;
     }
-  | { readonly status: "FAILED"; readonly at: string; readonly detail: string; readonly durationMs: number };
+  | { readonly status: "FAILED"; readonly at: string; readonly detail: string; readonly durationMs: number }
+  /* MW-033 (2026-09-25): no paid call was made — the loop's start model's prefix could not be shown to reach its cacheable minimum. */
+  | { readonly status: "SKIPPED"; readonly at: string; readonly model: string; readonly code: string; readonly detail: string; readonly durationMs: number };
 
 /**
  * **EVERY DUE ROW IS ACCOUNTED FOR, BY LANE.** (MW-014, MW-029, 2026-09-25.)

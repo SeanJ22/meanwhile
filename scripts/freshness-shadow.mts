@@ -206,7 +206,7 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_LOOP_STEP, SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { SCOUT_TOOL_SPECS, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -263,7 +263,6 @@ import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import type { AttemptCost } from "../lib/control-plane/attempt.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
-import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
@@ -281,6 +280,7 @@ import {
   FleetSafetyController,
   resolveRollingCeiling,
   scheduledBlackoutAt,
+  scoutEscalationReservation,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import {
@@ -2120,9 +2120,10 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
   const at = nowIso();
   const started = Date.now();
   try {
-    const route = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
-    const model = route.model === SCOUT_MODEL ? SCOUT_MODEL : route.model;
-    const request = scoutPrewarmRequest({ model, effort: route.effort, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    /* MW-033 (2026-09-25): warm the model the loop STARTS on, and only when its prefix can cache — else skip, by name, with no paid call. */
+    const plan = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
+    const { model, request } = plan;
     const transport = fleetSafety.guardedModelTransport("anthropic", "scout-prewarm", anthropicTransport(workerKey));
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
@@ -2159,6 +2160,8 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? scoutExecutor({
       transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
+      /* MW-033: a Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling. */
+      reserveEscalation: scoutEscalationReservation(fleetSafety),
       toolkitFor: (toolCtx) => buildScoutToolkit(scoutSearch !== null ? { ...toolCtx, search: scoutSearch } : toolCtx),
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
@@ -2643,7 +2646,8 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
-      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) } : {}),
+      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)),
+        reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
       /* The auditor admits against the ceiling in force, the same one admitScout reads — not the static default. */
       auditCeilingUsd: effectiveCeilingUsd });
     // Retained civic bytes get one guaranteed stage before open-ended discovery.

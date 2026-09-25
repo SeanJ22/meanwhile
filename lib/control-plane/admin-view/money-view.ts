@@ -956,8 +956,8 @@ export const LADDER_RULES: readonly { readonly holds: boolean; readonly text: st
     text: "The most capable class is the ceiling, and no model named Fable may route. Both are guards now, not observations: a routing edit that points any class above the ceiling or at a Fable fails when the code loads (MW-034).",
   },
   {
-    holds: false,
-    text: "Cheapest first, moving up only for a recorded reason. Not yet true: every production call runs its step's base class, nothing has ever moved up, and the reason and the combined cost of both tries would be recorded nowhere (MW-031).",
+    holds: true,
+    text: "Cheapest first, moving up only for a recorded reason. Enforced in code since Sep 25: the Scout's research starts on Sonnet 5 and moves up to Opus 5.5 only for one of four recorded reasons, after the spending ceiling holds room for the second try, and the result keeps the reason, the evidence and what both tries cost. The audit stays on Opus by design (MW-035). Checked with a stand-in provider only: no paid call has run under it yet (MW-031, MW-033).",
   },
   {
     holds: true,

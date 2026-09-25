@@ -188,7 +188,7 @@ export async function LearningScreen(props: { readonly searchParams: Promise<Sea
       lines: [
         ...(month && modelCharges > 0
           ? [
-              `${n(topCharges)} of ${n(modelCharges)} model charges this month (${month.window.label}, UTC) were on the most capable class. Nothing starts lower and nothing has ever moved up, so there is no reaching to count — the Scout loop and the audit start at the top by design.`,
+              `${n(topCharges)} of ${n(modelCharges)} model charges this month (${month.window.label}, UTC) were on the most capable class. Until Sep 25 the Scout loop and the audit started at the top by design; the Scout loop now starts on Sonnet 5 and records every move up (Fleet · Money counts them).`,
               "A trend needs a ladder that is used, and the reason for each move recorded.",
             ]
           : ["Escalation is not counted, so the rate over time cannot be drawn."]),

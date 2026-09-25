@@ -8,7 +8,7 @@
  */
 import type { CostEntry } from "./cost.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, usdForModelUsage } from "./model-cost.ts";
-import type { ModelRequest, ModelResponse, ModelTransport } from "./scheduler/scout-executor.ts";
+import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmission, ScoutEscalationRequest } from "./scheduler/scout-executor.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
 import type { OpenBytes } from "./scheduler/scout-contract.ts";
 import type { OpenOne } from "./scheduler/route-executor.ts";
@@ -773,4 +773,58 @@ export class FleetSafetyController {
       lastSuccessfulActivity: this.lastSuccessfulActivity,
     };
   }
+
+  /**
+   * **A HOLD FOR A MODEL ESCALATION, TAKEN BEFORE IT RUNS.** (MW-031, MW-033,
+   * 2026-09-25.) When a cheaper model attempt shows a recorded reason to move
+   * up a class, the second attempt's worst case is held against the SAME
+   * rolling-24h inequality `reserveModelRequest` enforces, before its first
+   * request — so the ceiling covers both attempts, and a concurrent Scout
+   * cannot spend the headroom the escalation was admitted on. Refuses (and
+   * defers the work by name) exactly as a request would. `draw` converts part
+   * of the hold into settled spend as each escalated turn is priced, so the
+   * hold and the spend are never counted twice; `release` returns the rest.
+   * Each escalated request is still reserved on its own on top of the hold.
+   */
+  holdModelBudget(work: string, usd: number): { readonly usd: number; readonly draw: (spentUsd: number) => void; readonly release: () => void } {
+    if (!Number.isFinite(usd) || usd < 0) this.refuse(work, "UNMEASURED_MODEL_SPEND", `an escalation hold of ${String(usd)} USD is not a measured amount`);
+    if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
+    if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
+    if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
+      this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+    }
+    this.reservedUsd += usd;
+    let held = usd;
+    return {
+      usd,
+      draw: (spentUsd) => {
+        const d = Math.min(held, Number.isFinite(spentUsd) ? Math.max(0, spentUsd) : 0);
+        held -= d;
+        this.reservedUsd -= d;
+      },
+      release: () => {
+        this.reservedUsd -= held;
+        held = 0;
+      },
+    };
+  }
+}
+
+/**
+ * The Scout executor's escalation seam (`ScoutExecutorDeps.reserveEscalation`),
+ * backed by this controller's hold (MW-033, 2026-09-25): admitted with the hold,
+ * or refused `CEILING` with the controller's own code and words. Any other
+ * failure is not a ceiling reading and is thrown to the executor, which records
+ * it as `NOT_RESERVED`.
+ */
+export function scoutEscalationReservation(controller: FleetSafetyController): (request: ScoutEscalationRequest) => ScoutEscalationAdmission {
+  return (request) => {
+    try {
+      const hold = controller.holdModelBudget(request.obligationId, request.worstCaseUsd);
+      return { admit: true, reservedUsd: hold.usd, draw: hold.draw, release: hold.release };
+    } catch (error) {
+      if (error instanceof FleetSafetyRefusal) return { admit: false, code: "CEILING", why: error.message };
+      throw error;
+    }
+  };
 }

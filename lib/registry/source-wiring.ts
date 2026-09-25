@@ -805,8 +805,14 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   },
 
   // Chandler, AZ — City Council (C14, 2026-09-24). Every agenda, result and
-  // minutes set is published only on destinyhosted.com, whose robots.txt reads
-  // as disallow-all and which is never requested. The city's own City Clerk
+  // minutes set is published only on destinyhosted.com. Its robots.txt reads
+  // as disallow-all, and the host was never requested until the owner's
+  // 2026-09-25 decision that robots.txt no longer blocks reading public pages;
+  // measured that day it answers the project's identified client with HTTP 200
+  // and no challenge. `destinyAgenda` reads the Council's month lists (type
+  // `CC`) and joins each listed agenda, result and video to the sitting the
+  // city's own pages dated, on the date and the name the city printed. The
+  // city's own City Clerk
   // page publishes the year's sittings as the "2026 City Council Meeting Dates"
   // table (Resolution No. 5937, Exhibit A): 33 full dates in three columns
   // (Regular and Study Sessions, Study Sessions, Regular Meetings). The table
@@ -837,8 +843,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // calendar, so the filter is the Council's own name as its events print it.
       dayJson: "https://www.chandleraz.gov/rest/events/day/",
       titleMatch: "City Council",
+      // The Council's own Destiny Agenda list (tenant 24263, meeting type CC),
+      // the page every "View Current Agenda" link on the city's event pages
+      // leads to. One request per month in reach; no sitting is made from it.
+      destinyAgenda: "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
     },
-    verifiedAt: "2026-09-24",
+    verifiedAt: "2026-09-25",
   },
 
   // Holbrook, AZ — City Council (R21's replacement route, 2026-09-25). The

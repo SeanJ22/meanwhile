@@ -14,6 +14,14 @@ import {
 import { resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
+import {
+  DESTINY_AHEAD_DAYS,
+  destinyMonthUrl,
+  destinyMonthsBetween,
+  joinDestinyRows,
+  parseDestinyMonth,
+  type DestinyMonth,
+} from "./destiny-agenda.ts";
 import type {
   Meeting,
   MeetingQuery,
@@ -177,6 +185,12 @@ export interface SchedulePageRaw {
   days?: readonly { readonly date: string; readonly url: string; readonly json: string }[];
   /** The documents page's HTML, where the row wires one. */
   documents?: string;
+  /**
+   * The body's Destiny Agenda month lists (`destinyAgenda` on the row, 2026-09-25): each month from the
+   * window's start to `DESTINY_AHEAD_DAYS` ahead that was read, keyed `YYYY-MM`. A month not read is absent,
+   * and its sittings carry no document links; they are never unpublished for it.
+   */
+  destiny?: readonly { readonly month: string; readonly url: string; readonly html: string }[];
   collectedAt: string;
   /**
    * This ROW's retrieval was refused, and `schedule` is empty (g3, 2026-08-16).
@@ -991,6 +1005,10 @@ export function makeSchedulePageSource(
 
     for (const row of raw) {
       const { wiring, schedule, documents, collectedAt, error } = row;
+      /* The Destiny month lists read for this row, keyed `YYYY-MM`; a month not read is absent. */
+      const destinyMonths = new Map<string, DestinyMonth>(
+        (row.destiny ?? []).map((m) => [m.month, parseDestinyMonth(m.html, m.url)] as const),
+      );
       // A refused row publishes nothing THIS run. It is counted, not skipped:
       // `notConfigured` is the drop bucket for "we had a row and produced no
       // meeting from it", and a run that quietly shortened its own input is
@@ -1169,6 +1187,14 @@ export function makeSchedulePageSource(
         const href = sitting.href ?? docs.get(sitting.date) ?? null;
         const base =
           wiring.config.documentsPage ?? wiring.config.schedulePage;
+        /*
+         * The Destiny list's row for this sitting (2026-09-25): a day-file sitting joins on its date and the
+         * name the city printed for it; a date-only sitting joins only a date the list gives one row. The
+         * city's own link, where the page carries one, is kept ahead of it.
+         */
+        const destinyJoin = joinDestinyRows(destinyMonths, sitting.date, sitting.pageUrl ? (sitting.note ?? null) : null);
+        const destinyRow = destinyJoin !== null && destinyJoin !== "EMPTY" ? destinyJoin : null;
+        const agendaUrl = href ? new URL(href, base).toString() : (destinyRow?.agendaUrl ?? null);
         meetings.push({
           id: sitting.id,
           ocdId: wiring.ocdId,
@@ -1188,7 +1214,10 @@ export function makeSchedulePageSource(
               }
             : null,
           ...(venueGap ? { venueGap } : {}),
-          agendaUrl: href ? new URL(href, base).toString() : null,
+          ...(destinyRow && destinyRow.links.length > 0 ? { publishedLinks: [...destinyRow.links] } : {}),
+          agendaUrl,
+          // The publisher's own agenda list for the month was read and names nothing on this date.
+          ...(agendaUrl === null && destinyJoin === "EMPTY" ? { agendaSlotObservedEmpty: true } : {}),
           jurisdiction: wiring.jurisdiction,
           status: sitting.canceled ? "CANCELED" : statusOf(startsAt, now),
           provenance: {
@@ -1316,6 +1345,27 @@ export function makeSchedulePageSource(
               }
             }
           }
+          /*
+           * `destinyAgenda` names the body's Destiny Agenda list (2026-09-25): one request per calendar month
+           * from the window's start (the concluded lookback) to DESTINY_AHEAD_DAYS ahead, five a read. Documents
+           * are a separate capability from the schedule: a month refused leaves its sittings without links,
+           * never unpublished.
+           */
+          const destiny: { month: string; url: string; html: string }[] = [];
+          if (wiring.config.destinyAgenda) {
+            const now = Date.now();
+            const from = query?.startsAfter ? Date.parse(query.startsAfter) : now - WINDOW_BACK_DAYS * 86_400_000;
+            const until = query?.startsBefore ? Date.parse(query.startsBefore) : now + WINDOW_FORWARD_DAYS * 86_400_000;
+            for (const { year, month } of destinyMonthsBetween(from, Math.min(until, now + DESTINY_AHEAD_DAYS * 86_400_000))) {
+              const url = destinyMonthUrl(wiring.config.destinyAgenda, year, month);
+              try {
+                const page = await politeGetText(url, { fetchImpl, accept: "text/html", signal: query?.signal });
+                destiny.push({ month: `${year}-${String(month).padStart(2, "0")}`, url, html: page.text });
+              } catch {
+                // One month refused is not the body's schedule refused.
+              }
+            }
+          }
           let documents: string | undefined;
           if (wiring.config.documentsPage) {
             const page = await politeGetText(wiring.config.documentsPage, {
@@ -1330,6 +1380,7 @@ export function makeSchedulePageSource(
             wiring,
             schedule,
             ...(days.length > 0 ? { days } : {}),
+            ...(destiny.length > 0 ? { destiny } : {}),
             documents,
             collectedAt: new Date().toISOString(),
           });

@@ -139,7 +139,7 @@ export const NON_ROUTINE_DISPOSITIONS: readonly NonRoutineDispositionContract[] 
     sourceId: "static-reference-vintages",
     inventoryClassification: "STATIC_VERSIONED_REFERENCE",
     disposition: "EXPLICIT_VERSION_ADOPTION",
-    trackedPaths: ["data/reference/census_govt_units_2022*.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
+    trackedPaths: ["data/reference/census_govt_units_2022*.csv", "data/reference/census_tiger_2023_territory_functional_status.csv", "data/reference/nces_ccd_lea_directory_2025_26.csv", "cited embedded definition modules"],
     execution: VERSION_ADOPTION,
     reason: "The filename and review identify the adopted source vintage; replacement is a deliberate version change.",
   },

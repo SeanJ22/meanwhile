@@ -26,12 +26,10 @@
  * promoted input against the store. Anything it cannot read refuses the
  * candidate by name and leaves the last known good wiring live.
  */
-import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import {
@@ -40,7 +38,7 @@ import {
   composeCrosswalk,
   readDerivedMeetingBodyCrosswalk,
 } from "../lib/civic-data/derived-crosswalk.ts";
-import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { planDerivedVersion, promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   derivedWiringCandidate,
@@ -81,7 +79,6 @@ assertWriteAllowed("a routine civic data candidate/version promotion");
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
   // An unchanged wiring re-check is receipted on the pointed version instead of
@@ -94,12 +91,6 @@ async function finish(candidate: RoutineCandidate): Promise<void> {
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
   if (!outcome.promoted) process.exitCode = 2;
-}
-
-function promotedInput(recordClass: string, scope: string, versionId: string | null, value: unknown, promotedAt: string | null): DerivedInputRef | null {
-  return versionId === null || promotedAt === null
-    ? null
-    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: sha256(canonicalCivicDataJson(value)), promotedAt };
 }
 
 /* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */
@@ -134,7 +125,7 @@ async function main(): Promise<void> {
   }
   const previous = lkg.kind === "PROMOTED" ? derivedWiringEntries(lkg.value) : [];
   const lkgInput = lkg.kind === "PROMOTED"
-    ? promotedInput("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
+    ? promotedInputRef("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
     : null;
 
   /*
@@ -156,10 +147,10 @@ async function main(): Promise<void> {
     return;
   }
   const manualInput = crosswalk.kind === "PROMOTED"
-    ? promotedInput(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt)
+    ? promotedInputRef(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt)
     : null;
   const automaticInput = automaticRead.kind === "PROMOTED"
-    ? promotedInput(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, automaticRead.metadata.versionId, automaticRead.value, automaticRead.metadata.promotedAt)
+    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, automaticRead.metadata.versionId, automaticRead.value, automaticRead.metadata.promotedAt)
     : null;
   if ((crosswalk.kind === "PROMOTED" && manualInput === null) || (automaticRead.kind === "PROMOTED" && automaticInput === null)) {
     await finish(derivedWiringFailedCandidate(now, "A promoted crosswalk carries no version id or promotion time."));
@@ -180,7 +171,7 @@ async function main(): Promise<void> {
   const registrations = new Map<string, { readonly input: DerivedInputRef; readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[] } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
     const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
-    const input = read.kind === "PROMOTED" ? promotedInput("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
+    const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
     registrations.set(state, read.kind === "PROMOTED" && input !== null
       ? { input, bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) }
       : { unread: `${state} registration is ${read.kind}` });

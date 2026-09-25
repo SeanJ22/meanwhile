@@ -94,11 +94,6 @@
       "reason": "The request-scoped edge counterparts of the refresh*FromPromoted bindings above: each seats a runner-published authority artifact into its OWN module cache for one reader request, binding a different type (RegistryRuntimeReadModel vs FederalDirectoryReadModel), domain validator, and isolated cache, and setting that module's read-state to BOOTSTRAP. A generic would take an untyped value into a caller-named cache — exactly the wrong-authority-through-a-string hazard the refresh group is kept separate to prevent — while duplicating no validation or cache policy."
     },
     {
-      "id": "shape:lib/outcomes/store.ts#settleOutcomeRead,lib/registry/server.ts#settleFederalDirectoryRead",
-      "disposition": "ALLOWED",
-      "reason": "Same edge-first shape over different typed families. A typed generic (settleEdgeFirst<T>, one T across edge accessor, prime and read) would serve all five settles; deferred because every call site is reader-bound and B6's reproof is running. Recorded follow-up."
-    },
-    {
       "id": "shape:lib/registry/runtime-read-model.ts#getRegistryRuntimeReadModel,lib/votes/key-votes-projection.ts#getFederalKeyVotesReadModel,lib/votes/snapshot.ts#getFederalVotesReadModel",
       "disposition": "ALLOWED",
       "reason": "Each synchronous accessor guards a different module-local cache and names the exact preload required. Their matching fail-closed shape is intentional; a shared accessor would need mutable cache parameters and could weaken the source-isolation boundary this cutover tests."
@@ -152,6 +147,14 @@
       "what": "the gate runner, duplicated between the two scripts that bookend a session",
       "how": "Moved to scripts/try-run.mjs. Each caller keeps a one-line BINDING that supplies cwd and nothing else, which is not an implementation.",
       "why": "It was consolidated because the duplicate had already cost something: Node defaults execFileSync maxBuffer to 1 MB, output past it THROWS, and both copies turned that into null. docs/state.md crossed a megabyte, so every git show of it in the handoff mirror guard threw, every revision was skipped, and the guard reported that a byte-identical mirror copy matched no version in its history — failing the handoff, which under RULING 75 is a gate. Fixing one copy would have left the other carrying the same silent wrong answer."
+    }
+  ],
+  "consolidatedOn2026-09-25": [
+    {
+      "id": "shape:lib/outcomes/store.ts#settleOutcomeRead,lib/registry/server.ts#settleFederalDirectoryRead",
+      "what": "the edge-first settle (serve the request's reader-edge value, else refuse in an edge-only context, else read the database pointer), written five times: the federal directory, the registry runtime, the comment-access rules, the campaign-site URLs and the recorded outcomes",
+      "how": "One typed settleEdgeFirst<T> in lib/registry/runtime-edge.ts, one T across the edge accessor, the prime and the read. Each family keeps a one-line BINDING naming its own accessor, prime and database read, which is not an implementation (R24).",
+      "why": "The recorded follow-up of the B6 reader work, done with the /ballot edge change (R30) because both touch the same reader-bound files. The prime stays each family's typed binding, so the generic never takes a value into a cache named by string."
     }
   ]
 }

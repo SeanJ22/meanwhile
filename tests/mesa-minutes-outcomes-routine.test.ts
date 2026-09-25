@@ -40,6 +40,7 @@ import {
   rangesForWindow,
   runInSiteMinutesOutcomeIngest,
 } from "../scripts/legistar-insite-minutes-ingest.mts";
+import { withFetch } from "./helpers/with-fetch.ts";
 
 /**
  * NH332: Mesa City Council decisions, read off the council's minutes on the
@@ -93,16 +94,6 @@ function recordedPortal(options: { readonly calendarStatus?: number; readonly do
   return { requests, fetchImpl };
 }
 
-async function withPortal<T>(portal: ReturnType<typeof recordedPortal>, run: () => Promise<T>): Promise<T> {
-  const original = globalThis.fetch;
-  globalThis.fetch = portal.fetchImpl as typeof fetch;
-  try {
-    return await run();
-  } finally {
-    globalThis.fetch = original;
-  }
-}
-
 function steppedClock(startIso: string): () => string {
   let at = Date.parse(startIso);
   return () => {
@@ -113,7 +104,7 @@ function steppedClock(startIso: string): () => string {
 
 async function pass(store: MemoryRoutineDataStore, portal: ReturnType<typeof recordedPortal>, window: { from: string; to: string }, clockStart: string) {
   const lines: string[] = [];
-  const result = await withPortal(portal, () => runInSiteMinutesOutcomeIngest({
+  const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
     store,
     tenant,
     args: parseMinutesIngestArgs(["--promote", "--slug", "mesa"]),

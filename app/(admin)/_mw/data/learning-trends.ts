@@ -68,7 +68,9 @@ const WEEKS = `
     count(*) filter (where not (${REFUSED}) and (record->'resumedFromRungs') is not null and ${RESUMED} = 0 and ${FOUND})::int as fresh_found,
     count(*) filter (where not (${REFUSED}) and ${FOUND})::int as found,
     coalesce(sum((record->>'usd')::numeric), 0)::float8 as usd,
-    count(*) filter (where record->>'usd' is null)::int as unpriced
+    count(*) filter (where record->>'usd' is null)::int as unpriced,
+    count(*) filter (where (record->'modelClass') is not null)::int as ladder_recorded,
+    count(*) filter (where coalesce(record->>'escalatedFrom', '') <> '')::int as escalated
   from cp_log_scout_results
   where record->>'startedAt' is not null
   group by 1 order by 1`;
@@ -126,6 +128,8 @@ export async function readLearningTrends(connection: string, nowIso: string): Pr
       found: num(w.found),
       usd: num(w.usd),
       unpriced: num(w.unpriced),
+      ladderRecorded: num(w.ladder_recorded),
+      escalated: num(w.escalated),
     })),
     doors: {
       walks: num(d.walks),

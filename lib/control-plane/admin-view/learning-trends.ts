@@ -19,8 +19,8 @@
  *
  * A week with no record of a measure is a GAP (null), never 0 — including the
  * weeks between the first record and now in which nothing ran. Escalations
- * are recorded nowhere (MW-031), so their count is the zero of an empty
- * record, and the sentence says exactly that. PURE: rows in, series out; the
+ * are recorded on each Scout result from 2026-09-25 (MW-031); walks before
+ * that carry no ladder, and the sentence names them instead of counting 0. PURE: rows in, series out; the
  * only clock is `nowIso`.
  */
 
@@ -50,6 +50,9 @@ export interface WeekLearningRow {
   readonly usd: number;
   /** Walks whose dollars were not reported. */
   readonly unpriced: number;
+  /** Walks that recorded their model ladder (MW-031, from 2026-09-25), and those that escalated. Absent on older reads. */
+  readonly ladderRecorded?: number;
+  readonly escalated?: number;
 }
 
 export interface SeriesPoint {
@@ -79,8 +82,8 @@ export interface LearningTrends {
   /** Every UTC week from the first on record through the current one, oldest first. */
   readonly weeks: readonly string[];
   readonly series: Readonly<Record<SeriesKey, LearningSeries>>;
-  /** Model-routing escalations: nothing records one, so the count is of an empty record. */
-  readonly escalations: { readonly recorded: 0; readonly weeks: number; readonly says: string };
+  /** Model-routing escalations, counted from walks that recorded their ladder; walks from before it are named, never counted as 0. */
+  readonly escalations: { readonly recorded: number; readonly ladderWalks: number; readonly weeks: number; readonly says: string };
 }
 
 const WEEK_MS = 7 * 86_400_000;
@@ -157,16 +160,22 @@ export function buildLearningTrends(rows: readonly WeekLearningRow[], nowIso: st
     perFind: build("perFind"),
   };
   const walked = rows.filter((r) => r.walks > 0).length;
+  const ladderWalks = rows.reduce((n, r) => n + (r.ladderRecorded ?? 0), 0);
+  const recorded = rows.reduce((n, r) => n + (r.escalated ?? 0), 0);
+  const before = rows.reduce((n, r) => n + r.walks, 0) - ladderWalks;
   return {
     weeks,
     series,
     escalations: {
-      recorded: 0,
+      recorded,
+      ladderWalks,
       weeks: walked,
       says:
         walked === 0
-          ? "No paid walk is on record, and nothing records an escalation."
-          : `0 escalations recorded in each of the ${walked} ${walked === 1 ? "week" : "weeks"} with paid work — because nothing writes an escalation record yet (MW-031), not because the fleet never reached for a more capable model.`,
+          ? "No paid walk is on record, so no model escalation is either."
+          : ladderWalks === 0
+            ? `None of the ${before.toLocaleString("en-US")} paid walks on record carries a model ladder: they ran before escalations were recorded (MW-031, 2026-09-25), all on the most capable model, so their count is not known — not zero.`
+            : `${recorded.toLocaleString("en-US")} of ${ladderWalks.toLocaleString("en-US")} walks that recorded their model ladder escalated to a more capable model${before > 0 ? `; ${before.toLocaleString("en-US")} earlier walks ran before the ladder was recorded` : ""}.`,
     },
   };
 }

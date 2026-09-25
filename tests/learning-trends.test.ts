@@ -69,7 +69,16 @@ test("MW-027: the weeks run from the first record through now, and a week with n
   assert.equal(pointWords("share", t.series.handed.points[0]!), "40% of 10");
   assert.equal(pointWords("share", t.series.handed.points[1]!), null);
   assert.equal(t.series.used.says, "Measured in 1 of 3 weeks; the other 2 hold no record of it — gaps, not zeros.");
-  assert.match(t.escalations.says, /^0 escalations recorded in each of the 2 weeks with paid work — because nothing writes an escalation record yet/);
+  assert.match(t.escalations.says, /^None of the \d+ paid walks on record carries a model ladder: they ran before escalations were recorded \(MW-031, 2026-09-25\)/);
+  assert.equal(t.escalations.ladderWalks, 0);
+
+  // Walks that record their ladder are counted; older walks are named, never counted as 0.
+  const withLadder = buildLearningTrends(
+    [row("2026-09-07"), row("2026-09-21", { usedRecorded: 0, usedWalks: 0, reusedDoors: 0, unpriced: 2, ladderRecorded: 4, escalated: 1 })],
+    "2026-09-25T12:00:00.000Z",
+  );
+  assert.equal(withLadder.escalations.recorded, 1);
+  assert.match(withLadder.escalations.says, /^1 of 4 walks that recorded their model ladder escalated to a more capable model; \d+ earlier walks ran before the ladder was recorded\.$/);
 });
 
 test("MW-027: no rows means no weeks and no measured series, never a row of zeros", () => {
@@ -77,5 +86,5 @@ test("MW-027: no rows means no weeks and no measured series, never a row of zero
   assert.deepEqual(t.weeks, []);
   assert.equal(t.series.handed.measuredWeeks, 0);
   assert.equal(t.series.handed.says, "Not recorded in any of the 0 weeks on record.");
-  assert.equal(t.escalations.says, "No paid walk is on record, and nothing records an escalation.");
+  assert.equal(t.escalations.says, "No paid walk is on record, so no model escalation is either.");
 });

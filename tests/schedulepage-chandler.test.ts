@@ -228,7 +228,7 @@ test("NORMALIZE with DESTINY: each dated sitting carries its own agenda, results
   assert.equal(agendaSeq(on("2026-09-17", "City Council Regular Meeting")), "2440");
   const regular = on("2026-09-17", "City Council Regular Meeting")!;
   assert.deepEqual(regular.publishedLinks?.map((l) => l.label), ["Results", "Video"]);
-  assert.match(regular.provenance.sourceUrl, /^https:\/\/www\.chandleraz\.gov\/events\/city-council-regular-meeting/, "the sitting is still the city's own; Destiny adds documents, not the sitting");
+  assert.match(regular.provenance.sourceUrl ?? "", /^https:\/\/www\.chandleraz\.gov\/events\/city-council-regular-meeting/, "the sitting is still the city's own; Destiny adds documents, not the sitting");
   for (const date of ["2026-10-12", "2026-10-15"]) {
     const only = meetings.filter((m) => m.id.includes(`:${date}`));
     assert.equal(only.length, 1);

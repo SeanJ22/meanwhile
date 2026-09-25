@@ -25,8 +25,23 @@
  * generated from the figures beside it.
  *
  * PURE: rows in, views out; the only clock is `nowIso`.
+ *
+ * **When we look** (C6). A meeting source is not read on its contract's
+ * `cadence`: that is how old a Reader may see a record before it reads stale.
+ * The runner reads it on the contract's sitting-window `schedule`, so a body
+ * whose contract carries one is described by that schedule, and its next read
+ * is worked out with the runner's own functions from the facts the runner
+ * reads: the last attempt, the current version's first event, and the
+ * sittings that version lists.
  */
 
+import type { SittingWindowSchedule } from "../../civic-data/contracts.ts";
+import {
+  sittingWindowHotByConclusion,
+  sittingWindowObligation,
+  sittingWindowRetryMs,
+  statedSittingEndsByScope,
+} from "../../civic-data/sitting-window-admission.ts";
 import { routineRuledOut, type DeadEndGaps } from "./dead-ends.ts";
 
 export type BodyStatus = "WORKING" | "NEEDS ATTENTION" | "STUCK" | "NOT READ YET";
@@ -51,6 +66,29 @@ export interface WatchedContract {
     readonly phases?: readonly { readonly through: string; readonly everyMs: number }[];
   };
   readonly retry: { readonly afterMs: number; readonly description: string };
+  /** The runner's re-read schedule when it is not `cadence` (every meeting partition: C6). */
+  readonly schedule?: SittingWindowSchedule;
+}
+
+/** A sitting as the current version lists it: its start and any publisher-stated end, both as stored. */
+export interface SittingFacts {
+  readonly startsAt: string;
+  readonly endsAt: string | null;
+}
+
+/**
+ * What the runner schedules a meeting source's next read from, read off the
+ * current version (`RoutineStoreClock` in lib/civic-data/store.ts).
+ */
+export interface VersionClockFacts {
+  /** The version's store-observed first event: the runner's success instant. */
+  readonly observedAt: string | null;
+  /** The version's newest unchanged confirmation, which counts as a later success. */
+  readonly confirmedAt: string | null;
+  /** A trusted-LKG import: never a success, and never an attempt, on the runner's clock. */
+  readonly imported: boolean;
+  /** Every sitting the version lists. */
+  readonly sittings: readonly SittingFacts[];
 }
 
 export interface VersionFacts {
@@ -81,6 +119,8 @@ export interface VersionFacts {
    * where the publisher's own list ends.
    */
   readonly horizon?: PublisherHorizon | null;
+  /** The runner's clock facts; absent on a reading taken before they were read. */
+  readonly clock?: VersionClockFacts;
 }
 
 /** The horizon slice of a civic-data candidate (`HorizonEvidence` in lib/civic-data/types.ts), as Admin reads it. */
@@ -359,6 +399,185 @@ function cadenceMs(c: WatchedContract, atMs: number): number {
   return c.cadence.defaultEveryMs;
 }
 
+/* ==================================================================== *
+ * THE SITTING-WINDOW CLOCK (C6), AS THE RUNNER KEEPS IT
+ * ==================================================================== */
+
+const HOUR_MS = 3_600_000;
+const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+
+function countWords(n: number): string {
+  return Number.isInteger(n) && n >= 0 && n < COUNT_WORDS.length ? COUNT_WORDS[n] : n.toLocaleString("en-US");
+}
+
+/** A span in words: "an hour", "twelve hours", "seven days", "25 minutes". */
+function spanWords(span: number): string {
+  if (span > 0 && span % DAY_MS === 0) return span === DAY_MS ? "a day" : `${countWords(span / DAY_MS)} days`;
+  if (span > 0 && span % HOUR_MS === 0) return span === HOUR_MS ? "an hour" : `${countWords(span / HOUR_MS)} hours`;
+  const minutes = Math.round(span / 60_000);
+  return minutes === 1 ? "a minute" : `${countWords(minutes)} minutes`;
+}
+
+/** A period as a rate: "hourly", "twice a day", else "every <span>". */
+function everyWords(period: number): string {
+  if (period >= HOUR_MS && DAY_MS % period === 0) {
+    const times = DAY_MS / period;
+    if (times === 24) return "hourly";
+    if (times === 1) return "once a day";
+    if (times === 2) return "twice a day";
+    return `${countWords(times)} times a day`;
+  }
+  return `every ${spanWords(period)}`;
+}
+
+/**
+ * The runner's sitting-window rule in words, from the schedule's own numbers:
+ * "twice a day, and within the hour while a sitting is within seven days ahead
+ * or behind".
+ */
+export function sittingWindowRuleWords(schedule: SittingWindowSchedule): string {
+  const within = schedule.hotEveryMs === HOUR_MS ? "the hour" : spanWords(schedule.hotEveryMs);
+  return `${everyWords(schedule.baseEveryMs)}, and within ${within} while a sitting is within ${spanWords(schedule.windowMs)} ahead or behind`;
+}
+
+/** One meeting source on the runner's sitting-window clock at `nowMs`. */
+export interface SittingClock {
+  readonly source: string;
+  readonly schedule: SittingWindowSchedule;
+  /** The facts were not in this reading, so nothing below was worked out. */
+  readonly unread: boolean;
+  readonly published: boolean;
+  /** How long the runner waits after each attempt while nothing from the source is published (R20). */
+  readonly unpublishedWaitMs: number;
+  /** Hourly (true), twice a day (false), or not known (undefined, which the runner reads hourly). */
+  readonly hot: boolean | undefined;
+  /** The sitting that holds the source hourly: the next one ahead, else the latest behind. */
+  readonly holding: { readonly startsAt: string; readonly ahead: boolean } | null;
+  /** The first sitting after now that the version lists. */
+  readonly nextSitting: string | null;
+  /**
+   * The next read the runner owes (`sittingWindowObligation`) and what it
+   * counts from; null when no attempt is on record to count from, which the
+   * runner treats as owed at once.
+   */
+  readonly owed: {
+    readonly deadlineMs: number;
+    readonly eligibleAtMs: number;
+    readonly from: "SUCCESS" | "RETRY" | "UNPUBLISHED";
+    readonly periodMs: number;
+  } | null;
+}
+
+/**
+ * A meeting source's clock, from the facts the runner schedules by
+ * (`RoutineStoreClock`) and the runner's own functions. The last attempt is
+ * the newest read's first event, or the version's own, or its confirmation;
+ * the success is the version's first event or its confirmation; a trusted-LKG
+ * import is neither, and only a read after it counts as an attempt. Every
+ * deadline here is at most twelve hours after its read, so a source with no
+ * read in the seven days held is owed at once, as the runner would find it.
+ */
+export function sittingClockOf(
+  contract: WatchedContract & { readonly schedule: SittingWindowSchedule },
+  version: VersionFacts | null,
+  attempts: readonly AttemptFacts[],
+  nowMs: number,
+): SittingClock {
+  const schedule = contract.schedule;
+  const source = sourceWords(contract.meetingSource);
+  const published = version !== null;
+  const unpublishedWaitMs = sittingWindowRetryMs(schedule, contract.retry.afterMs, false);
+  if (version !== null && version.clock === undefined) {
+    return { source, schedule, unread: true, published, unpublishedWaitMs, hot: undefined, holding: null, nextSitting: null, owed: null };
+  }
+  const clock = version?.clock ?? null;
+  const sittings = clock?.sittings ?? null;
+  const ends = sittings === null
+    ? new Map<string, number>()
+    : statedSittingEndsByScope([{ scope: contract.scope, pairs: sittings.map((s) => [s.startsAt, s.endsAt]) }]).get(contract.scope) ?? new Map<string, number>();
+  const hotAt = (starts: readonly string[] | undefined) => sittingWindowHotByConclusion(schedule, [starts], nowMs, ends);
+  const hot = hotAt(sittings?.map((s) => s.startsAt));
+
+  const dated = (sittings ?? []).filter((s) => Number.isFinite(ms(s.startsAt))).sort((a, b) => ms(a.startsAt) - ms(b.startsAt));
+  const next = dated.find((s) => ms(s.startsAt) > nowMs) ?? null;
+  const holdingAhead = dated.find((s) => ms(s.startsAt) > nowMs && hotAt([s.startsAt]) === true) ?? null;
+  const holdingBehind = [...dated].reverse().find((s) => ms(s.startsAt) <= nowMs && hotAt([s.startsAt]) === true) ?? null;
+  const holding = hot !== true ? null : holdingAhead ? { startsAt: holdingAhead.startsAt, ahead: true } : holdingBehind ? { startsAt: holdingBehind.startsAt, ahead: false } : null;
+
+  const imported = clock?.imported === true;
+  const importedMs = imported ? ms(version!.promotedAt) : Number.NaN;
+  const reads = attempts.map((a) => ms(a.attemptedAt)).filter((t) => Number.isFinite(t) && (!imported || t > importedMs));
+  const observedMs = !imported && clock?.observedAt ? ms(clock.observedAt) : Number.NaN;
+  const confirmedMs = !imported && clock?.confirmedAt ? ms(clock.confirmedAt) : Number.NaN;
+  const attemptedMs = Math.max(...reads, ...[observedMs, confirmedMs].filter(Number.isFinite));
+  const succeededMs = Number.isFinite(observedMs) ? Math.max(observedMs, ...[confirmedMs].filter(Number.isFinite)) : Number.NaN;
+
+  let owed: SittingClock["owed"] = null;
+  if (Number.isFinite(attemptedMs)) {
+    const { deadlineMs, eligibleAtMs } = sittingWindowObligation(schedule, contract.retry.afterMs, { attemptedMs, succeededMs, published }, hot);
+    // Which reading of `sittingWindowObligation` applied, for the words only; the instants are its own.
+    const from = !Number.isFinite(succeededMs) ? (published ? "RETRY" : "UNPUBLISHED") : attemptedMs > succeededMs ? "RETRY" : "SUCCESS";
+    owed = { deadlineMs, eligibleAtMs, from, periodMs: deadlineMs - (from === "SUCCESS" ? succeededMs : attemptedMs) };
+  }
+  return { source, schedule, unread: false, published, unpublishedWaitMs, hot, holding, nextSitting: next?.startsAt ?? null, owed };
+}
+
+/** "Hourly now — the next sitting, Sep 30, 2026, is within seven days." One source's standing on the rule. */
+function sittingStandingWords(c: SittingClock): string {
+  if (c.unread) return "Whether it is read hourly now was not read this time";
+  const window = spanWords(c.schedule.windowMs);
+  const nextWords = c.nextSitting === null ? "no sitting ahead is listed" : `the next one listed is ${fmtDate(c.nextSitting)}`;
+  if (!c.published) {
+    return `${cap(everyWords(c.unpublishedWaitMs))} until something from it is published: with no meeting on record, the runner waits ${spanWords(c.unpublishedWaitMs)} after each attempt`;
+  }
+  if (c.hot === false) return `${cap(everyWords(c.schedule.baseEveryMs))} now — no sitting is within ${window} ahead or behind; ${nextWords}`;
+  const hourly = cap(everyWords(c.schedule.hotEveryMs));
+  if (c.hot === undefined) return `${hourly} now — its sittings could not be read, and the runner reads an unknown as hourly`;
+  if (c.holding === null) return `${hourly} now`;
+  return c.holding.ahead
+    ? `${hourly} now — the next sitting, ${fmtDate(c.holding.startsAt)}, is within ${window}`
+    : `${hourly} now — the ${fmtDate(c.holding.startsAt)} sitting is within ${window} behind; ${nextWords}`;
+}
+
+/** When one source's next read is owed, and why. */
+function sittingOwedWords(c: SittingClock, nowMs: number): string {
+  if (c.unread) return "Not worked out — this reading did not include the runner's clock facts";
+  if (c.owed === null) return "Owed now — no read in the last seven days is on record to count from, so the runner owes one at once";
+  const period = spanWords(c.owed.periodMs);
+  const why =
+    c.owed.from === "SUCCESS"
+      ? `${period} after the last good read`
+      : c.owed.from === "RETRY"
+        ? `the retry ${period} after a read that published nothing`
+        : `${period} after the last attempt, since nothing from it is published yet`;
+  if (c.owed.deadlineMs <= nowMs) return `Overdue — owed by ${fmt(new Date(c.owed.deadlineMs).toISOString())}, ${why}`;
+  return `Owed by ${fmt(new Date(c.owed.deadlineMs).toISOString())}, ${why}; the runner may read it from ${fmt(new Date(c.owed.eligibleAtMs).toISOString())}`;
+}
+
+/** Per source when the sources differ, once when they agree. */
+function perSource(clocks: readonly SittingClock[], words: (c: SittingClock) => string, joiner: string): string {
+  const said = clocks.map((c) => ({ source: c.source, text: words(c) }));
+  if (new Set(said.map((s) => s.text)).size === 1) return said[0].text;
+  return said.map((s) => `${cap(s.source)}: ${s.text}`).join(joiner);
+}
+
+/** "How often": each source's standing now, then the rule itself. */
+export function sittingHowOftenWords(clocks: readonly SittingClock[]): string {
+  return `${perSource(clocks, sittingStandingWords, ". ")}. The rule: ${sittingWindowRuleWords(clocks[0].schedule)}.`;
+}
+
+/** "Next look": the next read each source owes, soonest first. */
+export function sittingNextLookWords(clocks: readonly SittingClock[], nowMs: number): string {
+  const soonest = [...clocks].sort((a, b) => (a.owed?.deadlineMs ?? Number.NEGATIVE_INFINITY) - (b.owed?.deadlineMs ?? Number.NEGATIVE_INFINITY));
+  return perSource(soonest, (c) => sittingOwedWords(c, nowMs), "; ");
+}
+
+/** How a failed read is retried: the contract's retry, or the twice-daily wait while a sitting-window source has nothing published (R20). */
+function retryWords(contract: WatchedContract, published: boolean): string {
+  if (contract.schedule?.kind !== "SITTING_WINDOW" || published) return contract.retry.description;
+  return `${spanWords(sittingWindowRetryMs(contract.schedule, contract.retry.afterMs, false))} after each attempt while nothing from it is published`;
+}
+
 const FAILED_STATES = new Set([
   "SOURCE_BLOCKED",
   "PARSE_INVALID",
@@ -600,6 +819,16 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
       .sort((a, b) => ms(b.f.retrievedAt) - ms(a.f.retrievedAt))[0] ?? null;
   const name = bodyDisplayName(contract, version);
   const stateCode = stateCodeOf(g.bodyId, contract.ocdId);
+  /*
+   * Every meeting partition is read on the sitting-window schedule (C6), not
+   * on its `cadence`: each source keeps its own clock, from its own reads and
+   * the sittings its own version lists.
+   */
+  const sittingContracts = g.contracts.filter((c): c is WatchedContract & { readonly schedule: SittingWindowSchedule } => c.schedule?.kind === "SITTING_WINDOW");
+  const clocks =
+    sittingContracts.length === g.contracts.length
+      ? sittingContracts.map((c) => sittingClockOf(c, l.versionByScope.get(c.scope) ?? null, l.attemptsByScope.get(c.scope) ?? [], l.nowMs))
+      : [];
 
   const lastFailed = last !== null && (!last.acquisitionSucceeded || FAILED_STATES.has(last.state));
   const access: BodyView["access"] = last === null ? "NOT_READ" : last.acquisitionSucceeded ? "GOT_IN" : "COULD_NOT";
@@ -743,7 +972,10 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
       pill: last === null ? "NOT READ" : lastFailed && !last.acquisitionSucceeded ? "RETRYING" : "RUNNING",
       tone: last === null ? "slate" : lastFailed && !last.acquisitionSucceeded ? "amber" : "teal",
       counts: day ? `${day.gotIn} of ${day.reads} reads got in · 24h` : "no reads in 24h",
-      note: `Runs on the standing runner's clock (${contract.cadence.description}); a failed read is retried ${contract.retry.description}.`,
+      note:
+        clocks.length > 0 && contract.schedule
+          ? `Runs on the standing runner's clock: ${sittingWindowRuleWords(contract.schedule)}; a failed read is retried ${retryWords(contract, version !== null)}.`
+          : `Runs on the standing runner's clock (${contract.cadence.description}); a failed read is retried ${contract.retry.description}.`,
     },
     {
       name: "Validation",
@@ -757,7 +989,8 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   /* ---------------------------------------------------------------- when we look */
   const lastLook = last ? `${fmt(last.attemptedAt)} — ${last.acquisitionSucceeded && !lastFailed ? "worked" : readStateWords(last.state, last.failureCode, last.failureDetail)}` : "No read in the last seven days";
   let nextLook: string;
-  if (last === null) nextLook = "Whenever the runner next reaches it — no read is recorded to count from";
+  if (clocks.length > 0) nextLook = sittingNextLookWords(clocks, l.nowMs);
+  else if (last === null) nextLook = "Whenever the runner next reaches it — no read is recorded to count from";
   else if (lastFailed) nextLook = `Due ${fmt(new Date(ms(last.attemptedAt) + contract.retry.afterMs).toISOString())} — the retry after a failed read`;
   else {
     const from = lastSuccess ?? last;
@@ -766,7 +999,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   const schedule: [string, string][] = [
     ["Last look", lastLook],
     ["Next look", nextLook],
-    ["How often", cap(contract.cadence.description)],
+    ["How often", clocks.length > 0 ? sittingHowOftenWords(clocks) : cap(contract.cadence.description)],
     ["Reads that got in", day ? `${day.gotIn} of ${day.reads} in the last 24 hours` : "None in the last 24 hours"],
     ["Publishes ahead", publishesAheadWords(version, last, l.nowMs)],
   ];
@@ -788,6 +1021,8 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
 
   /* ---------------------------------------------------------------- dead end */
   let deadEnd: BodyDeadEnd | null = null;
+  // A sitting-window source with nothing published waits twelve hours between attempts, not its one-hour retry (R20).
+  const retryClause = clocks.length > 0 && version === null ? retryWords(contract, false) : `${contract.retry.description} after a failure`;
   if (last !== null && lastFailed) {
     /* What the run of reads ruled out, from the reads themselves (MW-016); a gap is named, never left blank. */
     const ruled = routineRuledOut(
@@ -808,8 +1043,8 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
       ...(ruled.gap !== null ? { gaps: { ruledOut: ruled.gap } } : {}),
       wouldSettle: wouldSettleWords(last.state, last.failureCode, source, contract.sourceUrl, last.failureDetail),
       whoMoves: isJobFailure(last.failureDetail)
-        ? `Engineering: our adapter or its configuration has to change. The runner retries on its clock (${contract.retry.description} after a failure), but the same code fails the same way${version ? "; the last good version keeps serving meanwhile" : ""}.`
-        : `The runner reads it again on its clock (${contract.retry.description} after a failure)${version ? "; the last good version keeps serving meanwhile" : ""}. Nothing else is scheduled to change it.`,
+        ? `Engineering: our adapter or its configuration has to change. The runner retries on its clock (${retryClause}), but the same code fails the same way${version ? "; the last good version keeps serving meanwhile" : ""}.`
+        : `The runner reads it again on its clock (${retryClause})${version ? "; the last good version keeps serving meanwhile" : ""}. Nothing else is scheduled to change it.`,
     };
   }
 

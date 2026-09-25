@@ -37,6 +37,8 @@ export function watchedContractOf(c: AnyContract): WatchedContract {
     verifiedAt: text(wiring.verifiedAt),
     cadence: c.cadence,
     retry: c.retry,
+    // The runner re-reads a meeting source on this, never on `cadence` (C6).
+    ...(c.schedule ? { schedule: c.schedule } : {}),
   };
 }
 

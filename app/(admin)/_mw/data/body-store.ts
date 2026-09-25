@@ -16,7 +16,13 @@ import "server-only";
  *              holds, how many the last read re-confirmed ("fresh") versus
  *              carried forward, how many it held back, the change it made,
  *              and the furthest meeting it lists — counts only, never the
- *              payload (measured 2026-09-23: 84 bodies in ~180 ms)
+ *              payload (measured 2026-09-23: 84 bodies in ~180 ms). Beside
+ *              them, on the full read only, what the runner schedules the
+ *              next read from (C6): the version's first event, its newest
+ *              unchanged confirmation, whether it is a trusted-LKG import,
+ *              and each sitting's start and stated end, built in Postgres as
+ *              the runner's own clock reads build them (894 sittings over 102
+ *              scopes on 2026-09-25; the snapshot's time did not move)
  *   attempts   the last five reads per body in the last seven days, from
  *              the local attempt event (never the adapter's claimed time)
  *   changes    each body's LATEST version that changed something readers are
@@ -44,7 +50,9 @@ import "server-only";
 import { neon } from "@neondatabase/serverless";
 
 import { READER_PROJECTION_READBACK_PREFIX, parseReaderProjectionReadback } from "@/lib/civic-data/reader-readback.ts";
-import { horizonFromColumns, type PublisherHorizon } from "@/lib/control-plane/admin-view/bodies.ts";
+import { isTrustedLkgImportCandidate } from "@/lib/civic-data/trusted-lkg-import.ts";
+import { UNCHANGED_CONFIRMATION_PREFIX } from "@/lib/civic-data/unchanged-confirmation.ts";
+import { horizonFromColumns, type PublisherHorizon, type SittingFacts, type VersionClockFacts } from "@/lib/control-plane/admin-view/bodies.ts";
 
 export const BODY_STORE_STATEMENT_TIMEOUT_MS = 4_000;
 
@@ -76,6 +84,8 @@ export interface BodyVersionRow {
    * Null when the candidate records no horizon.
    */
   readonly horizon: PublisherHorizon | null;
+  /** What the runner schedules this source's next read from (C6); the standing read leaves it out. */
+  readonly clock?: VersionClockFacts;
 }
 
 export interface BodyAttemptRow {
@@ -158,14 +168,41 @@ function intOrNull(value: unknown): number | null {
 function textOrNull(value: unknown): string | null {
   return typeof value === "string" && value.trim() !== "" ? value : null;
 }
+/** Each [start, end] pair as stored; a pair without a string start is not a sitting the runner reads. */
+function sittingsOf(value: unknown): SittingFacts[] {
+  return (Array.isArray(value) ? value : []).flatMap((pair: unknown) =>
+    Array.isArray(pair) && typeof pair[0] === "string" ? [{ startsAt: pair[0], endsAt: typeof pair[1] === "string" ? pair[1] : null }] : [],
+  );
+}
+
+/** The confirmation prefix as a LIKE pattern: `_` is a wildcard, so it is matched literally, as the runner's clock read matches it. */
+const CONFIRMATION_LIKE = `${UNCHANGED_CONFIRMATION_PREFIX.replaceAll("_", "\\_")}%`;
+
 function meetingsOf(value: unknown): { readonly title: string | null; readonly startsAt: string | null }[] {
   return (Array.isArray(value) ? (value as Record<string, unknown>[]) : []).map((m) => ({ title: textOrNull(m.title), startsAt: textOrNull(m.startsAt) }));
 }
 
 /* ------------------------------------------------------------------ the statements */
 
-/** Each body's current promoted version: counts only, never the payload. */
-const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
+/**
+ * What the runner schedules each source's next read from (C6): the version's
+ * store-observed first event, its newest unchanged confirmation ($2), whether
+ * it is a trusted-LKG import (one scalar off the candidate), and each sitting's
+ * start and stated end, built in Postgres. Only the full read carries them: the
+ * preview's standing read never shows a schedule.
+ */
+const VERSIONS_CLOCK = `
+        (SELECT cd.candidate->'bootstrapImport'->>'kind' FROM civic_data_candidates cd WHERE cd.id = p.current_version_id) AS import_kind,
+        (SELECT e.at FROM civic_data_candidate_events e
+          WHERE e.candidate_id = p.current_version_id AND e.sequence = 1) AS observed_at,
+        (SELECT max(e.at) FROM civic_data_candidate_events e
+          WHERE e.candidate_id = p.current_version_id AND e.detail LIKE $2) AS confirmed_at,
+        (SELECT jsonb_agg(jsonb_build_array(m->'startsAt', m->'endsAt'))
+           FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.payload->'meetings') = 'array' THEN p.payload->'meetings' ELSE '[]'::jsonb END) m
+          WHERE jsonb_typeof(m->'startsAt') = 'string') AS sittings,`;
+
+/** Each body's current promoted version: counts only, never the payload; with its clock, VERSIONS_CLOCK beside them. */
+const versionsStatement = (clock: boolean) => `SELECT p.scope, p.current_version_id, p.promoted_at,
         jsonb_array_length(COALESCE(p.payload->'meetings', '[]'::jsonb)) AS meetings,
         (p.payload->'counts'->>'fresh')::int AS fresh,
         (p.payload->'counts'->>'carried')::int AS carried,
@@ -186,7 +223,7 @@ const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
           WHERE (m->>'startsAt')::timestamptz > $1::timestamptz) AS upcoming,
         (SELECT max((m->>'startsAt')::timestamptz) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m) AS furthest,
         p.payload->'meetings'->0->>'bodyName' AS body_name,
-        p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,
+        p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,${clock ? VERSIONS_CLOCK : ""}
         cs.outcome, cs.added, cs.changed, cs.removed, cs.held,
         cs.horizon_kind, cs.horizon_returned, cs.horizon_declared, cs.horizon_paginated, cs.horizon_complete
    FROM civic_data_promotions p
@@ -204,6 +241,8 @@ const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
        FROM (SELECT cd.candidate->'changeSet' AS cs, cd.candidate->'horizon' AS hz FROM civic_data_candidates cd WHERE cd.id = p.current_version_id OFFSET 0) x
    ) cs ON true
   WHERE p.record_class = 'MEETING'`;
+const VERSIONS = versionsStatement(false);
+const VERSIONS_WITH_CLOCK = versionsStatement(true);
 
 /** The last five reads per body in the last seven days, from the local attempt event. */
 const ATTEMPTS = `SELECT scope, candidate_id, state, failure_code, failure_detail, acquisition_succeeded, attempted_at FROM (
@@ -305,6 +344,17 @@ function versionsOf(rows: Rows): BodyVersionRow[] {
     removed: int(r.removed),
     held: int(r.held),
     horizon: horizonFromColumns(r),
+    // Only the full read selects the clock; a row without it says so by leaving it out.
+    ...("observed_at" in r
+      ? {
+          clock: {
+            observedAt: isoOrNull(r.observed_at),
+            confirmedAt: isoOrNull(r.confirmed_at),
+            imported: isTrustedLkgImportCandidate({ bootstrapImport: { kind: r.import_kind } }),
+            sittings: sittingsOf(r.sittings),
+          },
+        }
+      : {}),
   }));
 }
 
@@ -382,7 +432,7 @@ export async function readBodyStore(connection: string, nowIso: string): Promise
 
   /* The figures that must agree: one snapshot. */
   const snapshot = sql.transaction(
-    [sql.query(limit), sql.query(VERSIONS, [nowIso]), sql.query(ATTEMPTS, [nowIso]), sql.query(VERSION_READBACKS, [readbackLike]), sql.query(DAY, [nowIso])],
+    [sql.query(limit), sql.query(VERSIONS_WITH_CLOCK, [nowIso, CONFIRMATION_LIKE]), sql.query(ATTEMPTS, [nowIso]), sql.query(VERSION_READBACKS, [readbackLike]), sql.query(DAY, [nowIso])],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
 

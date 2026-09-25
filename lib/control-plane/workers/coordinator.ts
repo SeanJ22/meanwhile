@@ -342,5 +342,6 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
-  return {recovery,decisions,dispatches,scoutsAdmitted,deferred};
+  // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run (MW-014).
+  return {recovery,decisions,dispatches,scoutsAdmitted,deferred,considered:ids.length};
 }

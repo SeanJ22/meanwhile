@@ -75,6 +75,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "./data-plane.ts";
+import { currentMeetingOutcomesEdge } from "../registry/runtime-edge.ts";
 
 /** Where the committed store lives, relative to the repo root. */
 export const OUTCOME_SNAPSHOT_PATH = ["data", "states", "az", "outcomes", "legistar-outcomes.json"];
@@ -91,6 +92,8 @@ let outcomeReadState: CivicDataReadResult<OutcomeSnapshot> = civicDataReadNotIni
   PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
   "The Pima Legistar outcome pointer has not been read for this process.",
 );
+/** The edge version the current state was primed from, or null when it came from the database. */
+let edgePrimedVersion: string | null = null;
 
 /**
  * The committed store, read once per process.
@@ -133,6 +136,7 @@ let injected: OutcomeSnapshot | null = null;
  */
 export function useOutcomeSnapshotForTests(snapshot: OutcomeSnapshot | null): void {
   injected = snapshot;
+  edgePrimedVersion = null;
   outcomeReadState = civicDataReadNotInitialized(
     PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
     PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
@@ -178,6 +182,7 @@ function validateOutcomeProjection(value: OutcomeSnapshot, version: string): voi
 export async function readOutcomeProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<OutcomeSnapshot>> {
+  edgePrimedVersion = null;
   outcomeReadState = mayUseTestFixture()
     ? await readPromotedOrBootstrap<OutcomeSnapshot>({
         ...options,
@@ -205,6 +210,52 @@ export async function refreshOutcomeSnapshotFromPromoted(
 
 export const outcomeProjectionReadState = (): CivicDataReadResult<OutcomeSnapshot> => outcomeReadState;
 
+/**
+ * Prime the outcome projection from a validated EDGE serving artifact, with no
+ * database read (C20, 2026-09-24). BOOTSTRAP kind, as the registry's and the
+ * curated projections' edge primes are: the serving copy carries the validated
+ * value and its version, not the promotion receipt, which stays on the
+ * authoritative database path the runner reads.
+ */
+export function primeOutcomeProjection(value: OutcomeSnapshot, versionId: string): void {
+  validateOutcomeProjection(value, versionId);
+  outcomeReadState = {
+    kind: "BOOTSTRAP",
+    value,
+    metadata: {
+      recordClass: PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+      scope: PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+      sourceId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
+      version: null,
+      versionId,
+      lastKnownGoodVersionId: versionId,
+      sourceThrough: null,
+      retrievedAt: null,
+      promotedAt: null,
+      stale: "CURRENT",
+      staleAt: null,
+    },
+    detail: `Served from the meeting-outcomes edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
+  };
+  edgePrimedVersion = versionId;
+}
+
+/**
+ * **Edge first, database second.** (C20, 2026-09-24.) A reader request that
+ * entered the reader authority edge serves the recorded outcomes from its
+ * meeting-outcomes artifact without Neon: from the database this read was the
+ * pole of a cold Ask, 2.0–2.3 s. The standing runner and the workers never
+ * enter an edge, so they read the authoritative pointer as before.
+ */
+export async function settleOutcomeRead(): Promise<void> {
+  const edge = currentMeetingOutcomesEdge();
+  if (edge) {
+    primeOutcomeProjection(edge.value, edge.versionId);
+    return;
+  }
+  await refreshOutcomeSnapshotFromPromoted();
+}
+
 export function getOutcomeSnapshot(): OutcomeSnapshot {
   if (injected !== null) return injected;
   if (outcomeReadState.kind === "PROMOTED" || outcomeReadState.kind === "BOOTSTRAP") return outcomeReadState.value;
@@ -215,6 +266,7 @@ export function getOutcomeSnapshot(): OutcomeSnapshot {
 
 /** Drop the process cache. For tests and for a run that has just written. */
 export function resetOutcomeSnapshotCache(): void {
+  edgePrimedVersion = null;
   outcomeReadState = civicDataReadNotInitialized(
     PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
     PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
@@ -226,6 +278,8 @@ export function resetOutcomeSnapshotCache(): void {
 export function loadedFrom(): "DATA_PLANE" | "TEST_FIXTURE" | "EMPTY_STORE" {
   if (injected !== null) return injected.sittings.length === 0 && injected.generatedAt === "UNKNOWN" ? "EMPTY_STORE" : "TEST_FIXTURE";
   if (outcomeReadState.kind === "PROMOTED") return "DATA_PLANE";
+  // An edge-primed state is the promoted data plane's own validated value.
+  if (outcomeReadState.kind === "BOOTSTRAP" && edgePrimedVersion !== null) return "DATA_PLANE";
   if (outcomeReadState.kind === "BOOTSTRAP") return "TEST_FIXTURE";
   const snapshot = getOutcomeSnapshot();
   return snapshot.sittings.length === 0 && snapshot.generatedAt === "UNKNOWN"

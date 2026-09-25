@@ -107,6 +107,11 @@ export interface ReaderManifest {
    * gzip-compressed, immutable artifact per family; the reader fetches each once
    * per version (module-cached) and primes it request-scoped, never waking the
    * database for an ordinary visitor.
+   *
+   * 2026-09-24 (C20): the recorded meeting outcomes (~1.6 MB, the pole of a cold
+   * Ask at 2.0–2.3 s from the database) and the comment-access rules (0.6–0.8 s)
+   * are families too, so a cold topic question reads them in the same parallel
+   * edge fetch as the registry instead of as two cold database reads.
    */
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
   /**
@@ -129,13 +134,17 @@ export type AuthorityFamily =
   | "registry-runtime"
   | "federal-directory"
   | "campaign-sites"
-  | "state-legislators";
+  | "state-legislators"
+  | "meeting-outcomes"
+  | "comment-access";
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",
   "federal-directory",
   "campaign-sites",
   "state-legislators",
+  "meeting-outcomes",
+  "comment-access",
 ];
 
 export interface AuthorityArtifactRef {

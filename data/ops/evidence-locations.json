@@ -18352,6 +18352,3158 @@
       ],
       "destination": "reader-last-mile/pr413-76e59c99-3cdcde17/85701-hobbs-map-money.png",
       "sha256": "f5c3f06326502edfb64f7887449b09483b1da503e3fb76c106e4c523f8e10ce4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-about-area.png",
+      "sha256": "d205c41c302b8d121677ad5fa6e66ab3722447638f6be06daf23484ea2872882"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-ballot-ask-last-record.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-ballot-ask-last-record.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-ballot-ask-last-record.png",
+      "sha256": "a9e67a83812edc3fc79de175a345770227899c66ac23757102aa63dd10983480"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-ballot-ask.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-ballot-ask.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-ballot-ask.png",
+      "sha256": "78a9ba8081f9b434009b36638713c6401864bc935d812a81da3f0077f676af26"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-ballot-money.png",
+      "sha256": "990426b4cc5ebe116d6f7cc9ed499ab9f9149d134929978ed9d8f4d939a6dd15"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-civic.png",
+      "sha256": "ea31af215920838e4b3313168bbba5e0946aa63946358ada00579dfea52b20e2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-diligent-newburynh-3367-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-diligent-newburynh-3367-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-diligent-newburynh-3367-publication-index.png",
+      "sha256": "b2695c950d24aa96b238f29287b436110595fe3ddfa9f4554f8ac8ef7e7b0812"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-failure.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-failure.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-failure.png",
+      "sha256": "29d9a0fa2698d8a92d9010bad673a90831c692fa27f87ab0bd5a989d65ee70b5"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-count.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-count.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-count.png",
+      "sha256": "877bba22cae68c725f8635dd6835ac0c4db215ad911a985ff7b3cd1b52c3255c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-full-meeting.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-full-meeting.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-full-meeting.png",
+      "sha256": "f2d9b251e670f0e82bc4b071a63237969573a57aa5213244eb5c5dcb2e8b3119"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-overlay.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-overlay.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-overlay.png",
+      "sha256": "625439dea00d40b64a858d3a0b877e5a12ba4797ea6a4486edb04fd82901ba55"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-1.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-1.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-1.png",
+      "sha256": "e4b9f88b3f1a2e5c3a8728ee4d0b3923c3ebbae18e383ceba7b10f3b56ac0933"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-2.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-2.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-2.png",
+      "sha256": "98a51c5a77a27b711acab1588420bf07d1bb23bbd020d1f12b7671c3061c6c4b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-3.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-3.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-3.png",
+      "sha256": "d8ab875f813e65af4c4b008d2bfc2fa5a4b44ac63d83c6f3b50cfff63a26f073"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-4.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-4.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-4.png",
+      "sha256": "d6fb7132d07387a49db7242ad9436adbcf5fc38b3b6ad0ead726d6ee1b6e5f43"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-5.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-5.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-5.png",
+      "sha256": "26f38a1b17a3172f998c6773b2c0eb1bb6f4ac20901bf327a59a98c675dadc74"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-6.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-6.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-6.png",
+      "sha256": "53db94fd8e2f80b1d9fd4cb8759decc40b0d36bbba2c0a023eaae2f18a01adb4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-7.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-7.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-7.png",
+      "sha256": "31580706a268193a44bb5b6b63020054372c36d4ee5445aa7839d125e343e9f3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-8.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-popup-8.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-popup-8.png",
+      "sha256": "43dcb916dcbc76f489ad37499ec76d4fa1f3151252ade1191d3b83b1ef1b56a8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-venue.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-listing-venue.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-listing-venue.png",
+      "sha256": "27e0078433305d831cfc9985a3f066906a19017eaeb16ea144cac84fafbb530b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-map-money.png",
+      "sha256": "6e2012ca33cf4f3a4b852eefcffb8a3674750679c6fdfe19ce7a53d31b754c1e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-meeting-popup.png",
+      "sha256": "5246bffa4ba16728144c4f8baaecf7ab71197e5093f2a4a37d062eb5cf5fc148"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-dark-venue-meeting-panel.png",
+      "sha256": "854b72156dc8b7b0034e490eef60868b3927cc5e7f89b8a6a78d0e651271e3f4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-about-area.png",
+      "sha256": "3fe87aa0bcef16c3d0d1babaef79a4ab14ee52d7842afecf5cad6ae5ee86e87a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-ballot-money.png",
+      "sha256": "66cd9f2b3f5e3b2bcee79614949286e0e2f622fdaa9826bcfb6769d6b73b4740"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-civic.png",
+      "sha256": "c3259e8d89c0bf272782ff7600154ce4169db536734f001d7006dccef3fee7fe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-diligent-newburynh-3367-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-diligent-newburynh-3367-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-diligent-newburynh-3367-publication-index.png",
+      "sha256": "890209059cd36b39909dfb8ead4017291a926e3413856abedef9d3c37f7b26c1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-count.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-count.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-count.png",
+      "sha256": "6b4575b86c2cd70a272e4f1938c324680e8c7deeae72affa12dba781e4ed6d70"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-full-meeting.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-full-meeting.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-full-meeting.png",
+      "sha256": "bb12efee70cdca12ee7b7affe23b7a670fe62c089c6e68a7865619233d9adead"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-overlay.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-overlay.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-overlay.png",
+      "sha256": "d4f630019203b18ab84557a26334b37f0d15e587dbfeff2d88a01b98a169ceb1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-1.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-1.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-1.png",
+      "sha256": "ba4caa9ee40907cd6aea29c1e72894d96534651daf67eafa0a9d8388851be0e8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-2.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-2.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-2.png",
+      "sha256": "d7314bdc5bb47d9164414ee9a148eaeadc14c40979a4cc93081993dc411008e3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-3.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-3.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-3.png",
+      "sha256": "615f4ca3ac33d24a34927cdb594391bca30239cd678dfb73eb8615ce5fb7af92"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-4.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-4.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-4.png",
+      "sha256": "c0d6c080cc35a5f670ea7ac7c0b7cfcc2aec17a6207f966b354e183ab2a16975"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-5.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-5.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-5.png",
+      "sha256": "3cde61105244385f6e3a344d4d988c268ae3fec52f75a54203a80ea12b13c6f6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-6.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-6.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-6.png",
+      "sha256": "b0480799ede75d3a992e41c9e6e26d938e189abf63babcb48986ea48b9e39374"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-7.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-7.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-7.png",
+      "sha256": "8e754ab70f1401cb3c6ac7100fe3840d3cf88499ba6ffd2a3d72caed5d0d7ebc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-8.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-popup-8.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-popup-8.png",
+      "sha256": "1a131593adae920787c9f84180eb10cc95b8a6cdaf8b07c2de8f1b80fb41ea35"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-venue.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-listing-venue.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-listing-venue.png",
+      "sha256": "dfbdb8519f113a820e0992999caaeaa38b5000ecf76a64fe6dcf697685d19010"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-map-money.png",
+      "sha256": "cf70469b1aa33ae3608e3534683e57f37cea5b2e4c357cf040866e1a80821589"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-meeting-popup.png",
+      "sha256": "bf526d62391290bc88192622c924785f66a3e6eb45131a44f688ee4f3c41bf89"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-desktop-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-desktop-light-venue-meeting-panel.png",
+      "sha256": "00d53f2addbd4220afe9125c684be7a14777e66e189a01d1fecc8a1c5b694183"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-about-area.png",
+      "sha256": "83f665d9de204bd4c05a206880c44ac7fe94220cb160791730801b89a6ca5ecb"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-ballot-money.png",
+      "sha256": "85da575ed9a9b1270873667f7dfd202dbd2aab4ad4d690ccbce370a533a73ee0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-civic.png",
+      "sha256": "0aed57dda50829a9cdecf8c182ecc6bde69d91dda132b4a283267522f5d9e952"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-diligent-newburynh-3367-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-diligent-newburynh-3367-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-diligent-newburynh-3367-publication-index.png",
+      "sha256": "99423502a71a9bc3b17a9a18e6b57d420944150604ea691e09f4fcbc509aa8f5"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-count.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-count.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-count.png",
+      "sha256": "f8af2af441fa72deac4653b0bd4f1f808e2574d85c4bd6eabd7ac81cadbc34e9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-full-meeting.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-full-meeting.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-full-meeting.png",
+      "sha256": "1da3d059a262da6d3af77d1f6bb29e9160f7a55c0e509fd889d766f2c8861d9b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-overlay.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-overlay.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-overlay.png",
+      "sha256": "0f9e170f2ac343ae7a7a8faafa79f75456aa5785f4754afbeb4a16a7d8426694"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-1.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-1.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-1.png",
+      "sha256": "650bd968d01afde8590030efe076d8b28d234e4c6a6852f91d1362cd92ad3e64"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-2.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-2.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-2.png",
+      "sha256": "7ddfb47da4cccdbfc84b0cf2c37f9378258af3210750efce1912018c7da3e0e2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-3.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-3.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-3.png",
+      "sha256": "56bc600c90f8a807af7a8f5627a1f63dee8c2e336b9799904b07cb74f7b91922"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-4.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-4.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-4.png",
+      "sha256": "5e22ee0e4694eecced57b4afac8424a4a21dbb82bb14aae49d16c08d5acd9571"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-5.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-5.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-5.png",
+      "sha256": "e54303376f2fde41767da9eb6556cc022757bf8ed45b0e2076c0490f33323291"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-6.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-6.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-6.png",
+      "sha256": "f145f4d21ccc01dc560cf89c329dca088ced9473fc4c695582fea63f2020e356"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-7.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-7.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-7.png",
+      "sha256": "cde9bc50a339416b3e662d6c792d9f34d26c266de5db5e7dc1c3cbb2b9368075"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-8.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-popup-8.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-popup-8.png",
+      "sha256": "008e757e33c2618292fec18e9704f8a3e7cd39c0627e65de57225669c240de55"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-venue.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-listing-venue.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-listing-venue.png",
+      "sha256": "bdc29cee2d5cbbcf0b24829e89a411f2097dfae995cea3c61e8e2637fc0a14e9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-map-money.png",
+      "sha256": "bb84e80fb75a61afa89520155fb423f2e3451ce33cfc50411d8a344f20962b40"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-meeting-popup.png",
+      "sha256": "9a36fa252e3201619c91682623914dd4f2d5c28499298e40de7bf7e43ad50178"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-sidebar-civic.png",
+      "sha256": "390980a453bb4dc2a84293dcd23220fedfb3e0b5341a9c2942bc42b41d3f81f6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-dark-venue-meeting-panel.png",
+      "sha256": "700bf8bbfb44af3c0062c6ab135bf820ee6981a54ce8442687cdde3d20c6b1a5"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-about-area.png",
+      "sha256": "1d2b073a0acc456909d705c7114bbac7acb6833f53c309b7ba28b649e5986381"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-ballot-money.png",
+      "sha256": "bde5d49bf23422cb5901bf6b3e6a0d5040f40de2736ba2e5ef3e87cc561e8010"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-civic.png",
+      "sha256": "a60d6fe1f996f9afd471207fdb901614504f8f504e854b61682a5715981537ee"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-diligent-newburynh-3367-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-diligent-newburynh-3367-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-diligent-newburynh-3367-publication-index.png",
+      "sha256": "92055550e4c48c7d4e560ba7f86836a900d337334a0a0e14e9053b4bd6587176"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-count.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-count.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-count.png",
+      "sha256": "d2366b8cc4174143c8ef0b5b42ccfe31d89886872ba153982000eaa41edfce1b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-full-meeting.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-full-meeting.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-full-meeting.png",
+      "sha256": "5f9f83608b5b2acef0878e4a82cf2d36916d6750ec41ab6f36b863bcef0a47ad"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-overlay.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-overlay.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-overlay.png",
+      "sha256": "bbbb0717c7c187c75f2fb7c7e22c6135a8f27a036c8fcd36ac9483ef8cfe438a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-1.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-1.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-1.png",
+      "sha256": "7df09cbd0cbd470e7095f579bd958b13342c753bc18033242d1f3023d68e5390"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-2.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-2.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-2.png",
+      "sha256": "1a6f9c7afcaa12fd1fc045c49a43b717f9c0a4b8a50c8bd2e3b2b90b1d148620"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-3.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-3.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-3.png",
+      "sha256": "1ed54d0a1227595046e1fb7b132dd9bdd6943fba3811c43a0686e0282b7ee8fb"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-4.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-4.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-4.png",
+      "sha256": "f63d832ca37557cb1657a4a61963dda59ce86ad0ab52438dbfd61049bb847cda"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-5.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-5.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-5.png",
+      "sha256": "8bdf1d865cb004b881f2e53f7b60a41c456889f1c436a32c1442cbd5c674cf8b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-6.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-6.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-6.png",
+      "sha256": "f233b06792e909c48b7205746f2030cbf3ed9545be3f0bb5b4ae201dc5ce8f60"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-7.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-7.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-7.png",
+      "sha256": "4d8b093c93f73e84e4eb116038f31017ac4543ab919ef2fb4df72cb5adaa972e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-8.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-popup-8.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-popup-8.png",
+      "sha256": "a4478630ca827bd2f72f3d1884a4ddace585d4c2f2c41beeffc14a86819a9751"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-venue.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-listing-venue.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-listing-venue.png",
+      "sha256": "c683973aaf861894db55acfb142d7b30864a3b15a5ef01cefa7119e59c2f38dd"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-map-money.png",
+      "sha256": "15bfc18805f9247615d752c755723b3bdf687ba47dd8bd4db33b52ad3e2e12db"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-meeting-popup.png",
+      "sha256": "0be2bd4b1d555fe2775275dbcb264da0da733afed5ce36058238c7722caf2402"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-sidebar-civic.png",
+      "sha256": "99fddafe1499c4f2d609d0bb35e18e669bf3d0b4ac5aa288e8a7d605713cdb20"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/03255-phone-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-phone-light-venue-meeting-panel.png",
+      "sha256": "89c52b11101ce956ac8e70f6b82efb2dc096aa68d38cac04aec7d13e30fed950"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-about-area.png",
+      "sha256": "ecd53fcd74e3b3626e3b6cd273a761f37583a752fadaebaa8396973cef046df9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-ask-last-record.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-ask-last-record.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-ballot-ask-last-record.png",
+      "sha256": "28bef89b0356d602f95e3b2a495a75a4f53f6eabc6991f8baa5daa2fe53720d5"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-ask.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-ask.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-ballot-ask.png",
+      "sha256": "3198cce7391c8e42f0bcf0b3de7b5b0f899b8207f51c4c4f1f7d7cb34ba12491"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-filed-contact.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-filed-contact.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-ballot-filed-contact.png",
+      "sha256": "2ea9d02291ba2f2c6caa0ac7b1e0f9265c437e2d74b081a3aabdae16b4fc091a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-ballot-money.png",
+      "sha256": "6e6c73271b0cf1804247d7124acb42e1ea1cd7038f8d42a06b01a35888528b4b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-candidate-holder.png",
+      "sha256": "fc838dc70a2bc1cf777404731221ebe2d77633000724c55b2df87559c5ed2905"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-civic.png",
+      "sha256": "7c76d4d25d00d2799421702b7d52eac04f2e125cc20483b82d1c1d1522623ed7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-district-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-district-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-district-popup.png",
+      "sha256": "2661b8917fbdedba254a4513020a6b133dd8b4fb85f396a993012c90213d0ab3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-failure.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-failure.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-failure.png",
+      "sha256": "15ebdac2683e167fc87461000570e5bca45a1eaf75e5c0bc158880b9d75157c1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster-last-member.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster-last-member.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-incomplete-roster-last-member.png",
+      "sha256": "2ca972386ae2ed0a29418e248ab4a4c6a029403b43f04c6b4acf6d6cde88d41d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-incomplete-roster.png",
+      "sha256": "2676b26a67c03eee1c03282fbe75780d127cfa53cb0f0f1980b5a211e3fcfba3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-iqm2-morriscountynj-2236-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-iqm2-morriscountynj-2236-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-iqm2-morriscountynj-2236-agenda-text.png",
+      "sha256": "85b51aa04b6233a6ee825fc08aa7168f2a5a8a070a6c550dbfa0b928a6d684c3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-iqm2-morriscountynj-2236-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-iqm2-morriscountynj-2236-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-iqm2-morriscountynj-2236-minutes.png",
+      "sha256": "165aad49e3c760678ff574437b84005708093911d50b9c21fec731e4e975d791"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-map-money.png",
+      "sha256": "b76500ae3811663c5ca5299abb4aa3f4f483f4154193d21e37012c2a2235b6a8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-meeting-popup.png",
+      "sha256": "db75f4a83e5fc67f2cd8198847ac3d8872f15e508851223ee6871ffa8f5c1e37"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-pequannock-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-pequannock-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-pequannock-candidate-holder.png",
+      "sha256": "c3fa8b6a4a95d104b3a01f52fd61d971134cce19411e654e472af10846f3d9ba"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-dark-venue-meeting-panel.png",
+      "sha256": "b9adbd68b02430cf33b48949e7f47c2643c8c84a93b882d4cd521b19abefa405"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-about-area.png",
+      "sha256": "ee99047bd07dcfeea92b1180bdcb44c1f74b14cba5571c59dec66e2d348f9434"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-ballot-filed-contact.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-ballot-filed-contact.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-ballot-filed-contact.png",
+      "sha256": "e14c201ea9af4686fc9233491619fdb60ecdd3f513dc6499176dfe93647b043f"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-ballot-money.png",
+      "sha256": "580f5862d2e74ec9d07edf1ae23ac45db94f72ba14e439be7931bae761e76df7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-candidate-holder.png",
+      "sha256": "b4ad0472274fd0540c9d95ff03f05fcb8493ca8db209fbcaea04d38a8e81b055"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-civic.png",
+      "sha256": "1d2c83016d51b28ff6bd26cf6a17f7cddcfd9b3c59292c49a1be3f70ce1cc97b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-district-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-district-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-district-popup.png",
+      "sha256": "b6768d9625b577dfc2f4fc1830440ec59175b0a6f2ba8cc211506025fa768797"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-failure.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-failure.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-failure.png",
+      "sha256": "46bf074a81fc0a593c04c366d33578d9ea1a1c025fa83c0ef7c413a3cb0e2273"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-incomplete-roster-last-member.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-incomplete-roster-last-member.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-incomplete-roster-last-member.png",
+      "sha256": "82b7d016256f0756942c1fcc36abe1da30a20fadeaf2cce175df3cf5afb4568d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-incomplete-roster.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-incomplete-roster.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-incomplete-roster.png",
+      "sha256": "4d8a5ab1229052111a40a48fb0fc9bd5ba6fb53a32ffefa911f44c17eca1a2c4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-iqm2-morriscountynj-2236-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-iqm2-morriscountynj-2236-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-iqm2-morriscountynj-2236-agenda-text.png",
+      "sha256": "7872b3831bf2f22c80e4181b3f280d9959925325a1a596c4186307a5a0c39fce"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-iqm2-morriscountynj-2236-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-iqm2-morriscountynj-2236-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-iqm2-morriscountynj-2236-minutes.png",
+      "sha256": "ad25577a331a536975fa18be44a4c65865d4ef744ed5f60f9a3f04de3a4a3995"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-map-money.png",
+      "sha256": "f7f735cd544cc029d95b9a96d68bf4ee9f9fe1209a75179070d3d9a94e4a2964"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-meeting-popup.png",
+      "sha256": "24ac1095a62569fcb4be0097da36011f6c40e500492cb3511031ffa481ee7526"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-pequannock-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-pequannock-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-pequannock-candidate-holder.png",
+      "sha256": "5eb34b0e62d313fc7a37f55733ccd3e186c4b93ef9b4174d304b75c1eaf83bbe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-desktop-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-desktop-light-venue-meeting-panel.png",
+      "sha256": "46b864a10e8c5e9c97c180a9708d078981f31a27e5061fd5b444e559bb323bf0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-about-area.png",
+      "sha256": "25334041d5adf9b6b772cc3809446d1e72b9551bef35b9d5886c0230ce9697bb"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-filed-contact.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-filed-contact.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-ballot-filed-contact.png",
+      "sha256": "3680336c3d9b0add5e356aef81209833da3ecd3c42eacbb9192b2ba5c38733fe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-ballot-money.png",
+      "sha256": "c8acd989f12b033ab8209d95d9227a82ab55942cbdc4bb6516bf143969c12e1c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-voting-assigned-unresolved-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-voting-assigned-unresolved-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-ballot-voting-assigned-unresolved-last.png",
+      "sha256": "f84118f12ccc232a450691019e250349f9134d8c2283755102d2c12fa8019d53"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-voting-assigned-unresolved.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-ballot-voting-assigned-unresolved.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-ballot-voting-assigned-unresolved.png",
+      "sha256": "f84118f12ccc232a450691019e250349f9134d8c2283755102d2c12fa8019d53"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-candidate-holder.png",
+      "sha256": "c3991ca9dd19e3839a1d1bdfc5bb5c5b777ac52889694694d1948cb0a64e0c95"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-civic.png",
+      "sha256": "193fb093357587c6edbecd9bbc34251941c8187e87030594182a8db9189c71c2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-district-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-district-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-district-popup.png",
+      "sha256": "d36f561c702f6399adf5fe8b851801f6f8de27344e7e3f57e20d08f80530611c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-incomplete-roster-last-member.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-incomplete-roster-last-member.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-incomplete-roster-last-member.png",
+      "sha256": "a24e1b267c739bdec66ce510fb902ea316e4fb6f8b8ef6f98054763949abd127"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-incomplete-roster.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-incomplete-roster.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-incomplete-roster.png",
+      "sha256": "8f9fd2dc5ffa291500226cd8703175c44e7d9a65ce7fffc5966dd1889fd2e010"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-iqm2-morriscountynj-2236-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-iqm2-morriscountynj-2236-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-iqm2-morriscountynj-2236-agenda-text.png",
+      "sha256": "5623f8743f3f11a2598761d4e15159ec49e6061e9e29eb601e471829f5f19892"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-iqm2-morriscountynj-2236-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-iqm2-morriscountynj-2236-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-iqm2-morriscountynj-2236-minutes.png",
+      "sha256": "b8f7305d7f5b4142ca44cb59581d89341946f9d8edc2624ca4e86626a87f9251"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-map-money.png",
+      "sha256": "2770c870b3a030e3f78e6fddd1bac248df6a75a7f1af2113fbb4ff262fca528b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-meeting-popup.png",
+      "sha256": "60b8e5ab17ead3447c4fecc40715d339ec92c3559d0b22bc415bc40c3cf00e54"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-pequannock-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-pequannock-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-pequannock-candidate-holder.png",
+      "sha256": "5e6535471f8f1c13cdd78706fc787d7216118c042322dbb1e09f7b8993be7057"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-sidebar-civic.png",
+      "sha256": "cf402e71fc0cd13bc7d9a102e73198bd66addd946ffd1c988731ea772a4edd42"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-venue-meeting-panel.png",
+      "sha256": "8e2f3fc817dbfbedf2b39eef9a097c5aaaa9304dd6a8c203819d5956d792e9af"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-voting-assigned-unresolved-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-voting-assigned-unresolved-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-voting-assigned-unresolved-last.png",
+      "sha256": "73e5592d37a79ee4df6a581c3b4024091662d7abd2dabc33617def4c66a58039"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-voting-assigned-unresolved.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-dark-voting-assigned-unresolved.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-dark-voting-assigned-unresolved.png",
+      "sha256": "73e5592d37a79ee4df6a581c3b4024091662d7abd2dabc33617def4c66a58039"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-about-area.png",
+      "sha256": "9148a0bfe8f477c756e92de466bc0ac788a63f759e29ebbf63c966c2154176d3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-filed-contact.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-filed-contact.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-ballot-filed-contact.png",
+      "sha256": "7a954bb11fa6e518c61e73ae5cb7172d22e01afc113ca5fb6587fd7f59d0e5be"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-ballot-money.png",
+      "sha256": "5791b15a568d871b88eefcb3c69570b5a2bc0358d9931d7d518e4b3cb89550f9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-voting-assigned-unresolved-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-voting-assigned-unresolved-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-ballot-voting-assigned-unresolved-last.png",
+      "sha256": "b8c4e58d05ae5687d8bb3a1711b912b1a590ae988befb391e11ad2a0b7965fda"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-voting-assigned-unresolved.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-ballot-voting-assigned-unresolved.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-ballot-voting-assigned-unresolved.png",
+      "sha256": "b8c4e58d05ae5687d8bb3a1711b912b1a590ae988befb391e11ad2a0b7965fda"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-candidate-holder.png",
+      "sha256": "91afe334ef703cbc920670393cfbe452b52b20aac63894b8919bf35425d26245"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-civic.png",
+      "sha256": "9c2c1d1fe3865abdf85b54764e5f8b596676a521aebe21bfc439650a17a1722b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-district-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-district-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-district-popup.png",
+      "sha256": "a85a91320ed7af159becc5068e7e4336401580ca9920104e1a67e00fefe2cb66"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-incomplete-roster-last-member.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-incomplete-roster-last-member.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-incomplete-roster-last-member.png",
+      "sha256": "8d0bf99798a7c42f518dd0da3f5421f2bedf3f110fbbf0cfb9dc14c0c8d5a950"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-incomplete-roster.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-incomplete-roster.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-incomplete-roster.png",
+      "sha256": "d35d42459d945bc36b72a8254dd88e7773611a5be0a7fec35e87c1359b38ce1c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-iqm2-morriscountynj-2236-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-iqm2-morriscountynj-2236-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-iqm2-morriscountynj-2236-agenda-text.png",
+      "sha256": "fa45bb1e177b35dbcf7fbee9d5458eb9feb26f400d548c983eb95efe08b4d3ac"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-iqm2-morriscountynj-2236-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-iqm2-morriscountynj-2236-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-iqm2-morriscountynj-2236-minutes.png",
+      "sha256": "e8d4a82205c7894357b98395c57d9491d14dd01f64c2e10df37aa219cc9c50c1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-map-money.png",
+      "sha256": "2dfeb2523b67bd8f9972c0dfad847b8c286fea9c3f15fcf8c8c780ad36c47317"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-meeting-popup.png",
+      "sha256": "d4b5484baa03a0e686bf46ee02a370da8fe743175db62ae87d7e52a8c4a32aba"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-pequannock-candidate-holder.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-pequannock-candidate-holder.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-pequannock-candidate-holder.png",
+      "sha256": "94b8b10a96668d4c5665a6f770845a2574948c8ef3a1236dd8520890384f8661"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-sidebar-civic.png",
+      "sha256": "1ce26578f815ea10fa107dd5b5b211c9548ebb7caf558c039eb2bee25e24cfec"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-venue-meeting-panel.png",
+      "sha256": "2adc48a28baa69ec056954b2360514c3fd12089bd376bb1c738f681958374f36"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-voting-assigned-unresolved-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-voting-assigned-unresolved-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-voting-assigned-unresolved-last.png",
+      "sha256": "aad8e11056b7e411505a4432e51e495ec7a74fb5d8403ff2bab8416749166ddd"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-voting-assigned-unresolved.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/07866-phone-light-voting-assigned-unresolved.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-phone-light-voting-assigned-unresolved.png",
+      "sha256": "aad8e11056b7e411505a4432e51e495ec7a74fb5d8403ff2bab8416749166ddd"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-about-area.png",
+      "sha256": "e4f0ea94aaaec8a5c0999dd1e29ea1a4e50afd411a4c91407230cca6b0860481"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-apptegy-vail-60703698-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-apptegy-vail-60703698-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-apptegy-vail-60703698-publication-index.png",
+      "sha256": "237930a8183a443a72f1e250bb9f35eed46e9f595353b444e579454a27f76da9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-ask-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-ask-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-ask-current-scope.png",
+      "sha256": "4d4e233b2677fdfd79cdc3494f5b2c2026c0cf62ee237e1d4b500132352c97e8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-ask-last-record.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-ask-last-record.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-ask-last-record.png",
+      "sha256": "fe7480ff798f6616575234a88de5082446e941671c733a1481ab58a74ffe99bc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-ask.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-ask.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-ask.png",
+      "sha256": "5ee365efcb708796e9c616f2c518b9eb94fd2c16e3003b9417c81a0f0a1ce84a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-committees.png",
+      "sha256": "674279a3758af91e8a85c0857e53e0c945708f048e4b97b2f7006465f14f9f72"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-current-scope.png",
+      "sha256": "0ec199ef3185aae821d9a3d7579de24d5c6588be31c1bb3b18e613c17afd8491"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-federal-money.png",
+      "sha256": "e9d1eafce5aaaa0ccacfcfeb19c278f19d371cc99024fd5fb328e0048a0f94cb"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-key-votes-last.png",
+      "sha256": "64b0ff0e06b4846db6ecca148bb44c762c430171e9cf5349770f2692c3523265"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-key-votes.png",
+      "sha256": "ddc4d3c033662d3fe857aac8b557180fbc930be415693aec066a39dd4ad3fe0a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-money.png",
+      "sha256": "72ce0d73cae1b9a78d2aa052afcf2883ebc7589c9bec6528003d2f62233611ae"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-offices.png",
+      "sha256": "6b2b08151713397110d77c03f98b4e6d0a33f345648f6a5897b56f19b3f65358"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-profile.png",
+      "sha256": "07b40d9404c3a978e5ddd97c5dbddba8b14f6ba09740c376f2b0ce0fbcb6ec67"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-recent-votes-last.png",
+      "sha256": "8c07264a14be10075a3d31784470dae94dc4e4901778f07ce2c15918f91f7b50"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-ballot-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-ballot-recent-votes.png",
+      "sha256": "0cba77d906d5cba4eccd9d62d10ec258fc18556543cf6f62f3e7a041086e9c6b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-civic.png",
+      "sha256": "ef5c0cdbb72c57b635ba9728203b58274f610e5f7ed7d33a1fa2ef5b22b7e4c3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-committees.png",
+      "sha256": "11537d925b228dc06c0dde8c0da0ee816cbce1359644e9bfc539ee8a53ca65f0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-federal-money.png",
+      "sha256": "6c953f24c13f2ca7088d608517a152b1514e7179cb1582bca634a6ac47969bd7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-key-votes-last.png",
+      "sha256": "dc530d39a6fb7d00765b2cc0a3f3834c532a9dcd63edac1f38f08efa06399fb2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-key-votes.png",
+      "sha256": "2ce445065a364856eadcc0cc6cf12757eac492ff9b9a8ae4d2088a817af3956c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-money.png",
+      "sha256": "3b6c6884751c5ebbb4f0da1575fa4def8d40521b2568f18a986eb590f0f113c8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-offices.png",
+      "sha256": "553eb4993d07e3e5d7870be3416af3b01424c37117776483306ed6b8bddc7f9f"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-profile.png",
+      "sha256": "f6d6ac979a85f36be12f5d57d11633f3f57b3e3b2aabef3aa5e985f0f070dd3a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-recent-votes-last.png",
+      "sha256": "5035b7dfd30150d96dcd3ffdea530efaea48029e4be354498ccb420f89ba6416"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-map-recent-votes.png",
+      "sha256": "434b089550726017f6c4f6106b865c5cfdc27ac1442e6c1a62f3b66094e088c0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-meeting-popup.png",
+      "sha256": "87aa437c501537fa47c01c866c48913e58d4e496f6505cc64a0a1ee9a8c512cf"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-official-term-note.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-official-term-note.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-official-term-note.png",
+      "sha256": "8c307f162cc5ab28044c013432e3c8a30c02ce1fd88f35b5678b2e6f25208cca"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-dark-venue-meeting-panel.png",
+      "sha256": "2b5fd5bf93751defea8dcb4b17e48cf1a5efd614a80bf97460a51913531672a0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-about-area.png",
+      "sha256": "08d258be3d1010f12afac50e7abd43c052770f7afa94109698b45ea5431468ea"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-apptegy-vail-60703698-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-apptegy-vail-60703698-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-apptegy-vail-60703698-publication-index.png",
+      "sha256": "cc6196f9955278e55647537935c107b4ee53e157a81b0aa2028e2196b1bc759b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-committees.png",
+      "sha256": "47b0ebbba5c733b4a64ad5a3c7c96e6f9405712261e53b905a70e476065b8ea9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-current-scope.png",
+      "sha256": "4d139e57baeefbad2ff4148ff7d7ead41a2cc2a4f4bea93a8c8514cc71d70674"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-federal-money.png",
+      "sha256": "30323508a75b41bde600c7d222f8bd32f0f56a030c5edb1bbd60c15b7bb14d13"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-key-votes-last.png",
+      "sha256": "99552f6ae2e3cdde6251a369af3309fc66f0399df4d5605eca9f3ca673e6f6ce"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-key-votes.png",
+      "sha256": "7e13c06dd4e67eb0e8035a4315aa201bc1e0210a329cad3fcc40a8755cc84259"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-money.png",
+      "sha256": "a3b3818280bf3c961cc4231fe18805a26928edbb9bc4965e6cd93ff35d96d815"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-offices.png",
+      "sha256": "625a74f207ba56c022ecaf734afe5be56f940adb887a8d12bff5a5b53a8cb5f8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-profile.png",
+      "sha256": "fc6a91d6d011595d61ee0c294240429958906fb85e3d653435a332e3b72a09b8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-recent-votes-last.png",
+      "sha256": "cc7f5123bf13c7bcd06ac74124fb523546f4784a646bf0307d233351a23adafa"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-ballot-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-ballot-recent-votes.png",
+      "sha256": "ed0925a371ddb6bd9956bdf3d60682ef5b6ab5889c403e34a6d901b3d9cf3f08"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-civic.png",
+      "sha256": "e4beafe55baea699329a33341f93d6d0ceed1a1666d9e8bdf0c3b5739745b78b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-committees.png",
+      "sha256": "95004339b1fd765aa32d4788a64be96edb3ac014f53bedea000a05cd13220b30"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-federal-money.png",
+      "sha256": "31b14f04eecb9c1d60b0365ef3d92a5c9cac032bb1cdd5157d0544e50066a4cc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-key-votes-last.png",
+      "sha256": "bab4966de11ab857a61171cb158589d645be3ecd148ca084cf40c305d52704bf"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-key-votes.png",
+      "sha256": "f20e7e4e24e2bdb58519ac0f3d2ce4a33f349f787d40a0414a054167bb9ccc64"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-money.png",
+      "sha256": "afece1383bdeb9649d290a6c8ccbeedf8f1862541c5001702259a0d7aa5b0ccc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-offices.png",
+      "sha256": "d65a88565df86db590e738e9217b5073edf6c2a840d822247920e59a0f16da9c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-profile.png",
+      "sha256": "6747af6d0393e28bd25abe54bfb3551ebaa439b2cb839b0f9147164ec67784dc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-recent-votes-last.png",
+      "sha256": "499ed0d9aeddc8d0f1f50664db56b2d79e1d61c7ba63d3e5854ab04d0e2ae53e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-map-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-map-recent-votes.png",
+      "sha256": "19ff8c30a91244c23f86172b694c54e71b6c6387626d83398463580174949df2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-meeting-popup.png",
+      "sha256": "6c36d834f94c630a0b03943583e7eb11efa288e2c644c086134743744e4ddcf6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-official-term-note.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-official-term-note.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-official-term-note.png",
+      "sha256": "01f04dba364bb7ba787a1c6a0e197b67fb10d4878af1ba6702e53798343e316c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-desktop-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-desktop-light-venue-meeting-panel.png",
+      "sha256": "e91b3975268273d4409582772cf649e3e9d14f4a0b3be898210005291d62fa76"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-about-area.png",
+      "sha256": "dc94df46976c613f2b974e6b343b8e7247b88fa8174f282dc03dbf1997f3fdc6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-apptegy-vail-60703698-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-apptegy-vail-60703698-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-apptegy-vail-60703698-publication-index.png",
+      "sha256": "4746c5728399007e16b49bafc2fc9f877e09c60bf513525a626582f0e1c5dc01"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-committees.png",
+      "sha256": "636867a221a0b4a9b1b533062fe68081337a2fdfe6576a34a1314e6e5399e677"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-current-scope.png",
+      "sha256": "904e7f45b4afd394492f7ed3b4c5a20528a412a0545ad2adf2771ef090032f58"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-federal-money.png",
+      "sha256": "4a274fca4501598fddacf27f7c3df60049772552e4f7d8592177a04907b35a6b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-key-votes-last.png",
+      "sha256": "48e304200c845197021e66c851da94ac9646f0851e47a39b9e641e67b08c6154"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-key-votes.png",
+      "sha256": "baf96e4414d65e419c6b9e3e2c5da0978f768dcb7b7e1dc6b75806db8d7de121"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-money.png",
+      "sha256": "312bece5df25c8e6a80ecd8674391ac16879bb21cb8d79afb84dc9e3382c19fe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-offices.png",
+      "sha256": "4a960ec02d69cbc24cc2f4b6ab828af13e5f718e291cbd6ea69cd290ed666e3d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-profile.png",
+      "sha256": "045f3529a57675a1c26a68a60b315e2f35c924549f7bbc1348cd2c0e0a375fb0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-recent-votes-last.png",
+      "sha256": "6be3c67ac7ef3626c6da9b28c656e97cabf2e8c9f92617e4f7ab7105e5377415"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-ballot-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-ballot-recent-votes.png",
+      "sha256": "9dea76678d68159317c086c28a35f3854efc1c7689dc645cd2090725e27ecc62"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-civic.png",
+      "sha256": "202e336d1b9518ee5b7e18237ede7a62be4015a831c07f0d820b68c48fab025a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-committees.png",
+      "sha256": "66da2d0d9e3512fe87a33744bd86fc5023d652d71c314594587764cc612db247"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-federal-money.png",
+      "sha256": "0fd81648a62e8e511e31bfad28ad601b1b2823a1964346781881cfd69ca4685f"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-key-votes-last.png",
+      "sha256": "065960d19c8a2962133691e38b285c1377d7e17daa6c9fef9fae75f3e66c2185"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-key-votes.png",
+      "sha256": "12aec4aff730dcb8709a3d2d6fa264657c8badf2b8dc8d23062f29f096e4a449"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-money.png",
+      "sha256": "32fe5b277bae5fd6f737e1f9225cc6a60e2a8fce02fce29267277c53ecd3966b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-offices.png",
+      "sha256": "b935e892aed5646e7b7d590de1d664ccb9ee7b9b7ddcf2d25c885218788d9477"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-profile.png",
+      "sha256": "cb367fe832a4b66001c6d4225fb28742fb97fc21c78cad13b6927f78412d41ec"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-recent-votes-last.png",
+      "sha256": "9cdbc43b99ec4c72c7d4a30a09d40b917cb409e947b0bb025d8e0a847b3d40ec"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-map-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-map-recent-votes.png",
+      "sha256": "861681653e2783bcdb035e931b47315ef86f9e503034b9ca84b11df2613df6f0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-meeting-popup.png",
+      "sha256": "0306313a6c61dbd36e79c869b85d9e68eb78f9ea907f604ab327869717801ee6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-official-term-note.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-official-term-note.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-official-term-note.png",
+      "sha256": "fa9880507887b19f9ed608b76c1c1455bd00b6a0b05f5b425784a519b46fd226"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-sidebar-civic.png",
+      "sha256": "0fda517ff6a59b7d0d66d6d71f896ccd6834dd411bc9b5daa66af1f36375f8ea"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-dark-venue-meeting-panel.png",
+      "sha256": "e1fe6a05f30cbcfebc71bcfa9ec4fd17a4cced773c21b6c699738426474585ac"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-about-area.png",
+      "sha256": "c1765ddf8c00a29d162625db5cdb84bae0e71cc2dd4d861e8b9bd24d51cdffc9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-apptegy-vail-60703698-publication-index.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-apptegy-vail-60703698-publication-index.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-apptegy-vail-60703698-publication-index.png",
+      "sha256": "8a0c409a512f757dc54c1c530cfb82c0442e7281261470f0ae2db5c76bef351f"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-committees.png",
+      "sha256": "aa8bb16f0d3c04d75d816c0b0ad9bb002ec0c1f8c72593feeca78a5dc0a200cf"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-current-scope.png",
+      "sha256": "e058be868e58df25c9e15dcf352764e9f1b1dc109fcc0f620da20f716a81902a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-federal-money.png",
+      "sha256": "8be8ddb750014392c894e5e414122816860f251a383e2d76b5923efa4e3cce79"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-key-votes-last.png",
+      "sha256": "633a35e11a13dd592b46124246860d86030ef7cbc382f26d4ef5f5630927daa7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-key-votes.png",
+      "sha256": "7fdc69e8361abd2b51fd8f6b01bc3715946e92a6e735fc2a49358e73fba00176"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-money.png",
+      "sha256": "0dda8f7f885ed25bda232a7315a583ee3922031e19aa4922d1b26321b4f891e7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-offices.png",
+      "sha256": "9a600987560164f188fc263c2f429d2ce8b4fdb70a3ce62bc0fd1f381703d53b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-profile.png",
+      "sha256": "42a8dfe4655f4e73e1883bdd570227cf3b95a009f0f1563ee345917eeb31ce8c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-recent-votes-last.png",
+      "sha256": "1e4f5258732e80c1717bcb53291195f82fdd75821edd93a29c8a81e9d80ee185"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-ballot-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-ballot-recent-votes.png",
+      "sha256": "a0a30947d2cac16ff25c148fb743886e04acb08c63f5341302b4b143f2de22b8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-civic.png",
+      "sha256": "90bf232e2bfad60525c2f4d77a78de5c837073d29b19f798e13b39647e28f3d1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-committees.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-committees.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-committees.png",
+      "sha256": "ac05e039f55611d32b307f1aee3be38626a514390fa9d1ebbd90e791608ca2bc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-federal-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-federal-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-federal-money.png",
+      "sha256": "34ab9574341a25b702ca077ce0bc1e25ce63c5da6f2924d5e9126d32ac83f58f"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-key-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-key-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-key-votes-last.png",
+      "sha256": "2348b2b63d35d373fa14d7fe65bbd47a852a7c1c5af3d0e7c9a65f2e1161c611"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-key-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-key-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-key-votes.png",
+      "sha256": "2180aec814949cfea0e21cec12f5f6712df73d73ea2063dfb686a784bdd7153a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-money.png",
+      "sha256": "c4b39fc2102c251744433ab22cd7ec5cefe178f3e9136528fc66e60b0ce75707"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-offices.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-offices.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-offices.png",
+      "sha256": "ddb693015cb701d7c56683f59d3f50563ee750341132ecc73640dfaa0cdaf5ec"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-profile.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-profile.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-profile.png",
+      "sha256": "86646d91974c6a9de860cd5ff32eb9fbe1425c1e72216923c2e2a0f70f11f8dc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-recent-votes-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-recent-votes-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-recent-votes-last.png",
+      "sha256": "e6ffb97bd4184c2884783f2e336a543c438c1869c868eed613ec52d3dbf1a0e4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-recent-votes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-map-recent-votes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-map-recent-votes.png",
+      "sha256": "06bf1be5c66e83e97905a4da701c45d687edd5a4fe7f3ba20e42359a23556e58"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-meeting-popup.png",
+      "sha256": "b6c2b9bacee96a9cb2c59d2fa1e875a12a8b7e8c104734989949fa02738dba62"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-official-term-note.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-official-term-note.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-official-term-note.png",
+      "sha256": "2c9c421400c82dab5f2ede0adfa287a6f6797713de4c8bb09d15f04c95bee966"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-sidebar-civic.png",
+      "sha256": "183e795f6cb70223c0546ae6b7a8988e2267405f92c020f591e0813fa0318a14"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85641-phone-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85641-phone-light-venue-meeting-panel.png",
+      "sha256": "7db60fd48928585eb8d45dc5ace94a7da0bbb5ba27270cdcd9a95101746a8a76"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-about-area.png",
+      "sha256": "0cfec3aaf9bed6c1750b73cee462a226ac42210be240c77543b5be2c46141acd"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-ask-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-ask-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-ask-current-scope.png",
+      "sha256": "4d4e233b2677fdfd79cdc3494f5b2c2026c0cf62ee237e1d4b500132352c97e8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-ask-last-record.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-ask-last-record.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-ask-last-record.png",
+      "sha256": "fe7480ff798f6616575234a88de5082446e941671c733a1481ab58a74ffe99bc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-ask.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-ask.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-ask.png",
+      "sha256": "5ee365efcb708796e9c616f2c518b9eb94fd2c16e3003b9417c81a0f0a1ce84a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-current-scope.png",
+      "sha256": "b0f7cc685be1490fdb8e9492400e387d4ded1c4ea4024979ef09669d57f2264e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-money.png",
+      "sha256": "bc08053dfaca62925609d5824be003b97ccaab6889eb1ba1c297e242dc388500"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-official-actions-last.png",
+      "sha256": "27c171305f2c0f04ddf82736c883b02d62b84ed8f65700a67e767e59ba9b1873"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-official-actions.png",
+      "sha256": "226bb18afb2f266ac45930ba5a167a6c2a933affa0ca6843b9e3ad4cad153029"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-voting-sites-source.png",
+      "sha256": "60ca0c2b5dd4a52f714f29786a1e2006466aab97aa80177760da3f91c5bd8390"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-ballot-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-ballot-voting-sites.png",
+      "sha256": "52449fb7d7a6e5eadc9c263bb7ac77969c47874a84921f72c9bc22445763e48b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-civic.png",
+      "sha256": "1be40c3ccb628bd1bb1208e3c2e2e7f68a49c4fa957959a22ab453a5c88e47f5"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-diligent-tusd1-493-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-diligent-tusd1-493-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-diligent-tusd1-493-agenda-text.png",
+      "sha256": "1f518f8cbdc221938457bf3d6016264996e540fa4205abac4b07ad5691323e38"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1822-actions.png",
+      "sha256": "c1206c8fce49fce2ed1b2d76933705513004af1364f06e25ebd5fbb259bde4ee"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1822-agenda-text.png",
+      "sha256": "2b82aaec22b0691e8a64537d561337733513acad09ecaaf466c9f5bdea508234"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1822-agenda.png",
+      "sha256": "d8cebf521e0f11827f47226f95c25d41e8222d1a6e9ac05fbc99c4a49ca0a8db"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1822-minutes.png",
+      "sha256": "5078f2a8ea37a6b99358696f4e9db393ec8b35a33d7f3207dd29c4cc83acea15"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1822-rollCalls.png",
+      "sha256": "5cc24006f80bf99cc0c5648fa396f3309d2e30d1a506c9196a357f3a5fae3816"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1825-actions.png",
+      "sha256": "82ff3623169a32a80c29177db5a7bbacb8bbdae6917f5eeda2c35a7f6d69da57"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1825-agenda-text.png",
+      "sha256": "f1d1151f0addd9e8b7f906583a502471577748d672499aff3655d16d67f64423"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1825-agenda.png",
+      "sha256": "51cf790e9aff410e1f163c176220e1cd41f720bef8c864b815ba9debd14a89a0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1825-rollCalls.png",
+      "sha256": "908250ed9d1573d90909f6260d44ee3b0da3d841e284704bf87ef38a1bae8f43"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1827-actions.png",
+      "sha256": "992f5ad07a1445d8e3a9a465257f53ab3985f69e3c48960583495ccb6346fffe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1827-agenda-text.png",
+      "sha256": "539b9805d3dbfdecd8e2b96517b53de335dfa50dc1246e343145f4a4b34d6565"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1827-agenda.png",
+      "sha256": "641fe416089e74a595493121075ddbd1461da36eb1653255ea95602d64e4f0a7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-legistar-pima-1827-rollCalls.png",
+      "sha256": "61aa9d6e2332237d78f99d151841bec67625502a2a8e3af714bc8bbf6e5c0b0c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-map-money.png",
+      "sha256": "00f57b9d8027839ab479f0d3a3b237af229b2c341e74475eda4e139d934aa73d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-map-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-map-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-map-official-actions-last.png",
+      "sha256": "5dfbb0746645909e28cb2272676f6e4d338543a6b809f940521bf22e5db0f744"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-map-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-map-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-map-official-actions.png",
+      "sha256": "97635dae98e0bcb671812cb9e95e07d6fbf531b76f1704b84a2358722e4375f5"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-meeting-popup.png",
+      "sha256": "59049d77889b23e8738ec3a6c08f8329d00e13ca1bbfcbfece84c140bf0c45fe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-venue-meeting-panel.png",
+      "sha256": "b967d38c5c5033cf2f9384737c58b53d90138b666a009152ab36e48b9f8b7a12"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-voting-sites-source.png",
+      "sha256": "2d4623b1d6fdc04c6d8ef391b22dfa9ac5dd030a34108974bac0d2ec47751833"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-dark-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-dark-voting-sites.png",
+      "sha256": "28825f9c187701785f3df4cda57f307113a32008b9a49f487c28c577eee2ce7c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-about-area.png",
+      "sha256": "6c7a118a264a4d4b57e2b3d4843ff0dcc3292788fd5a6e2ae154f6596468b505"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-ballot-current-scope.png",
+      "sha256": "abd7d1efb3bf865aa307417944ec0d830b44e90e7eda56170840b7fdc9fad315"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-ballot-money.png",
+      "sha256": "67b9afa3eb6aaf354e56a45ec5dc5124bc4c6c7835d420ebd59d9d9765d6f689"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-ballot-official-actions-last.png",
+      "sha256": "78544dc141036ff689266aeb27fedede969b095c95840621c26dbdd94a654d50"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-ballot-official-actions.png",
+      "sha256": "70780ae8b690fe33b9f1a15cbfaa3e55344a46e0f27fd99bcd094bb6f869ad12"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-ballot-voting-sites-source.png",
+      "sha256": "bf2fcfe760adc2a8933dff836b464a4de0f64e9b32ad0971807bca6315e41ab3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-ballot-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-ballot-voting-sites.png",
+      "sha256": "ea8c8dc746c37ae25dd2d2b43f1c4ccf53bab9640065ea498fa83d119351aba9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-civic.png",
+      "sha256": "c2fb3fbc99ca58426826d7565c6cbf3224bc1f2393997206ae50a1fe905a22dc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-diligent-tusd1-493-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-diligent-tusd1-493-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-diligent-tusd1-493-agenda-text.png",
+      "sha256": "5e30426c4f1f8225d6292f6263a1f628c2c1687214f9f19712869f47a7980b94"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1822-actions.png",
+      "sha256": "4a18e413cd13d2bbe702e37ef1401ca90152afbee4bcf205661289e5c2ce28f0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1822-agenda-text.png",
+      "sha256": "e2c10f96b554b8f00cd5262dde6a0833be9e5e425b0fc6f0ac745ec384c7e4a1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1822-agenda.png",
+      "sha256": "453a2cda647acb03f07a3303f202e58f5ab2ddd8f86ccac2d837a2f75df7701b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1822-minutes.png",
+      "sha256": "6197988b0cceee7a00f9f846cc5d65aa850be25658063b4fb356882a097fe21e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1822-rollCalls.png",
+      "sha256": "a8bacd959489c0d4a0dbfe762af20cb53158b705307ca18262a2963ee97ab2c3"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1825-actions.png",
+      "sha256": "1a6ec0763ac2f66b457225c5807a693ca5a752c7a2107b4f8790a4932ec082bc"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1825-agenda-text.png",
+      "sha256": "69ff84445220932489340f133acfef72215305dc42c3b42177e3c527602675c8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1825-agenda.png",
+      "sha256": "03cb9b05621b6848c301352779d958d1842f379c546af9b5de7c3e6c33abf2ae"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1825-rollCalls.png",
+      "sha256": "94889158a4080f45eab3480a2bef3a50a916e1e70060c6d4bed4f8e98f3b0c80"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1827-actions.png",
+      "sha256": "6b9fa26a5ff25fecb6c7949678fc8c493ba39b6ab1dcd3b1accbdf5c97a6e664"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1827-agenda-text.png",
+      "sha256": "4e3087553032d794b0f3d3da0b034636c04f18fa7d9b2a43765e005ded330d8e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1827-agenda.png",
+      "sha256": "2d14f21ce9b305d6b7c69c57a92bbef47641da5b1793274debd5a81961ba5547"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-legistar-pima-1827-rollCalls.png",
+      "sha256": "c299f6f432efeff00ea9cbdb16769f91966cf32f82b1b18d27fcdb1cf9bbde90"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-map-money.png",
+      "sha256": "ab52ef9fae606df4fae2bcde7525ae4d088b5c58a78458fe36bf4b90290d4115"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-map-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-map-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-map-official-actions-last.png",
+      "sha256": "9edeee35e49ca52041adaa81d7466d42fb569c8b1faeba9a68096bed2bf12174"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-map-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-map-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-map-official-actions.png",
+      "sha256": "77fbbe4b1750988d4ce25588e605989d2dbcee75faad84ee604d1f5d44ebdcfd"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-meeting-popup.png",
+      "sha256": "d96513cec7134d4f6e1cb81a9c83b34850cc7e6a236ee8bdc43fc00d592df25a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-venue-meeting-panel.png",
+      "sha256": "b064fcbf6e463160b4cf4827413dca2da78d4db7d11e6185c6e50c96d3c8c26a"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-voting-sites-source.png",
+      "sha256": "7472ec2a6482c05e3abd51fb8d3420b0dda6c224e217d8950af080978a127e7c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-desktop-light-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-desktop-light-voting-sites.png",
+      "sha256": "2d76362a4af5908f435c9941396185db2339a71e64448053cf98935df2f1326e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-about-area.png",
+      "sha256": "1f5fbb0ee631468c3a742458080a4bf61a3147c772e7d31ce70f74263f4b9d83"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-current-scope.png",
+      "sha256": "5d1b935368230ba3eed752e2557794151891c786b2d5b4722d825419a72caff0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-money.png",
+      "sha256": "312bece5df25c8e6a80ecd8674391ac16879bb21cb8d79afb84dc9e3382c19fe"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-official-actions-last.png",
+      "sha256": "0bbfcb3780e0aa1a6f543e63e7afef127cb5bfa80c900b0bfd98f5b05bf16596"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-official-actions.png",
+      "sha256": "efba881aef462661d143c26e13d45bcca3990c4c130db4f7ae3e1279f8d9c96d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-positions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-positions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-positions.png",
+      "sha256": "dad922afb12de14ae26b6ca4c706298d9dfb56dfc5bc6d3e684ce0422259fa93"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-outside-coverage-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-outside-coverage-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-voting-outside-coverage-last.png",
+      "sha256": "daa2c068fc6da25e1b536c1391725d95066d6a2e65f4e0a23fda0c1ea3cc0516"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-outside-coverage.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-outside-coverage.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-voting-outside-coverage.png",
+      "sha256": "daa2c068fc6da25e1b536c1391725d95066d6a2e65f4e0a23fda0c1ea3cc0516"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-voting-sites-source.png",
+      "sha256": "6bd1d2a61f3553bdd207ee9257ed0c842158d4a3e8bdd65e3a683fb4f6cfa2cd"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-ballot-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-ballot-voting-sites.png",
+      "sha256": "be4b43b3e012ec10d84b3e3b94f1896dc9ff98db8728c5e289641eab5b315d93"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-civic.png",
+      "sha256": "70ca6d91e7219f994ea869e9f9052b1c2e9ea225c95f95536686e1fe98821d45"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-diligent-tusd1-493-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-diligent-tusd1-493-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-diligent-tusd1-493-agenda-text.png",
+      "sha256": "677e850816b1f06ac42c0874d3529f6f28cbdf9b85fcc65c34a200b7f28a194e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1822-actions.png",
+      "sha256": "56a828557601a56565daa06dc15eef97dbcfe5610c9a2ea3b04f7117ec189047"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1822-agenda-text.png",
+      "sha256": "633bac0b2cdee92bfd043ea584fb72e764e26169413d0da6822fb57d99f71a4c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1822-agenda.png",
+      "sha256": "343bcd630be51d18a6d18ab328926a11bdd47045814c325a5e1a4a927d351a3b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1822-minutes.png",
+      "sha256": "8fa76af4d6dcb27b76b2072b77bf468d676c1fae1b689cea86a71a982425a6b4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1822-rollCalls.png",
+      "sha256": "b81d6fdb67f4443dade9798349285a971563d186e3f5b173ce4c207b7153de75"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1825-actions.png",
+      "sha256": "8c8424c10e67b2ecd0b556729bf28cb2d4a9d318b4d45b83a35ad9c638d3f8f9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1825-agenda-text.png",
+      "sha256": "6ec054f20deecf5f35f2b0259c86d425559f8e0e58773fba2374d3269458a4d6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1825-agenda.png",
+      "sha256": "75a4e7c5237baceb0c1a8b657de229e34cb8dc704838ed9378c1572ded5897da"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1825-rollCalls.png",
+      "sha256": "3c19f14409084ca15009e38b660e260e81df51d4d43e6c84ceb88f4d4f8aad9f"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1827-actions.png",
+      "sha256": "eaa3803c9cca7aef21301e5e90e952af93bc2a5d05f10aec418c8bfddace549c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1827-agenda-text.png",
+      "sha256": "8d5c4f35332a70918ddb2e321fc6304ba82aeec8c5c47bab560c5f2616435aae"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1827-agenda.png",
+      "sha256": "8e756953dcb9e2549970b0157cabbcc4afb734c0623444a8f1d2e29d23a9c753"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-legistar-pima-1827-rollCalls.png",
+      "sha256": "ba545e3e571f388ee1ad881bad5c0280efb33c4cc739317d88c0e01d26a98d06"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-map-money.png",
+      "sha256": "2886a4fdea7e438bb93e824229604fd7cb5787a527281838c56f48308fac6a6b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-map-official-actions-last.png",
+      "sha256": "5333a7c97eeb4baccac5987cd7181b97dbb76274a12193cddf4bbb57d882271c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-map-official-actions.png",
+      "sha256": "33e154298bccb34aa6988ad54a97cd1bcb6242f2ea6e9a53a3fd2896d89efc01"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-positions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-map-positions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-map-positions.png",
+      "sha256": "89185ed54581069fcc512594389137e5a95414b785f3df77755cb560925f06f8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-meeting-popup.png",
+      "sha256": "b75a671df863867ac0a29b20926fd8ef6198529e2728926f7b2201cd15b1ffe9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-sidebar-civic.png",
+      "sha256": "7fd29bb6401336467807a8450bc59394f21bc52b58f5df75a50c5359f2919571"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-venue-meeting-panel.png",
+      "sha256": "f8cf8341197ada4942b27c8d4d7f86e1264a24f511e73aee8f5d1c2691bd6e5b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-outside-coverage-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-outside-coverage-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-voting-outside-coverage-last.png",
+      "sha256": "8d9a7e832297827af0a957208c712a61ac8db3b242480a96dea7425b80cb7262"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-outside-coverage.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-outside-coverage.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-voting-outside-coverage.png",
+      "sha256": "8d9a7e832297827af0a957208c712a61ac8db3b242480a96dea7425b80cb7262"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-voting-sites-source.png",
+      "sha256": "5fe0ec27d8b613b6f0fc22fc4265094e97570c405b6c1e24a9525e0e45b56b45"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-dark-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-dark-voting-sites.png",
+      "sha256": "b42c165fa68aad9f6ca62210016aeb759bd52b2e2cb341e1775705d306e29ce4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-about-area.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-about-area.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-about-area.png",
+      "sha256": "68fc726d2623909e61460954e84ba425d1e2c56270d1183f351be9f1ef89ec46"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-current-scope.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-current-scope.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-current-scope.png",
+      "sha256": "4a0eeeb7f2e1cd15908047d54636360f9d755cc9dcd288863b04ab3ff02019a0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-money.png",
+      "sha256": "0dda8f7f885ed25bda232a7315a583ee3922031e19aa4922d1b26321b4f891e7"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-official-actions-last.png",
+      "sha256": "f8686b81e8622e5bc61d38d8ae7165f2f5d10f6e31aa493381d4f6188d7ea44e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-official-actions.png",
+      "sha256": "928d404ca1298d3f6b9109f9e67c304a599415e6344b0c03c3844fbdf7b13a8d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-positions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-positions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-positions.png",
+      "sha256": "4e0592e12d85d4bc3a3216b236980e445e56030fe25c0890ba8df19633895104"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-outside-coverage-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-outside-coverage-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-voting-outside-coverage-last.png",
+      "sha256": "42fec58c3ef5e93986f66cbe9ee85ee92662b4314c28caead0182d500bfe3ae1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-outside-coverage.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-outside-coverage.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-voting-outside-coverage.png",
+      "sha256": "42fec58c3ef5e93986f66cbe9ee85ee92662b4314c28caead0182d500bfe3ae1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-voting-sites-source.png",
+      "sha256": "423652a1507bf5408841b1d4b72c56d4f2048d8327b6cc4777ba401689723b09"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-ballot-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-ballot-voting-sites.png",
+      "sha256": "137f2eec1d481fa1f026dadb5f59e45d887d54b95a363de4dfb5ca6a33ae9ce4"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-civic.png",
+      "sha256": "f8d98d4a8e5112bf1ec225278eb7563105675cf0ce7a7ce23151db7c58740654"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-diligent-tusd1-493-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-diligent-tusd1-493-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-diligent-tusd1-493-agenda-text.png",
+      "sha256": "1c2b5a892e38e1b4ec084c7a53a57de24c621d1dd08c144333d5ee58e496eb88"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1822-actions.png",
+      "sha256": "0201966c2ff1e69aaa710ccd7a5b5b528ed865a7ce662a37de6d2009f79ef050"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1822-agenda-text.png",
+      "sha256": "6ed8b572c940455a23f14d2b5e69173e5f65002150a2f8dbaa1891bc86f248da"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1822-agenda.png",
+      "sha256": "d6c44c7ffe5fec9e30246f9ab7a1e35781a88f98905379853a984f7a70752749"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-minutes.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-minutes.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1822-minutes.png",
+      "sha256": "1c3af2a9e0c8f0420742d250a323bed76fbe6591c9ed8d816114d2f6d574b274"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1822-rollCalls.png",
+      "sha256": "7bdff9fab26ac1b6db08ee8c293da018ee90c9d01525aad75c133fb3a31b912d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1825-actions.png",
+      "sha256": "9f3e8604951c85886d7254c5aba8684733ebe4107901230d14615be468000a11"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1825-agenda-text.png",
+      "sha256": "c75059626edd7ac4206e77d2adf34c24b5082ef49fdc068673a25ebe4b3dbde6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1825-agenda.png",
+      "sha256": "98e3ec7aed05cf1aa8650ff6346c38765d9a20130dfe83cb63d5cf45379c0ba2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1825-rollCalls.png",
+      "sha256": "a5dee8c3ded4aa0c91699d39a677f093fc741a48e69272e600ead2c4ecd09e94"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1827-actions.png",
+      "sha256": "4afe09ac28fba7dbce6c9cdae7a27601939df795278be57525978ebdd64aeca1"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-agenda-text.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-agenda-text.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1827-agenda-text.png",
+      "sha256": "8c1e5afb53b5837bf76a473eba7a80ba9b42485ecca670e91a8d9a718abcf098"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-agenda.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-agenda.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1827-agenda.png",
+      "sha256": "3c70cdedc25e608724756944b7ae053e337d1c0dbde756e70399c7e7ec620c49"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-rollCalls.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-rollCalls.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-legistar-pima-1827-rollCalls.png",
+      "sha256": "312fc73fda92340f9ad6aade6439467a6df40ae21fb6ff316d0071e0df871d4c"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-map-money.png",
+      "sha256": "d871940bb1e746e0debe5c25c3eeac46200c23d93fe68382624c945f1f5e7205"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-official-actions-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-official-actions-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-map-official-actions-last.png",
+      "sha256": "1660def3a77fb42f4dddc0ca6a7e7c68736b760d1165b2635e4abef5363dab8b"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-official-actions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-official-actions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-map-official-actions.png",
+      "sha256": "ed348b692a68ca1fa8e45db722ea9c936bd9d782fb70b07a3cd1f93d550f580d"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-positions.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-map-positions.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-map-positions.png",
+      "sha256": "49c135dbe0d8231ae342cce5d975c70512dd655bd1743cab045b6e3eb7eacaf2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-meeting-popup.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-meeting-popup.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-meeting-popup.png",
+      "sha256": "2c973d7c900c7b514f88f53540c18b261c02d9e06ccb74869f89fd7423ea68f8"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-sidebar-civic.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-sidebar-civic.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-sidebar-civic.png",
+      "sha256": "d88ec90198b811adc4fee07ecb81c6efb9828b61be70277a4a33a417c4080dd0"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-venue-meeting-panel.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-venue-meeting-panel.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-venue-meeting-panel.png",
+      "sha256": "b1b0fb36ddd81c51b55e7b66c67dc9eebff457f95a74dbea89296a3a7d39262e"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-outside-coverage-last.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-outside-coverage-last.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-voting-outside-coverage-last.png",
+      "sha256": "cd330a37783a09739240f665e33552b40faf29bc036c0cd08c7331cc6283c949"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-outside-coverage.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-outside-coverage.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-voting-outside-coverage.png",
+      "sha256": "cd330a37783a09739240f665e33552b40faf29bc036c0cd08c7331cc6283c949"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-sites-source.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-sites-source.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-voting-sites-source.png",
+      "sha256": "9e59db0239d4b8368d63492fd788aa43f7af42820c38a9b3ec7516fe57592fb9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-sites.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/85701-phone-light-voting-sites.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-phone-light-voting-sites.png",
+      "sha256": "5bec6cb98777f4609f07ce9bafe6cf45651e4ab60cec889ee1d3dad1259fa1b2"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/03255-newbury-unresolved-listings.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/03255-newbury-unresolved-listings.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/03255-newbury-unresolved-listings.png",
+      "sha256": "77b55642f0d15e50aa3c250f3f37ac5e7735ecfbc0f183113bb267eeb4186fe9"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/07866-filed-contact.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/07866-filed-contact.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/07866-filed-contact.png",
+      "sha256": "571ff3dd04360f8965a2dc81412b470a62fc60f93e1aaef736c1041c4e5485eb"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/85701-current-participation.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/85701-current-participation.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-current-participation.png",
+      "sha256": "20040b804240e977ae4c440eaf4d65703f3f2544b42965b7a23e582f8568ccc6"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/85701-hobbs-ballot-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/85701-hobbs-ballot-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-hobbs-ballot-money.png",
+      "sha256": "2b8d0aea90b5c0ecedd65c033e593023d84a5d7268008cf282825f22a2af9599"
+    },
+    {
+      "original": "C:/Users/seanj/dev/meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/85701-hobbs-map-money.png",
+      "aliases": [
+        "../meanwhile-worktrees/neon-cost-b6/screenshots/reader-last-mile/final/85701-hobbs-map-money.png"
+      ],
+      "destination": "reader-last-mile/pr416-31052a93-fb75f654/85701-hobbs-map-money.png",
+      "sha256": "f5c3f06326502edfb64f7887449b09483b1da503e3fb76c106e4c523f8e10ce4"
     }
   ]
 }

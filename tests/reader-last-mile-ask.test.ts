@@ -338,5 +338,12 @@ test("the real Ask route carries Mejia's published filing contact with its own p
   assert.match(record.text, /info@analiliafornj\.com/);
   assert.match(record.text, /13 Municipal Plaza/);
   assert.equal(record.sourceOrg, "Morris County Clerk");
-  assert.ok(record.sourceUrl?.endsWith("2026-general-election-candidates-9012026.pdf"));
+  // The contact's own provenance is the held filing document, whichever edition of the clerk's list the
+  // seed mirrors (the clerk republished it on 2026-09-24), never a pinned filename that goes stale.
+  const held = (JSON.parse(readFileSync("data/states/nj/ballot/nj-morris-2026-contacts.json", "utf8")) as {
+    contacts: { candidacyId: string; sourceUrl: string }[];
+  }).contacts.find((contact) => contact.candidacyId === "ballot-nj-morris:us-house-11:mejia");
+  assert.ok(held);
+  assert.match(held.sourceUrl, /^https:\/\/www\.morriscountyclerk\.org\/.+\.pdf$/);
+  assert.equal(record.sourceUrl, held.sourceUrl);
 });

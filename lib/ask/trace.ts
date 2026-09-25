@@ -146,6 +146,13 @@ export interface AskTrace {
    */
   preloadRetries?: string[];
   /**
+   * Where each essential source was read from on this request: the reader edge
+   * or the database (C20, 2026-09-24). A family the manifest carries is read
+   * from the edge; "DATABASE" names a family the edge did not carry, or one
+   * whose edge fetch failed.
+   */
+  preloadSources?: Record<string, "EDGE" | "DATABASE">;
+  /**
    * Which promoted sources this request loaded (2026-09-24): ESSENTIAL (the
    * registry, the federal directory and the recorded outcomes) on a topic
    * route, ALL otherwise. A fact about our machinery, never about a reader.

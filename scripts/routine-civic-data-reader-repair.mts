@@ -38,6 +38,8 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/e
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
+import { readOutcomeProjection } from "../lib/outcomes/store.ts";
+import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../lib/outcomes/data-plane.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -266,6 +268,32 @@ if (meetingAggregate) {
         }
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
+      // The recorded meeting outcomes and the comment-access rules (C20, 2026-09-24):
+      // from the database they were a cold Ask's two slowest reads (2.0–2.3 s and
+      // 0.6–0.8 s). Each is carried forward while its pointer is still the served
+      // version, and read whole only when it moved.
+      try {
+        const carried = await servedIfCurrent("meeting-outcomes", pointerVersion(PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass, PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope));
+        if (carried !== null) authority["meeting-outcomes"] = { versionId: carried, carried: true };
+        else {
+          const oc = await readOutcomeProjection();
+          if (oc.kind === "PROMOTED" && oc.metadata.versionId) authority["meeting-outcomes"] = { value: oc.value, versionId: oc.metadata.versionId };
+          else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes kind=${oc.kind}\n`);
+        }
+      } catch (error) {
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
+      try {
+        const carried = await servedIfCurrent("comment-access", manualPointer("comment-access"));
+        if (carried !== null) authority["comment-access"] = { versionId: carried, carried: true };
+        else {
+          const ca = await readCuratedReaderProjection("comment-access");
+          if (ca.kind === "PROMOTED" && ca.metadata.versionId) authority["comment-access"] = { value: ca.value, versionId: ca.metadata.versionId };
+          else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access kind=${ca.kind}\n`);
+        }
+      } catch (error) {
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       // Every state's promoted registration (lib/registration/edge.ts): one identity read for every registration
       // pointer decides which states carry by reference; only a state whose version moved is read. The section is

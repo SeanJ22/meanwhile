@@ -18,6 +18,7 @@ import {
   type SittingGap,
 } from "../lib/ask/sitting-answer.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
+import { readableSitting } from "../lib/ask/meeting-time.ts";
 import { citedUrlsFrom, synthesisPrompt, synthesisRequestBody, synthesisSources } from "../lib/ask/synthesize.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
@@ -148,6 +149,21 @@ test("composition steps aside whenever there is something to summarise or a fact
   assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", sittingGaps: [long] }), null, "the gap that IS the answer must fit, or the model writes it");
   const items = composeSittingAnswer({ ...base, shape: "MEETING_TIME", records: [RECORDS[0], item], sittingGaps: [] });
   assert.match(items?.answer ?? "", /The "City Council Study Session" agenda we hold lists 1 item\./, "a meeting-time answer counts, never summarises, held items");
+});
+
+test("a date-only posting is stated as its date, never as the midnight it is stored at", () => {
+  // Chandler's council listing (production, 2026-09-25) carries a date and no time.
+  const dayOnly: ComposableSitting = { id: "c1", title: "City Council", startsAt: "2026-10-12T00:00:00-07:00", timeZone: "America/Phoenix", startPrecision: "DAY", status: "SCHEDULED" };
+  const records = [meetingRecord(dayOnly, "https://chandler.example.gov/c1")];
+  const composed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Chandler", sittings: [dayOnly], records, sittingGaps: [], now: NOW });
+  assert.equal(composed?.answer, "The next Chandler meeting is on Monday, October 12th, 2026, listed as \"City Council\". Its start time has not been posted.");
+  assert.doesNotMatch(composed?.answer ?? "", /12:00 AM/);
+  // The record text the model reads says the same, through the same function.
+  assert.equal(readableSitting(dayOnly), "Monday, October 12th, 2026 (start time not posted)");
+  assert.equal(readableSitting({ ...dayOnly, startPrecision: undefined }), "Monday, October 12th, 2026 at 12:00 AM MST", "a posted time is still printed");
+  // Beside a timed sitting, a date-only one is "also that day", never "earlier".
+  const withTimed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Mesa", sittings: [STUDY, { ...dayOnly, startsAt: "2026-09-28T00:00:00-07:00", id: "m9" }], records: [RECORDS[0], meetingRecord({ ...dayOnly, id: "m9" }, "https://mesa.example.gov/m9")], sittingGaps: [], now: NOW });
+  assert.match(withTimed?.answer ?? "", /Also that day: "City Council" \(start time not posted\)\./);
 });
 
 test("with no sitting, the named gap is the whole answer", () => {

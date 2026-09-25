@@ -2,7 +2,7 @@ import { formatDateLong } from "../text/format-date.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import type { LexicalShape } from "./lexical-reading.ts";
 import { overLengthBudget } from "./length-contract.ts";
-import { localDate, localTime, localWeekday, zoneOf } from "./meeting-time.ts";
+import { localDate, localTime, localWeekday, startTimePosted, zoneOf } from "./meeting-time.ts";
 import type { ValidationVerdict } from "./validate.ts";
 
 /**
@@ -44,7 +44,14 @@ export interface ComposableSitting {
   title: string;
   startsAt: string;
   timeZone?: string | null;
+  /** `DAY`: a date-only posting — the date is stated and no time is printed. */
+  startPrecision?: "MINUTE" | "DAY";
   status: string;
+}
+
+/** " at 5:45 PM MST", or nothing for a date-only posting (its midnight is never a time). */
+function atTime(sitting: ComposableSitting): string {
+  return startTimePosted(sitting) ? ` at ${localTime(sitting)}` : "";
 }
 
 /**
@@ -116,7 +123,9 @@ export function plainGapStatement(statement: string, zone: string | null): strin
 }
 
 function listed(sittings: readonly ComposableSitting[]): string {
-  const parts = sittings.map((sitting) => `${quoted(sitting.title)} at ${localTime(sitting)}`);
+  const parts = sittings.map((sitting) => startTimePosted(sitting)
+    ? `${quoted(sitting.title)} at ${localTime(sitting)}`
+    : `${quoted(sitting.title)} (start time not posted)`);
   return parts.length <= 2 ? parts.join(" and ") : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
 }
 
@@ -169,19 +178,25 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     if (!input.sittings.every((sitting) => meetingRecords.has(sitting.id))) return null;
     const upcoming = Date.parse(chosen.startsAt) >= input.now;
     const lead = upcoming
-      ? `The next ${subjectName} meeting is on ${dayOf(chosen)} at ${localTime(chosen)}, listed as ${quoted(chosen.title)}`
-      : `The most recent ${subjectName} meeting we hold was on ${dayOf(chosen)} at ${localTime(chosen)}, listed as ${quoted(chosen.title)}`;
+      ? `The next ${subjectName} meeting is on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`
+      : `The most recent ${subjectName} meeting we hold was on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`;
     if (!add(lead)) return null;
+    if (!startTimePosted(chosen)) add("Its start time has not been posted");
     for (const sitting of input.sittings) {
       const url = meetingRecords.get(sitting.id)?.sourceUrl;
       if (url && !cited.includes(url)) cited.push(url);
     }
-    const later = sameDay.filter((sitting) => sitting.startsAt > chosen.startsAt);
-    const earlier = sameDay.filter((sitting) => sitting.startsAt < chosen.startsAt);
-    const alongside = sameDay.filter((sitting) => sitting.startsAt === chosen.startsAt);
+    /* Before/after is only meaningful between two posted times; a date-only
+       sitting (either side) is simply "also that day". */
+    const timed = startTimePosted(chosen) ? sameDay.filter(startTimePosted) : [];
+    const untimed = sameDay.filter((sitting) => !timed.includes(sitting));
+    const later = timed.filter((sitting) => sitting.startsAt > chosen.startsAt);
+    const earlier = timed.filter((sitting) => sitting.startsAt < chosen.startsAt);
+    const alongside = timed.filter((sitting) => sitting.startsAt === chosen.startsAt);
     if (alongside.length) add(`At the same time: ${listed(alongside)}`);
     if (later.length) add(`Later that day: ${listed(later)}`);
     if (earlier.length) add(`Earlier that day: ${listed(earlier)}`);
+    if (untimed.length) add(`Also that day: ${listed(untimed)}`);
     if (input.shape === "MEETING_TIME") {
       // Held agenda items, counted per sitting: two sittings one day are two dockets.
       for (const sitting of input.sittings) {

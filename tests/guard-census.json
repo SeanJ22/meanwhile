@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 822,
-    "named": 7938,
+    "named": 7939,
     "dynamic": 31
   },
   "files": {
@@ -1284,6 +1284,7 @@
         "ROUTE: the same question over unchanged records is served from the cache, with no new call",
         "a citation is a source number, mapped back to the pack's own URL; an unknown number never passes",
         "a composed answer ships only on a passing verdict, against the SAME validator",
+        "a date-only posting is stated as its date, never as the midnight it is stored at",
         "a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap",
         "composition steps aside whenever there is something to summarise or a fact it cannot state",
         "gap wording is kept; only a machine timestamp is spelled out in the body's zone",

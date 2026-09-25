@@ -1,6 +1,6 @@
 {
-  "exactHead": "ae0e18f5ca12129b92ce3d40050b956237a21c9c",
-  "buildId": "zko_LtZSbyFf2L04SQz8x",
+  "exactHead": "92f2c370662127b74ab2ee1b1b795f22510b3c73",
+  "buildId": "A-irs4JRGJLaIszg3aHPy",
   "sourceHashes": {
     "lib/routing/everyday.ts": "b00840fba176f775797dc300c5121285e03b49826dd589a95bf6385bb92600c5",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
@@ -187,7 +187,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "7ec81992880a71c8e383ac6ed8522f7835ed8dfd8759473a47b3b813a37d6b28",
+      "canonicalAnswerSha256": "4f7833c586b90a5db4e5e699aca0359d9aaf15956c2a34f665067796f4cde94a",
       "renderedTextSha256": "9c0fabfbac5455453cb94d888dd45ec73e19bd9d3c4c90226a835f923fedd50b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -235,7 +235,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "ad30546f961ddde3ce4af863c687ac705489f5cd2e5d190e2e2cb1722e816f25",
+      "canonicalAnswerSha256": "a64618626ddb643f13c8b414c0aaa6bd9c00f2b89947cd048ba628e4a5a01a11",
       "renderedTextSha256": "6387e74e9d8d6777f5e547e77a6740b6d1269bff618508e8e563ed77d6800fb9",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -1837,7 +1837,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "18fe2cabb371072757b2330759188d77a88d51f3e41a06ebf1c9b71dfd577db1",
+      "canonicalAnswerSha256": "32216eaba8a2a031f18c8774595614a45275ad0c21c28b19a69736557290ee46",
       "renderedTextSha256": "879a7fbaf65cdcb96a1402b104e1d0383cee6af889df98e8a4d3fa12ec895320",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -1885,7 +1885,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "578829d553c633068388f8da10b28003c8da34c2ebc71ab2dbc9498a3d801f69",
+      "canonicalAnswerSha256": "4795cf1f1116588b13b24992d1b50eff4925f744cd126f5f5a8832b637b76fed",
       "renderedTextSha256": "d22d14f403dc38dd6c6d9bb51e7c0a79c84938ffd674d1ffa9cb08ad1dc76848",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -2425,7 +2425,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "bad00d4ae777744f44d0496523850a1c5cbbe846fba0024f96fb44d2733d37c4",
+      "canonicalAnswerSha256": "b52b359e225007208ebe57284761b8f6ff5de1beda9166e026ff88bfdd2c6bf3",
       "renderedTextSha256": "b978fc8ee7074341658b9bdc64b6382813b61089e2263e393e19fba8cd4ad272",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -2473,7 +2473,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "1676f971eb29ac8ad8be5e82efd29c384eb29b4c8e0027e7393dc1a58c9d5f0d",
+      "canonicalAnswerSha256": "476e90e1beb1784f2574c751246b43ab6309c15781e1909ce83294854bd28230",
       "renderedTextSha256": "e22a4bcb33a69312fb25398f69e29f66e9c684301fd3c1a2b76dc2ebf0302885",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },

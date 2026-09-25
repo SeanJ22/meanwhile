@@ -38,6 +38,22 @@ import {
   parseReaderProjectionReadback,
 } from "./reader-readback.ts";
 import {
+  UNCHANGED_CONFIRMATION_PREFIX,
+  isUnchangedConfirmationDetail,
+  latestUnchangedConfirmation,
+  parseUnchangedConfirmation,
+  type UnchangedConfirmation,
+} from "./unchanged-confirmation.ts";
+
+/**
+ * Evidence appended to a PROMOTED candidate that is not a disposition of it: a
+ * Reader readback, or an unchanged confirmation and its sources event. Neither
+ * is a source-state transition, and neither is a second promotion.
+ */
+function isNonDispositionEvidence(detail: string): boolean {
+  return isReaderProjectionReadbackDetail(detail) || isUnchangedConfirmationDetail(detail);
+}
+import {
   isTrustedLkgImportCandidate,
   trustedLkgImportEvidenceIssue,
 } from "./trusted-lkg-import.ts";
@@ -189,7 +205,7 @@ export interface ExactOutcomeEvent {
   readonly id: string;
   readonly candidateId: string;
   readonly sequence: number;
-  readonly domain: "SOURCE_STATE" | "READER_READBACK";
+  readonly domain: "SOURCE_STATE" | "READER_READBACK" | "UNCHANGED_CONFIRMATION";
   readonly state: Observation<CandidateState>;
   readonly at: string;
   readonly detail: string;
@@ -532,7 +548,7 @@ function sourceAttemptTime(
   nowMs: number,
 ): Observation<string> {
   const sourceEvents = events.filter((event) =>
-    event.candidateId === row.id && !isReaderProjectionReadbackDetail(event.detail));
+    event.candidateId === row.id && !isNonDispositionEvidence(event.detail));
   if (sourceEvents.length === 0) {
     return notRecorded(`Candidate ${row.id} has no append-only source-state event, so its attempt time is not recorded.`);
   }
@@ -581,7 +597,7 @@ export function adjacentSourceStateTransitionIssue(
   events: readonly Pick<RoutineCandidateEventRow, "sequence" | "state" | "detail">[],
 ): string | null {
   const ordered = events
-    .filter((event) => !isReaderProjectionReadbackDetail(event.detail))
+    .filter((event) => !isNonDispositionEvidence(event.detail))
     .sort((left, right) => left.sequence - right.sequence);
   const first = ordered[0];
   if (first) {
@@ -637,7 +653,7 @@ function acquisitionTimeAfterValidationRefusalIssue(
   const attemptAt = sourceAttemptTime(row, events, nowMs);
   if (attemptAt.kind !== "MEASURED") return attemptAt.detail;
   const sourceEvents = events
-    .filter((event) => event.candidateId === row.id && !isReaderProjectionReadbackDetail(event.detail))
+    .filter((event) => event.candidateId === row.id && !isNonDispositionEvidence(event.detail))
     .sort((left, right) => left.sequence - right.sequence);
   const terminalEvents = sourceEvents.filter((event) => {
     const state = candidateState(event.state);
@@ -819,7 +835,9 @@ function exactEvent(row: RoutineCandidateEventRow): ExactOutcomeEvent {
   const state = candidateState(row.state);
   return {
     ...row,
-    domain: isReaderProjectionReadbackDetail(row.detail) ? "READER_READBACK" : "SOURCE_STATE",
+    domain: isReaderProjectionReadbackDetail(row.detail)
+      ? "READER_READBACK"
+      : isUnchangedConfirmationDetail(row.detail) ? "UNCHANGED_CONFIRMATION" : "SOURCE_STATE",
     state: state === null
       ? unknown(`Event ${row.id} carries an unrecognised state ${row.state}.`)
       : measured(state),
@@ -951,12 +969,12 @@ function pointerProof(
   const promotionEvents = events.filter((event) =>
     event.candidateId === promotion.currentVersionId &&
     event.state === "PROMOTED" &&
-    !isReaderProjectionReadbackDetail(event.detail));
+    !isNonDispositionEvidence(event.detail));
   const candidateEvents = events.filter((event) => event.candidateId === promotion.currentVersionId);
   // Reader delivery is a separate failure domain. A malformed/future Reader
   // receipt makes delivery UNKNOWN below; it must not invalidate a valid
   // source promotion or reclassify that source as failed.
-  const sourceEvents = candidateEvents.filter((event) => !isReaderProjectionReadbackDetail(event.detail));
+  const sourceEvents = candidateEvents.filter((event) => !isNonDispositionEvidence(event.detail));
   const unreadableSourceStates = sourceEvents.filter((event) => candidateState(event.state) === null);
   if (unreadableSourceStates.length > 0) reasons.push(`${unreadableSourceStates.length} source event state(s) are unrecognised`);
   const invalidSequences = sourceEvents.filter((event) => !Number.isInteger(event.sequence) || event.sequence < 1);
@@ -1085,7 +1103,7 @@ function readerProjectionProof(
   const atomicPromotion = events.find((event) =>
     event.candidateId === canonical.value.versionId &&
     event.state === "PROMOTED" &&
-    !isReaderProjectionReadbackDetail(event.detail));
+    !isNonDispositionEvidence(event.detail));
   if (!atomicPromotion || latest.sequence <= atomicPromotion.sequence) {
     return unknown("The latest Reader-projection readback does not follow the canonical atomic promotion event.");
   }
@@ -1139,9 +1157,14 @@ function freshness(
   contract: ObservableCivicDataContract,
   canonicalCandidate: RoutineCandidateRow | undefined,
   nowMs: number,
+  confirmation: UnchangedConfirmation | null = null,
 ): { readonly state: FreshnessState; readonly detail: string } {
   if (!canonicalCandidate) return { state: "UNKNOWN", detail: "No proven canonical promotion is recorded, so production freshness cannot be measured." };
-  const succeededAt = Date.parse(canonicalCandidate.retrievedAt);
+  // A confirmed re-check re-read the source and found the canonical version current.
+  const succeededAt = Math.max(
+    Date.parse(canonicalCandidate.retrievedAt),
+    confirmation ? Date.parse(confirmation.retrieval.retrievedAt) : Number.NEGATIVE_INFINITY,
+  );
   if (!Number.isFinite(succeededAt)) return { state: "UNKNOWN", detail: "The canonical acquisition time is unreadable." };
   if (succeededAt > nowMs) return { state: "UNKNOWN", detail: "The canonical acquisition time is in the future relative to this observation." };
   if (authorityOrigin(canonicalCandidate) === "TRUSTED_LKG_IMPORT") {
@@ -1174,6 +1197,7 @@ function nextDue(
   nowMs: number,
   latestOrderIssue: string | null = null,
   sittingHot?: boolean,
+  confirmation: UnchangedConfirmation | null = null,
 ): Observation<string> {
   if (isManualContract(contract)) return notApplicable("Manual production contract: no next-due clock exists.");
   if (latest && authorityOrigin(latest) === "TRUSTED_LKG_IMPORT") {
@@ -1192,9 +1216,11 @@ function nextDue(
   if (acquisition.kind !== "MEASURED" && !containedTemporalRefusal) {
     return unknown(`The next due time cannot be proven because ${acquisition.detail}`);
   }
-  const attempted = Date.parse(attemptedAt.value);
+  const confirmedMs = confirmation ? Date.parse(confirmation.observedAt) : Number.NEGATIVE_INFINITY;
+  const attempted = Math.max(Date.parse(attemptedAt.value), confirmedMs);
   const succeededAt = lastPromoted ? sourceAttemptTime(lastPromoted, events, nowMs) : null;
-  const succeeded = succeededAt?.kind === "MEASURED" ? Date.parse(succeededAt.value) : Number.NaN;
+  const newestSuccess = Math.max(succeededAt?.kind === "MEASURED" ? Date.parse(succeededAt.value) : Number.NEGATIVE_INFINITY, confirmedMs);
+  const succeeded = Number.isFinite(newestSuccess) ? newestSuccess : Number.NaN;
   if (!Number.isFinite(succeeded) || attempted > succeeded) {
     return measured(new Date(attempted + contract.retry.afterMs).toISOString());
   }
@@ -1375,6 +1401,17 @@ function latestAttemptTime(
     );
   }
   return measured(new Date(latestMs).toISOString());
+}
+
+/**
+ * A confirmation is a successful source acquisition that wrote no candidate.
+ * It moves a recorded or absent time forward. An unprovable one stays
+ * unprovable: newer evidence never hides a gap.
+ */
+function withConfirmation(observation: Observation<string>, confirmation: UnchangedConfirmation | null): Observation<string> {
+  if (confirmation === null || observation.kind === "UNKNOWN") return observation;
+  if (observation.kind === "MEASURED" && Date.parse(observation.value) >= Date.parse(confirmation.observedAt)) return observation;
+  return measured(new Date(Date.parse(confirmation.observedAt)).toISOString());
 }
 
 function latestSourceAttempt(
@@ -1672,7 +1709,7 @@ function currentCandidateEventIssue(
   nowMs: number,
 ): string | null {
   const sourceEvents = events.filter((event) =>
-    event.candidateId === candidate.id && !isReaderProjectionReadbackDetail(event.detail));
+    event.candidateId === candidate.id && !isNonDispositionEvidence(event.detail));
   const attemptAt = sourceAttemptTime(candidate, events, nowMs);
   if (attemptAt.kind !== "MEASURED") return attemptAt.detail;
   const ordered = [...sourceEvents].sort((left, right) => left.sequence - right.sequence);
@@ -1747,18 +1784,18 @@ function historyWindow(
   const invalidCandidateTimes = candidateAttemptTimes.filter(({ row, attemptedAt }) =>
     candidateEvidenceInWindow.includes(row) && attemptedAt.kind !== "MEASURED");
   const invalidEventTimes = events.filter((row) => {
-    if (isReaderProjectionReadbackDetail(row.detail)) return false;
+    if (isNonDispositionEvidence(row.detail)) return false;
     const at = Date.parse(row.at);
     return !Number.isFinite(at) || at > nowMs;
   });
   const unreadableEventStates = exactEvents.filter((event) =>
-    !isReaderProjectionReadbackDetail(event.detail) && event.state.kind !== "MEASURED");
+    !isNonDispositionEvidence(event.detail) && event.state.kind !== "MEASURED");
   const promotions = exactEvents.filter((event) =>
     event.state.kind === "MEASURED" &&
     event.state.value === "PROMOTED" &&
-    !isReaderProjectionReadbackDetail(event.detail));
+    !isNonDispositionEvidence(event.detail));
   const refusals = exactEvents.filter((event) =>
-    !isReaderProjectionReadbackDetail(event.detail) &&
+    !isNonDispositionEvidence(event.detail) &&
     event.state.kind === "MEASURED" &&
     terminalRefusalState(event.state.value));
   const terminalEvents = [...promotions, ...refusals];
@@ -1766,7 +1803,7 @@ function historyWindow(
   for (const event of terminalEvents) terminalEventCounts.set(event.candidateId, (terminalEventCounts.get(event.candidateId) ?? 0) + 1);
   const duplicateTerminalEvents = [...terminalEventCounts].filter(([, count]) => count > 1);
   const allTerminalCandidateIds = new Set(exactEvents.flatMap((event) =>
-    !isReaderProjectionReadbackDetail(event.detail) &&
+    !isNonDispositionEvidence(event.detail) &&
     event.state.kind === "MEASURED" && (
       event.state.value === "PROMOTED" || terminalRefusalState(event.state.value)
     )
@@ -1824,7 +1861,31 @@ function historyWindow(
     const proof = matches[0];
     return proof.kind === "MEASURED" ? measured(proof.value.outcome.outcome) : carryGap(proof);
   };
-  const attempts = inWindow.map((row) => attemptMember(row, events, nowMs, canonicalOutcomeForAttempt(row)));
+  // A confirmed re-check is a successful source acquisition that wrote no
+  // candidate: one attempt per confirmation receipt in the window, on the
+  // version it confirmed, with an UNCHANGED outcome (never a promotion).
+  const confirmationAttempts = events.flatMap((event): AttemptHistoryMember[] => {
+    if (event.state !== "PROMOTED" || !event.detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX)) return [];
+    const at = Date.parse(event.at);
+    if (!Number.isFinite(at) || at < sinceMs || at > nowMs) return [];
+    const confirmation = parseUnchangedConfirmation(event.detail);
+    const row = candidates.find((candidate) => candidate.id === event.candidateId);
+    if (confirmation === null || !row || confirmation.versionId !== row.id) return [];
+    const receipt = parseValidationReceipt(row.validationReceipt);
+    return [{
+      candidateId: row.id,
+      attemptedAt: measured(iso(event.at)!), // the recorded event instant (checked finite above)
+      state: measured("PROMOTED" as const),
+      acquisitionSucceeded: measured(true),
+      authorityOrigin: "LIVE_SOURCE_ACQUISITION",
+      validation: receipt ? measured(receipt) : unknown(`Confirmed version ${row.id} has no readable validation receipt.`),
+      canonicalOutcome: measured("UNCHANGED" as const),
+    }];
+  });
+  const attempts = [
+    ...inWindow.map((row) => attemptMember(row, events, nowMs, canonicalOutcomeForAttempt(row))),
+    ...confirmationAttempts,
+  ];
   const attemptCount: DrilldownCount<AttemptHistoryMember> = invalidCandidateTimes.length > 0 || invalidEventTimes.length > 0
     ? {
         kind: "UNKNOWN",
@@ -1947,14 +2008,27 @@ function projectContract(
   const canonicalCandidate = canonical.kind === "MEASURED"
     ? candidates.find((row) => row.id === canonical.value.versionId)
     : undefined;
-  const fresh = freshness(contract, canonicalCandidate, nowMs);
+  // The canonical version's newest unchanged confirmation: a later successful
+  // re-check that wrote no candidate (RULING 283's receipted no-change).
+  const confirmation = canonical.kind === "MEASURED"
+    ? latestUnchangedConfirmation(
+        events.filter((event) => event.candidateId === canonical.value.versionId && event.state === "PROMOTED"),
+        canonical.value.versionId,
+      )
+    : null;
+  const fresh = freshness(contract, canonicalCandidate, nowMs, confirmation);
   const readerVisible = readerProjectionProof(contract, canonical, events, currentReaderBuild, nowMs);
   const operation = latestOrderIssue === null
     ? operationalState(contract, latest, candidates, canonicalCandidate, canonical, readerVisible, fresh.state, events, nowMs)
     : { state: "UNKNOWN" as const, detail: latestOrderIssue };
   const latestAttempt = latest ? sourceAttemptTime(latest, events, nowMs) : null;
+  const confirmedLatest = confirmation !== null && latestOrderIssue === null && (
+    latestAttempt?.kind !== "MEASURED" || Date.parse(confirmation.observedAt) >= Date.parse(latestAttempt.value)
+  );
   const changes: RoutineContractObservation["latestChanges"] = latestOrderIssue !== null
     ? unknown(latestOrderIssue)
+    : confirmedLatest
+      ? measured({ outcome: "UNCHANGED" as const, added: [], changed: [], removed: [] })
     : latest
       ? exactChanges(latest, latestAttempt?.kind === "MEASURED" ? latestAttempt.value : latest.retrievedAt)
       : notRecorded("No attempt is recorded, so no change set is recorded.");
@@ -1969,7 +2043,9 @@ function projectContract(
       ? exactRefused(latest, nowMs, events, latestAttempt?.kind === "MEASURED" ? latestAttempt.value : latest.retrievedAt)
       : notRecorded("No attempt is recorded, so no refusal outcome is recorded.");
   let latestCanonicalOutcome: Observation<"CHANGED" | "UNCHANGED">;
-  if (latestOrderIssue !== null) {
+  if (confirmedLatest) {
+    latestCanonicalOutcome = measured("UNCHANGED");
+  } else if (latestOrderIssue !== null) {
     latestCanonicalOutcome = unknown(`The latest production outcome cannot be identified because ${latestOrderIssue}`);
   } else if (!latest || changes.kind === "NOT_RECORDED") {
     latestCanonicalOutcome = notRecorded("The latest attempt did not establish a persisted CHANGED or UNCHANGED production outcome.");
@@ -2064,8 +2140,8 @@ function projectContract(
     window.id,
     historyWindow(window.id, window.durationMs, nowMs, candidates, events),
   ])) as unknown as Readonly<Record<HistoryWindowId, RoutineHistoryWindow>>;
-  const lastAttemptedAcquisition = latestSourceAttempt(sourceAcquisitions);
-  const lastSuccessfulAcquisition = latestSuccessfulSourceAcquisition(sourceAcquisitions);
+  const lastAttemptedAcquisition = withConfirmation(latestSourceAttempt(sourceAcquisitions), confirmation);
+  const lastSuccessfulAcquisition = withConfirmation(latestSuccessfulSourceAcquisition(sourceAcquisitions), confirmation);
   return {
     contractId: contract.id,
     sourceId: contract.sourceId,
@@ -2089,7 +2165,7 @@ function projectContract(
       description: isManualContract(contract) ? "explicit owner invocation only" : contract.cadence.description,
       activeEveryMs: isManualContract(contract) ? 0 : cadenceMsAt(contract, nowMs),
       retryDescription: isManualContract(contract) ? "explicit owner rerun after inspecting the durable refusal" : contract.retry.description,
-      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot),
+      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot, confirmation),
       operationalState: operation.state,
       operationalDetail: operation.detail,
       freshness: fresh.state,

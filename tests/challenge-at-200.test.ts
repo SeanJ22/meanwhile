@@ -153,6 +153,19 @@ test("NHHUNT: the modern managed challenge is caught at 30 KB, not missed", () =
   }
 });
 
+test("A PRECONNECT HINT IS NOT A CHALLENGE: a real page that only warms the Turnstile host stays a page", () => {
+  // Chandler, AZ's City Clerk page (2026-09-24) carries this hint for its forms and 33 real sittings.
+  const filler = "<p>2026 City Council Meeting Dates</p>".repeat(900);
+  const page = `<html><head><link rel="preconnect" href="https://challenges.cloudflare.com" /></head><body>${filler}</body></html>`;
+  assert.equal(challengeIn(page), null);
+  assert.equal(challengeIn(`<html><head><link rel="dns-prefetch" href="//challenges.cloudflare.com"></head><body>${filler}</body></html>`), null);
+  assert.equal(
+    challengeIn(`<html><body><script async src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>${filler}</body></html>`),
+    "Cloudflare managed challenge",
+    "the host loaded as a script is still the mark",
+  );
+});
+
 test("NHHUNT: the ambiguous marks keep their floor, so a real page stays a page", () => {
   /*
    * Cloudflare's JS-detections beacon, which it injects into ORDINARY pages.

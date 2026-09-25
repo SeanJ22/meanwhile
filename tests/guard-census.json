@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 770,
-    "named": 7553,
+    "files": 775,
+    "named": 7589,
     "dynamic": 30
   },
   "files": {
@@ -1424,6 +1424,7 @@
         "ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance",
         "ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)",
         "ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation",
+        "TRACE, C20: every read inside sourcePreloads is timed by name, on an early return too",
         "TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, not by a fresh route that carries none of them",
         "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
         "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
@@ -2329,6 +2330,15 @@
       ],
       "dynamic": 0
     },
+    "tests/carried-venue-placement.test.ts": {
+      "names": [
+        "CARRIED-PLACE · (a) the measured case: the carried 23 September session is placed at the reviewed venue for its own words, and stays carried",
+        "CARRIED-PLACE · (b) with no reviewed venue for its words, or no venues handed in, the carried row keeps its stated words and no pin",
+        "CARRIED-PLACE · (c) only the row's own division places it; unstated, online, placed and division-less rows are returned as they were",
+        "CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin"
+      ],
+      "dynamic": 0
+    },
     "tests/carry-pins.test.ts": {
       "names": [
         "R47: a held answer NEVER carries across a zip change",
@@ -2427,6 +2437,7 @@
         "0C: a long document quoting the phrase is still a document",
         "0C: a real page is never called a challenge",
         "0C: an ordinary 200 still comes back exactly as before",
+        "A PRECONNECT HINT IS NOT A CHALLENGE: a real page that only warms the Turnstile host stays a page",
         "NHHUNT: the ambiguous marks keep their floor, so a real page stays a page",
         "NHHUNT: the modern managed challenge is caught at 30 KB, not missed"
       ],
@@ -2728,6 +2739,12 @@
         "PRDY-1: executable code above the runner is the real stale case, undiminished",
         "PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a real repository, with no network",
         "PRDY-1: unclassifiable and mixed commits are executable; the walk bound refuses rather than guesses"
+      ],
+      "dynamic": 0
+    },
+    "tests/cold-boot.test.ts": {
+      "names": [
+        "a cold server instance loads only the route it was asked for: Next's preload of every route stays off"
       ],
       "dynamic": 0
     },
@@ -5996,6 +6013,7 @@
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
         "a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof",
+        "a meeting re-check that finds no new fact is confirmed on the pointed version; a real change still promotes",
         "a pass that records readbacks and republishes the prepared snapshot composes every partition once",
         "a semantic refusal holds only the exact source/body partition",
         "a successful thin response retains unexplained in-window rows with exact held evidence",
@@ -6038,6 +6056,13 @@
       ],
       "dynamic": 0
     },
+    "tests/meeting-wiring-authority.test.ts": {
+      "names": [
+        "every https route a meeting wiring row configures inherits meetings-public-bodies authority",
+        "the two Newbury publications C9 wired are authorized routes"
+      ],
+      "dynamic": 0
+    },
     "tests/meetings-data-plane-cutover.test.ts": {
       "names": [
         "all assigned runtime consumers use the promoted meetings projection",
@@ -6057,6 +6082,7 @@
     },
     "tests/meetings-discovery-executor.test.ts": {
       "names": [
+        "A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out a 90-day recheck unattestable (NH330)",
         "A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN",
         "A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE",
         "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
@@ -6070,6 +6096,7 @@
         "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
         "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
         "PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall",
+        "PROVENANCE (NH330): the walk records where the address came from, each redirect to the homepage, and a withdrawn route's own 404 as vaulted evidence",
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
@@ -7201,6 +7228,7 @@
     "tests/permanent-civic-data-plane-pdc8.test.ts": {
       "names": [
         "PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG",
+        "PDC-8 NJ filing: the clerk's unstamped 2026-09-18 revision is a current document set, to the validator as to the selector",
         "PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG",
         "PDC-8 dotgov: a later registry commit whose hash sorts lower still promotes; the hash is an identity, not an order",
         "PDC-8 meetings: changed rows promote with exact added/changed/removed/held evidence; source-auth failure holds LKG",
@@ -8994,6 +9022,7 @@
         "a malformed exact receipt cannot suppress a valid prior supervisor attempt",
         "an all-unavailable provider rotates deterministically across frozen admission slots",
         "an exact task receipt excludes that task from the supervisor-only attempt clock",
+        "each Google calendar is its own lane; every other host keeps one lane per hostname",
         "frontier configuration and identities fail closed",
         "one pass admits one least-recently-considered task per provider domain",
         "repeated supervisor faults rotate fairly within one provider without changing other domains",
@@ -9056,7 +9085,8 @@
         "PDC-13: the deterministic Admin render contract leads with canonical operations and refuses false zeroes",
         "PDC-13: the exact 30d window does not truncate the full meeting-partition volume",
         "PDC-13: the pure source-state classifier refuses skipped, revived, and repeated dispositions",
-        "PDC-13: tied latest attempts cannot be ordered by UUID or database return order"
+        "PDC-13: tied latest attempts cannot be ordered by UUID or database return order",
+        "a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion"
       ],
       "dynamic": 0
     },
@@ -9172,12 +9202,20 @@
       "names": [
         "a MEETING clock reports its sitting starts, and the pointed success as its store-observed first event",
         "a MEETING pointer's sitting starts are built in Postgres; the promoted payload never leaves the database",
+        "a confirmation's runner receipt is proved from the pointer and its newest confirmation, never the dataset",
+        "a confirmed version is as fresh as its confirmation, on the cold, warm and batch reads",
         "a live candidate's proof reads neither its identity set nor its change set and records, and decides the same",
+        "a trusted-LKG import is never confirmed: a live read of it promotes instead",
         "an attested version is served from its pointer alone; any mismatch runs the full proof",
+        "an unchanged re-check is a confirmation on the pointed version: readers keep it, the clock moves",
         "attestations parse whole or not at all",
         "both stores' clocks read through the narrowed view, never a whole row",
+        "pointer reads carry the newest confirmation from Postgres beside the pointer, never a payload",
+        "readback inspection and the proof pin read one narrow row set, never a version's gathered confirmations",
+        "the Postgres confirmation is one guarded insert, and the clock reads one event detail for it",
         "the clock view names exactly the fields the clock proves; widening it is a visible cost decision",
         "the memory store's clock, read through the view, keeps its attempt and success instants",
+        "the narrowed event reads are chosen in Postgres: one newest readback per version, the move alone",
         "the narrowed view decides exactly what the whole candidate decides",
         "the proof view is built in Postgres; the identity column and a live row's change set, records and identities never leave",
         "the routine clock builds its candidate view in Postgres; the payload and read model never leave the database",
@@ -9295,6 +9333,17 @@
         "standing runtime preserves configured GitHub credentials without invoking the CLI",
         "standing runtime reuses only the existing github.com CLI login in memory",
         "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
+      ],
+      "dynamic": 0
+    },
+    "tests/schedulepage-chandler.test.ts": {
+      "names": [
+        "FETCH: one day file per scheduled date inside the window, and a refused day keeps its sitting date-only",
+        "NORMALIZE: a scheduled date the day file answers becomes its Council sittings with time and place; one it does not stays date-only",
+        "THE DAY FILE: each Council sitting the city posted for a scheduled date, with its own start and street address; the city's other events are not the Council's",
+        "no time is claimed: the table states none, and the page's 'usually' sentence is not the section's",
+        "normalize serves the Council's sittings in the window, on the city's own host, cited to its page",
+        "the section scope reads the schedule table's 33 dates, and only them"
       ],
       "dynamic": 0
     },
@@ -10059,6 +10108,7 @@
         "New Jersey official roster requires 120 unique BioLink identities and exact 2/1 district topology",
         "New Jersey roster refuses malformed IDs, duplicates, vacancies, and truncation",
         "an Arizona document failure is durable and cannot replace either its LKG or New Jersey's disposition",
+        "an hourly New Jersey roster re-read of the same bytes is confirmed, not re-promoted, and its receipt names the pointed version",
         "the standing AZ/NJ adapter builds official complete-roster candidates instead of horizon probes"
       ],
       "dynamic": 0
@@ -10134,6 +10184,17 @@
         "an absence is never a zero, and a filing always carries a figure",
         "every claimed target is a real candidacy, and no federal seat is claimed",
         "the NH snapshot exists and is the shape the loader names"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-record-observation-stamps.test.ts": {
+      "names": [
+        "a re-check whose cited roster moved is not a no-change, even when its records are unchanged",
+        "a roll-call re-read that differs only in each roll's retrievedAt is unchanged; a tally is a change",
+        "a roster fact is still a change, and the persisted before and after keep their stamps",
+        "a roster re-read whose members differ only in provenance stamps is unchanged",
+        "other record classes still compare whole records",
+        "the confirmation door requires the cited authority, and a confirmation takes no second readback"
       ],
       "dynamic": 0
     },

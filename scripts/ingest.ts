@@ -87,7 +87,7 @@ import {
 } from "../lib/civic-data/attested-promotion.ts";
 import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
-import { currentVenueCache } from "../lib/meetings/venue-cache.ts";
+import { currentVenueCache, resolveVenue, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -969,6 +969,43 @@ export interface SuccessfulMeetingPartitionReconciliation {
 }
 
 /**
+ * **A CARRIED SITTING IS PLACED BY TODAY'S REVIEWED VENUES.** (C1, 2026-09-24.
+ * The owner: "If an official meeting source publishes an address, use that
+ * address and place the pin there.")
+ *
+ * A row is carried when its publisher's page stops listing it, which is what
+ * happens to most sittings once they are held. The carry copies the last
+ * fresh row, and that row's place was resolved against the reviewed venues of
+ * THAT day. So a venue reviewed after the listing left never reached the
+ * sitting: Tucson Unified's 23 September community-engagement session stated
+ * "Cholla High School South Gym", the reviewed venue for exactly those words
+ * was promoted on 24 September at 19:30Z, and the carried row still served
+ * the words with no pin (measured read-only at 21:41Z, the only such row of
+ * 13 carried).
+ *
+ * The sitting's facts are not touched: what the publisher last stated, and
+ * when, stays as carried. Only our placement of its own stated words is
+ * redone, through `resolveVenue`, the same lookup and scope the adapter would
+ * apply to those words today. A row whose words match no reviewed venue, a
+ * row with no stated words, an online or already placed row, and a row with
+ * no division (whose scope needs the adapter's tenant, which a carried row
+ * does not hold) are returned unchanged.
+ */
+export function placeCarriedFromReviewedVenue(
+  prior: Meeting,
+  sourceName: string,
+  reviewedVenues: (() => readonly VenueEntry[]) | undefined,
+): Meeting {
+  const gap = prior.venueGap;
+  if (!reviewedVenues || prior.location || prior.online || prior.ocdId === null) return prior;
+  if (gap?.kind !== "STATED_NOT_PLACED" || !gap.publishedText?.trim()) return prior;
+  const venue = resolveVenue(sourceName, prior.ocdId, gap.publishedText, null, reviewedVenues());
+  if (!venue) return prior;
+  const { venueGap: _gap, ...rest } = prior;
+  return { ...rest, location: { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } };
+}
+
+/**
  * Reconcile one authenticated source/body response against its exact LKG.
  *
  * A successful response is still an OPEN fact set. Omission therefore cannot
@@ -1011,6 +1048,12 @@ export function reconcileSuccessfulMeetingPartition(input: {
    * them is removed under `EXCLUDED_BY_PUBLISHER`, never carried.
    */
   readonly publisherExclusions?: readonly PublisherExclusion[];
+  /**
+   * The promoted reviewed venues, read only if a carried row needs them
+   * (`placeCarriedFromReviewedVenue`). Omitted, carried rows keep their place
+   * exactly as before.
+   */
+  readonly reviewedVenues?: () => readonly VenueEntry[];
 }): SuccessfulMeetingPartitionReconciliation {
   const window = meetingReaderServingWindowAt(input.generatedAt);
   if (window === null) throw new Error(`MEETING_RECONCILIATION_CLOCK_INVALID:${input.generatedAt}`);
@@ -1113,7 +1156,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
         : input.previous!.generatedAt
     );
     meetings.push({
-      ...prior,
+      ...placeCarriedFromReviewedVenue(prior, input.sourceName, input.reviewedVenues),
       carried: {
         source: input.sourceName,
         lastFreshAt,
@@ -1291,7 +1334,9 @@ export async function promoteMeetingPartition(
     snapshot,
     retainedResponses,
   );
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt);
+  // An ordinary routine re-check that found nothing new is confirmed on the
+  // pointed version, not republished (RULING 283's receipted no-change).
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: true });
   return { candidate, outcome };
 }
 
@@ -1308,7 +1353,9 @@ export function printMeetingPartitionReceipt(
     meetingSource: partition.meetingSource,
     bodyId: partition.bodyId,
     scope: partition.scope,
-    candidateId: candidate.id,
+    // The durable candidate: the new one, or the pointed version a no-change
+    // re-check confirmed (then no new candidate exists).
+    candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,
     decision: outcome.candidate.receipt?.decision ?? null,
@@ -1319,6 +1366,9 @@ export function printMeetingPartitionReceipt(
     // configuration failed first); absent on success. Additive: the durable
     // receipt contract reads the fields above and ignores this one.
     ...(failureKind ? { failureKind } : {}),
+    // A confirmation names its observed instant, so the supervisor proves it
+    // from the pointer's identity and newest confirmation, not the dataset.
+    ...(outcome.confirmed ? { confirmedAt: outcome.confirmed.at } : {}),
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
 }
@@ -1421,6 +1471,7 @@ export async function promoteMeetingPartitions(input: {
       freshAgendaDocuments: freshDocuments,
       previous,
       publisherExclusions: recurrence.exclusions,
+      reviewedVenues: currentVenueCache,
     });
     const scopeFailures = [
       ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)

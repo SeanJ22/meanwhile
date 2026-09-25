@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "ae0e18f5ca12129b92ce3d40050b956237a21c9c",
-  "buildId": "zko_LtZSbyFf2L04SQz8x",
+  "exactHead": "92f2c370662127b74ab2ee1b1b795f22510b3c73",
+  "buildId": "A-irs4JRGJLaIszg3aHPy",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-24T21:34:10.453Z",
+  "runId": "reader-last-mile-final-render@2026-09-25T00:26:40.218Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -23,7 +23,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "b6bc0a4a6d1356982e0bd2acdc1acff32819b6a571aca93f32bda74f48d871f0"
+      "sha256": "64dcfc0821d9d9a76554779fe1b1072d0cff000de0fbbb2049e892caaf589692"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1943,7 +1943,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "f417632b6ab9e4134fffd8be8d7ac738b41cc49f6c173a9de0dfc64a241d166b"
+      "sha256": "b8aecc2487377130dc97231458e2cc08186c527fa8ddaaac401ad80cecd8daba"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2147,11 +2147,11 @@
     },
     {
       "path": "lib/civic-data/candidate-builders.ts",
-      "sha256": "3234ec46df0b61b8bfe70f0a62a96ca2670b44e84e7688f349871e60f6b0fa40"
+      "sha256": "7968ecb74352c0129a314a70b9e5b28f0b3e2d49897a8b62c464eb9fefc2b27e"
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "d2417c6bcbfba1e7901ddecfdfb8970cab9f49fee165bc72d2dd5d3c53fb1c0e"
+      "sha256": "2471c4794120af66052fde1cfaefebda479a32a468ca7f22e0ecb9ea6fd8ae36"
     },
     {
       "path": "lib/civic-data/contracts.ts",
@@ -2183,7 +2183,11 @@
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
-      "sha256": "7814cbcc465addaffee2867b05cb50b0fa449b4b874ddd64de6aa56db29866ab"
+      "sha256": "06f742cb0330448db5a10b234b6e1daa870bf9f58266579cf7093a848a885d71"
+    },
+    {
+      "path": "lib/civic-data/morris-filing-documents.ts",
+      "sha256": "39fe52e9661897b76f2f2cff1c00d2b7096d46cb9c7c35ae4836267a6e7b0d47"
     },
     {
       "path": "lib/civic-data/production-write.ts",
@@ -2191,7 +2195,7 @@
     },
     {
       "path": "lib/civic-data/read-model.ts",
-      "sha256": "7c9cc6bc8adb491bcf2aa9999eb796557983e68a05fbd839219c7a1acacf8ab1"
+      "sha256": "67bb97c9e1a8c3d00c1007d4d7a8615b31fdc45d712b8144944a23cf9dcd3b48"
     },
     {
       "path": "lib/civic-data/reader-readback.ts",
@@ -2211,7 +2215,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "292dfa853b6cd90e40066c82663ad6410078e2d812cf82aa520d91a0c0f4d5b7"
+      "sha256": "1ffabc01b5ccdea8d998e0efd0f3140f1a8c50af8ed4b73ff271463ce33d8ee8"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2219,7 +2223,7 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "bd7c522182eacfec994ccf28a4fba7953ed86a0d79ff76185f527924debdbb71"
+      "sha256": "0ae10ed7ce6eb6e320d69f85b85a533fc4965c6f65319aec85021887eb59062e"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
@@ -2227,7 +2231,11 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "e9e2f0ba73366d38d660bbe7bfd5ff8efc45470bb52a94bf7b0bc789bb143d1a"
+      "sha256": "5fec124558de0bf02086fb900859836bd2503b38f378bbab64e577ff47b9cfdf"
+    },
+    {
+      "path": "lib/civic-data/unchanged-confirmation.ts",
+      "sha256": "eb3d5d1e04d934b72f2f411e761e7c9ddfd33291ad4b554c2b9f0071ce70f225"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2947,7 +2955,7 @@
     },
     {
       "path": "lib/registry/source-wiring.ts",
-      "sha256": "41e9ec28ead6ee9155f541a9d30061d7ea9a9e2da66596a9b40ec594f773b352"
+      "sha256": "71a6f5f0938a5dd37a2509da0b8b439eb910cc505c07e4673093b38a77f39243"
     },
     {
       "path": "lib/registry/street-index-summary.json",
@@ -3107,7 +3115,7 @@
     },
     {
       "path": "lib/sources/http.ts",
-      "sha256": "b720023db7498e1ae0d69c178307cea79630651e440c0ce7fa0d44b0e5a5f3ea"
+      "sha256": "0a2195ddead5462e793cf4cac8af2e8ae3c5961f8075d6d2cbb8e46d82769c00"
     },
     {
       "path": "lib/sources/ical/index.ts",
@@ -3219,7 +3227,7 @@
     },
     {
       "path": "lib/sources/schedulepage/index.ts",
-      "sha256": "3efd3e1f1f13ebaa207b807ec9bb28847539cbd18aa48d6542eeecdcfada1425"
+      "sha256": "a11f267db2afea9aaedaffa467935aaaceaebf840c758af20520603dbaa9751b"
     },
     {
       "path": "lib/sources/sitting-status.ts",
@@ -3407,11 +3415,11 @@
     },
     {
       "path": "next.config.ts",
-      "sha256": "71665461c4485c4d946f0541da9ac652a16a59c64694f43c658e666ef46e8314"
+      "sha256": "f31352ace367c441d47de9c14672de729ffc639d4a1e40a0b7542a27fb596820"
     },
     {
       "path": "package.json",
-      "sha256": "4a1167fa323011fa42824ee52deb164126af5c22f774396685d0124de377a28d"
+      "sha256": "b369c93a148793d27989ad07a8fa672b115aa0cbe5c9a28378ece3e29929b091"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -8534,14 +8542,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42321",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T19:01:06.111Z"
+              "collectedAt": "2026-09-24T22:28:28.978Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43901",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T19:01:06.111Z"
+              "collectedAt": "2026-09-24T22:28:28.978Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8562,14 +8570,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42976",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44076",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8590,14 +8598,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42981",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44081",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8618,14 +8626,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42986",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44086",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8646,14 +8654,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42991",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44091",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8674,14 +8682,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42996",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44096",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8702,14 +8710,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/43001",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44101",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8730,20 +8738,20 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/43006",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44106",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T18:44:58.598Z"
+              "collectedAt": "2026-09-24T22:13:30.416Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
         }
       ],
-      "renderedListingRows": 387,
+      "renderedListingRows": 388,
       "failedRefreshDisclosure": {
         "carried": {
           "count": 13,

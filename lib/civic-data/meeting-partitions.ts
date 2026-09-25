@@ -74,7 +74,19 @@ export function meetingAcquisitionFailureDomain(
   if (url.protocol !== "https:" || !url.hostname || url.username || url.password) {
     throw new Error(`MEETING_FAILURE_DOMAIN_ENDPOINT_INVALID:${sourceName}:${wiring.bodyId}`);
   }
-  return `meeting-upstream:${url.hostname.toLowerCase()}`;
+  /*
+   * Google Calendar serves every public calendar from one hostname, but each
+   * calendar is its own publisher's feed: Bradford's and Warner's town
+   * calendars share nothing but Google. So the calendar, not the hostname, is
+   * the lane. Measured 2026-09-24: the two towns' 32 partitions put 19.2 reads
+   * an hour of sitting-window demand on one 12-per-hour lane (one child per
+   * lane per 5-minute pass), so neither town's in-window bodies could be read
+   * hourly. Every small-town host keeps its single lane.
+   */
+  const host = url.hostname.toLowerCase();
+  const googleCalendar = host === "calendar.google.com" ? /^\/calendar\/ical\/([^/]+)\//.exec(url.pathname)?.[1] : undefined;
+  if (googleCalendar) return `meeting-upstream:${host}/${decodeURIComponent(googleCalendar).toLowerCase()}`;
+  return `meeting-upstream:${host}`;
 }
 
 function buildMeetingPartitions(): readonly MeetingPartitionContract[] {

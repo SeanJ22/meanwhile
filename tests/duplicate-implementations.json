@@ -132,11 +132,6 @@
       "id": "exact:scripts/reader-last-mile-final-render.mts#openOfficial,scripts/reader-last-mile-render.mts#openOfficial",
       "disposition": "ALLOWED",
       "reason": "These are isolated Playwright proof harnesses with different frozen denominators: the historical exhaustive reader census and the bounded final-delta visual sample. Sharing the navigation helper would make the delta proof import the exhaustive harness and expand LM-F1 proof rather than inheriting it; both harnesses assert the product identity and payload selectors independently."
-    },
-    {
-      "id": "shape:lib/ask/synthesize.ts#synthesisFields,lib/civic-data/store.ts#promotedPointerIdentity",
-      "disposition": "ALLOWED",
-      "reason": "The collision exists only once identifiers are erased: both return seven fields read off their argument. synthesisFields renames an Ask evidence pack into the model-facing synthesis vocabulary; promotedPointerIdentity narrows a civic-data pointer to its identity columns so Reader-delivery evidence never carries the promoted payload. They share no field, caller, or policy, and a common helper would couple the Ask prompt contract to the civic-data store boundary."
     }
   ],
   "consolidatedOn2026-08-23-questionnaire-and-corpora": {

@@ -29,6 +29,7 @@ import {
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { readPromotedCivicDataBatch } from "../lib/civic-data/read-model.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
   readPublisherBody,
@@ -174,7 +175,7 @@ export async function persistAcquiredStateRollCall(
   retrievedAt: string,
 ): Promise<StateRollCallPersistResult> {
   return persistWithDurableResilience(contractId, () =>
-    processRegisteredRoutineCandidate(store, contractId, candidate, retrievedAt));
+    processRegisteredRoutineCandidate(store, contractId, candidate, retrievedAt, undefined, { confirmUnchanged: true }));
 }
 
 /**
@@ -631,12 +632,7 @@ async function main(): Promise<void> {
     const outcome = persisted.outcome;
     console.log("RCD_RECEIPT=" + JSON.stringify({
       source: target.contractId,
-      candidateId: candidate.id,
-      acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-      state: outcome.candidate.state,
-      decision: outcome.candidate.receipt?.decision ?? null,
-      promotedVersion: outcome.promoted?.versionId ?? null,
-      lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+      ...routineReceiptFields(candidate, outcome),
       structuralReleaseContract: ZERO_RELEASE_EVENTS,
     }));
     if (!outcome.promoted) process.exitCode = 2;

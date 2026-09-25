@@ -43,6 +43,7 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
   readPublisherBody,
@@ -357,8 +358,8 @@ async function main(): Promise<void> {
       extraction,
       identityCrosswalk,
     });
-    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, retrievedAt);
-    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, retrievedAt, undefined, { confirmUnchanged: true });
+    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
     if (!outcome.promoted) process.exitCode = 2;
   }
 }

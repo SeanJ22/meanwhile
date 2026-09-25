@@ -51,6 +51,7 @@ import { PILOT_ZIPS } from "@/lib/health/owner-corpus-compile.ts";
 import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
 import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
 import { WORK_QUESTION_WORDS } from "@/lib/control-plane/work-question.ts";
+import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-reading.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
@@ -60,6 +61,7 @@ import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
 import { REGISTERED_STATE_CODES, stateName } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
+import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
 import { withScope, type MwArea } from "../scope.ts";
@@ -187,7 +189,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
         const row = buildAssignments(read.value, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
-          ? { kind: "DETAIL", id: openId, detail: standingDetail(row), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
+          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
           : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
       } else opened = { kind: "MISSING", id: openId, says: read.detail };
     }
@@ -367,6 +369,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           )}
         </div>
       )}
+      {/* The lane gauges, drawn from the research state read above and refreshed from the pulse while the page is visible (MW-071). */}
+      {props.area === "fleet" && <LaneStrip initial={pulseLanesOf(research)} />}
       {/* The runner is not drawn in the design; it follows the design's own sections so Work leads with the instruction, as the design does. */}
       {props.area === "fleet" && (
         <RunnerCard
@@ -376,6 +380,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           digest={digestsOut && digestsOut.kind === "HELD" && digestsOut.value.length > 0 ? digestsOut.value[0] : null}
           digestNote={digestsOut && digestsOut.kind !== "HELD" ? digestsOut.detail : null}
           returnTo={base.here}
+          lanes={queueLanesOf(research)}
         />
       )}
       {props.area === "fleet" && (
@@ -616,7 +621,7 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
           </p>
           <div className={s.stack10}>
             {detail.unsettled.map((u) => (
-              <DeadEnd key={`${u.pill}-${u.title}`} flush d={{ pill: u.pill, title: u.title, ruledOut: u.ruledOut, wouldSettle: u.wouldSettle, whoMoves: u.whoMoves }} />
+              <DeadEnd key={`${u.pill}-${u.title}`} flush d={{ pill: u.pill, title: u.title, ruledOut: u.ruledOut, wouldSettle: u.wouldSettle, whoMoves: u.whoMoves, gaps: u.gaps }} />
             ))}
           </div>
         </div>

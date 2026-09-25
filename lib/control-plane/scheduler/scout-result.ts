@@ -344,6 +344,14 @@ export interface ScoutResult {
   readonly inheritedFieldManualEntryIds?: readonly string[];
   /** The exact rendered field-manual brief lines that led this walk's inherited context, captured at dispatch alongside `inheritedFieldManualEntryIds`. Absent on older results. */
   readonly inheritedFieldManualLines?: readonly string[];
+  /**
+   * MW-025: the handed entry ids this walk actually USED — the entry's url or
+   * `payload.routeId` matched a rung target it walked or a candidate routeId it
+   * proposed (`usedFieldManualEntryIds` in field-manual-scout.ts). Absent on
+   * results recorded before it (2026-09-25): read as not recorded, never as
+   * none used.
+   */
+  readonly usedFieldManualEntryIds?: readonly string[];
 }
 
 /* ------------------------------------------------------------- validation */

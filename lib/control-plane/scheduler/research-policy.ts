@@ -192,6 +192,13 @@ export interface ResearchState {
     readonly modelClassDeferredForLane: number;
     readonly deterministicDue: number;
     readonly deterministicDispatchedThisCycle: number;
+    /**
+     * MW-014 / MW-071: each lane's due, started, running and waiting rows, every
+     * reason a due row was not started (summing to the rows skipped), and the
+     * oldest waiting row's next-due. Absent on states written before it; read
+     * as "not recorded", never as nothing skipped.
+     */
+    readonly lanes?: import("./lane-reading.ts").QueueLanes | null;
   };
   readonly running: readonly RunningScout[];
   /** Named runtime conditions preventing eligible Scout work from dispatching. Empty when none. */

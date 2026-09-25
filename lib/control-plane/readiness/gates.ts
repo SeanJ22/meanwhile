@@ -6,6 +6,8 @@
  * This module is PURE. It reads no clock, no filesystem, no database, and holds
  * no React. Everything a readiness cell means is decided here so a test can fail
  * it, and so the panel cannot render a state that this module did not derive.
+ * The gates' words come from the versioned standard (`standard.json`, imported
+ * as a module, never read from disk at run time).
  *
  * The panel's one job is that it cannot lie — it can never believe it has data
  * it has not verified, and never believe it is missing data that does not exist.
@@ -14,6 +16,7 @@
  */
 import { type Held, type Measured, gap, held, measured } from "../owner-surface.ts";
 import { plainCode } from "../plain-words.ts";
+import { currentStandard } from "./standard.ts";
 
 /* ------------------------------------------------------------------ *
  * R-A — SIX CELL STATES, NEVER TWO.
@@ -58,6 +61,11 @@ export function isCellState(value: string): value is CellState {
  * left is not CURRENT. Publisher observation precedes any claim about what a
  * publisher publishes; reconciliation against an external authority precedes any
  * claim of verification; and so on rightward.
+ *
+ * The order, labels and definitions are the current version of the readiness
+ * standard (`standard.json`, MW-063). This tuple stays in code as the TYPE the
+ * cells are keyed by, and the module refuses to load when the manifest's gates
+ * are not exactly these, in this order — the two cannot drift apart silently.
  */
 export const GATE_ORDER = [
   "SOURCE_KNOWN",
@@ -68,30 +76,22 @@ export const GATE_ORDER = [
 ] as const;
 export type Gate = (typeof GATE_ORDER)[number];
 
-/** The column header each gate carries — spelled out in full, never abbreviated. */
-export const GATE_LABEL: Record<Gate, string> = {
-  SOURCE_KNOWN: "Source known",
-  ACQUIRED: "Acquired",
-  VERIFIED: "Verified",
-  SHOWN_TO_READER: "Shown to reader",
-  ASK_ANSWERS: "Ask answers",
-};
+const STANDARD_GATES = currentStandard().gates;
+if (STANDARD_GATES.map((g) => g.id).join("|") !== GATE_ORDER.join("|")) {
+  throw new Error(
+    `READINESS_STANDARD_GATES_DISAGREE: the standard's gates (${STANDARD_GATES.map((g) => g.id).join(", ")}) are not the code's GATE_ORDER (${GATE_ORDER.join(", ")})`,
+  );
+}
+
+/** The column header each gate carries — spelled out in full, never abbreviated. From the standard. */
+export const GATE_LABEL: Record<Gate, string> = Object.fromEntries(STANDARD_GATES.map((g) => [g.id, g.label])) as Record<Gate, string>;
 
 /**
  * What each gate asserts, so a drawer can say what a cell means without the
- * reader guessing. These are the definitions the panel is answerable to.
+ * reader guessing. These are the definitions the panel is answerable to, from
+ * the standard in force.
  */
-export const GATE_DEFINITION: Record<Gate, string> = {
-  SOURCE_KNOWN:
-    "A named, reachable publisher path exists and has been observed. Publisher observation precedes any claim about what they publish.",
-  ACQUIRED: "Records have been pulled and vaulted, with an as-of timestamp.",
-  VERIFIED:
-    "Reconciled against an external authority. No reconciliation may compare a parser to itself; if the only thing confirming our count is our own count, this gate is NOT_WALKED.",
-  SHOWN_TO_READER:
-    "Rendered on a live reader surface, and stated N equals rendered rows.",
-  ASK_ANSWERS:
-    "Ask answers from this data under the answer contract, without falling back to general knowledge.",
-};
+export const GATE_DEFINITION: Record<Gate, string> = Object.fromEntries(STANDARD_GATES.map((g) => [g.id, g.definition])) as Record<Gate, string>;
 
 /* ------------------------------------------------------------------ *
  * R-E / R-F — WORST-OF, NEVER AVERAGE.

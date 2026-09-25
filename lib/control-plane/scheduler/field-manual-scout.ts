@@ -132,6 +132,40 @@ export function compoundingPair(
   return { inheritedCount, newlyBuilt: result.candidates.length, rebuiltExisting: rebuilt };
 }
 
+/** A URL or route id, compared loosely: host case, a trailing slash and a fragment never make two doors different. */
+function doorKey(value: string): string {
+  const trimmed = value.trim();
+  try {
+    const u = new URL(trimmed);
+    return `${u.protocol}//${u.host.toLowerCase()}${u.pathname.replace(/\/+$/, "")}${u.search}`;
+  } catch {
+    return trimmed;
+  }
+}
+
+/**
+ * **GIVEN IS NOT USED.** (MW-025, 2026-09-25.)
+ *
+ * The inherited half of the pair counts the doors HANDED to the walk. This is
+ * the half that says which of them the walk actually went through: an entry
+ * counts as used when its url or its `payload.routeId` matches a rung the walk
+ * walked (the rung's target) or a candidate it proposed (the candidate's
+ * routeId). Only entries that were handed are considered, in the order they
+ * were handed; an id the store no longer holds cannot be matched and is not
+ * counted as used.
+ */
+export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly string[], store: FieldManualStore): string[] {
+  if (handedIds.length === 0) return [];
+  const walked = new Set<string>([...result.rungs.map((g) => doorKey(g.target)), ...result.candidates.map((c) => doorKey(c.routeId))]);
+  const byId = new Map(store.entries.map((e) => [e.id, e] as const));
+  return handedIds.filter((id) => {
+    const entry = byId.get(id);
+    if (entry === undefined) return false;
+    const routeId = (entry.payload as { routeId?: unknown } | null | undefined)?.routeId;
+    return (typeof entry.url === "string" && entry.url !== "" && walked.has(doorKey(entry.url))) || (typeof routeId === "string" && routeId !== "" && walked.has(doorKey(routeId)));
+  });
+}
+
 /**
  * Write a scout's discoveries into the growing field manual, live, with the
  * store's own CAS to survive a concurrent write. A write-back failure is a fact

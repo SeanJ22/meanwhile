@@ -38,7 +38,9 @@ import { formatEastern } from "../eastern-time.ts";
 import type { AssignmentReading } from "../expansion/assignment-budget.ts";
 import { modelName } from "../plain-words.ts";
 import { WORK_QUESTION_WORDS } from "../work-question.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { BodyView } from "./bodies.ts";
+import { latestScout, scoutDeadEnd, type DeadEndGaps } from "./dead-ends.ts";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 
@@ -136,6 +138,8 @@ export interface Unsettled {
   readonly ruledOut: string | null;
   readonly wouldSettle: string | null;
   readonly whoMoves: string | null;
+  /** Why a null field is missing, named (MW-016). */
+  readonly gaps?: DeadEndGaps;
 }
 
 export interface AssignmentDetailView {
@@ -164,8 +168,30 @@ const ROLE_WORDS: Readonly<Record<string, string>> = {
   RELEASE_ORCHESTRATOR: "Release orchestration",
 };
 
-/** The opened standing assignment, from its full row (read live by id). */
-export function standingDetail(row: AssignmentRow): AssignmentDetailView {
+/**
+ * MW-035: why this work reached the paid Scout, in the executor decision's own
+ * words (`ScoutResult.reason` is the decision's `why`, recorded when the walk
+ * was sent), never a fixed standing-rule sentence. Where the reasons of the
+ * walks differ, the latest leads and the count of others is said.
+ */
+function scoutDecisionWords(scouts: readonly ScoutResult[] | null, latest: ScoutResult | null): string {
+  if (scouts === null) return "Why the executor sent this to a paid Scout was not read with it.";
+  if (latest === null) return "No Scout walk is on record, so why the executor chose a paid model is not recorded here.";
+  const reason = latest.reason.trim();
+  if (reason === "") return `The executor sent it to a paid Scout (walk of ${formatEastern(latest.recordedAt)}); its reason was not recorded on the result.`;
+  const others = new Set(scouts.map((s) => s.reason.trim()).filter((r) => r !== "" && r !== reason)).size;
+  return `Executor decision: a bounded model worker (the Scout), because ${reason.replace(/\.$/, "")}.${others > 0 ? ` Earlier walks were sent for ${others} other ${others === 1 ? "reason" : "reasons"}.` : ""}`;
+}
+
+/**
+ * The opened standing assignment, from its full row (read live by id), and
+ * the Scout results read with it. Those results say why the work reached a
+ * paid model (MW-035) and what its dead ends ruled out and would settle
+ * (MW-016); absent, each says it was not read rather than borrowing a rule.
+ */
+export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?: readonly ScoutResult[] | null } = {}): AssignmentDetailView {
+  const scouts = evidence.scouts ?? null;
+  const latest = scouts === null ? null : latestScout(scouts);
   const d = row.discovery.discovered.held ? row.discovery.discovered.value : null;
   const dl = row.discovery.downloaded.held ? row.discovery.downloaded.value : null;
   const pipeline = row.verification.pipeline.held ? row.verification.pipeline.value : null;
@@ -226,7 +252,7 @@ export function standingDetail(row: AssignmentRow): AssignmentDetailView {
       cost: isModel ? (measuredUsd !== null ? money(measuredUsd) : "not reported") : "no cost",
       why: isModel
         ? w.role === "SCOUT"
-          ? `The research loop runs on the most capable class by standing rule; no cheaper class is tried first for it. ${w.attempts ?? "An uncounted number of"} attempts.`
+          ? `${scoutDecisionWords(scouts, latest)} ${w.attempts ?? "An uncounted number of"} attempts.`
           : `${w.attempts ?? "An uncounted number of"} attempts.`
         : `Plain code can do this, so it cannot reach a model at all. ${w.attempts ?? "An uncounted number of"} attempts.`,
     };
@@ -262,19 +288,42 @@ export function standingDetail(row: AssignmentRow): AssignmentDetailView {
       ? null
       : `Nothing from this assignment reached the public site. ${promoted?.says ?? (row.delivery.promoted.held ? "" : row.delivery.promoted.gap.says)}${row.delivery.blockers.length > 0 ? ` ${row.delivery.blockers.join(" ")}` : ""}`;
 
+  /*
+   * MW-016: a dead end reads its three fields from the latest Scout walk —
+   * failed rungs, next rungs, the outcome's owner — and falls back to the
+   * row's own next action and owner only where no walk answers. A field
+   * neither can answer stays null with its gap named.
+   */
   const unsettled: Unsettled[] = [];
   const w = row.waiting;
+  const notRead = "the Scout results for this work were not read with it";
   if (row.state === "BLOCKED" || row.state === "FAILED" || row.state === "UNKNOWN") {
+    const walk = scouts === null ? null : scoutDeadEnd(latest, { retryAt: w.retryAt });
+    const wouldSettle = walk?.wouldSettle ?? (w.nextAction || null);
+    const whoMoves = walk?.whoMoves ?? `${OWNER_WORDS[w.owner]}${w.backoff ? ` — ${w.backoff.says}` : ""}`;
     unsettled.push({
       pill: row.state === "BLOCKED" ? "BLOCKED" : row.state === "FAILED" ? "FAILED" : "CAN'T TELL",
       title: w.blocker.kind === "NAMED" ? w.blocker.says : w.blocker.kind === "UNKNOWN" ? w.blocker.gap.says : row.stateSays,
-      ruledOut: w.backoff ? w.backoff.says : null,
-      wouldSettle: w.nextAction || null,
-      whoMoves: OWNER_WORDS[w.owner],
+      ruledOut: walk?.ruledOut ?? null,
+      wouldSettle,
+      whoMoves,
+      gaps: {
+        ...(walk?.ruledOut ? {} : { ruledOut: walk?.gaps.ruledOut ?? notRead }),
+        ...(wouldSettle !== null ? {} : { wouldSettle: walk?.gaps.wouldSettle ?? "no next action is recorded for this work" }),
+      },
     });
   }
   for (const r of row.verification.refusedFinishes.slice(0, 3)) {
-    unsettled.push({ pill: "REFUSED", title: `A finish was refused on ${formatEastern(r.at)}`, ruledOut: r.says, wouldSettle: null, whoMoves: OWNER_WORDS[w.owner] });
+    /* The refused walk itself: its rungs are machine-derived, so what it ruled out and named next still stand. */
+    const walk = scouts === null ? null : scoutDeadEnd(scouts.find((s) => s.attemptId === r.attemptId) ?? null);
+    unsettled.push({
+      pill: "REFUSED",
+      title: `A finish was refused on ${formatEastern(r.at)}: ${r.says}`,
+      ruledOut: walk?.ruledOut ?? null,
+      wouldSettle: walk?.wouldSettle ?? null,
+      whoMoves: walk?.whoMoves ?? OWNER_WORDS[w.owner],
+      gaps: walk === null ? { ruledOut: notRead, wouldSettle: notRead } : walk.gaps,
+    });
   }
 
   const c = row.cost;
@@ -695,7 +744,9 @@ export function routineDetail(body: BodyView): AssignmentDetailView {
         : [],
     promotedNote:
       body.readerVisible !== null ? null : body.records === null ? "Nothing from this body has been published for a reader." : "A version is published, and no readback of it is recorded, so whether a reader can open it is not confirmed.",
-    unsettled: body.deadEnd ? [{ pill: body.deadEnd.pill, title: body.deadEnd.title, ruledOut: body.deadEnd.ruledOut, wouldSettle: body.deadEnd.wouldSettle, whoMoves: body.deadEnd.whoMoves }] : [],
+    unsettled: body.deadEnd
+      ? [{ pill: body.deadEnd.pill, title: body.deadEnd.title, ruledOut: body.deadEnd.ruledOut, wouldSettle: body.deadEnd.wouldSettle, whoMoves: body.deadEnd.whoMoves, ...(body.deadEnd.gaps ? { gaps: body.deadEnd.gaps } : {}) }]
+      : [],
     costLine: "Plain code: meeting reads never reach a paid model. The database and host they use are shared and not split per body.",
   };
 }

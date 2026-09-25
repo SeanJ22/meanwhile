@@ -237,6 +237,7 @@ import {
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
   scoutStateHint,
+  usedFieldManualEntryIds,
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
@@ -265,6 +266,7 @@ import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/c
 import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
@@ -1929,6 +1931,10 @@ let laneCounts: { deterministicDispatched: number; modelDispatched: number; defe
   modelDispatched: 0,
   deferredBy: {},
 };
+/** Obligations started this cycle in either lane, for the in-flight lane reading's oldest waiting row. */
+const startedThisCycle = new Set<string>();
+/** The lanes' final accounting, set once the cycle's lanes (and then the coordinator) have run; in-flight until then. */
+let finalQueueLanes: QueueLanes | null = null;
 /** Computed once at cycle end; null on the start-of-cycle state. */
 let metrics: ResearchMetrics | null = null;
 const researchWindowId = `research:${HOST}:${NOW}`;
@@ -1991,6 +1997,17 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       modelClassDeferredForLane: (laneCounts.deferredBy.LANE_DISABLED ?? 0) + (laneCounts.deferredBy.PAUSED ?? 0),
       deterministicDue: dueDeterministic,
       deterministicDispatchedThisCycle: laneCounts.deterministicDispatched,
+      lanes:
+        finalQueueLanes ??
+        lanesInFlight({
+          at: nowIso(),
+          deterministicRows: dueDeterministicRows,
+          modelRows: dueModel,
+          deterministicDispatched: laneCounts.deterministicDispatched,
+          modelDispatched: laneCounts.modelDispatched,
+          startedIds: startedThisCycle,
+          runningIds: new Set(running.map((r) => r.obligationId)),
+        }),
     },
     running: [...running],
     runtimeConditions: [...runtimeConditions],
@@ -2181,7 +2198,10 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           ...amended,
           inheritedFieldManual: pair.inheritedCount,
           rebuiltExistingRoutes: pair.rebuiltExisting,
-          ...(doors ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines } : {}),
+          /* MW-025: beside what was handed, which handed doors the walk went through, matched against the manual it was handed from. */
+          ...(doors
+            ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines, usedFieldManualEntryIds: usedFieldManualEntryIds(result, doors.entryIds, fieldManual) }
+            : {}),
         };
         if (result.refusal === null && result.candidates.length > 0) {
           const written = await writeFieldManualDiscoveries(
@@ -2366,6 +2386,7 @@ const cycle = await runCycle({
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
+      startedThisCycle.add(result.obligationId);
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
         spentThisCycle += result.cost?.usd ?? 0;
@@ -2397,6 +2418,8 @@ laneCounts = {
   modelDispatched: cycle.lanes?.model.dispatched ?? laneCounts.modelDispatched,
   deferredBy: { ...(cycle.lanes?.model.deferredBy ?? {}) },
 };
+/* MW-014: every lane's reasons, summing to what it skipped; the coordinator's pass is folded in when it runs. */
+if (cycle.lanes !== null) finalQueueLanes = lanesAtCycleEnd(cycle.lanes, null, nowIso());
 for (const row of cycle.deferred) {
   const code = /^([A-Z][A-Z0-9_]+)/.exec(row.why)?.[1] ?? "CYCLE_DEFERRED";
   fleetSafety.defer(row.obligationId, code, row.why);
@@ -2622,6 +2645,8 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
       deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
       admitDispatch: work => fleetSafety.admitDispatch(work) });
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
+    /* MW-014: the coordinator's deferrals AND its silent non-dispatches (BLOCKED, STAGED), counted by reason. */
+    if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
     const legacy = [...heldFirst];
     // No per-cycle dispatch cap: the held-worker loop runs until the wall

@@ -162,9 +162,16 @@ export interface DeadEndFields {
   readonly ruledOut: string | null;
   readonly wouldSettle: string | null;
   readonly whoMoves: string | null;
+  /** Why a missing field is missing, when the records say; else the generic words below. */
+  readonly gaps?: { readonly ruledOut?: string; readonly wouldSettle?: string; readonly whoMoves?: string };
 }
 
 const NOT_RECORDED = "Not recorded — the system does not write this field yet (MW-016).";
+
+/** A missing field's words: its own gap when the records named one, else the generic words. */
+function missing(gap: string | undefined): string {
+  return gap === undefined ? NOT_RECORDED : `Not known — ${gap} (MW-016).`;
+}
 
 /**
  * A dead end with its three fields. A missing field is said to be missing,
@@ -182,9 +189,9 @@ export function DeadEnd({ d, flush }: { d: DeadEndFields; flush?: boolean }) {
       <KV
         tight={flush}
         rows={[
-          ["What it ruled out", d.ruledOut ?? NOT_RECORDED],
-          ["What would settle it", d.wouldSettle ?? NOT_RECORDED],
-          ["Who moves next", d.whoMoves ?? NOT_RECORDED],
+          ["What it ruled out", d.ruledOut ?? missing(d.gaps?.ruledOut)],
+          ["What would settle it", d.wouldSettle ?? missing(d.gaps?.wouldSettle)],
+          ["Who moves next", d.whoMoves ?? missing(d.gaps?.whoMoves)],
         ]}
       />
     </div>

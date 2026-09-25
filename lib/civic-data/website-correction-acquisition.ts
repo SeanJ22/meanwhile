@@ -1,0 +1,138 @@
+/**
+ * @freshness-reads-here — a correction receipt's retrievedAt is the instant its own robots-first read returned,
+ * minted in the function that performed that read.
+ *
+ * **EACH WEBSITE CORRECTION, READ AGAIN WHEN THE REFERENCE IS PROMOTED.** (C15, 2026-09-24.)
+ *
+ * `lib/civic-data/website-corrections.ts` holds the reviewed corrections and
+ * their evidence. When the jurisdiction reference is promoted, each correction
+ * is read again at its own sources, robots.txt first (`researchFetch`):
+ *
+ * - its homepage must still be on the corrected site and still name the
+ *   government as reviewed;
+ * - its .gov registry row, where the site has its own, must still list the
+ *   domain for that government;
+ * - each other government's page it relies on must still name the site.
+ *
+ * Every page read is receipted (URL, status, time, sha256, bytes).
+ *
+ * - A source that now contradicts the review REFUSES the correction, and the
+ *   Census address stays. So does a source its publisher withdrew (404 or 410):
+ *   the correction no longer rests on a live publication.
+ * - A source that could not be read (a timeout, a server error, a refusal to
+ *   this client, a challenge, robots.txt that could not be read or that now
+ *   refuses us) is an outage. The reviewed evidence stands, and the correction
+ *   is applied on it, saying which source was not read again.
+ */
+
+import { challengeIn } from "../sources/http.ts";
+import { researchFetch, type ResearchRuntime } from "../hunt/robots-first-fetch.ts";
+import type { JurisdictionReferenceSourceReceipt, WebsiteCorrectionSourceId } from "./jurisdiction-reference-acquisition.ts";
+import {
+  DOTGOV_REGISTRY_URL,
+  governmentNamesMatch,
+  homepageStillNamesGovernment,
+  registryIsTheSitesOwn,
+  registryRowFor,
+  type WebsiteCorrection,
+} from "./website-corrections.ts";
+
+export type WebsiteCorrectionDisposition =
+  /** Every source read now agrees with the review. */
+  | "APPLIED_VERIFIED"
+  /** A source could not be read now; nothing read contradicts the review, so it stands. */
+  | "APPLIED_ON_REVIEWED_EVIDENCE"
+  /** A source read now contradicts the review, or its publisher withdrew it: not applied. */
+  | "REFUSED";
+
+export interface WebsiteCorrectionOutcome {
+  readonly jurisdictionId: string;
+  readonly recorded: string;
+  readonly corrected: string;
+  readonly disposition: WebsiteCorrectionDisposition;
+  readonly detail: string;
+}
+
+type Reading =
+  | { readonly kind: "READ"; readonly finalUrl: string; readonly text: string }
+  | { readonly kind: "WITHDRAWN"; readonly detail: string }
+  | { readonly kind: "NOT_READ"; readonly detail: string };
+
+const bareHost = (url: string): string => new URL(url).hostname.toLowerCase().replace(/^www\./, "");
+
+/**
+ * Read the corrections' sources again and decide each. The runtime is injected: production passes
+ * `nodeResearchGet` and a clock; a test passes recorded responses and never touches the network.
+ */
+export async function acquireWebsiteCorrections(
+  corrections: readonly WebsiteCorrection[],
+  runtime: ResearchRuntime,
+): Promise<{ readonly receipts: readonly JurisdictionReferenceSourceReceipt[]; readonly outcomes: readonly WebsiteCorrectionOutcome[] }> {
+  const receipts: JurisdictionReferenceSourceReceipt[] = [];
+
+  async function read(url: string, sourceId: WebsiteCorrectionSourceId): Promise<Reading> {
+    const got = await researchFetch(url, runtime);
+    if (got.outcome === "REFUSED") return { kind: "NOT_READ", detail: `${url} was not read: ${got.reason}` };
+    if (got.transportError !== null || got.status === null) return { kind: "NOT_READ", detail: `${url}: ${got.transportError ?? "no response"}` };
+    if (got.status === 404 || got.status === 410) return { kind: "WITHDRAWN", detail: `${url} answered ${got.status}: its publisher withdrew it` };
+    if (got.status < 200 || got.status >= 300) return { kind: "NOT_READ", detail: `${url} answered HTTP ${got.status}` };
+    const text = new TextDecoder().decode(got.body);
+    const challenge = challengeIn(text);
+    if (challenge !== null) return { kind: "NOT_READ", detail: `${url} answered a ${challenge} in place of the page` };
+    receipts.push({
+      sourceId,
+      requestedUrl: url,
+      finalUrl: got.finalUrl,
+      httpStatus: got.status,
+      retrievedAt: new Date(runtime.now()).toISOString(),
+      rawHash: got.sha256 ?? "",
+      byteCount: got.body.byteLength,
+    });
+    return { kind: "READ", finalUrl: got.finalUrl, text };
+  }
+
+  const registry = corrections.some((c) => registryIsTheSitesOwn(c))
+    ? await read(DOTGOV_REGISTRY_URL, "website-correction:dotgov-registry")
+    : null;
+
+  const outcomes: WebsiteCorrectionOutcome[] = [];
+  for (const c of corrections) {
+    const refusals: string[] = [];
+    const notRead: string[] = [];
+    const site = bareHost(c.corrected);
+    if (c.homepage !== null) {
+      const home = await read(c.homepage.url, `website-correction:${c.jurisdictionId}:homepage`);
+      if (home.kind === "READ") {
+        if (bareHost(home.finalUrl) !== site) refusals.push(`the homepage now leaves the site for ${new URL(home.finalUrl).host}`);
+        else if (!homepageStillNamesGovernment(home.text, c.homepage.selfName)) refusals.push(`the homepage no longer names ${c.homepage.selfName}`);
+      } else (home.kind === "WITHDRAWN" ? refusals : notRead).push(home.detail);
+    }
+    if (c.registry !== null && registryIsTheSitesOwn(c)) {
+      if (registry?.kind === "READ") {
+        const row = registryRowFor(registry.text, c.registry.domain);
+        if (row === null) refusals.push(`the .gov registry no longer lists ${c.registry.domain}`);
+        else if (!governmentNamesMatch(row.organization, c.governmentName)) refusals.push(`the .gov registry now lists ${c.registry.domain} for "${row.organization}"`);
+      } else if (registry?.kind === "WITHDRAWN") refusals.push(registry.detail);
+      else notRead.push(registry?.detail ?? "the .gov registry was not read");
+    }
+    for (const [i, o] of c.other.entries()) {
+      if (o.kind === "RECORDED_HOST_REDIRECT") continue;
+      const page = await read(o.url, `website-correction:${c.jurisdictionId}:evidence-${i}`);
+      if (page.kind === "READ") {
+        if (!page.text.toLowerCase().includes(site)) refusals.push(`${o.publisher}'s page no longer names ${site}`);
+      } else (page.kind === "WITHDRAWN" ? refusals : notRead).push(page.detail);
+    }
+    outcomes.push({
+      jurisdictionId: c.jurisdictionId,
+      recorded: c.recorded,
+      corrected: c.corrected,
+      disposition: refusals.length > 0 ? "REFUSED" : notRead.length > 0 ? "APPLIED_ON_REVIEWED_EVIDENCE" : "APPLIED_VERIFIED",
+      detail: refusals.length > 0
+        ? `not applied: ${refusals.join("; ")}`
+        : notRead.length > 0
+          ? `applied on the evidence reviewed ${c.reviewedAt} by ${c.reviewedBy}; not read again now: ${notRead.join("; ")}`
+          : `applied: every source read now agrees with the review of ${c.reviewedAt} by ${c.reviewedBy}`,
+    });
+  }
+  return { receipts, outcomes };
+}

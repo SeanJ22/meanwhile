@@ -114,7 +114,7 @@ export interface CarryForwardResult {
  * refusals; the third is a partial read. No single sentence is true of all
  * three, so none is chosen.
  */
-function mark(meeting: Meeting, source: string, previousGeneratedAt: string): Meeting {
+export function mark(meeting: Meeting, source: string, previousGeneratedAt: string): Meeting {
   if (meeting.carried) return meeting;
   const collected = meeting.provenance?.collectedAt;
   const lastFreshAt = Number.isFinite(Date.parse(collected ?? ""))

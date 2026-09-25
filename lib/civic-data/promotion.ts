@@ -19,6 +19,7 @@ import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
 import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts";
 import type { RoutineReaderVerification } from "./reader-verification.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
+import { derivedInputAuthorityIssue } from "./derived-door.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -140,6 +141,13 @@ function routineCandidateContractIssueFor(
     }
     return null;
   }
+  if (task.authorityMode === "DERIVED") {
+    /* No route to authorize: the validator checks the named inputs, and the door checks them against the store. */
+    if (candidate.retrieval.requestedUrl !== task.requestedUrl) return `a derived candidate requests ${task.requestedUrl}, not ${candidate.retrieval.requestedUrl}`;
+    if (candidate.retrieval.finalUrl !== null) return "a derived candidate has no final URL";
+    if (candidate.retrieval.succeeded && candidate.retrieval.derived === undefined) return "a derived candidate names the inputs it was computed from";
+    return null;
+  }
   if (task.authorityMode === "SINGLE_ROUTE") {
     if (!candidate.retrieval.requestedUrl.startsWith(task.requestedUrl)) return `requested route ${candidate.retrieval.requestedUrl} is outside ${task.requestedUrl}`;
     const authority = authorityFor(task.sourceId, task.recordClass, candidate.retrieval.requestedUrl);
@@ -178,6 +186,7 @@ export async function processRegisteredRoutineCandidate(
   }
   const issue = routineCandidateContractIssue(contractId, boundedCandidate);
   if (issue !== null) throw new Error(`ROUTINE_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
+  boundedCandidate = await withDerivedInputAuthority(store, contract, boundedCandidate);
   const identityAuthorityIssue = await officialStateRollIdentityAuthorityIssue(store, boundedCandidate);
   if (identityAuthorityIssue !== null) {
     boundedCandidate = {
@@ -313,9 +322,10 @@ export async function processRegisteredMeetingPartitionCandidate(
   if (issue !== null) {
     throw new Error(`MEETING_PARTITION_CANDIDATE_MISMATCH:${partitionId}:${issue}`);
   }
+  const derivedChecked = await withDerivedInputAuthority(store, contract, boundedCandidate);
   const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
     contract,
-    boundedCandidate,
+    derivedChecked,
     sourceProjectionObservedAt(store, now),
     trustedLkgPredecessorVersionId(boundedCandidate) !== null
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
@@ -323,13 +333,36 @@ export async function processRegisteredMeetingPartitionCandidate(
   );
   return processRoutineCandidate(
     store,
-    boundedCandidate,
+    derivedChecked,
     now,
     expectedBaseVersionId,
     REGISTERED_PRODUCTION_DOOR,
     sourceProjectionVerification,
     options,
   );
+}
+
+/**
+ * A DERIVED contract's candidate enters only with its named inputs checked against the store (C16): every promoted
+ * version it names exists as hashed, and every member read is on a host its named wiring version attests. A failure
+ * is a named failing dependent check, so the refusal is durable and the last known good stays live.
+ */
+async function withDerivedInputAuthority(
+  store: RoutineDataStore,
+  contract: RoutineSourceContract,
+  candidate: RoutineCandidate,
+): Promise<RoutineCandidate> {
+  if (contract.acquisitionAdapter.authorityMode !== "DERIVED" || candidate.retrieval.derived === undefined) return candidate;
+  const issue = await derivedInputAuthorityIssue(store, candidate);
+  return issue === null
+    ? candidate
+    : {
+        ...candidate,
+        dependentChecks: [
+          ...candidate.dependentChecks,
+          { consumer: "derived input authority (lib/civic-data/derived-door.ts)", passed: false, detail: issue },
+        ],
+      };
 }
 
 export function manualCandidateContractIssue(contractId: ManualProductionContractId, candidate: RoutineCandidate): string | null {

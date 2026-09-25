@@ -197,10 +197,8 @@ export function searchCostEntry(input: {
  * robots.txt included. Robots alone would also refuse these; the list keeps a
  * recorded refusal from costing another request per walk.
  */
-export const RECORDED_WALLS: readonly { readonly host: string; readonly why: string }[] = [
-  { host: "go.boarddocs.com", why: "robots-disallowed and 403 to an identified client (docs/source-ladder.md, MISS list)" },
-  { host: "pima.granicus.com", why: "robots.txt Disallow: / (GRANICUS_LIVE_PROCEEDINGS_WALL, lib/sources/legistar-insite/horizon.ts)" },
-];
+export { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
+import { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 
 export const DEFAULT_MAX_REQUESTS_PER_WALK = 12;
 const DEFAULT_TIMEOUT_MS = 20_000;

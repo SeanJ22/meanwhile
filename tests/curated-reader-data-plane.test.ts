@@ -17,6 +17,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceClass, ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import { COMMENT_ACCESS, currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
+import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -30,6 +31,10 @@ const URLS = {
   "venue-resolutions": [
     "https://public.example.gov/meetings/venue",
     "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=100+Main+St&benchmark=Public_AR_Current&format=json",
+  ],
+  "meeting-body-crosswalk": [
+    "https://www.test.example.gov/events/?ical=1",
+    "https://www.test.example.gov/government/city-council",
   ],
 } as const;
 
@@ -58,7 +63,37 @@ function receipt(
 function payloadFor(
   id: (typeof CURATED_READER_CONTRACT_IDS)[number],
   at: string,
+  hashCharacter = "a",
 ): CuratedReaderProjection {
+  if (id === "meeting-body-crosswalk") {
+    const ocdId = "ocd-division/country:us/state:az/place:test";
+    return {
+      kind: id,
+      records: [{
+        id: `${ocdId}#governing|ICAL`,
+        jurisdictionId: "az:city:city-of-test",
+        ocdId,
+        bodyId: `${ocdId}#governing`,
+        bodyRole: "GOVERNING",
+        bodyName: "Test City Council",
+        kind: "ICAL",
+        route: URLS[id][0],
+        officialHost: "www.test.example.gov",
+        filter: { titleMatch: "City Council" },
+        publishingOrg: "City of Test",
+        timeZone: "America/Phoenix",
+        evidence: {
+          calendar: { url: URLS[id][0], sha256: hashCharacter.repeat(64), selected: 2, total: 5 },
+          bodyPage: { url: URLS[id][1], sha256: String.fromCharCode(hashCharacter.charCodeAt(0) + 1).repeat(64), quote: "The Test City Council meets on the first Tuesday." },
+          readAt: at,
+        },
+        status: "ACTIVE",
+        reviewedBy: "a reviewing agent session",
+        reviewedAt: at,
+        authorization: CROSSWALK_CITATION,
+      }],
+    };
+  }
   if (id === "comment-access") {
     return {
       kind: id,
@@ -133,7 +168,7 @@ function packageFor(
     version: at,
     sourceThrough: at,
     sourceReceipt: receipt(id, at, hashCharacter),
-    payload: payloadFor(id, at),
+    payload: payloadFor(id, at, hashCharacter),
   };
 }
 
@@ -245,10 +280,10 @@ test("store failure does not reopen any curated tracked first seed", async () =>
   assert.equal(candidateReads, 0);
 });
 
-test("Admin projects the four manual authorities without inventing a clock", () => {
+test("Admin projects the five manual authorities without inventing a clock", () => {
   const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
-  assert.equal(contracts.length, 4);
+  assert.equal(contracts.length, 5);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);

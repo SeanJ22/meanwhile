@@ -1,6 +1,6 @@
 # The gap ledger
 
-Generated 2026-09-23 (America/Phoenix, `corepack pnpm stamp`).
+Generated 2026-09-24 (America/Phoenix, `corepack pnpm stamp`).
 Rebuild with `corepack pnpm ledger:build`.
 
 **This is what the digging sessions work, front to back.** Every entry names
@@ -107,7 +107,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-09-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-09-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -183,7 +183,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-09-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-09-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -263,7 +263,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-09-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-09-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -358,7 +358,7 @@ TIGER publishes no boundary for a special district, so geometry cannot answer th
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-09-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-09-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 None. No county over this zip holds a special district.
 
@@ -407,15 +407,15 @@ The standing runner retires an old `freshness:jurisdiction:<id>#meetings-N` row 
 | CITY OF CASA GRANDE (`az:city:city-of-casa-grande`) | CITY_OR_TOWN | http://www.casagrandeaz.gov | SOURCE_DISCOVERY_OWED |
 | CITY OF CHANDLER (`az:city:city-of-chandler`) | CITY_OR_TOWN | http://www.chandleraz.gov | SOURCE_DISCOVERY_OWED |
 | CITY OF COOLIDGE (`az:city:city-of-coolidge`) | CITY_OR_TOWN | none recorded | NO_MEETINGS_SOURCE_RECORDED |
-| CITY OF COTTONWOOD (`az:city:city-of-cottonwood`) | CITY_OR_TOWN | http://www.ci.cottonwood.az.us | SOURCE_DISCOVERY_OWED |
-| CITY OF DOUGLAS (`az:city:city-of-douglas`) | CITY_OR_TOWN | http://www.douglasaz.org | SOURCE_DISCOVERY_OWED |
-| CITY OF EL MIRAGE (`az:city:city-of-el-mirage`) | CITY_OR_TOWN | http://www.cityofelmirage.org | SOURCE_DISCOVERY_OWED |
-| CITY OF ELOY (`az:city:city-of-eloy`) | CITY_OR_TOWN | http://www.ci.eloy.az.us | SOURCE_DISCOVERY_OWED |
-| CITY OF FLAGSTAFF (`az:city:city-of-flagstaff`) | CITY_OR_TOWN | http://www.flagstaffaz.gov | SOURCE_DISCOVERY_OWED |
+| CITY OF COTTONWOOD (`az:city:city-of-cottonwood`) | CITY_OR_TOWN | https://cottonwoodaz.gov (corrected from http://www.ci.cottonwood.az.us; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
+| CITY OF DOUGLAS (`az:city:city-of-douglas`) | CITY_OR_TOWN | https://douglasaz.gov (corrected from http://www.douglasaz.org; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
+| CITY OF EL MIRAGE (`az:city:city-of-el-mirage`) | CITY_OR_TOWN | https://elmirageaz.gov (corrected from http://www.cityofelmirage.org; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
+| CITY OF ELOY (`az:city:city-of-eloy`) | CITY_OR_TOWN | https://eloyaz.gov (corrected from http://www.ci.eloy.az.us; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
+| CITY OF FLAGSTAFF (`az:city:city-of-flagstaff`) | CITY_OR_TOWN | https://www.flagstaff.az.gov (corrected from http://www.flagstaffaz.gov; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
 | CITY OF GLENDALE (`az:city:city-of-glendale`) | CITY_OR_TOWN | http://www.glendaleaz.com | SOURCE_DISCOVERY_OWED |
 | CITY OF GLOBE (`az:city:city-of-globe`) | CITY_OR_TOWN | http://www.globeaz.gov | SOURCE_DISCOVERY_OWED |
 | CITY OF GOODYEAR (`az:city:city-of-goodyear`) | CITY_OR_TOWN | http://www.goodyearaz.gov | SOURCE_DISCOVERY_OWED |
-| CITY OF HOLBROOK (`az:city:city-of-holbrook`) | CITY_OR_TOWN | http://www.ci.holbrook.az.us/ | SOURCE_DISCOVERY_OWED |
+| CITY OF HOLBROOK (`az:city:city-of-holbrook`) | CITY_OR_TOWN | https://holbrookaz.gov (corrected from http://www.ci.holbrook.az.us/; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
 | CITY OF KINGMAN (`az:city:city-of-kingman`) | CITY_OR_TOWN | http://www.cityofkingman.gov | SOURCE_DISCOVERY_OWED |
 | CITY OF LAKE HAVASU CITY (`az:city:city-of-lake-havasu-city`) | CITY_OR_TOWN | http://www.lhcaz.gov/ | SOURCE_DISCOVERY_OWED |
 | CITY OF LITCHFIELD PARK (`az:city:city-of-litchfield-park`) | CITY_OR_TOWN | http://www.litchfield-park.org | SOURCE_DISCOVERY_OWED |
@@ -1250,7 +1250,7 @@ The standing runner retires an old `freshness:jurisdiction:<id>#meetings-N` row 
 | TOWN OF NEW HAMPTON (`nh:city:town-of-new-hampton`) | CITY_OR_TOWN | http://www.newhampton.nh.us | SOURCE_DISCOVERY_OWED |
 | TOWN OF NEW IPSWICH (`nh:city:town-of-new-ipswich`) | CITY_OR_TOWN | http://www.townofnewipswich.org | SOURCE_DISCOVERY_OWED |
 | TOWN OF NEW LONDON (`nh:city:town-of-new-london`) | CITY_OR_TOWN | http://www.nl-nh.com | SOURCE_DISCOVERY_OWED |
-| TOWN OF NEWBURY (`nh:city:town-of-newbury`) | CITY_OR_TOWN | http://www.newburyh.org | SOURCE_DISCOVERY_OWED |
+| TOWN OF NEWBURY (`nh:city:town-of-newbury`) | CITY_OR_TOWN | https://www.newbury.nh.gov (corrected from http://www.newburyh.org; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
 | TOWN OF NEWFIELDS (`nh:city:town-of-newfields`) | CITY_OR_TOWN | http://www.newfieldsnh.gov | SOURCE_DISCOVERY_OWED |
 | TOWN OF NEWINGTON (`nh:city:town-of-newington`) | CITY_OR_TOWN | http://www.newington.nh.com | SOURCE_DISCOVERY_OWED |
 | TOWN OF NEWMARKET (`nh:city:town-of-newmarket`) | CITY_OR_TOWN | http://www.newmarketnh.gov/ | SOURCE_DISCOVERY_OWED |
@@ -1426,7 +1426,7 @@ The standing runner retires an old `freshness:jurisdiction:<id>#meetings-N` row 
 | JACKSON TOWN SCH DIST (`nh:school:jackson-town-sch-dist`) | SCHOOL_DISTRICT | none recorded | NO_MEETINGS_SOURCE_RECORDED |
 | JAFFREY RINDGE SCH DIST (`nh:school:jaffrey-rindge-sch-dist`) | SCHOOL_DISTRICT | http://www.sau47.k12.nh.us/ | SOURCE_DISCOVERY_OWED |
 | JOHN STARK REG SCHOOL DISTRICT (`nh:school:john-stark-reg-school-district`) | SCHOOL_DISTRICT | http://generals.john-stark.k12.nh.us/ | SOURCE_DISCOVERY_OWED |
-| KEARSARGE REGIONAL SCHOOL DIST (`nh:school:kearsarge-regional-school-dist`) | SCHOOL_DISTRICT | http://www.kearsarge.k12.nh.us/ | SOURCE_DISCOVERY_OWED |
+| KEARSARGE REGIONAL SCHOOL DIST (`nh:school:kearsarge-regional-school-dist`) | SCHOOL_DISTRICT | https://www.kearsarge.org (corrected from http://www.kearsarge.k12.nh.us/; C15: owner decision recorded 2026-09-24T22:43Z (website field only)) | SOURCE_DISCOVERY_OWED |
 | KEENE SCHOOL DISTRICT (`nh:school:keene-school-district`) | SCHOOL_DISTRICT | http://WWW.SAU29.K12.NH.US | SOURCE_DISCOVERY_OWED |
 | KENSINGTON TOWN SCH DIST (`nh:school:kensington-town-sch-dist`) | SCHOOL_DISTRICT | none recorded | NO_MEETINGS_SOURCE_RECORDED |
 | LAFAYETTE REGIONAL SCH DIST (`nh:school:lafayette-regional-sch-dist`) | SCHOOL_DISTRICT | http://WWW.LAFAYETTE.K12.NH.US | SOURCE_DISCOVERY_OWED |

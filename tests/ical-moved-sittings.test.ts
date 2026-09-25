@@ -76,9 +76,9 @@ test("every rescheduled or postponed summary in the recorded feeds is read for t
 });
 
 function wiring(slug: string) {
-  const found = MEETING_PARTITION_CONTRACTS.find((row) => row.meetingSource === "ical" && row.wiring.config.slug === slug);
+  const found = MEETING_PARTITION_CONTRACTS.find((row) => row.meetingSource === "ical" && row.wiring!.config.slug === slug);
   assert.ok(found, `no ${slug} partition is wired; this guard is stale`);
-  return found.wiring;
+  return found.wiring!;
 }
 
 function read(slugs: readonly string[], file: string, readAt: string) {

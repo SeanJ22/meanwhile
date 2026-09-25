@@ -19,5 +19,5 @@ export function registeredHeldMeetingContract(canonicalUrl: string, subjectId?: 
   const contract = PIMA_LEGISTAR_CONTRACT;
   if (subjectId && subjectId !== contract.subjectId) return null;
   const partition = meetingPartitionForRow("legistar", contract.subjectId);
-  return partition.wiring.config.slug === contract.publisherSlug ? contract : null;
+  return partition.wiring?.config.slug === contract.publisherSlug ? contract : null;
 }

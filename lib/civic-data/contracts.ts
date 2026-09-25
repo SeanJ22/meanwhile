@@ -113,6 +113,14 @@ export interface RoutineSourceContract {
     | {
         readonly authorityMode: "REGISTERED_SOURCE_ROUTES";
         readonly command: readonly string[];
+      }
+    | {
+        /**
+         * No route of its own: the candidate is authentic only as the exact promoted, vaulted or member-read
+         * inputs it names, checked by the validator and at the door (`lib/civic-data/derived-door.ts`). C16.
+         */
+        readonly authorityMode: "DERIVED";
+        readonly command: readonly string[];
       };
   readonly parserNormalizerVersion: string;
   readonly cadence: RoutineCadencePolicy;
@@ -170,6 +178,35 @@ export const MEETING_PARTITION_POLICY = {
   schedule: MEETING_SITTING_WINDOW,
   retry: { afterMs: HOUR, description: "one hour after a failed source/body attempt" },
   authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meetings-public-bodies" },
+  validationContract: CHECKS,
+  canonicalProductionStore: STORE,
+  autoPromotable: true,
+  classification: "RUNTIME_CIVIC_DATA",
+  readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
+} as const;
+
+/**
+ * **THE DERIVED MEETING FAMILIES** (C16, the owner's decision recorded 2026-09-24T22:43Z).
+ *
+ * One static partition per covered state whose members are the promoted
+ * meeting-source wiring's ACTIVE rows for that state, read at runtime. A
+ * reviewed crosswalk row plus a route discovery validated therefore publishes
+ * through the standing runner with no code release. The family is its scope's
+ * only writer; each member keeps its own last verified rows when it fails or
+ * is suspended; an unreadable wiring store blocks the family's candidate and
+ * keeps its last known good.
+ */
+export const DERIVED_MEETING_FAMILY_STATES = ["US-AZ", "US-NH", "US-NJ"] as const;
+export type DerivedMeetingFamilyState = (typeof DERIVED_MEETING_FAMILY_STATES)[number];
+
+export const DERIVED_MEETING_FAMILY_POLICY = {
+  sourceId: "meetings-derived-routes",
+  recordClass: "MEETING",
+  parserNormalizerVersion: "meetings-composite/2",
+  cadence: MEETING_CADENCE,
+  schedule: MEETING_SITTING_WINDOW,
+  retry: { afterMs: 6 * HOUR, description: "six hours after a failed family attempt; a family with no member yet holds, and says so" },
+  authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meetings-derived-routes" },
   validationContract: CHECKS,
   canonicalProductionStore: STORE,
   autoPromotable: true,
@@ -442,6 +479,25 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   })),
+  {
+    id: "meeting-source-wiring",
+    sourceId: "meeting-source-wiring",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US:meeting-source-wiring",
+    acquisitionFailureDomain: "derived:meeting-source-wiring",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-source-wiring.mts", "--promote"] },
+    parserNormalizerVersion: "meeting-source-wiring/1",
+    cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
+    retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-source-wiring" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "meeting-source-wiring", consumers: ["derived meeting families", "Admin"] },
+    lkgBehavior: "A version with a refused decision, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD wiring live; no row is ever dropped, and a suspended row stays marked until a later review.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

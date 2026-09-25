@@ -54,11 +54,11 @@ test("the PDC-7 frozen denominator accounts for every source row and all 42 hold
   const problems = validatePdc7DispositionRegistry(inventory.rows, DATASET_FAMILIES.map((family) => family.id));
   assert.deepEqual(problems, []);
 
-  assert.equal(inventory.rows.length, 38);
+  assert.equal(inventory.rows.length, 41); // + meeting-source-wiring, meetings-derived-families, meeting-body-crosswalk (C16)
   // legistar-outcomes moved from the explicit-owner bindings to the standing clock; registration adds one row.
-  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 9); // + registration (56 contracts, one binding) and + pima-legistar-outcomes, moved to the standing clock
+  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 11); // + the derived wiring store and the derived meeting families (C16) // + registration (56 contracts, one binding) and + pima-legistar-outcomes, moved to the standing clock
   assert.equal(NON_ROUTINE_DISPOSITIONS.length, 11);
-  assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 17);
+  assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 18); // + the meeting-body crosswalk (C16)
   assert.equal(PDC7_RESOLVED_SPLIT_BINDINGS.length, 1);
   assert.equal(PDC7_MIGRATION_BLOCKERS.length, 0);
   assert.equal(DATASET_FAMILIES.length, 42);
@@ -96,7 +96,7 @@ test("six direct routine rows plus the retired LegiScan row resolve every standi
     byId(observableRoutineContracts().map(({ id: contractId, sourceId: contractSourceId }) => ({ contractId, contractSourceId }))),
   );
   assert.equal(ROUTINE_SOURCE_CONTRACTS.some(({ id }) => id === "meetings"), false);
-  assert.equal(ROUTINE_INVENTORY_BINDINGS[0]?.contractIds.length, MEETING_PARTITION_CONTRACTS.length);
+  assert.equal(ROUTINE_INVENTORY_BINDINGS[0]?.contractIds.length, MEETING_PARTITION_CONTRACTS.filter(({ derivedFamily }) => derivedFamily === null).length);
 });
 
 test("every explicit-owner production contract resolves one frozen inventory row without becoming a routine clock", () => {

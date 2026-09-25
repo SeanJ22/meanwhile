@@ -322,13 +322,13 @@ function frozenImportAdmission(): ReaderExecutionAuthorityArchivedSupportAdmissi
 
 test("meeting proof derives the exact 83/41 authority from admitted import membership", () => {
   const authority = readerProofMeetingsAuthorityFromImport(frozenImportAdmission());
-  // 124 imported (83 promoted / 41 zero-LKG) + 4 registered after the import
+  // 124 imported (83 promoted / 41 zero-LKG) + 7 registered after the import
   // (PDC_V2_POST_IMPORT_MEETING_PARTITIONS: Tucson Unified's own page, C9's two
-  // Newbury pages and C14's Chandler schedule table), NOT_RECORDED until the
-  // runner gains them.
-  assert.equal(authority.partitions.length, 128);
+  // Newbury pages, C14's Chandler schedule table and C16's three derived state
+  // families), NOT_RECORDED until the runner gains them.
+  assert.equal(authority.partitions.length, 131);
   assert.equal(authority.meetingPartitionsWithLkg, 83);
-  assert.equal(authority.meetingPartitionsWithoutLkg, 45);
+  assert.equal(authority.meetingPartitionsWithoutLkg, 48);
   assert.deepEqual(authority, frozenMeetingAuthority());
 
   const admission = frozenImportAdmission();
@@ -393,11 +393,11 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
   const input = meetingProofInput();
   assert.equal(input.kind, "PROMOTED");
   if (input.kind !== "PROMOTED") return;
-  assert.equal(input.partitions.length, 128);
+  assert.equal(input.partitions.length, 131);
   assert.equal(input.partitions.filter(({ kind }) => kind === "PROMOTED").length, 83);
-  assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 45);
+  assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 48);
   assert.equal(expected.meetingPartitionsWithLkg, 83);
-  assert.equal(expected.meetingPartitionsWithoutLkg, 45);
+  assert.equal(expected.meetingPartitionsWithoutLkg, 48);
   assert.equal(requireReaderProofMeetingsProjection(input, expected), input.value);
   const identity = readerProofMeetingPartitionIdentity(input, expected);
   const reversed = meetingProofInput([...input.partitions].reverse());

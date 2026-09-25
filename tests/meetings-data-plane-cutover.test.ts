@@ -168,16 +168,16 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
   // The bundled fixture is frozen at the PDC v2 import: the only other
   // obligations it may leave unaccounted are rows whose partitions were
   // registered after it, each named in PDC_V2_POST_IMPORT_MEETING_PARTITIONS.
-  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
   /*
    * Coverage is counted by source route: a post-import row on a route the fixture already carries (C9's two
    * Newbury rows and Chandler's row, all on schedulepage, 2026-09-24) is represented by that route's rows and is not missing. Every post-import row
-   * on a route the fixture lacks must be.
+   * on a route the fixture lacks must be. A derived state family (C16) is no SOURCE_WIRING row, so the wiring coverage never counts it.
    */
+  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => p.wiring !== null && PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
   const fixtureRoutes = new Set(fixture.sources.map((source) => source.source));
   const expectedMissing = [
     ...WIRED_AFTER_FIXTURE,
-    ...postImport.filter((p) => !fixtureRoutes.has(p.meetingSource)).map((p) => `${p.bodyId}:${p.wiring.agendaSourceType}`),
+    ...postImport.filter((p) => !fixtureRoutes.has(p.meetingSource)).map((p) => `${p.bodyId}:${p.wiring!.agendaSourceType}`),
   ];
   assert.ok(postImport.some((p) => fixtureRoutes.has(p.meetingSource)), "the case this guards: a post-import row on a route the fixture carries");
   assert.deepEqual([...coverage.missing].sort(), [...expectedMissing].sort());

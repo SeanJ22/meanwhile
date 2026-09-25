@@ -33,6 +33,7 @@ import {
 import type { CoverageTier } from "../lib/coverage/tier.ts";
 import {
   meetingsDiscoveryNeeds,
+  withWebsiteCorrection,
   type JurisdictionRegistryFile,
   type MeetingsDiscoveryNeed,
 } from "../lib/hunt/meetings-discovery.ts";
@@ -612,7 +613,8 @@ const REGISTRY_PATHS = ["az", "nh", "nj"].map((st) => `data/states/${st}/jurisdi
 const registries = REGISTRY_PATHS.map(
   (p) => JSON.parse(readFileSync(join(process.cwd(), p), "utf8")) as JurisdictionRegistryFile,
 );
-const meetingNeeds = meetingsDiscoveryNeeds(registries);
+/* A reviewed website correction replaces a dead Census address while the registry still records it (C15). */
+const meetingNeeds = meetingsDiscoveryNeeds(registries).map(withWebsiteCorrection);
 const enumeratedGovernments = registries.reduce((n, r) => n + r.jurisdictions.length, 0);
 const owedWithSource = meetingNeeds.filter((n) => n.basis === "SOURCE_DISCOVERY_OWED");
 const noMeetingsSource = meetingNeeds.filter((n) => n.basis === "NO_MEETINGS_SOURCE_RECORDED");
@@ -662,7 +664,10 @@ for (const r of registries) {
   w("| Jurisdiction | Class | Website | Basis |");
   w("| --- | --- | --- | --- |");
   for (const n of rows) {
-    w(`| ${n.name} (\`${n.jurisdictionId}\`) | ${n.govClass} | ${n.ownWebAddress ?? "none recorded"} | ${n.basis} |`);
+    const site = n.addressCorrection === undefined
+      ? n.ownWebAddress ?? "none recorded"
+      : `${n.ownWebAddress} (corrected from ${n.addressCorrection.recorded}; ${n.addressCorrection.authorization})`;
+    w(`| ${n.name} (\`${n.jurisdictionId}\`) | ${n.govClass} | ${site} | ${n.basis} |`);
   }
   w();
 }

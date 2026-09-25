@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
+import { derivedAuthorityFor } from "./derived-door.ts";
 import {
   MEETING_READER_SERVING_WINDOW_CONTRACT,
   meetingReaderServingWindowAt,
@@ -406,7 +407,10 @@ export function validateRoutineCandidate(
   const readModel = durableCanonicalJson(candidate.readModel);
   const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
   const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
-  const authority = candidate.retrieval.manualSourceReceipt
+  /* A DERIVED authority has no route: its candidate is authentic only as the exact inputs it names (derived-door.ts). */
+  const authority = candidate.retrieval.derived
+    ? derivedAuthorityFor(candidate)
+    : candidate.retrieval.manualSourceReceipt
     ? authorityForManualReceipt(
         candidate.sourceId,
         candidate.recordClass,
@@ -480,7 +484,9 @@ export function validateRoutineCandidate(
     const confirmed = candidate.retrieval.httpStatus === 304
       ? `; 304 Not Modified against the pinned Last-Modified ${REGISTRATION_SOURCE_LAST_MODIFIED}, confirming the pinned bytes ${REGISTRATION_SOURCE_SHA256} without a download`
       : "";
-    checks.push(result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}${confirmed}; raw ${candidate.retrieval.rawHash}.`));
+    checks.push(candidate.retrieval.derived
+      ? result("SOURCE_AUTHENTICITY", "PASS", "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; derived from ${candidate.retrieval.derived.inputs.length} named input(s); raw ${candidate.retrieval.rawHash}.`)
+      : result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}${confirmed}; raw ${candidate.retrieval.rawHash}.`));
   }
 
   if (!candidate.normalization.succeeded) {

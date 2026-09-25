@@ -75,7 +75,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "./data-plane.ts";
-import { currentMeetingOutcomesEdge } from "../registry/runtime-edge.ts";
+import { currentMeetingOutcomesEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 /** Where the committed store lives, relative to the repo root. */
 export const OUTCOME_SNAPSHOT_PATH = ["data", "states", "az", "outcomes", "legistar-outcomes.json"];
@@ -245,7 +245,8 @@ export function primeOutcomeProjection(value: OutcomeSnapshot, versionId: string
  * entered the reader authority edge serves the recorded outcomes from its
  * meeting-outcomes artifact without Neon: from the database this read was the
  * pole of a cold Ask, 2.0–2.3 s. The standing runner and the workers never
- * enter an edge, so they read the authoritative pointer as before.
+ * enter an edge, so they read the authoritative pointer as before. An
+ * edge-only context (the keep-warm call, C21) refuses instead of reading it.
  */
 export async function settleOutcomeRead(): Promise<void> {
   const edge = currentMeetingOutcomesEdge();
@@ -253,6 +254,7 @@ export async function settleOutcomeRead(): Promise<void> {
     primeOutcomeProjection(edge.value, edge.versionId);
     return;
   }
+  refuseDatabaseInEdgeOnlyContext("The recorded outcomes");
   await refreshOutcomeSnapshotFromPromoted();
 }
 

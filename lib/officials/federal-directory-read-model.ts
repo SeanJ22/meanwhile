@@ -10,6 +10,7 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
+import { validateOnce } from "../civic-data/validated-once.ts";
 import {
   FEDERAL_DIRECTORY_SCOPE,
   FEDERAL_DIRECTORY_SOURCE_ID,
@@ -87,10 +88,11 @@ export async function refreshFederalDirectoryFromPromoted(options: PromotedCivic
  * `lib/registry/runtime-edge.ts`). Does NOT alter `refreshFederalDirectoryFromPromoted`,
  * which the runner and workers still use for the authoritative path. BOOTSTRAP
  * kind: the serving copy carries the validated value and its version, not the
- * promotion receipt (no fabricated receipt).
+ * promotion receipt (no fabricated receipt). Validated once per edge object and
+ * version (C21, `validateOnce`).
  */
 export function primeFederalDirectoryFromValue(value: FederalDirectoryReadModel, versionId: string): void {
-  validate(value, versionId);
+  validateOnce("federal-directory", value, versionId, () => validate(value, versionId));
   cache = value;
   readState = {
     kind: "BOOTSTRAP",

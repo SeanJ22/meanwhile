@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 786,
+    "named": 7676,
     "dynamic": 30
   },
   "files": {
@@ -3384,6 +3384,7 @@
         "6.5: a stamped tier above its evidence is caught; below it is fine",
         "6.5: no stamped zip carries a tier its own evidence does not support",
         "6.6: there is no setter — a tier can only be computed from evidence",
+        "C21: /api/meetings no longer reaches the coverage ledger, so it no longer traces it",
         "RULING 6: the four tiers exist in this vocabulary and no other",
         "RULING 6: the read side looks a stamp up and cannot compute one",
         "RULING 6: the stamped ledger exists and its distribution sums to its denominator",
@@ -4636,7 +4637,7 @@
         "D06: planted contributor-level data reaches no sold aggregate",
         "D06: the sentences state their base before they state any figure",
         "D40: distinct officials resolve to distinct funding payloads",
-        "D40: no query-keyed API route marks itself publicly cacheable",
+        "D40: no query-keyed API route marks itself publicly cacheable unless the CDN keys on every query parameter",
         "D40: no two candidates share an FEC id, a committee id, or a target key",
         "R4: a retained second-hop committee whose rows thin is still a regression",
         "R4: a vanished second-hop committee that is STILL derived is a regression",
@@ -7682,6 +7683,16 @@
       ],
       "dynamic": 0
     },
+    "tests/post-deploy-warm.test.ts": {
+      "names": [
+        "POST-DEPLOY · a deploy that never becomes the served one is reported, and nothing is warmed for it",
+        "POST-DEPLOY · each pilot fill asks exactly what the map asks, so it fills the object a reader will hit",
+        "POST-DEPLOY · it waits for production to serve the commit, then warms the instances and fills and rereads every pilot",
+        "POST-DEPLOY · only a production deploy with a commit is warmed",
+        "POST-DEPLOY · the deploy-succeeded function acts once per production commit and ignores every other event"
+      ],
+      "dynamic": 0
+    },
     "tests/prepared-meeting-snapshot.test.ts": {
       "names": [
         "a held prepared row is re-read when the coupling differs in any part",
@@ -8038,6 +8049,21 @@
       "names": [
         "an empty unbound engine cannot contradict a held civic answer, while identity and loader states remain visible",
         "reader civic contacts exclude a planted unverified acquisition"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-cold-path.test.ts": {
+      "names": [
+        "C21 · /api/representation reads the registry from the edge it entered, and the CDN holds its answer",
+        "C21 · a refusal, and an answer the edge did not serve whole, are never held",
+        "C21 · a warm call resolves one place per published state from the edge, and refuses what the edge does not carry",
+        "C21 · a whole /api/meetings answer from the edge is held by the CDN, keyed on every query parameter, and says where its time went",
+        "C21 · an edge value is validated once per object and version, and an invalid one fails every prime",
+        "C21 · concurrent reads on one instance share one fetch and one parse of an authority family",
+        "C21 · the Blobs manifest is held fifteen seconds per instance, shared in flight, and an absent one is never held",
+        "C21 · the held answer carries nothing about the visitor: other cookies, agents and addresses get the same bytes",
+        "C21 · the map's routes fetch only the authority families they read, never Ask's outcomes or the comment-access artifact",
+        "C21 · the route loads the ZIP table on demand, never as a 961 KB static import"
       ],
       "dynamic": 0
     },

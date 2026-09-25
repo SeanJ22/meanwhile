@@ -178,8 +178,8 @@ export interface Jurisdiction {
  */
 export interface RegistrationRegistryOrigin {
   readonly kind: "REGISTRATION";
-  /** The promoted REGISTRATION version, the one readers use; null when read from the committed reference before its first promotion. */
-  readonly versionId: string | null;
+  /** The promoted REGISTRATION version, the one readers use. */
+  readonly versionId: string;
   /** sha256 of the committed reference (`data/derived/registration/<st>.json`) the version was built from. */
   readonly referenceSha256: string;
   /** The Census file each web address was read from, with its sha256 as the reference's index records it. */

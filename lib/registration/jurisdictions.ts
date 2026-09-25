@@ -32,11 +32,11 @@
  *                     no source, so the need is `find-own-site`
  * ```
  *
- * The promoted version is preferred: it is the one readers use. A state with no
- * promoted registration yet is read from the committed reference itself
- * (`versionId: null`, each body minted by the same division rule), and says so.
- * A read that fails, or a promoted version built from another reference than
- * the committed one, refuses the state by name: nothing is guessed, and its
+ * Only the promoted version is read: it is the one readers use, and the
+ * committed reference is read only as the exact input that version names (its
+ * `referenceSha256`), never in its place. A state with no promoted registration,
+ * a read that fails, or a promoted version built from another reference than
+ * the committed one refuses the state by name: nothing is guessed, and its
  * governments are named as blocked rather than created.
  *
  * SERVER-ONLY (node:fs). Only the standing runner and tests read it; a request
@@ -80,7 +80,6 @@ const CLASS_OF: Readonly<Record<string, JurisdictionClass>> = {
   "COUNTY SUBDIVISION GOVERNMENT": "CITY_OR_TOWN",
   "PLACE GOVERNMENT": "CITY_OR_TOWN",
 };
-const SCHOOL_TYPES = new Set(["SCHOOL DISTRICT", "DEPENDENT SCHOOL SYSTEM"]);
 
 /* ------------------------------------------------------------ the Census file's own words */
 
@@ -169,9 +168,10 @@ export function registrationOwnSiteSource(census: string): JurisdictionSource {
 /* ------------------------------------------------------------ one state's registry */
 
 export interface RegistrationRegistryInput {
+  /** The committed reference the promoted version names by its sha256. */
   readonly reference: LoadedReference;
-  /** The promoted registration version and its read model; null reads the committed reference before its first promotion. */
-  readonly promoted: { readonly versionId: string; readonly model: RegistrationReadModel } | null;
+  /** The promoted registration version and its read model: the one readers use. */
+  readonly promoted: { readonly versionId: string; readonly model: RegistrationReadModel };
   readonly census: CensusFacts;
 }
 
@@ -184,36 +184,20 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   const ref = loaded.reference;
   const state = ref.state.toLowerCase();
   const postal = state.toUpperCase();
-  if (promoted !== null) {
-    if (promoted.model.state.toLowerCase() !== state) {
-      throw new Error(`REGISTRATION_STATE_MISMATCH:${postal}: the promoted version ${promoted.versionId} is ${promoted.model.state}'s`);
-    }
-    if (promoted.model.vintage.referenceSha256 !== loaded.sha256) {
-      throw new Error(
-        `REGISTRATION_REFERENCE_MISMATCH:${postal}: the promoted registration ${promoted.versionId} was built from reference ` +
-          `${promoted.model.vintage.referenceSha256}, and the committed reference is ${loaded.sha256}; neither is read until they agree`,
-      );
-    }
+  if (promoted.model.state.toLowerCase() !== state) {
+    throw new Error(`REGISTRATION_STATE_MISMATCH:${postal}: the promoted version ${promoted.versionId} is ${promoted.model.state}'s`);
+  }
+  if (promoted.model.vintage.referenceSha256 !== loaded.sha256) {
+    throw new Error(
+      `REGISTRATION_REFERENCE_MISMATCH:${postal}: the promoted registration ${promoted.versionId} was built from reference ` +
+        `${promoted.model.vintage.referenceSha256}, and the committed reference is ${loaded.sha256}; neither is read until they agree`,
+    );
   }
 
-  /* The body each government has: the promoted version's, or (before one) the division rule registration mints by. */
+  /* The body each government has: the one the promoted version minted, on its division. */
   const bodyOf = new Map<string, { readonly id: string; readonly ocdId: string }>();
-  if (promoted !== null) {
-    for (const body of promoted.model.bodies) {
-      if (body.jurisdictionId !== null && !bodyOf.has(body.jurisdictionId)) bodyOf.set(body.jurisdictionId, { id: body.id, ocdId: body.ocdId });
-    }
-  } else {
-    const minted = new Set<string>();
-    for (const [, jurisdictionId, , govType, division] of ref.governments) {
-      if (govType === "STATE" || division < 0) continue;
-      const ocdId = ref.divisions[division]?.[0];
-      if (ocdId === undefined) continue;
-      const id = `${ocdId}#${SCHOOL_TYPES.has(govType) ? "board" : "governing"}`;
-      /* One id, one body: a second government on a body id already minted gets none (candidate.ts). */
-      if (minted.has(id)) continue;
-      minted.add(id);
-      bodyOf.set(jurisdictionId, { id, ocdId });
-    }
+  for (const body of promoted.model.bodies) {
+    if (body.jurisdictionId !== null && !bodyOf.has(body.jurisdictionId)) bodyOf.set(body.jurisdictionId, { id: body.id, ocdId: body.ocdId });
   }
 
   /* Each division's Census layer and GEOID: the key its sampled ZCTA shares are read by. */
@@ -259,7 +243,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
   }
   const counts: Record<string, number> = {};
   for (const j of jurisdictions) counts[j.govClass] = (counts[j.govClass] ?? 0) + 1;
-  const version = promoted === null ? "its committed reference (not yet promoted)" : `promoted registration version ${promoted.versionId}`;
+  const version = `promoted registration version ${promoted.versionId}`;
   const enumerations: Record<string, { readonly describe: string; readonly path: string }> = {
     "the-state-itself": { describe: "the state itself — the authority every STATEWIDE route belongs to", path: "(not an external enumeration)" },
     "census-govt-units-2022": { describe: "U.S. Census Bureau, 2022 Census of Governments: Organization, as this state's registration reads it", path: `data/derived/registration/${state}.json` },
@@ -285,7 +269,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
     jurisdictions,
     registration: {
       kind: "REGISTRATION",
-      versionId: promoted?.versionId ?? null,
+      versionId: promoted.versionId,
       referenceSha256: loaded.sha256,
       webAddresses: census.source,
     },
@@ -304,9 +288,10 @@ export interface RegistrationJurisdictionsLoad {
 }
 
 /**
- * Read each named state's registration as a registry: the promoted version (the one readers use) through `read`;
- * a state with no promoted version yet, from its committed reference. Every other outcome refuses the state by
- * name. The caller decides which states (never a reviewed one: the reviewed registry wins).
+ * Read each named state's registration as a registry: the promoted version (the one readers use) through `read`.
+ * Every other outcome — no promoted version yet, an outage, a version built from another reference — refuses the
+ * state by name; the committed reference is never read in its place. The caller decides which states (never a
+ * reviewed one: the reviewed registry wins).
  */
 export async function loadRegistrationJurisdictions(input: {
   readonly root: string;
@@ -322,17 +307,16 @@ export async function loadRegistrationJurisdictions(input: {
       registrationTarget(state);
       const reference = loadRegistrationReference(input.root, state);
       const read = await input.read(state);
-      let promoted: RegistrationRegistryInput["promoted"];
-      if (read.kind === "PROMOTED") {
-        if (read.metadata.versionId === null) throw new Error(`REGISTRATION_VERSION_UNNAMED:${state.toUpperCase()}: the promoted pointer names no version`);
-        promoted = { versionId: read.metadata.versionId, model: read.value };
-      } else if (read.kind === "NOT_RECORDED") {
-        promoted = null;
-      } else {
-        throw new Error(`REGISTRATION_NOT_READ:${state.toUpperCase()}: ${read.kind}: ${"detail" in read ? read.detail : ""}`);
+      if (read.kind !== "PROMOTED") {
+        throw new Error(
+          read.kind === "NOT_RECORDED"
+            ? `REGISTRATION_NOT_PROMOTED:${state.toUpperCase()}: its registration has no promoted version yet, and the committed reference is never read in its place`
+            : `REGISTRATION_NOT_READ:${state.toUpperCase()}: ${read.kind}: ${"detail" in read ? read.detail : ""}`,
+        );
       }
+      if (read.metadata.versionId === null) throw new Error(`REGISTRATION_VERSION_UNNAMED:${state.toUpperCase()}: the promoted pointer names no version`);
       census ??= readCensusGovernmentFacts(input.root);
-      registries.set(state, registrationJurisdictionRegistry({ reference, promoted, census }));
+      registries.set(state, registrationJurisdictionRegistry({ reference, promoted: { versionId: read.metadata.versionId, model: read.value }, census }));
     } catch (error) {
       refused.set(state, error instanceof Error ? error.message : String(error));
     }

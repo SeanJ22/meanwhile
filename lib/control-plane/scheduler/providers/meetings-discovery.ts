@@ -112,7 +112,7 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
       source?.citation ??
       (reg.registration === undefined
         ? `the promoted ${need.stateCode} jurisdiction registry names this government and records no MEETINGS source for it (gap ledger basis NO_MEETINGS_SOURCE_RECORDED)`
-        : `${need.stateCode.toUpperCase()}'s registration names this government (${reg.registration.versionId === null ? "its committed reference, not yet promoted" : `promoted version ${reg.registration.versionId}`}), and the Census records no web address for it, so none is invented (basis NO_MEETINGS_SOURCE_RECORDED)`),
+        : `${need.stateCode.toUpperCase()}'s registration names this government (promoted version ${reg.registration.versionId}), and the Census records no web address for it, so none is invented (basis NO_MEETINGS_SOURCE_RECORDED)`),
     awaitingAdapter: "the meetings discovery executor",
   };
 }
@@ -209,7 +209,7 @@ export function materializedDiscoveryNeeds(
 export function dispatchedAddressSource(reg: JurisdictionRegistry, reviewedVersionId: string | null): DiscoveryAddressSource {
   return reg.registration === undefined
     ? { source: "OPERATIONAL_REFERENCE", versionId: reviewedVersionId }
-    : { source: "REGISTRATION", versionId: reg.registration.versionId ?? `reference-sha256:${reg.registration.referenceSha256}` };
+    : { source: "REGISTRATION", versionId: reg.registration.versionId };
 }
 
 export interface MeetingsDiscoveryInput {

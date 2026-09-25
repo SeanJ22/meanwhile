@@ -23,6 +23,7 @@ import { hasReviewedRegistry, JURISDICTION_REFERENCE_STATES } from "../lib/civic
 import { JURISDICTION_REFERENCE_STATES as FROM_REFERENCE } from "../lib/civic-data/operational-references.ts";
 import { registrationGovernments, type ReadOnlyQuery, type Statement } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { instructionView } from "../lib/control-plane/admin-view/work-view.ts";
+import { deployPreview } from "../lib/control-plane/deploy-preview.ts";
 import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import type { DispatchWorkReading, DispatchWorkTargetReading } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
@@ -131,6 +132,11 @@ test("Admin's preview: the registration slice, and the governments a Send must p
   );
   assert.match(stateSendPreviewSentence({ kind: "REVIEWED_REGISTRY", state: "AZ" }, 1000), /^AZ: its governments come from the reviewed AZ jurisdiction registry/);
   assert.match(stateSendPreviewSentence({ kind: "NOT_READ", state: "TX", why: "its registration is not promoted in this store yet" }, 1000), /no count is claimed/);
+
+  /* A DISPATCH ("deep dive on Ohio") says where Ohio's governments come from, and what is blocked is only an unreadable registration. */
+  const ohio = deployPreview({ note: "deep dive on Ohio", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } }).creates[0]!.says;
+  assert.match(ohio, /a state with no reviewed registry is read from its registration \(the 2022 Census of Governments\)/);
+  assert.match(ohio, /a state whose registration cannot be read is named as blocked/);
 
   /* The reviewed states, read alone for the preview, are the reference's own. */
   assert.deepEqual([...JURISDICTION_REFERENCE_STATES], [...FROM_REFERENCE]);

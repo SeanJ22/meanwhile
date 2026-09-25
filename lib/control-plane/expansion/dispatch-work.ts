@@ -30,17 +30,24 @@
  *                           deduped (local-jurisdictions.ts), and its meetings
  *                           discovery need in the gap ledger's shape
  *                           (lib/hunt/meetings-discovery.ts, the same derivation
- *                           that writes data/derived/gap-ledger.json)
+ *                           that writes data/derived/gap-ledger.json). A state
+ *                           with no reviewed registry is read from its promoted
+ *                           REGISTRATION (2026-09-25,
+ *                           lib/registration/jurisdictions.ts): every government
+ *                           it names owes its meetings discovery and nothing
+ *                           else, and each row created from it says so
+ *                           (`materializedFrom: REGISTRATION`)
  *   what already exists     this cycle's registry corpus and the durable
  *                           obligation rows (cp_obligations)
  * ```
  *
  * No state list, no county list and no body list is written here or anywhere
- * this module reaches. A geography in a state whose registry is not promoted
- * has governments the Census names and no requirement definitions, so it is
- * BLOCKED by name: a Census unit is a government, but a requirement no registry
- * defines is a lead, never work (RULING 251). Registering the state — its
- * registry in the promoted bundle — is the whole change needed to unblock it.
+ * this module reaches. A geography in a state with neither a promoted registry
+ * nor a registration this cycle could read has governments the Census names and
+ * no requirement definitions, so it is BLOCKED by name: a Census unit is a
+ * government, but a requirement no registry defines is a lead, never work
+ * (RULING 251). Every state, DC and territory is registered, so in practice a
+ * state is blocked only while its registration cannot be read, and says why.
  *
  * ## The state machine
  *
@@ -147,8 +154,8 @@ export const DATASET = {
   wiring: "the promoted meeting-partition source wiring",
   instruction: "a geography in the instruction (a state named in the words, or a geography sent from the Census lookup)",
   reader:
-    "the jurisdiction registry reader (lib/civic-data/operational-references.ts: the reviewed registries, and every other " +
-    "state's registration, read by lib/registration/jurisdictions.ts)",
+    "the operational-reference registry reader (lib/civic-data/operational-references.ts, the states it reads: the reviewed " +
+    "registries, and every other state's registration, read by lib/registration/jurisdictions.ts)",
 } as const;
 
 /* ----------------------------------------------------------------- targets */
@@ -790,9 +797,9 @@ export function dispatchWorkReading(
     /* Where the governments came from: the reviewed registries, or a state's registration (2026-09-25). */
     const fromRegistration = t.units.placed.filter((u) => registrySourceOf(u.reg) === "REGISTRATION");
     if (fromRegistration.length > 0) {
-      const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? null])).entries()]
+      const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? ""])).entries()]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([st, v]) => `${st.toUpperCase()} ${v === null ? "from its committed reference, not yet promoted" : `version ${v}`}`);
+        .map(([st, v]) => `${st.toUpperCase()} version ${v}`);
       says.push(
         `${fromRegistration.length} of the ${t.units.placed.length} governments here come from registration (the 2022 Census of Governments; ` +
           `${versions.join("; ")}), not a reviewed registry: no reviewed registry exists for ${versions.length === 1 ? "that state" : "those states"}. ` +

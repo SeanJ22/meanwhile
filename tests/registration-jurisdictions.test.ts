@@ -43,6 +43,7 @@ import {
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
+import { reviewedIds } from "./helpers/expansion-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const T = "2026-09-23T12:00:00.000Z";
@@ -55,26 +56,21 @@ installOperationalReferenceBundle(operationalReferenceBundle(REVIEWED));
 
 const NOT_RECORDED = async () => ({ kind: "NOT_RECORDED" as const, value: null, metadata: {} as never, detail: "no pointer" });
 
-async function promotedOhio(): Promise<{ versionId: string; model: RegistrationReadModel; store: MemoryRoutineDataStore }> {
-  const store = new MemoryRoutineDataStore();
-  const registry = JSON.parse(readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8")) as { divisions: { ocdId: string }[]; bodies: { id: string; ocdId: string | null }[] };
+/** One state's registration, promoted through its own routine door into a memory store. */
+async function promoted(state: string, store = new MemoryRoutineDataStore()): Promise<{ versionId: string; model: RegistrationReadModel; store: MemoryRoutineDataStore }> {
   const candidate = registrationCandidate({
-    target: registrationTarget("OH"),
-    reference: loadRegistrationReference(ROOT, "OH"),
+    target: registrationTarget(state),
+    reference: loadRegistrationReference(ROOT, state),
     receipt: { requestedUrl: REGISTRATION_SOURCE_URL, finalUrl: REGISTRATION_SOURCE_URL, httpStatus: 200, retrievedAt: T, sha256: REGISTRATION_SOURCE_SHA256, bytes: REGISTRATION_SOURCE_BYTES, confirmedBy: "BYTES_HASHED" },
-    reviewed: {
-      versionId: "cv-reviewed",
-      divisionIds: new Set(registry.divisions.map((d) => d.ocdId)),
-      bodyIds: new Set(registry.bodies.map((b) => b.id)),
-      bodyDivisionIds: new Set(registry.bodies.map((b) => b.ocdId).filter((id): id is string => id !== null)),
-    },
+    reviewed: reviewedIds(ROOT),
   });
-  assert.equal((await processRegisteredRoutineCandidate(store, "registration-oh", candidate, T)).candidate.state, "PROMOTED");
-  const read = await readRegistrationProjection("OH", { store, bypassCache: true, now: T });
+  assert.equal((await processRegisteredRoutineCandidate(store, `registration-${state.toLowerCase()}`, candidate, T)).candidate.state, "PROMOTED");
+  const read = await readRegistrationProjection(state, { store, bypassCache: true, now: T });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("unreachable");
   return { versionId: read.metadata.versionId!, model: read.value, store };
 }
+const promotedOhio = () => promoted("OH");
 
 test("Ohio's registration, read as a registry: every government under the reviewed ids, its body, and only the Census's own web address", async () => {
   const { versionId, model } = await promotedOhio();
@@ -115,7 +111,7 @@ test("Ohio's registration, read as a registry: every government under the review
   assert.match(index.unplaced.get(special.id) ?? "", /registration pairs it with no Census division/);
 });
 
-test("a promoted version built from another reference is refused by name; before a first promotion the committed reference is read and says so", async () => {
+test("only the promoted version is read: one built from another reference, none at all, or an outage refuses the state by name", async () => {
   const { versionId, model } = await promotedOhio();
   const reference = loadRegistrationReference(ROOT, "OH");
   const census = readCensusGovernmentFacts(ROOT);
@@ -125,11 +121,8 @@ test("a promoted version built from another reference is refused by name; before
   );
   const load = await loadRegistrationJurisdictions({ root: ROOT, states: ["OH", "zz"], read: NOT_RECORDED });
   assert.match(load.refused.get("zz") ?? "", /REGISTRATION_STATE_UNKNOWN/);
-  const oh = load.registries.get("oh")!;
-  assert.equal(oh.registration?.versionId, null, "read from the committed reference, not yet promoted");
-  assert.match(oh._note[0]!, /its committed reference \(not yet promoted\)/);
-  const columbus = oh.jurisdictions.find((j) => j.id === "oh:city:city-of-columbus")!;
-  assert.equal(columbus.bodyId, "ocd-division/country:us/state:oh/place:columbus#governing", "minted by the division rule registration mints by");
+  assert.equal(load.registries.size, 0, "the committed reference is never read in a promoted version's place");
+  assert.match(load.refused.get("oh") ?? "", /REGISTRATION_NOT_PROMOTED:OH: its registration has no promoted version yet/);
   const unreachable = await loadRegistrationJurisdictions({
     root: ROOT, states: ["oh"], read: async () => ({ kind: "STORE_UNREACHABLE", value: null, metadata: {} as never, code: "STORE_READ_FAILED", detail: "timeout" }),
   });
@@ -137,7 +130,9 @@ test("a promoted version built from another reference is refused by name; before
 });
 
 test("Puerto Rico: every municipio is registered from TIGER functional status, with no web address recorded and none invented", async () => {
-  const load = await loadRegistrationJurisdictions({ root: ROOT, states: ["pr"], read: NOT_RECORDED });
+  const { store } = await promoted("PR");
+  const load = await loadRegistrationJurisdictions({ root: ROOT, states: ["pr"], read: (state) => readRegistrationProjection(state, { store, bypassCache: true, now: T }) });
+  assert.deepEqual([...load.refused], []);
   const pr = load.registries.get("pr")!;
   const municipios = pr.jurisdictions.filter((j) => j.govClass === "COUNTY");
   assert.equal(municipios.length, 78);
@@ -173,7 +168,8 @@ test("the reviewed registry wins; a state is readable through the one accessor o
   assert.deepEqual([...promoted.registries.keys()].sort(), ["az", "nh", "nj", "oh"]);
   assert.match(promoted.refused.get("tx") ?? "", /STORE_UNREACHABLE/, "a state whose registration was not read is named, never used");
   clearRegistrationJurisdictionRegistries();
-  assert.deepEqual([...(promotedRegistries() as { registries: Map<string, unknown> }).registries.keys()].sort(), ["az", "nh", "nj"]);
+  const cleared = promotedRegistries();
+  assert.deepEqual("registries" in cleared ? [...cleared.registries.keys()].sort() : cleared, ["az", "nh", "nj"]);
 
   assert.equal(stateOfJurisdictionId("freshness:meetings-discovery:oh:city:city-of-columbus#own-site-meetings"), "oh");
   assert.equal(stateOfJurisdictionId("freshness:jurisdiction:pr:county:adjuntas-municipio#x"), "pr");

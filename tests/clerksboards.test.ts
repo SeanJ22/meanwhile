@@ -535,7 +535,8 @@ test("R8: the Past Agendas list is requested only for a board whose schedule pla
       : new Response(body, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
   };
   const source = makeClerksBoardsSource([IDA, wiringFor("38", "planning-commission")], fetchImpl, () => R8_NOW);
-  const raw = await source.fetch();
+  // Tucson; the adapter reads its wired boards whatever the point.
+  const raw = await source.fetch({ lat: 32.22, lng: -110.97, radiusKm: 25 } as Parameters<typeof source.fetch>[0]);
   assert.deepEqual(requested, [
     "https://clerksboards.tucsonaz.gov/boards/?board=43",
     "https://clerksboards.tucsonaz.gov/boards/?run=pastagenda&board=43",

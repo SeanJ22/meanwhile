@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 775,
-    "named": 7589,
+    "files": 782,
+    "named": 7633,
     "dynamic": 30
   },
   "files": {
@@ -3459,7 +3459,7 @@
     },
     "tests/curated-reader-data-plane.test.ts": {
       "names": [
-        "Admin projects the four manual authorities without inventing a clock",
+        "Admin projects the five manual authorities without inventing a clock",
         "a bad curated family is held against its own LKG and cannot affect another family",
         "comment-access drops the control-plane transport id at the Reader boundary",
         "curated Reader evidence is source-scoped and never names software certification",
@@ -3669,6 +3669,26 @@
       ],
       "dynamic": 0
     },
+    "tests/derived-authority.test.ts": {
+      "names": [
+        "C16: a trigger suspends a promoted row, which stays marked until a later review restores it",
+        "a held row is never removed: absence, transport, robots and a challenge hold it by name",
+        "a promoted row carries its inputs, and an undecided row is carried byte-exactly",
+        "a promotion without evidence, verified by another adapter, or producing nothing is refused by name",
+        "only the publisher withdraws a row, with vaulted evidence",
+        "the same inputs give the same hash in any order, and the version is no fresher than its newest input"
+      ],
+      "dynamic": 0
+    },
+    "tests/derived-meeting-family.test.ts": {
+      "names": [
+        "C16 END TO END: a reviewed crosswalk row plus a validated route publishes through the doors with no code release",
+        "C16: a member read off its attested host is held on its verified sittings, and the door refuses a forged member read",
+        "C16: a suspended connection publishes nothing new and keeps its previously verified sittings",
+        "C16: a wiring version that drops a row is refused by the door, and the last known good wiring stays"
+      ],
+      "dynamic": 0
+    },
     "tests/derived-picks.test.ts": {
       "names": [
         "M134 rule 1 — a Yes on one candidate IS the pick, and the race stops asking",
@@ -3677,6 +3697,18 @@
         "M134 rule 4 — resolving a pick cannot alter a reaction: this module writes nothing",
         "M134 rule 5 — a measure's Yes/No derives the same way, through the same function",
         "M134 — a derived pick says where it came from, and stays on the device"
+      ],
+      "dynamic": 0
+    },
+    "tests/derived-wiring.test.ts": {
+      "names": [
+        "C16 TRIGGERS SUSPEND A PROMOTED ROW; OUTAGES HOLD IT, CARRIED",
+        "C16: a withdrawn or vanished crosswalk row suspends its promoted row; only a review after the suspension restores it",
+        "C16: two reviewed bodies selecting the same sitting is conflicting evidence, and neither is published",
+        "HOLD BY NAME at the first check that fails: registration, walk, attestation, a hand-wired body, the vault, the reader adapter",
+        "PROMOTE only when every check holds, from a reviewed crosswalk row, never from a find alone",
+        "THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact",
+        "THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined for, and anything else is held by name"
       ],
       "dynamic": 0
     },
@@ -5917,6 +5949,16 @@
       ],
       "dynamic": 0
     },
+    "tests/meeting-body-crosswalk.test.ts": {
+      "names": [
+        "C16: a calendar is never a body's by domain alone: the filter must name the body's meetings",
+        "C16: a commission is a sub-body of its division, its id derived only from its printed name",
+        "C16: the crosswalk promotes through the verified manual door, and a row not bound to its receipted bytes is held alone",
+        "C16: the evidence is the government's own page naming the body, cited by sha256",
+        "C16: two bodies claiming the same meetings is conflicting evidence; withdrawal is stated, never an omission"
+      ],
+      "dynamic": 0
+    },
     "tests/meeting-card-title.test.ts": {
       "names": [
         "MTG-9: TUSD's single-sitting audit-committee venue — the instance nobody reported",
@@ -6915,6 +6957,7 @@
     },
     "tests/operational-reference-data-plane.test.ts": {
       "names": [
+        "C15: a reviewed website correction promotes with the receipts of the pages read again; a forged or unreceipted one is refused",
         "a semantically bad successor is refused without replacing the promoted reference",
         "first seed promotes with source-scoped evidence and a later HTTPS failure retains LKG",
         "live-input acquisition derives both Census sheets and carries exact response-byte receipts",
@@ -7929,6 +7972,13 @@
       ],
       "dynamic": 0
     },
+    "tests/read-only-vault.test.ts": {
+      "names": [
+        "C16: the derived wiring child's closure reaches no filesystem writer",
+        "C16: the read-only vault finds what the durable store committed, by id, content and work item, and proves the bytes"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-agenda-representation.test.ts": {
       "names": [
         "every held agenda representation reaches real routes and the real meeting leaf without portal/binary promotion or topic tail loss"
@@ -7983,6 +8033,14 @@
       "names": [
         "a missing deployed directory fails instead of claiming empty committees and offices",
         "all normalized directory entries survive exact Bioguide projection"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-edge-context.test.ts": {
+      "names": [
+        "Ask reads the registry and the federal directory from the edge it entered",
+        "Campaign money reads the registry from the edge it entered, and names every read's time",
+        "Node 24: an edge entered inside a helper never reaches the reads chained on it; entered by the caller, it does"
       ],
       "dynamic": 0
     },
@@ -10937,6 +10995,27 @@
         "too little history returns null, which is not the same claim as healthy",
         "two failures at the top of the list is a finding",
         "two failures separated by a success is not a finding"
+      ],
+      "dynamic": 0
+    },
+    "tests/website-corrections.test.ts": {
+      "names": [
+        "C15: a corrected row carries the reviewed correction exactly",
+        "C15: a correction applies only while the address on record is still the one it replaces",
+        "C15: a receipt must be a page the reviewed list names, on its own host",
+        "C15: a recorded redirect alone is not another government's publication",
+        "C15: a registry row that names a parent is not the government's, and without other evidence it is UNRESOLVED",
+        "C15: a source naming a different government is a conflict no other evidence outweighs",
+        "C15: a source that now contradicts the review, or was withdrawn, refuses the correction",
+        "C15: an outage keeps the reviewed evidence, and says which source was not read",
+        "C15: every reviewed correction meets the owner's rule, once per government",
+        "C15: every source agreeing applies the correction, each page receipted, robots.txt first",
+        "C15: the CISA registry row is read by exact domain, quoted fields included",
+        "C15: the committed gap ledger carries every applicable correction whose Census address it still records",
+        "C15: the committed gap ledger walks the corrected site, and a forged correction makes it unreadable",
+        "C15: the nine named governments are each corrected on the rule or named unresolved, never both",
+        "C15: the registry's inverted names read as the government's own",
+        "C15: the website correction never feeds meetings body attribution (C16)"
       ],
       "dynamic": 0
     },

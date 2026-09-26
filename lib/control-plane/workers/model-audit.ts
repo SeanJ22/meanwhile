@@ -7,6 +7,7 @@ import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../sched
 import { anthropicTransport, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import type { FleetRuntime } from "./runtime.ts";
 import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
+import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { inventoryRecordEvidence } from "./record-evidence.ts";
 
 export const AUDIT_REVIEW_TIMEOUT_MS = 60_000;
@@ -245,7 +246,12 @@ async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, ti
  * below $100 did not bind it. Absent (a manual proof), the default stands.
  */
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
-  options: { readonly timeoutMs?: number; readonly ceilingUsd?: number } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
+  options: {
+    readonly timeoutMs?: number;
+    readonly ceilingUsd?: number;
+    /** MW-021 (2026-09-25): the transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
+    readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
+  } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
   /*
    * THE AUDITOR STAYS ON THE FRONTIER (MW-033/MW-035, 2026-09-25). MW-035 lets
    * an expensive step run only when it is selective, and this one is: it runs
@@ -272,7 +278,11 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }], tools: [RECORD_AUDIT],
       tool_choice: { type: "auto" },
       messages: [{ role: "user", content: body }] };
-    const response = await transport(request).catch((error) => {
+    const send = options.transportFor === undefined ? transport
+      : options.transportFor({ subjectId: context.subjectId, state: context.contract.schemaVersion === 2 ? context.contract.jurisdiction.state : null });
+    const response = await send(request).catch((error) => {
+      /* A budget refusal is a policy denial before any request, never a provider failure (MW-021). */
+      if (error instanceof SendBudgetRefusal) throw new Error(`DENIED_BY_POLICY:${error.code}; ${error.why}`);
       const status = error && typeof error === "object" && "status" in error && typeof error.status === "number" ? String(error.status) : "UNAVAILABLE";
       throw new Error(`AUDIT_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
     });

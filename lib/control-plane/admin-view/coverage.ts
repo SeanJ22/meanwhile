@@ -12,10 +12,11 @@
  *   placement    a body is at a code when the reader's ZIP division index says
  *                its division's territory reaches that code — the reader's own
  *                rule for what governs a ZIP
- *   coverage     whether a body has a way in: its registry coverage status
- *                (LIVE or MANUAL = a recorded route; KNOWN_UNCOVERED and
- *                NO_SOURCE_FOUND = looked, no route; NOT_ATTEMPTED = never
- *                walked) — and, separately, whether we watch its meetings now
+ *   coverage     whether a body has a way in: its registry coverage status,
+ *                advanced by later confirmed reads for its exact body id.
+ *                Failed attempts without a confirmed route stay unresolved;
+ *                a clock alone cannot prove a read. Current meeting health
+ *                and public delivery remain separate measurements
  * ```
  *
  * A body reaching three codes is one body: every container and every state

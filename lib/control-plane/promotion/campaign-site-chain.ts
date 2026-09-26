@@ -51,7 +51,7 @@ import { accessControlIn } from "../../hunt/access-control.ts";
 import { controlsClean } from "./fact-verification.ts";
 import { scoreControls, type ControlFact, type ControlObservation, type ControlScore } from "../../health/control-fact.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
-import type { WorkerRole } from "../attempt.ts";
+import type { Attempt, WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { classFieldOpen } from "./activation-gate.ts";
 import { appendTransition, contextFromRepositories, readPipelineStates, type PipelineContext } from "./pipeline.ts";
@@ -158,6 +158,15 @@ export interface CampaignSiteChainOptions {
    * reaching the same first few. Absent, the log's order.
    */
   readonly rotation?: string;
+  /**
+   * Candidacies whose promoted profile already carries a campaign link on one
+   * of their Reader keys. The publication door holds any site approved for
+   * them (a reviewed link always wins: PRIOR_CAMPAIGN_LINK_HELD), so their
+   * leads are read, and their audit second reads made, after every other
+   * candidacy's. Order only: every lead is still read in turn, by the same
+   * checks. Absent, only the approvals this log already holds count.
+   */
+  readonly linkedCandidacies?: ReadonlySet<string>;
 }
 
 /** The door every approval publishes through: the derived routine contract `candidate-campaign-sites-derived`. */
@@ -478,11 +487,37 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   }
   if (pointersOffered > 0) heldStates = new Map((await readPipelineStates(repos)).map((s) => [s.itemId, s] as const));
 
+  /*
+   * **THE ORDER THE RUN'S BOUNDED READS ARE SPENT IN.** (2026-09-25.) Measured
+   * read-only on production that evening: the pass made 4 to 6 reads a cycle
+   * before its time budget was spent; of the 19 unread held leads whose held
+   * page already verifies, 12 belonged to candidates whose profile carries a
+   * reviewed campaign link, so an approval for them is held and never
+   * published (the one approval so far, Shephard's, is); and the audit's second
+   * reads came after the lead reads, when the budget was already spent, so an
+   * item one read from approval would wait behind the whole backlog. Order
+   * only, every check, bound and audit unchanged:
+   *
+   * 1. a candidacy the door cannot publish a new link for — a reviewed link on
+   *    one of its Reader keys, or a site this log already approved — is read
+   *    after every other candidacy, in every pass, the hour's rotation within;
+   * 2. the items an earlier run carried past SCOUTED go first, so the audit's
+   *    second reads are made before any new lead is read.
+   */
   const rotate = (s: PipelineItemState): string => (options.rotation === undefined ? "" : fingerprint([options.rotation, s.itemId]));
-  const states = [...heldStates.values()].filter((s) =>
-    s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.byStage.SCOUTED !== undefined &&
-    (s.byStage.SCOUTED.source.kind === "SCOUT_RESULT" || s.byStage.SCOUTED.source.kind === "DISCOVERY_POINTER"))
-    .sort((a, b) => rotate(a).localeCompare(rotate(b)) || a.itemId.localeCompare(b.itemId));
+  const settledNow = (): ReadonlySet<string> => {
+    const settled = new Set(options.linkedCandidacies ?? []);
+    for (const s of heldStates.values()) {
+      if (s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.stage === "APPROVED_FOR_PROMOTION" && s.subjectId !== null) settled.add(s.subjectId);
+    }
+    return settled;
+  };
+  const inReadOrder = (items: readonly PipelineItemState[]): PipelineItemState[] => {
+    const settled = settledNow();
+    const rank = (s: PipelineItemState): number => (settled.has(s.subjectId ?? "") ? 1 : 0);
+    return [...items].sort((a, b) => rank(a) - rank(b) || rotate(a).localeCompare(rotate(b)) || a.itemId.localeCompare(b.itemId));
+  };
+  const pastScouted = (s: PipelineItemState): boolean => s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.stage !== null && s.stage !== "SCOUTED";
 
   /*
    * Our own reads already held, newest per URL: a deterministic ACQUIRER's
@@ -497,114 +532,29 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   }
 
   /*
-   * CONFIRMED, in two passes: every lead of every held item at SCOUTED is read
-   * robots-first by our own Attempt and recorded first (each distinct URL once
-   * per run, within the read bound), then the context is rebuilt once so the
-   * pipeline's confirmation rules can see the new Attempts and artifacts.
+   * VERIFIED, AUDITED, APPROVED — from the vault, for an item past SCOUTED.
+   * The items an earlier run carried past SCOUTED are advanced FIRST, so an
+   * audit's second read is made before any new lead is read; the leads are
+   * read next; then the items this run confirmed are advanced.
    */
-  const readCache = new Map<string, { result: LeadReadResult; artifact: ArtifactRecord | null; via: "READ" | "VAULT" }>();
   let readsUsed = 0;
-  let judgedFromVault = 0;
-  const pending: { state: PipelineItemState; subject: CampaignSiteSubject; verdicts: { lead: CampaignSiteLead; verdict: CampaignSiteVerdict; artifact: ArtifactRecord }[] }[] = [];
-  for (const state of states) {
-    const subject = options.subjects.get(state.subjectId ?? "");
-    if (subject === undefined) { unjoined.push({ itemId: state.itemId, subjectId: state.subjectId ?? "" }); continue; }
-    if (state.stage !== "SCOUTED") continue;
-    const verdicts: (typeof pending)[number]["verdicts"] = [];
-    for (const lead of scoutLeads(state, ctx).slice(0, MAX_LEADS_PER_ITEM)) {
-      const pre = campaignSiteHostRefusal(lead.url);
-      if (pre !== null) { leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "REFUSED", refusals: [pre], historical: null, via: "NONE" }); continue; }
-      let cached = readCache.get(lead.url);
-      const earlier = cached === undefined && options.recheckAfterMs !== undefined ? ownReads.get(lead.url) : undefined;
-      if (earlier !== undefined && Date.parse(options.now) - Date.parse(earlier.recordedAt) < options.recheckAfterMs!) {
-        const page = await options.heldPage(earlier);
-        if (page !== null) {
-          judgedFromVault += 1;
-          cached = { result: { ok: true, read: page }, artifact: earlier, via: "VAULT" };
-          readCache.set(lead.url, cached);
-        }
-      }
-      if (cached === undefined) {
-        if (readsUsed >= maxReads) {
-          leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "DEFERRED", refusals: [{ code: "NOT_READ", detail: `the ${maxReads}-read bound for this run was reached; the lead stays owed` }], historical: null, via: "NONE" });
-          continue;
-        }
-        readsUsed += 1;
-        const result = await options.readLead(lead);
-        /* A lead the caller did not read (its own time bound) was not a read: it stays owed and uses none of the run's reads. */
-        if (!result.ok && result.refusal.code === "NOT_READ") readsUsed -= 1;
-        const artifact = result.ok ? await options.recordRead(subject.candidacyId, lead, result.read) : null;
-        if (artifact !== null) {
-          recordedThisRun += 1;
-          allArtifacts.push(artifact);
-        }
-        cached = { result, artifact, via: "READ" };
-        readCache.set(lead.url, cached);
-      }
-      if (!cached.result.ok || cached.artifact === null) {
-        const refusal = cached.result.ok ? { code: "TRANSPORT_FAILED" as const, detail: "the read was not recorded" } : cached.result.refusal;
-        leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: refusal.code === "NOT_READ" ? "DEFERRED" : "REFUSED", refusals: [refusal], historical: null, via: refusal.code === "NOT_READ" ? "NONE" : "READ" });
-        continue;
-      }
-      const verdict = verifyCampaignSitePage(subject, lead, cached.result.read);
-      verdicts.push({ lead, verdict, artifact: cached.artifact });
-      leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: verdict.verdict,
-        refusals: verdict.verdict === "REFUSED" ? verdict.refusals : [], historical: verdict.verdict === "REFUSED" ? verdict.historical?.years ?? null : null, via: cached.via });
-    }
-    pending.push({ state, subject, verdicts });
-  }
-  /* The confirmation rules see this run's Attempts and artifacts only once the context is read again. */
-  if (recordedThisRun > 0) ctx = await contextFromRepositories(repos);
-  for (const { state, subject, verdicts } of pending) {
-    const scouted = state.byStage.SCOUTED!;
-    const verified = verdicts.filter((v) => v.verdict.verdict === "VERIFIED");
-    const hosts = [...new Set(verified.map((v) => siteHost(v.artifact.canonicalUrl)))];
-    /* A refused page that still names the candidate was a plausible site: its refusal is recorded on the item. */
-    const named = verdicts.filter((v) => v.verdict.verdict === "REFUSED" && v.verdict.measurement !== null && v.verdict.measurement.name !== null);
-    let chosen: (typeof verdicts)[number] | null = null;
-    let agreement: { sameFact: boolean; detail: string } | null = null;
-    if (hosts.length === 1) {
-      chosen = [...verified].sort((a, b) => sitePathLength(a.artifact.canonicalUrl) - sitePathLength(b.artifact.canonicalUrl) || a.artifact.canonicalUrl.localeCompare(b.artifact.canonicalUrl))[0]!;
-      agreement = { sameFact: true, detail: (chosen.verdict as Extract<CampaignSiteVerdict, { verdict: "VERIFIED" }>).verification };
-    } else if (hosts.length > 1) {
-      chosen = verified[0]!;
-      agreement = { sameFact: false, detail: `MULTIPLE_SITES: ${hosts.join(", ")} each verify for ${displayName(subject)}; one campaign link is never chosen by guess` };
-    } else if (named.length > 0) {
-      chosen = named[0]!;
-      const refused = chosen.verdict as Extract<CampaignSiteVerdict, { verdict: "REFUSED" }>;
-      agreement = { sameFact: false, detail: `${refused.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ")}${refused.historical ? ` (historical site: ${refused.historical.years.join(", ")})` : ""}` };
-    }
-    if (chosen === null || agreement === null) continue;
-    const secondAcquisition = scouted.canonicalUrl !== null && chosen.artifact.canonicalUrl === scouted.canonicalUrl;
-    const confirmed: ConfirmedRecord = {
-      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
-      recordId: `${state.itemId}:confirmed:${fingerprint([chosen.artifact.artifactId, chosen.artifact.attemptId, agreement.sameFact ? "same" : "conflict"])}`,
-      itemId: state.itemId, at: chosen.artifact.recordedAt,
-      actor: { role: "ACQUIRER", lane: "DETERMINISTIC", instance: chosen.artifact.attemptId },
-      stage: "CONFIRMED", basis: secondAcquisition ? "SECOND_ACQUISITION" : "SECOND_ROUTE",
-      confirmingArtifactIds: [chosen.artifact.artifactId],
-      sameFact: secondAcquisition ? null : `${displayName(subject)}'s ${subject.cycle} campaign site is ${siteHost(chosen.artifact.canonicalUrl)}`,
-      factAgreement: agreement,
-    };
-    await offer(confirmed);
-  }
-
-  /* VERIFIED, AUDITED, APPROVED — from the vault, for every item past SCOUTED. */
   const approved: CampaignSiteApprovedRecord[] = [];
-  const attempts = (await repos.attempts.list()).map((row) => row.value);
+  /* The Attempts, listed when an audit first needs them, and listed again for the items this run confirmed once it has recorded reads. */
+  let attemptsListed: Attempt[] | null = null;
+  const attemptsNow = async (): Promise<Attempt[]> => (attemptsListed ??= (await repos.attempts.list()).map((row) => row.value));
   const maxRereads = options.maxRereads;
   let rereadsUsed = 0;
   const mayReread = (): boolean => (maxRereads === undefined ? readsUsed < maxReads : rereadsUsed < maxRereads);
-  for (const initial of [...heldStates.values()]) {
-    if (initial.recordClass !== CAMPAIGN_SITE_RECORD_CLASS || initial.stage === null || initial.stage === "SCOUTED") continue;
+  const advance = async (initial: PipelineItemState): Promise<void> => {
+    if (!pastScouted(initial)) return;
     const subject = options.subjects.get(initial.subjectId ?? "");
-    if (subject === undefined) continue;
+    if (subject === undefined) return;
     let state = initial;
     const confirmed = state.byStage.CONFIRMED!;
     const artifact = ctx.artifactById(confirmed.confirmingArtifactIds[0] ?? "");
-    if (artifact === null) continue;
+    if (artifact === null) return;
     const read = await options.heldPage(artifact);
-    if (read === null) continue;
+    if (read === null) return;
     /* The verdict every later stage rests on is re-made from the vaulted bytes, never carried from the read. */
     const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: confirmed.recordId }, read);
 
@@ -653,7 +603,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
         others.push({ artifactId: other.artifactId, url: other.canonicalUrl, at: other.recordedAt, attemptId: other.attemptId, role, how: "DISTINCT_READ" });
       };
       for (const other of allArtifacts) await considerArtifact(other, ctx.attemptRoleById(other.attemptId));
-      for (const attempt of attempts) {
+      for (const attempt of await attemptsNow()) {
         if (attempt.id === artifact.attemptId || attempt.outcome !== "COMPLETED" || !attempt.artifactIds.includes(artifact.artifactId)) continue;
         const at = attempt.endedAt ?? attempt.startedAt;
         if (gapFrom(at)) others.push({ artifactId: artifact.artifactId, url: artifact.canonicalUrl, at, attemptId: attempt.id, role: attempt.worker.role, how: "REOBSERVED" });
@@ -762,7 +712,111 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
       const held = state.byStage.APPROVED_FOR_PROMOTION as CampaignSiteApprovedRecord;
       if (held.campaignSite !== undefined) approved.push(held);
     }
+  };
+  const advancedFirst = new Set<string>();
+  for (const initial of inReadOrder([...heldStates.values()].filter(pastScouted))) {
+    advancedFirst.add(initial.itemId);
+    await advance(initial);
   }
+  const recordedBeforeLeads = recordedThisRun;
+
+  /*
+   * CONFIRMED, in two passes: every lead of every held item at SCOUTED is read
+   * robots-first by our own Attempt and recorded first (each distinct URL once
+   * per run, within the read bound), then the context is rebuilt once so the
+   * pipeline's confirmation rules can see the new Attempts and artifacts.
+   */
+  const readCache = new Map<string, { result: LeadReadResult; artifact: ArtifactRecord | null; via: "READ" | "VAULT" }>();
+  let judgedFromVault = 0;
+  const pending: { state: PipelineItemState; subject: CampaignSiteSubject; verdicts: { lead: CampaignSiteLead; verdict: CampaignSiteVerdict; artifact: ArtifactRecord }[] }[] = [];
+  for (const state of inReadOrder([...heldStates.values()].filter((s) =>
+    s.recordClass === CAMPAIGN_SITE_RECORD_CLASS && s.byStage.SCOUTED !== undefined &&
+    (s.byStage.SCOUTED.source.kind === "SCOUT_RESULT" || s.byStage.SCOUTED.source.kind === "DISCOVERY_POINTER")))) {
+    const subject = options.subjects.get(state.subjectId ?? "");
+    if (subject === undefined) { unjoined.push({ itemId: state.itemId, subjectId: state.subjectId ?? "" }); continue; }
+    if (state.stage !== "SCOUTED") continue;
+    const verdicts: (typeof pending)[number]["verdicts"] = [];
+    for (const lead of scoutLeads(state, ctx).slice(0, MAX_LEADS_PER_ITEM)) {
+      const pre = campaignSiteHostRefusal(lead.url);
+      if (pre !== null) { leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "REFUSED", refusals: [pre], historical: null, via: "NONE" }); continue; }
+      let cached = readCache.get(lead.url);
+      const earlier = cached === undefined && options.recheckAfterMs !== undefined ? ownReads.get(lead.url) : undefined;
+      if (earlier !== undefined && Date.parse(options.now) - Date.parse(earlier.recordedAt) < options.recheckAfterMs!) {
+        const page = await options.heldPage(earlier);
+        if (page !== null) {
+          judgedFromVault += 1;
+          cached = { result: { ok: true, read: page }, artifact: earlier, via: "VAULT" };
+          readCache.set(lead.url, cached);
+        }
+      }
+      if (cached === undefined) {
+        if (readsUsed >= maxReads) {
+          leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: "DEFERRED", refusals: [{ code: "NOT_READ", detail: `the ${maxReads}-read bound for this run was reached; the lead stays owed` }], historical: null, via: "NONE" });
+          continue;
+        }
+        readsUsed += 1;
+        const result = await options.readLead(lead);
+        /* A lead the caller did not read (its own time bound) was not a read: it stays owed and uses none of the run's reads. */
+        if (!result.ok && result.refusal.code === "NOT_READ") readsUsed -= 1;
+        const artifact = result.ok ? await options.recordRead(subject.candidacyId, lead, result.read) : null;
+        if (artifact !== null) {
+          recordedThisRun += 1;
+          allArtifacts.push(artifact);
+        }
+        cached = { result, artifact, via: "READ" };
+        readCache.set(lead.url, cached);
+      }
+      if (!cached.result.ok || cached.artifact === null) {
+        const refusal = cached.result.ok ? { code: "TRANSPORT_FAILED" as const, detail: "the read was not recorded" } : cached.result.refusal;
+        leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: refusal.code === "NOT_READ" ? "DEFERRED" : "REFUSED", refusals: [refusal], historical: null, via: refusal.code === "NOT_READ" ? "NONE" : "READ" });
+        continue;
+      }
+      const verdict = verifyCampaignSitePage(subject, lead, cached.result.read);
+      verdicts.push({ lead, verdict, artifact: cached.artifact });
+      leadsOut.push({ itemId: state.itemId, subjectId: subject.candidacyId, lead, outcome: verdict.verdict,
+        refusals: verdict.verdict === "REFUSED" ? verdict.refusals : [], historical: verdict.verdict === "REFUSED" ? verdict.historical?.years ?? null : null, via: cached.via });
+    }
+    pending.push({ state, subject, verdicts });
+  }
+  /* The confirmation rules see this run's Attempts and artifacts only once the context is read again. */
+  if (recordedThisRun > recordedBeforeLeads) ctx = await contextFromRepositories(repos);
+  for (const { state, subject, verdicts } of pending) {
+    const scouted = state.byStage.SCOUTED!;
+    const verified = verdicts.filter((v) => v.verdict.verdict === "VERIFIED");
+    const hosts = [...new Set(verified.map((v) => siteHost(v.artifact.canonicalUrl)))];
+    /* A refused page that still names the candidate was a plausible site: its refusal is recorded on the item. */
+    const named = verdicts.filter((v) => v.verdict.verdict === "REFUSED" && v.verdict.measurement !== null && v.verdict.measurement.name !== null);
+    let chosen: (typeof verdicts)[number] | null = null;
+    let agreement: { sameFact: boolean; detail: string } | null = null;
+    if (hosts.length === 1) {
+      chosen = [...verified].sort((a, b) => sitePathLength(a.artifact.canonicalUrl) - sitePathLength(b.artifact.canonicalUrl) || a.artifact.canonicalUrl.localeCompare(b.artifact.canonicalUrl))[0]!;
+      agreement = { sameFact: true, detail: (chosen.verdict as Extract<CampaignSiteVerdict, { verdict: "VERIFIED" }>).verification };
+    } else if (hosts.length > 1) {
+      chosen = verified[0]!;
+      agreement = { sameFact: false, detail: `MULTIPLE_SITES: ${hosts.join(", ")} each verify for ${displayName(subject)}; one campaign link is never chosen by guess` };
+    } else if (named.length > 0) {
+      chosen = named[0]!;
+      const refused = chosen.verdict as Extract<CampaignSiteVerdict, { verdict: "REFUSED" }>;
+      agreement = { sameFact: false, detail: `${refused.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ")}${refused.historical ? ` (historical site: ${refused.historical.years.join(", ")})` : ""}` };
+    }
+    if (chosen === null || agreement === null) continue;
+    const secondAcquisition = scouted.canonicalUrl !== null && chosen.artifact.canonicalUrl === scouted.canonicalUrl;
+    const confirmed: ConfirmedRecord = {
+      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
+      recordId: `${state.itemId}:confirmed:${fingerprint([chosen.artifact.artifactId, chosen.artifact.attemptId, agreement.sameFact ? "same" : "conflict"])}`,
+      itemId: state.itemId, at: chosen.artifact.recordedAt,
+      actor: { role: "ACQUIRER", lane: "DETERMINISTIC", instance: chosen.artifact.attemptId },
+      stage: "CONFIRMED", basis: secondAcquisition ? "SECOND_ACQUISITION" : "SECOND_ROUTE",
+      confirmingArtifactIds: [chosen.artifact.artifactId],
+      sameFact: secondAcquisition ? null : `${displayName(subject)}'s ${subject.cycle} campaign site is ${siteHost(chosen.artifact.canonicalUrl)}`,
+      factAgreement: agreement,
+    };
+    await offer(confirmed);
+  }
+
+  /* The items this run carried past SCOUTED, their audits reading the Attempts as they now stand. */
+  if (recordedThisRun > 0) attemptsListed = null;
+  for (const initial of inReadOrder([...heldStates.values()].filter((s) => pastScouted(s) && !advancedFirst.has(s.itemId)))) await advance(initial);
 
   /* Every offer's outcome replaced its item's state as it was made, so the final count needs no second read of the log. */
   const finalStates = [...heldStates.values()].filter((s) => s.recordClass === CAMPAIGN_SITE_RECORD_CLASS);

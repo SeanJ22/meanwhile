@@ -24,6 +24,7 @@ import {
   CAMPAIGN_SITE_BUDGET_MS,
   CAMPAIGN_SITE_MAX_READS,
   campaignSiteCycleLine,
+  campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
   type CampaignSiteCycleInput,
@@ -61,7 +62,7 @@ import {
 import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../lib/ballot/candidate-sites.ts";
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-import { KAPNER, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
+import { KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 
 await installRegistryRuntimeFirstSeeds();
 
@@ -375,6 +376,96 @@ async function createSlow(t: { after: (fn: () => void) => void }, pages: Record<
   assert.equal(CAMPAIGN_SITE_BUDGET_MS, 60_000);
   return { report, requests };
 }
+
+/** Twenty more held Scout findings, each naming its own readable page for its own candidacy (none of them Kapner or Tang Williams). */
+async function backlog(p: Plane): Promise<{ readonly ids: readonly string[]; readonly pages: Record<string, { status: number; body: string }>; readonly urlOf: (id: string) => string }> {
+  const ids = [...committedSubjects().keys()].filter((id) => id !== KAPNER && id !== TANG_WILLIAMS).slice(0, 20);
+  const pages: Record<string, { status: number; body: string }> = { ...served() };
+  const ctx = await contextFromRepositories(p.repos);
+  for (const [n, id] of ids.entries()) {
+    const url = `https://site-${n}.example/`;
+    pages[`https://site-${n}.example/robots.txt`] = { status: 200, body: "User-agent: *\nAllow: /\n" };
+    pages[url] = { status: 200, body: `<html><title>Site ${n}</title><body>An unrelated page.</body></html>` };
+    await appendTransition(p.repos, scoutedFromHeldFinding({ attemptId: `at-scout-${n}`, obligationId: `freshness:candidate-enrichment:${id}#x`, subjectId: id,
+      outcome: "ROUTE_CANDIDATE", routeId: `route-${n}`, canonicalUrl: url, artifactIds: [], recordedAt: T0, summary: "a site" }), ctx, T0);
+  }
+  return { ids, pages, urlOf: (id) => `https://site-${ids.indexOf(id)}.example/` };
+}
+
+test("the pass reads the leads of candidates with no campaign link first; a linked candidate's leads wait, deferred and never refused, and are read once the others are", async (t) => {
+  const p = await plane(t);
+  const { ids, pages, urlOf } = await backlog(p);
+  /* Half the backlog's candidates already carry a reviewed campaign link: a site approved for them would be held (PRIOR_CAMPAIGN_LINK_HELD). */
+  const linked = new Set(ids.slice(0, 10));
+  const first = await cycle(p, T1, { linkedCandidacies: linked }, pages);
+  assert.equal(first.report.chain.readsUsed, CAMPAIGN_SITE_MAX_READS, "the read bound is unchanged");
+  const read = first.report.chain.leads.filter((l) => l.via === "READ");
+  assert.ok(read.length > 0 && read.every((l) => !linked.has(l.subjectId)), `every read goes to a candidate with no link: ${read.map((l) => l.subjectId).join(", ")}`);
+  const waiting = first.report.chain.leads.filter((l) => linked.has(l.subjectId));
+  assert.equal(waiting.length, 10);
+  assert.ok(waiting.every((l) => l.outcome === "DEFERRED" && l.refusals[0]?.code === "NOT_READ"), "a linked candidate's lead is owed, never refused");
+  /* 13 readable leads have no link behind them (10 sites, Kapner, Lily's two): 12 are read, one waits with the linked ones. */
+  const unlinkedOwed = first.report.chain.leads.filter((l) => l.outcome === "DEFERRED" && !linked.has(l.subjectId));
+  assert.equal(unlinkedOwed.length, 1);
+
+  /* The next hourly cycle reads the last unlinked lead before any linked one, then the linked ones: every lead is still read. */
+  const before = p.requests.length;
+  const next = await cycle(p, "2026-09-24T22:00:00.000Z", { linkedCandidacies: linked }, pages);
+  assert.equal(next.report.chain.readsUsed, 11);
+  const asked = p.requests.slice(before);
+  const lastUnlinked = asked.indexOf(unlinkedOwed[0]!.lead.url);
+  assert.ok(lastUnlinked >= 0, `the owed unlinked lead is read: ${asked.join(" ")}`);
+  for (const id of linked) {
+    const at = asked.indexOf(urlOf(id));
+    assert.ok(at > lastUnlinked, `${id}'s lead is read after the unlinked one`);
+  }
+});
+
+test("the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget", async (t) => {
+  const p = await plane(t);
+  const pointer = discoveryPointerItemId(TANG_WILLIAMS, LILY);
+  await cycle(p, T1);
+  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "VERIFIED", "the Marginalia site waits for a second read an hour later");
+  const { pages } = await backlog(p);
+
+  /* Two hours later every request takes 5 s: the 60 s budget holds a dozen requests, far fewer than the backlog's forty. */
+  let ms = Date.parse(T2);
+  const runtime = servedRuntime(pages, T2);
+  const vault = await indexVault(p.vaultRoot);
+  const held = await heldMarginaliaFromManifest(p.vaultRoot, p.manifest, vault, T2);
+  const requests: string[] = [];
+  const report = await runCampaignSiteCycle({
+    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, gate: readActivationGate(ROOT), now: T2,
+    clock: () => ms, sleep: async (wait) => { ms += wait; },
+    open: async (request) => { requests.push(request.url); ms += 5_000; return runtime.get(request); },
+    vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
+  });
+  assert.equal(CAMPAIGN_SITE_BUDGET_MS, 60_000);
+  assert.ok(report.budgetSpent, "the backlog outlasts the pass's time");
+  assert.ok(report.chain.leads.some((l) => l.outcome === "DEFERRED" && l.refusals[0]?.code === "NOT_READ"), "new leads stay owed for the next cycle");
+  assert.deepEqual(requests.slice(0, 2), ["https://www.lilytangwilliams.com/robots.txt", LILY], "the second read is the pass's first read");
+  assert.equal(report.chain.rereadsUsed, 1);
+  assert.equal((await readPipelineStates(p.repos)).find((s) => s.itemId === pointer)?.stage, "APPROVED_FOR_PROMOTION");
+  assert.ok(report.chain.approved.some((a) => a.campaignSite.candidacyId === TANG_WILLIAMS));
+});
+
+test("who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys", () => {
+  const az = JSON.parse(readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8")) as unknown;
+  const link = { url: "https://www.krismayes.com", verification: "Fetched 2026-08-13: 'Kris Mayes for Arizona Attorney General'.", attemptedAt: "2026-08-13" };
+  const official = { url: "https://azgovernor.gov/", verification: "Fetched 2026-08-13: the Governor's office.", attemptedAt: "2026-08-13" };
+  const { subjects, linked } = campaignSiteSubjectsFromHoldings({
+    az: { ballot: az } as never, nh: null, nj: null,
+    profiles: {
+      cards: { curatedAt: "2026-09-08", note: "reviewed cards", cards: {}, hunts: [] },
+      /* Mayes carries a reviewed campaign link; Hobbs carries only an official link, which holds no campaign slot. */
+      links: { curatedAt: "2026-09-08", note: "reviewed links", links: { [MAYES_KEY]: { official: null, campaign: link }, "ballot-az-pima:governor:hobbs-katie": { official, campaign: null } }, hunts: [] },
+    } as never,
+    corpus: { documents: [] } as never,
+    failures: [],
+  }, T1);
+  assert.ok(subjects.has(MAYES) && subjects.has("az:2026:state-az:governor:hobbs-katie"));
+  assert.deepEqual([...linked], [MAYES]);
+});
 
 test("the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it", () => {
   const gate = readActivationGate(ROOT);

@@ -2668,7 +2668,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
   try {
     const holdings = candidateEnrichmentHoldings();
     if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
-    const { subjects } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+    const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
     const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
     /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
     let stagingManifest: ReturnType<typeof readStagingManifest> = null;
@@ -2682,6 +2682,8 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
     campaignSites = await runCampaignSiteCycle({
       repos,
       subjects,
+      /* Their leads are read last: a site approved for a candidacy that already carries a campaign link is held, never published. */
+      linkedCandidacies: linked,
       marginalia: held.responses,
       gate: readActivationGate(ROOT),
       now: nowIso(),
@@ -2697,7 +2699,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
       methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
     });
     campaignSitesState =
-      `ran over ${subjects.size} canonical candidacies and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+      `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
       (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : "");
   } catch (error) {
     campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;

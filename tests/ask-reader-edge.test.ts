@@ -181,7 +181,7 @@ const classOf = (read: string) => read.split(":")[0]!;
 
 const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "azBallot", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
 
-test("with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads", async () => {
+test("with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads", async () => {
   process.env.WTP_READER_EDGE_DIR = c20EdgeDir;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "ALL", "the question loaded every source");
@@ -199,19 +199,20 @@ test("with the C20 edge, a cold Mesa question reads every deferrable source from
     "STATE_CAMPAIGN_FINANCE:US-NH:campaign-finance:2026",
     "STATE_CAMPAIGN_FINANCE:US-NJ:campaign-finance:2026",
     "STATE_EXECUTIVE_ACTION:US-AZ:governor:official-actions",
-    "STATE_ROLL_CALL:US-AZ",
   ]);
+  // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls (2026-09-25; route.ts personStateVotes).
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], "DATABASE", `the trace misnames ${source}`);
 });
 
-test("with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left", async () => {
+test("with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left", async () => {
   process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "ALL", "the question loaded every source");
   const moved = databaseReads.filter((read) => DEFERRABLE_FROM_DATABASE.includes(classOf(read)));
   assert.deepEqual(moved, [], "a source the edge carries was read from the database");
-  // What still reads the database: the Arizona state roll calls, a pointer the edge does not carry (none is promoted).
-  assert.deepEqual([...databaseReads].sort(), ["STATE_ROLL_CALL:US-AZ"]);
+  // The Arizona state roll calls (a pointer the edge does not carry) are read only for a question about a
+  // state legislator since 2026-09-25 (route.ts personStateVotes), so a Mesa question reads nothing from the database.
+  assert.deepEqual([...databaseReads].sort(), []);
   assert.equal(fundingReadState().metadata.versionId, EDGE.funding, "FEC was not served from the edge");
   assert.equal(azPimaFinanceReadState().metadata.versionId, EDGE.pima, "Pima finance was not served from the edge");
   assert.equal(federalRollCallsReadState().metadata.versionId, EDGE.federalVotes, "the federal roll calls were not served from the edge");

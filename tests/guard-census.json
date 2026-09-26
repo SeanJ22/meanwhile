@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 845,
-    "named": 8163,
+    "files": 847,
+    "named": 8186,
     "dynamic": 33
   },
   "files": {
@@ -1134,6 +1134,24 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-code-reading-money.test.ts": {
+      "names": [
+        "'is there a meeting soon' wording and contact and person wording are canonical shapes now",
+        "ROUTE: 'Has Cinde Warmington raised more money than Kelly Ayotte?' retrieves BOTH and composes the comparison",
+        "ROUTE: 'Is there a Vail school board meeting coming up soon?' is read in code and composed from the sitting",
+        "ROUTE: 'who gave' says our records hold totals, not donors — composed, validated, no model",
+        "ROUTE: Rebecca Harned, asked from Merrimack County, is found and her held filing is the answer — no model",
+        "ROUTE: a New Jersey meeting question does not wait for New Jersey's roll calls (5.7-6.7 s cold, measured)",
+        "ROUTE: a comparison whose second name is SHORTER still reaches both people (the whole-question binder picks the longer name)",
+        "a comparison binds the FIRST named person through the reader's own mention, and names the second exactly",
+        "a held candidate the reader NAMES is a subject outside the reader's divisions — and nothing else from there is",
+        "a named person's money question is read in code: the subject, PERSON_RECORD and no tense — the models' reading",
+        "a state's roll calls are read for a state legislator only — never for a body or a county candidate",
+        "the code's guess for a pronoun money question is the models' reading: PERSON_RECORD, no tense",
+        "the other person named is the FULL name the reader typed, never another candidate's bare surname alias"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-decision-answer.test.ts": {
       "names": [
         "Mesa: the council's decisions from its own minutes — each motion and its result in the minutes' words, and the minutes' standing",
@@ -1522,6 +1540,21 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-money-answer.test.ts": {
+      "names": [
+        "Rebecca Harned and Cinde Warmington: the held NH filings are what the answer states",
+        "a race the reader names must be the person's own office",
+        "compare: each person's own figure, and a verdict only on like-for-like filings",
+        "every held AZ, NH and NJ filing state composes inside the length contract and passes the validator",
+        "how much: the committee's own figures, period, agency and read date — and it passes the validator",
+        "the comparison that retrieved no money is now a money question, and so is every shape composed here",
+        "the period is the agency's own, spelled for a reader; New Jersey's report codes are not read out",
+        "the relevance gate keeps a compared person's records by exact id, and nobody else's",
+        "two committees are stated separately and never added; composition steps aside for what it cannot state",
+        "who gave: our records hold totals, not donor identities — said as OURS, counted, never put on the state"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-prompt-cache.test.ts": {
       "names": [
         "H1: a LOCAL PRODUCTION BUILD's harness traffic is never pooled with production readers",
@@ -1548,8 +1581,8 @@
     },
     "tests/ask-reader-edge.test.ts": {
       "names": [
-        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left",
-        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads"
+        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left",
+        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads"
       ],
       "dynamic": 0
     },

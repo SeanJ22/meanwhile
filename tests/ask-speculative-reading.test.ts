@@ -46,7 +46,8 @@ test("the code's best reading: a guess from the reader's words, the page or the 
     return reading && { intent: reading.interpretation.intent, temporal: reading.interpretation.temporal.kind, basis: reading.basis, subject: reading.subjectId, mentions: reading.interpretation.entityMentions.length, referent: reading.interpretation.referent };
   };
   assert.deepEqual(read("Who can I talk to at the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
-  assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
+  // A canonical CONTACT shape since 2026-09-25 (lib/ask/lexical-reading.ts): the same guess, read off the shape.
+  assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
   // Pronoun follow-ups: the lexical reading refuses a pronoun in the name slot. "It" binds the earlier turn's
   // body in the binders; "they" is read there as people, so the guess proposes that body as the referent — as a
   // model does — and the model's own referent decides whether the guess is kept.

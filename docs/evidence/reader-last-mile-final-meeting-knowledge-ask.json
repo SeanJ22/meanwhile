@@ -1,11 +1,11 @@
 {
-  "exactHead": "66030e6986e960e379bb21aa3a5de2793593a355",
+  "exactHead": "4fd7e1cb91734df45f70befe1f1a0465dd1f1ac8",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "f48687e72e51a85ff05678ef0cb00d4f012616265ee7cdf294c36f0e06fb51b0"
+      "sha256": "0f4d0f16ff5064e5dbee0b441fe42f76509dd03416f304a6062d221dbd460369"
     },
     {
       "path": "lib/ask/meeting-knowledge.ts",
@@ -133,7 +133,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "b4345f88296f12774dbe42bfa7383b2653eb6a612f0d7788d6b9d017317a58b1",
+      "payloadSha256": "0b80ab98fb285ed53f590f6b7681d13fa5812fb067d32781e99b076edb62c7a3",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "48ee262bd1064f0e3668e07a4b1a763bb9829d33986e9bcfa9738ed7d842ac53",
+      "payloadSha256": "176fbcd384b69491bfdc89a6447fda27ba6801ea544ec1c78657563eeced2833",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -439,7 +439,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "789ccf3de04a5bcb2155f4387302c2551bdfb5bd7581af533da8ce11c724f29d",
+      "payloadSha256": "cc5fbb17fb205feeded4943632748f56b725b2fe2ac606145306fd26c5af65ac",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -595,7 +595,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e5f5ffd88f6280b96ffe5628f9be2f94576af39fb50a9f33f90ee75ef5198c64",
+      "payloadSha256": "b43f6196930116333701d3f6f3ca73f9898dba469f2c4460146ac290f6b8f22c",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -783,7 +783,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "07f696ef4d678da5e80de54c98a5a885e022629ee073a841579e3a1147fd158c",
+      "payloadSha256": "5bf817f00ceb69e583677c356427ed3d70bfdfb470fe0dc33bfad65c2addd23d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -971,7 +971,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "4c33df1ac54238fba352b5962211a1793d14472b55dc4bc74c01e5b80a7b3cc0",
+      "payloadSha256": "2040e295c2f53e9b4542e40b2f5cdf2979be2acbdc8c40d24205514b0f84f789",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1159,7 +1159,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "6fbe2b848ecd1dc3ecf83db2185da2aaa7cbe7b3084657cea488c3aff3e704f1",
+      "payloadSha256": "9aa92ffbc29cfa00fb0f0269234a531d6605f1fc0d1905d2f15c730558563fe4",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1371,7 +1371,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "013d8406a3c3728fb61ebb5319cd385a4909819d1da4ca8fa934aba0ac6a15fc",
+      "payloadSha256": "a558ffc33f908145869a7fdbde0bcbfdf1859510aa9036ffa9f4e81eb32d0039",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1587,7 +1587,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "311d892643b83fd1ba683befa180181871e93f76e68da5dc078232aabb39a603",
+      "payloadSha256": "cd2e493eae108e59654d91ecda14c6dae57c20452cfad02c0df2c9bc27c60b85",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1736,7 +1736,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "a19fc7ca0329b650eefb3c78ea228280a4de75dbab0351d9e8de5a96966671d1",
+      "payloadSha256": "378b75b1b259894e9bc0448cb299637fa5fb80acfccf7a374c72017bfd02c60d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1952,7 +1952,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "71068fb46ece1a624c0cd2f8454082220bd7f18b57642b5a03ea85ca6f3a6fd8",
+      "payloadSha256": "b7c90c00e7a29587c829ff551b358799b3b7131cbc22bf436cd4bb1edf2648c9",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2129,7 +2129,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "fb860bea1b4e316581fe4f1333a3d23d0d7663d5a763ddee60342289d1a3599c",
+      "payloadSha256": "6c0614e68ece75d6e5618ab1542d89de57bbb57d2265c59d3b42aeb5d9b178f9",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2282,7 +2282,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "575010efb30be332f794692b1c1c7ec6ee2c76dda2dcb3297048e90ccfeb8fcc",
+      "payloadSha256": "80cc7f61ec02404e42ea0de56983e5854d1fc69f3b18ee48111d354e4e51ff12",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2491,7 +2491,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "b572250208ced7302656b23bc608547a92dee2ff0d11d7f50ea280e5a8240b9a",
+      "payloadSha256": "c5eb723a992909a055f6df8edf45243f99fb01dee1eaa0c567c8488953183252",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2700,7 +2700,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0a9c9aefa36f17567ae8f60a54ba0ad6d9522855440f2fa954746afd24ac09df",
+      "payloadSha256": "eaab31a0987f194648fa5ba27f1e8c9065d156635467bd4878c637b9a6c71823",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2912,7 +2912,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f00a131623459b0fbf6d96f9b8635db7679a32d80b1e932bb462b448e482d588",
+      "payloadSha256": "23742d0bfcb91376fce742968659e3a45e6ddd4b9ce47386b0a862ff83b9bd7b",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3093,7 +3093,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "fdd148957c278e9ef889ebeca77d0b20d5902ba48758507ebbc2b753bd6b1574",
+      "payloadSha256": "437ae8f7ce55fd15a15b8302802c949951fab178215094440365f377906ca298",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3277,7 +3277,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "2d03bc5480b98fd77145c0c21758fedc5a59766ac1a66661a480a62cb73f7910",
+      "payloadSha256": "bbabfc26d4dc9d6b31199beb5cd1e07e7016264a77673c8156bd10492624e591",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3433,7 +3433,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "6bcce4071e0f879c172cccdefc0dea38b88e64d7c4469833f259048b33297fcc",
+      "payloadSha256": "fd9a955a60fc866a6d61a13cce8e222a458ed234af121e91634d5b0a7bb71850",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3589,7 +3589,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "6379c123ac09f5aa548e5fbc9729b78751a9f70fbd06f60b7f7a0c6349f81d43",
+      "payloadSha256": "062533e257f00372fceb4cfd5d9abb88008100ab053ee2a631f5474722a36cda",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

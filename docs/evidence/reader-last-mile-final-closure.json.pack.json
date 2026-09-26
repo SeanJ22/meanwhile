@@ -3,8 +3,8 @@
   "encoding": "gzip",
   "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
   "path": "docs/evidence/reader-last-mile-final-closure.json.gz",
-  "originalSha256": "7bc75cbf22c2c177ff9a53c70f2a3b5f281c68fc3156a1267a366ae4482422c8",
+  "originalSha256": "1b4da4bd313ee91acc2d1d4215d77ebfe0cd9cc607dc74f426b3f45ed5a5205c",
   "bytes": 416848867,
-  "packedBytes": 9236560,
-  "packedSha256": "853c4865333e385d5895586124395e74aa7d54dd914cc64e124e2bc8f03f2b10"
+  "packedBytes": 9237722,
+  "packedSha256": "cbeaff20a40088f0796b3b5b4637c53130f3c799e7dbe22f2402ec7921bbbb24"
 }

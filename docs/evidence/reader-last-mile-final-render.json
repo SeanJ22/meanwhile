@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "66030e6986e960e379bb21aa3a5de2793593a355",
-  "buildId": "rPES9aXKvj_UvgQqdGjNe",
+  "exactHead": "4fd7e1cb91734df45f70befe1f1a0465dd1f1ac8",
+  "buildId": "BsNEFoNIiskkqOQwxy1lG",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-26T10:51:50.405Z",
+  "runId": "reader-last-mile-final-render@2026-09-26T11:59:04.929Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -23,7 +23,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "f48687e72e51a85ff05678ef0cb00d4f012616265ee7cdf294c36f0e06fb51b0"
+      "sha256": "0f4d0f16ff5064e5dbee0b441fe42f76509dd03416f304a6062d221dbd460369"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1879,7 +1879,7 @@
     },
     {
       "path": "lib/ask/lexical-reading.ts",
-      "sha256": "169c6f8fea6e03efec53c7f7630c11dd566b1f328306ce627111bc6cceaeeebc"
+      "sha256": "3ae5ebc50cca19d461cfafdc20a83646de4ffc9183cc706c0e912de193607caa"
     },
     {
       "path": "lib/ask/local-finance.ts",
@@ -1895,7 +1895,7 @@
     },
     {
       "path": "lib/ask/meeting-outcomes.ts",
-      "sha256": "4e9a230b24d86c8771f0851ac90f0099a8fd5aee4ea38527ddb5bd07adbd3f76"
+      "sha256": "7666f07389adb7a34244874e6682193c31b09d1559a8670e8cab85f614d39458"
     },
     {
       "path": "lib/ask/meeting-time.ts",
@@ -1963,7 +1963,7 @@
     },
     {
       "path": "lib/ask/sitting-answer.ts",
-      "sha256": "abd7e761e7df6809d79985e713d90f6a2afd4943e524c8d7887f234ea350b81f"
+      "sha256": "cb3674f01fe1ff24c3d7d983d59d9b70e6c3a783a72b4eddc2d30bf1434111ae"
     },
     {
       "path": "lib/ask/speculative-reading.ts",

@@ -10,6 +10,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 import {
   DELIVERY_TRAIL_VERSION,
@@ -60,7 +61,7 @@ test("Admin retains failed readback reason and time without turning it into veri
   const approved = { chain: { scouted: "sc", confirmed: "cf", verified: "vf", audited: "au" }, recordClass: "candidate-enrichment", at: "2026-09-26T08:00:00Z", recordId: "approved" };
   const item = state({ itemId: "a", stage: "APPROVED_FOR_PROMOTION", approved });
   const checkedAt = "2026-09-26T09:00:00Z";
-  const read = { checkedAt, errors: [], witnesses: [{ itemId: "a", approvalId: "approved", versionId: "d1", readerKey: "key", url: "https://meanwhileusa.com/ballot?zip=85635", checkedAt, state: "NOT_OBSERVED" as const, reason: "Sources control failed.", responseSha256: null }] };
+  const read = { checkedAt, errors: [], witnesses: [{ itemId: "a", approvalId: "approved", versionId: "d1", readerKey: "key", url: `${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`, checkedAt, state: "NOT_OBSERVED" as const, reason: "Sources control failed.", responseSha256: null }] };
   const view = buildDeliveryTrail([item], input({ now: checkedAt, servedReader: read }));
   assert.match(view.promotions[0].destination, /NOT_OBSERVED — Sources control failed/);
   assert.equal(view.promotions[0].checkedAt, checkedAt);

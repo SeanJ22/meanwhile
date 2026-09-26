@@ -235,11 +235,15 @@ export function aggregateModelSpend(
   let measured = 0;
   let unmeasured = 0;
   for (const entry of costs) {
+    // Search invoices are tracked separately; the Anthropic token budget must
+    // never consume Brave/Exa charges merely because they carry a dollar value.
+    if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") continue;
     const isModelBacked =
       entry.role === "SCOUT" ||
       entry.cost.inputTokens !== null ||
       entry.cost.outputTokens !== null ||
-      (entry.cost.usd !== null && entry.cost.usd !== undefined && entry.cost.usd > 0);
+        entry.source === "api.anthropic.com" ||
+        entry.byModel?.some((part) => part.model.startsWith("claude-"));
     if (!isModelBacked) continue;
     const at = Date.parse(entry.recordedAt);
     if (at < Date.parse(since) || at > Date.parse(until)) continue;

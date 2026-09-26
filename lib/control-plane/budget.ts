@@ -118,6 +118,8 @@ export interface SpendHold {
   readonly obligationId: string;
   /** Budget keys: `send:<assignment key>` and `area:<scope key>`. */
   readonly keys: readonly string[];
+  /** These lines never expire at midnight or after a restart. */
+  readonly lifetimeKeys?: readonly string[];
   /** The worst case reserved. */
   readonly usd: number;
   readonly heldAt: string;

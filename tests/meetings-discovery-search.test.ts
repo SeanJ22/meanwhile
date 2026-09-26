@@ -193,7 +193,7 @@ test("BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap ho
   }
 });
 
-test("WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method", async () => {
+test("WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method", async () => {
   for (const [label, repos] of await eachStore("wtp-search-walk-")) {
     const site = fakeOpen({
       "https://benson.gov/robots.txt": { status: 404 },
@@ -245,7 +245,7 @@ test("WALK: search runs only when nothing was confirmed, follows own-site result
     const afterMiss = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === learned.recipeId)!;
     assert.equal(afterMiss.failures, 1, `${label}: a saved method that found nothing here is recorded against it`);
 
-    /* A walk that confirmed a route never searches. */
+    /* A working feed is still compared with a current search when authorized. */
     const found = fakeOpen({
       "https://gilbert.gov/robots.txt": { status: 404 },
       "https://gilbert.gov/": { status: 200, body: "<a href='/m.ics'>m</a>" },
@@ -254,7 +254,7 @@ test("WALK: search runs only when nothing was confirmed, follows own-site result
     const idle = fakeSearch({});
     const direct = await walkMeetingsDiscoveryNeed(need("az:town:gilbert", "gilbert.gov", "TOWN OF GILBERT"), runtime(found.open, idle.search, []));
     assert.equal(direct.outcome, "FOUND");
-    assert.deepEqual(idle.calls, [], `${label}: no search is paid for once the site proved a route`);
+    assert.equal(idle.calls.length, 1, `${label}: a confirmed feed still gets a current-information search`);
   }
 });
 

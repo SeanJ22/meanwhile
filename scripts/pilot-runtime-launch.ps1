@@ -73,6 +73,9 @@ try {
         Remove-Item Env:WTP_RUNTIME_AUTHORITY_CONTRACT -ErrorAction SilentlyContinue
         $env:WTP_RUNTIME_AUTHORITY_PARENT_PID = [string]$PID
         $env:WTP_RUNTIME_AUTHORITY_NONCE = [guid]::NewGuid().ToString("N")
+        # A path, never a secret. Only the billing collector reopens these five
+        # credentials so key rotation does not require stopping civic workers.
+        $env:WTP_BILLING_ENV_FILE = $EnvFile
 
         & $node.Source "--env-file=$EnvFile" --experimental-strip-types scripts/pilot-runner.mts "--interval=$IntervalMinutes" --release-handoff
         exit $(if ($null -eq $LASTEXITCODE) { 2 } else { [int]$LASTEXITCODE })

@@ -261,7 +261,7 @@ test("production children are hidden behind the installed runtime and local proo
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
   assert.doesNotMatch(runner, /pnpm pilot:run|pilot:run ·/, "the retired direct runner command returned in help or output");
   assert.match(runner, /scripts\/readiness-refresh\.mts", "--target=control-plane"/);
-  assert.match(runner, /standingChildEnvironment\("CONSOLE_PUBLISHER"\)/);
+  assert.match(runner, /standingChildEnvironment\("CONSOLE_PUBLISHER", process\.env, publisher\.name === "owner snapshot"\)/);
   assert.match(runner, /standingChildEnvironment\("INTAKE_RUNTIME"\)/);
   assert.match(runner, /"ROUTINE_SUPERVISOR"/);
 });

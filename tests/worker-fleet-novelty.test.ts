@@ -7,7 +7,10 @@ import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { unknownApplicability, type MethodKnowledge } from "../lib/method/knowledge.ts";
-import type { ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
+import { dispatchOne } from "../lib/control-plane/scheduler/dispatch.ts";
 import { emptyFieldManual, fieldManualEntryId, upsertEntries } from "../lib/control-plane/field-manual.ts";
 
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
@@ -54,4 +57,44 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   assert.ok(Date.parse(attempt.endedAt!)>=Date.parse(result.recordedAt),"Completion must use the actual post-provider clock, not dispatch admission time.");
   assert.deepEqual(await h.repos.workerResults.readAll(),before,"a Scout transport failure cannot rewrite the prior Hunter evidence");
   assert.notEqual((await h.repos.workItems.mustRead(h.item.id)).value.state,"VERIFIED_COMPLETE");
+});
+
+test("one running worker runtime saves a new observed route and hands it to its next Scout", async t => {
+  const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
+  await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1 });
+  const root = await mkdtemp(join(tmpdir(), "fleet-new-method-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await mkdir(join(root, "data", "method"), { recursive: true });
+  await writeFile(join(root, "data", "method", "knowledge.json"), JSON.stringify({ version: 56, updatedOn: "2026-09-03", routes: [] }));
+  const discovered = "https://fixture-clerk.example.gov/alternate-roster.json";
+  const requests: ModelRequest[] = [];
+  const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now, spaceOut: async () => {},
+    openBytes: async ({ url }) => ({ status: 200, bytes: Buffer.from(url.endsWith("robots.txt") ? "User-agent: *\nDisallow:\n" : '[{"id":"clerk","name":"Clerk"}]'), contentType: "text/plain", finalUrl: url, durationMs: 1, transportError: null }),
+    transport: async request => {
+      requests.push(request);
+      if (requests.length > 3) throw new Error("SECOND_WALK_CAPTURED_OFFLINE");
+      const observed = JSON.stringify(request.messages).match(/ARTIFACT (ar-[a-f0-9]+) \| url https:\/\/fixture-clerk.example.gov\/alternate-roster.json/);
+      const content: ModelResponse["content"] = !observed
+        ? [{ type: "tool_use", id: "open", name: "fetch_public", input: { url: discovered, rung: "primary-site-navigation", why: "Read the alternative official roster" } }]
+        : [{ type: "tool_use", id: "done", name: "finish", input: { outcome: "ROUTE_CANDIDATE", rungsWalked: [{ index: 0, note: "Observed alternate roster" }], candidates: [{ routeId: "new-official-roster", title: "Alternative official roster", url: discovered, procedure: "GET the public roster and parse its JSON records", relevance: "official roster", permission: "ALLOWED", permissionReading: "Recorded public response", evidenceArtifactIds: [observed[1]], observedOn: "2026-09-03", recordClass: "OFFICIAL_ROSTER", deterministic: true, unverified: [] }], findings: [], nextRungs: [], unverified: [], narrative: "Observed a source route; publication remains independently verified." } }];
+      return { model: request.model, stop_reason: "tool_use", content, usage: { input_tokens: 100, output_tokens: 50, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } };
+    } });
+  await runAutonomousCoordinator(runtime, { maximum: 1, concurrency: 1, maxScoutDispatches: 1 });
+  const first = (await h.repos.scoutResults.readAll()).at(-1)!;
+  assert.equal(first.refusal, null, JSON.stringify(first.refusal));
+  assert.equal(first.candidates.length, 1);
+  assert.deepEqual(first.rebuiltExistingRoutes, []);
+  const stored = await h.repos.fieldManual.read("live");
+  const entry = stored!.value.entries.find(e => e.url === discovered)!;
+  assert.ok(entry, "real runtime write-back persisted the discovered route");
+  const item = (await h.repos.workItems.mustRead(h.item.id)).value;
+  const task = createRouteTask({ workItemId: item.id, routeId: "reuse-check", routeLabel: "Follow-up route check", target: discovered, inherited: true, now: h.now() });
+  await registerRouteTask(h.repos, task, h.now());
+  await dispatchOne(h.repos, { obligation: { obligation: { id: task.id, subjectId: item.subject, recordClass: "OFFICIAL_ROSTER", routeId: task.routeId, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, nextDueAt: task.createdAt, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "Offline reuse proof" }, routeTaskId: task.id, holder: "offline-reuse", now: h.now(), leaseTtlMs: 420000, bound: { maxAttempts: 3, maxWallMs: 300000, maxCostUnits: 400000 }, maturity: () => "UNGRADUATED", executor: runtime.scoutFor!(item, task, []), methodVersion: 56, policyVersion: "offline-proof" });
+  assert.equal(requests.length, 4);
+  assert.ok(JSON.stringify(requests[2].messages).includes(discovered));
+  const second = (await h.repos.scoutResults.readAll()).find(r => r.routeTaskId === task.id)!;
+  assert.ok(second.inheritedFieldManualEntryIds?.includes(entry.id));
+  assert.ok(second.inheritedFieldManualLines?.some(line => line.includes(discovered)));
+  assert.ok(second.usedFieldManualEntryIds?.includes(entry.id), "the next worker actually walked the inherited route");
 });

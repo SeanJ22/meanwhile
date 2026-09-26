@@ -405,6 +405,8 @@ export function scopeModelSpend(
 export const SCOPE_BUDGET_CODE = "SCOPE_BUDGET";
 
 export interface BudgetScope {
+  readonly lifetime?: boolean;
+  readonly budgetStartedAt?: string;
   readonly key: string;
   readonly label: string;
   readonly budgetUsd: number;
@@ -503,7 +505,7 @@ export class ScopeBudgetGate {
       if (scope.historicalUsd === null || this.cycleUnmeasured.has(scope.key)) {
         return { refusal: this.refuse(scope, `model spend in ${scope.label} is unmeasured, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked`) as Extract<BudgetAdmission, { admit: false }> };
       }
-      lines.push({ key: areaBudgetKey(scope.key), label: scope.label, budgetUsd: scope.budgetUsd, historicalUsd: scope.historicalUsd, historyReadAt: this.historyReadAt });
+      lines.push({ key: areaBudgetKey(scope.budgetStartedAt ? `${scope.key}@${scope.budgetStartedAt}` : scope.key), label: scope.label, budgetUsd: scope.budgetUsd, historicalUsd: scope.historicalUsd, historyReadAt: this.historyReadAt, lifetime: scope.lifetime });
     }
     return { lines };
   }
@@ -762,6 +764,8 @@ export function armExpansionBudget(
       return reading;
     }
     const spend24 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since24, input.now);
+    const budgetSpend = d.budgetStartedAt && input.costs !== null ? scopeModelSpend(input.costs, scope.members, d.budgetStartedAt, input.now) : spend24;
+    const period = d.budgetStartedAt ? "for this hunt (Anthropic tokens)" : "in the rolling 24 hours";
     const spend7 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since7, input.now);
     budgetScopes.push({
       key: d.key,
@@ -770,7 +774,9 @@ export function armExpansionBudget(
       resolved: true,
       members: scope.members,
       states: scope.states,
-      historicalUsd: spend24 === null ? null : spend24.usd,
+      historicalUsd: budgetSpend === null ? null : budgetSpend.usd,
+      lifetime: Boolean(d.budgetStartedAt),
+      budgetStartedAt: d.budgetStartedAt,
     });
     return {
       ...reading,
@@ -786,13 +792,13 @@ export function armExpansionBudget(
               unmeasuredRows7d: spend7.unmeasured,
             },
       budgetSays:
-        spend24 === null
+        budgetSpend === null
           ? `The cost ledger could not be read, so the $${d.budgetUsd.toFixed(2)} budget cannot be checked: paid work in this scope is held.`
-          : spend24.usd === null
-            ? `${spend24.unmeasured} model row(s) in this scope reported no dollar figure, so the $${d.budgetUsd.toFixed(2)} budget cannot be checked: paid work here is held.`
-            : spend24.usd + input.worstCaseUsd > d.budgetUsd
-              ? `$${spend24.usd.toFixed(2)} spent in the rolling 24 hours of a $${d.budgetUsd.toFixed(2)} budget: one more Scout would exceed it, so paid work here is held.`
-              : `$${spend24.usd.toFixed(2)} spent in the rolling 24 hours of a $${d.budgetUsd.toFixed(2)} budget: room for paid work here, when the paid lane is open.`,
+          : budgetSpend.usd === null
+            ? `${budgetSpend.unmeasured} model row(s) in this scope reported no dollar figure, so the $${d.budgetUsd.toFixed(2)} budget cannot be checked: paid work here is held.`
+            : budgetSpend.usd + input.worstCaseUsd > d.budgetUsd
+              ? `$${budgetSpend.usd.toFixed(2)} spent ${period} of a $${d.budgetUsd.toFixed(2)} budget: one more Scout would exceed it, so paid work here is held.`
+              : `$${budgetSpend.usd.toFixed(2)} spent ${period} of a $${d.budgetUsd.toFixed(2)} budget: room for paid work here, when the paid lane is open.`,
     };
   });
   const gate = new ScopeBudgetGate({ scopes: budgetScopes, worstCaseUsd: input.worstCaseUsd, malformedScopes: plan.malformedScopes, historyReadAt: input.now });

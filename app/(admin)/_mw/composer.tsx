@@ -48,6 +48,7 @@ export interface GeoOption {
 }
 
 export const KIND_WORDS: Readonly<Record<string, string>> = {
+  zcta: "ZIP (Census ZCTA)",
   county: "County",
   congressional_district: "Congressional district",
   cbsa: "Metro or micro area",
@@ -64,6 +65,7 @@ interface CodeRow {
   readonly counts: { readonly bodies: number; readonly wayIn: number; readonly neverWalked: number; readonly lookedNoRoute: number } | null;
 }
 interface Preview {
+  readonly geography?: GeoOption;
   readonly ok: boolean;
   readonly says?: string;
   readonly codes?: readonly CodeRow[];
@@ -149,13 +151,16 @@ export function Composer(props: {
   const [categories, setCategories] = useState<readonly string[]>([]);
   const [stop, setStop] = useState<string>("budget");
   const [budget, setBudget] = useState<string>("0");
+  const [huntBudget, setHuntBudget] = useState(true);
+  const [newHunt, setNewHunt] = useState(false);
   const [priority, setPriority] = useState<string>("1");
   const [words, setWords] = useState<string>("");
   const [sent, setSent] = useState<Sent>({ kind: "IDLE" });
 
   const options = kind ? props.geographies[kind] ?? [] : [];
-  const chosen = options.find((o) => o.geoid === geoid) ?? null;
-  const key = chosen ? `${chosen.type}|${chosen.geoid}` : "";
+  const listed = options.find((o) => o.geoid === geoid) ?? null;
+  const key = kind === "zcta" ? (/^\d{5}$/.test(geoid) ? `zcta|${geoid}` : "") : listed ? `${listed.type}|${listed.geoid}` : "";
+  const chosen = kind === "zcta" ? (preview?.key === key && preview.p.ok ? preview.p.geography ?? null : null) : listed;
 
   useEffect(() => {
     if (key === "") return;
@@ -209,6 +214,8 @@ export function Composer(props: {
             geography: { type: chosen.type, geoid: chosen.geoid, version: chosen.version, label: chosen.label, stateAbbr: chosen.stateAbbr },
             priority: priorityNum,
             budgetUsd: budgetNum,
+            huntBudget,
+            newHunt,
             note: composedNote === "" ? null : composedNote,
             questions: questionsSent,
           },
@@ -271,6 +278,7 @@ export function Composer(props: {
               onChange={(e) => {
                 setKind(e.target.value);
                 setGeoid("");
+                setNewHunt(false);
                 setPreview(null);
                 setSent({ kind: "IDLE" });
               }}
@@ -282,13 +290,14 @@ export function Composer(props: {
                 </option>
               ))}
             </select>
-            <select
+            {kind === "zcta" ? <label>ZIP <input className={s.input} aria-label="ZIP for this hunt" inputMode="numeric" maxLength={5} value={geoid} onChange={e => { setGeoid(e.target.value.replace(/\D/g, "")); setSent({ kind: "IDLE" }); setNewHunt(false); }} /></label> : <select
               className={`${s.select} ${s.selectWide}`}
               aria-label="Geography"
               value={geoid}
               disabled={kind === ""}
               onChange={(e) => {
                 setGeoid(e.target.value);
+                setNewHunt(false);
                 setSent({ kind: "IDLE" });
               }}
             >
@@ -298,7 +307,7 @@ export function Composer(props: {
                   {o.label}
                 </option>
               ))}
-            </select>
+            </select>}
             {props.geographiesGap && <p className={s.goldNote}>{props.geographiesGap}</p>}
           </div>
           <div className={s.inset} style={{ marginTop: 14 }}>
@@ -428,19 +437,21 @@ export function Composer(props: {
           </div>
           <div className={s.rowCenter} style={{ marginTop: 14 }}>
             <span className={s.dollar}>$</span>
-            <input className={s.input} value={budget} inputMode="decimal" aria-label="Budget for paid work, rolling 24 hours" onChange={(e) => setBudget(e.target.value)} />
-            <span className={s.note}>most paid work here may spend in any rolling 24 hours</span>
+            <input className={s.input} value={budget} inputMode="decimal" aria-label="Anthropic token budget" onChange={(e) => setBudget(e.target.value)} />
+            <select className={s.select} aria-label="Budget period" value={huntBudget ? "lifetime" : "rolling"} onChange={e => setHuntBudget(e.target.value === "lifetime")}>
+              <option value="lifetime">Total for this hunt</option><option value="rolling">Rolling 24 hours</option>
+            </select>
           </div>
           <div className={s.rowCenter} style={{ marginTop: 10 }}>
             <input className={s.input} style={{ width: 70 }} value={priority} inputMode="numeric" aria-label="Priority (1 runs first)" onChange={(e) => setPriority(e.target.value)} />
             <span className={s.note}>priority — 1 runs first among your geographies</span>
           </div>
           <p className={s.goldNote}>
-            Enforced by the runner: once paid research in this geography has spent this much in a rolling 24 hours, it is held back there. The ${props.ceilingUsd.toFixed(2)} ceiling
-            inside the application still binds first, over everything. Plain-code reads are free and never limited by it.
+            This limits Anthropic token usage across all workers, retries and escalations {huntBudget ? "for this hunt" : "in any rolling 24 hours"}. Editing this hunt does not reset its spending. Search and other service costs are tracked separately. The existing ${props.ceilingUsd.toFixed(2)} Fleet ceiling still binds; no new search cap is created.
             {!budgetOk ? " Enter an amount from $0 to $10,000." : ""}
             {!priorityOk ? " Priority is a whole number from 1 to 999." : ""}
           </p>
+          {already && huntBudget && <label><input type="checkbox" checked={newHunt} onChange={e => setNewHunt(e.target.checked)} /> Start a separate hunt with a new accounting period. Leave unchecked to continue this hunt.</label>}
         </div>
       </div>
 
@@ -485,7 +496,7 @@ export function Composer(props: {
               {budgetOk
                 ? budgetNum === 0
                   ? "A $0 budget holds back every paid research call in this geography; plain-code work still runs."
-                  : `Your $${budgetNum.toFixed(2)} is enforced on paid research here, in any rolling 24 hours. The $${props.ceilingUsd.toFixed(2)} ceiling over everything binds first.`
+                  : `Your $${budgetNum.toFixed(2)} Anthropic budget is enforced ${huntBudget ? "for this hunt" : "in any rolling 24 hours"}. The existing $${props.ceilingUsd.toFixed(2)} Fleet ceiling also applies.`
                 : "Enter a budget to see what it enforces."}
             </span>
           </div>

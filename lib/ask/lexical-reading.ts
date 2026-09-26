@@ -10,7 +10,7 @@ import {
 import { decideNamedBody } from "./body-confirmation.ts";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
-import { moneyQuestionShape, raceWordsFitOffice, type MoneyAsk } from "./money-answer.ts";
+import { groupMoneyQuestionShape, moneyQuestionShape, raceWordsFitOffice, type GroupMoneyAsk, type MoneyAsk } from "./money-answer.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import { resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
@@ -67,7 +67,7 @@ export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
  * the module that composes its answer. `CONTACT` is how to reach a named
  * person or body.
  */
-export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY";
+export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY";
 
 export type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
@@ -165,6 +165,8 @@ const SHAPE_INTENT: Readonly<Record<Exclude<LexicalShape, SittingShape>, AskInte
   /* A named person's campaign-money question, 2026-09-25 comparison: PERSON_RECORD in 25 of the 29
      distinct readings logged (UNKNOWN twice, MEASURE, CIVICS), and no tense in all 29. */
   MONEY: "PERSON_RECORD",
+  /* A race's candidates' money (2026-09-25): the same reading as one person's; no sitting is selected for it. */
+  GROUP_MONEY: "PERSON_RECORD",
 };
 
 const SLOT_PRONOUNS: ReadonlySet<string> = new Set([
@@ -318,6 +320,61 @@ export function moneyShapeForBoundPerson(
 }
 
 /**
+ * **THE RACE MONEY SHAPE OF A QUESTION ALREADY BOUND TO `subjectId`.**
+ * (2026-09-25.) "Who funded the Vail school board candidates?", "How much have
+ * the candidates for governor raised?": the race words must name that contest
+ * or body and nothing else, and nothing in the question names a person. The
+ * composer asks this whichever rung read the question. Null means the model
+ * writes the answer.
+ */
+export function groupMoneyShapeForBoundSubject(
+  question: string,
+  inventory: readonly BindableEntity[],
+  subjectId: string,
+): GroupMoneyAsk | null {
+  const group = groupMoneyQuestionShape(question);
+  if (!group || !slotNames(group.group, inventory, subjectId)) return null;
+  const bound = bindNamedEntity(group.group, inventory);
+  if (bound.kind !== "BOUND" || bound.entity.id !== subjectId) return null;
+  const kind = kindOf(bound.entity);
+  if (kind !== "CONTEST" && kind !== "BODY") return null;
+  return namesAnotherSubject(question, inventory, subjectId) ? null : group.ask;
+}
+
+/**
+ * **A RACE'S CANDIDATES' MONEY, READ IN CODE.** (2026-09-25.) Undefined when
+ * the question is not a race money shape; null when it is and cannot be
+ * settled here. The same conditions as every other shape: the race words bind
+ * one contest or body and are its name and nothing else; the route's own
+ * resolver binds the same subject on the whole question; nothing else is named;
+ * and for a body, the route's named-body decision binds the same body on the
+ * reader's words alone. No tense is read.
+ */
+function groupMoneyReading(input: LexicalReadingInput): LexicalReading | null | undefined {
+  const group = groupMoneyQuestionShape(input.question);
+  if (!group) return undefined;
+  if (outcomeQuestionClass(input.question)) return null;
+  const bound = bindNamedEntity(group.group, input.inventory);
+  if (bound.kind !== "BOUND") return null;
+  const kind = kindOf(bound.entity);
+  if (kind !== "CONTEST" && kind !== "BODY") return null;
+  if (!groupMoneyShapeForBoundSubject(input.question, input.inventory, bound.entity.id)) return null;
+  const temporal = { kind: "NONE" as const };
+  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
+    activeSubjects: input.activeSubjects ?? [],
+    priorSubjects: input.priorSubjects ?? [],
+  });
+  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION" || resolved.binding.entity.id !== bound.entity.id) return null;
+  if (kind === "BODY") {
+    const decision = decideNamedBody(input.question, input.namedBodies, input.confirmation, []);
+    if (decision.kind !== "BOUND" || decision.confirmed || decision.entity.id !== bound.entity.id) return null;
+  } else if (classPhraseIn(input.question)) {
+    return null;
+  }
+  return { shape: "GROUP_MONEY", interpretation: { ...unavailableInterpretation(), intent: SHAPE_INTENT.GROUP_MONEY, temporal }, subjectId: bound.entity.id };
+}
+
+/**
  * The one OTHER held person a money question names beside its subject —
  * "...raised more money than Kelly Ayotte" — or null. Every identifying word of
  * that person's name is in the question and at least one is not the subject's
@@ -370,6 +427,8 @@ export interface LexicalReading {
 export function lexicalReading(input: LexicalReadingInput): LexicalReading | null {
   const money = moneyReading(input);
   if (money !== undefined) return money;
+  const group = groupMoneyReading(input);
+  if (group !== undefined) return group;
   const matches = shapeMatches(input.question);
   if (matches.length === 0) return null;
 

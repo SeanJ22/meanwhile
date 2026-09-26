@@ -102,6 +102,67 @@ export function reconciledCandidacyIdForCard(cardKey: string): string | null {
   return row.canonicalCandidacyId;
 }
 
+/**
+ * **ONE NAME, TWO PARTIES: THE PAIR THE GENERATOR ALREADY FOUND.**
+ *
+ * A `PARTY_CONFLICT` card is exactly one name match in the card's own contest
+ * whose two authorities publish different party labels (Teri Ann Hourihan:
+ * the certified canvass says "No Labels", the Secretary of State's filing list
+ * says "Arizona Independent Party"). The card still has NO canonical candidacy
+ * — `reconciledCandidacyIdForCard` stays `null` and `readerPersonKeys` stays
+ * the card alone — because we have not established that the two rows are the
+ * same candidacy.
+ *
+ * What this returns is the committed pair itself, so a reader surface can
+ * treat the reader's words ("Teri Ann Hourihan") as naming one subject instead
+ * of asking "which one did you mean?" about two rows that exist only because
+ * two authorities disagree, and then state BOTH parties with their sources.
+ * It never attaches the filing's money or records to the card as its own.
+ * `null` unless the row is a PARTY_CONFLICT with exactly one registry
+ * identity that names a canonical candidacy.
+ */
+export interface PartyConflictFiling {
+  readonly cardKey: string;
+  readonly contestId: string;
+  readonly filingCandidacyId: string;
+  readonly name: string;
+  readonly canvassParty: string | null;
+  readonly canvassSourceUrl: string | null;
+  readonly filingParty: string | null;
+  readonly filingSourceUrl: string | null;
+  /** The committed reader sentence for the unresolved row. */
+  readonly readerGapSentence: string | null;
+}
+
+export function partyConflictFilingForCard(cardKey: string): PartyConflictFiling | null {
+  const row = lineupRowForCard(cardKey);
+  if (!row || row.outcome !== "PARTY_CONFLICT" || row.sourceValues.registryCandidateIds.length !== 1) return null;
+  const identity = azIdentityRegistry()?.candidates.find((candidate) => candidate.identityId === row.sourceValues.registryCandidateIds[0]);
+  if (!identity?.canonicalCandidacyId) return null;
+  const canvass = azLineupReconciliation()?.sources.find((source) => source.url && /canvass/i.test(source.name));
+  return {
+    cardKey,
+    contestId: row.contestId,
+    filingCandidacyId: identity.canonicalCandidacyId,
+    name: row.nomineeName,
+    canvassParty: row.sourceValues.canvassParty,
+    canvassSourceUrl: canvass?.url ?? null,
+    filingParty: row.sourceValues.registryParty,
+    filingSourceUrl: identity.candidacySourceUrl,
+    readerGapSentence: row.readerGapSentence,
+  };
+}
+
+/** The PARTY_CONFLICT card whose single name match is this filing, or `null`. */
+export function partyConflictCardForFiling(candidacyId: string): PartyConflictFiling | null {
+  for (const row of azLineupReconciliation()?.rows ?? []) {
+    if (row.outcome !== "PARTY_CONFLICT") continue;
+    const pair = partyConflictFilingForCard(row.cardKey);
+    if (pair?.filingCandidacyId === candidacyId) return pair;
+  }
+  return null;
+}
+
 /** Test seam. Never called by a render path. */
 export function resetAzIdentityCache(): void {
   registryCache = undefined;

@@ -214,6 +214,40 @@ export interface ContainerWithCodes {
   readonly zctas: readonly ZctaInScope[];
 }
 
+/** A single ZIP's Census approximation, without widening the hunt to its county. */
+export async function loadZcta(zcta5: string): Promise<LookupRead<{ readonly geography: Omit<GeographyRef, "type"> & { readonly type: "zcta" }; readonly zctas: readonly ZctaInScope[] }>> {
+  if (!/^\d{5}$/.test(zcta5)) return unread("Enter a five-digit ZIP.");
+  const query = readerQuery();
+  const types: GeographyType[] = ["county", "congressional_district", "state_leg_upper", "state_leg_lower", "cbsa"];
+  const slice = query === null ? null : await sliceRead(`zcta|${zcta5}`, `The Census geography for ZCTA ${zcta5}`, () => containersOfCode(zcta5, types, query));
+  let refs: readonly GeographyRef[];
+  let vintages: readonly string[];
+  let source: PublishedLookupSource;
+  let versionId: string;
+  if (!readsWholeLookup(slice) && slice !== null) {
+    if (slice.kind !== "HELD") return unread(slice.kind === "UNREAD" ? slice.detail : NOT_PUBLISHED);
+    if (!slice.value.known) return unread(`${zcta5} is outside the published Census ZCTA coverage.`);
+    refs = slice.value.containers.map(c => c.ref);
+    vintages = slice.value.zctaTabulations ?? [];
+    source = "published"; versionId = slice.versionId;
+  } else {
+    const opened = await lookupOrUnread();
+    if (!opened.ok) return unread(opened.detail);
+    const [r, manifest] = await Promise.all([opened.state.lookup.groupingsForZcta(zcta5), opened.state.lookup.manifest()]);
+    if (r.status.kind !== "OK") return unread(r.status.note);
+    refs = r.memberships.map(m => m.geography);
+    vintages = [...new Set(manifest.versions.map(v => v.zctaTabulation))];
+    source = opened.state.source; versionId = opened.state.versionId;
+  }
+  const states = [...new Set(refs.filter(g => g.type === "county").map(g => g.stateAbbr))].sort();
+  const unique = [...new Set(vintages)];
+  if (!states.length || unique.length !== 1 || !/^\d{4}$/.test(unique[0])) return unread("This ZIP's Census states or tabulation vintage cannot be resolved unambiguously.");
+  return { kind: "HELD", source, versionId, value: {
+    geography: { type: "zcta", geoid: zcta5, version: `zcta:${unique[0]}`, label: `ZIP ${zcta5} (Census ZCTA)`, stateAbbr: states[0], stateFips: refs.find(r => r.stateAbbr === states[0])!.stateFips, memberStates: states, ocdId: null },
+    zctas: await codesOf([{ zcta5, whole: true, fraction: 1 }]),
+  } };
+}
+
 /** Every container of one type in the state, each with its codes — one read, one pass. */
 export async function loadContainersWithCodes(stateAbbr: string, type: GeographyType): Promise<LookupRead<readonly ContainerWithCodes[]>> {
   const st = stateAbbr.toUpperCase();

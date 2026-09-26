@@ -150,6 +150,12 @@
 [functions]
   directory = "netlify/functions"
 
+# Same Ask engine, with its own small cold-start boundary. Static geography
+# remains file-backed; mutable civic records still resolve published pointers.
+[functions."grounded-ask"]
+  node_bundler = "esbuild"
+  included_files = ["data/derived/zip-divisions/*.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/states/*/geo/**/*.geojson", "public/geo/*.geojson"]
+
 # THE LEGACY HOST FORWARDS — ITEM F (2026-09-01).
 #
 # `sparkwtp.netlify.app` is the Netlify site's default subdomain and it keeps

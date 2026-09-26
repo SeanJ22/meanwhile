@@ -48,7 +48,6 @@ import {
   ModelTransportError,
   SCOUT_ESCALATION_EVIDENCE_MAX_CHARS,
   cacheTtlOrderProblems,
-  prefixTokensAtLeast,
   scoutAttemptWorstCaseUsd,
   scoutExecutor,
   scoutLoopBase,
@@ -66,6 +65,7 @@ import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 
 const NOW = "2026-09-23T18:00:00.000Z"; // a Wednesday: outside the Saturday blackout the controller enforces
 const NOW_MS = Date.parse(NOW);
+const HAIKU = "claude-haiku-4-5-20251001";
 const SONNET = "claude-sonnet-5";
 const OPUS = "claude-opus-5-5";
 
@@ -203,7 +203,7 @@ async function runLadder(input: {
   const results: ScoutResult[] = [];
   const exec = scoutExecutor({
     transport: input.transport,
-    ...(input.model !== undefined ? { model: input.model } : {}),
+    ...(input.model !== undefined ? { model: input.model } : { model: SONNET }),
     ...(input.reserveEscalation !== undefined ? { reserveEscalation: input.reserveEscalation } : {}),
     toolkitFor: (_ctx: ScoutToolContext) => toolkit,
     contextFor: () => ({
@@ -237,39 +237,49 @@ const close = (a: number | null | undefined, b: number): boolean => a !== null &
 
 /* --------------------------------------------------------------------- L1 */
 
-test("L1: the loop's first request goes to Sonnet 5 — the cheapest suitable class — with every cache breakpoint placed and a prefix that clears Sonnet's minimum", async () => {
-  assert.equal(SCOUT_MODEL, SONNET, "the lane's recorded start model is Sonnet 5");
-  const base = scoutLoopBase();
-  assert.deepEqual({ model: base.model, modelClass: base.modelClass, effort: base.effort }, { model: SONNET, modelClass: "sonnet", effort: "medium" });
-  assert.match(base.why, /cheapest class/);
-  assert.match(base.why, /Haiku 4\.5 rejects the effort setting/);
-
-  const transport = perModelTransport({
-    [SONNET]: [[fetchOf("u1", "https://a.gov/meetings")], [candidateFinish("f", "art-1", [{ index: 0, note: "meetings page" }])]],
-  });
-  const { result } = await runLadder({ transport });
+test("L1: acquisition starts with Haiku and omits unsupported effort and adaptive thinking", async () => {
+  assert.equal(SCOUT_MODEL, HAIKU);
+  assert.equal(scoutLoopBase().model, HAIKU);
+  const transport = perModelTransport({ [HAIKU]: [[fetchOf("u1", "https://a.gov/meetings")], [candidateFinish("f", "art-1", [{ index: 0, note: "meetings page" }])]] });
+  const { result } = await runLadder({ transport, model: HAIKU });
   assert.equal(transport.requests.length, 2);
   for (const request of transport.requests) {
-    assert.equal(request.model, SONNET, "every turn of a finishing Sonnet attempt stays on Sonnet");
-    /* The breakpoints, as the request body carries them to the cheaper model. */
-    assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the last tool definition carries the prefix breakpoint");
-    assert.deepEqual(request.system[0].cache_control, { type: "ephemeral" }, "the system block carries the pre-warm's breakpoint");
-    assert.deepEqual(request.cache_control, { type: "ephemeral" }, "the moving breakpoint is the top-level marker");
-    assert.equal(JSON.stringify(request.messages).includes("cache_control"), false, "no stale message-level marker competes with it");
-    assert.deepEqual(request.output_config, { effort: "medium" });
+    assert.equal(request.model, HAIKU);
+    assert.equal(request.output_config, undefined);
+    assert.equal(request.thinking, undefined);
+    assert.deepEqual(request.tools.at(-1)?.cache_control, { type: "ephemeral" });
+    assert.deepEqual(request.system[0].cache_control, { type: "ephemeral" });
+    assert.deepEqual(request.cache_control, { type: "ephemeral" });
     assert.deepEqual(cacheTtlOrderProblems(request), []);
   }
-  /* The breakpoints only cache if the prefix reaches the model's minimum; a lower bound proves it does for Sonnet. */
-  const minimum = minimumCacheablePrefixTokensFor(SONNET);
-  assert.equal(minimum, 1024);
-  const realPrefix = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-  assert.equal(realPrefix.kind, "SEND");
-  assert.ok(prefixTokensAtLeast(realPrefix.kind === "SEND" ? realPrefix.request : transport.requests[0]) >= (minimum ?? Infinity), "the production static prefix clears Sonnet 5's 1,024-token minimum by its lower bound");
-  assert.equal(result.modelClass, "sonnet");
-  assert.equal(result.worker.model, SONNET);
+  assert.equal(minimumCacheablePrefixTokensFor(HAIKU), 4096);
+  const prewarm = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  assert.equal(prewarm.kind, "SKIP", "do not spend on a prefix below Haiku's cache minimum");
+  assert.equal(result.modelClass, "haiku");
+  assert.equal(result.worker.model, HAIKU);
+  assert.equal(result.escalatedFrom, null);
 });
 
 /* --------------------------------------------------------------------- L2 */
+
+test("Haiku then Sonnet then Opus records both justified escalations and all costs without repeating discovery", async () => {
+  const transport = perModelTransport({
+    [HAIKU]: [[fetchOf("h1", "https://a.gov/meetings")], [text("no result")]],
+    [SONNET]: [[text("still no result")]],
+    [OPUS]: [[candidateFinish("f", "art-1", [{ index: 0, note: "inherited meeting page" }])]],
+  });
+  const reservation = recordingReservation();
+  const { result, outcome } = await runLadder({ model: HAIKU, transport, reserveEscalation: reservation.seam, bound: { maxTurns: 2 } });
+  assert.equal(outcome.kind, "DISPOSED");
+  assert.deepEqual(result.modelAttempts?.map(a => a.model), [HAIKU, SONNET, OPUS]);
+  assert.deepEqual(result.modelAttempts?.slice(1).map(a => a.escalation?.from), [HAIKU, SONNET]);
+  assert.ok(result.modelAttempts?.slice(1).every(a => a.escalation?.at === NOW && a.escalation.reason && a.escalation.evidence));
+  assert.equal(reservation.asked.length, 2);
+  assert.equal(reservation.released(), 2);
+  assert.deepEqual(result.candidates[0].evidenceArtifactIds, ["art-1"]);
+  assert.ok(close(result.usd, result.modelAttempts!.reduce((n,a) => n + a.usd!,0)));
+  assert.ok(close(outcome.cost?.usd, outcome.costByModel!.reduce((n,a) => n + a.usd!,0)));
+});
 
 test("L2: a Sonnet attempt that produces an accepted typed result is the whole Attempt — no escalation, no reservation, one attempt's cost", async () => {
   const reservation = recordingReservation();
@@ -365,7 +375,7 @@ for (const c of REASON_CASES) {
     assert.match(result.escalationEvidence ?? "", c.evidence);
     assert.ok((result.escalationEvidence ?? "").length <= SCOUT_ESCALATION_EVIDENCE_MAX_CHARS, "the evidence line is short");
     assert.equal(result.escalationRefused, null);
-    assert.match(result.modelClassWhy ?? "", /cheapest class/);
+    assert.match(result.modelClassWhy ?? "", /deterministic routes/);
     assert.match(outcome.detail, new RegExp(`ESCALATED sonnet → frontier \\(${c.reason}\\)`));
 
     /* Sonnet first; every frontier request came after the reservation and names the escalation. */
@@ -511,7 +521,7 @@ test("L5 WALL_CLOCK / UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, re
 /* --------------------------------------------------------------------- L6 */
 
 test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to the loop's first request — and is skipped by name when the prefix cannot be shown to cache", async () => {
-  const plan = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  const plan = scoutPrewarmPlan({ model: SONNET, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
   assert.equal(plan.kind, "SEND");
   if (plan.kind !== "SEND") return;
   assert.equal(plan.model, SONNET);
@@ -528,6 +538,7 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   };
   const exec = scoutExecutor({
     transport: capture,
+    model: SONNET,
     toolkitFor: () => ({ specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } }),
     contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
     now: () => NOW,
@@ -559,10 +570,10 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
 /* --------------------------------------------------------------------- L7 */
 
 test("L7: Opus 5.5 remains the maximum the ladder can reach, a Fable is refused, the auditor stays on the frontier, and an escalation needs a recorded reason below the top", async () => {
-  const up = escalationTargetFor("scout-research-loop");
+  const up = escalationTargetFor("scout-research-loop", "sonnet");
   assert.equal(up?.model, MODEL_CEILING);
   assert.equal(MODEL_CEILING, OPUS);
-  const escalated = assertStepMayEscalate("scout-research-loop", "RESULT_REFUSED");
+  const escalated = assertStepMayEscalate("scout-research-loop", "RESULT_REFUSED", "sonnet");
   assert.deepEqual({ model: escalated.model, modelClass: escalated.modelClass, escalatedFrom: escalated.escalatedFrom }, { model: OPUS, modelClass: "frontier", escalatedFrom: "sonnet" });
   for (const cls of MODEL_CLASSES) {
     assert.doesNotMatch(MODEL_FOR_CLASS[cls], /fable/i);

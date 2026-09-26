@@ -88,6 +88,14 @@ export interface DiligentMeeting {
   Published?: boolean;
 }
 
+/** Public service response, used by discovery and the existing reader adapter. */
+export function parseDiligentMeetings(text: string): DiligentMeeting[] | null {
+  try {
+    const value: unknown = JSON.parse(text);
+    return Array.isArray(value) && value.every(m => m && Number.isInteger(m.Id) && typeof m.Name === "string" && /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(m.MeetingDateTime)) ? value : null;
+  } catch { return null; }
+}
+
 export interface DiligentRaw {
   wiring: BodySourceWiring;
   meetings: DiligentMeeting[];
@@ -195,6 +203,12 @@ export function makeDiligentSource(
           .filter((id) => Number.isInteger(id) && id > 0),
       );
       for (const m of rows) {
+        // Derived connections carry reviewed body filters. Existing hand-wired
+        // single-body tenants retain their own configuration when these are absent.
+        const filterTitle = m.Name ?? m.CleanName ?? "";
+        const match = (wiring.config.titleMatch ?? "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+        const exclude = (wiring.config.titleExclude ?? "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+        if ((match.length && !match.some(s => filterTitle.toLowerCase().includes(s))) || exclude.some(s => filterTitle.toLowerCase().includes(s))) { drops.notConfigured++; continue; }
         const clock = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(
           m.MeetingDateTime ?? "",
         );

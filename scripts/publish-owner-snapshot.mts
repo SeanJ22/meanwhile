@@ -53,6 +53,10 @@ import {
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
+import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
+import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
+import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
   CACHE_OBSERVATION_ID,
@@ -405,6 +409,8 @@ const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
  * gap rather than a zero.
  */
 interface ControlPlaneReads {
+  readonly billingScopes: Parameters<typeof providerBillingAttribution>[0]["scopes"];
+  readonly billingHolds: Parameters<typeof providerBillingAttribution>[0]["holds"];
   readonly costs: Awaited<ReturnType<ControlPlaneRepositories["costs"]["readAll"]>>;
   readonly attempts: { readonly id: string; readonly worker: { readonly version: string; readonly provider: string } }[];
   readonly obligations: { readonly id: string; readonly subjectId: string }[];
@@ -422,6 +428,10 @@ interface ControlPlaneReads {
 }
 
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
+  const [billingScopes, billingHolds] = await Promise.all([
+    repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
+    repos.budget.read().then(r => r.value.spendHolds ?? {}).catch(() => null),
+  ]);
   const [costs, attempts, obligations, research] = await Promise.all([
     repos.costs.readAll(),
     repos.attempts.list(),
@@ -462,6 +472,7 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   }
   const metrics = research?.value.metrics ?? null;
   return {
+    billingScopes, billingHolds,
     costs,
     attempts: attempts.map((a) => ({ id: a.value.id, worker: a.value.worker })),
     obligations: obligations.map((o) => ({ id: o.value.id, subjectId: o.value.subjectId })),
@@ -734,7 +745,9 @@ async function main(): Promise<void> {
       ],
     });
   }
-  const snapshot = buildSnapshot(reads, maptiler);
+  const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
+  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, readings: providerBilling.readings }) : null;
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler), providerBilling, billingAttribution };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");

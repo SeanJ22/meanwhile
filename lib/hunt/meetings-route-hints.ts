@@ -187,7 +187,9 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   /*
    * The 85635 expansion (2026-09-26): the district's recorded k12.az.us host no longer resolves. The federal
    * school-district directory names its current site, and that site names the district. Its board's agendas are on
-   * Diligent (fhasd.community.highbond.com) and BoardDocs (boarddocs.com/az/fhas), which no adapter reads yet.
+   * Diligent (fhasd.community.highbond.com) and BoardDocs (boarddocs.com/az/fhas).
+   * Diligent's public MeetingsService now uses the standing adapter after linked-page identity verification;
+   * the annual schedule remains complementary evidence when the portal omits later dates.
    */
   siteHint("az:depschool:fort-huachuca-accommodation-school", {
     origin: "https://www.fhasd.org",

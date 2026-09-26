@@ -2,6 +2,7 @@ import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.
 import { createHash } from "node:crypto";
 import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { browseWithPlaywright } from "./scout-browse.mts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -1864,9 +1865,10 @@ const assignmentsReading = (): AssignmentCycleReading | null =>
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
 const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
-/* THE FIELD MANUAL a Scout inherits this cycle, read ONCE and projected per obligation. */
+/* The live field manual is refreshed after write-back and captured per dispatch. */
 let fieldManual: FieldManualStore = emptyFieldManual();
-let fieldManualKnown: ReadonlySet<string> = new Set<string>();
+let fieldManualRevision = 0;
+const inheritedManualStores = new Map<string, FieldManualStore>();
 const inheritedFieldManualCounts = new Map<string, number>();
 /** The exact projected doors handed to each obligation's scout at dispatch — captured input for the delivery audit, keyed by obligation id. */
 const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
@@ -1887,7 +1889,7 @@ if (modelLaneEnabled && dueModel.length > 0) {
     const fm = await repos.fieldManual.read("live");
     if (fm) {
       fieldManual = fm.value;
-      fieldManualKnown = knownRouteIds(fm.value);
+      fieldManualRevision = fm.revision;
     }
   } catch (error) {
     runtimeConditions.push(`the field manual could not be read: ${error instanceof Error ? error.message : String(error)}`);
@@ -1998,6 +2000,7 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     recordClass: row.obligation.recordClass,
   });
   inheritedFieldManualCounts.set(id, projection.entryIds.length);
+  inheritedManualStores.set(id, fieldManual);
   const manualLines = fieldManualBriefLines(projection);
   // Capture the EXACT projected doors handed to this scout, at dispatch, for the delivery audit.
   inheritedFieldManualDoors.set(id, { entryIds: projection.entryIds, lines: manualLines });
@@ -2362,6 +2365,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           spaceOut: spacer,
           openOne: fleetSafety.guardedOpenOne("public-web", scheduled.obligation.id),
           openBytes: fleetSafety.guardedOpenBytes("public-web", scheduled.obligation.id),
+          browse: browseWithPlaywright,
         },
       }),
       onStart: async ({ attemptId, obligationId, startedAt }) => {
@@ -2394,7 +2398,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
          * back into the field manual so the NEXT Scout of any role inherits them
          * this cycle — no human method:learn step in between.
          */
-        const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, fieldManualKnown);
+        const handedManual = inheritedManualStores.get(result.obligationId) ?? fieldManual;
+        const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, knownRouteIds(handedManual));
         const doors = inheritedFieldManualDoors.get(result.obligationId);
         amended = {
           ...amended,
@@ -2402,7 +2407,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           rebuiltExistingRoutes: pair.rebuiltExisting,
           /* MW-025: beside what was handed, which handed doors the walk went through, matched against the manual it was handed from. */
           ...(doors
-            ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines, usedFieldManualEntryIds: usedFieldManualEntryIds(result, doors.entryIds, fieldManual) }
+            ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines, usedFieldManualEntryIds: usedFieldManualEntryIds(result, doors.entryIds, handedManual) }
             : {}),
         };
         if (result.refusal === null && result.candidates.length > 0) {
@@ -2413,6 +2418,13 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
           );
           if (written.error) {
             amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
+          } else {
+            try {
+              const refreshed = await repos.fieldManual.read("live");
+              if (refreshed && refreshed.revision >= fieldManualRevision) { fieldManualRevision = refreshed.revision; fieldManual = refreshed.value; }
+            } catch (error) {
+              amended = { ...amended, unverified: [...amended.unverified, `field manual saved but refresh failed: ${String(error)}`] };
+            }
           }
         }
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
@@ -2970,6 +2982,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleetGuarded = modelLaneEnabled ? fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
+      browse: browseWithPlaywright,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
       /* MW-021: no Send binds the auditor or the autonomous Scouts; each request fits the Fleet ceiling and its job's area (`autonomousTransportFor`). */
       ...(fleetGuarded !== null ? { transport: fleetGuarded, transportFor: autonomousTransportFor(fleetGuarded), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),

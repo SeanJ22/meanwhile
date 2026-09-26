@@ -94,6 +94,7 @@ async function zctasOf(g: ExpansionScopeGeography): Promise<string[]> {
 
 /** A geography's ZCTAs as the overlap rule reads them: all, the wholly-inside ones, and each partial share. */
 async function geometryOf(g: ExpansionScopeGeography): Promise<ScopeZctas> {
+  if (g.type === "zcta") throw new Error("Use resolveScopes for a ZIP hunt");
   const lookup = loadBootstrapLookup();
   const result = await lookup.zctasForGrouping({ type: g.type, geoid: g.geoid, version: g.version });
   assert.equal(result.status.kind, "OK", `${g.label} resolves in the bootstrap fixture`);
@@ -525,6 +526,23 @@ test("resolving against the lookup names every failure and never returns an empt
   assert.equal(out.scopes[2].kind, "UNRESOLVED", "a plan version that is not published is not zero ZCTAs");
   const unread = await resolveScopes([decision(PIMA, 1, 1)], null, "STORE_UNREACHABLE");
   assert.equal(unread.lookup.source, "NOT_READ");
+});
+
+test("a ZIP hunt resolves only that published Census ZCTA, with no neighboring ZIP expansion", async () => {
+  const lookup = loadBootstrapLookup();
+  for (const zip of ["85635", "85701"]) {
+    const d = decision({ type: "zcta", geoid: zip, version: "zcta:2020", label: `ZIP ${zip}`, stateAbbr: "AZ" }, 1, 50);
+    const result = await resolveScopes([d], { lookup, source: "published", versionId: "fixture-published" }, null);
+    const scope = result.scopes[0];
+    assert.equal(scope.kind, "RESOLVED");
+    assert.deepEqual([...scope.zctas], [zip]);
+    assert.deepEqual([...scope.whole], [zip]);
+    assert.deepEqual(scope.states, ["AZ"]);
+    const absent = await resolveScopes([{ ...d, geography: { ...d.geography, version: "zcta:2099" } }], { lookup, source: "published", versionId: "v" }, null);
+    assert.equal(absent.scopes[0].kind, "UNRESOLVED");
+    const fixture = await resolveScopes([d], { lookup, source: "bootstrap", versionId: "v" }, null);
+    assert.equal(fixture.scopes[0].kind, "UNRESOLVED");
+  }
 });
 
 /* ======================================================================= *

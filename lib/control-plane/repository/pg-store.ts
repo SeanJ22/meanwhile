@@ -1001,6 +1001,7 @@ export async function createPgRepositories(
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded),
       locks,
+      "ATOMIC_COMPARE_AND_SET",
     ),
     locks,
     describe: () =>

@@ -16,54 +16,25 @@
 import { useEffect, useState } from "react";
 
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
-import { PULSE_INTERVAL_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
+import { type LivePulse } from "@/lib/control-plane/live-pulse.ts";
 
 import s from "./mw.module.css";
 
 type PulseLanes = LivePulse["lanes"];
 
 export function LaneStrip({ initial }: { readonly initial: PulseLanes }) {
-  const [lanes, setLanes] = useState<PulseLanes>(initial);
+  const [observed, setLanes] = useState<PulseLanes>(null);
   const [failedAt, setFailedAt] = useState<string | null>(null);
+  const lanes = observed !== null && (initial === null || observed.at >= initial.at) ? observed : initial;
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    let stopped = false;
-    const clear = () => {
-      if (timer !== null) clearTimeout(timer);
-      timer = null;
+    const receive = (event: Event) => {
+      const pulse = (event as CustomEvent<LivePulse>).detail;
+      if (pulse.lanes !== null) setLanes(pulse.lanes);
+      setFailedAt(pulse.unread.length > 0 ? pulse.at : null);
     };
-    const schedule = () => {
-      clear();
-      if (!stopped && document.visibilityState === "visible") timer = setTimeout(() => void tick(), PULSE_INTERVAL_MS);
-    };
-    const tick = async () => {
-      if (stopped || document.visibilityState !== "visible") return;
-      try {
-        const res = await fetch("/api/admin/live", { headers: { accept: "application/json" }, cache: "no-store" });
-        const body = (await res.json().catch(() => null)) as { readonly lanes?: PulseLanes; readonly revision?: string } | null;
-        if (!res.ok || body === null || body.revision === "unread") setFailedAt(new Date().toISOString());
-        else {
-          setLanes(body.lanes ?? null);
-          setFailedAt(null);
-        }
-      } catch {
-        setFailedAt(new Date().toISOString());
-      } finally {
-        schedule();
-      }
-    };
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") void tick();
-      else clear();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    schedule();
-    return () => {
-      stopped = true;
-      clear();
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
+    window.addEventListener("meanwhile:admin-pulse", receive);
+    return () => window.removeEventListener("meanwhile:admin-pulse", receive);
   }, []);
 
   if (lanes === null) {

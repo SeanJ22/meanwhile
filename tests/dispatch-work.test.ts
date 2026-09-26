@@ -120,6 +120,8 @@ function decision(geography: ExpansionScopeGeography, priority = 1, budgetUsd = 
 }
 
 async function planned(d: ExpansionScopeDecision): Promise<PlannedScope> {
+  assert.notEqual(d.geography.type, "zcta", "this grouping fixture helper takes a container");
+  if (d.geography.type === "zcta") throw new Error("Use resolveScopes for a ZIP hunt");
   const result = await loadBootstrapLookup().zctasForGrouping({ type: d.geography.type, geoid: d.geography.geoid, version: d.geography.version });
   assert.equal(result.status.kind, "OK", `${d.geography.label} resolves in the bootstrap fixture`);
   const fractions = new Map<string, number>();

@@ -290,6 +290,7 @@ export interface ScoutRepresentationOverrun {
  * combined cost of all of them.
  */
 export interface ScoutModelAttempt {
+  readonly escalation?: { readonly from: string; readonly at: string; readonly reason: ModelEscalationReason; readonly evidence: string };
   readonly modelClass: ModelClass;
   readonly model: string;
   /** Provider turns this attempt made. */
@@ -350,7 +351,7 @@ export interface ScoutResult {
   readonly recordedAt: string;
   /* ---- RULING 244 instrumentation. Absent on results recorded before 2026-09-02. ---- */
   /** The effort the SCOUT role ran at. */
-  readonly effort?: ModelEffort;
+  readonly effort?: ModelEffort | null;
   readonly steps?: readonly ScoutStep[];
   readonly cacheDefect?: ScoutCacheDefect | null;
   readonly guardRefusals?: readonly ScoutGuardRefusal[];

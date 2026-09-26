@@ -66,23 +66,23 @@ function fakeTransport(outputTokens = 1_000) {
 const request = (maxTokens = 8_192): ModelRequest => ({ model: "claude-sonnet-5", max_tokens: maxTokens, system: [], tools: [], messages: [{ role: "user", content: "x" }] }) as unknown as ModelRequest;
 
 test("the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60", () => {
-  assert.equal(WORST, scoutAttemptWorstCaseUsd("claude-sonnet-5", RESEARCH_BOUNDS.perDispatch));
+  assert.equal(WORST, scoutAttemptWorstCaseUsd("claude-haiku-4-5-20251001", RESEARCH_BOUNDS.perDispatch));
   /* (400,000 tokens + one 8,192-token turn) at Sonnet 5's dearest per-token rate, $10/MTok output. */
-  assert.ok(Math.abs(WORST - 4.08192) < 1e-9, `worst case ${WORST}`);
+  assert.ok(Math.abs(WORST - 2.04096) < 1e-9, `worst case ${WORST}`);
   assert.ok(Math.abs(scoutAttemptWorstCaseUsd("claude-opus-5-5", RESEARCH_BOUNDS.perDispatch)! - 8.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
 });
 
 test("a job that would exceed the Send's budget is refused before any spend", async () => {
   const { spend } = holds();
-  const job = new JobSpend(spend, "job-1", "ob-1", lines([send(5, 2)]));
+  const job = new JobSpend(spend, "job-1", "ob-1", lines([send(5, 4)]));
   const { sent, transport } = fakeTransport();
   const admitted = await job.admit(WORST, "one Scout job");
   assert.equal(admitted.admit, false);
   assert.equal(!admitted.admit && admitted.code, "ASSIGNMENT_BUDGET");
-  assert.match(!admitted.admit ? admitted.why : "", /\$3\.00 left.*\$4\.08\) does not fit/);
+  assert.match(!admitted.admit ? admitted.why : "", /\$1\.00 left.*\$2\.04\) does not fit/);
   assert.equal(sent.length, 0, "no request was ever sent");
   /* The area's own cap refuses the same way, even with the Send's room. */
-  const other = new JobSpend(spend, "job-2", "ob-2", lines([send(100)], [area(4, 0.5)]));
+  const other = new JobSpend(spend, "job-2", "ob-2", lines([send(100)], [area(4, 3.5)]));
   const byArea = await other.admit(WORST, "one Scout job");
   assert.equal(!byArea.admit && byArea.code, "SCOPE_BUDGET");
   void transport;

@@ -197,6 +197,7 @@ export async function oneContainer(type: GeographyType, geoid: string, query: Re
 }
 
 export interface CodeSlice extends GeographySlice {
+  readonly zctaTabulations?: readonly string[];
   /** Whether the ZCTA is in the published universe at all. */
   readonly known: boolean;
 }
@@ -216,7 +217,7 @@ export async function containersOfCode(
         params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], zcta5],
       },
       {
-        text: "SELECT (p.payload->'zctaUniverse') @> jsonb_build_array($3::text) AS known FROM civic_data_promotions p WHERE p.record_class = $1 AND p.scope = $2",
+        text: "SELECT (p.payload->'zctaUniverse') @> jsonb_build_array($3::text) AS known, (SELECT jsonb_agg(DISTINCT s->'versionMeta'->>'zctaTabulation') FROM jsonb_array_elements(p.payload->'scopes') s) AS zcta_tabulations FROM civic_data_promotions p WHERE p.record_class = $1 AND p.scope = $2",
         params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, zcta5],
       },
     ],
@@ -229,6 +230,7 @@ export async function containersOfCode(
       scopes: slice.value.scopes,
       containers: slice.value.containers.map((c) => ({ ...c, overlaps: (c.overlaps ?? []).filter((o) => o.zcta5 === zcta5) })),
       known: rest[0]?.[0]?.known === true,
+      zctaTabulations: Array.isArray(rest[0]?.[0]?.zcta_tabulations) ? (rest[0][0].zcta_tabulations as unknown[]).filter((v): v is string => typeof v === "string") : [],
     },
   };
 }

@@ -27,6 +27,7 @@ import type { ReactNode } from "react";
 
 import { readFleetSafety, readHeartbeat, readMapTilerUsageDigests, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { billingFactsOf } from "@/lib/control-plane/billing-facts.ts";
+import { ProviderSyncPanel } from "../provider-sync-panel.tsx";
 import { displayNameOf } from "@/lib/control-plane/display-name.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import {
@@ -226,6 +227,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
             says: maptilerPanel.says,
           };
     const rows = providerRows({
+      automatic: snapshot?.providerBilling,
       month,
       rolling,
       maptiler,
@@ -259,6 +261,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
             </p>
           </div>
         )}
+        <ProviderSyncPanel snapshot={snapshot?.providerBilling ?? null} attribution={snapshot?.billingAttribution ?? null} now={base.nowIso} />
         <section className={`${s.card} ${s.gap32}`} aria-labelledby="ceilings">
           <h2 id="ceilings" className={s.h2Card}>
             Three ceilings, and only one of them is ours
@@ -737,4 +740,3 @@ function OutcomeCells({ o }: { o: OutcomeFacts }) {
     </>
   );
 }
-

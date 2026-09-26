@@ -45,6 +45,8 @@
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
+import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../meetings/constants.ts";
+import { parseDiligentMeetings } from "../sources/diligent/index.ts";
 
 /**
  * How a candidate was evidenced. The first three come from the government's
@@ -67,6 +69,7 @@ export const VERIFIABLE_VENDORS = [
   "civicclerk-api",
   "iqm2",
   "boardbook",
+  "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
 ] as const;
@@ -156,13 +159,19 @@ const OWN_SITE_MEETINGS = /agenda|minutes|meetings?\b|public-?notices?|boards?-?
  * candidate is unique by URL. Own-site meeting pages are leads only: a page is
  * not a route until an adapter can read it.
  */
-export function meetingEndpointCandidates(html: string, pageUrl: string): readonly EndpointCandidate[] {
+export function meetingEndpointCandidates(html: string, pageUrl: string, now?: string): readonly EndpointCandidate[] {
   const page = new URL(pageUrl);
   const origin = `${page.protocol}//${page.host}`;
   const found = new Map<string, EndpointCandidate>();
   const add = (c: EndpointCandidate): void => {
     if (!found.has(c.url)) found.set(c.url, c);
   };
+  // A recorded public Diligent portal uses the same service already read by
+  // the standing adapter. The caller supplies the clock; no tenant is guessed.
+  if (now && /(^|\.)(highbond\.com|civicweb\.net|diligentoneplatform\.com)$/i.test(page.hostname) && /MeetingSchedule\.aspx/i.test(html)) {
+    const day = (delta: number) => new Date(Date.parse(now) + delta * 86_400_000).toISOString().slice(0, 10);
+    add({ vendor: "diligent", url: `${origin}/Services/MeetingsService.svc/meetings?from=${day(-CONCLUDED_LOOKBACK_DAYS)}&to=${day(UPCOMING_HORIZON_DAYS)}`, basis: "SERVED_BY", evidence: "Diligent public portal links MeetingSchedule.aspx; existing MeetingsService adapter", verifiable: true });
+  }
 
   for (const href of pageLinks(html, pageUrl)) {
     const url = new URL(href);
@@ -289,7 +298,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@cd7f0852192b";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@635c08160afa";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -541,6 +550,11 @@ export function verifyEndpointBody(
       return rows > 0
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
+    }
+    case "diligent": {
+      const rows = parseDiligentMeetings(body);
+      return rows === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "not a Diligent list with meeting identities and local dates" }
+        : { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Diligent meeting record(s)` };
     }
     case "official-page-events":
       return verifyOfficialPage(response, identity);

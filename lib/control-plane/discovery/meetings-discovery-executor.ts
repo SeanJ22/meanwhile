@@ -587,7 +587,7 @@ export async function walkMeetingsDiscoveryNeed(
           redirects: home.redirects,
         };
         homeHtml = home.body;
-        candidates = meetingEndpointCandidates(home.body, home.finalUrl);
+        candidates = meetingEndpointCandidates(home.body, home.finalUrl, runtime.now());
         /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
         const proposed = recipeCandidates({
           recipes: runtime.recipes ?? [],
@@ -612,6 +612,16 @@ export async function walkMeetingsDiscoveryNeed(
      * is recorded as a lead: it is the page the proposed feeds' attestation chains through.
      */
     const civicPlusFeeds: { candidate: EndpointCandidate; via: Via }[] = [];
+    // Retain the linked public portal itself before using its API: the exact
+    // body name and the official site's link are required for automatic review.
+    for (const portal of candidates.filter(c => c.vendor === "diligent" && !c.verifiable).slice(0, 2)) {
+      const got = await get(portal.url, "endpoint", ACCEPT_PAGE);
+      leads.push({ vendor: portal.vendor, url: portal.url, basis: portal.basis, evidence: portal.evidence, detail: got ? "public portal retained for body identity and service discovery" : "portal could not be read", via: homePage });
+      if (got) {
+        readPages.push({ url: portal.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
+        for (const c of meetingEndpointCandidates(got.body, got.finalUrl, runtime.now()).filter(c => c.vendor === "diligent" && c.verifiable)) civicPlusFeeds.push({ candidate: c, via: { page: got.finalUrl, artifactId: got.artifactId } });
+      }
+    }
     let civicPlusIndex: string | null = null;
     if (homeOrigin !== null && candidates.some((c) => c.vendor === "civicplus-agendacenter")) {
       civicPlusIndex = `${homeOrigin}${CIVICPLUS_CALENDAR_INDEX_PATH}`;
@@ -734,7 +744,7 @@ export async function walkMeetingsDiscoveryNeed(
       const nextHop: { candidate: EndpointCandidate; via: Via }[] = [];
       for (const page of readPages) {
         const pageVia: Via = { page: page.finalUrl, artifactId: page.artifactId };
-        for (const c of meetingEndpointCandidates(page.body, page.finalUrl)) {
+        for (const c of meetingEndpointCandidates(page.body, page.finalUrl, runtime.now())) {
           if (tried.has(c.url)) continue;
           tried.add(c.url);
           const linked = { ...c, evidence: `linked from ${page.url} (${c.evidence})` };
@@ -755,12 +765,13 @@ export async function walkMeetingsDiscoveryNeed(
     }
 
     /*
-     * 4. Search, only when nothing was confirmed and a search seam exists: the
+     * 4. Search whenever the owner's paid-search seam is enabled, including a
+     * healthy connected feed: current information can exist elsewhere. Use the
      * saved methods' queries first, then the defaults. A result is a pointer: it
      * is followed only on the government's own domain or a known publisher host,
      * opened robots-first, and confirmed by content. Every request is charged.
      */
-    if (found.length === 0 && runtime.search !== undefined && origins.length > 0) {
+    if (runtime.search !== undefined && origins.length > 0) {
       const search = runtime.search;
       const identity = identityFor(need, homeOrigin ?? origins[0], new Date(startedAt).getUTCFullYear());
       /* A saved method searches only where its precondition shows (or it has none) and no failure of it stands here. */
@@ -795,7 +806,7 @@ export async function walkMeetingsDiscoveryNeed(
           requests: requests.map(({ bytes: _bytes, ...rest }) => rest), followed,
         });
         for (const hit of res.hits) {
-          if (found.length > 0 || followed.length >= MAX_HITS_FOLLOWED_PER_QUERY) break;
+          if (followed.length >= MAX_HITS_FOLLOWED_PER_QUERY) break;
           if (hitStanding(hit.url, identity.domain) === null || tried.has(hit.url)) continue;
           tried.add(hit.url);
           const page = await get(hit.url, "endpoint", ACCEPT_PAGE);
@@ -846,6 +857,7 @@ export async function walkMeetingsDiscoveryNeed(
     }
   }
   for (const candidate of candidates.filter((c) => !c.verifiable).slice(0, 8)) {
+    if (leads.some(lead => lead.vendor === candidate.vendor && lead.url === candidate.url)) continue;
     leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "recognised but not readable by any content check yet", via: homePage });
   }
 

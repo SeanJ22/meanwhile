@@ -169,6 +169,20 @@ export async function resolveScopes(
   for (const decision of decisions) {
     const g = decision.geography;
     try {
+      if (g.type === "zcta") {
+        const [result, manifest] = await Promise.all([state.lookup.groupingsForZcta(g.geoid), state.lookup.manifest()]);
+        const vintages = new Set(manifest.versions.map(v => `zcta:${v.zctaTabulation}`));
+        if (result.status.kind !== "OK" || !vintages.has(g.version)) {
+          scopes.push({ kind: "UNRESOLVED", decision, why: result.status.kind !== "OK" ? result.status.note : "The selected Census ZCTA vintage is not published.", states: [g.stateAbbr] });
+        } else {
+          // A metro can span states this ZIP does not touch. Counties partition
+          // the ZIP itself; the metro's other member states are not its scope.
+          const states = [...new Set(result.memberships.filter(m => m.geography.type === "county").map(m => m.geography.stateAbbr.toUpperCase()))];
+          if (states.length === 0) throw new Error("The published ZIP has no county membership to establish its states.");
+          scopes.push({ kind: "RESOLVED", decision, zctas: new Set([g.geoid]), whole: new Set([g.geoid]), fractions: new Map(), states });
+        }
+        continue;
+      }
       const result = await state.lookup.zctasForGrouping({ type: g.type as GeographyType, geoid: g.geoid, version: g.version });
       if (result.status.kind !== "OK") {
         scopes.push({

@@ -50,9 +50,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   ]);
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
   const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
-  const fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
-  const fieldManualKnown = knownRouteIds(fieldManual);
+  let fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
+  let fieldManualRevision = fmRead?.revision ?? 0;
   const inheritedFieldManualCounts = new Map<string, number>();
+  const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime(input);
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
@@ -81,6 +82,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         // RULING 63: inherit the one growing field manual too, projected to this jurisdiction.
         const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
         inheritedFieldManualCounts.set(item.id,manualProjection.entryIds.length);
+        inheritedManualStores.set(item.id,fieldManual);
         const manualLines=fieldManualBriefLines(manualProjection);
         inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,lines:manualLines});
         return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
@@ -115,15 +117,26 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             `Method candidates were not proposed: ${error instanceof Error?error.message:String(error)}`]};
         }
         // RULING 63 reported pair + live write-back (no human method:learn step).
-        const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,fieldManualKnown);
+        const handedManual = inheritedManualStores.get(result.workItemId) ?? fieldManual;
+        const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,knownRouteIds(handedManual));
         const doors=inheritedFieldManualDoors.get(result.workItemId);
         recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting,
           ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines,
             // MW-025: which handed doors this walk actually went through.
-            usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.entryIds,fieldManual)}:{})};
+            usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.entryIds,handedManual)}:{})};
         if(result.refusal===null&&result.candidates.length>0){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};
+          else {
+            // Read the canonical result, including concurrent writers, before a later
+            // task constructs its context. Already running tasks retain their receipt.
+            try {
+              const refreshed = await input.repos.fieldManual.read("live");
+              if (refreshed && refreshed.revision >= fieldManualRevision) { fieldManualRevision = refreshed.revision; fieldManual = refreshed.value; }
+            } catch (error) {
+              recorded = { ...recorded, unverified: [...recorded.unverified, `field manual saved but refresh failed: ${String(error)}`] };
+            }
+          }
         }
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
         return recorded;

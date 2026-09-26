@@ -17,7 +17,7 @@
  *   whose own territory is unresolved is named and left out: the union is a floor, never a guess.
  *
  * **APPROXIMATE, FOR WORK CREATION ONLY.** A special district no rule names may still be matched, by its exact name,
- * in an approximate boundary extract (`data/derived/az-fire-district-territory.json`: the Arizona Department of
+ * in an approximate work-placement extract (`lib/control-plane/expansion/reference/az-fire-district-territory.json`: the Arizona Department of
  * Forestry and Fire Management's fire-district layer, whose own disclaimer calls it approximate and for wildfire
  * dispatch). An engineering decision of 2026-09-26: such a boundary may decide where a Send creates discovery work,
  * where an error costs one extra or one missed walk, and never a reader-facing governance claim. A ZCTA the
@@ -84,27 +84,27 @@ export const DISTRICT_TERRITORIES: readonly DistrictTerritory[] = [
         { pid6: "100308", name: "BOWIE SCHOOL DISTRICT 14" },
         { pid6: "177936", name: "SIERRA VISTA UNIFIED SCHOOL DISTRICT 68" },
         { pid6: "115654", name: "DOUGLAS UNIFIED SCHOOL DISTRICT 27" },
+        { pid6: "177987", name: "PATAGONIA UNION HIGH SCHOOL DISTRICT 20" },
         { pid6: "209962", name: "SAN SIMON SCHOOL DISTRICT 18" },
         { pid6: "202899", name: "ST DAVID SCHOOL DISTRICT 21" },
         { pid6: "100310", name: "TOMBSTONE SCHOOL DISTRICT 1" },
         { pid6: "177939", name: "VALLEY UNION HIGH SCHOOL DISTRICT 22" },
         { pid6: "188126", name: "WILLCOX SCHOOL DISTRICT 13" },
       ],
-      unresolved: [
-        { pid6: "177987", name: "PATAGONIA UNION HIGH SCHOOL DISTRICT 20", why: "its Census unit has no NCES match in the crosswalk, so the committed data holds no territory for it" },
-      ],
+      unresolved: [],
     },
     evidence: [
       "A.R.S. 15-393: a joint technical education district is formed by, and its territory is, its member school districts",
       "cochisejted.org's own \"Member Schools\" list: Benson, Bisbee, Bowie, Buena (Sierra Vista Unified), Douglas, Patagonia, San Simon, St. David, Tombstone, Valley Union and Willcox High Schools",
       "Patagonia High School's district lies in Santa Cruz County, so the district is not coextensive with Cochise County",
+      "Held Census 2022 independent school-system row 177987 is secondary-only; held NCES CCD 2025-26 row 0406030 uniquely names Patagonia Union High School District, grades 09–12, PO Box 254, Patagonia AZ. Its elementary district is a separate row (209974/0406000), never a substitute boundary.",
     ],
     observed: RESEARCH,
   },
 ];
 
 /** Where the approximate boundary extract lives, relative to the repository root. Read only by the runner's Send placement. */
-export const APPROXIMATE_DISTRICT_EXTRACT_PATH = ["data", "derived", "az-fire-district-territory.json"] as const;
+export const APPROXIMATE_DISTRICT_EXTRACT_PATH = ["lib", "control-plane", "expansion", "reference", "az-fire-district-territory.json"] as const;
 
 /**
  * The least share of a ZCTA an approximate boundary must hold for that ZCTA to place the district: 5%, the same

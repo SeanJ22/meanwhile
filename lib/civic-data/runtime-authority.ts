@@ -2,6 +2,7 @@ import { execFileSync, type ExecFileSyncOptionsWithStringEncoding } from "node:c
 import { randomBytes } from "node:crypto";
 import { realpathSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
+import { withoutBillingSecrets } from "../control-plane/provider-billing.ts";
 
 export const RUNTIME_AUTHORITY_ENV = Object.freeze({
   repo: "WTP_RUNTIME_AUTHORITY_REPO",
@@ -321,6 +322,8 @@ export function admittedRuntimeChildEnvironment(input: {
   readonly contract?: string | null;
   readonly parentPid?: number;
   readonly nonce?: string;
+  /** Only the existing owner-snapshot publisher collects provider reports. */
+  readonly billingCollector?: boolean;
 }): NodeJS.ProcessEnv {
   const env = input.parentEnv ?? process.env;
   const repo = env[RUNTIME_AUTHORITY_ENV.repo];
@@ -329,7 +332,7 @@ export function admittedRuntimeChildEnvironment(input: {
     throw new RuntimeAuthorityRefused("an admitted parent lacks exact repository/SHA facts");
   }
   return {
-    ...env,
+    ...(input.billingCollector === true && input.capability === "CONSOLE_PUBLISHER" ? env : withoutBillingSecrets(env)),
     [RUNTIME_AUTHORITY_ENV.repo]: repo,
     [RUNTIME_AUTHORITY_ENV.sha]: sha.toLowerCase(),
     [RUNTIME_AUTHORITY_ENV.capability]: input.capability,

@@ -31,6 +31,7 @@ import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../../meetings/c
 import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
 import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource } from "../../sources/official-page-events/index.ts";
+import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import type { Meeting } from "../../sources/types.ts";
 import { sameRoute, type WiringVerification } from "./derived-wiring.ts";
 
@@ -91,6 +92,8 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
   const { text, contentType } = reading.held;
   const fetchImpl = (async (request: string | URL | Request) => {
     const url = typeof request === "string" ? request : request instanceof URL ? request.toString() : request.url;
+    // The same retained Diligent response is read directly below: its original
+    // date query remains evidence, never a claim that different bytes were fetched.
     return sameRoute(url, row.route)
       ? new Response(text, { status: 200, headers: { "content-type": contentType || "text/html" } })
       : new Response("not held in the vault", { status: 404 });
@@ -104,9 +107,9 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
   let meetings: readonly Meeting[];
   try {
     const wiring = bodySourceWiringFor(row);
-    const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl);
+    const source = row.kind === "ICAL" ? makeIcalSource([wiring], fetchImpl) : row.kind === "DILIGENT" ? makeDiligentSource([wiring], fetchImpl) : makeOfficialPageEventsSource([wiring], fetchImpl);
     const nowMs = Date.parse(now);
-    const raw = await source.fetch({
+    const raw = row.kind === "DILIGENT" ? [{ wiring, meetings: JSON.parse(text), collectedAt: reading.evidence.retrievedAt }] : await source.fetch({
       lat: 39.5, lng: -98.35, radiusKm: 5000,
       startsAfter: new Date(nowMs - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
       startsBefore: new Date(nowMs + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),

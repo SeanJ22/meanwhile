@@ -48,6 +48,7 @@ export const BUDGET_AGGREGATE_ID = "shared-budget-ledger";
 export function budgetRepositoryFrom(
   aggregate: AggregateRepository<BudgetLedger>,
   locks: LockManager,
+  concurrency: "EXCLUSIVE_LOCK" | "ATOMIC_COMPARE_AND_SET" = "EXCLUSIVE_LOCK",
 ): BudgetRepository {
   const read = async (): Promise<Persisted<BudgetLedger>> => {
     const persisted = await aggregate.read(BUDGET_AGGREGATE_ID);
@@ -77,8 +78,8 @@ export function budgetRepositoryFrom(
     mutate: async <R>(
       mutator: (ledger: BudgetLedger) => { readonly ledger: BudgetLedger; readonly result: R },
       now: string,
-    ): Promise<{ readonly result: R; readonly persisted: Persisted<BudgetLedger> }> =>
-      locks.withLock(`budget:${BUDGET_AGGREGATE_ID}`, async () => {
+    ): Promise<{ readonly result: R; readonly persisted: Persisted<BudgetLedger> }> => {
+      const decideAndCommit = async () => {
         const current = await read();
         const decided = mutator(current.value);
         const persisted = await aggregate.compareAndSet(
@@ -88,7 +89,14 @@ export function budgetRepositoryFrom(
           now,
         );
         return { result: decided.result, persisted };
-      }),
+      };
+      // Postgres fences this write in one UPDATE ... WHERE revision statement.
+      // HTTP queries do not share a session, so a session advisory lock cannot
+      // protect their read/decision/write lifetime. A losing CAS throws before
+      // any admission is returned; the caller retries the pure decision.
+      return concurrency === "ATOMIC_COMPARE_AND_SET" ? decideAndCommit()
+        : locks.withLock(`budget:${BUDGET_AGGREGATE_ID}`, decideAndCommit);
+    },
   };
 }
 

@@ -72,7 +72,11 @@ test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECH
   const santaCruz = await countyScope("04023");
   assert.ok(!certainlyOverlaps(college, santaCruz), "the college district is not in Santa Cruz County");
   assert.ok(!certainlyOverlaps(college, await countyScope("04019")), "nor in Pima County");
-  assert.ok(!jted.zctas.has("85624"), "Patagonia's own ZCTA is left out: its member district's territory is unresolved, so the union is a floor");
+  assert.ok(jted.zctas.has("85624"), "Patagonia's secondary district supplies its actual Census boundary in Santa Cruz County");
+  assert.ok(certainlyOverlaps(jted, santaCruz));
+  const patagonia = readCensusUnitTerritories(ROOT).find(u => u.pid6 === "177987")!;
+  assert.match(patagonia.method ?? "", /scsd GEOID 0406030/);
+  assert.ok(patagonia.zips.includes("85624"));
 });
 
 test("THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY IN 85635, PALOMINAS IN THE COUNTY BUT NOT 85635", async () => {
@@ -123,7 +127,7 @@ test("NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send pl
   }
   /* Outside tests and the generator, the extract is named only where the runner reads it. */
   const namers = trackedFilesNaming(["-e", "az-fire-district-territory", "-e", "APPROXIMATE_DISTRICT_EXTRACT_PATH", "-e", "readApproximateDistrictExtract"]);
-  assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", "lib/control-plane/expansion/runner-load.ts"]);
+  assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/"), "lib/control-plane/expansion/runner-load.ts"]);
   const importers = trackedFilesNaming(["-e", "expansion/runner-load"]);
   assert.deepEqual(importers, [], "no app page, component or library module loads the runner's placement");
 });

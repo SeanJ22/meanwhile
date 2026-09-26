@@ -123,6 +123,8 @@ const MONEY_PATTERNS: readonly MoneyPattern[] = [
 export function moneyQuestionShape(question: string): MoneyQuestion | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 160 || /\d{4}/.test(normalized)) return null;
+  // "Who donated to the candidates for governor?" names a race, not a person: the race reader owns it.
+  if (groupMoneyQuestionShape(question)) return null;
   for (const { pattern, read } of MONEY_PATTERNS) {
     const groups = pattern.exec(normalized)?.groups;
     const slot = groups?.name?.trim();
@@ -165,6 +167,12 @@ export interface MoneyAnswerInput {
   /** The gated pack records — the same ones the validator checks. */
   records: readonly EvidenceRecord[];
   gaps: readonly EvidenceGap[];
+  /**
+   * A required first sentence the route states before the figures: a person
+   * held as two records whose authorities disagree (Hourihan's two parties) is
+   * named with both, never merged silently. Not used for a comparison.
+   */
+  lead?: string;
 }
 
 type Finance = NonNullable<EvidenceRecord["finance"]>;
@@ -256,10 +264,17 @@ function sourceSentence(held: readonly Held[]): string {
   return pairs.map((entry, index) => `${index === 0 ? "Filed" : "and filed"} with the ${entry.finance.agency}; read ${formatDateLong(entry.finance.checkedAt) ?? entry.finance.checkedAt}`).join(", ");
 }
 
-/** The state regime note's own second sentence: the campaigns' own filings, no outside spending. */
+const STATE_NOTE_LEAD = /^State filings: this answer uses the same state campaign-money records as the card\.\s+/;
+
+/**
+ * The state regime note's own second sentence: the campaigns' own filings, no
+ * outside spending. Everything after the note's fixed first sentence — never a
+ * split on the next period, which cut "for or against Gregory M. Sargent" to
+ * "for or against Gregory M." (the 2026-09-25 production sweep).
+ */
 function outsideSpendingSentence(gaps: readonly EvidenceGap[]): string | null {
-  const note = gaps.find((gap) => gap.statement.startsWith("State filings: this answer uses the same state campaign-money records"));
-  const second = note?.statement.split(/(?<=\.)\s+/)[1];
+  const note = gaps.find((gap) => STATE_NOTE_LEAD.test(gap.statement));
+  const second = note?.statement.replace(STATE_NOTE_LEAD, "");
   return second ? second.replace(/[.\s]+$/, "") : null;
 }
 
@@ -282,7 +297,8 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   // Anything the pack holds beyond state committee totals is for a writer to read.
   if (input.records.some((record) => record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION")) return null;
   const people = [input.subject, ...(input.ask.kind === "COMPARE" && input.other ? [input.other] : [])];
-  if (input.ask.kind === "COMPARE" && people.length !== 2) return null;
+  if (input.ask.kind === "COMPARE" && (people.length !== 2 || input.lead)) return null;
+  const first = input.lead ? [input.lead] : [];
   const heldBy = people.map((person) => heldFor(input.records, person.id));
   if (heldBy.some((held) => held === null || held.length === 0)) return null;
   const all = heldBy.flat() as Held[];
@@ -357,7 +373,7 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
       : `Our records for ${person.name} name no donors (${count})`;
     const body = statement(false);
     if (!body) return null;
-    const answer = assemble([lead, ...(shown.length === 2 ? ["They are 2 committee filings, each stated on its own and not added together"] : []), body, ...(source ? [source] : [])], caveat ? [caveat] : []);
+    const answer = assemble([...first, lead, ...(shown.length === 2 ? ["They are 2 committee filings, each stated on its own and not added together"] : []), body, ...(source ? [source] : [])], caveat ? [caveat] : []);
     return answer ? { answer, citedUrls: cited } : null;
   }
 
@@ -369,6 +385,302 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
     ? input.ask.measures.filter((measure) => filed.every((entry) => entry.finance.totals[MEASURE_WORDS[measure].key] === null))
     : [];
   const absent = missing.map((measure) => `Our record of ${filed.length === 1 ? "this filing" : "these filings"} does not include ${MEASURE_WORDS[measure].noun}`);
-  const answer = assemble([...(two ? [two] : []), body, ...(source ? [source] : []), ...absent], caveat ? [caveat] : []);
+  const answer = assemble([...first, ...(two ? [two] : []), body, ...(source ? [source] : []), ...absent], caveat ? [caveat] : []);
+  return answer ? { answer, citedUrls: cited } : null;
+}
+
+/* ── a race's candidates, together ──────────────────────────────────────── */
+
+/**
+ * **THE CANDIDATES IN ONE RACE, FROM THE SAME HELD FILINGS.** (2026-09-25,
+ * the Ask three-second repair, part two.)
+ *
+ * *"Who funded the Vail school board candidates?"* named a race, not a person:
+ * a model read it (Haiku) and Opus 5.5 wrote it first on the escalation route —
+ * 8.5 s locally, 4.97 s warm on production — to restate records we hold. The
+ * question is answered here from those records only, when the words name ONE
+ * race the route resolved:
+ *
+ * - **A contest on the reader's held ballot** (bound by name, or the one
+ *   contest for a bound body's own seats in its division): every candidate the
+ *   ballot lists for it, each with their own state committee filing —
+ *   registered name, the figures as filed, the agency's period, agency and read
+ *   date; two committees stated apart, never added — and every candidate we
+ *   hold no money record for, named as such (candidates sharing one gap named
+ *   together), with the count ("candidates with a state money record we hold:
+ *   2 of 3"). "Who is raising the most" gets a verdict only when every
+ *   candidate has one filing with the same agency and period; otherwise the
+ *   figures stand side by side.
+ * - **A governing body whose race the authority says is not on the ballot**
+ *   (Vail: the Board of Supervisors cancelled it as uncontested): that
+ *   statement in the authority's words, then the committees the county register
+ *   links to the office, each by its registered name with its status and filing
+ *   count as the register states them. Never attached to a person — the
+ *   register links a committee to an office, not a human.
+ *
+ * "Who gave" is answered the way the one-person answer is: our records hold
+ * campaign totals, not the identities of donors, counted — never the state's or
+ * the county's withholding. Anything else (a federal or county record in a
+ * contest, a candidate with three filings, no state filing held for anyone, a
+ * body whose race IS on the ballot but is not one held contest, more than fits
+ * the length contract) returns null and the model writes.
+ */
+export type GroupMoneyAsk =
+  | { kind: "HOW_MUCH"; measures: readonly MoneyMeasure[] }
+  | { kind: "WHO_GAVE" }
+  | { kind: "MOST"; measure: MoneyMeasure };
+
+export interface GroupMoneyQuestion {
+  ask: GroupMoneyAsk;
+  /** The words naming the race ("vail school board", "governor", "state senator district 7"). */
+  group: string;
+}
+
+const FUNDED = "(?:funded|funds|is funding|has funded|financed|is financing|has financed|bankrolled|is bankrolling|is paying for|paid for|(?:gave|gives|given|donated|donates|contributed|contributes) (?:money )?to)";
+const GROUP_TAIL = "(?: (?:so far|in total|this (?:year|cycle|election(?: cycle)?)))?";
+/* "the Vail school board candidates", "the candidates for governor", "the candidates in the state senate district 7 race". */
+const CANDIDATES_OF: readonly string[] = [
+  "(?:the )?(?<group>.+?) (?:candidates|candidates campaigns|candidates committees)",
+  "(?:the )?candidates (?:for|in|running for) (?:the )?(?<group>.+?)(?: (?:race|contest|election))?",
+];
+const RACE = "(?:the )?(?<group>.+?)(?: (?:race|contest|election))?";
+const mostMeasure = (verb: string | undefined): MoneyMeasure => /^spen/.test(verb ?? "") ? "SPENT" : "RAISED";
+
+const GROUP_PATTERNS: readonly { pattern: RegExp; read: (groups: Record<string, string | undefined>) => GroupMoneyAsk }[] = [
+  /* WHO_GAVE */
+  ...CANDIDATES_OF.map((of) => ({ pattern: new RegExp(`^who (?:has |have )?${FUNDED} ${of}$`), read: (): GroupMoneyAsk => ({ kind: "WHO_GAVE" }) })),
+  ...CANDIDATES_OF.map((of) => ({ pattern: new RegExp(`^who (?:are|were|is) the ${DONORS} (?:to|of|for|behind) ${of}$`), read: (): GroupMoneyAsk => ({ kind: "WHO_GAVE" }) })),
+  { pattern: new RegExp(`^who (?:are|were|is) the ${DONORS} (?:in|for) ${RACE}$`), read: () => ({ kind: "WHO_GAVE" }) },
+  /* HOW_MUCH */
+  ...CANDIDATES_OF.map((of) => ({
+    pattern: new RegExp(`^how much (?:campaign )?(?:money )?(?:have|has|did) ${of} (?<m1>${RAISE}|${SPEND})(?: and (?<m2>${RAISE}|${SPEND}))?${GROUP_TAIL}$`),
+    read: (g: Record<string, string | undefined>): GroupMoneyAsk => ({ kind: "HOW_MUCH", measures: [...new Set([measureOf(g.m1), ...(g.m2 ? [measureOf(g.m2)] : [])])] }),
+  })),
+  { pattern: new RegExp(`^how much (?:campaign )?money (?:has been|was|is being) (?<m1>raised|spent) (?:in|for) ${RACE}${GROUP_TAIL}$`), read: (g) => ({ kind: "HOW_MUCH", measures: [measureOf(g.m1)] }) },
+  /* MOST */
+  { pattern: new RegExp(`^(?:who|which candidate) (?:is|s|has been|has|have) (?<m>raising|spending|raised|spent) the most(?: money)? (?:in|for|among) ${RACE}${GROUP_TAIL}$`), read: (g) => ({ kind: "MOST", measure: mostMeasure(g.m) }) },
+  { pattern: new RegExp(`^(?:who|which candidate) (?<m>raised|spent) the most(?: money)? (?:in|for|among) ${RACE}${GROUP_TAIL}$`), read: (g) => ({ kind: "MOST", measure: mostMeasure(g.m) }) },
+  ...CANDIDATES_OF.map((of) => ({
+    pattern: new RegExp(`^which of ${of} (?:has |is )?(?<m>raising|spending|raised|spent) the most(?: money)?${GROUP_TAIL}$`),
+    read: (g: Record<string, string | undefined>): GroupMoneyAsk => ({ kind: "MOST", measure: mostMeasure(g.m) }),
+  })),
+];
+
+const GROUP_PRONOUNS = /\b(?:he|she|his|her|their|they|them|this|that|these|those|my|our|your|i|me|we|you)\b/;
+
+/** The race money question this is, with the words naming the race, or null. Nothing is bound here. */
+export function groupMoneyQuestionShape(question: string): GroupMoneyQuestion | null {
+  const normalized = normalizeName(question);
+  if (!normalized || normalized.length > 160 || /\d{4}/.test(normalized)) return null;
+  for (const { pattern, read } of GROUP_PATTERNS) {
+    const groups = pattern.exec(normalized)?.groups;
+    // "the governor s race": the possessive is not part of the race's name.
+    const group = groups?.group?.trim().replace(/^the /, "").replace(/ s$/, "").trim();
+    if (!groups || !group || GROUP_PRONOUNS.test(group)) continue;
+    return { ask: read(groups), group };
+  }
+  return null;
+}
+
+/**
+ * Is this contest the bound body's own seats? A body names its race only
+ * through its office: every word of the contest's title (past "member of the")
+ * must be a word of the body's name — "Member of the Township Committee" is the
+ * Mendham Township Committee's; "County Clerk" is not the Board of County
+ * Commissioners', whatever division they share.
+ */
+export function contestFitsBody(contestTitle: string, bodyName: string): boolean {
+  const office = normalizeName(contestTitle).replace(/\b(?:members?|of|at large|unexpired|full|short|term|seats?)\b/g, " ").trim();
+  return raceWordsFitOffice(office, bodyName);
+}
+
+/** A candidate the ballot lists; `matched` is false when their ballot listing is not yet joined to a filing identity. */
+export interface GroupCandidate extends MoneyPerson {
+  matched: boolean;
+}
+
+export interface GroupMoneyContestInput {
+  ask: GroupMoneyAsk;
+  contest: { id: string; title: string };
+  /** Every candidate the held ballot lists for the contest, in ballot order. */
+  candidates: readonly GroupCandidate[];
+  records: readonly EvidenceRecord[];
+  gaps: readonly EvidenceGap[];
+}
+
+const MEASURE_VERB: Record<MoneyMeasure, string> = { RAISED: "raised", SPENT: "spent", CASH: "cash on hand" };
+
+/** What one committee filing reported, compactly: "raised $X, spent $Y", and any asked figure it does not carry. */
+function filedFacts(finance: Held["finance"], measures: readonly MoneyMeasure[]): string {
+  const parts = measures.flatMap((measure) => {
+    const amount = finance.totals[MEASURE_WORDS[measure].key];
+    if (amount === null) return [];
+    return [measure === "CASH" ? `${dollars(amount)} cash on hand` : `${MEASURE_VERB[measure]} ${dollars(amount)}`];
+  });
+  const missing = measures.filter((measure) => finance.totals[MEASURE_WORDS[measure].key] === null).map((measure) => MEASURE_WORDS[measure].noun);
+  return [...parts, ...(missing.length ? [`no ${missing.join(" or ")} in our record of the filing`] : [])].join(", ");
+}
+
+/**
+ * One candidate, compactly: `Katie Hobbs ("Elect Katie Hobbs"): raised
+ * $11,109,719.95`. Two committees are stated apart, never added. A candidate
+ * with no filing is OUR gap — "no state committee filing in our records", or,
+ * when the ballot listing is not yet joined to a filing identity, "not yet
+ * matched to a state filing in our records" (never "no filing", which would be
+ * false about a filing held under another record). The gap kinds carry a `gap`
+ * text so candidates sharing one are named together ("Shaun Fife and Bob
+ * Wayne McClory: no reports on file with ... as of ...").
+ */
+function candidateClause(person: GroupCandidate, held: readonly Held[], measures: readonly MoneyMeasure[], withPeriod: boolean): { name: string; text: string; gap?: string } | null {
+  const period = (finance: Held["finance"]) => withPeriod ? ` ${periodPhrase(finance)}` : "";
+  if (held.length === 0) {
+    return { name: person.name, text: "", gap: person.matched ? "no state committee filing in our records" : "not yet matched to a state filing in our records" };
+  }
+  if (held.length === 2) {
+    if (!held.every((entry) => entry.finance.filingState === "FILED")) return null;
+    const apart = held.map((entry) => `${quoted(entry.finance.registeredName)} ${filedFacts(entry.finance, measures)}${period(entry.finance)}`).join("; ");
+    return { name: person.name, text: `${person.name}, two committees stated apart (${apart})` };
+  }
+  const { finance } = held[0];
+  const read = formatDateLong(finance.checkedAt) ?? finance.checkedAt;
+  if (finance.filingState === "FILED") {
+    return { name: person.name, text: `${person.name} (${quoted(finance.registeredName)}): ${filedFacts(finance, measures)}${period(finance)}` };
+  }
+  if (finance.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") {
+    return { name: person.name, text: `${person.name} (${quoted(finance.registeredName)}): registered, no money raised or spent reported to the ${finance.agency} as of ${read}` };
+  }
+  if (finance.filingState === "NO_REPORTS_ON_FILE") {
+    return { name: person.name, text: "", gap: `no reports on file with the ${finance.agency} as of ${read}` };
+  }
+  return null;
+}
+
+/** The clauses in ballot order, candidates who share a gap named together where the first of them stands. */
+function joinedClauses(clauses: readonly { name: string; text: string; gap?: string }[]): string {
+  const out: string[] = [];
+  const placed = new Set<string>();
+  for (const clause of clauses) {
+    if (!clause.gap) { out.push(clause.text); continue; }
+    if (placed.has(clause.gap)) continue;
+    placed.add(clause.gap);
+    const names = clauses.filter((other) => other.gap === clause.gap).map((other) => other.name);
+    const named = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
+    out.push(`${named}: ${clause.gap}`);
+  }
+  return out.join("; ");
+}
+
+/** Compose a contest's candidates' money from their held state filings, or null when a model should write it. */
+export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer: string; citedUrls: string[] } | null {
+  if (input.candidates.length === 0) return null;
+  if (input.records.some((record) => record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION")) return null;
+  const ids = new Set(input.candidates.map((person) => person.id));
+  // Every money summary in the pack belongs to a candidate the ballot lists for this race.
+  if (input.records.some((record) => record.kind === "FINANCE_SUMMARY" && !ids.has(record.subjectId ?? ""))) return null;
+  const heldBy = input.candidates.map((person) => heldFor(input.records, person.id));
+  if (heldBy.some((held) => held === null || held.length > 2)) return null;
+  const chosen = heldBy as Held[][];
+  const all = chosen.flat();
+  // A race where we hold no state filing at all (a federal race, say) is for the records and a writer, not a list of "none".
+  if (all.length === 0) return null;
+  const where = `a composed race money answer for ${input.contest.id}`;
+  const measures: readonly MoneyMeasure[] = input.ask.kind === "HOW_MUCH" ? input.ask.measures
+    : input.ask.kind === "MOST" ? [input.ask.measure] : ["RAISED"];
+  const filed = all.filter((held) => held.finance.filingState === "FILED");
+  // One period, stated once, when every filing states the same one.
+  const periods = new Set(filed.map((held) => periodPhrase(held.finance)));
+  const shared = filed.length > 1 && periods.size === 1 ? [...periods][0] : null;
+  const clauses = input.candidates.map((person, index) => candidateClause(person, chosen[index], measures, !shared));
+  if (clauses.some((clause) => clause === null)) return null;
+  const list = joinedClauses(clauses as { name: string; text: string; gap?: string }[]);
+  const withFiling = chosen.filter((held) => held.length > 0).length;
+  const count = floorLine(floored("candidates with a state money record we hold", where, input.candidates.length, withFiling));
+  const race = `the ${input.contest.title} race`;
+  const sentences: string[] = [];
+  if (input.ask.kind === "WHO_GAVE") {
+    const donors = floorLine(floored("money records naming a donor", where, all.length, 0));
+    sentences.push(`Our records for ${race} hold campaign totals, not the identities of donors (${donors}; ${count})`);
+    sentences.push(`What we hold for each${shared ? `, filed ${shared}` : ""}: ${list}`);
+  } else {
+    sentences.push(`For ${race}, by each candidate's own committee filing${shared ? ` ${shared}` : ""} (${count}): ${list}`);
+  }
+  if (input.ask.kind === "MOST") {
+    const key = MEASURE_WORDS[input.ask.measure].key;
+    // Like for like only: one filing each, every candidate, the same agency and period, the asked figure present.
+    const comparable = chosen.every((held) => held.length === 1 && held[0].finance.filingState === "FILED") && filed.length > 1 &&
+      periods.size === 1 && new Set(filed.map((held) => held.finance.agency)).size === 1 && filed.every((held) => held.finance.totals[key] !== null);
+    if (comparable) {
+      const top = Math.max(...filed.map((held) => held.finance.totals[key]!));
+      const leaders = filed.filter((held) => held.finance.totals[key] === top);
+      sentences.push(leaders.length === 1
+        ? `By these filings, ${quoted(leaders[0].finance.registeredName)} reported ${MEASURE_WORDS[input.ask.measure].more}`
+        : `By these filings, ${leaders.length} committees reported the same, highest ${MEASURE_WORDS[input.ask.measure].noun}`);
+    } else {
+      sentences.push("Not every candidate has one like filing for the same period, so none is ranked");
+    }
+  }
+  sentences.push(sourceSentence(all));
+  const caveat = outsideSpendingSentence(input.gaps)
+    ? ["These are the campaigns' own filings; they do not show outside spending for or against any candidate"] : [];
+  const answer = assemble(sentences, caveat);
+  const cited = [...new Set(all.flatMap((entry) => entry.record.sourceUrl ? [entry.record.sourceUrl] : []))];
+  return answer ? { answer, citedUrls: cited } : null;
+}
+
+export interface GroupMoneyNoRaceInput {
+  ask: GroupMoneyAsk;
+  body: { id: string; name: string };
+  /** The authority's own statement that this body's race is not on the ballot. */
+  absence: EvidenceRecord;
+  records: readonly EvidenceRecord[];
+}
+
+interface RegisterRow { record: EvidenceRecord; name: string; status: string; agency: string; office: string; filings: string }
+/* The register row's own sentence (`lib/ask/local-finance.ts`), read back field by field; anything else refuses. */
+const REGISTER_ROW = new RegExp("^\"(?<name>[^\"]+)\" is an? (?<status>active|inactive) .+? in the (?<agency>.+?) campaign-finance register, registered for the office the register names \"(?<office>[^\"]+)\", with (?<filings>\\d+) campaign-finance filings? on record\\.$");
+
+/**
+ * A body whose race the authority says is not on the ballot: that statement,
+ * then the committees the county register links to the office, as the register
+ * states them. Only the register rows are restated; the itemized rows stay in
+ * the records below the answer, never added into a total. Null when the pack
+ * holds anything this cannot state plainly.
+ */
+export function composeNoRaceMoneyAnswer(input: GroupMoneyNoRaceInput): { answer: string; citedUrls: string[] } | null {
+  if (input.absence.kind !== "BALLOT_ABSENCE" || !input.absence.text.trim()) return null;
+  if (input.records.some((record) => record.kind === "FINANCE_SUMMARY")) return null;
+  const mine = (record: EvidenceRecord) => record.bodyId === input.body.id;
+  const money = input.records.filter((record) => (record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION") && mine(record));
+  const rows = input.records.filter((record) => record.kind === "FINANCE_COMMITTEE" && mine(record)).map((record): RegisterRow | null => {
+    const groups = REGISTER_ROW.exec(record.text)?.groups;
+    return groups ? { record, name: groups.name, status: groups.status, agency: groups.agency, office: groups.office, filings: groups.filings } : null;
+  });
+  if (rows.some((row) => row === null)) return null;
+  const register = rows as RegisterRow[];
+  const one = <T>(values: T[]): T | null => new Set(values).size === 1 ? values[0] : null;
+  // A held row that names who gave is for a writer to read; the count below is measured, never assumed.
+  const namingDonor = money.filter((record) => record.kind === "FINANCE_TRANSACTION" && /\bcontribution\b.*\bfrom\b/.test(record.text)).length;
+  if (namingDonor > 0) return null;
+  const agency = one(register.map((row) => row.agency));
+  const office = one(register.map((row) => row.office));
+  const readOn = one(register.map((row) => row.record.retrievedAt ?? ""));
+  if (register.length > 0 && (!agency || !office || !readOn)) return null;
+  const where = `a composed no-race money answer for ${input.body.id}`;
+  const sentences = [input.absence.text.trim()];
+  if (register.length === 0) {
+    sentences.push(`We have not linked any campaign-finance committee to ${input.body.name} in the records we hold`);
+  } else {
+    const listed = register.map((row) => `${quoted(row.name)} (${row.status}, ${row.filings} filing${row.filings === "1" ? "" : "s"})`);
+    const joined = listed.length > 1 ? `${listed.slice(0, -1).join(", ")} and ${listed[listed.length - 1]}` : listed[0];
+    sentences.push(`The ${agency} register we hold (read ${formatDateLong(readOn!) ?? readOn}) links ${register.length === 1 ? "one committee" : `${register.length} committees`} to ${quoted(office!)}: ${joined}`);
+    sentences.push(input.ask.kind === "WHO_GAVE"
+      ? `Our money records for them name no donor (${floorLine(floored("money records naming a donor", where, money.length, namingDonor))})`
+      : "We do not add their itemized rows into totals; the rows we hold are listed below");
+  }
+  /* The authority's whole statement when it fits; otherwise its first sentence
+     (that the race is not on the ballot), the rest staying in the record below. */
+  const lead = input.absence.text.trim().split(/(?<=\.)\s+(?=[A-Z])/)[0];
+  const answer = assemble(sentences, []) ?? assemble([lead, ...sentences.slice(1)], []);
+  const cited = [...new Set([input.absence, ...register.map((row) => row.record)].flatMap((record) => record.sourceUrl ? [record.sourceUrl] : []))];
   return answer ? { answer, citedUrls: cited } : null;
 }

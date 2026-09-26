@@ -19,6 +19,8 @@
  * government), and each is matched to exactly one Arizona special-district Census unit by its exact name, or listed
  * unmatched.
  *
+ * @freshness-reads-here The download path stamps retrievedAt only after fetching the layer's pages;
+ * cached rebuilds carry that saved receipt without advancing its retrieval date.
  * `--download` reads the layer (one identified, paginated query; robots.txt does not govern an ArcGIS REST API,
  * and no key or login is involved) into `.cache/dffm/`, with its receipt. Without it the cached copy is read, so a
  * rebuild is reproducible. The TIGER ZCTA file is read from `.cache/tiger` (`pnpm tiger:fetch`), or `--tiger-cache`.
@@ -36,7 +38,7 @@ const UA = "we-the-people-freshness/1.0 (civic records refresh; public data; con
 const CACHE = join(process.cwd(), ".cache", "dffm");
 const RAW = join(CACHE, "arizona-fire-districts.json");
 const RECEIPT = join(CACHE, "arizona-fire-districts.receipt.json");
-const OUT = join(process.cwd(), "data", "derived", "az-fire-district-territory.json");
+const OUT = join(process.cwd(), "lib", "control-plane", "expansion", "reference", "az-fire-district-territory.json");
 const SAMPLE_RES = 0.01;
 const ZCTA_FILE = "cb_2020_us_zcta520_500k.zip";
 

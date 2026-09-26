@@ -162,8 +162,30 @@ type Pair = { census: Side; nces: Side; key: string };
 const matched: Pair[] = [];
 const ambiguous: Array<{ key: string; censusRows: number; ncesRows: number }> = [];
 
+/* The normalizer deliberately removes HIGH/ELEMENTARY and therefore collapses
+ * these two distinct Patagonia governments. The held official directories name
+ * both uniquely: Census 2022 pid6 177987 (secondary only), 209974 (elementary
+ * only); NCES 2025-26 0406030 (09–12), 0406000 (PK–08), both at PO Box 254,
+ * Patagonia AZ. Preserve the type distinction instead of guessing a numeric
+ * suffix match: the NCES parentheses are state LEA ids, not district numbers. */
+const patagonia = [
+  ["177987", "PATAGONIA UNION HIGH SCHOOL DISTRICT 20", "0406030", "Patagonia Union High School District (4462)"],
+  ["209974", "PATAGONIA ELEMENTARY SCHOOL DISTRICT 6", "0406000", "Patagonia Elementary District (4460)"],
+] as const;
+for (const [pid6, censusName, leaid, ncesName] of patagonia) {
+  const c = census.find(r => r.id === pid6 && r.name === censusName && r.fips === "04");
+  const n = nces.find(r => r.id === leaid && r.name === ncesName && r.fips === "04");
+  if (!c || !n) throw new Error(`Patagonia official-directory identity changed: ${pid6}/${leaid}; revalidate the bridge`);
+  matched.push({ census: c, nces: n, key: `04|PATAGONIA#official-directory-type:${leaid}` });
+}
+
 for (const [k, censusRows] of censusBy) {
-  const ncesRows = ncesBy.get(k);
+  const remainingCensus = censusRows.filter(c => !matched.some(m => m.census.id === c.id));
+  const ncesRows = ncesBy.get(k)?.filter(n => !matched.some(m => m.nces.id === n.id));
+  if (remainingCensus.length !== censusRows.length) {
+    if (remainingCensus.length || ncesRows?.length) throw new Error(`Explicit identity bridge only partly resolved ${k}; inspect remaining identities`);
+    continue;
+  }
   if (!ncesRows) continue;
 
   // ONE-TO-ONE ONLY. Anything else is ambiguous and counts as unmatched on

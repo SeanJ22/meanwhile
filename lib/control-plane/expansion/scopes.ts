@@ -42,6 +42,7 @@ import { isWorkQuestion, type WorkQuestion } from "../work-question.ts";
 
 /** The five primary groupings the owner may select, in the lookup's own vocabulary. */
 export const EXPANSION_SCOPE_TYPES = [
+  "zcta",
   "county",
   "congressional_district",
   "cbsa",
@@ -52,6 +53,7 @@ export type ExpansionScopeType = (typeof EXPANSION_SCOPE_TYPES)[number];
 
 /** The version-key prefix each type's plan carries (`"cd:119"`, `"county:2020"`, …). */
 export const VERSION_PREFIX: Readonly<Record<ExpansionScopeType, string>> = {
+  zcta: "zcta",
   county: "county",
   congressional_district: "cd",
   cbsa: "cbsa",
@@ -61,6 +63,7 @@ export const VERSION_PREFIX: Readonly<Record<ExpansionScopeType, string>> = {
 
 /** The words a type renders as. */
 export const SCOPE_TYPE_WORDS: Readonly<Record<ExpansionScopeType, string>> = {
+  zcta: "ZIP (Census ZCTA)",
   county: "County",
   congressional_district: "Congressional district",
   cbsa: "Metro or micro area",
@@ -103,6 +106,8 @@ export interface ExpansionScopeDecision {
   readonly priority: number;
   /** Rolling-24-hour cap on paid model work in this scope, in USD. May be 0. */
   readonly budgetUsd: number;
+  /** Absent on legacy rolling budgets. Immutable start of a lifetime Anthropic budget. */
+  readonly budgetStartedAt?: string;
   readonly note: string | null;
   /**
    * MW-002: the questions the owner asked of this Send, typed — not folded into
@@ -144,6 +149,7 @@ export function validateScopeGeography(input: Readonly<Record<string, unknown>>)
     return { ok: false, why: "choose a county, congressional district, metro area or state legislative district" };
   }
   const geoid = collapse(input.geoid);
+  if (type === "zcta" && !/^\d{5}$/.test(geoid)) return { ok: false, why: "Enter a five-digit ZIP with published Census ZCTA coverage." };
   if (!/^[0-9A-Za-z]{2,12}$/.test(geoid)) return { ok: false, why: "the geography's Census code is missing or malformed" };
   const version = collapse(input.version);
   const prefix = VERSION_PREFIX[type];
@@ -205,6 +211,7 @@ export function isExpansionScopeDecision(value: unknown): value is ExpansionScop
     typeof v.budgetUsd === "number" &&
     Number.isFinite(v.budgetUsd) &&
     v.budgetUsd >= 0 &&
+    (v.budgetStartedAt === undefined || (typeof v.budgetStartedAt === "string" && Number.isFinite(Date.parse(v.budgetStartedAt)))) &&
     typeof v.decidedAt === "string" &&
     typeof v.decidedBy === "string" &&
     typeof v.receiptId === "string" &&
@@ -264,6 +271,9 @@ export function withScopeSet(
     readonly geography: ExpansionScopeGeography;
     readonly priority: number;
     readonly budgetUsd: number;
+    readonly huntBudget?: boolean;
+    /** An explicit new hunt gets a separate accounting period; edits never reset it. */
+    readonly newHunt?: boolean;
     readonly note: string | null;
     /** MW-002. Absent or empty: the Send asked no question. */
     readonly questions?: readonly WorkQuestion[];
@@ -279,6 +289,7 @@ export function withScopeSet(
     geography: change.geography,
     priority: change.priority,
     budgetUsd: change.budgetUsd,
+    ...((previous?.budgetStartedAt || change.huntBudget) ? { budgetStartedAt: change.newHunt ? change.decidedAt : previous?.budgetStartedAt ?? change.decidedAt } : {}),
     note: change.note,
     ...(change.questions !== undefined && change.questions.length > 0 ? { questions: [...change.questions] } : {}),
     decidedAt: change.decidedAt,
@@ -301,7 +312,7 @@ export function withScopeRemoved(
 /** A key as the remove action accepts it: `<version>/<geoid>`, nothing else. */
 export function validateScopeKey(raw: unknown): ScopeValidation<string> {
   const key = collapse(raw);
-  if (!/^(county|cd|cbsa|sldu|sldl):[0-9]{2,4}\/[0-9A-Za-z]{2,12}$/.test(key)) {
+  if (!/^(zcta|county|cd|cbsa|sldu|sldl):[0-9]{2,4}\/[0-9A-Za-z]{2,12}$/.test(key)) {
     return { ok: false, why: "say which selected geography to remove" };
   }
   return { ok: true, value: key };

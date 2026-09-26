@@ -68,6 +68,7 @@ export interface BudgetLine {
   /** Rolling-window spend from the canonical cost ledger, read at `historyReadAt`. */
   readonly historicalUsd: number;
   readonly historyReadAt: string;
+  readonly lifetime?: boolean;
 }
 
 /** The lines one piece of work is held against: one Send with room suffices; every area must have room. */
@@ -96,7 +97,7 @@ export function committedUsd(holds: Readonly<Record<string, SpendHold>>, line: B
   const readMs = Date.parse(line.historyReadAt);
   let total = line.historicalUsd;
   for (const h of Object.values(holds)) {
-    if (!h.keys.includes(line.key) || !inWindow(h, nowMs)) continue;
+    if (!h.keys.includes(line.key) || (!line.lifetime && !inWindow(h, nowMs))) continue;
     if (h.settled === null) total += h.usd;
     else if (Date.parse(h.settled.costRecordedAt) > readMs) total += h.settled.usd;
   }
@@ -104,13 +105,15 @@ export function committedUsd(holds: Readonly<Record<string, SpendHold>>, line: B
 }
 
 export function leftUsd(holds: Readonly<Record<string, SpendHold>>, line: BudgetLine, now: string): number {
-  return line.budgetUsd - committedUsd(holds, line, now);
+  // Normalize binary subtraction at nanodollar precision; otherwise an exact-fit
+  // reservation can fail by a floating-point ulp. No spend-sized epsilon is added.
+  return Math.round((line.budgetUsd - committedUsd(holds, line, now)) * 1e9) / 1e9;
 }
 
 function pruned(ledger: BudgetLedger, now: string): Record<string, SpendHold> {
   const nowMs = Date.parse(now);
   const out: Record<string, SpendHold> = {};
-  for (const [id, h] of Object.entries(ledger.spendHolds ?? {})) if (inWindow(h, nowMs)) out[id] = h;
+  for (const [id, h] of Object.entries(ledger.spendHolds ?? {})) if (h.lifetimeKeys?.length || inWindow(h, nowMs)) out[id] = h;
   return out;
 }
 
@@ -137,11 +140,12 @@ export function decideHold(
       result: {
         admit: false,
         code: SPEND_HOLD_CODE_SEND,
-        why: `${l.label}'s ${usd(l.budgetUsd)} budget has ${usd(Math.max(0, leftUsd(holds, l, input.now)))} left in the rolling 24 hours (spent and held, across every cycle), and ${input.what}'s worst case (${usd(input.usd)}) does not fit${others}`,
+        why: `${l.label}'s ${usd(l.budgetUsd)} budget has ${usd(Math.max(0, leftUsd(holds, l, input.now)))} left ${l.lifetime ? "for this hunt (Anthropic tokens)" : "in the rolling 24 hours"} (spent and held, across every cycle), and ${input.what}'s worst case (${usd(input.usd)}) does not fit${others}`,
       },
     };
   }
-  for (const l of input.lines.areas) {
+  // A second Send must never authorize exceeding an existing lifetime hunt cap.
+  for (const l of [...input.lines.areas, ...input.lines.sends.filter(l => l.lifetime)]) {
     const left = leftUsd(holds, l, input.now);
     if (left < input.usd) {
       return {
@@ -149,7 +153,7 @@ export function decideHold(
         result: {
           admit: false,
           code: SPEND_HOLD_CODE_AREA,
-          why: `${l.label} has ${usd(Math.max(0, left))} of its ${usd(l.budgetUsd)} rolling 24-hour budget left (spent and held, across every cycle), and ${input.what}'s worst case (${usd(input.usd)}) would exceed it`,
+          why: `${l.label} has ${usd(Math.max(0, left))} of its ${usd(l.budgetUsd)} ${l.lifetime ? "Anthropic budget for this hunt" : "rolling 24-hour budget"} left (spent and held, across every cycle), and ${input.what}'s worst case (${usd(input.usd)}) would exceed it`,
         },
       };
     }
@@ -159,6 +163,7 @@ export function decideHold(
     jobId: input.jobId,
     obligationId: input.obligationId,
     keys: [...input.lines.sends, ...input.lines.areas].map((l) => l.key),
+    lifetimeKeys: [...input.lines.sends, ...input.lines.areas].filter(l => l.lifetime).map(l => l.key),
     usd: input.usd,
     heldAt: input.now,
     what: input.what,

@@ -67,6 +67,7 @@ const LABEL_MAX = 80;
 
 /** One Send's budget in force. */
 export interface AssignmentBudgetSpec {
+  readonly budgetStartedAt?: string;
   readonly key: string;
   readonly kind: "SCOPE" | "DISPATCH";
   readonly label: string;
@@ -122,6 +123,7 @@ export function assignmentBudgetsOf(input: {
     ref: d.receiptId,
     budgetUsd: d.budgetUsd,
     sentAt: d.decidedAt,
+    ...(d.budgetStartedAt ? { budgetStartedAt: d.budgetStartedAt } : {}),
   }));
   for (const i of input.intents) {
     if (i.kind !== "INTENT" || i.action !== "DISPATCH") continue;
@@ -362,7 +364,7 @@ export class AssignmentBudgetGate {
           ),
         };
       }
-      lines.push({ key: sendBudgetKey(b.key), label: `assignment ${this.name(b)}`, budgetUsd: b.budgetUsd, historicalUsd: hist.usd, historyReadAt: this.historyReadAt });
+      lines.push({ key: sendBudgetKey(b.budgetStartedAt ? `${b.key}@${b.budgetStartedAt}` : b.key), label: `assignment ${this.name(b)}`, budgetUsd: b.budgetUsd, historicalUsd: hist.usd, historyReadAt: this.historyReadAt, lifetime: Boolean(b.budgetStartedAt) });
     }
     return { lines };
   }
@@ -403,22 +405,27 @@ export class AssignmentBudgetGate {
       const b = budgeted[0];
       return this.refused(budgeted.map((s) => s.key), `the cost ledger could not be read, so assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked; paid work it reached is held`);
     }
-    for (const b of budgeted) {
+    const blockedHunt = budgeted.find(b => b.budgetStartedAt && (() => {
+      const s = this.state(b.key);
+      return s === null || s.spentUsd === null || s.spentUsd + s.heldUsd + this.worstCaseUsd > b.budgetUsd;
+    })());
+    for (const b of blockedHunt ? [] : budgeted) {
       const s = this.state(b.key);
       if (s !== null && s.spentUsd !== null && s.spentUsd + s.heldUsd + this.worstCaseUsd <= b.budgetUsd) return { admit: true, runsUnder: b.key, keys };
     }
-    const b = budgeted[0];
+    const b = blockedHunt ?? budgeted[0];
     const s = this.state(b.key);
-    const others = budgeted.length > 1 ? `; the ${budgeted.length - 1} other Send(s) this work belongs to have no room either` : "";
+    const period = b.budgetStartedAt ? "for this hunt" : `in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours`;
+    const others = blockedHunt ? "; every hunt cap remains binding when work is shared with other Sends" : budgeted.length > 1 ? `; the ${budgeted.length - 1} other Send(s) this work belongs to have no room either` : "";
     if (s === null || s.spentUsd === null) {
       return this.refused(
         budgeted.map((x) => x.key),
-        `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked: a charge on its work in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours reported no dollar figure, ${usd(s?.heldUsd ?? 0)} held${others}`,
+        `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked: a charge on its work ${period} reported no dollar figure, ${usd(s?.heldUsd ?? 0)} held${others}`,
       );
     }
     return this.refused(
       budgeted.map((x) => x.key),
-      `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget is spent: ${usd(s.spentUsd)} spent, ${usd(s.heldUsd)} held in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours, ` +
+      `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget is spent: ${usd(s.spentUsd)} spent, ${usd(s.heldUsd)} held ${period}, ` +
         `and one more Scout's worst case (${usd(this.worstCaseUsd)}) does not fit${others}`,
     );
   }
@@ -475,7 +482,7 @@ export function armAssignmentBudget(input: {
   const historical = new Map<string, AssignmentSpend>();
   if (input.costs !== null) {
     const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(input.costs, input.membership.byKey.get(spec.key) ?? empty, since, input.now));
+    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(input.costs, input.membership.byKey.get(spec.key) ?? empty, spec.budgetStartedAt ?? since, input.now));
   }
   return new AssignmentBudgetGate({
     specs: input.specs,
@@ -493,6 +500,7 @@ export function armAssignmentBudget(input: {
 /* ------------------------------------------------------------ the reading */
 
 export interface AssignmentBudgetReading {
+  readonly lifetime?: boolean;
   readonly budgetUsd: number;
   readonly windowHours: number;
   readonly since: string;
@@ -564,7 +572,7 @@ export function assignmentCycleReading(input: {
     const spec = specs.get(key) ?? null;
     const m = input.membership.byKey.get(key) ?? empty;
     const state = input.gate.state(key);
-    const spend = spec !== null && input.costs !== null ? assignmentSpend(input.costs, m, since, input.now) : null;
+    const spend = spec !== null && input.costs !== null ? assignmentSpend(input.costs, m, spec.budgetStartedAt ?? since, input.now) : null;
     const kind = key.startsWith("dispatch:") ? "DISPATCH" : "SCOPE";
     return {
       key,
@@ -583,7 +591,8 @@ export function assignmentCycleReading(input: {
           : {
               budgetUsd: spec.budgetUsd,
               windowHours: ASSIGNMENT_BUDGET_WINDOW_HOURS,
-              since,
+              since: spec.budgetStartedAt ?? since,
+              lifetime: Boolean(spec.budgetStartedAt),
               until: input.now,
               spentUsd: state.spentUsd,
               heldUsd: state.heldUsd,

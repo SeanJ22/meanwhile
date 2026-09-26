@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 851,
-    "named": 8226,
+    "files": 857,
+    "named": 8258,
     "dynamic": 33
   },
   "files": {
@@ -1331,6 +1331,26 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-group-money-answer.test.ts": {
+      "names": [
+        "Vail: no race on the ballot, in the authority's words, then the county register's committees by their registered names, never a total",
+        "a bound body reaches a contest only through its own office, never another office sharing its division",
+        "a candidate whose ballot listing is not matched to a filing identity is never said to have no filing",
+        "a contest with a candidate lacking a record names the gap as ours, with the count",
+        "candidates who share a gap are named together, in ballot order, where the first of them stands",
+        "every held contest in AZ, NH and NJ composes, names every candidate with its own figures and a counted denominator, and passes the validator",
+        "race money wording is recognised with its race words, and a named person's money question is not a race question",
+        "the race composer steps aside for anything it cannot state plainly"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-identity-bridge.test.ts": {
+      "names": [
+        "Amalia DUARTE: the Mendham Township Committee roster row and her 2026 Township Committee candidacy are one committed person",
+        "Teri Ann Hourihan: the certified card and her filing are the committed party-conflict pair, one subject with both parties and sources"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-integration.test.ts": {
       "names": [
         "ASK SIGNAL: enabling the flag without minting a key writes NOTHING, loudly",
@@ -1552,6 +1572,13 @@
         "the relevance gate keeps a compared person's records by exact id, and nobody else's",
         "two committees are stated separately and never added; composition steps aside for what it cannot state",
         "who gave: our records hold totals, not donor identities — said as OURS, counted, never put on the state"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-native-adapter.test.ts": {
+      "names": [
+        "native Ask uses the public route and preserves validation and origin rejection",
+        "request lifetimes retain background receipts and stay isolated across concurrent calls"
       ],
       "dynamic": 0
     },
@@ -1829,7 +1856,8 @@
         "ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, or cannot be read, holds no row; an access control on the naming page does",
         "THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an outage never drops it, and only a later automatic review restores it",
         "THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does",
-        "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused"
+        "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused",
+        "an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection"
       ],
       "dynamic": 0
     },
@@ -3060,6 +3088,15 @@
         "THE INDEX: every category calendar feed the county lists, with the name it gives it, on its own host only",
         "THE MATCH: only a category that is exactly the governing body's name of its kind of government names a registered body; every other is unmatched, with its reason",
         "THE WALK: a CivicPlus site's index is read robots-first, and only the governing body's category feed is requested and found, attested through the index"
+      ],
+      "dynamic": 0
+    },
+    "tests/civicplus-category-feed-wiring.test.ts": {
+      "names": [
+        "COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-feed row, cites the index that names it, and the adapter reads its sittings at their MST times",
+        "STRICT: a category naming another body, a generic category, a partial name and a feed on another host never give a whole-feed row",
+        "THE ADAPTER: a title or category filter reads exactly as before; only a whole-feed filter selects every event",
+        "THE ROW CHECK: a whole-feed filter stands only as \\\"category\\\", alone, on a category-scoped feed"
       ],
       "dynamic": 0
     },
@@ -4537,6 +4574,7 @@
     "tests/expansion-scopes.test.ts": {
       "names": [
         "a $0 budget holds all paid work in the scope, and a subject in two scopes must pass both",
+        "a ZIP hunt resolves only that published Census ZCTA, with no neighboring ZIP expansion",
         "a malformed stored scope is counted, never dropped as if no restriction stood",
         "a piece of work's subject and state are read from its own id, never guessed",
         "a scope budget admits within it, reserves the worst case, and refuses by name past it",
@@ -5522,6 +5560,16 @@
         "http: retries are BOUNDED — a permanently failing host is not hammered",
         "http: the client identifies itself on every request, and there is no browser rung",
         "http: the content type is carried through, never inferred from the body"
+      ],
+      "dynamic": 0
+    },
+    "tests/hunt-budget-period.test.ts": {
+      "names": [
+        "$50 is shared across concurrent work in one hunt and cannot reset after a day or restart",
+        "Brave and Exa costs do not consume the Anthropic token-only cap",
+        "an overlapping Send cannot override this hunt's remaining token budget",
+        "atomic CAS reservations retry revision conflicts without relying on HTTP session locks",
+        "editing the current hunt preserves its accounting start; an explicit separate hunt gets a new start"
       ],
       "dynamic": 0
     },
@@ -6768,7 +6816,7 @@
         "SEAM WORST CASE: every provider at its timeout, plus the ledger's calls",
         "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
         "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
-        "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
+        "WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method"
       ],
       "dynamic": 0
     },
@@ -8533,6 +8581,18 @@
         "the ceiling is hard, and the request that crosses it is refused rather than counted",
         "the ledger records what a run spent, and never a key",
         "the shared browser site enforces the barrier, and enforces it first"
+      ],
+      "dynamic": 0
+    },
+    "tests/provider-billing.test.ts": {
+      "names": [
+        "a fresh cached sync makes no provider calls; failure retains last report and its actual period",
+        "an incomplete report cannot silently replace a previously complete provider total",
+        "collector reloads the exact absolute file after rotation; siblings receive neither reporting keys nor its path",
+        "hunt attribution does not add account reports or count shared reservation keys twice",
+        "missing Exa service access uses priced requests as estimates, without searching or claiming provider charges",
+        "missing reporting credentials and unread request ledger remain unknown; search keys are unchanged",
+        "provider reporting uses documented GETs, cents/discounts correctly, and preserves historical model labels"
       ],
       "dynamic": 0
     },
@@ -10404,7 +10464,8 @@
     },
     "tests/scout-model-ladder.test.ts": {
       "names": [
-        "L1: the loop's first request goes to Sonnet 5 — the cheapest suitable class — with every cache breakpoint placed and a prefix that clears Sonnet's minimum",
+        "Haiku then Sonnet then Opus records both justified escalations and all costs without repeating discovery",
+        "L1: acquisition starts with Haiku and omits unsupported effort and adaptive thinking",
         "L2: a Sonnet attempt that produces an accepted typed result is the whole Attempt — no escalation, no reservation, one attempt's cost",
         "L4: a provider overload (HTTP 529) is not the model's failing and never escalates — a dearer model is not a retry",
         "L5 CEILING (positive control): under a ceiling that covers both attempts the real controller holds the escalation, and after it every cent of the hold is drawn or released",
@@ -12169,6 +12230,7 @@
     },
     "tests/worker-fleet-novelty.test.ts": {
       "names": [
+        "one running worker runtime saves a new observed route and hands it to its next Scout",
         "the actual Scout request inherits a learned method and the failed Hunter route before novelty"
       ],
       "dynamic": 0

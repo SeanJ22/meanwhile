@@ -61,7 +61,8 @@ export const browseWithPlaywright: BrowseFn = async ({ url, timeoutMs }) => {
       status = response ? response.status() : null;
       const remaining = Math.max(0, timeoutMs - (Date.now() - started));
       try {
-        await page.waitForLoadState("networkidle", { timeout: Math.min(remaining, NETWORK_IDLE_CAP_MS) });
+        // Playwright interprets zero as no deadline, not as no time left.
+        if (remaining > 0) await page.waitForLoadState("networkidle", { timeout: Math.min(remaining, NETWORK_IDLE_CAP_MS) });
       } catch {
         /* A page that never goes idle still loaded; what it fetched is in `requests`. */
       }

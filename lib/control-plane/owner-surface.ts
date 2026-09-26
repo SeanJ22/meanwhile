@@ -1586,6 +1586,9 @@ export interface OwnerSnapshot {
    * CONNECTED — never as zero usage, which would read as headroom.
    */
   readonly maptiler?: MapTilerUsageSnapshot | null;
+  /** Cached GET-only billing reports, written by the existing standing publisher. */
+  readonly providerBilling?: import("./provider-billing.ts").ProviderBillingSnapshot | null;
+  readonly billingAttribution?: import("./provider-billing-attribution.ts").BillingAttribution | null;
 
   /** Bounded runner reading of historical receipts; absent until the authorized publisher supplies it. */
   readonly fleetReceipts?: FleetReceiptSnapshot | null;

@@ -20,6 +20,7 @@ import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 
 import { OtherPages, ScopeSelect, type ScopeOptionGroup } from "./header-controls.tsx";
 import s from "./mw.module.css";
+import { LiveRefresh } from "./live-refresh.tsx";
 import {
   FLEET_TABS,
   READINESS_TABS,
@@ -60,6 +61,7 @@ export function MwShell(props: MwShellProps) {
   const scopeValue = scopeParam(props.scope) ?? "all";
   return (
     <main className={s.root} data-mw-area={props.area} data-mw-tab={props.tab}>
+      <LiveRefresh />
       <header className={s.header}>
         <Link href={areaHome("fleet", props.scope)} className={s.brand} aria-label="Control centre home">
           <Logo variant="wordmark" size={20} decorative />

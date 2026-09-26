@@ -503,7 +503,7 @@ test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system bloc
   /* The records carry their own retrieval stamps, which are evidence; the DATE SENTENCE is what must not sit before the last breakpoint. */
   assert.doesNotMatch(body.system[0].text + blocks[0].text, /Today is/, "no date sentence before the last breakpoint");
   /* With caching off (the comparison seam) the system field is the plain string and nothing is marked. */
-  const cold = synthesisRequestBody(zipPack(), { model: "claude-opus-5", cached: false, effort: "medium" });
+  const cold = synthesisRequestBody(zipPack(), { model: "claude-opus-5-5", cached: false, effort: "medium" });
   assert.equal(typeof cold.system, "string");
   assert.ok(!JSON.stringify(cold).includes("cache_control"));
 });

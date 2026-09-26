@@ -20,7 +20,7 @@ import {
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { readableSitting } from "../lib/ask/meeting-time.ts";
 import { citedUrlsFrom, synthesisContextPayload, synthesisLadder, synthesisPrompt, synthesisRequestBody, synthesisSources, synthesizeWithLadder } from "../lib/ask/synthesize.ts";
-import { ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL } from "../lib/ask/model.ts";
+import { ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL, resolveAskRoleModel } from "../lib/ask/model.ts";
 import { WRITER_MEMBER_VOTE_ROWS, writerInputProof, writerSelection } from "../lib/ask/writer-selection.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
@@ -287,7 +287,7 @@ interface Payload {
   trace: {
     interpretation: { ran: boolean; why?: string; cached?: boolean };
     speculation?: { ran: boolean; why: string; delivered: string };
-    synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
+    synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerRoute?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
     validation: { ran: boolean; passed?: boolean; failed?: string[] };
     composition?: { shape: string; composed: boolean; passed?: boolean };
   };
@@ -342,7 +342,7 @@ test("ROUTE: a named-subject question is read in code too — one writing call, 
 test("ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who can I talk to at the Vail school board?", [AZ, PIMA, VAIL]);
   assert.deepEqual(made.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"], "one reading and one answer: the answer was started on the code's reading, not written twice");
-  assert.equal(made[0].model, ASK_SYNTHESIS_MODEL, "reading the question stays on the frontier model");
+  assert.equal(made[0].model, resolveAskRoleModel("READER"), "reading the question is the READER role's model (Haiku 4.5 since the 2026-09-25 comparison)");
   assert.equal(payload.trace.interpretation.ran, true);
   assert.equal(payload.trace.composition, undefined, "no composition shape");
   assert.equal(payload.mode, "GROUNDED_CLAUDE");
@@ -357,6 +357,15 @@ test("ROUTE: the same question over unchanged records is served from the cache, 
   assert.equal(second.payload.trace.interpretation.cached, true);
   assert.equal(second.payload.trace.synthesis.cached, true);
   assert.equal(second.payload.answer, first.payload.answer);
+});
+
+test("ROUTE: a money question asking WHO gave is written by the escalation writer first, and the trace says why", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who funded the Vail school board?", [AZ, PIMA, VAIL]);
+  const writers = made.filter((call) => call.kind === "SYNTHESIZE");
+  assert.ok(writers.length >= 1, "a writer ran");
+  assert.ok(writers.every((call) => call.model === ASK_SYNTHESIS_MODEL), `only the escalation writer wrote: ${writers.map((call) => call.model).join(", ")}`);
+  assert.equal(payload.trace.synthesis.writerRoute, "money-who-or-comparison");
+  assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => writer.role), writers.map(() => "FRONTIER"));
 });
 
 test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded", { concurrency: false }, async () => {
@@ -450,7 +459,7 @@ test("the synthesis request numbers the sources, asks for numbers, and still gen
     question: "What's on the agenda?", intent: "UPCOMING_AGENDA", temporal: { kind: "NEXT" },
     subject: { kind: "BODY", id: MESA, name: "Mesa" }, records: [RECORDS[0]], gaps: [], denominators: {}, today: "2026-09-25",
   };
-  const body = synthesisRequestBody(pack, { model: "claude-opus-5", cached: true, effort: "medium" }) as {
+  const body = synthesisRequestBody(pack, { model: ASK_SYNTHESIS_MODEL, cached: true, effort: "medium" }) as {
     output_config: { format: { schema: { properties: Record<string, unknown>; required: string[] } } };
     messages: { content: { text: string }[] }[];
   };

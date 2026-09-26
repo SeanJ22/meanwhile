@@ -73,6 +73,8 @@ export interface AskSitting {
   bodyName: string;
   startsAt: string;
   timeZone?: string | null;
+  /** `DAY`: a date-only posting; `startsAt`'s midnight is never a time (M59). */
+  startPrecision?: Meeting["startPrecision"];
   agendaUrl?: string | null;
   location: Meeting["location"];
   status: Meeting["status"];

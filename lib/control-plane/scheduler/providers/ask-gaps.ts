@@ -17,7 +17,9 @@
  * agenda documents and recorded outcomes Ask reads. It reads no question, no
  * reader, no log and no browser event: a gap exists here exactly when Ask
  * would state it to anyone who asked about that body, whether or not anyone
- * did. No collection changes (RULING 259).
+ * did. The one other input is the count of answers that told a reader each
+ * gap (below) — a body, a code, a day and a number, never a person or a
+ * question.
  *
  * ```
  *   id          freshness:ask-gap:<body id>#<code>        one per body and code
@@ -53,6 +55,32 @@
  * the meetings, or the recorded outcomes — is a `readFailure`, so a failed
  * read never retires a gap that is still open.
  *
+ * ## What readers were told raises it, and creates what the reading cannot see
+ *
+ * (2026-09-25, the owner's decision of that day: record the body behind an
+ * unanswered Ask question, and nothing personal.) Ask's route counts each coded
+ * gap it states, per body and day (`lib/control-plane/ask-gap-observations.ts`:
+ * a body, a code, a day, a count). This provider folds the last
+ * `ASK_GAP_OBSERVATION_WINDOW_DAYS` of them:
+ *
+ * - **A gap readers were told about is reader impact now.** Its obligation's
+ *   `readerImpactAt` is the start of the latest day it was told (or the
+ *   sitting's start, if earlier), which puts it in reader-impact band 1 and
+ *   brings its next round forward; its evidence says how often readers met it.
+ *   The carrying routine read keeps the owner's cadence (docs/rulings.md §4):
+ *   an ask changes which OBLIGATION is looked at first, never how often a
+ *   publisher is read.
+ * - **A body readers were told we hold no meeting of** (`MEETINGS_NOT_HELD`)
+ *   is outside the held reading altogether, so the ask CREATES its obligation:
+ *   carried by the body's own meeting partition when one is registered, or
+ *   engineering's calendar route otherwise. A state's derived family is not
+ *   taken as carrying it, because nothing shows that family reads this body.
+ * - A gap the held reading has since closed is not reopened by an old ask.
+ *
+ * Unreadable observations are a `readFailure` (no row retires on that
+ * reading); absent ones — a caller that passed none — leave the held
+ * derivation exactly as it was.
+ *
  * PURE: the holdings, the clocks and the registered contracts are handed in
  * (`ask-gap-holdings.ts` reads them); no clock and no store is read here.
  */
@@ -60,11 +88,21 @@
 import {
   ASK_GAP_RECORD_CLASS,
   heldBodyGaps,
+  meetingsNotHeldGap,
   type AskGapCode,
   type AskGapRecordClass,
   type HeldAskGap,
   type HeldGapMeetingLike,
 } from "../../../ask/held-gaps.ts";
+import {
+  ASK_GAP_OBSERVATION_WINDOW_DAYS,
+  askedGapKey,
+  askedWords,
+  foldAskGapObservations,
+  observationDayStart,
+  type AskedGap,
+  type AskGapObservationReading,
+} from "../../ask-gap-observations.ts";
 import type { AgendaDocumentLike } from "../../../routing/agenda-search.ts";
 import type { PersistedSittingOutcomes } from "../../../outcomes/types.ts";
 import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "../../../civic-data/contracts.ts";
@@ -149,7 +187,7 @@ export function askGapCarriers(
   const partitions = registered.partitions ?? MEETING_PARTITION_CONTRACTS;
   const contracts = registered.contracts ?? ROUTINE_SOURCE_CONTRACTS;
   if (recordClass === "MEETING") {
-    const own = partitions.filter((p) => p.derivedFamily === null && p.bodyId === bodyId).map((p) => p.id).sort();
+    const own = ownMeetingPartitions(bodyId, partitions);
     if (own.length > 0) return own;
     const state = stateOfBody(bodyId);
     return partitions.filter((p) => p.derivedFamily !== null && p.derivedFamily === state).map((p) => p.id);
@@ -158,6 +196,26 @@ export function askGapCarriers(
     .filter((c) => c.recordClass === "MEETING_OUTCOME" && (c.schedule?.follows ?? []).some((f) => f.bodyId === bodyId))
     .map((c) => c.id)
     .sort();
+}
+
+/** The body's own meeting partitions (never a state's derived family), sorted. */
+function ownMeetingPartitions(bodyId: string, partitions: readonly Pick<MeetingPartitionContract, "id" | "bodyId" | "derivedFamily">[]): string[] {
+  return partitions.filter((p) => p.derivedFamily === null && p.bodyId === bodyId).map((p) => p.id).sort();
+}
+
+/**
+ * The carriers of one gap code. `MEETINGS_NOT_HELD` is carried only by the
+ * body's own partitions: with no meeting of the body held, nothing shows that
+ * its state's derived family reads it, and saying it did would tell the owner
+ * a routine read closes a gap no read is reaching.
+ */
+export function askGapCarriersFor(
+  bodyId: string,
+  code: AskGapCode,
+  registered: Parameters<typeof askGapCarriers>[2] = {},
+): readonly string[] {
+  if (code === "MEETINGS_NOT_HELD") return ownMeetingPartitions(bodyId, registered.partitions ?? MEETING_PARTITION_CONTRACTS);
+  return askGapCarriers(bodyId, ASK_GAP_RECORD_CLASS[code], registered);
 }
 
 const hours = (ms: number): string => `${(ms / 3_600_000).toFixed(1)} hours`;
@@ -203,8 +261,13 @@ function sittingWords(gaps: readonly HeldAskGap[]): string {
   return `${shown.join(", ")}${listed.length > shown.length ? ` and ${listed.length - shown.length} more` : ""}`;
 }
 
-/** What Ask states, in the obligation's own words: which sittings, and since when. */
-export function askGapEvidence(code: AskGapCode, gaps: readonly HeldAskGap[], nowMs: number): string {
+/** What Ask states, in the obligation's own words: which sittings, since when, and how often readers were told it. */
+export function askGapEvidence(code: AskGapCode, gaps: readonly HeldAskGap[], nowMs: number, asked: AskedGap | null = null): string {
+  const told = asked === null ? "" : ` ${askedWords(asked)}`;
+  return `${heldEvidence(code, gaps, nowMs)}${told}`;
+}
+
+function heldEvidence(code: AskGapCode, gaps: readonly HeldAskGap[], nowMs: number): string {
   const since = gaps.map((g) => g.since).filter((s): s is string => s !== null).sort()[0] ?? null;
   switch (code) {
     case "AGENDA_NOT_HELD":
@@ -215,6 +278,8 @@ export function askGapEvidence(code: AskGapCode, gaps: readonly HeldAskGap[], no
       return `Ask states that the body's calendar was last read ${since}${since ? `, ${hours(nowMs - Date.parse(since))} before this reading` : ""}; a read older than 36 hours is stated to readers.`;
     case "OUTCOMES_UNREADABLE":
       return "Ask states that the recorded actions and votes we hold could not be read: the recorded-outcome projection was unreadable when this reading was taken.";
+    case "MEETINGS_NOT_HELD":
+      return "Ask states that we have not recorded any meetings for this body: no held meeting names it in this reading.";
   }
 }
 
@@ -229,12 +294,14 @@ export function askGapRoute(input: {
   readonly clockOf: (contractId: string) => CarrierClock;
   readonly nowMs: number;
   readonly source: string;
+  /** What readers were told of this gap in the observation window; null when none were, or none were read. */
+  readonly asked?: AskedGap | null;
 }): RouteDescriptor {
   const { bodyId, code, gaps, carriers } = input;
   const recordClass = ASK_GAP_RECORD_CLASS[code];
   const name = displayNameOf(bodyId);
   const place = name.short.split(" — ")[0] || name.short;
-  const evidence = askGapEvidence(code, gaps, input.nowMs);
+  const evidence = askGapEvidence(code, gaps, input.nowMs, input.asked ?? null);
   const label = `${name.short} — ${code.replace(/_/g, " ").toLowerCase()}`;
   const citation =
     `lib/ask/held-gaps.ts decides the gap over ${input.source}; ` +
@@ -290,6 +357,18 @@ export interface AskGapsInput {
   readonly holdings?: () => AskGapHoldingsReading;
   /** The registered contracts carriage is read from; the committed registries by default. */
   readonly registered?: Parameters<typeof askGapCarriers>[2];
+  /**
+   * What readers were told, counted per body, gap and day (`ask-gap-observations.ts`).
+   * Absent: the held derivation alone, exactly as before. Unreadable: a named read failure.
+   */
+  readonly observations?: () => AskGapObservationReading;
+}
+
+/** The earlier of two instants, either of which may be absent. */
+function earliest(a: string | null, b: string | null): string | null {
+  if (a === null) return b;
+  if (b === null) return a;
+  return Date.parse(a) <= Date.parse(b) ? a : b;
 }
 
 function groupBy<T>(items: readonly T[], key: (item: T) => string | null | undefined): Map<string, T[]> {
@@ -310,7 +389,9 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
     id: ASK_GAPS_PROVIDER_ID,
     describe:
       "every gap Ask would state about a body with held meetings — an agenda not held, an outcome not read, a stale " +
-      "calendar read, an unreadable outcome store — decided by Ask's own held-gaps rule, one obligation per body and code",
+      "calendar read, an unreadable outcome store — decided by Ask's own held-gaps rule, one obligation per body and code; " +
+      "gaps readers were told about in the last 30 days are reader impact now, and a body readers were told we hold no " +
+      "meeting of is created from those counts",
 
     /* The template `askGapObligationId` restates (the route id is the gap code); the assignment view's prefix table reads it here. */
     scheduledId: (record, route) => `freshness:ask-gap:${record.subjectId}#${route.routeId}`,
@@ -328,10 +409,20 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
       const outcomesDown = reading.outcomesUnreadable !== null;
       const documentsByMeeting = groupBy(reading.documents, (d) => d.meetingId);
       const sittingsByBody = groupBy(reading.sittings, (s) => s.bodyId);
+      const meetingsByBody = groupBy(reading.meetings, (m) => m.bodyId);
       const records: ProvidedObligation[] = [];
       let unroutedOutcomeFailures = 0;
 
-      for (const [bodyId, meetings] of [...groupBy(reading.meetings, (m) => m.bodyId)].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
+      /* What readers were told, folded over the window. Absent is the held derivation alone; unreadable is named. */
+      const observed = input.observations?.() ?? null;
+      const observationsDown = observed !== null && "unreadable" in observed ? observed.unreadable : null;
+      const asked: ReadonlyMap<string, AskedGap> =
+        observed !== null && !("unreadable" in observed) ? foldAskGapObservations(observed.rows, ctx.nowIso).asked : new Map();
+      const askedFor = (bodyId: string, code: AskGapCode): AskedGap | null => asked.get(askedGapKey(bodyId, code)) ?? null;
+      /* A reader was hurt on the latest day they were told it: reader impact now. */
+      const toldAt = (told: AskedGap | null): string | null => (told === null ? null : observationDayStart(told.lastDay));
+
+      for (const [bodyId, meetings] of [...meetingsByBody].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
         const held = heldBodyGaps({
           bodyId,
           meetings,
@@ -341,7 +432,7 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
           outcomesUnavailable: outcomesDown,
         });
         for (const [code, gaps] of groupBy(held.gaps, (g) => g.code) as Map<AskGapCode, HeldAskGap[]>) {
-          const carriers = askGapCarriers(bodyId, ASK_GAP_RECORD_CLASS[code], input.registered);
+          const carriers = askGapCarriersFor(bodyId, code, input.registered);
           /*
            * An unreadable outcome store is OUR read failing, once, for every
            * body. It is work only where a routine outcomes read exists to fix;
@@ -353,29 +444,72 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
             continue;
           }
           const upcoming = gaps.flatMap((g) => (g.sitting && !g.sitting.past ? [g.sitting.startsAt] : [])).sort()[0] ?? null;
+          const told = askedFor(bodyId, code);
           records.push({
             recordClass: ASK_GAP_OBLIGATION_CLASS,
             subjectId: bodyId,
-            /* A reader is hurt when an upcoming sitting arrives with its agenda still unheld; the other gaps name no deadline. */
-            readerImpactAt: code === "AGENDA_NOT_HELD" ? upcoming : null,
+            /*
+             * A reader is hurt when an upcoming sitting arrives with its agenda
+             * still unheld, and was hurt on the day they were told the gap.
+             * The earlier binds; a gap nobody was told of that names no
+             * sitting carries no deadline.
+             */
+            readerImpactAt: earliest(code === "AGENDA_NOT_HELD" ? upcoming : null, toldAt(told)),
             observedChangeRateHours: null,
             lastWorkedAt: null,
-            routes: [askGapRoute({ bodyId, code, gaps, carriers, clockOf: reading.clockOf, nowMs, source: reading.source })],
+            routes: [askGapRoute({ bodyId, code, gaps, carriers, clockOf: reading.clockOf, nowMs, source: reading.source, asked: told })],
           });
         }
       }
 
-      const readFailure = outcomesDown
-        ? `the recorded outcomes Ask reads could not be read (${reading.outcomesUnreadable}): no body's OUTCOME_NOT_READ could be decided, ` +
-          "so no Ask-gap row retires on this reading" +
-          (unroutedOutcomeFailures > 0 ? `; ${unroutedOutcomeFailures} bod${unroutedOutcomeFailures === 1 ? "y" : "ies"} with no outcomes route carry no row for it` : "")
-        : null;
+      /*
+       * A body readers were told we hold no meeting of is outside the held
+       * reading altogether, so the telling creates its work — while the held
+       * reading still names no meeting of it. Once a meeting is held, the gap
+       * is closed and an old ask does not reopen it.
+       */
+      const observedSource = observed !== null && !("unreadable" in observed) ? observed.source : "";
+      for (const told of [...asked.values()].filter((a) => a.code === "MEETINGS_NOT_HELD").sort((a, b) => (a.bodyId < b.bodyId ? -1 : a.bodyId > b.bodyId ? 1 : 0))) {
+        const gap = meetingsNotHeldGap(told.bodyId, meetingsByBody.get(told.bodyId)?.length ?? 0);
+        if (gap === null) continue;
+        records.push({
+          recordClass: ASK_GAP_OBLIGATION_CLASS,
+          subjectId: told.bodyId,
+          readerImpactAt: toldAt(told),
+          observedChangeRateHours: null,
+          lastWorkedAt: null,
+          routes: [askGapRoute({
+            bodyId: told.bodyId,
+            code: "MEETINGS_NOT_HELD",
+            gaps: [gap],
+            carriers: askGapCarriersFor(told.bodyId, "MEETINGS_NOT_HELD", input.registered),
+            clockOf: reading.clockOf,
+            nowMs,
+            source: `${reading.source}, and ${observedSource}`,
+            asked: told,
+          })],
+        });
+      }
+
+      const failures = [
+        ...(outcomesDown
+          ? [`the recorded outcomes Ask reads could not be read (${reading.outcomesUnreadable}): no body's OUTCOME_NOT_READ could be decided, ` +
+            "so no Ask-gap row retires on this reading" +
+            (unroutedOutcomeFailures > 0 ? `; ${unroutedOutcomeFailures} bod${unroutedOutcomeFailures === 1 ? "y" : "ies"} with no outcomes route carry no row for it` : "")]
+          : []),
+        ...(observationsDown !== null
+          ? [`the Ask-gap observations could not be read (${observationsDown}): what readers were told neither raises nor creates work this cycle, ` +
+            "so no Ask-gap row retires on this reading"]
+          : []),
+      ];
+      const readFailure = failures.length > 0 ? failures.join("; ") : null;
       return {
         obligations: records,
         readFailure,
         emptyReason:
           records.length === 0 && readFailure === null
-            ? `${reading.source} was read and no body with held meetings carries a gap Ask would state`
+            ? `${reading.source} was read and no body with held meetings carries a gap Ask would state` +
+              (observed !== null ? `, and no body readers were told we hold no meeting of is still without one (${ASK_GAP_OBSERVATION_WINDOW_DAYS}-day window)` : "")
             : null,
       };
     },

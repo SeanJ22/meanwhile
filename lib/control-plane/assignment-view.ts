@@ -59,6 +59,14 @@
  */
 import { ASK_GAP_CODES, ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
 import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
+import {
+  ASK_GAP_OBSERVATION_WINDOW_DAYS,
+  askedGapKey,
+  askedWords,
+  foldAskGapObservations,
+  type AskedGap,
+  type AskGapObservation,
+} from "./ask-gap-observations.ts";
 import type { Attempt, ExecutionLease, WorkerRef } from "./attempt.ts";
 import { isProofProject, type CostEntry } from "./cost.ts";
 import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
@@ -616,6 +624,12 @@ export interface AssignmentSources {
   readonly servedReader: null;
   /** The installed release's pilot ZIPs, for the reader-impact band (the runner's own list). */
   readonly pilotZips: readonly string[];
+  /**
+   * What readers were told Ask does not hold, counted per body, gap and day
+   * (`ask-gap-observations.ts`). Null: the read failed. Absent: not read by
+   * this caller. Either way no Ask-gap row says how often readers met it.
+   */
+  readonly askGapObservations?: readonly AskGapObservation[] | null;
 }
 
 export interface AssignmentBuildOptions {
@@ -781,6 +795,8 @@ interface Index {
   readonly workerResultByAttempt: Map<string, WorkerResultRecord>;
   readonly pipelineByAttempt: Map<string, PipelineItemState[]>;
   readonly pipelineByWorkItem: Map<string, PipelineItemState[]>;
+  /** What readers were told, by `askedGapKey`, over the observation window; null when the observations were not read. */
+  readonly askedGaps: ReadonlyMap<string, AskedGap> | null;
 }
 
 function indexSources(src: AssignmentSources): Index {
@@ -866,6 +882,7 @@ function indexSources(src: AssignmentSources): Index {
     workerResultByAttempt,
     pipelineByAttempt,
     pipelineByWorkItem,
+    askedGaps: src.askGapObservations ? foldAskGapObservations(src.askGapObservations, src.nowIso).asked : null,
   };
 }
 
@@ -1046,10 +1063,11 @@ function fromScout(s: ScoutResult, clipAt: number): RoundOutcome {
       return {
         state: "FAILED",
         code: s.outcome,
-        says: `Every route the hunter tried hit a wall or a disallow (${walked}).`,
+        says: `Every route the hunter tried was walled (${walked}).`,
         at: s.recordedAt,
         owner: "RUNNER",
-        nextAction: "Walls can lift: the runner tries again on its backoff; a compliant alternate route is still owed.",
+        nextAction:
+          "Walls can lift: the runner tries again on its backoff. An access control (a login, a bot check, a rate limit) is never bypassed, and another public route is still owed; a robots file no longer counts as a wall.",
       };
     case "NEEDS_ADAPTER":
       return {
@@ -1089,7 +1107,7 @@ function fromWorkerResult(r: WorkerResultRecord, clipAt: number): RoundOutcome {
           says: `The acquirer was blocked${blocker ? `: ${clip(blocker, clipAt)}` : finding()}`,
           at,
           owner: "ENGINEERING",
-          nextAction: "Clear the named blocker (a permission reading, an adapter or a decision), then acquire again.",
+          nextAction: "Clear the named blocker (an access control met by another public route, an adapter or a decision), then acquire again.",
         };
       }
       return {
@@ -1380,6 +1398,13 @@ function whereOf(subject: string | null): Held<{ readonly name: string; readonly
   return held({ name: d.name, state: d.state });
 }
 
+/** How often readers were told one Ask gap, as the row says it; nothing when the observations were not read. */
+function askedSays(idx: Index, bodyId: string, code: AskGapCode): string {
+  if (idx.askedGaps === null) return "";
+  const told = idx.askedGaps.get(askedGapKey(bodyId, code));
+  return told === undefined ? ` No reader was told it in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days.` : ` ${askedWords(told)}`;
+}
+
 function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips): AssignmentWhat {
   const ob = g.obligation;
   if (ob === null) {
@@ -1428,7 +1453,8 @@ function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSources, clips: 
     where: whereOf(ob.subjectId),
     why: {
       says: ob.active && askGap
-        ? "Owed because Ask tells anyone who asks about this body that we do not hold this yet; it closes when a read holds the record."
+        ? "Owed because Ask tells anyone who asks about this body that we do not hold this yet; it closes when a read holds the record." +
+          askedSays(idx, askGap.bodyId, askGap.code)
         : ob.active
         ? `Owed on a standing freshness clock: ${sentenceCase(ob.recordClass).toLowerCase()} for this subject, through ${routeWords}.`
         : `This clock was retired${ob.retiredAt ? ` on ${ob.retiredAt}` : ""}: ${clip(ob.retirementReason ?? "no reason was recorded", clips.text)}`,
@@ -2445,9 +2471,24 @@ export interface AssignmentSummary {
    * Open Ask gaps by code: the active `freshness:ask-gap:` obligations. A gap —
    * never zero — when no Ask-gap obligation is on record at all. Absent on a
    * view published before the count existed, which a page names as not counted.
+   *
+   * `told` (2026-09-25): how many open gaps readers were told in the
+   * observation window, and the most-told of them by body and gap, each with its
+   * share of every telling of an open gap. Absent when the observations were not
+   * read, which the words say rather than implying nobody was told.
    */
-  readonly askGaps?: Held<{ readonly open: number; readonly byCode: readonly { readonly code: AskGapCode; readonly count: Measured }[] }>;
+  readonly askGaps?: Held<{
+    readonly open: number;
+    readonly byCode: readonly { readonly code: AskGapCode; readonly count: Measured }[];
+    readonly told?: {
+      readonly gaps: Measured;
+      readonly mostTold: readonly { readonly bodyId: string; readonly code: AskGapCode; readonly asks: Measured; readonly lastDay: string }[];
+    };
+  }>;
 }
+
+/** How many of the most-told open Ask gaps the summary names. */
+export const MOST_TOLD_ASK_GAPS = 5;
 
 export interface AssignmentView {
   readonly version: typeof ASSIGNMENT_VIEW_VERSION;
@@ -2634,9 +2675,29 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
 
   const askGapRows = src.obligations.flatMap((o) => {
     const parsed = parseAskGapObligationId(o.id);
-    return parsed === null ? [] : [{ code: parsed.code, active: o.active }];
+    return parsed === null ? [] : [{ bodyId: parsed.bodyId, code: parsed.code, active: o.active }];
   });
   const openAskGaps = askGapRows.filter((row) => row.active);
+  /* What readers were told of the OPEN gaps: a closed gap's old tellings owe nothing. */
+  const told = (() => {
+    const asked = built.idx.askedGaps;
+    if (asked === null) return undefined;
+    const openTold = openAskGaps.flatMap((row) => asked.get(askedGapKey(row.bodyId, row.code)) ?? []);
+    const allAsks = openTold.reduce((n, t) => n + t.asks, 0);
+    const source = `cp_ask_gap_observations (the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days) joined to cp_obligations (active freshness:ask-gap: rows)`;
+    return {
+      gaps: measured(openTold.length, openAskGaps.length, `open Ask gaps a reader was told in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days, of every open Ask gap`, source),
+      mostTold: [...openTold]
+        .sort((a, b) => b.asks - a.asks || (a.lastDay < b.lastDay ? 1 : a.lastDay > b.lastDay ? -1 : 0) || askedGapKey(a.bodyId, a.code).localeCompare(askedGapKey(b.bodyId, b.code)))
+        .slice(0, MOST_TOLD_ASK_GAPS)
+        .map((t) => ({
+          bodyId: t.bodyId,
+          code: t.code,
+          asks: measured(t.asks, allAsks, "answers that told a reader this body's gap, of every answer that told a reader an open Ask gap, in the window", source),
+          lastDay: t.lastDay,
+        })),
+    };
+  })();
   const askGaps: AssignmentSummary["askGaps"] =
     askGapRows.length === 0
       ? gap("OURS", "no Ask-gap obligation is on record: the ask-gaps provider has registered none yet, so open Ask gaps are not counted — never read as zero")
@@ -2651,6 +2712,7 @@ function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<
               "cp_obligations (active freshness:ask-gap: rows)",
             ),
           })),
+          ...(told !== undefined ? { told } : {}),
         });
 
   return { total, byState, byLane, groups, overdue, inBackoff, costs, pipeline: pipelineHeld, askGaps };
@@ -2835,7 +2897,7 @@ export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: re
   pushHeld(out, "assignment costs · unattributed", view.summary.costs.unattributed.usd);
   pushHeld(out, "assignment costs · unmeasured model rows", view.summary.costs.unmeasuredModelRows);
   if (view.summary.pipeline.held) pushMeasured(out, "assignments · pipeline items linked", view.summary.pipeline.value.linked);
-  if (view.summary.askGaps?.held) for (const c of view.summary.askGaps.value.byCode) pushMeasured(out, `open Ask gaps · ${c.code}`, c.count);
+  out.push(...askGapRenderedNumbers(view));
   out.push({
     label: "assignments · published rows",
     value: view.selection.published,
@@ -2856,11 +2918,37 @@ export function askGapCountWords(view: Pick<AssignmentView, "summary">): string 
   const counted = view.summary.askGaps;
   if (counted === undefined) return "Open Ask gaps are not counted on this published list: it was built before the count existed.";
   if (!counted.held) return `Open Ask gaps are not counted: ${counted.gap.says}.`;
+  const told = counted.value.told;
+  const tellings =
+    told === undefined
+      ? " How often readers were told them is not on this list: the Ask-gap observations were not read for it."
+      : told.gaps.value === 0
+        ? ` No reader was told any of them in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days.`
+        : ` Readers were told ${told.gaps.value.toLocaleString("en-US")} of them in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days; most told: ` +
+          told.mostTold
+            .map((t) => `${displayNameOf(t.bodyId).short}, ${ASK_GAP_CODE_WORDS[t.code].toLowerCase()} — ${t.asks.value.toLocaleString("en-US")} of ${t.asks.denominator.toLocaleString("en-US")} tellings, latest ${t.lastDay}`)
+            .join(" · ") +
+          ".";
   return (
     `Open Ask gaps — ${counted.value.open.toLocaleString("en-US")}: ` +
     counted.value.byCode.map((c) => `${ASK_GAP_CODE_WORDS[c.code].toLowerCase()} ${c.count.value.toLocaleString("en-US")}`).join(" · ") +
-    "."
+    "." +
+    tellings
   );
+}
+
+/** Every number the Ask-gap summary draws, for `auditRenderedNumbers`: the open gaps by code, and what readers were told of them. */
+export function askGapRenderedNumbers(view: Pick<AssignmentView, "summary">): RenderedNumber[] {
+  const out: RenderedNumber[] = [];
+  const counted = view.summary.askGaps;
+  if (!counted?.held) return out;
+  for (const c of counted.value.byCode) pushMeasured(out, `open Ask gaps · ${c.code}`, c.count);
+  const told = counted.value.told;
+  if (told !== undefined) {
+    pushMeasured(out, "open Ask gaps · told to a reader", told.gaps);
+    for (const t of told.mostTold) pushMeasured(out, `open Ask gaps · tellings · ${t.bodyId}#${t.code}`, t.asks);
+  }
+  return out;
 }
 
 /** The combined filter counts, for `auditRenderedNumbers`. */

@@ -18,6 +18,7 @@ import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from 
 import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
+  publishReaderEdgeChecks,
   purgeReaderCacheTags,
   READER_MANIFEST_CACHE_TAG,
   servedAuthorityVersion,
@@ -43,10 +44,12 @@ import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRAC
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readPromotedEdgeFamilies } from "../lib/civic-data/promoted-edge-publication.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
+import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
 import { readerEdgeCarriesForward } from "./lib/reader-edge-current.ts";
@@ -62,6 +65,13 @@ function safeFailure(value: string): string {
     .join(" | ")
     .slice(0, 4_000) || "Reader repair failed without a diagnostic.";
 }
+
+// An error nothing caught ends this child through one sanitized RCD_FATAL line
+// naming its step (lib/ops/fatal-line.ts). Without it the supervisor quoted the
+// last eight stderr lines, which for an uncaught throw are stack frames: the
+// 2026-09-25T23:01Z runtime-authority refusals recorded no reason at all.
+let step = "reading the Reader repair arguments";
+installFatalLine("routine-civic-data-reader-repair", () => step);
 
 const argv = process.argv.slice(2);
 const meetingAggregate = present(argv, "meeting-aggregate");
@@ -81,16 +91,20 @@ if (meetingAggregate === (contractId !== null && contractId !== "")) {
 const stage = meetingAggregate
   ? null
   : (what: string): void => {
+    step = what;
     process.stderr.write(`${stageLine("READER_REPAIR_STAGE", what)}\n`);
   };
+step = `modules loaded for ${contractId ?? "the meeting aggregate"}`;
 stage?.(`modules loaded for ${contractId}`);
 
 installNeonRequestDeadline();
+step = "admitting the production write";
 const handle = resolveProductionWriteHandle();
 process.env.DATABASE_URL = handle.connection;
 process.env.WTP_DB_ROLE = "production";
 process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
 assertWriteAllowed("a routine civic data candidate/version promotion");
+step = meetingAggregate ? "repairing the meeting aggregate" : `repairing ${contractId}`;
 const store = stage
   ? traceMethodCalls(new PostgresRoutineDataStore(), "store", stage)
   : new PostgresRoutineDataStore();
@@ -324,6 +338,21 @@ if (meetingAggregate) {
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
+      // The proven pointers a cold /ballot and a cold Ask read from the database
+      // (2026-09-25): the ballots, candidate profiles and publications, navigation,
+      // the NH roster, FEC, state and Pima money, federal votes and key votes,
+      // statements and executive actions (lib/civic-data/promoted-edge-publication.ts).
+      // Each family is carried while its pointers still name the served version,
+      // read and proved only when one moved, and published only after its own
+      // Reader accepted the entry; a family that fails is left out, and the
+      // reader reads it from the database.
+      try {
+        const promoted = await readPromotedEdgeFamilies({ store, servedManifest, now: observedAt });
+        Object.assign(authority, promoted.authority);
+        for (const line of promoted.skipped) process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: ${safeFailure(line)}\n`);
+      } catch (error) {
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: promoted pointers ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
       // Every state's promoted registration (lib/registration/edge.ts): one identity read for every registration
       // pointer decides which states carry by reference; only a state whose version moved is read. The section is
       // complete or left out: any failure leaves it out this pass, and the reader reads registration from the database.
@@ -345,7 +374,26 @@ if (meetingAggregate) {
 `);
       }
       const carry = readerEdgeCarriesForward({ prepared, servedManifest, extras, authority, registrations });
-      if (carry.current) {
+      // The composition and its quiet re-checks, stated in the manifest (lib/meetings/fresh-checks.ts).
+      const checks = prepared.status === "CURRENT" || prepared.status === "PUBLISHED"
+        ? { composition: prepared.composition, freshChecks: prepared.freshChecks }
+        : undefined;
+      // Only re-checked since the served composition: the manifest alone moves.
+      const checksOnly = !carry.current && carry.checksOnly === true && prepared.status === "CURRENT" && checks !== undefined
+        ? await publishReaderEdgeChecks(
+            { generatedAt: prepared.servedGeneratedAt ?? prepared.generatedAt ?? observedAt, retrievedAt: prepared.checkedAt, checks },
+            { store: artifactStore },
+          )
+        : null;
+      if (checksOnly?.status === "PUBLISHED") {
+        const purge = await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]);
+        console.log(JSON.stringify({ readerEdge: "PUBLISHED_CHECKS", sequence: checksOnly.sequence, lastChecked: prepared.status === "CURRENT" ? prepared.servedGeneratedAt : null, purged: purge.purged }));
+      } else if (checksOnly?.status === "CURRENT" || checksOnly?.status === "RACED") {
+        console.log(JSON.stringify({ readerEdge: `CHECKS_${checksOnly.status}`, sequence: checksOnly.sequence }));
+      } else if (checksOnly?.status === "FAILED") {
+        failed = true;
+        process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(checksOnly.error)}\n`);
+      } else if (carry.current) {
         // Exactly what the publish would answer, without the prepared row.
         console.log(JSON.stringify({ readerEdge: "CURRENT", sequence: carry.sequence }));
       } else {
@@ -364,6 +412,7 @@ if (meetingAggregate) {
               ...(extras ? { extras } : {}),
               ...(Object.keys(authority).length > 0 ? { authority } : {}),
               ...(registrations !== undefined ? { registrations } : {}),
+              ...(checks !== undefined ? { checks } : {}),
             },
           );
           if (edge.status === "FAILED") {

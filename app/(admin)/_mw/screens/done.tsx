@@ -16,8 +16,8 @@ import { familyRows, gridCounts } from "@/lib/control-plane/admin-view/readiness
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
 import { GATE_DEFINITION, GATE_LABEL, GATE_ORDER } from "@/lib/control-plane/readiness/gates.ts";
-import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "@/lib/control-plane/readiness/model.ts";
-import { readReadinessSnapshot } from "@/lib/control-plane/readiness/read.ts";
+import { READINESS_DERIVATION_CONTRACT } from "@/lib/control-plane/readiness/model.ts";
+import { readReadinessGrid, type ReadinessGrid } from "@/lib/control-plane/readiness/read.ts";
 import { standardHistory, standardVersion } from "@/lib/control-plane/readiness/standard.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
@@ -57,8 +57,9 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
   }
 
   const states = base.scope.kind === "all" ? TRACKED_STATE_CODES : [base.scope.state];
-  const [bodiesRead, ...reads] = await Promise.all([loadWatchedBodies(base.nowIso), ...states.map(async (code) => ({ code, read: await readReadinessSnapshot(code) }))]);
-  const held: ReadinessStateSnapshot[] = reads.flatMap((r) => (r.read.kind === "HELD" ? [r.read.snapshot] : []));
+  const [bodiesRead, ...reads] = await Promise.all([loadWatchedBodies(base.nowIso), ...states.map(async (code) => ({ code, read: await readReadinessGrid(code) }))]);
+  // Each state's grid, without the ZIP rows this screen never draws (see readReadinessGrid).
+  const held: ReadinessGrid[] = reads.flatMap((r) => (r.read.kind === "HELD" ? [r.read.snapshot] : []));
   const unread = reads.filter((r) => r.read.kind !== "HELD").map((r) => stateName(r.code));
   /* Each state's result, against the version it was measured under — a superseded one is named, never re-graded under the new bar. */
   const measuredUnder = reads.map((r) => {

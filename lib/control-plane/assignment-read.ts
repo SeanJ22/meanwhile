@@ -24,6 +24,8 @@
  */
 import type { Attempt, ExecutionLease } from "./attempt.ts";
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
+import { parseAskGapObligationId } from "./ask-gap-id.ts";
+import { readAskGapObservations } from "./ask-gap-observations.ts";
 import type { AssignmentSources } from "./assignment-view.ts";
 import type { CostEntry } from "./cost.ts";
 import { deriveItemState, isPipelineRecord, methodCandidateItemId, scoutResultItemId } from "./promotion/pipeline.ts";
@@ -109,6 +111,8 @@ export async function readAllAssignmentSources(
   ]);
   const pipeline =
     already.pipeline !== undefined ? already.pipeline : pipelineStatesOf(await repos.promotionPipeline.readAll());
+  /* What readers were told (v13). A failed read is null — the page says it was not read — and never fails the publish. */
+  const observed = await readAskGapObservations(repos.askGapObservations);
   return {
     nowIso: base.nowIso,
     obligations,
@@ -128,6 +132,7 @@ export async function readAllAssignmentSources(
     activation: base.activation,
     servedReader: null,
     pilotZips: base.pilotZips,
+    askGapObservations: "unreadable" in observed ? null : observed.rows,
   };
 }
 
@@ -233,7 +238,12 @@ export async function readAssignmentSourcesById(
       };
     }
 
-    const [workItemRows, routeTaskRows, artifactLists, costLists, workerLists, commitLists, extra] = await Promise.all([
+    /* An Ask-gap obligation's body: what readers were told of its gaps, read by body beside the rest. A failed read is null, never a failed drilldown. */
+    const askGap = obligations.length === 1 ? parseAskGapObligationId(obligations[0]!.id) : null;
+    const askGapRead = askGap === null
+      ? Promise.resolve(undefined)
+      : repos.askGapObservations.listWhere(["bodyId"], askGap.bodyId).then((rows) => rows.map((row) => row.value), () => null);
+    const [workItemRows, routeTaskRows, artifactLists, costLists, workerLists, commitLists, extra, askGapObservations] = await Promise.all([
       itemRows !== null ? Promise.resolve(itemRows) : inBatches(workItemIds, (wi) => repos.workItems.read(wi)),
       inBatches(routeTaskIds, (rt) => repos.routeTasks.read(rt)),
       inBatches(workItemIds, (wi) => repos.artifacts.read(wi)),
@@ -241,6 +251,7 @@ export async function readAssignmentSourcesById(
       inBatches(workItemIds, (wi) => repos.workerResults.read(wi)),
       inBatches(routeTaskIds, (rt) => repos.dispositions.read(rt)),
       wave3Extra(),
+      askGapRead,
     ]);
     const workItems: WorkItem[] = values(workItemRows);
     const namedTasks: RouteTask[] = values(routeTaskRows);
@@ -296,6 +307,7 @@ export async function readAssignmentSourcesById(
         activation: base.activation,
         servedReader: null,
         pilotZips: base.pilotZips,
+        ...(askGapObservations !== undefined ? { askGapObservations } : {}),
       },
     };
   } catch (error) {

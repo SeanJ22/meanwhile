@@ -32,6 +32,12 @@
  *   record, so it takes the twice-daily deadline after each attempt, not the
  *   contract's one-hour failure retry. Never-published retries had taken 4.2 of
  *   New London's 12 reads an hour.
+ * - **A failed read never waits longer than the schedule it failed (2026-09-25).**
+ *   A published task's retry after a failed read is its contract's retry, but
+ *   never later than its re-read period: within the hour while hourly. A derived
+ *   meeting family retries on six hours, so a published family whose read failed
+ *   while its bodies were hourly went up to six hours unchecked (the whole-registry
+ *   replay in tests/meeting-refresh-schedule-clock.test.ts: 340 minutes).
  *
  * The runner admits on these instants and orders each lane by deadline; Admin
  * shows the same instants.
@@ -157,11 +163,12 @@ export function sittingWindowObligation(
   reads: SittingWindowReads,
   hot: boolean | undefined,
 ): SittingWindowObligation {
+  const rereadMs = sittingWindowRereadMs(schedule, hot);
   const [fromMs, periodMs] = !Number.isFinite(reads.succeededMs)
-    ? [reads.attemptedMs, sittingWindowRetryMs(schedule, retryMs, reads.published)]
+    ? [reads.attemptedMs, reads.published ? Math.min(sittingWindowRetryMs(schedule, retryMs, true), rereadMs) : sittingWindowRetryMs(schedule, retryMs, false)]
     : reads.attemptedMs > reads.succeededMs
-      ? [reads.attemptedMs, retryMs]
-      : [reads.succeededMs, sittingWindowRereadMs(schedule, hot)];
+      ? [reads.attemptedMs, Math.min(retryMs, rereadMs)]
+      : [reads.succeededMs, rereadMs];
   const leadMs = periodMs >= schedule.baseEveryMs ? SITTING_WINDOW_BASE_ADMISSION_LEAD_MS : SITTING_WINDOW_ADMISSION_LEAD_MS;
   return { deadlineMs: fromMs + periodMs, eligibleAtMs: fromMs + periodMs - leadMs };
 }

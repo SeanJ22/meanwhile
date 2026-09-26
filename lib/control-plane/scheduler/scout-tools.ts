@@ -5,11 +5,17 @@
  * tool here acts under enforcement the model cannot reach, in this order:
  *
  * ```
- *   public URL guard   -> per-host request cap -> permission (robots.txt,
- *   RULING 182: DISALLOWED honoured, CANNOT_TELL fails safe, NO_ROBOTS opens)
- *   -> spaced, identified GET -> VAULT FIRST -> derive `forModel` FROM THE
- *   VAULTED BODY -> return it with the artifact id, wrapped as untrusted DATA
+ *   public URL guard   -> per-host request cap -> robots.txt READ AND RECORDED
+ *   (every verdict travels with the artifact; none refuses a public page:
+ *   owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION = false)
+ *   -> spaced, identified GET (no credential, no cookie) -> VAULT FIRST
+ *   -> derive `forModel` FROM THE VAULTED BODY -> return it with the artifact
+ *   id, wrapped as untrusted DATA
  * ```
+ *
+ * An access control on the answer (401/403/429, a bot challenge, a login) is a
+ * WALL: reported, vaulted as DIAGNOSTIC, never defeated. The model is told to
+ * walk another public route, never to get past it (`lib/hunt/access-control.ts`).
  *
  * Failure modes, each a named refusal in `forModel` and never a throw:
  * a vault that refuses or throws shows the model NOTHING of the body; a
@@ -18,6 +24,7 @@
  * no `vaultBytes` in the runtime is refused by name.
  */
 
+import { accessControlIn } from "../../hunt/access-control.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
@@ -72,10 +79,11 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
     name: "read_permission",
     description:
       "Read https://<host>/robots.txt for the URL's host and report the verdict for that URL: ALLOWED, " +
-      "DISALLOWED (honoured, never re-walked), NO_ROBOTS (no document; the path may be opened) or " +
-      "CANNOT_TELL (the document could not be read as robots; fails safe, the host is not opened). The " +
-      "robots document is vaulted and the operative lines are returned. fetch_public and browse read " +
-      "permission automatically; call this to see the rules themselves.",
+      "DISALLOWED (the rules name the path), NO_ROBOTS (no document) or CANNOT_TELL (the document could not " +
+      "be read as robots). The verdict is RECORDED as evidence and never refuses a public page: the owner " +
+      "decided that robots.txt alone does not block acquisition. The robots document is " +
+      "vaulted and the operative lines are returned. fetch_public and browse read and record it " +
+      "automatically; call this to see the rules themselves.",
     input_schema: {
       type: "object",
       properties: { url: URL_SCHEMA, rung: RUNG_SCHEMA, why: WHY_SCHEMA },
@@ -87,8 +95,10 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
     description:
       "GET one public http(s) URL with identified headers, vault the body, and return a representation " +
       "derived from the vaulted bytes with its artifact id: HTML -> title, visible text and absolute links; " +
-      "JSON -> pretty-printed; PDF -> extracted text. Refuses private hosts, DISALLOWED and CANNOT_TELL " +
-      "hosts, and requests past the per-host cap. A wall (403 etc.) is reported as a wall, never as absence.",
+      "JSON -> pretty-printed; PDF -> extracted text. Refuses private hosts and requests past the per-host " +
+      "cap. robots.txt is read and recorded with the artifact, never a refusal. An access control (401, 403, " +
+      "429, a login or a bot challenge) is reported as a wall, never as absence, and is never bypassed: walk " +
+      "another public route instead.",
     input_schema: {
       type: "object",
       properties: { url: URL_SCHEMA, rung: RUNG_SCHEMA, why: WHY_SCHEMA },
@@ -131,8 +141,9 @@ export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
     "Look up a query in the compliant paid search indexes (Brave and Exa) and return POINTERS ONLY — a " +
     "ranked list of result URLs and titles, no page content. Use it when direct routes are walled, or to " +
     "discover a candidate's own publication: the \"<name> for <office>\" committee phrasing surfaces campaign " +
-    "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read " +
-    "permission and vault the evidence. A hit is a lead, never proof, and may be a prior cycle's site.",
+    "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read and " +
+    "record robots.txt (never a refusal of a public page) and vault the evidence; an access control there is a " +
+    "wall, never bypassed. A hit is a lead, never proof, and may be a prior cycle's site.",
   input_schema: {
     type: "object",
     properties: {
@@ -667,14 +678,17 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     if (reading.matchedRule !== null) lines.push(`Matched rule: ${reading.matchedRule}`);
     if (reading.crawlDelayMs !== null) lines.push(`Crawl-delay: ${reading.crawlDelayMs} ms (requests are spaced per host).`);
     if (reading.verdict === "DISALLOWED") {
-      lines.push("A disallow is honoured and never re-walked. Walk another branch: a compliant alternate host or route to the same record.");
+      lines.push(
+        "The rules name this path. That is RECORDED with the artifact and does not refuse it: the owner decided on " +
+          "2026-09-25 that robots.txt alone never blocks reading a public page. fetch_public and browse will open it.",
+      );
     } else if (reading.verdict === "CANNOT_TELL") {
       lines.push(
-        "CANNOT_TELL fails safe: fetch_public and browse will NOT open this host this Attempt. That is a fact about our " +
-          "robots read, not about the host's policy or the record. Walk another branch (an alternate official host, an API host, an archive).",
+        "The robots document could not be read as robots; that is recorded as unread, never as 'no robots file', and " +
+          "it does not refuse the page. The page's own answer decides: an access control there is a wall, never bypassed.",
       );
     } else if (reading.verdict === "NO_ROBOTS") {
-      lines.push("No robots document: an absence of restrictions, never a grant. The path may be opened.");
+      lines.push("No robots document: recorded as absent.");
     }
     if (reading.operativeLines.length > 0) {
       lines.push(UNTRUSTED_CONTENT_HEADER, DATA_BEGIN, ...reading.operativeLines, DATA_END);
@@ -750,22 +764,9 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const capBefore = overCap(host);
     if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
+    /* Read and recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
     const robots = await readRobots(url, acc);
     const reading = evaluate(robots, url);
-    if (reading.verdict === "DISALLOWED" || reading.verdict === "CANNOT_TELL") {
-      const rung: Rung = {
-        rung: input.rung,
-        tool,
-        target: url.toString(),
-        observed: `permission ${reading.verdict}${reading.matchedRule ? ` (${reading.matchedRule})` : ""}; no request sent`,
-        artifactIds: [...robots.artifactIds],
-        transport: "NOT_ATTEMPTED", httpStatus: null, returnedCount: null, nextHopUrls: [], applicableBecause: input.why,
-      };
-      const text =
-        `permission for ${host} is ${reading.verdict}, so ${tool} did not open it. ` +
-        permissionText(url, robots, reading, acc.requests === 0);
-      return { kind: "REFUSED", result: { ...result(false, `REFUSED: ${text}`, rung, acc, permissionState(reading.verdict)) } };
-    }
     const capAfter = overCap(host);
     if (capAfter !== null) {
       return {
@@ -792,13 +793,15 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const permLine = permissionLine(url, reading, robots);
     let nextHopUrls: string[] = [];
     let returnedCount: number | null = null;
+    /* A challenge served at 2xx is CHALLENGED on the rung as on the artifact, never REACHABLE. */
+    let challenged = false;
     const rung = (observed: string): Rung => ({
       rung: input.rung,
       tool: "fetch_public",
       target: url.toString(),
       observed,
       artifactIds: acc.artifacts.map((a) => a.artifactId),
-      transport: transportOf(got.status, got.transportError), httpStatus: got.status,
+      transport: challenged ? "CHALLENGED" : transportOf(got.status, got.transportError), httpStatus: got.status,
       nextHopUrls, returnedCount, applicableBecause: input.why,
     });
 
@@ -825,6 +828,24 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return await binaryRepresentation({ url, finalUrl, status, got, permission, permLine, acc, rung });
       }
       const text = decodeText(got.bytes, got.contentType);
+      /* A challenge served at 2xx is an access control: vaulted as DIAGNOSTIC, never shown as the page, never solved. */
+      const control = accessControlIn({ status, text });
+      if (control !== null) {
+        challenged = true;
+        const walled = await vaultText(
+          {
+            url, finalUrl, status, contentType: got.contentType, text, methodRouteId: "scout:fetch_public",
+            permission, transport: "CHALLENGED", retention: "DIAGNOSTIC",
+          },
+          acc,
+        );
+        const where = walled.stored ? `the answer page is vaulted as ${walled.artifact.id} (DIAGNOSTIC); its body is not shown` : `the answer page was not vaulted: ${walled.why}`;
+        return result(
+          false,
+          `${control.detail} at ${url.host}: a WALL, named. It is never bypassed and is not a fact about the record. ${where}. Walk another public branch: the API behind the page, an official mirror, a feed, an archive.\n${permLine}`,
+          rung(`HTTP ${status} (${control.kind})`), acc, permission
+        );
+      }
       const report = await vaultText(
         { url, finalUrl, status, contentType: got.contentType, text, methodRouteId: "scout:fetch_public", permission, transport: "REACHABLE" },
         acc,
@@ -870,7 +891,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     if (wall) {
       return result(
         false,
-        `HTTP ${status} from ${url.host} to this client: a WALL, named. It is not a fact about whether the record exists or about the host's policy. ${diagnostic}. Walk another branch: another representation of the same record, the API behind the page, an official mirror, an archive.\n${permLine}`,
+        `HTTP ${status} from ${url.host} to this client: a WALL, named — an access control, never bypassed. It is not a fact about whether the record exists. ${diagnostic}. Walk another public branch: another representation of the same record, the API behind the page, an official mirror, an archive.\n${permLine}`,
         rung(`HTTP ${status} (wall)`), acc, permission
       );
     }
@@ -1003,6 +1024,27 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
     const status = obs.status ?? 0;
     const finalUrl = obs.finalUrl || url.toString();
+    /*
+     * An access control is never passed by rendering it: a navigation answered 401/403/429, or a challenge page, is a
+     * WALL even when the browser went on to render content behind it. The render is vaulted DIAGNOSTIC and not shown.
+     */
+    const control = accessControlIn({ status: obs.status, text: obs.html });
+    if (control !== null) {
+      browserTransport = "CHALLENGED";
+      const walled = await vaultText(
+        {
+          url, finalUrl, status, contentType: "text/html; charset=utf-8", text: obs.html, methodRouteId: "scout:browse",
+          permission, transport: "CHALLENGED", retention: "DIAGNOSTIC",
+        },
+        acc,
+      );
+      const where = walled.stored ? `the render is vaulted as ${walled.artifact.id} (DIAGNOSTIC); nothing of it is shown` : `the render was not vaulted: ${walled.why}`;
+      return result(
+        false,
+        `${control.detail} at ${url.host}: a WALL, named. The browser does not get past an access control. ${where}. Walk another public branch.\n${permLine}`,
+        rung(`browser HTTP ${obs.status ?? "none"} (${control.kind})`), acc, permission
+      );
+    }
     const page = await vaultText(
       {
         url, finalUrl, status, contentType: "text/html; charset=utf-8", text: obs.html, methodRouteId: "scout:browse",
@@ -1099,7 +1141,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       ? `SEARCH "${query}" reached no provider${errNote}`
       : res.hits.length === 0
         ? `SEARCH "${query}" — no pointers from ${res.providersUsed.join(", ")}. A search index finding nothing is a real (not failed) negative for this query.${errNote}`
-        : `SEARCH "${query}" — ${res.hits.length} pointer(s) from ${res.providersUsed.join(", ")}. LEADS, not evidence: open a promising one with fetch_public or browse (which read permission and vault). A hit may be a prior cycle's site.${errNote}`;
+        : `SEARCH "${query}" — ${res.hits.length} pointer(s) from ${res.providersUsed.join(", ")}. LEADS, not evidence: open a promising one with fetch_public or browse (which read and record robots.txt and vault). A hit may be a prior cycle's site.${errNote}`;
     const forModel =
       res.hits.length === 0
         ? header

@@ -170,10 +170,11 @@ const ROUTE_FIXTURES: Readonly<Record<string, { file: string; contentType: strin
     contentType: "text/html",
   },
   /*
-   * NO BYTES, ON PURPOSE. `pima.granicus.com` serves `User-agent: * / Disallow: /`.
-   * A permission refusal is a fact about what WE may do and carries no claim
-   * whatever about the content behind it. Retrieving it anyway to "have an
-   * artifact" would be the residential-proxy reasoning wearing a different hat.
+   * NO BYTES: no adapter reads this route yet, so nothing was recorded for it.
+   * `pima.granicus.com` serves `User-agent: * / Disallow: /`; that is recorded
+   * and, since the owner decision of 2026-09-25, blocks nothing. The missing
+   * artifact is our unbuilt reader, and it carries no claim whatever about the
+   * content behind the route.
    */
   GRANICUS_VIEW_PUBLISHER: null,
 };
@@ -265,42 +266,37 @@ const ROUTE_PLAN: Readonly<Record<string, RoutePlan>> = {
   },
   GRANICUS_VIEW_PUBLISHER: {
     /*
-     * BLOCKED_CURRENTLY is an OPEN disposition, and that is the point. A wall is
-     * not an emptiness. `pima.granicus.com/robots.txt` publishes
-     * `User-agent: * / Disallow: /`, which says what we may do and says nothing
-     * about what is behind it. Recording this as WALKED_NO_YIELD would convert
-     * "we are not allowed to look" into "there is nothing there" — the single
-     * conversion this product cannot survive.
+     * REQUIRES_NEW_ADAPTER is an OPEN disposition, and that is the point. An
+     * unbuilt route is not an emptiness. Recording this as WALKED_NO_YIELD
+     * would convert "we have not looked" into "there is nothing there" — the
+     * single conversion this product cannot survive.
+     *
+     * Until 2026-09-25 this was BLOCKED_CURRENTLY, a permission wall, because
+     * `pima.granicus.com/robots.txt` publishes `User-agent: * / Disallow: /`.
+     * Since the owner decision of 2026-09-25 robots.txt is recorded and blocks
+     * nothing, so the truth is ours: no adapter reads the route yet.
      */
-    disposition: "BLOCKED_CURRENTLY",
+    disposition: "REQUIRES_NEW_ADAPTER",
     rawCount: 0,
     normalizedCount: 0,
+    // The robots.txt reading, recorded as evidence exactly as before. It is no
+    // longer a reason the route is not walked.
     permission: "DISALLOWED",
     /*
-     * `CHALLENGED`, matching `tests/control-plane-pima-shadow.test.ts` exactly.
-     *
-     * A NAMED IMPRECISION, recorded rather than smoothed over. `TRANSPORT_STATES`
-     * has no value for "never attempted, because permission refused it" — the six
-     * members all describe an attempt that happened. The truthful reading of this
-     * route is that no transport was attempted at all.
-     *
-     * Two wrong ways to resolve that, and neither is taken here. Inventing a
-     * seventh state is a change to a governed vocabulary that ripples through
-     * every disposition in the repository, and it is not this session's to make
-     * on its own authority. Choosing a DIFFERENT member than the shipped test
-     * chose would give one fact two readings (RULING 103) and the divergence
-     * would show up later as two files disagreeing about one wall.
-     *
-     * So: the same value the proven test uses, and the gap is written down here
-     * and carried to the tracker rather than left for a later session to
-     * rediscover. What matters for correctness is unaffected — the disposition is
-     * `BLOCKED_CURRENTLY`, an OPEN state, and the obligation stays open on it.
+     * `REACHABLE`: the host answered the one request made of it, its robots.txt
+     * (read 2026-08-28). The route itself is not requested because no adapter
+     * reads it, and nothing about it is an access control. This was
+     * `CHALLENGED` until 2026-09-25, a named imprecision for "never attempted,
+     * because permission refused it"; `CHALLENGED` now means an access control
+     * (a bot challenge), which this route never showed, so keeping it would
+     * misread the route as walled.
      */
-    transport: "CHALLENGED",
+    transport: "REACHABLE",
     note:
+      "No adapter reads this route yet, so it is not walked and the obligation stays open on it. " +
       `${PIMA_GRANICUS_PERMISSION.host}/robots.txt publishes "${PIMA_GRANICUS_PERMISSION.rule}" ` +
-      `(read ${PIMA_GRANICUS_PERMISSION.readAt}). The route is not walked and the obligation ` +
-      "stays open on it. NO CLAIM WHATEVER is made about the proceedings behind it.",
+      `(read ${PIMA_GRANICUS_PERMISSION.readAt}): recorded, not blocking since the owner decision ` +
+      "of 2026-09-25. NO CLAIM WHATEVER is made about the proceedings behind it.",
   },
 };
 

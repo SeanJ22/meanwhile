@@ -16,13 +16,18 @@
  * - **Not yet published** (`NOT_YET_PUBLISHED`). The portal's minutes cell
  *   says "Not available". That is a fact about the publisher, stated with the
  *   instant we read it, and never "no decision was made".
- * - **Not read** (`REQUEST_FAILED` / `ZERO_ROWS_FAILED`). Ours, retryable.
+ * - **Not read** (`REQUEST_FAILED` / `ZERO_ROWS_FAILED`). Ours, retryable. A
+ *   request that failed stays out of the projection and is retried soon. A
+ *   document read whose extraction failed on its bytes is held, named, with
+ *   those bytes' identity (`failedMinutesRead`), and read again only when the
+ *   document or the parser changes (2026-09-25).
  */
 import { createHash } from "node:crypto";
 
 import { decodeEntities } from "../sources/http.ts";
 import type { InSiteCalendarRow } from "../sources/legistar-insite/calendar.ts";
 import {
+  MINUTES_PARSER_REVISION,
   minutesOutcomeRecords,
   parseCouncilMinutes,
   type MinutesPage,
@@ -30,12 +35,14 @@ import {
 } from "../sources/legistar-insite/minutes.ts";
 import type { InSiteTenant } from "../sources/legistar-insite/tenant-registry.ts";
 import type { LegistarMinutesPointer } from "../sources/legistar/outcomes.ts";
+import { LEGISTAR_DOCUMENT_HOSTS } from "../sources/legistar/routes.ts";
 import type { NeverRead, ReadStamp } from "../ops/freshness.ts";
 import { toZonedIso } from "../time/zoned.ts";
 import { observationFromGridCell } from "./publication.ts";
 import type {
   MinutesApprovalState,
   OutcomeSnapshot,
+  PersistedFailedMinutesRead,
   PersistedMinutesDocument,
   PersistedPublicationStatus,
   PersistedSittingOutcomes,
@@ -57,23 +64,47 @@ export interface MinutesLink {
   readonly label: string;
 }
 
-function onHost(href: string, host: string): string | null {
+/**
+ * A grid link, resolved against the tenant's portal, when it is a public web
+ * address this route may follow: https, no credentials in the URL, and on one
+ * of `hosts`. Null otherwise.
+ */
+function publicLinkOn(href: string, host: string, hosts: readonly string[]): string | null {
   try {
     const url = new URL(href, `https://${host}/`);
-    // Only the tenant's own permitted portal host. A link off it (the vendor's
-    // document host refuses us in robots.txt) is never followed here.
-    return url.protocol === "https:" && url.hostname.toLowerCase() === host.toLowerCase() ? url.href : null;
+    if (url.protocol !== "https:" || url.username !== "" || url.password !== "") return null;
+    return hosts.includes(url.hostname.toLowerCase()) ? url.href : null;
   } catch {
     return null;
   }
 }
 
+/** A page of the tenant's own portal (the sitting's detail page): the portal host only. */
+function onPortal(href: string, host: string): string | null {
+  return publicLinkOn(href, host, [host.toLowerCase()]);
+}
+
+/**
+ * A document the grid links (minutes, agenda file): on the tenant's portal
+ * host or on the vendor's document host (`LEGISTAR_DOCUMENT_HOSTS`,
+ * `legistar.granicus.com`). (2026-09-25.)
+ *
+ * Until the owner decision of 2026-09-25 only the portal host was followed,
+ * because the vendor's document host answers robots.txt with `Disallow: /`.
+ * robots.txt is recorded and blocks nothing now, so a public document on the
+ * vendor's host is read like one on the portal. A link to any other host is
+ * not this tenant's publication and stays unfollowed.
+ */
+function documentOn(href: string, host: string): string | null {
+  return publicLinkOn(href, host, [host.toLowerCase(), ...LEGISTAR_DOCUMENT_HOSTS]);
+}
+
 export function minutesLinkFor(row: InSiteCalendarRow, host: string): MinutesLink | null {
-  const accessible = row.accessibleMinutes.href ? onHost(row.accessibleMinutes.href, host) : null;
+  const accessible = row.accessibleMinutes.href ? documentOn(row.accessibleMinutes.href, host) : null;
   if (accessible && !/not available/i.test(row.accessibleMinutes.status)) {
     return { url: accessible, format: "HTML", label: row.accessibleMinutes.status || row.minutes.status };
   }
-  const pdf = row.minutes.href ? onHost(row.minutes.href, host) : null;
+  const pdf = row.minutes.href ? documentOn(row.minutes.href, host) : null;
   if (pdf && !/not available/i.test(row.minutes.status)) return { url: pdf, format: "PDF", label: row.minutes.status };
   return null;
 }
@@ -138,7 +169,30 @@ export type MinutesRefreshReason =
   | "MINUTES_PUBLISHED"
   /** The link or its label moved ("Results" → "Minutes"): a new document. */
   | "PUBLISHER_RELABELED"
+  /** A failed request or a failure with no document identity held: read again. */
   | "PRIOR_EXTRACTION_FAILED"
+  /**
+   * Held, but its note names "It was moved" passages the parser could not read, and a newer parser revision
+   * than the one that read it is in force (2026-09-25): read again, so a parser that now reads them reaches
+   * readers without a forced pass. The 2026-08-13 study session held three motions and named its fourth this
+   * way until the parser learned the clerk's infinitive form. Under the same revision it is not re-read.
+   */
+  | "UNREAD_PASSAGES_HELD"
+  /**
+   * The link serves the document whose extraction failed (`failedMinutesRead`): the caller asks the portal
+   * whether it changed (`failedDocumentCheck`) before downloading it again.
+   */
+  | "FAILED_DOCUMENT_CHECK"
+  /** The failed document's cheap check says it changed: read it again at once. */
+  | "FAILED_DOCUMENT_CHANGED"
+  /** The failed document's cheap check says it is the same document: held, not downloaded. */
+  | "FAILED_DOCUMENT_UNCHANGED"
+  /** The cheap check could not be made (the portal did not answer it): held until the re-verification date. */
+  | "FAILED_DOCUMENT_UNCHECKED"
+  /** A newer parser revision than the one that failed on these bytes: read again at once. */
+  | "FAILED_DOCUMENT_PARSER_CHANGED"
+  /** The failed read is `FAILED_MINUTES_REVERIFY_DAYS` old: the bytes are read once more, whatever the check says. */
+  | "FAILED_DOCUMENT_REVERIFY"
   | "FORCED"
   /** Held and unchanged. */
   | "UNCHANGED_SKIP"
@@ -150,21 +204,140 @@ export type MinutesRefreshReason =
    */
   | "LINK_WITHDRAWN_KEPT";
 
+/**
+ * How long a held failed extraction goes without its bytes being read again when the cheap check keeps
+ * saying the document is unchanged (2026-09-25). The check (length, type, any validators) cannot see a
+ * same-length replacement, so the bytes themselves are re-read on this bound: once a week, never hourly.
+ */
+export const FAILED_MINUTES_REVERIFY_DAYS = 7;
+
+/** The words `minutesSitting` writes when a document leaves "It was moved" passages unread. */
+const UNREAD_PASSAGES_PHRASE = "were not in the clerk's usual form and were not read";
+const UNREAD_PASSAGES_NOTE = /passage\(s\) beginning "It was moved" were not in the clerk's usual form and were not read/;
+
 export function minutesRefreshDecision(
   link: MinutesLink | null,
   held: PersistedSittingOutcomes | undefined,
-): { readonly walk: boolean; readonly reason: MinutesRefreshReason } {
+  now: Date = new Date(),
+): { readonly walk: boolean; readonly reason: MinutesRefreshReason; readonly check?: PersistedFailedMinutesRead } {
   if (held === undefined) return { walk: true, reason: "NEW" };
   if (held.extraction === "NOT_YET_PUBLISHED") {
     return link === null ? { walk: false, reason: "STILL_NOT_PUBLISHED" } : { walk: true, reason: "MINUTES_PUBLISHED" };
   }
   if (link === null) return { walk: false, reason: "LINK_WITHDRAWN_KEPT" };
+  const failed = held.failedMinutesRead;
+  if (failed && failed.url === link.url && failed.publisherLabel === link.label) {
+    if (failed.parserRevision !== MINUTES_PARSER_REVISION) return { walk: true, reason: "FAILED_DOCUMENT_PARSER_CHANGED" };
+    const readAt = Date.parse(failed.readAt);
+    if (!Number.isFinite(readAt) || now.getTime() - readAt >= FAILED_MINUTES_REVERIFY_DAYS * 86_400_000) {
+      return { walk: true, reason: "FAILED_DOCUMENT_REVERIFY" };
+    }
+    return { walk: false, reason: "FAILED_DOCUMENT_CHECK", check: failed };
+  }
   if (held.extraction !== "RETRIEVED") return { walk: true, reason: "PRIOR_EXTRACTION_FAILED" };
   const document = held.minutesDocument;
   if (!document || document.url !== link.url || document.publisherLabel !== link.label) {
     return { walk: true, reason: "PUBLISHER_RELABELED" };
   }
+  if (UNREAD_PASSAGES_NOTE.test(held.extractionNote ?? "") && document.parserRevision !== MINUTES_PARSER_REVISION) {
+    return { walk: true, reason: "UNREAD_PASSAGES_HELD" };
+  }
   return { walk: false, reason: "UNCHANGED_SKIP" };
+}
+
+/** What a HEAD of the failed document answered, or null when it could not be asked. */
+export interface MinutesDocumentHead {
+  readonly status: number;
+  readonly contentType: string;
+  readonly contentLength: number | null;
+  readonly etag: string | null;
+  readonly lastModified: string | null;
+}
+
+function baseType(contentType: string | null): string | null {
+  const base = (contentType ?? "").split(";")[0]!.trim().toLowerCase();
+  return base === "" ? null : base;
+}
+
+/**
+ * Did the document whose extraction failed change? Asked of one HEAD, without its bytes (2026-09-25).
+ *
+ * Changed — read again at once — when the length differs from the bytes that failed, when the type differs,
+ * or when a validator (`ETag`, `Last-Modified`) differs from the one served with them, including one appearing
+ * or disappearing. Unchanged when every one agrees. A HEAD that was not answered with a 2xx and a length says
+ * nothing either way: the failure stays held until `FAILED_MINUTES_REVERIFY_DAYS`, when the bytes are re-read.
+ */
+export function failedDocumentCheck(
+  failed: PersistedFailedMinutesRead,
+  head: MinutesDocumentHead | null,
+): { readonly walk: boolean; readonly reason: "FAILED_DOCUMENT_CHANGED" | "FAILED_DOCUMENT_UNCHANGED" | "FAILED_DOCUMENT_UNCHECKED"; readonly detail: string } {
+  if (head === null || head.status < 200 || head.status >= 300 || head.contentLength === null) {
+    return {
+      walk: false,
+      reason: "FAILED_DOCUMENT_UNCHECKED",
+      detail: head === null
+        ? "the portal did not answer the check"
+        : `the check answered HTTP ${head.status}${head.contentLength === null ? " with no length" : ""}`,
+    };
+  }
+  const differences = [
+    head.contentLength !== failed.byteCount ? `length ${failed.byteCount} → ${head.contentLength}` : null,
+    failed.contentType !== null && baseType(head.contentType) !== baseType(failed.contentType) ? `type ${failed.contentType} → ${head.contentType}` : null,
+    head.etag !== failed.etag ? `ETag ${failed.etag ?? "none"} → ${head.etag ?? "none"}` : null,
+    head.lastModified !== failed.lastModified ? `Last-Modified ${failed.lastModified ?? "none"} → ${head.lastModified ?? "none"}` : null,
+  ].filter((difference): difference is string => difference !== null);
+  return differences.length > 0
+    ? { walk: true, reason: "FAILED_DOCUMENT_CHANGED", detail: differences.join("; ") }
+    : { walk: false, reason: "FAILED_DOCUMENT_UNCHANGED", detail: `the same ${failed.byteCount} bytes by length, type and validators` };
+}
+
+/**
+ * The failed read to remember, when a document was read and its extraction failed on its bytes; null for any
+ * other sitting (a read that succeeded, or a request that failed and read no bytes).
+ */
+export function failedMinutesReadFor(
+  sitting: PersistedSittingOutcomes,
+  document: MinutesDocumentRead,
+  response: { readonly contentType: string | null; readonly etag: string | null; readonly lastModified: string | null },
+  readAt: string,
+): PersistedFailedMinutesRead | null {
+  if (sitting.extraction !== "ZERO_ROWS_FAILED") return null;
+  return {
+    url: document.link.url,
+    publisherLabel: document.link.label,
+    sha256: document.sha256,
+    byteCount: document.byteCount,
+    contentType: response.contentType === "" ? null : response.contentType,
+    etag: response.etag,
+    lastModified: response.lastModified,
+    parserRevision: MINUTES_PARSER_REVISION,
+    readAt,
+    reason: sitting.extractionNote ?? "The minutes were read and yielded nothing we could extract.",
+  };
+}
+
+/**
+ * What a read leaves held for its sitting (2026-09-25).
+ *
+ * - A read that succeeded is the sitting, and clears any failure remembered for it.
+ * - A read whose extraction failed on its bytes is held as the failure it is, with those bytes' identity —
+ *   except over a sitting already held with verified minutes (a relabel to a document that fails): the
+ *   verified reading stays, and the failed newer document is remembered beside it, never in its place.
+ * - A request that failed is returned as it is: it read no bytes, is not held, and is retried soon.
+ */
+export function sittingAfterRead(
+  held: PersistedSittingOutcomes | undefined,
+  fresh: PersistedSittingOutcomes,
+  failed: PersistedFailedMinutesRead | null,
+): PersistedSittingOutcomes {
+  if (failed === null) return fresh;
+  if (held?.extraction === "RETRIEVED") return { ...held, failedMinutesRead: failed };
+  return { ...fresh, failedMinutesRead: failed };
+}
+
+/** A failed extraction held with the identity of the bytes it failed on: a named failure, not a retryable request. */
+export function isHeldFailedExtraction(sitting: PersistedSittingOutcomes): boolean {
+  return sitting.extraction === "ZERO_ROWS_FAILED" && sitting.failedMinutesRead !== undefined;
 }
 
 /** The document as read: its bytes' identity and its text, page by page. */
@@ -227,7 +400,7 @@ function publicationFromRow(
   return {
     agendaStatusName: row.agenda.status || null,
     agendaStatusId: null,
-    agendaFile: row.agenda.href ? onHost(row.agenda.href, tenant.host) : null,
+    agendaFile: row.agenda.href ? documentOn(row.agenda.href, tenant.host) : null,
     agendaLastPublishedUtc: null,
     // The portal cell's words, verbatim. Not the vendor's "Minutes status"
     // field, which reads "Draft" on approved and action minutes alike.
@@ -235,15 +408,21 @@ function publicationFromRow(
     minutesStatusId: null,
     minutesFile: link?.url ?? null,
     minutesLastPublishedUtc: null,
-    inSiteUrl: row.detailHref ? onHost(row.detailHref, tenant.host) : null,
+    inSiteUrl: row.detailHref ? onPortal(row.detailHref, tenant.host) : null,
     lastModifiedUtc: null,
     videoStatus: null,
     observedAt,
   };
 }
 
-function pointerFromLink(link: MinutesLink | null, row: InSiteCalendarRow, host: string, note: string): LegistarMinutesPointer {
-  return { url: link?.url ?? null, status: (link?.label ?? row.minutes.status) || null, host: link ? host : null, retrievalNote: note };
+/** The pointer's host is the link's own: the portal's, or the vendor's document host. */
+function pointerFromLink(link: MinutesLink | null, row: InSiteCalendarRow, note: string): LegistarMinutesPointer {
+  return {
+    url: link?.url ?? null,
+    status: (link?.label ?? row.minutes.status) || null,
+    host: link ? new URL(link.url).hostname.toLowerCase() : null,
+    retrievalNote: note,
+  };
 }
 
 interface SittingInput {
@@ -266,7 +445,7 @@ function sittingBase(input: SittingInput, link: MinutesLink | null): Omit<Persis
     jurisdiction: tenant.jurisdiction,
     startsAt: gridStartsAt(row, tenant.timeZone),
     sourceOrg: tenant.publishingOrg,
-    sourceUrl: row.detailHref ? onHost(row.detailHref, tenant.host) : null,
+    sourceUrl: row.detailHref ? onPortal(row.detailHref, tenant.host) : null,
     publication: publicationFromRow(row, tenant, link, input.observedAt),
     agenda: [],
     rollCalls: [],
@@ -295,7 +474,7 @@ export function notYetPublishedSitting(input: SittingInput): PersistedSittingOut
       `${input.tenant.publishingOrg} has not published minutes for this sitting yet: the portal's ` +
       `minutes cell read "${cell}" at ${input.observedAt}. Its decisions are not yet in the public ` +
       "record we read. That is not a record that nothing was decided.",
-    minutesPointer: pointerFromLink(null, input.row, input.tenant.host, "The portal links no minutes for this sitting yet."),
+    minutesPointer: pointerFromLink(null, input.row, "The portal links no minutes for this sitting yet."),
     outcomes: [],
     routesWalked: ["INSITE_CALENDAR"],
   };
@@ -311,7 +490,7 @@ export function failedMinutesSitting(
     extractionNote:
       `The minutes request for this sitting failed: ${input.error}. Nothing is claimed about what ` +
       "the sitting decided; the read is retryable and stays open.",
-    minutesPointer: pointerFromLink(input.link, input.row, input.tenant.host, "The read of this minutes document failed; it stays owed."),
+    minutesPointer: pointerFromLink(input.link, input.row, "The read of this minutes document failed; it stays owed."),
     outcomes: [],
     routesWalked: ["INSITE_CALENDAR"],
   };
@@ -339,7 +518,7 @@ export function minutesSitting(
 ): { readonly sitting: PersistedSittingOutcomes; readonly parsed: ParsedCouncilMinutes | null } {
   const { document } = input;
   const base = sittingBase(input, document.link);
-  const pointer = pointerFromLink(document.link, input.row, input.tenant.host, "Read by the InSite minutes route; see minutesDocument.");
+  const pointer = pointerFromLink(document.link, input.row, "Read by the InSite minutes route; see minutesDocument.");
   if (document.unreadable !== null) {
     return {
       parsed: null,
@@ -384,11 +563,12 @@ export function minutesSitting(
     approves: approvalItem?.sittings ?? [],
     approvesQuote: approvalItem ? `${approvalItem.consent ? "*" : ""}${approvalItem.itemReference}. ${approvalItem.quote}` : null,
     approvalCarried,
+    parserRevision: MINUTES_PARSER_REVISION,
   };
 
   const empty = outcomes.length === 0;
   const unread = parsed.unreadMotions.length > 0
-    ? ` ${parsed.unreadMotions.length} passage(s) beginning "It was moved" were not in the clerk's usual form and were not read: ` +
+    ? ` ${parsed.unreadMotions.length} passage(s) beginning "It was moved" ${UNREAD_PASSAGES_PHRASE}: ` +
       parsed.unreadMotions.map((passage) => `"${passage}"`).join("; ")
     : "";
   if (empty && !parsed.statesNoFormalAction) {

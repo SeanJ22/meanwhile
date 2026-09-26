@@ -68,9 +68,9 @@ test("THE PERMISSION-IS-NOT-TRANSPORT TEST — client A fails, client B reads, n
   assert.notEqual(a.permission, "DISALLOWED");
 
   const gateA = mayWalk(a);
-  assert.equal(gateA.allowed, false, "it still fails SAFE for the route (RULING 148)");
-  assert.equal(gateA.recheck, true, "and it stays on the recheck clock, unlike a real disallow");
-  assert.match(gateA.reason, /asserts nothing about the host or the fact/);
+  assert.equal(gateA.allowed, true, "an unread robots.txt is recorded and never blocks (owner decision 2026-09-25)");
+  assert.equal(gateA.recheck, true, "and it stays on the recheck clock");
+  assert.match(gateA.reason, /recorded as unread, and not blocking/);
 
   // Supplying a verdict for a document that was never retrieved is refused
   // outright, because the collapse is one line of plausible code.
@@ -98,8 +98,8 @@ test("THE PERMISSION-IS-NOT-TRANSPORT TEST — client A fails, client B reads, n
   assert.equal(b.permission, "ALLOWED");
   assert.equal(mayWalk(b).allowed, true, "escalating the client recovered the host");
 
-  // And a genuine disallow is a different thing from an unread one: it is NOT
-  // re-walked on a clock, because re-walking is asking again after being told no.
+  // A genuine disallow is still a different RECORD from an unread one, and
+  // neither blocks: robots.txt is recorded, not blocking (owner decision 2026-09-25).
   const disallowed = recordPermissionRead({
     host: "search.example",
     transport: "REACHABLE",
@@ -107,7 +107,14 @@ test("THE PERMISSION-IS-NOT-TRANSPORT TEST — client A fails, client B reads, n
     checkedOn: "2026-08-26",
     verdictFromDocument: "DISALLOWED",
   });
-  assert.equal(mayWalk(disallowed).recheck, false);
+  assert.equal(disallowed.permission, "DISALLOWED", "the disallow is recorded as read");
+  assert.equal(mayWalk(disallowed).allowed, true, "and does not block the walk");
+  assert.match(mayWalk(disallowed).reason, /recorded, and not blocking/);
+
+  // What does block is an access control: a challenge in front of the rules is a wall, never bypassed.
+  const challenged = recordPermissionRead({ host: "waf.example", transport: "CHALLENGED", client: "node-fetch", checkedOn: "2026-09-25", failure: "Cloudflare managed challenge" });
+  assert.equal(mayWalk(challenged).allowed, false, "a challenge is an access control");
+  assert.match(mayWalk(challenged).reason, /never bypassed/);
 });
 
 test("a workstream recording a permission verdict without a successful read fails validation", () => {
@@ -127,7 +134,7 @@ test("a workstream recording a permission verdict without a successful read fail
   assert.ok(validateWorkstream(w, NOW).some((i) => i.rule === "transport-became-permission"));
 });
 
-test("an unread permission keeps the workstream OPEN and never reads as absence", () => {
+test("a robots read answered by a challenge (an access control) keeps the workstream OPEN and never reads as absence", () => {
   const w = ws({
     permissions: [
       recordPermissionRead({ host: "h", transport: "CHALLENGED", client: "c", checkedOn: "2026-08-26", failure: "captcha" }),
@@ -135,7 +142,7 @@ test("an unread permission keeps the workstream OPEN and never reads as absence"
   });
   const v = completion(w, NOW);
   assert.equal(v.workstream, "OPEN");
-  assert.ok(v.blockedBy.some((b) => /permission unread/.test(b)));
+  assert.ok(v.blockedBy.some((b) => /walling this client by an access control/.test(b)));
 });
 
 /* ------------------------------------------------------- THE LEAD-IS-NOT-A-BODY TEST */

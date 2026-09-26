@@ -89,7 +89,7 @@ export const FIRST_PARTY_ROUTES = [
   "INSITE_MEETING_DETAIL",
   /** The body's OWN site: the Clerk of the Board's schedule table. */
   "CLERK_SCHEDULE_PAGE",
-  /** `{tenant}.granicus.com/ViewPublisher.php` — see `GRANICUS_LIVE_PROCEEDINGS_WALL`. */
+  /** `{tenant}.granicus.com/ViewPublisher.php` — see `GRANICUS_LIVE_PROCEEDINGS_ROUTE`. */
   "GRANICUS_VIEW_PUBLISHER",
 ] as const;
 
@@ -101,16 +101,22 @@ export type FirstPartyRoute = (typeof FIRST_PARTY_ROUTES)[number];
  * The five states are five different facts and the product breaks if any two
  * are pooled. `PUBLISHER_STATED_EMPTY` is the only one that licenses a zero:
  * it means the page rendered its grid and said **"No records were found."**
- * `NOT_RETRIEVED` with zero rows is a wall wearing a zero, and
- * `PERMISSION_DISALLOWED` is a fact about US that says nothing whatever about
- * the record behind it.
+ * `NOT_RETRIEVED` with zero rows is a wall wearing a zero, and `NOT_BUILT` —
+ * no adapter reads the route yet, so nothing was asked — is a fact about US
+ * that says nothing whatever about the record behind it.
+ *
+ * `NOT_BUILT` replaced `PERMISSION_DISALLOWED` on 2026-09-25: robots.txt is
+ * recorded and blocks nothing since the owner decision of that day, so a
+ * route nobody reads is unbuilt, not forbidden. Route observations are never
+ * stored (they are dropped at the composite boundary), so no record carries
+ * the old member.
  */
 export type EnumerationState =
   | "COMPLETE_AS_OBSERVED"
   | "INCOMPLETE"
   | "PUBLISHER_STATED_EMPTY"
   | "NOT_RETRIEVED"
-  | "PERMISSION_DISALLOWED";
+  | "NOT_BUILT";
 
 /** One future sitting, as ONE route published it. */
 export interface RouteInstance {
@@ -278,10 +284,13 @@ export function intersectionOfRoutes(
  * Why a union instance is not in front of a reader — or that it is.
  *
  * Every verdict names WHOSE fact it is. `BEYOND_APP_SERVING_HORIZON` is a fact
- * about this application; `CANCELED_BY_PUBLISHER` is a fact about the body;
- * `ROUTE_DISALLOWED` is a fact about our permission and about nothing else.
+ * about this application; `CANCELED_BY_PUBLISHER` is a fact about the body.
  * `CLAUDE.md` requires a null to render as its NAMED GAP with whose gap it is,
- * and a verdict that blurred the three would make that impossible upstream.
+ * and a verdict that blurred the two would make that impossible upstream.
+ *
+ * A `ROUTE_DISALLOWED` verdict (robots.txt reads `Disallow: /`) existed until
+ * 2026-09-25 and was never given to any instance. Since the owner decision of
+ * that day robots.txt blocks nothing, so it is gone.
  */
 export type DispositionVerdict =
   /** It reaches the reader. The only verdict that is not a gap. */
@@ -327,9 +336,7 @@ export type DispositionVerdict =
    * disposition carries `missingForPlacement`, naming the exact fields that
    * would let it be placed.
    */
-  | "PUBLISHED_BUT_UNPLACED_BY_US"
-  /** OURS, and a permission fact: the route publishes `Disallow: /`. */
-  | "ROUTE_DISALLOWED";
+  | "PUBLISHED_BUT_UNPLACED_BY_US";
 
 /**
  * **THE ROUTES THIS ADAPTER CAN ACTUALLY TURN INTO A `Meeting`.**
@@ -440,10 +447,10 @@ export interface DispositionEvidence {
  * A disposition is DATA, and it is the only permitted alternative to shipping
  * an instance.
  *
- * `claimAboutContent` is null wherever we are not entitled to a claim — most
- * importantly on `ROUTE_DISALLOWED`, where a permission refusal says nothing
- * about what is behind it (RULING 182). It is not optional and not omitted: an
- * absent field reads as an oversight, a present null reads as a decision.
+ * `claimAboutContent` is null wherever we are not entitled to a claim — a
+ * route nobody read says nothing about what is behind it (RULING 182). It is
+ * not optional and not omitted: an absent field reads as an oversight, a
+ * present null reads as a decision.
  */
 export interface InstanceDisposition {
   key: string;
@@ -487,8 +494,7 @@ export interface InstanceDisposition {
  * `NOT_THE_WIRED_BODY` are facts about the publisher and nothing is owed.
  * `BEYOND_APP_SERVING_HORIZON` is collected and keyed — held, not missing.
  * `SUPERSEDED_BY_RICHER_ROUTE` means the sitting IS served, under the
- * identity `supersededBy` names. `ROUTE_DISALLOWED` is a permission wall and
- * the obligation lives on the permission ladder, not here.
+ * identity `supersededBy` names.
  *
  * The rest are ours and are open.
  */
@@ -535,47 +541,55 @@ export function unaccounted(
 }
 
 /**
- * **A PERMISSION WALL, RECORDED SO IT IS NEVER RE-WALKED ON A CLOCK.**
+ * **A ROUTE NOBODY HAS BUILT YET, WITH ITS ROBOTS.TXT READING KEPT AS EVIDENCE.**
  *
  * `pima.granicus.com/robots.txt` publishes `User-agent: * / Disallow: /` —
- * read 2026-08-28. Its "Live Proceedings" / `ViewPublisher.php` surface is
- * therefore not retrieved by this adapter or by anything else in this
- * repository, at any rung, including on the recheck cadence that transport
- * walls get.
+ * read 2026-08-28 and again 2026-09-25. Until 2026-09-25 that reading walled
+ * the "Live Proceedings" / `ViewPublisher.php` surface off from every rung,
+ * and no adapter for it was ever written. Since the owner decision of
+ * 2026-09-25 ("Robots.txt alone must not block acquisition") the reading is
+ * recorded and blocks nothing, so the true state is ours: the route is not
+ * built, and each run's observation of it retrieves nothing.
  *
  * Pima's own site links to it — `www.pima.gov/2312/Clerk-of-the-Board` renders
  * `http://pima.granicus.com/ViewPublisher.php?view_id=3` — so we know it
- * exists, that the county treats it as a publication surface, and that it is
- * out of reach. **No claim whatever is made about what it holds**: not that it
- * duplicates the portal, not that it adds nothing, not that it is empty. A
- * disallow is a rule about US.
+ * exists and that the county treats it as a publication surface. A research
+ * read on 2026-09-25 (through the robots-first research fetch) answered HTTP
+ * 200 text/html after a 308 to https, listing upcoming Board of Supervisors
+ * sittings, and the page links an RSS feed (`ViewPublisherRSS.php`). That read
+ * is why the route is worth building; it is not this adapter's observation,
+ * so the run's observation still makes **no claim about what the route
+ * holds**: not that it duplicates the portal, not that it adds nothing, not
+ * that it is empty.
  *
- * It is not a dead end either. A records request, an agreement with the vendor,
- * or a feed the county publishes itself are all still open, and the fourteen
- * instances this workstream owes a reader are all obtainable from routes that
- * permit us — which is why nothing here depends on it.
+ * The fourteen instances this workstream owes a reader are all obtainable from
+ * routes this adapter already reads, which is why nothing here depends on it.
  */
-export const GRANICUS_LIVE_PROCEEDINGS_WALL = {
+export const GRANICUS_LIVE_PROCEEDINGS_ROUTE = {
   host: "pima.granicus.com",
+  /** The host's robots.txt, as read: recorded evidence, not a block. */
   rule: "User-agent: * / Disallow: /",
   readAt: "2026-08-28",
-  state: "PERMISSION_DISALLOWED" as const,
-  /** Where we learned the surface exists, without fetching it. */
+  /** Since the owner decision of 2026-09-25 robots.txt blocks no public page. */
+  robotsBlocks: false as const,
+  /** OURS: no adapter reads this route yet. */
+  state: "NOT_BUILT" as const,
+  /** Where we learned the surface exists. */
   linkedFrom: "https://www.pima.gov/2312/Clerk-of-the-Board",
   linkedUrl: "http://pima.granicus.com/ViewPublisher.php?view_id=3",
   /** Deliberately empty of any statement about the content behind it. */
   claimAboutContent: null,
 };
 
-/** The wall as a route observation, so it appears in the per-route table as a wall. */
-export function granicusWallObservation(): RouteObservation {
+/** The unbuilt route as a route observation, so it appears in the per-route table as ours to build. */
+export function granicusRouteObservation(): RouteObservation {
   return {
     route: "GRANICUS_VIEW_PUBLISHER",
-    mechanism: GRANICUS_LIVE_PROCEEDINGS_WALL.linkedUrl,
-    observedAt: GRANICUS_LIVE_PROCEEDINGS_WALL.readAt,
-    enumeration: "PERMISSION_DISALLOWED",
+    mechanism: GRANICUS_LIVE_PROCEEDINGS_ROUTE.linkedUrl,
+    observedAt: GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt,
+    enumeration: "NOT_BUILT",
     // Not zero-as-measured. Zero is what we RETRIEVED, and we retrieved nothing
-    // because we are not permitted to ask. The counts are the honest report of
+    // because no adapter reads this route. The counts are the honest report of
     // our own action; they are not a statement about the route's contents.
     rawFutureCount: 0,
     uniqueFutureCount: 0,
@@ -583,10 +597,11 @@ export function granicusWallObservation(): RouteObservation {
     latest: null,
     instances: [],
     note:
-      `${GRANICUS_LIVE_PROCEEDINGS_WALL.host}/robots.txt publishes ` +
-      `"${GRANICUS_LIVE_PROCEEDINGS_WALL.rule}" (read ${GRANICUS_LIVE_PROCEEDINGS_WALL.readAt}). ` +
-      "NOT FETCHED AT ANY RUNG. This states our permission and makes NO claim " +
-      "about what the route publishes.",
+      "NOT BUILT: no adapter reads this route yet, so nothing was retrieved and the zero " +
+      `is ours. ${GRANICUS_LIVE_PROCEEDINGS_ROUTE.host}/robots.txt publishes ` +
+      `"${GRANICUS_LIVE_PROCEEDINGS_ROUTE.rule}" (read ${GRANICUS_LIVE_PROCEEDINGS_ROUTE.readAt}): ` +
+      "recorded, and not blocking since the owner decision of 2026-09-25. NO claim is " +
+      "made about what the route publishes.",
   };
 }
 

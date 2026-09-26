@@ -691,10 +691,18 @@ export function outcomeEvidenceFor(
       records: [],
       sittings,
       refused: [],
-      gap:
-        "Our retrieval of that sitting's agenda items returned nothing, which is a " +
-        "failed retrieval on our side and not a meeting with nothing on it. It is " +
-        "retryable and it has not been retried yet.",
+      /*
+       * A minutes read held as a failed extraction (2026-09-25) is ours in its
+       * own words: the minutes were read and we could not find the decisions in
+       * them, and they are read again when the document or our reading changes.
+       */
+      gap: sittings.every((s) => isMinutesRouteSitting(s) && s.failedMinutesRead !== undefined)
+        ? "We read that sitting's minutes and could not find in them what was decided. That is a " +
+          "failed reading on our side, not a meeting where nothing was decided. We read the minutes " +
+          "again when the document changes or our reading of it improves."
+        : "Our retrieval of that sitting's agenda items returned nothing, which is a " +
+          "failed retrieval on our side and not a meeting with nothing on it. It is " +
+          "retryable and it has not been retried yet.",
       openFailures,
     };
   }
@@ -713,7 +721,8 @@ export function outcomeEvidenceFor(
    * Minutes read, and they record no motion because — in their own words — no
    * formal action was taken (a study or strategic planning session). That is a
    * fact about the body, read off its record; any other empty minutes read
-   * was refused as a failed extraction before it could reach this store.
+   * reaches this store only as a held failed extraction (`ZERO_ROWS_FAILED`),
+   * answered above, never as RETRIEVED.
    */
   if (
     held.length === 0 &&

@@ -2,27 +2,20 @@
  * **A GENERAL WEB INDEX THIS PROJECT MAY WALK.**
  * (The final pass, 2026-08-25.)
  *
- * ## THE FIRST QUESTION IS PERMISSION, NOT REACHABILITY
+ * ## ROBOTS.TXT IS RECORDED; AN ACCESS CONTROL IS WHAT KEEPS AN ENGINE OUT
  *
  * This module was first written with Mojeek and Brave in the pool, because both
- * answered and both passed a control query. **Both carry `Disallow: /search` in
- * their `robots.txt`, and `/search` is exactly the path a query goes to.** They
- * were removed the same session, and the reason is recorded rather than the
- * removal being quietly made.
+ * answered and both passed a control query. Both carry `Disallow: /search` in
+ * their `robots.txt`, and from 2026-08-25 that line alone kept them out.
  *
- * `CLAUDE.md` names four limits on an otherwise unrestricted mandate, and one of
- * them is that an access control is never circumvented. RULING 52 says the same
- * thing in the tree's vocabulary: *a `robots.txt` disallow gets a COMPLIANT
- * ROUTE to the same information.* And the 2026-08-24 session had already
- * recorded both hosts in `docs/sources.md` as **not walked at any rung** for
- * precisely this reason — the record was right and a later session walked them
- * anyway.
- *
- * **A HOST THAT DISALLOWS IS NOT A WALL, AND THE TWO MUST NEVER BE RECORDED
- * ALIKE.** A wall is a host refusing us; a disallow is a host telling us not to
- * ask. A wall expires and is re-walked on its cadence (RULING 53). A disallow is
- * honoured until the host changes it, and re-testing it on a clock would be
- * asking the same question after being told no.
+ * **Since the owner decision of 2026-09-25 it does not.** "Robots.txt alone must
+ * not block acquisition." Each engine's robots reading is still recorded, and an
+ * engine is excluded only for a reason that is not a robots line: an access
+ * control on the query page (a CAPTCHA, a challenge, a 403, a 429 — never
+ * solved, evaded or pushed through), or an answer that fails the control.
+ * Re-measured 2026-09-25 through the research fetch: Mojeek now answers its
+ * query path with a CAPTCHA page, and Brave with HTTP 429. Both stay out, as
+ * WALLED, and a wall is re-measured on its cadence.
  *
  * ## What was measured, and on what date
  *
@@ -64,7 +57,7 @@ export interface SearchEngine {
   index: string;
   /** The literal URL for a query. */
   url: (query: string) => string;
-  /** The `robots.txt` line that permits the path this uses, quoted. */
+  /** The `robots.txt` reading for the path this uses, quoted and dated. Recorded evidence, never a gate. */
   robots: string;
   /**
    * A status that means REFUSED rather than answered.
@@ -85,11 +78,9 @@ export const SEARCH_POOL: readonly SearchEngine[] = [
   },
 ];
 
-/** Why a host is not in the pool. The two reasons are not the same reason. */
+/** Why a host is not in the pool. Never a robots.txt line alone (owner decision 2026-09-25). */
 export type ExclusionKind =
-  /** Its `robots.txt` disallows the path a query uses. Honoured, never retested on a clock. */
-  | "DISALLOWED"
-  /** It refuses us, or answers with something that is not a result set. Expires under RULING 53. */
+  /** An access control answers the query (a CAPTCHA, a challenge, a 403, a 429), or something that is not a result set. Re-measured on its cadence; never bypassed. */
   | "WALLED"
   /** It answers, and its answer is indistinguishable from its answer to an impossible query. */
   | "FAILS_CONTROL";
@@ -97,10 +88,10 @@ export type ExclusionKind =
 /**
  * Engines measured and NOT in the pool, kept here rather than deleted.
  *
- * A route that stops working keeps its id with a dated note (RULING 61), and a
- * route that was never permitted is worth as much: the next session that thinks
- * of Mojeek can see it was considered, on what date, and that the answer was a
- * `Disallow` rather than a wall — which is a decision, not an obstacle.
+ * A route that stops working keeps its id with a dated note, so the next
+ * session that thinks of Mojeek can see it was considered, on what date, and
+ * what actually keeps it out. Each engine's robots.txt line is recorded in its
+ * reason as evidence; it is never the reason.
  */
 export const SEARCH_POOL_EXCLUDED: ReadonlyArray<{
   id: string;
@@ -110,27 +101,27 @@ export const SEARCH_POOL_EXCLUDED: ReadonlyArray<{
 }> = [
   {
     id: "mojeek",
-    kind: "DISALLOWED",
-    measuredOn: "2026-08-25",
-    why: "`https://www.mojeek.com/robots.txt` carries `User-agent: *` / `Disallow: /search`, and `/search` is the query path. It ANSWERS — 200, naming the subject 44 times, control 11,420 B — which is exactly why the record has to say DISALLOWED rather than walled: the host is not refusing us, it is telling us not to ask, and those get opposite treatment.",
+    kind: "WALLED",
+    measuredOn: "2026-09-25",
+    why: "An access control: re-measured 2026-09-25 through the research fetch, the query path `/search?q=` answered HTTP 200 with a CAPTCHA page (5,513 B, `<title>Captcha</title>`, \"JavaScript is required to complete this challenge\"), which is never solved or evaded. Its robots.txt `Disallow: /search` is recorded and is not the reason (owner decision 2026-09-25). On 2026-08-25 it had answered a real result page.",
   },
   {
     id: "brave",
-    kind: "DISALLOWED",
-    measuredOn: "2026-08-25",
-    why: "`https://search.brave.com/robots.txt` allows `/search?conversation=` and then `Disallow: /search`. A plain web query is the disallowed form.",
+    kind: "WALLED",
+    measuredOn: "2026-09-25",
+    why: "An access control: re-measured 2026-09-25 through the research fetch, `search.brave.com/search?q=` answered HTTP 429 (73,966 B) — a rate limit, honoured and never pushed through. Its robots.txt `Disallow: /search` is recorded and is not the reason. The same index reaches the project through the paid Brave API, under Admin's spending controls and the paid-research pause.",
   },
   {
     id: "ecosia",
-    kind: "DISALLOWED",
+    kind: "WALLED",
     measuredOn: "2026-08-25",
-    why: "`Disallow: /search`, and it answered 403 to this client besides. Either alone is sufficient.",
+    why: "An access control: it answered HTTP 403 to this client (2026-08-25). Its robots.txt `Disallow: /search` is recorded and is not the reason.",
   },
   {
     id: "startpage",
-    kind: "DISALLOWED",
+    kind: "FAILS_CONTROL",
     measuredOn: "2026-08-25",
-    why: "`Disallow: /sp/`, which is the query path. It also returned BYTE-IDENTICAL bodies (22,098 B) for a real query and for an identifier that cannot exist — a JavaScript shell — so it would have failed the control too.",
+    why: "It returned BYTE-IDENTICAL bodies (22,098 B) for a real query and for an identifier that cannot exist — a JavaScript shell — so it fails the control. Its robots.txt `Disallow: /sp/` is recorded and is not the reason.",
   },
   {
     id: "searx-be",

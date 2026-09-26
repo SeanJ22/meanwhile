@@ -9,9 +9,12 @@
  *
  * ## What this is NOT
  *
- * It is not a way around a refusal. **Compliance is decided before the rung
- * ladder starts**, by reading each host's own `robots.txt`, and a host that
- * disallows its search path is not walked at any rung. Measured 2026-08-24:
+ * It is not a way around a refusal. Each host's own `robots.txt` is read and
+ * recorded before the rung ladder starts. (Until the owner decision of
+ * 2026-09-25 a host that disallowed its search path was not walked at any rung;
+ * robots.txt alone no longer blocks, and the engines below that stay out are
+ * kept out by access controls — see `SEARCH_POOL_EXCLUDED` in
+ * `lib/hunt/search-pool.ts`, re-measured 2026-09-25.) Measured 2026-08-24:
  *
  * | host | `User-agent: *` says | walkable |
  * |---|---|---|
@@ -40,7 +43,7 @@
  */
 
 import { launchGuarded } from "./browser.mts";
-import { browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
+import { sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 
 const PROBE_QUERIES = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const QUERIES = PROBE_QUERIES.length > 0 ? PROBE_QUERIES : ['"Gary Kapner" Mendham 2026'];
@@ -97,7 +100,7 @@ for (const q of QUERIES) {
   /* Rung 3 — the full browser header set. */
   try {
     const r = await fetch(url, {
-      headers: { ...browserProfileHeaders(), "User-Agent": sourceUserAgent() },
+      headers: sourceRequestHeaders("text/html,application/xhtml+xml,*/*;q=0.8"),
       signal: AbortSignal.timeout(30_000),
     });
     const t = await r.text();
@@ -160,7 +163,7 @@ for (const q of QUERIES) {
   }
 }
 
-console.log(`search:rung · ${QUERIES.length} quer(y|ies) · compliance decided from each host's own robots.txt\n`);
+console.log(`search:rung · ${QUERIES.length} quer(y|ies) · each host's robots.txt read and recorded\n`);
 for (const r of results) {
   console.log(
     `  ${r.rung.padEnd(22)} ${r.host.padEnd(22)} ${String(r.status).padStart(7)}  ${String(r.bytes).padStart(8)} B  ` +

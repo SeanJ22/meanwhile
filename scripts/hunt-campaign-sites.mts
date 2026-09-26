@@ -59,7 +59,7 @@ import {
   verdictFor,
 } from "../lib/hunt/candidate-evidence.ts";
 import { ControlledProbe, type ProbeOutcome } from "../lib/hunt/control-query.ts";
-import { browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
+import { sourceRequestHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 import { conserve } from "../lib/sources/normalize-account.ts";
 import { today } from "./doc-dates.mjs";
 
@@ -557,7 +557,7 @@ async function get(url: string, publisher: string): Promise<SourcePage> {
   let page: SourcePage;
   try {
     const res = await fetch(url, {
-      headers: { ...browserProfileHeaders(), "User-Agent": sourceUserAgent() },
+      headers: sourceRequestHeaders("text/html,application/xhtml+xml,*/*;q=0.8"),
       redirect: "follow",
       signal: AbortSignal.timeout(30_000),
     });
@@ -921,7 +921,7 @@ const probe = new ControlledProbe(async (url) => {
   let result: { status: number; length: number };
   try {
     const res = await fetch(url, {
-      headers: { ...browserProfileHeaders(), "User-Agent": sourceUserAgent() },
+      headers: sourceRequestHeaders("text/html,application/xhtml+xml,*/*;q=0.8"),
       redirect: "follow",
       signal: AbortSignal.timeout(30_000),
     });

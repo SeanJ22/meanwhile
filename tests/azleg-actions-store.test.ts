@@ -240,7 +240,7 @@ test("DENOMINATOR: the legislative half states what it did NOT reach", () => {
   );
 });
 
-test("PERMISSION: apps.azleg.gov is named as disallowed and appears in no fetched URL", () => {
+test("ROBOTS RECORDED: apps.azleg.gov's Disallow is recorded as read, and every row cites the document actually read", () => {
   const leg = store.legislative!;
   // `[\s\S]` rather than the dotAll flag: `s` needs an es2018 target and this
   // tsconfig is below it, so the flag is a build error rather than a nicety.
@@ -250,7 +250,7 @@ test("PERMISSION: apps.azleg.gov is named as disallowed and appears in no fetche
     for (const url of [action.sourceUrl, action.documentUrl ?? ""]) {
       assert.ok(
         !url.includes("apps.azleg.gov"),
-        `${action.id} carries a URL on a host that disallows every automated client: ${url}`,
+        `${action.id} cites ${url}; no adapter reads apps.azleg.gov, so a row citing it cites something nothing read`,
       );
     }
   }

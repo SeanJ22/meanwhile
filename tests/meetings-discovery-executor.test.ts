@@ -1,13 +1,16 @@
 /**
- * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR ASKS PERMISSION FIRST, EVERY HOST,
- * AND RECORDS EVERY WALK.** (2026-09-23.)
+ * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR READS ROBOTS.TXT FIRST, EVERY HOST,
+ * RECORDS IT, AND RECORDS EVERY WALK.** (2026-09-23; robots made a record
+ * rather than a refusal by the owner decision of 2026-09-25.)
  *
  * `lib/control-plane/discovery/meetings-discovery-executor.ts`, run against a
  * recorded fake transport; no test reaches the network. What these tests hold:
  *
- * - **Permission first.** robots.txt is the first request to every host. A
- *   DISALLOWED or CANNOT_TELL verdict, or a recorded wall, sends nothing more,
- *   and a redirect onto a refusing host is not followed.
+ * - **Robots first, recorded, never a refusal.** robots.txt is the first
+ *   request to every host and its verdict is recorded on every step. A
+ *   DISALLOWED or CANNOT_TELL verdict never stops the walk; a recorded wall
+ *   sends nothing, and a 429 is honoured. Only an access control (a recorded
+ *   wall, or the site's own 401, 403 or 429) makes a walk BLOCKED.
  * - **Evidence to find.** A route the homepage links is requested and confirmed
  *   by content; its bytes are vaulted with the walk's own identity; a vendor we
  *   cannot read is a lead and is never requested.
@@ -121,24 +124,49 @@ test("FOUND: robots first, then the homepage, then the route it links; confirmed
   });
 });
 
-test("PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall", async () => {
+test("ROBOTS RECORDED, NOT BLOCKING: a disallowing or unreadable robots.txt is recorded on the step and the public homepage is still read, on either origin (owner decision 2026-09-25)", async () => {
   const { open, seen } = fakeOpen({
     "https://www.benson.gov/robots.txt": DENY,
     "https://benson.gov/robots.txt": { status: 500, body: "oops" },
   });
   const attempt = await walkMeetingsDiscoveryNeed(need("az:city:city-of-benson", "www.benson.gov"), runtime(open));
-  assert.deepEqual(seen, ["https://www.benson.gov/robots.txt", "https://benson.gov/robots.txt"], "only robots.txt was ever requested");
+  assert.deepEqual(
+    seen,
+    ["https://www.benson.gov/robots.txt", "https://www.benson.gov/", "https://benson.gov/robots.txt", "https://benson.gov/"],
+    "each origin's robots.txt first, then its homepage",
+  );
   assert.deepEqual(
     attempt.steps.filter((s) => s.purpose === "homepage").map((s) => [s.url, s.permission, s.status]),
-    [["https://www.benson.gov/", "DISALLOWED", null], ["https://benson.gov/", "CANNOT_TELL", null]],
+    [["https://www.benson.gov/", "DISALLOWED", 404], ["https://benson.gov/", "CANNOT_TELL", 404]],
+    "the verdict travels on the step that was requested",
   );
-  assert.equal(attempt.outcome, "COULD_NOT_READ", "a 500 at robots.txt is a server failure, not the host refusing us");
+  assert.equal(attempt.outcome, "COULD_NOT_READ", "neither homepage answered; nothing refused us");
+
+  const read = fakeOpen({
+    "https://bisbee.gov/robots.txt": DENY,
+    "https://bisbee.gov/": { status: 200, body: `<a href="/m.ics">Meetings</a>` },
+    "https://bisbee.gov/m.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const found = await walkMeetingsDiscoveryNeed(need("az:city:city-of-bisbee", "bisbee.gov"), runtime(read.open));
+  assert.equal(found.outcome, "FOUND", "a route behind a Disallow: / is found and confirmed by content");
+  assert.deepEqual(found.found.map((f) => f.url), ["https://bisbee.gov/m.ics"]);
+  assert.ok(found.steps.filter((s) => s.purpose !== "robots").every((s) => s.permission === "DISALLOWED"), "and every request carries the recorded verdict");
 });
 
-test("WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door", async () => {
+test("WALL OR NOT: only an access control — a recorded wall, or the site's own 401/403/429 — makes a walk BLOCKED and teaches a dead door; robots.txt never does", async () => {
   const cases: [string, Readonly<Record<string, Reply>>, string][] = [
-    ["az:t:walled", { "https://walled.gov/robots.txt": { status: 403, body: "Forbidden" }, "https://www.walled.gov/robots.txt": { status: 429, body: "Too many" } }, "BLOCKED"],
-    ["az:t:closed", { "https://closed.gov/robots.txt": DENY, "https://www.closed.gov/robots.txt": { status: 401, body: "Auth" } }, "BLOCKED"],
+    ["az:t:walled", {
+      "https://walled.gov/robots.txt": { status: 403, body: "Forbidden" },
+      "https://walled.gov/": { status: 403, body: "Forbidden" },
+      "https://www.walled.gov/robots.txt": { status: 401, body: "Auth" },
+      "https://www.walled.gov/": { status: 401, body: "Auth" },
+    }, "BLOCKED"],
+    ["az:t:closed", {
+      "https://closed.gov/robots.txt": DENY,
+      "https://closed.gov/": { status: 200, body: "<html>Closed, AZ</html>" },
+      "https://www.closed.gov/robots.txt": DENY,
+    }, "NOTHING_DETECTED"],
+    ["az:t:limited", { "https://limited.gov/robots.txt": { status: 429, body: "Too many" }, "https://www.limited.gov/robots.txt": { status: 429, body: "Too many" } }, "COULD_NOT_READ"],
     ["az:t:gone", { "https://gone.gov/robots.txt": { transportError: "getaddrinfo ENOTFOUND gone.gov" }, "https://www.gone.gov/robots.txt": { transportError: "getaddrinfo ENOTFOUND www.gone.gov" } }, "COULD_NOT_READ"],
     ["az:t:erroring", { "https://erroring.gov/robots.txt": { status: 503, body: "down" }, "https://www.erroring.gov/robots.txt": { status: 502, body: "bad gateway" } }, "COULD_NOT_READ"],
     ["az:t:shell", { "https://shellrobots.gov/robots.txt": { status: 200, body: "<!DOCTYPE html><html>home</html>" }, "https://www.shellrobots.gov/robots.txt": { transportError: "ECONNRESET" } }, "COULD_NOT_READ"],
@@ -146,6 +174,7 @@ test("WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robot
       "https://waf.gov/robots.txt": ALLOW,
       "https://waf.gov/": { status: 403, body: "Access denied" },
       "https://www.waf.gov/robots.txt": { status: 301, location: "https://waf.gov/" },
+      "https://www.waf.gov/": { status: 301, location: "https://waf.gov/" },
     }, "BLOCKED"],
     ["az:t:missing", {
       "https://missing.gov/robots.txt": { status: 404 },
@@ -158,12 +187,14 @@ test("WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robot
     const { open, seen } = fakeOpen(map);
     const attempt = await walkMeetingsDiscoveryNeed(need(id, host), runtime(open));
     assert.equal(attempt.outcome, expected, `${id}: ${attempt.steps.filter((s) => s.purpose === "robots").map((s) => s.note).join(" | ")}`);
-    if (Object.keys(map).every((u) => u.endsWith("/robots.txt"))) {
-      assert.equal(seen.every((u) => u.endsWith("/robots.txt")), true, `${id}: nothing past robots.txt was requested`);
+    if (Object.keys(map).every((u) => u.endsWith("/robots.txt")) && id !== "az:t:limited") {
+      assert.ok(seen.some((u) => !u.endsWith("/robots.txt")), `${id}: an unread robots.txt does not stop the homepage request`);
     }
+    if (id === "az:t:limited") assert.equal(seen.every((u) => u.endsWith("/robots.txt")), true, `${id}: a 429 is honoured; nothing more is asked of the host`);
+    if (id === "az:t:closed") assert.ok(seen.includes("https://closed.gov/"), `${id}: a Disallow: / is recorded, and the homepage is read`);
     const deadDoors = discoveryFieldManualEntries(attempt).filter((e) => e.kind === "DEAD_DOOR");
     assert.equal(deadDoors.length, expected === "BLOCKED" ? 1 : 0, `${id}: a dead door is taught only for a wall`);
-    if (id === "az:t:waf") assert.match(deadDoors[0].summary, /refused this client (.*HTTP 403.*)/, "the dead door names what refused: the homepage's own 403");
+    if (id === "az:t:waf") assert.match(deadDoors[0].summary, /walled this client by an access control \(.*HTTP 403.*\)/, "the dead door names what walled it: the homepage's own 403");
   }
 });
 
@@ -187,7 +218,12 @@ test("ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309),
   for (let i = 1; i <= 5; i += 1) loopMap[`https://loop.gov/r${i}.txt`] = { status: 302, location: `https://loop.gov/r${i + 1}.txt` };
   const loop = fakeOpen(loopMap);
   const looped = await walkMeetingsDiscoveryNeed(need("az:t:loop", "loop.gov"), runtime(loop.open));
-  assert.deepEqual(loop.seen.filter((u) => u.startsWith("https://loop.gov/")), ["https://loop.gov/robots.txt", ...[1, 2, 3, 4, 5].map((i) => `https://loop.gov/r${i}.txt`)]);
+  assert.deepEqual(
+    loop.seen.filter((u) => u.startsWith("https://loop.gov/")),
+    ["https://loop.gov/robots.txt", ...[1, 2, 3, 4, 5].map((i) => `https://loop.gov/r${i}.txt`), "https://loop.gov/"],
+    "five redirects are followed, the chain is recorded CANNOT_TELL, and the homepage is still asked for",
+  );
+  assert.equal(looped.steps.find((s) => s.url === "https://loop.gov/")?.permission, "CANNOT_TELL");
   assert.equal(looped.outcome, "COULD_NOT_READ");
 
   /* A redirect to a private address is never followed. */
@@ -196,21 +232,55 @@ test("ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309),
     "https://www.priv.gov/robots.txt": { status: 302, location: "http://localhost/robots.txt" },
   });
   const refused = await walkMeetingsDiscoveryNeed(need("az:t:priv", "priv.gov"), runtime(priv.open));
-  assert.deepEqual(priv.seen, ["https://priv.gov/robots.txt", "https://www.priv.gov/robots.txt"]);
+  assert.deepEqual(
+    priv.seen,
+    ["https://priv.gov/robots.txt", "https://priv.gov/", "https://www.priv.gov/robots.txt", "https://www.priv.gov/"],
+    "the private hop is never taken; the unread rules are recorded and the public homepage is still asked for",
+  );
   assert.equal(refused.outcome, "COULD_NOT_READ");
 });
 
-test("REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed", async () => {
+test("REDIRECT: each hop reads and records its host's robots.txt first; a hop onto a disallowing host is followed, and a hop onto a recorded wall is not", async () => {
   const { open, seen } = fakeOpen({
     "https://oldtown.gov/robots.txt": ALLOW,
     "https://oldtown.gov/": { status: 301, location: "https://portal.vendor-cms.com/oldtown/" },
     "https://portal.vendor-cms.com/robots.txt": DENY,
-    "https://www.oldtown.gov/robots.txt": DENY,
+    "https://portal.vendor-cms.com/oldtown/": { status: 200, body: "<html>Oldtown council</html>" },
   });
   const attempt = await walkMeetingsDiscoveryNeed(need("az:town:oldtown", "oldtown.gov"), runtime(open));
-  assert.equal(seen.includes("https://portal.vendor-cms.com/oldtown/"), false, "the refusing host's page was never requested");
-  assert.ok(seen.indexOf("https://portal.vendor-cms.com/robots.txt") > seen.indexOf("https://oldtown.gov/"), "permission was asked on arrival at the new host");
-  assert.equal(attempt.outcome, "BLOCKED", "a homepage that redirects onto a refusing host is a wall");
+  assert.ok(seen.indexOf("https://portal.vendor-cms.com/robots.txt") > seen.indexOf("https://oldtown.gov/"), "robots.txt was read on arrival at the new host");
+  assert.ok(seen.indexOf("https://portal.vendor-cms.com/oldtown/") > seen.indexOf("https://portal.vendor-cms.com/robots.txt"), "and the page after it");
+  assert.equal(attempt.steps.find((s) => s.url === "https://portal.vendor-cms.com/oldtown/")?.permission, "DISALLOWED", "the verdict is recorded on the step");
+  assert.equal(attempt.outcome, "NOTHING_DETECTED", "a homepage read over a Disallow is a read, not a wall");
+
+  const walled = fakeOpen({
+    "https://newtown.gov/robots.txt": ALLOW,
+    "https://newtown.gov/": { status: 302, location: "https://go.boarddocs.com/az/newtown/Board.nsf/Public" },
+    "https://www.newtown.gov/robots.txt": ALLOW,
+  });
+  const blocked = await walkMeetingsDiscoveryNeed(need("az:town:newtown", "newtown.gov"), runtime(walled.open));
+  assert.equal(walled.seen.some((u) => u.includes("boarddocs.com")), false, "a recorded wall is never asked anything, not even through a redirect");
+  assert.equal(blocked.steps.find((s) => s.url.includes("boarddocs.com"))?.permission, "RECORDED_WALL");
+});
+
+test("A CHALLENGE AT 200 IS A WALL: the walk records the access control on the step, vaults the page as its evidence, never reads it as the homepage, and teaches a dead door", async () => {
+  const challenge = "<html><head><title>Just a moment...</title></head><body>Checking</body></html>";
+  const { open, seen } = fakeOpen({
+    "https://cftown.gov/robots.txt": ALLOW,
+    "https://cftown.gov/": { status: 200, body: challenge },
+    "https://www.cftown.gov/robots.txt": ALLOW,
+    "https://www.cftown.gov/": { status: 200, body: challenge },
+  });
+  const rt = runtime(open);
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:town:cftown", "cftown.gov"), rt);
+  assert.equal(attempt.outcome, "BLOCKED");
+  const home = attempt.steps.filter((s) => s.purpose === "homepage");
+  assert.ok(home.length > 0 && home.every((s) => /challenge/.test(s.accessControl ?? "")), JSON.stringify(home));
+  assert.ok(home.every((s) => s.artifactId !== null), "the challenge page is vaulted as the wall's evidence");
+  assert.equal(seen.filter((u) => u === "https://cftown.gov/").length, 1, "asked once, never re-sent");
+  const doors = discoveryFieldManualEntries(attempt).filter((e) => e.kind === "DEAD_DOOR");
+  assert.equal(doors.length, 1);
+  assert.match(doors[0].summary, /a bot challenge/);
 });
 
 test("WALL: a recorded wall is never requested, not even its robots.txt", async () => {
@@ -360,7 +430,9 @@ test("PASS: every walk is appended under its jurisdiction; a need not yet due is
       "https://found.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
       "https://found.gov/m.ics": { status: 200, body: ICS },
       "https://blocked.gov/robots.txt": DENY,
+      "https://blocked.gov/": { status: 403, body: "Forbidden" },
       "https://www.blocked.gov/robots.txt": DENY,
+      "https://www.blocked.gov/": { status: 403, body: "Forbidden" },
     });
     const needs = [
       need("az:a:found", "found.gov"),

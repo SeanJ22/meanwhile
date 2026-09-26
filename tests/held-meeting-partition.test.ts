@@ -37,7 +37,9 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { candidateForMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
 
 /*
- * A route retired for permission hands its body to a successor partition. The
+ * A retired route (Pima Community College's Diligent tenant, retired
+ * 2026-09-23 for robots.txt alone; it stays retired because its successor
+ * carries every sitting it did) hands its body to a successor partition. The
  * retired partition has no writer from the moment the change lands; until the
  * successor's first promotion its last promoted version is HELD — composed in
  * the successor's place and named on the successor's readback — and the first

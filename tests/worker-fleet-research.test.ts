@@ -4,6 +4,7 @@ import { defaultGrant } from "../lib/control-plane/capability.ts";
 import { recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { MemoryEvidenceStore, objectKey, putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
+import { carriesCredential } from "../lib/hunt/access-control.ts";
 import { buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { runAcquirer, type AcquirerWorkerInput, type VaultedResearchEvidence } from "../lib/control-plane/workers/acquirer.ts";
@@ -20,6 +21,7 @@ async function acquirerFixture(options: { body?: string; status?: number; robots
   const store = new MemoryEvidenceStore();
   const metadata = new Map<string, Artifact>();
   const seen: string[] = [];
+  const headers: Readonly<Record<string, string>>[] = [];
   const put = async (a: Artifact, body: string) => {
     await putArtifact(store, PROJECT, a, new TextEncoder().encode(body));
     // The immutable store retains original attribution on identical-byte retry.
@@ -43,8 +45,9 @@ async function acquirerFixture(options: { body?: string; status?: number; robots
     nextDueAt: NOW, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" }, route: null, providerId: null,
     attemptId: input.attemptId, workItemId: input.workItemId, routeTaskId: "rt-research", holder: "holder", vault: put,
     spaceOut: async () => {}, bound: RESEARCH_BOUNDS.perDispatch, now: input.now, inherited: { artifactIds: [], summary: "" },
-    openOne: async ({ url }) => {
+    openOne: async ({ url, headers: sent }) => {
       seen.push(url);
+      headers.push(sent);
       const robots = url.endsWith("/robots.txt");
       const body = robots ? options.robots ?? "User-agent: *\nDisallow:\n" : options.body ?? '[{"id":"official:clerk","name":"Clerk"}]';
       const error = robots ? null : options.error ?? null;
@@ -57,7 +60,7 @@ async function acquirerFixture(options: { body?: string; status?: number; robots
     assert.ok(held);
     return { artifact, key: held.key, bytes: held.bytes };
   };
-  return { input, runtime: { toolkit, readVault }, seen, store, metadata };
+  return { input, runtime: { toolkit, readVault }, seen, headers, store, metadata };
 }
 
 test("Hunter reuses shared permission/fetch/vault and an immutable retry keeps exact artifact identity without network", async () => {
@@ -90,13 +93,44 @@ test("Hunter capability and observed-route failures send no network request", as
   assert.deepEqual(f.seen, []);
 });
 
-test("Hunter records path permission denial separately from transport", async () => {
+test("Hunter records a robots.txt disallow separately from transport and still acquires the public path (owner decision 2026-09-25)", async () => {
   const f = await acquirerFixture({ robots: "User-agent: *\nDisallow: /records.json\n" });
   const r = await runAcquirer(f.input, f.runtime);
-  assert.equal(r.verdict, "BLOCKED");
-  assert.equal(r.blockers[0].code, "PERMISSION_DENIED");
-  assert.deepEqual(f.seen, [`${HOST}/robots.txt`]);
-  assert.equal(r.walkState.state, "OPEN");
+  assert.equal(r.verdict, "ACQUIRED", JSON.stringify(r.blockers));
+  assert.deepEqual(r.blockers, [], "robots.txt alone never blocks a public page");
+  assert.deepEqual(f.seen, [`${HOST}/robots.txt`, URL], "robots.txt is read FIRST, then the page");
+  const permissionStep = r.walk.find(s => s.rung === "permission");
+  assert.equal(permissionStep?.permission, "DISALLOWED", "the verdict is recorded on the walk");
+  assert.equal(permissionStep?.transport, "REACHABLE", "the robots read's transport is its own fact, apart from the verdict");
+  assert.equal(r.walk.at(-1)?.permission, "DISALLOWED", "the retrieval step carries the verdict it ran under");
+  assert.equal(r.walk.at(-1)?.outcome, "WALKED_AND_FOUND");
+  assert.equal(r.artifacts[0].transport, "REACHABLE");
+  /* A route whose recorded verdict is already DISALLOWED or CANNOT_TELL is walked as well: no pre-block, no "no request sent". */
+  for (const permission of ["DISALLOWED", "CANNOT_TELL"] as const) {
+    const g = await acquirerFixture();
+    const recorded = await runAcquirer({ ...g.input, route: { ...g.input.route, permission } }, g.runtime);
+    assert.equal(recorded.verdict, "ACQUIRED", `${permission}: ${JSON.stringify(recorded.blockers)}`);
+    assert.deepEqual(g.seen, [`${HOST}/robots.txt`, URL]);
+    assert.ok(!recorded.walk.some(s => /no request sent/.test(s.observed)), permission);
+  }
+});
+
+test("Hunter meets an access control as a wall: a 403, a bot challenge or a 429 blocks the route by name after one request, and no request carries a credential", async () => {
+  for (const [name, options] of [
+    ["403", { status: 403, body: "Forbidden" }],
+    ["challenge", { status: 200, body: "<html><head><title>Just a moment...</title></head><body>checking your browser</body></html>" }],
+    ["429", { status: 429, body: "slow down" }],
+  ] as const) {
+    const f = await acquirerFixture(options);
+    const r = await runAcquirer(f.input, f.runtime);
+    assert.equal(r.verdict, "BLOCKED", name);
+    assert.equal(r.blockers[0].code, name === "429" ? "RATE_LIMITED" : "PUBLISHER_AUTHENTICATION", name);
+    assert.equal(r.artifacts.length, 0, `${name}: nothing behind a wall is accepted as the record`);
+    assert.equal(f.seen.filter(u => u === URL).length, 1, `${name}: requested exactly once, never re-sent to push through`);
+    assert.equal(r.walkState.state, "OPEN", `${name}: another public route is still owed`);
+    assert.equal(f.headers.length, f.seen.length);
+    for (const h of f.headers) assert.equal(carriesCredential(h), false, `${name}: ${JSON.stringify(h)}`);
+  }
 });
 
 test("Hunter partial bytes, publisher zero rows, zero-byte read and transport failure remain distinct", async () => {

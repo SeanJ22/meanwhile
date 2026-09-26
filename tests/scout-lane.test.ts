@@ -41,7 +41,7 @@ import {
   type ModelTransport,
 } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { ArtifactProvenance, InheritedEvidence, ScoutToolkit, ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { MIN_DISTINCT_RUNGS, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { MIN_DISTINCT_RUNGS, classifyPriorRung, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   ceilingPermits,
@@ -888,6 +888,25 @@ test("12. SEEDED (RULING 243): a permission claim the record contradicts, a cita
   assert.deepEqual(earliest, []);
 });
 
+test("12b. robots.txt is RECORDED, never a refusal (owner decision 2026-09-25): a candidate citing a page retrieved under DISALLOWED or CANNOT_TELL is accepted, and the verdict is its machine-owned permission", () => {
+  const prov = new Map<string, ArtifactProvenance>([
+    ["art-d", { artifactId: "art-d", canonicalUrl: "https://a.gov/meetings", retrievedAt: NOW, permission: "DISALLOWED", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
+    ["art-c", { artifactId: "art-c", canonicalUrl: "https://c.gov/agendas", retrievedAt: NOW, permission: "CANNOT_TELL", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
+  ]);
+  const rungs = [{ index: 0, rung: "primary-site-navigation", tool: "fetch_public", target: "https://a.gov/meetings", observed: "HTTP 200", artifactIds: ["art-d"], note: null, at: NOW }];
+  const base = { rungs, toolCalls: 1, stoppedBy: "MODEL" as const, vaulted: new Set(["art-d", "art-c"]), inherited: new Set<string>(), machine: { provenance: prov, recordClass: "meetings" } };
+  const fin = (candidates: unknown[]) => ({ outcome: "ROUTE_CANDIDATE", rungsWalked: [{ index: 0, note: "n" }], candidates: candidates as never, findings: [], nextRungs: [], unverified: [], narrative: "n" });
+
+  const disallowed = validateScoutFinish({ ...base, finish: fin([candidateWith({ evidenceArtifactIds: ["art-d"], permission: "DISALLOWED" })]) });
+  assert.deepEqual(disallowed, [], "a public page read over a robots.txt disallow substantiates its route");
+  const cannotTell = validateScoutFinish({ ...base, finish: fin([candidateWith({ url: "https://c.gov/agendas", evidenceArtifactIds: ["art-c"], permission: "CANNOT_TELL" })]) });
+  assert.deepEqual(cannotTell, [], "an unread robots.txt does not disqualify a route either");
+  /* The verdict is still the machine's record: a claim that hides the disallow is refused as a disagreement, not for robots. */
+  const hidden = validateScoutFinish({ ...base, finish: fin([candidateWith({ evidenceArtifactIds: ["art-d"], permission: "ALLOWED" })]) });
+  assert.ok(hidden.some((i) => i.code === "SCOUT_PROVENANCE_DISAGREES" && /retrieved under DISALLOWED/.test(i.detail)), JSON.stringify(hidden));
+  assert.ok(!hidden.some((i) => i.code === "SCOUT_PROVENANCE_UNDERIVABLE"), "a DISALLOWED retrieval is never itself a refusal");
+});
+
 /* ================================================================== *
  * RULING 244 — the Worker Efficiency Law's five seeded failures
  * ================================================================== */
@@ -1074,6 +1093,66 @@ test("17. SEEDED (iv): a rung a prior Attempt recorded as durably FAILED is not 
   assert.match(brief, /FAILED, durable/);
   assert.match(brief, /NEXT RUNGS THE PRIOR INVESTIGATION NAMED[\s\S]*open-data-portal/);
   assert.match(brief, /Continue the ladder/);
+});
+
+test("17b. a rung a prior Attempt refused for robots.txt alone (before 2026-09-25) is re-walkable: never durable, labelled walkable in the brief, and it reaches the toolkit; an access-control wall stays durable", async () => {
+  assert.equal(classifyPriorRung({ observed: "permission DISALLOWED (Disallow: /w/); no request sent", ok: false }), "ROBOTS_ONLY");
+  assert.equal(classifyPriorRung({ observed: "permission CANNOT_TELL; no request sent", ok: false }), "ROBOTS_ONLY");
+  assert.equal(classifyPriorRung({ observed: "permission DISALLOWED; no request sent" }), "ROBOTS_ONLY", "a legacy rung with no `ok` is classified from its line");
+  assert.equal(classifyPriorRung({ observed: "robots.txt HTTP 403; permission CANNOT_TELL", tool: "read_permission" }), "NOT_A_FAILURE", "the robots read is a record, never a failure");
+  assert.equal(classifyPriorRung({ observed: "HTTP 403 (wall)", ok: false }), "DURABLE", "POSITIVE CONTROL: an access control stays durable");
+  assert.equal(classifyPriorRung({ observed: "HTTP 200 (CHALLENGE)", ok: false }), "DURABLE", "a bot challenge is an access control");
+  assert.equal(classifyPriorRung({ observed: "browser HTTP 429 (RATE_LIMIT)", ok: false }), "DURABLE");
+
+  const toolkit = fakeToolkit();
+  const inherited: InheritedEvidence = {
+    artifactIds: [],
+    summary: "prior",
+    priorRungs: [
+      { rung: "primary-site-navigation", tool: "fetch_public", target: "https://a.gov/w/meetings", observed: "permission DISALLOWED (Disallow: /w/); no request sent", ok: false, at: "2026-08-31T12:00:00.000Z", attemptId: "at-prior" },
+      { rung: "site-search-or-sitemap", tool: "fetch_public", target: "https://a.gov/walled", observed: "HTTP 403 (wall)", ok: false, at: "2026-08-31T12:00:00.000Z", attemptId: "at-prior" },
+    ],
+    nextRungs: ["open-data-portal"],
+  };
+  const transport = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/w/meetings", rung: "primary-site-navigation", why: "robots.txt no longer refuses a public page" })],
+    [toolUse("u2", "fetch_public", { url: "https://a.gov/walled", rung: "site-search-or-sitemap", why: "again" })],
+    [finish("f", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "a" }], candidates: [candidateWith({ url: "https://a.gov/w/meetings", evidenceArtifactIds: ["art-1"] })] })],
+  ]);
+  const { exec, results } = executorWith(transport, toolkit, { inherited });
+  const { result } = await dispatchScout(exec);
+  assert.equal(result.outcome, "WORKED", result.detail);
+  assert.deepEqual(toolkit.calls, ["fetch_public"], "the robots-only rung was walked; the access-control wall was not");
+  assert.deepEqual(results[0].guardRefusals?.map((g) => [g.kind, g.target]), [["RE_WALK", "https://a.gov/walled"]]);
+  const brief = (transport.requests[0].messages[0].content as { text: string }[])[0].text;
+  assert.match(brief, /a\.gov\/w\/meetings[^\n]*refused for robots\.txt alone before 2026-09-25; not a wall, walk it/);
+  assert.match(brief, /a\.gov\/walled[^\n]*FAILED, durable/);
+  const system = JSON.stringify(transport.requests[0].system);
+  assert.match(system, /robots\.txt is different: the tools read and record it automatically, and it never refuses a public page \(an owner decision\)/);
+  assert.match(system, /Never bypass an access control/);
+  assert.doesNotMatch(system, /The tools refuse disallowed and cannot-tell hosts/);
+});
+
+test("17c. a BLOCKED Scout means an access control: its disposition's permission is the recorded robots verdict, never read off a DISALLOWED line", () => {
+  const rungs = [
+    { index: 0, rung: "primary-site-navigation", tool: "fetch_public", target: "https://a.gov/x", observed: "HTTP 403 (wall)", artifactIds: ["art-1"], note: null, at: NOW, ok: false, permission: "ALLOWED" as const },
+    { index: 1, rung: "other:legacy", tool: "fetch_public", target: "https://a.gov/w/y", observed: "permission DISALLOWED (Disallow: /w/); no request sent", artifactIds: [], note: null, at: NOW, ok: false },
+  ];
+  const base = { candidates: [], findings: [], rungs, narrative: "n", methodCandidateIds: [] };
+  const blocked = dispositionForScout({ ...base, outcome: "BLOCKED" });
+  assert.equal(blocked?.disposition, "BLOCKED_CURRENTLY");
+  assert.equal(blocked?.transport, "CHALLENGED");
+  assert.equal(blocked?.permission, "ALLOWED", "the walled rung ran under ALLOWED; a legacy DISALLOWED line no longer decides the record");
+  assert.match(blocked?.note ?? "", /ACCESS CONTROL/);
+  assert.doesNotMatch(blocked?.note ?? "", /DISALLOW/);
+  /* Evidence read over a disallow records DISALLOWED, never a blanket ALLOWED. */
+  const evidence = dispositionForScout({
+    ...base,
+    rungs: [{ ...rungs[0], observed: "HTTP 200, 10 bytes", ok: true, permission: "DISALLOWED" as const }],
+    outcome: "EVIDENCE_FOUND",
+    findings: [{ summary: "the agenda", artifactIds: ["art-1"], kind: "RECORD" }],
+  });
+  assert.equal(evidence?.permission, "DISALLOWED");
 });
 
 test("18. no re-read: a second fetch of a URL this Attempt vaulted is refused and hands back the artifact id; a different representation is not refused", async () => {

@@ -654,8 +654,11 @@ test("a request failure persists as a named open failure and never as an empty s
   /*
    * And the minutes pointer is still recorded — the document is known to exist
    * and is not held. A lead with NO record class, so it can never be handed to
-   * `assertAnswerable` as evidence of what the body decided.
+   * `assertAnswerable` as evidence of what the body decided. Its note names
+   * our own gap (no minutes adapter reads it), never robots.txt, which blocks
+   * nothing since the owner decision of 2026-09-25.
    */
   assert.ok(!("recordClass" in sitting.minutesPointer));
-  assert.match(sitting.minutesPointer.retrievalNote, /Disallow/i);
+  assert.match(sitting.minutesPointer.retrievalNote, /No minutes adapter reads the file/);
+  assert.doesNotMatch(sitting.minutesPointer.retrievalNote, /Disallow/i);
 });

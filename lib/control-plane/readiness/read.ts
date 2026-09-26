@@ -27,8 +27,37 @@ import { CAPABILITY_TAXONOMY, US_STATES, stateEntry } from "./catalog.ts";
 import { type CapabilityInput, emptyStateSnapshot } from "./compute.ts";
 import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "./model.ts";
 
-export type ReadinessReadOutcome =
-  | { readonly kind: "HELD"; readonly snapshot: ReadinessStateSnapshot; readonly source: string }
+/**
+ * **THE GRID: A STATE'S SNAPSHOT WITHOUT ITS ZIP ROWS.** Every field but
+ * `zips`. The all-states views (Readiness, Done) draw each state's grid and
+ * never a ZIP row, and the ZIP rows were 870 KB of the 989 KB the three
+ * tracked states' snapshots came to on 2026-09-25 (AZ 291 of 330 KB, NH 173 of
+ * 213, NJ 406 of 446). The store leaves them behind (`readNarrowed`); the
+ * state's own page, which draws them, still reads the whole row.
+ */
+export const READINESS_GRID_FIELDS = [
+  "formatVersion",
+  "derivationContract",
+  "state",
+  "stateName",
+  "publishedAt",
+  "publishedFromSha",
+  "publisher",
+  "summary",
+  "capabilities",
+  "evidenceWalks",
+  "delivery",
+  "monotonicityViolations",
+] as const satisfies readonly Exclude<keyof ReadinessStateSnapshot, "zips">[];
+export type ReadinessGrid = Pick<ReadinessStateSnapshot, (typeof READINESS_GRID_FIELDS)[number]>;
+/* A field added to the snapshot must be named above or left out on purpose here: this fails to compile until it is. */
+type UnclassifiedSnapshotField = Exclude<keyof ReadinessStateSnapshot, (typeof READINESS_GRID_FIELDS)[number] | "zips">;
+const EVERY_FIELD_CLASSIFIED: [UnclassifiedSnapshotField] extends [never] ? true : never = true;
+void EVERY_FIELD_CLASSIFIED;
+
+/** `S` is the snapshot as read: the whole row, or the grid (`readReadinessGrid`: the row without its ZIP rows). */
+export type ReadinessReadOutcome<S extends ReadinessGrid = ReadinessStateSnapshot> =
+  | { readonly kind: "HELD"; readonly snapshot: S; readonly source: string }
   | { readonly kind: "NOT_RECORDED"; readonly detail: string; readonly source: string }
   /**
    * A snapshot exists but was produced under a SUPERSEDED derivation contract
@@ -102,12 +131,12 @@ export const READINESS_REPUBLISH_UNATTENDED =
  * contract; absent or older marker → REQUIRES_REPUBLISH; a null row → NOT_RECORDED.
  * `persisted` carries the store's revision and write time when the caller has them.
  */
-export function readinessRowOutcome(
-  value: ReadinessStateSnapshot | null,
+export function readinessRowOutcome<S extends ReadinessGrid = ReadinessStateSnapshot>(
+  value: S | null,
   source: string,
   stateName: string,
   persisted: { readonly revision: number; readonly updatedAt: string } | null = null,
-): ReadinessReadOutcome {
+): ReadinessReadOutcome<S> {
   if (value === null) {
     return {
       kind: "NOT_RECORDED",
@@ -215,6 +244,45 @@ export async function readReadinessSnapshot(state: string): Promise<ReadinessRea
       row?.value ?? null,
       opened.source,
       entry.name,
+      row ? { revision: row.revision, updatedAt: row.updatedAt } : null,
+    );
+  } catch (error) {
+    return {
+      kind: "UNAVAILABLE",
+      detail: `Reading the readiness snapshot failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
+    };
+  }
+}
+
+/**
+ * One state's grid: its readiness snapshot without the ZIP rows, narrowed by
+ * the store, with the same outcomes as `readReadinessSnapshot` — the same
+ * quarantine of a superseded contract, the same words.
+ */
+export async function readReadinessGrid(state: string): Promise<ReadinessReadOutcome<ReadinessGrid>> {
+  const entry = stateEntry(state);
+  if (entry === null) {
+    return { kind: "UNAVAILABLE", detail: `"${state}" is not a state, DC, or territory this panel tracks.` };
+  }
+  const opened = await openReadinessRepositories();
+  if (!opened.ok) return { kind: "UNAVAILABLE", detail: opened.detail };
+  return readReadinessGridFrom(opened.repos.readinessSnapshots, entry.code, entry.name, opened.source);
+}
+
+/** The grid from a repository already open: `readReadinessGrid`'s read, for a caller that holds one. */
+export async function readReadinessGridFrom(
+  snapshots: ControlPlaneRepositories["readinessSnapshots"],
+  code: string,
+  stateName: string,
+  source: string,
+): Promise<ReadinessReadOutcome<ReadinessGrid>> {
+  try {
+    const projection = Object.fromEntries(READINESS_GRID_FIELDS.map((f) => [f, true as const]));
+    const row = await snapshots.readNarrowed(code, projection);
+    return readinessRowOutcome<ReadinessGrid>(
+      row === null ? null : (row.value as ReadinessGrid),
+      source,
+      stateName,
       row ? { revision: row.revision, updatedAt: row.updatedAt } : null,
     );
   } catch (error) {

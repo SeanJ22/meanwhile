@@ -91,12 +91,10 @@ async function laddered(
   label: string,
 ): Promise<{ text: string; rung: number }> {
   const rungs: string[] = [];
-  for (const [rung, profile] of [
-    [2, undefined],
-    [3, "browser"],
-  ] as const) {
+  /* One identified client (2026-09-25): the browser-header rung 3 disguised it and is retired. */
+  for (const [rung] of [[2]] as const) {
     try {
-      const r = await politeGetText(url, profile ? { profile } : {});
+      const r = await politeGetText(url, {});
       return { text: r.text, rung };
     } catch (err) {
       rungs.push(`rung ${rung}: ${String(err).split("\n")[0]!.slice(0, 90)}`);

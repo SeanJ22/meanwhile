@@ -36,13 +36,17 @@
  * demand-letter class and no door reaches them.
  */
 
-/** Whether a host's own policy permits the paths a walk would use. */
+/**
+ * What a host's robots.txt said about the paths a walk would use, as recorded. Evidence only: since the owner
+ * decision of 2026-09-25 no value here stops a walk of a public page ("Robots.txt alone must not block
+ * acquisition"); an access control on the page itself (a 403, a challenge, a login) still does.
+ */
 export type PressPermission =
   /** The policy was read and permits it. */
   | "PERMITTED"
-  /** The policy was read and forbids the path. Honoured; never re-walked on a clock. */
+  /** The policy was read and names the path. Recorded, not blocking. */
   | "DISALLOWED"
-  /** The policy could not be read. NOT an implied yes. */
+  /** The policy could not be read. Recorded as unread, never as "no robots file". */
   | "UNREADABLE";
 
 export interface PressOutlet {
@@ -136,13 +140,13 @@ export const PRESS_OUTLETS: readonly PressOutlet[] = [
     kind: "hyperlocal-network",
     permission: "UNREADABLE",
     robots:
-      "**`https://www.tapinto.net/robots.txt` answers HTTP 403.** The policy cannot be read, so permission cannot be established — and a 403 on the policy is not an implied yes (read 2026-08-25)",
+      "**`https://www.tapinto.net/robots.txt` answers HTTP 403.** The policy cannot be read (read 2026-08-25); recorded as unread, not blocking. No town or entry URL is recorded for the network yet, so the walk has nothing of it to read",
     townUrl: null,
     entry: null,
   },
 ];
 
-/** Only outlets whose own policy was READ and permits the walk. */
+/** Every outlet the walk has a public URL for; its robots reading travels with it and never removes it. */
 export function walkableOutlets(): PressOutlet[] {
-  return PRESS_OUTLETS.filter((o) => o.permission === "PERMITTED");
+  return PRESS_OUTLETS.filter((o) => o.townUrl !== null || o.entry !== null);
 }

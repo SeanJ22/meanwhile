@@ -61,11 +61,13 @@
  * ## The 403 that was our own name
  *
  * `www.sos.nh.gov` answers 200 to a bare client and 403 to the identical
- * request carrying this project's name in the User-Agent. So the New Hampshire
- * descriptors move the identification into `From:` and `X-Purpose:`, which the
- * host serves. **That is identification, not evasion**: the headers name a
- * person and a purpose, no credential or session is sent, and nothing pretends
- * to be a residential client.
+ * request carrying this project's name in the User-Agent. Until 2026-09-25 the
+ * lobbyist-registry descriptor left the name out of the User-Agent to get past
+ * that filter. The owner decision of 2026-09-25 rules that out (access
+ * controls are never bypassed; a filter that refuses an identified client is
+ * one), so every descriptor here sends the route executor's identified
+ * User-Agent, with `From:` and `X-Purpose:` added beside it. A 403 is a
+ * technical failure of the route, pursued by other public routes.
  *
  * ## HOW LANE AZ AND LANE NH SLOT IN — by CONTRACT, not by conversation
  *
@@ -329,13 +331,9 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
       url: "https://www.sos.nh.gov/lobbyists",
       headers: {
         /*
-         * THE 403 WAS OUR OWN NAME. This host answers 200 to a bare client and
-         * 403 to the identical request carrying the project's name in the
-         * User-Agent, so the identification moves to headers it serves. That is
-         * identification rather than evasion: a person and a purpose are named,
-         * no credential is sent, and nothing claims to be a residential client.
+         * The route executor's identified User-Agent stands (2026-09-25): leaving the project's name out of it to get
+         * past this host's filter was a disguise, and access controls are never bypassed.
          */
-        "user-agent": "Mozilla/5.0 (compatible; civic-records-refresh)",
         ...identifiedHeaders(),
       },
     },

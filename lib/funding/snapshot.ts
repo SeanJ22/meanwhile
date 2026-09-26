@@ -19,6 +19,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import { requiredRoutineContract, routineFreshnessMs } from "../civic-data/contracts.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 /**
  * Server-side reader over the promoted operational FEC projection, with the
@@ -108,6 +109,12 @@ export async function refreshFundingFromPromoted(
 ): Promise<string | null> {
   return promotedVersionOrThrow(await readFundingSnapshot(options));
 }
+
+/** The FEC read, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+export const settleFundingSnapshotRead = (): Promise<CivicDataReadResult<FundingSnapshot>> =>
+  readPromotedEdgeFirst("FEC_FUNDING", FEC_SCOPE, readFundingSnapshot, "The FEC funding");
+/** The FEC preload, edge first. */
+export const settleFundingRead = async (): Promise<string | null> => promotedVersionOrThrow(await settleFundingSnapshotRead());
 
 export function fundingReadState(): CivicDataReadResult<FundingSnapshot> {
   return readState;

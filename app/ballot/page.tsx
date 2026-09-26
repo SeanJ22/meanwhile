@@ -71,7 +71,7 @@ import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
 import {
   nhLegislativeRosterAppliesTo,
-  refreshNhSeatHolders,
+  settleNhSeatHolders,
 } from "@/lib/ballot/seat-holders";
 import {
   IncumbentNameLink,
@@ -83,14 +83,14 @@ import {
   STATE_FUNDING_NOTE,
   type FundingAnswer,
 } from "@/lib/funding/display";
-import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
-import { refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "@/lib/funding/state-snapshot";
+import { settleFundingRead } from "@/lib/funding/snapshot";
+import { settleStateMoneyRead, stateMoneyReadState } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { fundingFreshnessNote } from "@/lib/funding/freshness";
 import { directFundingTargetPlan, settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
 import {
   ensureReaderAuthorityEdge,
-  READER_MAP_AUTHORITY_FAMILIES,
+  READER_BALLOT_AUTHORITY_FAMILIES,
   readReaderManifest,
 } from "@/lib/meetings/edge-serving";
 import {
@@ -99,11 +99,11 @@ import {
   type ReaderAuthorityEdgeBundle,
 } from "@/lib/registry/runtime-edge";
 import {
-  refreshCandidateCorpusFromPromoted,
-  refreshCandidateProfilesFromPromoted,
+  settleCandidateCorpusRead,
+  settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
 import {
-  refreshBallotNavigationFromPromoted,
+  settleBallotNavigationRead,
 } from "@/lib/civic-data/curated-reader-read-model";
 import {
   FundingAbsence,
@@ -862,16 +862,18 @@ function unavailableHolding(family: string) {
  * The reader authority edge for this render, fetched and NOT entered: an entry
  * made inside a helper never reaches its caller's later reads on Node 24
  * (tests/reader-edge-context.test.ts), so the page enters what this returns.
- * The four families the map's routes read are the four this page reads:
- * divisions, the federal officeholders, the campaign-site URLs that key the
- * officeholder graph in production, and the state legislators incumbency asks
- * about. Null when nothing is published or the fetch failed; never reads the
- * database.
+ * The four families the map's routes read (divisions, the federal
+ * officeholders, the campaign-site URLs that key the officeholder graph in
+ * production, the state legislators incumbency asks about), and since
+ * 2026-09-25 the proven pointers the page read from the database: the ballot,
+ * the candidate profiles and publications, the navigation links, the NH
+ * roster, FEC and state money (`READER_BALLOT_AUTHORITY_FAMILIES`). Null when
+ * nothing is published or the fetch failed; never reads the database.
  */
 async function readBallotReaderEdge(): Promise<ReaderAuthorityEdgeBundle | null> {
   const manifest = await readReaderManifest().catch(() => null);
   if (!manifest?.authorityArtifacts) return null;
-  return ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null);
+  return ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(() => null);
 }
 
 export default async function BallotPage({
@@ -925,11 +927,18 @@ export default async function BallotPage({
    * every read this function awaits after this line (divisions, the
    * officeholder preloads) primes those families from the edge instead. The
    * async components React renders later run outside this function's context,
-   * so each is handed `readerEdge` and runs its reads inside it. Families the
-   * edge does not publish (the ballot itself, candidate profiles and
-   * publications, ballot navigation, NH members, FEC and state money) still
-   * read the database. No manifest, or a failed fetch: no edge, and the page
-   * reads everything from the database as before.
+   * so each is handed `readerEdge` and runs its reads inside it.
+   *
+   * 2026-09-25: the ballot itself, the candidate profiles and publications,
+   * the navigation links, the NH roster, FEC and state money are proven
+   * pointers on the edge too (`PromotedEdgeEntry`), each read through its own
+   * Reader (`readPromotedEdgeFirst`). On production a cold render's first
+   * request still took 5.1–5.8 s reading them from a cold database: a pointer
+   * and a proof read each, the ballot's first and alone. From the edge, the
+   * ballot stage and the supporting stage below are memory reads; the order
+   * stays because it is the failure-domain rule (a supporting family opens only
+   * for the ballot that answered), not a database order. A family the manifest
+   * does not carry, or a failed fetch, reads the database as before.
    */
   let readerEdge: ReaderAuthorityEdgeBundle | null = null;
   if (centroid) {
@@ -977,8 +986,9 @@ export default async function BallotPage({
    */
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
   if (set && matched) {
-    auxiliaryPreloads.set("candidate-profiles", refreshCandidateProfilesFromPromoted);
-    auxiliaryPreloads.set("candidate-publications", refreshCandidateCorpusFromPromoted);
+    // Each edge first (2026-09-25): the edge's proven copy through the family's own Reader, else the database.
+    auxiliaryPreloads.set("candidate-profiles", settleCandidateProfilesRead);
+    auxiliaryPreloads.set("candidate-publications", settleCandidateCorpusRead);
     // Edge first (R30): the same settles `divisionsAt` and the officeholder
     // graph use, so an edge-served version is never read again from the
     // database in the same render.
@@ -989,22 +999,22 @@ export default async function BallotPage({
       // membership projection. It must be established before the synchronous
       // exact-seat resolver runs; a failed/absent read leaves that resolver
       // explicitly incomplete and is surfaced in the holding-gap list below.
-      auxiliaryPreloads.set("nh-members", refreshNhSeatHolders);
+      auxiliaryPreloads.set("nh-members", settleNhSeatHolders);
     }
     auxiliaryPreloads.set(
       "ballot-navigation",
       process.env.NODE_ENV === "production"
-        ? refreshBallotNavigationFromPromoted
+        ? settleBallotNavigationRead
         : async () => null,
     );
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      auxiliaryPreloads.set("federal-funding", refreshFundingFromPromoted);
+      auxiliaryPreloads.set("federal-funding", settleFundingRead);
     }
     if (matched.contests.some((contest) => !isFederalContest(contest))) {
       const state = set.election.state as StateCampaignFinanceJurisdiction;
       auxiliaryPreloads.set(
         "state-money",
-        () => refreshStateMoneyProjectionFromPromoted(state),
+        () => settleStateMoneyRead(state),
       );
     }
   }

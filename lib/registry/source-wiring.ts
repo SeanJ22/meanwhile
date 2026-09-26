@@ -145,7 +145,7 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
     if (retired) {
       throw new Error(
         `MEETING_ROUTE_RETIRED:${route}:${row.bodyId} — retired ${retired.retiredOn} (${retired.reason}); ` +
-          `the permitted route is ${retired.replacedBy}.`,
+          `the route that replaced it is ${retired.replacedBy}.`,
       );
     }
   }
@@ -153,22 +153,30 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
 }
 
 /**
- * **A ROUTE RETIRED FOR PERMISSION, AND WHAT IT LEAVES BEHIND.**
+ * **A RETIRED MEETINGS ROUTE, AND WHAT IT LEAVES BEHIND.**
  * (2026-09-23, the Pima school-agenda routes session. RULING 283, RULING 263.)
  *
  * RULING 283: a proved source cutover disables its old writer in the same
  * transaction, and neither two authoritative clocks nor none is lawful. When a
- * body's permitted route replaces a route whose host refuses this client, the
- * old (route, body) pair is named here, and naming it is enforced, not
- * described:
+ * body's new route replaces an old one, the old (route, body) pair is named
+ * here, and naming it is enforced, not described:
  *
  * - `meetingSourceNamesForWiring` throws for a wiring row that would re-open
  *   the pair, so no partition, clock or acquisition can exist for it;
- * - `scripts/ingest.ts` refuses agenda-document retrieval from `hosts` — the
- *   body still PUBLISHES links into its agenda platform, and a reader may
- *   follow one, but this client never requests it;
+ * - `scripts/ingest.ts` refuses agenda-document retrieval from `hosts` unless
+ *   they are marked `hostsReadable` — the body may still PUBLISH links into
+ *   its old platform, and a reader may follow one; this client reads it only
+ *   when there is something there to read;
  * - `tests/retired-meeting-routes.test.ts` holds that every retired pair has a
  *   wired successor for the same body.
+ *
+ * **robots.txt alone retires nothing, and closes no host.** (Owner decision
+ * 2026-09-25: "Robots.txt alone must not block acquisition.") The first
+ * retirement here (Pima Community College's Diligent tenant, 2026-09-23) was
+ * made for robots.txt alone. It stays retired because its successor carries
+ * every sitting it did and more, and a second route for the body would show
+ * each sitting twice; but its host is readable again (`hostsReadable`), so the
+ * college's own links into the tenant are read like any public agenda link.
  *
  * **What the retired route already holds stays.** Its promoted partition
  * version and every candidate behind it remain in the production store exactly
@@ -177,20 +185,31 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
  * successor's place and named on its readback (`HELD_MEETING_PARTITIONS`,
  * `lib/civic-data/meeting-partitions.ts`), so the body's sittings never leave
  * the page between the old writer stopping and the new one's first version.
- * The first promotion supersedes it. A permission rule binds the next fetch,
- * never possession of what was already published (RULING 263).
+ * The first promotion supersedes it. A retirement binds the next fetch, never
+ * possession of what was already published (RULING 263).
  *
  * A route whose host is GONE (2026-09-25: Newbury's CivicWeb portal, NXDOMAIN)
- * retires under the same rules. When its successor was already a wired route
- * for the body (`successorAlreadyWired`), that successor has its own pointer,
- * so nothing is held and the retired pointer simply stops being composed.
+ * retires under the same rules, and its host is not readable: there is nothing
+ * there. When its successor was already a wired route for the body
+ * (`successorAlreadyWired`), that successor has its own pointer, so nothing is
+ * held and the retired pointer simply stops being composed.
  */
 export interface RetiredMeetingRoute {
   /** The adapter route (partition `meetings:<meetingSource>:<bodyId>`) that no longer runs. */
   readonly meetingSource: string;
   readonly bodyId: string;
-  /** Hosts the retired route read. Nothing may fetch them for this body. */
+  /**
+   * Hosts the retired route read. No clock or partition reads them for this
+   * body. Agenda retrieval refuses them too, unless `hostsReadable` is set.
+   */
   readonly hosts: readonly string[];
+  /**
+   * The retirement closes the route's clock only: its hosts stay readable, so
+   * a link into them (the body's own agenda link) is read like any public
+   * document. Set for a route superseded by a better one while its host still
+   * serves the body's documents — never for a host that is gone.
+   */
+  readonly hostsReadable?: true;
   /** ISO date of the cutover (`pnpm stamp`). */
   readonly retiredOn: string;
   readonly reason: string;
@@ -214,17 +233,21 @@ export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
     meetingSource: "diligent",
     bodyId: "curated:az/pima-community-college#governing",
     hosts: ["pima.community.highbond.com"],
+    hostsReadable: true,
     retiredOn: "2026-09-23",
     reason:
-      "robots.txt on pima.community.highbond.com is an allowlist — six named search crawlers may read " +
-      "/Portal/, /document/ and /Services/, and User-agent: * carries Disallow: / (read 2026-09-23T20:02Z, " +
-      "23,479 bytes, sha256 b5cbf0b4b2cbcf18…); docs/sources.md recorded the host DISALLOWED on 2026-08-29",
+      "retired 2026-09-23 for robots.txt alone: the tenant's robots.txt is an allowlist — six named search " +
+      "crawlers may read /Portal/, /document/ and /Services/, and User-agent: * carries Disallow: / (read " +
+      "2026-09-23T20:02Z and again 2026-09-25, 23,479 bytes, sha256 b5cbf0b4b2cbcf18…). robots.txt no longer " +
+      "blocks since the owner decision of 2026-09-25. The route stays retired because pima-edu carries every " +
+      "sitting it did (cutover dry run: 7 the same, 5 added, none removed), and a second route for the body " +
+      "would show each sitting twice; its host is readable again for the college's agenda links",
     replacedBy: "pima-edu",
     held:
       "the promoted meetings:diligent partition for this body (7 sittings, 486 stored portal-page reads as of " +
       "2026-09-23T19:48Z) stays in the production store unchanged, composed as held rows until the pima-edu " +
-      "partition's first promotion supersedes it; the college's own " +
-      "links into the tenant are carried by pima-edu as links and never fetched",
+      "partition's first promotion supersedes it; the college's own links into the tenant are carried by " +
+      "pima-edu as links, and agenda retrieval reads them",
   },
   {
     // Not a permission cutover: the host is gone. Every read since 2026-09-14
@@ -254,17 +277,24 @@ export function retiredMeetingRoute(meetingSource: string, bodyId: string): Reti
 }
 
 /**
- * Is this URL on a host a retired route read? Agenda retrieval refuses these:
- * the link stays a link a reader can follow, and this client does not read it.
+ * Is this URL on a retired route's host that nothing may fetch? Agenda
+ * retrieval refuses these: the link stays a link a reader can follow, and this
+ * client does not read it.
+ *
+ * A retired route whose hosts stay readable (`hostsReadable`) is not one: its
+ * retirement closed its clock, not its host. Until 2026-09-25 this refused
+ * every retired route's host, including Pima Community College's Diligent
+ * tenant, retired for robots.txt alone; since the owner decision of that day
+ * robots.txt closes nothing.
  */
-export function isRetiredMeetingHost(url: string): boolean {
+export function isUnreadableRetiredMeetingHost(url: string): boolean {
   let host: string;
   try {
     host = new URL(url).hostname.toLowerCase();
   } catch {
     return false;
   }
-  return RETIRED_MEETING_ROUTES.some((r) => r.hosts.includes(host));
+  return RETIRED_MEETING_ROUTES.some((r) => !r.hostsReadable && r.hosts.includes(host));
 }
 
 export function wiringForMeetingSource(sourceName: string): BodySourceWiring[] {
@@ -498,12 +528,15 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
 
   // ── D28: Pima Community College Governing Board ─────────────────────────
   // No Census division: `ocdId` is null and the body is the curated registry
-  // row. Read from the college's OWN permitted pages since 2026-09-23 — the
-  // Diligent tenant this row used to name (pima.community.highbond.com)
-  // disallows this client in robots.txt, and that route is retired in
-  // RETIRED_MEETING_ROUTES above. See lib/sources/pima-edu/index.ts.
+  // row. Read from the college's OWN pages since 2026-09-23, which carry every
+  // sitting the Diligent tenant this row used to name
+  // (pima.community.highbond.com) did, and five more. That route is retired
+  // in RETIRED_MEETING_ROUTES above; it was retired for robots.txt alone,
+  // which blocks nothing since the owner decision of 2026-09-25, so the
+  // tenant's host is readable again for the college's agenda links. See
+  // lib/sources/pima-edu/index.ts.
   //
-  // Every URL below was read 2026-09-23 under a robots.txt that permits it:
+  // robots.txt as read 2026-09-23 for every URL below, recorded:
   // www.pima.edu (8 narrow disallows, none on the governing-board path) and
   // events.pima.edu (Drupal defaults: /admin/, /search/, /user/…). Venue
   // spellings key the promoted `venue-resolutions` rows reviewed 2026-08-14
@@ -805,8 +838,14 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   },
 
   // Chandler, AZ — City Council (C14, 2026-09-24). Every agenda, result and
-  // minutes set is published only on destinyhosted.com, whose robots.txt reads
-  // as disallow-all and which is never requested. The city's own City Clerk
+  // minutes set is published only on destinyhosted.com. Its robots.txt reads
+  // as disallow-all, and the host was never requested until the owner's
+  // 2026-09-25 decision that robots.txt no longer blocks reading public pages;
+  // measured that day it answers the project's identified client with HTTP 200
+  // and no challenge. `destinyAgenda` reads the Council's month lists (type
+  // `CC`) and joins each listed agenda, result and video to the sitting the
+  // city's own pages dated, on the date and the name the city printed. The
+  // city's own City Clerk
   // page publishes the year's sittings as the "2026 City Council Meeting Dates"
   // table (Resolution No. 5937, Exhibit A): 33 full dates in three columns
   // (Regular and Study Sessions, Study Sessions, Regular Meetings). The table
@@ -837,8 +876,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // calendar, so the filter is the Council's own name as its events print it.
       dayJson: "https://www.chandleraz.gov/rest/events/day/",
       titleMatch: "City Council",
+      // The Council's own Destiny Agenda list (tenant 24263, meeting type CC),
+      // the page every "View Current Agenda" link on the city's event pages
+      // leads to. One request per month in reach; no sitting is made from it.
+      destinyAgenda: "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
     },
-    verifiedAt: "2026-09-24",
+    verifiedAt: "2026-09-25",
   },
 
   // Holbrook, AZ — City Council (R21's replacement route, 2026-09-25). The
@@ -853,8 +896,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   // governing body of `az:city:city-of-holbrook` (Census place 0433280).
   //
   // The page states no hour and no room; the agendas that do sit on Google
-  // Drive, whose viewer is script-only and whose byte route robots.txt
-  // disallows. Every sitting ships date-only with its own agenda cited. The
+  // Drive, whose viewer is script-only. Its byte route's robots.txt disallow
+  // is recorded and has blocked nothing since the owner decision of
+  // 2026-09-25; no adapter reads the Drive bytes yet. Every sitting ships
+  // date-only with its own agenda cited. The
   // publisher's horizon: a sitting appears when the city posts its agenda.
   {
     bodyId: "ocd-division/country:us/state:az/place:holbrook#governing",
@@ -913,12 +958,15 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-09-25",
   },
 
-  // ── The browser rung (M79, 2026-08-15) ──────────────────────────────────
-  // Two New Hampshire hosts answer 403 to this pipeline's civic-index client
-  // and 200 to a browser, which is why these four bodies sat unwired with
-  // their schedules in plain view. `profile: "browser"` is the rung — the
-  // same public page, one step up the ladder, contact address intact. See
-  // `lib/sources/http.ts`.
+  // ── Two hosts that refuse the identified client (M79, 2026-08-15) ─────────
+  // kearsarge.org and newbury.nh.gov answer 403 (a bot challenge) to this
+  // pipeline's identified client. From 2026-08-15 these four rows asked for a
+  // browser header set instead ("profile: browser"); the owner decision of
+  // 2026-09-25 rules that out — dressing the client as a browser to get past a
+  // filter is bypassing an access control — so they are read by the one
+  // identified client (`lib/sources/http.ts`). Measured 2026-09-25: both hosts
+  // challenge Node's client whatever it sends, and admit the same identity
+  // through `curl` (the client's one honest second ask), so every row is read.
   //
   // Kearsarge Regional School District is 03255's school district. Its board
   // publishes the whole 2026-2027 year as a two-column month table with the
@@ -937,7 +985,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "kearsarge",
-      profile: "browser",
       shapes: "month-table",
       schedulePage:
         "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule",
@@ -980,7 +1027,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "newbury-planning-board",
-      profile: "browser",
       shapes: "agenda-list",
       schedulePage: "https://www.newbury.nh.gov/planning-board",
       pathPrefix: "/planning-board/",
@@ -1000,7 +1046,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "newbury-conservation-commission",
-      profile: "browser",
       // Two shapes on one page: the commission writes its whole year with
       // times in its own free-content block, and the agenda block links the
       // sittings that have documents. Unioned by date.
@@ -1081,7 +1126,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "newbury-zoning-board-of-adjustment",
-      profile: "browser",
       shapes: "agenda-list",
       schedulePage: "https://www.newbury.nh.gov/zoning-board-adjustment",
       pathPrefix: "/zoning-board-adjustment/",
@@ -1159,7 +1203,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "newbury-advisory-budget-committee",
       feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
-      titleMatch: "Advisory Budget Committee",
+      // "Budget Advisory Committee" (2026-09-25): the feed's 22 September 2025
+      // sitting, which the committee's own minutes list. The feed's bare
+      // "Budget Committee Meeting" is not claimed: it names no advisory body.
+      titleMatch: "Advisory Budget Committee,Budget Advisory Committee",
       bodyName: "2026 Advisory Budget Committee",
       // Every event on this feed publishes an EMPTY `LOCATION`, so every row
       // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
@@ -1744,7 +1791,9 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       [
         "ad-hoc-fire-safety-municipal-building-committee",
         "Ad Hoc Fire Safety Municipal Building Committee",
-        "Fire Safety Municipal Building",
+        // Since 2025-10-16 the feed writes "Ad Hoc Fire Safety Municipal Bldg
+        // Comm Mtg" (six sittings to 2026-04-02), read 2026-09-25.
+        "Fire Safety Municipal Building,Fire Safety Municipal Bldg",
         "Joint",
       ],
       [
@@ -1806,15 +1855,23 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       ["energy-committee", "Energy Committee", "Energy Committee"],
       ["housing-commission", "Housing Commission", "Housing Commission"],
       ["recreation-commission", "Recreation Commission", "Recreation Commission"],
+      // 2026-09-25: the town's own spellings, read off every event from
+      // February 2020 to March 2027 (the calendar's list view). Firewards also
+      // write "Fire Wards"; the committee is "Citizens Committee" and
+      // "Citizen's Advisory Committee" (apostrophes are set aside when
+      // matching); the trustees are "Trustees of the Trust Fund"; the bicycle
+      // committee is "Bike & Pedestrian Advisory Committee" and "Bicycles and
+      // Pedestrian Committee" — "Pedestrian" names it and nothing else there.
+      // The Archives Committee has no event in that whole list.
       ["board-of-firewards", "Firewards,Fire Wards", "Board of Firewards"],
       ["archives-committee", "Archives Committee", "Archives Committee"],
       [
         "bicycle-pedestrian-advisory-committee",
-        "Bicycle & Pedestrian",
+        "Pedestrian",
         "Bicycle & Pedestrian Advisory Committee",
       ],
-      ["citizens-committee", "Citizens' Committee", "Citizens' Committee"],
-      ["trustees-of-the-trust-funds", "Trust Funds", "Trustees of the Trust Funds"],
+      ["citizens-committee", "Citizens Committee,Citizens Advisory Committee", "Citizens' Committee"],
+      ["trustees-of-the-trust-funds", "Trust Fund", "Trustees of the Trust Funds"],
       [
         "tri-town-assessing-board",
         "Tri-Town Assessing",
@@ -1849,12 +1906,16 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       titleMatch,
       bodyName,
       // The hall the calendar names most often. A row naming a different
-      // room resolves on its own string via `otherVenueMarkers`.
+      // room resolves on its own string via `otherVenueMarkers`. The trustees
+      // sit in the Syd (Sydney) Crook Room, the Firewards at the Fire
+      // Department, and the Tri-Town board at the Newbury and Sunapee offices
+      // in turn (2026-09-25): each is its own room, never the hall.
       venueMatch: "Whipple Memorial Town Hall",
       otherVenueMarkers:
-        "Whipple Memorial Hall,Whipple Hall,New London Town Office",
+        "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department," +
+        "Newbury Town Office,Sunapee Town Offices",
     },
-    verifiedAt: "2026-08-19",
+    verifiedAt: "2026-09-25",
   })),
 
   /*
@@ -2402,26 +2463,37 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     noticeUrl: "https://warnernh.gov/calendar/",
     verifiedAt: "2026-08-21",
   },
-  // Warner, NH — Warner River Local Advisory Committee: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  // Warner, NH — Warner River Local Advisory Committee, off the "Warner Events"
+  // calendar (2026-09-25). The town's own feed carried only three of its
+  // sittings (2025-11-19, 2026-03-25, 2026-05-27) and none after May. The
+  // Pillsbury Free Library's public Google calendar — embedded with the town's
+  // on library.warnernh.gov/news-and-events and reached from the town's
+  // "Calendar - Warner Events" menu — carries the committee's series: every
+  // other month on the 4th Wednesday at 7 PM at the library from 2026-01-28,
+  // with 25 November moved to 18 November. The committee's own site
+  // (wrlac.com) and its 22 July 2026 agenda state the same 23 September and
+  // 18 November sittings. One feed, so no sitting is listed twice. The library
+  // writes the committee "Warner River LAC" and "WRLAC"; entries it prefixes
+  // "NO"/"NOT" (2020-2021) are the library saying a sitting will not happen.
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-river-local-advisory-committee",
     ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
     agendaSourceType: "ICAL",
     jurisdiction: "Warner, NH",
-    publishingOrg: "Town of Warner",
+    publishingOrg: "Pillsbury Free Library (Warner, NH)",
     timeZone: "America/New_York",
     config: {
       slug: "warner-warner-river-local-advisory-committee",
-      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-      titleMatch: "Warner River Local Advisory,WRLAC",
+      feedUrl: "https://calendar.google.com/calendar/ical/mq5sbbdfvg3le9ddpc76qpo5d8%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "WRLAC,Warner River LAC,Warner River Local Advisory,Warner Local River Advisory",
+      titleExclude: "NO Warner River,NOT Warner River",
       bodyName: "Warner River Local Advisory Committee",
-      // The hall the Select Board's own page gives as its address, and the
-      // building this calendar names on 47 of its board sittings. Reached only
-      // when the event itself carried no location at all.
+      // Reached only when the event itself carried no location at all; the
+      // library's events name the library.
       venueMatch: "Warner Town Hall",
     },
     noticeUrl: "https://warnernh.gov/calendar/",
-    verifiedAt: "2026-08-21",
+    verifiedAt: "2026-09-25",
   },
   // Warner, NH — Warner Village Water District: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
   {
@@ -2434,7 +2506,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "warner-warner-village-water-district",
       feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-      titleMatch: "Warner Village Water,WVWD",
+      // "Precinct Commissioners" (2026-09-25): the district's commissioners'
+      // two standing series on this feed, the 2nd and 4th Wednesday at 3:30 PM
+      // at 55 West Joppa Rd. The town's notices page states the same schedule
+      // for the WVWD Commissioners at the treatment plant there, and the
+      // district's page calls its area "the Precinct".
+      titleMatch: "Warner Village Water,WVWD,Precinct Commissioners",
       titleExclude: "Budget Comm",
       bodyName: "Warner Village Water District",
       // The hall the Select Board's own page gives as its address, and the
@@ -2494,7 +2571,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "lake-todd-village-district-newbury",
       feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-      titleMatch: "Lake Todd",
+      // "LTVD Annual Mtg" (2025-09-06) is the district's own abbreviation
+      // (read 2026-09-25). Its 2026 budget and annual meetings sit in the feed
+      // as "1st Fl Reserved" with the district named only in the description,
+      // which this adapter does not read; the district meets in spring, so no
+      // sitting falls in the current window either way.
+      titleMatch: "Lake Todd,LTVD",
       bodyName: "Lake Todd Village District",
     },
     // Read 2026-08-21: the district's own page is HTTP 404 at every rung and

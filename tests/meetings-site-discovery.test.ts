@@ -155,34 +155,44 @@ test("VERIFY: Legistar, CivicPlus, IQM2 and CivicClerk yield only by their own c
   assert.equal(verifyEndpointBody({ vendor: "novusagenda", url: "https://x.novusagenda.com/" }, { status: 200, body: "<html/>", finalUrl: "https://x.novusagenda.com/" }).verdict, "NOT_CONFIRMED");
 });
 
-test("OUTCOME: found beats lead beats a read homepage; walled everywhere is BLOCKED, unreadable rules are not a wall; a redirect is a hop, not an answer", () => {
+test("OUTCOME: found beats lead beats a read homepage; walled everywhere (an access control) is BLOCKED, a robots.txt verdict never is; a redirect is a hop, not an answer", () => {
   assert.equal(decideOutcome({ found: [1], leads: [1], steps: [] }), "FOUND");
   assert.equal(decideOutcome({ found: [], leads: [1], steps: [] }), "LEAD");
   assert.equal(decideOutcome({ found: [], leads: [], steps: [step({})] }), "NOTHING_DETECTED");
-  const refused = step({ status: null, permission: "DISALLOWED", rung: null });
-  const cannotTell = { ...refused, url: "https://www.example.gov/", permission: "CANNOT_TELL" as const };
+  assert.equal(
+    decideOutcome({ found: [], leads: [], steps: [step({ permission: "DISALLOWED" })] }),
+    "NOTHING_DETECTED",
+    "a homepage read over a Disallow is a read (owner decision 2026-09-25)",
+  );
+  const walled = step({ status: null, permission: "RECORDED_WALL", rung: null });
+  /* An unrequested DISALLOWED step exists only in a walk made before 2026-09-25; it is not a wall now. */
+  const skippedForRobots = { ...walled, url: "https://www.example.gov/", permission: "DISALLOWED" as const };
   const robotsOf = (over: Partial<DiscoveryStep>) => step({ purpose: "robots", url: "https://www.example.gov/robots.txt", permission: "CANNOT_TELL", ...over });
   assert.equal(
-    decideOutcome({ found: [], leads: [], steps: [refused, robotsOf({ status: 403 }), cannotTell] }),
+    decideOutcome({ found: [], leads: [], steps: [walled, robotsOf({ status: 403 }), step({ url: "https://www.example.gov/", status: 403 })] }),
     "BLOCKED",
-    "a host's rules on one origin and a 403 at robots.txt on the other: every origin is a wall",
+    "a recorded wall on one origin and the site's own 403 on the other: every origin is walled by an access control",
   );
   assert.equal(
-    decideOutcome({ found: [], leads: [], steps: [refused, robotsOf({ status: null, transportError: "getaddrinfo ENOTFOUND" }), cannotTell] }),
+    decideOutcome({ found: [], leads: [], steps: [walled, skippedForRobots] }),
     "COULD_NOT_READ",
-    "an origin whose robots.txt could not be reached refused nothing",
+    "a step skipped for robots.txt alone is not a wall",
   );
-  assert.equal(decideOutcome({ found: [], leads: [], steps: [refused, cannotTell] }), "COULD_NOT_READ", "unread rules with no wall behind them are not a wall");
   assert.equal(
-    decideOutcome({ found: [], leads: [], steps: [step({ status: 403 }), refused] }),
-    "BLOCKED",
-    "a homepage that answers this client 403 is the host refusing it, as much as its rules are",
+    decideOutcome({ found: [], leads: [], steps: [walled, robotsOf({ status: null, transportError: "getaddrinfo ENOTFOUND" }), step({ url: "https://www.example.gov/", status: null, transportError: "getaddrinfo ENOTFOUND" })] }),
+    "COULD_NOT_READ",
+    "an origin that could not be reached refused nothing",
   );
-  assert.equal(decideOutcome({ found: [], leads: [], steps: [step({ status: 404 }), refused] }), "COULD_NOT_READ", "a 404 homepage is not a wall");
   assert.equal(
-    decideOutcome({ found: [], leads: [], steps: [step({ status: 301, note: "redirected" }), refused] }),
+    decideOutcome({ found: [], leads: [], steps: [step({ status: 403 }), walled] }),
     "BLOCKED",
-    "a homepage that redirects onto a refusing host is a wall, not an unreadable site",
+    "a homepage that answers this client 403 is the host walling it, as much as a recorded wall is",
+  );
+  assert.equal(decideOutcome({ found: [], leads: [], steps: [step({ status: 404 }), walled] }), "COULD_NOT_READ", "a 404 homepage is not a wall");
+  assert.equal(
+    decideOutcome({ found: [], leads: [], steps: [step({ status: 301, note: "redirected" }), walled] }),
+    "BLOCKED",
+    "a homepage that redirects onto a recorded wall is a wall, not an unreadable site",
   );
   assert.equal(decideOutcome({ found: [], leads: [], steps: [step({ status: 503 })] }), "COULD_NOT_READ");
   assert.equal(decideOutcome({ found: [], leads: [], steps: [step({ status: null, transportError: "ETIMEDOUT" })] }), "COULD_NOT_READ");

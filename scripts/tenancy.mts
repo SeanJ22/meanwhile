@@ -120,17 +120,17 @@ async function main(): Promise<void> {
   const stamp = today();
   const rows: TenancyRow[] = [];
   let unreadable = 0;
-  let refused = 0;
+  let robotsNamed = 0;
   let n = 0;
 
   for (const [origin, body] of hosts) {
     if (n >= limit) break;
     n += 1;
+    /* robots.txt is read and recorded, never a refusal (owner decision 2026-09-25). */
     const perm = await judgeUrl(origin);
-    if (perm.verdict !== "ALLOWED" && perm.verdict !== "NO_ROBOTS") {
-      refused += 1;
-      console.log(`  REFUSED       ${perm.verdict.padEnd(12)} ${origin}`);
-      continue;
+    if (perm.verdict === "DISALLOWED" || perm.verdict === "CANNOT_TELL") {
+      robotsNamed += 1;
+      console.log(`  ROBOTS        ${perm.verdict.padEnd(12)} ${origin} (recorded, not blocking)`);
     }
     const html = await getPage(origin);
     if (html === null) {
@@ -155,7 +155,7 @@ async function main(): Promise<void> {
     "",
     `**Probed ${stamp}** by \`pnpm tenancy --state ${state}\`, over the hosts \`pnpm descent\` actually saw.`,
     "",
-    `**${hosts.size} host(s) known · ${n} probed · ${refused} refused on permission (RULING 148).**`,
+    `**${hosts.size} host(s) known · ${n} probed · ${robotsNamed} with a robots.txt Disallow or an unread one (recorded, not blocking: owner decision 2026-09-25).**`,
     "",
     "| | Count | What it means |",
     "|---|---|---|",

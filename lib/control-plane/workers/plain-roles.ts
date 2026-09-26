@@ -69,7 +69,8 @@ const FINDING_PLAIN: Record<string, string> = {
   AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE: "a model raised a doubt that needs machine-checkable evidence before it counts",
   AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE: "a model raised a doubt that needs machine-checkable evidence before it counts",
   AUDIT_EXTERNAL_AUTHORITY_MISSING: "no independent authority is on file to check this record against",
-  PERMISSION_DENIED: "the source's permission rules refused the route",
+  // Historical: only results recorded before 2026-09-25 carry it. robots.txt no longer stops a public page.
+  PERMISSION_DENIED: "an older attempt stopped at the site's robots.txt, which no longer blocks a public page",
   DECLARED_COUNT_MISMATCH: "the document's own stated count does not match what was extracted",
   DUPLICATE_SOURCE_RECORD_ID: "two records carried the same source id",
   SOURCE_PAGINATION_REMAINS: "more pages remain unread at the source",
@@ -156,7 +157,8 @@ const FINDING_MEANING: Record<string, string> = {
   SOURCE_PAGINATION_REMAINS: "There are more pages of records at the source that this attempt did not read, so what we have is a part and not the whole.",
   SUBRESOURCE_NOT_INTERPRETED: "A linked document was noticed and not read, so anything only it holds is still missing.",
   UNEXTRACTED_COMPOSITE_FIELD: "One field holds several facts together and was kept whole rather than split into a guess.",
-  PERMISSION_DENIED: "The source's own rules say we may not take this route, so nothing was requested.",
+  PERMISSION_DENIED:
+    "An older attempt stopped because the site's robots.txt named this page, so nothing was requested then. Since your decision of 2026-09-25, robots.txt is recorded and never blocks a public page, so it no longer stops this route.",
   AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE:
     "A model suggested something might be wrong. A suggestion is not evidence, so nothing was changed until a machine can check it.",
   AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE:

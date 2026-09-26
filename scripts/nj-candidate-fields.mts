@@ -132,7 +132,7 @@ const CONTROL = domainGuesses("Zzyzx", "Qwertling");
 
 async function fetchOnce(url: string): Promise<{ status: number; text: string } | null> {
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     return { status: r.status, text: r.text };
   } catch {
     return null;

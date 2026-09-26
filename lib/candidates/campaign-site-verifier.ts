@@ -19,8 +19,11 @@
  *
  * A lead passes only when ALL of these hold on the fetched page:
  *
- * - it is an HTTPS HTML page answered 2xx, every origin in its redirect chain
- *   read robots.txt first and allowed us (`lib/hunt/robots-first-fetch.ts`);
+ * - it is an HTTPS HTML page answered 2xx with no access control in front of
+ *   it (a login, a 403, a bot challenge: `lib/hunt/access-control.ts`), and
+ *   every origin in its redirect chain had robots.txt read first and recorded
+ *   (`lib/hunt/robots-first-fetch.ts`). The robots verdict travels with the
+ *   read as evidence and never refuses it (owner decision 2026-09-25);
  * - its final host is not a social platform, an aggregator or voter guide, a
  *   news outlet, a government or institutional site, a party or organization
  *   site, a web archive or proxy, or a search engine (closed lists below);
@@ -40,6 +43,7 @@
 import { createHash } from "node:crypto";
 
 import { nameForms } from "../identity/name-forms.ts";
+import { accessControlIn } from "../hunt/access-control.ts";
 import { researchFetch, type ResearchFetchResult, type ResearchRuntime } from "../hunt/robots-first-fetch.ts";
 import type { PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 
@@ -87,7 +91,10 @@ export const CAMPAIGN_SITE_REFUSALS = [
   "WEB_ARCHIVE",
   "SEARCH_ENGINE",
   "NOT_A_PAGE",
+  /** Historical: before the owner decision of 2026-09-25 a robots.txt verdict refused a lead. Never produced now. */
   "ROBOTS_REFUSED",
+  /** An access control answered in place of the page (a recorded wall, a 401/403/429, a bot challenge). Never bypassed. */
+  "ACCESS_CONTROLLED",
   "TRANSPORT_FAILED",
   "HTTP_NOT_OK",
   "NOT_HTML",
@@ -680,9 +687,13 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
   const refusals: CampaignSiteRefusal[] = [];
   if (hostRefused !== null) refusals.push(hostRefused);
   if (!read.finalUrl.startsWith("https://")) refusals.push({ code: "NOT_HTTPS", detail: `${read.finalUrl} is not HTTPS; a reader link is HTTPS only` });
-  const blocked = read.permissions.find((p) => p.verdict !== "ALLOWED" && p.verdict !== "NO_ROBOTS");
-  if (blocked !== undefined) refusals.push({ code: "ROBOTS_REFUSED", detail: `${blocked.origin}: ${blocked.verdict} (${blocked.detail})` });
-  if (read.httpStatus < 200 || read.httpStatus >= 300) refusals.push({ code: "HTTP_NOT_OK", detail: `${read.finalUrl} answered HTTP ${read.httpStatus}` });
+  /* The robots verdicts in read.permissions are recorded evidence and refuse nothing (owner decision 2026-09-25). */
+  const control = accessControlIn({ status: read.httpStatus, text: read.body });
+  if (read.httpStatus < 200 || read.httpStatus >= 300) {
+    refusals.push({ code: "HTTP_NOT_OK", detail: `${read.finalUrl} answered HTTP ${read.httpStatus}${control === null ? "" : ` (${control.detail})`}` });
+  } else if (control !== null) {
+    refusals.push({ code: "ACCESS_CONTROLLED", detail: `${read.finalUrl}: ${control.detail}` });
+  }
   if (!/html/i.test(read.contentType)) refusals.push({ code: "NOT_HTML", detail: `${read.finalUrl} is ${read.contentType || "an untyped body"}, not a web page` });
   if (refusals.length > 0) return refusal(identity, lead, refusals, measurement);
 
@@ -718,7 +729,7 @@ export function verifyCampaignSitePage(identity: CampaignSiteIdentity, lead: Cam
 /* ------------------------------------------------------ the robots-first read */
 
 /**
- * Read one lead robots-first. The host is judged before any request, so a
+ * Read one lead robots-first, recording the robots verdict. The host is judged before any request, so a
  * social, aggregator, news, government, archive or search host is never asked
  * for anything, robots.txt included.
  */
@@ -730,7 +741,7 @@ export async function readCampaignSiteLead(
   if (pre !== null) return { ok: false, refusal: pre, fetched: null };
   const fetched = await researchFetch(lead.url, runtime);
   if (fetched.outcome === "REFUSED") {
-    const code = /robots\.txt|recorded wall|waits on the owner/.test(fetched.reason) ? "ROBOTS_REFUSED" : /redirect|not a public/.test(fetched.reason) ? "LEAD_URL_INVALID" : "TRANSPORT_FAILED";
+    const code = /recorded wall|waits on the owner/.test(fetched.reason) ? "ACCESS_CONTROLLED" : /redirect|not a public/.test(fetched.reason) ? "LEAD_URL_INVALID" : "TRANSPORT_FAILED";
     return { ok: false, refusal: { code, detail: `${fetched.refusedUrl}: ${fetched.reason}` }, fetched };
   }
   if (fetched.transportError !== null || fetched.status === null || fetched.sha256 === null) {

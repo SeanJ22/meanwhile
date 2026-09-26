@@ -5,9 +5,33 @@
  * adapters that arrived with the composite: identify yourself, go at a human
  * pace, honour `Retry-After`, and never parallelize against a single tenant.
  * Engineering manners, not hedging — see `CLAUDE.md` on public records.
+ *
+ * **HONEST IDENTITY, NEVER A DISGUISE.** (2026-09-25.)
+ *
+ * Sean's decision of 2026-09-25 authorizes reading public pages whatever
+ * robots.txt says and "does not extend to bypassing authentication or other
+ * access controls". The line this module draws from it: saying who we are is
+ * always allowed, pretending to be someone else is not. So every request here
+ * carries the project's own identified `User-Agent` (`sourceUserAgent()`), and
+ * when a filter refuses Node's own client (a 403, or a challenge page at 200)
+ * the SAME identity is asked once more through `curl`, a different HTTP client,
+ * with its purpose and contact in the fields built for them
+ * (`identificationHeaders`). Measured 2026-09-25 on the Cloudflare-fronted
+ * Sutton, Newbury and Kearsarge hosts: Node's client is challenged whatever it
+ * sends, and the honestly identified `curl` request is admitted 30 of 30.
+ *
+ * What was removed that day, because each one misrepresented who we are to get
+ * past a filter: the browser profile (a Chrome `User-Agent` and browser
+ * navigation headers, asked for first by four wiring rows), rung 3 (the same
+ * browser header set after a 403), rung 3b (a plain Chrome `User-Agent` with
+ * the project's name taken out), and the browser header sets on the `curl`
+ * rung. No challenge or CAPTCHA is ever answered or scripted past: a challenge
+ * from the `curl` request is a WALL naming rung 4, and a 401 or 407 is never
+ * re-asked at all. `tests/robots-recorded-not-blocking.test.ts` holds this.
  */
 
 import { recordAcquiredResponse } from "./acquisition-trace.ts";
+import { challengeIn } from "./challenge-signatures.ts";
 import {
   sourceAcquisitionSecondsRemaining,
   sourceAcquisitionSleep,
@@ -34,18 +58,14 @@ export class SourceHttpError extends Error {
   readonly status: number;
   readonly url: string;
   /**
-   * The FURTHEST LADDER RUNG this retrieval reached before it stopped (F22,
-   * 2026-08-20) — the numbering in `CLAUDE.md` and `docs/source-ladder.md`,
-   * never a parallel vocabulary invented here.
-   *
-   * `2` plain fetch · `3` fetch with the full browser header set · `4` a
-   * different CLIENT whose TLS fingerprint passes. A wall is recorded on the
-   * rung it stopped at so the next session starts at the next rung instead of
-   * re-walking the ones already known to fail — "every wall that falls becomes
-   * a rung, so it never costs a second session", read from the other side.
+   * The ladder rung this retrieval stopped at (F22, 2026-08-20) — the numbering
+   * in `CLAUDE.md` and `docs/source-ladder.md`: `2` the plain identified fetch
+   * (Node's client), `4` the same identity through a different client (`curl`).
+   * Rung 3 (the browser header set) was retired on 2026-09-25 because it
+   * disguised the client; a stored rung 3 from before still reads.
    *
    * This is deliberately not a terminal state and there is no `SOURCE_BLOCKED`
-   * beside it: rungs 5 through 14 exist and are unwalked by this client.
+   * beside it: a wall is one route closed, never a fact about the record.
    */
   readonly rung: number;
 
@@ -63,32 +83,6 @@ export interface HttpOptions {
   fetchImpl?: typeof fetch;
   accept?: string;
   signal?: AbortSignal;
-  /**
-   * Which retrieval profile to present — the **browser rung** (M79, born
-   * 2026-08-15).
-   *
-   * `"index"` (the default) is the polite civic-index client every adapter
-   * has used since the beginning: our own `User-Agent` with a contact
-   * address, and nothing else.
-   *
-   * `"browser"` is the next rung up the ladder for a host that refuses that
-   * client. `newbury.nh.gov` and `kearsarge.org` both answer **403 to the
-   * index profile and 200 to a browser** — and both publish exactly the
-   * meeting notices New Hampshire's RSA 91-A obliges them to publish. Nothing
-   * about that refusal is an access control: there is no login, no token, no
-   * robots directive naming these paths, and the pages serve to any member of
-   * the public who opens them. It is a WAF's default posture toward an
-   * unfamiliar client string, and stepping up to the profile the same public
-   * page already serves is content negotiation, not circumvention.
-   *
-   * **The identification survives the step.** The browser profile still
-   * carries `we-the-people civic meeting index (contact: …)` at the end of
-   * its `User-Agent`, so an administrator reading a log still has somewhere
-   * to write; the pacing, the `Retry-After` handling and the serialization
-   * are unchanged. We look like a browser to a filter and like ourselves to a
-   * human — which is the honest way round.
-   */
-  profile?: "index" | "browser";
   /**
    * What a real document from this URL must contain — **RULING 43, moved one
    * layer down, to the fetch (NH Hunt 3, 2026-08-21).**
@@ -149,9 +143,7 @@ export interface HttpOptions {
    * real rungs.
    */
   ladder?: {
-    /** Rung 3: the same client with the full browser header set. */
-    browserFetch?: typeof fetch;
-    /** Rung 4: a different client, whose TLS fingerprint passes. */
+    /** Rung 4: the same identity through a different client (`curl`). */
     curl?: (
       url: string,
       headers: Record<string, string>,
@@ -182,11 +174,6 @@ export function notADocument(text: string, expect?: HttpOptions["expect"]): stri
   return null;
 }
 
-/**
- * The browser profile's headers — a real Chrome's, with our identification
- * appended to the `User-Agent` so the step up the ladder does not cost the
- * contact address.
- */
 /**
  * Identify this project in the headers RFC 9110 provides for it.
  *
@@ -224,8 +211,13 @@ export function notADocument(text: string, expect?: HttpOptions["expect"]): stri
  * hosts ALLOWLIST it — `states/nj/NOTES.md` records `morriscountyclerk.org`
  * and `states/az/NOTES.md` records `tucsonaz.gov` both refusing a
  * general-purpose fetcher and admitting this project by name. Dropping the
- * suffix globally would trade one family of hosts for another. It is a RUNG,
- * walked when the identified client is refused.
+ * suffix globally would trade one family of hosts for another.
+ *
+ * **Since 2026-09-25 these headers travel BESIDE the identified `User-Agent`,
+ * never instead of it.** The rung that paired them with a clean Chrome
+ * `User-Agent` (rung 3b) left our name out of the one field the filter reads,
+ * which is a disguise, and it is gone; a host that refuses our name is a wall
+ * pursued by other public routes.
  */
 export function identificationHeaders(): Record<string, string> {
   const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
@@ -237,41 +229,27 @@ export function identificationHeaders(): Record<string, string> {
 }
 
 /**
- * The browser header set with the project's name taken OUT of the `User-Agent`
- * and put into the fields built for it — rung 3b.
- *
- * Same manners, same disclosure, different envelope. See
- * `identificationHeaders` for the measurement.
+ * The headers of the first request: the project's own identified `User-Agent`
+ * and an `Accept`. Exported so a script that must build its own request sends
+ * the same honest client rather than a borrowed one.
  */
-export function identifiedBrowserHeaders(): Record<string, string> {
-  const { "User-Agent": _drop, ...rest } = browserProfileHeaders();
+export function sourceRequestHeaders(accept?: string): Record<string, string> {
   return {
-    ...rest,
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    ...identificationHeaders(),
+    "User-Agent": sourceUserAgent(),
+    Accept: accept ?? "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
   };
 }
 
-export function browserProfileHeaders(): Record<string, string> {
-  return {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-      `(KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 ${sourceUserAgent()}`,
-    Accept:
-      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "none",
-    "Upgrade-Insecure-Requests": "1",
-  };
+/** The `curl` request's headers: the same identity, with purpose and contact in the fields built for them. */
+export function curlRequestHeaders(accept?: string): Record<string, string> {
+  return { "User-Agent": sourceUserAgent(), Accept: accept ?? "*/*", ...identificationHeaders() };
 }
 
 /**
- * The second half of the browser rung, and the reason it needed measuring
- * rather than assuming: **the headers are not what these two hosts read.**
+ * Rung 4: the same identity through a different client. It began as the
+ * second half of the (retired) browser rung, and the reason it needed
+ * measuring rather than assuming: **the headers are not what these hosts read.**
  *
  * Node's `fetch` (undici) sending the exact browser headers above still gets
  * 403 from both hosts; `curl` sending the identical headers gets 200. The
@@ -281,9 +259,10 @@ export function browserProfileHeaders(): Record<string, string> {
  * is not there. So when the in-process request is refused, the same request is
  * re-issued through the system `curl`, a different TLS stack.
  *
- * Same manners either way: one serialized request, our contact string in the
- * `User-Agent`, no retry storm. `child_process` is imported dynamically so
- * this module stays safe to reach from a client chunk.
+ * Same manners either way: one serialized request, our own name in the
+ * `User-Agent` (since 2026-09-25 never a browser's), no retry storm, and no
+ * challenge answered. `child_process` is imported dynamically so this module
+ * stays safe to reach from a client chunk.
  */
 export type CurlProcessRunner = (
   args: readonly string[],
@@ -358,111 +337,13 @@ export async function curlGetText(
 }
 
 /**
- * **A bot-detection interstitial served with HTTP 200.** (F01-continued
- * session 2, item 0C, 2026-08-19.)
- *
- * The browser rung above escalates to a different TLS stack on a **403**. It
- * had never been asked what to do about a **200** — and Apptegy's edge does
- * not refuse an unfamiliar client, it answers it with a 3 KB page titled
- * "Client Challenge" and a `200 OK`. Every layer above then behaved
- * perfectly: the fetch succeeded, the parse succeeded, the extraction found
- * no content because there was none, and the body was recorded as a page that
- * says nothing.
- *
- * That is `CLAUDE.md`'s "an operation that can return nothing must be asked
- * what it returned" and "a failed fetch never silently empties a previously
- * full surface", both landing in the ONE function every adapter fetches
- * through. It is also the fifth sighting of the shape.
- *
- * **Nothing here defeats a challenge.** These signatures cause the request to
- * be re-issued through `curl` — the same rung 4 the 403 path already uses,
- * and the same public page: the host serves the real 260 KB document to that
- * client with no challenge, no token, and no authentication. If the second
- * client is challenged too, the retrieval is reported as a FAILURE naming the
- * wall, which is the whole point — a challenge page must never be mistaken
- * for a body that publishes nothing.
+ * **A bot-detection interstitial served with HTTP 200** is recognised by
+ * `challengeIn` (`./challenge-signatures.ts`, a pure leaf since 2026-09-25 so
+ * the access-control rule in `lib/hunt/access-control.ts` can use it). A
+ * challenge is an access control: it is recognised so a read is recorded as a
+ * WALL instead of a document, and it is never answered, solved or scripted past.
  */
-/**
- * **THE SIZE FLOOR IS PER-SIGNATURE, NOT GLOBAL** (NH Hunt, 2026-08-20).
- *
- * The floor exists for exactly one signature: a real 260 KB article that
- * quotes "Checking your browser" is a page, not a wall. It was applied to all
- * seven, and that is what let a challenge page through — Cloudflare's current
- * interstitial is **29,809 bytes**, comfortably over the 20 KB floor, so a
- * KEARSARGE REGIONAL SCHOOL DISTRICT board-roster page served as a challenge
- * was handed to the extractor as a document. Layer 5 read the challenge page's
- * own table, found no person in it, and reported `ZERO_ROWS` — a finding about
- * the district's page, when the truth was that we never saw the district's
- * page at all.
- *
- * That is the wall-rendered-as-an-emptiness shape the transparency mandate
- * forbids by name, and it was one line of arithmetic.
- *
- * A signature that names a vendor's own machinery — `cdn-cgi/challenge-platform`,
- * `<title>Just a moment...</title>`, `_Incapsula_Resource` — cannot appear in a
- * real article by accident, so it needs no floor and gets none. Only the loose
- * PROSE signature keeps one.
- */
-const CHALLENGE_SIGNATURES: readonly {
-  name: string;
-  test: RegExp;
-  /** Bytes above which this signature is not trusted. Absent means any size. */
-  maxBytes?: number;
-}[] = [
-  { name: "Fastly/Imperva client challenge", test: /<title>\s*Client Challenge\s*<\/title>/i },
-  { name: "Cloudflare 'just a moment'", test: /<title>\s*Just a moment\.\.\.\s*<\/title>/i },
-  /*
-   * The modern managed challenge, and the three marks that are UNAMBIGUOUS.
-   *
-   * `window._cf_chl_opt` is the challenge's own options object, the Turnstile
-   * widget host is only loaded by a challenge, and the prose line appears
-   * nowhere else. Verified against this repo's two `schedulepage` fixtures,
-   * which are real pages from a Cloudflare-fronted host: all three are absent
-   * from both, and all three are present in the 29,809-byte interstitial
-   * Kearsarge served on 2026-08-20.
-   */
-  /*
-   * The Turnstile host counts only as a script the page loads. A resource hint
-   * is not a challenge: Chandler, AZ's real City Clerk page (2026-09-24, 210 KB,
-   * 33 sittings) carries `<link rel="preconnect" href="https://challenges.cloudflare.com">`
-   * for its forms, and reading the bare host as a wall marked it refused.
-   */
-  {
-    name: "Cloudflare managed challenge",
-    test: /window\._cf_chl_opt|<script\b[^>]*challenges\.cloudflare\.com|Performing security verification/i,
-  },
-  { name: "Cloudflare attention-required", test: /Attention Required!\s*\|\s*Cloudflare/i },
-  { name: "Imperva/Incapsula", test: /_Incapsula_Resource|Incapsula incident ID/i },
-  { name: "PerimeterX", test: /px-captcha|PerimeterX/i },
-  /*
-   * The two that KEEP the floor, and why — corrected the same day the floor
-   * was made per-signature, because the first version of that change removed
-   * it from this one and broke two tests immediately.
-   *
-   * `cdn-cgi/challenge-platform` is NOT a challenge marker on its own:
-   * Cloudflare injects `/cdn-cgi/challenge-platform/scripts/jsd/main.js` into
-   * ORDINARY pages as its JS-detections beacon, and both recorded
-   * `schedulepage` fixtures — real Morris Hills pages that parse into real
-   * meetings — carry it. Reading it as a wall at any size would have marked a
-   * working source refused, which is the same defect pointed the other way.
-   * The floor is what keeps it usable: an 82 KB agenda page is a page.
-   */
-  {
-    name: "Cloudflare interstitial",
-    test: /cdn-cgi\/challenge-platform|cf-browser-verification/i,
-    maxBytes: 20_000,
-  },
-  { name: "browser check", test: /Checking your browser before accessing/i, maxBytes: 20_000 },
-];
-
-/** The named wall, or null when the body is a real page. */
-export function challengeIn(text: string): string | null {
-  return (
-    CHALLENGE_SIGNATURES.find(
-      (s) => (s.maxBytes === undefined || text.length <= s.maxBytes) && s.test.test(text),
-    )?.name ?? null
-  );
-}
+export { challengeIn } from "./challenge-signatures.ts";
 
 /**
  * **THE ONE FINALIZER EVERY TRANSPORT RUNG PASSES THROUGH** — A-003.
@@ -534,30 +415,57 @@ export function readValidatedResponse(
   };
 }
 
+/** The access-control statuses Node's client is never re-asked for: authentication, not a filter. */
+const AUTHENTICATION_STATUS = new Set([401, 407]);
+
+/**
+ * Rung 4, once: the same identity through `curl`, through the one finalizer. A
+ * 403 or a challenge page here is a WALL on rung 4 — the filter refused who we
+ * are, and nothing else is tried.
+ */
+async function curlRung(
+  url: string,
+  curl: NonNullable<NonNullable<HttpOptions["ladder"]>["curl"]>,
+  accept: string | undefined,
+  signal: AbortSignal | undefined,
+  expect: HttpOptions["expect"],
+): Promise<{ status: number; contentType: string; text: string }> {
+  let response: Awaited<ReturnType<typeof curl>>;
+  try {
+    response = await curl(url, curlRequestHeaders(accept), signal);
+  } catch (error) {
+    if (error instanceof SourceHttpError && error.status === 403) {
+      throw new SourceHttpError(
+        `HTTP 403 for ${url} — refused to our own name on rung 4 as on rung 2. An access control: a WALL, ` +
+          "never bypassed with another identity.",
+        403,
+        url,
+        4,
+      );
+    }
+    throw error;
+  }
+  return readValidatedResponse(url, 4, response, expect);
+}
+
 /**
  * One polite GET returning the body as text. Retries 429 and 5xx a small
  * number of times, honouring `Retry-After`; everything else fails immediately.
+ * A 403 or a challenge page from Node's client is asked once more with the same
+ * identity through `curl` (rung 4); a 401 or 407 is never re-asked.
  */
 export async function politeGetText(
   url: string,
   options: HttpOptions = {},
 ): Promise<{ status: number; contentType: string; text: string }> {
   const impl = options.fetchImpl ?? fetch;
-  const browser = options.profile === "browser";
   /*
-   * A-003 · WHETHER THE LADDER IS WALKED, DECIDED ONCE.
-   *
-   * `!options.fetchImpl` was tested at two separate escalation sites, which is
-   * how one of them acquired a return path the other did not have. It is one
-   * named condition now, and it is `true` in production (nothing is injected)
-   * and `true` for a test that deliberately supplies the rungs it wants driven.
+   * A-003 · WHETHER RUNG 4 IS WALKED, DECIDED ONCE: true in production (nothing
+   * injected) and for a test that deliberately supplies the `curl` double.
    */
   const escalates = !options.fetchImpl || options.ladder !== undefined;
-  const browserFetch = options.ladder?.browserFetch ?? impl;
   const curl = options.ladder?.curl ?? curlGetText;
-  const headers: Record<string, string> = browser
-    ? { ...browserProfileHeaders(), ...(options.accept ? { Accept: options.accept } : {}) }
-    : { "User-Agent": sourceUserAgent(), Accept: options.accept ?? "*/*" };
+  const headers = sourceRequestHeaders(options.accept);
   let lastStatus = 0;
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -575,163 +483,39 @@ export async function politeGetText(
         contentType: response.headers.get("content-type") ?? "",
         text,
       };
-      const wall = challengeIn(text);
-      if (!wall) {
-        // A-003: one finalizer, and this rung goes through it like every other.
-        return readValidatedResponse(url, browser ? 3 : 2, here, options.expect);
+      // A challenge served at 200 to Node's client: the same identity asks once through `curl`.
+      if (challengeIn(text) !== null && escalates) {
+        return await curlRung(url, curl, options.accept, options.signal, options.expect);
       }
-      // A 200 that is not the page. Step to the other client — same rung as
-      // the 403 path — and if that is challenged too, say so out loud rather
-      // than handing an empty document upward as a successful read.
-      if (browser && escalates) {
-        // Rung 4 answers on its own terms and gets the same question asked of
-        // it, by the same function. A document check that only guarded one of
-        // two return paths would be a guard with a door beside it — which is
-        // exactly what A-003 found on the 403 path below.
-        return readValidatedResponse(
-          url,
-          4,
-          await curl(url, headers, options.signal),
-          options.expect,
-        );
-      }
+      // A-003: one finalizer. A challenge that is not re-asked is a WALL here.
+      return readValidatedResponse(url, 2, here, options.expect);
+    }
+
+    if (AUTHENTICATION_STATUS.has(response.status)) {
       throw new SourceHttpError(
-        `${wall} at ${url} — HTTP 200 carrying a challenge page rather than the ` +
-          "document. This is a WALL, not an empty page.",
+        `HTTP ${response.status} for ${url} — authentication is required. An access control: a WALL, never ` +
+          "bypassed; no credential is sent and nothing else is tried.",
         response.status,
         url,
-        // Stopped at the profile in hand; rung 4 was not attempted here.
-        browser ? 3 : 2,
+        2,
       );
     }
 
-    /*
-     * **A 403 IS A RUNG, NOT AN ANSWER — AND THE LADDER IS WALKED IN ORDER.**
-     * (Widened 2026-08-20, NH Hunt.)
-     *
-     * The escalation to a different TLS stack was already here and was reached
-     * only from the BROWSER profile, so a caller on the plain profile — which
-     * is every adapter that does not opt in, including `ical` — stopped at
-     * rung 2 and reported a wall. The Town of Newbury proved the cost in one
-     * measurement: its own `export.ics` answers **403 to this process and 200
-     * to `curl`, 467,525 bytes, with either User-Agent**. Nothing about the
-     * headers mattered; the TLS fingerprint did. Ten wired Newbury bodies
-     * would have rendered as unreachable against a feed that was serving.
-     *
-     * So the rungs are walked in the order `CLAUDE.md` numbers them:
-     *   rung 2 refused → rung 3, the full browser header set
-     *   rung 3 refused → rung 4, a different client
-     *
-     * Only when the caller has not injected a `fetchImpl`, because a test's
-     * fake fetch is the thing under test and must not be routed around.
-     */
-    if (escalates && response.status === 403) {
-      if (!browser) {
-        const withBrowserHeaders = await browserFetch(url, {
-          headers: {
-            ...browserProfileHeaders(),
-            ...(options.accept ? { Accept: options.accept } : {}),
-          },
-          signal: options.signal,
-        });
-        if (withBrowserHeaders.ok) {
-          const text = await withBrowserHeaders.text();
-          options.signal?.throwIfAborted();
-          /*
-           * A-003 · THIS RETURN WAS THE DEFECT.
-           *
-           * It read `if (!challengeIn(text)) return {…}` — a KNOWN
-           * interstitial was caught and everything else was handed upward as
-           * a document. A blank body, a truncated transfer, or an `.ics` URL
-           * answering with an HTML error page all passed, and passed ONLY
-           * here: the same bytes arriving on rung 2 were refused by
-           * `notADocument` two screens above.
-           *
-           * The failure that makes it concrete: a host that 403s the index
-           * client and answers the browser headers with an empty 200 would
-           * hand `parseIcs` an empty string. `accountedNormalize` would then
-           * refuse the zero-row result and turn the whole refresh red for a
-           * parser that did nothing wrong — or, with one drop recorded
-           * anywhere, would have passed silently, which is A-002.
-           */
-          if (challengeIn(text) === null) {
-            return readValidatedResponse(
-              url,
-              3,
-              {
-                status: withBrowserHeaders.status,
-                contentType: withBrowserHeaders.headers.get("content-type") ?? "",
-                text,
-              },
-              options.expect,
-            );
-          }
-        }
-      }
-      /*
-       * RUNG 3b — SAY WHO WE ARE SOMEWHERE THE FILTER IS NOT READING.
-       * (2026-08-26, the descent-resume session.)
-       *
-       * Walked before rung 4 because it is the cheaper question and, on the
-       * host family that produced it, the only one that works: `*.nh.gov`
-       * refuses rung 2, rung 3 AND rung 4, because all three carry
-       * `we-the-people civic meeting index` inside the `User-Agent`, and that
-       * substring is the whole of the wall. A clean UA plus `From:` and
-       * `X-Purpose:` is admitted by every one of them.
-       *
-       * Thirty-odd New Hampshire state hosts sat behind this, and a private
-       * curl-only client in this session's census walk had already reported
-       * 23 governments "unreachable" because of it. Not a wall around the
-       * data — a wall around our own name, in the one header a WAF reads
-       * first.
-       */
-      const identified = await browserFetch(url, {
-        headers: {
-          ...identifiedBrowserHeaders(),
-          ...(options.accept ? { Accept: options.accept } : {}),
-        },
-        signal: options.signal,
-      });
-      if (identified.ok) {
-        const text = await identified.text();
-        options.signal?.throwIfAborted();
-        if (challengeIn(text) === null) {
-          return readValidatedResponse(
-            url,
-            3,
-            {
-              status: identified.status,
-              contentType: identified.headers.get("content-type") ?? "",
-              text,
-            },
-            options.expect,
-          );
-        }
-      }
-
-      // Rung 4, and it used to be returned RAW — neither `challengeIn` nor
-      // `notADocument` ever saw it. A different client's 200 is a status like
-      // any other status (A-003).
-      return readValidatedResponse(
+    if (response.status === 403) {
+      // The same identity, once, through another client. A refusal there is the wall.
+      if (escalates) return await curlRung(url, curl, options.accept, options.signal, options.expect);
+      throw new SourceHttpError(
+        `HTTP 403 for ${url} — an access control refused the identified client. A WALL, never bypassed with ` +
+          "another identity.",
+        403,
         url,
-        4,
-        await curl(
-          url,
-          browser ? headers : browserProfileHeaders(),
-          options.signal,
-        ),
-        options.expect,
+        2,
       );
     }
 
     const retryable = response.status === 429 || response.status >= 500;
     if (!retryable || attempt === MAX_RETRIES) {
-      throw new SourceHttpError(
-        `HTTP ${response.status} for ${url}`,
-        response.status,
-        url,
-        browser ? 3 : 2,
-      );
+      throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }
 
     const retryAfter = Number(response.headers.get("retry-after"));
@@ -742,7 +526,7 @@ export async function politeGetText(
     await sourceAcquisitionSleep(waitMs, options.signal);
   }
 
-  throw new SourceHttpError(`HTTP ${lastStatus} for ${url}`, lastStatus, url, browser ? 3 : 2);
+  throw new SourceHttpError(`HTTP ${lastStatus} for ${url}`, lastStatus, url, 2);
 }
 
 /** One polite GET returning parsed JSON. */
@@ -762,68 +546,54 @@ export async function politeGetJson<T>(
  * (2026-08-27, the coverage-truth session.)
  *
  * **Why this is here and not private to `pnpm pdf:read`.** Every other
- * retrieval in this repository is identified, spaced and laddered by this
- * module, and a binary fetched by a script's own `fetch` call is a second
- * client with its own failure modes and its own idea of who we are. The CAWCD
- * board publishes its 2026 meeting schedule as a PDF and links it from its own
- * meetings page; reading that link is a retrieval like any other.
+ * retrieval in this repository is identified and spaced by this module, and a
+ * binary fetched by a script's own `fetch` call is a second client with its
+ * own failure modes and its own idea of who we are.
  *
- * **It walks rung 2 and rung 3 and stops there, and that is stated rather than
- * hidden.** `politeGetText` escalates to rung 4 (`curl`, a different TLS stack)
- * by re-issuing the request through a text client, which cannot carry bytes
- * back intact. A host that refuses both rungs here is a WALL on rung 3 — the
- * error says so, with the rung — and the next session escalates from there.
- * That is the ladder's own bargain: **a wall names the rung it stopped at, so
- * it never costs a second session the same climb** (RULING 184 — a blocked
- * route is never a blocked fact).
+ * One identified request (since 2026-09-25 there is no browser-header second
+ * attempt; `curl` cannot carry bytes back intact through the text client). A
+ * refusal is a WALL on rung 2 — the error says so — and a zero-byte 200 is a
+ * failed retrieval, never an empty document.
  */
 export async function politeGetBytes(
   url: string,
   options: HttpOptions = {},
 ): Promise<{ status: number; contentType: string; bytes: Uint8Array; rung: number }> {
   const impl = options.fetchImpl ?? fetch;
-  let lastStatus = 0;
-
-  for (const [rung, headers] of [
-    [2, { "User-Agent": sourceUserAgent(), Accept: options.accept ?? "*/*" }],
-    [3, { ...browserProfileHeaders(), ...(options.accept ? { Accept: options.accept } : {}) }],
-  ] as const) {
-    const response = await impl(url, { headers, signal: options.signal });
-    lastStatus = response.status;
-    if (!response.ok) continue;
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    options.signal?.throwIfAborted();
-    /*
-     * A ZERO-BYTE 200 IS A FAILED RETRIEVAL, NOT AN EMPTY DOCUMENT.
-     * The same rule `readValidatedResponse` applies to text, and the same
-     * reason: an operation that can return nothing must be asked what it
-     * returned, and a caller handed an empty buffer will report that the
-     * document says nothing.
-     */
-    if (bytes.length === 0) {
-      throw new SourceHttpError(
-        `${url} answered HTTP ${response.status} with ZERO bytes. That is a failed ` +
-          "retrieval, never an empty document.",
-        response.status,
-        url,
-        rung,
-      );
-    }
-    return {
-      status: response.status,
-      contentType: response.headers.get("content-type") ?? "",
-      bytes,
-      rung,
-    };
+  const response = await impl(url, { headers: sourceRequestHeaders(options.accept), signal: options.signal });
+  if (!response.ok) {
+    throw new SourceHttpError(
+      `HTTP ${response.status} for ${url}. This is a WALL on rung 2, not an absent document` +
+        ([401, 403, 407].includes(response.status) ? " — an access control, never bypassed." : "."),
+      response.status,
+      url,
+      2,
+    );
   }
-
-  throw new SourceHttpError(
-    `HTTP ${lastStatus} for ${url} on rungs 2 and 3. This is a WALL on rung 3, not an ` +
-      "absent document — rungs 4 and above are unwalked by this client.",
-    lastStatus,
-    url,
-    3,
-  );
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  options.signal?.throwIfAborted();
+  /*
+   * A ZERO-BYTE 200 IS A FAILED RETRIEVAL, NOT AN EMPTY DOCUMENT.
+   * The same rule `readValidatedResponse` applies to text, and the same
+   * reason: an operation that can return nothing must be asked what it
+   * returned, and a caller handed an empty buffer will report that the
+   * document says nothing.
+   */
+  if (bytes.length === 0) {
+    throw new SourceHttpError(
+      `${url} answered HTTP ${response.status} with ZERO bytes. That is a failed ` +
+        "retrieval, never an empty document.",
+      response.status,
+      url,
+      2,
+    );
+  }
+  return {
+    status: response.status,
+    contentType: response.headers.get("content-type") ?? "",
+    bytes,
+    rung: 2,
+  };
 }
 
 /**

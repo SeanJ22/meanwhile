@@ -135,6 +135,13 @@ export interface PromotedCivicDataReadOptions {
    * never by verification (`bypassCache`).
    */
   readonly attested?: AttestedPromotion;
+  /**
+   * The reader edge's copy of this pointer (`PromotedEdgeEntry`): the read is
+   * answered from it and the store is not opened. Only a reader request that
+   * entered the edge passes it (`readPromotedEdgeFirst`,
+   * lib/registry/runtime-edge.ts); the runner and every verification path never do.
+   */
+  readonly edge?: PromotedEdgeEntry<unknown>;
 }
 
 /** Whether a freshly read pointer is exactly the attested, proven version. */
@@ -190,7 +197,15 @@ export function attestPromotedVersion(
 ): AttestedPromotion | null {
   const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
   if (!proven) return null;
-  const { projection, candidate } = proven;
+  return attestationOf(recordClass, scope, proven.projection, proven.candidate);
+}
+
+function attestationOf(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  projection: PromotedProjection,
+  candidate: CandidateVersionRecord,
+): AttestedPromotion | null {
   const temporal = candidate.candidate.temporal;
   const retrievedAt = candidate.candidate.retrieval?.retrievedAt;
   if (typeof retrievedAt !== "string" || !temporal) return null;
@@ -204,6 +219,125 @@ export function attestPromotedVersion(
     version: temporal.version ?? null,
     sourceThrough: temporal.sourceThrough ?? null,
   };
+}
+
+/**
+ * **A PROVEN POINTER AS THE READER EDGE CARRIES IT.** (2026-09-25.)
+ *
+ * A cold /ballot and a cold Ask read their ballot, candidate, money and record
+ * families from the database: a pointer read and a proof read each, the proof
+ * alone up to 6.4 MB (Pima finance) on a cold instance. The standing runner
+ * already reads and proves each of them; it now publishes the proven pair on
+ * the reader edge, and a reader request answers the same typed read from it.
+ *
+ * What the edge carries is what the proof leaves behind, never less:
+ *
+ * - the pointer row itself (`PromotedProjection`: payload, the durable GOOD
+ *   receipt, the promotion instant, the newest unchanged confirmation), and
+ * - the attestation of the candidate the runner proved it against
+ *   (`AttestedPromotion`, RULING 288's "attest, never re-run", the same
+ *   record the supervisor hands its children): the payload's SHA-256 and the
+ *   candidate's retrieval instant, version, source-through and staleness.
+ *
+ * From those two the read is rebuilt exactly as `promotedResult` builds it
+ * from the database, so a reader sees the same kind (PROMOTED), the same
+ * metadata and the same staleness, measured at its own request instant. A copy
+ * that names another pointer, carries no GOOD receipt for its version, or whose
+ * payload does not hash to the attested payload is refused as
+ * PROMOTION_PROOF_INVALID, as the database path refuses a pointer whose proof
+ * fails. An answered, absent pointer travels as NOT_RECORDED, so a family with
+ * no pointer (the derived campaign sites today) costs no database read either.
+ */
+export type PromotedEdgeEntry<T = unknown> =
+  | {
+      readonly kind: "PROMOTED";
+      readonly projection: PromotedProjection<T>;
+      readonly attested: AttestedPromotion;
+    }
+  | {
+      readonly kind: "NOT_RECORDED";
+      readonly recordClass: RoutineRecordClass;
+      readonly scope: string;
+    };
+
+/**
+ * The runner's side: the edge entry for a read this process just made. A
+ * PROMOTED read yields its pointer and the attestation of the candidate its
+ * proof cleared (null when this process holds no proof of that exact version);
+ * an answered, absent pointer yields NOT_RECORDED; anything else yields null
+ * and publishes nothing.
+ */
+export function promotedEdgeEntryOf<T>(
+  result: CivicDataReadResult<T>,
+  recordClass: RoutineRecordClass,
+  scope: string,
+  store?: CivicDataReadStore,
+): PromotedEdgeEntry<T> | null {
+  if (result.kind === "NOT_RECORDED") return { kind: "NOT_RECORDED", recordClass, scope };
+  if (result.kind !== "PROMOTED") return null;
+  const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
+  if (!proven || proven.projection.versionId !== result.projection.versionId) return null;
+  const attested = attestationOf(recordClass, scope, result.projection, proven.candidate);
+  return attested === null ? null : { kind: "PROMOTED", projection: result.projection, attested };
+}
+
+/** Entries whose payload already hashed to its attestation in this process (each edge value is immutable). */
+const verifiedEdgeEntries = new WeakSet<object>();
+
+function promotedEdgeIssue(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  entry: Extract<PromotedEdgeEntry<unknown>, { kind: "PROMOTED" }>,
+): string | null {
+  const { projection, attested } = entry;
+  if (projection.key !== projectionKey(recordClass, scope) || projection.recordClass !== recordClass || projection.scope !== scope) {
+    return "the edge copy names another class or scope";
+  }
+  if (projection.lastKnownGoodVersionId !== projection.versionId) return "the current pointer and last-known-good pointer diverge";
+  if (attested.recordClass !== recordClass || attested.scope !== scope || attested.versionId !== projection.versionId) {
+    return "the attestation does not name the pointed version";
+  }
+  const receipt = parseValidationReceipt(projection.receipt);
+  if (
+    !receipt || receipt.decision !== "GOOD" || receipt.candidateId !== projection.versionId ||
+    receipt.sourceId !== projection.sourceId || receipt.recordClass !== recordClass || receipt.scope !== scope
+  ) return "the GOOD receipt does not identify the attested version";
+  if (!verifiedEdgeEntries.has(entry)) {
+    if (promotedPayloadSha256(projection.payload) !== attested.payloadSha256) return "the payload does not hash to the attested payload";
+    verifiedEdgeEntries.add(entry);
+  }
+  return null;
+}
+
+/** The reader's side: the typed read an edge entry stands for, measured at `now`. Never opens a store. */
+function readPromotedFromEdge<T>(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  entry: PromotedEdgeEntry<unknown>,
+  now: string,
+  maxAgeMs: number | undefined,
+): CivicDataReadResult<T> {
+  if (entry.kind === "NOT_RECORDED") {
+    if (entry.recordClass !== recordClass || entry.scope !== scope) {
+      return {
+        kind: "STORE_UNREACHABLE",
+        value: null,
+        metadata: emptyMetadata(recordClass, scope),
+        code: "PROMOTION_PROOF_INVALID",
+        detail: `The reader edge answered for ${projectionKey(entry.recordClass, entry.scope)}, not ${projectionKey(recordClass, scope)}.`,
+      };
+    }
+    return {
+      kind: "NOT_RECORDED",
+      value: null,
+      metadata: emptyMetadata(recordClass, scope),
+      detail: `The routine civic-data store answered and holds no canonical pointer for ${projectionKey(recordClass, scope)}.`,
+    };
+  }
+  const projection = entry.projection as PromotedProjection<T>;
+  const issue = promotedEdgeIssue(recordClass, scope, entry);
+  if (issue !== null) return promotionProofInvalidResult(recordClass, scope, projection, `the reader edge copy: ${issue}`);
+  return promotedResult(projection, attestedCandidate(entry.attested, projection), now, maxAgeMs);
 }
 
 function hasBatchReadDoor(store: CivicDataReadStore): store is CivicDataBatchReadStore {
@@ -421,6 +555,8 @@ export async function readPromotedCivicData<T>(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<T>> {
   const now = options.now ?? new Date().toISOString();
+  // The reader edge's copy answers without opening the store (and without any cache).
+  if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
   if (!injected && !process.env.DATABASE_URL) {
     return {
@@ -575,6 +711,8 @@ export async function readPromotedCivicDataBatch<T>(
   scopes: readonly string[],
   options: PromotedCivicDataReadOptions = {},
 ): Promise<readonly CivicDataReadResult<T>[]> {
+  // An edge entry answers one pointer; a batch never takes one.
+  if (options.edge !== undefined) throw new Error("A batch civic-data read takes no reader edge entry.");
   if (scopes.length === 0) return [];
   const injected = options.store !== undefined;
   if (!injected && !process.env.DATABASE_URL) {

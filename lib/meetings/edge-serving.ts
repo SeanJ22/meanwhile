@@ -9,9 +9,11 @@ import {
   scopesForStates,
   sha256OfJson,
   AUTHORITY_FAMILIES,
+  PROMOTED_AUTHORITY_FAMILIES,
   READER_ARTIFACT_FORMAT_VERSION,
   type AuthorityArtifactRef,
   type AuthorityFamily,
+  type PromotedFamilyArtifactValue,
   type ReaderGeoArtifact,
   type ReaderManifest,
   type ReaderManifestScope,
@@ -23,6 +25,7 @@ import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-b
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
+import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   resolveReaderArtifactStore,
   resolveReaderArtifactWriteStore,
@@ -32,6 +35,7 @@ import {
   readPreparedMeetingsProjection,
 } from "./prepared-snapshot.ts";
 import { activeReaderProofMeetingPin } from "./proof-pin.ts";
+import { applyMeetingFreshChecks, laterCheck, sameMeetingFreshChecks } from "./fresh-checks.ts";
 import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
@@ -94,6 +98,83 @@ export interface PublishMetadata {
   readonly sourceThrough: string | null;
   readonly retrievedAt: string | null;
   readonly promotedThrough: string | null;
+}
+
+/**
+ * What a manifest says about quiet re-checks (lib/meetings/fresh-checks.ts):
+ * the composition its scope artifacts were partitioned from, and each route's
+ * newest successful fresh check that found nothing new.
+ */
+export interface PublishReaderChecks {
+  readonly composition: string;
+  readonly freshChecks: Readonly<Record<string, string>>;
+}
+
+/** A manifest already states these checks and this "Last checked". */
+function manifestStatesChecks(manifest: ReaderManifest, generatedAt: string, checks: PublishReaderChecks | undefined): boolean {
+  return manifest.generatedAt === generatedAt &&
+    (manifest.composition ?? null) === (checks?.composition ?? null) &&
+    sameMeetingFreshChecks(manifest.freshChecks, checks?.freshChecks);
+}
+
+/** The manifest with new checks and "Last checked", everything it points at unchanged. */
+function manifestWithChecks(
+  manifest: ReaderManifest,
+  sequence: number,
+  update: { readonly generatedAt: string; readonly retrievedAt: string | null; readonly checks: PublishReaderChecks | undefined },
+): ReaderManifest {
+  const { freshChecks: _freshChecks, composition: _composition, ...rest } = manifest;
+  return {
+    ...rest,
+    sequence,
+    generatedAt: update.generatedAt,
+    retrievedAt: laterCheck(manifest.retrievedAt, update.retrievedAt),
+    ...(update.checks && Object.keys(update.checks.freshChecks).length > 0 ? { freshChecks: update.checks.freshChecks } : {}),
+    ...(update.checks ? { composition: update.checks.composition } : {}),
+  };
+}
+
+/**
+ * **A QUIET RE-CHECK REPUBLISHES THE MANIFEST ALONE** (2026-09-25).
+ *
+ * When the served scope artifacts are exactly the composition the prepared
+ * serving copy still holds (`composition`), and a partition was re-checked with
+ * nothing new, only "Last checked" and the route checks move: one small manifest
+ * write, compare-and-set like every publish, pointing at the same immutable
+ * artifacts. No row is read from the database and no artifact is rewritten. A
+ * manifest from another composition is refused (NOT_COMPOSABLE), and the caller
+ * publishes in full.
+ */
+export async function publishReaderEdgeChecks(
+  update: { readonly generatedAt: string; readonly retrievedAt: string | null; readonly checks: PublishReaderChecks },
+  options: { readonly store?: ReaderArtifactStore | null } = {},
+): Promise<PublishReaderEdgeResult> {
+  const store = options.store ?? resolveReaderArtifactWriteStore();
+  if (!store) return { status: "SKIPPED_NO_STORE" };
+  let current;
+  try {
+    current = await store.readManifest();
+  } catch (error) {
+    return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
+  }
+  if (!current) return { status: "NOT_COMPOSABLE", detail: "no served manifest to carry the checks" };
+  if (current.manifest.composition !== undefined && current.manifest.composition !== update.checks.composition) {
+    return { status: "NOT_COMPOSABLE", detail: "the served manifest was partitioned from another composition" };
+  }
+  const generatedAt = laterCheck(current.manifest.generatedAt, update.generatedAt) ?? update.generatedAt;
+  if (manifestStatesChecks(current.manifest, generatedAt, update.checks)) {
+    return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
+  }
+  const sequence = current.manifest.sequence + 1;
+  let result;
+  try {
+    result = await store.writeManifest(manifestWithChecks(current.manifest, sequence, { ...update, generatedAt }), current.etag ?? null);
+  } catch (error) {
+    return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
+  }
+  return result.modified
+    ? { status: "PUBLISHED", sequence, scopes: current.manifest.scopes.length, meetings: current.manifest.scopes.reduce((sum, scope) => sum + scope.meetingCount, 0) }
+    : { status: "RACED", sequence };
 }
 
 /** The other ready-to-display reader families the runner embeds in the manifest. */
@@ -229,6 +310,39 @@ export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "federal-directory",
   "campaign-sites",
   "state-legislators",
+];
+
+/**
+ * What a cold `/ballot` reads (2026-09-25): the map's four, and the proven
+ * pointers it read from the database in two stages until now — the ballots,
+ * the candidate profiles (with the derived campaign sites) and publications,
+ * the navigation links, the NH roster, FEC and state money. Never the
+ * Ask-only records (Pima finance, votes, statements, executive actions).
+ */
+/**
+ * What a cold `/api/funding` reads (2026-09-25): the registry and the federal
+ * directory that plan a target, and the money itself — FEC, state money, and
+ * the AZ ballot that carries Arizona's candidacy identity. Nothing else: the
+ * route used to fetch every family, Ask's records included.
+ */
+export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "registry-runtime",
+  "federal-directory",
+  "federal-funding",
+  "state-money",
+  "ballot-az",
+];
+
+export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  ...READER_MAP_AUTHORITY_FAMILIES,
+  "ballot-az",
+  "ballot-nh",
+  "candidate-profiles",
+  "candidate-publications",
+  "ballot-navigation",
+  "nh-members",
+  "federal-funding",
+  "state-money",
 ];
 
 // The reader fetches each large authority artifact from the edge at most once
@@ -384,6 +498,8 @@ export async function ensureReaderAuthorityEdge(
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
     wanted.has(family) ? fetchAuthorityValue(family, refs[family], store) : Promise.resolve(null);
+  // The proven-pointer families start with the others, never after them.
+  const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
   const [registry, federal, campaign, legislators, outcomes, commentAccess] = await Promise.all([
     fetchWanted("registry-runtime"),
     fetchWanted("federal-directory"),
@@ -398,7 +514,22 @@ export async function ensureReaderAuthorityEdge(
   if (legislators !== null) bundle.stateLegislators = { value: legislators as Record<string, OfficialStateLegislatorReadModel>, versionId: refs["state-legislators"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
   if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
-  return { ...bundle, ...registrations };
+  // The proven-pointer families, fetched beside the others. A family whose
+  // artifact is missing, failed or malformed adds nothing, and each of its
+  // pointers is then read from the database by its own settle.
+  const promoted = new Map<string, PromotedEdgeEntry>();
+  const promotedFamilies = new Set<string>();
+  const promotedValues = await promotedFetch;
+  PROMOTED_AUTHORITY_FAMILIES.forEach((family, index) => {
+    const artifact = promotedValues[index] as Partial<PromotedFamilyArtifactValue> | null;
+    if (artifact?.kind !== "PROMOTED_POINTERS" || !Array.isArray(artifact.entries)) return;
+    promotedFamilies.add(family);
+    for (const entry of artifact.entries) {
+      const pointer = entry?.kind === "PROMOTED" ? entry.projection?.key : entry?.kind === "NOT_RECORDED" ? `${entry.recordClass}:${entry.scope}` : null;
+      if (typeof pointer === "string") promoted.set(pointer, entry);
+    }
+  });
+  return { ...bundle, ...registrations, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
@@ -422,6 +553,8 @@ export async function publishReaderEdgeArtifacts(
     readonly extras?: PublishReaderExtras;
     readonly authority?: PublishAuthority;
     readonly registrations?: PublishRegistrations;
+    /** The composition and its quiet re-checks (lib/meetings/fresh-checks.ts), stated in the manifest. */
+    readonly checks?: PublishReaderChecks;
   } = {},
 ): Promise<PublishReaderEdgeResult> {
   const store = options.store ?? resolveReaderArtifactWriteStore();
@@ -469,7 +602,26 @@ export async function publishReaderEdgeArtifacts(
     const sameRegistrations = registrationVersions(
       current.manifest.registrations === undefined ? null : Object.entries(current.manifest.registrations).map(([state, ref]) => [state, ref.version] as const),
     ) === newRegistrationVersions;
-    if (sameSet && sameExtras && sameAuthority && sameRegistrations) return { status: "CURRENT", sequence: current.manifest.sequence, scopes: artifacts.length };
+    if (sameSet && sameExtras && sameAuthority && sameRegistrations) {
+      if (manifestStatesChecks(current.manifest, snapshot.generatedAt || now, options.checks)) {
+        return { status: "CURRENT", sequence: current.manifest.sequence, scopes: artifacts.length };
+      }
+      // The same data, re-checked: "Last checked" and the route checks move and
+      // nothing else, so the manifest points at the artifacts it already serves.
+      const sequence = current.manifest.sequence + 1;
+      let written;
+      try {
+        written = await store.writeManifest(
+          { ...manifestWithChecks(current.manifest, sequence, { generatedAt: snapshot.generatedAt || now, retrievedAt: metadata.retrievedAt, checks: options.checks }), sources: snapshot.sources },
+          current.etag ?? null,
+        );
+      } catch (error) {
+        return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
+      }
+      return written.modified
+        ? { status: "PUBLISHED", sequence, scopes: artifacts.length, meetings: snapshot.meetings.length }
+        : { status: "RACED", sequence };
+    }
   }
 
   const sequence = (current?.manifest.sequence ?? 0) + 1;
@@ -554,6 +706,8 @@ export async function publishReaderEdgeArtifacts(
     ...(options.extras?.everydayRouting !== undefined ? { everydayRouting: options.extras.everydayRouting } : {}),
     ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
     ...(registrationsComplete ? { registrations } : {}),
+    ...(options.checks && Object.keys(options.checks.freshChecks).length > 0 ? { freshChecks: options.checks.freshChecks } : {}),
+    ...(options.checks ? { composition: options.checks.composition } : {}),
   };
   let result;
   try {
@@ -632,7 +786,9 @@ export async function readReaderEdgeMeetings(
   }
   if (artifacts.length === 0) return fallback();
 
-  const value = mergeScopeArtifacts(artifacts, manifest);
+  // A quiet re-check since these artifacts were written restamps its route's
+  // fresh rows; "Last checked" is already the manifest's (lib/meetings/fresh-checks.ts).
+  const value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
   const complete = artifacts.length === needed.length;
   const read: MeetingsProjectionReadResult = {
     kind: "PROMOTED",

@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * THE IN-PROCESS DOUBLE.
@@ -54,6 +55,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   jsonTextAtPath,
+  projectAggregate,
   projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
@@ -94,6 +96,11 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
 
   return {
     read,
+
+    readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
+      const row = await read(id);
+      return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };
+    },
 
     mustRead: async (id: string): Promise<Persisted<T>> => {
       const row = await read(id);
@@ -311,6 +318,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
+    /* What readers were told Ask does not hold (schema v13). */
+    askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

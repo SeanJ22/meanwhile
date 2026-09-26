@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
@@ -251,12 +252,15 @@ function jsonPathLiteral(table: string, path: readonly string[]): string {
   return `{${path.join(",")}}`;
 }
 
-/* A `RecordProjection` as a Postgres expression over the `record` column:
-   `projectRecord`, built by the database, so a dropped field never leaves it.
+/* A `RecordProjection` as a Postgres expression over the `record` column (a
+   log's) or the `value` column (an aggregate's): `projectRecord`, built by the
+   database, so a dropped field never leaves it.
    Keys are CODE-PROVIDED and embedded as literals, so each is validated as a
    plain identifier exactly as a JSON path segment is. `jsonb_each` keeps only
    the keys the record holds, so an absent key stays absent. */
-function recordProjectionSql(table: string, projection: RecordProjection): string {
+function recordProjectionSql(table: string, projection: RecordProjection, column: "record" | "value" = "record"): string {
+  /* An aggregate's column is named through its table, so it is never read as the `value` column `jsonb_each` answers. */
+  const source = column === "record" ? "record" : `${table}.value`;
   const literal = (key: string): string => {
     if (!/^[A-Za-z0-9_]+$/.test(key)) {
       throw new Error(`${table}: unsafe projection key ${JSON.stringify(key)}`);
@@ -274,9 +278,9 @@ function recordProjectionSql(table: string, projection: RecordProjection): strin
     ];
   });
   const value = narrowed.length === 0 ? "t.value" : `CASE ${narrowed.join(" ")} ELSE t.value END`;
-  return `CASE WHEN jsonb_typeof(record) = 'object' THEN ` +
-    `(SELECT coalesce(jsonb_object_agg(t.key, ${value}), '{}'::jsonb) FROM jsonb_each(record) AS t ` +
-    `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE record END`;
+  return `CASE WHEN jsonb_typeof(${source}) = 'object' THEN ` +
+    `(SELECT coalesce(jsonb_object_agg(t.key, ${value}), '{}'::jsonb) FROM jsonb_each(${source}) AS t ` +
+    `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE ${source} END`;
 }
 
 /**
@@ -326,6 +330,28 @@ export function pgAggregateRepository<T>(
 
   return {
     read,
+
+    async readNarrowed(id, projection) {
+      /* Postgres narrows the row, so only the kept fields cross the wire; an
+         empty projection reads the revision and write time without the value
+         at all, so a large document is not even decompressed. A small answer,
+         so a POINT call, whatever the row's class. */
+      const narrowed = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
+      const rows = (await run(
+        "readNarrowed",
+        "POINT",
+        `SELECT id, revision, updated_at, ${narrowed} AS value FROM ${table} WHERE id = $1`,
+        [id],
+      )) as Record<string, unknown>[];
+      if (rows.length === 0) return null;
+      const row = rows[0];
+      return {
+        id: String(row.id),
+        revision: Number(row.revision),
+        updatedAt: new Date(row.updated_at as string).toISOString(),
+        value: parseValue<unknown>(row.value, `${where} id ${id}`),
+      };
+    },
 
     async mustRead(id) {
       const found = await read(id);
@@ -970,6 +996,8 @@ export async function createPgRepositories(
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
+    /* What readers were told Ask does not hold (schema v13). Ask's route adds through `pgAskGapObservationSink`, one atomic upsert per row. */
+    askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded),
       locks,

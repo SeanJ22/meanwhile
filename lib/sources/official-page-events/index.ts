@@ -1437,7 +1437,6 @@ export function makeOfficialPageEventsSource(
           const { text } = await politeGetText(pageUrl, {
             fetchImpl,
             accept: "text/html",
-            profile: wiring.config.profile === "browser" ? "browser" : "index",
             signal: query?.signal,
           });
           const collectedAt = new Date().toISOString();

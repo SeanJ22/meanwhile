@@ -10,7 +10,8 @@
  *     [--evidence "<KIND>|<publisher>|<url>"]...   (KIND: STATE_LISTING, COUNTY_PAGE, MEMBER_TOWN_PAGE, FEDERAL_LISTING)
  *
  * 1. Reads the candidate homepage robots-first (`researchFetch`): its final URL, title, sha256, and whether it
- *    prints the government's name. A challenge is not a reading.
+ *    prints the government's name. Robots.txt is read first and noted, never a refusal (owner decision 2026-09-25);
+ *    an access control (a login, a 403, a rate limit, a bot challenge) is not a reading and is never pushed past.
  * 2. Reads CISA's .gov registry file robots-first and finds the candidate's own row, when it is .gov.
  * 3. Reads each named evidence page robots-first and quotes where it names the site.
  * 4. Prints a draft `WebsiteCorrection` with the owner's rule applied (`websiteCorrectionIssues`).
@@ -19,7 +20,7 @@
  * `WEBSITE_CORRECTIONS`, where the tests hold it to the rule and the reference promotion reads its sources again.
  * A draft with issues is an unresolved case: it is reported by name, never committed.
  */
-import { challengeIn } from "../lib/sources/http.ts";
+import { accessControlIn } from "../lib/hunt/access-control.ts";
 import { memoryInProcess, nodeResearchGet, researchFetch, type ResearchRuntime } from "../lib/hunt/robots-first-fetch.ts";
 import { recordedMeetingsDiscovery, GAP_LEDGER_PATH } from "../lib/hunt/meetings-discovery.ts";
 import {
@@ -63,14 +64,22 @@ async function page(url: string) {
     notes.push(`${url}: not read (${got.reason})`);
     return null;
   }
-  if (got.status === null || got.status < 200 || got.status >= 300) {
-    notes.push(`${url}: ${got.transportError ?? `HTTP ${got.status}`}`);
+  /* Robots.txt was read first and recorded; its verdict never stops the read (owner decision 2026-09-25). It is noted, as evidence. */
+  const named = got.permissions.filter((p) => p.verdict === "DISALLOWED" || p.verdict === "CANNOT_TELL");
+  if (named.length > 0) notes.push(`${url}: read over robots.txt ${named.map((p) => `${p.origin} ${p.verdict}`).join(", ")} (recorded, not blocking: owner decision 2026-09-25)`);
+  if (got.status === null) {
+    notes.push(`${url}: ${got.transportError ?? "no response"}`);
     return null;
   }
   const body = text(got.body);
-  const challenge = challengeIn(body);
-  if (challenge !== null) {
-    notes.push(`${url}: a ${challenge} answered in place of the page; not a reading`);
+  /* An access control (a login, a 403, a rate limit, a bot challenge) is not a reading, and is never pushed past. */
+  const control = accessControlIn({ status: got.status, text: body });
+  if (control !== null) {
+    notes.push(`${url}: an access control answered in place of the page (${control.detail}); not a reading`);
+    return null;
+  }
+  if (got.status < 200 || got.status >= 300) {
+    notes.push(`${url}: ${got.transportError ?? `HTTP ${got.status}`}`);
     return null;
   }
   return { finalUrl: got.finalUrl, body, sha256: got.sha256!, at: new Date(runtime.now()).toISOString() };

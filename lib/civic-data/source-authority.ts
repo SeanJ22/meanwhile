@@ -407,14 +407,17 @@ export const SOURCE_AUTHORITIES = {
       // Newbury's CivicWeb portal (newburynh.civicweb.net) is a retired route
       // since 2026-09-25 — the host no longer resolves — and no longer inherits
       // meetings authority; the town's own calendar feed carries its Selectboard.
-      // Pima Community College's own permitted pages (2026-09-23); its Diligent
-      // tenant pima.community.highbond.com is a retired route (robots.txt
-      // Disallow: /) and no longer inherits meetings authority.
+      // Pima Community College's own pages (2026-09-23); its Diligent tenant
+      // pima.community.highbond.com is a retired route — superseded by these
+      // pages, which carry every sitting it did — and no longer inherits
+      // meetings authority. (It was retired for its robots.txt alone; since the
+      // owner decision of 2026-09-25 robots.txt blocks nothing, and the tenant
+      // is readable for the college's agenda links.)
       "https://www.pima.edu/robots.txt",
       "https://www.pima.edu/about-pima/leadership-policies/governing-board/",
       "https://events.pima.edu/",
-      // Sunnyside USD's own calendar JSON (robots.txt permits /api/; read
-      // 2026-09-23), unioned with its portal's list for the forward window.
+      // Sunnyside USD's own calendar JSON (read 2026-09-23), unioned with its
+      // portal's list for the forward window.
       "https://www.susd12.org/robots.txt",
       "https://www.susd12.org/api/calendars/150042/events",
       "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
@@ -435,6 +438,10 @@ export const SOURCE_AUTHORITIES = {
       "https://www.chandleraz.gov/robots.txt",
       "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
       "https://www.chandleraz.gov/rest/events/day/",
+      // The Council's Destiny Agenda month lists (2026-09-25), scoped to the
+      // tenant and the one meeting type wired; read once robots.txt stopped
+      // blocking public pages (owner decision, 2026-09-25).
+      "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
       // Two Newbury bodies the town calendar never carries, read from their
       // own publications (C9, 2026-09-24), each scoped to the one route wired:
       // the Library Trustees' notices feed on the library's site, and the
@@ -463,7 +470,7 @@ export const SOURCE_AUTHORITIES = {
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
       "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
       "www.tusd1.org",
-      "www.chandleraz.gov",
+      "www.chandleraz.gov", "public.destinyhosted.com",
       "newburynhlibrary.net", "www.newburyenergynh.org",
       "holbrookaz.gov", "winslowaz.suiteonemedia.com",
     ],
@@ -721,11 +728,14 @@ export const SOURCE_AUTHORITIES = {
     publisher: "City of Mesa City Clerk, on the city's public Legistar portal",
     trust: "T2_AUTHORITATIVE_DOCUMENT",
     sourceClass: "OFFICIAL_PLATFORM",
-    // The portal host only. robots.txt answered 404 (NO_ROBOTS) on 2026-08-28
-    // and 2026-09-25; the API's minutes host, legistar.granicus.com, disallows
-    // every agent and is never an allowed host here.
-    routePrefixes: ["https://mesa.legistar.com/"],
-    allowedFinalHosts: ["mesa.legistar.com"],
+    // The portal host, and the vendor's document host scoped to Mesa's own
+    // path. robots.txt answered 404 (NO_ROBOTS) on the portal on 2026-08-28 and
+    // 2026-09-25. legistar.granicus.com publishes `Disallow: /`, which kept it
+    // out until the owner decision of 2026-09-25 (robots.txt alone never blocks
+    // a public page); the minutes reader now follows a minutes link there when
+    // the portal carries none (lib/outcomes/minutes-ingest.ts).
+    routePrefixes: ["https://mesa.legistar.com/", "https://legistar.granicus.com/mesa/"],
+    allowedFinalHosts: ["mesa.legistar.com", "legistar.granicus.com"],
     jurisdictions: ["US-AZ"],
     recordClasses: ["MEETING_OUTCOME"],
     competentFacts: ["recorded council motion", "mover and seconder", "recorded result", "verbatim tabulation of votes", "minutes document standing (action minutes, minutes, approval recorded)", "minutes not yet published"],

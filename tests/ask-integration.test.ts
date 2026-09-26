@@ -801,7 +801,8 @@ test("ASK SIGNAL: there is a REAL production call site, in the route, after the 
   /* And it must be called with the DELIVERED answer, which is only known at
      the end — a call before synthesis would record an intention. */
   const captureAt = route.indexOf("await capture(mode,");
-  const synthesisAt = route.indexOf("await synthesizeAnswer(");
+  // The route calls the writing ladder (2026-09-25); synthesizeAnswer is its last rung.
+  const synthesisAt = route.indexOf("await synthesizeWithLadder(");
   assert.ok(captureAt > 0 && synthesisAt > 0);
   assert.ok(
     captureAt > synthesisAt,

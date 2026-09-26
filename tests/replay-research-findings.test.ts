@@ -113,3 +113,27 @@ test("LIVE: the complete chain approves what verifies twice, and its package ent
   assert.equal(payload.links.links[MAYES_KEY]?.campaign?.url, "https://www.krismayes.com", "the prior version is carried forward");
   assert.deepEqual(outcome.candidate.candidate.changeSet?.added.map((r) => r.key).sort(), [`links:${CHIPPERSON_KEY}`, `links:${DUARTE_KEY}`].sort());
 });
+
+/* Owner decision 2026-09-25: "Robots.txt alone must not block acquisition." A robots verdict held with a read is evidence, never a refusal. */
+test("ROBOTS IS RECORDED, NOT BLOCKING: held reads recorded under a disallowing robots.txt verify offline and approve live, exactly as allowed ones", async (t) => {
+  const disallowed = held.map((h) => ({ ...h, permission: "DISALLOWED" }));
+  const robots: HeldRead = { artifactId: "ar-held-duarte-robots", attemptId: "at-scout-duarte", canonicalUrl: "https://www.duarte4mendham.com/robots.txt", contentType: "text/plain",
+    httpStatus: 200, retrievedAt: "2026-09-21T02:23:00.000Z", body: "User-agent: *\nDisallow: /\n", sha256: sha256("User-agent: *\nDisallow: /\n"), methodRouteId: "scout:fetch_public", permission: null };
+  const offline = await replayResearchFindings({ subjects: committedSubjects(), findings, held: [...disallowed, robots], marginalia, prior: null, gate: readActivationGate("."), now: "2026-09-24T12:00:00.000Z" });
+  assert.equal(offline.counts.VERIFIED, 2);
+  assert.equal(offline.counts.ROBOTS_REFUSED ?? 0, 0);
+  assert.deepEqual(offline.wouldPublish.map((w) => w.key).sort(), [CHIPPERSON_KEY, DUARTE_KEY].sort());
+
+  const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-replay-robots-"));
+  t.after(() => rmSync(vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
+  const runtime = servedRuntime({
+    "https://www.duarte4mendham.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
+    [MEET]: { status: 200, body: fixture("duarte4mendham-meet-amalia.live.html") },
+    "https://www.chippersonforharding.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
+    [CHIP]: { status: 200, body: fixture("chippersonforharding-root.live.html") },
+  }, "2026-09-24T11:00:00.000Z");
+  const live = await replayResearchFindings({ subjects: committedSubjects(), findings, held: disallowed, marginalia: [], prior: null, gate: readActivationGate("."), now: "2026-09-24T12:00:00.000Z",
+    live: { runtime, vaultRoot, methodVersion: 1 } });
+  assert.ok(runtime.requests.includes(MEET) && runtime.requests.includes(CHIP), "the public pages are read over the robots.txt");
+  assert.deepEqual(live.chain!.approved.map((a) => a.campaignSite.candidacyId).sort(), [CHIPPERSON, DUARTE].sort());
+});

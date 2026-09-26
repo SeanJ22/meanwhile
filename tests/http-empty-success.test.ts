@@ -30,7 +30,8 @@ import { accountedNormalize } from "../lib/sources/normalize-account.ts";
  * This file holds the two halves of the close:
  *
  * 1. the fetch layer refuses a 200 that is not a document, on BOTH return
- *    paths — the in-process client and the curl rung;
+ *    paths — the in-process client and the curl rung (since 2026-09-25 the
+ *    curl rung carries the same identity; the browser-header rung 3 is gone);
  * 2. an honest empty — a real calendar with nothing in the served window — is
  *    still allowed through, because turning a quiet town into a red nightly
  *    job would be the WALL-versus-JOB confusion RULING 12 names, pointed at
@@ -243,19 +244,14 @@ const html404 = "<html><body><h1>404 Not Found</h1></body></html>";
 const refuse403 = (): Promise<Response> =>
   Promise.resolve(new Response("forbidden", { status: 403 }));
 
-test("A-003 · a rung-3 browser-header 200 carrying the wrong format is a WALL, not a document", async () => {
+test("A-003 · a rung-4 200 carrying the wrong format is a WALL, not a document", async () => {
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
       fetchImpl: refuse403 as unknown as typeof fetch,
       expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
       ladder: {
-        // Rung 3 answers 200 with an HTML error page. Before A-003 this was
+        // Rung 4 answers 200 with an HTML error page. Before A-003 this was
         // returned as the document.
-        browserFetch: (async () =>
-          new Response(html404, {
-            status: 200,
-            headers: { "content-type": "text/html" },
-          })) as unknown as typeof fetch,
         curl: async () => ({ status: 200, contentType: "text/html", text: html404 }),
       },
     }),
@@ -268,13 +264,12 @@ test("A-003 · a rung-3 browser-header 200 carrying the wrong format is a WALL, 
   );
 });
 
-test("A-003 · a rung-3 200 with an EMPTY body is a WALL — the case challengeIn cannot see", async () => {
+test("A-003 · a rung-4 200 with an EMPTY body is a WALL — the case challengeIn cannot see", async () => {
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
       fetchImpl: refuse403 as unknown as typeof fetch,
       ladder: {
-        browserFetch: (async () => new Response("   \n  ", { status: 200 })) as unknown as typeof fetch,
-        curl: async () => ({ status: 200, contentType: "", text: "" }),
+        curl: async () => ({ status: 200, contentType: "", text: "   \n  " }),
       },
     }),
     /an empty body/,
@@ -287,9 +282,8 @@ test("A-003 · the rung-4 curl fallback is validated too — it used to be retur
       fetchImpl: refuse403 as unknown as typeof fetch,
       expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
       ladder: {
-        // Rung 3 refuses outright, so the ladder falls through to rung 4 —
-        // which answers 200 with a page that is not the feed.
-        browserFetch: (async () => new Response("forbidden", { status: 403 })) as unknown as typeof fetch,
+        // Node's client is refused, so the same identity is asked through
+        // curl — which answers 200 with a page that is not the feed.
         curl: async () => ({ status: 200, contentType: "text/html", text: html404 }),
       },
     }),
@@ -302,17 +296,13 @@ test("A-003 · the rung-4 curl fallback is validated too — it used to be retur
   );
 });
 
-test("A-003 · a rung-3 200 that IS the document still succeeds, and reports rung 3's bytes", async () => {
+test("A-003 · a rung-4 200 that IS the document still succeeds, and reports rung 4's bytes", async () => {
   const feed = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Selectboard\nEND:VEVENT\nEND:VCALENDAR";
   const got = await politeGetText("https://town.example/export.ics", {
     fetchImpl: refuse403 as unknown as typeof fetch,
     expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
     ladder: {
-      browserFetch: (async () =>
-        new Response(feed, { status: 200, headers: { "content-type": "text/calendar" } })) as unknown as typeof fetch,
-      curl: async () => {
-        throw new Error("rung 4 must not be reached when rung 3 answered with the document");
-      },
+      curl: async () => ({ status: 200, contentType: "text/calendar", text: feed }),
     },
   });
   assert.equal(got.text, feed);
@@ -349,7 +339,11 @@ test("A-003 · politeGetText has exactly ONE place a body becomes a return value
   assert.ok(body.length > 500, "the slice missed politeGetText — this guard is stale");
 
   const finalized = body.match(/return readValidatedResponse\(/g) ?? [];
-  assert.ok(finalized.length >= 3, `only ${finalized.length} rung(s) route through the finalizer`);
+  assert.ok(finalized.length >= 1, "the identified request routes through the finalizer");
+  const rung4 = source.slice(source.indexOf("async function curlRung"), source.indexOf("export async function politeGetText"));
+  assert.match(rung4, /return readValidatedResponse\(url, 4,/, "rung 4 returns only through the finalizer");
+  assert.equal((body.match(/return await curlRung\(/g) ?? []).length >= 1, true, "and politeGetText reaches rung 4 only through curlRung");
+  assert.doesNotMatch(source, /Mozilla\/5\.0|Chrome\/\d/, "no borrowed browser identity on any rung (2026-09-25)");
 
   // A bare object return of the transport triple is the shape that was wrong.
   const bare = body.match(/return\s*\{\s*\n?\s*status:/g) ?? [];

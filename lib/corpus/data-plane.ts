@@ -20,6 +20,7 @@ import {
   type TrustedLkgStatementIdentityTransfer,
 } from "./statement-identity-transfer.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 const CONTRACT = requiredManualProductionContract("officeholder-statements");
 export const OFFICEHOLDER_STATEMENT_SCOPE = CONTRACT.scope;
@@ -124,6 +125,10 @@ export async function refreshOfficeholderStatementsFromPromoted(
   }
   return promotedVersionOrThrow(result);
 }
+
+/** The statement preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+export const settleOfficeholderStatementsRead = (): Promise<string | null> =>
+  readPromotedEdgeFirst(CONTRACT.recordClass, CONTRACT.scope, refreshOfficeholderStatementsFromPromoted, "The officeholder statements");
 
 export function officeholderStatementsReadState(): CivicDataReadResult<StatementCorpus> {
   return readState;

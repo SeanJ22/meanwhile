@@ -232,6 +232,42 @@ export interface PersistedMinutesDocument {
   readonly approves: readonly { readonly kind: string; readonly date: string }[];
   readonly approvesQuote: string | null;
   readonly approvalCarried: boolean;
+  /**
+   * The minutes parser revision that read this document
+   * (`MINUTES_PARSER_REVISION`, lib/sources/legistar-insite/minutes.ts).
+   * Absent on documents read before 2026-09-25, which reads as an older parser.
+   */
+  readonly parserRevision?: string;
+}
+
+/**
+ * **A minutes document we read and could not extract from, remembered by its identity.** (2026-09-25.)
+ *
+ * The bytes were fetched and parsed, and the parser found no motion and no statement that no action was
+ * taken: a deterministic failure of ours on those bytes (RULING 100 — a failed extraction, never "nothing
+ * was decided"). Reading the same bytes with the same parser fails the same way, so the next pass asks the
+ * portal whether the document changed (a HEAD: its length, type and any validators) before downloading it
+ * again, and reads it again at once when it did, when the parser revision changed, or after
+ * `FAILED_MINUTES_REVERIFY_DAYS`. Mesa's 2026-05-28 strategic planning minutes (18.8 MB) had been
+ * downloaded and failed on every hourly retry before this record existed.
+ */
+export interface PersistedFailedMinutesRead {
+  /** The exact URL read, and the grid label it was linked under. The failure belongs to this link only. */
+  readonly url: string;
+  readonly publisherLabel: string;
+  /** The identity of the bytes that failed. */
+  readonly sha256: string;
+  readonly byteCount: number;
+  readonly contentType: string | null;
+  /** The response's own validators, as served with those bytes; null where the host sends none. */
+  readonly etag: string | null;
+  readonly lastModified: string | null;
+  /** The parser revision that failed on these bytes. */
+  readonly parserRevision: string;
+  /** When the bytes were read. */
+  readonly readAt: string;
+  /** Why the extraction failed, in the sentence the sitting carries. */
+  readonly reason: string;
 }
 
 /** One item whose votes request failed. Open, retryable, never an empty roll. */
@@ -306,6 +342,12 @@ export interface PersistedSittingOutcomes {
 
   /** The minutes document read, on sittings the InSite minutes route wrote (NH332). */
   readonly minutesDocument?: PersistedMinutesDocument;
+  /**
+   * The minutes document this sitting's current link serves, read and failed (2026-09-25). On a
+   * `ZERO_ROWS_FAILED` sitting it is the held failure; on a `RETRIEVED` sitting it is a newer document
+   * (a relabel) that failed while the earlier verified reading stays held. Cleared by a successful read.
+   */
+  readonly failedMinutesRead?: PersistedFailedMinutesRead;
 }
 
 /** The committed store. One file, every tenant. */

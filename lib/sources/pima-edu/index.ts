@@ -41,12 +41,13 @@ import type {
  * service every day. Its `robots.txt` is an allowlist: six named search crawlers
  * may read `/Portal/`, `/document/` and `/Services/`, and `User-agent: *`
  * carries `Disallow: /` — read 2026-09-23T20:02Z, 23,479 bytes, the same file
- * every Diligent Community tenant serves. `docs/sources.md` had recorded the
- * host `DISALLOWED — NOT WALKED` on 2026-08-29 while the routine clock kept
- * reading it.
+ * every Diligent Community tenant serves. That reading alone retired the
+ * tenant route on 2026-09-23. Since the owner decision of 2026-09-25 robots.txt
+ * is recorded and blocks nothing; the route stays retired because this one
+ * carries every sitting it did, and five more.
  *
  * The college publishes the same sittings, and some of the agendas themselves,
- * on hosts that permit this client:
+ * on its own hosts:
  *
  * - `www.pima.edu/.../board-meetings/documents.html` — the year's table of
  *   every Governing Board sitting (regular, executive session, study session,
@@ -66,12 +67,14 @@ import type {
  * ## What is carried, and what is deliberately not
  *
  * - **The agenda link is the college's own link, whatever host it names.** A
- *   first-party PDF on `www.pima.edu` is retrieved and read by the ingest; a
- *   link into the Diligent tenant is carried as the link the college published
- *   and is NEVER fetched — `RETIRED_MEETING_ROUTES` in
- *   `lib/registry/source-wiring.ts` names that host and `scripts/ingest.ts`
- *   refuses agenda retrieval there. A reader can follow it; this client does
- *   not read it.
+ *   first-party PDF on `www.pima.edu` is retrieved and read by the ingest, and
+ *   so is a link into the Diligent tenant: the tenant's route is retired
+ *   (`RETIRED_MEETING_ROUTES` in `lib/registry/source-wiring.ts`), for
+ *   robots.txt alone, and its host stays readable (`hostsReadable`) since the
+ *   owner decision of 2026-09-25 that robots.txt blocks nothing. That link is
+ *   the tenant's meeting page (`/Portal/MeetingInformation.aspx`), which states
+ *   no agenda item itself; the agenda text is behind the page's own
+ *   `/document/…` link, which nothing follows yet.
  * - **Time and place come from a sitting-specific statement or not at all.**
  *   The event page's own calendar link, the committee schedule's row, or the
  *   first-party agenda's header (`August 10, 2026 at 5:00 p.m. … VIRTUAL

@@ -24,6 +24,19 @@ import { MEETING_PARTITION_CONTRACTS } from "../civic-data/meeting-partitions.ts
  * Ask reads. The pin chooses WHICH version. Every pinned read is still proven
  * (`readPinnedPromotedCivicDataBatch` → `promotionProofIssue`, GOOD receipts).
  *
+ * It also fixes WHEN each version was last checked (schemaVersion 2,
+ * 2026-09-25). Since migration 0029 a quiet re-check writes a receipt on the
+ * pinned version instead of a new one, and "Last checked" and the re-read rows'
+ * `collectedAt` follow the newest receipt (lib/meetings/fresh-checks.ts). A hot
+ * body is re-checked about hourly, so an hours-long run saw the check move
+ * under the same pinned version. Batch D's first reproof failed on exactly
+ * that: prepare served the prepared copy with the receipts it read live
+ * (Pima rows at 5:22 PM MST) and the proof server's Ask composed the pinned
+ * version, whose pinned read carries no receipt (2:48 PM MST), so 470 of 862
+ * meetings-Ask readbacks disagreed on `retrievedAt` alone. The capture now
+ * records each version's check, and every pinned read, composing or prepared,
+ * applies that check and no other.
+ *
  * The switch cannot reach a reader. The pin is refused, and the read stays
  * live, unless ALL of these hold:
  *  - the build is not a deployed build. `next.config.ts` bakes
@@ -43,10 +56,16 @@ export interface ReaderProofMeetingPinPartition {
   readonly scope: string;
   readonly kind: "PROMOTED" | "NOT_RECORDED";
   readonly versionId: string | null;
+  /**
+   * The capture's newest successful fresh check of this version
+   * (`MeetingPartitionFreshCheck.checkedAt`), or null when it had none. Every
+   * pinned read applies exactly this check. Always null for NOT_RECORDED.
+   */
+  readonly checkedAt: string | null;
 }
 
 export interface ReaderProofMeetingPin {
-  readonly schemaVersion: 1;
+  readonly schemaVersion: 2;
   readonly kind: "READER_PROOF_MEETING_PIN";
   readonly capturedAt: string;
   /** Exactly one row per registered meeting partition contract, in registry order. */
@@ -93,7 +112,17 @@ export function readerProofMeetingPinAdmission(
 }
 
 function canonicalPartitions(partitions: readonly ReaderProofMeetingPinPartition[]): string {
-  return JSON.stringify(partitions.map(({ contractId, scope, kind, versionId }) => ({ contractId, scope, kind, versionId })));
+  return JSON.stringify(partitions.map(({ contractId, scope, kind, versionId, checkedAt }) => ({ contractId, scope, kind, versionId, checkedAt })));
+}
+
+/**
+ * The check a pinned read applies to one partition version: the capture's, and
+ * only for the exact version the pin names. Null for any other version, which
+ * a pinned read never serves anyway.
+ */
+export function readerProofPinnedCheckedAt(pin: ReaderProofMeetingPin, contractId: string, versionId: string | null | undefined): string | null {
+  const row = pin.partitions.find((partition) => partition.contractId === contractId);
+  return row?.kind === "PROMOTED" && versionId && row.versionId === versionId ? row.checkedAt : null;
 }
 
 export function readerProofMeetingPinSha256(partitions: readonly ReaderProofMeetingPinPartition[]): string {
@@ -115,7 +144,13 @@ export function readerProofMeetingPinSha256(partitions: readonly ReaderProofMeet
  * reads through the composing reader, which reads the pinned versions.
  */
 export function readerProofMeetingPinFromReadback(
-  partitions: readonly { readonly contractId: string; readonly scope: string; readonly kind: string; readonly versionId: string | null }[],
+  partitions: readonly {
+    readonly contractId: string;
+    readonly scope: string;
+    readonly kind: string;
+    readonly versionId: string | null;
+    readonly freshCheck?: { readonly checkedAt: string | null };
+  }[],
   capturedAt: string,
 ): ReaderProofMeetingPin {
   const rows: ReaderProofMeetingPinPartition[] = MEETING_PARTITION_CONTRACTS.map((contract) => {
@@ -125,10 +160,14 @@ export function readerProofMeetingPinFromReadback(
       throw new Error(`READER_PROOF_MEETING_PIN_CAPTURE_INVALID:${contract.id} is missing, duplicated or mis-scoped in the readback.`);
     }
     if (row.kind === "PROMOTED" && typeof row.versionId === "string" && row.versionId) {
-      return { contractId: contract.id, scope: contract.scope, kind: "PROMOTED", versionId: row.versionId };
+      const checkedAt = row.freshCheck?.checkedAt ?? null;
+      if (checkedAt !== null && !Number.isFinite(Date.parse(checkedAt))) {
+        throw new Error(`READER_PROOF_MEETING_PIN_CAPTURE_INVALID:${contract.id}'s fresh check is not an instant.`);
+      }
+      return { contractId: contract.id, scope: contract.scope, kind: "PROMOTED", versionId: row.versionId, checkedAt };
     }
     if (row.kind === "NOT_RECORDED" && row.versionId === null) {
-      return { contractId: contract.id, scope: contract.scope, kind: "NOT_RECORDED", versionId: null };
+      return { contractId: contract.id, scope: contract.scope, kind: "NOT_RECORDED", versionId: null, checkedAt: null };
     }
     throw new Error(`READER_PROOF_MEETING_PIN_CAPTURE_INVALID:${contract.id} is ${row.kind}; only a proven PROMOTED or answered NOT_RECORDED partition can be pinned.`);
   });
@@ -137,7 +176,7 @@ export function readerProofMeetingPinFromReadback(
   }
   if (!Number.isFinite(Date.parse(capturedAt))) throw new Error("READER_PROOF_MEETING_PIN_CAPTURE_INVALID: capturedAt is not an instant.");
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     kind: "READER_PROOF_MEETING_PIN",
     capturedAt,
     partitions: rows,
@@ -148,8 +187,8 @@ export function readerProofMeetingPinFromReadback(
 /** Validate a pin exactly; anything else is refused loudly, never read as "no pin". */
 export function parseReaderProofMeetingPin(value: unknown): ReaderProofMeetingPin {
   const pin = value as Partial<ReaderProofMeetingPin> | null;
-  if (!pin || typeof pin !== "object" || pin.schemaVersion !== 1 || pin.kind !== "READER_PROOF_MEETING_PIN") {
-    throw new Error("READER_PROOF_MEETING_PIN_INVALID: not a schemaVersion 1 Reader proof meeting pin.");
+  if (!pin || typeof pin !== "object" || pin.schemaVersion !== 2 || pin.kind !== "READER_PROOF_MEETING_PIN") {
+    throw new Error("READER_PROOF_MEETING_PIN_INVALID: not a schemaVersion 2 Reader proof meeting pin.");
   }
   if (typeof pin.capturedAt !== "string" || !Number.isFinite(Date.parse(pin.capturedAt))) {
     throw new Error("READER_PROOF_MEETING_PIN_INVALID: capturedAt is not an instant.");
@@ -164,8 +203,9 @@ export function parseReaderProofMeetingPin(value: unknown): ReaderProofMeetingPi
       throw new Error(`READER_PROOF_MEETING_PIN_INVALID: row ${index} is not ${contract.id}.`);
     }
     const valid = row.kind === "PROMOTED"
-      ? typeof row.versionId === "string" && row.versionId.length > 0
-      : row.kind === "NOT_RECORDED" && row.versionId === null;
+      ? typeof row.versionId === "string" && row.versionId.length > 0 &&
+        (row.checkedAt === null || (typeof row.checkedAt === "string" && Number.isFinite(Date.parse(row.checkedAt))))
+      : row.kind === "NOT_RECORDED" && row.versionId === null && row.checkedAt === null;
     if (!valid) throw new Error(`READER_PROOF_MEETING_PIN_INVALID: ${contract.id} has an invalid disposition.`);
   });
   if (pin.partitionsSha256 !== readerProofMeetingPinSha256(partitions)) {

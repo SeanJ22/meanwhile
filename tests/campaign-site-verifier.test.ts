@@ -124,17 +124,37 @@ test("host classes are refused before any request, each with its own typed reaso
   assert.ok(cases.every(([, code]) => (CAMPAIGN_SITE_REFUSALS as readonly string[]).includes(code)));
 });
 
-test("the read is robots-first: a refused host is never asked anything, a disallowing robots.txt stops the page request", async () => {
+test("the read is robots-first: a refused host is never asked anything; a disallowing robots.txt is read first and recorded, the page is still requested; a challenge is ACCESS_CONTROLLED", async () => {
   const social = servedRuntime({});
   const refused = await readCampaignSiteLead(lead("https://www.facebook.com/x"), social);
   assert.ok(!refused.ok && refused.refusal.code === "SOCIAL_PLATFORM");
   assert.deepEqual(social.requests, [], "no request, robots.txt included, for a refused host");
 
+  /* Owner decision 2026-09-25: robots.txt alone must not block acquisition. It is read first, recorded, and the public page is read. */
   const url = "https://www.duarte4mendham.com/meet-amalia";
-  const disallow = servedRuntime({ "https://www.duarte4mendham.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" } });
-  const blocked = await readCampaignSiteLead(lead(url), disallow);
-  assert.ok(!blocked.ok && blocked.refusal.code === "ROBOTS_REFUSED");
-  assert.deepEqual(disallow.requests, ["https://www.duarte4mendham.com/robots.txt"]);
+  const disallow = servedRuntime({
+    "https://www.duarte4mendham.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
+    [url]: { status: 200, body: fixture("duarte4mendham-meet-amalia.live.html") },
+  });
+  const overRobots = await readCampaignSiteLead(lead(url), disallow);
+  assert.ok(overRobots.ok, JSON.stringify(overRobots.ok ? null : overRobots.refusal));
+  assert.deepEqual(disallow.requests, ["https://www.duarte4mendham.com/robots.txt", url], "robots.txt first, then the page");
+  assert.equal(overRobots.read.permissions[0]?.verdict, "DISALLOWED", "the verdict travels on the read");
+  const overVerdict = verifyCampaignSitePage(subject(DUARTE), lead(url), overRobots.read);
+  assert.equal(overVerdict.verdict, "VERIFIED", JSON.stringify(codes(overVerdict)));
+  assert.equal(overVerdict.measurement!.permissions[0]?.verdict, "DISALLOWED", "recorded on the measurement, never a refusal");
+
+  /* An access control is never bypassed: a bot challenge served in place of the page refuses the lead. */
+  const challenge = servedRuntime({
+    "https://www.duarte4mendham.com/robots.txt": { status: 200, body: fixture("duarte4mendham.robots.txt") },
+    [url]: { status: 200, body: "<html><head><title>Just a moment...</title></head><body>Checking</body></html>" },
+  });
+  const challenged = await readCampaignSiteLead(lead(url), challenge);
+  assert.ok(challenged.ok);
+  assert.deepEqual(codes(verifyCampaignSitePage(subject(DUARTE), lead(url), challenged.read)), ["ACCESS_CONTROLLED"]);
+  const forbidden = verifyCampaignSitePage(subject(DUARTE), lead(url), { ...challenged.read, httpStatus: 403, body: "Forbidden" });
+  assert.deepEqual(codes(forbidden), ["HTTP_NOT_OK"]);
+  assert.ok(!codes(forbidden).includes("ROBOTS_REFUSED") && !codes(overVerdict).includes("ROBOTS_REFUSED"), "ROBOTS_REFUSED is historical, never produced");
 
   const allow = servedRuntime({
     "https://www.duarte4mendham.com/robots.txt": { status: 200, body: fixture("duarte4mendham.robots.txt") },

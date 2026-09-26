@@ -32,6 +32,8 @@
 import type { SeatHolderRef } from "./incumbency.ts";
 import type { NhMemberReadModel } from "../civic-data/candidate-builders.ts";
 import { readNhMembers } from "../civic-data/state-members.ts";
+import { requiredRoutineContract } from "../civic-data/contracts.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import {
   civicDataReadNotInitialized,
   type CivicDataReadResult,
@@ -53,6 +55,11 @@ export async function refreshNhSeatHolders(
   readState = await readNhMembers(options);
   return readState;
 }
+
+/** The NH roster, edge first (2026-09-25): the reader edge's proven copy through the same Reader, else the database. */
+const NH_MEMBERS = requiredRoutineContract("nh-members");
+export const settleNhSeatHolders = (): Promise<CivicDataReadResult<NhMemberReadModel>> =>
+  readPromotedEdgeFirst(NH_MEMBERS.recordClass, NH_MEMBERS.scope, refreshNhSeatHolders, "The New Hampshire roster");
 
 export function nhSeatHolderReadState(): CivicDataReadResult<NhMemberReadModel> {
   return readState;

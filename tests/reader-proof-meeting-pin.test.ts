@@ -11,7 +11,12 @@ import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { CandidateVersionRecord, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
-import { readPreparedMeetingsProjection, MEETINGS_PREPARED_SCOPE } from "../lib/meetings/prepared-snapshot.ts";
+import {
+  clearPreparedMeetingsProjectionCache,
+  MEETINGS_PREPARED_SCOPE,
+  preparePublishedMeetingSnapshot,
+  readPreparedMeetingsProjection,
+} from "../lib/meetings/prepared-snapshot.ts";
 import {
   activeReaderProofMeetingPin,
   parseReaderProofMeetingPin,
@@ -368,6 +373,98 @@ test("the proof server's prepared row serves only when it was composed from exac
   });
 });
 
+/** A re-read that finds nothing new: a receipt on the pointed version (migration 0029), never a new version. */
+async function recheckVersion(store: MemoryRoutineDataStore, versionCollectedAt: string, readAt: string): Promise<void> {
+  const [result] = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [{ ...meeting(legistar, readAt, "newbury-shaped-sitting"), title: `Newbury-shaped sitting, agenda of ${versionCollectedAt}` }],
+    agendaDocuments: [],
+    reports: [report(legistar.meetingSource, readAt)],
+    generatedAt: readAt,
+  });
+  assert.ok(result?.outcome.confirmed, `the re-read at ${readAt} is a receipt on the pointed version`);
+}
+
+test("a quiet re-check mid-run moves no pinned read: the prepared copy and the composing reader both apply the capture's check (batch D's first reproof, 470 of 862 meetings-Ask readbacks)", async () => {
+  clearPromotedReadModelCache();
+  clearPreparedMeetingsProjectionCache();
+  const store = new EventCountingStore();
+  const CHECKED_BEFORE_CAPTURE = "2026-09-23T22:00:00.000Z";
+  const RECHECKED_MID_RUN = "2026-09-23T23:10:55.145Z";
+  const v1 = await promoteVersion(store, CAPTURED);
+  await recheckVersion(store, CAPTURED, CHECKED_BEFORE_CAPTURE);
+  // The runner's pass after the check: the serving copy of v1, which records its routes.
+  const prepared = await preparePublishedMeetingSnapshot(store, CHECKED_BEFORE_CAPTURE);
+  assert.ok(prepared.status === "PUBLISHED" || prepared.status === "CURRENT", prepared.status);
+
+  // The capture, unpinned, exactly as scripts/reader-proof-meeting-pin.mts takes it.
+  const capture = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: CHECKED_BEFORE_CAPTURE });
+  assert.equal(capture.kind, "PROMOTED");
+  if (capture.kind !== "PROMOTED") return;
+  const pin = readerProofMeetingPinFromReadback(capture.partitions, CHECKED_BEFORE_CAPTURE);
+  const pinned = pin.partitions.find(({ contractId }) => contractId === legistar.id)!;
+  assert.deepEqual({ versionId: pinned.versionId, checkedAt: pinned.checkedAt }, { versionId: v1, checkedAt: CHECKED_BEFORE_CAPTURE });
+
+  // Mid-run the runner re-checks the same version: the live check moves, the version does not.
+  await recheckVersion(store, CAPTURED, RECHECKED_MID_RUN);
+  assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, v1);
+  clearPromotedReadModelCache();
+  clearPreparedMeetingsProjectionCache();
+  assert.equal(sitting(await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: LATER })).provenance.collectedAt, RECHECKED_MID_RUN, "unpinned, the composing reader applies the newest check");
+  assert.equal(sitting(await readPreparedMeetingsProjection({ store, now: LATER })).provenance.collectedAt, RECHECKED_MID_RUN, "unpinned, the serving copy applies the newest check");
+
+  await withEnv(harnessEnv(writePin(pin)), async () => {
+    clearPromotedReadModelCache();
+    clearPreparedMeetingsProjectionCache();
+    // Prepare and the executors read through the serving copy; the proof server's Ask composes the pinned versions.
+    const servingCopy = await readPreparedMeetingsProjection({ store, now: LATER });
+    assert.match(servingCopy.kind === "PROMOTED" ? servingCopy.detail : servingCopy.kind, /prepared reader snapshot/, "the serving copy of exactly the pinned version serves");
+    const composing = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: LATER });
+    assert.doesNotMatch(composing.kind === "PROMOTED" ? composing.detail : composing.kind, /prepared reader snapshot/);
+    for (const read of [servingCopy, composing]) {
+      assert.equal(partitionVersion(read), v1);
+      assert.equal(sitting(read).provenance.collectedAt, CHECKED_BEFORE_CAPTURE, "every pinned read applies the capture's check, not the mid-run one");
+    }
+    assert.deepEqual(sitting(composing), sitting(servingCopy), "the two pinned paths serve the same row");
+  });
+});
+
+test("a serving copy written before couplings recorded their routes cannot apply the pin's checks, so the pinned versions are composed (batch D's second reproof)", async () => {
+  clearPromotedReadModelCache();
+  clearPreparedMeetingsProjectionCache();
+  const store = new EventCountingStore();
+  const CHECKED_BEFORE_CAPTURE = "2026-09-23T22:00:00.000Z";
+  const v1 = await promoteVersion(store, CAPTURED);
+  await recheckVersion(store, CAPTURED, CHECKED_BEFORE_CAPTURE);
+  const capture = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: CHECKED_BEFORE_CAPTURE });
+  if (capture.kind !== "PROMOTED") throw new Error("unreachable");
+  const pin = readerProofMeetingPinFromReadback(capture.partitions, CHECKED_BEFORE_CAPTURE);
+  // Production's serving copy on 2026-09-25: the pinned version, composed by a runner that recorded no routes.
+  const oldFormat = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: CAPTURED });
+  if (oldFormat.kind !== "PROMOTED") throw new Error("unreachable");
+  await store.writePreparedReaderProjection({
+    recordClass: "MEETING" as RoutineRecordClass,
+    scope: MEETINGS_PREPARED_SCOPE,
+    payload: { ...oldFormat.value, meetings: oldFormat.value.meetings.map((row) => ({ ...row, provenance: { ...row.provenance, collectedAt: CAPTURED } })) },
+    composedFrom: [{ contractId: legistar.id, versionId: v1 }],
+    factSha256: "f".repeat(64),
+    generatedAt: CAPTURED,
+    composedAt: CAPTURED,
+    sourceThrough: null,
+    retrievedAt: null,
+    promotedThrough: null,
+  }, null);
+  await withEnv(harnessEnv(writePin(pin)), async () => {
+    clearPromotedReadModelCache();
+    clearPreparedMeetingsProjectionCache();
+    const read = await readPreparedMeetingsProjection({ store, now: LATER });
+    assert.doesNotMatch(read.kind === "PROMOTED" ? read.detail : read.kind, /prepared reader snapshot/, "the copy cannot state the pinned check, so it is not served");
+    assert.equal(partitionVersion(read), v1);
+    assert.equal(sitting(read).provenance.collectedAt, CHECKED_BEFORE_CAPTURE, "the composed pinned version carries the capture's check");
+  });
+});
+
 test("a deployed build, a function runtime, or a process outside the harness never admits the pin", async () => {
   const { store, v1, pin } = await seededRun();
   const path = writePin(pin);
@@ -413,6 +510,9 @@ test("an admitted pin that is malformed or edited is refused loudly, never read 
   assert.equal(parseReaderProofMeetingPin(JSON.parse(JSON.stringify(pin))).partitionsSha256, pin.partitionsSha256);
   const edited = { ...pin, partitions: pin.partitions.map((row) => row.contractId === legistar.id ? { ...row, versionId: "cv-edited" } : row) };
   assert.throws(() => parseReaderProofMeetingPin(edited), /partitionsSha256 does not match/);
+  const recheckedByHand = { ...pin, partitions: pin.partitions.map((row) => row.contractId === legistar.id ? { ...row, checkedAt: LATER } : row) };
+  assert.throws(() => parseReaderProofMeetingPin(recheckedByHand), /partitionsSha256 does not match/, "a pinned check is part of the pin");
+  assert.throws(() => parseReaderProofMeetingPin({ ...pin, schemaVersion: 1 }), /not a schemaVersion 2/, "a pin without checks is refused, never read as having none");
   assert.throws(() => parseReaderProofMeetingPin({ ...pin, partitions: pin.partitions.slice(1) }), /registered partition denominator/);
   assert.throws(() => activeReaderProofMeetingPin(harnessEnv(writePin(edited)), ["", ""]), /READER_PROOF_MEETING_PIN_INVALID/);
   assert.throws(() => readerProofMeetingPinFromReadback([], CAPTURED), /READER_PROOF_MEETING_PIN_CAPTURE_INVALID/);

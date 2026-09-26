@@ -14,6 +14,7 @@ import {
 } from "../lib/ask/model-economics.ts";
 import { comparabilityFailure } from "../lib/ask/model-comparison.ts";
 import { ASK_SYNTHESIS_MODEL } from "../lib/ask/synthesize.ts";
+import { ASK_FAST_WRITER_MODEL } from "../lib/ask/model.ts";
 
 /**
  * **H2 — ASK MODEL ECONOMICS, UNDER RULING 230.** (Session C, lane B, amended
@@ -38,7 +39,7 @@ import { ASK_SYNTHESIS_MODEL } from "../lib/ask/synthesize.ts";
  * **both arms failing one question yields HOLD/RETAIN, never SWITCH.**
  */
 
-test("H2: ONE MODEL FOR ALL ASK TRAFFIC — every Ask call site names the same model", () => {
+test("H2: every Ask call site reads its model from the ONE declaring module — the frontier model and, since 2026-09-25, the fast writer", () => {
   /*
    * Read off the source, because the rule is about what the product RUNS. A
    * per-caller or per-question model would also shard the prompt cache, which
@@ -76,11 +77,18 @@ test("H2: ONE MODEL FOR ALL ASK TRAFFIC — every Ask call site names the same m
       (m) => m[1],
     );
 
+  /*
+   * 2026-09-25 (the Ask latency repair): the answer-writing rung has a second,
+   * DECLARED rung — the fast writer, tried first, the frontier writing only
+   * when its answer fails validation (lib/ask/synthesize.ts, synthesizeWithLadder).
+   * Still exactly one declaration each, in this one module; no call site
+   * declares either.
+   */
   const declared = declarations(DECLARING_MODULE);
   assert.deepEqual(
     declared,
-    [ASK_INCUMBENT_MODEL],
-    `${DECLARING_MODULE} must declare the Ask model exactly once and declare no other`,
+    [ASK_INCUMBENT_MODEL, ASK_FAST_WRITER_MODEL],
+    `${DECLARING_MODULE} must declare the Ask model and the fast writer exactly once each and declare no other`,
   );
 
   for (const site of sites) {

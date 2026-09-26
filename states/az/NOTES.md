@@ -506,3 +506,66 @@ display*, and nothing is suppressed because something else is missing.
 
 The district went in, and then the adapter did. `tests/coverage.test.ts` now
 records the arc rather than the answer.
+
+## 2026-09-25 — DESTINY AGENDA: WHERE CHANDLER'S AGENDAS, RESULTS AND MINUTES ARE
+
+(The failing-sources session. Append-only.)
+
+**The route.** Chandler posts every agenda, result and minutes set on Destiny
+Agenda: `https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=<type>`,
+one month per page (`&get_month=M&get_year=YYYY`). The City Council's type is
+`CC`; the page's own type menu lists about forty more (Planning and Zoning `PZ`,
+Board of Adjustment `BOA`, the commissions and foundations), and `CANCEL` holds
+cancellation notices. Each row: the agenda link (text = the date as printed,
+title attribute = "View Agenda for <meeting> (MM/DD/YYYY)"), the meeting's name,
+the minutes cell ("Results" or "Minutes", a PDF under `/chanddocs/`), and other
+links ("Video", on `chandleraz.new.swagit.com`). A month with nothing posted
+says so: "No agendas or minutes were found for the meeting type 'City Council'
+in October 2026." The hrefs are entity-encoded (`&#x3f;`, `&#x3d;`).
+
+**Why it was never read, and what changed.** Its robots.txt is one line,
+`User-agent: * Disallow: /`, so it was never requested. Since the owner's
+2026-09-25 decision that robots.txt no longer blocks reading public pages, it
+was checked: HTTP 200 from IIS to the project's identified client, no challenge.
+The agenda page itself (`&dsp=ag&seq=N`, ~134 KB) is HTML with the whole agenda:
+title, date and time, the chambers' address, and every item.
+
+**How it is used.** `destinyAgenda` on a `schedulepage` row
+(`lib/sources/schedulepage/destiny-agenda.ts`) reads the months in reach and
+JOINS rows to sittings the body's own pages already dated: a sitting whose title
+the city printed joins on date + name, a date-only sitting only where the list
+gives that date one row. No sitting is ever made from the list (it states no
+time or place). Wired for the Council on 2026-09-25; the same field serves any
+Destiny tenant (search results for `destinyhosted.com agenda_publish.cfm <city>`
+find the tenant id).
+
+## 2026-09-25 — MESA'S MINUTES: THE CLERK WRITES A MOTION THREE WAYS
+
+The minutes parser (`lib/sources/legistar-insite/minutes.ts`) read only "It was
+moved by X, seconded by Y, that …". The clerk also writes "…, seconded by Y,
+receipt of the above listed minutes be acknowledged." (no "that"; the 2026-06-04
+study session) and "…, seconded by Y, to direct the City Attorney to pursue
+litigation …" (an infinitive; the 2026-08-13 study session). Both now read; any
+other continuation stays a named unread passage. A scan of all 21 documents the
+promoted projection cites found no other missed motion. The 2026-05-28
+strategic planning session records no motion and does not say no action was
+taken; it stays a failed extraction by rule.
+
+### A minutes document that fails by rule is not downloaded again every hour (2026-09-25)
+
+Mesa's 2026-05-28 strategic planning minutes (18,779,714 bytes) record no motion
+and do not say no action was taken, so every read is a failed extraction by
+rule. Each failure refused the candidate; the contract retries a failed pass
+after an hour; each retry downloaded the same 18.8 MB and failed again. Now the
+failure is HELD in the projection as `ZERO_ROWS_FAILED` with the identity of the
+bytes it failed on (`failedMinutesRead`: URL, label, sha256, length, type, any
+ETag/Last-Modified, parser revision, read time), named on every candidate as
+`MINUTES_EXTRACTION_FAILED_HELD`, and the pass promotes. Later passes send one
+paced HEAD first: Mesa's portal answers it with the length and type and no
+validators (measured). Unchanged: nothing is downloaded. Changed length, type
+or validator, a new link or label, or a new `MINUTES_PARSER_REVISION`: read at
+once. A week old: the bytes are re-read once to catch a same-length
+replacement. A failed REQUEST still refuses the candidate and retries in an
+hour; a failure over verified minutes keeps the verified reading. The same
+HEAD-before-GET rule fits any large document route whose extraction can fail
+deterministically.

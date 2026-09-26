@@ -356,6 +356,8 @@ function sittingMembers(sitting: PersistedSittingOutcomes): CivicRecordMember[] 
         publicationObservations: sitting.publicationObservations,
         // Minutes-route sittings only (NH332); absent, and so unchanged, on Pima's.
         ...(sitting.minutesDocument ? { minutesDocument: sitting.minutesDocument } : {}),
+        // A held failed minutes extraction and the bytes it failed on (2026-09-25); absent elsewhere.
+        ...(sitting.failedMinutesRead ? { failedMinutesRead: sitting.failedMinutesRead } : {}),
       },
     },
     ...sitting.agenda.map((record) => ({ key: `agenda:${sitting.meetingId}:${record.eventItemId}`, record })),
@@ -500,9 +502,11 @@ export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string 
  * A Mesa minutes-outcome candidate built only from exact HTTP-response
  * receipts: the calendar grid read and each minutes document walked this run.
  *
- * A sitting whose minutes read failed refuses the candidate (the prior GOOD
- * pointer stays live). A sitting whose minutes are not yet published is a
- * valid, stated row — a fact about the publisher, never a failure of ours.
+ * A sitting whose minutes request failed refuses the candidate (the prior GOOD
+ * pointer stays live); a sitting whose read minutes yielded nothing is held as
+ * the failed extraction it is, with the bytes it failed on (2026-09-25). A
+ * sitting whose minutes are not yet published is a valid, stated row — a fact
+ * about the publisher, never a failure of ours.
  */
 export function mesaLegistarMinutesOutcomesCandidate(input: {
   readonly snapshot: OutcomeSnapshot;
@@ -519,9 +523,33 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
   if (new Set(ids).size !== ids.length) violations.push("Mesa sitting ids are duplicated.");
   const scopeIssue = mesaMinutesOutcomeScopeIssue(snapshot);
   if (scopeIssue) violations.push(scopeIssue);
-  const failed = snapshot.sittings.filter((sitting) => sitting.extraction === "REQUEST_FAILED" || sitting.extraction === "ZERO_ROWS_FAILED");
+  /*
+   * A failed REQUEST read no bytes and is retried soon: it refuses the candidate and the prior GOOD pointer stays
+   * live. A document read whose extraction failed on its bytes, held with those bytes' identity
+   * (`failedMinutesRead`, 2026-09-25), is a named failure of ours, not a retryable request: it is admitted as
+   * the failed extraction it is, with no record, so the same unchanged document is not downloaded and failed
+   * again on every hourly retry. The fail-closed rule is unchanged: it claims nothing about what was decided.
+   */
+  const failed = snapshot.sittings.filter((sitting) =>
+    sitting.extraction === "REQUEST_FAILED" || (sitting.extraction === "ZERO_ROWS_FAILED" && sitting.failedMinutesRead === undefined));
   if (failed.length > 0) {
     violations.push(`${failed.length} minutes read(s) failed (${failed.map((sitting) => sitting.meetingId).join(", ")}); the prior GOOD projection remains live.`);
+  }
+  for (const sitting of snapshot.sittings.filter((row) => row.failedMinutesRead !== undefined)) {
+    const read = sitting.failedMinutesRead!;
+    if (!SHA256_HEX.test(read.sha256) || !read.url.startsWith("https://mesa.legistar.com/") || !read.reason.trim() || !read.parserRevision) {
+      violations.push(`${sitting.meetingId} holds a failed minutes read without the exact document, digest, parser and reason it failed on.`);
+    }
+    if (sitting.extraction === "ZERO_ROWS_FAILED" && (sitting.outcomes.length > 0 || sitting.agenda.length > 0 || sitting.rollCalls.length > 0)) {
+      violations.push(`${sitting.meetingId} is a failed extraction and carries records; a failed extraction claims nothing.`);
+    }
+    if (sitting.extraction !== "ZERO_ROWS_FAILED" && sitting.extraction !== "RETRIEVED") {
+      violations.push(`${sitting.meetingId} remembers a failed minutes read on a ${sitting.extraction} sitting.`);
+    }
+    const acquired = acquisitions.filter((row) => row.finalUrl === read.url || row.requestedUrl === read.url);
+    if (acquired.length > 0 && !acquired.some((row) => row.rawHash === read.sha256)) {
+      violations.push(`${sitting.meetingId}'s failed minutes digest does not match the bytes this run acquired from ${read.url}.`);
+    }
   }
   if (snapshot.sittings.some((sitting) => !sitting.sourceOrg || !sitting.publication.observedAt)) {
     violations.push("A sitting lacks its publisher or observation time.");
@@ -613,12 +641,25 @@ export function mesaLegistarMinutesOutcomesCandidate(input: {
     normalizedPayload,
     readModel: snapshot,
     civicRecords: members,
-    excludedFacts: snapshot.sittings
-      .filter((sitting) => sitting.extraction === "NOT_YET_PUBLISHED")
-      .map((sitting) => ({
-        key: `${sitting.meetingId}:minutes`,
-        code: "MINUTES_NOT_YET_PUBLISHED",
-        detail: sitting.extractionNote ?? "The publisher has not published minutes for this sitting yet.",
-      })),
+    excludedFacts: [
+      ...snapshot.sittings
+        .filter((sitting) => sitting.extraction === "NOT_YET_PUBLISHED")
+        .map((sitting) => ({
+          key: `${sitting.meetingId}:minutes`,
+          code: "MINUTES_NOT_YET_PUBLISHED",
+          detail: sitting.extractionNote ?? "The publisher has not published minutes for this sitting yet.",
+        })),
+      // Visible on every candidate while held: a named failure of ours, with the bytes it failed on.
+      ...snapshot.sittings
+        .filter((sitting) => sitting.failedMinutesRead !== undefined)
+        .map((sitting) => ({
+          key: `${sitting.meetingId}:minutes-extraction`,
+          code: "MINUTES_EXTRACTION_FAILED_HELD",
+          detail:
+            `${sitting.failedMinutesRead!.url} (${sitting.failedMinutesRead!.byteCount} bytes, sha256 ${sitting.failedMinutesRead!.sha256.slice(0, 16)}…, ` +
+            `parser ${sitting.failedMinutesRead!.parserRevision}, read ${sitting.failedMinutesRead!.readAt}): ${sitting.failedMinutesRead!.reason} ` +
+            "Read again when the document changes, the parser changes, or the failure is a week old.",
+        })),
+    ],
   };
 }

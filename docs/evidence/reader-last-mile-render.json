@@ -1,17 +1,17 @@
 {
   "date": "2026-09-25",
   "base": "http://localhost:3210",
-  "buildId": "MJ4e_tQyxDEyjR9ocnnTx",
-  "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-  "runId": "reader-last-mile-render@2026-09-25T21:08:31.801Z",
+  "buildId": "aVzo2Jk-e20tAnKXwvmxo",
+  "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
+  "runId": "reader-last-mile-render@2026-09-26T02:42:15.929Z",
   "results": [
     {
       "label": "85701-desktop-dark",
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -377,45 +377,64 @@
           "synthesis": {
             "ran": false,
             "why": "no-key",
-            "ms": 0
+            "ms": 0,
+            "writers": [
+              {
+                "model": "claude-haiku-4-5",
+                "role": "FAST",
+                "ms": 0,
+                "result": "UNAVAILABLE",
+                "detail": "no-key"
+              }
+            ]
           },
           "validation": {
             "ran": false
           },
           "answerMode": "STRUCTURED_GROUNDED",
-          "totalMs": 1743,
+          "totalMs": 720,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
             "outcomes": "DATABASE",
-            "commentAccess": "DATABASE"
+            "commentAccess": "DATABASE",
+            "funding": "DATABASE",
+            "stateMoney": "DATABASE",
+            "azPimaFinance": "DATABASE",
+            "federalVotes": "DATABASE",
+            "federalKeyVotes": "DATABASE",
+            "azBallot": "DATABASE",
+            "candidateProfiles": "DATABASE",
+            "candidateCorpus": "DATABASE",
+            "officeholderStatements": "DATABASE",
+            "executiveActions": "DATABASE"
           },
           "preloads": {
             "edgeManifest": 0,
-            "executiveActions": 7,
-            "federalDirectory": 13,
-            "azBallot": 13,
-            "registry": 13,
-            "commentAccess": 90,
-            "outcomes": 91,
-            "federalVotes": 241,
-            "candidateCorpus": 241,
-            "officeholderStatements": 247,
-            "azPimaFinance": 249,
-            "candidateProfiles": 258,
-            "funding": 259,
-            "federalKeyVotes": 261,
-            "stateVotes:US-AZ": 263,
-            "stateMoney": 263
+            "outcomes": 6,
+            "federalDirectory": 12,
+            "registry": 12,
+            "executiveActions": 12,
+            "azBallot": 12,
+            "commentAccess": 100,
+            "funding": 264,
+            "federalKeyVotes": 276,
+            "stateMoney": 276,
+            "candidateCorpus": 277,
+            "federalVotes": 277,
+            "officeholderStatements": 277,
+            "stateVotes:US-AZ": 277,
+            "candidateProfiles": 277,
+            "azPimaFinance": 277
           },
           "sourcesLoaded": "ALL",
           "stages": {
-            "sourcePreloads": 263,
-            "meetingsProjection": 1285,
-            "officeholdersAndBallot": 185,
+            "sourcePreloads": 277,
+            "meetingsProjection": 243,
+            "officeholdersAndBallot": 190,
             "interpretation": 0,
-            "resolutionAndRetrieval": 8,
-            "synthesisAndValidation": 1
+            "resolutionAndRetrieval": 9,
+            "synthesisAndValidation": 0
           }
         },
         "answer": null,
@@ -553,9 +572,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -6394,9 +6413,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -10736,9 +10755,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -15033,9 +15052,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -18672,8 +18691,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -19064,44 +19083,63 @@
           "synthesis": {
             "ran": false,
             "why": "no-key",
-            "ms": 0
+            "ms": 0,
+            "writers": [
+              {
+                "model": "claude-haiku-4-5",
+                "role": "FAST",
+                "ms": 0,
+                "result": "UNAVAILABLE",
+                "detail": "no-key"
+              }
+            ]
           },
           "validation": {
             "ran": false
           },
           "answerMode": "STRUCTURED_GROUNDED",
-          "totalMs": 859,
+          "totalMs": 861,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
             "outcomes": "DATABASE",
-            "commentAccess": "DATABASE"
+            "commentAccess": "DATABASE",
+            "funding": "DATABASE",
+            "stateMoney": "DATABASE",
+            "azPimaFinance": "DATABASE",
+            "federalVotes": "DATABASE",
+            "federalKeyVotes": "DATABASE",
+            "azBallot": "DATABASE",
+            "candidateProfiles": "DATABASE",
+            "candidateCorpus": "DATABASE",
+            "officeholderStatements": "DATABASE",
+            "executiveActions": "DATABASE"
           },
           "preloads": {
             "edgeManifest": 0,
-            "executiveActions": 5,
-            "federalDirectory": 8,
-            "azBallot": 8,
+            "outcomes": 6,
             "registry": 8,
-            "officeholderStatements": 255,
-            "candidateCorpus": 255,
-            "funding": 260,
-            "stateVotes:US-AZ": 262,
-            "azPimaFinance": 265,
-            "commentAccess": 267,
-            "stateMoney": 266,
-            "outcomes": 270,
-            "candidateProfiles": 269,
-            "federalKeyVotes": 274,
-            "federalVotes": 280
+            "executiveActions": 7,
+            "azBallot": 7,
+            "commentAccess": 86,
+            "federalKeyVotes": 248,
+            "funding": 249,
+            "azPimaFinance": 258,
+            "federalVotes": 258,
+            "candidateProfiles": 259,
+            "federalDirectory": 261,
+            "candidateCorpus": 260,
+            "officeholderStatements": 260,
+            "stateVotes:US-AZ": 261,
+            "stateMoney": 266
           },
           "sourcesLoaded": "ALL",
           "stages": {
-            "sourcePreloads": 281,
-            "meetingsProjection": 364,
-            "officeholdersAndBallot": 209,
+            "sourcePreloads": 267,
+            "meetingsProjection": 407,
+            "officeholdersAndBallot": 180,
             "interpretation": 1,
-            "resolutionAndRetrieval": 3,
+            "resolutionAndRetrieval": 5,
             "synthesisAndValidation": 1
           }
         },
@@ -19229,9 +19267,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -19264,7 +19302,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:09:40.198Z",
+              "recheckDueAt": "2026-09-26T02:43:11.555Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -19431,8 +19469,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -19821,44 +19859,63 @@
           "synthesis": {
             "ran": false,
             "why": "no-key",
-            "ms": 0
+            "ms": 0,
+            "writers": [
+              {
+                "model": "claude-haiku-4-5",
+                "role": "FAST",
+                "ms": 0,
+                "result": "UNAVAILABLE",
+                "detail": "no-key"
+              }
+            ]
           },
           "validation": {
             "ran": false
           },
           "answerMode": "STRUCTURED_GROUNDED",
-          "totalMs": 1789,
+          "totalMs": 622,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
             "outcomes": "DATABASE",
-            "commentAccess": "DATABASE"
+            "commentAccess": "DATABASE",
+            "funding": "DATABASE",
+            "stateMoney": "DATABASE",
+            "azPimaFinance": "DATABASE",
+            "federalVotes": "DATABASE",
+            "federalKeyVotes": "DATABASE",
+            "azBallot": "DATABASE",
+            "candidateProfiles": "DATABASE",
+            "candidateCorpus": "DATABASE",
+            "officeholderStatements": "DATABASE",
+            "executiveActions": "DATABASE"
           },
           "preloads": {
             "edgeManifest": 0,
+            "commentAccess": 3,
+            "outcomes": 4,
+            "federalDirectory": 4,
             "azPimaFinance": 4,
-            "commentAccess": 8,
-            "officeholderStatements": 9,
-            "executiveActions": 9,
-            "funding": 10,
-            "federalVotes": 10,
-            "federalKeyVotes": 10,
-            "federalDirectory": 11,
-            "azBallot": 11,
-            "candidateCorpus": 11,
-            "stateMoney": 11,
-            "candidateProfiles": 11,
-            "outcomes": 237,
-            "registry": 245,
-            "stateVotes:US-NJ": 353
+            "registry": 4,
+            "officeholderStatements": 4,
+            "executiveActions": 4,
+            "funding": 4,
+            "federalVotes": 4,
+            "federalKeyVotes": 4,
+            "stateMoney": 4,
+            "azBallot": 4,
+            "candidateCorpus": 4,
+            "candidateProfiles": 4,
+            "stateVotes:US-NJ": 373
           },
           "sourcesLoaded": "ALL",
           "stages": {
-            "sourcePreloads": 354,
-            "meetingsProjection": 1285,
-            "officeholdersAndBallot": 136,
-            "interpretation": 1,
-            "resolutionAndRetrieval": 12,
+            "sourcePreloads": 373,
+            "meetingsProjection": 66,
+            "officeholdersAndBallot": 178,
+            "interpretation": 0,
+            "resolutionAndRetrieval": 5,
             "synthesisAndValidation": 0
           }
         },
@@ -19922,9 +19979,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -20122,8 +20179,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -20551,43 +20608,62 @@
           "synthesis": {
             "ran": false,
             "why": "no-key",
-            "ms": 0
+            "ms": 0,
+            "writers": [
+              {
+                "model": "claude-haiku-4-5",
+                "role": "FAST",
+                "ms": 0,
+                "result": "UNAVAILABLE",
+                "detail": "no-key"
+              }
+            ]
           },
           "validation": {
             "ran": false
           },
           "answerMode": "STRUCTURED_GROUNDED",
-          "totalMs": 930,
+          "totalMs": 628,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
             "outcomes": "DATABASE",
-            "commentAccess": "DATABASE"
+            "commentAccess": "DATABASE",
+            "funding": "DATABASE",
+            "stateMoney": "DATABASE",
+            "azPimaFinance": "DATABASE",
+            "federalVotes": "DATABASE",
+            "federalKeyVotes": "DATABASE",
+            "azBallot": "DATABASE",
+            "candidateProfiles": "DATABASE",
+            "candidateCorpus": "DATABASE",
+            "officeholderStatements": "DATABASE",
+            "executiveActions": "DATABASE"
           },
           "preloads": {
             "edgeManifest": 0,
-            "federalDirectory": 15,
-            "registry": 15,
-            "azBallot": 255,
-            "outcomes": 256,
-            "executiveActions": 266,
-            "funding": 268,
-            "federalKeyVotes": 272,
-            "azPimaFinance": 274,
-            "commentAccess": 275,
-            "candidateCorpus": 282,
-            "officeholderStatements": 283,
-            "candidateProfiles": 290,
-            "federalVotes": 299,
-            "stateMoney": 300
+            "outcomes": 13,
+            "federalDirectory": 20,
+            "registry": 20,
+            "commentAccess": 100,
+            "azPimaFinance": 252,
+            "funding": 253,
+            "stateMoney": 254,
+            "azBallot": 271,
+            "executiveActions": 272,
+            "candidateProfiles": 272,
+            "officeholderStatements": 272,
+            "federalKeyVotes": 274,
+            "federalVotes": 274,
+            "candidateCorpus": 276
           },
           "sourcesLoaded": "ALL",
           "stages": {
-            "sourcePreloads": 300,
-            "meetingsProjection": 318,
-            "officeholdersAndBallot": 301,
+            "sourcePreloads": 277,
+            "meetingsProjection": 56,
+            "officeholdersAndBallot": 288,
             "interpretation": 1,
-            "resolutionAndRetrieval": 9,
+            "resolutionAndRetrieval": 6,
             "synthesisAndValidation": 0
           }
         },
@@ -20637,9 +20713,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -20672,7 +20748,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:10:30.814Z",
+              "recheckDueAt": "2026-09-26T02:43:57.081Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -20701,75 +20777,12 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 394,
+        "renderedListingCount": 386,
         "groups": [
           {
             "sourceIds": [
               "ical:newbury-ical-conservation-commission:calendar.42321.field_date_and_time.0@www.newbury.nh.gov",
               "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
             ],
             "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
             "sourceListingCount": 2,
@@ -20892,8 +20905,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -21048,9 +21061,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -26889,9 +26902,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -31231,9 +31244,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -35528,9 +35541,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:39:43.273Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -39167,8 +39180,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -39312,9 +39325,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:45:02.583Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -39347,7 +39360,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:12:07.881Z",
+              "recheckDueAt": "2026-09-26T02:45:16.757Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -39514,8 +39527,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -39682,9 +39695,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:45:02.583Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -39882,8 +39895,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -40000,9 +40013,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:45:05.149Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -40035,7 +40048,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:12:48.507Z",
+              "recheckDueAt": "2026-09-26T02:45:52.695Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -40064,75 +40077,12 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 394,
+        "renderedListingCount": 386,
         "groups": [
           {
             "sourceIds": [
               "ical:newbury-ical-conservation-commission:calendar.42321.field_date_and_time.0@www.newbury.nh.gov",
               "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
             ],
             "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
             "sourceListingCount": 2,
@@ -40255,8 +40205,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -40411,9 +40361,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -46252,9 +46202,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -50594,9 +50544,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -54891,9 +54841,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -58814,8 +58764,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -58959,9 +58909,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -58994,7 +58944,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:14:16.187Z",
+              "recheckDueAt": "2026-09-26T02:46:37.978Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -59161,8 +59111,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -59329,9 +59279,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -59903,8 +59853,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -60021,9 +59971,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -60056,7 +60006,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:14:44.912Z",
+              "recheckDueAt": "2026-09-26T02:47:05.326Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -60085,75 +60035,12 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 394,
+        "renderedListingCount": 386,
         "groups": [
           {
             "sourceIds": [
               "ical:newbury-ical-conservation-commission:calendar.42321.field_date_and_time.0@www.newbury.nh.gov",
               "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
             ],
             "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
             "sourceListingCount": 2,
@@ -60276,8 +60163,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -60432,9 +60319,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -66273,9 +66160,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -70615,9 +70502,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -74912,9 +74799,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -78835,8 +78722,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -78980,9 +78867,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -79015,7 +78902,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:15:53.302Z",
+              "recheckDueAt": "2026-09-26T02:47:58.085Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -79182,8 +79069,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -79350,9 +79237,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -79924,8 +79811,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-        "commitShort": "e52ca4a",
+        "commit": "2177304519fbcda93768287913214d93b4335ce9",
+        "commitShort": "2177304",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -80042,9 +79929,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-25T20:30:08.447Z",
-              "retrievedAt": "2026-09-25T20:30:09.135Z",
-              "promotedAt": "2026-09-25T20:30:09.318Z",
+              "sourceThrough": "2026-09-26T01:27:53.681Z",
+              "retrievedAt": "2026-09-26T02:46:04.419Z",
+              "promotedAt": "2026-09-26T01:27:54.374Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -80077,7 +79964,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-25T21:16:20.985Z",
+              "recheckDueAt": "2026-09-26T02:48:21.945Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -80106,75 +79993,12 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 394,
+        "renderedListingCount": 386,
         "groups": [
           {
             "sourceIds": [
               "ical:newbury-ical-conservation-commission:calendar.42321.field_date_and_time.0@www.newbury.nh.gov",
               "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
-            ],
-            "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
-            "sourceListingCount": 2,
-            "uniqueMeetingCount": null
-          },
-          {
-            "sourceIds": [
-              "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
-              "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
             ],
             "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
             "sourceListingCount": 2,
@@ -80376,13 +80200,6 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-full-meeting.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-2.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-3.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-4.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-5.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-6.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-7.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-8.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-9.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-listing-popup-10.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-ballot-money.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-ballot-ask.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-dark-ballot-ask-last-record.png",
@@ -80461,13 +80278,6 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-full-meeting.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-2.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-3.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-4.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-5.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-6.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-7.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-8.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-9.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-listing-popup-10.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-ballot-money.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-desktop-light-about-area.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\85701-phone-dark-map-money.png",
@@ -80554,13 +80364,6 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-full-meeting.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-2.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-3.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-4.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-5.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-6.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-7.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-8.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-9.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-listing-popup-10.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-ballot-money.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-dark-about-area.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\85701-phone-light-map-money.png",
@@ -80647,13 +80450,6 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-full-meeting.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-2.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-3.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-4.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-5.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-6.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-7.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-8.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-9.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-listing-popup-10.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-ballot-money.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-completion-5704b1\\screenshots\\reader-last-mile\\03255-phone-light-about-area.png"
   ],

@@ -16,14 +16,21 @@ import {
 } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
+import { carriesCredential } from "../lib/hunt/access-control.ts";
 
 /**
  * THE SEEDED FAILURE SUITE — the Scout's research tools.
  *
  * Each seeded failure plants one way a tool could hand the model something it
- * must not have (unvaulted bytes, a disallowed page, a page behind a robots
- * read nobody could make) and asserts the exact refusal. A positive control
- * proves each detector can fail.
+ * must not have (unvaulted bytes, a page behind an access control) and asserts
+ * the exact refusal. A positive control proves each detector can fail.
+ *
+ * robots.txt is READ FIRST AND RECORDED, never a refusal of a public page
+ * (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION = false): the seeded
+ * robots cases below assert the document is read and vaulted, the verdict
+ * travels on the rung and the artifact, and the page GET happens. An access
+ * control (a 403, a bot challenge) is a WALL: vaulted DIAGNOSTIC, never shown,
+ * requested once, never retried with a credential.
  */
 
 const NOW = "2026-09-01T12:00:00.000Z";
@@ -37,11 +44,17 @@ interface Route {
   readonly transportError?: string;
 }
 
-/** A fake transport: every request is recorded; unmapped URLs answer 404. */
-function fakeTransport(routes: Readonly<Record<string, Route>>): { readonly open: OpenOne; readonly seen: string[] } {
+/** A fake transport: every request and its headers are recorded; unmapped URLs answer 404. */
+function fakeTransport(routes: Readonly<Record<string, Route>>): {
+  readonly open: OpenOne;
+  readonly seen: string[];
+  readonly headers: Readonly<Record<string, string>>[];
+} {
   const seen: string[] = [];
-  const open: OpenOne = async ({ url }) => {
+  const headers: Readonly<Record<string, string>>[] = [];
+  const open: OpenOne = async ({ url, headers: sent }) => {
     seen.push(url);
+    headers.push(sent);
     const route = routes[url];
     if (!route) return { status: 404, bytes: 9, contentType: "text/html", body: "not found", durationMs: 1, transportError: null };
     if (route.transportError) return { status: null, bytes: 0, contentType: "", body: "", durationMs: 1, transportError: route.transportError };
@@ -54,7 +67,7 @@ function fakeTransport(routes: Readonly<Record<string, Route>>): { readonly open
       transportError: null,
     };
   };
-  return { open, seen };
+  return { open, seen, headers };
 }
 
 type VaultMode = "accept" | "refuse" | "throw";
@@ -294,9 +307,9 @@ test("POSITIVE CONTROL for (a): with an accepting vault the same body DOES reach
   assert.ok(r.forModel.includes(pagePut.artifact.id), "the envelope names the artifact");
 });
 
-/* ======================================== SEEDED (b): DISALLOWED, no GET */
+/* ============== SEEDED (b): DISALLOWED is RECORDED, never a refusal (owner decision 2026-09-25) */
 
-test("SEEDED (b): a DISALLOWED path is refused BEFORE any GET — the transport saw only robots.txt", async () => {
+test("SEEDED (b): a DISALLOWED path is read, not refused — robots.txt is read FIRST and vaulted, the verdict is recorded on the rung and the artifact, and the GET succeeds", async () => {
   const { open, seen } = fakeTransport({
     [`${HOST}/robots.txt`]: { status: 200, body: "User-agent: *\nDisallow: /w/\nAllow: /wiki/\n", contentType: "text/plain" },
     [`${HOST}/w/api.php?action=query`]: { status: 200, body: `<html><body>${MARKER}</body></html>` },
@@ -304,45 +317,67 @@ test("SEEDED (b): a DISALLOWED path is refused BEFORE any GET — the transport 
   const vault = recordingVault();
   const kit = buildScoutToolkit(context({ openOne: open, vault: vault.put }));
   const r = await kit.call("fetch_public", { url: `${HOST}/w/api.php?action=query`, ...IN }, null);
-  assert.equal(r.ok, false);
-  assert.deepEqual(seen, [`${HOST}/robots.txt`], "only the permission document was requested");
-  assert.ok(!r.forModel.includes(MARKER));
-  assert.match(r.forModel, /DISALLOWED/);
-  assert.match(r.forModel, /Disallow: \/w\//, "the operative rule is named");
-  assert.match(r.forModel, /another branch/i, "the Scout is told to walk a compliant alternate");
-  assert.match(r.rung?.observed ?? "", /permission DISALLOWED.*no request sent/);
+  assert.equal(r.ok, true, r.forModel);
+  assert.deepEqual(seen, [`${HOST}/robots.txt`, `${HOST}/w/api.php?action=query`], "robots.txt FIRST, then the page: a disallow no longer stops the GET");
+  assert.ok(r.forModel.includes(MARKER), "the public page reaches the model");
+  assert.match(r.forModel, /PERMISSION DISALLOWED for clerk\.example\.gov/, "the verdict travels with the answer");
   assert.equal(r.rung?.tool, "fetch_public");
-  assert.equal(r.artifacts.length, 1, "the robots document itself is vaulted evidence");
-  assert.equal(r.artifacts[0].canonicalUrl, `${HOST}/robots.txt`);
-  assert.deepEqual(r.rung?.artifactIds, [r.artifacts[0].artifactId], "the disallow rung is evidence-backed by the robots document");
+  assert.equal(r.rung?.permission, "DISALLOWED", "the rung records the verdict it ran under");
+  assert.match(r.rung?.observed ?? "", /^HTTP 200/);
+  assert.doesNotMatch(r.rung?.observed ?? "", /no request sent/);
+  /* The robots document is read first, vaulted, and is itself always readable. */
+  assert.equal(vault.puts[0].artifact.canonicalUrl, `${HOST}/robots.txt`);
   assert.equal(vault.puts[0].artifact.methodRouteId, "scout:read_permission");
   assert.equal(vault.puts[0].artifact.permission, "ALLOWED", "the robots document itself is always readable");
+  const page = vault.puts.find((p) => p.artifact.canonicalUrl === `${HOST}/w/api.php?action=query`);
+  assert.equal(page?.artifact.permission, "DISALLOWED", "the page artifact carries the verdict as evidence");
+  assert.equal(page?.artifact.transport, "REACHABLE");
+  assert.deepEqual(r.artifacts.map((a) => a.canonicalUrl), [`${HOST}/robots.txt`, `${HOST}/w/api.php?action=query`]);
+  assert.deepEqual(r.rung?.artifactIds, r.artifacts.map((a) => a.artifactId), "the rung is evidence-backed by the robots document and the page");
+  /* The matched rule is on record, and the reading says it does not refuse. */
+  const p = await kit.call("read_permission", { url: `${HOST}/w/api.php?action=query`, ...IN }, null);
+  assert.match(p.forModel, /Matched rule: Disallow: \/w\//, "the operative rule is named");
+  assert.match(p.forModel, /RECORDED/);
+  assert.match(p.forModel, /does not refuse it/);
+  assert.doesNotMatch(p.forModel, /honoured|never re-walked|did not open/i);
 });
 
-/* ============================== SEEDED (c): CANNOT_TELL fails safe, no GET */
+/* ======== SEEDED (c): CANNOT_TELL is recorded as unread, never a disallow, and never a refusal */
 
-test("SEEDED (c): robots.txt answers 403 -> CANNOT_TELL -> no GET, and the refusal names the verdict", async () => {
+test("SEEDED (c): robots.txt answers 403 -> CANNOT_TELL is recorded as unread, never a disallow, and the page GET still happens (fetch_public and browse)", async () => {
   const { open, seen } = fakeTransport({
     [`${HOST}/robots.txt`]: { status: 403, body: "<html><body>Access denied</body></html>" },
     [`${HOST}/agendas`]: { status: 200, body: PAGE },
   });
-  const kit = buildScoutToolkit(context({ openOne: open }));
+  const vault = recordingVault();
+  const kit = buildScoutToolkit(context({ openOne: open, vault: vault.put }));
   const r = await kit.call("fetch_public", { url: `${HOST}/agendas`, ...IN }, null);
-  assert.equal(r.ok, false);
-  assert.deepEqual(seen, [`${HOST}/robots.txt`]);
-  assert.ok(!r.forModel.includes(MARKER));
-  assert.match(r.forModel, /CANNOT_TELL/);
-  assert.match(r.forModel, /fails safe/i);
-  assert.match(r.forModel, /not about the host's policy/i, "a wall in front of robots is not a DISALLOW");
+  assert.equal(r.ok, true, r.forModel);
+  assert.deepEqual(seen, [`${HOST}/robots.txt`, `${HOST}/agendas`], "robots.txt first, then the page");
+  assert.ok(r.forModel.includes(MARKER), "the public page reaches the model");
+  assert.match(r.forModel, /PERMISSION CANNOT_TELL/);
+  assert.equal(r.rung?.permission, "CANNOT_TELL");
   assert.ok(!/DISALLOWED/.test(r.rung?.observed ?? ""), "the rung never records a disallow it did not read");
-  assert.equal(r.artifacts.length, 1, "the 403 answer page is vaulted as diagnostic evidence");
-  assert.equal(r.artifacts[0].canonicalUrl, `${HOST}/robots.txt`);
+  const robots = vault.puts.find((p) => p.artifact.canonicalUrl === `${HOST}/robots.txt`);
+  assert.equal(robots?.artifact.retentionPolicy, "DIAGNOSTIC", "the 403 answer in front of robots.txt is vaulted as diagnostic evidence");
+  const page = vault.puts.find((p) => p.artifact.canonicalUrl === `${HOST}/agendas`);
+  assert.equal(page?.artifact.permission, "CANNOT_TELL", "the page records that robots.txt went unread");
+  const reading = await kit.call("read_permission", { url: `${HOST}/agendas`, ...IN }, null);
+  assert.match(reading.forModel, /recorded as unread/);
+  assert.match(reading.forModel, /does not refuse the page/);
 
-  /* browse fails safe the same way. */
-  const kit2 = buildScoutToolkit(context({ openOne: fakeTransport({ [`${HOST}/robots.txt`]: { status: 403, body: "denied" } }).open, browse: async () => { throw new Error("must not be reached"); } }));
+  /* browse proceeds the same way. */
+  let navigations = 0;
+  const browse: BrowseFn = async ({ url }) => {
+    navigations += 1;
+    return { finalUrl: url, status: 200, html: PAGE, text: MARKER, requests: [], transportError: null, durationMs: 1 };
+  };
+  const kit2 = buildScoutToolkit(context({ openOne: fakeTransport({ [`${HOST}/robots.txt`]: { status: 403, body: "denied" } }).open, browse }));
   const b = await kit2.call("browse", { url: `${HOST}/agendas`, ...IN }, null);
-  assert.equal(b.ok, false);
+  assert.equal(b.ok, true, b.forModel);
+  assert.equal(navigations, 1, "the browser navigated to the page");
   assert.match(b.forModel, /CANNOT_TELL/);
+  assert.equal(b.rung?.permission, "CANNOT_TELL");
 });
 
 test("a robots.txt transport failure is CANNOT_TELL, never a verdict", async () => {
@@ -352,11 +387,83 @@ test("a robots.txt transport failure is CANNOT_TELL, never a verdict", async () 
   });
   const kit = buildScoutToolkit(context({ openOne: open }));
   const r = await kit.call("fetch_public", { url: `${HOST}/agendas`, ...IN }, null);
-  assert.equal(r.ok, false);
-  assert.deepEqual(seen, [`${HOST}/robots.txt`]);
-  assert.match(r.forModel, /CANNOT_TELL/);
-  assert.match(r.forModel, /transport failure/i);
+  assert.equal(r.ok, true, r.forModel);
+  assert.deepEqual(seen, [`${HOST}/robots.txt`, `${HOST}/agendas`], "the failed robots read is recorded and the page is still read");
+  assert.ok(r.forModel.includes(MARKER));
+  assert.match(r.forModel, /PERMISSION CANNOT_TELL/);
+  assert.equal(r.rung?.permission, "CANNOT_TELL");
+  const reading = await kit.call("read_permission", { url: `${HOST}/agendas`, ...IN }, null);
+  assert.match(reading.forModel, /CANNOT_TELL/);
+  assert.match(reading.forModel, /transport failure/i);
 });
+
+/* ============ SEEDED (c2): an ACCESS CONTROL is a WALL — recorded, never bypassed */
+
+const CHALLENGE_PAGE =
+  `<!doctype html><html><head><title>Just a moment...</title></head><body><p>${MARKER}</p>` +
+  `<script>window._cf_chl_opt={cvId:"3"};</script></body></html>`;
+
+for (const [name, route] of [
+  ["a page answering HTTP 403", { status: 403, body: `<html><body>Forbidden ${MARKER}</body></html>` }],
+  ["a page answering HTTP 200 with a Cloudflare \"Just a moment...\" challenge", { status: 200, body: CHALLENGE_PAGE }],
+] as const) {
+  test(`SEEDED (c2): ${name} is a WALL — vaulted DIAGNOSTIC, body not shown, requested exactly once, no credential sent`, async () => {
+    const { open, seen, headers } = fakeTransport({
+      [`${HOST}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" },
+      [`${HOST}/agendas`]: route,
+    });
+    const vault = recordingVault();
+    const kit = buildScoutToolkit(context({ openOne: open, vault: vault.put }));
+    const r = await kit.call("fetch_public", { url: `${HOST}/agendas`, ...IN }, null);
+    assert.equal(r.ok, false, "an access control is never reported as the page");
+    assert.match(r.forModel, /a WALL, named/);
+    assert.match(r.forModel, /never bypassed/);
+    assert.match(r.forModel, /another public branch/i, "the Scout is told to walk another public route");
+    assert.ok(!r.forModel.includes(MARKER), "nothing of the walled answer reaches the model");
+    assert.equal(seen.filter((u) => u === `${HOST}/agendas`).length, 1, "the walled page is requested exactly once, never re-sent to push through");
+    const walled = vault.puts.find((p) => p.artifact.canonicalUrl === `${HOST}/agendas`);
+    assert.equal(walled?.artifact.retentionPolicy, "DIAGNOSTIC", "the walled answer is vaulted as diagnostic evidence only");
+    assert.equal(walled?.artifact.transport, "CHALLENGED");
+    assert.equal(r.rung?.permission, "ALLOWED", "the robots verdict is still recorded beside the wall");
+    assert.match(r.rung?.observed ?? "", /\((wall|CHALLENGE)\)/);
+    assert.equal(headers.length, seen.length, "every request's headers were observed");
+    for (const h of headers) assert.equal(carriesCredential(h), false, `no request carries a credential or a session: ${JSON.stringify(h)}`);
+  });
+}
+
+for (const [name, obs] of [
+  ["a navigation answered HTTP 403", { status: 403, html: `<html><body>Forbidden ${MARKER}</body></html>` }],
+  ["a render that is a bot challenge page", { status: 200, html: CHALLENGE_PAGE }],
+] as const) {
+  test(`browse: ${name} is a WALL — the render is vaulted DIAGNOSTIC, nothing of it or its requests is shown, one navigation`, async () => {
+    let navigations = 0;
+    const browse: BrowseFn = async ({ url }) => {
+      navigations += 1;
+      return {
+        finalUrl: url, status: obs.status, html: obs.html, text: MARKER,
+        requests: [{ url: `${HOST}/api/secret-path`, method: "GET", status: 200, resourceType: "xhr", contentType: "application/json" }],
+        transportError: null, durationMs: 1,
+      };
+    };
+    const { open, headers } = fakeTransport({ [`${HOST}/robots.txt`]: { status: 200, body: ROBOTS_ALLOW_ALL, contentType: "text/plain" } });
+    const vault = recordingVault();
+    const kit = buildScoutToolkit(context({ openOne: open, vault: vault.put, browse }));
+    const r = await kit.call("browse", { url: `${HOST}/spa`, ...IN }, null);
+    assert.equal(r.ok, false);
+    assert.match(r.forModel, /a WALL, named/);
+    assert.match(r.forModel, /does not get past an access control/);
+    assert.ok(!r.forModel.includes(MARKER), "nothing of the render reaches the model");
+    assert.ok(!r.forModel.includes("secret-path"), "nor the requests the page made behind the wall");
+    assert.equal(navigations, 1, "one navigation, never retried");
+    const renders = vault.puts.filter((p) => p.artifact.methodRouteId === "scout:browse");
+    assert.equal(renders.length, 1);
+    assert.equal(renders[0].artifact.retentionPolicy, "DIAGNOSTIC");
+    assert.equal(renders[0].artifact.transport, "CHALLENGED");
+    assert.ok(!vault.puts.some((p) => p.artifact.methodRouteId === "scout:browse:network-observation"), "no network observation is vaulted behind a wall");
+    assert.match(r.rung?.observed ?? "", /\((FORBIDDEN|CHALLENGE)\)/);
+    for (const h of headers) assert.equal(carriesCredential(h), false);
+  });
+}
 
 /* ================================== SEEDED (d): NO_ROBOTS permits the GET */
 
@@ -706,6 +813,9 @@ test("read_permission returns the verdict and operative lines, vaults robots.txt
   assert.equal(a.rung?.tool, "read_permission");
   const b = await kit.call("read_permission", { url: `${HOST}/admin/x`, ...IN }, null);
   assert.match(b.forModel, /DISALLOWED/);
+  assert.match(b.forModel, /RECORDED with the artifact and does not refuse it/, "a disallow is evidence, never a refusal (owner decision 2026-09-25)");
+  assert.doesNotMatch(b.forModel, /honoured|never re-walked|Walk another branch/i);
+  assert.equal(b.rung?.permission, "DISALLOWED");
   assert.match(b.forModel, /read earlier this Attempt/);
   assert.deepEqual(b.artifacts, [], "nothing new was vaulted");
   assert.deepEqual(b.rung?.artifactIds, a.rung?.artifactIds, "the cached rung still cites the robots artifact");

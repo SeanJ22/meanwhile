@@ -8,6 +8,7 @@ import {
 } from "./read-model.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
@@ -112,6 +113,10 @@ export const refreshCommentAccessFromPromoted = (options: PromotedCivicDataReadO
   refreshCuratedReaderProjection("comment-access", options);
 export const refreshBallotNavigationFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("ballot-navigation", options);
+/** The ballot navigation links, edge first (2026-09-25): the reader edge's proven copy, else the database. */
+const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
+export const settleBallotNavigationRead = (): Promise<string> =>
+  readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope, refreshBallotNavigationFromPromoted, "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
 export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
@@ -125,13 +130,22 @@ export function curatedReaderReadState(id: CuratedReaderContractId): CivicDataRe
  * Synchronous selectors are allowed only after the canonical pointer was read.
  * The tracked value is deterministic first-seed/test evidence, never a
  * production fallback after NOT_RECORDED or a store failure.
+ *
+ * **AN EDGE COPY IS SERVED, NOT REFUSED** (2026-09-25). A curated reader
+ * projection has no bundled first seed (`readCuratedReaderProjection` reads
+ * the pointer only), so its one BOOTSTRAP state is the validated edge copy of a
+ * promoted version (`primeCuratedReaderProjection`). This selector refused it
+ * outside tests: since the campaign-site URLs and the comment-access rules
+ * moved to the reader edge, an edge-served request withheld every campaign
+ * link and every comment rule in production, while the test process returned
+ * the tracked seed and hid it (tests/curated-reader-edge-selector.test.ts).
  */
 export function currentCuratedReaderRecords<T>(
   id: CuratedReaderContractId,
   testSeed: readonly T[],
 ): readonly T[] {
   const state = states.get(id) ?? initial(id);
-  if (state.kind === "PROMOTED") return state.value.records as readonly T[];
+  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value.records as readonly T[];
   if (mayUseTestFixture()) return testSeed;
   throw new Error(`${id} projection is ${state.kind}; initialize its canonical read before using the synchronous Reader projection.`);
 }

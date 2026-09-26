@@ -48,11 +48,16 @@ const REGISTRATIONS_CARRIED: PublishRegistrations = {
   az: { versionId: "reg-az-v1", carried: true },
   nh: { versionId: "reg-nh-v1", carried: true },
 };
-const CURRENT_PREPARED: PrepareMeetingSnapshotResult = {
+// The composition and its quiet re-checks, as prepare states them (lib/meetings/fresh-checks.ts).
+const CHECKS = { composition: "composition-1", freshChecks: {} };
+const CURRENT_PREPARED: Extract<PrepareMeetingSnapshotResult, { status: "CURRENT" }> = {
   status: "CURRENT",
   sequence: 7,
   coupledPartitions: 3,
   generatedAt: GENERATED_AT,
+  servedGeneratedAt: GENERATED_AT,
+  checkedAt: null,
+  ...CHECKS,
 };
 
 async function servedEdge(): Promise<{ store: LocalFileArtifactStore; manifest: ReaderManifest }> {
@@ -63,6 +68,7 @@ async function servedEdge(): Promise<{ store: LocalFileArtifactStore; manifest: 
     extras: EXTRAS,
     authority: VALUES,
     registrations: REGISTRATION_VALUES,
+    checks: CHECKS,
   });
   assert.equal(published.status, "PUBLISHED");
   return { store, manifest: (await store.readManifest())!.manifest };
@@ -85,9 +91,26 @@ test("R28: an unchanged pass carries the served edge forward, exactly where the 
     extras: { ...EXTRAS },
     authority: CARRIED,
     registrations: REGISTRATIONS_CARRIED,
+    checks: CHECKS,
   });
   assert.equal(publish.status, "CURRENT");
   assert.equal("sequence" in publish ? publish.sequence : null, manifest.sequence);
+});
+
+test("a family left out this pass that the manifest does not serve either changes nothing: the pass still carries, and the publish agrees", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-carry-")));
+  const without = <T extends PublishAuthority>(authority: T): PublishAuthority =>
+    Object.fromEntries(Object.entries(authority).filter(([family]) => family !== "pima-finance"));
+  const published = await publishReaderEdgeArtifacts(snapshot(), META, {
+    store, now: GENERATED_AT, extras: EXTRAS, authority: without(VALUES), registrations: REGISTRATION_VALUES, checks: CHECKS,
+  });
+  assert.equal(published.status, "PUBLISHED");
+  const manifest = (await store.readManifest())!.manifest;
+  assert.equal(manifest.authorityArtifacts?.["pima-finance"], undefined);
+  const input = { prepared: CURRENT_PREPARED, servedManifest: manifest, extras: { ...EXTRAS }, authority: without(CARRIED), registrations: REGISTRATIONS_CARRIED };
+  assert.deepEqual(readerEdgeCarriesForward(input), { current: true, sequence: manifest.sequence });
+  const publish = await publishReaderEdgeArtifacts(snapshot(), META, { store, now: "2026-09-25T15:05:00.000Z", ...input, checks: CHECKS });
+  assert.equal(publish.status, "CURRENT", "the publish would have changed the edge");
 });
 
 test("R28: every condition that could change the edge reads the prepared row and publishes", async () => {
@@ -102,14 +125,19 @@ test("R28: every condition that could change the edge reads the prepared row and
   const { commentAccess: _served, ...withoutCommentAccess } = manifest;
   const { registrations: _registrations, ...withoutRegistrations } = manifest;
   const cases: readonly [string, Parameters<typeof readerEdgeCarriesForward>[0], RegExp][] = [
-    ["the prepared snapshot was republished this pass", { ...base, prepared: { status: "PUBLISHED", sequence: 8, coupledPartitions: 3, generatedAt: GENERATED_AT } }, /PUBLISHED/],
+    ["the prepared snapshot was republished this pass", { ...base, prepared: { ...CURRENT_PREPARED, status: "PUBLISHED", sequence: 8, generatedAt: GENERATED_AT } }, /PUBLISHED/],
     ["the prepared snapshot raced", { ...base, prepared: { status: "RACED", sequence: 8, coupledPartitions: 3 } }, /RACED/],
     ["the prepared snapshot failed", { ...base, prepared: { status: "FAILED", error: "x", lastValidGeneratedAt: GENERATED_AT } }, /FAILED/],
     ["the prepared snapshot is not composable", { ...base, prepared: { status: "NOT_COMPOSABLE", detail: "x", lastValidGeneratedAt: null } }, /NOT_COMPOSABLE/],
     ["the prepared row has no generation instant", { ...base, prepared: { ...CURRENT_PREPARED, generatedAt: null } }, /generation instant/],
     ["no manifest is served", { ...base, servedManifest: null }, /no served manifest/],
     ["the manifest has another format", { ...base, servedManifest: { ...manifest, formatVersion: 2 as unknown as 1 } }, /format/],
-    ["the manifest came from another composition", { ...base, prepared: { ...CURRENT_PREPARED, generatedAt: "2026-09-25T16:00:00.000Z" } }, /generated/],
+    ["the manifest came from another composition", { ...base, prepared: { ...CURRENT_PREPARED, composition: "composition-2", generatedAt: "2026-09-25T16:00:00.000Z" } }, /another composition/],
+    [
+      "a manifest written before compositions were named came from another generation",
+      { ...base, servedManifest: { ...manifest, composition: undefined }, prepared: { ...CURRENT_PREPARED, generatedAt: "2026-09-25T16:00:00.000Z" } },
+      /another composition/,
+    ],
     ["the embedded families were not read", { ...base, extras: undefined }, /not read/],
     ["comment access changed", { ...base, extras: { ...EXTRAS, commentAccess: [{ bodyId: "body-2" }] } }, /embedded families changed/],
     ["everyday routing changed", { ...base, extras: { ...EXTRAS, everydayRouting: null } }, /embedded families changed/],

@@ -76,7 +76,7 @@ async function textOf(): Promise<string> {
   // politeGetText is the shared client with the F20 challenge escalation: a bot
   // interstitial served at 200 THROWS naming the wall rather than coming back
   // as a page that says nothing.
-  const { status, text } = await politeGetText(target!, { profile: "browser" });
+  const { status, text } = await politeGetText(target!, {});
   if (status !== 200) {
     console.error(`CANNOT RUN: ${target} answered HTTP ${status}`);
     process.exit(1);

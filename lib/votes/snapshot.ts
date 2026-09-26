@@ -17,6 +17,7 @@ import {
   type FederalRollCallsReadModel,
 } from "./data-plane.ts";
 import type { VotesSnapshot } from "./types.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 let cache: FederalRollCallsReadModel | null = null;
 let readState: CivicDataReadResult<FederalRollCallsReadModel> = civicDataReadNotInitialized(
@@ -105,6 +106,10 @@ export async function refreshFederalVotesFromPromoted(
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
+
+/** The federal roll-call preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+export const settleFederalVotesRead = (): Promise<string | null> =>
+  readPromotedEdgeFirst("FEDERAL_ROLL_CALL", FEDERAL_ROLLCALL_SCOPE, refreshFederalVotesFromPromoted, "The federal roll calls");
 
 export function federalRollCallsReadState(): CivicDataReadResult<FederalRollCallsReadModel> {
   return readState;

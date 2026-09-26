@@ -115,7 +115,7 @@ export const ROLE_ONE_LINER: Record<WorkerRole, string> = {
   ENGINEERING: "Turns a proven, reusable method into durable code, proved in isolation and put up for review. It never merges anything itself.",
   RELEASE_ORCHESTRATOR: "Carries a release through the ordinary gates. It has never run here.",
   DISCOVERY_SEARCH:
-    "Asks a search provider (Brave or Exa) where a government publishes its meetings. It opens nothing itself: every result is fetched with permission checked first and confirmed by its content. Its spend is counted apart from model spend.",
+    "Asks a search provider (Brave or Exa) where a government publishes its meetings. It opens nothing itself: every result is fetched with the site's robots file read and recorded first, and confirmed by its content. Its spend is counted apart from model spend.",
 };
 
 /** The group each role reports under, mirroring `FLEET_GROUPS` membership by name. */

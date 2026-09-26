@@ -910,7 +910,7 @@ test("the pilot outer bound contains the frontier (one a pass, two on a meeting 
     clockTaskCount: ROUTINE_SOURCE_TASKS.length,
     clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
     clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    coordinationRequests: 3,
+    coordinationRequests: 4,
     readerSingleDomains: readerDomains.filter(({ mode }) => mode === "SINGLE").length,
     readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
     readerMeetingDomains: readerDomains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,
@@ -1055,7 +1055,8 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /MEETING_PARTITION_TASK_IDS\.has\(task\.id\) \? "MEETING_PARTITION" : "SINGLE"/);
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
-  assert.match(runner, /if \(admittedIds\.has\(candidate\.pending\.id\)\) pendingRuns\.push\(candidate\.pending\)/);
+  // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
+  assert.match(runner, /for \(const \{ task \} of routinePassLaunchOrder\(admitted\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -1717,7 +1718,7 @@ test("the supervisor proves the registry once for two or more meeting children a
   const admitted = source.indexOf("attempted = pendingRuns.length;");
   const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
   const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
-  const launch = source.indexOf("const childRuns = await runBoundedChildPass(");
+  const launch = source.indexOf("const sourcePass = runBoundedChildPass(");
   assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
   assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
   assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);

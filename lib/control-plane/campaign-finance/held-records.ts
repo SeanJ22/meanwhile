@@ -58,6 +58,7 @@ import {
   PIMA_LOCAL_FINANCE_CONTRACT,
   type AzPimaFinanceReadModel,
 } from "../../funding/data-plane.ts";
+import { readPromotedEdgeFirst } from "../../registry/runtime-edge.ts";
 import type {
   AuthorityAggregate,
   Contribution,
@@ -186,6 +187,10 @@ export async function refreshAzPimaFinanceFromPromoted(
   }
   throw new Error(result.detail);
 }
+
+/** The Pima finance preload, edge first (2026-09-25): the reader edge's proven copy through this Reader, else the database. */
+export const settleAzPimaFinanceRead = (): Promise<string | null> =>
+  readPromotedEdgeFirst("LOCAL_CAMPAIGN_FINANCE", PIMA_LOCAL_FINANCE_CONTRACT.scope, refreshAzPimaFinanceFromPromoted, "The Pima campaign finance");
 
 export function azPimaFinanceReadState(): CivicDataReadResult<AzPimaFinanceReadModel> {
   return azPimaReadState;

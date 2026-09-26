@@ -131,7 +131,7 @@ async function fetchFollowing(
     throw new Error(`redirect loop: ${[...redirects, url].join(" → ")}`);
   }
   try {
-    const r = await politeGetText(url, { profile: "browser" });
+    const r = await politeGetText(url, {});
     return { text: r.text, status: r.status, finalUrl: url, redirects };
   } catch (error) {
     const message = String((error as Error).message ?? error);

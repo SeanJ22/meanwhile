@@ -167,7 +167,7 @@ for (const body of candidates) {
   const attemptedAt = new Date().toISOString();
   done += 1;
   try {
-    const res = await politeGetText(url, { profile: "browser" });
+    const res = await politeGetText(url, {});
     const signatures = PLATFORMS.filter((p) => p.test(res.text)).map((p) => p.key);
     const platform = signatures[0] ?? null;
     const jsonBytes = embeddedJsonBytes(res.text);

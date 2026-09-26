@@ -15,7 +15,7 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
-import { activeReaderProofMeetingPin } from "./proof-pin.ts";
+import { activeReaderProofMeetingPin, readerProofPinnedCheckedAt } from "./proof-pin.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
 import {
   HELD_MEETING_PARTITIONS,
@@ -25,6 +25,13 @@ import {
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
+import {
+  applyPartitionFreshCheck,
+  confirmationCheckedAt,
+  meetingVersionReadsASource,
+  meetingVersionRoutes,
+  type MeetingPartitionFreshCheck,
+} from "./fresh-checks.ts";
 
 export const MEETINGS_RECORD_CLASS = "MEETING" as const;
 /** Reader composition scope; no canonical pointer is ever written at this key. */
@@ -116,6 +123,15 @@ export interface SnapshotSourceReport {
    * nothing on the reader's card claims a freshness it does not have.
    */
   carriedForward?: number;
+  /**
+   * How many of this source's carried rows the composed snapshot collapsed
+   * into another route's listing of the same sitting (2026-09-25). Stated,
+   * never absorbed: in a composed snapshot `carriedForward` counts the carried
+   * rows it still holds, and the sitting stays listed by the route that won the
+   * merge. First seen when Flagstaff's Tourism Commission feed stopped listing
+   * its Sep 24 sitting (carried) while its events page listed it fresh.
+   */
+  carriedCollapsed?: number;
   /** Exact acquired bodies and observed final redirects for durable promotion proof. */
   acquisitions?: readonly SourceAcquisitionEvidence[];
 }
@@ -282,6 +298,54 @@ export function snapshotCounts(
   };
 }
 
+/**
+ * The composed snapshot's accounting for the rows the cross-route merge
+ * dropped (2026-09-25).
+ *
+ * A dropped FRESH row is a collapsed duplicate (`duplicatesCollapsed`), so
+ * fresh + collapsed still equals what the sources normalized. A dropped CARRIED
+ * row was never normalized by this run, and counting it there broke that sum by
+ * one: production's composition was refused from 6:27 PM MST that day, when
+ * Flagstaff's Tourism Commission feed stopped listing its Sep 24 sitting (the
+ * family carried it) while its events page listed the same sitting fresh.
+ * Such a row moves from its own partition's report's `carriedForward` to that
+ * report's `carriedCollapsed`, so every carried-row check still reconciles with
+ * the rows the snapshot holds, and the collapse is stated rather than absorbed.
+ * A row carried from a successful response is charged to a successful report,
+ * any other carried row to a failed or partial one, exactly as the checks count
+ * them. A carried row whose report cannot be found is left as it was, and
+ * validation refuses the snapshot as before. Reports are restated as copies;
+ * the partitions' own reports are never changed.
+ */
+export function accountCarriedCollapses(
+  partitions: readonly Pick<MeetingsSnapshot, "meetings" | "sources">[],
+  sources: readonly SnapshotSourceReport[],
+  dropped: readonly Meeting[],
+): { readonly sources: readonly SnapshotSourceReport[]; readonly freshCollapsed: number } {
+  const freshCollapsed = dropped.filter((meeting) => !meeting.carried).length;
+  const carriedDropped = dropped.filter((meeting) => meeting.carried);
+  if (carriedDropped.length === 0) return { sources, freshCollapsed };
+  const ownReports = new Map<string, readonly SnapshotSourceReport[]>();
+  for (const partition of partitions) {
+    for (const meeting of partition.meetings) ownReports.set(meeting.id, partition.sources);
+  }
+  const restated = new Map<SnapshotSourceReport, SnapshotSourceReport>();
+  const current = (report: SnapshotSourceReport) => restated.get(report) ?? report;
+  const answered = (report: SnapshotSourceReport) => report.ok && (report.unreachableOcdIds?.length ?? 0) === 0;
+  for (const row of carriedDropped) {
+    const carried = row.carried!;
+    const fromAnswer = carried.reason === "UNEXPLAINED_DISAPPEARANCE";
+    const report = (ownReports.get(row.id) ?? []).find((candidate) => {
+      const now = current(candidate);
+      return now.source === carried.source && (now.carriedForward ?? 0) > 0 && answered(now) === fromAnswer;
+    });
+    if (report === undefined) continue;
+    const now = current(report);
+    restated.set(report, { ...now, carriedForward: now.carriedForward! - 1, carriedCollapsed: (now.carriedCollapsed ?? 0) + 1 });
+  }
+  return { sources: sources.map((report) => restated.get(report) ?? report), freshCollapsed };
+}
+
 export function reconcileCounts(snap: MeetingsSnapshot): void {
   const counts = snap.counts;
   if (!counts || typeof counts !== "object") {
@@ -413,6 +477,9 @@ export function validateSnapshot(
     // exists to make visible.
     if (s.carriedForward !== undefined && !Number.isInteger(s.carriedForward)) {
       throw new Error(`${s.source}: carriedForward must be stated as an integer`);
+    }
+    if (s.carriedCollapsed !== undefined && (!Number.isInteger(s.carriedCollapsed) || s.carriedCollapsed < 1)) {
+      throw new Error(`${s.source}: carriedCollapsed must be stated as a positive integer`);
     }
     if (
       s.unreachableOcdIds !== undefined &&
@@ -627,6 +694,13 @@ export interface MeetingPartitionReadback {
    * NOT_RECORDED — and this names exactly which version the rows came from.
    */
   readonly heldFrom?: MeetingPartitionHeldFrom;
+  /**
+   * The composed version's fresh-row routes and its newest successful fresh
+   * check that found nothing new (lib/meetings/fresh-checks.ts). Present only
+   * for a composed version that reads a source; the prepared serving copy
+   * records it so a later check is applied without reading any payload.
+   */
+  readonly freshCheck?: MeetingPartitionFreshCheck;
 }
 
 export interface MeetingPartitionHeldFrom {
@@ -846,7 +920,25 @@ export async function readMeetingsProjection(
     for (const owner of new Set(owners)) invalid.set(owner, `MEETING_PARTITION_DOCUMENT_COLLISION:${id}`);
   }
 
-  const promoted = rawPromoted.filter(({ partition }) => !invalid.has(partition.id));
+  // A version's newest successful fresh check that found nothing new is applied
+  // to its own fresh rows and to "Last checked" (lib/meetings/fresh-checks.ts):
+  // since migration 0029 a quiet re-check is a confirmation, not a new version.
+  // Under a Reader proof pin the check is the capture's, like the version.
+  const promoted = rawPromoted
+    .filter(({ partition }) => !invalid.has(partition.id))
+    .map((read) => {
+      const readsASource = meetingVersionReadsASource(read.result.value.sources);
+      const checkedAt = pin === null
+        ? confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource)
+        : readsASource ? readerProofPinnedCheckedAt(pin, read.partition.id, read.result.metadata.versionId) : null;
+      const routes = meetingVersionRoutes(read.result.value);
+      return {
+        ...read,
+        value: applyPartitionFreshCheck(read.result.value, checkedAt),
+        freshCheck: routes === null ? undefined : { routes, checkedAt } satisfies MeetingPartitionFreshCheck,
+      };
+    });
+  const freshChecks = new Map(promoted.flatMap(({ partition, freshCheck }) => freshCheck ? [[partition.id, freshCheck] as const] : []));
   const partitionReadbacks: MeetingPartitionReadback[] = reads.map(({ partition, result, held }) => {
     const heldFrom = held && !invalid.has(partition.id) && held.result.metadata.versionId
       ? { contractId: held.partition.id, scope: held.partition.scope, versionId: held.result.metadata.versionId }
@@ -863,6 +955,7 @@ export async function readMeetingsProjection(
           `(retired ${held!.partition.retiredOn}) is composed in its place until this partition's first promotion.`
         : "detail" in result ? result.detail : null),
       ...(heldFrom ? { heldFrom } : {}),
+      ...(freshChecks.has(partition.id) ? { freshCheck: freshChecks.get(partition.id)! } : {}),
     };
   });
 
@@ -870,11 +963,11 @@ export async function readMeetingsProjection(
     const meetings: Meeting[] = [];
     const agendaDocuments: AgendaDocument[] = [];
     const sources: SnapshotSourceReport[] = [];
-    for (const { result } of promoted) {
-      meetings.push(...result.value.meetings);
-      agendaDocuments.push(...result.value.agendaDocuments);
+    for (const { value } of promoted) {
+      meetings.push(...value.meetings);
+      agendaDocuments.push(...value.agendaDocuments);
       /* One source per partition; a derived family accounts for one per member adapter. */
-      sources.push(...result.value.sources);
+      sources.push(...value.sources);
     }
     for (const { partition } of reads) {
       if (promoted.some((row) => row.partition.id === partition.id)) continue;
@@ -897,9 +990,15 @@ export async function readMeetingsProjection(
       });
     }
     const collapsed = collapseDuplicateSittings(meetings);
+    const accounted = accountCarriedCollapses(
+      promoted.map(({ value }) => value),
+      sources,
+      collapsed.dropped,
+    );
+    sources.splice(0, sources.length, ...accounted.sources);
     const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
     const retainedDocuments = agendaDocuments.filter((document) => retainedIds.has(document.meetingId));
-    const generatedAt = promoted.map(({ result }) => result.value.generatedAt).sort().at(-1) ?? now;
+    const generatedAt = promoted.map(({ value }) => value.generatedAt).sort().at(-1) ?? now;
     const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const promotedAt = promoted.map(({ result }) => result.metadata.promotedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
@@ -914,7 +1013,7 @@ export async function readMeetingsProjection(
     const value: MeetingsSnapshot = {
       formatVersion: 1,
       generatedAt,
-      counts: snapshotCounts(collapsed.rows, collapsed.dropped.length),
+      counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed),
       sources,
       meetings: collapsed.rows,
       agendaDocuments: retainedDocuments,

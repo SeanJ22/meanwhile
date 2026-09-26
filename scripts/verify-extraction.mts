@@ -265,21 +265,8 @@ async function main(): Promise<void> {
     if (n >= limit) break;
     n += 1;
     const url = roster.sourceUrl;
+    /* robots.txt is read and recorded on the result, never a refusal (owner decision 2026-09-25). */
     const perm = await judgeUrl(url);
-    if (perm.verdict !== "ALLOWED" && perm.verdict !== "NO_ROBOTS") {
-      results.push({
-        body: roster.bodyName,
-        url,
-        agreed: [],
-        agreedInEmbeddedData: [],
-        partial: [],
-        disagreed: [],
-        readable: false,
-        permission: perm.verdict,
-      });
-      console.log(`  REFUSED  ${perm.verdict.padEnd(12)} ${roster.bodyName}`);
-      continue;
-    }
 
     const html = await getPage(url);
     if (html === null) {

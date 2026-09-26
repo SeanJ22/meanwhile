@@ -54,16 +54,20 @@ import {
 import {
   applyMinutesApprovals,
   concludedSittingRows,
+  failedDocumentCheck,
+  failedMinutesReadFor,
   failedMinutesSitting,
   insiteMeetingId,
+  isHeldFailedExtraction,
   minutesLinkFor,
   minutesRefreshDecision,
   minutesSitting,
   notYetPublishedSitting,
   readMinutesDocument,
+  sittingAfterRead,
 } from "../lib/outcomes/minutes-ingest.ts";
 import { readMesaOutcomeProjection } from "../lib/outcomes/store.ts";
-import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
+import type { OutcomeSnapshot, PersistedFailedMinutesRead, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
 import { captureSourceAcquisitions, type SourceAcquisitionEvidence } from "../lib/sources/acquisition-trace.ts";
 import {
@@ -179,6 +183,8 @@ export interface MinutesIngestResult {
   readonly documentsRead: number;
   readonly notYetPublished: number;
   readonly skippedUnchanged: number;
+  /** Held failed extractions whose document a cheap check found unchanged (or could not check): not downloaded. */
+  readonly heldFailedExtractions: number;
 }
 
 /** The calendar grid, every range and page the window needs, as rows. */
@@ -231,6 +237,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   let documentsRead = 0;
   let notYetPublished = 0;
   let skippedUnchanged = 0;
+  let heldFailedExtractions = 0;
 
   const current = await currentProjection(store);
   let snapshot = current.snapshot;
@@ -257,6 +264,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     documentsRead,
     notYetPublished,
     skippedUnchanged,
+    heldFailedExtractions,
   });
 
   const attemptedAt = now();
@@ -305,9 +313,9 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     const meetingId = insiteMeetingId(tenant.slug, row.insiteId!);
     const link = minutesLinkFor(row, tenant.host);
     const heldSitting = held.get(meetingId);
-    const decision = args.force && link !== null
+    let decision: { readonly walk: boolean; readonly reason: string; readonly check?: PersistedFailedMinutesRead } = args.force && link !== null
       ? ({ walk: true, reason: "FORCED" } as const)
-      : minutesRefreshDecision(link, heldSitting);
+      : minutesRefreshDecision(link, heldSitting, new Date(calendarAt));
 
     if (link === null) {
       if (heldSitting === undefined) {
@@ -322,6 +330,26 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
         }
       }
       continue;
+    }
+    /*
+     * A held failed extraction (2026-09-25): ask the portal, without the bytes, whether the document changed.
+     * Unchanged or unanswered, the failure stays held and nothing is downloaded; changed, it is read at once.
+     */
+    if (!decision.walk && decision.reason === "FAILED_DOCUMENT_CHECK" && decision.check) {
+      if (!writes) {
+        log(`  would check ${meetingId} ${link.url} before reading it again — held failed extraction`);
+        skippedUnchanged += 1;
+        continue;
+      }
+      const head = await session.head(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
+      const checked = failedDocumentCheck(decision.check, head);
+      log(`  ${meetingId} ${row.date} ${row.bodyName}: held failed extraction — ${checked.reason} (${checked.detail})`);
+      if (!checked.walk) {
+        heldFailedExtractions += 1;
+        skippedUnchanged += 1;
+        continue;
+      }
+      decision = checked;
     }
     if (!decision.walk) {
       skippedUnchanged += 1;
@@ -341,27 +369,34 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
       runForSource(CONTRACT.sourceId, async () => {
         try {
           const fetched = await session.getBytes(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
-          return { bytes: fetched.bytes, error: null as string | null };
+          return {
+            bytes: fetched.bytes,
+            response: { contentType: fetched.contentType, etag: fetched.etag, lastModified: fetched.lastModified },
+            error: null as string | null,
+          };
         } catch (error) {
-          return { bytes: null, error: error instanceof Error ? error.message : String(error) };
+          return { bytes: null, response: null, error: error instanceof Error ? error.message : String(error) };
         }
       }),
     );
     documentsRead += 1;
     const observedAt = now();
     let persisted: PersistedSittingOutcomes;
-    if (read.value.bytes === null) {
+    if (read.value.bytes === null || read.value.response === null) {
       persisted = failedMinutesSitting({ ...base, row, observedAt, link, error: read.value.error ?? "unknown failure" });
     } else {
       const document = await readMinutesDocument(link, read.value.bytes);
       const readOn = stampFromRead({ source: link.url, ok: true, bytes: document.byteCount, on: runStamp(new Date(observedAt)) });
-      persisted = minutesSitting({ ...base, row, observedAt, document, readOn }).sitting;
+      const fresh = minutesSitting({ ...base, row, observedAt, document, readOn }).sitting;
+      // A failure on the bytes is held with their identity; over verified minutes, beside them (2026-09-25).
+      persisted = sittingAfterRead(heldSitting, fresh, failedMinutesReadFor(fresh, document, read.value.response, observedAt));
     }
     const proposed = applyMinutesApprovals(mergeSnapshot(snapshot, [...pending, persisted], {
       generatedOn: observedAt.slice(0, 10),
       generatedAt: observedAt,
     }));
-    const failed = persisted.extraction === "REQUEST_FAILED" || persisted.extraction === "ZERO_ROWS_FAILED";
+    // A failed request is retried soon; a held failed extraction is a named result that promotes.
+    const failed = persisted.extraction === "REQUEST_FAILED" || (persisted.extraction === "ZERO_ROWS_FAILED" && !isHeldFailedExtraction(persisted));
     const outcome = await persist({
       snapshot: proposed,
       acquisitions: [...calendarEvidence, ...read.evidence],
@@ -391,7 +426,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     log(`STOPPED AT THE PER-RUN BUDGET of ${args.maxDocuments} document(s); the remaining sittings stay due and no completion is inferred.`);
   }
   if (!writes) {
-    return { receiptLine: null, exitCode: 0, promotedSittings, refusedSittings, documentsRead, notYetPublished, skippedUnchanged };
+    return { receiptLine: null, exitCode: 0, promotedSittings, refusedSittings, documentsRead, notYetPublished, skippedUnchanged, heldFailedExtractions };
   }
 
   if (pending.length > 0) {

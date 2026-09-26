@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { ocdStateCode } from "../ocd/state-of.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
+import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   snapshotCounts,
   type MeetingsSnapshot,
@@ -127,6 +128,70 @@ export interface ReaderManifest {
    * state from the database.
    */
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  /**
+   * **Quiet re-checks, applied when served** (2026-09-25, lib/meetings/fresh-checks.ts).
+   * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
+   * nothing new since its rows were written. The reader restamps that route's
+   * fresh rows with it; carried rows never. `generatedAt` above already states
+   * the newest check as "Last checked". Absent: no check since the artifacts.
+   */
+  readonly freshChecks?: Readonly<Record<string, string>>;
+  /**
+   * The partition versions these scope artifacts were composed from
+   * (`meetingCompositionId`): how the runner tells a quiet re-check, which
+   * republishes this manifest alone, from new data, which republishes the
+   * scopes. Absent on manifests written before it.
+   */
+  readonly composition?: string;
+}
+
+/**
+ * **THE PROVEN-POINTER FAMILIES** (2026-09-25). Each artifact carries one or
+ * more proven pointers whole (`PromotedEdgeEntry`, lib/civic-data/read-model.ts)
+ * and is read through each pointer's own typed Reader. A cold /ballot read the
+ * first eight from the database, in two stages (the ballot, then the rest);
+ * a cold Ask read all of them among its deferrable sources (14.8 s measured
+ * on production for one cold Mesa question, 2026-09-25).
+ */
+export type PromotedAuthorityFamily =
+  | "ballot-az"
+  | "ballot-nh"
+  | "candidate-profiles"
+  | "candidate-publications"
+  | "ballot-navigation"
+  | "nh-members"
+  | "federal-funding"
+  | "state-money"
+  | "pima-finance"
+  | "federal-votes"
+  | "federal-key-votes"
+  | "officeholder-statements"
+  | "executive-actions";
+
+export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
+  "ballot-az",
+  "ballot-nh",
+  "candidate-profiles",
+  "candidate-publications",
+  "ballot-navigation",
+  "nh-members",
+  "federal-funding",
+  "state-money",
+  "pima-finance",
+  "federal-votes",
+  "federal-key-votes",
+  "officeholder-statements",
+  "executive-actions",
+];
+
+/** A proven-pointer family's artifact value: every pointer the family names, each proven or answered absent. */
+export interface PromotedFamilyArtifactValue {
+  readonly kind: "PROMOTED_POINTERS";
+  readonly entries: readonly PromotedEdgeEntry[];
+}
+
+export function isPromotedAuthorityFamily(family: AuthorityFamily): family is PromotedAuthorityFamily {
+  return (PROMOTED_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
 
 export type AuthorityFamily =
@@ -135,7 +200,8 @@ export type AuthorityFamily =
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
-  | "comment-access";
+  | "comment-access"
+  | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",
@@ -144,6 +210,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
   "meeting-outcomes",
   "comment-access",
+  ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 
 export interface AuthorityArtifactRef {

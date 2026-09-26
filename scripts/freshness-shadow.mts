@@ -698,10 +698,14 @@ const registry = buildRegistry(
     localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
-    /* The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded. */
+    /*
+     * The gaps Ask states about each body, decided by Ask's own rule over what we hold (2026-09-25); read once, here, bounded.
+     * Beside it, the counts of gaps readers were told (body, code, day, count — the owner's decision of 2026-09-25), which
+     * make those gaps reader impact now and create the work for a body readers were told we hold no meeting of.
+     */
     (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
       await pending.step("ask-gaps:held-reading", async () =>
-        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW })),
+        (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
     ),
   ],
   { root: ROOT, nowIso: NOW },
@@ -1556,7 +1560,7 @@ const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
   },
   now: nowIso,
 });
-/* Pointers only: the model still opens each hit with fetch_public/browse, which enforce robots and vault. */
+/* Pointers only: the model still opens each hit with fetch_public/browse, which read and record robots.txt (never a refusal, owner decision 2026-09-25), wall on an access control, and vault. */
 const scoutSearch = searchBudget === null ? null : makeScoutSearch({
   braveKey: process.env.BRAVE_SEARCH_API_KEY,
   exaKey: process.env.EXA_API_KEY,
@@ -1566,7 +1570,7 @@ console.log(
   scoutSearch === null
     ? `  scout search: OFF (${discoverySearchOn ? "no Brave or Exa key in this process" : configHold !== null ? "held: the owner's config row could not be trusted" : "the owner's paid-search switch is off"})`
     : `  scout search: ON under the owner's switch (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}; ` +
-        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots enforced downstream`,
+        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots.txt recorded downstream`,
 );
 
 /*
@@ -1836,7 +1840,8 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     );
   }
   for (const d of dispositions) {
-    lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (permission ${d.permission}, transport ${d.transport}) — ${d.note.slice(0, 300)}`);
+    /* The robots.txt verdict is a record, never a reason to stop (owner decision 2026-09-25); the transport says whether a wall stood. */
+    lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (robots.txt ${d.permission}, recorded, never a refusal; transport ${d.transport}) — ${d.note.slice(0, 300)}`);
   }
   if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
   /* A dispatched discovery row starts from what the free walk saw: its outcome and the leads it could not confirm. */
@@ -2663,7 +2668,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
   try {
     const holdings = candidateEnrichmentHoldings();
     if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
-    const { subjects } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+    const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
     const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
     /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
     let stagingManifest: ReturnType<typeof readStagingManifest> = null;
@@ -2677,6 +2682,8 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
     campaignSites = await runCampaignSiteCycle({
       repos,
       subjects,
+      /* Their leads are read last: a site approved for a candidacy that already carries a campaign link is held, never published. */
+      linkedCandidacies: linked,
       marginalia: held.responses,
       gate: readActivationGate(ROOT),
       now: nowIso(),
@@ -2692,7 +2699,7 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
       methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
     });
     campaignSitesState =
-      `ran over ${subjects.size} canonical candidacies and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+      `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
       (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : "");
   } catch (error) {
     campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;

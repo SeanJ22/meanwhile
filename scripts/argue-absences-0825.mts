@@ -278,7 +278,7 @@ async function controlFor(engineId: string, url: (q: string) => string): Promise
   const cached = controlBody.get(engineId);
   if (cached !== undefined) return cached;
   try {
-    const r = await politeGetText(url(SEARCH_CONTROL_QUERY), { profile: "browser" });
+    const r = await politeGetText(url(SEARCH_CONTROL_QUERY), {});
     const body = r.status === 200 ? r.text : "";
     controlBody.set(engineId, body);
     return body;
@@ -342,7 +342,7 @@ async function browserQuery(name: string, place: string, nth: number): Promise<Q
     let status = 0;
     let text = "";
     try {
-      const r = await politeGetText(engine.url(query), { profile: "browser" });
+      const r = await politeGetText(engine.url(query), {});
       status = r.status;
       text = r.text;
     } catch (e) {

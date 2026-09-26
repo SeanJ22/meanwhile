@@ -14,6 +14,7 @@ import {
   type StateCampaignFinanceJurisdiction,
 } from "./data-plane.ts";
 import { isRenderable } from "./state-money-reader.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord, StateMoneySnapshot } from "./state-money.ts";
 
 /**
@@ -120,6 +121,34 @@ export async function refreshStateMoneyProjectionFromPromoted(
   cache = nextCache;
   readStates = nextStates;
   return result;
+}
+
+/**
+ * One state's money, edge first (2026-09-25): the reader edge's proven copy of
+ * that state's pointer through this same Reader and validator, else the
+ * database exactly as `refreshStateMoneyProjectionFromPromoted`.
+ */
+export function settleStateMoneyRead(state: StateCampaignFinanceJurisdiction): Promise<StateRead> {
+  return readPromotedEdgeFirst(
+    "STATE_CAMPAIGN_FINANCE",
+    STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
+    (options) => refreshStateMoneyProjectionFromPromoted(state, options),
+    `The ${state} campaign money`,
+  );
+}
+
+/**
+ * Every state's money, edge first, each state its own read and failure domain
+ * (Ask's preload). Settles like `refreshStateMoneyFromPromoted`: the promoted
+ * versions, joined, or null.
+ */
+export async function settleStateMoneyReads(): Promise<string | null> {
+  const states = Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[];
+  const reads = await Promise.allSettled(states.map((state) => settleStateMoneyRead(state)));
+  const versions = reads
+    .flatMap((read) => read.status === "fulfilled" && read.value.kind === "PROMOTED" ? [read.value.metadata.versionId] : [])
+    .filter((version): version is string => version !== null);
+  return versions.length ? versions.join(",") : null;
 }
 
 /** Read all independent state pointers; one unavailable state cannot erase another. */

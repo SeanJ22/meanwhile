@@ -1,7 +1,7 @@
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
-import type { AuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import type { AuthorityFamily, PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -13,7 +13,7 @@ import {
   actionText,
   executiveActionStore,
   monthsBefore,
-  refreshExecutiveActionsFromPromoted,
+  settleExecutiveActionsRead,
   undatedFor,
 } from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
@@ -49,6 +49,8 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
+import { lexicalReading, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { composeSittingAnswer, settleSittingComposition, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
 import { readableSitting } from "@/lib/ask/meeting-time";
@@ -62,27 +64,28 @@ import {
 } from "@/lib/ask/contacts";
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
-import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
-import { refreshStateMoneyFromPromoted } from "@/lib/funding/state-snapshot";
-import { refreshAzPimaFinanceFromPromoted } from "@/lib/control-plane/campaign-finance/held-records";
+import { settleFundingRead } from "@/lib/funding/snapshot";
+import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
+import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { isRetiredStateRollCallScope, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
   officialStateRollCallTargetByScope,
   officialStateVoteScopeForOfficeholderId,
   type OfficialStateVoteScope,
 } from "@/lib/state-rollcalls/authority";
-import { refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
-import { refreshFederalKeyVotesFromPromoted } from "@/lib/votes/key-votes-projection";
+import { settleFederalVotesRead } from "@/lib/votes/snapshot";
+import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 
 import {
-  refreshAzBallotFromPromoted,
-  refreshCandidateCorpusFromPromoted,
-  refreshCandidateProfilesFromPromoted,
+  settleAzBallotRead,
+  settleCandidateCorpusRead,
+  settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
+import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import {
   refreshCommentAccessFromPromoted,
 } from "@/lib/civic-data/curated-reader-read-model";
-import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
+import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
   absencesWithoutRemovals,
@@ -95,13 +98,14 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
-import { askModelStartupLine, resolveAskEffort, resolveAskModel } from "@/lib/ask/model";
+import { askModelStartupLine, resolveAskModel } from "@/lib/ask/model";
 import {
   BoundedTtlCache,
   interpretationCacheKey,
   synthesisCacheKey,
 } from "@/lib/ask/model-result-cache";
-import { synthesizeAnswer } from "@/lib/ask/synthesize";
+import { ladderIdentity, synthesisLadder, synthesizeWithLadder, type LadderResult } from "@/lib/ask/synthesize";
+import { writerSelection } from "@/lib/ask/writer-selection";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { meetingDateInQuestion } from "@/lib/ask/meeting-date";
 import {
@@ -118,6 +122,9 @@ import {
   sittingsForBody,
 } from "@/lib/outcomes/store";
 import { buildTopicTimeline, composeAreaTopicAnswer, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
+import { ASK_GAP_RECORD_CLASS, meetingsNotHeldGap } from "@/lib/ask/held-gaps";
+import { planAskGapObservations, recordAskGapObservations, statedAskGaps } from "@/lib/ask/gap-observation";
+import { afterResponse } from "@/lib/log/after-response";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
@@ -178,12 +185,15 @@ import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
  *
  * ## What this route deliberately does NOT do
  *
- * **It writes nothing today.** `captureAskInteraction` is called at the end,
- * with the delivered answer, and `ripcord.askSignalCapture` ships PULLED so the
- * call returns `GATED` and no row exists. The gate is an operator decision
- * pending the author's approval of reader-facing disclosure copy (NH246) — see
- * `lib/db/ask-signal.ts`, which states that basis honestly rather than citing a
- * rule that governs a different store.
+ * **It writes nothing about the reader.** `captureAskInteraction` is called at
+ * the end, with the delivered answer, and `ripcord.askSignalCapture` ships
+ * PULLED so the call returns `GATED` and no row exists. The gate is an operator
+ * decision pending the author's approval of reader-facing disclosure copy
+ * (NH246) — see `lib/db/ask-signal.ts`, which states that basis honestly rather
+ * than citing a rule that governs a different store. The one write that runs
+ * (2026-09-25, the owner's decision of that day) is a count: for each coded
+ * gap the answer stated, one more for that body, gap and day in the control
+ * plane — no question, no reader, no instant (`lib/ask/gap-observation.ts`).
  *
  * **It never lets the model reach past the pack.** The synthesis rung has no
  * corpus, no tools and no network. Its inability to look anything up is
@@ -242,9 +252,8 @@ function allowCall(): boolean {
 }
 /* Successful model results, keyed by their exact inputs (lib/ask/model-result-cache.ts). */
 const interpretationCache = new BoundedTtlCache<InterpretReadOutcome>();
-const synthesisCache = new BoundedTtlCache<SynthesisWroteOutcome>();
+const synthesisCache = new BoundedTtlCache<LadderResult>();
 type InterpretReadOutcome = Extract<Awaited<ReturnType<typeof interpretQuestion>>, { kind: "READ" }>;
-type SynthesisWroteOutcome = Extract<Awaited<ReturnType<typeof synthesizeAnswer>>, { kind: "WROTE" }>;
 
 /** Test seam — the suite must never inherit another test's counter or cached model result. */
 export function resetGroundedState(): void {
@@ -280,6 +289,8 @@ interface MeetingLike {
   bodyName: string;
   startsAt: string;
   timeZone?: string | null;
+  /** `DAY`: a date-only posting; `startsAt`'s midnight is never a time (M59). */
+  startPrecision?: Meeting["startPrecision"];
   agendaUrl?: string | null;
   /**
    * **WHERE IT IS, WHETHER IT IS STILL ON, AND WHOSE IT IS.**
@@ -753,24 +764,47 @@ export async function POST(request: Request) {
       ? [() => commentAccessFromDatabase]
       : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
+  // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
+  const promotedSource = (family: PromotedAuthorityFamily): "EDGE" | "DATABASE" =>
+    authorityEdge?.promotedFamilies?.has(family) ? "EDGE" : "DATABASE";
   trace.preloadSources = {
     registry: authorityEdge?.registryRuntime ? "EDGE" : "DATABASE",
     federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
     outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
     ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
+    funding: promotedSource("federal-funding"),
+    stateMoney: promotedSource("state-money"),
+    azPimaFinance: promotedSource("pima-finance"),
+    federalVotes: promotedSource("federal-votes"),
+    federalKeyVotes: promotedSource("federal-key-votes"),
+    azBallot: promotedSource("ballot-az"),
+    candidateProfiles: promotedSource("candidate-profiles"),
+    candidateCorpus: promotedSource("candidate-publications"),
+    officeholderStatements: promotedSource("officeholder-statements"),
+    executiveActions: promotedSource("executive-actions"),
   };
+  /*
+   * **THE DEFERRABLE SOURCES, EDGE FIRST.** (2026-09-25.) A cold Mesa
+   * question spent 14.8 s here on production, every one of these a pointer
+   * read and a proof read from a cold database (Pima finance alone 6.4 MB of
+   * proof). Each is now a proven pointer on the reader edge, fetched with the
+   * authority families above, and read through its own Reader from that copy
+   * (`readPromotedEdgeFirst`); the database stays the fallback for a family
+   * the manifest does not carry. The state roll calls stay on the database:
+   * New Jersey's is 9.4 MB, read only for a New Jersey question.
+   */
   const deferrablePreloads = [
-    timed("funding", refreshFundingFromPromoted),
-    timed("stateMoney", refreshStateMoneyFromPromoted),
-    timed("azPimaFinance", refreshAzPimaFinanceFromPromoted),
+    timed("funding", settleFundingRead),
+    timed("stateMoney", settleStateMoneyReads),
+    timed("azPimaFinance", settleAzPimaFinanceRead),
     ...[...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))),
-    timed("federalVotes", refreshFederalVotesFromPromoted),
-    timed("federalKeyVotes", refreshFederalKeyVotesFromPromoted),
-    timed("azBallot", refreshAzBallotFromPromoted),
-    timed("candidateProfiles", refreshCandidateProfilesFromPromoted),
-    timed("candidateCorpus", refreshCandidateCorpusFromPromoted),
-    timed("officeholderStatements", refreshOfficeholderStatementsFromPromoted),
-    timed("executiveActions", refreshExecutiveActionsFromPromoted),
+    timed("federalVotes", settleFederalVotesRead),
+    timed("federalKeyVotes", settleFederalKeyVotesRead),
+    timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
+    timed("candidateProfiles", settleCandidateProfilesRead),
+    timed("candidateCorpus", settleCandidateCorpusRead),
+    timed("officeholderStatements", settleOfficeholderStatementsRead),
+    timed("executiveActions", settleExecutiveActionsRead),
   ];
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
   // The recorded outcomes are what a topic answer leads with. A cold read that
@@ -1003,12 +1037,34 @@ export async function POST(request: Request) {
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
   const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute;
-  const interpretationKey = modelFreeTopicRoute ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
+  /*
+   * **THE LEXICAL READING.** (2026-09-25, the Ask latency repair.) A question
+   * in one of a few canonical shapes ("when does the Mesa City Council meet
+   * next?") whose name binds one body identically in every binder the route
+   * consults is read in code: the model rung cost 2.4-3.3 s on a warm instance
+   * to return the same body, intent and tense. Anything the module does not
+   * settle returns null and is read by the model exactly as before. See
+   * `lib/ask/lexical-reading.ts` for the conditions.
+   */
+  const lexical = modelFreeTopicRoute ? null : lexicalReading({
+    question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects,
+  });
+  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
-  const outcome = modelFreeTopicRoute ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
+  const outcome = modelFreeTopicRoute || lexical ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
-  if (outcome === null) {
+  if (outcome === null && lexical) {
+    interpretation = structuredClone(lexical.interpretation);
+    trace.interpretation = {
+      ran: false,
+      why: "lexical-reading",
+      ms: Date.now() - interpretationStarted,
+      intent: interpretation.intent,
+      temporal: interpretation.temporal,
+      fellBackToDeterministic: true,
+    };
+  } else if (outcome === null) {
     /* The deterministic topic route above: the topic is curated code and the
        body bound on the reader's own words, so no model reading is needed and
        no tense is imposed — a topic spans what was decided and what is next. */
@@ -1221,6 +1277,16 @@ export async function POST(request: Request) {
   /** A topic question's dated timeline for the bound body, when one was built. */
   let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
   const gaps: EvidenceGap[] = [...holdingLoadGaps];
+  /* The gaps attached to the chosen sitting(s), by why they were attached, for
+     an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
+     also in `gaps`; this only remembers which ones are about the sitting. */
+  const sittingGaps: SittingGap[] = [];
+  const attachSittingGaps = (role: SittingGapRole, attached: readonly EvidenceGap[]) => {
+    for (const gap of attached) {
+      gaps.push(gap);
+      sittingGaps.push({ role, gap });
+    }
+  };
   const denominators: Record<string, number> = {
     ballotLoaderFailures: ballot.loaderFailures.length,
     meetingCanonicalProjectionReads: meetingDataState === "PROMOTED" ? 1 : 0,
@@ -1423,7 +1489,10 @@ export async function POST(request: Request) {
       gaps.push(...topicTimeline.gaps);
       Object.assign(denominators, topicTimeline.denominators);
     } else if (!chosen && archivedOutcomes.length === 0) {
-      gaps.push({
+      /* A body we hold no meeting of carries its code (held-gaps.ts), so the gap a reader is told is work the runner creates (2026-09-25). */
+      const notHeld = snapshot && !requestedMeetingDate ? meetingsNotHeldGap(subject.id, forBody.length) : null;
+      attachSittingGaps("NO_SITTING", [{
+        ...(notHeld ? { code: notHeld.code, bodyId: notHeld.bodyId, recordClass: notHeld.recordClass } : {}),
         whose: "OURS",
         statement:
           !snapshot
@@ -1437,7 +1506,7 @@ export async function POST(request: Request) {
             : selection === "LAST"
               ? `We hold meetings for ${subject.name} but none that have already happened.`
               : `We hold meetings for ${subject.name} but none scheduled in the future.`,
-      });
+      }]);
     } else if (chosen) {
       /*
        * **THE SITTING IS PRINTED IN THE BODY'S OWN ZONE, SPELLED OUT.**
@@ -1460,7 +1529,7 @@ export async function POST(request: Request) {
       const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
       const listingKnowledge = meetingListingKnowledgeFor(snapshot?.meetings ?? [], [chosen.id, ...sameDay.map(meeting => meeting.id)]);
       const listingGroupFor = (id: string) => listingKnowledge.readback.groups.find(group => group.sourceIds.includes(id));
-      gaps.push(...listingKnowledge.gaps);
+      attachSittingGaps("LISTING", listingKnowledge.gaps);
       records.push({
         kind: "MEETING",
         id: chosen.id,
@@ -1636,7 +1705,21 @@ export async function POST(request: Request) {
       const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
       // A document extraction gap is not an absence of the separately held
       // structured agenda for this exact sitting.
-      if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) gaps.push(publication.gap);
+      if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) {
+        /*
+         * OUR "we have not yet acquired the agenda" for this body's sitting is
+         * the gap held-gaps.ts codes AGENDA_NOT_HELD (2026-09-25): no document
+         * for the sitting is held at all. Coded, a reader being told it raises
+         * the runner's matching obligation; a sitting outside that rule's
+         * window raises nothing. A publisher's own "not posted" (THEIRS) and a
+         * held document we could not read are not this gap and stay uncoded.
+         */
+        const unacquired = publication.gap.whose === "OURS" &&
+          (publication.acquisition === "NOT_ACQUIRED" || publication.acquisition === "ROUTE_BLOCKED" || publication.acquisition === "REPRESENTATION_DISCOVERED");
+        attachSittingGaps("AGENDA", [unacquired
+          ? { ...publication.gap, code: "AGENDA_NOT_HELD", bodyId: subject.id, recordClass: ASK_GAP_RECORD_CLASS.AGENDA_NOT_HELD }
+          : publication.gap]);
+      }
 
       // The document the reader is shown first — the one the reading, and so
       // `items`, was taken over — never merely the newest stored row.
@@ -1712,11 +1795,11 @@ export async function POST(request: Request) {
       records.push(...outcome.records);
       records.push(...minutes.records);
       records.push(...notice.records);
-      gaps.push(...notice.gaps);
-      gaps.push(...minutes.gaps);
+      attachSittingGaps("NOTICE", notice.gaps);
+      attachSittingGaps("MINUTES", minutes.gaps);
       // A sourced summary answers what happened without pretending it records
       // each member's vote. No outcome-store absence may erase that answer.
-      if (!minutes.records.length) gaps.push(...outcome.gaps);
+      if (!minutes.records.length) attachSittingGaps("OUTCOME", outcome.gaps);
       denominators.minutesSummaryRecordsReturned = (denominators.minutesSummaryRecordsReturned ?? 0) + minutes.records.length;
       denominators.noticeSummaryRecordsReturned = (denominators.noticeSummaryRecordsReturned ?? 0) + notice.records.length;
       for (const [key, count] of Object.entries(outcome.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
@@ -2131,16 +2214,66 @@ export async function POST(request: Request) {
    * does; a rejection falls back exactly as a rejected model answer would.
    */
   lap("resolutionAndRetrieval");
-  const composed = topicTimeline
+  const topicComposed = topicTimeline
     ? composeTopicAnswer(topicTimeline, selectionNow)
     : areaTimelines.length > 0 ? composeAreaTopicAnswer(areaTimelines, selectionNow) : null;
-  const synthesisKey = composed ? null : synthesisCacheKey(pack, resolveAskModel(), resolveAskEffort());
+  /*
+   * **WHEN A BODY SITS IS COMPOSED FROM THE SITTING, NOT WRITTEN BY A MODEL.**
+   * (2026-09-25, the Ask latency repair.) A question asking when a named body
+   * meets — or for its agenda or decisions when the pack holds nothing to
+   * summarise, only the sitting and its named gaps — is answered from the
+   * MEETING records and those gaps in their own words (`lib/ask/sitting-answer.ts`).
+   * The synthesis rung spent 4-6.5 s warm to say the same thing. The composed
+   * prose must pass the SAME validator first; a refusal is recorded and the
+   * question goes to the model exactly as before, so a composition that fails
+   * a check can never reach a reader.
+   */
+  const sittingShape = !topicComposed && !topicFocus && !requestedMeetingDate && snapshot && subject?.kind === "BODY"
+    ? shapeForBoundBody(question, inventory, subject.id) : null;
+  const sittingSettled = settleSittingComposition(
+    sittingShape && subject
+      ? composeSittingAnswer({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, questionClass: outcomeQuestionClass(question) })
+      : null,
+    (text, urls) => validateAnswer(text, urls, pack, bodies),
+  );
+  if (sittingShape) {
+    trace.composition = {
+      kind: "SITTING",
+      shape: sittingShape,
+      composed: Boolean(sittingSettled.verdict),
+      ...(sittingSettled.verdict ? { passed: sittingSettled.verdict.kind === "PASSED" } : {}),
+      ...(sittingSettled.verdict?.kind === "FAILED" ? { failed: sittingSettled.verdict.failed } : {}),
+    };
+  }
+  const composed = topicComposed ?? sittingSettled.composed;
+  /*
+   * **THE WRITING LADDER.** (2026-09-25, the Ask latency repair.) The fast
+   * writer answers first; the frontier model writes only when that answer fails
+   * the SAME validator (or cannot be had), and the reason is recorded. Each
+   * writer reads a bounded selection of the pack (lib/ask/writer-selection.ts);
+   * the reader's records and the validator keep the whole pack. See
+   * `synthesizeWithLadder` in lib/ask/synthesize.ts.
+   */
+  const ladder = synthesisLadder();
+  const ladderKey = ladderIdentity(ladder);
+  const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
   const cachedSynthesis = synthesisKey ? synthesisCache.get(synthesisKey) : null;
-  const synthesis = composed ? null : cachedSynthesis ?? await synthesizeAnswer(pack, {
+  const written = composed ? null : cachedSynthesis ?? await synthesizeWithLadder(pack, {
     allowCall,
     callerKey: askCallerKey(process.env, markerFromRequest(request).runClass),
+    validate: (text, urls) => validateAnswer(text, urls, pack, bodies),
+    ladder,
   });
-  if (synthesisKey && !cachedSynthesis && synthesis?.kind === "WROTE") synthesisCache.set(synthesisKey, synthesis);
+  if (synthesisKey && !cachedSynthesis && written?.outcome.kind === "WROTE") synthesisCache.set(synthesisKey, written);
+  const synthesis = written?.outcome ?? null;
+  const selectionForWriter = composed ? null : writerSelection(pack);
+  const writerTrace = written ? {
+    writers: written.attempts,
+    ...(written.escalation ? { escalation: written.escalation } : {}),
+    ...(selectionForWriter && selectionForWriter.withheld.memberVoteRows > 0
+      ? { writerSelection: { memberVoteRowsShown: selectionForWriter.shown.memberVoteRows, memberVoteRowsWithheld: selectionForWriter.withheld.memberVoteRows, rollCallsWithheld: selectionForWriter.withheld.rollCalls } }
+      : {}),
+  } : {};
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
@@ -2151,7 +2284,7 @@ export async function POST(request: Request) {
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (composed) {
-    trace.synthesis = { ran: false, why: "composed-from-structured-evidence", ms: 0 };
+    trace.synthesis = { ran: false, why: topicComposed ? "composed-from-structured-evidence" : "composed-from-sitting-records", ms: 0 };
     const verdict = validateAnswer(composed.answer, composed.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {
@@ -2173,8 +2306,9 @@ export async function POST(request: Request) {
          made the call rather than off the constants — an override that ran
          unrecorded is exactly the un-attributable answer §5 exists to stop. */
       model: synthesis.model,
-      effort: synthesis.effort,
-      ms: cachedSynthesis ? 0 : synthesis.ms,
+      ...(synthesis.effort ? { effort: synthesis.effort } : {}),
+      /* The whole ladder's time, every writer that ran, not only the last. */
+      ms: cachedSynthesis ? 0 : written!.attempts.reduce((total, attempt) => total + attempt.ms, 0),
       /* Reused from byte-identical evidence on this instance: no model call was made. */
       ...(cachedSynthesis ? { cached: true } : {}),
       /*
@@ -2188,6 +2322,7 @@ export async function POST(request: Request) {
         cacheCreationInputTokens: synthesis.usage.cacheCreationInputTokens,
         uncachedInputTokens: synthesis.usage.inputTokens,
       },
+      ...writerTrace,
     };
     /* And into the server console, so a collapsed hit rate is visible in the
        deployment log rather than only in a trace somebody has to go and read.
@@ -2245,7 +2380,8 @@ export async function POST(request: Request) {
     trace.synthesis = {
       ran: false,
       why: synthesis.detail ? `${synthesis.why}: ${synthesis.detail}` : synthesis.why,
-      ms: synthesis.ms,
+      ms: written ? written.attempts.reduce((total, attempt) => total + attempt.ms, 0) || synthesis.ms : synthesis.ms,
+      ...(written && written.attempts.length > 0 ? writerTrace : {}),
     };
   }
 
@@ -2266,6 +2402,22 @@ export async function POST(request: Request) {
    * itself, returns GATED, and builds no row at all.
    */
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
+
+  /*
+   * **THE GAPS THIS READER WAS TOLD, COUNTED BY BODY — AND NOTHING ABOUT THE
+   * READER.** (2026-09-25, the owner's decision of that day.) Each coded gap
+   * the delivered answer states adds one to its body's count for that gap and
+   * day (`lib/ask/gap-observation.ts`); the runner turns those counts into
+   * targeted work. The plan is decided HERE, in the handler, so a reader-edge
+   * context that refuses the database is honoured; the write runs after the
+   * response, bounded, and its failure is logged by name and never reaches
+   * this reader. Synthetic runs are not readers and count nothing.
+   */
+  const gapObservations = planAskGapObservations({
+    stated: statedAskGaps({ gaps: packGaps, timelines: topicTimeline ? [topicTimeline] : areaTimelines }),
+    runClass: markerFromRequest(request).runClass,
+  });
+  await afterResponse(() => recordAskGapObservations(gapObservations));
 
   /*
    * **ONE DECLARED SHAPE, BUILT FROM THE PACK THAT PRODUCED IT.** (ASK-05.)

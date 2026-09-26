@@ -11,12 +11,34 @@ import { putArtifact } from "../evidence/store.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { createWorkItem } from "../work-item.ts";
 import { createRouteTask } from "../route-task.ts";
-import { beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
+import { abandonAttempt, beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import { enqueueWorkerTask, FLEET_POLICY_VERSION } from "./runtime.ts";
 import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { ZERO_COST } from "../attempt.ts";
 
-/** Retain an actual routine response for independent work. No acquisition is scheduled here. */
+/**
+ * Retain an actual routine response for independent work. No acquisition is scheduled here.
+ *
+ * **ONE CAPTURE TASK PER CANDIDATE RESPONSE, SETTLED ONCE** (2026-09-25).
+ * Two refusals stopped every Pima capture after 2026-09-25T00:29Z:
+ *
+ * 1. The feed's request window rolls each UTC day, so an unchanged calendar
+ *    arrives with the same bytes at a new URL. The artifact is content-derived,
+ *    so the append-only artifact log refused the new URL as a rewrite of the
+ *    held record, and the capture threw with its Attempt still open.
+ * 2. The lease expired, the sweep made the task RECLAIMABLE, and the next pass
+ *    re-derived the same task id (candidate version + raw hash) and offered a
+ *    fresh PENDING value, which the store refused as "a DIFFERENT value".
+ *    Migration 0029 made this permanent: an unchanged re-check confirms the
+ *    pointed candidate instead of creating a new one, so the same candidate,
+ *    and the same task id, returns every pass.
+ *
+ * So a byte-identical response at a new URL settles as a RE-OBSERVATION of the
+ * held artifact: its URL and retrieval time go in the disposition, and the
+ * artifact log keeps its first observation. An unsettled task is resumed under
+ * its persisted value. A failure after the Attempt opens closes that Attempt
+ * with the cause, so the route is owed again at once and says why.
+ */
 export async function retainRoutineMeetingForWorkers(input: {
   readonly repos: ControlPlaneRepositories; readonly store: EvidenceStore;
   readonly response: RetainedSourceResponse; readonly subjectId: string; readonly methodVersion: number;
@@ -41,28 +63,57 @@ export async function retainRoutineMeetingForWorkers(input: {
     routeLabel: "Actual permanent source acquisition receipt", target: response.requestedUrl, inherited: false, now });
   const prior = await repos.routeTasks.read(task.id);
   if (prior?.value.disposition != null) return null;
-  await registerRouteTask(repos, task, now);
+  // CLAIMED belongs to a live capture or to the lease sweep; POLICY_DENIED waits for its named change.
+  if (prior && prior.value.state !== "PENDING" && prior.value.state !== "RECLAIMABLE") return null;
+  if (!prior) await registerRouteTask(repos, task, now);
   const holder = `routine-meeting-receipt:${randomUUID()}`;
   const claim = await claimRouteTask(repos, { routeTaskId: task.id, holder, now, ttlMs: 120_000 });
   const attempt = await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: item.id, lease: claim.lease.value,
     worker: { role: "ACQUIRER", provider: "permanent-meeting-source", version: "routine-held-evidence/1", instance: holder },
     methodVersion: input.methodVersion, policyVersion: FLEET_POLICY_VERSION, now });
-  const { artifact } = recordAcquisition({ canonicalUrl: response.finalUrl, retrievalUrl: response.requestedUrl,
-    retrievedAt: response.retrievedAt, httpStatus: response.httpStatus, contentType: "application/json",
-    sourceId: response.source, methodRouteId: task.routeId, workItemId: item.id, attemptId: attempt.id,
-    permission: "ALLOWED", transport: "REACHABLE" }, text);
-  if (artifact.contentHash !== `sha256-${response.rawHash}` || artifact.byteLength !== response.byteCount) throw new Error("ROUTINE_RESEARCH_CAPTURE_BYTE_MISMATCH");
-  await putArtifact(store, item.project, artifact, response.bytes);
-  await recordArtifactMetadata(repos, { artifactId: artifact.id, workItemId: item.id, routeTaskId: task.id, attemptId: attempt.id,
-    tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType,
-    canonicalUrl: artifact.canonicalUrl, partial: false, recordedAt: response.retrievedAt }, now);
-  await disposeRouteTask(repos, { routeTaskId: task.id, attemptId: attempt.id,
-    expectedTaskRevision: (await repos.routeTasks.mustRead(task.id)).revision, artifactIds: [artifact.id], now,
-    cost: { ...ZERO_COST, usd: 0, inputTokens: 0, outputTokens: 0, requestCount: 0 },
-    disposition: { disposition: "INGESTED", attemptId: attempt.id, at: now, artifactIds: [artifact.id], observation: null,
-      permission: "ALLOWED", transport: "REACHABLE", note: `Exact bytes copied from permanent candidate ${input.candidateVersionId ?? "recorded-test-capture"}, acquired ${response.retrievedAt}; no extra HTTP request or model call occurred.` } });
-  const parser = await enqueueWorkerTask(repos, { workItemId: item.id, artifactId: artifact.id, contract, now, role: "PARSER" });
-  return { workItemId: item.id, artifactId: artifact.id, parserTaskId: parser.id, attemptId: attempt.id };
+  let artifactId: string;
+  try {
+    const { artifact } = recordAcquisition({ canonicalUrl: response.finalUrl, retrievalUrl: response.requestedUrl,
+      retrievedAt: response.retrievedAt, httpStatus: response.httpStatus, contentType: "application/json",
+      sourceId: response.source, methodRouteId: task.routeId, workItemId: item.id, attemptId: attempt.id,
+      permission: "ALLOWED", transport: "REACHABLE" }, text);
+    if (artifact.contentHash !== `sha256-${response.rawHash}` || artifact.byteLength !== response.byteCount) throw new Error("ROUTINE_RESEARCH_CAPTURE_BYTE_MISMATCH");
+    await putArtifact(store, item.project, artifact, response.bytes);
+    const held = (await repos.artifacts.read(item.id)).find(record => record.artifactId === artifact.id) ?? null;
+    // Same bytes, same classification, another URL: the content is held; this retrieval is a re-observation of it.
+    const reobservation = held !== null && held.contentHash === artifact.contentHash && held.byteLength === artifact.byteLength &&
+      held.tier === artifact.tier && !held.partial && held.canonicalUrl !== artifact.canonicalUrl ? held : null;
+    if (!reobservation) {
+      await recordArtifactMetadata(repos, { artifactId: artifact.id, workItemId: item.id, routeTaskId: task.id, attemptId: attempt.id,
+        tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType,
+        canonicalUrl: artifact.canonicalUrl, partial: false, recordedAt: response.retrievedAt }, now);
+    }
+    const copied = `Exact bytes copied from permanent candidate ${input.candidateVersionId ?? "recorded-test-capture"}, acquired ${response.retrievedAt}`;
+    await disposeRouteTask(repos, { routeTaskId: task.id, attemptId: attempt.id,
+      expectedTaskRevision: (await repos.routeTasks.mustRead(task.id)).revision, artifactIds: [artifact.id], now,
+      cost: { ...ZERO_COST, usd: 0, inputTokens: 0, outputTokens: 0, requestCount: 0 },
+      disposition: { disposition: "INGESTED", attemptId: attempt.id, at: now, artifactIds: [artifact.id], observation: null,
+        permission: "ALLOWED", transport: "REACHABLE", note: reobservation
+          ? `${copied} from ${artifact.canonicalUrl}. Byte-identical to artifact ${artifact.id}, first recorded ${reobservation.recordedAt} ` +
+            `from ${reobservation.canonicalUrl}; the artifact log keeps that first observation. No extra HTTP request or model call occurred.`
+          : `${copied}; no extra HTTP request or model call occurred.` } });
+    artifactId = artifact.id;
+  } catch (error) {
+    const cause = error instanceof Error ? error.message : String(error);
+    try {
+      // A committed disposition is finished by reconcile(); closing its Attempt here would contradict it.
+      const committed = (await repos.dispositions.read(task.id)).some(commit => commit.attemptId === attempt.id);
+      if (!committed) {
+        await abandonAttempt(repos, { routeTaskId: task.id, attemptId: attempt.id, outcome: "ABORTED", now,
+          reason: `ROUTINE_MEETING_CAPTURE_FAILED: ${cause}`.slice(0, 2_000) });
+      }
+    } catch (closing) {
+      throw new Error(`${cause}; the capture Attempt ${attempt.id} could not be closed: ${closing instanceof Error ? closing.message : String(closing)}`);
+    }
+    throw error;
+  }
+  const parser = await enqueueWorkerTask(repos, { workItemId: item.id, artifactId, contract, now, role: "PARSER" });
+  return { workItemId: item.id, artifactId, parserTaskId: parser.id, attemptId: attempt.id };
 }
 
 /** Research consumes durable source candidates; routine children never import the control plane. */
@@ -76,13 +127,20 @@ export async function retainRecentRoutineMeetingEvidence(input: {
       sql`${civicDataCandidates.candidate} ? 'retainedSourceResponses'`))
     .orderBy(desc(civicDataCandidates.retrievedAt)).limit(2)).map(row => row.candidate as RetainedMeetingCandidate);
   const results = [];
+  // One response's refusal does not keep another candidate's bytes from independent work; every refusal is still reported.
+  const failures: string[] = [];
   for (const candidate of [...candidates].reverse()) {
     if (candidate.scope !== partition.scope || candidate.recordClass !== "MEETING") continue;
     for (const held of candidate.retainedSourceResponses ?? []) {
       const response = { ...held, bytes: new Uint8Array(Buffer.from(held.base64, "base64")) };
-      const result = await retainRoutineMeetingForWorkers({ ...input, response, candidateVersionId: candidate.id, subjectId: partition.bodyId });
-      if (result) results.push(result);
+      try {
+        const result = await retainRoutineMeetingForWorkers({ ...input, response, candidateVersionId: candidate.id, subjectId: partition.bodyId });
+        if (result) results.push(result);
+      } catch (error) {
+        failures.push(`${candidate.id}: ${error instanceof Error ? error.message : String(error)}`);
+      }
     }
   }
+  if (failures.length) throw new Error(`${failures.join("; ")} (${results.length} other capture(s) retained)`);
   return results;
 }

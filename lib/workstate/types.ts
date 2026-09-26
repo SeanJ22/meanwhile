@@ -266,13 +266,14 @@ export const OPEN_DISPOSITIONS: readonly Disposition[] = [
 /** --------------------------------------- permission and transport, apart */
 
 /**
- * What we know about whether we MAY walk a host.
+ * What a host's robots.txt said about a route, as RECORDED evidence.
  *
- * `CANNOT_TELL` fails safe for the route (RULING 148) and is NOT `DISALLOWED`.
- * The distinction is the whole of RULING 182: one is a host telling us not to
- * ask, the other is us being unable to hear the answer. A `DISALLOWED` host is
- * never re-walked on a clock, because re-walking it is asking again after being
- * told no. A `CANNOT_TELL` host is re-walked with a different client.
+ * `CANNOT_TELL` (the document could not be read) is NOT `DISALLOWED` (the
+ * document was read and names the route): RULING 182 keeps the two apart, and
+ * a transport failure may never become a verdict. Since the owner decision of
+ * 2026-09-25 neither refuses a public page: "Robots.txt alone must not block
+ * acquisition." Both are recorded and the route is walked; what stops a walk
+ * is an access control (a challenge, a 401/403/429), never a robots line.
  */
 export const PERMISSION_STATES = ["ALLOWED", "DISALLOWED", "CANNOT_TELL", "NOT_APPLICABLE"] as const;
 export type PermissionState = (typeof PERMISSION_STATES)[number];
@@ -317,29 +318,41 @@ export interface PermissionRecord {
 /**
  * May we fetch from this host right now?
  *
- * Fails safe on `CANNOT_TELL` and on `DISALLOWED` alike — but for different
- * reasons, and the reason travels with the answer, because the two lead to
- * completely different next moves.
+ * A robots.txt verdict never refuses (owner decision 2026-09-25: robots.txt
+ * alone must not block acquisition); it is recorded and the reason travels
+ * with the answer. The one refusal here is an access control: a permission
+ * read that a bot challenge answered (`CHALLENGED`) says the host is walling
+ * this client, and a wall is investigated by another public route, never
+ * pushed past.
  */
 export function mayWalk(p: PermissionRecord): { allowed: boolean; reason: string; recheck: boolean } {
+  if (p.transport === "CHALLENGED") {
+    return {
+      allowed: false,
+      reason:
+        `the robots.txt read was answered by an access control (${p.failure ?? "a challenge or a 401/403/429"}); ` +
+        "a wall is never bypassed, and this refuses the ROUTE while asserting nothing about the fact",
+      recheck: true,
+    };
+  }
   switch (p.permission) {
     case "ALLOWED":
-      return { allowed: true, reason: "permission read and allows this route", recheck: true };
+      return { allowed: true, reason: "robots.txt read and allows this route", recheck: true };
     case "NOT_APPLICABLE":
-      return { allowed: true, reason: "no permission document governs this route", recheck: false };
+      return { allowed: true, reason: "no robots document governs this route", recheck: false };
     case "DISALLOWED":
       return {
-        allowed: false,
-        reason: "the host's own rules refuse this route; a disallow is not a wall and is not re-walked on a clock",
-        recheck: false,
+        allowed: true,
+        reason: "robots.txt names this route; recorded, and not blocking (owner decision 2026-09-25)",
+        recheck: true,
       };
     case "CANNOT_TELL":
     default:
       return {
-        allowed: false,
+        allowed: true,
         reason:
-          `permission is unread (${p.transport}${p.failure ? `: ${p.failure}` : ""}); ` +
-          "this refuses the ROUTE and asserts nothing about the host or the fact",
+          `robots.txt is unread (${p.transport}${p.failure ? `: ${p.failure}` : ""}); recorded as unread, ` +
+          "and not blocking (owner decision 2026-09-25)",
         recheck: true,
       };
   }

@@ -189,9 +189,9 @@ const PERMISSION = {
   "www.azleg.gov":
     "ALLOWED. robots.txt 793B, User-agent: *, Crawl-delay: 120 (honoured on every request). /govlettr/, /legtext/ and /sessionlaws/ are not among the named disallows.",
   "apps.azleg.gov":
-    "DISALLOWED (User-agent: * / Disallow: /). NOT REQUESTED. Its BillStatus URLs travel as cross-reference strings only.",
+    "DISALLOWED (User-agent: * / Disallow: /), recorded and not blocking since the owner decision of 2026-09-25. No adapter reads the application yet; its BillStatus URLs travel as cross-reference strings.",
   "azhouse.gov, azsenate.gov":
-    "CANNOT_TELL / RECHECK_DUE. robots.txt unreadable by two clients; cause isolated to CERT_HAS_EXPIRED (CN=azsenate.gov, GoDaddy, valid_to Aug 28 16:04:01 2026 GMT). Transport state is not a permission verdict (RULING 182). Not walked.",
+    "CANNOT_TELL / RECHECK_DUE. robots.txt unreadable by two clients; cause isolated to CERT_HAS_EXPIRED (CN=azsenate.gov, GoDaddy, valid_to Aug 28 16:04:01 2026 GMT). A transport failure, recorded; not a robots verdict and not a refusal. Not yet walked.",
   "azgovernor.gov":
     "ALLOWED, Crawl-delay 10. Walked by scripts/hunt-az-executive-orders.mts. Publishes no bill-action or veto index.",
 };

@@ -20,9 +20,10 @@
  * guessed tier is a count that cannot be checked.
  *
  * Every host here was judged by `pnpm robots:sweep` on 2026-08-26 and every one
- * came back ALLOWED or NO_ROBOTS. `CANNOT_TELL` hosts are deliberately absent:
- * an unanswered permission question refuses the walk (RULING 148), and adding
- * one here would route around the fetcher's own refusal.
+ * came back ALLOWED or NO_ROBOTS. `CANNOT_TELL` hosts were left out under the
+ * rule of that date; since the owner decision of 2026-09-25 an unread robots.txt
+ * no longer refuses a walk, so such a host may be added as a seed with its
+ * verdict recorded (an access control on its pages still walls it).
  */
 
 import type { TierId } from "./descent.ts";

@@ -1,6 +1,6 @@
 {
-  "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
-  "buildId": "MJ4e_tQyxDEyjR9ocnnTx",
+  "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
+  "buildId": "aVzo2Jk-e20tAnKXwvmxo",
   "base": "http://localhost:3210",
   "sourceHashes": [
     {
@@ -21,7 +21,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "dce1e0d945787efa513e1f7dba352be3384361b998e6ebe12934c8e127346024"
+      "sha256": "2928e81b601c319f5bf3d54678cd8d46a1c576fd4107a7fc5cc464be85f0463b"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -33,7 +33,7 @@
     },
     {
       "path": "app/api/funding/[target]/route.ts",
-      "sha256": "2a5e8aeb090a4dfbdee260084009a8e81f33b3d89c2ca901f67b95943f25f4e0"
+      "sha256": "6c2d173da33c1b415fe49614c4bfb2c5068fed662a5fc8fcb3d35ea484c6ca62"
     },
     {
       "path": "app/api/log/route.ts",
@@ -77,7 +77,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "e6c14e30926e28877136fa775e3173ecda222d1749c6fb780b61aa47e0abcf5d"
+      "sha256": "10b6f8d6108e13e534b5d7cf196e928897643bc73caa7a5a185db3d3d79b6087"
     },
     {
       "path": "app/globals.css",
@@ -1789,7 +1789,7 @@
     },
     {
       "path": "lib/ask/answer.ts",
-      "sha256": "227b807758d040af3e458c5cd99d07557392a7afc697e1d971b1ec038cb3af17"
+      "sha256": "c2db4d2b9106850e81a5c3e455e4f14f72d4c5a33c698825146d09f8d7fdbf5a"
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
@@ -1829,7 +1829,11 @@
     },
     {
       "path": "lib/ask/gap-codes.ts",
-      "sha256": "3806300808bab41ab6343feaa8ac1eabaad9c0b5b81fba9ded82a61773ea78be"
+      "sha256": "5ca41a5d8831cb088b9dbefc0c26c1f8d3dcd919a5e9b2b4899440fc078fc467"
+    },
+    {
+      "path": "lib/ask/gap-observation.ts",
+      "sha256": "b4f23a636d2d4ff8e5e723a2c84e80c179c309a2efaeee9cf926c62b2c4c86cd"
     },
     {
       "path": "lib/ask/held-agenda.ts",
@@ -1837,7 +1841,7 @@
     },
     {
       "path": "lib/ask/held-gaps.ts",
-      "sha256": "91b69efc4ab439494e705566d6ba5c27e71fd75bd7ce820678dcee7d32cb495a"
+      "sha256": "df6fb91f19af798f5bbbcf8f424620634183b6164c651455054fc9d491a2b586"
     },
     {
       "path": "lib/ask/host.ts",
@@ -1861,11 +1865,15 @@
     },
     {
       "path": "lib/ask/length-contract.ts",
-      "sha256": "4037768f5d104bf64bdea7b6850d6a2182dd91d33b03df312e691590618800a1"
+      "sha256": "cc77521e405a9831d125a85b311a4befa6443a708b16c6af5ed62fb39e13e6b1"
     },
     {
       "path": "lib/ask/length-fallback.ts",
       "sha256": "44c1827ba6b630b60b306c83c668546d0a37b453d95476859f628ed5c70025a8"
+    },
+    {
+      "path": "lib/ask/lexical-reading.ts",
+      "sha256": "f43fd474e6c708ab05f4d19bc024e9267d85f54e6295448e5a56310d10e8d5d7"
     },
     {
       "path": "lib/ask/local-finance.ts",
@@ -1885,7 +1893,7 @@
     },
     {
       "path": "lib/ask/meeting-time.ts",
-      "sha256": "37113e16958cf79b2c4bb7f2c9a77d17b857768ac3db800caf85978f77b7d083"
+      "sha256": "14edbbc26e0682b9b4c51f823f21ad86f2d2ba9d195d132c04e324150f57bb75"
     },
     {
       "path": "lib/ask/model-result-cache.ts",
@@ -1893,7 +1901,7 @@
     },
     {
       "path": "lib/ask/model.ts",
-      "sha256": "b27e9e12f1fe078a623d97976499b88dca0be5cefb9d7419b88bbdd875f35e56"
+      "sha256": "c1f468508a09f12ae43d2f808d7316133a2fd43f7b16efd36686feb362d48544"
     },
     {
       "path": "lib/ask/office-question.ts",
@@ -1940,6 +1948,10 @@
       "sha256": "822002a4700505ffbd611d52bca24135299988e33fac42147adfbd5885ef0052"
     },
     {
+      "path": "lib/ask/sitting-answer.ts",
+      "sha256": "66617e2f419b617537434f5fba495e09a26ad8c429d1924622d65ebd4e997cc7"
+    },
+    {
       "path": "lib/ask/statements.ts",
       "sha256": "40a5b4fcd68bd0fbf7050fba4ee92ce5e677e482544c88e4a667c90f6803e94e"
     },
@@ -1949,7 +1961,7 @@
     },
     {
       "path": "lib/ask/synthesize.ts",
-      "sha256": "346c26e0e9b68d5e2a94205e2473a916e83b428be60749b4a70be4b037978a9d"
+      "sha256": "f82749526e780f0088cf0758a5ea847ee39c1639280315e00896eb638d1f1f7e"
     },
     {
       "path": "lib/ask/topic-timeline.ts",
@@ -1957,15 +1969,19 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "31b8c07853e44be44b68744ed6ca0b682ec61a0a497514fac010bf1b58c9a3cb"
+      "sha256": "084f24d5d8db778cb47ca7956ae5a90cddb841a30cbc706d6d14bf0822228a36"
     },
     {
       "path": "lib/ask/validate.ts",
-      "sha256": "bc0254d601ac5931d14d114179b3ff931ec32c8232095d660957d69c7755e0e9"
+      "sha256": "26e8e4cdf5227cda45fbdf0c9cdc7c75d21c786a31b659db0a24963c8fd82ac2"
     },
     {
       "path": "lib/ask/votes.ts",
       "sha256": "6ce0d91bea06c22a58e61457c0d3d1f3838024688d80d432aa75260ded816e9c"
+    },
+    {
+      "path": "lib/ask/writer-selection.ts",
+      "sha256": "d8963e2f0d57f435ec649ab89f0647ee0dac830fa28458e71ddec17a2a7077bc"
     },
     {
       "path": "lib/ballot/absence-grouping.ts",
@@ -2105,7 +2121,7 @@
     },
     {
       "path": "lib/ballot/seat-holders.ts",
-      "sha256": "8ce0e5a6023020fc7ab3f57778fd5e9887c20dd23a9854fb67633032f24d2875"
+      "sha256": "2c691377370133a6f96de4c12c8a5850a4fb8aaec067458a94c65459e62b58f1"
     },
     {
       "path": "lib/ballot/shared-notes.ts",
@@ -2165,7 +2181,7 @@
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "e8b9a0af51466a1363b048ec5102d3d5580e65c40cf0634121e4e9be80a2af02"
+      "sha256": "0f7324d06d02125c95f7a81a4c502f0daed4589cd6a5ded351f76b22784e80fa"
     },
     {
       "path": "lib/civic-data/contracts.ts",
@@ -2173,11 +2189,11 @@
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
-      "sha256": "8600218c0d4cc5f028e08d6a70947f7e912d9a4a6c5f899e28947bf4946a59d4"
+      "sha256": "ab3f34b3be8424a3146ae63aef326e2f0f725d8f5de929a0f05eb3b7e4a914ec"
     },
     {
       "path": "lib/civic-data/derived-authority.ts",
-      "sha256": "fcc5b0f3af108a0cafe2d29be00148e797bd6c3539323186c66945c7663cd6a6"
+      "sha256": "05968f4b8b7ec5e412f25623c75adfcb2912931a7c8275fbaa81b30a2076cf43"
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
@@ -2201,7 +2217,7 @@
     },
     {
       "path": "lib/civic-data/manual-read-models.ts",
-      "sha256": "a1b5ec4f5cf63bc0af410fcad53da3416ac12da796c7278d272dc2d71dcdebac"
+      "sha256": "b4e5ab4fe5c864487f6543a13947c9d30bd2feb076ebc26b186933621f1e07ad"
     },
     {
       "path": "lib/civic-data/manual-source-isolation.ts",
@@ -2225,7 +2241,7 @@
     },
     {
       "path": "lib/civic-data/read-model.ts",
-      "sha256": "67bb97c9e1a8c3d00c1007d4d7a8615b31fdc45d712b8144944a23cf9dcd3b48"
+      "sha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89"
     },
     {
       "path": "lib/civic-data/reader-readback.ts",
@@ -2237,7 +2253,7 @@
     },
     {
       "path": "lib/civic-data/runtime-authority.ts",
-      "sha256": "0a0093626973a84b557a61c00904299ad257592c143dfee99c8d545d5e653e4c"
+      "sha256": "2a517f2449a1503b80ffee1107f83a6719d58344403eb9739ad54e85a14d5512"
     },
     {
       "path": "lib/civic-data/source-acquisition-error.ts",
@@ -2245,7 +2261,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "11924f289009c457c45acd976efce8a9690a55d7e54aeafc6f118fdd9b5742ec"
+      "sha256": "fc088f36d0745854e4deb72829d8abbe4a8d85870f4f89cbf5c91aea8671e7b6"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2272,16 +2288,24 @@
       "sha256": "05f8086d1fb83fdc0249381ecec9c593d5ec6eacae224b6f6a2ea1c151a98329"
     },
     {
+      "path": "lib/control-plane/ask-gap-observations.ts",
+      "sha256": "ff22f02c63ba91e55902106d702a1b98614b51f008833f7c88729f3bb012c0d0"
+    },
+    {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
-      "sha256": "be1d193b854d8014101fae7ed7985be417fb401db088dd11fc6c33e9a209dea2"
+      "sha256": "b45347c316050792eb7e8e793b0ccc3f6227f2ff22bbeca1ef83791efd7a8856"
+    },
+    {
+      "path": "lib/control-plane/repository/request-bounds.ts",
+      "sha256": "1cfe5826b6ee5d63b4710db0f650ea5471056d6f4f7ac9db756dfcc5f5ea09d9"
     },
     {
       "path": "lib/control-plane/scheduler/robots.ts",
-      "sha256": "41e1f54f4c53ea415dcad316263e65e9d93fc5cb1527eddefc500326f29b0843"
+      "sha256": "1077b3333f4ae85120a4be07b7282447969ebd611483429926e988b095747fbb"
     },
     {
       "path": "lib/corpus/data-plane.ts",
-      "sha256": "17298908425d00cbfc637cdc4f09b05a5960bded16a07a524684858943dc3aed"
+      "sha256": "62077431622e8b6ea65e5b22d36060f195ffeebde9fef3c2a857624cb6106cf0"
     },
     {
       "path": "lib/corpus/positions.ts",
@@ -2417,7 +2441,7 @@
     },
     {
       "path": "lib/funding/snapshot.ts",
-      "sha256": "99fc15f16a949f997356ed55555d3cd27e0d98f8f5673eb8a49b0a19d8e06acd"
+      "sha256": "e958d4dd9ce2dd42ff59265ce237b5565a4c215014dfcf9e1fba66fd02ac46d6"
     },
     {
       "path": "lib/funding/state-money-reader.ts",
@@ -2429,7 +2453,7 @@
     },
     {
       "path": "lib/funding/state-snapshot.ts",
-      "sha256": "0ea50d08c33131d6f27ac6fadffccf0c776e3d26c12acf4be1d1252497ace28d"
+      "sha256": "611117b17aed769c08ab92965f06f328931463b191793afe38d045370142633e"
     },
     {
       "path": "lib/funding/target-authorities.ts",
@@ -2506,6 +2530,10 @@
     {
       "path": "lib/identity/reader-person.ts",
       "sha256": "e6e3ce856884b353aabb6bd2911efe441688e5f91e202687310558cdf5a73b13"
+    },
+    {
+      "path": "lib/log/after-response.ts",
+      "sha256": "b8ba715e0bd2de69f23cc48474ad83f5d0b1dcaf312e1058c843a2cc9dda7f85"
     },
     {
       "path": "lib/log/client.ts",
@@ -2589,15 +2617,19 @@
     },
     {
       "path": "lib/meetings/edge-artifacts.ts",
-      "sha256": "c4fbdd67fb3b3c9a77ad44e52892f8a03fbf41cbf9bb11bb11d7f36fda0cda06"
+      "sha256": "95c7a0cee400998a67ebd59d830e6fe25dcf17e065e3968e54973c2863b76596"
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "4f20ce38e9acb4108eb705e82f2608c4e60b126ca32d54c70294f641a4b45ecd"
+      "sha256": "a4b3aa0c5b1c423c23202246ea05b41fabd9fd63e6c78e53842604f1c3a96000"
     },
     {
       "path": "lib/meetings/edge-store.ts",
       "sha256": "c600f9dac25ff1aae841a68c8b98aceae796016ee8e43d2f7f8ec35cde1ad94a"
+    },
+    {
+      "path": "lib/meetings/fresh-checks.ts",
+      "sha256": "4a11229097d194916049d3211dfdcba3ff71c86dcae9d5ef46a6f5f88e4dda34"
     },
     {
       "path": "lib/meetings/freshness.ts",
@@ -2645,11 +2677,11 @@
     },
     {
       "path": "lib/meetings/prepared-snapshot.ts",
-      "sha256": "9d468ed13d9f18975381912b4e271e1cefd53f883021f96480894d845a1a767d"
+      "sha256": "87c77e7d2adaa6d38a1336e490026864d94143e3234bb32663fdaa4b6ce075bb"
     },
     {
       "path": "lib/meetings/proof-pin.ts",
-      "sha256": "3f0bd2d151497cc9fd40b793b27531d834a28fce23984d2ac3aab0a08041eb77"
+      "sha256": "4b77d53d47701d337f3f422a851239968ace55fbde2df0956d04b739e2c724f7"
     },
     {
       "path": "lib/meetings/query.ts",
@@ -2669,7 +2701,7 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "dddab248a48f8237f3339bbe937046a1912ce32ed4692987106d353c4b47db8f"
+      "sha256": "cab3298e4c02680e9ca84818bb0ef533b4a4e845583e2edbfeaab94e26c42302"
     },
     {
       "path": "lib/meetings/status-marks.ts",
@@ -2749,7 +2781,7 @@
     },
     {
       "path": "lib/officials/executive-actions.ts",
-      "sha256": "daeda320cda98240fef6d40a5e90e71b730ff557771fd10eb155050d4615b278"
+      "sha256": "33ba801e153253f084b1e02a736b98b7ea51c8b8640892335d2f974d8a4a5a6e"
     },
     {
       "path": "lib/officials/federal-directory-data-plane.ts",
@@ -2845,7 +2877,7 @@
     },
     {
       "path": "lib/outcomes/data-plane.ts",
-      "sha256": "af32672e76f9e1e7e075908724eec4f0b2633e0b1a9a12132942e2d726eb5af6"
+      "sha256": "d90cfc90bd78d40770449f02289c018312120566418e1a232b1189bd1d3d1e8a"
     },
     {
       "path": "lib/outcomes/publication.ts",
@@ -2853,7 +2885,7 @@
     },
     {
       "path": "lib/outcomes/store.ts",
-      "sha256": "0841b67213d333b55466e5c1ac7e2968997f340cb8af4d5344664e37948badc7"
+      "sha256": "708658d012cf856331d562fb4a0b0b63310064ca81df4c733ca492e57a216deb"
     },
     {
       "path": "lib/photos/person.ts",
@@ -2981,7 +3013,7 @@
     },
     {
       "path": "lib/registry/runtime-edge.ts",
-      "sha256": "069c7f5e27d54f87e865c15920ab030914193fac0312fd1e62e3a03d487d9233"
+      "sha256": "2f5eb5aa481e15545c96f2b9e7203f954784ab4a2391540894e139b6066375cd"
     },
     {
       "path": "lib/registry/runtime-read-model.ts",
@@ -2993,7 +3025,7 @@
     },
     {
       "path": "lib/registry/source-wiring.ts",
-      "sha256": "8ec9b2a950f3bd335138253e0f1792b60682d7ccde525a8d44370a2de2bd5308"
+      "sha256": "aabe8d837e76f1379fd6432fc18ca6ae95189e87b1308833ed6ad317f1966759"
     },
     {
       "path": "lib/registry/street-index-summary.json",
@@ -3101,7 +3133,7 @@
     },
     {
       "path": "lib/sources/ballot-curated/index.ts",
-      "sha256": "d1d86c362491f72a0f21c60df156c6bb4875b440457b0974c8ea4284a02e63eb"
+      "sha256": "9d1c44278349175282ee70e9942797e8a7785faa5584bcd5b072b062f3d0069d"
     },
     {
       "path": "lib/sources/ballot-nj-morris/index.ts",
@@ -3116,6 +3148,10 @@
       "sha256": "3c0619c6353a3976427b7400f9727189fcda649f614c7986df7f25027a4cd787"
     },
     {
+      "path": "lib/sources/challenge-signatures.ts",
+      "sha256": "727504f8aac65ad3e11f2e197d330c580f398aaf75f15ad4e3051e51e1fc2ffc"
+    },
+    {
       "path": "lib/sources/civicclerk/index.ts",
       "sha256": "399fb338a3171231ad4b7499e9f4d7ef91be8fe519d78e5710f1cca9b36c1708"
     },
@@ -3125,23 +3161,23 @@
     },
     {
       "path": "lib/sources/clerksboards/index.ts",
-      "sha256": "517d95a7d77a246d9d87edd8b90cde15a59cdef8158a61d92bca48b80d412974"
+      "sha256": "d35e8488b8ce6bd1d034d8930c9b282653e8d71e4cbdc7263bb8fd13409fc45c"
     },
     {
       "path": "lib/sources/composite/failure-kind.ts",
-      "sha256": "9463af1fefaf47f0c8c321787bad595f37c294da34d510c1eb6f82c57d54a647"
+      "sha256": "792e836a73cec7309e1201cfadd73ae052dd4ce94686a3a6a12261f7b5df1fd5"
     },
     {
       "path": "lib/sources/composite/index.ts",
-      "sha256": "8b649fb93f3bf9e993951e4a7672305c57a27bad9f306d8df4be63884ae7f57b"
+      "sha256": "ea8a83103e832e09679774c870612a7de4a6040235fc9b8caaa777d238aa12cc"
     },
     {
       "path": "lib/sources/composite/wiring.ts",
-      "sha256": "950737b01578669fdd770aecaee10134817d8e4b89b85ede23843c35275c1e92"
+      "sha256": "4ce360e1e6244779a1d392360c7f73e8538bbe54aa4a8358cfc4bf56ec175cec"
     },
     {
       "path": "lib/sources/diligent/index.ts",
-      "sha256": "978495acd2f6d52ded29b0e1b874749219c0cbb662f9116bbdb4560815d95fd7"
+      "sha256": "6935da70c6a165c8121b18d89a9826712044c0781a1acc082d11cf6768b3cea0"
     },
     {
       "path": "lib/sources/diligent/schedule-union.ts",
@@ -3157,11 +3193,11 @@
     },
     {
       "path": "lib/sources/http.ts",
-      "sha256": "0a2195ddead5462e793cf4cac8af2e8ae3c5961f8075d6d2cbb8e46d82769c00"
+      "sha256": "53ee02357f05ed6bd00f7cca6b87f6bd51f51620e89f5a0e26a0e5736afe0509"
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "e01e31a9bf602ea0d137f2af0f889d9fa51b97c24a2fa662c19da1bc90884bd8"
+      "sha256": "70ca28148129d8121d827016a4cd52d0fcc2e2534f82745ff6d42f00e5d6cdd4"
     },
     {
       "path": "lib/sources/ical/recurrence.ts",
@@ -3189,15 +3225,15 @@
     },
     {
       "path": "lib/sources/legistar-insite/horizon.ts",
-      "sha256": "669d26e1cbe819c0cd30b747b4a92d7e04a54e22c2bbf9181ddf939cf3aa9d08"
+      "sha256": "850baf537e1c9283315b2357eeae344e8b37d5f31f82169177eebcca2ba4eebf"
     },
     {
       "path": "lib/sources/legistar-insite/http.ts",
-      "sha256": "2e740005dc046ef55f5684dc77465918f885caf0d9adb617e713ce1afbae6666"
+      "sha256": "41f41aa836660de072ea0d41177f5511ed9f48d94a22b8845d8ef9e5cfecc491"
     },
     {
       "path": "lib/sources/legistar-insite/index.ts",
-      "sha256": "ad942b3ff322473c9bd34a2a521a4032e47135854025c14034938fd58298e989"
+      "sha256": "873d34f2fe221cc6bed6f62c7419a340568dc7723cd630274b0a544eee81f2d6"
     },
     {
       "path": "lib/sources/legistar-insite/tenant-registry.ts",
@@ -3217,7 +3253,7 @@
     },
     {
       "path": "lib/sources/legistar/outcomes.ts",
-      "sha256": "f958c2b7e6046737001f7d84b35bdd86fb140f8623c1fb90d813e63ad706c250"
+      "sha256": "04f693cc155097c4acf49dded567662f3e08ce4a93f418b578d8882b1dd640dc"
     },
     {
       "path": "lib/sources/mock/fixtures.ts",
@@ -3233,7 +3269,7 @@
     },
     {
       "path": "lib/sources/official-page-events/index.ts",
-      "sha256": "6d69dde61eead59beb191db3173b1c4656034eb38f5c53f02fe6a3874b05080c"
+      "sha256": "f0e5c101e44b93ec88849cc0c794a72f9ec56209d69da95faa2c3af2088d3f4a"
     },
     {
       "path": "lib/sources/onbase/index.ts",
@@ -3241,11 +3277,11 @@
     },
     {
       "path": "lib/sources/permission-gate.ts",
-      "sha256": "ba900864f3b00a30c01fb2d1782d1bc8342cf7281e46ec16c75a69349cc982f4"
+      "sha256": "7cb364532f908e7141c1b84616fcab66fc1eedf6f675deb99a9e1a32644446d8"
     },
     {
       "path": "lib/sources/pima-edu/index.ts",
-      "sha256": "deb114737ab618c2b936eb76d87fd8df5a1cc9a542530f67f928f2069212687e"
+      "sha256": "97129d540752420f3de600572ec846ff20be51c80dfafbc4b8298aae3d4480d3"
     },
     {
       "path": "lib/sources/prl/data-plane.ts",
@@ -3268,8 +3304,12 @@
       "sha256": "12c84e5b9c749d6138890e832ee3b50766e194fe697ea2dfc9973d8b8ad681f5"
     },
     {
+      "path": "lib/sources/schedulepage/destiny-agenda.ts",
+      "sha256": "ec15d34a29bc2add9586b90677012ed29e1e9f3c5a8dd1543ad95ab96d8a9033"
+    },
+    {
       "path": "lib/sources/schedulepage/index.ts",
-      "sha256": "a11f267db2afea9aaedaffa467935aaaceaebf840c758af20520603dbaa9751b"
+      "sha256": "8c294d45520d12d47be3beb0db472c179ca89dc820004c47ca4fde5594268b8b"
     },
     {
       "path": "lib/sources/sitting-status.ts",
@@ -3429,7 +3469,7 @@
     },
     {
       "path": "lib/votes/key-votes-projection.ts",
-      "sha256": "7c8f6d9d3317524ac78906e12c9c655d937bbfcb587e2a43555919bb6404f51f"
+      "sha256": "0e40a787629d38a710c6cb8542c506218f98c029411f50cb9dd6ccb95ba72ea1"
     },
     {
       "path": "lib/votes/key-votes-reader.ts",
@@ -3453,7 +3493,7 @@
     },
     {
       "path": "lib/votes/snapshot.ts",
-      "sha256": "e969e831c91bfb99327fd5d12537522ce0aec20e4124c372ddfe2c644e514bdd"
+      "sha256": "90201bc39ccd770bb306eaf697397a741696a15e50714be74417bbdf70d56fb7"
     },
     {
       "path": "lib/votes/vote-explainers.ts",
@@ -3465,7 +3505,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "d5a9e308452e7e560bcbf8a23bad0f61262995bbc0c8f18ee9ac9aff462deb3c"
+      "sha256": "b420951349d1d2ff82f989b8c87d654299fb520d875208bb610b087b10be76f4"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -7777,7 +7817,7 @@
   "execution": "Only the post-checkpoint funding and outcomes HTTP seams were re-executed against the frozen local production build and compared with canonical selectors.",
   "denominator": {
     "moneyTargets": 403,
-    "outcomeSittings": 24
+    "outcomeSittings": 47
   },
   "negativeIdentity": {
     "hobbsCandidacy": "ballot-az-pima:governor:hobbs-katie",
@@ -8321,18 +8361,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "3ba135bf64ab6867d5ce4f744ad3bd63c426d324b46ae288f2f831e2cfddf96f"
+      "payloadSha256": "3d80059e3d6d2ab544920b13fbf82303e1dd5d5714f7b0b0602245f75b2778c7"
     },
     {
       "surface": "funding/state-money",
@@ -8797,18 +8837,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "62ba19a1c783ee977224e7d1ccc9b426f9b7b70ae99a03dcd84ca5f1177bb542"
+      "payloadSha256": "a9aade120266ebe796931daf0ed63d5a579224d72b0f10947835463c363db5f4"
     },
     {
       "surface": "funding/state-money",
@@ -11282,18 +11322,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b24fe08ea857789d96c4f8ec8fa7752711b381c18599e600a767607888dfe1fe"
+      "payloadSha256": "382a87e55de2468dfa1e971d09dd9cba1290c5fa005f5c8a38002a30d86ec13d"
     },
     {
       "surface": "funding/state-money",
@@ -11963,18 +12003,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "213606be8c16e684f5b59c4fce61d5059cece4da05011f00169b8e1ac0baf8f7"
+      "payloadSha256": "dcb43b0361c148d29eb1e54f455e92ab7161767f0f00ca99a3ff941e9fcf4648"
     },
     {
       "surface": "funding/state-money",
@@ -12616,18 +12656,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "31a4904a8e8693553c37e792d8a08f720c64ee5fbcdfbc9d7dd755dca262fb6e"
+      "payloadSha256": "93d3a59b8b2a971fd7294b0a23489fb106fb87094faf3785ada262c88af92979"
     },
     {
       "surface": "funding/state-money",
@@ -12663,18 +12703,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "bdde9468c710b86faf46abbaf4f48590307e177f2d5789a6b8c9168f3e9078c8"
+      "payloadSha256": "4b582eb08c8cc018d81138b6dd6f0d0b5f2ce9566c8d0f25ac3f4e5b715d2546"
     },
     {
       "surface": "funding/state-money",
@@ -12710,18 +12750,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "bdde9468c710b86faf46abbaf4f48590307e177f2d5789a6b8c9168f3e9078c8"
+      "payloadSha256": "4b582eb08c8cc018d81138b6dd6f0d0b5f2ce9566c8d0f25ac3f4e5b715d2546"
     },
     {
       "surface": "funding/state-money",
@@ -13363,18 +13403,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "31a4904a8e8693553c37e792d8a08f720c64ee5fbcdfbc9d7dd755dca262fb6e"
+      "payloadSha256": "93d3a59b8b2a971fd7294b0a23489fb106fb87094faf3785ada262c88af92979"
     },
     {
       "surface": "funding/state-money",
@@ -14044,18 +14084,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "213606be8c16e684f5b59c4fce61d5059cece4da05011f00169b8e1ac0baf8f7"
+      "payloadSha256": "dcb43b0361c148d29eb1e54f455e92ab7161767f0f00ca99a3ff941e9fcf4648"
     },
     {
       "surface": "funding/state-money",
@@ -14522,18 +14562,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "881afa78241e2102895e6b6fade786d7b0b091c4ad9deeb36b667cc838db9260"
+      "payloadSha256": "80e866c6bd00e921cab8f3b6e5228829ac6e5727539fee9614566295c3bf8fbb"
     },
     {
       "surface": "funding/state-money",
@@ -15535,18 +15575,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "9fb13f27a5c9ea744cfce07f08eaff69dbc7c8321954d27d9d76bd7b0a4a6320"
+      "payloadSha256": "649e994163838cb21a230ca046735422b032c2cd174cca4f9a23caea119cef0d"
     },
     {
       "surface": "funding/state-money",
@@ -16548,18 +16588,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "9fb13f27a5c9ea744cfce07f08eaff69dbc7c8321954d27d9d76bd7b0a4a6320"
+      "payloadSha256": "649e994163838cb21a230ca046735422b032c2cd174cca4f9a23caea119cef0d"
     },
     {
       "surface": "funding/state-money",
@@ -17026,18 +17066,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "881afa78241e2102895e6b6fade786d7b0b091c4ad9deeb36b667cc838db9260"
+      "payloadSha256": "80e866c6bd00e921cab8f3b6e5228829ac6e5727539fee9614566295c3bf8fbb"
     },
     {
       "surface": "funding/state-money",
@@ -19335,18 +19375,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "ccadbc2abae5a14d2192159299c252bfc2fa420166e6f2941735ec56feef4219"
+      "payloadSha256": "a93837856bacbeb89670427f44f286f6822fb8f6c6b8063d171a15202350627e"
     },
     {
       "surface": "funding/state-money",
@@ -20016,18 +20056,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "227d0e29ef0a3132851986225adc33ff8b44dcc8d96edfe1276153d103533913"
+      "payloadSha256": "54b36fa66819a1b19265d03fd6fe0c47ebc5763296ce79d0f5cde611d451fc62"
     },
     {
       "surface": "funding/state-money",
@@ -20272,18 +20312,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "e2602ab560de4f48043061073d2de09cb5d6b45e59af6bec35dab6dfdae6da13"
+      "payloadSha256": "e276f1764d88f62b6d5001673936c66ad42958308056c367d0793b4920c27fb6"
     },
     {
       "surface": "funding/state-money",
@@ -20882,18 +20922,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "1eb737f808d45bd6931c09207f88be851da0fafd1b58af62aec1316753681bb2"
+      "payloadSha256": "bf6d0993dfbd614f9fe6c7ba062cfa7bffded5711fa4ce18581d9f7c75d1cfbd"
     },
     {
       "surface": "funding/state-money",
@@ -21398,18 +21438,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "ada3ffa3bd945287855eda5c0b4ddd48c0f6bb893477723abc91041070ab6df9"
+      "payloadSha256": "5e5dffb52df20134c1f7640cd1e1bd562a7a3e5d415b1c2bb50a3cc1d81fe62d"
     },
     {
       "surface": "funding/state-money",
@@ -22081,18 +22121,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "9c123bed21a5f8e39c80fe1f083eaf575c1353b2e378c753ac8917c00c815546"
+      "payloadSha256": "6bb79fb6d3bf7601eda1a9289ff2b471e688f9b08c6a05b0dc1aeb6a9601e1e1"
     },
     {
       "surface": "funding/state-money",
@@ -22642,18 +22682,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "be41c6d9259436c098b4fa547dbb5b7d10466fe70d95dcc7784ec9a871097350"
+      "payloadSha256": "f26e34b18eb6a79ab3403fb7529907745145112a30c0c76cd99d6b5e87736140"
     },
     {
       "surface": "funding/state-money",
@@ -23543,18 +23583,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "2a1ccbf872ce51fed6c6eb8f65a0a9d328d375aedbe49b66a5cce1f5c46831eb"
+      "payloadSha256": "928516fba78db2168d6e08edd53a86e2f01ed9701b3414b8b25c83f54470ed35"
     },
     {
       "surface": "funding/state-money",
@@ -24096,18 +24136,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "63cde8ac6eb36ad84770084483032e4ef5d522ad0fbca4f3c8b61183f42c1280"
+      "payloadSha256": "73f3668a955da2ee4faa0203a1f36263b1aee77c6e1eada67fcbb5464e3c20a7"
     },
     {
       "surface": "funding/state-money",
@@ -43469,18 +43509,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "92edcf1578c31f1be316c12810dfd25030575734c97c519b262a4e2a2c2f1eca"
+      "payloadSha256": "a70061a049031102c97a42ecfd3eedcdadc44174266b04495421165f792e0475"
     },
     {
       "surface": "funding/state-money",
@@ -44391,18 +44431,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "1a0947bb976006840faff3c7b5445f3d9aa88427842f2d94509f6e8bc7701459"
+      "payloadSha256": "a7210c0dd766fa67ce916309e990d8f42391bc04b6077be5f7c2c457824f6a88"
     },
     {
       "surface": "funding/state-money",
@@ -44962,18 +45002,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "1c6db082288cd75b114a0a450fdd5c5a567dd7fabdac17881a85cca74bd099fd"
+      "payloadSha256": "d1864fb430899215171555a41033caacd963118ec6dfdf9b4787fe108cd1d335"
     },
     {
       "surface": "funding/state-money",
@@ -45478,18 +45518,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "8f9f1578012455ac14caa3b932d0ebd3601a1d4d05eb2f6d532e52ce80e33c20"
+      "payloadSha256": "fe1e7db54a939b656c401a3585a9fb96401f141c23d87c713e5a79d0351b415b"
     },
     {
       "surface": "funding/state-money",
@@ -47675,18 +47715,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "1c6db082288cd75b114a0a450fdd5c5a567dd7fabdac17881a85cca74bd099fd"
+      "payloadSha256": "d1864fb430899215171555a41033caacd963118ec6dfdf9b4787fe108cd1d335"
     },
     {
       "surface": "funding/state-money",
@@ -47743,18 +47783,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "3ba135bf64ab6867d5ce4f744ad3bd63c426d324b46ae288f2f831e2cfddf96f"
+      "payloadSha256": "3d80059e3d6d2ab544920b13fbf82303e1dd5d5714f7b0b0602245f75b2778c7"
     },
     {
       "surface": "funding/state-money",
@@ -48424,18 +48464,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "213606be8c16e684f5b59c4fce61d5059cece4da05011f00169b8e1ac0baf8f7"
+      "payloadSha256": "dcb43b0361c148d29eb1e54f455e92ab7161767f0f00ca99a3ff941e9fcf4648"
     },
     {
       "surface": "funding/state-money",
@@ -49105,18 +49145,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "7a49bce2af27428ad268234ad0dab7b4f04b2c16bb67f3c71c7c3df59e29b7e6"
+      "payloadSha256": "18574377262b185251401f2f2e0326dd569605dfd2c78a518c8a355082b16b00"
     },
     {
       "surface": "funding/state-money",
@@ -49786,18 +49826,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "227d0e29ef0a3132851986225adc33ff8b44dcc8d96edfe1276153d103533913"
+      "payloadSha256": "54b36fa66819a1b19265d03fd6fe0c47ebc5763296ce79d0f5cde611d451fc62"
     },
     {
       "surface": "funding/state-money",
@@ -50799,18 +50839,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "9fb13f27a5c9ea744cfce07f08eaff69dbc7c8321954d27d9d76bd7b0a4a6320"
+      "payloadSha256": "649e994163838cb21a230ca046735422b032c2cd174cca4f9a23caea119cef0d"
     },
     {
       "surface": "funding/state-money",
@@ -51794,18 +51834,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "471a1dc5f10fa69d767bb121452ba4b4a42a0e60ed12b499a52d209bf5926408"
+      "payloadSha256": "ac3133f868474e22ddba8893bbdc9e71f5642547cbfa7ce681a018e3c40aa055"
     },
     {
       "surface": "funding/state-money",
@@ -52515,18 +52555,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "46aff78d72aa2d43122f4a10708f3c8f36fc7ecc0fef9c92b1e5e47d60bea533"
+      "payloadSha256": "86773d140b7890770a31ae2c6cd2efdf03046e976757eae92961c8b565979c6e"
     },
     {
       "surface": "funding/state-money",
@@ -53234,18 +53274,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "a27940432780c07086c17e2fa0ed9497aee175ebac3bba8568c3eccfdb310248"
+      "payloadSha256": "8876b28ca58b985057385460b567680fbbb84f94a6be01be74a8b5732dac1162"
     },
     {
       "surface": "funding/state-money",
@@ -53258,18 +53298,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "87b67c8296dedb08138548b4950e80417ebea66ad3c5946e4b494a42eb003086"
+      "payloadSha256": "7471a9f9b071c887cdd8bb794f67fca2066e19efcc080f36da6ad7008777345b"
     },
     {
       "surface": "funding/state-money",
@@ -54180,18 +54220,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "1a0947bb976006840faff3c7b5445f3d9aa88427842f2d94509f6e8bc7701459"
+      "payloadSha256": "a7210c0dd766fa67ce916309e990d8f42391bc04b6077be5f7c2c457824f6a88"
     },
     {
       "surface": "funding/state-money",
@@ -54204,18 +54244,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "87b67c8296dedb08138548b4950e80417ebea66ad3c5946e4b494a42eb003086"
+      "payloadSha256": "7471a9f9b071c887cdd8bb794f67fca2066e19efcc080f36da6ad7008777345b"
     },
     {
       "surface": "funding/state-money",
@@ -55060,18 +55100,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "d234413b87b570b340eb8e0a1202348500b21d053f0f8f020a85eee135dce714"
+      "payloadSha256": "9d13ccedac0951fd01f4f90f51c2a5652d79018fff96263f083942ff860c9ba0"
     },
     {
       "surface": "funding/state-money",
@@ -55128,18 +55168,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-504be9d416fcc1b68fc2bc666810452d",
-          "lastKnownGoodVersionId": "cv-504be9d416fcc1b68fc2bc666810452d",
+          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-25T19:48:23.518Z",
-          "promotedAt": "2026-09-25T19:48:23.817Z",
+          "retrievedAt": "2026-09-26T01:56:48.350Z",
+          "promotedAt": "2026-09-26T01:56:48.577Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-02T19:48:23.518Z"
+          "staleAt": "2026-10-03T01:56:48.350Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "62ba19a1c783ee977224e7d1ccc9b426f9b7b70ae99a03dcd84ca5f1177bb542"
+      "payloadSha256": "a9aade120266ebe796931daf0ed63d5a579224d72b0f10947835463c363db5f4"
     },
     {
       "surface": "funding/state-money",
@@ -59132,6 +59172,443 @@
     },
     {
       "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336056",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 24,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 24,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "5ec17423bc50bf802acff2dd7853d6bac0a9564cbf7556763e0cfda53464f83d"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336057",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 25,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 25,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "0854852de2b65d2e7a5ea55798459478c0a7fca130c6142789f8befa3692366a"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336058",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 27,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 27,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "d17d9b71408bfe4e03a78859df7683fa072c004205bba2433e59cb45858f5887"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336059",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 15,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 15,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "2147b98c540caa7fea24147dc8d54054becc561b656988e01a748fe1b34495ee"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336061",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 25,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 25,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "fb504c47be47523d3e7484cd553c2a1cf723579c2d5ab2ea9179115e03f0258a"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336065",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 24,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 24,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "7b879370bf2cf3d02f44c84b5f0c6102cc87c5145b1ce996eabf22d99b7ef76e"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1336069",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "NOT_HELD",
+      "payloadSha256": "553bd7db5abafd3e54d493da2545bc1ec8e7e658d2d521e4dff30e53e94c5e5c"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343127",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "a6681d62e466a670a879b879a9e2d180fcc19f98d3dcceb7cd76cce5cac180fd"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343128",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "26b743f4475946f100b10da9561389eddc1b453e270d24dbeb0617cfc8d47bad"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343129",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "87a08ab28a178117553ee83567b061096f3daf78c961bf56a5f1befd5b7d7752"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343130",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "ddad2a01a5e00b5a5fab5207272bdbc7009663e1795ab1a9369cda0736c31bc4"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343131",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "aa87a3260eb408ec8ec8cd367726565c56a591e98fc69cc6a0dccaf983f37d53"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343132",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "283bdfdd1c83b0c147728e2cd9331a058f563fd1d14dede9f5c021d978b9b967"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343133",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "NOT_HELD",
+      "payloadSha256": "bff6310c79f7b45e2a1abdb594fd0b4d5b191bd38013f7e8fdc013e1adc0bdad"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343168",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 3,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 3,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "d37bf0c478d1a421de53e9d053cb96485b726552176bbff4722d35f1ff33b1fe"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343172",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 3,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 3,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "32c3a92a2517de06ceb4af3a504aed749190ae6d52f92054d8bf0c8fa70e85ad"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343174",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "4c7f24f7c8c7382c6be21db28b6dd98451099e1331389f6c7acf9e33d34cdea8"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343176",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "NOT_HELD",
+      "payloadSha256": "a7f247e94562a1a848d8be6854d027fa7ee1b1e77ad02aaca6885fdb960ad638"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343177",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "d6f3c206729318a08b63ea46e1bc68367a1ead5ce77eebcc0b458c87fea75c07"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1343178",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 0,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "NOT_HELD",
+      "payloadSha256": "a5dba5ffb9f2f9a13ea5e8d1a2900ad6247fcf029c26f2e8191b27a2cd804427"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1408112",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "ca237420737fd0e2e22f4e8dec3bee1c44fd169b3c9e44b934dae33e9fd3de40"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1428059",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 2,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "0fd90ca800a38fbca2f436389625c923940167434327363339f9f9ca945c0d51"
+    },
+    {
+      "surface": "agenda/map",
+      "meetingId": "legistar-insite:mesa:1439833",
+      "bodyId": "ocd-division/country:us/state:az/place:mesa#governing",
+      "expected": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "returned": {
+        "agenda": 0,
+        "actions": 1,
+        "rollCalls": 0,
+        "votes": 0
+      },
+      "status": "HELD",
+      "payloadSha256": "4309f3112f7d516895c4034f3cc2d429ea8e1e75e7ddbcb8bd7656b7cb321f9b"
+    },
+    {
+      "surface": "agenda/map",
       "meetingId": "legistar:pima:1801",
       "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
       "expected": {
@@ -59147,7 +59624,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "6f219a42dd4afff06085917c8c9518784e985ada85748387d20ecba5522cc89c"
+      "payloadSha256": "6adb73fda0475989d2e96e7b30abcbd3874de537df8f1e92cea1eded4c7e2217"
     },
     {
       "surface": "agenda/map",
@@ -59166,7 +59643,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "08705461952654a6e3280c30abce8d2e70eaa960f245a9c181aadd1afc31936f"
+      "payloadSha256": "1ed3acaaeac4330294ddd55b42e3ff7c8004e55f0dc0018205f7f8529360d872"
     },
     {
       "surface": "agenda/map",
@@ -59185,7 +59662,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "fdccd1c58798b01b5c9d55596d748fef8d6fcf62b0aa4c64305c1ca7d697514f"
+      "payloadSha256": "7351dc4fbdc2a58880373da285849c800d9bbeb308882b2620f2f842a1554622"
     },
     {
       "surface": "agenda/map",
@@ -59204,7 +59681,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "4dc7d83b00795103ed89d440b04e10e1b40082f466099fe51871899d332499bc"
+      "payloadSha256": "f4b1912ac5bc67568e04eab931d0c5c37bd4d40b8dd1ea229c2a705828fa6061"
     },
     {
       "surface": "agenda/map",
@@ -59223,7 +59700,7 @@
         "votes": 220
       },
       "status": "HELD",
-      "payloadSha256": "96a3842a031dcbc42c10a80a8340973f7015fbb2d3021fe7472923a363b35167"
+      "payloadSha256": "f4712ca701c0f4b64cc5b1ae2b56d54a112ab950331fdb7f0f3008d12a94a2a2"
     },
     {
       "surface": "agenda/map",
@@ -59242,7 +59719,7 @@
         "votes": 380
       },
       "status": "HELD",
-      "payloadSha256": "0d12b4474aa85546138acb0b40f46addab5e92cd8c7cb5278a0af9d9d70dce37"
+      "payloadSha256": "5049e53adf73f9ffd695bd7cd1d5114a14eafe027a16b6f6949fad95010b7e41"
     },
     {
       "surface": "agenda/map",
@@ -59261,7 +59738,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "0b75afd359af734efd87d0d4019cf65a0f55847871be586fa3f27b0ee3972cd3"
+      "payloadSha256": "f0066e570a00e7eac79701ede73ff8c4003696a1934092674c71a634280b5c52"
     },
     {
       "surface": "agenda/map",
@@ -59280,7 +59757,7 @@
         "votes": 145
       },
       "status": "HELD",
-      "payloadSha256": "c793733ea5ebc3390301ea1f62851257283ab714c52ddf6f10b0138bd283c2cf"
+      "payloadSha256": "05f20c2e2f5fc1ae17782008ef4f0b3776ad5d2f141da666b5cd3540beee6f1b"
     },
     {
       "surface": "agenda/map",
@@ -59299,7 +59776,7 @@
         "votes": 185
       },
       "status": "HELD",
-      "payloadSha256": "d51fb6f57954e9cfcb087e553b9a083ab60345a7e49150cfb69bb79caccc72dd"
+      "payloadSha256": "3e523282b9e04ebadc303c11109924ba9202ca522b82a9b1a5e5ed325742c7fe"
     },
     {
       "surface": "agenda/map",
@@ -59318,7 +59795,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "db8bc6cf0b3150a729bf5946bcdd7176bf66b69946897ba57df398e67017f779"
+      "payloadSha256": "2249b6138fb57e13f2545eea5c438ca14253a4434049094626a64c1cb9f62cd1"
     },
     {
       "surface": "agenda/map",
@@ -59337,7 +59814,7 @@
         "votes": 230
       },
       "status": "HELD",
-      "payloadSha256": "047ec0416e38168b8d5fcd1dc1c9063e0d7d16b3bcba8ff4264f6fe3d8b01427"
+      "payloadSha256": "46c3f337460c02ee3c23dbf00ad2ddcb2372b50725ab50a9ea5d803b6d136c19"
     },
     {
       "surface": "agenda/map",
@@ -59356,7 +59833,7 @@
         "votes": 285
       },
       "status": "HELD",
-      "payloadSha256": "5c03804829a2bca59884078c1b40e348ad0b11c426ccc2357ec56055668700b4"
+      "payloadSha256": "4cda98bfc01010afa41051c36fa00b57f4f127d70851a4121d2e0c41532bcf8b"
     },
     {
       "surface": "agenda/map",
@@ -59375,7 +59852,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "39f73f04b594361ff403104e83812f6063615103b836974b6b89f782c2e76f32"
+      "payloadSha256": "d1c3b0d80968e309c076f6b4acc3a8899ade59e468be2bd62a8e3772008227d3"
     },
     {
       "surface": "agenda/map",
@@ -59394,7 +59871,7 @@
         "votes": 135
       },
       "status": "HELD",
-      "payloadSha256": "5480fa76534c95cc1d9d5652931e82f50fb9914533d5310e0b54b716d419bd5d"
+      "payloadSha256": "70bb382f9ce63603cb9c5f2a28f36015ea3f16a6fe6c4836b3e975c9b69da406"
     },
     {
       "surface": "agenda/map",
@@ -59413,7 +59890,7 @@
         "votes": 240
       },
       "status": "HELD",
-      "payloadSha256": "3812ba113666d1fa40c8090c83b50fb0c3551d4cccb2b55330cb28344165d4a3"
+      "payloadSha256": "9be6199b85931401108ef69b897089b514323255ab515202a83d8f10c8d0081e"
     },
     {
       "surface": "agenda/map",
@@ -59432,7 +59909,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "c2a01a87145fcde87d6a936cd75c66e32dfe580c2ed2a798e54d34aee6a75636"
+      "payloadSha256": "c2511419960dd22e1d0e3399eb1f204bf9120ef787cb2a4a93549043587807b7"
     },
     {
       "surface": "agenda/map",
@@ -59451,7 +59928,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "00fb82bb28666b55ca614cee0d536d9ca9e408ef46111462a9aecf68593d3164"
+      "payloadSha256": "babdc0c8472fc93e4eca2956b37db95e0db1907f89e937ed78f0b65712650056"
     },
     {
       "surface": "agenda/map",
@@ -59470,7 +59947,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "ed033ecc53fff5f7599274065c5475d6122b0f43f9aedd106d94d4ab3ee43424"
+      "payloadSha256": "3d8b41cd82ab79dae6bb1f9e2842990ee172d733fcad8316d2feb3de7b98cf95"
     },
     {
       "surface": "agenda/map",
@@ -59489,7 +59966,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "c24d2ec23583bb6b39d50f5802f91e3942749a7ac5bf2eb2661fa2de3e619231"
+      "payloadSha256": "1e73beb5f1d66a07bb73176ec56cd6e4f0cb4fe838e8d9601a24a1d62b4c3954"
     },
     {
       "surface": "agenda/map",
@@ -59508,7 +59985,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "3c33f564bfe80bb10ecc1c3d2e23b22c883d720a3e513e594dd579473d834666"
+      "payloadSha256": "4fe51aaab931ad767bfb49574553194b8220148ddbce90c9c72485c11e43c0c7"
     },
     {
       "surface": "agenda/map",
@@ -59527,7 +60004,7 @@
         "votes": 8
       },
       "status": "HELD",
-      "payloadSha256": "6058c39f22bb127246c166879b8f2d304f192a4efdcabcb37440bbd01656fa46"
+      "payloadSha256": "76a620906e984b919c535ffdfc180bdf7ee7d9e470a77a23e4b9ea7f4c605330"
     },
     {
       "surface": "agenda/map",
@@ -59546,7 +60023,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "5a4044fc31ba8d5954fce6798709db62fcc57273a55acbc94c14ff0fcc469464"
+      "payloadSha256": "c72f0c4d23e878b55e5f8d2546fd48eeb4bf8d8a493761e353708e01495ad6d9"
     },
     {
       "surface": "agenda/map",
@@ -59565,7 +60042,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "0151c57c80575ea55962ddcc721e2067dc6326ce0ebc7adbc62d5a8c5b00fe7d"
+      "payloadSha256": "20a9eebea7e6997350e66ba28dc009788f63b5ea70303b7813b1ae0f94e69f20"
     },
     {
       "surface": "agenda/map",
@@ -59584,7 +60061,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "f9347e8eb29317781ee5518a352c65be1caab0a931031ff1fa8c5d05094b5e2e"
+      "payloadSha256": "628bdd665f9f23551756094ee0b3e7972f94acbcaba7d4eb26983f3dea55a439"
     }
   ]
 }

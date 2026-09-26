@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * THE DURABLE FILESYSTEM STORE — where "the worker may die" stops being a
@@ -102,6 +103,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   jsonTextAtPath,
+  projectAggregate,
   projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
@@ -390,6 +392,12 @@ export function fileAggregateRepository<T>(
 
   return {
     read,
+
+    /* A file holds the whole row, so this reads it and narrows it in process, exactly as the Postgres read narrows it in the database. */
+    readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
+      const row = await read(id);
+      return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };
+    },
 
     mustRead: async (id: string): Promise<Persisted<T>> => {
       const row = await read(id);
@@ -785,6 +793,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
+    /* What readers were told Ask does not hold (schema v13). */
+    askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

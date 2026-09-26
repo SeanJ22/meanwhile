@@ -1048,7 +1048,7 @@ const CURATED_READER_READER_GATES = [
   { path: "lib/sources/legistar-insite/tenant-registry.ts", required: [/reviewedVenueEntries\(/, /inSiteTenantsFromWiring/, /wiringForMeetingSource\("legistar-insite"\)/] },
   { path: "app/api/meetings/route.ts", required: [/refreshCommentAccessFromPromoted/, /commentAccessDataState = "STORE_UNREACHABLE"/] },
   { path: "app/api/voting-sites/route.ts", required: [/refreshBallotNavigationFromPromoted/, /ballotNavigationDataState = "STORE_UNREACHABLE"/] },
-  { path: "app/ballot/page.tsx", required: [/refreshBallotNavigationFromPromoted/, /registrationLinkFor\([^,]+,\s*registrationLinks\)/, /pollingPlaceLinkFor\([^,]+,\s*pollingPlaceLinks\)/] },
+  { path: "app/ballot/page.tsx", required: [/settleBallotNavigationRead/, /registrationLinkFor\([^,]+,\s*registrationLinks\)/, /pollingPlaceLinkFor\([^,]+,\s*pollingPlaceLinks\)/] },
   { path: "app/api/ask/grounded/route.ts", required: [/refreshCommentAccessFromPromoted\(\)\.catch/] },
   { path: "lib/registry/server.ts", required: [/refreshCampaignSitesFromPromoted/] },
   { path: "scripts/ingest.ts", required: [/refreshVenueResolutionsFromPromoted/, /input\.sourceName === "composite"\s*\|\|\s*input\.sourceName === "legistar"/] },

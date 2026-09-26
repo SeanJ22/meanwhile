@@ -1,6 +1,7 @@
 import { overLengthBudget } from "./length-contract.ts";
 import { packSourceUrls, type EvidencePack } from "./evidence.ts";
 import { normalizeName } from "../routing/exact-name.ts";
+import { writerSelection } from "./writer-selection.ts";
 
 /**
  * **STRUCTURAL VALIDATION — the checks that can actually be made, made
@@ -200,6 +201,29 @@ export function validateAnswer(
 
   checked.push("no-internal-vocabulary");
   if (INTERNAL_VOCABULARY.some((p) => p.test(answer))) failed.push("internal-vocabulary");
+
+  /*
+   * **VOTES THE WRITER WAS NOT SENT ARE NOT VOTES NOBODY PUBLISHED.**
+   * (2026-09-25, the bounded writer selection, `lib/ask/writer-selection.ts`.)
+   *
+   * The answer writer is sent only some of a large sitting's per-member vote
+   * rows; the reader sees them all. Measured that day, the fast writer — told
+   * so in its records — still wrote "The Board has not published how each
+   * member voted on most other items" over a pack holding 48 roll calls. A
+   * false statement about a government, made out of our own selection. Where
+   * rows were held back from the writer and the pack holds per-member votes,
+   * a sentence about votes that says they were not published, recorded or
+   * available is refused.
+   */
+  checked.push("no-withheld-votes-called-unpublished");
+  if (writerSelection(pack).withheld.memberVoteRows > 0 && pack.records.some((r) => r.kind === "MEETING_MEMBER_VOTE")) {
+    const sentences = answer.split(/(?<=[.!?])\s+/);
+    if (sentences.some((sentence) => /\bvot(?:e|es|ed|ing)\b/i.test(sentence) &&
+      /\b(?:not|never|no|hasn't|haven't|didn't|isn't|aren't|wasn't|weren't)\b/i.test(sentence) &&
+      /\b(?:publish(?:ed)?|record(?:ed)?|release(?:d)?|available|posted|held)\b/i.test(sentence))) {
+      failed.push("withheld-votes-called-unpublished");
+    }
+  }
 
   /*
    * **ASK-19 — THE LENGTH CONTRACT, ENFORCED WHERE EVERY OTHER CONTRACT IS.**

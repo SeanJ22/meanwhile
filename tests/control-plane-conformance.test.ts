@@ -491,7 +491,7 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
-  assert.equal(BOOTSTRAP_VERSION, 12, "the meetings-discovery attempt log (cp_log_discovery_attempts) follows the field manual aggregate");
+  assert.equal(BOOTSTRAP_VERSION, 13, "the Ask-gap observations aggregate (cp_ask_gap_observations) follows the meetings-discovery attempt log");
   for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
@@ -512,6 +512,30 @@ test("schema v12 declares the meetings-discovery attempt log, and every provider
     const repos = await provider.open();
     assert.equal(typeof repos.discoveryAttempts?.append, "function", `${provider.name} bundle lacks discoveryAttempts`);
     assert.deepEqual(await repos.discoveryAttempts.readRecent("a-jurisdiction-nothing-walked", 1), [], `${provider.name} answers a walk nobody made`);
+  }
+});
+
+test("schema v13 declares the Ask-gap observations aggregate; every provider bundle adds a count, and Postgres's atomic add agrees with the repository's", async () => {
+  const { AGGREGATE_KINDS, DECLARED_TABLES } = await import("../lib/control-plane/repository/pg-schema.ts");
+  const observations = await import("../lib/control-plane/ask-gap-observations.ts");
+  assert.ok((AGGREGATE_KINDS as readonly string[]).includes("ask_gap_observations"), "ask_gap_observations is not declared");
+  assert.ok(DECLARED_TABLES.includes(observations.ASK_GAP_OBSERVATIONS_TABLE), `${observations.ASK_GAP_OBSERVATIONS_TABLE} is not a declared table`);
+  /* A per-run body, so the append-only Postgres test database never meets an earlier run's row. */
+  const body = `curated:conformance/${RUN_NAMESPACE}#governing`;
+  const one = observations.askGapObservation({ bodyId: body, code: "AGENDA_NOT_HELD" }, NOW);
+  const id = observations.askGapObservationId(body, "AGENDA_NOT_HELD", one.day);
+  for (const provider of providers) {
+    const repos = await provider.open();
+    assert.equal(typeof repos.askGapObservations?.compareAndSet, "function", `${provider.name} bundle lacks askGapObservations`);
+    const sink = provider.name === "postgres" && pgLane.kind === "READY"
+      ? observations.pgAskGapObservationSink(pgLane.url)
+      : observations.repositoryAskGapObservationSink(repos.askGapObservations);
+    assert.equal(await sink.record([one]), 1);
+    assert.equal(await sink.record([one]), 1);
+    const row = await repos.askGapObservations.read(id);
+    assert.deepEqual(row?.value, { ...one, count: 2 }, `${provider.name}: a second ask the same day is a count, never a second row`);
+    assert.equal(row?.revision, 2);
+    assert.equal(Date.parse(row!.updatedAt), Date.parse(observations.observationDayStart(one.day)), `${provider.name}: the row holds the day, never the instant`);
   }
 });
 

@@ -111,6 +111,21 @@ const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
  */
 const CANCELED = /\bcancel(?:l?ed)?\b/i;
 
+/**
+ * A `LOCATION` that names no place a reader could go: blank, or a bare state
+ * ("NH", Wilmot's Selectboard). Only then may a row's standing `venueMatch`
+ * stand in for it; any other text is the town's own words for the place.
+ */
+export function namesNoPlace(rawLocation: string): boolean {
+  const text = rawLocation.trim().replace(/[.,]+$/, "");
+  return text === "" || US_STATE_CODES.has(text.toUpperCase()) || /^(?:New Hampshire|Arizona|New Jersey)$/i.test(text);
+}
+
+const US_STATE_CODES = new Set(
+  ("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR " +
+    "PA RI SC SD TN TX UT VT VA WA WV WI WY PR").split(" "),
+);
+
 const MOVED = /\b(reschedul\w*|postpon\w*)\b/i;
 /** A month/day a summary names, with the word that points at it, if any. */
 const NAMED_DAY = /\b(from|to)?[\s-]*(\d{1,2})\/(\d{1,2})(?:\/(\d{4}|\d{2}))?(?![\d/])/gi;
@@ -1007,7 +1022,6 @@ export function makeIcalSource(
        * and each event keeps the id a single event always had. See
        * `ruleRestatedOnSittings`.
        */
-      const restated = ruleRestatedOnSittings(events);
       let restatedSeriesEvents = 0;
       /** Every id THIS row produced, in the order first claimed: the scope `collapsePublisherRelistings` merges within. */
       const rowIds: string[] = [];
@@ -1023,6 +1037,18 @@ export function makeIcalSource(
               titleTerms.some((t) => summary.includes(t)) &&
               !excludeTerms.some((t) => summary.includes(t));
       };
+      /*
+       * The evidence is read from THIS BODY's own series (2026-09-25). It was
+       * read from the whole feed, and a Google calendar's ordinary history
+       * supplies it by accident: Warner's "Warner Events" calendar (3,522
+       * events) carries a book club split "this and following" (a new UID
+       * starting on a sitting of the old rule) and a Zumba series entered
+       * twice, so no rule in the feed was expanded and the river committee's
+       * every-other-month series produced only its one edited sitting. Newbury's
+       * restated sittings restate THEIR OWN body's series, so each body there
+       * still carries the evidence itself.
+       */
+      const restated = ruleRestatedOnSittings(events.filter(namesThisBody));
 
       for (const event of events) {
         // A-002 · the logical record here is the EVENT, never the document.
@@ -1192,8 +1218,21 @@ export function makeIcalSource(
          * It applies ONLY when the feed gave nothing usable. A feed that
          * names a hall wins, every time.
          */
+        /*
+         * "ONLY when the feed gave nothing usable" is now what the code does
+         * (2026-09-25). It used to reach `venueMatch` for any LOCATION with no
+         * reviewed row, so a feed that named ANOTHER place was pinned at the
+         * standing hall: measured over all 59 ICAL rows' live feeds that day,
+         * 15 sittings — Warner's Village Water District commissioners at "55
+         * West Joppa Rd." (the treatment plant), its Housing Committee at the
+         * "pillsbury library", its Road Committee at the "State Highway Garage
+         * Rt 103" — all pinned at Warner Town Hall. A LOCATION that names a
+         * place is the town's own words and renders as its named gap below; only
+         * a blank one or a bare state (Wilmot's "NH", 12 sittings) reaches the
+         * body's standing statement.
+         */
         let venue = resolveVenue(SOURCE_NAME, wiring.ocdId, rawLocation);
-        if (!venue && wiring.config.venueMatch) {
+        if (!venue && wiring.config.venueMatch && namesNoPlace(rawLocation)) {
           venue = resolveVenue(SOURCE_NAME, wiring.ocdId, wiring.config.venueMatch);
         }
         /*
@@ -1472,7 +1511,6 @@ export function makeIcalSource(
           const res = await politeGetText(url, {
             fetchImpl,
             accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
-            profile: wiring.config.profile === "browser" ? "browser" : undefined,
             signal: query.signal,
             // A 200 with no VCALENDAR in it is not this town's empty calendar;
             // it is a retrieval that failed while looking like a success. See
@@ -1502,8 +1540,6 @@ export function makeIcalSource(
               const past = await politeGetText(wiring.config.pastFeedUrl, {
                 fetchImpl,
                 accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
-                profile:
-                  wiring.config.profile === "browser" ? "browser" : undefined,
                 signal: query.signal,
                 expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
               });

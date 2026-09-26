@@ -54,7 +54,7 @@ import { ADMIN_RECEIPT_LOG_KEY } from "./contract.ts";
 import { AGENT_JOB_LOG_KEY, liveJobCount } from "./agent-job.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
 import { pulseLanesOf } from "../scheduler/lane-reading.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { ControlPlaneRepositories, RecordProjection } from "../repository/types.ts";
 
 /**
  * One read's answer.
@@ -80,8 +80,26 @@ async function reading<T>(name: string, read: () => Promise<T | null>): Promise<
   }
 }
 
+/**
+ * The four fields of the published snapshot the pulse reads, and the one field
+ * of the research state. Postgres narrows each row before it leaves the store
+ * (`readNarrowed`): measured 2026-09-25, the snapshot is 449 KB and these four
+ * fields about 92 KB of it, and the research state is 1.16 MB of which the lane
+ * gauges read the 782-byte `queue`. The revisions come with the narrowed rows,
+ * so the pulse is the same pulse, byte for byte: every field it reads is kept.
+ */
+export const PULSE_SNAPSHOT_FIELDS = {
+  decisionCards: true,
+  freshnessDebtRows: true,
+  incidents: true,
+  obligationsByState: true,
+} as const satisfies RecordProjection & Partial<Record<keyof OwnerSnapshot, true>>;
+export const PULSE_RESEARCH_FIELDS = { queue: true } as const satisfies RecordProjection;
+
+type PulseSnapshot = Pick<OwnerSnapshot, keyof typeof PULSE_SNAPSHOT_FIELDS>;
+
 /** The counts a published snapshot already carries, with the ones it cannot answer left null. */
-function countsFrom(snapshot: OwnerSnapshot | null): {
+function countsFrom(snapshot: PulseSnapshot | null): {
   readonly freshnessDebtRows: number | null;
   readonly incidents: number | null;
   readonly obligations: number | null;
@@ -111,14 +129,14 @@ export async function readPulse(
 ): Promise<LivePulse> {
   const [heartbeat, snapshot, research, decisions, receipts, jobs] = await Promise.all([
     reading("the runner's heartbeat", async () => (await repos.runnerHeartbeat.read(RUNNER_ID)) ?? null),
-    reading("the control centre snapshot", async () => (await repos.ownerSnapshots.read(SNAPSHOT_ID)) ?? null),
-    reading("the research lane's state", async () => (await repos.researchState.read(RESEARCH_STATE_ID)) ?? null),
+    reading("the control centre snapshot", async () => (await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, PULSE_SNAPSHOT_FIELDS)) ?? null),
+    reading("the research lane's state", async () => (await repos.researchState.readNarrowed(RESEARCH_STATE_ID, PULSE_RESEARCH_FIELDS)) ?? null),
     reading("the decisions you have recorded", async () => repos.ownerDecisions.read(DECISION_LOG_KEY)),
     reading("what this console has already done", async () => repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY)),
     reading("the jobs running for you", async () => repos.agentJobs.read(AGENT_JOB_LOG_KEY)),
   ]);
 
-  const snapshotValue = snapshot.value?.value ?? null;
+  const snapshotValue = (snapshot.value?.value ?? null) as PulseSnapshot | null;
   const counts = countsFrom(snapshotValue);
 
   /*

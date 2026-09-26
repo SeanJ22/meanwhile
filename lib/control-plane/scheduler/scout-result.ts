@@ -82,7 +82,10 @@ export const SCOUT_OUTCOMES = [
   "EVIDENCE_FOUND",
   /** A specific adapter is named and nothing else stands in the way. REQUIRES_NEW_ADAPTER. */
   "NEEDS_ADAPTER",
-  /** Every walked rung hit a wall or a disallow. BLOCKED_CURRENTLY. */
+  /**
+   * Every walked rung hit an access control (a login or 401, a paywall, a 403 or bot challenge, a 429). BLOCKED_CURRENTLY.
+   * robots.txt is never a wall: it is recorded and does not refuse a public page (owner decision 2026-09-25).
+   */
   "BLOCKED",
   /** The ladder was walked to the declared minimum and nothing advanced. The Attempt ABORTS; the obligation stays owed. */
   "NO_PROGRESS",
@@ -444,7 +447,10 @@ export const SCOUT_REFUSALS = [
   "SCOUT_PROVENANCE_ABSENT",
   /** RULING 243: the model's observedOn / permission / recordClass disagrees with the machine's derivation. */
   "SCOUT_PROVENANCE_DISAGREES",
-  /** RULING 243: the cited artifacts yield no single verdict (none with provenance, disagreeing verdicts, or a DISALLOWED retrieval). */
+  /**
+   * RULING 243: the cited artifacts yield no single verdict (none with provenance, or disagreeing verdicts). A
+   * DISALLOWED retrieval is no longer one of these: robots.txt is recorded, never a refusal (owner decision 2026-09-25).
+   */
   "SCOUT_PROVENANCE_UNDERIVABLE",
   /** RULING 244: the executor decision was DETERMINISTIC (a graduated or declared route) and the model executor was reached anyway. */
   "SCOUT_GRADUATED_ROUTE",
@@ -486,13 +492,14 @@ export function distinctEvidenceRungs(rungs: readonly ScoutRung[]): number {
 
 /* --------------------------------------------- machine-owned provenance */
 
-/** The methodRouteId of a robots document. It is the permission INSTRUMENT, never the route's evidence. */
+/** The methodRouteId of a robots document. It is the robots.txt RECORD, never the route's evidence. */
 export const ROBOTS_ROUTE_ID = "scout:read_permission";
 
 export const PROVENANCE_RULE =
-  "observedOn = the earliest retrievedAt date (UTC) among the cited artifacts; permission = the verdict the cited " +
-  "non-robots artifacts were retrieved under (those at the candidate URL first, then its host, then all cited), " +
-  "refused when they disagree or any cited retrieval was DISALLOWED; recordClass = the obligation's; " +
+  "observedOn = the earliest retrievedAt date (UTC) among the cited artifacts; permission = the robots.txt verdict " +
+  "the cited non-robots artifacts were retrieved under (those at the candidate URL first, then its host, then all " +
+  "cited), recorded as evidence and never a refusal (owner decision 2026-09-25), refused only when they disagree " +
+  "so no single verdict can be recorded; recordClass = the obligation's; " +
   "evidenceArtifactIds = the cited ids the vault or inherited evidence holds";
 
 export interface MachineProvenance {
@@ -550,14 +557,11 @@ export function deriveCandidateProvenance(input: {
   }
   const observedOn = dates.reduce((a, b) => (a < b ? a : b));
 
-  const disallowed = withRecord.filter((p) => p.permission === "DISALLOWED");
-  if (disallowed.length > 0) {
-    return {
-      ok: false,
-      code: "SCOUT_PROVENANCE_UNDERIVABLE",
-      detail: `${label} cites ${disallowed.map((p) => p.artifactId).join(", ")}, retrieved under DISALLOWED; a disallowed retrieval cannot substantiate a route`,
-    };
-  }
+  /*
+   * A page retrieved under a DISALLOWED or CANNOT_TELL robots.txt verdict substantiates a route like any other public
+   * page: the verdict is recorded on the candidate, never a refusal (owner decision 2026-09-25, ROBOTS_BLOCKS_ACQUISITION
+   * is false). What stops a page is an access control (lib/hunt/access-control.ts), and the tools report that as a wall.
+   */
   const pages = withRecord.filter((p) => p.methodRouteId !== ROBOTS_ROUTE_ID);
   if (pages.length === 0) {
     return {
@@ -800,23 +804,39 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
 /* --------------------------------------------------- prior-rung classes */
 
 /**
- * Whether a prior rung's failure is DURABLE (a wall, a disallow, a not-found,
- * a permission the tools will not open) or TRANSIENT (their side broke, the
- * transport timed out). RULING 244 forbids re-walking a rung recorded FAILED;
- * RULING 53 says absences expire and a transport failure is a fact about a
- * moment. So a durable failure is refused for `REWALK_REFUSAL_DAYS`, and a
- * transient one is not refused at all. Classified from the machine-written
- * `observed` line, which is the only record older results carry.
+ * Whether a prior rung's failure is DURABLE (an access control — a 401/403/429
+ * wall or a bot challenge — a not-found, an unvaulted read) or TRANSIENT (their
+ * side broke, the transport timed out). A rung recorded as durably failed is not
+ * re-walked for `REWALK_REFUSAL_DAYS`; absences expire, and a transport failure
+ * is a fact about a moment, so a transient one is not refused at all.
+ * Classified from the machine-written `observed` line, which is the only record
+ * older results carry.
+ *
+ * ROBOTS.TXT IS NEVER A DURABLE FAILURE. Before the owner decision of
+ * 2026-09-25 the tools refused a DISALLOWED or CANNOT_TELL host without sending
+ * a request ("permission DISALLOWED (...); no request sent"). Those rungs are
+ * `ROBOTS_ONLY`: nothing was asked of the page, nothing failed, and the rung is
+ * walked again now that robots.txt is recorded and never refuses a public page.
+ * A `read_permission` rung is the robots record itself, never a failure.
  */
 export const REWALK_REFUSAL_DAYS = 30;
 
-export type PriorFailureClass = "DURABLE" | "TRANSIENT" | "NOT_A_FAILURE";
+export type PriorFailureClass = "DURABLE" | "TRANSIENT" | "ROBOTS_ONLY" | "NOT_A_FAILURE";
 
-export function classifyPriorRung(rung: { readonly observed: string; readonly ok?: boolean | null }): PriorFailureClass {
+/** The observed line of a rung the tools refused for robots.txt alone, before 2026-09-25 (historical records only). */
+export const ROBOTS_ONLY_REFUSAL = /permission (DISALLOWED|CANNOT_TELL)\b[^\n]*no request sent/i;
+
+export function classifyPriorRung(rung: {
+  readonly observed: string;
+  readonly ok?: boolean | null;
+  readonly tool?: string;
+}): PriorFailureClass {
   const o = rung.observed;
   if (rung.ok === true) return "NOT_A_FAILURE";
+  if (rung.tool === "read_permission") return "NOT_A_FAILURE";
+  if (ROBOTS_ONLY_REFUSAL.test(o)) return "ROBOTS_ONLY";
   if (/transport failure|browser failure|timed out|timeout|aborted|HTTP 5\d\d|empty render/i.test(o)) return "TRANSIENT";
-  if (/\(wall\)|HTTP 4\d\d|permission (DISALLOWED|CANNOT_TELL)|NOT VAULTED|0 bytes/i.test(o)) return "DURABLE";
+  if (/\(wall\)|HTTP 4\d\d|\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)|NOT VAULTED|0 bytes/i.test(o)) return "DURABLE";
   if (rung.ok === false) return "TRANSIENT";
   return "NOT_A_FAILURE";
 }

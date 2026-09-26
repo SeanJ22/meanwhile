@@ -8,6 +8,8 @@ export interface PublicPageRead {
   readonly html: string;
   /** Observed after opening this exact candidate's Battlecard and Sources controls. */
   readonly openedLinks?: readonly { readerKey: string; href: string; domSha256: string }[];
+  /** Exact failure at the visible control; never inferred from stored publication. */
+  readonly failures?: readonly { readerKey: string; reason: string }[];
 }
 
 const entities = (v: string): string => v.replace(/&(?:amp|quot|apos|lt|gt|#\d+|#x[a-f\d]+);/gi, s => {
@@ -62,7 +64,7 @@ export async function collectServedReader(input: {
     const visible = page?.status === 200 && (opened !== undefined || campaignVisibleInHtml(page.html, record.id, record.campaign.url));
     witnesses.push({ ...base, responseSha256: opened?.domSha256 ?? (page ? createHash("sha256").update(page.html).digest("hex") : null),
       state: visible ? "CONFIRMED" : "NOT_OBSERVED",
-      reason: visible ? opened ? "Exact candidate Battlecard → Sources → verified campaign link observed on the public ballot." : "Exact candidate container and verified campaign link observed on the public ballot." : `Exact candidate and campaign link not observed${page ? ` (HTTP ${page.status})` : " (read failed)"}.` });
+      reason: visible ? opened ? "Exact candidate Battlecard → Sources → verified campaign link observed on the public ballot." : "Exact candidate container and verified campaign link observed on the public ballot." : page?.failures?.find(x => x.readerKey === record.id)?.reason ?? `Exact candidate and campaign link not observed${page ? ` (HTTP ${page.status})` : " (read failed)"}.` });
   }
   return { checkedAt: input.now, witnesses, errors };
 }

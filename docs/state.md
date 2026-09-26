@@ -1,6 +1,23 @@
-## Current release checkpoint — September 26, 2026, 11:25 AM Arizona MST
+## Current release checkpoint — September 26, 2026, 1:25 PM Arizona MST
+
+PRs #429 (401d84db) and #430 (00a8db9f) are deployed; the normal runner adopted #430 with successful passes at 12:38 and 12:42 PM. The hunt remains paused and NOT READY. Its only new spending cap is $50 of Anthropic tokens for this hunt; other service costs remain separate.
+
+The Ask source-loading repair at 6fb3eb7a passed its full reader proof: 20,477 component cases, zero closure failures and 29/29 census tests. Evidence is committed at d99340fc. The independent OCR, exact shared-scope preview, public-readback failure details and publication wake-up changes do not intersect that proof's source hashes and are being combined for final gates. OCR now rasterizes scanned PDF pages before Tesseract; a retained scanned government PDF passed through the actual Scout extractor. Transcription remains unverified until the normal validation chain passes.
+
+The separate OCR/Admin gate run found raw Admin timestamps and a hardcoded test origin (both corrected), a governance negative-test failure not reproduced in isolated or concurrent generator checks (exact refusal diagnostics strengthened), and Turbopack refusing the checkout's dependency junction (own locked dependencies installed; production build passed). No failed gate was waived. Final integrated gates, CI, deployment, normal runner capability and genuinely cold production Ask timing remain required. Full scope/source connections and the incorrect Pima-only ballot note shown for Cochise remain launch blockers.
+
+## Prior checkpoint — September 26, 2026, 11:50 AM Arizona MST
+## Current release checkpoint — September 26, 2026, 11:50 AM Arizona MST
+
+PR #429 is deployed as 401d84db; its 16 local gates and production integrity checks passed. Seven genuinely cold Ask requests on the new release completed in 2,672–3,128 ms; four exceeded three seconds. A reused instance also took 3,299 ms. None of these failures is hidden by a warm retry. The Vail location/time and dated Mesa answers are now confirmed on production. Full 85635 readiness remains NOT READY and the hunt remains paused.
+
+The next Ask repair defers unrelated Pima finance, federal vote/key-vote, statement and executive-action evidence for meeting-shaped questions. It still loads the complete person/ballot/body identity inventory; only the existing lexical binder's proven sitting answer can leave those families unread. Any unresolved binding restores the full edge bundle and original readers before interpretation. The grounded-route, edge-source and topic regression checks passed (54 tests). This changes reader-bound code, so its reader closure must be renewed before release; it has no production speed claim yet. Coverage follow-up #430 is separate; its test suite passed 8,420 with one skip, while builds and fresh CI against main are still completing.
+
+## Prior checkpoint — September 26, 2026, 11:25 AM Arizona MST
 
 Focused follow-up on the pending 99fd0136 release: Admin coverage now advances old registry labels from the same body's measured publication/confirmation. A later failed read retains the recorded route and its separate failure status; an attempted but unconfirmed read is unresolved, not never walked. No geographic-name or sibling-body success is borrowed. Preview counts and named rows use the same observation. Fourteen focused checks pass, with prior type/lint checks also passing; these changes do not intersect the reader proof's 577 bound paths. This is a tested follow-up, not deployed or hunt-ready evidence. Paid acquisition remains paused.
+
+## Prior checkpoint — September 26, 2026, 11:12 AM Arizona MST
 
 The cf06b463 full gates again passed 15/16: 8,414 tests passed, one failed and one was skipped. The remaining failure was the committed guard census retaining the old name of the deliberately corrected free-discovery test. Its explicit generated rename is committed in 99f84fc1; no test was removed and the census gate is unchanged. The failed receipt is preserved as gate-run-cf06b463-failed.json. Repair 938e5dbe also recovers transient cycle-lease reads within existing bounded retry rules and names partial Admin readings. Lease writes remain single attempt, another holder remains exclusive, and persistent read failures remain failures. Targeted census/discovery/lease/parser checks pass (27 tests); final full gates are still required. The production 10:35 AM cycle's lease-read timeout is the recorded trigger.
 

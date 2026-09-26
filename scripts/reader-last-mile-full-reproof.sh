@@ -71,7 +71,7 @@ export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--network-family-autoselecti
 LOG=".scratch/reproof-step.log"; mkdir -p .scratch
 mask() { sed -E 's#postgres(ql)?://[^ "]*#postgres://<redacted>#g'; }
 
-# run LABEL -- CMD... ; retries once on any failure. When the log shows this host
+# run LABEL -- CMD... ; retries only a classified store outage. When the log shows this host
 # could not reach the store, that is transient infrastructure, not a proof result:
 # wait and re-ask, up to STORE_RETRY_MAX attempts STORE_RETRY_WAIT_MS apart. An
 # immediate retry lands in the same outage window (seen 2026-09-22: intermittent
@@ -90,7 +90,7 @@ run() { local label="$1"; shift; local e attempt=0
       echo "store unreachable from this host — re-asking in $((STORE_RETRY_WAIT_MS / 1000))s"
       node -e "setTimeout(() => {}, $STORE_RETRY_WAIT_MS)"; continue
     fi
-    [ "$attempt" -lt 2 ] && continue; break
+    break
   done
   echo "!!! FAILED $label — tail:"; tail -25 "$LOG" | mask; exit "$e"; }
 # proof OUTPUT_OR_EMPTY SCRIPT [LOADER]  (LOADER defaults to tsx; use "test" for in-process CSS renders)

@@ -160,12 +160,15 @@ test("a hand-edited generated view is caught by governance:check", () => {
     const p = join(dir, "docs", "governance", "rulings-index.md");
     writeFileSync(p, readFileSync(p, "utf8") + "\n\n## RULING 999 — smuggled in by hand\n", "utf8");
     let failed = false;
+    let output = "";
     try {
-      runTypedScript(join(dir, "scripts", "governance-check.mts"), dir);
-    } catch {
+      output = runTypedScript(join(dir, "scripts", "governance-check.mts"), dir);
+    } catch (error) {
       failed = true;
+      output = String((error as { stdout?: string }).stdout ?? "");
     }
-    assert.ok(failed, "a hand-edited generated view must fail governance:check");
+    assert.ok(failed, `a hand-edited generated view must fail governance:check; checker output:\n${output}`);
+    assert.match(output, /STALE: docs\/governance\/rulings-index\.md/, "the refusal must identify the changed view, not an unrelated process error");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

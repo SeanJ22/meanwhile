@@ -42,3 +42,12 @@ test("collector shares one public read, records exact approvals and holds missin
   assert.equal(result.witnesses[0].approvalId, "a:approved");
   assert.match(result.witnesses[0].responseSha256!, /^[a-f0-9]{64}$/);
 });
+
+test("failed public controls retain the exact blocker for only that reader key", async () => {
+  const record = (id: string) => ({ id, candidacyId: id, campaign: { url: "https://campaign.test/", evidence: { approvalItemId: id, approvalRecordId: "approved" } } }) as DerivedCampaignSiteRecord;
+  const url = `${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`;
+  const result = await collectServedReader({ now: "2026-09-26T09:00:00Z", versionId: "d1", records: [record("a"), record("b")], destinations: new Map([["a", url], ["b", url]]), read: async () => ({ status: 200, html: "", failures: [{ readerKey: "a", reason: "Candidate absent from current certified lineup." }] }) });
+  assert.equal(result.witnesses[0].state, "NOT_OBSERVED");
+  assert.equal(result.witnesses[0].reason, "Candidate absent from current certified lineup.");
+  assert.match(result.witnesses[1].reason, /not observed/);
+});

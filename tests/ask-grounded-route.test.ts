@@ -74,6 +74,9 @@ interface GroundedBody {
   candidates?: string[];
   clarification?: string;
   trace?: {
+    sourcesLoaded?: string;
+    preloads?: Record<string, number>;
+    preloadSources?: Record<string, string>;
     resolution: { state: string; basis?: string; subjectId?: string | null };
     retrieval: { selection: string; recordCount: number };
     answerMode: string;
@@ -127,6 +130,11 @@ test("RED CONTROL: 'What's on the Vail school district agenda?' resolves Vail an
   assert.equal(body.subject?.id, VAIL_BOARD, "the BODY the reader NAMED, not its division");
   assert.equal(body.trace?.resolution.state, "BOUND");
   assert.equal(body.trace?.retrieval.selection, "NEXT", "'what's on the agenda' means the next sitting");
+  assert.equal(body.trace?.sourcesLoaded, "IDENTITY_AND_MEETINGS");
+  for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
+    assert.equal(body.trace?.preloads?.[key], undefined, `a bound meeting question never reads ${key}`);
+    assert.equal(body.trace?.preloadSources?.[key], undefined, "an unread family is not mislabeled as a database read");
+  }
 
   const meeting = body.records?.find((r) => r.kind === "MEETING");
   assert.ok(meeting, "the chosen sitting must travel as a record");
@@ -135,6 +143,14 @@ test("RED CONTROL: 'What's on the Vail school district agenda?' resolves Vail an
     "apptegy:vail:60703698",
     "the next future Vail sitting as of 2026-08-28",
   );
+});
+
+test("a meeting-shaped question without a proved body restores all evidence before fallback", async () => {
+  const body = await ask("When does the Unheld Example City Council meet next?");
+  assert.equal(body.trace?.sourcesLoaded, "ALL");
+  for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
+    assert.equal(typeof body.trace?.preloads?.[key], "number", `fallback still reads ${key}`);
+  }
 });
 
 test("RED CONTROL: the SAME question in the past tense selects a DIFFERENT, earlier sitting", async () => {

@@ -1,6 +1,6 @@
 {
-  "exactHead": "814604f8a83a31442a5f3cec9cccda1416d29af5",
-  "buildId": "YDf1MQD597zmKGI_RgU_T",
+  "exactHead": "6fb3eb7a9ee63cd562e524cf26ca846cb52694dc",
+  "buildId": "jJF5gsswUQlG4MKgj3WF8",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -20,7 +20,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "0f4d0f16ff5064e5dbee0b441fe42f76509dd03416f304a6062d221dbd460369"
+      "sha256": "203e1f594b74e78d53883ce7938778f8923c413163ec3d89ad8cc9f7c409a3fc"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1984,7 +1984,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "16b9f47d086e3155f3c18d284125cacf952f56c7d0f0bfc21beadf88a023953b"
+      "sha256": "302c35cc1173debc50d6f2a18047dbeac494ebc98dcdf4d6a87f57cc058c504e"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -14232,8 +14232,9 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
+          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
           "sourceUrls": [
+            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",

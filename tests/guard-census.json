@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 866,
-    "named": 8293,
+    "files": 869,
+    "named": 8306,
     "dynamic": 33
   },
   "files": {
@@ -606,6 +606,13 @@
     "tests/admin-scope-preview.test.ts": {
       "names": [
         "scope preview retains body identity, shared records and partial ZIP coverage"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-scope-work.test.ts": {
+      "names": [
+        "provider applicability survives restart, avoids rewrites and removes withdrawn declarations",
+        "scope preview reuses shared records and retains unknowns without including another district or sibling body"
       ],
       "dynamic": 0
     },
@@ -1295,6 +1302,7 @@
         "RED CONTROL: the sitting a reader reads is the LOCAL day, not the UTC day",
         "SIGNAL: a real reader Ask through the real route writes no interaction row",
         "SOURCES: an answer does not carry documents it did not rest on",
+        "a meeting-shaped question without a proved body restores all evidence before fallback",
         "a question about a government we do not hold says so, and never substitutes a nearby one"
       ],
       "dynamic": 0
@@ -1622,9 +1630,10 @@
       "names": [
         "a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch",
         "an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write",
+        "an unsettled meeting-shaped question restores deferred edge evidence without falling through to the database",
         "the warm call settles exactly the sources the Ask preloads, by the names its trace times them under",
         "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left",
-        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads"
+        "with the C20 edge, a cold Mesa question reads the complete identity inventory but skips unrelated evidence"
       ],
       "dynamic": 0
     },
@@ -2551,6 +2560,13 @@
         "the host list is not a pattern over the word 'party'",
         "the label NEVER characterises the party's politics",
         "the pill row asks the shared module rather than testing the URL itself"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-publication-due.test.ts": {
+      "names": [
+        "new approvals enter the normal publication frontier before hourly cadence without changing other families",
+        "publication admission uses a bounded approval clock and preserves unread errors"
       ],
       "dynamic": 0
     },
@@ -4076,6 +4092,7 @@
     },
     "tests/delivery-trail.test.ts": {
       "names": [
+        "Admin retains failed readback reason and time without turning it into verified delivery",
         "MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records",
         "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
         "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
@@ -7584,6 +7601,14 @@
       ],
       "dynamic": 0
     },
+    "tests/ocr-rasterization.test.ts": {
+      "names": [
+        "failure on a later scanned page never publishes a truncated extraction",
+        "missing rasterizer and incomplete page conversion refuse OCR without false empty success",
+        "scanned PDF pages are rasterized before OCR, numerically ordered and cleaned up"
+      ],
+      "dynamic": 0
+    },
     "tests/office-blurbs.test.ts": {
       "names": [
         "a New Jersey mayor is never described as a city's elected leader",
@@ -10587,6 +10612,8 @@
         "SEEDED (e): the (N+1)th request to one host is refused, naming the count; another host is unaffected",
         "SEEDED (f): instruction-shaped page text comes back verbatim inside the DATA wrapper, after the untrusted header",
         "SEEDED (g): every successful fetch returns a rung whose artifactIds are non-empty and reported in artifacts and the toolkit's set",
+        "Scout PDF access uses OCR only for unread scanned pages and preserves original vaulted bytes",
+        "Scout reports unavailable scanned-PDF extraction instead of a successful empty document",
         "a 403 is a WALL: the challenge page is vaulted DIAGNOSTIC, its body is never shown, and the rung says (wall)",
         "a PDF is vaulted as bytes BEFORE extraction; the model gets the artifact id, byte length and extracted text",
         "a binary body with no vaultBytes in the runtime is refused by name, and nothing of it is shown",
@@ -10718,6 +10745,7 @@
         "Battlecard evidence belongs only to the candidate whose controls were opened",
         "a witness cannot transfer to a new approval or survive stale time",
         "collector shares one public read, records exact approvals and holds missing destinations",
+        "failed public controls retain the exact blocker for only that reader key",
         "public readback requires the exact candidate container, not another card or serialized script"
       ],
       "dynamic": 0

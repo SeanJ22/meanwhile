@@ -27,7 +27,7 @@ import {
   type RenderedNumber,
 } from "./owner-surface.ts";
 import { formatEastern } from "./eastern-time.ts";
-import { servedWitness, type ServedReaderReadback } from "./served-reader.ts";
+import { latestServedObservation, servedWitness, SERVED_READER_MAX_AGE_MS, type ServedReaderReadback } from "./served-reader.ts";
 import { stageCounts, type StageCounts } from "./promotion/pipeline.ts";
 import {
   PIPELINE_STAGES,
@@ -268,6 +268,9 @@ export function buildDeliveryTrail(
   for (const s of states) {
     const approved = s.byStage.APPROVED_FOR_PROMOTION;
     if (!approved) continue;
+    const observed = latestServedObservation(input.servedReader, s.itemId, approved.recordId);
+    const observationAge = observed ? Date.parse(readAt) - Date.parse(observed.checkedAt) : NaN;
+    const stale = observed !== null && !(observationAge >= 0 && observationAge <= SERVED_READER_MAX_AGE_MS);
     promotions.push({
       subjectId: s.subjectId,
       recordClass: approved.recordClass,
@@ -276,8 +279,10 @@ export function buildDeliveryTrail(
       approvedAt: approved.at,
       changeSummary: promotionChangeSummary(s),
       version: approved.recordId,
-      destination: witnessed.get(s.itemId)?.url ?? "NOT_OBSERVED — no current public readback for this exact approval",
-      checkedAt: witnessed.get(s.itemId)?.checkedAt ?? null,
+      destination: witnessed.get(s.itemId)?.url ?? (observed
+        ? `NOT_OBSERVED${stale ? " (stale readback)" : ""} — ${observed.reason}`
+        : "NOT_OBSERVED — no public readback recorded for this exact approval"),
+      checkedAt: witnessed.get(s.itemId)?.checkedAt ?? observed?.checkedAt ?? null,
     });
   }
 

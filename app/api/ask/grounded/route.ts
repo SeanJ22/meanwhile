@@ -1,7 +1,7 @@
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
-import type { AuthorityFamily, PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { AUTHORITY_FAMILIES, type AuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -50,7 +50,7 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { groupMoneyShapeForBoundSubject, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
@@ -711,6 +711,13 @@ export async function POST(request: Request) {
    * request or relabelling every unrelated source as unavailable.
    */
   const topicRoute = topicFocusedQuestion(question);
+  // A shape is only a scheduling hint here. The complete subject inventory
+  // still loads, and lexicalReading below must prove the body binding before
+  // unrelated evidence may stay unread. A failed/ambiguous binding restores
+  // every family before the normal interpretation and retrieval path runs.
+  const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
+  const deferUnrelatedEvidence = !topicRoute && sittingShapes.has(lexicalQuestionShape(question)?.shape ?? "");
+  const unrelatedFamilies = new Set<AuthorityFamily>(["pima-finance", "federal-votes", "federal-key-votes", "officeholder-statements", "executive-actions"]);
   /*
    * **WHICH READ A COLD REQUEST WAITS ON, NAMED.** (2026-09-24, C20.) A cold
    * Pima topic request spent 2,525 ms in `sourcePreloads` with no breakdown,
@@ -761,7 +768,8 @@ export async function POST(request: Request) {
   meetingsRead.catch(() => undefined);
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
-    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
+    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
+      deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   const essentialPreloads = [
@@ -819,18 +827,21 @@ export async function POST(request: Request) {
     stateVotesRead ??= settleGroundedSourcePreloads([...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))));
     return stateVotesRead;
   };
+  const unrelatedPreloads = [
+    timed("azPimaFinance", settleAzPimaFinanceRead),
+    timed("federalVotes", settleFederalVotesRead),
+    timed("federalKeyVotes", settleFederalKeyVotesRead),
+    timed("officeholderStatements", settleOfficeholderStatementsRead),
+    timed("executiveActions", settleExecutiveActionsRead),
+  ];
   const deferrablePreloads = [
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
     timed("stateMoney", settleStateMoneyReads),
-    timed("azPimaFinance", settleAzPimaFinanceRead),
-    timed("federalVotes", settleFederalVotesRead),
-    timed("federalKeyVotes", settleFederalKeyVotesRead),
     timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
     timed("candidateProfiles", settleCandidateProfilesRead),
     timed("candidateCorpus", settleCandidateCorpusRead),
-    timed("officeholderStatements", settleOfficeholderStatementsRead),
-    timed("executiveActions", settleExecutiveActionsRead),
+    ...(!deferUnrelatedEvidence ? unrelatedPreloads : []),
   ];
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
   // The recorded outcomes are what a topic answer leads with. A cold read that
@@ -1164,6 +1175,28 @@ export async function POST(request: Request) {
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
   });
+  if (deferUnrelatedEvidence) {
+    if (lexical && sittingShapes.has(lexical.shape)) {
+      trace.sourcesLoaded = "IDENTITY_AND_MEETINGS";
+      for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
+        delete trace.preloadSources![key];
+      }
+    } else {
+      // Enter in this async scope, not inside a preload helper: otherwise the
+      // AsyncLocalStorage context would not reach the subsequent readers.
+      if (edgeManifest?.authorityArtifacts) {
+        authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
+        if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+      }
+      trace.preloadSources = { ...trace.preloadSources,
+        azPimaFinance: promotedSource("pima-finance"), federalVotes: promotedSource("federal-votes"),
+        federalKeyVotes: promotedSource("federal-key-votes"), officeholderStatements: promotedSource("officeholder-statements"),
+        executiveActions: promotedSource("executive-actions"),
+      };
+      await settleGroundedSourcePreloads(unrelatedPreloads);
+      trace.sourcesLoaded = "ALL";
+    }
+  }
   const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskRoleModel("READER"));
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
   // The model's reading is requested first; the code's reading runs while it is in flight.

@@ -274,9 +274,11 @@ export async function syncObligations(
     };
 
     const changed: string[] = [];
-    for (const key of Object.keys(o) as (keyof FreshnessObligation)[]) {
+    for (const key of new Set([...Object.keys(o), "scopeDivisions"] as (keyof FreshnessObligation)[])) {
       if ((RUNTIME_OWNED as readonly string[]).includes(key)) continue;
-      if (held[key] !== o[key]) changed.push(key);
+      if (key === "scopeDivisions") {
+        if (canonicalJson(held.scopeDivisions ?? []) !== canonicalJson(o.scopeDivisions ?? [])) changed.push(key);
+      } else if (held[key] !== o[key]) changed.push(key);
     }
 
     if (changed.length === 0) {

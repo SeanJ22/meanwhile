@@ -93,6 +93,10 @@ export interface FreshnessObligation {
   readonly recordClass: string;
   /** The canonical subject: a body id, a division, a committee. */
   readonly subjectId: string;
+  /** Applicability declared by the source provider, including shared state or
+   * federal records. Stored with the obligation so Admin can preview the same
+   * work without reconstructing a candidate's geography from its name. */
+  readonly scopeDivisions?: readonly string[];
   /** The route this obligation is worked through, when one is known. */
   readonly routeId: string | null;
   readonly active: boolean;

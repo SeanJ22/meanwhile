@@ -46,8 +46,8 @@ function meetingRecord(sitting: ComposableSitting, bodyId: string, url: string):
   return { kind: "MEETING", id: sitting.id, bodyId, text: `${sitting.title}.`, occurredAt: sitting.startsAt, sourceUrl: url };
 }
 
-function packOf(subject: { id: string; name: string }, records: EvidenceRecord[]): EvidencePack {
-  return { question: QUESTION, intent: "PAST_MEETING", temporal: { kind: "LAST" }, subject: { kind: "BODY", ...subject }, records, gaps: [], denominators: {}, today: "2026-09-25" };
+function packOf(subject: { id: string; name: string }, records: readonly EvidenceRecord[]): EvidencePack {
+  return { question: QUESTION, intent: "PAST_MEETING", temporal: { kind: "LAST" }, subject: { kind: "BODY", ...subject }, records: [...records], gaps: [], denominators: {}, today: "2026-09-25" };
 }
 
 /** The described actions: the phrases after "Recorded actions described here: N of M — ", up to that sentence's end. */

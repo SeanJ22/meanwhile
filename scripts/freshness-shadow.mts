@@ -122,11 +122,13 @@ import {
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
   CAMPAIGN_SITE_BUDGET_MS,
+  CAMPAIGN_SITE_STOP_GRACE_MS,
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
   type CampaignSiteCycleReport,
+  withinWallTime,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
@@ -220,7 +222,7 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -296,6 +298,8 @@ import {
   resolveRollingCeiling,
   scheduledBlackoutAt,
   scoutEscalationReservation,
+  modelRequestWorstCaseUsd,
+  modelResponseUsd,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import {
@@ -321,9 +325,19 @@ import {
   assignmentBudgetsOf,
   assignmentCycleReading,
   assignmentMembership,
+  malformedAssignmentBudgetsOf,
   type AssignmentBudgetGate,
   type AssignmentCycleReading,
 } from "../lib/control-plane/expansion/assignment-budget.ts";
+import {
+  DurableSpendHolds,
+  JobSpend,
+  SendBudgetRefusal,
+  budgetGuardedTransport,
+  hasBudgetLines,
+  type BudgetLine,
+  type BudgetLines,
+} from "../lib/control-plane/expansion/spend-holds.ts";
 import { evaluateAssignmentFromRecords } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
@@ -492,6 +506,16 @@ const SCOUT_MAX = boundedNumber(
    in a busy-loop. Sized a little above the observed ~$0.45/attempt so the lane
    pauses once it could not afford even one scout. */
 const SCOUT_WORST_CASE_USD = 0.6;
+/*
+ * MW-021 (2026-09-25): what one Scout job holds against a Send or area budget
+ * before it starts — its first attempt's worst case under the bound the loop
+ * enforces (`scoutJobWorstCaseUsd`: (400,000 + 8,192) tokens at Sonnet 5's
+ * dearest $10/MTok = $4.08), never the flat $0.60 above, which sizes only the
+ * Fleet lane's pause. An escalation and every request past the hold must win
+ * their own holds first (`spend-holds.ts`). Null (no stated rate): budgeted
+ * work waits.
+ */
+const SCOUT_JOB_WORST_CASE_USD = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch);
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -1122,6 +1146,8 @@ interface OwnerDispatchRecord {
 const ownerDispatches: OwnerDispatchRecord[] = [];
 const honoredDispatch: string[] = [];
 const dispatchPriority = new Set<string>();
+/** MW-021: obligation id -> the DISPATCH keys this cycle matched it under (the fallback when the dispatch-work plan could not be made). */
+const dispatchMatchReached = new Map<string, string[]>();
 /** The DISPATCH intents this cycle reads, with the matching sentence each HONORED record opens with. */
 const dispatchDetails: { readonly intent: ResearchIntentRequest; readonly detail: string }[] = [];
 for (const pending of intents.pendingDispatch) {
@@ -1131,6 +1157,8 @@ for (const pending of intents.pendingDispatch) {
   );
   const matchedIds = new Set(matched.map((u) => u.obligation.id));
   for (const id of matchedIds) dispatchPriority.add(id);
+  /* MW-021: the Send this cycle reached each matched row under, whether or not its record gets written (the budget gate holds the gap). */
+  for (const id of matchedIds) dispatchMatchReached.set(id, [...(dispatchMatchReached.get(id) ?? []), `dispatch:${pending.intentId}`]);
   const dueAmongMatched = dueThisCycle.filter((d) => matchedIds.has(d.obligation.id)).length;
   const detail = describeDispatchMatch(target, matched.length, allUnits.length, trackedStateCodes);
   ownerDispatches.push({
@@ -1581,7 +1609,7 @@ console.log(
  */
 const expansionBudget = expansionPlan === null
   ? null
-  : armExpansionBudget(expansionPlan, { now: NOW, costs: ledgerUnreadable === null ? costLedger : null, worstCaseUsd: SCOUT_WORST_CASE_USD });
+  : armExpansionBudget(expansionPlan, { now: NOW, costs: ledgerUnreadable === null ? costLedger : null, worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY });
 let expansionReading: ExpansionCycleReading | null = expansionBudget === null || expansionPlan === null
   ? null
   : withCycleCounts(expansionBudget.reading, {
@@ -1637,6 +1665,8 @@ const dispatchTargets: DispatchWorkTarget[] = [];
 let dispatchWork: DispatchWorkReading | null = null;
 /* The Sends this cycle recorded on rows after they were read, for the assignment budgets below. */
 let dispatchRecorded: NonNullable<DispatchWorkApplied["recorded"]> = [];
+/** MW-021: every Send record the dispatch-work plan meant to write this cycle (null: no plan was made). */
+let plannedSendMarks: { readonly obligationId: string; readonly key: string }[] | null = null;
 if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
@@ -1672,6 +1702,7 @@ if (dispatchTargets.length > 0) {
         refusedRegistries,
       },
     });
+    plannedSendMarks = plan.marks.map((m) => ({ obligationId: m.obligationId, key: m.target.key }));
     const applied = dispatchWorkWrites
       ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS })
       : null;
@@ -1719,17 +1750,84 @@ for (const { intent, detail } of dispatchDetails) {
  * ceiling reads. Restrict-only, consulted in `admitScout` after every Fleet gate.
  */
 const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? [])], dispatchRecorded);
+/*
+ * Fail closed (2026-09-25): the Sends this cycle reached each row under — the
+ * records the dispatch-work plan meant to write, or, when no plan could be
+ * made, every pending DISPATCH's own match. A budgeted Send whose record did
+ * not reach the row holds its paid work instead of letting it run unbudgeted.
+ */
+const sendsReachedThisCycle = new Map<string, readonly string[]>();
+if (plannedSendMarks !== null) {
+  for (const m of plannedSendMarks) sendsReachedThisCycle.set(m.obligationId, [...(sendsReachedThisCycle.get(m.obligationId) ?? []), m.key]);
+} else {
+  for (const [id, keys] of dispatchMatchReached) sendsReachedThisCycle.set(id, keys);
+}
 const assignmentSpecs = assignmentBudgetsOf({ scopes: (expansionPlan?.scopes ?? []).map((s) => s.decision), intents: intentLog });
 const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
   now: NOW,
   specs: assignmentSpecs,
   membership: assignmentMembers,
   costs: ledgerUnreadable === null ? costLedger : null,
-  worstCaseUsd: SCOUT_WORST_CASE_USD,
+  worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY,
   /* MW-021: an unread log cannot say which DISPATCH carries a budget, so its work is held (assignment-budget.ts). */
   intentsReadable: intentLogUnreadable === null,
+  /* Fail closed (2026-09-25): a DISPATCH whose budget is unreadable holds its work; so does work this cycle reached under a Send whose record on the row was not written. */
+  malformed: malformedAssignmentBudgetsOf(intentLog),
+  reachedThisCycle: sendsReachedThisCycle,
 });
 const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
+
+/*
+ * **MW-021 — THE SEND AND AREA BUDGETS ARE HARD CAPS.** (2026-09-25;
+ * `lib/control-plane/expansion/spend-holds.ts` carries the design note.) The
+ * gates above decide whether a budget can be checked at all; the dollars are
+ * HELD on the one shared budget ledger, under its compare-and-set, before any
+ * paid call: a Scout job's worst case at admission, an escalation's and a
+ * pre-warm's before they run, and every request past what its job holds. A
+ * settled job books what it measured; an unmeasured job or a crash leaves the
+ * whole hold counting for the rolling 24 hours.
+ */
+const spendHolds = new DurableSpendHolds({ budget: repos.budget, now: nowIso });
+/** The admitted Scout job on each obligation this cycle, with what it holds. */
+const jobSpend = new Map<string, JobSpend>();
+/** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
+const jobSubject = new Map<string, string>();
+let scoutJobSeq = 0;
+/** The Send and area lines one obligation's paid work is held against, or why it cannot be checked. */
+const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lines: BudgetLines } | { readonly code: string; readonly why: string } => {
+  const sends = assignmentBudget.linesFor(obligationId);
+  if ("refusal" in sends) return { code: sends.refusal.code, why: sends.refusal.why };
+  const areas = expansionBudget === null ? { lines: [] as readonly BudgetLine[] } : expansionBudget.gate.linesFor(subjectId);
+  if ("refusal" in areas) return { code: areas.refusal.code, why: areas.refusal.why };
+  return { lines: { sends: sends.lines, areas: areas.lines } };
+};
+/**
+ * A paid request that names no Send obligation (the autonomous Fleet's
+ * auditor and Scouts) cannot be charged to one budget, so it must fit EVERY
+ * Send and area budget in force — the gates' own over-count rule, which can
+ * only hold work back. No budget in force: nothing changes.
+ */
+const unattributedBudgetGuard = (transport: ModelTransport): ModelTransport => async (request) => {
+  const every = [assignmentBudget.allLines(), ...(expansionBudget === null ? [] : [expansionBudget.gate.allLines()])];
+  const lines: BudgetLine[] = [];
+  for (const part of every) {
+    if ("refusal" in part) throw new SendBudgetRefusal(part.refusal.code, part.refusal.why);
+    lines.push(...part.lines);
+  }
+  if (lines.length === 0) return transport(request);
+  const worst = modelRequestWorstCaseUsd(request);
+  if (worst === null) throw new SendBudgetRefusal("ASSIGNMENT_BUDGET", `model ${request.model} has no stated rate, so the request cannot be checked against the budgets in force`);
+  const left = await spendHolds.left(lines);
+  if (left === null) throw new SendBudgetRefusal("ASSIGNMENT_BUDGET", "the shared budget ledger could not be read, so the budgets in force cannot be checked; the request waits");
+  const short = left.find((l) => l.leftUsd < worst);
+  if (short !== undefined) {
+    throw new SendBudgetRefusal(
+      short.line.key.startsWith("area:") ? "SCOPE_BUDGET" : "ASSIGNMENT_BUDGET",
+      `${short.line.label} has $${Math.max(0, short.leftUsd).toFixed(2)} left of its $${short.line.budgetUsd.toFixed(2)} budget, and this request's worst case ($${worst.toFixed(2)}) names no Send, so it must fit every budget in force`,
+    );
+  }
+  return transport(request);
+};
 /* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
@@ -2163,11 +2261,31 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
     const plan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
     if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
     const { model, request } = plan;
+    /*
+     * MW-021 (2026-09-25): the pre-warm is made for the Scouts this cycle
+     * admitted, so when one of them runs under a Send or area budget, the
+     * pre-warm's own worst case is held on those budgets first — refused, it
+     * is skipped by name with no paid call — and its cost is charged there.
+     */
+    const forJob = [...jobSpend.values()][0] ?? null;
+    let prewarmHold: JobSpend | null = null;
+    if (forJob !== null) {
+      const worst = modelRequestWorstCaseUsd(request);
+      if (worst === null) return { status: "SKIPPED", at, model, code: "ASSIGNMENT_BUDGET", detail: `no paid call: ${model} has no stated rate, so the pre-warm cannot be held against the budget of the work it serves`, durationMs: Date.now() - started };
+      prewarmHold = new JobSpend(spendHolds, `prewarm:${NOW}`, forJob.obligationId, forJob.lines);
+      const held = await prewarmHold.admit(worst, "the cycle's pre-warm");
+      if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
+    }
     const transport = fleetSafety.guardedModelTransport("anthropic", "scout-prewarm", anthropicTransport(workerKey));
+    /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
     const response = await transport(request);
     const metered = readMeteredUsage(response.usage ?? {});
     const priced = priceMeteredUsage(model, metered, "5m");
     const durationMs = Date.now() - started;
+    if (prewarmHold !== null) {
+      const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
+      if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
+    }
     const cost: AttemptCost = {
       inputTokens: metered.uncachedInputTokens === null ? null : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0),
       outputTokens: metered.outputTokens,
@@ -2179,7 +2297,13 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
     };
     await recordCost(
       repos,
-      { attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com", jurisdiction: null, project: "freshness", role: "SCOUT", cost, recordedAt: at },
+      {
+        attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com",
+        /* Charged to the budgeted work it was held for, so the Send's and area's history carries it (MW-021); otherwise as before. */
+        jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
+        ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId }),
+        project: "freshness", role: "SCOUT", cost, recordedAt: at,
+      },
       at,
     ).catch(() => undefined);
     if (priced.usd !== null) spentThisCycle += priced.usd;
@@ -2198,9 +2322,25 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  */
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? scoutExecutor({
-      transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
-      /* MW-033: a Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling. */
-      reserveEscalation: scoutEscalationReservation(fleetSafety),
+      /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
+      transport: budgetGuardedTransport({
+        transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
+        job: () => jobSpend.get(scheduled.obligation.id) ?? null,
+        worstCaseOf: modelRequestWorstCaseUsd,
+        priceOf: modelResponseUsd,
+      }),
+      /* MW-033: a Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling —
+         and (MW-021) against the Send and area budgets the job runs under, before its first frontier request. */
+      reserveEscalation: async (request) => {
+        const fleet = scoutEscalationReservation(fleetSafety)(request);
+        if (!fleet.admit) return fleet;
+        const job = jobSpend.get(request.obligationId);
+        if (job === undefined) return fleet;
+        const more = await job.extend(request.worstCaseUsd, `the escalation to ${request.to.model}`);
+        if (more.admit) return fleet;
+        fleet.release();
+        return { admit: false, code: "CEILING", why: `${more.code}: ${more.why}` };
+      },
       toolkitFor: (toolCtx) => buildScoutToolkit(scoutSearch !== null ? { ...toolCtx, search: scoutSearch } : toolCtx),
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
@@ -2421,10 +2561,51 @@ const cycle = await runCycle({
         const scoped = expansionBudget.gate.admit(row.obligation.id, row.obligation.subjectId);
         if (!scoped.admit) return { admit: false, code: scoped.code, why: scoped.why };
       }
-      /* Admission is synchronous, so this re-check agrees with the one above; it takes the Send's hold. */
+      /* The in-memory gates are checked synchronously, so this re-check agrees with the one above; it takes the Send's in-cycle hold. */
       assignmentBudget.admit(row.obligation.id);
       scoutsAdmittedThisCycle += 1;
-      return { admit: true };
+      /*
+       * MW-021 — THE HARD CAP. The job's worst case is held on the shared
+       * budget ledger, atomically against every other Scout and every
+       * overlapping cycle, before it starts; refused, the in-cycle holds above
+       * are returned and the Scout waits, by name.
+       */
+      const undo = (): void => {
+        scoutsAdmittedThisCycle -= 1;
+        expansionBudget?.gate.settle(row.obligation.id, 0);
+        assignmentBudget.settle(row.obligation.id, 0);
+      };
+      const lines = budgetLinesFor(row.obligation.id, row.obligation.subjectId);
+      if ("code" in lines) {
+        undo();
+        return { admit: false, code: lines.code, why: lines.why };
+      }
+      if (!hasBudgetLines(lines.lines)) return { admit: true };
+      if (SCOUT_JOB_WORST_CASE_USD === null) {
+        undo();
+        return { admit: false, code: "ASSIGNMENT_BUDGET", why: "the Scout's start model has no stated rate, so its worst case cannot be held against the budget; the work waits" };
+      }
+      scoutJobSeq += 1;
+      const job = new JobSpend(spendHolds, `scout:${NOW}:${scoutJobSeq}:${row.obligation.id}`, row.obligation.id, lines.lines);
+      return job.admit(SCOUT_JOB_WORST_CASE_USD, `one Scout job's worst case on ${row.obligation.id}`).then((held) => {
+        if (!held.admit) {
+          undo();
+          return { admit: false as const, code: held.code, why: held.why };
+        }
+        jobSpend.set(row.obligation.id, job);
+        jobSubject.set(row.obligation.id, row.obligation.subjectId);
+        return { admit: true as const };
+      });
+    },
+    /* MW-021: a Scout admitted and then not run returns everything its admission held. */
+    onAdmittedNotDispatched: async (row) => {
+      expansionBudget?.gate.settle(row.obligation.id, 0);
+      assignmentBudget.settle(row.obligation.id, 0);
+      const job = jobSpend.get(row.obligation.id);
+      if (job === undefined) return;
+      jobSpend.delete(row.obligation.id);
+      const failed = await spendHolds.settle(job.jobId, 0, nowIso());
+      if (failed !== null) runtimeConditions.push(`a budget hold for ${row.obligation.id} could not be released (${failed}); it counts in full for its window`);
     },
     modelExecutor: scoutFor,
     maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
@@ -2449,6 +2630,13 @@ const cycle = await runCycle({
         expansionBudget?.gate.settle(result.obligationId, result.cost?.usd ?? null);
         /* The same for every Send it held against (MW-021). */
         assignmentBudget.settle(result.obligationId, result.cost?.usd ?? null);
+        /* The durable holds: book what it measured and release the rest; unmeasured, the whole hold keeps counting (MW-021). */
+        const job = jobSpend.get(result.obligationId);
+        if (job !== undefined) {
+          jobSpend.delete(result.obligationId);
+          const failed = await spendHolds.settle(job.jobId, result.cost?.usd ?? null, nowIso());
+          if (failed !== null) runtimeConditions.push(`the budget hold for ${result.obligationId} could not be settled (${failed}); it counts in full for its window`);
+        }
         const at = running.findIndex((r) => r.attemptId === result.attemptId);
         if (at >= 0) running.splice(at, 1);
         laneCounts = { ...laneCounts, modelDispatched: laneCounts.modelDispatched + 1 };
@@ -2661,46 +2849,64 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
   campaignSitesState = "not run: a dry, canary, filtered or blackout cycle reads nothing";
 } else if (intents.runnerPause.paused) {
   campaignSitesState = "not run: the owner has paused the runner";
-} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS > DISPATCH_DEADLINE_MS) {
+} else if (Date.now() + CAMPAIGN_SITE_BUDGET_MS + 2 * CAMPAIGN_SITE_STOP_GRACE_MS > DISPATCH_DEADLINE_MS) {
   campaignSitesState = "not run: less of the cycle's admission window remains than the pass's budget";
 } else {
   const leaveCampaignSites = pending.enter("campaign-sites");
+  /* The pass's budget runs from HERE, its loading included (2026-09-25: loading and store work sat outside it, 93–160 s passes and one 4.5-minute hang). */
+  const campaignStartedMs = Date.now();
+  /* The cycle's own backstop, one grace past the pass's own hard stop: whatever the pass awaits (its loading too), the cycle moves on. */
+  const campaignHardStopMs = CAMPAIGN_SITE_BUDGET_MS + 2 * CAMPAIGN_SITE_STOP_GRACE_MS;
   try {
-    const holdings = candidateEnrichmentHoldings();
-    if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
-    const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-    const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
-    /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
-    let stagingManifest: ReturnType<typeof readStagingManifest> = null;
-    try {
-      stagingManifest = readStagingManifest(ROOT);
-    } catch (error) {
-      runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
+    const pass = await withinWallTime((async () => {
+      const holdings = candidateEnrichmentHoldings();
+      if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
+      const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+      const vaultIndex = await indexVault(join(ROOT, ...VAULT_DIR));
+      /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
+      let stagingManifest: ReturnType<typeof readStagingManifest> = null;
+      try {
+        stagingManifest = readStagingManifest(ROOT);
+      } catch (error) {
+        runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
+      }
+      const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
+      const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+      const report = await runCampaignSiteCycle({
+        startedAtMs: campaignStartedMs,
+        repos,
+        subjects,
+        /* Their leads are read last: a site approved for a candidacy that already carries a campaign link is held, never published. */
+        linkedCandidacies: linked,
+        marginalia: held.responses,
+        gate: readActivationGate(ROOT),
+        now: nowIso(),
+        clock: () => Date.now(),
+        sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
+        open: async ({ url, headers, timeoutMs }) => {
+          const got = await openCampaignSite({ url, headers, timeoutMs });
+          return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+        },
+        spaceOut: spacer,
+        vaultRoot: join(ROOT, ...VAULT_DIR),
+        heldVault: vaultIndex,
+        methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      });
+      return {
+        report,
+        state:
+          `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+          (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
+      };
+    })(), campaignHardStopMs - (Date.now() - campaignStartedMs));
+    if (pass.done) {
+      campaignSites = pass.value.report;
+      campaignSitesState = pass.value.state;
+      if (campaignSites.stoppedAtDeadline === true) runtimeConditions.push(`campaign-site pass stopped at its hard deadline after ${Math.round(campaignSites.elapsedMs / 1000)}s; the leads it had not weighed stay owed (NOT_READ) for the next cycle`);
+    } else {
+      campaignSitesState = `STOPPED: the pass did not return by the cycle's ${campaignHardStopMs / 1000}s backstop (its loading or its own stop hung), so the cycle moved on; every lead it had not weighed stays owed (NOT_READ) for the next cycle`;
+      runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
     }
-    const held = await heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso());
-    const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
-    campaignSites = await runCampaignSiteCycle({
-      repos,
-      subjects,
-      /* Their leads are read last: a site approved for a candidacy that already carries a campaign link is held, never published. */
-      linkedCandidacies: linked,
-      marginalia: held.responses,
-      gate: readActivationGate(ROOT),
-      now: nowIso(),
-      clock: () => Date.now(),
-      sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
-      open: async ({ url, headers, timeoutMs }) => {
-        const got = await openCampaignSite({ url, headers, timeoutMs });
-        return { status: got.status, body: got.bytes, contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
-      },
-      spaceOut: spacer,
-      vaultRoot: join(ROOT, ...VAULT_DIR),
-      heldVault: vaultIndex,
-      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
-    });
-    campaignSitesState =
-      `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
-      (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : "");
   } catch (error) {
     campaignSitesState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(`campaign-site pass ${campaignSitesState}`);
@@ -2756,7 +2962,8 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
-      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)),
+      /* MW-021: the auditor and the autonomous Scouts name no Send obligation, so each request must fit every Send and area budget in force. */
+      ...(modelLaneEnabled ? { transport: unattributedBudgetGuard(fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey))),
         reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
       /* The auditor admits against the ceiling in force, the same one admitScout reads — not the static default. */
       auditCeilingUsd: effectiveCeilingUsd });

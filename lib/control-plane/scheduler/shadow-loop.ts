@@ -222,9 +222,13 @@ export interface ResearchLanes {
    * also records for Admin.
    */
   readonly compareModelRows?: (left: ScheduledObligation, right: ScheduledObligation) => number;
+  /**
+   * May answer asynchronously (MW-021, 2026-09-25): a budgeted Send's or
+   * area's hold is taken on the shared budget ledger before the Scout starts.
+   */
   readonly admitScout: (
     row: ScheduledObligation,
-  ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+  ) => ScoutAdmission | Promise<ScoutAdmission>;
   readonly modelExecutor: DeclaredExecutor | ((row: ScheduledObligation) => DeclaredExecutor);
   readonly maxConcurrentScouts: number;
   readonly scoutLeaseTtlMs: number;
@@ -247,6 +251,12 @@ export interface ResearchLanes {
    */
   readonly scoutDeadlineMs?: number;
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
+  /**
+   * A Scout `admitScout` admitted that then did not run (its occurrence could
+   * not be opened, it was recovered, or an aggregate refused it), so whatever
+   * the admission held is released (MW-021, 2026-09-25).
+   */
+  readonly onAdmittedNotDispatched?: (row: ScheduledObligation, code: string) => void | Promise<void>;
   /**
    * **THE PRE-WARM.** (2026-09-06.) Called ONCE per cycle, before the first
    * admitted Scout is dispatched and after nothing else: it writes the static
@@ -351,6 +361,8 @@ export interface RecoveredOccurrence extends SettledOccurrence {
 }
 
 /** A bounded pool: at most `limit` items in flight, in input order. */
+export type ScoutAdmission = { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+
 async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
   let next = 0;
   const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length || 1)) }, async () => {
@@ -850,7 +862,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         holdModel(row, "BUDGET");
         return;
       }
-      const admit = research.admitScout(row);
+      const admit = await research.admitScout(row);
       if (!admit.admit) {
         deferred.push({
           obligationId: row.obligation.id,
@@ -863,18 +875,21 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       if (opened === false) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
         holdModel(row, "NO_OPEN_OCCURRENCE");
+        if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, "NO_OPEN_OCCURRENCE");
         return;
       }
       /* No Scout runs for a recovered row, so it is not counted as dispatched. */
       if (opened !== true) {
         recover(row, opened.settled);
         modelRecovered += 1;
+        if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, "RECOVERED");
         return;
       }
       /* Counted under the aggregate admission's own code (a wall, a blackout), never a generic AGGREGATE. */
       const refusedBy = aggregateRefusal(row);
       if (refusedBy !== null) {
         holdModel(row, refusedBy);
+        if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, refusedBy);
         return;
       }
       /* Admitted: the static prefix is warmed once, before the first dispatch, and every dispatch waits for it. */

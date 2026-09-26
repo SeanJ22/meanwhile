@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 842,
-    "named": 8135,
+    "files": 843,
+    "named": 8147,
     "dynamic": 33
   },
   "files": {
@@ -2460,16 +2460,19 @@
     },
     "tests/campaign-site-runner.test.ts": {
       "names": [
+        "a fetch that never answers cannot hold the pass: it ends at its wall-time budget and every unread lead stays owed, never refused",
         "a refused lead publishes nothing and keeps its typed reason where Admin reads it",
         "a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it",
         "a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved",
         "per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest",
         "the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key",
         "the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget",
+        "the budget runs from the pass's start, loading included, and a store call that never returns is abandoned at the hard stop",
         "the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins",
         "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it",
         "the pass reads the leads of candidates with no campaign link first; a linked candidate's leads wait, deferred and never refused, and are read once the others are",
-        "who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys"
+        "who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys",
+        "withinWallTime ends a promise that never settles and clears its timer when one does"
       ],
       "dynamic": 0
     },
@@ -10456,6 +10459,20 @@
         "no real credential value appears anywhere in the repository",
         "parsing takes long values, skips comments, and drops short configuration",
         "the placeholder names WHICH credential, so the line stays diagnostic"
+      ],
+      "dynamic": 0
+    },
+    "tests/send-budget-hard-cap.test.ts": {
+      "names": [
+        "N jobs racing for a budget that fits N−1 admit exactly N−1, on one ledger, whatever the interleaving",
+        "a follow-up that would exceed is refused before it is sent: an escalation, and a request past the job's hold",
+        "a job that would exceed the Send's budget is refused before any spend",
+        "a ledger the store cannot read or write refuses the hold, by name: nothing runs unbudgeted",
+        "a missing Send record or an unreadable budget refuses; with no Send budget nothing changes",
+        "a pre-warm holds its own worst case on the budget of the work it serves, and is refused when that does not fit",
+        "a settled job's measured spend counts until the cost history carries it, never twice",
+        "settling releases the unused hold; a failed or unmeasured job keeps its hold; a retry re-reserves; a crash's hold counts until its window ends",
+        "the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60"
       ],
       "dynamic": 0
     },

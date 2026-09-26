@@ -70,6 +70,7 @@ import {
 } from "./reading.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
+import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
 import { stateOfSubject } from "./subjects.ts";
 
 /* ------------------------------------------------------------ territory */
@@ -431,15 +432,20 @@ export class ScopeBudgetGate {
   private readonly refusedBy = new Map<string, number>();
   private readonly admittedBy = new Map<string, number>();
 
+  private readonly historyReadAt: string;
+
   constructor(input: {
     readonly scopes: readonly BudgetScope[];
     readonly worstCaseUsd: number;
     /** Entries on the policy row that are not readable scopes: while > 0, every paid Scout is held. */
     readonly malformedScopes?: number;
+    /** When the scopes' historical spend was read (the cycle's instant). */
+    readonly historyReadAt?: string;
   }) {
     this.scopes = input.scopes;
     this.worstCaseUsd = input.worstCaseUsd;
     this.heldForMalformed = input.malformedScopes ?? 0;
+    this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
   /** The scopes a subject is bound by. */
@@ -448,6 +454,47 @@ export class ScopeBudgetGate {
     return this.scopes.filter((s) =>
       s.resolved ? s.members.has(subjectId) : state === null || s.states.includes(state),
     );
+  }
+
+  /** Every area budget in force as a line, for paid work that names no subject — or the refusal when any cannot be checked. */
+  allLines(): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
+    const refusal = (why: string): { readonly refusal: Extract<BudgetAdmission, { admit: false }> } => ({ refusal: { admit: false, code: SCOPE_BUDGET_CODE, why } });
+    if (this.heldForMalformed > 0) return refusal(`${this.heldForMalformed} selected scope(s) on the owner's policy row could not be read, so no scope budget can be checked`);
+    const lines: BudgetLine[] = [];
+    for (const scope of this.scopes) {
+      if (!scope.resolved || scope.historicalUsd === null || this.cycleUnmeasured.has(scope.key)) return refusal(`${scope.label}'s $${scope.budgetUsd.toFixed(2)} budget cannot be checked (unresolved or unmeasured)`);
+      lines.push({ key: areaBudgetKey(scope.key), label: scope.label, budgetUsd: scope.budgetUsd, historicalUsd: scope.historicalUsd, historyReadAt: this.historyReadAt });
+    }
+    return { lines };
+  }
+
+  /**
+   * The area budget lines a paid job on this subject is held against, for the
+   * durable holds (`spend-holds.ts`): EVERY binding scope must have room — or
+   * the refusal when a scope's budget cannot be checked at all. No lines: no
+   * area budget applies.
+   */
+  linesFor(subjectId: string): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
+    if (this.heldForMalformed > 0) {
+      return {
+        refusal: {
+          admit: false,
+          code: SCOPE_BUDGET_CODE,
+          why: `${this.heldForMalformed} selected scope(s) on the owner's policy row could not be read, so no scope budget can be checked; paid work is held until the scope list is readable`,
+        },
+      };
+    }
+    const lines: BudgetLine[] = [];
+    for (const scope of this.bindingScopes(subjectId)) {
+      if (!scope.resolved) {
+        return { refusal: this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`) as Extract<BudgetAdmission, { admit: false }> };
+      }
+      if (scope.historicalUsd === null || this.cycleUnmeasured.has(scope.key)) {
+        return { refusal: this.refuse(scope, `model spend in ${scope.label} is unmeasured, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked`) as Extract<BudgetAdmission, { admit: false }> };
+      }
+      lines.push({ key: areaBudgetKey(scope.key), label: scope.label, budgetUsd: scope.budgetUsd, historicalUsd: scope.historicalUsd, historyReadAt: this.historyReadAt });
+    }
+    return { lines };
   }
 
   admit(obligationId: string, subjectId: string): BudgetAdmission {
@@ -737,7 +784,7 @@ export function armExpansionBudget(
               : `$${spend24.usd.toFixed(2)} spent in the rolling 24 hours of a $${d.budgetUsd.toFixed(2)} budget: room for paid work here, when the paid lane is open.`,
     };
   });
-  const gate = new ScopeBudgetGate({ scopes: budgetScopes, worstCaseUsd: input.worstCaseUsd, malformedScopes: plan.malformedScopes });
+  const gate = new ScopeBudgetGate({ scopes: budgetScopes, worstCaseUsd: input.worstCaseUsd, malformedScopes: plan.malformedScopes, historyReadAt: input.now });
   return { gate, reading: { ...plan.reading, scopes: readings } };
 }
 

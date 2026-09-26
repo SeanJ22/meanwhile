@@ -150,7 +150,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
 const AZ = "ocd-division/country:us/state:az";
 
 /** One cold Ask: the Mesa question production measured at 14.8 s of source preloads. */
-async function askMesa(): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
+async function askMesa(question = "When does the Mesa City Council meet next?"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
@@ -158,7 +158,7 @@ async function askMesa(): Promise<{ trace: { preloads?: Record<string, number>; 
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
-    body: JSON.stringify({ question: "When does the Mesa City Council meet next?", approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
+    body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
   }));
   assert.equal(response.status, 200);
   return await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
@@ -181,43 +181,47 @@ const DEFERRABLE_FROM_DATABASE = [
 const classOf = (read: string) => read.split(":")[0]!;
 
 const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "azBallot", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
+const UNRELATED_TRACE = new Set(["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]);
 
-test("with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads", async () => {
+test("with the C20 edge, a cold Mesa question reads the complete identity inventory but skips unrelated evidence", async () => {
   process.env.WTP_READER_EDGE_DIR = c20EdgeDir;
   const payload = await askMesa();
-  assert.equal(payload.trace.sourcesLoaded, "ALL", "the question loaded every source");
+  assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
   assert.deepEqual([...databaseReads].sort(), [
     "BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot",
     "CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates",
     "CANDIDATE_PUBLICATION:US-AZ+US-NH+US-NJ:2026-supported-candidates",
     "CURATED_READER_RECORD:US:candidate-campaign-sites-derived",
     "FEC_FUNDING:federal-supported",
-    "FEDERAL_KEY_VOTE:US:reviewed-key-vote-selection:v1",
-    "FEDERAL_ROLL_CALL:US:recent-federal-rollcalls",
-    "LOCAL_CAMPAIGN_FINANCE:US-AZ:county:pima:campaign-finance:2026",
-    "OFFICEHOLDER_STATEMENT:US:covered-officeholders:primary-publications",
     "STATE_CAMPAIGN_FINANCE:US-AZ:campaign-finance:2026",
     "STATE_CAMPAIGN_FINANCE:US-NH:campaign-finance:2026",
     "STATE_CAMPAIGN_FINANCE:US-NJ:campaign-finance:2026",
-    "STATE_EXECUTIVE_ACTION:US-AZ:governor:official-actions",
   ]);
   // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls (2026-09-25; route.ts personStateVotes).
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], "DATABASE", `the trace misnames ${source}`);
+  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "DATABASE", `the trace misnames ${source}`);
 });
 
 test("with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left", async () => {
   process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
   const payload = await askMesa();
-  assert.equal(payload.trace.sourcesLoaded, "ALL", "the question loaded every source");
+  assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
   const moved = databaseReads.filter((read) => DEFERRABLE_FROM_DATABASE.includes(classOf(read)));
   assert.deepEqual(moved, [], "a source the edge carries was read from the database");
   // The Arizona state roll calls (a pointer the edge does not carry) are read only for a question about a
   // state legislator since 2026-09-25 (route.ts personStateVotes), so a Mesa question reads nothing from the database.
   assert.deepEqual([...databaseReads].sort(), []);
   assert.equal(fundingReadState().metadata.versionId, EDGE.funding, "FEC was not served from the edge");
-  assert.equal(azPimaFinanceReadState().metadata.versionId, EDGE.pima, "Pima finance was not served from the edge");
-  assert.equal(federalRollCallsReadState().metadata.versionId, EDGE.federalVotes, "the federal roll calls were not served from the edge");
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], "EDGE", `the trace misnames ${source}`);
+  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "EDGE", `the trace misnames ${source}`);
+});
+
+test("an unsettled meeting-shaped question restores deferred edge evidence without falling through to the database", async () => {
+  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
+  const payload = await askMesa("When does the Unheld Example City Council meet next?");
+  assert.equal(payload.trace.sourcesLoaded, "ALL");
+  assert.deepEqual(databaseReads, []);
+  assert.equal(azPimaFinanceReadState().metadata.versionId, EDGE.pima);
+  assert.equal(federalRollCallsReadState().metadata.versionId, EDGE.federalVotes);
+  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], "EDGE", `the fallback lost ${source}`);
 });
 
 /**

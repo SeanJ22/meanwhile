@@ -504,11 +504,11 @@ export function Composer(props: {
             </div>
           )}
           <div className={s.row}>
-            <Pill tone={budgetNum === 0 ? "gold" : "teal"}>{budgetNum === 0 ? "HOLDS ALL PAID WORK" : "BUDGET ENFORCED"}</Pill>
+            <Pill tone={budgetNum === 0 ? "gold" : "teal"}>{budgetNum === 0 ? "HOLDS ANTHROPIC TOKENS" : "BUDGET ENFORCED"}</Pill>
             <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
               {budgetOk
                 ? budgetNum === 0
-                  ? "A $0 budget holds back every paid research call in this geography; plain-code work still runs."
+                  ? "A $0 Anthropic budget holds token calls for this hunt. Plain-code work can continue; search and other service costs use their separate existing controls."
                   : `Your $${budgetNum.toFixed(2)} Anthropic budget is enforced ${huntBudget ? "for this hunt" : "in any rolling 24 hours"}. The existing $${props.ceilingUsd.toFixed(2)} Fleet ceiling also applies.`
                 : "Enter a budget to see what it enforces."}
             </span>

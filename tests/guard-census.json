@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 866,
-    "named": 8291,
+    "named": 8293,
     "dynamic": 33
   },
   "files": {
@@ -1293,6 +1293,7 @@
         "RED CONTROL: the sitting a reader reads is the LOCAL day, not the UTC day",
         "SIGNAL: a real reader Ask through the real route writes no interaction row",
         "SOURCES: an answer does not carry documents it did not rest on",
+        "a meeting-shaped question without a proved body restores all evidence before fallback",
         "a question about a government we do not hold says so, and never substitutes a nearby one"
       ],
       "dynamic": 0
@@ -1620,9 +1621,10 @@
       "names": [
         "a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch",
         "an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write",
+        "an unsettled meeting-shaped question restores deferred edge evidence without falling through to the database",
         "the warm call settles exactly the sources the Ask preloads, by the names its trace times them under",
         "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left",
-        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads"
+        "with the C20 edge, a cold Mesa question reads the complete identity inventory but skips unrelated evidence"
       ],
       "dynamic": 0
     },

@@ -595,7 +595,7 @@ export function instructionView(input: {
   if (completion === null) {
     ack.push({ pill: "NOT COMPLETE", tone: "gold", text: "Not evaluated yet: the runner has not recorded whether the work this instruction reached is finished, so it is never shown as finished.", at: null });
   } else if (completion.kind === "COMPLETE") {
-    ack.push({ pill: "COMPLETE", tone: "teal", text: assignmentCompletionWords(completion), at: input.assignmentAt ?? null });
+    ack.push({ pill: "TRACKED WORK COMPLETE", tone: "teal", text: `${assignmentCompletionWords(completion)} This covers the registered work this instruction reached. It does not establish that every applicable body and information family has been discovered and delivered.`, at: input.assignmentAt ?? null });
   } else {
     const named = completion.kind === "NOT_COMPLETE"
       ? completion.exceptions.slice(0, 3).map((e) => `${e.obligationId}: ${e.says}`).join("; ")

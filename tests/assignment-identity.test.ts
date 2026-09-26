@@ -724,7 +724,8 @@ test("MW-015: a Send is complete only when every member is settled, and the inst
   assert.match(pill?.text ?? "", /^Not complete: 1 of 5 member obligations passed the completion check; 1 refused and 3 not yet settled remain\. For example — ob-absent: recorded as absent until/);
   const done = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => evaluate([member("ob-a")]) });
   const finished = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: done.assignments[0], assignmentAt: T0 });
-  assert.equal(finished.ack.find((f) => f.pill === "COMPLETE")?.text, "Complete: all 1 member obligations passed the completion check.");
+  assert.equal(finished.ack.find((f) => f.pill === "COMPLETE"), undefined, "a closed subset cannot certify the entire scope");
+  assert.match(finished.ack.find((f) => f.pill === "TRACKED WORK COMPLETE")?.text ?? "", /^Complete: all 1 member obligations passed the completion check\..*does not establish that every applicable body and information family/s);
   const unevaluated = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null });
   assert.match(unevaluated.ack.find((f) => f.pill === "NOT COMPLETE")?.text ?? "", /^Not evaluated yet/);
 });

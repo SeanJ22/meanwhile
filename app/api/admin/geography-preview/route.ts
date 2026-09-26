@@ -21,6 +21,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { containerStanding, indexBodies } from "@/lib/control-plane/admin-view/coverage.ts";
+import { previewScopeBodies } from "@/lib/control-plane/admin-view/scope-preview.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 
@@ -85,6 +86,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     ok: true,
     geography: { type: g.type, geoid: g.geoid, version: g.version, label: g.label, stateAbbr: g.stateAbbr },
     codes: standing.perCode.map((c) => ({ zcta5: c.zcta5, whole: c.whole, fraction: c.fraction, indexed: c.indexed, counts: c.counts })),
+    scopeBodies: previewScopeBodies(container.value.zctas, index),
     totals: {
       ...standing.counts,
       codes: standing.codes,

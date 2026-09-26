@@ -27,7 +27,14 @@ export interface RungTrace {
   ran: boolean;
   /** Why not, when it did not. */
   why?: string;
+  /** The model id we sent (the resolved role model, lib/ask/model.ts). */
   model?: string;
+  /**
+   * The model the API says served the call (the response's own `model`
+   * field), so the model actually used can be checked, not only the one asked
+   * for (2026-09-25). Null when the reply carried none.
+   */
+  servedModel?: string | null;
   ms?: number;
   /**
    * The model's result was reused from byte-identical inputs on this server
@@ -125,9 +132,15 @@ export interface AskTrace {
      * check's names, or an unavailable call's status. `model` above is the
      * writer whose answer was settled.
      */
-    writers?: { model: string; role: "FAST" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
+    writers?: { model: string; servedModel?: string | null; role: "FAST" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
     /** Why the frontier writer ran: the fast writer's failed checks, or why it could not answer. */
     escalation?: string;
+    /**
+     * Why the escalation writer wrote FIRST, skipping the fast writer: a
+     * question kind the fast writer measurably gets wrong (2026-09-25;
+     * `escalationFirstReason` in lib/ask/synthesize.ts). Absent on the default ladder.
+     */
+    writerRoute?: string;
     /**
      * What the writer was NOT sent (`lib/ask/writer-selection.ts`): per-member
      * vote rows beyond the bound, by whole roll call. The reader's records and
@@ -151,9 +164,34 @@ export interface AskTrace {
   composition?: {
     kind: "SITTING";
     shape: string;
+    /** Which records it was read from: recorded actions, roll calls, or the sitting and its named gaps. */
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS";
     composed: boolean;
     passed?: boolean;
     failed?: string[];
+  };
+  /**
+   * **WHICH READING THE DELIVERED ANSWER CAME FROM, AND WHY.** (2026-09-25,
+   * `lib/ask/speculative-reading.ts`.) For a question the code cannot settle,
+   * the answer path starts from the code's own best reading while the model
+   * reads the question; its answer is kept only when the model's reading
+   * agrees — same subject, same body, same question kind and byte-identical
+   * writer input — and is discarded otherwise. Facts about our machinery only:
+   * intents, tense kinds and times, never the question.
+   */
+  speculation?: {
+    /** Whether a speculative writer started. */
+    ran: boolean;
+    /** Why it did not start; or why its answer was kept or discarded. */
+    why: string;
+    /** SPECULATIVE_ANSWER: the writer started on the code's reading delivered. MODEL_READING: the answer path ran on the model's reading, as before. */
+    delivered: "SPECULATIVE_ANSWER" | "MODEL_READING";
+    codeIntent?: AskIntent;
+    codeTemporal?: AskTemporal;
+    /** Milliseconds from the request's start to the speculative writer's start. */
+    writerStartedAtMs?: number;
+    /** A discarded writer still running was stopped. */
+    aborted?: boolean;
   };
   /**
    * Wall-clock milliseconds per stage of the request, in order (2026-09-24):

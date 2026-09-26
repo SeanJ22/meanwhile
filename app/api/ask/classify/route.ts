@@ -89,5 +89,10 @@ export async function POST(request: Request) {
     outcome.kind === "TOPIC"
       ? { topic: outcome.topicId }
       : { topic: null, why: outcome.kind === "UNAVAILABLE" ? outcome.why : "none" };
+  /* Operators only: which model labelled it, and which model the API says served it. */
+  if (outcome.kind !== "UNAVAILABLE" && outcome.model) {
+    reply.model = outcome.model;
+    reply.servedModel = outcome.servedModel ?? null;
+  }
   return Response.json(reply, { status: 200 });
 }

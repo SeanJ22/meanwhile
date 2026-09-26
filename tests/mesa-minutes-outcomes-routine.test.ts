@@ -485,7 +485,7 @@ test("Ask answers a Mesa council decision from the council's own minutes, with t
   assert.equal(outcomeGapWhose(evidence.state), "OURS");
 
   // An agenda question is answered by the meeting's agenda document, not by the minutes store.
-  assert.deepEqual(meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId, startsAt: "2026-07-20T17:45:00-07:00", question: "What is on the agenda?" }), { records: [], gaps: [], denominators: {} });
+  assert.deepEqual(meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId, startsAt: "2026-07-20T17:45:00-07:00", question: "What is on the agenda?" }), { records: [], gaps: [], denominators: {}, actions: [] });
 
   // Minutes not yet published answer as the publisher's state.
   const september = meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: "legistar-insite:mesa:1336069", startsAt: "2026-09-14T17:45:00-07:00", question: "What did the council decide?" });

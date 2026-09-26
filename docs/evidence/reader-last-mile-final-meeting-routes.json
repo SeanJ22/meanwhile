@@ -1,8 +1,8 @@
 {
-  "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
-  "buildId": "aVzo2Jk-e20tAnKXwvmxo",
+  "exactHead": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
+  "buildId": "x-g3IjEB-gcdZ6Ummnn_T",
   "executionLevel": "ACTUAL_HTTP_ROUTE",
-  "asOf": "2026-09-26T02:34:48.595Z",
+  "asOf": "2026-09-26T03:54:36.592Z",
   "sourceHashes": [
     {
       "path": "app/api/meetings/route.ts",
@@ -42,9 +42,9 @@
     }
   ],
   "denominator": {
-    "held": 871,
-    "inCurrentWindow": 829,
-    "returned": 829,
+    "held": 876,
+    "inCurrentWindow": 834,
+    "returned": 834,
     "outsideWindow": 42,
     "queriedHeldLocations": 54
   },
@@ -54,294 +54,294 @@
       "startsAt": "2026-01-06T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-01-20",
       "startsAt": "2026-01-20T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-02-10",
       "startsAt": "2026-02-10T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-02-24",
       "startsAt": "2026-02-24T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-03-10",
       "startsAt": "2026-03-10T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-03-14",
       "startsAt": "2026-03-14T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-03-24",
       "startsAt": "2026-03-24T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-04-28",
       "startsAt": "2026-04-28T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-05-12",
       "startsAt": "2026-05-12T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-05-26",
       "startsAt": "2026-05-26T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-06-09",
       "startsAt": "2026-06-09T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-01-12",
       "startsAt": "2026-01-12T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-02-09",
       "startsAt": "2026-02-09T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-02-23",
       "startsAt": "2026-02-23T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-03-09",
       "startsAt": "2026-03-09T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-04-20",
       "startsAt": "2026-04-20T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-06-15",
       "startsAt": "2026-06-15T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-01-13",
       "startsAt": "2026-01-13T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-01-27",
       "startsAt": "2026-01-27T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-02-03",
       "startsAt": "2026-02-03T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-02-17",
       "startsAt": "2026-02-17T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-03-03",
       "startsAt": "2026-03-03T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-04-07",
       "startsAt": "2026-04-07T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-04-21",
       "startsAt": "2026-04-21T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-05-05",
       "startsAt": "2026-05-05T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-05-19",
       "startsAt": "2026-05-19T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-06-16",
       "startsAt": "2026-06-16T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-02-09",
       "startsAt": "2026-02-09T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-02-20",
       "startsAt": "2026-02-20T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-03-09",
       "startsAt": "2026-03-09T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-03-23",
       "startsAt": "2026-03-23T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-04-13",
       "startsAt": "2026-04-13T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-04-27",
       "startsAt": "2026-04-27T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-05-11",
       "startsAt": "2026-05-11T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-05-26",
       "startsAt": "2026-05-26T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-06-01",
       "startsAt": "2026-06-01T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-06-08",
       "startsAt": "2026-06-08T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-06-22",
       "startsAt": "2026-06-22T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703706",
       "startsAt": "2027-01-27T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703707",
       "startsAt": "2027-02-10T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703708",
       "startsAt": "2027-02-24T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703709",
       "startsAt": "2027-03-10T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T02:34:48.595Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T03:54:36.592Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     }
   ],
   "missing": [],
@@ -353,7 +353,7 @@
         "lat": 32.0149457,
         "lng": -110.6984644
       },
-      "returnedCount": 274,
+      "returnedCount": 279,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -440,6 +440,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "clerksboards:41:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-greens-committee"
         },
@@ -482,6 +490,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -654,6 +666,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -838,6 +854,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -1453,18 +1473,23 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 274,
-        "sourceListingCount": 274,
+        "recordCount": 279,
+        "sourceListingCount": 279,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting"
         ],
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "eb511a4fb9d22e3802d89dd674a6215cd8f49399b9c3a59d8a24b6c80fe0d74d",
+      "payloadSha256": "608eaf6f78cef1e0617957f363aa76edc8e6644cf587d8802e4319e66c9b64ee",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -1476,7 +1501,7 @@
         "lng": -110.62291,
         "zip": "85641"
       },
-      "returnedCount": 274,
+      "returnedCount": 279,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -1563,6 +1588,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "clerksboards:41:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-greens-committee"
         },
@@ -1605,6 +1638,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -1777,6 +1814,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -1961,6 +2002,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -2576,18 +2621,23 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 274,
-        "sourceListingCount": 274,
+        "recordCount": 279,
+        "sourceListingCount": 279,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting"
         ],
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "1747df10fdd4d8fd2117427bc7838b865769a958a69bdfe2daf6e49870ce11ca",
+      "payloadSha256": "d53e79dde2e1171eb52e435e03e694e4dbe5ae32a17fdcd896acc2a226c49031",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -2598,7 +2648,7 @@
         "lat": 32.137642,
         "lng": -110.938584
       },
-      "returnedCount": 274,
+      "returnedCount": 279,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -2685,6 +2735,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "clerksboards:41:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-greens-committee"
         },
@@ -2727,6 +2785,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -2899,6 +2961,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -3083,6 +3149,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -3698,18 +3768,23 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 274,
-        "sourceListingCount": 274,
+        "recordCount": 279,
+        "sourceListingCount": 279,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting"
         ],
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "601958e649d0e5b8dee7e22f4be868626dba6f56cf733b050633a81967f5004e",
+      "payloadSha256": "0a04942802d74d44cd96e80f3604ee174f51f469e082f0e1836948e5effdfaa6",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -3721,7 +3796,7 @@
         "lng": -110.93334,
         "zip": "85706"
       },
-      "returnedCount": 274,
+      "returnedCount": 279,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -3808,6 +3883,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "clerksboards:41:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-greens-committee"
         },
@@ -3850,6 +3933,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -4022,6 +4109,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -4206,6 +4297,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -4821,18 +4916,23 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 274,
-        "sourceListingCount": 274,
+        "recordCount": 279,
+        "sourceListingCount": 279,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting"
         ],
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "5958c5506caa5bfefb1659322ff742e25da7423e0a1b61353de6422474c1089f",
+      "payloadSha256": "ab814e3d0cdd3d7adc781f5fc851671606f9be871d0362b98de8b0122e2095dd",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -4843,7 +4943,7 @@
         "lat": 32.20685,
         "lng": -111.009039
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -4934,6 +5034,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -4980,6 +5088,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -5160,6 +5272,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -5360,6 +5476,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -6007,11 +6127,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -6027,7 +6152,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4fb80b693986052d904556fea9308d8674e3115d76fd8a17d3b7d0742927af53",
+      "payloadSha256": "2fd8b751d0faae30762f93f3ef3e02c4a9b1c4e0c0f03674c1068951bae5ad4b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -6038,7 +6163,7 @@
         "lat": 32.210629,
         "lng": -110.918028
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -6129,6 +6254,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -6175,6 +6308,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -6355,6 +6492,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -6555,6 +6696,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -7202,11 +7347,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -7222,7 +7372,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4d4a2d79a0b77723afa7c9f886ec1c896664086e835179d4abe7f6d5165a9448",
+      "payloadSha256": "7f602fc4a35f8486c8c77899a433a0ba3dc1eb581649041dc9b12c14f1fe678a",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -7233,7 +7383,7 @@
         "lat": 32.21063,
         "lng": -110.918028
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -7324,6 +7474,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -7370,6 +7528,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -7550,6 +7712,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -7750,6 +7916,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -8397,11 +8567,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -8417,7 +8592,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "c526b574ac30b1ad6612ca8a22b21c2addcd340957365c00deaa0efebd197c48",
+      "payloadSha256": "d2c3e0671c6fe6d1035cf17de9cb573de38345417a86e28ae0cfc8ef77a75983",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -8428,7 +8603,7 @@
         "lat": 32.216382,
         "lng": -110.977394
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -8519,6 +8694,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -8565,6 +8748,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -8745,6 +8932,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -8945,6 +9136,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -9592,11 +9787,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -9612,7 +9812,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "c3594768e41b336100f9a4d0fe57dba0b50cd1cef0ed2e5319430e0f1883b543",
+      "payloadSha256": "c3e5ebc7e7a55f278592389bf55662c1a833109eac71dbee78784afcf92683c9",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -9623,7 +9823,7 @@
         "lat": 32.221072,
         "lng": -110.971058
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -9714,6 +9914,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -9760,6 +9968,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -9940,6 +10152,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -10140,6 +10356,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -10787,11 +11007,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -10807,7 +11032,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b9d0bdfdceab6727eb22b52e72118ea23974e1123737b0bb64e71084adb01389",
+      "payloadSha256": "46d15fd8d0f00beefe289d062632f1f4c926538637f6ac65dbc80000e14bccfe",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -10818,7 +11043,7 @@
         "lat": 32.221616,
         "lng": -110.974033
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -10909,6 +11134,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -10955,6 +11188,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -11135,6 +11372,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -11335,6 +11576,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -11982,11 +12227,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -12002,7 +12252,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "73568c9bbd8ebda251b14586e26767c54e1a02fb9ec902f65e21e389d1b5b2a6",
+      "payloadSha256": "915f02a16bd87c8c200d861b766615f5580528dd5ef8b5262cfbfc42c80a96b5",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -12013,7 +12263,7 @@
         "lat": 32.221683,
         "lng": -110.887102
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -12104,6 +12354,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -12150,6 +12408,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -12330,6 +12592,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -12530,6 +12796,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -13177,11 +13447,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -13197,7 +13472,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "13ba3838f6a6a28850be65a4affa40c2203460c2c497b42eb1a4939354081a03",
+      "payloadSha256": "b6d3b7eb8734dbe0ffd8d7213189794cbffe383b445edb4f5af5b344180c21c9",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -13208,7 +13483,7 @@
         "lat": 32.222464,
         "lng": -110.956126
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -13299,6 +13574,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -13345,6 +13628,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -13525,6 +13812,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -13725,6 +14016,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -14372,11 +14667,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -14392,7 +14692,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "bca8a5e428ce32e94fc7a15724bf2f12e0215a18d4185426b2a82cc524a3f3e6",
+      "payloadSha256": "c6316ff0b907d50c75ea17d3830a72e3c4d0c4bf085e5b289e217a402dfc7107",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -14403,7 +14703,7 @@
         "lat": 32.222932,
         "lng": -110.975639
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -14494,6 +14794,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -14540,6 +14848,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -14720,6 +15032,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -14920,6 +15236,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -15567,11 +15887,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -15587,7 +15912,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "35146b14fc2eb3842d2e8ee233ce4fdaff06782d3a872a37a2d5fc45c5a6f532",
+      "payloadSha256": "473c8afca34e7e930cdd184a7e4875437e734da8f7d8edeeee3d5ed4fdd0a989",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -15598,7 +15923,7 @@
         "lat": 32.223037,
         "lng": -110.975001
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -15689,6 +16014,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -15735,6 +16068,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -15915,6 +16252,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -16115,6 +16456,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -16762,11 +17107,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -16782,7 +17132,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "d58a172b5ca1a92a886e4957985beb1382fb9ba9720b53067bbd3805bc6aa149",
+      "payloadSha256": "c2cf18c2611a8cc82954f13ed6bec337dd97f257fc6da2de9ba37041205c6101",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -16793,7 +17143,7 @@
         "lat": 32.223146,
         "lng": -110.969606
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -16884,6 +17234,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -16930,6 +17288,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -17110,6 +17472,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -17310,6 +17676,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -17957,11 +18327,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -17977,7 +18352,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "7e167afe37aa360b43bf6439fdbf6918428833fc6c10ad65695d039a68ec9386",
+      "payloadSha256": "d4a586135e66fe173cd77e5d214147174598bf7502abfdd6316d11874dd67707",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -17988,7 +18363,7 @@
         "lat": 32.224663,
         "lng": -110.973964
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -18079,6 +18454,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -18125,6 +18508,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -18305,6 +18692,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -18505,6 +18896,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -19152,11 +19547,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -19172,7 +19572,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "a246170491c37d25fdc27a45f850a2eafafc83edb58d98d5cfa88a21f2d575b9",
+      "payloadSha256": "bf499dfb4c28a692eb756d0e182b98baa8affea3bf1870f944cdb8cc6416c6aa",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -19183,7 +19583,7 @@
         "lat": 32.227621,
         "lng": -110.962451
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -19274,6 +19674,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -19320,6 +19728,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -19500,6 +19912,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -19700,6 +20116,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -20347,11 +20767,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -20367,7 +20792,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4345049d8d9b0397cebdf867e822ea528f2b21cbc7984c51b87f1b9ad3e054fa",
+      "payloadSha256": "4ec15d6c337580c02846cb413e429d892a81f60b61a5360cb991eaab5c768b1b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -20378,7 +20803,7 @@
         "lat": 32.228998,
         "lng": -110.883029
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -20469,6 +20894,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -20515,6 +20948,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -20695,6 +21132,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -20895,6 +21336,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -21542,11 +21987,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -21562,7 +22012,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "e58f8353b444ec3a2f9eac652f9af499df6e45543c34c0ee2e6768d3531441aa",
+      "payloadSha256": "f5dcc0e15b3bc873914b81b55b58e241abc2455d159121a43a24501c2c740679",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -21573,7 +22023,7 @@
         "lat": 32.235068,
         "lng": -110.925106
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -21664,6 +22114,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -21710,6 +22168,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -21890,6 +22352,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -22090,6 +22556,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -22737,11 +23207,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -22757,7 +23232,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b17df27f0681de69350451f00489e51257d67c55f8772b4d4f45c01f8679e82f",
+      "payloadSha256": "2c1d9aea5139ba17e9450ee15a70029c3ac17b99fcd76e9fdcc13395127d4fd9",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -22875,7 +23350,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "e6f3dd46ee24c4f22aeeb2a815a768e128e32c99fc3328d58f495bf65807d214",
+      "payloadSha256": "780c5a0fd7caf63168858c77e07b5c8190e9e98fbd84a83c11ebb9b005418b3a",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -22886,7 +23361,7 @@
         "lat": 32.261484,
         "lng": -110.881209
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -22977,6 +23452,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -23023,6 +23506,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -23203,6 +23690,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -23403,6 +23894,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -24050,11 +24545,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -24070,7 +24570,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b881cdef1f2e6a3ebf913992a3f8577b7951166f53678d07a77f892ec9df59df",
+      "payloadSha256": "f139776e1d254705cd68bbd1fbf027f28d3bd0b75bfc6ebccb33f11b7b386e2e",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -24081,7 +24581,7 @@
         "lat": 32.286421,
         "lng": -110.980988
       },
-      "returnedCount": 322,
+      "returnedCount": 327,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -24172,6 +24672,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -24238,6 +24746,10 @@
         {
           "id": "legistar-insite:mesa:1336059",
           "bodyId": "ocd-division/country:us/state:az/place:mesa#governing"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -24434,6 +24946,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -24662,6 +25178,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar-insite:mesa:1343177",
@@ -25373,11 +25893,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 322,
-        "sourceListingCount": 322,
+        "recordCount": 327,
+        "sourceListingCount": 327,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -25393,7 +25918,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "eb86720a10b07f965d9b867905208f225a31d91f71f3fca971e3b6a3565d55e3",
+      "payloadSha256": "34cfa8e091ccd431d6f9e269f63c076d1cbed5edc9dc7762a06a9f4c91d5c53e",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -25405,7 +25930,7 @@
         "lng": -110.73317,
         "zip": "85619"
       },
-      "returnedCount": 290,
+      "returnedCount": 295,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -25496,6 +26021,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -25542,6 +26075,10 @@
         {
           "id": "clerksboards:39:2026-07-27",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -25722,6 +26259,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:496",
@@ -25922,6 +26463,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "diligent:tusd1:502",
@@ -26569,11 +27114,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 290,
-        "sourceListingCount": 290,
+        "recordCount": 295,
+        "sourceListingCount": 295,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -26589,7 +27139,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "0495911802b5fce2d253632bf26259756c61c163e009cf497e1966b3540a1af8",
+      "payloadSha256": "a93ab76ec09743a3ed3ca332e60bd56a1af474887cbc0c31ce17bfea24f277bf",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -26600,7 +27150,7 @@
         "lat": 33.300663,
         "lng": -111.840334
       },
-      "returnedCount": 311,
+      "returnedCount": 316,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -26691,6 +27241,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -26761,6 +27319,10 @@
         {
           "id": "legistar-insite:mesa:1336059",
           "bodyId": "ocd-division/country:us/state:az/place:mesa#governing"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -26945,6 +27507,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "civicclerk:capaz:549",
@@ -27173,6 +27739,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar-insite:mesa:1343177",
@@ -27848,11 +28418,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 311,
-        "sourceListingCount": 311,
+        "recordCount": 316,
+        "sourceListingCount": 316,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -27868,7 +28443,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "f768215fa03ff26084b49374a7238700d2fce69537391b95ec5d9d455b726afc",
+      "payloadSha256": "fdc62e1aae3714aa562727e8be9db2d8870f25a0f28700eb28d3ef697f9ca693",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -27880,7 +28455,7 @@
         "lng": -111.87647,
         "zip": "85224"
       },
-      "returnedCount": 258,
+      "returnedCount": 263,
       "identities": [
         {
           "id": "diligent:tusd1:488",
@@ -27967,6 +28542,14 @@
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
         },
         {
+          "id": "clerksboards:43:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
+        },
+        {
+          "id": "clerksboards:15:2026-07-16",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission"
+        },
+        {
           "id": "schedulepage:chandler-city-council:2026-07-16",
           "bodyId": "ocd-division/country:us/state:az/place:chandler#governing"
         },
@@ -28017,6 +28600,10 @@
         {
           "id": "legistar-insite:mesa:1336059",
           "bodyId": "ocd-division/country:us/state:az/place:mesa#governing"
+        },
+        {
+          "id": "clerksboards:43:2026-07-28",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar:pima:1869",
@@ -28185,6 +28772,10 @@
         {
           "id": "clerksboards:3:2026-08-19",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-08-20",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "civicclerk:capaz:549",
@@ -28381,6 +28972,10 @@
         {
           "id": "clerksboards:3:2026-09-16",
           "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues"
+        },
+        {
+          "id": "clerksboards:43:2026-09-17",
+          "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority"
         },
         {
           "id": "legistar-insite:mesa:1343177",
@@ -28916,11 +29511,16 @@
         }
       ],
       "listingIdentity": {
-        "recordCount": 258,
-        "sourceListingCount": 258,
+        "recordCount": 263,
+        "sourceListingCount": 263,
         "groups": [],
         "unresolvedBodySourceIds": [],
         "unresolvedTimeSourceIds": [
+          "clerksboards:15:2026-07-16",
+          "clerksboards:43:2026-07-16",
+          "clerksboards:43:2026-07-28",
+          "clerksboards:43:2026-08-20",
+          "clerksboards:43:2026-09-17",
           "official-page-events:tusd1-reconfiguration:2026-09-11:joint-committee-meeting",
           "official-page-events:tusd1-reconfiguration:2026-10-01:joint-committee-meeting",
           "schedulepage:chandler-city-council:2026-07-13",
@@ -28936,7 +29536,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "c0daaf19827dd99959056afe4260a5ffd3450b1c01b7d53a6937abbee82c0845",
+      "payloadSha256": "4ba53ddff35f9c15ccafa5203f28795157404b2abd967b72eb6608dfbf833e7b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -29257,7 +29857,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "075a6a7171481122bb69a35e8ac31927ea7b6315c9c9665104ef4ceb76834a53",
+      "payloadSha256": "2320e6393df77b384cba37d46c33b46bb11170fad872afea5aaa8ec744ebf7df",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -29578,7 +30178,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "6bf7f2a86839bd2ab46e55f9b508e3aaac546762adb1a4d8f9693026deaa4810",
+      "payloadSha256": "023efcee9777ef918808a055ad8d5ea2973a9d3ef1d88da5cb8e025096611f34",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -29876,7 +30476,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "eb9b9a47d64a287289bff65cc19cab28cb11d4e134bbf13e8574ec11bb2a61fa",
+      "payloadSha256": "8acec2b00fa64ad46a822598065aa00e6d0e1dc981debfaabc1f62290cd8672d",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30173,7 +30773,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "e0dadcbe53326d9260c03467ca556cb604e2fefd0f5ee7fbe1a0798fb55002ce",
+      "payloadSha256": "cd9e3d7c5b212531ae142def682784b3d471053bcdbed1737f67254cab261bd4",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30470,7 +31070,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "37df4dfac446a1f00bbaa5d0551c39f4ca99d365fb285c70602a37aab2f07cb1",
+      "payloadSha256": "a8d1557bc9b86b47743bb90f2b8da38f375d26748ae2d509dcec7546ecc58c21",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30520,7 +31120,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "c1791bd39fcfd5500a26a87bfb9715a4610a17b904aaf3202848877ed812f457",
+      "payloadSha256": "1137de5f86c6f6551774e666223fcc1abb4cfecb158f37482196fd78bb8e03bc",
       "tier": "concluded",
       "radiusKm": 150
     },
@@ -30595,7 +31195,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "bde2f515786de4843df3477d4ef6ad219af37723fcad29872ed879e0a51b486f",
+      "payloadSha256": "4c6b248a1312bbb283bb3b951e574cc840473ab34fb4a93f4eaf3987eee343a6",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30715,7 +31315,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4c8d3745e18c48bb5114cfa5bf7a5b1767e5ccbeacc80f836adfb83979547809",
+      "payloadSha256": "50d537589fadd068a57df3c508dd2bf4abc2d059c14c30f3dcc2e428d32720f4",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31009,7 +31609,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "d5a018a55e3335e3bc59abfd07202d891bcf88ca38b36fae8a344439f5adf4a1",
+      "payloadSha256": "f966fba4a97c56971708ec2c581ebb7ede82dbda625702237c687857e7f01690",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31303,7 +31903,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "841ed27ea108dd5b56905662cdb4224b0749dad1398e1e229cc738215addc3b3",
+      "payloadSha256": "541de575574efbbf8ddfeee0c345571a32c82a3d98c5331900b184e1633fbcb7",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31597,7 +32197,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "2eb2df046b7a6ba30278bbfba37c7a2bc2824cd653eb1493efbabf15a068dbbd",
+      "payloadSha256": "1d7655d5810b549fee2a8b9608278634e025c6d9eecb635c3d2e1e0f8762bcff",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31891,7 +32491,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "ce363704b73edb2e0b0155f8da73bf681d14b7d1e722081f6796d3c599b748ed",
+      "payloadSha256": "0025ae892eb7519ea8c3e5d2172fe99b7e51d27a10bf18de7ea89364716b94a1",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -33588,7 +34188,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "88d503eed06142605284ee27ecec719c68d20f1fe3351b46591603a0216e91c2",
+      "payloadSha256": "f04a757d93ea00d0e77b91b8b2f5ab7d9cdfe5d735e253e2cede296d48af5c12",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -35286,7 +35886,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b8e9f4b4ef2d697e1a049d9bf5f59d30d15fff0ddca7a577656590a98f6b89e4",
+      "payloadSha256": "77594fc69e4b4b452f93717755e288277110914b6858fc1bf571369b2bc06c50",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -36983,7 +37583,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "26b673c6bd90c1c9d210da58d315ded4363791ad645623881fdc2295a4436a9a",
+      "payloadSha256": "f192fdd15b5219156cc113cfd0e826251f4aec112239fa537ad5440d63840839",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -38680,7 +39280,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "00fbac8545abaa7f91509b9176cb845bf5a30c264f0a9c8ae5c886ef582dc353",
+      "payloadSha256": "492cba6b1a5c8a76162a92e6dd1ebbcdb75ab568391617e896d0591ac9a2a553",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -40377,7 +40977,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "cb0d4d8723ff54e973eeb10d88a6b3377f9a2a13591b050d2f812df38df19169",
+      "payloadSha256": "9edff814383fc463740c9f77516813be88c58945bd84bcc362a38e6eedb23645",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -42074,7 +42674,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "34bf4f40002f9aad9363f6f13f8ec082bf1cf2a579b82241b1151de78ca9655b",
+      "payloadSha256": "99301d4fe3e339a26b6a1370acc1385834a1ad8d69a84794df085f39a1ff488b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -43771,7 +44371,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "07214e90ff42ec0de5381b3e85b0769af772f93af8d757ecc585cd30fd28b569",
+      "payloadSha256": "8dca691cde24773b985586f81886a872f22cfca4e65826dd212904055260efaf",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -45468,7 +46068,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4bebd27b70db9555cfda55389e6101baaca0b0ef4141e5e57906999f666ad912",
+      "payloadSha256": "be437f8f0ba655d2472880da49024add3c115be1f69c552b4ca43d00cfa89e56",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -47165,7 +47765,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "3d64ec367adbdc355d1a23979ccac69961b01343888d1123dfb59c674158988f",
+      "payloadSha256": "8cf989dc4dddb59ac2d7dd5d697ad7a65c6222a429542a5eb2577571e4e126bc",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -48862,7 +49462,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "3fa86d9e26c65472804805ec8fc3e2a09176877a4549d93e754572c1a42974bc",
+      "payloadSha256": "75c1f7870f0901a959a706bc6aa4bac717b69fabd57979939d388e0516e8ead7",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -50559,7 +51159,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "6658bdca044d0a38a19dc874a914587fd1abc0fea0114968dd82ac3d23640be0",
+      "payloadSha256": "d783d3b56633b298a59120900ece20b6d36209a2136a70b110b081c98153b74b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -52256,7 +52856,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "3801e49dedae683f2c142be54cdcba6a45d8406d68c1a1e75f23f3eee5d641ce",
+      "payloadSha256": "9870f9c03ff0080642e583546cf77216e5f5da4fad716c3bb631493950755f4d",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -53953,7 +54553,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4d3db0fb74ad874ca3c05203f50f6dc0883fb804bf95f786cac913f706738093",
+      "payloadSha256": "40899d8563f85b88cc09c741fa631d784470f44a7a3300fdaffad6b4fe4aa30b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -55650,7 +56250,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "bf4fbd97312a11f679d0c9d6a64aa6e1202ec5c7338614d3a90e2c66fdfe007a",
+      "payloadSha256": "4839f1b23f363210a09f31ffb881e3c9978185e533223d6bdf4384f93a49b995",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -57347,7 +57947,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "1e75420804a6ddd0a8f3b524f7913d3e9c8a48848fa9b848be6bdb23256642a5",
+      "payloadSha256": "9b20cafe342eca7219e0ba1a4b1c545018acfdcacd259bdb6fd0706c69bf170d",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -59044,7 +59644,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "ec37f826985955e6f4af989a4a5341f70bd276839ebf97d9912c663d9a851755",
+      "payloadSha256": "6adb662b6283c233d0feee3b8c55df88f71b5d918e2186aec4f124ec2ad9fa10",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -60741,7 +61341,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "56aab6643f1ceffdfb4bdb1151682f19fb49a710c9e8d4166a0ddb3e7d05de3d",
+      "payloadSha256": "7de5b4b844d408b49d078e23ac5c2f9b161db9e6c7f49b941d3940f19cba0e31",
       "tier": "exact",
       "radiusKm": 150
     }

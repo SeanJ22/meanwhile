@@ -62,7 +62,7 @@ export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
 /** The closed set of question shapes this module reads. */
 export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD";
 
-type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
+export type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
 interface ShapePattern {
   readonly shape: LexicalShape;
@@ -150,7 +150,7 @@ const SLOT_PRONOUNS: ReadonlySet<string> = new Set([
  * absence — so a shape can never disagree with retrieval about which question
  * was asked.
  */
-function shapeMatches(question: string): { shape: LexicalShape; kind: SubjectKind; slot: string }[] {
+function shapeMatches(question: string, options: { pronouns?: boolean } = {}): { shape: LexicalShape; kind: SubjectKind; slot: string }[] {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 160) return [];
   const outcome = outcomeQuestionClass(question);
@@ -159,7 +159,7 @@ function shapeMatches(question: string): { shape: LexicalShape; kind: SubjectKin
     const slot = pattern.exec(normalized)?.[1]?.trim();
     if (!slot) continue;
     // A pronoun is not a name: "when do they meet" depends on something earlier.
-    if (slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
+    if (!options.pronouns && slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
     if (SITTING_SHAPES.has(shape) && (shape === "MEETING_OUTCOME") !== Boolean(outcome)) continue;
     if (!SITTING_SHAPES.has(shape) && outcome) continue;
     out.push({ shape, kind, slot });
@@ -171,6 +171,32 @@ function shapeMatches(question: string): { shape: LexicalShape; kind: SubjectKin
 export function lexicalQuestionShape(question: string): { shape: LexicalShape; slot: string } | null {
   const found = shapeMatches(question)[0];
   return found ? { shape: found.shape, slot: found.slot } : null;
+}
+
+/**
+ * The intent a shape carries for a subject of the kind it asks about — the one
+ * rule `lexicalReading` applies below, for a caller that reads the question
+ * more loosely (`lib/ask/speculative-reading.ts`): a pronoun may fill the name
+ * slot, and the subject may be bound by the page or an earlier turn. Null when
+ * no shape of that kind matches. It is only ever a GUESS there: the model still
+ * reads the question, and a guess it does not confirm is discarded.
+ */
+export function shapeIntentFor(question: string, kind: SubjectKind | null, temporal: AskInterpretation["temporal"]): { shape: LexicalShape; intent: AskIntent } | null {
+  const found = shapeMatches(question, { pronouns: true }).find((match) => match.kind === kind);
+  if (!found) return null;
+  return { shape: found.shape, intent: shapeIntent(found.shape, temporal) };
+}
+
+/** A subject's kind, as the shapes read it. */
+export function subjectKindOf(entity: BindableEntity): SubjectKind | null {
+  return kindOf(entity);
+}
+
+function shapeIntent(shape: LexicalShape, temporal: AskInterpretation["temporal"]): AskIntent {
+  if (!SITTING_SHAPES.has(shape)) return SHAPE_INTENT[shape as Exclude<LexicalShape, SittingShape>];
+  return shape === "BODY_AGENDA"
+    ? "UPCOMING_AGENDA"
+    : shape === "MEETING_OUTCOME" || temporal.kind === "LAST" ? "PAST_MEETING" : "MEETING_TIME";
 }
 
 function kindOf(entity: BindableEntity): SubjectKind | null {
@@ -297,12 +323,10 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
      */
     if (temporal.kind === "RANGE" || temporal.kind === "DATE") return null;
     if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST") return null;
-    intent = found.shape === "BODY_AGENDA"
-      ? "UPCOMING_AGENDA"
-      : found.shape === "MEETING_OUTCOME" || temporal.kind === "LAST" ? "PAST_MEETING" : "MEETING_TIME";
+    intent = shapeIntent(found.shape, temporal);
   } else {
     if (temporal.kind !== "NONE") return null;
-    intent = SHAPE_INTENT[found.shape as Exclude<LexicalShape, SittingShape>];
+    intent = shapeIntent(found.shape, temporal);
   }
 
   return { shape: found.shape, interpretation: { ...unavailableInterpretation(), intent, temporal }, subjectId: entity.id };

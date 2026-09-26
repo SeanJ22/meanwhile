@@ -6,6 +6,7 @@ import test from "node:test";
 import { coverageAt } from "../lib/registry/server.ts";
 import { answerQuestion, REFUSAL_LOG_MAX_CHARS } from "../lib/routing/ask.ts";
 import { matchTopic } from "../lib/routing/match.ts";
+import { resolveAskRoleModel } from "../lib/ask/model.ts";
 
 /**
  * The ask box, v1 (session brief 5, 2026-08-19): routing without
@@ -563,9 +564,12 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
       );
     }) as unknown as typeof fetch;
 
+    /* 2026-09-25: the outcome also records the model sent and the model the API says served it. */
+    const labelledBy = { model: resolveAskRoleModel("CLASSIFIER"), servedModel: null };
     assert.deepEqual(await classifyQuestion("first question", { fetchImpl }), {
       kind: "TOPIC",
       topicId: "libraries",
+      ...labelledBy,
     });
     assert.equal(calls, 1);
     assert.equal(classifierSpendToday().calls, 1);
@@ -579,6 +583,7 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
     assert.deepEqual(await classifyQuestion("First Question!", { fetchImpl }), {
       kind: "TOPIC",
       topicId: "libraries",
+      ...labelledBy,
     });
     assert.equal(calls, 1);
     assert.equal(cacheKey("First Question!"), cacheKey("first question"));
@@ -593,6 +598,7 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
       )) as unknown as typeof fetch;
     assert.deepEqual(await classifyQuestion("something odd", { fetchImpl: rogue }), {
       kind: "NONE",
+      ...labelledBy,
     });
 
     // An upstream failure is unavailable, never a guess.

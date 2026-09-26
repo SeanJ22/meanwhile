@@ -1,7 +1,9 @@
+import { floored, floorLine } from "../ops/denominator-floor.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import type { SittingShape } from "./lexical-reading.ts";
 import { overLengthBudget } from "./length-contract.ts";
+import type { HeldMeetingAction } from "./meeting-outcomes.ts";
 import { localDate, localTime, localWeekday, startTimePosted, zoneOf } from "./meeting-time.ts";
 import type { ValidationVerdict } from "./validate.ts";
 
@@ -36,6 +38,11 @@ import type { ValidationVerdict } from "./validate.ts";
  * cancelled, or when a body's time zone is not recorded. Composition never
  * decides that a record does not matter; it only answers where no record
  * needs explaining.
+ *
+ * Two outcome answers ARE the records, and are read off them rather than
+ * summarised: how each member voted (the publisher's roll calls,
+ * `composeVoteAnswer`) and what the body decided (its recorded actions, each
+ * motion and result in the record's own words, `composeDecisionAnswer`).
  */
 
 /** A sitting as the route resolved it (`AskSitting`), narrowed to what is read here. */
@@ -64,6 +71,8 @@ export type SittingGapRole = "NO_SITTING" | "LISTING" | "AGENDA" | "NOTICE" | "M
 export interface SittingGap {
   role: SittingGapRole;
   gap: EvidenceGap;
+  /** The sitting the gap was attached for, where the route attached it for one. */
+  meetingId?: string;
 }
 
 /** Records that carry something to summarise, not merely a sitting or a gap. */
@@ -88,6 +97,18 @@ export interface SittingAnswerInput {
   now: number;
   /** The route's own reading of an outcome question (`outcomeQuestionClass`), when it made one. */
   questionClass?: string | null;
+  /**
+   * The recorded actions the route held for these sittings, read beside the
+   * records (`lib/ask/meeting-outcomes.ts` `HeldMeetingAction`). Only a "what
+   * did they decide" answer reads them, and only through the records they name.
+   */
+  actions?: readonly HeldMeetingAction[];
+  /**
+   * Whether one described action may be quoted: the caller's validator over
+   * the phrase alone, so an item whose own title names another government is
+   * left to the records rather than failing the whole answer.
+   */
+  admissible?: (text: string) => boolean;
 }
 
 /** `On "<title>", <member> voted <value>.` — the text `lib/ask/meeting-outcomes.ts` mints for a member-vote row. */
@@ -159,6 +180,172 @@ function composeVoteAnswer(input: SittingAnswerInput, chosen: ComposableSitting,
   return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
 }
 
+/** Whitespace is not content: a clerk's line break reads as a space. */
+function squash(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+/**
+ * A verbatim span: the text's first sentence when that is a sentence of its
+ * own under `max` characters (a clerk's item is often a sentence and then its
+ * detail), else cut at a word under `max` and marked "…".
+ */
+function clip(text: string, max: number): string {
+  const line = squash(text);
+  if (line.length <= max) return line;
+  const first = /^.{30,}?[a-z]{3}[.!?](?=\s+["'(A-Z])/.exec(line)?.[0];
+  if (first && first.length <= max) return first;
+  const cut = line.slice(0, max);
+  const space = cut.lastIndexOf(" ");
+  return `${cut.slice(0, space > max / 2 ? space : max).replace(/[\s,;:]+$/, "")}…`;
+}
+
+/** Quoted without changing a word: an inner double quote reads as a single one, as every composed quote here does. */
+function inQuotes(text: string): string {
+  return `"${text.replace(/"/g, "'")}"`;
+}
+
+/**
+ * **WHAT A BODY DECIDED, READ OFF ITS OWN RECORD OF THE SITTING.**
+ * (2026-09-25, the Ask three-second repair.)
+ *
+ * Measured warm, locally, that day: *"What did the Pima board decide at its
+ * last meeting?"* took 3.1-3.8 s end to end, all but ~0.3 s of it the fast
+ * model writing a paragraph out of the `MEETING_ACTION` records — the
+ * publisher's own verb for each motion and its own pass/fail word. Sean's bar
+ * is three seconds. So this answer is composed here, exactly as the vote
+ * answer above is:
+ *
+ * - the sitting's date in the body's own zone, and how many actions its record
+ *   holds;
+ * - the result counts, each with its denominator (`floored` / `floorLine`),
+ *   in the publisher's own result words — never mapped to "passed";
+ * - as many actions as fit the one length contract, each as the item, the
+ *   motion and the result in the record's own words — failed motions and
+ *   split roll calls first, then the publisher's order, motions with no
+ *   result recorded last;
+ * - an action with no result recorded is SAID to have none. A result is never
+ *   inferred from a motion, a tally or a roll call;
+ * - minutes that are not the approved record say so, in their own words;
+ * - how many actions are described, of how many — the records carry them all.
+ *
+ * Every quoted span is checked to be a span of the record the reader is
+ * shown before it is quoted. Null — and the model writes, as before — when the
+ * chosen sitting holds no action, a sitting is cancelled, unzoned or an
+ * unresolved listing, a same-day sitting holds neither an action nor a named
+ * outcome gap, two action records share an id, or any span fails that check.
+ */
+function composeDecisionAnswer(input: SittingAnswerInput, chosen: ComposableSitting): { answer: string; citedUrls: string[] } | null {
+  const actionRecords = input.records.filter((record) => record.kind === "MEETING_ACTION");
+  if (new Set(actionRecords.map((record) => record.id)).size !== actionRecords.length) return null;
+  const held = input.actions ?? [];
+  if (new Set(held.map((action) => action.recordId)).size !== held.length) return null;
+  const byId = new Map(actionRecords.map((record) => [record.id, record]));
+  // Every recorded action in the pack is one the route held for these sittings, and the reverse.
+  if (held.length !== actionRecords.length || !held.every((action) => byId.has(action.recordId))) return null;
+  for (const action of held) {
+    const text = squash(byId.get(action.recordId)!.text);
+    for (const span of [action.item, action.motion, action.result, action.standing, action.matterFile]) {
+      if (span && !text.includes(squash(span))) return null;
+    }
+  }
+  const meetings = new Map(input.records.filter((record) => record.kind === "MEETING").map((record) => [record.id, record]));
+  if (!input.sittings.every((sitting) => meetings.has(sitting.id))) return null;
+
+  const mine = held.filter((action) => action.meetingId === chosen.id);
+  if (mine.length === 0) return null;
+  const total = mine.length;
+  const where = `a composed decisions answer for sitting ${chosen.id}`;
+  const minutes = mine.every((action) => action.source === "MINUTES");
+  const others = input.sittings.slice(1);
+
+  /* 1. The sitting, how many actions its record holds, and the results, each counted over them. */
+  const results = new Map<string, number>();
+  for (const action of mine) if (action.resultState === "STATED") results.set(action.result!, (results.get(action.result!) ?? 0) + 1);
+  const counts: string[] = [];
+  // A result a clerk wrote as a sentence is quoted per action below, never repeated as a count label.
+  if ([...results.keys()].every((word) => word.length <= 40)) {
+    for (const [word, count] of results) counts.push(floorLine(floored(`${minutes ? "result in the minutes" : "published result"} ${inQuotes(word)}`, where, total, count)));
+  }
+  const absent = mine.filter((action) => action.resultState === "ABSENT").length;
+  if (absent > 0) counts.push(floorLine(floored(minutes ? "without a result in the minutes text we could read" : "without a published result", where, total, absent)));
+  const contradictory = mine.filter((action) => action.resultState === "CONTRADICTORY").length;
+  if (contradictory > 0) counts.push(floorLine(floored("with a published result that contradicts itself", where, total, contradictory)));
+  const titled = others.length > 0 ? ` (${quoted(chosen.title)})` : "";
+  const lead = `At its ${dayOf(chosen)} meeting${titled}, the ${proseName(input.subjectName)} recorded ${total} action${total === 1 ? "" : "s"}, ` +
+    `${total === 1 ? "in the records" : "each in the records"} with this answer${counts.length ? `; ${counts.join("; ")}` : ""}`;
+
+  /* 2. Every other sitting that day: its own actions counted, or its named outcome gap. */
+  const afterwards: string[] = [];
+  for (const sitting of others) {
+    const theirs = held.filter((action) => action.meetingId === sitting.id).length;
+    const when = startTimePosted(chosen) && startTimePosted(sitting)
+      ? sitting.startsAt < chosen.startsAt ? "earlier that day" : sitting.startsAt > chosen.startsAt ? "later that day" : "at the same time"
+      : "that day";
+    if (theirs > 0) {
+      afterwards.push(`The ${quoted(sitting.title)} sitting ${when} recorded ${theirs} more action${theirs === 1 ? "" : "s"}`);
+      continue;
+    }
+    const gaps = input.sittingGaps.filter((entry) => entry.meetingId === sitting.id && (entry.role === "OUTCOME" || entry.role === "MINUTES"));
+    if (gaps.length === 0) return null;
+    for (const { gap } of gaps) {
+      const plain = plainGapStatement(gap.statement, chosen.timeZone ?? null);
+      if (plain === null) return null;
+      afterwards.push(`For the ${quoted(sitting.title)} sitting ${when}: ${plain.replace(/[.\s]+$/, "")}`);
+    }
+  }
+  // The standing of minutes that are not the approved record travels with any answer read from them.
+  const standing = [...new Set(mine.flatMap((action) => action.standing ? [squash(action.standing)] : []))];
+
+  /* 3. As many actions as fit, the decisive first: a failed motion, a result
+     that contradicts itself, a split roll call, then the publisher's order —
+     its own agenda before its consent calendar, and an item it records no
+     result for last (the count above already says how many there are). */
+  const rank = (action: HeldMeetingAction) => action.disposition === "FAILED" ? 0
+    : action.resultState === "CONTRADICTORY" ? 1
+      : action.resultState === "ABSENT" ? 5
+        : action.divided ? 2
+          : action.consent ? 4 : 3;
+  const ordered = mine.map((action, index) => ({ action, index }))
+    .sort((a, b) => rank(a.action) - rank(b.action) || a.index - b.index)
+    .map(({ action }) => action);
+  /* An action with nothing to name it by is left to the records. */
+  const phrase = (action: HeldMeetingAction): string | null => {
+    const label = action.item ? inQuotes(clip(action.item, 80)) : action.matterFile ?? "";
+    const head = [action.itemReference ? `Item ${action.itemReference}` : "", label].filter(Boolean).join(", ");
+    if (!head) return null;
+    const motion = action.motion ? inQuotes(clip(action.motion, 90)) : "";
+    const result = action.resultState === "STATED" ? `result ${inQuotes(action.result!)}`
+      : action.resultState === "CONTRADICTORY" ? "its published result contradicts itself"
+        : action.source === "MINUTES" ? "without a result in the minutes text we could read" : "without a published result";
+    return `${head}: ${[motion, result].filter(Boolean).join(", ")}`;
+  };
+  // The described actions are counted over all of them, in the sentence that describes them.
+  const described = (shown: readonly string[]) => `${floorLine(floored("Recorded actions described here", where, total, shown.length))} — ${shown.join("; ")}`;
+  const assemble = (shown: readonly string[]) => [lead, described(shown), ...afterwards, ...standing]
+    .map((sentence) => sentence.replace(/[.\s]+$/, ""));
+  const fits = (sentences: readonly string[]) => overLengthBudget(`${sentences.join(". ")}.`) === null;
+  const shown: string[] = [];
+  for (const action of ordered) {
+    const next = phrase(action);
+    if (next === null || (input.admissible && !input.admissible(next))) continue;
+    if (!fits(assemble([...shown, next]))) continue;
+    shown.push(next);
+  }
+  if (shown.length === 0) return null;
+
+  const cited: string[] = [];
+  for (const sitting of input.sittings) {
+    const url = meetings.get(sitting.id)?.sourceUrl;
+    if (url && !cited.includes(url)) cited.push(url);
+  }
+  for (const action of mine) {
+    const url = byId.get(action.recordId)?.sourceUrl;
+    if (url && !cited.includes(url)) cited.push(url);
+  }
+  return { answer: `${assemble(shown).join(". ")}.`, citedUrls: cited };
+}
+
 function dayOf(sitting: ComposableSitting): string {
   const day = localDate(sitting);
   return `${localWeekday(sitting)}, ${formatDateLong(day) ?? day}`;
@@ -215,11 +402,38 @@ export function settleSittingComposition(
   return { composed: verdict.kind === "PASSED" ? composed : null, verdict };
 }
 
+/** Which records a composed sitting answer was read from, for the trace. */
+export type SittingAnswerBasis = "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS";
+
+/** The composed answer and the records it was read from; `composed` is null when a model should write it. */
+export function composeSittingAnswerWithBasis(input: SittingAnswerInput): { composed: { answer: string; citedUrls: string[] } | null; basis: SittingAnswerBasis } {
+  if (input.shape === "MEETING_OUTCOME" && input.questionClass === "WHAT_WAS_DECIDED" &&
+    input.records.some((record) => record.kind === "MEETING_ACTION")) {
+    return { composed: decisionAnswer(input), basis: "RECORDED_ACTIONS" };
+  }
+  const basis: SittingAnswerBasis = input.shape === "MEETING_OUTCOME" && input.questionClass === "HOW_DID_THEY_VOTE" &&
+    input.records.some((record) => record.kind === "MEETING_MEMBER_VOTE") ? "ROLL_CALLS" : "SITTING_AND_GAPS";
+  return { composed: composeSittingAnswer(input), basis };
+}
+
+/** The decisions answer's own gate: a concluded, zoned, uncancelled sitting whose identity is resolved. */
+function decisionAnswer(input: SittingAnswerInput): { answer: string; citedUrls: string[] } | null {
+  const [chosen] = input.sittings;
+  if (!chosen || Date.parse(chosen.startsAt) >= input.now) return null;
+  if (input.sittings.some((sitting) => sitting.status === "CANCELED" || !zoneOf(sitting).known)) return null;
+  if (input.records.some((record) => record.kind === "MEETING" && record.meetingListingIdentity)) return null;
+  return composeDecisionAnswer(input, chosen);
+}
+
 /**
  * Compose the answer, or null when a model should write it. See the module
  * note for exactly when each applies.
  */
 export function composeSittingAnswer(input: SittingAnswerInput): { answer: string; citedUrls: string[] } | null {
+  if (input.shape === "MEETING_OUTCOME" && input.questionClass === "WHAT_WAS_DECIDED" &&
+    input.records.some((record) => record.kind === "MEETING_ACTION")) {
+    return decisionAnswer(input);
+  }
   if (input.shape === "MEETING_OUTCOME" && input.questionClass === "HOW_DID_THEY_VOTE" &&
     input.records.some((record) => record.kind === "MEETING_MEMBER_VOTE")) {
     const [chosen] = input.sittings;

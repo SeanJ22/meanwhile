@@ -2,6 +2,7 @@ import { lengthRuleForPrompt } from "./length-contract.ts";
 import { writerSelection } from "./writer-selection.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelEnv } from "./model.ts";
+import { askRequestFields, servedModelOf } from "./model-registry.ts";
 import type { ValidationVerdict } from "./validate.ts";
 import {
   SYNTHESIS_CACHE_TTL,
@@ -94,6 +95,8 @@ export type SynthesisOutcome =
        * answer from before a model switch is incomparable to every one after.
        */
       model: string;
+      /** The model the API says served the call (its `model` field), recorded beside the id we asked for. */
+      servedModel: string | null;
       /** The resolved effort. Recorded for the same reason as `model`. Null for a model that takes none. */
       effort: AskEffort | null;
       ms: number;
@@ -427,6 +430,9 @@ export function synthesisRequestBody(
    * system field stays the plain string the comparison seam measures.
    */
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
+  /* What this model accepts, from the registry (lib/ask/model-registry.ts): adaptive thinking where it
+     takes it (none on Haiku 4.5), the effort only where it takes one. */
+  const fields = askRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
   const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] = shape.cached
     ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.cacheControl }]
     : synthesisPrompt(pack);
@@ -469,7 +475,7 @@ export function synthesisRequestBody(
      * contract in `synthesisPrompt` stops the model enumerating the records. The
      * ceiling stays a safety ceiling.
      */
-    max_tokens: 2048,
+    max_tokens: Math.max(2048, fields.minMaxTokens),
     /*
      * ADAPTIVE, and it is the only on-mode Sonnet 5 accepts. The manual form
      * — `{type: "enabled", budget_tokens: N}` — is REMOVED on this model
@@ -481,7 +487,7 @@ export function synthesisRequestBody(
      * both are a 400 there — so its request carries neither and it writes
      * without thinking. `askModelTakesEffort` is the one place that decides.
      */
-    ...(askModelTakesEffort(shape.model) ? { thinking: { type: "adaptive" } } : {}),
+    ...(fields.thinking ? { thinking: fields.thinking } : {}),
     output_config: {
       /*
        * PINNED, never omitted. An omitted `effort` defaults to `high` on the
@@ -490,7 +496,7 @@ export function synthesisRequestBody(
        * by accident. The value is `lib/ask/model.ts`'s resolved one so the
        * override and the recorded value cannot disagree.
        */
-      ...(askModelTakesEffort(shape.model) ? { effort: shape.effort ?? resolveAskEffort() } : {}),
+      ...(fields.effort ? { effort: fields.effort } : {}),
       format: { type: "json_schema", schema: synthesisSchema() },
     },
     /*
@@ -526,6 +532,13 @@ export interface SynthesizeOptions {
    * blended rate describes neither.
    */
   callerKey?: AskCallerKey;
+  /**
+   * The caller no longer wants this answer (2026-09-25): a writer started on
+   * the code's own reading of the question, which the model's reading then
+   * contradicted (`lib/ask/speculative-reading.ts`). An aborted call stops,
+   * and the ladder never escalates past it.
+   */
+  signal?: AbortSignal;
 }
 
 /**
@@ -563,11 +576,47 @@ export function frontierRung(env: AskModelEnv = process.env): SynthesisRung {
  * `resolveAskFastWriter()`; `WTP_ASK_FAST_MODEL=off` collapses the ladder to
  * the frontier alone without a deploy.
  */
-export function synthesisLadder(env: AskModelEnv = process.env): SynthesisRung[] {
+export function synthesisLadder(env: AskModelEnv = process.env, context: { question?: string } = {}): SynthesisRung[] {
   const frontier = frontierRung(env);
   const fast = resolveAskFastWriter(env);
   if (!fast || fast === frontier.model) return [frontier];
+  /* A kind the fast writer measurably gets wrong is written by the escalation writer first. */
+  if (context.question && escalationFirstReason(context.question, env)) return [frontier];
   return [{ model: fast, effort: askModelTakesEffort(fast) ? "low" : null, role: "FAST", timeoutMs: ASK_FAST_WRITER_TIMEOUT_MS }, frontier];
+}
+
+/** `off` sends every question through the default ladder (fast writer first) without a deploy. */
+export const ASK_WRITER_ROUTING_ENV = "WTP_ASK_WRITER_ROUTING";
+
+const MONEY_WORDS = /\b(money|raised?|raising|donat\w*|donors?|contribut\w*|fund\w*|financ\w*|spent|spend\w*|pacs?|backers?)\b/i;
+const WHO_OR_COMPARISON = /\b(who|whom|whose|donors?|contributors?|backers?|funders?|biggest|largest|top|most|more|less|fewer|than|versus|vs|compare\w*)\b/i;
+
+/**
+ * **WHY THIS QUESTION'S ANSWER IS WRITTEN BY THE ESCALATION WRITER FIRST, OR
+ * NULL.** (2026-09-25, the Ask model-routing test.)
+ *
+ * Measured on production read-only packs, the same pack to each writer: on
+ * campaign-money questions that ask WHO gave or COMPARE candidates, Haiku 4.5
+ * was wrong 6 times in 8 — in ways the validator cannot see. It listed a
+ * committee's one contribution without saying the donor is not named ("Who
+ * funded the Vail school board candidates?"); it put our gap on the state
+ * ("Campaign money records filed with Arizona describe totals, not the
+ * identities of people who gave money"); it said we hold no fundraising for
+ * Kelly Ayotte when we do ("Has Cinde Warmington raised more money than Kelly
+ * Ayotte?"). Opus 5.5 was right 7 times in 8 on the same packs; Sonnet 5 was
+ * wrong 4 times in 8 (the who-funded and the comparison questions). On money questions that ask HOW MUCH
+ * one candidate raised or spent, Haiku 4.5 was right every time, so those
+ * keep the fast writer.
+ *
+ * The price is time: Opus 5.5 writes in 2.7-6.1 s, so these answers do not
+ * meet the three-second bar — reported, not hidden. Deliberately a wording
+ * test on the reader's question (money words AND a who/comparison word): it
+ * must be decided before the pack exists, so the speculative and sequential
+ * paths use one ladder. It errs toward the stronger writer.
+ */
+export function escalationFirstReason(question: string, env: AskModelEnv = process.env): string | null {
+  if ((typeof env[ASK_WRITER_ROUTING_ENV] === "string" ? env[ASK_WRITER_ROUTING_ENV]!.trim() : "") === "off") return null;
+  return MONEY_WORDS.test(question) && WHO_OR_COMPARISON.test(question) ? "money-who-or-comparison" : null;
 }
 
 /** The ladder as strings for a cache key: a changed rung is a new key. */
@@ -608,6 +657,7 @@ async function synthesizeOnRung(
 
   const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key", ms: elapsed() };
+  if (options.signal?.aborted) return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "AbortError" };
   if (options.allowCall && !options.allowCall()) {
     return { kind: "UNAVAILABLE", why: "ceiling", ms: elapsed() };
   }
@@ -638,7 +688,7 @@ async function synthesizeOnRung(
       // A bounded wait (2026-09-24). Past the bound the records still ship as
       // the structured answer (or the next rung writes); an unbounded call
       // could outlive the platform limit and deliver the reader nothing at all.
-      signal: AbortSignal.timeout(rung.timeoutMs),
+      signal: options.signal ? AbortSignal.any([AbortSignal.timeout(rung.timeoutMs), options.signal]) : AbortSignal.timeout(rung.timeoutMs),
     });
     if (!response.ok) {
       /* The status, and Anthropic's own error TYPE token if it sent one. The
@@ -660,11 +710,14 @@ async function synthesizeOnRung(
     }
 
     const body = (await response.json()) as {
+      model?: unknown;
+      stop_reason?: unknown;
       content?: Array<{ type?: string; text?: string }>;
     };
     const text = body.content?.find((b) => b.type === "text")?.text ?? "";
     if (!text) {
-      return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "no text block" };
+      /* A classifier refusal (stop_reason "refusal") lands here too: fail closed, and name it. */
+      return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: body.stop_reason === "refusal" ? "refusal" : "no text block" };
     }
     const parsed = JSON.parse(text) as { answer?: unknown; citedSources?: unknown };
     if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0) {
@@ -675,6 +728,7 @@ async function synthesizeOnRung(
       answer: parsed.answer.trim(),
       citedUrls: citedUrlsFrom(pack, parsed.citedSources),
       model,
+      servedModel: servedModelOf(body),
       effort,
       ms: elapsed(),
       /* Read off the response, never inferred from the request we sent. A
@@ -697,6 +751,8 @@ async function synthesizeOnRung(
 /** One writer's try, as the trace records it. Facts about our machinery only. */
 export interface LadderAttempt {
   model: string;
+  /** The model the API says served it, for an attempt that got a reply. */
+  servedModel?: string | null;
   role: SynthesisRung["role"];
   ms: number;
   result: "PASSED" | "FAILED" | "UNAVAILABLE";
@@ -743,8 +799,10 @@ export async function synthesizeWithLadder(
   let escalation: string | null = null;
   let last: LadderResult | null = null;
   for (const [index, rung] of ladder.entries()) {
+    // An answer the caller has abandoned is never escalated to another writer.
+    if (options.signal?.aborted && last) return last;
     const outcome = await synthesizeOnRung(pack, rung, options);
-    const hasNext = index < ladder.length - 1;
+    const hasNext = index < ladder.length - 1 && !options.signal?.aborted;
     if (outcome.kind === "UNAVAILABLE") {
       attempts.push({ model: rung.model, role: rung.role, ms: outcome.ms, result: "UNAVAILABLE", detail: outcome.detail ? `${outcome.why}: ${outcome.detail}` : outcome.why });
       last = { outcome, verdict: null, attempts, escalation };
@@ -753,7 +811,7 @@ export async function synthesizeWithLadder(
       continue;
     }
     const verdict = options.validate(outcome.answer, outcome.citedUrls);
-    attempts.push({ model: rung.model, role: rung.role, ms: outcome.ms, result: verdict.kind, ...(verdict.kind === "FAILED" ? { failed: verdict.failed } : {}) });
+    attempts.push({ model: rung.model, servedModel: outcome.servedModel, role: rung.role, ms: outcome.ms, result: verdict.kind, ...(verdict.kind === "FAILED" ? { failed: verdict.failed } : {}) });
     last = { outcome, verdict, attempts, escalation };
     if (verdict.kind === "PASSED" || !hasNext) return last;
     escalation = `${rung.role.toLowerCase()}-writer-failed-validation: ${verdict.failed.join(", ")}`;

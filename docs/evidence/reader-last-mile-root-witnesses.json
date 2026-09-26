@@ -2,22 +2,22 @@
   {
     "surface": "ballot",
     "component": "components/ballot/candidate-card.tsx",
-    "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
+    "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
     "evidencePath": "docs/evidence/reader-last-mile-final-ballot.json",
-    "evidenceSha256": "10a717f0ba256feab34f3afecaf5e721a7ae66f0dc9898eae80fe29754bcd311"
+    "evidenceSha256": "af204af4057e3f6e630bfbd96ad7d2e57e982cfb40e9d8b037603eafd6071074"
   },
   {
     "surface": "ballot",
     "component": "components/officials/positions-section.tsx",
-    "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
+    "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
     "evidencePath": "docs/evidence/reader-last-mile-positions.json",
-    "evidenceSha256": "2abfae89ae724b24c92b5d327d053df1c356d3dc28a97a6b2f39fd48184460db"
+    "evidenceSha256": "3bfed9501e48646aff85f5aa1316d630da78e5d5b79fac4e33fbb56ad2412ad5"
   },
   {
     "surface": "civic-routing",
     "component": "components/ask/ask-box.tsx",
-    "exactHead": "e52ca4af965822abf9eb633e7e2d95b83a749496",
+    "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
     "evidencePath": "docs/evidence/reader-last-mile-civic.json",
-    "evidenceSha256": "31bc3ebf67fa57d1ba4e55fefb25384eb07e8b5bcb502234c2cc35fe4df362a7"
+    "evidenceSha256": "255ede53f14797fd7f4a5bf23db20a1a8c499d781d2a8a617c0057d3f4e6dc9b"
   }
 ]

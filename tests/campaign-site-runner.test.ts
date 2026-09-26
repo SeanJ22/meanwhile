@@ -39,7 +39,7 @@ import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import { scoutedFromHeldFinding } from "../lib/candidates/research-findings-replay.ts";
 import { heldPageRead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { campaignPublicationDue, CAMPAIGN_PUBLICATION_TASK } from "../lib/civic-data/campaign-publication-due.ts";
+import { campaignPublicationInputsDue, CAMPAIGN_PUBLICATION_TASK } from "../lib/civic-data/campaign-publication-due.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue, routineFailureDomainFrontier } from "../lib/civic-data/runner.ts";
 import { manualProjectionCandidate, type CandidateProfilesProjection, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -221,7 +221,7 @@ test("a runner cycle over held results publishes a verified site through the der
   const task = ROUTINE_SOURCE_TASKS.find(row => row.id === CAMPAIGN_PUBLICATION_TASK)!;
   const clock = { lastAttemptedAt: "2026-09-24T22:55:00.000Z", lastSucceededAt: "2026-09-24T22:55:00.000Z" };
   assert.equal(routineTaskDue(task, clock, Date.parse(PUBLISH)), false);
-  assert.equal(campaignPublicationDue({ taskId: task.id, approvalAt: T2, ...clock, nowMs: Date.parse(PUBLISH) }), true);
+  assert.equal(campaignPublicationInputsDue(task.id, { approvals: second.report.chain.approved.length, attemptedApprovals: 0 }), true);
   assert.deepEqual(routineFailureDomainFrontier([{ task, lastConsideredAt: clock.lastAttemptedAt }]).map(row => row.task.id), [task.id]);
 
   /* The routine child's pass: no owner step, the routine door. */

@@ -144,12 +144,12 @@ import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
-  UNREAD_MEETING_PARTITIONS,
   promotedRegistries,
   trackedStatesFromOperationalReference,
   type FreeDiscoveryWalks,
   type MaterializedReading,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
+import { createMeetingPartitionOwnership } from "../lib/control-plane/scheduler/meeting-ownership.ts";
 import { readFreeDiscoveryWalks, type FreeWalkSubject } from "../lib/control-plane/discovery/free-walks.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import {
@@ -167,12 +167,9 @@ import {
   type DurableRowFacts,
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
+import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
-import {
-  factFreshnessFromPermanentMeetings,
-  RESEARCH_CYCLE_MEETINGS_RECEIPT,
-  type PermanentMeetingsReceipt,
-} from "../lib/control-plane/promotion/fact-freshness.ts";
+import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
@@ -716,6 +713,7 @@ try {
  * their retirement for the cycle rather than retiring the owner's work.
  */
 const trackedStates = trackedStatesFromOperationalReference();
+const meetingPartitions = createMeetingPartitionOwnership({ root: ROOT });
 let materialized: MaterializedReading;
 try {
   const rows = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
@@ -727,11 +725,16 @@ try {
 if ("ids" in materialized) {
   await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => stateOfJurisdictionId(id) ?? []), options: { bypassCache: true } });
 }
+const ownershipStates = trackedStates.read();
+await meetingPartitions.readStates([
+  ...("states" in ownershipStates ? ownershipStates.states : []),
+  ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
+]);
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
     trackerIntakeProvider(),
-    localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
+    localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
     /*
@@ -1227,10 +1230,13 @@ const expansionLoad = await loadExpansionPlan({
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId, scopeDivisions: scopeDivisionsByObligation.get(o.id) })),
   /* Each scope state with no reviewed registry is read from its registration before the territory (2026-09-25). */
-  beforeTerritory: async (states) =>
-    [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } })).refused].map(
+  beforeTerritory: async (states) => {
+    const registration = await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } });
+    await meetingPartitions.readStates(states);
+    return [...registration.refused].map(
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
-    ),
+    );
+  },
   ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
@@ -1685,6 +1691,7 @@ if (dispatchTargets.length > 0) {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
     /* A DISPATCH's states with no reviewed registry are read from their registration, as a scope's were (2026-09-25). */
     await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
+    await meetingPartitions.readStates(dispatchTargets.flatMap(t => t.kind === "DISPATCH" ? t.target.states : []));
     const current = promotedRegistries();
     const registries = "registries" in current ? current.registries : promoted.registries;
     const refusedRegistries = "refused" in current ? current.refused : promoted.refused;
@@ -1710,7 +1717,7 @@ if (dispatchTargets.length > 0) {
         territoryDetail: expansionLoad.territoryDetail ?? null,
         corpus: allUnits.map((u) => ({ id: u.obligation.id, subjectId: u.obligation.subjectId })),
         durable,
-        meetingPartitions: UNREAD_MEETING_PARTITIONS,
+        meetingPartitions,
         censusUnitsByState,
         refusedRegistries,
       },
@@ -2509,6 +2516,33 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
   freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
 }
 
+// Retained results get their verification/publication opportunity BEFORE new
+// acquisition can consume the cycle. This reads held bytes and writes only the
+// existing gated pipeline. A second pass is justified only by new worker output.
+async function projectRetainedFacts(phase: string): Promise<void> {
+  const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
+  try {
+    const report = await pending.step(phase, () => runBoundedStep({
+      label: phase,
+      budgetMs: Math.min(120_000, lateWorkBudgetMs()),
+      fn: () => projectFleetPipeline(repos, {
+        readArtifactText: async id => (await readEvidence(id)).text,
+        now: nowIso(), root: ROOT,
+        freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
+          onUnavailable: detail => runtimeConditions.push(detail) }),
+      }),
+    }));
+    if (report !== null) for (const line of factChainLines(report)) console.log(line);
+  } catch (error) {
+    const reason = error instanceof CycleStepTimeout || isControlPlaneRequestTimeout(error)
+      ? error.message
+      : error instanceof Error && /^[A-Z][A-Z0-9_]{2,100}$/.test(error.message)
+        ? error.message : "RETAINED_FACT_PROJECTION_FAILED";
+    runtimeConditions.push(phase + ": " + reason + "; retained records remain owed, existing reader data is preserved");
+  }
+}
+if (!dry && !canary && !scheduledBlackout) await projectRetainedFacts("retained-results:fact-projection");
+
 const cycle = await runCycle({
   repos,
   obligations: sync.all,
@@ -2975,13 +3009,6 @@ if (!dry && !canary) {
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    const meetingsReceipt: PermanentMeetingsReceipt = RESEARCH_CYCLE_MEETINGS_RECEIPT;
-    if (meetingsReceipt.kind === "UNAVAILABLE") {
-      runtimeConditions.push(
-        `permanent meetings receipt unavailable to immutable fact projection: ${meetingsReceipt.detail}; ` +
-        "fact approval remains held and no legacy acquisition clock is reopened",
-      );
-    }
     /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
     const fleetGuarded = modelLaneEnabled ? fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
@@ -3022,29 +3049,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     autonomousDispatchedThisCycle = fleetDispatches.filter(row => row.attemptId !== null).length;
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
-    /*
-     * PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result
-     * keeps the generic offer. The projection re-reads the store whole every cycle, and its appends are keyed by
-     * record id, so it is late work: it yields at the late-work deadline (2026-09-26: it ran a cycle to 835 s and
-     * the research state and the heartbeat Admin reads were never written), and the next cycle projects again.
-     */
-    let factReport: Awaited<ReturnType<typeof projectFleetPipeline>> = null;
-    try {
-      factReport = await pending.step("autonomous-workers:fact-projection", () => runBoundedStep({
-        label: "autonomous-workers:fact-projection",
-        budgetMs: lateWorkBudgetMs(),
-        fn: () => projectFleetPipeline(repos, {
-          readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
-          now: nowIso(),
-          root: ROOT,
-          freshness: async (input) => factFreshnessFromPermanentMeetings(meetingsReceipt, input),
-        }),
-      }));
-    } catch (error) {
-      if (!(error instanceof CycleStepTimeout) && !isControlPlaneRequestTimeout(error)) throw error;
-      runtimeConditions.push(`the worker fleet's fact projection yielded to the cycle's records (${error.message}); the next cycle projects again`);
-    }
-    if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
+    if (fleetDispatches.some(row => row.outcome === "WORKED")) await projectRetainedFacts("new-worker-results:fact-projection");
   } catch (error) {
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
   } finally {

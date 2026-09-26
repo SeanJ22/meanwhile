@@ -8,6 +8,7 @@
  */
 import {
   cadenceMsAt,
+  sittingWindowRereadMs,
   type RoutineSourceContract,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, sittingWindowSourceIds } from "./meeting-partitions.ts";
@@ -45,6 +46,7 @@ import {
 } from "./reader-readback.ts";
 import {
   UNCHANGED_CONFIRMATION_PREFIX,
+  UNCHANGED_CONFIRMATION_SOURCES_PREFIX,
   isUnchangedConfirmationDetail,
   latestUnchangedConfirmation,
   parseUnchangedConfirmation,
@@ -1113,10 +1115,37 @@ function readerProjectionProof(
   if (!atomicPromotion || latest.sequence <= atomicPromotion.sequence) {
     return unknown("The latest Reader-projection readback does not follow the canonical atomic promotion event.");
   }
-  if (ordered.some((event, index) => event.sequence !== atomicPromotion.sequence + index + 1)) {
+  // Quiet source re-checks append confirmation + retained-source events to the
+  // same candidate. Reader-only sequence numbers therefore need not be adjacent.
+  // Prove continuity against ALL appended evidence, never skip a missing event.
+  const appended = events.filter(event => event.candidateId === canonical.value.versionId && event.sequence > atomicPromotion.sequence)
+    .sort((a, b) => a.sequence - b.sequence);
+  if (appended.some((event, index) => event.sequence !== atomicPromotion.sequence + index + 1)) {
     return unknown(
       `Canonical version ${canonical.value.versionId} has a gap between its atomic promotion and append-only Reader-projection history.`,
     );
+  }
+  for (const event of appended) {
+    if (event.state !== "PROMOTED" || iso(event.at) === null || Date.parse(event.at) > nowMs) {
+      return unknown("The append-only Reader history contains invalid state or time evidence.");
+    }
+    if (event.detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX)) {
+      const confirmation = parseUnchangedConfirmation(event.detail);
+      if (!confirmation || confirmation.versionId !== canonical.value.versionId || confirmation.sourceId !== contract.sourceId ||
+          confirmation.recordClass !== contract.recordClass || confirmation.scope !== contract.scope ||
+          confirmation.pointerKey !== `${contract.recordClass}:${contract.scope}` || iso(confirmation.observedAt) !== iso(event.at)) {
+        return unknown("The append-only Reader history contains a malformed or mismatched unchanged confirmation.");
+      }
+    } else if (event.detail.startsWith(UNCHANGED_CONFIRMATION_SOURCES_PREFIX)) {
+      let sources: Record<string, unknown> | null = null;
+      try { sources = object(JSON.parse(event.detail.slice(UNCHANGED_CONFIRMATION_SOURCES_PREFIX.length))); } catch { /* fail closed below */ }
+      const previous = appended.find(row => row.sequence === event.sequence - 1);
+      const confirmation = previous ? parseUnchangedConfirmation(previous.detail) : null;
+      if (!sources || !confirmation || sources.versionId !== confirmation.versionId || sources.observedAt !== confirmation.observedAt ||
+          iso(String(sources.observedAt)) !== iso(event.at) || !Array.isArray(sources.retainedSourceResponses)) {
+        return unknown("The append-only Reader history contains malformed or unpaired confirmation sources.");
+      }
+    }
   }
   if (receipt.status !== "PASS") {
     return unknown(`Typed Reader read-model verification failed for canonical version ${receipt.versionId}: ${receipt.detail}`);
@@ -1164,6 +1193,7 @@ function freshness(
   canonicalCandidate: RoutineCandidateRow | undefined,
   nowMs: number,
   confirmation: UnchangedConfirmation | null = null,
+  activeEveryMs?: number,
 ): { readonly state: FreshnessState; readonly detail: string } {
   if (!canonicalCandidate) return { state: "UNKNOWN", detail: "No proven canonical promotion is recorded, so production freshness cannot be measured." };
   // A confirmed re-check re-read the source and found the canonical version current.
@@ -1182,7 +1212,7 @@ function freshness(
   if (isManualContract(contract)) {
     return { state: "MANUAL", detail: "This canonical projection advances only on explicit owner invocation; it has no due/stale clock." };
   }
-  const cadenceMs = cadenceMsAt(contract, nowMs);
+  const cadenceMs = activeEveryMs ?? cadenceMsAt(contract, nowMs);
   const dueAt = succeededAt + cadenceMs;
   if (canonicalCandidate.sourceThrough.trim() === "") return { state: "UNKNOWN", detail: "The canonical candidate has no source-through value." };
   const temporal = object(candidatePayload(canonicalCandidate)?.temporal);
@@ -1190,7 +1220,7 @@ function freshness(
   if (temporal && "staleAtRetrieval" in temporal && typeof temporal.staleAtRetrieval !== "boolean") {
     return { state: "UNKNOWN", detail: "The canonical candidate's source-staleness evidence is unreadable." };
   }
-  if (nowMs < dueAt) return { state: "FRESH", detail: `The canonical GOOD acquisition is inside the active ${contract.cadence.description} cadence.` };
+  if (nowMs < dueAt) return { state: "FRESH", detail: `The canonical GOOD acquisition is inside the active ${cadenceMs / HOUR}-hour cadence.` };
   if (nowMs < dueAt + cadenceMs) return { state: "DUE", detail: "The ordinary cadence has elapsed and the source is due now." };
   return { state: "STALE", detail: "The source is more than one active cadence beyond its expected acquisition time." };
 }
@@ -2071,7 +2101,10 @@ function projectContract(
         canonical.value.versionId,
       )
     : null;
-  const fresh = freshness(contract, canonicalCandidate, nowMs, confirmation);
+  const schedule = "schedule" in contract ? contract.schedule : undefined;
+  const activeEveryMs = isManualContract(contract) ? 0 : schedule?.kind === "SITTING_WINDOW"
+    ? sittingWindowRereadMs(schedule, sittingHot) : cadenceMsAt(contract, nowMs);
+  const fresh = freshness(contract, canonicalCandidate, nowMs, confirmation, activeEveryMs);
   const readerVisible = readerProjectionProof(contract, canonical, events, currentReaderBuild, nowMs);
   const operation = latestOrderIssue === null
     ? operationalState(contract, latest, candidates, canonicalCandidate, canonical, readerVisible, fresh.state, events, nowMs)
@@ -2217,8 +2250,9 @@ function projectContract(
     sourceThrough,
     cadence: {
       clock: isManualContract(contract) ? "MANUAL" : "STANDING",
-      description: isManualContract(contract) ? "explicit owner invocation only" : contract.cadence.description,
-      activeEveryMs: isManualContract(contract) ? 0 : cadenceMsAt(contract, nowMs),
+      description: isManualContract(contract) ? "explicit owner invocation only" : schedule?.kind === "SITTING_WINDOW"
+        ? `every ${activeEveryMs / HOUR} hours under the rolling meeting window` : contract.cadence.description,
+      activeEveryMs,
       retryDescription: isManualContract(contract)
         ? "explicit owner rerun after inspecting the durable refusal"
         : observedRetryDescription(contract, canonical.kind !== "NOT_RECORDED"),

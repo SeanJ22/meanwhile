@@ -1,4 +1,4 @@
-import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { artifactId as deriveArtifactId, type Artifact } from "../evidence/artifact.ts";
 import { readForParser, type EvidenceStore, type ObjectMeta } from "../evidence/store.ts";
 import type { ParserInput } from "../evidence/parser-boundary.ts";
@@ -23,21 +23,27 @@ const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "ADVERSARIAL_AUDITOR"];
  * first record's Attempt would credit the bytes to a capture the vault never held,
  * a citation that no replay of that Attempt's evidence could reproduce.
  */
-export function workerVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string) {
+export function workerVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string, options: { readonly snapshot?: boolean } = {}) {
+  // Only an explicitly bounded projection pass freezes its input index. Normal
+  // acquisition workers keep seeing newly appended records on every invocation.
+  let snapshotRecords: Promise<readonly ArtifactRecord[]> | undefined;
+  let snapshotKeys: Promise<string[]> | undefined;
+  const snapshotHeads = new Map<string, Promise<ObjectMeta | null>>();
   return async (artifactId: string): Promise<ParserInput> => {
-    const records = (await repos.artifacts.readAll()).filter(a => a.artifactId === artifactId && !a.partial);
+    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
+    const records = all.filter(a => a.artifactId === artifactId && !a.partial);
     if (records.length === 0) throw new Error("WORKER_ARTIFACT_MISSING_OR_PARTIAL");
     let keys: string[] | null = null;
-    const heads = new Map<string, ObjectMeta | null>();
+    const heads = options.snapshot ? snapshotHeads : new Map<string, Promise<ObjectMeta | null>>();
     let admitted = false;
     for (const record of records) {
       const acquiringAttempt = (await repos.attempts.mustRead(record.attemptId)).value;
       if (!WORKER_READABLE_ROLES.includes(acquiringAttempt.worker.role)) continue;
       admitted = true;
-      keys ??= await store.list(`project/${project}/`);
+      keys ??= options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
       for (const key of keys) {
-        if (!heads.has(key)) heads.set(key, await store.head(key));
-        const meta = heads.get(key);
+        if (!heads.has(key)) heads.set(key, store.head(key));
+        const meta = await heads.get(key);
         if (!meta || meta.contentHash !== record.contentHash) continue;
         const m = meta.custom;
         if (!m || m.tier !== record.tier || deriveArtifactId(record.tier, meta.contentHash) !== artifactId ||

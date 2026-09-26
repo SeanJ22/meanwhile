@@ -37,6 +37,7 @@ import {
   type VerifiedRecord,
 } from "../lib/control-plane/promotion/types.ts";
 import type { MethodCandidate } from "../lib/method/candidate.ts";
+import { mapEvidenceIntoPipeline } from "../lib/control-plane/promotion/mapping.ts";
 
 const T0 = "2026-09-02T04:00:00.000Z";
 const T1 = "2026-09-02T04:05:00.000Z";
@@ -401,6 +402,42 @@ test("mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED", () => {
   assert.equal(item.stage, "SCOUTED");
   assert.equal(item.canonicalUrl, URL);
   assert.equal(scoutedFromMethodCandidate({ ...candidate, lifecycle: "REJECTED" }, new Map()), null);
+});
+
+test("mapping reuses accepted confirmation at a later clock instead of stranding it behind a duplicate-stage refusal", async () => {
+  const repos = createMemoryRepositories();
+  const result = scoutResult();
+  await repos.scoutResults.append(result.obligationId, result.attemptId, result, T0);
+  const scout = scoutedFromScoutResult(result)[0];
+  await appendTransition(repos, scout, GOOD_CTX, T0);
+  const confirmation = confirmed({ itemId: scout.itemId, recordId: `${scout.itemId}:confirmed` });
+  await appendTransition(repos, confirmation, GOOD_CTX, T1);
+  const before = await repos.promotionPipeline.read(scout.itemId);
+  const later = await mapEvidenceIntoPipeline(repos, ".", "2026-09-03T04:05:00.000Z");
+  assert.equal(later.scouted.alreadyHeld, 1);
+  assert.equal(later.confirmed.alreadyHeld, 1);
+  assert.equal(later.confirmed.refused, 0);
+  assert.equal(later.states[0].stage, "CONFIRMED", "reused confirmation does not imply verification or approval");
+  assert.deepEqual(await repos.promotionPipeline.read(scout.itemId), before, "no new receipt, timestamp or refusal is manufactured");
+});
+
+test("method lifecycle advancement reuses its scouting evidence but changed source identity is still refused", async () => {
+  const repos = createMemoryRepositories();
+  const result = scoutResult();
+  await repos.scoutResults.append(result.obligationId, result.attemptId, result, T0);
+  const candidate: MethodCandidate = { id: "mc-reuse", attemptId: result.attemptId,
+    proposal: { id: "r-1", title: "t", tier: "A1", fields: ["meetings"], note: "n", origin: "o", outcome: { jurisdiction: "body-1", rows: 1, outcome: "YIELDED", note: "n" } },
+    submittedAt: T0, observedMethodVersion: 1, lifecycle: "PROPOSED", validation: null, admission: null, rejection: null };
+  await repos.methodCandidates.put("live", { storeVersion: 1, updatedOn: T0, candidates: [candidate] }, T0);
+  await mapEvidenceIntoPipeline(repos, ".", T0);
+  const row = await repos.methodCandidates.mustRead("live");
+  await repos.methodCandidates.compareAndSet("live", row.revision, { ...row.value, candidates: [{ ...candidate, lifecycle: "VALIDATED" }] }, T1);
+  const replay = await mapEvidenceIntoPipeline(repos, ".", T1);
+  assert.equal(replay.scouted.alreadyHeld, 2);
+  assert.equal(replay.scouted.refused, 0);
+  const item = scoutedFromMethodCandidate(candidate, new Map([[result.attemptId, result]]))!;
+  const state = replay.states.find(s => s.itemId === item.itemId)!;
+  assert.deepEqual(codes(validateTransition(state, { ...item, subjectId: "different-body" }, GOOD_CTX)), ["STAGE_ALREADY_REACHED"]);
 });
 
 test("mapping: CONFIRMED exists only where an ACQUIRER artifact at the same URL comes from another Attempt", () => {

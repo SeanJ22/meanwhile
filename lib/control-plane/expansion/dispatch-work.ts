@@ -228,6 +228,7 @@ export interface RequirementInstance {
   readonly executor: ExecutorKind;
   /** How it is carried when no clock exists yet. HELD never becomes a row. */
   readonly carriage: "OWED" | "MEETING_PARTITION" | "HELD_UNREAD_WIRING";
+  readonly heldReason?: string;
 }
 
 function obligationOf(id: string, recordClass: string, subjectId: string, routeId: string, from: JurisdictionRegistrySource): FreshnessObligation {
@@ -265,6 +266,7 @@ export function requirementsFor(
       kind: "REGISTRY_ROUTE",
       executor: r.route.executorClass,
       carriage: r.carriage === "HERE" ? "OWED" : r.carriage,
+      ...(r.heldReason ? { heldReason: r.heldReason } : {}),
     });
   }
   if (need !== null) {
@@ -951,7 +953,10 @@ export function dispatchWorkReading(
       );
     }
     if (capped > 0) says.push(`${capped} are beyond this geography's cap of ${plan.cap}; send a smaller geography to reach them.`);
-    if (held > 0) says.push(`${held} machine-openable meetings route(s) are held: ${DATASET.wiring} could not be read, and a second meetings clock is never risked.`);
+    if (held > 0) {
+      const reasons = [...new Set(t.instances.filter(p => p.state === "HELD").map(p => p.instance.heldReason).filter((reason): reason is string => Boolean(reason)))];
+      says.push(`${held} machine-openable meetings route(s) are held: ${reasons.length ? reasons.join("; ") : `${DATASET.wiring} could not be read`}; a second meetings clock is never risked.`);
+    }
     for (const b of t.units.blocked) says.push(`Blocked (${b.dataset}): ${b.why}.`);
     if (t.target.kind === "DISPATCH" && t.units.placed.length === 0 && t.units.blocked.length === 0) {
       says.push(`No registered government in ${t.target.target.stateNames.join(", ")} carries these words, so nothing was created; the words still put matching work first.`);

@@ -129,6 +129,8 @@ export function promotionChangeSummary(state: PipelineItemState): string {
 }
 
 export interface DeliveryTrailView {
+  /** Absent on older snapshots; every pending item is retained, never sampled. */
+  readonly pending?: readonly DeliveryPendingRow[];
   readonly version: typeof DELIVERY_TRAIL_VERSION;
   readonly items: number;
   readonly stages: readonly DeliveryStageRow[];
@@ -142,6 +144,40 @@ export interface DeliveryTrailView {
   };
   readonly promotions: readonly DeliveryPromotionRow[];
   readonly servedReader: { readonly state: "NO_PRODUCER" | "OBSERVED"; readonly says: string };
+}
+
+export interface DeliveryPendingRow {
+  readonly itemId: string;
+  readonly subjectId: string | null;
+  readonly recordClass: string | null;
+  readonly stage: PipelineStage | null;
+  readonly blocker: string;
+  readonly correctiveAction: string;
+  readonly outcome: string;
+  readonly lastRefusal: string | null;
+}
+
+export function pendingDelivery(state: PipelineItemState): DeliveryPendingRow | null {
+  if (state.byStage.APPROVED_FOR_PROMOTION) return null;
+  const next = PIPELINE_STAGES[(state.stage === null ? -1 : PIPELINE_STAGES.indexOf(state.stage)) + 1];
+  const last = state.records.filter((record): record is RefusedRecord => record.stage === "REFUSED").at(-1);
+  const activeRefusal = last && PIPELINE_STAGES.indexOf(last.atStage) > (state.stage === null ? -1 : PIPELINE_STAGES.indexOf(state.stage));
+  const reasons = last?.reasons.map(reason => `${reason.code}: ${reason.detail}`).join("; ") ?? null;
+  const source = state.byStage.SCOUTED?.source;
+  const method = source?.kind === "METHOD_CANDIDATE";
+  return {
+    itemId: state.itemId, subjectId: state.subjectId, recordClass: state.recordClass, stage: state.stage,
+    blocker: activeRefusal ? reasons! : `Required ${next ?? "approval"} evidence has not been accepted.`,
+    correctiveAction: method
+      ? "This is a reusable acquisition method, not a civic claim. Its method-store lifecycle governs worker reuse; it must not be published as a fact."
+      : state.recordClass === "candidate-enrichment"
+        ? "The standing campaign-site verifier revisits held leads, reuses vaulted reads and acquires missing confirmation. Only campaign-site findings use this connection; other candidate fields still need their own verified reader connection."
+        : source?.kind === "FLEET_EXTRACTION"
+          ? "The worker's typed fact contract determines its verification and reader connection. A missing contract check remains a repair obligation, never a successful verification."
+          : "Resolve the named source or verification failure through the item's existing worker contract. A missing publication connection remains an implementation defect.",
+    outcome: `Verification incomplete; ${state.stage ?? "no accepted stage"} is the last accepted pipeline stage. No public delivery is established by this record.`,
+    lastRefusal: reasons,
+  };
 }
 
 export interface DeliveryTrailInput {
@@ -188,10 +224,10 @@ export function buildDeliveryTrail(
     },
     {
       key: "validation",
-      label: "Validated",
+      label: "Validation stage passed",
       anchor: "VERIFIED",
-      reached: reachedRow("VERIFIED", "records independently verified (reached VERIFIED or beyond)"),
-      note: `${items === 0 ? 0 : reachedAtLeast(states, "AUDITED")} also survived the adversarial audit (AUDITED).`,
+      reached: reachedRow("VERIFIED", "records that passed the five validation-stage checks; audit and publication checks may still remain"),
+      note: `${items === 0 ? 0 : reachedAtLeast(states, "AUDITED")} also passed adversarial audit. This stage alone does not establish complete verification or public delivery.`,
     },
     {
       key: "publication",
@@ -288,6 +324,7 @@ export function buildDeliveryTrail(
 
   return {
     version: DELIVERY_TRAIL_VERSION,
+    pending: states.flatMap(state => { const row = pendingDelivery(state); return row ? [row] : []; }),
     items,
     stages,
     byRecordClass: stageCounts(states).byRecordClass,

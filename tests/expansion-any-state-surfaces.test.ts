@@ -177,7 +177,12 @@ test("the runner reads a state's registration before its providers run, before t
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   const preload = runner.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids]");
   assert.ok(preload > 0 && preload < runner.indexOf("const registry = buildRegistry("), "created work's states are read before the providers keep it");
-  assert.match(runner, /beforeTerritory: async \(states\) =>\s+\[\.\.\.\(await preloadRegistrationJurisdictions\(/, "a scope's states before its territory");
+  const beforeTerritory = runner.slice(runner.indexOf("beforeTerritory: async (states) => {"), runner.indexOf("...(\"registries\" in promoted"));
+  const registrationRead = beforeTerritory.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states,");
+  const ownershipRead = beforeTerritory.indexOf("await meetingPartitions.readStates(states)");
+  const refusalReturn = beforeTerritory.indexOf("return [...registration.refused]");
+  assert.ok(registrationRead > 0 && ownershipRead > registrationRead && refusalReturn > ownershipRead,
+    "a scope awaits registration and meeting ownership before returning its territory preflight, preserving refused registrations");
   assert.match(runner, /await preloadRegistrationJurisdictions\(\{ root: ROOT, states: dispatchTargets\.flatMap/, "a DISPATCH's states before its plan");
   assert.match(runner, /addressSource: dispatchedAddressSource\(e\.reg, /, "a dispatched need's address names the registry it was recorded in");
   const wiring = readFileSync(join(ROOT, "scripts", "derive-meeting-source-wiring.mts"), "utf8");

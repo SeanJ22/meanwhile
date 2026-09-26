@@ -2,7 +2,7 @@
  * The unbounded routine observability read (2026-09-23): every candidate
  * version with its full payload, 3.8 GB, after minutes of correlated scans.
  * - The research cycle no longer makes it. It exhausted the cycle's 4 GB heap,
- *   and the meetings receipt it fed now stands UNAVAILABLE by name, which
+ *   and a failed bounded replacement remains UNAVAILABLE, which
  *   holds fact approval fail-closed.
  * - Admin's request-scoped read is bounded server-side and names the timeout;
  *   it never reports an empty or zero outcome.
@@ -17,7 +17,6 @@ import {
   readRoutineDataObservabilityFromConnection,
 } from "../lib/civic-data/observability-store.ts";
 import {
-  RESEARCH_CYCLE_MEETINGS_RECEIPT,
   factFreshnessFromPermanentMeetings,
 } from "../lib/control-plane/promotion/fact-freshness.ts";
 
@@ -25,20 +24,16 @@ test("the research cycle never makes the unbounded observability read", () => {
   const src = readFileSync("scripts/freshness-shadow.mts", "utf8");
   assert.doesNotMatch(src, /readRoutineDataObservability/, "the research child must not read the full canonical projection");
   assert.doesNotMatch(src, /observability-store/, "nor import its store");
-  assert.match(src, /const meetingsReceipt: PermanentMeetingsReceipt = RESEARCH_CYCLE_MEETINGS_RECEIPT;/);
+  assert.match(src, /createPermanentMeetingFreshness\(/);
 });
 
-test("the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed", () => {
-  assert.equal(RESEARCH_CYCLE_MEETINGS_RECEIPT.kind, "UNAVAILABLE");
-  assert.match(RESEARCH_CYCLE_MEETINGS_RECEIPT.kind === "UNAVAILABLE" ? RESEARCH_CYCLE_MEETINGS_RECEIPT.detail : "", /3\.8 GB[\s\S]*heap[\s\S]*held/);
-  const reading = factFreshnessFromPermanentMeetings(RESEARCH_CYCLE_MEETINGS_RECEIPT, {
-    recordClass: "meeting-times",
-    subjectId: "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#budget-committee",
-    meetingSource: "schedulepage",
+test("a missing permanent receipt continues to hold approval fail-closed", () => {
+  const reading = factFreshnessFromPermanentMeetings({kind:"UNAVAILABLE", detail:"bounded proof read failed"}, {
+    recordClass:"meeting-times", subjectId:"unknown", meetingSource:"schedulepage",
   });
-  assert.equal(reading.hold, true, "no fact is approved on a missing receipt");
-  assert.equal(reading.state, "UNKNOWN");
-  assert.match(reading.reason, /permanent meetings receipt unavailable: not read by the research cycle/);
+  assert.equal(reading.hold,true);
+  assert.equal(reading.state,"UNKNOWN");
+  assert.match(reading.reason,/bounded proof read failed/);
 });
 
 test("a read that runs past its statement limit is a named store failure, never an empty or zero outcome", async () => {

@@ -326,7 +326,11 @@ test("the research cycle bounds its late work by the late-work deadline: the met
   /* The projection runs inside a bounded step whose budget is the late work's, and a yield is named, never a crash. */
   assert.match(
     source,
-    /pending\.step\("autonomous-workers:fact-projection", \(\) => runBoundedStep\(\{\s*label: "autonomous-workers:fact-projection",\s*budgetMs: lateWorkBudgetMs\(\),\s*fn: \(\) => projectFleetPipeline\(/,
+    /pending\.step\(phase, \(\) => runBoundedStep\(\{\s*label: phase,\s*budgetMs: Math\.min\(120_000, lateWorkBudgetMs\(\)\),\s*fn: \(\) => projectFleetPipeline\(/,
   );
-  assert.match(source, /the worker fleet's fact projection yielded to the cycle's records/);
+  assert.match(source, /retained records remain owed, existing reader data is preserved/);
+  const retained = source.indexOf('await projectRetainedFacts("retained-results:fact-projection")');
+  assert.ok(retained > 0 && retained < source.indexOf("const cycle = await runCycle("), "retained verification cannot be starved behind new acquisition");
+  assert.match(source, /if \(!dry && !canary && !scheduledBlackout\) await projectRetainedFacts/, "normal operating controls still govern the pass");
+  assert.match(source, /if \(fleetDispatches\.some\(row => row\.outcome === "WORKED"\)\) await projectRetainedFacts\("new-worker-results:fact-projection"\)/, "only new worker output justifies the second pass");
 });

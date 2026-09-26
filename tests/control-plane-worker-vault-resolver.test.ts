@@ -138,3 +138,30 @@ test("an admitted record the vault does not hold under its own identity is not i
   );
   await assert.rejects(workerVaultResolver(repos([record(first)]), store, PROJECT)(first.id), /WORKER_ARTIFACT_NOT_IN_VAULT/);
 });
+
+test("a retained-evidence pass shares its immutable index, while the next pass sees later acquisitions", async t => {
+  const store = await vault(t);
+  const first = capture(1);
+  await hold(store, first);
+  const records = [record(first)];
+  const repository = repos(records);
+  let logReads = 0;
+  let listings = 0;
+  const readAll = repository.artifacts.readAll.bind(repository.artifacts);
+  repository.artifacts.readAll = async () => { logReads++; return [...await readAll()]; };
+  const list = store.list.bind(store);
+  store.list = async prefix => { listings++; return list(prefix); };
+  const read = workerVaultResolver(repository, store, PROJECT, { snapshot: true });
+  const held = await Promise.all([read(first.id), read(first.id), read(first.id)]);
+  assert.ok(held.every(input => input.text === BODY && input.attemptId === first.attemptId));
+  assert.equal(logReads, 1, "one log read, not one complete-log query per artifact request");
+  assert.equal(listings, 1, "one vault listing shared by concurrent reads");
+  const text = BODY + "<p>New notice</p>";
+  const newer = recordAcquisition({ ...first, workItemId: "wi-new", attemptId: "at-new" }, text).artifact;
+  await putArtifact(store, PROJECT, newer, new TextEncoder().encode(text));
+  records.push(record(newer));
+  await assert.rejects(read(newer.id), /WORKER_ARTIFACT_MISSING_OR_PARTIAL/, "the existing pass cannot silently change its evidence set");
+  const next = await workerVaultResolver(repository, store, PROJECT, { snapshot: true })(newer.id);
+  assert.equal(next.text, text);
+  assert.equal(next.attemptId, "at-new");
+});

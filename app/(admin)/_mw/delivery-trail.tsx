@@ -15,6 +15,7 @@ import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 
 import { Dash, Pill, mw as s } from "./ui.tsx";
+import { DeliveryPending } from "./delivery-pending.tsx";
 
 export function DeliveryTrailCard({ trail, note }: { readonly trail: DeliveryTrailView | null; readonly note: string | null }) {
   return (
@@ -77,6 +78,7 @@ export function DeliveryTrailCard({ trail, note }: { readonly trail: DeliveryTra
             <span className={s.strong}>Public availability: </span>
             {trail.servedReader.says}
           </p>
+          {trail.pending && <DeliveryPending rows={trail.pending} />}
           {trail.promotions.length > 0 && (
             <div className={s.stack8}>
               <span className={s.label}>Records approved for promotion, with their history</span>

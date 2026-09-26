@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 869,
-    "named": 8306,
+    "files": 871,
+    "named": 8322,
     "dynamic": 33
   },
   "files": {
@@ -2010,6 +2010,14 @@
       ],
       "dynamic": 0
     },
+    "tests/ballot-coverage-note-scope.test.ts": {
+      "names": [
+        "a changed legacy note needs new scope and cannot silently reuse the old geographic assertion",
+        "explicit future note scopes support shared divisions while statewide freshness warnings remain visible",
+        "retained Pima absence notes cannot become Cochise ballot claims; measured Vail notes survive"
+      ],
+      "dynamic": 0
+    },
     "tests/ballot-desktop-composition.test.ts": {
       "names": [
         "BAL-25: no ballot surface answers the desktop with a label/value column pair",
@@ -2565,8 +2573,9 @@
     },
     "tests/campaign-publication-due.test.ts": {
       "names": [
-        "new approvals enter the normal publication frontier before hourly cadence without changing other families",
-        "publication admission uses a bounded approval clock and preserves unread errors"
+        "committed approvals wake normal publication despite old acquisition clocks and survive restart",
+        "only an exact publication child receipt acknowledges the captured input count",
+        "publication admission reads one committed snapshot and refuses malformed accounting"
       ],
       "dynamic": 0
     },
@@ -3704,6 +3713,7 @@
       "names": [
         "a later record of the same artifact is read when the first record's bytes were never vaulted",
         "a partial capture is never read; a complete record of the same bytes is",
+        "a retained-evidence pass shares its immutable index, while the next pass sees later acquisitions",
         "an admitted record the vault does not hold under its own identity is not in the vault",
         "only an acquiring role may hand bytes to a worker, and a refusal still names why",
         "the first held record still wins, in log order"
@@ -4096,7 +4106,8 @@
         "MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records",
         "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
         "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
-        "empty pipeline: every stage is a named gap, the blockers are named, promotions empty"
+        "empty pipeline: every stage is a named gap, the blockers are named, promotions empty",
+        "pending records show the unresolved verification step without reviving historical duplicate-stage failures"
       ],
       "dynamic": 0
     },
@@ -6068,7 +6079,8 @@
         "MW-014: the coordinator's BLOCKED and STAGED decisions are counted, not silent",
         "MW-014: the persisted reading's reasons sum to the skipped count on the runner card",
         "MW-071: mid-cycle lanes count running Scouts as active and the oldest row neither started nor running",
-        "MW-071: the pulse carries the lane gauges from the research state it already reads"
+        "MW-071: the pulse carries the lane gauges from the research state it already reads",
+        "a cycle without dispatches does not invent a spending-limit stop"
       ],
       "dynamic": 0
     },
@@ -6763,6 +6775,15 @@
         "production membership and scopes are one-to-one and the global disposition is absent",
         "the batched Reader bounds database calls and isolates a corrupt partition",
         "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-partition-ownership.test.ts": {
+      "names": [
+        "later Admin scopes reuse readings and load each newly reached state once",
+        "meeting ownership joins exact bodies, never a county's committees or neighboring governments",
+        "reviewed government joins require the promoted Census vintage and preserve conflicting exact IDs",
+        "unread wiring holds only unowned routes and conflicting government identities stay held"
       ],
       "dynamic": 0
     },
@@ -8614,9 +8635,11 @@
         "a stage out of order is refused, the refusal is APPENDED as history, and it refuses the OFFER, not the item",
         "an identical re-offer of a held record is a NO-OP SUCCESS, so a re-map cannot refuse what it already mapped",
         "item states come from one paged read of the log, equal to reading every item's key",
+        "mapping reuses accepted confirmation at a later clock instead of stranding it behind a duplicate-stage refusal",
         "mapping: CONFIRMED exists only where an ACQUIRER artifact at the same URL comes from another Attempt",
         "mapping: ROUTE_CANDIDATE and EVIDENCE_FOUND become SCOUTED; refused and absence-shaped results map to nothing",
         "mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED",
+        "method lifecycle advancement reuses its scouting evidence but changed source identity is still refused",
         "the full chain is ACCEPTED when every burden is met — the positive control for every refusal below"
       ],
       "dynamic": 0
@@ -10096,7 +10119,10 @@
         "PDC-13: the pure source-state classifier refuses skipped, revived, and repeated dispositions",
         "PDC-13: tied latest attempts cannot be ordered by UUID or database return order",
         "R20: Admin shows the retry the runner admits on; a meeting partition never published is next due at the base cadence",
-        "a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion"
+        "a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion",
+        "bounded worker freshness rejects missing readback, bad pointer, stale authority and another deployed build",
+        "bounded worker freshness reuses full canonical proof and shares one read across fact classes",
+        "bounded worker proof failure stays named, cached and secret-free"
       ],
       "dynamic": 0
     },
@@ -10261,11 +10287,11 @@
     "tests/routine-observability-bounded.test.ts": {
       "names": [
         "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
+        "a missing permanent receipt continues to hold approval fail-closed",
         "a read that runs past its statement limit is a named store failure, never an empty or zero outcome",
         "any other read failure stays an untyped store failure",
         "the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it",
         "the research cycle never makes the unbounded observability read",
-        "the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed",
         "the statement limit is validated before any connection is opened"
       ],
       "dynamic": 0

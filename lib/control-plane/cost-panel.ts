@@ -402,14 +402,14 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
       : grandTotal === null
         ? gap("OURS", "no attempt in the ledger reported a dollar cost.")
         : input.verifiedRecords === 0
-          ? gap("OURS", "no record has reached VERIFIED yet; a cost over zero records is not a number.")
+          ? gap("OURS", "no record has passed the validation stage yet; a cost over zero records is not a number.")
           : held({
               // Built directly: a ratio is not a count, and measured() would
               // refuse a per-record cost larger than the record count.
               value: round(grandTotal / input.verifiedRecords),
               denominator: input.verifiedRecords,
               contract:
-                "measured dollars per record that reached VERIFIED: the value is dollars per record, the denominator is how many records reached VERIFIED",
+                "measured dollars per record that passed the validation stage (VERIFIED); audit and publication may remain, so this is not cost per verified result delivered to readers",
               denominatorSource: "cp_log_promotion_pipeline via stageCounts().byStage.VERIFIED",
             });
 

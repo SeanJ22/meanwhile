@@ -10,7 +10,7 @@
  */
 import { hostname } from "node:os";
 import { neon } from "@neondatabase/serverless";
-import { campaignPublicationDue, readLatestCampaignApprovalAt, CAMPAIGN_PUBLICATION_TASK } from "../lib/civic-data/campaign-publication-due.ts";
+import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
@@ -284,6 +284,7 @@ function newestConsideredAt(
 }
 
 async function persistSupervisorOutcome(input: {
+  readonly campaignPublicationApprovalsAttempted?: number;
   readonly failures: readonly SupervisorFailure[];
   readonly attemptedTasks: number;
   readonly verifiedSourceSuccesses: number;
@@ -313,6 +314,7 @@ async function persistSupervisorOutcome(input: {
   assertDurableRepositories(repos, "routine civic-data supervisor outcomes");
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
+    ...(input.campaignPublicationApprovalsAttempted !== undefined ? { campaignPublicationApprovalsAttempted: input.campaignPublicationApprovalsAttempted } : {}),
     cycleId,
     startedAt: RUN_STARTED_AT,
     finishedAt: input.finishedAt,
@@ -431,14 +433,14 @@ if (!FORCE) {
 const honouredDueRequests = new Map<string, RoutineDueRequest>();
 // Newly verified findings need not wait for the hourly fallback clock. This
 // read changes no data; admission uses the same frontier and publication child.
-let latestCampaignApprovalAt: string | null = null;
+let campaignPublicationInputs: CampaignPublicationInputs | null = null;
 const publicationInputLines: string[] = [];
 if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK)) {
   try {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("control-plane reporting connection is unavailable");
     const sql = neon(connection);
-    latestCampaignApprovalAt = await readLatestCampaignApprovalAt((query, params) => sql.query(query, params));
+    campaignPublicationInputs = await readCampaignPublicationInputs((query, params) => sql.query(query, params));
   } catch (error) {
     const detail = safeFailure(sanitizedErrorDiagnostic(error));
     supervisorFailures.push({ taskId: CAMPAIGN_PUBLICATION_TASK, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
@@ -456,7 +458,7 @@ for (const read of clockReads) {
   const durableClock: RoutineTaskClock | undefined = read.clock;
   const sittingHot = sittingSignals.get(task.id);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
-  const publicationDue = campaignPublicationDue({ taskId: task.id, approvalAt: latestCampaignApprovalAt, lastAttemptedAt: durableClock?.lastAttemptedAt, nowMs: admissionNowMs });
+  const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
   if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null && !publicationDue) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
@@ -464,7 +466,7 @@ for (const read of clockReads) {
     continue;
   }
   if (publicationDue) {
-    const detail = `${task.id}: new complete approval at ${latestCampaignApprovalAt}; offered to the normal publication frontier without waiting for hourly cadence.`;
+    const detail = `${task.id}: ${campaignPublicationInputs!.approvals - campaignPublicationInputs!.attemptedApprovals} newly committed approval(s); offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);
     console.log(`RCD_INPUT_CHANGED ${detail}`);
   }
@@ -979,6 +981,8 @@ for (const reference of readerReadbackReferences) {
 step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
+    ...(campaignPublicationInputs !== null && verifiedTaskReceipts.some(row => row.taskId === CAMPAIGN_PUBLICATION_TASK)
+      ? { campaignPublicationApprovalsAttempted: campaignPublicationInputs.approvals } : {}),
     failures: supervisorFailures,
     attemptedTasks: attempted,
     verifiedSourceSuccesses,

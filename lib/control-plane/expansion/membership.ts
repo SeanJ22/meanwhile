@@ -545,7 +545,7 @@ export class ScopeBudgetGate {
         const spent = scope.historicalUsd + (this.cycleUsd.get(scope.key) ?? 0);
         return this.refuse(
           scope,
-          `${scope.label} has spent $${spent.toFixed(2)} of its $${scope.budgetUsd.toFixed(2)} rolling 24-hour budget; one more Scout's worst case ($${this.worstCaseUsd.toFixed(2)}) would exceed it`,
+          `${scope.label} has spent $${spent.toFixed(2)} of its $${scope.budgetUsd.toFixed(2)} ${scope.lifetime ? "Anthropic token budget for this hunt" : "rolling 24-hour budget"}; one more Scout's worst case ($${this.worstCaseUsd.toFixed(2)}) would exceed it`,
         );
       }
     }

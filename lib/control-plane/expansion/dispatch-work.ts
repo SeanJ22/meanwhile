@@ -938,9 +938,9 @@ export function dispatchWorkReading(
         `When the paid lane runs, every Scout passes the Fleet's ${usd(context.ceilingUsd)} rolling 24-hour ceiling ` +
           `(${context.ceilingSource === "OVERRIDE" ? "your dial" : "the built-in fallback"}) first` +
           (t.target.kind === "SCOPE"
-            ? `, then this Send's own ${usd(t.target.budgetUsd)} rolling 24-hour budget over the work it reached, and this geography's.`
+            ? `, then this Send's own ${usd(t.target.budgetUsd)} ${t.target.scope.decision.budgetStartedAt ? "Anthropic token budget for this hunt" : "rolling 24-hour budget"} over the work it reached, and this geography's.`
             : ", then this Send's own budget over the work it reached, when you sent it with one.") +
-          " Work several Sends reached runs while any of them has room.",
+          " Every applicable hunt token budget must have room; another instruction cannot override it. Legacy rolling assignments retain their recorded rules.",
       );
     }
     if (createdDeterministic > 0) says.push(`${createdDeterministic} run on the plain-code lane as they come due, at no model cost.`);

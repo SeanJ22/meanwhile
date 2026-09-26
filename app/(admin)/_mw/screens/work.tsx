@@ -483,7 +483,7 @@ function InstructionDetail({ view, openHref }: { view: InstructionView; openHref
         ))}
         <p className={s.note}>
           {(d.questions ?? []).length > 0
-            ? "Your questions are kept on the instruction and on every piece of work it reaches. They say what it is for; they do not yet change how the work runs."
+            ? "Your questions are kept on the instruction and on every piece of work it reaches. Scouts receive them in their task brief and investigate them against current evidence and inherited holdings; validation and publication requirements still apply."
             : "You asked no question of it — or sent it before questions were kept. The geography is what it is for."}
         </p>
       </div>

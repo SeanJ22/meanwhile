@@ -35,6 +35,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "@/lib/control-plane/work-question.ts";
 import type { PreviewScopeBody } from "@/lib/control-plane/admin-view/scope-preview.ts";
+import { scopeRouteDescription } from "@/lib/control-plane/admin-view/scope-preview-words.ts";
 
 import { fnv } from "./fnv.ts";
 import s from "./mw.module.css";
@@ -350,7 +351,7 @@ export function Composer(props: {
                   <ul className={s.stack8} style={{ maxHeight: 300, overflowY: "auto" }}>
                     {p.scopeBodies.map(body => <li key={body.id}>
                       <span className={s.name14}>{body.name}</span>
-                      <div className={s.note}>{body.codes.map(code => `${code.zcta5}${code.partial ? " (partial ZIP coverage)" : ""}`).join(", ")} · {body.coverageStatus === "NOT_ATTEMPTED" ? "No walk recorded in this registry" : body.coverageStatus === "LIVE" || body.coverageStatus === "MANUAL" ? "A source route is registered" : body.coverageStatus === "KNOWN_UNCOVERED" || body.coverageStatus === "NO_SOURCE_FOUND" ? "Looked; no source route registered" : "Source-route status unclassified"}</div>
+                      <div className={s.note}>{body.codes.map(code => `${code.zcta5}${code.partial ? " (partial ZIP coverage)" : ""}`).join(", ")} · {scopeRouteDescription(body.coverageStatus)}</div>
                     </li>)}
                   </ul>
                 </details>}

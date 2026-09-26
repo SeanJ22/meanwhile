@@ -915,7 +915,9 @@ export default async function BallotPage({
   // The reader edge and the committed geometry start before anything waits (R30).
   const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve(null);
   if (centroid) prefetchReaderGeography();
-  const certainty = await zipCertainty(zip);
+  // Certainty now includes the publisher's Census serving copy. Read it in
+  // the same request bundle as the ballot, never ahead of the edge boundary.
+  const certainty = await readerEdgeRead.then(edge => withReaderAuthorityEdge(edge, () => zipCertainty(zip)));
 
   /*
    * **THE READER EDGE IS ENTERED HERE, IN THE PAGE'S OWN FUNCTION.** (R30,

@@ -25,6 +25,7 @@ import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-b
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
+import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
 import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   resolveReaderArtifactStore,
@@ -306,6 +307,7 @@ export async function readReaderManifest(
  * the state legislators incumbency asks about.
  */
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "census-districts",
   "registry-runtime",
   "federal-directory",
   "campaign-sites",
@@ -485,6 +487,7 @@ export async function ensureReaderAuthorityEdge(
     : {};
   if (!refs || !store) return registrations;
   const bundle: {
+    censusDistricts?: { value: CensusDistrictEdge; versionId: string };
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
@@ -500,13 +503,14 @@ export async function ensureReaderAuthorityEdge(
     wanted.has(family) ? fetchAuthorityValue(family, refs[family], store) : Promise.resolve(null);
   // The proven-pointer families start with the others, never after them.
   const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
-  const [registry, federal, campaign, legislators, outcomes, commentAccess] = await Promise.all([
+  const [registry, federal, campaign, legislators, outcomes, commentAccess, censusDistricts] = await Promise.all([
     fetchWanted("registry-runtime"),
     fetchWanted("federal-directory"),
     fetchWanted("campaign-sites"),
     fetchWanted("state-legislators"),
     fetchWanted("meeting-outcomes"),
     fetchWanted("comment-access"),
+    fetchWanted("census-districts"),
   ]);
   if (registry !== null) bundle.registryRuntime = { value: registry as RegistryRuntimeReadModel, versionId: refs["registry-runtime"]!.version };
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
@@ -514,6 +518,7 @@ export async function ensureReaderAuthorityEdge(
   if (legislators !== null) bundle.stateLegislators = { value: legislators as Record<string, OfficialStateLegislatorReadModel>, versionId: refs["state-legislators"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
   if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
+  if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
   // The proven-pointer families, fetched beside the others. A family whose
   // artifact is missing, failed or malformed adds nothing, and each of its
   // pointers is then read from the database by its own settle.

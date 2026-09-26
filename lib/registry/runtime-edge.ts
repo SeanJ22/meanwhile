@@ -8,6 +8,7 @@ import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
+import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
 
 /**
  * Request-scoped "reader authority" edge bundle: the large families the coverage
@@ -62,6 +63,7 @@ export interface RegistrationsEdge {
 }
 
 export interface ReaderAuthorityEdgeBundle {
+  readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
   readonly registryRuntime?: RegistryRuntimeEdgeValue;
   readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;

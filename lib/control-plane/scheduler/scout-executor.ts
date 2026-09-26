@@ -629,6 +629,20 @@ export function scoutAttemptWorstCaseUsd(model: string, bound: ScoutBound): numb
   return ((bound.maxTokens + bound.maxOutputTokensPerTurn) / 1_000_000) * dearest;
 }
 
+/**
+ * **WHAT ONE SCOUT JOB HOLDS AGAINST A SEND OR AREA BUDGET BEFORE IT STARTS.**
+ * (MW-021, 2026-09-25.) Its first attempt's worst case at the model the loop
+ * starts on (`scoutAttemptWorstCaseUsd`, from the same bound the loop
+ * enforces), replacing the flat $0.60 the budgets held. An escalation holds
+ * its own worst case before it runs, and every request past the job's hold
+ * must win a further hold first (`spend-holds.ts`), so this need not cover
+ * them. Null when the start model has no stated rate: no budget can be held,
+ * and budgeted work waits.
+ */
+export function scoutJobWorstCaseUsd(bound: ScoutBound, modelOverride?: string): number | null {
+  return scoutAttemptWorstCaseUsd(scoutLoopBase(modelOverride).model, bound);
+}
+
 interface ToolResultBlock {
   readonly type: "tool_result";
   readonly tool_use_id: string;

@@ -59,6 +59,8 @@ import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
 import type { SearchHit } from "../scheduler/scout-contract.ts";
 import {
+  CIVICPLUS_CALENDAR_INDEX_PATH,
+  civicPlusCategoryFeeds,
   decideOutcome,
   meetingEndpointCandidates,
   recheckAfter,
@@ -81,6 +83,7 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission } from "../scheduler/robots.ts";
 import { DEFAULT_USER_AGENT, type VaultPut } from "../scheduler/route-executor.ts";
+import { categoryBodyOf } from "./auto-crosswalk.ts";
 
 /** One HTTP hop. It never follows a redirect: the executor asks permission of every new host first. */
 export type DiscoveryOpen = (input: {
@@ -600,6 +603,62 @@ export async function walkMeetingsDiscoveryNeed(
     }
 
     /*
+     * 2b. A CivicPlus site's calendar feeds (2026-09-25, the 85635 expansion). An AgendaCenter page cannot be wired;
+     * the ICAL wiring reads a feed, and every CivicPlus site lists one per calendar category on its iCalendar index.
+     * On a site whose own markup shows CivicPlus, the index is read robots-first like any page, and each category is
+     * matched to the body it names by the reviewer's own rule (`categoryBodyOf`). Only a category naming the
+     * government's registered body is proposed, as an iCal feed the index links, so the ICAL wiring and the C16
+     * reviewer take it; every other category is recorded unmatched, with its reason. Nothing is guessed. The index
+     * is recorded as a lead: it is the page the proposed feeds' attestation chains through.
+     */
+    const civicPlusFeeds: { candidate: EndpointCandidate; via: Via }[] = [];
+    let civicPlusIndex: string | null = null;
+    if (homeOrigin !== null && candidates.some((c) => c.vendor === "civicplus-agendacenter")) {
+      civicPlusIndex = `${homeOrigin}${CIVICPLUS_CALENDAR_INDEX_PATH}`;
+      const index = await get(civicPlusIndex, "endpoint", ACCEPT_PAGE);
+      const evidence = "CivicPlus markup on the government's own domain: its iCalendar index lists one feed per calendar category";
+      const indexOrigin = index === null ? null : new URL(index.finalUrl).origin;
+      if (index === null) {
+        leads.push({ vendor: "civicplus-icalendar", url: civicPlusIndex, basis: "SERVED_BY", evidence, detail: "the route could not be read this walk", via: homePage });
+      } else if (indexOrigin !== homeOrigin) {
+        leads.push({ vendor: "civicplus-icalendar", url: civicPlusIndex, basis: "SERVED_BY", evidence, detail: `it answered from ${indexOrigin}, off the homepage's origin, so no feed it lists is proposed`, via: homePage });
+      } else {
+        const feeds = civicPlusCategoryFeeds(index.body, index.finalUrl);
+        const proposed: string[] = [];
+        const unmatched: string[] = [];
+        for (const feed of feeds) {
+          const named = categoryBodyOf(feed.name, need.jurisdictionId);
+          if ("unmatched" in named) {
+            unmatched.push(`${named.unmatched} (catID ${feed.catId})`);
+            continue;
+          }
+          proposed.push(`"${feed.name}" (catID ${feed.catId})`);
+          civicPlusFeeds.push({
+            candidate: {
+              vendor: "ical",
+              url: feed.url,
+              basis: "LINKED",
+              evidence: `CivicPlus calendar category "${feed.name}" (catID ${feed.catId}), listed on ${index.finalUrl}: it names the government's governing body, "${named.name}"`,
+              verifiable: true,
+            },
+            via: { page: index.finalUrl, artifactId: index.artifactId },
+          });
+        }
+        leads.push({
+          vendor: "civicplus-icalendar",
+          url: index.finalUrl,
+          basis: "SERVED_BY",
+          evidence,
+          detail: feeds.length === 0
+            ? "the index lists no category calendar feed"
+            : `${feeds.length} category feed(s); proposed as the governing body's: ${proposed.length === 0 ? "none" : proposed.join(", ")}; ` +
+              `left unmatched: ${unmatched.length === 0 ? "none" : unmatched.join("; ")}`,
+          via: homePage,
+        });
+      }
+    }
+
+    /*
      * 3. The routes, confirmed by content: the government's committed hints
      * first, then the page's own evidence, then the saved methods. A hint no
      * content check covers is still requested, robots-first, so the walk records
@@ -614,7 +673,13 @@ export async function walkMeetingsDiscoveryNeed(
         via: null,
       });
     }
-    for (const candidate of candidates.filter((c) => c.verifiable && !planned.some((p) => p.candidate.url === c.url))) {
+    /* The category feeds a CivicPlus index proposed, after the hints and before the homepage's own links. */
+    for (const { candidate, via } of civicPlusFeeds.filter((f) => !planned.some((p) => p.candidate.url === f.candidate.url))) {
+      planned.push({ candidate, recipeIds: [], label: null, via });
+    }
+    /* A homepage link to the CivicPlus index itself is not a feed, and the index was already read. */
+    const isIndex = (url: string): boolean => civicPlusIndex !== null && url.toLowerCase() === civicPlusIndex.toLowerCase();
+    for (const candidate of candidates.filter((c) => c.verifiable && !isIndex(c.url) && !planned.some((p) => p.candidate.url === c.url))) {
       planned.push({ candidate, recipeIds: [], label: null, via: homePage });
     }
     for (const p of proposals) {
@@ -665,7 +730,7 @@ export async function walkMeetingsDiscoveryNeed(
      * Nothing is guessed: every candidate is a link a read page carries.
      */
     if (found.length === 0) {
-      const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url)]);
+      const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url), ...(civicPlusIndex === null ? [] : [civicPlusIndex])]);
       const nextHop: { candidate: EndpointCandidate; via: Via }[] = [];
       for (const page of readPages) {
         const pageVia: Via = { page: page.finalUrl, artifactId: page.artifactId };

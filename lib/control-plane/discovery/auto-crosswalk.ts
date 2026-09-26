@@ -287,6 +287,40 @@ function canonical(name: string, jurisdictionId: string): string {
   return words.slice(i).join(" ");
 }
 
+/** The body a calendar category names, by the reviewer's own rules, or why it names none this government registers. */
+export type CategoryBody =
+  | { readonly role: "GOVERNING"; readonly name: string }
+  | { readonly unmatched: string };
+
+/**
+ * **WHICH REGISTERED BODY A CALENDAR CATEGORY NAMES, OR WHY NONE.** (2026-09-25, the 85635 expansion.)
+ *
+ * A category is a body's name only when it is exactly one printed name and nothing else, the rule the review
+ * below applies to an event's `CATEGORIES`. A government's registration pairs it with one body, its governing
+ * body, so a category names a registered body only when that one name is a governing-body name of this kind of
+ * government ("Board of Supervisors" of a county). Nothing is guessed: an office or a department ("Assessor"), a
+ * general calendar ("Main Calendar"), a phrase longer than one name ("Clerk of the Board"), another government's
+ * body ("Housing Authority") and a sub-body the registration does not record are each left unmatched, by name.
+ */
+export function categoryBodyOf(category: string, jurisdictionId: string): CategoryBody {
+  const shown = flat(category);
+  const names = printedNames(shown, jurisdictionId);
+  if (names.length === 0) return { unmatched: `"${shown}" prints no body's name: an office, a department or a general calendar` };
+  if (names.length > 1) return { unmatched: `"${shown}" prints ${names.length} bodies' names` };
+  if (tokenize(names[0]!.text).length < 2) return { unmatched: `"${shown}" prints a bare "${names[0]!.text}", which names no body by itself` };
+  const key = canonical(names[0]!.text, jurisdictionId);
+  if (key !== canonical(shown, jurisdictionId)) return { unmatched: `"${shown}" says more than one body's name ("${names[0]!.text}")` };
+  const kind = governmentKind(jurisdictionId);
+  const listed = governingNames(kind).find((n) => canonical(n, jurisdictionId) === key);
+  if (listed !== undefined) return { role: "GOVERNING", name: listed };
+  const words = key.split(" ");
+  if (Object.values(GOVERNING_NAMES).flat().some((n) => canonical(n, jurisdictionId) === key) ||
+    SEPARATE_GOVERNMENT_WORDS.some((w) => words.includes(w) && !OWN_CLASS_WORD[kind].includes(w))) {
+    return { unmatched: `"${shown}" reads as another government's body` };
+  }
+  return { unmatched: `"${shown}" names a sub-body; the registration pairs this government with its governing body only, and the reviewer takes sub-bodies from event titles` };
+}
+
 /* --------------------------------------------------------------- events */
 
 interface CalendarEvent {

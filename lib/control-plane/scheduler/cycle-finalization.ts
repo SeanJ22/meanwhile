@@ -80,6 +80,35 @@ export function cycleClock(input: { readonly processStartedMs: number; readonly 
 }
 
 /**
+ * The finalization steps before the digest, whose records Admin reads live: the research state (Fleet's lanes
+ * and the cycle's phases), the code identity the heartbeat carries, and the heartbeat (the runner card).
+ */
+export const ADMIN_VISIBLE_FINALIZATION_MS =
+  CYCLE_FINALIZATION_BUDGETS_MS.researchState + CYCLE_FINALIZATION_BUDGETS_MS.codeIdentity + CYCLE_FINALIZATION_BUDGETS_MS.heartbeat;
+
+/**
+ * **WHEN THE CYCLE'S LATE WORK YIELDS.** (2026-09-26.)
+ *
+ * The late work — the metrics, the research progression and the worker fleet's
+ * fact projection — is optional: each re-derives from the store, and what one
+ * cycle does not finish the next does. It yields at the stall diagnostic's
+ * moment, or earlier where that would not leave every finalization step its
+ * whole budget before the digest's reserve.
+ *
+ * On the fifteen-minute wall the stall point (810 s) left 25 s for the 100 s
+ * the research state, the code identity and the heartbeat declare. On
+ * 2026-09-26 the first cycle on fb84b6f0 ran its fact projection to 835 s:
+ * the research state and the heartbeat were "not started; no time was left",
+ * so Admin's runner card kept the previous cycle and the previous code for an
+ * hour and its lanes read "mid-cycle" from 03:55Z, while the digest said
+ * SUCCEEDED. The late work now ends by 735 s on that wall.
+ */
+export function lateWorkDeadlineMs(clock: CycleClock): number {
+  const leavesFinalizationItsBudgets = clock.recordsDeadlineMs - DIGEST_AND_RECORD_RESERVE_MS - ADMIN_VISIBLE_FINALIZATION_MS;
+  return Math.max(clock.processStartedMs, Math.min(clock.stallAtMs, leavesFinalizationItsBudgets));
+}
+
+/**
  * A step's budget: its own, cut to what is left before `deadlineMs` once the
  * later steps' reserve is set aside. Zero means there is no time for it.
  */

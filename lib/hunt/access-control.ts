@@ -56,12 +56,35 @@ export const RATE_LIMIT_BACKOFF_MS = 60_000;
 export const FORBIDDEN_REQUEST_HEADERS: readonly string[] = ["authorization", "cookie", "proxy-authorization"];
 
 /**
+ * **A SCRIPT-ONLY PAGE THAT SENDS THE BROWSER BACK WITH A SIGNED TOKEN.** (2026-09-26.)
+ *
+ * Sierra Vista Unified School District's homepage (ZIP 85635) answered the discovery walk this way: HTTP 200,
+ * 490 bytes, `<title>Loading...</title>`, a `sid` session cookie, and nothing but
+ * `window.location.replace('…/?ch=1&js=<signed token>&sid=…')`. The walk read it as the homepage and recorded
+ * "shows no route this walk recognises". Getting past it means returning the session cookie and the token, which
+ * is a bypass, so it is a wall. The floor keeps it to pages that are nothing but the redirect.
+ *
+ * It is judged here, beside the shared signatures, because `lib/sources/challenge-signatures.ts` is bound by
+ * the Reader proof's closure receipt: moving it there belongs with the next reader re-proof, so that the source
+ * adapters judge it too.
+ */
+export const TOKEN_REDIRECT_CHALLENGE = {
+  name: "JavaScript token redirect",
+  test: /location\.(?:replace\(|assign\(|href\s*=)\s*['"][^'"]*[?&]js=[\w-]+\.[\w-]+\.[\w-]+/i,
+  maxBytes: 4_000,
+} as const;
+
+function tokenRedirectIn(text: string): string | null {
+  return text.length <= TOKEN_REDIRECT_CHALLENGE.maxBytes && TOKEN_REDIRECT_CHALLENGE.test.test(text) ? TOKEN_REDIRECT_CHALLENGE.name : null;
+}
+
+/**
  * The access control this answer puts in front of the page, or null when it is
  * not one. A challenge page is recognised at any status, 200 included.
  */
 export function accessControlIn(answer: { readonly status: number | null; readonly text?: string | null }): AccessControl | null {
   const text = answer.text ?? "";
-  const challenge = text === "" ? null : challengeIn(text);
+  const challenge = text === "" ? null : (challengeIn(text) ?? tokenRedirectIn(text));
   if (challenge !== null) {
     return {
       kind: "CHALLENGE",

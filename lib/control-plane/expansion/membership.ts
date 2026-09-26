@@ -68,6 +68,7 @@ import {
   type ExpansionScopeReading,
   type ScopeCoverageReading,
 } from "./reading.ts";
+import { ruledDistrictTerritory } from "./district-territory.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
@@ -192,6 +193,7 @@ export function buildTerritoryIndex(
   divisionTerritory: (j: Jurisdiction) => DivisionTerritory | undefined = () => undefined,
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
+  const unitsByPid = new Map(units.map((u) => [`${u.state.toUpperCase()}:${u.pid6}`, u] as const));
   const unitsByKey = new Map<string, CensusUnitTerritory[]>();
   const unregisteredUnitsByState = new Map<string, CensusUnitTerritory[]>();
   for (const unit of units) {
@@ -257,7 +259,13 @@ export function buildTerritoryIndex(
       if (unit === null) continue;
       claimed.add(unit);
       if (unit.zips.length === 0) {
-        unplaced.set(j.id, "its Census unit carries no ZCTA territory");
+        /* A district TIGER draws no boundary for may still have one its own law gives (`district-territory.ts`). */
+        const ruled = ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey);
+        if (ruled !== null && !("unplaced" in ruled)) {
+          bySubject.set(j.id, { subjectId: j.id, name: j.name, govClass: j.govClass, stateCode: j.stateCode.toUpperCase(), zctas: ruled.zctas, shares: ruled.shares });
+          continue;
+        }
+        unplaced.set(j.id, ruled === null ? "its Census unit carries no ZCTA territory" : `its Census unit carries no ZCTA territory, and ${ruled.unplaced}`);
         continue;
       }
       const key = unitShareKey(unit);

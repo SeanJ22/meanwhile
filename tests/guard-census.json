@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 839,
-    "named": 8087,
-    "dynamic": 31
+    "files": 841,
+    "named": 8123,
+    "dynamic": 33
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -775,20 +775,20 @@
     },
     "tests/agenda-retrieval-disallowed-hosts.test.ts": {
       "names": [
-        "a permitted agenda link that redirects into a refused host is held as a link, and the refused host is never requested",
-        "a portal detail page that redirects into a refused host is not followed, and the sitting keeps its link",
-        "a refused API agenda link is read through the sitting's portal link, stored on the API row, and the page is read once",
-        "an agenda link on a disallowed host is held as a link, never read; permitted hosts are unaffected",
-        "the ingest's agenda retrieval never requests a DISALLOWED host, and still requests a permitted one",
+        "a robots-disallowed agenda host is read; only a dead retired route's host is held as a link",
+        "a vendor-host API agenda link is read through the sitting's portal link first, stored on the API row, and the page is read once",
+        "an agenda link that redirects into a dead retired host is held as a link; a redirect into a robots-disallowed host is followed",
+        "the ingest's agenda retrieval reads a robots-disallowed vendor host, and holds only a dead retired host's link",
         "the recorded detail page's agenda link is read, never the accessible copy, and an unposted agenda reads as none",
-        "the refused hosts are derived from the catalogue's own DISALLOWED routes"
+        "the vendor's document hosts are derived from the catalogue, and no route carries a robots disposition",
+        "when the portal page links no agenda, or cannot be read, the vendor's file is read instead"
       ],
       "dynamic": 0
     },
     "tests/agenda-retrieval-order.test.ts": {
       "names": [
         "a link never read goes first, re-reads by nearness to today, and another sitting's page last",
-        "a refused link read through its portal page ranks as read once the sitting holds the portal's link",
+        "a vendor-host link read through its portal page ranks as read once the sitting holds the portal's link",
         "one run reads all six Board Actions links and no landing page; the next run reads no link twice",
         "read order is retrievedAt, then id, whatever order the rows arrive in",
         "seeded in payload order an unchanged read is stored again; seeded in read order it is not",
@@ -1747,6 +1747,7 @@
         "HELD: two bodies selecting one event, and a category that is a body's name",
         "MANUAL ROWS WIN: a reviewed row for the same body and kind, withdrawn or not, and one claiming the same calendar and filter",
         "PRINTED NAMES: a run of capitalized words ending in a body noun, two bodies joined by 'and' are two",
+        "ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, or cannot be read, holds no row; an access control on the naming page does",
         "THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an outage never drops it, and only a later automatic review restores it",
         "THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does",
         "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused"
@@ -1830,13 +1831,13 @@
         "PDF: a chaptered version is born-digital and carries its own approval stamp",
         "PDF: a governor's letter is a SCAN, and that reports as a failed read, not an empty document",
         "PDF: with an engine injected, the letter's own words decide the disposition",
-        "PERMISSION: apps.azleg.gov is named as disallowed and appears in no fetched URL",
         "RENDER: a signed bill cites the DOCUMENT its date came from",
         "RENDER: a veto says vetoed, and never asserts a signature",
         "RENDER: an enacted bill with no recognised stamp does not claim she signed it",
         "RENDER: an unread letter says WE have not read it, in plain language",
         "RENDER: no rendered sentence ever contains a null, undefined or empty quote",
         "RENDER: no row that is not a signing ever renders the word `signed`",
+        "ROBOTS RECORDED: apps.azleg.gov's Disallow is recorded as read, and every row cites the document actually read",
         "SCHEMA: a date is either published-and-read, or null with a reason naming whose gap it is",
         "SCHEMA: nothing is filed as SIGNED without a date read from a document",
         "SCHEMA: the session's general effective date is never used as a signing date",
@@ -2435,6 +2436,7 @@
       "names": [
         "a class opened for another field does not approve a campaign site",
         "a held paid-research finding reaches APPROVED with every check measured, controls clean and an independent second read",
+        "robots.txt is recorded, not a burden: a site whose robots.txt disallows every path is approved with the verdict on its record; an access control or an unread robots.txt still fails the class burden",
         "with the gate closed (the state before this change) nothing is approved: the class burden refuses"
       ],
       "dynamic": 0
@@ -2480,7 +2482,7 @@
         "a surname alone never names the candidate",
         "cycle evidence: the year must sit beside an election phrase or in the title",
         "host classes are refused before any request, each with its own typed reason",
-        "the read is robots-first: a refused host is never asked anything, a disallowing robots.txt stops the page request",
+        "the read is robots-first: a refused host is never asked anything; a disallowing robots.txt is read first and recorded, the page is still requested; a challenge is ACCESS_CONTROLLED",
         "the same bytes on a host that is not the candidate's are refused: a page about them is not their site"
       ],
       "dynamic": 0
@@ -3099,6 +3101,7 @@
         "a challenge served with HTTP 200 is the same wall",
         "a child rejected by a host that no longer resolves keeps the transport's code",
         "a real calendar we extract nothing from is still OUR zero-row JOB",
+        "a robots.txt line is never the publisher's wall; an access control still is",
         "meeting partition receipts parse with and without the additive failureKind",
         "our own code and configuration failures are jobs, and so is an unknown",
         "publisher-side failures are walls",
@@ -3435,7 +3438,7 @@
     "tests/control-plane-pima-shadow.test.ts": {
       "names": [
         "SEEDED: an incomplete denominator refuses the close even when every route is disposed",
-        "SEEDED: the Granicus wall keeps the obligation open — a permission verdict is not a finding",
+        "SEEDED: the unbuilt Granicus route keeps the obligation open — its robots.txt reading is evidence, not a finding",
         "SEEDED: walking seven of eight routes and omitting /EventDates cannot close MTG-13",
         "adapter-declared routes are never marked speculative, whatever the store's portability says",
         "the Pima floor is computed from the real method store plus the adapter's declared routes",
@@ -3501,7 +3504,7 @@
         "9. a validation and an INDEPENDENT adversarial audit are attached",
         "cleanup",
         "no route the run disposed carries an artifact from another Attempt",
-        "the Granicus wall stays a WALL — an OPEN disposition, never an emptiness",
+        "the Granicus route stays OPEN — unbuilt, its robots.txt recorded, never an emptiness",
         "the run agrees with the acceptance established BEFORE the control plane existed",
         "the shadow run executes end to end against DURABLE stores"
       ],
@@ -3991,7 +3994,7 @@
     "tests/derived-authority.test.ts": {
       "names": [
         "C16: a trigger suspends a promoted row, which stays marked until a later review restores it",
-        "a held row is never removed: absence, transport, robots and a challenge hold it by name",
+        "a held row is never removed: absence, transport, an access control and a walk's pre-2026-09-25 robots skip hold it by name",
         "a promoted row carries its inputs, and an undecided row is carried byte-exactly",
         "a promotion without evidence, verified by another adapter, or producing nothing is refused by name",
         "only the publisher withdraws a row, with vaulted evidence",
@@ -4031,11 +4034,13 @@
     },
     "tests/derived-wiring.test.ts": {
       "names": [
+        "A BOT CHALLENGE AT 200 ON A REVIEWED CALENDAR HOLDS THE ROW AS CHALLENGED — never read as the calendar, never a suspension",
         "C16 TRIGGERS SUSPEND A PROMOTED ROW; OUTAGES HOLD IT, CARRIED",
         "C16: a withdrawn or vanished crosswalk row suspends its promoted row; only a review after the suspension restores it",
         "C16: two reviewed bodies selecting the same sitting is conflicting evidence, and neither is published",
         "HOLD BY NAME at the first check that fails: registration, walk, attestation, a hand-wired body, the vault, the reader adapter",
         "PROMOTE only when every check holds, from a reviewed crosswalk row, never from a find alone",
+        "ROBOTS IS RECORDED, NOT BLOCKING: a walk over a disallowing robots.txt promotes the row; a recorded wall holds it as CHALLENGED; a pre-2026-09-25 robots skip holds it until the next walk",
         "THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact",
         "THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined for, and anything else is held by name"
       ],
@@ -4594,6 +4599,7 @@
     },
     "tests/field-manual-scout.test.ts": {
       "names": [
+        "a dead door recorded for robots.txt alone is not a wall: the brief says so and marks it walkable; an access-control dead door stays a wall (owner decision 2026-09-25)",
         "a projection never exceeds its limit — a worker inherits a page, not the whole store",
         "compoundingPair flags a rebuilt-existing route as a defect (RULING 63)",
         "scoutDiscoveryEntries turns grounded candidates into YIELDED field-manual entries",
@@ -4809,6 +4815,7 @@
     },
     "tests/fleet-recovery-journey.test.ts": {
       "names": [
+        "a route an older acquisition blocked for robots.txt alone (PERMISSION_DENIED, never retryable) is acquired again at once, robots first; any other non-retryable block still holds",
         "corrupt held candidate cannot starve a separately validated current capture; history and original attribution survive",
         "failed publisher refresh retains the last acquired capture for unfinished validation while automatic recovery remains owed",
         "recorded research to verified meeting facts survives expired parser lease, refuses late completion, preserves proof and withholds publication",
@@ -5369,9 +5376,9 @@
     },
     "tests/http-empty-success.test.ts": {
       "names": [
-        "A-003 · a rung-3 200 that IS the document still succeeds, and reports rung 3's bytes",
-        "A-003 · a rung-3 200 with an EMPTY body is a WALL — the case challengeIn cannot see",
-        "A-003 · a rung-3 browser-header 200 carrying the wrong format is a WALL, not a document",
+        "A-003 · a rung-4 200 carrying the wrong format is a WALL, not a document",
+        "A-003 · a rung-4 200 that IS the document still succeeds, and reports rung 4's bytes",
+        "A-003 · a rung-4 200 with an EMPTY body is a WALL — the case challengeIn cannot see",
         "A-003 · injecting a fetchImpl alone still does NOT walk the ladder",
         "A-003 · politeGetText has exactly ONE place a body becomes a return value",
         "A-003 · the rung-4 curl fallback is validated too — it used to be returned raw",
@@ -5396,11 +5403,11 @@
         "http: an injected fetchImpl is never routed around, even on a 403",
         "http: entity decoding covers decimal AND hex, which is how ’ reached a reader",
         "http: every wall records the RUNG it stopped at, never a terminal blocked state",
+        "http: no request carries a borrowed browser identity or browser-only navigation headers",
         "http: politeGetJson asks for JSON and parses it",
         "http: politeGetJson on a blank 200 is a WALL, not an empty object",
         "http: retries are BOUNDED — a permanently failing host is not hammered",
-        "http: the browser profile carries a real browser header set, not just a User-Agent",
-        "http: the client identifies itself, and a contact address survives the browser rung",
+        "http: the client identifies itself on every request, and there is no browser rung",
         "http: the content type is carried through, never inferred from the body"
       ],
       "dynamic": 0
@@ -5504,14 +5511,12 @@
     },
     "tests/identified-ua-wall.test.ts": {
       "names": [
-        "a Cloudflare-style host that challenges Node and refuses the old rung-4 set is read with our own name",
-        "a host that refuses our name is walked at rung 3b, not recorded as a wall",
-        "a set refused with a challenge page is set aside and the next set is asked",
-        "every set refused is a WALL on rung 4, and a 404 is an answer that stops the walk",
-        "identificationHeaders names the project without a User-Agent at all",
-        "rung 3b keeps the identification and moves it out of the User-Agent",
-        "rung 4's header sets: our own name with X-Purpose first, the old set second, the clean browser set last",
-        "the identification still travels in the User-Agent on the early rungs"
+        "a Cloudflare-style host that challenges Node is read with our own name through curl",
+        "a challenge from the curl request is a WALL on rung 4 — never answered, and no other identity is tried",
+        "a host that refuses our name is a WALL named as an access control, and nothing is re-sent under another identity",
+        "a refusal on rung 4 is a WALL naming rung 4, and a 404 there is the answer",
+        "rung 4 is one request: our own name in the User-Agent, purpose and contact beside it, never a browser's",
+        "the identification travels in the User-Agent of every request, on both clients"
       ],
       "dynamic": 0
     },
@@ -5911,7 +5916,7 @@
         "richerRouteLink refuses every link it cannot PROVE",
         "sittingKeyFromLocal and sittingKey are the same key, reached two ways",
         "the Clerk of the Board publishes the SAME fourteen, on the county's own domain",
-        "the Granicus wall is a wall — a verdict, a date, and a NULL claim about content",
+        "the Granicus route is unbuilt, not walled — its robots.txt recorded with a date, and a NULL claim about content",
         "the WebAPI's future horizon is EMPTY, and that is a fact about the route",
         "the per-route table states each route's mechanism, counts, span and completeness",
         "the portal publishes FOURTEEN future sittings, to 2026-12-15"
@@ -5943,7 +5948,7 @@
         "every tenant states a body, a zone and a sourced venue — no room name is geocoded at runtime",
         "fetch drives the ASP.NET postback and reads back the range that was rendered",
         "per-field provenance names WHICH ROUTE supplied each value",
-        "pima.granicus.com is recorded as a PERMISSION wall, with no claim about what it holds",
+        "pima.granicus.com is recorded as an UNBUILT route, its robots.txt reading kept as evidence, with no claim about what it holds",
         "the SECOND page is walked, and the completed range reports no shortfall",
         "the WebAPI returns ZERO September rows — the measurement, reproduced",
         "the calendar feed URL is read off the page, never constructed from a stored pair",
@@ -6035,11 +6040,11 @@
         "MEETING_EXISTENCE is multiply routed across transports — the union rule, made structural",
         "SEEDED FAILURE: a full sweep of the JSON API does NOT discharge the facts only other representations carry",
         "SEEDED FAILURE: one successful route never collapses the universe for the facts it does not bear",
-        "a DISALLOWED route keeps its facts OWED and is never SUGGESTED — a blocked route is not a blocked fact",
         "an empty walk owes everything",
         "every information-bearing fact class is reachable through more than one route, or is NAMED as singly routed",
         "factsBorneBy ignores an unknown route id rather than crediting it",
         "no two routes are substitutable unless they bear identical fact sets",
+        "robots.txt is recorded on a route and never decides it: the vendor's minutes file keeps its facts OWED and IS suggested",
         "the portfolio names no tenant — Pima is the proving tenant, not the scope"
       ],
       "dynamic": 0
@@ -6586,6 +6591,7 @@
     },
     "tests/meetings-discovery-executor.test.ts": {
       "names": [
+        "A CHALLENGE AT 200 IS A WALL: the walk records the access control on the step, vaults the page as its evidence, never reads it as the homepage, and teaches a dead door",
         "A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out a 90-day recheck unattestable (NH330)",
         "A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN",
         "A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE",
@@ -6599,9 +6605,9 @@
         "HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed by content; any other is requested and recorded as a lead, a witness is never a sitting, and a binary body is never vaulted as text",
         "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
         "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
-        "PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall",
         "PROVENANCE (NH330): the walk records where the address came from, each redirect to the homepage, and a withdrawn route's own 404 as vaulted evidence",
-        "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
+        "REDIRECT: each hop reads and records its host's robots.txt first; a hop onto a disallowing host is followed, and a hop onto a recorded wall is not",
+        "ROBOTS RECORDED, NOT BLOCKING: a disallowing or unreadable robots.txt is recorded on the step and the public homepage is still read, on either origin (owner decision 2026-09-25)",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
         "THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, replaces exactly the address it records, and the runner passes them to every walk",
@@ -6609,7 +6615,7 @@
         "THE NEXT HOP: when nothing is confirmed, the pages the walk read are read for the routes they link; a readable one is confirmed, an unreadable publisher is a lead and is never requested",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
-        "WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door",
+        "WALL OR NOT: only an access control — a recorded wall, or the site's own 401/403/429 — makes a walk BLOCKED and teaches a dead door; robots.txt never does",
         "WALL: a recorded wall is never requested, not even its robots.txt"
       ],
       "dynamic": 0
@@ -6687,7 +6693,7 @@
         "CANDIDATES: a page that evidences nothing names nothing, and no tenant is ever derived from a name",
         "LINKS: hrefs and srcs resolve against the page; webcal reads as https; mailto, javascript and fragments are dropped",
         "ORIGINS: a recorded address becomes its https origin and its www/apex twin; an unusable one becomes nothing",
-        "OUTCOME: found beats lead beats a read homepage; walled everywhere is BLOCKED, unreadable rules are not a wall; a redirect is a hop, not an answer",
+        "OUTCOME: found beats lead beats a read homepage; walled everywhere (an access control) is BLOCKED, a robots.txt verdict never is; a redirect is a hop, not an answer",
         "VERIFY: Legistar, CivicPlus, IQM2 and CivicClerk yield only by their own content",
         "VERIFY: an iCal route yields only with a VEVENT; an empty calendar is EMPTY, and an HTML shell at a feed URL is not a calendar"
       ],
@@ -6728,7 +6734,7 @@
         "the 2026-07-27 council minutes: five motions, two split votes, the consent agenda and the items pulled from it",
         "the Mesa candidate admits a held failed extraction, names it, and still refuses a failure with no document identity",
         "the concluded sittings a pass considers: the wired bodies, in the window, already held, one row per portal id",
-        "the minutes link: the accessible HTML first, the PDF second, and never a link off the tenant's portal host",
+        "the minutes link: the accessible HTML first, the PDF second, on the portal or the vendor's document host, never a third host",
         "the next pass asks the portal first: an unchanged document is not downloaded, a changed one is read at once",
         "the parser's revision is pinned to its source: an edit to the minutes parser has to decide whether held readings are re-read",
         "which sittings a pass reads again: new, newly published, relabelled or failed — never an unchanged link"
@@ -7996,7 +8002,7 @@
         "the documents page parses every 2026 sitting row, month notes counted apart",
         "the events listing yields the board's eight upcoming sittings with times",
         "the gate reads robots once per origin and admits a permitted path",
-        "the permission gate refuses a disallowed path before any request to it",
+        "the permission gate reads robots.txt first, records a disallow, and still reads the public page (owner decision 2026-09-25)",
         "the wiring row reads permitted pima.edu hosts and never the Diligent tenant",
         "the wiring type is a registered agenda-source type (BodySourceWiring compiles)"
       ],
@@ -9475,7 +9481,8 @@
     "tests/replay-research-findings.test.ts": {
       "names": [
         "LIVE: the complete chain approves what verifies twice, and its package enters the door as a validated successor",
-        "OFFLINE: held findings are judged on held bytes; unread leads stay owed; the would-be links are named, never packaged"
+        "OFFLINE: held findings are judged on held bytes; unread leads stay owed; the would-be links are named, never packaged",
+        "ROBOTS IS RECORDED, NOT BLOCKING: held reads recorded under a disallowing robots.txt verify offline and approve live, exactly as allowed ones"
       ],
       "dynamic": 0
     },
@@ -9632,12 +9639,13 @@
     "tests/retired-meeting-routes.test.ts": {
       "names": [
         "Newbury's dead CivicWeb route is retired, and its already-wired calendar feed is the Selectboard's one clock",
-        "a link into a retired host is recognised as held-as-link, and nothing else is",
+        "a superseded retired route's host is readable for agenda retrieval while its clock stays off",
         "agenda retrieval consults the retired-host rule before any request",
         "every retired route has exactly one wired successor for the same body, and no clock of its own",
         "no wiring row names a retired host, and meetings authority no longer reaches it",
+        "only a dead retired route's host is held as a link; the robots-retired college tenant is readable, and nothing else is refused",
         "re-opening a retired (route, body) pair fails at registration, loudly",
-        "the retired tenant's recorded robots.txt refuses this client and admits named search crawlers"
+        "the retired tenant's recorded robots.txt reads DISALLOWED for this client and ALLOWED for named search crawlers, and blocks nothing"
       ],
       "dynamic": 0
     },
@@ -9658,12 +9666,32 @@
     },
     "tests/robots-first-fetch.test.ts": {
       "names": [
-        "A DISALLOW REFUSES, AND EVERY PATH IS EVALUATED FOR ITSELF against the one reading of its origin",
-        "A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five redirects, a 5xx and a transport failure all refuse, and nothing else is requested",
+        "A DISALLOW IS RECORDED, NOT OBEYED AS A REFUSAL (owner decision 2026-09-25), AND EVERY PATH IS EVALUATED FOR ITSELF against the one reading of its origin",
+        "A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five redirects, a 5xx, a transport failure and a 403 are recorded CANNOT_TELL, and the public page is still read",
+        "AN ACCESS CONTROL IS NAMED AND NEVER PUSHED THROUGH: 401, 403, a challenge at 200, and a 429 that backs the host off; no credential or cookie is ever sent",
         "ONE HOST IS SPACED: two seconds between its requests, or its own Crawl-delay when it asks for more",
+        "RECORDED WALLS ARE NEVER ASKED ANYTHING, not even robots.txt, and not by a redirect; destinyhosted.com no longer waits on the owner",
         "ROBOTS FIRST, EVERY ORIGIN: a redirect onto a new origin asks that origin's robots.txt before anything else",
-        "THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFetch, and package.json names it",
-        "WALLS AND HOSTS AWAITING THE OWNER ARE NEVER ASKED ANYTHING, not even robots.txt, and not by a redirect"
+        "THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFetch, and package.json names it"
+      ],
+      "dynamic": 0
+    },
+    "tests/robots-recorded-not-blocking.test.ts": {
+      "names": [
+        "A PORTAL'S SESSION COOKIE GOES BACK ONLY TO THE HOST THAT SET IT, never to the vendor's document host",
+        "ACCESS CONTROLS ARE NAMED, NEVER PUSHED THROUGH: 401, 402, 403, 407, 429, 451 and a challenge page at any status",
+        "EVERY ROBOTS CONSUMER IS NAMED with the test that holds it to the rule, and none has gone missing",
+        "NO PRODUCTION MODULE CARRIES A BORROWED IDENTITY, and the script debt only shrinks",
+        "NO WIRING ROW ASKS FOR A DISGUISE, AND THE RELAY RUNG REFUSES BEFORE ANY REQUEST",
+        "THE ADAPTER PERMISSION GATE reads robots.txt once per origin, records the Disallow, and the page is read",
+        "THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and records a homepage 403 as a wall, never re-sent",
+        "THE DISCOVERY WALK reads robots.txt first, records a Disallow: / on the step, and reads the homepage and the route it links",
+        "THE OLD ROBOTS REFUSALS DO NOT RETURN in production code",
+        "THE RESEARCH FETCH names each access control, sends each request once, and backs a rate-limited host off",
+        "THE RESEARCH FETCH reads robots.txt first, records a Disallow: / with its rule, and reads the public page",
+        "THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once more through curl with the same User-Agent, and a refusal there stands",
+        "THE RULE HAS ONE HOME: ROBOTS_BLOCKS_ACQUISITION is false, no host waits on the owner for robots, and every recorded wall is an access control",
+        "THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a wall, and the one second ask is the same name through curl"
       ],
       "dynamic": 0
     },
@@ -9708,6 +9736,7 @@
     },
     "tests/routine-child-fatal-line.test.ts": {
       "names": [
+        "a Reader repair child that dies before its protocol names its step and cause in the line the supervisor quotes",
         "a rejected top-level await exits 1 through one sanitized fatal line naming the step",
         "an unhandled rejection and a thrown callback end the same way",
         "the parent reads the child's fatal line and still never its raw stderr",
@@ -9945,6 +9974,15 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-meeting-intake-receipt.test.ts": {
+      "names": [
+        "a capture left unsettled by an expired lease is resumed under its persisted value",
+        "a capture that fails after its Attempt opens closes the Attempt with the cause, and the next pass settles it",
+        "an unchanged feed under a rolled request window settles as a re-observation of the held artifact",
+        "one candidate's capture failure does not keep the other candidate's bytes from independent work"
+      ],
+      "dynamic": 0
+    },
     "tests/routine-observability-bounded.test.ts": {
       "names": [
         "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
@@ -10022,11 +10060,15 @@
     },
     "tests/runtime-authority.test.ts": {
       "names": [
+        "a read that fails to answer during a shared-config rewrite is read again and admits on the answer",
+        "a read that never answers refuses and names the read, its exit and Git's words",
+        "an answer is a fact and is never read again: dirty, attached and off origin/main still refuse at once",
         "branch, dirty tree, wrong SHA, wrong parent and wrong contract each fail closed",
         "child delegation rotates nonce and narrows capability/contract to one parent PID",
         "exact clean detached origin/main child with immediate-parent and contract admission passes",
         "retired importer capability is refused at the raw environment parser",
-        "temporary importer capability cannot satisfy an ordinary source-child expectation"
+        "temporary importer capability cannot satisfy an ordinary source-child expectation",
+        "the real Git reads of a clean detached worktree answer on the first attempt"
       ],
       "dynamic": 0
     },
@@ -10203,11 +10245,14 @@
         "10. SEEDED (measured live): a provider refusal before any completion aborts with a MEASURED zero cost",
         "11. SEEDED (RULING 243): a finish whose observedOn disagrees with the artifact record is REFUSED; the corrected claim is accepted and the candidate carries machine-owned provenance",
         "12. SEEDED (RULING 243): a permission claim the record contradicts, a citation of robots documents only, and an absent claim are each refused by name",
+        "12b. robots.txt is RECORDED, never a refusal (owner decision 2026-09-25): a candidate citing a page retrieved under DISALLOWED or CANNOT_TELL is accepted, and the verdict is its machine-owned permission",
         "13. SEEDED (v): a route the decision rule sent DETERMINISTIC reaching the model executor makes NO request and aborts by name; decideExecutor names the graduation",
         "14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is recorded as a cacheDefect; the request carries the static markers and the top-level moving breakpoint",
         "15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED by the step registry; model steps route to the cheapest class and escalate on record",
         "16. SEEDED (iii): a representation past its step budget is truncated with a stated notice naming the artifact, and the overrun is recorded",
         "17. SEEDED (iv): a rung a prior Attempt recorded as durably FAILED is not re-walked — refused with the prior observation quoted; a transient failure and a different client are not refused",
+        "17b. a rung a prior Attempt refused for robots.txt alone (before 2026-09-25) is re-walkable: never durable, labelled walkable in the brief, and it reaches the toolkit; an access-control wall stays durable",
+        "17c. a BLOCKED Scout means an access control: its disposition's permission is the recorded robots verdict, never read off a DISALLOWED line",
         "18. no re-read: a second fetch of a URL this Attempt vaulted is refused and hands back the artifact id; a different representation is not refused",
         "19. every turn is a recorded step: model, effort, tokens by category and cost; the deterministic steps ran no model; the cost is the steps' sum",
         "2. SEEDED: a model that called no tool and wrote prose is REFUSED",
@@ -10284,8 +10329,8 @@
     "tests/scout-tools.test.ts": {
       "names": [
         "POSITIVE CONTROL for (a): with an accepting vault the same body DOES reach the model, inside the DATA wrapper",
-        "SEEDED (b): a DISALLOWED path is refused BEFORE any GET — the transport saw only robots.txt",
-        "SEEDED (c): robots.txt answers 403 -> CANNOT_TELL -> no GET, and the refusal names the verdict",
+        "SEEDED (b): a DISALLOWED path is read, not refused — robots.txt is read FIRST and vaulted, the verdict is recorded on the rung and the artifact, and the GET succeeds",
+        "SEEDED (c): robots.txt answers 403 -> CANNOT_TELL is recorded as unread, never a disallow, and the page GET still happens (fetch_public and browse)",
         "SEEDED (d): robots.txt 404 is NO_ROBOTS and the GET proceeds; the artifact records NOT_APPLICABLE, never ALLOWED",
         "SEEDED (e): the (N+1)th request to one host is refused, naming the count; another host is unaffected",
         "SEEDED (f): instruction-shaped page text comes back verbatim inside the DATA wrapper, after the untrusted header",
@@ -10313,7 +10358,7 @@
         "the tool-call bound refuses the (N+1)th call and names it; read_inherited counts as a call",
         "the toolkit exposes exactly the research tools, each requiring rung and why"
       ],
-      "dynamic": 1
+      "dynamic": 3
     },
     "tests/search-log-exclusion.test.ts": {
       "names": [
@@ -10348,14 +10393,14 @@
         "a page with the subject in RESULT TEXT still names the subject",
         "a search page that echoes the query and returns nothing does NOT name the subject",
         "docs/sources.md records the same verdict as the module, for the same hosts",
-        "every engine in the pool quotes the robots.txt line that permits its path",
+        "every engine in the pool records its robots.txt reading with a date",
         "every exclusion says WHY and carries a date, and none is a placeholder",
-        "mojeek and brave are named as DISALLOWED, not as walls — they answered fine",
-        "no engine in the pool is one this project recorded as DISALLOWED",
+        "mojeek and brave are walled by access controls, re-measured 2026-09-25 — their robots.txt lines are recorded, not the reason",
+        "no engine is excluded for robots.txt alone, and none in the pool is one this project recorded as excluded",
         "stripQueryEcho removes the metadata and the attribute echoes and nothing else",
         "the content control catches a shell that answers identically to an impossible query",
         "the control query is an identifier nothing could match",
-        "the search pool asks permission before it asks anything else"
+        "the search pool records robots.txt and excludes only for an access control or a failed control"
       ],
       "dynamic": 0
     },
@@ -11122,7 +11167,7 @@
     "tests/suiteone-source.test.ts": {
       "names": [
         "WINSLOW · a portal that no longer carries the council's own panel is never read as a council with no meetings",
-        "WINSLOW · permission is asked first; a host with no robots.txt states no restriction",
+        "WINSLOW · robots.txt is read first and recorded; a host with no robots.txt states no restriction, and a Disallow never stops the read",
         "WINSLOW · the council's in-window sittings reach readers with their own time, agenda and cancellations",
         "WINSLOW · the portal's two lists are read as printed, and each panel's own count is met",
         "WINSLOW · the wired body is Winslow's registered governing body, read from its portal in its own partition"
@@ -11405,7 +11450,7 @@
         "recorded, planted: a portal row whose place is blanked is published with the gap named, never dropped",
         "recorded: row 500's own title says CANCELLED, so it is CANCELED, not CONCLUDED",
         "recorded: the first promotion keeps all 17 portal ids and adds exactly the four calendar-only Governing Board sittings",
-        "the calendar is read only under a permission verdict; a refusal fails the run, never half a union",
+        "the calendar is read under a recorded robots verdict that never refuses it; a failed calendar read fails the run, never half a union",
         "the calendar route reads exactly the forward window's months",
         "the partition publishes every forward sitting either source verifies, and portal ids stay put",
         "the portal's cancellation note is the sitting's status"
@@ -11737,6 +11782,7 @@
       "names": [
         "C15: a corrected row carries the reviewed correction exactly",
         "C15: a correction applies only while the address on record is still the one it replaces",
+        "C15: a public page read over a robots.txt that disallows it is a reading (owner decision 2026-09-25), robots.txt still read first",
         "C15: a receipt must be a page the reviewed list names, on its own host",
         "C15: a recorded redirect alone is not another government's publication",
         "C15: a registry row that names a parent is not the government's, and without other evidence it is UNRESOLVED",
@@ -11805,11 +11851,10 @@
     "tests/wikipedia-permission.test.ts": {
       "names": [
         "404 is 'no such article', and a non-200 is reported as itself",
+        "Wikipedia's Disallow: /w/ is recorded as evidence and no longer forbids a route (owner decision 2026-09-25)",
         "a redirect chain deeper than one hop STOPS, and says so",
         "a redirect is followed exactly once, because the API's redirects=1 was load-bearing",
         "an empty body is a FAILED extraction, never an empty article",
-        "no committed source composes a URL on Wikipedia's disallowed /w/ path",
-        "the guard is looking at something — the disallowed literal is still in the tree",
         "the replacement route is under /wiki/, which carries no blanket Disallow"
       ],
       "dynamic": 0
@@ -12018,8 +12063,9 @@
         "Detective denominator is unknown without external provenance and exact count pointer prevents duplicate-value citation",
         "Detective exact authoritative pointer comparisons preserve spans and require independent validation",
         "Hunter capability and observed-route failures send no network request",
+        "Hunter meets an access control as a wall: a 403, a bot challenge or a 429 blocks the route by name after one request, and no request carries a credential",
         "Hunter partial bytes, publisher zero rows, zero-byte read and transport failure remain distinct",
-        "Hunter records path permission denial separately from transport",
+        "Hunter records a robots.txt disallow separately from transport and still acquires the public path (owner decision 2026-09-25)",
         "Hunter refuses corrupted cache bytes and cannot reuse another project's artifact",
         "Hunter reuses shared permission/fetch/vault and an immutable retry keeps exact artifact identity without network",
         "Research result assertions refuse an invented closed walk and unattributable blockers"
@@ -12134,6 +12180,7 @@
         "a promoted body with no registry id is a lead, not a body",
         "a promotion with no evidence, and a rejection with no reason, both fail",
         "a required child may not disappear",
+        "a robots read answered by a challenge (an access control) keeps the workstream OPEN and never reads as absence",
         "a workstream recording a permission verdict without a successful read fails validation",
         "a workstream with no convergence record is EXPANDING, never quietly converged",
         "an eligible edge advances an owed question; site chrome does not enlarge the graph",
@@ -12142,7 +12189,6 @@
         "an obligation may not be silently dropped, discharged without a count, or double-counted",
         "an unmaterialized obligation is counted, never resumable, and never complete",
         "an unnamed blocker, and an undated recheck, are refused",
-        "an unread permission keeps the workstream OPEN and never reads as absence",
         "convergence reopens on a newer method version, a changed universe, or expired freshness",
         "every persisted edge carries a stable id, provenance and a disposition",
         "every universe member gets exactly one disposition",

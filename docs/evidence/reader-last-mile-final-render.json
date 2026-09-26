@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-  "buildId": "1urH9pt5HWdVFv5KE1SAg",
+  "exactHead": "66030e6986e960e379bb21aa3a5de2793593a355",
+  "buildId": "rPES9aXKvj_UvgQqdGjNe",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-26T09:02:54.819Z",
+  "runId": "reader-last-mile-final-render@2026-09-26T10:51:50.405Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -2190,6 +2190,14 @@
       "sha256": "8af5eb5d3c538c03054b740b7ad1a94839fa457bf1f04d4a91cfa9d47cec06f7"
     },
     {
+      "path": "lib/census-geography/division-id.ts",
+      "sha256": "ab1834fd0b616f99309319d78b3dcd986ec074eecb2563155f73d24324565e59"
+    },
+    {
+      "path": "lib/census-geography/publication.ts",
+      "sha256": "ca2c2db76d7d3a21154b2a9f9e661257ec98b7c13c265d19ab3de9972f918a56"
+    },
+    {
       "path": "lib/civic-data/attested-promotion.ts",
       "sha256": "21d8f8d8ac9cb8b7b6c1f2b239c678fd7c5458738791187be638355c9e4ff7ed"
     },
@@ -2258,6 +2266,10 @@
       "sha256": "afbc5cc393c6318f19ce56da2f6a3002d302dbf3145aa46d6dc9ce74384922b6"
     },
     {
+      "path": "lib/civic-data/promoted-reader-query.ts",
+      "sha256": "06a74ae54c1fe7799e0e4e87c7ce1494a5ab4ffca838c2f40866bcdfc754c158"
+    },
+    {
       "path": "lib/civic-data/read-model.ts",
       "sha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89"
     },
@@ -2304,6 +2316,10 @@
     {
       "path": "lib/civic-data/validated-once.ts",
       "sha256": "05f8086d1fb83fdc0249381ecec9c593d5ec6eacae224b6f6a2ea1c151a98329"
+    },
+    {
+      "path": "lib/control-plane/admin-view/promoted-slices.ts",
+      "sha256": "290f1f5d8a5f67574e3845f82dd6fc950dae51f872cee5aa51114e501a1cf1f6"
     },
     {
       "path": "lib/control-plane/ask-gap-observations.ts",
@@ -2530,12 +2546,16 @@
       "sha256": "61d208ab905302a0259db03d9cba3cc61415a8b3794c223d0937a32d43e36cd9"
     },
     {
+      "path": "lib/geo/zip-census-districts.ts",
+      "sha256": "342aecf9be3b06c4a06b7892ec6f88383db1cf4e4b5e9f0382bc9b70308362d1"
+    },
+    {
       "path": "lib/geo/zip-certainty.ts",
-      "sha256": "d00e27966283cf47663ead2f1281a21b0cf8a41c4ef5ddc40cd82ef720f7a10b"
+      "sha256": "6fe24669eb48c4e0fd51c4733501ff7ac615632981ed0677bbfe9fcc7b4cb2c4"
     },
     {
       "path": "lib/geo/zip-division-index.ts",
-      "sha256": "8b4ae14c3add888b5193557f4dfa1f32376f7578a2185bbd075b7b49b24a7ed9"
+      "sha256": "e17e9a930a6039c51ceb1724554bb73f523c77a15e0b095df57fe181ef7ffb51"
     },
     {
       "path": "lib/holdings/datasets.ts",
@@ -2752,6 +2772,10 @@
     {
       "path": "lib/ocd/district-tiers.ts",
       "sha256": "34c9fcfd6370eaff592816ee4a67f577519587a4c6b7cc01f96d4173e7b40b6b"
+    },
+    {
+      "path": "lib/ocd/divisions.ts",
+      "sha256": "2b813084f105696ab0ede932f8f407cf4c66848acfda3e9f99f7a4bc37208966"
     },
     {
       "path": "lib/ocd/fips.ts",

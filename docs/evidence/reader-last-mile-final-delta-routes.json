@@ -1,6 +1,6 @@
 {
-  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-  "buildId": "1urH9pt5HWdVFv5KE1SAg",
+  "exactHead": "66030e6986e960e379bb21aa3a5de2793593a355",
+  "buildId": "rPES9aXKvj_UvgQqdGjNe",
   "base": "http://localhost:3210",
   "sourceHashes": [
     {
@@ -2188,6 +2188,14 @@
       "sha256": "8af5eb5d3c538c03054b740b7ad1a94839fa457bf1f04d4a91cfa9d47cec06f7"
     },
     {
+      "path": "lib/census-geography/division-id.ts",
+      "sha256": "ab1834fd0b616f99309319d78b3dcd986ec074eecb2563155f73d24324565e59"
+    },
+    {
+      "path": "lib/census-geography/publication.ts",
+      "sha256": "ca2c2db76d7d3a21154b2a9f9e661257ec98b7c13c265d19ab3de9972f918a56"
+    },
+    {
       "path": "lib/civic-data/attested-promotion.ts",
       "sha256": "21d8f8d8ac9cb8b7b6c1f2b239c678fd7c5458738791187be638355c9e4ff7ed"
     },
@@ -2256,6 +2264,10 @@
       "sha256": "afbc5cc393c6318f19ce56da2f6a3002d302dbf3145aa46d6dc9ce74384922b6"
     },
     {
+      "path": "lib/civic-data/promoted-reader-query.ts",
+      "sha256": "06a74ae54c1fe7799e0e4e87c7ce1494a5ab4ffca838c2f40866bcdfc754c158"
+    },
+    {
       "path": "lib/civic-data/read-model.ts",
       "sha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89"
     },
@@ -2302,6 +2314,10 @@
     {
       "path": "lib/civic-data/validated-once.ts",
       "sha256": "05f8086d1fb83fdc0249381ecec9c593d5ec6eacae224b6f6a2ea1c151a98329"
+    },
+    {
+      "path": "lib/control-plane/admin-view/promoted-slices.ts",
+      "sha256": "290f1f5d8a5f67574e3845f82dd6fc950dae51f872cee5aa51114e501a1cf1f6"
     },
     {
       "path": "lib/control-plane/ask-gap-observations.ts",
@@ -2528,12 +2544,16 @@
       "sha256": "61d208ab905302a0259db03d9cba3cc61415a8b3794c223d0937a32d43e36cd9"
     },
     {
+      "path": "lib/geo/zip-census-districts.ts",
+      "sha256": "342aecf9be3b06c4a06b7892ec6f88383db1cf4e4b5e9f0382bc9b70308362d1"
+    },
+    {
       "path": "lib/geo/zip-certainty.ts",
-      "sha256": "d00e27966283cf47663ead2f1281a21b0cf8a41c4ef5ddc40cd82ef720f7a10b"
+      "sha256": "6fe24669eb48c4e0fd51c4733501ff7ac615632981ed0677bbfe9fcc7b4cb2c4"
     },
     {
       "path": "lib/geo/zip-division-index.ts",
-      "sha256": "8b4ae14c3add888b5193557f4dfa1f32376f7578a2185bbd075b7b49b24a7ed9"
+      "sha256": "e17e9a930a6039c51ceb1724554bb73f523c77a15e0b095df57fe181ef7ffb51"
     },
     {
       "path": "lib/holdings/datasets.ts",
@@ -2750,6 +2770,10 @@
     {
       "path": "lib/ocd/district-tiers.ts",
       "sha256": "34c9fcfd6370eaff592816ee4a67f577519587a4c6b7cc01f96d4173e7b40b6b"
+    },
+    {
+      "path": "lib/ocd/divisions.ts",
+      "sha256": "2b813084f105696ab0ede932f8f407cf4c66848acfda3e9f99f7a4bc37208966"
     },
     {
       "path": "lib/ocd/fips.ts",
@@ -59215,7 +59239,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "4cd21ef51c8af1ae186de9762380321b83d40b384f2e04b108574fb543a8cf58"
+      "payloadSha256": "8a3a3e01051308a37e11795b5f33ff7539eef72f64c8553dd89256e3fe5b57a3"
     },
     {
       "surface": "agenda/map",
@@ -59234,7 +59258,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "61d394b918d8e5f13cdb57ef59144b17a5a3b2a084e948e1cf3876e0a9f7b256"
+      "payloadSha256": "0b4015a057a710d3f35c85d133c5de812241781fd077ffbb7374098b9ee304bd"
     },
     {
       "surface": "agenda/map",
@@ -59253,7 +59277,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "aeeaf896fdaa59ee27f239835ccdf1e9ead5fccc28bf933a75a53e187aa15213"
+      "payloadSha256": "afe01cd8e932dd6e16a307776a6ae01ca5194f4c144112cd4eefe834de451f7a"
     },
     {
       "surface": "agenda/map",
@@ -59272,7 +59296,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "fc17b343a5179fdce29602279c6596f059dfed69ce9634b0d3b64e3fa3714e93"
+      "payloadSha256": "bd61ae2e317f1bd65cd687044aca037dca21bab38f22f4f75b379e3e5d92b1bb"
     },
     {
       "surface": "agenda/map",
@@ -59291,7 +59315,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "97fded6eb3a73495bbdd4e67e835654f08dbbe7d6b1c29ba435c5bbb39619dc8"
+      "payloadSha256": "87565c03d14a3f018b60ed8c02c60fe048588dc8b6b40b335cd05253cbd4f502"
     },
     {
       "surface": "agenda/map",
@@ -59310,7 +59334,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "412da310d3ad35e1ce7b6a74f891d51af0a2b36f0b0063a3b9a2ab87b78ff504"
+      "payloadSha256": "06161f7fa84f64f784359bf57e675770c9d9f61fb48f04b471b401e0d26e7495"
     },
     {
       "surface": "agenda/map",
@@ -59329,7 +59353,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "460eab02af3913c9321536f5b198514155a200b84aa61dfcef8a75ffa5aa8886"
+      "payloadSha256": "1fc7642498968fe22e760e24ec3a5a2c44ec3b1fa6d164b3371271a1016661e4"
     },
     {
       "surface": "agenda/map",
@@ -59348,7 +59372,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "f2158f8010f37766fd9e0815af57ba47982794e21d237fc5a75152ba996e9e44"
+      "payloadSha256": "9d4a71e091332867769b1bf1be1f4edbd63a6eda1eb1543188d6925ffa7b965d"
     },
     {
       "surface": "agenda/map",
@@ -59367,7 +59391,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "d9b520a4f368cdc4c9ad0434bf7a1f19ec209bb415956a90fcbe6a53d0a008db"
+      "payloadSha256": "d283f3efe37a0a828d9801dae52f118e6dde239b5a01aa5b189f0fcfb84c7771"
     },
     {
       "surface": "agenda/map",
@@ -59386,7 +59410,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8aba6700756d45f55804be6c28ddda0daacb9662e42178ca258bdd50687ef65f"
+      "payloadSha256": "eed74fa4f6adcb6ca99bd815e012314e5623ce37dfc9528f702b5db41be1a944"
     },
     {
       "surface": "agenda/map",
@@ -59405,7 +59429,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "19253679534e84b8407b4338c643f066e5bc3a1b2fe7fe8aa4025ca132e0b627"
+      "payloadSha256": "0c5089680b3a79d7176ac08a12294a2baddf2ffe49e8fb0543e3e5cf0d7cfab2"
     },
     {
       "surface": "agenda/map",
@@ -59424,7 +59448,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "711827d440e2813c4034a2814b6ee25e88dfc213db3ead9509bcf4bd7c9b5231"
+      "payloadSha256": "afecdd111c0c440d545d0be947a1823a3d3384e50e9e44949e6ae5bf0e533804"
     },
     {
       "surface": "agenda/map",
@@ -59443,7 +59467,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8dc9177ba6885a64abe0f71e7428b2d3f57c7e4d5f51a99fef48948bcccc840f"
+      "payloadSha256": "2ce9385588199c814d2a1ad8f828af594847d808ebeeeee60ecb79cc074d4820"
     },
     {
       "surface": "agenda/map",
@@ -59462,7 +59486,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "d2b8dafbece43fd3a08546aed94ca170ef66fa2d9b7027f5f5d90d16edfd969a"
+      "payloadSha256": "06140f6a10f4ff3a3adc912612266e5cbf371ad27fa20bcae47689c3fb1cb7fe"
     },
     {
       "surface": "agenda/map",
@@ -59481,7 +59505,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "4d7c72953c87b6d66638d86ca3f795dd914702217df28a1ef591041fcfb9442f"
+      "payloadSha256": "43658d8451c25abd0c216a82c090dbc5fca11d3345212574a4322c48260d62b7"
     },
     {
       "surface": "agenda/map",
@@ -59500,7 +59524,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "40824329b1fc4e2e125dc1dbf897e75f04dee8a173310106c522877caa316854"
+      "payloadSha256": "85c206b0fc2cc13362259b9cf501aae2fcf62b32312eeefdadca397b83ab356f"
     },
     {
       "surface": "agenda/map",
@@ -59519,7 +59543,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "6bcbba0b0daa1266fe08efaba4ca5a42c1c45208592d422ba5572e4df3ad1fa0"
+      "payloadSha256": "dee4a0bba939afb34a2a3a988a448e33f15e1c4904144a9a359a07f19f2086a4"
     },
     {
       "surface": "agenda/map",
@@ -59538,7 +59562,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "c3dd6730eefcaef54b455781300aa5d41f74b699e201bea1ea43376dc34247d4"
+      "payloadSha256": "d4ace3565bb3c03af28e77e64bf16682c79640bf7978c7eadec2b1a801b11a0c"
     },
     {
       "surface": "agenda/map",
@@ -59557,7 +59581,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "d35e46ae68f47f17e2db1fe6d7de24947a1bb4ac8e95019e59e5507c35900cc0"
+      "payloadSha256": "33896504bc08cfa96e433344d737826b65e566cd6c5d68bed4794576f1e01ec8"
     },
     {
       "surface": "agenda/map",
@@ -59576,7 +59600,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "65f75e2d0eea92a138e62e1c73f8f7f44670dd369838e6b10d022aca79ab96e1"
+      "payloadSha256": "9c5adf402fc69a9bb961a5db0f2436ab70500661ef4bac3d757558dd6776e5fa"
     },
     {
       "surface": "agenda/map",
@@ -59595,7 +59619,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "b770aa53abde8a2be1eece08a32acf829bcfbc3e239fd7aa018dd02195d4867d"
+      "payloadSha256": "fe1bd54a7e72f565284b4ebb08ed913bcf56db4e69a3ad6e07b78f34ec29ed1b"
     },
     {
       "surface": "agenda/map",
@@ -59614,7 +59638,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "40f9f167307b232e30f1346438398d93d449592e5138d0f2f5acfaeb440b9913"
+      "payloadSha256": "cff39d6b6eebb01001ae2b148b719a968420e663576806841afcca3171a19038"
     },
     {
       "surface": "agenda/map",
@@ -59633,7 +59657,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "72084f53a47401e74f087faf0ef17e534bf2b3d77ebc6da130bf773d30f7c722"
+      "payloadSha256": "7a50aea8f45f3d45ffa0d767396d1366f6bc840a1ad0192399e9b774c4d39844"
     },
     {
       "surface": "agenda/map",
@@ -59652,7 +59676,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "9afd2fa05bd061c367cb9fd14888b4417a64c26b3afa6949f182ca184d4ef543"
+      "payloadSha256": "7dc9092d10b7d59304b3a9f0a32e379875aee26374946e38b439f77a70644d29"
     },
     {
       "surface": "agenda/map",
@@ -59671,7 +59695,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "bb74db4bc047d20320fa22aa8e167ed3bcd107b5176019297bae912e6dee0931"
+      "payloadSha256": "54cdcd0fca10b382699029f75d031c8371354ffb4c83de5934427f20b1e0c905"
     },
     {
       "surface": "agenda/map",
@@ -59690,7 +59714,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "2f24245170462464873865be5dd2bea4fd1563611ec8716bf87c47a847179796"
+      "payloadSha256": "c390318bd37d790f7b28cf0384c8c6fe7112b3e8915f2cc4e678a699be9e82ad"
     },
     {
       "surface": "agenda/map",
@@ -59709,7 +59733,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "0707c3dd6309e2d24a9d96e9c3b55ec8ac458ecbd39e2369dad5ba044a96fd6a"
+      "payloadSha256": "17708f68598c8cbe8ade0d11b3e7fd830cdae6d35495bc0ce3636478298ab6a3"
     },
     {
       "surface": "agenda/map",
@@ -59728,7 +59752,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "0dac5982c08e68275474fa0968afd75d297327524a3f973edc8a97d62ecf68ba"
+      "payloadSha256": "9e8cc912fd7854232a89238ac5b08d4b7c3a59aab8c81d9b849fd5ab3f8b06f8"
     },
     {
       "surface": "agenda/map",
@@ -59747,7 +59771,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "d44878c6420edb92115a5174ec6618366fc8b656ab3ddfbecc9b5dfe09083418"
+      "payloadSha256": "77287538515d3d986dbae18f63450b6dfe96bc883d1e599948a38d5395a26dbd"
     },
     {
       "surface": "agenda/map",
@@ -59766,7 +59790,7 @@
         "votes": 220
       },
       "status": "HELD",
-      "payloadSha256": "938ac25cc965473d2f2c84e3cdd8e84f4990f2270b9d08326798976324e25944"
+      "payloadSha256": "0b1539a297fbde18b4ca2d2af6219c2a12fcb496736cfd89ce75b5f8ab831782"
     },
     {
       "surface": "agenda/map",
@@ -59785,7 +59809,7 @@
         "votes": 380
       },
       "status": "HELD",
-      "payloadSha256": "824be10d84bdf1415c68e379875f8e4f8e1967aa0d280979a603d9a29fa040da"
+      "payloadSha256": "f9b94d2f9f03cc27486b3e4d6155548a3c5ef92e178bac1e411cdcaaf39ccbd8"
     },
     {
       "surface": "agenda/map",
@@ -59804,7 +59828,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "7e10af586eb84598a36de388d46ad6048e9f16833f156a32b468dd7c7b95cda5"
+      "payloadSha256": "3959c3c4b8a1b33874fd330c0cc3793629913d75132721c8281c8a014f17336b"
     },
     {
       "surface": "agenda/map",
@@ -59823,7 +59847,7 @@
         "votes": 145
       },
       "status": "HELD",
-      "payloadSha256": "30f7e87f3727dd72de4a37b5204cb9f882c2f83a639f338ea6231e0b07046158"
+      "payloadSha256": "d785a08857a8cb729b676a2b7f89e4d3059c62e000c6dac3d416be197f9f59bd"
     },
     {
       "surface": "agenda/map",
@@ -59842,7 +59866,7 @@
         "votes": 185
       },
       "status": "HELD",
-      "payloadSha256": "37cb99770b2236dd0885e7b2976800bcd867166ec4fd4d272fb318c9795c7f0f"
+      "payloadSha256": "d8c8e141e88f802e6c71ecba85bde49a0510713013b76fd9bd00f64b2d45e847"
     },
     {
       "surface": "agenda/map",
@@ -59861,7 +59885,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8cde71de7114fc50077d39882ab4652dc1b95824abeba78b96f4bfba4a333a5d"
+      "payloadSha256": "74f61ad77c4736e633e67b93ea28fc09ab426324931570ccbbb0ce98a443f118"
     },
     {
       "surface": "agenda/map",
@@ -59880,7 +59904,7 @@
         "votes": 230
       },
       "status": "HELD",
-      "payloadSha256": "e29f206188aa666c68a7d5de5aaebbee9866dabea45e442505cc5a9dc810b285"
+      "payloadSha256": "8df7cbe3047ba32c209c280f325c492508f3ffa5fbe0d0d2428fc262b31c663b"
     },
     {
       "surface": "agenda/map",
@@ -59899,7 +59923,7 @@
         "votes": 285
       },
       "status": "HELD",
-      "payloadSha256": "155f67f64acd618b593788fbb5a12eabf576495440e91ae926cc2097c3f46eda"
+      "payloadSha256": "9adaac38e6966f746b880e17ba9a6ec158ef1045b604b91d3a85a8dabe93f99a"
     },
     {
       "surface": "agenda/map",
@@ -59918,7 +59942,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "143d5604f93c089b60d7f5c6194933870e7c1985fbde54e556e266d99ca55ba1"
+      "payloadSha256": "8944b1ab6de103e48324e21e115a52b8ebf456df6026c07e091f774e9795456f"
     },
     {
       "surface": "agenda/map",
@@ -59937,7 +59961,7 @@
         "votes": 135
       },
       "status": "HELD",
-      "payloadSha256": "c6b1b05b742a0c9add3ccefeb785b05a4c084b31b854ec8999d73614f8793543"
+      "payloadSha256": "1de502da24528cc7982feb92bf050158e938f2d6f44850b6f5cb0ca2361ce11f"
     },
     {
       "surface": "agenda/map",
@@ -59956,7 +59980,7 @@
         "votes": 240
       },
       "status": "HELD",
-      "payloadSha256": "a3ced91c3a361afe36040a6b4bc046157bdbffb4f773b9eb80ae97e0aa677f4c"
+      "payloadSha256": "f982531932d7582c97c57a59a1577c2734c90bdfe6b48992de3e45e6981d174d"
     },
     {
       "surface": "agenda/map",
@@ -59975,7 +59999,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "5440e314b8f04680dbcbacc69f42835f391f0967f0e5609aa32ee5349117f653"
+      "payloadSha256": "ba0f45c3850cdb324a41046699c40ea6b09c248b390a07fc52e09daae13d5470"
     },
     {
       "surface": "agenda/map",
@@ -59994,7 +60018,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "1439ffa4cc945cf847a4b3a867b9bed89826e82529ed131d6393706d4a9ce3d2"
+      "payloadSha256": "0d3c1819bf6fee9dfaad403f8e9673f1ff14d68946fee541625d90b383481be4"
     },
     {
       "surface": "agenda/map",
@@ -60013,7 +60037,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "9eb4e86724be37cc64e2bb528d4cbf9e43a75b1a7105c1ee6fe9f985ec8db523"
+      "payloadSha256": "024126e81533cd5b85be2f44f453188e1c83cf7e68363ad79031874580364918"
     },
     {
       "surface": "agenda/map",
@@ -60032,7 +60056,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "92040953b92ff3fac2badfcd9e43d22d40e65aa513743cd3e1864a948ed12447"
+      "payloadSha256": "8df9ed0b8ce33bdb46e1852d35f39a6fc1ee31cde47512405d2a24dad25f988f"
     },
     {
       "surface": "agenda/map",
@@ -60051,7 +60075,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "b07f5ec6b284c99576aae0573d05f15711ff397a656cfc563a79b166eddc3ddc"
+      "payloadSha256": "da4a2bccad5913acd47a672aab7ec092dc56bbc1fdee502e079ac27c14fde072"
     },
     {
       "surface": "agenda/map",
@@ -60070,7 +60094,7 @@
         "votes": 8
       },
       "status": "HELD",
-      "payloadSha256": "c51f959b0f2423ec47cbea05f4988079a27b5828168db6a96c62fced1ce1b4dd"
+      "payloadSha256": "d539dc48dd6b8c5b29d9edf59c7eb54e404c8965f75f9396ef4e9f16cec2541a"
     },
     {
       "surface": "agenda/map",
@@ -60089,7 +60113,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "b6234b0e739a8f9b6b147d79bd765a179914098a369e36fbd6e991cf375aa834"
+      "payloadSha256": "3f56d0683e40c416de2b082aa87785842b6ba405d80cd63ad7aa0d83951dfe39"
     },
     {
       "surface": "agenda/map",
@@ -60108,7 +60132,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "a99fd6f9f4064568074771ee0cb4bdffe2d54c1009e545ba2f3c00958fc3011a"
+      "payloadSha256": "7f9a76ac3cf0c8e2afa81648241fbda4f9aab4d98352273cbf26e6d891111159"
     },
     {
       "surface": "agenda/map",
@@ -60127,7 +60151,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "9c1dcdac0ba45636fb1aa31a4c673262537895dd4120143f35cf28b1bffbcb47"
+      "payloadSha256": "7b4aacd9cc97bc07f6cab77e69fdff1f838e77663d3a359b002d101639ece8b8"
     }
   ]
 }

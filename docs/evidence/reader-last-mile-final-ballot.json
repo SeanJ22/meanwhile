@@ -1,6 +1,6 @@
 {
-  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-  "buildId": "1urH9pt5HWdVFv5KE1SAg",
+  "exactHead": "66030e6986e960e379bb21aa3a5de2793593a355",
+  "buildId": "rPES9aXKvj_UvgQqdGjNe",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -2187,6 +2187,14 @@
       "sha256": "8af5eb5d3c538c03054b740b7ad1a94839fa457bf1f04d4a91cfa9d47cec06f7"
     },
     {
+      "path": "lib/census-geography/division-id.ts",
+      "sha256": "ab1834fd0b616f99309319d78b3dcd986ec074eecb2563155f73d24324565e59"
+    },
+    {
+      "path": "lib/census-geography/publication.ts",
+      "sha256": "ca2c2db76d7d3a21154b2a9f9e661257ec98b7c13c265d19ab3de9972f918a56"
+    },
+    {
       "path": "lib/civic-data/attested-promotion.ts",
       "sha256": "21d8f8d8ac9cb8b7b6c1f2b239c678fd7c5458738791187be638355c9e4ff7ed"
     },
@@ -2255,6 +2263,10 @@
       "sha256": "afbc5cc393c6318f19ce56da2f6a3002d302dbf3145aa46d6dc9ce74384922b6"
     },
     {
+      "path": "lib/civic-data/promoted-reader-query.ts",
+      "sha256": "06a74ae54c1fe7799e0e4e87c7ce1494a5ab4ffca838c2f40866bcdfc754c158"
+    },
+    {
       "path": "lib/civic-data/read-model.ts",
       "sha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89"
     },
@@ -2301,6 +2313,10 @@
     {
       "path": "lib/civic-data/validated-once.ts",
       "sha256": "05f8086d1fb83fdc0249381ecec9c593d5ec6eacae224b6f6a2ea1c151a98329"
+    },
+    {
+      "path": "lib/control-plane/admin-view/promoted-slices.ts",
+      "sha256": "290f1f5d8a5f67574e3845f82dd6fc950dae51f872cee5aa51114e501a1cf1f6"
     },
     {
       "path": "lib/control-plane/ask-gap-observations.ts",
@@ -2527,12 +2543,16 @@
       "sha256": "61d208ab905302a0259db03d9cba3cc61415a8b3794c223d0937a32d43e36cd9"
     },
     {
+      "path": "lib/geo/zip-census-districts.ts",
+      "sha256": "342aecf9be3b06c4a06b7892ec6f88383db1cf4e4b5e9f0382bc9b70308362d1"
+    },
+    {
       "path": "lib/geo/zip-certainty.ts",
-      "sha256": "d00e27966283cf47663ead2f1281a21b0cf8a41c4ef5ddc40cd82ef720f7a10b"
+      "sha256": "6fe24669eb48c4e0fd51c4733501ff7ac615632981ed0677bbfe9fcc7b4cb2c4"
     },
     {
       "path": "lib/geo/zip-division-index.ts",
-      "sha256": "8b4ae14c3add888b5193557f4dfa1f32376f7578a2185bbd075b7b49b24a7ed9"
+      "sha256": "e17e9a930a6039c51ceb1724554bb73f523c77a15e0b095df57fe181ef7ffb51"
     },
     {
       "path": "lib/holdings/datasets.ts",
@@ -2749,6 +2769,10 @@
     {
       "path": "lib/ocd/district-tiers.ts",
       "sha256": "34c9fcfd6370eaff592816ee4a67f577519587a4c6b7cc01f96d4173e7b40b6b"
+    },
+    {
+      "path": "lib/ocd/divisions.ts",
+      "sha256": "2b813084f105696ab0ede932f8f407cf4c66848acfda3e9f99f7a4bc37208966"
     },
     {
       "path": "lib/ocd/fips.ts",
@@ -7886,6 +7910,8 @@
           "ballot-az-pima:prop-318",
           "ballot-az-pima:prop-319",
           "ballot-az-pima:prop-320",
+          "ballot-az-pima:state-senate-17",
+          "ballot-az-pima:state-house-17",
           "ballot-az-pima:corporation-commissioner",
           "ballot-az-pima:prop-425",
           "ballot-az-pima:prop-423"
@@ -7932,6 +7958,7 @@
         "state": "nj",
         "contestIds": [
           "ballot-nj-morris:us-senate",
+          "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
           "ballot-nj-morris:us-house-11",
           "ballot-nj-morris:county-commissioner",
           "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township",
@@ -7955,7 +7982,8 @@
         ],
         "absenceOcdIds": [
           "ocd-division/country:us/state:nj/place:morristown",
-          "ocd-division/country:us/state:nj/county:morris/place:parsippany_troy_hills_township"
+          "ocd-division/country:us/state:nj/county:morris/place:parsippany_troy_hills_township",
+          "ocd-division/country:us/state:nj/cd:7"
         ]
       },
       {
@@ -7964,6 +7992,7 @@
         "contestIds": [
           "ballot-nj-morris:us-senate",
           "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
+          "ballot-nj-morris:us-house-11",
           "ballot-nj-morris:county-commissioner",
           "ballot-nj-morris:jefferson-township-mayor-place-jefferson-township",
           "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township",
@@ -8055,6 +8084,7 @@
         "state": "nj",
         "contestIds": [
           "ballot-nj-morris:us-senate",
+          "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
           "ballot-nj-morris:us-house-11",
           "ballot-nj-morris:county-commissioner",
           "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover",
@@ -8068,7 +8098,8 @@
           "ballot-nj-morris:rockaway-twp-boe-unexpired"
         ],
         "absenceOcdIds": [
-          "ocd-division/country:us/state:nj/county:morris/place:rockaway_township"
+          "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+          "ocd-division/country:us/state:nj/cd:7"
         ]
       },
       {
@@ -8077,6 +8108,7 @@
         "contestIds": [
           "ballot-nj-morris:us-senate",
           "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
+          "ballot-nj-morris:us-house-11",
           "ballot-nj-morris:county-commissioner",
           "ballot-nj-morris:mendham-borough-mayor-place-mendham",
           "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham",
@@ -8147,6 +8179,7 @@
         "contestIds": [
           "ballot-nj-morris:us-senate",
           "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
+          "ballot-nj-morris:us-house-11",
           "ballot-nj-morris:county-commissioner",
           "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township",
           "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township",
@@ -8182,38 +8215,6 @@
         "absenceOcdIds": [
           "ocd-division/country:us/state:nj/county:morris/place:denville_township",
           "ocd-division/country:us/state:nj/county:morris/place:parsippany_troy_hills_township"
-        ]
-      },
-      {
-        "zip": "85619",
-        "state": "az",
-        "contestIds": [
-          "ballot-az-pima:governor",
-          "ballot-az-pima:secretary-of-state",
-          "ballot-az-pima:attorney-general",
-          "ballot-az-pima:state-treasurer",
-          "ballot-az-pima:superintendent",
-          "ballot-az-pima:mine-inspector",
-          "ballot-az-pima:us-house-6",
-          "ballot-az-pima:prop-141",
-          "ballot-az-pima:prop-142",
-          "ballot-az-pima:prop-143",
-          "ballot-az-pima:prop-144",
-          "ballot-az-pima:prop-145",
-          "ballot-az-pima:prop-212",
-          "ballot-az-pima:prop-316",
-          "ballot-az-pima:prop-317",
-          "ballot-az-pima:prop-318",
-          "ballot-az-pima:prop-319",
-          "ballot-az-pima:prop-320",
-          "ballot-az-pima:state-senate-17",
-          "ballot-az-pima:state-house-17",
-          "ballot-az-pima:corporation-commissioner",
-          "ballot-az-pima:prop-425",
-          "ballot-az-pima:prop-429"
-        ],
-        "absenceOcdIds": [
-          "ocd-division/country:us/state:az"
         ]
       },
       {
@@ -8336,6 +8337,43 @@
         "absenceOcdIds": [
           "ocd-division/country:us/state:nj/county:morris/place:mine_hill_township",
           "ocd-division/country:us/state:nj/cd:7"
+        ]
+      },
+      {
+        "zip": "85602",
+        "state": "az",
+        "contestIds": [
+          "ballot-az-pima:governor",
+          "ballot-az-pima:secretary-of-state",
+          "ballot-az-pima:attorney-general",
+          "ballot-az-pima:state-treasurer",
+          "ballot-az-pima:superintendent",
+          "ballot-az-pima:mine-inspector",
+          "ballot-az-pima:us-house-6",
+          "ballot-az-pima:state-senate-19",
+          "ballot-az-pima:state-house-19",
+          "ballot-az-pima:prop-141",
+          "ballot-az-pima:prop-142",
+          "ballot-az-pima:prop-143",
+          "ballot-az-pima:prop-144",
+          "ballot-az-pima:prop-145",
+          "ballot-az-pima:prop-212",
+          "ballot-az-pima:prop-316",
+          "ballot-az-pima:prop-317",
+          "ballot-az-pima:prop-318",
+          "ballot-az-pima:prop-319",
+          "ballot-az-pima:prop-320",
+          "ballot-az-pima:state-senate-17",
+          "ballot-az-pima:state-house-17",
+          "ballot-az-pima:corporation-commissioner",
+          "ballot-az-pima:prop-425",
+          "ballot-az-pima:prop-423",
+          "ballot-az-pima:prop-429"
+        ],
+        "absenceOcdIds": [
+          "ocd-division/country:us/state:az",
+          "ocd-division/country:us/state:az/school_district:vail_unified_district",
+          "ocd-division/country:us/state:az/school_district:empire_elementary_district"
         ]
       }
     ],
@@ -8872,9 +8910,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -9110,8 +9147,8 @@
         "ballot-az-pima:prop-319",
         "ballot-az-pima:prop-320"
       ],
-      "statedContestCount": 23,
-      "returnedContestCount": 23,
+      "statedContestCount": 25,
+      "returnedContestCount": 25,
       "proofs": [
         {
           "contestId": "ballot-az-pima:governor",
@@ -9269,9 +9306,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "36ff1775f3a9f36eabea8b3c9efa297d6d57726af878e3290ffbcafbeccb3151",
+          "textSha256": "63362916acedbdc37dafab284d21af0a42a7ebcf36d8beb8e390c8481e6728c9",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://ciscomani.house.gov",
             "https://www.joannamendoza.com",
@@ -9340,7 +9376,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "c6d5e4d908d005cec31c6c194bc94acc8d3ce4134e446d31e17c5e203bc3dda3",
+          "textSha256": "fe2e053292db93cad53fd2cb611e2d507b35160f65ac828b280f442052ce6568",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202025.pdf"
@@ -9359,7 +9395,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "aba1e1311d900f41d36b0263a58930829d9035e6efff054e37b46d8122d7ad99",
+          "textSha256": "02075ff5aa8bed48117874c91cc8ea3e540e6e76ec4cb3c6fffefa400a624fa0",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202044%20-%202026.pdf"
@@ -9380,7 +9416,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "b9c54371bbc9f6249d12775a9eeecdf7a62a189ac302fd946729fb9bfd6e64cf",
+          "textSha256": "fc7b4e847e9a1c6f2d4fa6c68952ce009162d978fe5b2a53cc4aadff602e8344",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2040%20-%202026.pdf"
@@ -9402,7 +9438,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "a523c2b10deaa80fa98f4ebe05263e20ac371c1b53d29dc433df6341648ff325",
+          "textSha256": "23d18231a640a7213506773062964768081ca6c4a0306f462816cb61a776af68",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202001%20-%202026.pdf"
@@ -9420,7 +9456,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "8d0bb5de9303ea08cb7d3843cb5513416323d9a7f018541e585ffaefb63ac5ac",
+          "textSha256": "afef611a73b518232916ade21890898c9d841794e98b52eb2caae1eb8f0dc5a2",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2048%20-%202026.pdf"
@@ -9446,7 +9482,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "02a06be7a4526672ec795d58ed7f33106b3d8b2aadef3c002cf87ccb46016040",
+          "textSha256": "6f4c6cb45da5f257e31a253e45ebb3509288e426e5b7b2dd8a7206f2ddfeb918",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20I-09-2026.pdf"
@@ -9464,7 +9500,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "17f8c2f03bb745d92cfe97090420db7825ae51ae7cd090317c4263679cd15ec4",
+          "textSha256": "70d2a244e8a1784ab85e5206e431c59b16bb226737b60a2547030796e07f21b5",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2021%20-%202025.pdf"
@@ -9482,7 +9518,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "c0c572e521bf19438705b2bcf054bb1648f970a93d33bae9d70f44288dfe7b5f",
+          "textSha256": "1bc0cd23b5be2ceeafe37742d3485416845b529eda3f815fc7f2f7808fea2ae8",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202055%20-%202025.pdf"
@@ -9502,7 +9538,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "be400301403281fecb52ce628b033c70be6a5edd7a8bfe19eb89e00982d4aab7",
+          "textSha256": "39fc2616f784bf2025b56b2a4934843cca42680e8b2d333b474559e6f6394421",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2003%20-%202026.pdf"
@@ -9520,7 +9556,7 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "f7974a154c8f96b3fc61359026850687bd48adf4932118f37f3a6591cf348a20",
+          "textSha256": "6eeff735bce1df89d5afda837e99311caa47de6fedc223fdfd48c44f08b1cf64",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/ballot%20analysis%20SCR1004%20-%202026.pdf"
@@ -9539,10 +9575,53 @@
           ],
           "removalIds": [],
           "summaryHeld": true,
-          "textSha256": "7f8448204a79fc38c1f6d4692952d34bc740d04e9aef83e329a896e9e77c49bb",
+          "textSha256": "6852b9865791e3fb2985cf6e50c82122744e530bcc40e25289c1f517204433b1",
           "sourceUrls": [
             "#scope-notes",
             "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-senate-17",
+          "candidacyIds": [
+            "ballot-az-pima:state-senate-17:king",
+            "ballot-az-pima:state-senate-17:soto"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-senate-17:king",
+            "ballot-az-pima:state-senate-17:soto"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "e47f46bd685e86583ae3448c6d2ca8ca1af0849117362925bc8aa0decc3266aa",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-1"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-house-17",
+          "candidacyIds": [
+            "ballot-az-pima:state-house-17:keshel",
+            "ballot-az-pima:state-house-17:winchester",
+            "ballot-az-pima:state-house-17:lyon",
+            "ballot-az-pima:state-house-17:volk"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-house-17:keshel",
+            "ballot-az-pima:state-house-17:lyon",
+            "ballot-az-pima:state-house-17:volk",
+            "ballot-az-pima:state-house-17:winchester"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "2fd235e6f512123407dbd475a62934af3971110d3f3f33189e6869f814887745",
+          "sourceUrls": [
+            "#jurisdiction-note"
           ]
         },
         {
@@ -9563,8 +9642,10 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "436015b9dfc2fd7ce3d1d13367f6b99a3fe828d80b7ba05b63d30b84501eafd4",
-          "sourceUrls": []
+          "textSha256": "d8562137046851aed699af4e55ee91d2c4ebd5e9778eb8d1e9eef5acb27ee9ad",
+          "sourceUrls": [
+            "#source-note-1"
+          ]
         },
         {
           "contestId": "ballot-az-pima:prop-425",
@@ -9824,9 +9905,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "6154957939b6c839da04473d7918d380b616b8404c35b8213b496f0db9a900d9",
+          "textSha256": "a19f4361dc30dd7f16731fee6a8b65784a6b1f7563850d948a063358c6e72888",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.adelitaforcongress.com",
             "https://grijalva.house.gov",
@@ -9845,9 +9925,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "a50f08b9b1225d7daaeb92a76ea7ef0b3bf9b28718f63130439c7de0ecf1a905",
+          "textSha256": "95dde4a949b410ca7d9e463898210093b62b8349e7a7a495cd6d6ef4afbb0bca",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.almaforarizona.com",
             "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2312"
@@ -9867,9 +9946,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "d34dbf232cf2075e5138efd09da900e7ba715fe7b04a2c062db701be7d33d2e3",
+          "textSha256": "c3671333bd5439fe9bdf25fbe2f83fd36bf6f9b50e6e7844da79a8d3b4feef03",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2381",
             "https://bettyvillegasaz.com",
@@ -10198,8 +10276,8 @@
         "pollingLinkRendered": false
       },
       "analysisContestIds": [],
-      "statedContestCount": 21,
-      "returnedContestCount": 21,
+      "statedContestCount": 22,
+      "returnedContestCount": 22,
       "proofs": [
         {
           "contestId": "ballot-nj-morris:us-senate",
@@ -10227,6 +10305,32 @@
             "https://veronicaforsenate.com",
             "https://jerseyjustin4senate.org",
             "tel:6099690959"
+          ]
+        },
+        {
+          "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
+          "candidacyIds": [
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:o-toole-seamus-patrick"
+          ],
+          "actualCardKeys": [
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:o-toole-seamus-patrick"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
+          ],
+          "summaryHeld": false,
+          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
           ]
         },
         {
@@ -10658,6 +10762,7 @@
         }
       ],
       "absenceOcdIds": [
+        "ocd-division/country:us/state:nj/cd:7",
         "ocd-division/country:us/state:nj/county:morris/place:parsippany_troy_hills_township",
         "ocd-division/country:us/state:nj/place:morristown"
       ]
@@ -10726,8 +10831,8 @@
         "pollingLinkRendered": false
       },
       "analysisContestIds": [],
-      "statedContestCount": 15,
-      "returnedContestCount": 15,
+      "statedContestCount": 16,
+      "returnedContestCount": 16,
       "proofs": [
         {
           "contestId": "ballot-nj-morris:us-senate",
@@ -10781,6 +10886,32 @@
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-nj-morris:us-house-11",
+          "candidacyIds": [
+            "ballot-nj-morris:us-house-11:hathaway",
+            "ballot-nj-morris:us-house-11:mejia",
+            "ballot-nj-morris:us-house-11:bond"
+          ],
+          "actualCardKeys": [
+            "ballot-nj-morris:us-house-11:hathaway",
+            "ballot-nj-morris:us-house-11:mejia",
+            "ballot-nj-morris:us-house-11:bond"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.joehathawayforcongress.com",
+            "https://randolphrepublicans.org/",
+            "https://www.analiliafornj.com",
+            "https://mejia.house.gov"
           ]
         },
         {
@@ -11185,9 +11316,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -11637,9 +11767,8 @@
             "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
           ],
           "summaryHeld": false,
-          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "textSha256": "6f4293d8b77e147cb7eea98bfb949b20534eebdd94fc9954b6eb76f014b93838",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
@@ -12018,9 +12147,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -12249,8 +12377,8 @@
         "pollingLinkRendered": false
       },
       "analysisContestIds": [],
-      "statedContestCount": 12,
-      "returnedContestCount": 12,
+      "statedContestCount": 13,
+      "returnedContestCount": 13,
       "proofs": [
         {
           "contestId": "ballot-nj-morris:us-senate",
@@ -12278,6 +12406,32 @@
             "https://veronicaforsenate.com",
             "https://jerseyjustin4senate.org",
             "tel:6099690959"
+          ]
+        },
+        {
+          "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
+          "candidacyIds": [
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:o-toole-seamus-patrick"
+          ],
+          "actualCardKeys": [
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:o-toole-seamus-patrick"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [
+            "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
+          ],
+          "summaryHeld": false,
+          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
           ]
         },
         {
@@ -12515,6 +12669,7 @@
         }
       ],
       "absenceOcdIds": [
+        "ocd-division/country:us/state:nj/cd:7",
         "ocd-division/country:us/state:nj/county:morris/place:rockaway_township"
       ]
     },
@@ -12582,8 +12737,8 @@
         "pollingLinkRendered": false
       },
       "analysisContestIds": [],
-      "statedContestCount": 13,
-      "returnedContestCount": 13,
+      "statedContestCount": 14,
+      "returnedContestCount": 14,
       "proofs": [
         {
           "contestId": "ballot-nj-morris:us-senate",
@@ -12637,6 +12792,32 @@
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-nj-morris:us-house-11",
+          "candidacyIds": [
+            "ballot-nj-morris:us-house-11:hathaway",
+            "ballot-nj-morris:us-house-11:mejia",
+            "ballot-nj-morris:us-house-11:bond"
+          ],
+          "actualCardKeys": [
+            "ballot-nj-morris:us-house-11:hathaway",
+            "ballot-nj-morris:us-house-11:mejia",
+            "ballot-nj-morris:us-house-11:bond"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.joehathawayforcongress.com",
+            "https://randolphrepublicans.org/",
+            "https://www.analiliafornj.com",
+            "https://mejia.house.gov"
           ]
         },
         {
@@ -13003,9 +13184,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -13316,9 +13496,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -13527,9 +13706,8 @@
             "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
           ],
           "summaryHeld": false,
-          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "textSha256": "6f4293d8b77e147cb7eea98bfb949b20534eebdd94fc9954b6eb76f014b93838",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
@@ -13717,8 +13895,8 @@
         "pollingLinkRendered": false
       },
       "analysisContestIds": [],
-      "statedContestCount": 8,
-      "returnedContestCount": 8,
+      "statedContestCount": 9,
+      "returnedContestCount": 9,
       "proofs": [
         {
           "contestId": "ballot-nj-morris:us-senate",
@@ -13772,6 +13950,32 @@
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-nj-morris:us-house-11",
+          "candidacyIds": [
+            "ballot-nj-morris:us-house-11:hathaway",
+            "ballot-nj-morris:us-house-11:mejia",
+            "ballot-nj-morris:us-house-11:bond"
+          ],
+          "actualCardKeys": [
+            "ballot-nj-morris:us-house-11:hathaway",
+            "ballot-nj-morris:us-house-11:mejia",
+            "ballot-nj-morris:us-house-11:bond"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.joehathawayforcongress.com",
+            "https://randolphrepublicans.org/",
+            "https://www.analiliafornj.com",
+            "https://mejia.house.gov"
           ]
         },
         {
@@ -14027,9 +14231,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -14363,558 +14566,6 @@
       ]
     },
     {
-      "zip": "85619",
-      "state": "az",
-      "navigation": {
-        "dates": {
-          "state": "AZ",
-          "electionDay": "2026-11-03",
-          "steps": [
-            {
-              "label": "Primary election (held)",
-              "date": "2026-07-21",
-              "detail": "Canvassed August 6, 2026. The general-election candidate list narrows to the primary winners when the Secretary of State publishes it."
-            },
-            {
-              "label": "Voter registration deadline",
-              "date": "2026-10-05",
-              "detail": "11:59 p.m."
-            },
-            {
-              "label": "Early voting begins",
-              "date": "2026-10-07",
-              "detail": null
-            },
-            {
-              "label": "Election Day",
-              "date": "2026-11-03",
-              "detail": null
-            }
-          ],
-          "sourceUrl": "https://azsos.gov/elections/ballot-measures",
-          "sourceOrg": "Arizona Secretary of State",
-          "collectedAt": "2026-08-14",
-          "verifiedAt": "2026-08-14"
-        },
-        "registration": {
-          "url": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
-          "label": "Check whether you're registered to vote",
-          "state": "AZ",
-          "sourceOrg": "Arizona Secretary of State",
-          "verifiedAt": "2026-08-13",
-          "verification": "azsos.gov/elections/voters (fetched 2026-08-13) links this as the Arizona Voter Information Portal; the portal host itself challenges non-browser clients."
-        },
-        "polling": {
-          "url": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
-          "note": "You'll need your date of birth and either a driver's licence number or the last four of your Social Security number.",
-          "label": "Find your polling place",
-          "state": "AZ",
-          "sourceOrg": "Arizona Secretary of State",
-          "verifiedAt": "2026-08-15",
-          "verification": "azsos.gov/elections/voters (fetched 2026-08-15) names the Arizona Voter Information Portal as where voting locations are found; the portal host challenges plain clients, so the polling-place entry itself was opened in a browser on 2026-08-15 and served the portal's lookup form."
-        },
-        "pollingLinkRendered": false
-      },
-      "analysisContestIds": [
-        "ballot-az-pima:prop-141",
-        "ballot-az-pima:prop-142",
-        "ballot-az-pima:prop-143",
-        "ballot-az-pima:prop-144",
-        "ballot-az-pima:prop-145",
-        "ballot-az-pima:prop-212",
-        "ballot-az-pima:prop-316",
-        "ballot-az-pima:prop-317",
-        "ballot-az-pima:prop-318",
-        "ballot-az-pima:prop-319",
-        "ballot-az-pima:prop-320"
-      ],
-      "statedContestCount": 23,
-      "returnedContestCount": 23,
-      "proofs": [
-        {
-          "contestId": "ballot-az-pima:governor",
-          "candidacyIds": [
-            "ballot-az-pima:governor:hobbs-katie",
-            "ballot-az-pima:governor:biggs-andy",
-            "ballot-az-pima:governor:lombardo-risa",
-            "ballot-az-pima:governor|Teri Ann Hourihan"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:governor|Katie Hobbs",
-            "ballot-az-pima:governor|Andy Biggs",
-            "ballot-az-pima:governor|Risa Lombardo",
-            "ballot-az-pima:governor|Teri Ann Hourihan"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "3135e4bb78b7905ca7e3bd4463cdc59a9ff1fa58657e64a10382b62a09219830",
-          "sourceUrls": [
-            "#source-note-0",
-            "https://katiehobbs.org",
-            "https://azgovernor.gov",
-            "https://biggsforarizona.com",
-            "https://biggs.house.gov",
-            "https://teriann4azgov.org"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:secretary-of-state",
-          "candidacyIds": [
-            "ballot-az-pima:secretary-of-state:fontes-adrian",
-            "ballot-az-pima:secretary-of-state:kolodin-alexander",
-            "ballot-az-pima:secretary-of-state:collier-duwayne"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:secretary-of-state|Adrian Fontes",
-            "ballot-az-pima:secretary-of-state|Alexander Kolodin",
-            "ballot-az-pima:secretary-of-state|Duwayne Collier"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "f6d8fa3709087c1e94e16e560c439e21658e6fe79ac6338279213a3dc74a0945",
-          "sourceUrls": [
-            "#source-note-0",
-            "https://www.adrianfontes.com",
-            "https://azsos.gov",
-            "https://www.alexforaz.com",
-            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2318"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:attorney-general",
-          "candidacyIds": [
-            "ballot-az-pima:attorney-general:mayes-kris",
-            "ballot-az-pima:attorney-general:petersen-warren"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:attorney-general|Kris Mayes",
-            "ballot-az-pima:attorney-general|Warren Petersen"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "4a455b5c40aa955057ed1b8ea3f3ddd69fab1d7d2b8ecd466bfd36c0d485ed3f",
-          "sourceUrls": [
-            "#source-note-0",
-            "https://www.krismayes.com",
-            "https://www.azag.gov",
-            "https://www.petersenforag.com",
-            "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:state-treasurer",
-          "candidacyIds": [
-            "ballot-az-pima:state-treasurer:mansour-nick",
-            "ballot-az-pima:state-treasurer:norton-elijah"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:state-treasurer|Nick Mansour",
-            "ballot-az-pima:state-treasurer|Elijah Norton"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "681ae9fe260872f339741d31d0d1cb3ace1c70cea30615b8f16881adc39e3a24",
-          "sourceUrls": [
-            "#source-note-0",
-            "https://mansourforarizona.com",
-            "https://nortonforaz.com"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:superintendent",
-          "candidacyIds": [
-            "ballot-az-pima:superintendent:leyba-ruiz-teresa",
-            "ballot-az-pima:superintendent:yee-kimberly"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
-            "ballot-az-pima:superintendent|Kimberly Yee"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "f3f8f10b28de1961b1bb74e37107a594d0b5c3ad325ed14d9b684425831595c1",
-          "sourceUrls": [
-            "#source-note-0",
-            "https://www.drruizforarizona.com",
-            "https://www.kimberlyyee.com",
-            "https://www.aztreasury.gov"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:mine-inspector",
-          "candidacyIds": [
-            "ballot-az-pima:mine-inspector:matlock-brian",
-            "ballot-az-pima:mine-inspector:presmyk-walter"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
-            "ballot-az-pima:mine-inspector|Brian Matlock"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "75f95b0e4bc75d83b56785e64f4c52849324da5ecf8620141ab650b62a879dd6",
-          "sourceUrls": [
-            "#source-note-0"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:us-house-6",
-          "candidacyIds": [
-            "ballot-az-pima:us-house-6:mendoza-joanna",
-            "ballot-az-pima:us-house-6:ciscomani-juan",
-            "ballot-az-pima:us-house-6:peters-jereme-lance",
-            "ballot-az-pima:us-house-6|Gary Swing"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:us-house-6|Juan Ciscomani",
-            "ballot-az-pima:us-house-6|JoAnna Mendoza",
-            "ballot-az-pima:us-house-6|Jereme Lance Peters",
-            "ballot-az-pima:us-house-6|Gary Swing"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "36ff1775f3a9f36eabea8b3c9efa297d6d57726af878e3290ffbcafbeccb3151",
-          "sourceUrls": [
-            "#jurisdiction-note",
-            "#source-note-0",
-            "https://ciscomani.house.gov",
-            "https://www.joannamendoza.com",
-            "https://theswingvote.wixsite.com/unity"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-141",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-141#no-mileage-tax",
-            "ballot-az-pima:prop-141#no-mileage-monitoring",
-            "ballot-az-pima:prop-141#exceptions"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "fe2e053292db93cad53fd2cb611e2d507b35160f65ac828b280f442052ce6568",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202025.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-142",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-142#no-preference-or-discrimination",
-            "ballot-az-pima:prop-142#no-required-endorsement",
-            "ballot-az-pima:prop-142#no-public-money-for-offices",
-            "ballot-az-pima:prop-142#no-race-based-discipline"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "02075ff5aa8bed48117874c91cc8ea3e540e6e76ec4cb3c6fffefa400a624fa0",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202044%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-143",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-143#no-public-resources-for-unions",
-            "ballot-az-pima:prop-143#no-dues-deduction",
-            "ballot-az-pima:prop-143#no-district-communications",
-            "ballot-az-pima:prop-143#individual-negotiation",
-            "ballot-az-pima:prop-143#supersedes-agreements",
-            "ballot-az-pima:prop-143#starts-2028"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "fc7b4e847e9a1c6f2d4fa6c68952ce009162d978fe5b2a53cc4aadff602e8344",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2040%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-144",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-144#citizens-only",
-            "ballot-az-pima:prop-144#id-at-every-election",
-            "ballot-az-pima:prop-144#count-at-the-polls",
-            "ballot-az-pima:prop-144#no-foreign-money",
-            "ballot-az-pima:prop-144#standard-for-election-laws",
-            "ballot-az-pima:prop-144#legislature-funds-it",
-            "ballot-az-pima:prop-144#starts-2028"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "23d18231a640a7213506773062964768081ca6c4a0306f462816cb61a776af68",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202001%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-145",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-145#no-confiscation",
-            "ballot-az-pima:prop-145#later-laws-void",
-            "ballot-az-pima:prop-145#not-confiscation"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "afef611a73b518232916ade21890898c9d841794e98b52eb2caae1eb8f0dc5a2",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2048%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-212",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-212#income-limit",
-            "ballot-az-pima:prop-212#one-year-if-unrenewed",
-            "ballot-az-pima:prop-212#sweep-to-classroom-site-fund",
-            "ballot-az-pima:prop-212#sponsor-may-sue",
-            "ballot-az-pima:prop-212#permanent-disqualification",
-            "ballot-az-pima:prop-212#quarterly-reports-and-ag",
-            "ballot-az-pima:prop-212#repeal-burden-of-proof",
-            "ballot-az-pima:prop-212#what-money-can-buy",
-            "ballot-az-pima:prop-212#annual-registration",
-            "ballot-az-pima:prop-212#medical-marijuana-transfer",
-            "ballot-az-pima:prop-212#severability"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "6f4c6cb45da5f257e31a253e45ebb3509288e426e5b7b2dd8a7206f2ddfeb918",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20I-09-2026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-316",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-316#existing-tax-capped",
-            "ballot-az-pima:prop-316#new-tax-needs-a-vote",
-            "ballot-az-pima:prop-316#freeze-window"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "70d2a244e8a1784ab85e5206e431c59b16bb226737b60a2547030796e07f21b5",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2021%20-%202025.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-317",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-317#declaration",
-            "ballot-az-pima:prop-317#homeland-security-duty",
-            "ballot-az-pima:prop-317#not-an-asylum-basis"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "1bc0cd23b5be2ceeafe37742d3485416845b529eda3f815fc7f2f7808fea2ae8",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202055%20-%202025.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-318",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-318#female-sports",
-            "ballot-az-pima:prop-318#team-designations",
-            "ballot-az-pima:prop-318#private-spaces",
-            "ballot-az-pima:prop-318#who-may-sue",
-            "ballot-az-pima:prop-318#matching-and-coed-unaffected"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "39fc2616f784bf2025b56b2a4934843cca42680e8b2d333b474559e6f6394421",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2003%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-319",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-319#no-new-systems",
-            "ballot-az-pima:prop-319#voters-decide-existing",
-            "ballot-az-pima:prop-319#ten-year-renewal"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "6eeff735bce1df89d5afda837e99311caa47de6fedc223fdfd48c44f08b1cf64",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/ballot%20analysis%20SCR1004%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-320",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [],
-          "provisionIds": [
-            "ballot-az-pima:prop-320#sixty-percent-floor",
-            "ballot-az-pima:prop-320#auditor-general-defines",
-            "ballot-az-pima:prop-320#half-percent-a-year",
-            "ballot-az-pima:prop-320#withheld-classroom-site-fund"
-          ],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "6852b9865791e3fb2985cf6e50c82122744e530bcc40e25289c1f517204433b1",
-          "sourceUrls": [
-            "#scope-notes",
-            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:state-senate-17",
-          "candidacyIds": [
-            "ballot-az-pima:state-senate-17:king",
-            "ballot-az-pima:state-senate-17:soto"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:state-senate-17:king",
-            "ballot-az-pima:state-senate-17:soto"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "e47f46bd685e86583ae3448c6d2ca8ca1af0849117362925bc8aa0decc3266aa",
-          "sourceUrls": [
-            "#jurisdiction-note",
-            "#source-note-1"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:state-house-17",
-          "candidacyIds": [
-            "ballot-az-pima:state-house-17:keshel",
-            "ballot-az-pima:state-house-17:winchester",
-            "ballot-az-pima:state-house-17:lyon",
-            "ballot-az-pima:state-house-17:volk"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:state-house-17:keshel",
-            "ballot-az-pima:state-house-17:lyon",
-            "ballot-az-pima:state-house-17:volk",
-            "ballot-az-pima:state-house-17:winchester"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "2fd235e6f512123407dbd475a62934af3971110d3f3f33189e6869f814887745",
-          "sourceUrls": [
-            "#jurisdiction-note"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:corporation-commissioner",
-          "candidacyIds": [
-            "ballot-az-pima:corporation-commissioner:thompson",
-            "ballot-az-pima:corporation-commissioner:myers",
-            "ballot-az-pima:corporation-commissioner:pratte",
-            "ballot-az-pima:corporation-commissioner:hill"
-          ],
-          "actualCardKeys": [
-            "ballot-az-pima:corporation-commissioner:hill",
-            "ballot-az-pima:corporation-commissioner:myers",
-            "ballot-az-pima:corporation-commissioner:pratte",
-            "ballot-az-pima:corporation-commissioner:thompson"
-          ],
-          "measureIds": [],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": false,
-          "textSha256": "d8562137046851aed699af4e55ee91d2c4ebd5e9778eb8d1e9eef5acb27ee9ad",
-          "sourceUrls": [
-            "#source-note-1"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-425",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [
-            "ballot-az-pima:prop-425:question"
-          ],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "857c1bf8cb0bc8d40dc49c54eee671d5b34ab29885e9c75b70f86f0def36f125",
-          "sourceUrls": [
-            "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf"
-          ]
-        },
-        {
-          "contestId": "ballot-az-pima:prop-429",
-          "candidacyIds": [],
-          "actualCardKeys": [],
-          "measureIds": [
-            "ballot-az-pima:prop-429:question"
-          ],
-          "provisionIds": [],
-          "removalIds": [],
-          "summaryHeld": true,
-          "textSha256": "e876ba90d345f1952bb109e0152a9defdddc81719d6b4de1c54602333ef8c0a9",
-          "sourceUrls": [
-            "https://www.schools.pima.gov/"
-          ]
-        }
-      ],
-      "absenceOcdIds": [
-        "ocd-division/country:us/state:az"
-      ]
-    },
-    {
       "zip": "07046",
       "state": "nj",
       "navigation": {
@@ -15025,9 +14676,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -15222,9 +14872,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -15412,9 +15061,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -15594,9 +15242,8 @@
             "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
           ],
           "summaryHeld": false,
-          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "textSha256": "6f4293d8b77e147cb7eea98bfb949b20534eebdd94fc9954b6eb76f014b93838",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
@@ -15778,9 +15425,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -16012,9 +15658,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -16346,9 +15991,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "6154957939b6c839da04473d7918d380b616b8404c35b8213b496f0db9a900d9",
+          "textSha256": "a19f4361dc30dd7f16731fee6a8b65784a6b1f7563850d948a063358c6e72888",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.adelitaforcongress.com",
             "https://grijalva.house.gov",
@@ -16742,9 +16386,8 @@
             "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
           ],
           "summaryHeld": false,
-          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "textSha256": "6f4293d8b77e147cb7eea98bfb949b20534eebdd94fc9954b6eb76f014b93838",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
@@ -16776,6 +16419,624 @@
       "absenceOcdIds": [
         "ocd-division/country:us/state:nj/cd:7",
         "ocd-division/country:us/state:nj/county:morris/place:mine_hill_township"
+      ]
+    },
+    {
+      "zip": "85602",
+      "state": "az",
+      "navigation": {
+        "dates": {
+          "state": "AZ",
+          "electionDay": "2026-11-03",
+          "steps": [
+            {
+              "label": "Primary election (held)",
+              "date": "2026-07-21",
+              "detail": "Canvassed August 6, 2026. The general-election candidate list narrows to the primary winners when the Secretary of State publishes it."
+            },
+            {
+              "label": "Voter registration deadline",
+              "date": "2026-10-05",
+              "detail": "11:59 p.m."
+            },
+            {
+              "label": "Early voting begins",
+              "date": "2026-10-07",
+              "detail": null
+            },
+            {
+              "label": "Election Day",
+              "date": "2026-11-03",
+              "detail": null
+            }
+          ],
+          "sourceUrl": "https://azsos.gov/elections/ballot-measures",
+          "sourceOrg": "Arizona Secretary of State",
+          "collectedAt": "2026-08-14",
+          "verifiedAt": "2026-08-14"
+        },
+        "registration": {
+          "url": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+          "label": "Check whether you're registered to vote",
+          "state": "AZ",
+          "sourceOrg": "Arizona Secretary of State",
+          "verifiedAt": "2026-08-13",
+          "verification": "azsos.gov/elections/voters (fetched 2026-08-13) links this as the Arizona Voter Information Portal; the portal host itself challenges non-browser clients."
+        },
+        "polling": {
+          "url": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+          "note": "You'll need your date of birth and either a driver's licence number or the last four of your Social Security number.",
+          "label": "Find your polling place",
+          "state": "AZ",
+          "sourceOrg": "Arizona Secretary of State",
+          "verifiedAt": "2026-08-15",
+          "verification": "azsos.gov/elections/voters (fetched 2026-08-15) names the Arizona Voter Information Portal as where voting locations are found; the portal host challenges plain clients, so the polling-place entry itself was opened in a browser on 2026-08-15 and served the portal's lookup form."
+        },
+        "pollingLinkRendered": false
+      },
+      "analysisContestIds": [
+        "ballot-az-pima:prop-141",
+        "ballot-az-pima:prop-142",
+        "ballot-az-pima:prop-143",
+        "ballot-az-pima:prop-144",
+        "ballot-az-pima:prop-145",
+        "ballot-az-pima:prop-212",
+        "ballot-az-pima:prop-316",
+        "ballot-az-pima:prop-317",
+        "ballot-az-pima:prop-318",
+        "ballot-az-pima:prop-319",
+        "ballot-az-pima:prop-320"
+      ],
+      "statedContestCount": 26,
+      "returnedContestCount": 26,
+      "proofs": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "candidacyIds": [
+            "ballot-az-pima:governor:hobbs-katie",
+            "ballot-az-pima:governor:biggs-andy",
+            "ballot-az-pima:governor:lombardo-risa",
+            "ballot-az-pima:governor|Teri Ann Hourihan"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:governor|Katie Hobbs",
+            "ballot-az-pima:governor|Andy Biggs",
+            "ballot-az-pima:governor|Risa Lombardo",
+            "ballot-az-pima:governor|Teri Ann Hourihan"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "3135e4bb78b7905ca7e3bd4463cdc59a9ff1fa58657e64a10382b62a09219830",
+          "sourceUrls": [
+            "#source-note-0",
+            "https://katiehobbs.org",
+            "https://azgovernor.gov",
+            "https://biggsforarizona.com",
+            "https://biggs.house.gov",
+            "https://teriann4azgov.org"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:secretary-of-state",
+          "candidacyIds": [
+            "ballot-az-pima:secretary-of-state:fontes-adrian",
+            "ballot-az-pima:secretary-of-state:kolodin-alexander",
+            "ballot-az-pima:secretary-of-state:collier-duwayne"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:secretary-of-state|Adrian Fontes",
+            "ballot-az-pima:secretary-of-state|Alexander Kolodin",
+            "ballot-az-pima:secretary-of-state|Duwayne Collier"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "f6d8fa3709087c1e94e16e560c439e21658e6fe79ac6338279213a3dc74a0945",
+          "sourceUrls": [
+            "#source-note-0",
+            "https://www.adrianfontes.com",
+            "https://azsos.gov",
+            "https://www.alexforaz.com",
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2318"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:attorney-general",
+          "candidacyIds": [
+            "ballot-az-pima:attorney-general:mayes-kris",
+            "ballot-az-pima:attorney-general:petersen-warren"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:attorney-general|Kris Mayes",
+            "ballot-az-pima:attorney-general|Warren Petersen"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "4a455b5c40aa955057ed1b8ea3f3ddd69fab1d7d2b8ecd466bfd36c0d485ed3f",
+          "sourceUrls": [
+            "#source-note-0",
+            "https://www.krismayes.com",
+            "https://www.azag.gov",
+            "https://www.petersenforag.com",
+            "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-treasurer",
+          "candidacyIds": [
+            "ballot-az-pima:state-treasurer:mansour-nick",
+            "ballot-az-pima:state-treasurer:norton-elijah"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-treasurer|Nick Mansour",
+            "ballot-az-pima:state-treasurer|Elijah Norton"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "681ae9fe260872f339741d31d0d1cb3ace1c70cea30615b8f16881adc39e3a24",
+          "sourceUrls": [
+            "#source-note-0",
+            "https://mansourforarizona.com",
+            "https://nortonforaz.com"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:superintendent",
+          "candidacyIds": [
+            "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+            "ballot-az-pima:superintendent:yee-kimberly"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+            "ballot-az-pima:superintendent|Kimberly Yee"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "f3f8f10b28de1961b1bb74e37107a594d0b5c3ad325ed14d9b684425831595c1",
+          "sourceUrls": [
+            "#source-note-0",
+            "https://www.drruizforarizona.com",
+            "https://www.kimberlyyee.com",
+            "https://www.aztreasury.gov"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:mine-inspector",
+          "candidacyIds": [
+            "ballot-az-pima:mine-inspector:matlock-brian",
+            "ballot-az-pima:mine-inspector:presmyk-walter"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
+            "ballot-az-pima:mine-inspector|Brian Matlock"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "75f95b0e4bc75d83b56785e64f4c52849324da5ecf8620141ab650b62a879dd6",
+          "sourceUrls": [
+            "#source-note-0"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:us-house-6",
+          "candidacyIds": [
+            "ballot-az-pima:us-house-6:mendoza-joanna",
+            "ballot-az-pima:us-house-6:ciscomani-juan",
+            "ballot-az-pima:us-house-6:peters-jereme-lance",
+            "ballot-az-pima:us-house-6|Gary Swing"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:us-house-6|Juan Ciscomani",
+            "ballot-az-pima:us-house-6|JoAnna Mendoza",
+            "ballot-az-pima:us-house-6|Jereme Lance Peters",
+            "ballot-az-pima:us-house-6|Gary Swing"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "63362916acedbdc37dafab284d21af0a42a7ebcf36d8beb8e390c8481e6728c9",
+          "sourceUrls": [
+            "#source-note-0",
+            "https://ciscomani.house.gov",
+            "https://www.joannamendoza.com",
+            "https://theswingvote.wixsite.com/unity"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-senate-19",
+          "candidacyIds": [
+            "ballot-az-pima:state-senate-19:griffin-gail",
+            "ballot-az-pima:state-senate-19|Bob Karp"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-senate-19|Gail Griffin",
+            "ballot-az-pima:state-senate-19|Bob Karp"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "abe79d876797b8c013df21938b0e51b078da7435a292c8e1b05c78cf0af06221",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309",
+            "https://www.rwkarp.com"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-house-19",
+          "candidacyIds": [
+            "ballot-az-pima:state-house-19:gowan-david",
+            "ballot-az-pima:state-house-19:diaz-lupe",
+            "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+            "ballot-az-pima:state-house-19:swallow-aiden-nicholette"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-house-19|David Gowan",
+            "ballot-az-pima:state-house-19|Lupe Diaz",
+            "ballot-az-pima:state-house-19|Jackie O'Donnell Anderson",
+            "ballot-az-pima:state-house-19|Aiden Nicholette Swallow"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "56ae3465bb302abad27f852dba5555e8bb6ddd03600df81d20cccb3143d56b8a",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-0",
+            "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2382",
+            "https://lupediazaz.com",
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304",
+            "https://aswallowforaz.com"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-141",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-141#no-mileage-tax",
+            "ballot-az-pima:prop-141#no-mileage-monitoring",
+            "ballot-az-pima:prop-141#exceptions"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "fe2e053292db93cad53fd2cb611e2d507b35160f65ac828b280f442052ce6568",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202025.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-142",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-142#no-preference-or-discrimination",
+            "ballot-az-pima:prop-142#no-required-endorsement",
+            "ballot-az-pima:prop-142#no-public-money-for-offices",
+            "ballot-az-pima:prop-142#no-race-based-discipline"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "02075ff5aa8bed48117874c91cc8ea3e540e6e76ec4cb3c6fffefa400a624fa0",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202044%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-143",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-143#no-public-resources-for-unions",
+            "ballot-az-pima:prop-143#no-dues-deduction",
+            "ballot-az-pima:prop-143#no-district-communications",
+            "ballot-az-pima:prop-143#individual-negotiation",
+            "ballot-az-pima:prop-143#supersedes-agreements",
+            "ballot-az-pima:prop-143#starts-2028"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "fc7b4e847e9a1c6f2d4fa6c68952ce009162d978fe5b2a53cc4aadff602e8344",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2040%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-144",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-144#citizens-only",
+            "ballot-az-pima:prop-144#id-at-every-election",
+            "ballot-az-pima:prop-144#count-at-the-polls",
+            "ballot-az-pima:prop-144#no-foreign-money",
+            "ballot-az-pima:prop-144#standard-for-election-laws",
+            "ballot-az-pima:prop-144#legislature-funds-it",
+            "ballot-az-pima:prop-144#starts-2028"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "23d18231a640a7213506773062964768081ca6c4a0306f462816cb61a776af68",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202001%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-145",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-145#no-confiscation",
+            "ballot-az-pima:prop-145#later-laws-void",
+            "ballot-az-pima:prop-145#not-confiscation"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "afef611a73b518232916ade21890898c9d841794e98b52eb2caae1eb8f0dc5a2",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2048%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-212",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-212#income-limit",
+            "ballot-az-pima:prop-212#one-year-if-unrenewed",
+            "ballot-az-pima:prop-212#sweep-to-classroom-site-fund",
+            "ballot-az-pima:prop-212#sponsor-may-sue",
+            "ballot-az-pima:prop-212#permanent-disqualification",
+            "ballot-az-pima:prop-212#quarterly-reports-and-ag",
+            "ballot-az-pima:prop-212#repeal-burden-of-proof",
+            "ballot-az-pima:prop-212#what-money-can-buy",
+            "ballot-az-pima:prop-212#annual-registration",
+            "ballot-az-pima:prop-212#medical-marijuana-transfer",
+            "ballot-az-pima:prop-212#severability"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "6f4c6cb45da5f257e31a253e45ebb3509288e426e5b7b2dd8a7206f2ddfeb918",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20I-09-2026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-316",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-316#existing-tax-capped",
+            "ballot-az-pima:prop-316#new-tax-needs-a-vote",
+            "ballot-az-pima:prop-316#freeze-window"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "70d2a244e8a1784ab85e5206e431c59b16bb226737b60a2547030796e07f21b5",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2021%20-%202025.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-317",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-317#declaration",
+            "ballot-az-pima:prop-317#homeland-security-duty",
+            "ballot-az-pima:prop-317#not-an-asylum-basis"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "1bc0cd23b5be2ceeafe37742d3485416845b529eda3f815fc7f2f7808fea2ae8",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202055%20-%202025.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-318",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-318#female-sports",
+            "ballot-az-pima:prop-318#team-designations",
+            "ballot-az-pima:prop-318#private-spaces",
+            "ballot-az-pima:prop-318#who-may-sue",
+            "ballot-az-pima:prop-318#matching-and-coed-unaffected"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "39fc2616f784bf2025b56b2a4934843cca42680e8b2d333b474559e6f6394421",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2003%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-319",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-319#no-new-systems",
+            "ballot-az-pima:prop-319#voters-decide-existing",
+            "ballot-az-pima:prop-319#ten-year-renewal"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "6eeff735bce1df89d5afda837e99311caa47de6fedc223fdfd48c44f08b1cf64",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/ballot%20analysis%20SCR1004%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-320",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [],
+          "provisionIds": [
+            "ballot-az-pima:prop-320#sixty-percent-floor",
+            "ballot-az-pima:prop-320#auditor-general-defines",
+            "ballot-az-pima:prop-320#half-percent-a-year",
+            "ballot-az-pima:prop-320#withheld-classroom-site-fund"
+          ],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "6852b9865791e3fb2985cf6e50c82122744e530bcc40e25289c1f517204433b1",
+          "sourceUrls": [
+            "#scope-notes",
+            "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-senate-17",
+          "candidacyIds": [
+            "ballot-az-pima:state-senate-17:king",
+            "ballot-az-pima:state-senate-17:soto"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-senate-17:king",
+            "ballot-az-pima:state-senate-17:soto"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "e47f46bd685e86583ae3448c6d2ca8ca1af0849117362925bc8aa0decc3266aa",
+          "sourceUrls": [
+            "#jurisdiction-note",
+            "#source-note-1"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:state-house-17",
+          "candidacyIds": [
+            "ballot-az-pima:state-house-17:keshel",
+            "ballot-az-pima:state-house-17:winchester",
+            "ballot-az-pima:state-house-17:lyon",
+            "ballot-az-pima:state-house-17:volk"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:state-house-17:keshel",
+            "ballot-az-pima:state-house-17:lyon",
+            "ballot-az-pima:state-house-17:volk",
+            "ballot-az-pima:state-house-17:winchester"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "2fd235e6f512123407dbd475a62934af3971110d3f3f33189e6869f814887745",
+          "sourceUrls": [
+            "#jurisdiction-note"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:corporation-commissioner",
+          "candidacyIds": [
+            "ballot-az-pima:corporation-commissioner:thompson",
+            "ballot-az-pima:corporation-commissioner:myers",
+            "ballot-az-pima:corporation-commissioner:pratte",
+            "ballot-az-pima:corporation-commissioner:hill"
+          ],
+          "actualCardKeys": [
+            "ballot-az-pima:corporation-commissioner:hill",
+            "ballot-az-pima:corporation-commissioner:myers",
+            "ballot-az-pima:corporation-commissioner:pratte",
+            "ballot-az-pima:corporation-commissioner:thompson"
+          ],
+          "measureIds": [],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": false,
+          "textSha256": "d8562137046851aed699af4e55ee91d2c4ebd5e9778eb8d1e9eef5acb27ee9ad",
+          "sourceUrls": [
+            "#source-note-1"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-425",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [
+            "ballot-az-pima:prop-425:question"
+          ],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "857c1bf8cb0bc8d40dc49c54eee671d5b34ab29885e9c75b70f86f0def36f125",
+          "sourceUrls": [
+            "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-423",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [
+            "ballot-az-pima:prop-423:question"
+          ],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "60f041b4ee702b01f508ff2da3d3e011c6de8396122f07f6b91d17659b607564",
+          "sourceUrls": [
+            "https://www.schools.pima.gov/"
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:prop-429",
+          "candidacyIds": [],
+          "actualCardKeys": [],
+          "measureIds": [
+            "ballot-az-pima:prop-429:question"
+          ],
+          "provisionIds": [],
+          "removalIds": [],
+          "summaryHeld": true,
+          "textSha256": "e876ba90d345f1952bb109e0152a9defdddc81719d6b4de1c54602333ef8c0a9",
+          "sourceUrls": [
+            "https://www.schools.pima.gov/"
+          ]
+        }
+      ],
+      "absenceOcdIds": [
+        "ocd-division/country:us/state:az",
+        "ocd-division/country:us/state:az/school_district:empire_elementary_district",
+        "ocd-division/country:us/state:az/school_district:vail_unified_district"
       ]
     }
   ]

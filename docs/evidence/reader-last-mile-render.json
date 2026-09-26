@@ -1,17 +1,17 @@
 {
   "date": "2026-09-26",
   "base": "http://localhost:3210",
-  "buildId": "1urH9pt5HWdVFv5KE1SAg",
-  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-  "runId": "reader-last-mile-render@2026-09-26T08:56:50.766Z",
+  "buildId": "rPES9aXKvj_UvgQqdGjNe",
+  "exactHead": "66030e6986e960e379bb21aa3a5de2793593a355",
+  "runId": "reader-last-mile-render@2026-09-26T10:45:33.984Z",
   "results": [
     {
       "label": "85701-desktop-dark",
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -400,7 +400,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 467,
+          "totalMs": 450,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -419,20 +419,20 @@
           },
           "preloads": {
             "edgeManifest": 0,
-            "outcomes": 4,
-            "federalDirectory": 7,
-            "registry": 7,
-            "executiveActions": 7,
-            "azBallot": 7,
-            "commentAccess": 125,
-            "federalKeyVotes": 246,
-            "candidateProfiles": 247,
-            "federalVotes": 254,
-            "candidateCorpus": 262,
-            "stateMoney": 263,
-            "azPimaFinance": 263,
-            "officeholderStatements": 266,
-            "funding": 268
+            "outcomes": 5,
+            "federalDirectory": 9,
+            "registry": 9,
+            "executiveActions": 9,
+            "azBallot": 9,
+            "commentAccess": 94,
+            "candidateCorpus": 249,
+            "funding": 262,
+            "candidateProfiles": 262,
+            "federalKeyVotes": 268,
+            "stateMoney": 268,
+            "federalVotes": 269,
+            "officeholderStatements": 269,
+            "azPimaFinance": 269
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -445,10 +445,10 @@
           "stages": {
             "sourcePreloads": 269,
             "meetingsProjection": 0,
-            "officeholdersAndBallot": 185,
+            "officeholdersAndBallot": 167,
             "interpretation": 2,
-            "resolutionAndRetrieval": 9,
-            "composition": 2
+            "resolutionAndRetrieval": 8,
+            "composition": 3
           }
         },
         "answer": "Katie Hobbs's campaign committee, registered as \"Elect Katie Hobbs\", reported raising $11,109,719.95 and spending $14,355,612.69 for the Arizona 2026 election cycle, activity recorded January 1st, 2025 through September 8th, 2026. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.",
@@ -586,9 +586,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -6427,9 +6427,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -10769,9 +10769,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -15066,9 +15066,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -18705,8 +18705,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -18791,7 +18791,7 @@
         "unavailableAuthorities": []
       },
       "population": {
-        "cardsOpened": 29,
+        "cardsOpened": 35,
         "rows": [
           {
             "key": "ballot-az-pima:governor|Katie Hobbs",
@@ -18919,6 +18919,36 @@
             "renderedRecords": 1
           },
           {
+            "key": "ballot-az-pima:state-senate-17:king",
+            "eligibleDisplayRecords": 1,
+            "renderedRecords": 1
+          },
+          {
+            "key": "ballot-az-pima:state-senate-17:soto",
+            "eligibleDisplayRecords": 1,
+            "renderedRecords": 1
+          },
+          {
+            "key": "ballot-az-pima:state-house-17:keshel",
+            "eligibleDisplayRecords": 1,
+            "renderedRecords": 1
+          },
+          {
+            "key": "ballot-az-pima:state-house-17:lyon",
+            "eligibleDisplayRecords": 1,
+            "renderedRecords": 1
+          },
+          {
+            "key": "ballot-az-pima:state-house-17:volk",
+            "eligibleDisplayRecords": 1,
+            "renderedRecords": 1
+          },
+          {
+            "key": "ballot-az-pima:state-house-17:winchester",
+            "eligibleDisplayRecords": 1,
+            "renderedRecords": 1
+          },
+          {
             "key": "ballot-az-pima:corporation-commissioner:hill",
             "eligibleDisplayRecords": 1,
             "renderedRecords": 1
@@ -19042,7 +19072,7 @@
           "interpretation": {
             "ran": false,
             "why": "lexical-reading",
-            "ms": 4,
+            "ms": 1,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -19120,7 +19150,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 376,
+          "totalMs": 505,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -19139,20 +19169,20 @@
           },
           "preloads": {
             "edgeManifest": 0,
-            "commentAccess": 6,
-            "outcomes": 8,
-            "azPimaFinance": 8,
+            "outcomes": 5,
             "registry": 8,
-            "officeholderStatements": 8,
-            "executiveActions": 8,
-            "funding": 8,
-            "federalVotes": 8,
-            "federalKeyVotes": 8,
-            "stateMoney": 8,
-            "azBallot": 8,
-            "candidateCorpus": 8,
-            "candidateProfiles": 8,
-            "federalDirectory": 239
+            "executiveActions": 7,
+            "azBallot": 7,
+            "commentAccess": 231,
+            "funding": 242,
+            "federalDirectory": 243,
+            "federalKeyVotes": 250,
+            "azPimaFinance": 250,
+            "candidateProfiles": 258,
+            "candidateCorpus": 266,
+            "officeholderStatements": 269,
+            "stateMoney": 269,
+            "federalVotes": 270
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -19163,12 +19193,12 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 240,
-            "meetingsProjection": 76,
-            "officeholdersAndBallot": 41,
-            "interpretation": 4,
-            "resolutionAndRetrieval": 13,
-            "composition": 2
+            "sourcePreloads": 271,
+            "meetingsProjection": 55,
+            "officeholdersAndBallot": 172,
+            "interpretation": 1,
+            "resolutionAndRetrieval": 5,
+            "composition": 1
           }
         },
         "answer": "Katie Hobbs's campaign committee, registered as \"Elect Katie Hobbs\", reported raising $11,109,719.95 and spending $14,355,612.69 for the Arizona 2026 election cycle, activity recorded January 1st, 2025 through September 8th, 2026. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.",
@@ -19249,7 +19279,7 @@
           "ballot-az-pima:state-senate-19",
           "ballot-az-pima:state-house-19"
         ],
-        "footerText": "‡We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
+        "footerText": "§We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
         "screenshot": "C:\\Users\\seanj\\dev\\acf\\screenshots\\reader-last-mile\\85641-desktop-dark-ballot-current-scope.png",
         "obsoletePublisherAbsence": false
       },
@@ -19295,9 +19325,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -19330,7 +19360,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T08:57:43.464Z",
+              "recheckDueAt": "2026-09-26T10:46:31.982Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -19497,8 +19527,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -19839,7 +19869,7 @@
           "interpretation": {
             "ran": false,
             "why": "lexical-reading",
-            "ms": 2,
+            "ms": 1,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -19910,7 +19940,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 1800,
+          "totalMs": 571,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -19929,20 +19959,20 @@
           },
           "preloads": {
             "edgeManifest": 0,
-            "commentAccess": 7,
-            "outcomes": 12,
-            "federalDirectory": 15,
-            "registry": 15,
-            "azBallot": 15,
-            "funding": 242,
-            "azPimaFinance": 251,
-            "federalVotes": 252,
-            "stateMoney": 254,
-            "candidateProfiles": 260,
-            "candidateCorpus": 260,
-            "executiveActions": 262,
-            "federalKeyVotes": 267,
-            "officeholderStatements": 267
+            "commentAccess": 4,
+            "outcomes": 4,
+            "federalDirectory": 4,
+            "azPimaFinance": 4,
+            "registry": 4,
+            "officeholderStatements": 4,
+            "executiveActions": 4,
+            "funding": 4,
+            "federalVotes": 4,
+            "federalKeyVotes": 4,
+            "stateMoney": 5,
+            "azBallot": 5,
+            "candidateCorpus": 5,
+            "candidateProfiles": 5
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -19953,12 +19983,12 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 268,
-            "meetingsProjection": 1361,
-            "officeholdersAndBallot": 153,
-            "interpretation": 2,
-            "resolutionAndRetrieval": 12,
-            "composition": 3
+            "sourcePreloads": 5,
+            "meetingsProjection": 312,
+            "officeholdersAndBallot": 247,
+            "interpretation": 1,
+            "resolutionAndRetrieval": 5,
+            "composition": 1
           }
         },
         "answer": "Tayfun SELEN's campaign committee, registered as \"SELEN, TAYFUN\", reported raising $225,025.50 and spending $229,525.50 in 14 reports filed through June 22nd, 2026. Filed with the New Jersey Election Law Enforcement Commission; read September 8th, 2026. These records describe the campaigns' own filings; they do not establish outside spending for or against Tayfun SELEN.",
@@ -20021,9 +20051,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -20221,8 +20251,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -20602,7 +20632,7 @@
           "interpretation": {
             "ran": false,
             "why": "lexical-reading",
-            "ms": 2,
+            "ms": 3,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -20673,7 +20703,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 908,
+          "totalMs": 541,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -20692,20 +20722,20 @@
           },
           "preloads": {
             "edgeManifest": 0,
-            "outcomes": 8,
-            "federalDirectory": 11,
-            "registry": 11,
-            "federalVotes": 240,
-            "federalKeyVotes": 251,
-            "candidateCorpus": 251,
-            "stateMoney": 252,
-            "candidateProfiles": 251,
-            "officeholderStatements": 251,
-            "azBallot": 254,
-            "azPimaFinance": 257,
-            "funding": 258,
-            "executiveActions": 257,
-            "commentAccess": 267
+            "outcomes": 5,
+            "federalDirectory": 7,
+            "registry": 7,
+            "funding": 287,
+            "federalVotes": 287,
+            "executiveActions": 289,
+            "azBallot": 289,
+            "commentAccess": 312,
+            "federalKeyVotes": 313,
+            "officeholderStatements": 313,
+            "azPimaFinance": 313,
+            "stateMoney": 314,
+            "candidateCorpus": 314,
+            "candidateProfiles": 314
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -20716,12 +20746,12 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 267,
-            "meetingsProjection": 450,
-            "officeholdersAndBallot": 182,
-            "interpretation": 2,
-            "resolutionAndRetrieval": 6,
-            "composition": 0
+            "sourcePreloads": 315,
+            "meetingsProjection": 50,
+            "officeholdersAndBallot": 168,
+            "interpretation": 3,
+            "resolutionAndRetrieval": 4,
+            "composition": 1
           }
         },
         "answer": "Kelly Ayotte's campaign committee, registered as \"Kelly for New Hampshire\", reported raising $6,112,059.13 and spending $3,941,563.62 for the 2026 Election Cycle. Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 8th, 2026. These records describe the campaigns' own filings; they do not establish outside spending for or against Kelly Ayotte.",
@@ -20770,9 +20800,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:53:09.994Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -20805,7 +20835,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T08:58:33.638Z",
+              "recheckDueAt": "2026-09-26T10:47:17.012Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -20940,8 +20970,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -21096,9 +21126,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:41.683Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -26937,9 +26967,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:41.683Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -31279,9 +31309,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:41.683Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -35576,9 +35606,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:41.683Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -39215,8 +39245,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -39314,7 +39344,7 @@
           "ballot-az-pima:state-senate-19",
           "ballot-az-pima:state-house-19"
         ],
-        "footerText": "‡We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
+        "footerText": "§We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
         "screenshot": "C:\\Users\\seanj\\dev\\acf\\screenshots\\reader-last-mile\\85641-desktop-light-ballot-current-scope.png",
         "obsoletePublisherAbsence": false
       },
@@ -39360,9 +39390,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -39395,7 +39425,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T08:59:30.743Z",
+              "recheckDueAt": "2026-09-26T10:48:09.170Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -39562,8 +39592,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -39730,9 +39760,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -39930,8 +39960,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -40048,9 +40078,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:44:15.523Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -40083,7 +40113,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T09:00:00.728Z",
+              "recheckDueAt": "2026-09-26T10:48:40.282Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -40218,8 +40248,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -40374,9 +40404,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:48:49.622Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -46215,9 +46245,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:48:49.622Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -50557,9 +50587,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:48:49.622Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -54854,9 +54884,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:48:49.622Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -58777,8 +58807,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -58876,7 +58906,7 @@
           "ballot-az-pima:state-senate-19",
           "ballot-az-pima:state-house-19"
         ],
-        "footerText": "‡We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
+        "footerText": "§We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
         "screenshot": "C:\\Users\\seanj\\dev\\acf\\screenshots\\reader-last-mile\\85641-phone-dark-ballot-current-scope.png",
         "obsoletePublisherAbsence": false
       },
@@ -58922,9 +58952,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:15.705Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -58957,7 +58987,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T09:00:30.850Z",
+              "recheckDueAt": "2026-09-26T10:49:26.284Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -59124,8 +59154,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -59292,9 +59322,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:15.705Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -59866,8 +59896,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -59984,9 +60014,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:15.705Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -60019,7 +60049,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T09:00:52.228Z",
+              "recheckDueAt": "2026-09-26T10:49:49.478Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -60154,8 +60184,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -60310,9 +60340,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -66151,9 +66181,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -70493,9 +70523,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -74790,9 +74820,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -78713,8 +78743,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -78812,7 +78842,7 @@
           "ballot-az-pima:state-senate-19",
           "ballot-az-pima:state-house-19"
         ],
-        "footerText": "‡We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
+        "footerText": "§We have not recorded the final ballot wording for this measure. The title and any official analysis shown here are the records we hold. (applies to 11 contests on this page)",
         "screenshot": "C:\\Users\\seanj\\dev\\acf\\screenshots\\reader-last-mile\\85641-phone-light-ballot-current-scope.png",
         "obsoletePublisherAbsence": false
       },
@@ -78858,9 +78888,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -78893,7 +78923,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T09:01:20.168Z",
+              "recheckDueAt": "2026-09-26T10:50:17.453Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -79060,8 +79090,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -79228,9 +79258,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -79802,8 +79832,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-        "commitShort": "9dfd9f8",
+        "commit": "66030e6986e960e379bb21aa3a5de2793593a355",
+        "commitShort": "66030e6",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -79920,9 +79950,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-26T05:10:12.409Z",
-              "retrievedAt": "2026-09-26T08:58:51.625Z",
-              "promotedAt": "2026-09-26T05:10:12.862Z",
+              "sourceThrough": "2026-09-26T08:57:49.275Z",
+              "retrievedAt": "2026-09-26T10:49:28.786Z",
+              "promotedAt": "2026-09-26T08:57:49.905Z",
               "stale": "UNKNOWN",
               "staleAt": null
             },
@@ -79955,7 +79985,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-26T09:01:41.862Z",
+              "recheckDueAt": "2026-09-26T10:50:40.196Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],

@@ -184,6 +184,22 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
     ],
     observed: { at: "2026-09-24T19:33:49Z", by: DOTGOV_SWEEP },
   }),
+  /*
+   * The 85635 expansion (2026-09-26): the district's recorded k12.az.us host no longer resolves. The federal
+   * school-district directory names its current site, and that site names the district. Its board's agendas are on
+   * Diligent (fhasd.community.highbond.com) and BoardDocs (boarddocs.com/az/fhas), which no adapter reads yet.
+   */
+  siteHint("az:depschool:fort-huachuca-accommodation-school", {
+    origin: "https://www.fhasd.org",
+    selfName: "Fort Huachuca Accommodation Schools",
+    replaces: "http://fthuachuca.k12.az.us/",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL, with and without www)",
+    evidence: [
+      "the NCES Common Core of Data district detail for district 0403150, \"Fort Huachuca Accommodation District\" (Fort Huachuca, AZ 85613), lists its website as http://fhasd.org",
+      "its homepage answered 200, titled \"Fort Huachuca Accommodation Schools\", and links its \"Meet the Governing Board\", \"Information and Meeting Dates\" and \"Governing Board Agenda/Minutes\" pages",
+    ],
+    observed: { at: "2026-09-26T04:57:27Z", by: "85635 acquisition session: one honest request per page, robots.txt read first (www.fhasd.org answers 404 to it)" },
+  }),
   {
     /*
      * The 85635 expansion (2026-09-26). The city publishes its sittings on its own "Calendar Meeting List" page as

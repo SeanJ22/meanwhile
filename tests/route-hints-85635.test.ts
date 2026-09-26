@@ -37,6 +37,35 @@ test("SIERRA VISTA: the meeting list page is confirmed for the city only under t
   assert.match(labelled.detail, /City Council Work Session \(2026-10-06\); City Council Regular Meeting \(2026-10-08\)/);
 });
 
+test("FORT HUACHUCA: the walk reads the district's current site in place of its dead k12.az.us host, while that site still names the district", async () => {
+  const hints = routeHintsFor("az:depschool:fort-huachuca-accommodation-school", ROUTE_HINTS)!;
+  assert.equal(hints.officialSite?.origin, "https://www.fhasd.org");
+  assert.equal(hints.officialSite?.replaces, "http://fthuachuca.k12.az.us/");
+  const seen: string[] = [];
+  const open = recordedDiscoveryOpen({
+    "https://www.fhasd.org/robots.txt": { status: 404, body: "not found" },
+    "https://www.fhasd.org/": {
+      status: 200,
+      body: `<title>Fort Huachuca Accommodation Schools</title><a href="https://fhasd.community.highbond.com/Portal/">Governing Board Agenda/Minutes</a>`,
+    },
+  });
+  let tick = 0;
+  const attempt = await walkMeetingsDiscoveryNeed({
+    jurisdictionId: "az:depschool:fort-huachuca-accommodation-school", stateCode: "AZ", name: "FORT HUACHUCA ACCOMMODATION SCHOOL",
+    govClass: "DEPENDENT_SCHOOL_SYSTEM", ownWebAddress: "http://fthuachuca.k12.az.us/", basis: "SOURCE_DISCOVERY_OWED", sources: [],
+  }, {
+    open: async (input) => (seen.push(input.url), open(input)),
+    spaceOut: async () => {},
+    vault: async (artifact) => ({ stored: true, where: `vault/${artifact.id}`, why: "stored" }),
+    now: () => new Date(Date.parse(NOW) + (tick++) * 1000).toISOString(),
+    budget: { spent: () => false },
+    routeHints: ROUTE_HINTS,
+  });
+  assert.deepEqual(seen.slice(0, 2), ["https://www.fhasd.org/robots.txt", "https://www.fhasd.org/"]);
+  assert.equal(attempt.site?.homepage?.basis, "ROUTE_HINT");
+  assert.deepEqual(attempt.leads.map((l) => l.vendor), ["diligent"], "its board portal is a lead until an adapter reads it");
+});
+
 test("SIERRA VISTA, THE WALK: the hinted page is read robots-first and found, attested by the hint", async () => {
   const seen: string[] = [];
   const open = recordedDiscoveryOpen({

@@ -56,6 +56,23 @@ const input = (over: Partial<DeliveryTrailInput> = {}): DeliveryTrailInput => ({
   ...over,
 });
 
+test("Admin retains failed readback reason and time without turning it into verified delivery", () => {
+  const approved = { chain: { scouted: "sc", confirmed: "cf", verified: "vf", audited: "au" }, recordClass: "candidate-enrichment", at: "2026-09-26T08:00:00Z", recordId: "approved" };
+  const item = state({ itemId: "a", stage: "APPROVED_FOR_PROMOTION", approved });
+  const checkedAt = "2026-09-26T09:00:00Z";
+  const read = { checkedAt, errors: [], witnesses: [{ itemId: "a", approvalId: "approved", versionId: "d1", readerKey: "key", url: "https://meanwhileusa.com/ballot?zip=85635", checkedAt, state: "NOT_OBSERVED" as const, reason: "Sources control failed.", responseSha256: null }] };
+  const view = buildDeliveryTrail([item], input({ now: checkedAt, servedReader: read }));
+  assert.match(view.promotions[0].destination, /NOT_OBSERVED — Sources control failed/);
+  assert.equal(view.promotions[0].checkedAt, checkedAt);
+  const served = view.stages.find(s => s.key === "publicly_available")!.reached;
+  assert.ok(served.held && served.value.value === 0);
+  const stale = buildDeliveryTrail([item], input({ now: "2026-09-26T13:00:00Z", servedReader: read }));
+  assert.match(stale.promotions[0].destination, /stale readback/);
+  const wrongApproval = buildDeliveryTrail([item], input({ now: checkedAt, servedReader: { ...read, witnesses: [{ ...read.witnesses[0], approvalId: "other" }] } }));
+  assert.equal(wrongApproval.promotions[0].checkedAt, null);
+  assert.doesNotMatch(wrongApproval.promotions[0].destination, /Sources control/);
+});
+
 test("empty pipeline: every stage is a named gap, the blockers are named, promotions empty", () => {
   /* A closed gate is named as a blocker; the live gate now opens campaign sites (2026-09-21), so it is not one. */
   const open = buildDeliveryTrail([], input());

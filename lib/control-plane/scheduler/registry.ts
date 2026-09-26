@@ -358,6 +358,7 @@ export function buildRegistry(
             id,
             recordClass: record.recordClass,
             subjectId: record.subjectId,
+            ...(record.scopeDivisions ? { scopeDivisions: [...new Set(record.scopeDivisions)].sort() } : {}),
             routeId: route.routeId,
             active: true,
             readerImpactAt: record.readerImpactAt,

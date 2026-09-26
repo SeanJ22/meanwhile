@@ -55,6 +55,7 @@ export async function collectPublishedCampaignReadback(now: string): Promise<Ser
         try {
           const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15_000 });
           const openedLinks: { readerKey: string; href: string; domSha256: string }[] = [];
+          const failures: { readerKey: string; reason: string }[] = [];
           for (const record of derived.value.records.filter(r => destinations.get(r.candidacyId) === url)) {
             const candidate = page.locator(`[data-candidate-target=${JSON.stringify(record.id)}]`);
             try {
@@ -65,11 +66,15 @@ export async function collectPublishedCampaignReadback(now: string): Promise<Ser
               if (await link.isVisible()) {
                 const href = await link.getAttribute("href");
                 if (href) openedLinks.push({ readerKey: record.id, href, domSha256: createHash("sha256").update(await dialog.evaluate(el => el.outerHTML)).digest("hex") });
-              }
-            } catch { /* This exact record remains NOT_OBSERVED; later records are still owed. */ }
+              } else failures.push({ readerKey: record.id, reason: "Candidate Battlecard and Sources opened, but the campaign link is absent. Publication-to-reader connection requires repair." });
+            } catch {
+              failures.push({ readerKey: record.id, reason: await candidate.count() === 0
+                ? "Published record retained, but this exact candidate is absent from the current public ballot. Reconcile the current certified lineup before changing reader eligibility."
+                : "Candidate is present, but Battlecard → Sources did not complete within the readback deadline. Reader action requires repair." });
+            }
             finally { await page.getByRole("dialog").getByRole("button", { name: "Close", exact: true }).click().catch(() => undefined); }
           }
-          return { status: response?.status() ?? 0, html: await page.content(), openedLinks };
+          return { status: response?.status() ?? 0, html: await page.content(), openedLinks, failures };
         } finally { await page.close(); }
       } });
     return { ...report, syntheticRunId: browser.runId };

@@ -1,7 +1,8 @@
-import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { execFile, spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { promisify } from "node:util";
 
 import { cannotRun, extracted, zeroRows } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
@@ -48,6 +49,12 @@ export interface OcrPage {
 export interface OcrOptions {
   /** Override the binary. Default `tesseract`, resolved on PATH. */
   binary?: string;
+  /** Poppler's local PDF-to-image converter. Default `pdftoppm` on PATH. */
+  rasterizer?: string;
+  /** Local process boundary, injectable for deterministic failure tests. */
+  execute?: (binary: string, args: readonly string[]) => void | Promise<void>;
+  /** Wall-time allowance for conversion and all pages together. */
+  timeoutMs?: number;
   /**
    * A whole-engine override: given the PDF bytes, return one string per page.
    * Injected by tests, and the seam for a session with a better engine.
@@ -58,12 +65,13 @@ export interface OcrOptions {
 }
 
 /** Is a usable engine on PATH? Answered once, honestly, before any work. */
-export function ocrEngineAvailable(binary = "tesseract"): boolean {
-  const probe = spawnSync(binary, ["--version"], { encoding: "utf8" });
+export function ocrEngineAvailable(binary = process.env.WTP_OCR_BINARY ?? "tesseract"): boolean {
+  const probe = spawnSync(binary, ["--version"], { encoding: "utf8", timeout: 10_000, windowsHide: true });
   return probe.status === 0;
 }
 
 const MIN_PAGE_CHARS = 2;
+const executeFile = promisify(execFile);
 
 export async function runOcr(
   bytes: Uint8Array,
@@ -79,7 +87,7 @@ export async function runOcr(
   if (opts.engine) {
     pageTexts = await opts.engine(bytes);
   } else {
-    const binary = opts.binary ?? "tesseract";
+    const binary = opts.binary ?? process.env.WTP_OCR_BINARY ?? "tesseract";
     if (!ocrEngineAvailable(binary)) {
       /*
        * THE WALL, NAMED — and named as a wall rather than as a result. The
@@ -98,31 +106,38 @@ export async function runOcr(
       );
     }
 
+    const deadline = Date.now() + (opts.timeoutMs ?? 60_000);
+    const execute = opts.execute ?? (async (command: string, args: readonly string[]) => {
+      const remaining = deadline - Date.now();
+      if (remaining <= 0) throw new Error("document OCR time allowance exhausted");
+      await executeFile(command, [...args], { encoding: "utf8", timeout: remaining, windowsHide: true });
+    });
     const dir = mkdtempSync(join(tmpdir(), "wtp-ocr-"));
+    let step = "PDF rasterisation";
     try {
       const pdf = join(dir, "in.pdf");
       writeFileSync(pdf, bytes);
-      /*
-       * Tesseract reads images, not PDFs. Rather than add a rasteriser as a
-       * second dependency, the PDF goes in whole and tesseract's own PDF
-       * handling (via Leptonica) is used where the build has it; where it does
-       * not, the failure is reported as CANNOT_RUN with tesseract's own words,
-       * which names the next rung rather than guessing at it.
-       */
-      const out = join(dir, "out");
-      execFileSync(
-        opts.binary ?? "tesseract",
-        [pdf, out, "-l", opts.language ?? "eng", "txt"],
-        { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
-      );
-      pageTexts = [readFileSync(`${out}.txt`, "utf8")];
+      // Tesseract cannot read PDF input. Render every page first; a failed
+      // conversion or missing page refuses the document, never an empty success.
+      await execute(opts.rasterizer ?? process.env.WTP_PDF_RASTERIZER ?? "pdftoppm", ["-r", "300", "-png", pdf, join(dir, "page")]);
+      const images = readdirSync(dir).map(name => ({ name, page: /^page-(\d+)\.png$/.exec(name)?.[1] }))
+        .filter((row): row is { name: string; page: string } => row.page !== undefined)
+        .sort((a, b) => Number(a.page) - Number(b.page));
+      if (!images.length || images.some((row, i) => Number(row.page) !== i + 1)) throw new Error("converter produced no complete consecutive page sequence");
+      pageTexts = [];
+      for (const image of images) {
+        step = `OCR page ${Number(image.page)}`;
+        const out = join(dir, `text-${image.page}`);
+        await execute(binary, [join(dir, image.name), out, "-l", opts.language ?? "eng", "txt"]);
+        pageTexts.push(readFileSync(`${out}.txt`, "utf8"));
+      }
     } catch (error) {
       return cannotRun(
         "OCR",
         source,
-        `the OCR engine refused the file: ${(error as Error).message.slice(0, 300)}. ` +
-          "Rasterise the pages first (pdftoppm) and OCR the images, which is the " +
-          "next rung — this is not a finding about the document.",
+        `${step} failed: ${(error as Error).message.slice(0, 300)}. ` +
+          "Check the local Poppler (pdftoppm) and Tesseract installations and the fetched PDF. " +
+          "This is not a finding that the publisher supplied no text.",
         { inputBytes: bytes.length },
       );
     } finally {

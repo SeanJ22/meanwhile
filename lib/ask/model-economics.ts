@@ -127,7 +127,15 @@ export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
  * `pnpm ask:model-compare`), and the run record names the two it used, so no
  * later reader has to infer a record's arms from what this constant says today.
  */
-export const ASK_CHALLENGER_MODEL = "claude-opus-5-5";
+/*
+ * 2026-09-25: Ask's frontier model became `claude-opus-5-5` (Sean: Opus 5 out
+ * of the rotation completely), so the arm above now equals the incumbent and a
+ * flagless run would grade a model against itself. The standing arm is the
+ * cheaper `claude-sonnet-5`. The 2026-09-25 per-role comparison (Haiku 4.5,
+ * Sonnet 5, Opus 5.5 on identical inputs) is recorded in
+ * meanwhile-evidence/admin-completion/2026-09-25/ask-model-test/.
+ */
+export const ASK_CHALLENGER_MODEL = "claude-sonnet-5";
 
 /**
  * How much cheaper the challenger's tokens are, on the published rates alone.

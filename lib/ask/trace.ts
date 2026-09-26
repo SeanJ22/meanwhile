@@ -27,7 +27,14 @@ export interface RungTrace {
   ran: boolean;
   /** Why not, when it did not. */
   why?: string;
+  /** The model id we sent (the resolved role model, lib/ask/model.ts). */
   model?: string;
+  /**
+   * The model the API says served the call (the response's own `model`
+   * field), so the model actually used can be checked, not only the one asked
+   * for (2026-09-25). Null when the reply carried none.
+   */
+  servedModel?: string | null;
   ms?: number;
   /**
    * The model's result was reused from byte-identical inputs on this server
@@ -125,7 +132,7 @@ export interface AskTrace {
      * check's names, or an unavailable call's status. `model` above is the
      * writer whose answer was settled.
      */
-    writers?: { model: string; role: "FAST" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
+    writers?: { model: string; servedModel?: string | null; role: "FAST" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
     /** Why the frontier writer ran: the fast writer's failed checks, or why it could not answer. */
     escalation?: string;
     /**

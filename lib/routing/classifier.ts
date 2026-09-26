@@ -1,5 +1,6 @@
 import { scrubFreeText } from "../log/scrub.ts";
-import { resolveAskModel } from "../ask/model.ts";
+import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
+import { askRequestFields, servedModelOf } from "../ask/model-registry.ts";
 
 import { TOPIC_ROUTES } from "./topics.ts";
 
@@ -48,8 +49,8 @@ import { TOPIC_ROUTES } from "./topics.ts";
 export const NO_TOPIC = "NONE";
 
 export type ClassifierOutcome =
-  | { kind: "TOPIC"; topicId: string }
-  | { kind: "NONE" }
+  | { kind: "TOPIC"; topicId: string; model?: string; servedModel?: string | null }
+  | { kind: "NONE"; model?: string; servedModel?: string | null }
   /** The rung did not run. The caller falls back to the keyword refusal. */
   | { kind: "UNAVAILABLE"; why: "ripcord" | "ceiling" | "no-key" | "error" };
 
@@ -203,7 +204,8 @@ const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
  * looked like proof the model was innocent and was really proof that the
  * override never reached this code.
  */
-const askModel = (): string => resolveAskModel();
+/* 2026-09-25: the CLASSIFIER role of `lib/ask/model.ts`'s one table, resolved per call. */
+const askModel = (): string => resolveAskRoleModel("CLASSIFIER");
 
 export interface ClassifyOptions {
   /** Overridden in tests so the suite never touches the network. */
@@ -230,6 +232,12 @@ export async function classifyQuestion(
   if (!noteCall()) return { kind: "UNAVAILABLE", why: "ceiling" };
 
   const impl = options.fetchImpl ?? fetch;
+  /* Resolved once: the same id is sent and recorded. Thinking OFF where the
+     model accepts `{type: "disabled"}`; on a model that always thinks (Opus
+     5.5, where the field is a 400) it is omitted, effort stays low and
+     `max_tokens` leaves room for the thinking (lib/ask/model-registry.ts). */
+  const model = askModel();
+  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.CLASSIFIER.thinking, effort: ASK_MODEL_ROLES.CLASSIFIER.effort });
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",
@@ -239,13 +247,11 @@ export async function classifyQuestion(
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: askModel(),
-        max_tokens: 64,
-        // Thinking off and effort low: the answer is one identifier, and
-        // disabling thinking is permitted at `high` or below.
-        thinking: { type: "disabled" },
+        model,
+        max_tokens: Math.max(64, fields.minMaxTokens),
+        ...(fields.thinking ? { thinking: fields.thinking } : {}),
         output_config: {
-          effort: "low",
+          ...(fields.effort ? { effort: fields.effort } : {}),
           format: { type: "json_schema", schema: classifierSchema() },
         },
         system: classifierPrompt(),
@@ -257,11 +263,14 @@ export async function classifyQuestion(
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error" };
 
     const body = (await response.json()) as {
+      model?: unknown;
       content?: Array<{ type?: string; text?: string }>;
     };
     const text = body.content?.find((b) => b.type === "text")?.text ?? "";
     const parsed = JSON.parse(text) as { topic?: unknown };
-    const outcome = readClassifierAnswer(parsed.topic);
+    /* The label, plus the model asked and the model the API says served it. */
+    const label = readClassifierAnswer(parsed.topic);
+    const outcome: ClassifierOutcome = label.kind === "UNAVAILABLE" ? label : { ...label, model, servedModel: servedModelOf(body) };
     if (cache.size >= CACHE_MAX) cache.clear();
     cache.set(key, outcome);
     return outcome;

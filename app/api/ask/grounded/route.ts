@@ -100,7 +100,7 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
-import { askModelStartupLine, resolveAskModel } from "@/lib/ask/model";
+import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
 import {
   BoundedTtlCache,
   interpretationCacheKey,
@@ -1107,7 +1107,7 @@ export async function POST(request: Request) {
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects,
   });
-  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
+  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskRoleModel("READER"));
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
   // The model's reading is requested first; the code's reading runs while it is in flight.
   const modelReading = modelFreeTopicRoute || lexical || cachedInterpretation ? null : interpretQuestion(question, interpretContext, { allowCall });
@@ -1143,6 +1143,7 @@ export async function POST(request: Request) {
     trace.interpretation = {
       ran: true,
       model: outcome.model,
+      ...(outcome.servedModel !== undefined ? { servedModel: outcome.servedModel } : {}),
       ms: cachedInterpretation ? 0 : outcome.ms,
       ...(cachedInterpretation ? { cached: true } : {}),
       intent: interpretation.intent,
@@ -2438,6 +2439,7 @@ export async function POST(request: Request) {
          made the call rather than off the constants — an override that ran
          unrecorded is exactly the un-attributable answer §5 exists to stop. */
       model: synthesis.model,
+      servedModel: synthesis.servedModel ?? null,
       ...(synthesis.effort ? { effort: synthesis.effort } : {}),
       /* The whole ladder's time, every writer that ran, not only the last. */
       ms: cachedSynthesis ? 0 : written!.attempts.reduce((total, attempt) => total + attempt.ms, 0),

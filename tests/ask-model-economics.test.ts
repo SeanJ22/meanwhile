@@ -119,7 +119,8 @@ test("H2: the incumbent is read from the code, never from a constant that can dr
    * noticing, and every stored answer's provenance depends on knowing which
    * one shipped. Re-making the switch means editing this line too, on purpose.
    */
-  assert.equal(ASK_SYNTHESIS_MODEL, "claude-opus-5");
+  /* 2026-09-25: Opus 5 retired from Ask (Sean, 7:25 and 7:50 PM MST); the frontier is Opus 5.5. */
+  assert.equal(ASK_SYNTHESIS_MODEL, "claude-opus-5-5");
 });
 
 test("H2: both candidates' rates carry a date and a source", () => {
@@ -133,7 +134,7 @@ test("H2: both candidates' rates carry a date and a source", () => {
   }
 });
 
-test("the standing comparison is the one still owed: Opus 5 against Opus 5.5, never a model against itself", () => {
+test("the standing comparison is Opus 5.5 against the cheaper Sonnet 5, never a model against itself", () => {
   /*
    * The history is kept because each earlier version of this assertion was
    * written on purpose.
@@ -152,7 +153,8 @@ test("the standing comparison is the one still owed: Opus 5 against Opus 5.5, ne
    * recorded, not decisive. RULING 230 switches only on held questions, and
    * `switchVerdict` never reads a price.
    */
-  assert.equal(ASK_CHALLENGER_MODEL, "claude-opus-5-5");
+  /* 2026-09-25: the incumbent became Opus 5.5 (Opus 5 retired), so the standing arm moved to Sonnet 5. */
+  assert.equal(ASK_CHALLENGER_MODEL, "claude-sonnet-5");
   assert.notEqual(
     ASK_CHALLENGER_MODEL,
     ASK_INCUMBENT_MODEL,
@@ -162,8 +164,8 @@ test("the standing comparison is the one still owed: Opus 5 against Opus 5.5, ne
     ASK_MODEL_RATES[ASK_INCUMBENT_MODEL],
     ASK_MODEL_RATES[ASK_CHALLENGER_MODEL],
   );
-  assert.equal(ratio.input, 1.25);
-  assert.equal(ratio.output, 1.25);
+  assert.equal(ratio.input, 2);
+  assert.equal(ratio.output, 2);
 });
 
 /* ── the verdict ─────────────────────────────────────────────────────────── */

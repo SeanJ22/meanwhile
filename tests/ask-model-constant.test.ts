@@ -95,7 +95,7 @@ test("a set override is honoured, and is REPORTED as an override", () => {
    * and that is exactly why the value must not be hardcoded here at runtime.
    */
   const current: string = ASK_SYNTHESIS_MODEL;
-  const other = current === "claude-sonnet-5" ? "claude-opus-5" : "claude-sonnet-5";
+  const other = current === "claude-sonnet-5" ? "claude-opus-5-5" : "claude-sonnet-5";
   const env = { [ASK_MODEL_ENV]: other };
   assert.notEqual(other, ASK_SYNTHESIS_MODEL, "the override must differ from the default");
   assert.equal(resolveAskModel(env), other);
@@ -162,7 +162,7 @@ test("effort is PINNED on the request, never omitted to the server default", () 
 test("the model id carries no date suffix — these ids are dateless AND pinned", () => {
   /* From the Claude 4.6 generation onward a dateless id identifies one pinned
      version. A dated variant would name a model that does not exist. */
-  assert.match(ASK_SYNTHESIS_MODEL, /^claude-[a-z]+-[0-9]+$/);
+  assert.match(ASK_SYNTHESIS_MODEL, /^claude-[a-z]+(-[0-9]+)+$/);
   assert.ok(!/-\d{8}$/.test(ASK_SYNTHESIS_MODEL), "no date suffix");
 });
 
@@ -239,10 +239,12 @@ test("every Ask rung imports the RESOLVER, so the override cannot miss one", () 
     "lib/ask/synthesize.ts",
   ]) {
     const src = readFileSync(join(process.cwd(), rung), "utf8");
+    /* 2026-09-25: each rung resolves its ROLE (lib/ask/model.ts), whose override list carries
+       WTP_ASK_MODEL as an alias; the frontier writer still reads resolveAskModel. */
     assert.match(
       src,
-      /import\s*\{[^}]*resolveAskModel[^}]*\}\s*from/,
-      `${rung} does not import resolveAskModel, so WTP_ASK_MODEL cannot reach it`,
+      /import\s*\{[^}]*\b(resolveAskModel|resolveAskRoleModel)\b[^}]*\}\s*from/,
+      `${rung} does not import a model resolver, so an override cannot reach it`,
     );
   }
 });

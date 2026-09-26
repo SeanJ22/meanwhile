@@ -51,7 +51,8 @@
  */
 import { ripcordPulled } from "../ripcords.ts";
 import { scrubFreeText } from "../log/scrub.ts";
-import { resolveAskModel } from "../ask/model.ts";
+import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
+import { askRequestFields } from "../ask/model-registry.ts";
 
 /**
  * The mark, in plain language, rendered ABOVE the answer.
@@ -158,7 +159,8 @@ const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
  * looked like proof the model was innocent and was really proof that the
  * override never reached this code.
  */
-const askModel = (): string => resolveAskModel();
+/* 2026-09-25: the UNSOURCED role of `lib/ask/model.ts`'s one table, resolved per call. */
+const askModel = (): string => resolveAskRoleModel("UNSOURCED");
 
 /**
  * The system prompt, and every line of it is a constraint rather than a style.
@@ -210,6 +212,11 @@ export async function askUnsourced(
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
 
   const impl = options.fetchImpl ?? fetch;
+  /* Thinking OFF where the model accepts it; on an always-thinking model (Opus
+     5.5, where `{type: "disabled"}` is a 400) it is omitted and `max_tokens`
+     leaves room for the thinking (lib/ask/model-registry.ts). */
+  const model = askModel();
+  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.UNSOURCED.thinking, effort: ASK_MODEL_ROLES.UNSOURCED.effort });
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",
@@ -219,10 +226,10 @@ export async function askUnsourced(
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: askModel(),
-        max_tokens: 300,
-        thinking: { type: "disabled" },
-        output_config: { effort: "low" },
+        model,
+        max_tokens: Math.max(300, fields.minMaxTokens),
+        ...(fields.thinking ? { thinking: fields.thinking } : {}),
+        ...(fields.effort ? { output_config: { effort: fields.effort } } : {}),
         system: fallbackPrompt(),
         // The same scrub the refusal log and the classifier already run:
         // nothing shaped like a phone number, an email or a street address

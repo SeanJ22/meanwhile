@@ -102,10 +102,8 @@
  *   (`AssignmentBudgetGate`, MW-021) and the scope's own budget
  *   (`ScopeBudgetGate`). Deterministic rows
  *   run on the plain-code lane as they come due. A meetings-discovery row goes
- *   to the unpaid discovery walk first: a paid Scout is admitted for it only
- *   after that walk read the government's site and found nothing
- *   (`paidDiscoveryHold`, code FREE_WALK_FIRST), so the paid lane never
- *   re-walks what the free lane read.
+ *   to the unpaid discovery walk where suitable; paid admission reuses that
+ *   walk's findings without requiring it to fail first (`paidDiscoveryHold`).
  * - **The denominator stays the authority's.** A geography orders which part
  *   of the registry's universe is materialized first (RULING 248 cl. 6); every
  *   requirement it creates was already owed, and the gap ledger keeps recording
@@ -926,8 +924,8 @@ export function dispatchWorkReading(
     }
     if (createdMeetingsDiscovery > 0) {
       says.push(
-        `${createdMeetingsDiscovery} of the created obligations are meetings discovery: the free discovery walk takes them first, and a paid Scout ` +
-          "takes one up only where that walk read the government's site and found nothing.",
+        `${createdMeetingsDiscovery} of the created obligations are meetings discovery: the free discovery walk remains available, and a paid Scout ` +
+          "may use an appropriate route within your controls without waiting for free routes to fail. Confirmed routes are reused.",
       );
     }
     if (createdModel > 0) {

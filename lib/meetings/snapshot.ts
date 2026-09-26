@@ -15,7 +15,7 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
-import { activeReaderProofMeetingPin } from "./proof-pin.ts";
+import { activeReaderProofMeetingPin, readerProofPinnedCheckedAt } from "./proof-pin.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
 import {
   HELD_MEETING_PARTITIONS,
@@ -863,11 +863,14 @@ export async function readMeetingsProjection(
   // A version's newest successful fresh check that found nothing new is applied
   // to its own fresh rows and to "Last checked" (lib/meetings/fresh-checks.ts):
   // since migration 0029 a quiet re-check is a confirmation, not a new version.
+  // Under a Reader proof pin the check is the capture's, like the version.
   const promoted = rawPromoted
     .filter(({ partition }) => !invalid.has(partition.id))
     .map((read) => {
       const readsASource = meetingVersionReadsASource(read.result.value.sources);
-      const checkedAt = confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource);
+      const checkedAt = pin === null
+        ? confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource)
+        : readsASource ? readerProofPinnedCheckedAt(pin, read.partition.id, read.result.metadata.versionId) : null;
       const routes = meetingVersionRoutes(read.result.value);
       return {
         ...read,

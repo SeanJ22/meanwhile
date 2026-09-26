@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 841,
-    "named": 8123,
+    "named": 8124,
     "dynamic": 33
   },
   "files": {
@@ -9076,6 +9076,7 @@
         "a mid-run promotion splits the unpinned harness's two reads, and the pin holds both on the captured version",
         "a pinned store failure stays a failure and a pinned absence stays absent",
         "a pinned version proven once serves the proof run's later requests without being re-read",
+        "a quiet re-check mid-run moves no pinned read: the prepared copy and the composing reader both apply the capture's check (batch D's first reproof, 470 of 862 meetings-Ask readbacks)",
         "an admitted pin that is malformed or edited is refused loudly, never read as no pin",
         "the pinned read still refuses an unverified version: never promoted, or tampered after promotion",
         "the proof server's prepared row serves only when it was composed from exactly the pinned versions"

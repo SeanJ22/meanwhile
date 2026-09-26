@@ -22,7 +22,7 @@ import {
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
-import { activeReaderProofMeetingPin } from "./proof-pin.ts";
+import { activeReaderProofMeetingPin, readerProofPinnedCheckedAt, type ReaderProofMeetingPin } from "./proof-pin.ts";
 import {
   applyMeetingFreshChecks,
   confirmationCheckedAt,
@@ -382,6 +382,13 @@ async function servedPreparedChecks(
   }
 }
 
+/** The serving copy's coupled versions with the Reader proof pin's checks in place of any recorded or live one. */
+function pinnedPreparedChecks(couplings: readonly FreshCheckCoupling[], pin: ReaderProofMeetingPin): readonly FreshCheckCoupling[] {
+  return couplings.map((coupling) => coupling.routes === undefined
+    ? coupling
+    : { ...coupling, checkedAt: readerProofPinnedCheckedAt(pin, coupling.contractId, coupling.versionId) });
+}
+
 /**
  * The reader's fast path: read the single prepared reader snapshot and serve it
  * — one query, no 124-partition haul or re-compose. It NEVER recomposes on
@@ -432,8 +439,12 @@ export async function readPreparedMeetingsProjection(
   // A quiet re-check since the composition confirmed a version without
   // rewriting this row: "Last checked" and the re-read rows say so
   // (lib/meetings/fresh-checks.ts). No check: the payload is served verbatim.
+  // Under a Reader proof pin the checks are the capture's, exactly as the
+  // composing reader applies them, and nothing is read live.
   const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
-  const checks = meetingFreshChecks(await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
+  const checks = meetingFreshChecks(pin === null
+    ? await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs)
+    : pinnedPreparedChecks(prepared.composedFrom as readonly FreshCheckCoupling[], pin));
   return {
     kind: "PROMOTED",
     value: applyMeetingFreshChecks(prepared.payload as MeetingsSnapshot, checks),

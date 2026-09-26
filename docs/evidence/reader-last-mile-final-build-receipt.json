@@ -1,10 +1,10 @@
 {
-  "exactHead": "2177304519fbcda93768287913214d93b4335ce9",
-  "buildId": "aVzo2Jk-e20tAnKXwvmxo",
+  "exactHead": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
+  "buildId": "x-g3IjEB-gcdZ6Ummnn_T",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "2177304519fbcda93768287913214d93b4335ce9",
-    "commitShort": "2177304",
+    "commit": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
+    "commitShort": "72ec05e",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "0d77e6c13fed2a02474fcfbfc43052af6a8e9335247a9e56937fbe551209ea58",
+  "buildLogSha256": "496959e0df062401f68379b4d1210534c1164f68128577e57cfb58141cf21d30",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,
@@ -42,11 +42,11 @@
     },
     {
       "path": "app/api/ask/classify/route.ts",
-      "sha256": "3bfb2f2a88e88db1f0600cc250b86a29e91307f6ee2ca2920509bd21b853d181"
+      "sha256": "9659371a3a9422a209e35bc13cf0d0f7895fd1d6ee25c6b6cac48898bde4bc04"
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "2928e81b601c319f5bf3d54678cd8d46a1c576fd4107a7fc5cc464be85f0463b"
+      "sha256": "4537ec81290a1beae531643d15ff445485898f836fbfa03ba08fe7d8f8589cec"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1814,7 +1814,7 @@
     },
     {
       "path": "lib/ask/answer.ts",
-      "sha256": "c2db4d2b9106850e81a5c3e455e4f14f72d4c5a33c698825146d09f8d7fdbf5a"
+      "sha256": "b3d14d996a5e7439ea4fcdcceb8237d2eb8d4a860c4d77154c514beb1b703c2d"
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
@@ -1878,7 +1878,7 @@
     },
     {
       "path": "lib/ask/interpret.ts",
-      "sha256": "cfd371a1c768aa51f61fb7d288956876325fef5aeb6922894777c6d9963d5c5c"
+      "sha256": "9b262a9db9bc1317b936442dd116444d6e7cfd0a9846f539f5301b8cf02e7efb"
     },
     {
       "path": "lib/ask/inventory.ts",
@@ -1898,7 +1898,7 @@
     },
     {
       "path": "lib/ask/lexical-reading.ts",
-      "sha256": "f43fd474e6c708ab05f4d19bc024e9267d85f54e6295448e5a56310d10e8d5d7"
+      "sha256": "91486e890cc505520dcf5cb0f5fc548d0f75040d713064535c019f337c458510"
     },
     {
       "path": "lib/ask/local-finance.ts",
@@ -1914,11 +1914,15 @@
     },
     {
       "path": "lib/ask/meeting-outcomes.ts",
-      "sha256": "5762b373dc8b66eb9b4880240488e3eb9a4053e7df1b00c9c257c00e9c801c41"
+      "sha256": "4e9a230b24d86c8771f0851ac90f0099a8fd5aee4ea38527ddb5bd07adbd3f76"
     },
     {
       "path": "lib/ask/meeting-time.ts",
       "sha256": "14edbbc26e0682b9b4c51f823f21ad86f2d2ba9d195d132c04e324150f57bb75"
+    },
+    {
+      "path": "lib/ask/model-registry.ts",
+      "sha256": "7b5d37d518f9f82101ebcbaeb5b85be20d9d9e93dbcab447b28854c0796472e6"
     },
     {
       "path": "lib/ask/model-result-cache.ts",
@@ -1926,7 +1930,7 @@
     },
     {
       "path": "lib/ask/model.ts",
-      "sha256": "c1f468508a09f12ae43d2f808d7316133a2fd43f7b16efd36686feb362d48544"
+      "sha256": "284b73136943d6e94ea874e20cf06bdce2234be970451bbe77766f0a69cf4682"
     },
     {
       "path": "lib/ask/office-question.ts",
@@ -1974,7 +1978,11 @@
     },
     {
       "path": "lib/ask/sitting-answer.ts",
-      "sha256": "66617e2f419b617537434f5fba495e09a26ad8c429d1924622d65ebd4e997cc7"
+      "sha256": "abd7e761e7df6809d79985e713d90f6a2afd4943e524c8d7887f234ea350b81f"
+    },
+    {
+      "path": "lib/ask/speculative-reading.ts",
+      "sha256": "90c8c1a0be84c5bba99596071b57a22ea2ee4b2f4f943aa957901d4a5d243526"
     },
     {
       "path": "lib/ask/statements.ts",
@@ -1986,7 +1994,7 @@
     },
     {
       "path": "lib/ask/synthesize.ts",
-      "sha256": "f82749526e780f0088cf0758a5ea847ee39c1639280315e00896eb638d1f1f7e"
+      "sha256": "a2e8313f650745713730342e328a72ff36c62072f429e23f67c7525bf3a926c3"
     },
     {
       "path": "lib/ask/topic-timeline.ts",
@@ -1994,7 +2002,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "084f24d5d8db778cb47ca7956ae5a90cddb841a30cbc706d6d14bf0822228a36"
+      "sha256": "59d87d277af561a0430b9ec01a94c02f3fb84f01de69f4e9cb9e2471586ffe9c"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2319,6 +2327,10 @@
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
       "sha256": "b45347c316050792eb7e8e793b0ccc3f6227f2ff22bbeca1ef83791efd7a8856"
+    },
+    {
+      "path": "lib/control-plane/model-cost.ts",
+      "sha256": "408d3899060842a89c68568b7638caf521679d5c88fa85668db592c031a5c542"
     },
     {
       "path": "lib/control-plane/repository/request-bounds.ts",
@@ -2893,6 +2905,10 @@
       "sha256": "c6b34bde6ba1b54038f026d137a5ab9d188dbf5894a011b8af9be0bbfb7ef446"
     },
     {
+      "path": "lib/ops/denominator-floor.ts",
+      "sha256": "e779ae01b37b9f5b67b471e7777b3d67e7580467df6e3c1d7cf177574cfcd501"
+    },
+    {
       "path": "lib/ops/freshness.ts",
       "sha256": "2a2d40097284f969bf3f4b84dd4f28f77dc6d8a0dd8efbbcb0a6c9b993accbee"
     },
@@ -3086,7 +3102,7 @@
     },
     {
       "path": "lib/routing/classifier.ts",
-      "sha256": "26ed0964e0403f5d144189eab87fa0fc083a51bc6b539498ad28eee57f4e266d"
+      "sha256": "55b0435665dd63b9de1aa060904e36dc76d7ffe4f62cefe02fbc440e3cac0c96"
     },
     {
       "path": "lib/routing/destinations.ts",

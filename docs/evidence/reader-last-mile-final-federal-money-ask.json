@@ -1,11 +1,11 @@
 {
-  "exactHead": "814604f8a83a31442a5f3cec9cccda1416d29af5",
+  "exactHead": "6fb3eb7a9ee63cd562e524cf26ca846cb52694dc",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "0f4d0f16ff5064e5dbee0b441fe42f76509dd03416f304a6062d221dbd460369"
+      "sha256": "203e1f594b74e78d53883ce7938778f8923c413163ec3d89ad8cc9f7c409a3fc"
     },
     {
       "path": "lib/ask/campaign-money.ts",
@@ -100,7 +100,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "0695c239ad1c44a9b03f523f97c58c4947d17e43fcdc4e38925f38f00bc9a1db",
+      "payloadSha256": "23d94688d0e25760ef9662b21809594a1038c6e96f2d9c6ad869aa2135cbfaa0",
       "gaps": [
         {
           "whose": "OURS",
@@ -219,7 +219,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "d65fb83b5c83b810a066e8dfaae4b15339cf3e5491a2a6ca465ed723a4ad6ee9",
+      "payloadSha256": "cc90e8bef6659cdfb6889b867fdfaa0502e72328676ae118d8bc1b97d59e888c",
       "gaps": [
         {
           "whose": "OURS",
@@ -337,7 +337,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "7f56a572ed380ff72ac6f1dc9f05c59984b7a1123cf571558bb02810f27badd2",
+      "payloadSha256": "1717316e9fca224008b7e221aacf62efff80da09cb569891847e7d3fb821bef1",
       "gaps": [
         {
           "whose": "OURS",
@@ -547,7 +547,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "800049382eabefa1c0d563cd652c89a3226a518a2406840213615304f939f874",
+      "payloadSha256": "320aefa557e62494223dc19368731121fa8c10dc56b1cee3a979b2cbd1a7483c",
       "gaps": [
         {
           "whose": "OURS",
@@ -665,7 +665,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "26e48b9e5cf7f1a231a235f1d471bebdec10383e2ca62b0eea3a01bee5d340f4",
+      "payloadSha256": "8f56a9fc26de3d0ce40e8d106edb53a155159919553a4ced16ffe73cee9940ed",
       "gaps": [
         {
           "whose": "OURS",
@@ -871,7 +871,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "f515feb893ae4abacf252a8d8f7fa13ecd1621afaced458cfcccefdc112dcd09",
+      "payloadSha256": "d9301ea098ecf9f47b08afd26e164fbadcd3c14610c338b387897db637b00758",
       "gaps": [
         {
           "whose": "OURS",
@@ -999,7 +999,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "b9c954d08d2cd1be97e453a7cd7dfa573924ee067dd3b00a8c4dd9eb2d8c1602",
+      "payloadSha256": "79b843ddc9ed1f304e402405554e9187680d31cabdc3ec5ce067b24f30f968d5",
       "gaps": [
         {
           "whose": "OURS",
@@ -1146,7 +1146,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "21e988cc2f57c2db42d106599667b85058a44246d4502eb3685db52714098451",
+      "payloadSha256": "7c698180dc8af7e4592f05e8e0ea2ad2d3df9660a58f4bceeebbf79c529f335a",
       "gaps": [
         {
           "whose": "OURS",
@@ -1318,7 +1318,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "8c18c1bf4910d046a7bedd72066c4737f2c76a1e5f959d6a37eaec8a16e0ffd0",
+      "payloadSha256": "d160d03674121db78b1b4cd2576a2f4feceb0ecf16cdc276cd996579b8c3f690",
       "gaps": [
         {
           "whose": "OURS",
@@ -1501,7 +1501,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "88f8e3af5e94eec2e7991d1e8f0e77cb2a8bc8ed2e29093d78cf8878d75cd0d2",
+      "payloadSha256": "f8fe117049fbaf9ef0c81a34249ad8e31340d590cba49d24cf00934a8f3ebab0",
       "gaps": [
         {
           "whose": "OURS",
@@ -1689,7 +1689,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "3e792a80220b770a290c91d56cdf95171bf31f4d7cc8f526532d1361318262b6",
+      "payloadSha256": "12a5c08131b823fa91e4ab64f0092d3badde6e95d458bf52e380d6c97e6120b5",
       "gaps": [
         {
           "whose": "OURS",
@@ -1804,7 +1804,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "e9ff3b64100def8e176011501c62438c2dbbd39dc5f9fe38d35283c80ed3e844",
+      "payloadSha256": "66bdbb371cb16d5fa550cbea5ed4e18bfea5dc527e6812ada8d84c826fc542cc",
       "gaps": [
         {
           "whose": "OURS",
@@ -1920,7 +1920,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "a5e21207c620366e80efbab5bacaca5647f97b76d362523edba3d730598d740e",
+      "payloadSha256": "eccb3f55a89ab5c7f9b9f80aa04006b57bcca5c1917acb812d1789d20d47c278",
       "gaps": [
         {
           "whose": "OURS",
@@ -2035,7 +2035,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "82d793a1714aef64a23686eec2123fd9b94bcd78d7c488a752965bfe888bffb5",
+      "payloadSha256": "1de0724954b4de9a3b965364e90c2b05cb1199d7053cb5af35f1ac985185ea6e",
       "gaps": [
         {
           "whose": "OURS",
@@ -2151,7 +2151,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "85c5dd9a7213ac0ee5c925cc2af969feb14926deb183818dc2c4d7794d1224b5",
+      "payloadSha256": "3359296cee13ed021e62d74e3e984fec360cc6780c133a29b00af67c8df55164",
       "gaps": [
         {
           "whose": "OURS",
@@ -2267,7 +2267,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "b806c3efea549761e0bd067c7d541a1450d9bab70ad2c9dc8a12f7bf6eb1b775",
+      "payloadSha256": "cf86ee3aa292f4bb2773c54b8462f1c4db1e35b9a763d3b29ddf5f835c0602be",
       "gaps": [
         {
           "whose": "OURS",
@@ -2382,7 +2382,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "9a283fbeb10c9103906aa66ee64ba7e0a6659741bc2afa94400f7444c6c465e2",
+      "payloadSha256": "bac7b7974b97fde3d299da1fa98a8751545e933e2a72baf36d330efb72a19df2",
       "gaps": [
         {
           "whose": "OURS",
@@ -2497,7 +2497,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "31ee9a6aaa64a1e73b236cedfde7e87962b823ceb4d497c756385541e1e30bca",
+      "payloadSha256": "1666a51e0c14336b6a20c79f73972bd49e87ffe99879677b392d98d5b253ed78",
       "gaps": [
         {
           "whose": "OURS",
@@ -2619,7 +2619,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "893db1c8e46fcb0792e8f214b54d70c79a73caee90215b0903cd3a8d217cf8cd",
+      "payloadSha256": "eb56968c3007a637ba1a8aa5d21d15eb92fb8e31656be9f475fe168b18d9e94e",
       "gaps": [
         {
           "whose": "OURS",
@@ -2734,7 +2734,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "550f4c00da2434f43e5731cb1166b422fa03e47da99ebddd3f5eb68e5135c7cf",
+      "payloadSha256": "337c3b5670b8e7d7c71f40832a69d0b2d3064ece121bb75ca169b59e0150454e",
       "gaps": [
         {
           "whose": "OURS",
@@ -2849,7 +2849,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "78f00f5b1ec2eb7293b24c03d3b0ffe6d75066ce775064e0a344a6b7d1933e4e",
+      "payloadSha256": "8f0e6a677fadbb4ea4a64f8ccd5a66f1f97faa93a8b1184396a826218acf7251",
       "gaps": [
         {
           "whose": "OURS",
@@ -2964,7 +2964,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "da6abc223adf0e8836b3e70b7ff03116de5b758af918796bb44a43f5f11145e9",
+      "payloadSha256": "426b770dfbf3e71209ea9a8c695684a96e8b006c5f81318661212d20f48f2a53",
       "gaps": [
         {
           "whose": "OURS",
@@ -3079,7 +3079,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "dc63814f29c3b234ef1c6dac86aef0107bb8a5aba6c8b6a7c01f171a786f00c9",
+      "payloadSha256": "1810f5469cf9b68876ecf7860c85e940423fe6f532ceed8a0c241333530b09da",
       "gaps": [
         {
           "whose": "OURS",
@@ -3194,7 +3194,7 @@
           "retrievedAt": "2026-09-26"
         }
       ],
-      "payloadSha256": "7072500d84f862e1ccacda85c6ce263e96ee9dc1d19edba3edb5510ed6479194",
+      "payloadSha256": "79c019708c8aa450884769d225343ac709bac234db5f8da09e88fb4d7f179e5d",
       "gaps": [
         {
           "whose": "OURS",

@@ -167,6 +167,7 @@ import {
   type DurableRowFacts,
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
+import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
@@ -2515,6 +2516,33 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
   freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
 }
 
+// Retained results get their verification/publication opportunity BEFORE new
+// acquisition can consume the cycle. This reads held bytes and writes only the
+// existing gated pipeline. A second pass is justified only by new worker output.
+async function projectRetainedFacts(phase: string): Promise<void> {
+  const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
+  try {
+    const report = await pending.step(phase, () => runBoundedStep({
+      label: phase,
+      budgetMs: Math.min(120_000, lateWorkBudgetMs()),
+      fn: () => projectFleetPipeline(repos, {
+        readArtifactText: async id => (await readEvidence(id)).text,
+        now: nowIso(), root: ROOT,
+        freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
+          onUnavailable: detail => runtimeConditions.push(detail) }),
+      }),
+    }));
+    if (report !== null) for (const line of factChainLines(report)) console.log(line);
+  } catch (error) {
+    const reason = error instanceof CycleStepTimeout || isControlPlaneRequestTimeout(error)
+      ? error.message
+      : error instanceof Error && /^[A-Z][A-Z0-9_]{2,100}$/.test(error.message)
+        ? error.message : "RETAINED_FACT_PROJECTION_FAILED";
+    runtimeConditions.push(phase + ": " + reason + "; retained records remain owed, existing reader data is preserved");
+  }
+}
+if (!dry && !canary && !scheduledBlackout) await projectRetainedFacts("retained-results:fact-projection");
+
 const cycle = await runCycle({
   repos,
   obligations: sync.all,
@@ -2981,10 +3009,6 @@ if (!dry && !canary) {
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    const meetingFreshness = createPermanentMeetingFreshness({
-      connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
-      onUnavailable: detail => runtimeConditions.push(detail),
-    });
     /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
     const fleetGuarded = modelLaneEnabled ? fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
@@ -3025,29 +3049,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     autonomousDispatchedThisCycle = fleetDispatches.filter(row => row.attemptId !== null).length;
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
-    /*
-     * PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result
-     * keeps the generic offer. The projection re-reads the store whole every cycle, and its appends are keyed by
-     * record id, so it is late work: it yields at the late-work deadline (2026-09-26: it ran a cycle to 835 s and
-     * the research state and the heartbeat Admin reads were never written), and the next cycle projects again.
-     */
-    let factReport: Awaited<ReturnType<typeof projectFleetPipeline>> = null;
-    try {
-      factReport = await pending.step("autonomous-workers:fact-projection", () => runBoundedStep({
-        label: "autonomous-workers:fact-projection",
-        budgetMs: lateWorkBudgetMs(),
-        fn: () => projectFleetPipeline(repos, {
-          readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
-          now: nowIso(),
-          root: ROOT,
-          freshness: meetingFreshness,
-        }),
-      }));
-    } catch (error) {
-      if (!(error instanceof CycleStepTimeout) && !isControlPlaneRequestTimeout(error)) throw error;
-      runtimeConditions.push(`the worker fleet's fact projection yielded to the cycle's records (${error.message}); the next cycle projects again`);
-    }
-    if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
+    if (fleetDispatches.some(row => row.outcome === "WORKED")) await projectRetainedFacts("new-worker-results:fact-projection");
   } catch (error) {
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
   } finally {

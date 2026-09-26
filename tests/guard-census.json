@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 871,
-    "named": 8321,
+    "named": 8322,
     "dynamic": 33
   },
   "files": {
@@ -3713,6 +3713,7 @@
       "names": [
         "a later record of the same artifact is read when the first record's bytes were never vaulted",
         "a partial capture is never read; a complete record of the same bytes is",
+        "a retained-evidence pass shares its immutable index, while the next pass sees later acquisitions",
         "an admitted record the vault does not hold under its own identity is not in the vault",
         "only an acquiring role may hand bytes to a worker, and a refusal still names why",
         "the first held record still wins, in log order"

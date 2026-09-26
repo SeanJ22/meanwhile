@@ -226,6 +226,48 @@ export function meetingEndpointCandidates(html: string, pageUrl: string): readon
   ];
 }
 
+/* ------------------------------------------------ CivicPlus calendar feeds */
+
+/**
+ * **A CIVICPLUS SITE LISTS ITS CALENDAR FEEDS, ONE PER CATEGORY.** (2026-09-25, the 85635 expansion.)
+ *
+ * An AgendaCenter page cannot be wired: the ICAL wiring reads a feed. But every CivicPlus (CivicEngage) site serves
+ * `/iCalendar.aspx`, a page listing one iCal feed per calendar category
+ * (`/common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar`), each linked under the category's own name.
+ * Cochise County, AZ lists 25, "Board of Supervisors" among them (catID 31, read 2026-09-26). The index is
+ * CivicPlus-wide, like the AgendaCenter route, so it is read only on a site whose own markup shows CivicPlus.
+ */
+export const CIVICPLUS_CALENDAR_INDEX_PATH = "/iCalendar.aspx";
+
+/** One category feed a CivicPlus iCalendar index lists: the feed and the name the site gives it. */
+export interface CivicPlusCategoryFeed {
+  readonly catId: string;
+  /** The category as the site names it, entities decoded ("Engineering & Natural Resources"). */
+  readonly name: string;
+  readonly url: string;
+}
+
+const CIVICPLUS_FEED = /\/iCalendar\.aspx$/i;
+
+/**
+ * The category calendar feeds a CivicPlus iCalendar index lists, in page order, one per category id. Only a link on
+ * the index's own host, to a `feed=calendar` feed with a `catID`, carrying a visible name, counts: the news and alert
+ * feeds the same page lists are not calendars, and a feed with no name cannot be matched to a body.
+ */
+export function civicPlusCategoryFeeds(html: string, pageUrl: string): readonly CivicPlusCategoryFeed[] {
+  const host = new URL(pageUrl).hostname.toLowerCase();
+  const out = new Map<string, CivicPlusCategoryFeed>();
+  for (const link of anchorLinks(html, pageUrl)) {
+    const url = new URL(link.url);
+    if (url.hostname.toLowerCase() !== host || !CIVICPLUS_FEED.test(url.pathname)) continue;
+    const params = new Map([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
+    const catId = params.get("catid") ?? "";
+    if (!/^\d+$/.test(catId) || (params.get("feed") ?? "").toLowerCase() !== "calendar" || link.text === "") continue;
+    if (!out.has(catId)) out.set(catId, { catId, name: link.text, url: url.toString() });
+  }
+  return [...out.values()];
+}
+
 export type EndpointVerdict = "YIELDED" | "EMPTY" | "NOT_CONFIRMED";
 
 export interface EndpointVerification {

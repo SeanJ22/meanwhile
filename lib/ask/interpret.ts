@@ -1,5 +1,6 @@
 import { scrubFreeText } from "../log/scrub.ts";
-import { resolveAskModel } from "./model.ts";
+import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
+import { askRequestFields, servedModelOf } from "./model-registry.ts";
 import { asksForBodyAgenda } from "../routing/named-entity.ts";
 
 import {
@@ -84,7 +85,7 @@ export interface InterpretContext {
 }
 
 export type InterpretOutcome =
-  | { kind: "READ"; interpretation: AskInterpretation; model: string; ms: number }
+  | { kind: "READ"; interpretation: AskInterpretation; model: string; servedModel?: string | null; ms: number }
   | { kind: "UNAVAILABLE"; why: "ripcord" | "ceiling" | "no-key" | "error"; ms: number };
 
 /** How much of the inventory the model is shown. Bounded for cost and latency. */
@@ -132,7 +133,8 @@ const MAX_PRIOR_TURNS = 4;
  * looked like proof the model was innocent and was really proof that the
  * override never reached this code.
  */
-const askModel = (): string => resolveAskModel();
+/* 2026-09-25: the READER role of `lib/ask/model.ts`'s one table, resolved per call. */
+const askModel = (): string => resolveAskRoleModel("READER");
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 export function interpretSchema(): Record<string, unknown> {
@@ -228,6 +230,9 @@ export async function interpretQuestion(
   }
 
   const impl = options.fetchImpl ?? fetch;
+  /* Resolved once: the same id is sent and recorded. */
+  const model = askModel();
+  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
   const priorTurns = (context.priorTurns ?? []).slice(-MAX_PRIOR_TURNS);
 
   /*
@@ -277,11 +282,13 @@ export async function interpretQuestion(
       // stands in, exactly as it does for any other unavailable model.
       signal: AbortSignal.timeout(ASK_INTERPRET_TIMEOUT_MS),
       body: JSON.stringify({
-        model: askModel(),
-        max_tokens: 1024,
-        thinking: { type: "adaptive" },
+        model,
+        max_tokens: Math.max(1024, fields.minMaxTokens),
+        /* What the model accepts, from the registry: adaptive thinking where it takes it
+           (none on Haiku 4.5), the role's effort only where it takes one. */
+        ...(fields.thinking ? { thinking: fields.thinking } : {}),
         output_config: {
-          effort: "low",
+          ...(fields.effort ? { effort: fields.effort } : {}),
           format: { type: "json_schema", schema: interpretSchema() },
         },
         system: interpretPrompt(context),
@@ -291,6 +298,7 @@ export async function interpretQuestion(
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
 
     const body = (await response.json()) as {
+      model?: unknown;
       content?: Array<{ type?: string; text?: string }>;
     };
     const text = body.content?.find((b) => b.type === "text")?.text ?? "";
@@ -298,7 +306,8 @@ export async function interpretQuestion(
     return {
       kind: "READ",
       interpretation: readInterpretation(JSON.parse(text)),
-      model: askModel(),
+      model,
+      servedModel: servedModelOf(body),
       ms: elapsed(),
     };
   } catch {

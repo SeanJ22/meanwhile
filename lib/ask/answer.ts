@@ -165,6 +165,10 @@ export interface AskClassifyReply {
   topic: string | null;
   /** `off`, `none`, or the rung's own unavailability reason. Operators only. */
   why?: string;
+  /** The model id the classifier sent (lib/ask/model.ts, CLASSIFIER role). Operators only. */
+  model?: string;
+  /** The model the API says served the call. Operators only. */
+  servedModel?: string | null;
 }
 
 /** The empty shape every producer starts from, so no field is forgotten. */

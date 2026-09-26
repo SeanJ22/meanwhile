@@ -1,14 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
 import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
-import {
-  ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-} from "../lib/civic-data/bounded-child-pass.ts";
+import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
@@ -52,10 +48,14 @@ import {
  *    success read in the attempt clock's units; R20 (never published: twice
  *    daily); a failed read's one-hour retry; the window rolling in at an instant.
  *  - tests/routine-civic-data-frontier.test.ts: earliest-deadline-first, three
- *    reads a meeting lane; 30 days on ONE Tucson-shaped lane (27 bodies) with
- *    clean passes (0 late) and with production's recorded passes (the open C6
- *    residual: at most 3 hourly reads late by at most 2 minutes).
- *  - tests/hot-read-catch-up.test.ts: reads admitted while Reader repair runs.
+ *    reads a meeting lane; 30 days on Tucson's board lane (27 bodies) with
+ *    clean passes and with production's recorded passes, catch-up included
+ *    (0 late in both).
+ *  - tests/hot-read-catch-up.test.ts: reads started while a pass is held open,
+ *    one a lane at a time, by its source reads or its Reader repair.
+ *  - tests/helpers/routine-pass-replay.ts: how a replayed pass runs: the
+ *    runner's pool and catch-up code under a controlled clock, beside the rest
+ *    of a recorded production pass split into its measured phases.
  *  - tests/routine-clock-narrow-read.test.ts: an unchanged confirmation moves the
  *    store's clock without moving the pointer.
  *
@@ -365,6 +365,8 @@ interface SimResult {
   readonly deadChildren: number;
   readonly maxHotGapMs: number;
   readonly maxGapMs: number;
+  /** Reads started by catch-up while a pass was held open. */
+  readonly catchUpReads: number;
 }
 
 function hotIntervals(starts: readonly string[]): (readonly [number, number])[] {
@@ -383,14 +385,15 @@ function hotIntervals(starts: readonly string[]): (readonly [number, number])[] 
   return merged;
 }
 
-function simulateRegistry(options: {
+async function simulateRegistry(options: {
   readonly recordedPasses: boolean;
   readonly days: number;
-}): SimResult {
-  const rand = seeded(options.recordedPasses ? 925 : 924);
+  readonly seed?: number;
+}): Promise<SimResult> {
+  const rand = seeded(options.seed ?? (options.recordedPasses ? 925 : 924));
   const start = Date.parse("2026-10-05T07:00:00.000Z");
   const end = start + options.days * DAY;
-  const recorded = JSON.parse(readFileSync("tests/fixtures/routine-pass-durations-2026-09-24.json", "utf8")) as { durationSeconds: number[] };
+  const recorded = recordedPasses();
   const windowed = ROUTINE_SOURCE_TASKS.filter((task) => task.contract.schedule?.kind === "SITTING_WINDOW");
   const followed = new Set(windowed.filter((task) => task.recordClass !== "MEETING").flatMap((task) =>
     (task.contract.schedule?.kind === "SITTING_WINDOW" ? task.contract.schedule.follows ?? [] : [])
@@ -454,70 +457,61 @@ function simulateRegistry(options: {
   const crashFrom = start + DAY;
   const crashTo = crashFrom + 6 * HOUR;
 
-  let at = start;
   let pass = 0;
   let longestPassMs = 0;
   let peakHot = 0;
   let reads = 0;
   let failedReads = 0;
   let deadChildren = 0;
+  let catchUpReads = 0;
   const all = [...bodies.values()];
-  while (at < end) {
-    const clockReads = all.map((body) => ({ task: body.task, ok: true, clock: clocks.get(body.task.id) }));
-    const signals = sittingWindowSignals(clockReads, at);
-    peakHot = Math.max(peakHot, all.filter((body) => hotAt(body, at)).length);
-    const due = all.filter((body) => routineTaskDue(body.task, clocks.get(body.task.id), at, signals.get(body.task.id)));
-    const admitted = routineFailureDomainFrontier(due.map((body) => ({
-      task: body.task,
-      lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
-      deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), signals.get(body.task.id)),
-    })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
-    // The runner's pool: four children, a lane's reads one at a time with the
-    // same-host gap, each worker taking the first runnable read in order.
-    const pending = routinePassLaunchOrder(admitted).map(({ task }) => bodies.get(task.id)!);
-    const laneFreeAt = new Map<string, number>();
-    const running: { readonly body: SimBody; readonly endsAt: number }[] = [];
-    let clockAt = at + 20_000;
-    let lastEnd = clockAt;
-    while (pending.length > 0 || running.length > 0) {
-      while (running.length < ROUTINE_CHILD_CONCURRENCY) {
-        const index = pending.findIndex((body) =>
-          !running.some((run) => run.body.task.acquisitionFailureDomain === body.task.acquisitionFailureDomain) &&
-          (laneFreeAt.get(body.task.acquisitionFailureDomain) ?? 0) <= clockAt);
-        if (index < 0) break;
-        const [body] = pending.splice(index, 1);
-        running.push({ body: body!, endsAt: clockAt + 10_000 + Math.floor(rand() * 50_000) });
+  const tasks = all.map(({ task }) => task);
+  // Each pass is admitted by the runner's own functions and run by
+  // tests/helpers/routine-pass-replay.ts: the runner's pool of four children
+  // (a lane's reads one at a time with the same-host gap) beside the rest of a
+  // recorded pass, then its Reader repair, with catch-up reads while either
+  // holds the pass open.
+  const clock = new ControlledClock(start);
+  await clock.run(async () => {
+    let at = start;
+    while (at < end) {
+      await clock.sleepUntil(at);
+      const clockReads = all.map((body) => ({ task: body.task, ok: true, clock: clocks.get(body.task.id) }));
+      const signals = sittingWindowSignals(clockReads, at);
+      peakHot = Math.max(peakHot, all.filter((body) => hotAt(body, at)).length);
+      const due = all.filter((body) => routineTaskDue(body.task, clocks.get(body.task.id), at, signals.get(body.task.id)));
+      const admitted = routineFailureDomainFrontier(due.map((body) => ({
+        task: body.task,
+        lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
+        deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), signals.get(body.task.id)),
+      })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
+      for (const lane of new Set(admitted.map(({ task }) => task.acquisitionFailureDomain))) {
+        assert.ok(admitted.filter(({ task }) => task.acquisitionFailureDomain === lane).length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
       }
-      // Advance to the next child's end, or to the instant a waiting lane's gap elapses.
-      const next = running.map((run) => run.endsAt);
-      for (const body of pending) {
-        const lane = body.task.acquisitionFailureDomain;
-        const freeAt = laneFreeAt.get(lane) ?? 0;
-        if (freeAt > clockAt && !running.some((run) => run.body.task.acquisitionFailureDomain === lane)) next.push(freeAt);
-      }
-      assert.ok(next.length > 0, "the pool always has a next event while work remains");
-      clockAt = Math.min(...next);
-      for (const run of running.filter((row) => row.endsAt <= clockAt)) {
-        running.splice(running.indexOf(run), 1);
-        laneFreeAt.set(run.body.task.acquisitionFailureDomain, run.endsAt + ROUTINE_SAME_DOMAIN_CHILD_GAP_MS);
-        lastEnd = Math.max(lastEnd, run.endsAt);
-        reads += 1;
-        if (run.body.task.id === crashing.id && run.endsAt >= crashFrom && run.endsAt < crashTo) { deadChildren += 1; continue; }
-        const failed = rand() < 0.03;
-        if (failed) failedReads += 1;
-        record(run.body, run.endsAt, failed);
-      }
+      const result = await replayPass({
+        clock,
+        admittedAtMs: at,
+        recorded: options.recordedPasses ? recorded[Math.floor(rand() * recorded.length)] : undefined,
+        cleanRepairMs: 15_000,
+        launched: routinePassLaunchOrder(admitted).map(({ task }) => task),
+        windowed: tasks,
+        passClocks: new Map(tasks.map((task) => [task.id, clocks.get(task.id)])),
+        readMs: () => 10_000 + Math.floor(rand() * 50_000),
+        settled: (task, endedAtMs) => {
+          reads += 1;
+          if (task.id === crashing.id && endedAtMs >= crashFrom && endedAtMs < crashTo) { deadChildren += 1; return; }
+          const failed = rand() < 0.03;
+          if (failed) failedReads += 1;
+          record(bodies.get(task.id)!, endedAtMs, failed);
+        },
+      });
+      longestPassMs = Math.max(longestPassMs, result.endedAtMs - at);
+      catchUpReads += result.catchUpReads;
+      const handoff = at >= start + 3 * DAY && at < start + 3 * DAY + 10 * MIN ? 8 * MIN : 0;
+      at = nextAdmissionMs(at, result.endedAtMs, handoff);
+      pass += 1;
     }
-    for (const lane of new Set(admitted.map(({ task }) => task.acquisitionFailureDomain))) {
-      assert.ok(admitted.filter(({ task }) => task.acquisitionFailureDomain === lane).length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
-    }
-    const sampled = recorded.durationSeconds[Math.floor(rand() * recorded.durationSeconds.length)]! * 1_000;
-    const duration = Math.max(options.recordedPasses ? sampled : 0, lastEnd - at + 15_000);
-    longestPassMs = Math.max(longestPassMs, duration);
-    const handoff = at >= start + 3 * DAY && at < start + 3 * DAY + 10 * MIN ? 8 * MIN : 0;
-    at = Math.ceil((Math.max(at + PASS, at + duration) + handoff) / MIN) * MIN;
-    pass += 1;
-  }
+  });
 
   const hourlyLate: string[] = [];
   const twiceDailyLate: string[] = [];
@@ -533,20 +527,21 @@ function simulateRegistry(options: {
       maxGapMs = Math.max(maxGapMs, to - from);
       if (to - from > 12 * HOUR) twiceDailyLate.push(`${body.task.id} ${((to - from) / HOUR).toFixed(2)} h ending ${iso(to)}`);
       for (const [hotFrom, hotTo] of body.hot) {
-        // Judged from the run's first instant: what happened before it is the seeded history.
-        const owed = Math.max(from, hotFrom, start);
-        if (owed + HOUR < to && owed + HOUR <= hotTo) {
+        // Every obligation due after the run's first instant is judged; one due
+        // before it belongs to the seeded history, which the run did not make.
+        const owed = Math.max(from, hotFrom);
+        if (owed + HOUR >= start && owed + HOUR < to && owed + HOUR <= hotTo) {
           hourlyLate.push(`${body.task.id} unread ${((Math.min(to, hotTo) - owed) / MIN).toFixed(2)} min from ${iso(owed)}`);
         }
         if (hotFrom <= from && to <= hotTo) maxHotGapMs = Math.max(maxHotGapMs, to - from);
       }
     }
   }
-  return { hourlyLate, twiceDailyLate, peakHot, passes: pass, longestPassMs, reads, failedReads, deadChildren, maxHotGapMs, maxGapMs };
+  return { hourlyLate, twiceDailyLate, peakHot, passes: pass, longestPassMs, reads, failedReads, deadChildren, maxHotGapMs, maxGapMs, catchUpReads };
 }
 
-test("controlled clock, whole registry: every sitting-window task on its real lane shares the four-child pool, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00", () => {
-  const result = simulateRegistry({ recordedPasses: false, days: 14 });
+test("controlled clock, whole registry: every sitting-window task on its real lane shares the four-child pool, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00", async () => {
+  const result = await simulateRegistry({ recordedPasses: false, days: 14 });
   assert.ok(result.peakHot >= 60, `${result.peakHot} hourly bodies at the peak (production had 49 on 2026-09-25)`);
   assert.ok(result.failedReads > 50 && result.deadChildren > 10, `${result.failedReads} failed reads, ${result.deadChildren} dead children`);
   assert.deepEqual(result.twiceDailyLate, []);
@@ -554,18 +549,21 @@ test("controlled clock, whole registry: every sitting-window task on its real la
   assert.ok(result.maxHotGapMs <= HOUR && result.maxGapMs <= 12 * HOUR);
 });
 
-test("controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52): prioritising hourly bodies never pushes any body past 12 hours", () => {
-  const result = simulateRegistry({ recordedPasses: true, days: 14 });
-  assert.ok(result.longestPassMs >= 952_000, "the run drew the longest recorded pass");
-  assert.deepEqual(result.twiceDailyLate, [], "no body waits past 12 hours for the hourly ones");
-  // The hourly residual under passes that long is C6's, recorded in
-  // tests/routine-civic-data-frontier.test.ts: reads delayed by a pass held
-  // open by Reader repair or another family, never by meeting scheduling.
-  // Across the whole registry it stays as rare and as small: 2 reads, 60:55 and
-  // 61:01, in 14 days (this replay does not model the catch-up rounds that now
-  // admit meeting reads while Reader repair runs).
-  assert.ok(result.hourlyLate.length <= 3, `${result.hourlyLate.length} late hourly reads: ${result.hourlyLate.slice(0, 6).join(" | ")}`);
-  for (const late of result.hourlyLate) assert.match(late, /unread 6[01]\.\d\d min/, late);
+test("controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52), with catch-up while a pass is held open: every hourly body is read within 60:00 and prioritising hourly bodies never pushes any body past 12 hours", async () => {
+  // 925 is this replay's own draw. Under 9, catch-up only while Reader repair
+  // ran left 11 hourly and 5 twice-daily reads late on Tucson's lane in the
+  // first hour (up to 69.56 min and 12.13 h): every body due at once kept the
+  // first pass open 28:29, and its one round held every lane until its last read.
+  for (const seed of [925, 9]) {
+    const result = await simulateRegistry({ recordedPasses: true, days: 14, seed });
+    const detail = `seed ${seed}: longest hourly gap ${(result.maxHotGapMs / MIN).toFixed(2)} min, longest gap ${(result.maxGapMs / HOUR).toFixed(2)} h, ` +
+      `longest pass ${(result.longestPassMs / MIN).toFixed(2)} min, ${result.reads} reads, ${result.catchUpReads} by catch-up`;
+    assert.ok(result.longestPassMs >= 952_000, `the run drew the longest recorded pass (${detail})`);
+    assert.equal(result.twiceDailyLate.length, 0, `no body waits past 12 hours for the hourly ones (${detail}): ${result.twiceDailyLate.slice(0, 6).join(" | ")}`);
+    assert.equal(result.hourlyLate.length, 0, `late hourly reads (${detail}): ${result.hourlyLate.slice(0, 6).join(" | ")}`);
+    assert.ok(result.maxHotGapMs <= HOUR && result.maxGapMs <= 12 * HOUR, detail);
+    assert.ok(result.catchUpReads > 0, `the long passes admitted reads by catch-up (${detail})`);
+  }
 });
 
 // ---------------------------------------------------------------------------

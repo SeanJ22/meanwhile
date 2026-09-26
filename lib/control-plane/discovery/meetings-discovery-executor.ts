@@ -132,6 +132,8 @@ export interface DiscoveryRuntime {
    * searches. Every provider request it reports is charged to the cost ledger.
    */
   readonly search?: DiscoverySearch;
+  /** Exact scope membership from the runner; no dollar admission or token reservation. */
+  readonly searchScopeFor?: (jurisdictionId: string) => { readonly assignmentKeys: readonly string[]; readonly hold: string | null };
   /** Writes one CostEntry per provider request actually sent (role DISCOVERY_SEARCH). */
   readonly recordCost?: (entry: CostEntry) => Promise<void>;
   readonly maxQueriesPerWalk?: number;
@@ -169,6 +171,7 @@ export function searchCostEntry(input: {
   readonly usd: number | null;
   readonly bytes: number;
   readonly recordedAt: string;
+  readonly assignmentKeys?: readonly string[];
 }): CostEntry {
   return {
     attemptId: input.attemptId,
@@ -179,6 +182,7 @@ export function searchCostEntry(input: {
     jurisdiction: input.jurisdictionId,
     project: FRESHNESS_PROJECT,
     role: DISCOVERY_SEARCH_ROLE,
+    ...(input.assignmentKeys?.length ? { assignmentKeys: [...input.assignmentKeys] } : {}),
     cost: {
       inputTokens: null,
       outputTokens: null,
@@ -295,6 +299,7 @@ export async function walkMeetingsDiscoveryNeed(
   const maxRequests = runtime.maxRequestsPerWalk ?? DEFAULT_MAX_REQUESTS_PER_WALK;
   const timeoutMs = runtime.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const steps: DiscoveryStep[] = [];
+  const searchScope = runtime.search === undefined ? null : runtime.searchScopeFor?.(need.jurisdictionId) ?? null;
   const robotsByHost = new Map<string, { readonly verdict: StepPermission; readonly detail: string; readonly rateLimited?: true }>();
   let requests = 0;
 
@@ -771,7 +776,7 @@ export async function walkMeetingsDiscoveryNeed(
      * is followed only on the government's own domain or a known publisher host,
      * opened robots-first, and confirmed by content. Every request is charged.
      */
-    if (runtime.search !== undefined && origins.length > 0) {
+    if (runtime.search !== undefined && !searchScope?.hold && origins.length > 0) {
       const search = runtime.search;
       const identity = identityFor(need, homeOrigin ?? origins[0], new Date(startedAt).getUTCFullYear());
       /* A saved method searches only where its precondition shows (or it has none) and no failure of it stands here. */
@@ -796,7 +801,7 @@ export async function walkMeetingsDiscoveryNeed(
           if (r.status === "BUDGET_REFUSED") continue;
           await runtime.recordCost?.(searchCostEntry({
             attemptId, jurisdictionId: need.jurisdictionId, routeId: q.recipeId ?? `discovery-search:${q.templateId}`,
-            host: r.host, usd: r.usd, bytes: r.bytes, recordedAt: runtime.now(),
+            host: r.host, usd: r.usd, bytes: r.bytes, recordedAt: runtime.now(), assignmentKeys: searchScope?.assignmentKeys,
           }));
         }
         /* Recorded before its results are followed, so a query the time cuts off still reports what it cost. */
@@ -880,7 +885,7 @@ export async function walkMeetingsDiscoveryNeed(
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
     site: { address: need.addressSource ?? null, homepage: homeProvenance },
-    note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused),
+    note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused) + (searchScope?.hold ? ` ${searchScope.hold}` : ""),
     ...(hints === null
       ? {}
       : {

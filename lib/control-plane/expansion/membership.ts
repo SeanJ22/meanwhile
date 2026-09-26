@@ -793,7 +793,8 @@ export function armExpansionBudget(
     const scope = plan.scopes[i];
     const d = scope.decision;
     if (scope.kind !== "RESOLVED") {
-      budgetScopes.push({ key: d.key, label: d.geography.label, budgetUsd: d.budgetUsd, resolved: false, members: scope.members, states: scope.states, historicalUsd: null });
+      budgetScopes.push({ key: d.key, label: d.geography.label, budgetUsd: d.budgetUsd, resolved: false, members: scope.members, states: scope.states, historicalUsd: null,
+        lifetime: Boolean(d.budgetStartedAt), budgetStartedAt: d.budgetStartedAt });
       return reading;
     }
     const spend24 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since24, input.now);

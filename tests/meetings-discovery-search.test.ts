@@ -328,3 +328,27 @@ test("SEAM WORST CASE: every provider at its timeout, plus the ledger's calls", 
   assert.equal(makeDiscoverySearch({ braveKey: "b", exaKey: "e", budget, fetchImpl, timeoutMs: 8_000 })?.worstCaseMs, 18_000);
   assert.equal(makeDiscoverySearch({ braveKey: "b", budget, fetchImpl, timeoutMs: 8_000 })?.worstCaseMs, 10_000);
 });
+
+test("discovery search records hunt references on successful and failed charges, while an out-of-scope hold keeps free reads", async () => {
+  const site = fakeOpen({ "https://x.gov/robots.txt": { status: 404 }, "https://x.gov/": { status: 200, body: "<title>Town of X</title>" } });
+  const search = fakeSearch({}, { failExa: true });
+  const costs: CostEntry[] = [];
+  await walkMeetingsDiscoveryNeed(need("az:town:x", "x.gov", "TOWN OF X"), {
+    ...runtime(site.open, search.search, costs), maxQueriesPerWalk: 1,
+    searchScopeFor: () => ({ assignmentKeys: ["zcta:2020/85635", "county:2020/04003"], hold: null }),
+  });
+  assert.equal(costs.length, 2);
+  assert.deepEqual(costs.map(c => c.assignmentKeys), Array(2).fill(["zcta:2020/85635", "county:2020/04003"]));
+  assert.equal(costs.find(c => c.source === "api.exa.ai")?.cost.usd, null, "a failed unpriced request is still attributed");
+  const outside = fakeSearch({});
+  const noCosts: CostEntry[] = [];
+  const before = site.seen.length;
+  const held = await walkMeetingsDiscoveryNeed(need("az:town:x", "x.gov", "TOWN OF X"), {
+    ...runtime(site.open, outside.search, noCosts),
+    searchScopeFor: () => ({ assignmentKeys: [], hold: "Paid search waits for resolved hunt membership." }),
+  });
+  assert.equal(outside.calls.length, 0);
+  assert.equal(noCosts.length, 0);
+  assert.ok(site.seen.length > before, "free public-page discovery still runs");
+  assert.match(held.note, /Paid search waits for resolved hunt membership/);
+});

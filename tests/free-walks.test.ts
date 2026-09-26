@@ -6,7 +6,8 @@
  * and the dispatched needs the free walk goes first on. What these tests hold:
  *
  * - **Every reading reaches its hold decision.**
- *   - FOUND and NOT_WALKED keep a dispatched row held.
+ *   - FOUND keeps a dispatched row held to avoid duplicate acquisition.
+ *   - NOT_WALKED permits an appropriate paid route without exhausting free routes.
  *   - WALKED_NOT_FOUND lets the paid lane take it. That covers a site that
  *     showed nothing or only leads, a wall, and an unreadable site.
  *   - NO_SITE_TO_WALK lets the paid lane take it too.
@@ -95,11 +96,11 @@ function attempt(outcome: DiscoveryOutcome, finishedAt: string, leads: MeetingsD
 
 const held = (row: string, walks: Parameters<typeof paidDiscoveryHold>[1]) => paidDiscoveryHold(row, walks)?.code ?? "PAID LANE MAY TAKE IT";
 
-test("EVERY READING REACHES ITS HOLD DECISION: found and not-walked hold, a walk that confirmed nothing or no site to walk opens, unread holds; the newest walk decides", async () => {
+test("EVERY READING REACHES ITS HOLD DECISION: found and unread hold, not-walked or an unsuccessful walk permits paid discovery; the newest walk decides", async () => {
   for (const [label, repos] of await eachStore("wtp-free-walks-")) {
     const before = await readFreeDiscoveryWalks(repos, SUBJECTS);
     assert.equal(before.latestFor(AJ), "NOT_WALKED", `${label}: no walk recorded yet`);
-    assert.equal(held(AJ_ROW, before), FREE_WALK_FIRST, `${label}: the free walk goes first`);
+    assert.equal(held(AJ_ROW, before), "PAID LANE MAY TAKE IT", `${label}: useful paid discovery need not wait for a free walk`);
     assert.equal(before.latestFor(COOLIDGE), "NO_SITE_TO_WALK");
     assert.equal(held(COOLIDGE_ROW, before), "PAID LANE MAY TAKE IT", `${label}: with no site to walk, the free lane has nothing to try`);
     assert.equal(before.latestFor("az:city:underivable"), "UNREAD");

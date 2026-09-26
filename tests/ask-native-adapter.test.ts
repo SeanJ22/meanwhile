@@ -5,7 +5,9 @@ import { afterResponse, withResponseLifetime } from "../lib/log/after-response.t
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 test("native Ask uses the public route and preserves validation and origin rejection", async () => {
-  assert.deepEqual(config, { path:"/api/ask/grounded", method:"POST" });
+  assert.equal(config.path, "/api/ask/grounded");
+  assert.equal(config.method, "POST");
+  assert.equal(config.memory, 4096);
   const context = { waitUntil: (_work:Promise<unknown>) => undefined };
   const request = (origin:string,body:string) => new Request(`${PUBLIC_SITE_ORIGIN}/api/ask/grounded`,{method:"POST",headers:{origin,"content-type":"application/json"},body});
   const rejected = await ask(request("https://unrelated.example","{}"),context);

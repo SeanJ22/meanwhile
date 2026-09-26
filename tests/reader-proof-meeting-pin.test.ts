@@ -430,6 +430,41 @@ test("a quiet re-check mid-run moves no pinned read: the prepared copy and the c
   });
 });
 
+test("a serving copy written before couplings recorded their routes cannot apply the pin's checks, so the pinned versions are composed (batch D's second reproof)", async () => {
+  clearPromotedReadModelCache();
+  clearPreparedMeetingsProjectionCache();
+  const store = new EventCountingStore();
+  const CHECKED_BEFORE_CAPTURE = "2026-09-23T22:00:00.000Z";
+  const v1 = await promoteVersion(store, CAPTURED);
+  await recheckVersion(store, CAPTURED, CHECKED_BEFORE_CAPTURE);
+  const capture = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: CHECKED_BEFORE_CAPTURE });
+  if (capture.kind !== "PROMOTED") throw new Error("unreachable");
+  const pin = readerProofMeetingPinFromReadback(capture.partitions, CHECKED_BEFORE_CAPTURE);
+  // Production's serving copy on 2026-09-25: the pinned version, composed by a runner that recorded no routes.
+  const oldFormat = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: CAPTURED });
+  if (oldFormat.kind !== "PROMOTED") throw new Error("unreachable");
+  await store.writePreparedReaderProjection({
+    recordClass: "MEETING" as RoutineRecordClass,
+    scope: MEETINGS_PREPARED_SCOPE,
+    payload: { ...oldFormat.value, meetings: oldFormat.value.meetings.map((row) => ({ ...row, provenance: { ...row.provenance, collectedAt: CAPTURED } })) },
+    composedFrom: [{ contractId: legistar.id, versionId: v1 }],
+    factSha256: "f".repeat(64),
+    generatedAt: CAPTURED,
+    composedAt: CAPTURED,
+    sourceThrough: null,
+    retrievedAt: null,
+    promotedThrough: null,
+  }, null);
+  await withEnv(harnessEnv(writePin(pin)), async () => {
+    clearPromotedReadModelCache();
+    clearPreparedMeetingsProjectionCache();
+    const read = await readPreparedMeetingsProjection({ store, now: LATER });
+    assert.doesNotMatch(read.kind === "PROMOTED" ? read.detail : read.kind, /prepared reader snapshot/, "the copy cannot state the pinned check, so it is not served");
+    assert.equal(partitionVersion(read), v1);
+    assert.equal(sitting(read).provenance.collectedAt, CHECKED_BEFORE_CAPTURE, "the composed pinned version carries the capture's check");
+  });
+});
+
 test("a deployed build, a function runtime, or a process outside the harness never admits the pin", async () => {
   const { store, v1, pin } = await seededRun();
   const path = writePin(pin);

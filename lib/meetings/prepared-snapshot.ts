@@ -382,6 +382,11 @@ async function servedPreparedChecks(
   }
 }
 
+/** Whether the serving copy records the routes of every version the pin gives a check to, so it can apply them. */
+function preparedStatesPinnedChecks(couplings: readonly FreshCheckCoupling[], pin: ReaderProofMeetingPin): boolean {
+  return couplings.every((coupling) => coupling.routes !== undefined || readerProofPinnedCheckedAt(pin, coupling.contractId, coupling.versionId) === null);
+}
+
 /** The serving copy's coupled versions with the Reader proof pin's checks in place of any recorded or live one. */
 function pinnedPreparedChecks(couplings: readonly FreshCheckCoupling[], pin: ReaderProofMeetingPin): readonly FreshCheckCoupling[] {
   return couplings.map((coupling) => coupling.routes === undefined
@@ -429,6 +434,13 @@ export async function readPreparedMeetingsProjection(
       ),
     )
   ) {
+    return readMeetingsProjection(options);
+  }
+  // A serving copy composed before couplings recorded their routes cannot
+  // apply the pin's checks; the composing reader applies them to the same
+  // pinned versions (batch D's second reproof: production's copy was written by
+  // a runner on the previous release).
+  if (pin !== null && !preparedStatesPinnedChecks(prepared.composedFrom as readonly FreshCheckCoupling[], pin)) {
     return readMeetingsProjection(options);
   }
   const partitions = partitionsFromCoupling(prepared.composedFrom);

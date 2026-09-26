@@ -604,7 +604,7 @@ const WHO_OR_COMPARISON = /\b(who|whom|whose|donors?|contributors?|backers?|fund
  * identities of people who gave money"); it said we hold no fundraising for
  * Kelly Ayotte when we do ("Has Cinde Warmington raised more money than Kelly
  * Ayotte?"). Opus 5.5 was right 7 times in 8 on the same packs; Sonnet 5 was
- * wrong on the same two kinds Haiku was. On money questions that ask HOW MUCH
+ * wrong 4 times in 8 (the who-funded and the comparison questions). On money questions that ask HOW MUCH
  * one candidate raised or spent, Haiku 4.5 was right every time, so those
  * keep the fast writer.
  *

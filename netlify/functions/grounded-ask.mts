@@ -27,9 +27,14 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   response.headers.set("x-wtp-ask-handler-ms", String(Math.round(performance.now() - started)));
   response.headers.set("x-wtp-ask-handler-started-at", String(startedAt));
   response.headers.set("x-wtp-ask-process-age-ms", String(processAgeMs));
+  if (process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE) response.headers.set("x-wtp-ask-memory-mb", process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE);
   if (context.server?.region) response.headers.set("x-wtp-ask-region", context.server.region);
   return response;
 };
 export default groundedAsk;
 
-export const config = { path: "/api/ask/grounded", method: "POST" };
+// Cold boundary receipts on 2026-09-26 showed ~2 s of process startup before
+// the handler and ~2 s reading/validating held data at the default half vCPU.
+// Give this reader endpoint CPU for startup and JSON validation; no keep-warm.
+// Netlify bills the configured size; report it as platform compute, not tokens.
+export const config = { path: "/api/ask/grounded", method: "POST", memory: 4096 };

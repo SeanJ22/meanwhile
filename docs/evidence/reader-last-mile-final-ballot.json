@@ -1,6 +1,6 @@
 {
-  "exactHead": "6fb3eb7a9ee63cd562e524cf26ca846cb52694dc",
-  "buildId": "jJF5gsswUQlG4MKgj3WF8",
+  "exactHead": "e9181066f8abf490fdab7ea91b71a4429b5af5b8",
+  "buildId": "EJdewd9SG27oQECn_hfHT",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -76,7 +76,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "6893dfa48c1ac0a31462158def677328ccd4de67e8eaef89f4b8bfe8688c7b2d"
+      "sha256": "ad62cdc615ae00143b02441106ba84562a848b3efcd91c08bc8ed6b99eaafc6e"
     },
     {
       "path": "app/globals.css",
@@ -2047,6 +2047,10 @@
       "sha256": "fd8f70affeef20fbce9735f83343073bb10265db0a165d86d28713cae36faaee"
     },
     {
+      "path": "lib/ballot/coverage-notes.ts",
+      "sha256": "6b586ef12973957f5eae3ec566ab5b65dd361ed822144aef2cfb3e8d4a9d0990"
+    },
+    {
       "path": "lib/ballot/covered-states.ts",
       "sha256": "d42f085494a2f073930e0dc493d018e6ce51441bd947275d00b012db71a823f4"
     },
@@ -3188,7 +3192,7 @@
     },
     {
       "path": "lib/sources/ballot-curated/index.ts",
-      "sha256": "9d1c44278349175282ee70e9942797e8a7785faa5584bcd5b072b062f3d0069d"
+      "sha256": "465caa917cf816cd48519359c2f355982702fa37e4a50e7c9cce3b0135eafc00"
     },
     {
       "path": "lib/sources/ballot-nj-morris/index.ts",
@@ -14232,9 +14236,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",

@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "censusPath": "docs/evidence/reader-last-mile-final-closure.json",
-  "censusSha256": "a5dcfe6e8efeda6e949ede26fa7b707dbda4ea9ffe0ffe2985671cc64bf8ec51",
+  "censusSha256": "56fd7ac9c5adcdbcd66226e5fa6c3c10baabc289cf018b99d4d131ac51991a64",
   "holdingsDigest": "58ccd76eba5bae41b0b09a83145c6a16c35f7a2d1cbb7dc986b1dae4967d30af",
   "registrySha256": "1dfbb6b814a7e3c6c5fb87e0acc3926d7a45ac4c2ab4a7717f79f03da799b80a",
   "sourceHashes": [
@@ -79,7 +79,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "6893dfa48c1ac0a31462158def677328ccd4de67e8eaef89f4b8bfe8688c7b2d"
+      "sha256": "ad62cdc615ae00143b02441106ba84562a848b3efcd91c08bc8ed6b99eaafc6e"
     },
     {
       "path": "app/globals.css",
@@ -836,6 +836,10 @@
     {
       "path": "lib/ballot/could-govern.ts",
       "sha256": "fd8f70affeef20fbce9735f83343073bb10265db0a165d86d28713cae36faaee"
+    },
+    {
+      "path": "lib/ballot/coverage-notes.ts",
+      "sha256": "6b586ef12973957f5eae3ec566ab5b65dd361ed822144aef2cfb3e8d4a9d0990"
     },
     {
       "path": "lib/ballot/covered-states.ts",
@@ -1947,7 +1951,7 @@
     },
     {
       "path": "lib/sources/ballot-curated/index.ts",
-      "sha256": "9d1c44278349175282ee70e9942797e8a7785faa5584bcd5b072b062f3d0069d"
+      "sha256": "465caa917cf816cd48519359c2f355982702fa37e4a50e7c9cce3b0135eafc00"
     },
     {
       "path": "lib/sources/ballot-nj-morris/index.ts",
@@ -2317,103 +2321,103 @@
   "evidenceHashes": [
     {
       "path": "docs/evidence/reader-last-mile-ask-route-proof.json",
-      "sha256": "2f3da91bbddde96a77ed954d3c18b60b302b41cf13c946501305e2c0c5575b9b"
+      "sha256": "0cd2546c384fdb2902eaba0607112edced211340bf820e941665f7de5c1e7653"
     },
     {
       "path": "docs/evidence/reader-last-mile-bodies.json",
-      "sha256": "369d79c1589c5603274add7353894d08a97e1e3cad766c621c460d15e06a9b74"
+      "sha256": "7a5169fbc096f37e6bd9a16338399c562c8c664ef794acb835c7b9110b213f1e"
     },
     {
       "path": "docs/evidence/reader-last-mile-civic.json",
-      "sha256": "868a54801484914f649cb16fbbbf4952cf5a8596a502c21cfeb92e29944a8cc2"
+      "sha256": "d9a6fd71faf4fcfa2b32f51b8a2c22d4d4b8625159dcefc27816c369d23f7b41"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-agenda.json",
-      "sha256": "aa7c603e2ef7d78f230e911427b81fc2615e16546422b6bc836a991e38ebc86b"
+      "sha256": "a84c60aa5c31aba2f6742835d75b75f03b1ba9d4480b3fe3914cf7da07ba489c"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-ask-exhaustive.json",
-      "sha256": "a02702c6375fa40fbc384020df138f79866c2450d3d59632ec5192b08bd9e866"
+      "sha256": "42084f23c2d56b785160efc0e3a95cde917682f06858d8802f3ef23b6f11cdd8"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-ballot-ask.json",
-      "sha256": "d44e0dae2ea07cbff2b4853fbc7baee2b7634d3e24669769dd6081b05f908bec"
+      "sha256": "ee9b465a540403200265dbe88da8448b2e8fd1318d1e2e407ec6d6f2e9652a29"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-ballot.json",
-      "sha256": "2d18b38e5354d6f48a3e6cc54d22b7f30a1b0a50dc53873c3e0e7cc2d7610a85"
+      "sha256": "e09373e73fb5474c39528d937df740a66fa102367190f5330a357c749987bc69"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-build-receipt.json",
-      "sha256": "f5437f23d2a2a83cca7715a0f91a907547db7da0369f328bb4e31064d0f78c9b"
+      "sha256": "428907fb17f5834cf173c114c5dbed1580a5bff8677660f9fb8f2d2aaa3bb4a8"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-bundle.json",
-      "sha256": "f4918308922a8e8018cebc877ade54a84e1424ed3b5314ad8a47b06e730532ea"
+      "sha256": "e8b95eb2ce9e99c69382e472de70768156a8a926383884b88d5f535281193aed"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json",
-      "sha256": "4acc5bdab63edc8ba576689ab56d248d9b01373f7e22343cbdb30eb4cdb7385c"
+      "sha256": "a2790fa60d498bff65fe7ea4d6ad3047c6b138750ac29b4e6f3096c353f3bcfb"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-delta-components.json",
-      "sha256": "69ed092c25e1bbdd3bf1ab01f106c570639551b57ca5c182987d22b5c1493576"
+      "sha256": "00caf04ac5d1424defd9bbd868559514bd9533313082b3cd7617aca42a128955"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-delta-routes.json",
-      "sha256": "5ef331d50a130c5bfa2bdd6cf8b260196674f02b7e5d8058a88fe23459d8be06"
+      "sha256": "6815d90fca0aef0afdd4c3a0f6ae6c7202e1ccd37001e41a300b18d417f841f9"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-federal-money-ask.json",
-      "sha256": "c891d8f8801a554fc90a260a0887136b6d2605a610634eae74d5905380446c42"
+      "sha256": "983f951d04099be1671ba4c3f47d05e525290775507e2eef69c24c66dd77310a"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-invalidation.json",
-      "sha256": "e2478a283d15a0204823173d03f094c56e24761180705885c517973695023be8"
+      "sha256": "071c06206002a1f9c8021b621e6f92bfb62c48d1adcb5a4b42f7c7422b91bd5e"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-key-votes-ask.json",
-      "sha256": "a04c143b9b782caae4742762e94c4225700fb96471ad03aec2d5c710a572e7ca"
+      "sha256": "0626e4ff70b7f2df5de72c8539009ef217c908eba9bbe3eb306f13b7882dc86c"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json",
-      "sha256": "638fa837b007433254f85a22385020ef0b2656dc36d2095bd5f2ee50b4d782ed"
+      "sha256": "166008765400abc0b505b025f4bab3bdd9f6ebaf3c2d074e1cfca40582b76649"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-meeting-routes.json",
-      "sha256": "1ab9673436f1b994e2091f4a86096d13c47ccf8ea5b7df243ebefb176b018dfb"
+      "sha256": "9707682598365b701524a0b8cd7cce996629c65204707f8d11795b1963eb4d54"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-meetings-ask.json",
-      "sha256": "58c68d93b90a584c8eabe73f9bc1cf9e820010f60d7a5926a16a88f20dab9df6"
+      "sha256": "f0854862ab7654af4b3944e70de8e131ce0a520ef2f289d32456d1a4d80a8c40"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-money-ask.json",
-      "sha256": "4132e88b5842649a2e5116b2aaf960347581474d0087405b2ef6672184f964b3"
+      "sha256": "5c3785c06d9fab9a1db6967ebcfa1d621ac9187fb3646bfc7cbc9f2f63d86042"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-portraits.json",
-      "sha256": "a8786c8d1d6949046bc890ffc15a0e6f6a17f9a5ec3110dbb958f2bcffe0f649"
+      "sha256": "196a94484a4bd0b4e56ed082ff1cd5311ccecb91e57bb5a33aa67588ac494201"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-render.json",
-      "sha256": "41b8322592014efe8e9d589ad21e14771d8c83a85a19e7e5c9ec957da0d7f924"
+      "sha256": "a1040f639108ceadb4dfa4a1d39d473ec0a40a2cf3157062044e47e1ed3dfee9"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-routes.json",
-      "sha256": "0391d0d6faf7411dfef394adf57c0616369fd5f047f0d2d7c093d7f0768ac577"
+      "sha256": "3efe0f3dfe2f03582ef27df536c7becd0270c03dc18af6f57ee44ae025dba4da"
     },
     {
       "path": "docs/evidence/reader-last-mile-officials-ask.json",
-      "sha256": "c960f873d24e8c8bf1aaaa427e8eb75769138547be093ecb0a3f41028fc54fc7"
+      "sha256": "7012ce26617cd4f5c9c493e2b92bc190360db61baa9b816d0dfe11943fbcce6a"
     },
     {
       "path": "docs/evidence/reader-last-mile-positions.json",
-      "sha256": "f093ab9832acd8fae2627239970353714f5834ed13cf80c4a16b41f38f44414e"
+      "sha256": "312c0d103bb630a0e0b71b7806d7380f9991105421076d1ebad45212cd70eaed"
     },
     {
       "path": "docs/evidence/reader-last-mile-production-authority.json",
-      "sha256": "44119029e23b220d8d08a8ae7b622c0b90f7d3be0a8657ba43a3654853834468"
+      "sha256": "0397f97613bee7669f621ba6e11a09ae2fd70f1d17105b0f74ca10089848d09a"
     },
     {
       "path": "docs/evidence/reader-last-mile-production-import-receipt.json",
@@ -2421,32 +2425,32 @@
     },
     {
       "path": "docs/evidence/reader-last-mile-production-provider-metadata.json",
-      "sha256": "c1602a5a0b21982410c181278641561c18b43af1c13d7492355fbaa21df43d16"
+      "sha256": "e054abeaf4576cc2e33189e0b24de2c30a0736f129982e55200d20dc3cc1422d"
     },
     {
       "path": "docs/evidence/reader-last-mile-render-federal-money.json",
-      "sha256": "b2a4d83325b6df328665b7e14526a1d337c22ed4db2cd7b97bd5a4dadd0cbe37"
+      "sha256": "4b0aea9afe76c4be0ae712fca83bae8f284ad38be8bc0edccc0deb82373bc0c2"
     },
     {
       "path": "docs/evidence/reader-last-mile-render.json",
-      "sha256": "31cb1a54651c1252342d2810f52cee5d88ed5bcd1f8751e9e5386d4ab7aed3c4"
+      "sha256": "3f5981b2b93617249e869fca42163c3fc8f17cdd938decb6ae3c9023f48e79be"
     },
     {
       "path": "docs/evidence/reader-last-mile-surface-witnesses.json",
-      "sha256": "a5127f87855bc0b4013788158dd98875a5ffbe4375fd2aca19401018d2dc3ade"
+      "sha256": "de271dbf6eaac4126233e910f266de41ba420048a82d3b34b556ae7a53dd8166"
     },
     {
       "path": "docs/evidence/reader-last-mile-voting-sites.json",
-      "sha256": "82b124a51487b531dec23e69930e2473e5543c4276a84ba78286c2f0706378c0"
+      "sha256": "82fd3f0bbd6797b8f9a868d24936b066073329e7b34efc2eada262fa83233d21"
     }
   ],
   "executionAuthority": {
     "phase": "PRODUCTION",
     "evidencePath": "docs/evidence/reader-last-mile-production-authority.json",
-    "evidenceSha256": "44119029e23b220d8d08a8ae7b622c0b90f7d3be0a8657ba43a3654853834468"
+    "evidenceSha256": "0397f97613bee7669f621ba6e11a09ae2fd70f1d17105b0f74ca10089848d09a"
   },
   "inheritance": {
     "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
-    "reportSha256": "e2478a283d15a0204823173d03f094c56e24761180705885c517973695023be8"
+    "reportSha256": "071c06206002a1f9c8021b621e6f92bfb62c48d1adcb5a4b42f7c7422b91bd5e"
   }
 }

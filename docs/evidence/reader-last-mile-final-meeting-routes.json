@@ -1,8 +1,8 @@
 {
-  "exactHead": "6fb3eb7a9ee63cd562e524cf26ca846cb52694dc",
-  "buildId": "jJF5gsswUQlG4MKgj3WF8",
+  "exactHead": "e9181066f8abf490fdab7ea91b71a4429b5af5b8",
+  "buildId": "EJdewd9SG27oQECn_hfHT",
   "executionLevel": "ACTUAL_HTTP_ROUTE",
-  "asOf": "2026-09-26T19:46:11.955Z",
+  "asOf": "2026-09-26T21:52:31.268Z",
   "sourceHashes": [
     {
       "path": "app/api/meetings/route.ts",
@@ -42,11 +42,11 @@
     }
   ],
   "denominator": {
-    "held": 933,
-    "inCurrentWindow": 891,
-    "returned": 891,
+    "held": 973,
+    "inCurrentWindow": 931,
+    "returned": 931,
     "outsideWindow": 42,
-    "queriedHeldLocations": 61
+    "queriedHeldLocations": 64
   },
   "dispositions": [
     {
@@ -54,294 +54,294 @@
       "startsAt": "2026-01-06T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-01-20",
       "startsAt": "2026-01-20T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-02-10",
       "startsAt": "2026-02-10T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-02-24",
       "startsAt": "2026-02-24T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-03-10",
       "startsAt": "2026-03-10T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-03-14",
       "startsAt": "2026-03-14T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-03-24",
       "startsAt": "2026-03-24T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-04-28",
       "startsAt": "2026-04-28T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-05-12",
       "startsAt": "2026-05-12T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-05-26",
       "startsAt": "2026-05-26T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township:archive:2026-06-09",
       "startsAt": "2026-06-09T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-01-12",
       "startsAt": "2026-01-12T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-02-09",
       "startsAt": "2026-02-09T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-02-23",
       "startsAt": "2026-02-23T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-03-09",
       "startsAt": "2026-03-09T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-04-20",
       "startsAt": "2026-04-20T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_planning_board:archive:2026-06-15",
       "startsAt": "2026-06-15T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-01-13",
       "startsAt": "2026-01-13T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-01-27",
       "startsAt": "2026-01-27T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-02-03",
       "startsAt": "2026-02-03T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-02-17",
       "startsAt": "2026-02-17T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-03-03",
       "startsAt": "2026-03-03T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-04-07",
       "startsAt": "2026-04-07T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-04-21",
       "startsAt": "2026-04-21T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-05-05",
       "startsAt": "2026-05-05T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-05-19",
       "startsAt": "2026-05-19T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-06-16",
       "startsAt": "2026-06-16T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-02-09",
       "startsAt": "2026-02-09T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-02-20",
       "startsAt": "2026-02-20T00:00:00-05:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-03-09",
       "startsAt": "2026-03-09T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-03-23",
       "startsAt": "2026-03-23T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-04-13",
       "startsAt": "2026-04-13T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-04-27",
       "startsAt": "2026-04-27T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-05-11",
       "startsAt": "2026-05-11T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-05-26",
       "startsAt": "2026-05-26T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-06-01",
       "startsAt": "2026-06-01T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-06-08",
       "startsAt": "2026-06-08T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "revize:merrimack:2026-06-22",
       "startsAt": "2026-06-22T00:00:00-04:00",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703706",
       "startsAt": "2027-01-27T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703707",
       "startsAt": "2027-02-10T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703708",
       "startsAt": "2027-02-24T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     },
     {
       "id": "apptegy:vail:60703709",
       "startsAt": "2027-03-10T02:00:00.000Z",
       "state": "INTENTIONALLY_OUT_OF_SCOPE",
       "selector": "searchMeetings current canonical serving window",
-      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T19:46:11.955Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
+      "reason": "Current reader window is 90 days back and 120 days forward at 2026-09-26T21:52:31.268Z. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event."
     }
   ],
   "missing": [],
@@ -1489,7 +1489,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "c30a6bc5716a36516e7ca27ac3c949fa9bcf9eaf6291120f6464101b9818aa89",
+      "payloadSha256": "f45e3d72ae061c77c1b439c483f10367e26f9114d361689efa6739def70ae32d",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -2637,7 +2637,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "2d14e3e48c94f417bd24dbda372699edfcffafb18d1e55af3684baf215f0ad5d",
+      "payloadSha256": "038bcf7112c7914519871f388240f44486b9da4bcc6190ff2f8efe06dad46acf",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -3784,7 +3784,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "992833d05304bf0cfdfe818a2fc1fbc94654b9e065fa00e46c681b74ea638d84",
+      "payloadSha256": "002fd777287a4cb64eb519ed3d20949ef654c6903470de1bf11f859d44f92308",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -4932,7 +4932,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "21125012b42b0a4ed6443d9c34cccb0dd6cb8c4086df974b44f2bdff6bea9e59",
+      "payloadSha256": "0a7e024e59096d4b828a66ab8af3f5fbf5deee295f0c77d639b9e01563093aa9",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -6152,7 +6152,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "ab1b3254424c763e752f771f3d2057ccce86ae77cbb5e1d849f2dcabe19c0685",
+      "payloadSha256": "55455288feb99998d01ef7dd5d80074a18570cbe88399d0187a49a4fbec7f3be",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -7372,7 +7372,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b2975445490ed7d506c19f6561146ccd304cce152aea908d751257fa13de87ee",
+      "payloadSha256": "827502a7f55628b7a164d62ec301edeb99e97c7e6a75bb6a01c1c4d24b2d977f",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -8592,7 +8592,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "21995906c820849279cb744be05cb4e14b25f392f0a47ea04c645c9fa270ae29",
+      "payloadSha256": "249ddabc8a26d9dba1d562eae734330aa75a472e56c4eb566dfc8524f45c20e4",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -9812,7 +9812,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "1c53e5698be5fb9a465419eac4f8fce5d900e75fc4393b58114851d522b193d2",
+      "payloadSha256": "9b3fca513b587c6ae5822ef1fb32b25aca7b1696d20716650183384ef2b55dfa",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -11032,7 +11032,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b14c3414f420354c4c13bf7de268eb3ee263395f074f225fb1a181bfc8ed038f",
+      "payloadSha256": "c3ba43a30e0706254093b0e1568a60dd97597907d461c93ccb35f1c71e6f644c",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -12252,7 +12252,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "61049e13e575676cc1e384bc74b3d00d63669083dc2234bbfe7223dd9451d876",
+      "payloadSha256": "045d02c990e25fab53629a216aa4be50ec46d3e56a6691acd64366212bffcfe1",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -13472,7 +13472,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "a5fa40cf6db73e62b7652cb0703b6e10cf699468643e032b10e1c2f2fce17a4b",
+      "payloadSha256": "24d0b924df4f18725841685d6ab8e0c359c91a9cf8b389e4e00489944d4f6daf",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -14692,7 +14692,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "010eac0d6ff3a397c4a0fb46d54788a799ffe0a437e3bcc71fe845a0de60f40f",
+      "payloadSha256": "8c2145cd8bfc5f37594b39d7ce4c33887fc344de822cefe2a732ba595040c4ba",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -15912,7 +15912,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "dc351932f5d792d81f0ff7015efe8c351fc5902bb8324d8c7888f7445ea96f5f",
+      "payloadSha256": "c42b71cd02c5d5140af6861b0207d54d3097326e1eb9b8887895724d9276bad8",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -17132,7 +17132,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "223f6eece8b4b9bc6ff1586a87086d61079209bdeb4f3584a6dcc46f229c1f0f",
+      "payloadSha256": "a8a99129ceda0c7ffe5839b92654fedf7fae48a363383eb7a34ae1b2353b0284",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -18352,7 +18352,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "538e9516b776a549afbf556fb0932ae87731bf0c7b621267c73e3985ed7263c1",
+      "payloadSha256": "ebd36cd7b1c1b20c04b43393afb70fad0bc60083ea05afaab5dd67267d4df592",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -19572,7 +19572,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "07f9f76ceee93e5d2a809e96f0de84a98946cd32725dd60fab031f375efffe7b",
+      "payloadSha256": "401def91dafd2d133b89c5ff3de158f83ef5a9149336cff7f4c4b5bcacdc6717",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -20792,7 +20792,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "a1d07b0d08b4e2d747e12854bb5620e54c5e2c5129a0759bd057234051954945",
+      "payloadSha256": "5243e2dd9fa04d0ef3390b6bbc3671a40f7cd08a0e52524aaa0252379401de25",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -22012,7 +22012,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b0606012be9263a29232bc49dfb4aa812bbf72771860da72d2665a64a8014399",
+      "payloadSha256": "8ded851bafe01ead79ebf5ad460ade05351b58841d7eb3779a2ea94f0df24b24",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -23232,7 +23232,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "0ec9433a19104e5bcb127c27fbaaa624adccc2ea6495e68e92429e6dc08a5a35",
+      "payloadSha256": "d6fa2e5cabccd61eeba597985c18bfa469ad2d605f729d780bc5b0c4ea6fe9e4",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -23350,7 +23350,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b0da8fb3f51cbf93af288fe0e7acd84b5d96938fc7287a4832ec15f51b10c661",
+      "payloadSha256": "df2848061cdb3c160566257b2101644db2891c45e9c02776d3b37b2ebefda150",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -24570,7 +24570,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "9635734f91d24e5600ed041380a473a4fdb24ceb415ef4095aa5018166065cdb",
+      "payloadSha256": "239ba8cafa11758f4f5c53260d2761108d376771f029f3ab56a918349737e3ac",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -25918,7 +25918,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "468d29fd9ee6353559fad800c158f954d8bdc2673f34d9aebc1842dfba3fb353",
+      "payloadSha256": "b82244ff37a81cb8dec17b6ecf3bc8272f7e2587ae3a5430a96203c7524a8651",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -27139,7 +27139,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "64d96c1c7d2939227a9893f21dc9920c047b902907bd9d3dfb47bb151fda737a",
+      "payloadSha256": "490e06062ffb280788b2a7577623d992685f5ede91d8938cb74e2dde87687149",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -28443,7 +28443,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "2f5f31cfea0b73d26223f37fa2a317c0eba38ad148d653140d1f2c0f256c317c",
+      "payloadSha256": "f95a7ae3071b9189dfc64b02d431085c5d1be3c3e6e75d299a4cde039d0549f4",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -29536,7 +29536,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "dc058a9fba80273d6776164f1e402babf2667c3013d65f3dbd9871d8a7221c45",
+      "payloadSha256": "4fa305839dc2eb14d8978c2d367bc1a29f5e839c7a8a3929f481bd843e498030",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -29857,7 +29857,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "5b27dbdcc81699c0d6f8e08a700afa11fdd8c2dd13c19ab6f9bf87da66b9c064",
+      "payloadSha256": "941fce2449b94a1503698fd7dd91cb99ac18a092f963fc366be9e3838c6317b7",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30178,7 +30178,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "4057ddb0f1c6b043f1358dfd8ffc1805a55c4fe408bfebbb13f090e741f2dd09",
+      "payloadSha256": "cede145976dabbd82ce12b104ba0ced9995791a0d66444d563b8eb821cd8abfd",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30476,7 +30476,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "5e5509d2db0d042ddb43af990eaf955fbb951c90a4e8cf307d770fad32b8aa85",
+      "payloadSha256": "389cea2e4182832f618d53b400261409eeee2c4d78ef75a454f6bd76314e39e8",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -30773,7 +30773,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "98cf382ea35119809347653f856935050896537c54e04c475257c7a1f088f466",
+      "payloadSha256": "ade0f2ff2d2fd45629cfbaf6bb9a1320cb0f2e68dfb77565c1e51e6c79926df9",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31070,7 +31070,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "2808334033ec335dfa327d1f3b14e68cc85e3450c9135d4935b13d9958379db3",
+      "payloadSha256": "fe51f0357ad8847d72830c79be6e620d0fcfb30648a6ece2767f2d8e4d9dade5",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31120,7 +31120,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "14645ac44f0edb3cd0a75619a96dc3e6965aa313a4ba4729f37fe9a54e5e9822",
+      "payloadSha256": "5db600bac3f9a11d14879c8b067a3d18a2fa5ec05aab451f0255ce371817dced",
       "tier": "concluded",
       "radiusKm": 150
     },
@@ -31195,7 +31195,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "1b097a5e0405e2054afd7ee9b6755f8328e713fdefaad16b5da08b5cda64d7a1",
+      "payloadSha256": "467cb9cffc51eda52f730bf3c6607455a3f331c5af787e94bbfdf8ef7eda1ffb",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31315,7 +31315,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "a91751623dbce952cc649b623b6aa3e30b5b5174a2f5dadffbe1e864fe24f177",
+      "payloadSha256": "04b30453dcfd8242956172da7a73ea417a1427660a2e530fd5b150b460ab0041",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31460,7 +31460,794 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "b28c6f111a6c5dd8d0d5a7953d8d05b48510d016bc747b86f87a48893fd7a819",
+      "payloadSha256": "eeef328d7194f08298c0e5fc8a7e76bee99e5b22dbfb604b9a5f8d0e52109b89",
+      "tier": "exact",
+      "radiusKm": 150
+    },
+    {
+      "surface": "meetings/map",
+      "request": "/api/meetings?lat=39.7161&lng=-75.21927&radiusKm=150&zip=08062",
+      "point": {
+        "lat": 39.7161,
+        "lng": -75.21927,
+        "zip": "08062"
+      },
+      "returnedCount": 98,
+      "identities": [
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-07-07",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2233",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2239",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345145",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-07-14",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:archive:2026-07-20",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2240",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2236",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-08-04",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2241",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345162",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2242",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-08-17",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-08-18",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2243",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2244",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-01",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-09-08",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1823",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2245",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345225",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2246",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:archive:2026-09-14",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1791",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-15",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1776",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-09-22",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1824",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2247",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2248",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-09-28",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003099-1790881200-1790884800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10887-1790881200-1790884800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:historical-commission"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1777",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "apptegy:rocktwp:51345226",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000724-1791399600-1791403200@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:environmental-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004202-1791831600-1791831600@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:economic-development-committee-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002879-1791916200-1791919800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:recreation-commission"
+        },
+        {
+          "id": "civicplus:rockaway_township:1825",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2249",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2250",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003315-1792004400-1792008000@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historical-society-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003159-1792090800-1792094400@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10897-1792432800-1792436400@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1792",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1778",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001880-1792522800-1792526400@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historic-preservation-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-veterans-commission:10903-1792695600-1792699200@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:veterans-commission"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-10-26",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:1826",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2251",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2252",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000725-1793818800-1793822400@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:environmental-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003100-1793905200-1793908800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-board-of-health:10919-1793905200-1793908800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:board-of-health"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10921-1793905200-1793908800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:historical-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10923-1794247200-1794250800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004203-1794250800-1794250800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:economic-development-committee-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002880-1794335400-1794339000@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:recreation-commission"
+        },
+        {
+          "id": "civicplus:rockaway_township:1827",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345354",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003316-1794423600-1794427200@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historical-society-board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2255",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2254",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-11-16",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1793",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1779",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001881-1794942000-1794945600@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historic-preservation-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003160-1795114800-1795118400@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2256",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2257",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1828",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1780",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000726-1796238000-1796241600@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:environmental-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003101-1796324400-1796328000@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002881-1796754600-1796758200@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:recreation-commission"
+        },
+        {
+          "id": "civicplus:rockaway_township:1829",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2258",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345385",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2259",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003317-1796842800-1796846400@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historical-society-board"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-12-14",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004204-1797274800-1797274800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:economic-development-committee-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1794",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1781",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001882-1797361200-1797364800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historic-preservation-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003161-1797534000-1797537600@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2260",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2261",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1830",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2027-01-04",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "apptegy:rocktwp:51345474",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000727-1799262000-1799265600@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:environmental-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003102-1799348400-1799352000@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:land-use-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004205-1799694000-1799694000@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:economic-development-committee-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002882-1799778600-1799782200@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:recreation-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003318-1799866800-1799870400@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historical-society-board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001883-1800385200-1800388800@harrisontwp.us",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:harrison_township#body:historic-preservation-commission"
+        }
+      ],
+      "listingIdentity": {
+        "recordCount": 98,
+        "sourceListingCount": 98,
+        "groups": [],
+        "unresolvedBodySourceIds": [
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004202-1791831600-1791831600@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004203-1794250800-1794250800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004204-1797274800-1797274800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-economic-development-committee-board:10004205-1799694000-1799694000@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000724-1791399600-1791403200@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000725-1793818800-1793822400@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000726-1796238000-1796241600@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-environmental-commission:10000727-1799262000-1799265600@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001880-1792522800-1792526400@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001881-1794942000-1794945600@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001882-1797361200-1797364800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historic-preservation-commission:10001883-1800385200-1800388800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003315-1792004400-1792008000@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003316-1794423600-1794427200@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003317-1796842800-1796846400@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-historical-society-board:10003318-1799866800-1799870400@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003099-1790881200-1790884800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003100-1793905200-1793908800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003101-1796324400-1796328000@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003102-1799348400-1799352000@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003159-1792090800-1792094400@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003160-1795114800-1795118400@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-land-use-board:10003161-1797534000-1797537600@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002879-1791916200-1791919800@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002880-1794335400-1794339000@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002881-1796754600-1796758200@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-harrison-township-body-recreation-commission:10002882-1799778600-1799782200@harrisontwp.us",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-board-of-health:10919-1793905200-1793908800@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10887-1790881200-1790884800@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10921-1793905200-1793908800@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-veterans-commission:10903-1792695600-1792699200@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10897-1792432800-1792436400@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10923-1794247200-1794250800@mantuatownship.com"
+        ],
+        "unresolvedTimeSourceIds": [
+          "civicplus:rockaway_township:archive:2026-07-14",
+          "civicplus:rockaway_township:archive:2026-08-18",
+          "civicplus:rockaway_township:archive:2026-09-08",
+          "civicplus:rockaway_township:archive:2026-09-22",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-07-07",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-08-04",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-01",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-15",
+          "civicplus:rockaway_township_planning_board:archive:2026-07-20",
+          "civicplus:rockaway_township_planning_board:archive:2026-09-14"
+        ],
+        "duplicateNativeIds": []
+      },
+      "listingIdentityAgrees": true,
+      "payloadSha256": "be1b677e5b2c03b2a84c704f087ef99d70f9925a044ce7ce575ecdd3d1ab0e35",
+      "tier": "exact",
+      "radiusKm": 150
+    },
+    {
+      "surface": "meetings/map",
+      "request": "/api/meetings?lat=39.79726&lng=-75.22527&radiusKm=150&zip=08020",
+      "point": {
+        "lat": 39.79726,
+        "lng": -75.22527,
+        "zip": "08020"
+      },
+      "returnedCount": 71,
+      "identities": [
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-07-07",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2233",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2239",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345145",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-07-14",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:archive:2026-07-20",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2240",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2236",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-08-04",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2241",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345162",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2242",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-08-17",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-08-18",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2243",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2244",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-01",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-09-08",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1823",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2245",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345225",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2246",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:archive:2026-09-14",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1791",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-15",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1776",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-09-22",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1824",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2247",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2248",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-09-28",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10887-1790881200-1790884800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:historical-commission"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1777",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "apptegy:rocktwp:51345226",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:1825",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2249",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2250",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10897-1792432800-1792436400@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1792",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1778",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-veterans-commission:10903-1792695600-1792699200@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:veterans-commission"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-10-26",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:1826",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2251",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2252",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-board-of-health:10919-1793905200-1793908800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:board-of-health"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10921-1793905200-1793908800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#body:historical-commission"
+        },
+        {
+          "id": "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10923-1794247200-1794250800@mantuatownship.com",
+          "bodyId": "ocd-division/country:us/state:nj/county:gloucester/place:mantua_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1827",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345354",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2255",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2254",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-11-16",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1793",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1779",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2256",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2257",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1828",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1780",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:1829",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2258",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345385",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2259",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-12-14",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1794",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1781",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2260",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2261",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1830",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2027-01-04",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "apptegy:rocktwp:51345474",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        }
+      ],
+      "listingIdentity": {
+        "recordCount": 71,
+        "sourceListingCount": 71,
+        "groups": [],
+        "unresolvedBodySourceIds": [
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-board-of-health:10919-1793905200-1793908800@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10887-1790881200-1790884800@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-historical-commission:10921-1793905200-1793908800@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-body-veterans-commission:10903-1792695600-1792699200@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10897-1792432800-1792436400@mantuatownship.com",
+          "ical:derived-state-nj-county-gloucester-place-mantua-township-governing:10923-1794247200-1794250800@mantuatownship.com"
+        ],
+        "unresolvedTimeSourceIds": [
+          "civicplus:rockaway_township:archive:2026-07-14",
+          "civicplus:rockaway_township:archive:2026-08-18",
+          "civicplus:rockaway_township:archive:2026-09-08",
+          "civicplus:rockaway_township:archive:2026-09-22",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-07-07",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-08-04",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-01",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-15",
+          "civicplus:rockaway_township_planning_board:archive:2026-07-20",
+          "civicplus:rockaway_township_planning_board:archive:2026-09-14"
+        ],
+        "duplicateNativeIds": []
+      },
+      "listingIdentityAgrees": true,
+      "payloadSha256": "226a3287893fc0ad4717b18e2c5f6b93d04bbb0a2af73d2b489e335b4d68aca7",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -31761,7 +32548,338 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "a09a41d514779413ea58c2c3d38f4396cca44b309bb6f2cf57fa1100211a2f2b",
+      "payloadSha256": "84e1ec35d7f034d43f116f488a978149e031c027d74195577e1702630e084f1d",
+      "tier": "exact",
+      "radiusKm": 150
+    },
+    {
+      "surface": "meetings/map",
+      "request": "/api/meetings?lat=40.36167&lng=-74.07808&radiusKm=150&zip=07701",
+      "point": {
+        "lat": 40.36167,
+        "lng": -74.07808,
+        "zip": "07701"
+      },
+      "returnedCount": 72,
+      "identities": [
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-07-07",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2233",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2239",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345145",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-07-14",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:archive:2026-07-20",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2240",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2236",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-08-04",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2241",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345162",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2242",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-08-17",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-08-18",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2243",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2244",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-01",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-09-08",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1823",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2245",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345225",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2246",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:archive:2026-09-14",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1791",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-15",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1776",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "civicplus:rockaway_township:archive:2026-09-22",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1824",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2247",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2248",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-09-28",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6177",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1777",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "apptegy:rocktwp:51345226",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:1825",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2249",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2250",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6194",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1792",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1778",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-10-26",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township:1826",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2251",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2252",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6178",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1827",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345354",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2255",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2254",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-11-16",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1793",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1779",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2256",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2257",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1828",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1780",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6179",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1829",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2258",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "apptegy:rocktwp:51345385",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "iqm2:morriscountynj:2259",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2026-12-14",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "civicplus:rockaway_township_planning_board:1794",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board"
+        },
+        {
+          "id": "civicplus:rockaway_township_board_of_adjustment:1781",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment"
+        },
+        {
+          "id": "iqm2:morriscountynj:2260",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "iqm2:morriscountynj:2261",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6196",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        },
+        {
+          "id": "civicplus:rockaway_township:1830",
+          "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6199",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        },
+        {
+          "id": "schedulepage:mhrd:2027-01-04",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board"
+        },
+        {
+          "id": "apptegy:rocktwp:51345474",
+          "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
+        },
+        {
+          "id": "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6197",
+          "bodyId": "ocd-division/country:us/state:nj/county:monmouth/place:middletown_township#governing"
+        }
+      ],
+      "listingIdentity": {
+        "recordCount": 72,
+        "sourceListingCount": 72,
+        "groups": [],
+        "unresolvedBodySourceIds": [
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6177",
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6178",
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6179",
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6194",
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6196",
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6197",
+          "ical:derived-state-nj-county-monmouth-place-middletown-township-governing:6199"
+        ],
+        "unresolvedTimeSourceIds": [
+          "civicplus:rockaway_township:archive:2026-07-14",
+          "civicplus:rockaway_township:archive:2026-08-18",
+          "civicplus:rockaway_township:archive:2026-09-08",
+          "civicplus:rockaway_township:archive:2026-09-22",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-07-07",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-08-04",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-01",
+          "civicplus:rockaway_township_board_of_adjustment:archive:2026-09-15",
+          "civicplus:rockaway_township_planning_board:archive:2026-07-20",
+          "civicplus:rockaway_township_planning_board:archive:2026-09-14"
+        ],
+        "duplicateNativeIds": []
+      },
+      "listingIdentityAgrees": true,
+      "payloadSha256": "b84dee5fbb2f55e8215d8f0d68c8e7b9f59b900737694c26cefb6c17808a2b1d",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -32055,7 +33173,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "59924a4dbf6269f76e13fc43c4144b74ff7c46cf4c700b3b0b284af37b67fbb7",
+      "payloadSha256": "ffc439bc8e07145a68cc8600b2a730edde75eff4a6ee8d34ec67fac5960d08a3",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -32349,7 +33467,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "91ea2f5ed7e779494b527a594e84086962e5c8b04eb957156e4d06e200242856",
+      "payloadSha256": "e40d4a4e94b00cd77be7fd299c7d2c91368d911b42887f7e60d048cadc954111",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -32643,7 +33761,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "1c300a38bb04bd5aa261d8235c74d6ae13bb60e72ec13570fd9d22acb21a5336",
+      "payloadSha256": "ee2ed1205943dbcc08b6cecf967a75fea10894b7dd560b968809e03045b02890",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -32937,7 +34055,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "bc551a7abe802450bf9825f2d9d66764aaaa1ec198a9fdc9d077603185ad783c",
+      "payloadSha256": "1291ceddffde1a0bbdb7020d25345658cb6f64ed6d006b3bd0f4d66254436bc2",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -34652,7 +35770,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "5ca031657672d344b6726a50a7fb0cc743e49f3838944fbca05b7df0b665cf33",
+      "payloadSha256": "f61f45b1fba347eb7f057b02aca0f7f35d5e26ca230ab535e9e0a2c868a8fcae",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -36360,7 +37478,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "1dbe5ebab1b28f6123fefd09a2b51907bc80c9ffac2ea850a2d7b35736c1b6c0",
+      "payloadSha256": "5485c402f072b3b89e04aa03b819d61248b4b008a9d5aa43581090a4de3b5a3c",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -38069,7 +39187,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "9c54200eb353fc1cf8d0a4cb00b5c6f3c91d22e098052ed655c9395453fd35d4",
+      "payloadSha256": "cbbe65c73f88e6f0d839758017d38a35d2949d44e44ae3615c466004bddd77ab",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -39778,7 +40896,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "9c54200eb353fc1cf8d0a4cb00b5c6f3c91d22e098052ed655c9395453fd35d4",
+      "payloadSha256": "cbbe65c73f88e6f0d839758017d38a35d2949d44e44ae3615c466004bddd77ab",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -41486,7 +42604,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "5cc04ab62bbbe9f42626c26df5befcc21656474f5c7caa020d691842e35519f0",
+      "payloadSha256": "493d7290337e179bbb332bb6911c792a9934510c4d170907be262828f6196778",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -43194,7 +44312,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "e79610124b9be6f9ec4e44c080186e1889fa9d438f87ba31190cc2ce89d1efea",
+      "payloadSha256": "d0fd5c4b2afd5961003c206820d62da4f296249cf8739be5ab49e3b522416d29",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -44902,7 +46020,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "7e3c6737bf4479b53507b5dd09059d708afdcf4ca6f260160cf5c5c80291aa11",
+      "payloadSha256": "417750d93a102d39afa68d182263a11df6b20b19198b6c5574f0d5a77c2d6052",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -46610,7 +47728,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "f8bcc48d17ddd0676504c5cad12a82accef0e625b9ec825ede2cfa6cb7e0c1e5",
+      "payloadSha256": "8f6c23d423eebd029defb5865fe8e241948f2ca1e8dc2aeaf9b0608c55ec78df",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -48318,7 +49436,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "6133337e30d149b4fdf5532652f86480c77806ab2b8aaa9c9eb58f65c4aaa306",
+      "payloadSha256": "320ab84e025ad493a0dd0f81c79d9d78c2953cb602534b31688d239c4fab239c",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -50026,7 +51144,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "ab972dad235a7bf9b33d480b86609b4371b9c6218bd227f163365cf48b02afe7",
+      "payloadSha256": "b59ee1d0294ab0e4bc4dcc66a44a0bced8fbef36bbcce9a6736e6db0c1245362",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -51734,7 +52852,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "f3a2ef3732ef50f8ad3382ca6f3dd706d03c5065e0072f3273b85c577fdc4fd7",
+      "payloadSha256": "9168d58e6f2daa2c7dd5b6316b857993193e70cfff673453d1270c1c36fb50f3",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -53442,7 +54560,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "aaeb96755d84dbcc38d8bc24d63bbfae1ba34b9ea5cc8e6146f92e4d231afe7d",
+      "payloadSha256": "29c49a53ece486ddbafedfff7aa03bba39a422137ab11b04118ab291d93a5fda",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -55150,7 +56268,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "2583c437b0336aa9ba65d3bcd4708f6daf7d07bcf16a6f4cd88f3fb81bc9d109",
+      "payloadSha256": "acbb664d71a0f5aacaae9dfc23c47109985a822baf5890edf6433090ad8f5bfa",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -56858,7 +57976,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "920aac15e0dd2f75b80105fa494fd83c0951c97a1e6a9250c2790842d87a791d",
+      "payloadSha256": "ea7ff7314e1084eb9a455f6a51018f9da0a95866db3f351e75e366b1272eba55",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -58566,7 +59684,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "82c2a49ba4aa871a4eb8d8106b1145f999d722426aa2da71843fdef32afbbe6a",
+      "payloadSha256": "4e261142daa80c4b9f366feb6a6fdda3e826d2dd9f2f5cad89f5769846519b68",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -60274,7 +61392,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "cefc864b61781622d8ff175eb65850d496df2f6f75f30fef7dd71a33729b1b97",
+      "payloadSha256": "330c7eac1bdf4b63bdf611a16754619e2ab082cca37710bcffa26244c4af6280",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -61982,7 +63100,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "653904e8a28dc8552d8a9bcfc6c403979fa48007fc60b4ffd039c222d35e7406",
+      "payloadSha256": "a2f15d4dba5c4fee161c7a88e888a0aa23266d69a361827a3e6aa755a0aaae0b",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -63690,7 +64808,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "2183bae606f7370f0d74a519381c5da689703dc2de3e29ef541fc428481e6c7d",
+      "payloadSha256": "2cb9dc00c40460bdea60c0fa3cab9c4f917d92184ebc067af2892f31f042fc99",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -65399,7 +66517,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "d5cdee6fc314cfee97c15e874d3e6e1de148f3c5f79190ee890bac2e6d8e0256",
+      "payloadSha256": "6cea615e373639553031653a872694a3865e16a2e099fb92f4ee1ab76dfbeead",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -67107,7 +68225,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "88f9ee28768ee69b7d0d2bf3d41e55442d9559ed34e7569fa2b7b37f97d48c00",
+      "payloadSha256": "d22ad3b88625aa8aaeed3ec0d8d4ce350eb8a63c75970a33e03d313529da53ba",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -68847,7 +69965,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "36adfecee5a7ac91c1ba89b876c27a75c1775d0e816aa767842f04df5e841e92",
+      "payloadSha256": "035b423f05bb25efd80008f00b3aa69c0373976f67a4de23ed95e102e0db371d",
       "tier": "exact",
       "radiusKm": 150
     },
@@ -70562,7 +71680,7 @@
         "duplicateNativeIds": []
       },
       "listingIdentityAgrees": true,
-      "payloadSha256": "33ea7d8f1c339cdbeebef8269fa63621ad71394139d92c5a318dfc933007e7d8",
+      "payloadSha256": "63249b215f53cf72b96def80c782ffca4fd53d5b72ec237b5b8ddd451140bd04",
       "tier": "exact",
       "radiusKm": 150
     }

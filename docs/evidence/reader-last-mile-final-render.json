@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "6fb3eb7a9ee63cd562e524cf26ca846cb52694dc",
-  "buildId": "jJF5gsswUQlG4MKgj3WF8",
+  "exactHead": "e9181066f8abf490fdab7ea91b71a4429b5af5b8",
+  "buildId": "EJdewd9SG27oQECn_hfHT",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-26T20:11:50.475Z",
+  "runId": "reader-last-mile-final-render@2026-09-26T22:13:36.515Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -79,7 +79,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "6893dfa48c1ac0a31462158def677328ccd4de67e8eaef89f4b8bfe8688c7b2d"
+      "sha256": "ad62cdc615ae00143b02441106ba84562a848b3efcd91c08bc8ed6b99eaafc6e"
     },
     {
       "path": "app/globals.css",
@@ -2050,6 +2050,10 @@
       "sha256": "fd8f70affeef20fbce9735f83343073bb10265db0a165d86d28713cae36faaee"
     },
     {
+      "path": "lib/ballot/coverage-notes.ts",
+      "sha256": "6b586ef12973957f5eae3ec566ab5b65dd361ed822144aef2cfb3e8d4a9d0990"
+    },
+    {
       "path": "lib/ballot/covered-states.ts",
       "sha256": "d42f085494a2f073930e0dc493d018e6ce51441bd947275d00b012db71a823f4"
     },
@@ -3191,7 +3195,7 @@
     },
     {
       "path": "lib/sources/ballot-curated/index.ts",
-      "sha256": "9d1c44278349175282ee70e9942797e8a7785faa5584bcd5b072b062f3d0069d"
+      "sha256": "465caa917cf816cd48519359c2f355982702fa37e4a50e7c9cce3b0135eafc00"
     },
     {
       "path": "lib/sources/ballot-nj-morris/index.ts",
@@ -8637,13 +8641,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-cb5a24d5a78ce30c1e983a992879bfde",
-          "lastKnownGoodVersionId": "cv-cb5a24d5a78ce30c1e983a992879bfde",
+          "versionId": "cv-d7aeb4c856604eb1a24e83c76cc3ec9b",
+          "lastKnownGoodVersionId": "cv-d7aeb4c856604eb1a24e83c76cc3ec9b",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-26T14:16:46.189Z",
-          "promotedAt": "2026-09-26T14:16:46.412Z",
+          "retrievedAt": "2026-09-26T20:27:00.725Z",
+          "promotedAt": "2026-09-26T20:27:00.990Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-03T14:16:46.189Z"
+          "staleAt": "2026-10-03T20:27:00.725Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []

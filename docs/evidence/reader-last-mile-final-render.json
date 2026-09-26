@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "4fd7e1cb91734df45f70befe1f1a0465dd1f1ac8",
-  "buildId": "BsNEFoNIiskkqOQwxy1lG",
+  "exactHead": "814604f8a83a31442a5f3cec9cccda1416d29af5",
+  "buildId": "YDf1MQD597zmKGI_RgU_T",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-26T11:59:04.929Z",
+  "runId": "reader-last-mile-final-render@2026-09-26T17:11:42.773Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -79,7 +79,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "10b6f8d6108e13e534b5d7cf196e928897643bc73caa7a5a185db3d3d79b6087"
+      "sha256": "6893dfa48c1ac0a31462158def677328ccd4de67e8eaef89f4b8bfe8688c7b2d"
     },
     {
       "path": "app/globals.css",
@@ -2190,6 +2190,10 @@
       "sha256": "8af5eb5d3c538c03054b740b7ad1a94839fa457bf1f04d4a91cfa9d47cec06f7"
     },
     {
+      "path": "lib/census-geography/district-edge.ts",
+      "sha256": "d5a7e64489de945d9d23d50d3153d5ad8db60cc184b32ee7459b7d93ad45366f"
+    },
+    {
       "path": "lib/census-geography/division-id.ts",
       "sha256": "ab1834fd0b616f99309319d78b3dcd986ec074eecb2563155f73d24324565e59"
     },
@@ -2547,7 +2551,7 @@
     },
     {
       "path": "lib/geo/zip-census-districts.ts",
-      "sha256": "342aecf9be3b06c4a06b7892ec6f88383db1cf4e4b5e9f0382bc9b70308362d1"
+      "sha256": "fc9fb21667a55c3a32e3e7a398eb35bdb146ab9829b69a8ccfa2d6bcba26cb84"
     },
     {
       "path": "lib/geo/zip-certainty.ts",
@@ -2663,11 +2667,11 @@
     },
     {
       "path": "lib/meetings/edge-artifacts.ts",
-      "sha256": "95c7a0cee400998a67ebd59d830e6fe25dcf17e065e3968e54973c2863b76596"
+      "sha256": "d5eea05e8941185a8b194d7bdc1fee45e29b9ff92068344a9ab9209896eab465"
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "a4b3aa0c5b1c423c23202246ea05b41fabd9fd63e6c78e53842604f1c3a96000"
+      "sha256": "ac8a533a496e84fb838dacb83088f955377312c318f19e3fa90594ae33eb669c"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -3067,7 +3071,7 @@
     },
     {
       "path": "lib/registry/runtime-edge.ts",
-      "sha256": "2f5eb5aa481e15545c96f2b9e7203f954784ab4a2391540894e139b6066375cd"
+      "sha256": "465f99d5bf3dc5e5bd89cc4711c7e6d268df5f57bf049c16a1bc602a3c5ad256"
     },
     {
       "path": "lib/registry/runtime-read-model.ts",
@@ -8633,13 +8637,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-55543ec011996087126138929cba7e47",
-          "lastKnownGoodVersionId": "cv-55543ec011996087126138929cba7e47",
+          "versionId": "cv-cb5a24d5a78ce30c1e983a992879bfde",
+          "lastKnownGoodVersionId": "cv-cb5a24d5a78ce30c1e983a992879bfde",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-26T08:10:42.928Z",
-          "promotedAt": "2026-09-26T08:10:43.213Z",
+          "retrievedAt": "2026-09-26T14:16:46.189Z",
+          "promotedAt": "2026-09-26T14:16:46.412Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-03T08:10:42.928Z"
+          "staleAt": "2026-10-03T14:16:46.189Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
@@ -8666,7 +8670,7 @@
       "id": "newbury-listings-resolved",
       "result": "PASS",
       "groups": [],
-      "renderedListingRows": 383,
+      "renderedListingRows": 410,
       "failedRefreshDisclosure": {
         "carried": {
           "count": 15,
@@ -8678,15 +8682,15 @@
       },
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/03255-newbury-listings-resolved.png",
-        "sha256": "802ebf65dbe1aaf19221054cd4f2a7ac75520794037a8e0996ab8ba4439a6afd"
+        "sha256": "f6d18946e34089c4a0c6119a8957ff30eed921f983ebee2cf87c56e5c45cb1b0"
       }
     },
     {
       "id": "current-participation",
       "result": "PASS",
-      "meetingId": "official-page-events:tusd1-reconfiguration:2026-09-26T0900:community-engagement-session",
+      "meetingId": "diligent:tusd1:503",
       "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
-      "startsAt": "2026-09-26T09:00:00-07:00",
+      "startsAt": "2026-09-28T18:15:00-07:00",
       "expectedLines": [
         "Call to the Audience. The comment period is 45 minutes at regular meetings and 20 minutes at special meetings, and is extended only by the Board's approval. Speakers whose comments relate to an item on the agenda are taken first; the rest are taken in the order their forms arrived.",
         "Up to three minutes per speaker, or per written comment read aloud. The presiding officer may shorten it when many people have signed up, and speakers may not give their time to someone else.",
@@ -8722,7 +8726,7 @@
     },
     {
       "path": "screenshots/reader-last-mile/final/03255-newbury-listings-resolved.png",
-      "sha256": "802ebf65dbe1aaf19221054cd4f2a7ac75520794037a8e0996ab8ba4439a6afd"
+      "sha256": "f6d18946e34089c4a0c6119a8957ff30eed921f983ebee2cf87c56e5c45cb1b0"
     },
     {
       "path": "screenshots/reader-last-mile/final/85701-current-participation.png",

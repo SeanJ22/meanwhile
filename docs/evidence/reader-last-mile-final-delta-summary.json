@@ -1,14 +1,14 @@
 {
   "formatVersion": 1,
-  "exactReaderHead": "4fd7e1cb91734df45f70befe1f1a0465dd1f1ac8",
+  "exactReaderHead": "814604f8a83a31442a5f3cec9cccda1416d29af5",
   "inheritedRows": 0,
   "invalidatedRows": 352,
   "recomputedRows": 688,
-  "invalidatedApplicableRecords": 21178,
+  "invalidatedApplicableRecords": 21175,
   "routeProofs": 194,
   "componentProofs": 237,
-  "componentCases": 20480,
-  "componentUncoveredDiagnostics": 69971,
+  "componentCases": 20477,
+  "componentUncoveredDiagnostics": 69956,
   "closureFailures": 0,
   "denominatorFloor": {
     "outcome": "MEASURED",

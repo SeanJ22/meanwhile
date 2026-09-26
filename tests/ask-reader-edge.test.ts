@@ -103,7 +103,8 @@ const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyA
   })], "edge-test:ask:actions"),
 };
 
-async function publishEdge(withPromoted: boolean): Promise<string> {
+/** `overrides` replaces some proven-pointer families with values published under other versions. */
+async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const snapshot = readSnapshot();
@@ -112,7 +113,7 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
     "registry-runtime": { value: registryRuntimeFirstSeed().value, versionId: "edge-test:ask:registry" },
     "federal-directory": { value: federalDirectoryFirstSeed().value, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
-    ...(withPromoted ? PROMOTED : {}),
+    ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
   const result = await publishReaderEdgeArtifacts(snapshot, {
     sourceThrough: snapshot.generatedAt,
@@ -216,4 +217,74 @@ test("with every deferrable source on the edge, a cold Mesa question reads none 
   assert.equal(azPimaFinanceReadState().metadata.versionId, EDGE.pima, "Pima finance was not served from the edge");
   assert.equal(federalRollCallsReadState().metadata.versionId, EDGE.federalVotes, "the federal roll calls were not served from the edge");
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], "EDGE", `the trace misnames ${source}`);
+});
+
+/**
+ * **A KEPT-WARM INSTANCE IS READY FOR ITS FIRST ASK.** (2026-09-25, after
+ * batch E.) On production at bba8770b a kept instance's first Ask took ~2.0 s
+ * end to end against ~0.4 s for its second: ~0.73 s of the Ask's own source
+ * preloads and ~0.6 s outside the handler, loading the Ask route's code. A
+ * marked /api/warm call now loads both on its instance: the route module's
+ * graph, and every Ask source from the edge, in the edge-only context. No
+ * handler runs, so no model, no log and no write; nothing reaches the database.
+ */
+test("a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch", async () => {
+  // Versions only this edge carries: a read state that names one was loaded by the warm call, never by an Ask.
+  const WARM = { funding: "edge-test:ask:warm:fec", federalVotes: "edge-test:ask:warm:federal-votes" };
+  process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {
+    "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: WARM.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], WARM.funding),
+    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: served(await readFederalRollCallsProjection({ store: seedStore, bypassCache: true })) })], WARM.federalVotes),
+  });
+  clearPromotedReadModelCache();
+  databaseReads.length = 0;
+  const stubbed = globalThis.fetch;
+  const elsewhere: string[] = [];
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    if (!url.includes("ask-edge-test.invalid/")) elsewhere.push(url);
+    return stubbed(input, init);
+  }) as typeof fetch;
+  try {
+    const { GET, KEEP_WARM_MARKER, ASK_SOURCE_PRELOADS } = await import("../app/api/warm/route.ts");
+    const response = await GET(new Request("https://wtp.test/api/warm?hold=0", { headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER } }));
+    assert.equal(response.status, 200);
+    const { primed } = await response.json() as { primed: { manifest: boolean; ask: { graphMs: number | null; sources: number; sourcesRefused: number; sourcesFailed: number; sourcesMs: number | null } | null } };
+    assert.equal(primed.manifest, true);
+    assert.ok(primed.ask, "a marked call with an edge primes the Ask");
+    assert.equal(typeof primed.ask.graphMs, "number", "the Ask route's module graph was loaded");
+    assert.equal(typeof primed.ask.sourcesMs, "number", "the Ask's sources settled within the budget");
+    // This edge publishes no comment-access artifact, so that one source is refused rather than read from the database.
+    assert.deepEqual(
+      { sources: primed.ask.sources, sourcesRefused: primed.ask.sourcesRefused, sourcesFailed: primed.ask.sourcesFailed },
+      { sources: Object.keys(ASK_SOURCE_PRELOADS).length - 1, sourcesRefused: 1, sourcesFailed: 0 },
+    );
+    assert.deepEqual(databaseReads, [], "a warm call reached the database");
+    assert.deepEqual(elsewhere, [], "a warm call fetched something other than the edge (a model, a log)");
+    assert.equal(fundingReadState().metadata.versionId, WARM.funding, "the warm call did not load FEC from the edge");
+    assert.equal(federalRollCallsReadState().metadata.versionId, WARM.federalVotes, "the warm call did not load the federal roll calls from the edge");
+  } finally {
+    globalThis.fetch = stubbed;
+  }
+});
+
+test("an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write", async () => {
+  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
+  const { GET } = await import("../app/api/warm/route.ts");
+  const { primed } = await (await GET(new Request("https://wtp.test/api/warm?hold=0"))).json() as { primed: unknown };
+  assert.equal(primed, null);
+  const source = readFileSync("app/api/warm/route.ts", "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
+  assert.match(source, /await import\("@\/app\/api\/ask\/grounded\/route"\)\.then\(\(\) => \{ primed\.graphMs/, "the route module is imported for its graph only");
+  assert.doesNotMatch(source, /\bPOST\b|captureAskInteraction|recordAskGapObservations|afterResponse|interpretQuestion|synthesize|anthropic|getDb/i);
+});
+
+test("the warm call settles exactly the sources the Ask preloads, by the names its trace times them under", async () => {
+  const { ASK_SOURCE_PRELOADS } = await import("../app/api/warm/route.ts");
+  const ask = readFileSync("app/api/ask/grounded/route.ts", "utf8");
+  const start = ask.indexOf("const essentialPreloads = [");
+  const end = ask.indexOf("await settleGroundedSourcePreloads(topicRoute");
+  assert.ok(start > 0 && end > start, "the Ask route's preload lists moved; re-read them here");
+  const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
+  // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
+  assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
+  assert.deepEqual(Object.keys(ASK_SOURCE_PRELOADS).sort(), [...named].sort());
 });

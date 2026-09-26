@@ -3,7 +3,8 @@
  * minutes, fourteen overlapping marked calls to `/api/warm`, each holding its
  * instance for 900 ms, so at least ten server instances stay booted and ten
  * concurrent reader requests skip the 2.7-3.7 s boot. See app/api/warm/route.ts
- * for why the calls must overlap.
+ * for why the calls must overlap, and for what each call loads on its instance
+ * (the reader edge, one place per state, and the Ask route's code and sources).
  *
  * Measured on production (2026-09-24 11:54 PM to 2026-09-25 12:47 AM MST): the
  * platform places overlapping calls on fewer instances than calls. Ten calls

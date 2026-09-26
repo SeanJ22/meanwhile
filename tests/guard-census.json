@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 845,
-    "named": 8163,
+    "named": 8166,
     "dynamic": 33
   },
   "files": {
@@ -1548,6 +1548,9 @@
     },
     "tests/ask-reader-edge.test.ts": {
       "names": [
+        "a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch",
+        "an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write",
+        "the warm call settles exactly the sources the Ask preloads, by the names its trace times them under",
         "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left",
         "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads"
       ],

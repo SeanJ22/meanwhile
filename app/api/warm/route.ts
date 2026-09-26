@@ -44,18 +44,50 @@
  * context is entered here, in the function whose own reads follow it
  * (AsyncLocalStorage.enterWith; tests/reader-edge-context.test.ts).
  *
+ * **2026-09-25 (after batch E): AND READY FOR A COLD ASK, ITS CODE AND ITS
+ * SOURCES.** Measured on production at bba8770b (9:57 PM MST, synthetic
+ * "When does the Mesa City Council meet next?", answered in code with no
+ * model): on a kept instance the edge was loaded (the Ask's `authorityEdge`
+ * 3-5 ms), yet its first Ask took ~2.0 s end to end against ~0.4 s for the
+ * next one. ~0.73 s was the Ask's own source preloads (`sourcePreloads`
+ * 730-737 ms, 5-8 ms warm: the proven pointers read through their Readers
+ * from the edge copy), and ~0.6 s was outside the handler (0.87 s against
+ * 0.21-0.25 s warm): loading the Ask route's module graph, which no warm call
+ * ever touched. So a marked call also loads that graph (a dynamic import of
+ * the route module, which shares Turbopack's one module cache with the route
+ * itself; nothing in it runs, so no handler, no model, no log and no write)
+ * and settles the Ask's source preloads (`ASK_SOURCE_PRELOADS`) in the same
+ * edge-only context, within {@link PRIME_ASK_BUDGET_MS}.
+ *
  * An unmarked call, or a hold asked beyond the cap, is answered at once or
  * capped, loads nothing, and cannot hold an instance longer than that.
  */
 import { numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { settleAzBallotRead, settleCandidateCorpusRead, settleCandidateProfilesRead } from "@/lib/civic-data/manual-read-models";
+import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
+import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
+import { settleFundingRead } from "@/lib/funding/snapshot";
+import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
 import { zipCertainty } from "@/lib/geo/zip-certainty";
 import { lowestZipByDivision } from "@/lib/geo/zip-division-index";
 import { lookupZctaAsync } from "@/lib/geo/zcta-table";
 import { NATIONAL_SCOPE, type ReaderManifest } from "@/lib/meetings/edge-artifacts";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { settleExecutiveActionsRead } from "@/lib/officials/executive-actions";
+import { settleOutcomeRead } from "@/lib/outcomes/store";
 import { enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal } from "@/lib/registry/runtime-edge";
-import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography } from "@/lib/registry/server";
+import {
+  coverageAt,
+  divisionsAt,
+  divisionsByOcdIds,
+  prefetchReaderGeography,
+  settleCommentAccessRead,
+  settleFederalDirectoryRead,
+  settleRegistryAuthorityReads,
+} from "@/lib/registry/server";
+import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
+import { settleFederalVotesRead } from "@/lib/votes/snapshot";
 
 /** The synthetic-run marker the pinger sends (`x-wtp-synthetic-run`). */
 export const KEEP_WARM_MARKER = "keep-warm";
@@ -63,8 +95,50 @@ export const KEEP_WARM_MARKER = "keep-warm";
 export const MAX_HOLD_MS = 1000;
 /** The longest a marked call spends resolving places before it answers. */
 export const PRIME_PLACES_BUDGET_MS = 4000;
+/** The longest a marked call spends loading the Ask's code and sources before it answers; the rest goes on in the background. */
+export const PRIME_ASK_BUDGET_MS = 4000;
+
+/**
+ * The Ask's own source preloads, under the names its trace times them by
+ * (`essentialPreloads` and `deferrablePreloads` in
+ * app/api/ask/grounded/route.ts; tests/ask-warm.test.ts holds the two lists
+ * equal). Every one is edge first (`settleEdgeFirst` / `readPromotedEdgeFirst`),
+ * so in this route's edge-only context a source the edge does not carry is
+ * refused, never read from the database. The state roll calls are left out:
+ * the Ask reads them from the database, per state, only for that state.
+ */
+export const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>>> = {
+  registry: () => settleRegistryAuthorityReads("REGISTRY"),
+  federalDirectory: settleFederalDirectoryRead,
+  outcomes: settleOutcomeRead,
+  commentAccess: settleCommentAccessRead,
+  funding: settleFundingRead,
+  stateMoney: settleStateMoneyReads,
+  azPimaFinance: settleAzPimaFinanceRead,
+  federalVotes: settleFederalVotesRead,
+  federalKeyVotes: settleFederalKeyVotesRead,
+  azBallot: settleAzBallotRead,
+  candidateProfiles: settleCandidateProfilesRead,
+  candidateCorpus: settleCandidateCorpusRead,
+  officeholderStatements: settleOfficeholderStatementsRead,
+  executiveActions: settleExecutiveActionsRead,
+};
 
 const bootedAt = new Date().toISOString();
+
+/** What a marked call loaded, on its instance, for a cold Ask. */
+export interface AskPrimed {
+  /** Milliseconds to load the Ask route's module graph here (near 0 once loaded); null when the import failed or outran the budget. */
+  readonly graphMs: number | null;
+  /** Ask sources that settled from the edge. */
+  readonly sources: number;
+  /** Ask sources the edge does not carry, refused rather than read from the database. */
+  readonly sourcesRefused: number;
+  /** Ask sources whose edge read failed some other way (the Ask reports its own gap for these). */
+  readonly sourcesFailed: number;
+  /** Milliseconds the source preloads took, or null when they outran the budget. */
+  readonly sourcesMs: number | null;
+}
 
 export interface ReaderEdgePrimed {
   readonly manifest: boolean;
@@ -74,9 +148,11 @@ export interface ReaderEdgePrimed {
   readonly places: number;
   /** States whose place needed a family the manifest does not carry, so it was refused rather than read from the database. */
   readonly placesRefused: number;
+  /** The Ask's code and sources on this instance; null when there is no edge to load them from. */
+  readonly ask: AskPrimed | null;
 }
 
-const NOTHING_PRIMED: ReaderEdgePrimed = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0 };
+const NOTHING_PRIMED: ReaderEdgePrimed = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0, ask: null };
 
 /** How many of a state's lowest ZIPs are tried for a centroid that lies inside it. */
 const PLACE_CANDIDATES = 5;
@@ -126,7 +202,35 @@ async function primeReaderPlaces(manifest: ReaderManifest): Promise<{ places: nu
   return { ...counts };
 }
 
-/** Loads, on this instance, what a cold Ask or a cold map reads first from the reader edge. Never the database. */
+/**
+ * Load, on this instance, the Ask route's module graph and settle its source
+ * preloads, in the caller's edge-only context. Importing the route module runs
+ * its module-level code only (one startup log line); its handler is never
+ * called, so no question is read, resolved, logged or sent to a model.
+ */
+async function primeAsk(): Promise<AskPrimed> {
+  const primed: { -readonly [K in keyof AskPrimed]: AskPrimed[K] } = { graphMs: null, sources: 0, sourcesRefused: 0, sourcesFailed: 0, sourcesMs: null };
+  const work = (async () => {
+    const graphStarted = Date.now();
+    await import("@/app/api/ask/grounded/route").then(() => { primed.graphMs = Date.now() - graphStarted; }, () => undefined);
+    const sourcesStarted = Date.now();
+    await Promise.all(Object.values(ASK_SOURCE_PRELOADS).map((preload) =>
+      Promise.resolve().then(preload).then(
+        () => { primed.sources += 1; },
+        (error: unknown) => {
+          if (error instanceof ReaderEdgeOnlyRefusal) primed.sourcesRefused += 1;
+          else primed.sourcesFailed += 1;
+        },
+      )));
+    primed.sourcesMs = Date.now() - sourcesStarted;
+  })();
+  let expired: ReturnType<typeof setTimeout> | undefined;
+  await Promise.race([work, new Promise((resolve) => { expired = setTimeout(resolve, PRIME_ASK_BUDGET_MS); })]);
+  clearTimeout(expired);
+  return { ...primed };
+}
+
+/** Loads, on this instance, what a cold Ask or a cold map reads first from the reader edge, and the Ask's own code. Never the database. */
 export async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
   const manifest = await readReaderManifest().catch(() => null);
   if (!manifest) return NOTHING_PRIMED;
@@ -138,8 +242,12 @@ export async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
     manifest,
     fallback: () => Promise.reject(new Error("keep-warm loads the edge only, never the database")),
   }).then(() => true, () => false);
-  const places = bundle?.registryRuntime ? await primeReaderPlaces(manifest) : { places: 0, placesRefused: 0 };
-  return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, ...places };
+  // Both started here, after the edge-only context was entered, so every read they make is inside it.
+  const [places, ask] = await Promise.all([
+    bundle?.registryRuntime ? primeReaderPlaces(manifest) : Promise.resolve({ places: 0, placesRefused: 0 }),
+    primeAsk(),
+  ]);
+  return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, ...places, ask };
 }
 
 export async function GET(request: Request): Promise<Response> {

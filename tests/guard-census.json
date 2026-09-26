@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 842,
-    "named": 8130,
+    "named": 8135,
     "dynamic": 33
   },
   "files": {
@@ -2465,8 +2465,11 @@
         "a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved",
         "per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest",
         "the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key",
+        "the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget",
         "the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins",
-        "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it"
+        "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it",
+        "the pass reads the leads of candidates with no campaign link first; a linked candidate's leads wait, deferred and never refused, and are read once the others are",
+        "who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys"
       ],
       "dynamic": 0
     },
@@ -5324,10 +5327,12 @@
     "tests/hot-read-catch-up.test.ts": {
       "names": [
         "C6: a due hourly read is admitted within its deadline while a long Reader repair is in flight",
-        "C6: a round admits only due sitting-window reads, earliest deadline first, three a lane, after the same-host gap",
-        "C6: a round due while a racing repair runs starts as soon as that repair settles",
-        "C6: an ordinary short repair runs no round, and a failed repair still fails the phase",
-        "C6: no round may outlast the pilot's own outer limit on the pass",
+        "C6: a lane with many due reads keeps reading, one read at a time a minute apart, while a pass is held open; lanes take the two children earliest deadline first",
+        "C6: a read due while a racing repair runs starts as soon as that repair settles",
+        "C6: a short phase with nothing due starts no read, a failed phase still fails, and a catch-up defect stops catch-up without costing the phase",
+        "C6: catch-up runs beside the source reads, and the Reader repair starts only once every read begun there has settled",
+        "C6: catch-up starts only due sitting-window reads, one a lane, the lane's soonest owed first, after the same-host gap and never on a lane the pass is still reading",
+        "C6: no catch-up read may outlast the pilot's own outer limit on the pass, and one begun beside the source reads leaves the repair its own worst case",
         "C6: the parent's account of a killed pass counts the reads admitted during repair",
         "C6: the repairs a catch-up read could race run first"
       ],
@@ -6538,7 +6543,7 @@
         "a failed read never waits longer than the schedule it failed: a published derived family retries within the hour while hourly",
         "a pass starts the read owed soonest first; tasks without a deadline keep their registry place at the front",
         "controlled clock through the real store: a Pima-shaped body read across cold, an upcoming meeting, its conclusion and cooling, with changed versions, unchanged confirmations, failed reads and a dead child",
-        "controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52): prioritising hourly bodies never pushes any body past 12 hours",
+        "controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52), with catch-up while a pass is held open: every hourly body is read within 60:00 and prioritising hourly bodies never pushes any body past 12 hours",
         "controlled clock, whole registry: every sitting-window task on its real lane shares the four-child pool, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00",
         "rehearsal of the accelerated production test: a due request brings a cold partition forward, the ordinary pass reads it, and the next due is the normal rule's"
       ],
@@ -9759,7 +9764,7 @@
     },
     "tests/routine-civic-data-frontier.test.ts": {
       "names": [
-        "C6 residual, open: with production's recorded passes (up to 15:52, drawn at random) a Tucson-shaped lane still misses the hour, rarely and by at most two minutes",
+        "C6: 30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00",
         "C6: 30 days on a lane shaped like Tucson's, passes of normal length, the same-host gap and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00",
         "C6: a meeting lane is read earliest deadline first, up to three a pass; every other lane keeps one least-recently-considered",
         "C6: no production lane mixes sitting-window tasks with any other task, so deadline order and the extra slots touch meeting lanes only",

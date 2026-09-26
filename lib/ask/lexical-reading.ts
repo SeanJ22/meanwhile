@@ -10,6 +10,7 @@ import {
 import { decideNamedBody } from "./body-confirmation.ts";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
+import { meetingDateInQuestion } from "./meeting-date.ts";
 import { groupMoneyQuestionShape, moneyQuestionShape, raceWordsFitOffice, type GroupMoneyAsk, type MoneyAsk } from "./money-answer.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import { resolveInterpretation } from "./resolve.ts";
@@ -92,6 +93,7 @@ const RECENTLY = "(?: (?:recently|lately|last time|at (?:its|their|the) (?:last|
 
 const SHAPES: readonly ShapePattern[] = [
   /* MEETING_TIME — when a named body sits. */
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s) (?:the )?(.+?) meeting next(?: and where)?$/ },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:(?:next|last|first) )?(?:meet|convene|sit)${WHEN_TAIL}$`) },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:hold|have) (?:its|their) (?:next|last|first) (?:meeting|session)$`) },
   { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s|was) (?:the )?(?:next|upcoming|last|latest|most recent|previous) (.+?) (?:meeting|session)$/ },
@@ -110,6 +112,7 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on (?:the )?(.+?)(?: s)? (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:meeting )?(?:agenda|docket)$/ },
   { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on the (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:agenda|docket) (?:for|of|at) (?:the )?(.+?)(?: (?:next )?meeting)?$/ },
   /* MEETING_OUTCOME — what a named body decided, or how it voted. */
+  { shape: "MEETING_OUTCOME", kind: "BODY", pattern: /^what did (?:the )?(.+?) (?:decide|approve|pass|adopt) at (?:its|their|the) (?:\d{4} \d{1,2} \d{1,2}|(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?) \d{1,2}(?:st|nd|rd|th)? \d{4}) meeting$/ },
   { shape: "MEETING_OUTCOME", kind: "BODY", pattern: new RegExp(`^what did (?:the )?(.+?) (?:decide|decide on|vote on|approve|pass|adopt)${RECENTLY}$`) },
   { shape: "MEETING_OUTCOME", kind: "BODY", pattern: new RegExp(`^how did (?:the )?(.+?) vote${RECENTLY}$`) },
   /* BODY_ROSTER — who sits on a named body. Before PERSON_RECORD: "who is on X" is not "who is X". */
@@ -433,7 +436,11 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   if (matches.length === 0) return null;
 
   // 1. The whole question binds one subject on the reader's own words, and names no other.
-  const temporal = interpretWithoutModel(input.question).temporal;
+  const explicitDate = meetingDateInQuestion(input.question);
+  if (explicitDate && !explicitDate.date) return null;
+  const temporal: AskInterpretation["temporal"] = explicitDate?.date
+    ? { kind: "DATE", localDate: explicitDate.date }
+    : interpretWithoutModel(input.question).temporal;
   const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
     activeSubjects: input.activeSubjects ?? [],
     priorSubjects: input.priorSubjects ?? [],
@@ -470,8 +477,8 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
      * from the shape is a past meeting-time question ("when did the Mesa City
      * Council last meet?"), which it calls PAST_MEETING; so does this.
      */
-    if (temporal.kind === "RANGE" || temporal.kind === "DATE") return null;
-    if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST") return null;
+    if (temporal.kind === "RANGE" || (temporal.kind === "DATE" && found.shape !== "MEETING_OUTCOME")) return null;
+    if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST" && temporal.kind !== "DATE") return null;
     intent = shapeIntent(found.shape, temporal);
   } else {
     if (temporal.kind !== "NONE") return null;

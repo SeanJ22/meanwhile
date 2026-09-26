@@ -54,6 +54,14 @@ export interface ComposableSitting {
   /** `DAY`: a date-only posting — the date is stated and no time is printed. */
   startPrecision?: "MINUTE" | "DAY";
   status: string;
+  location?: { name: string; address: string | null } | null;
+}
+
+/** A venue is held meeting data, never a body's contact address. */
+export function sittingVenue(sitting: ComposableSitting): string {
+  return sitting.location
+    ? [sitting.location.name, sitting.location.address].filter(Boolean).join(", ")
+    : "";
 }
 
 /** " at 5:45 PM MST", or nothing for a date-only posting (its midnight is never a time). */
@@ -95,6 +103,7 @@ export interface SittingAnswerInput {
   /** The gaps the route attached to these sittings, in the order it attached them. */
   sittingGaps: readonly SittingGap[];
   now: number;
+  includeLocation?: boolean;
   /** The route's own reading of an outcome question (`outcomeQuestionClass`), when it made one. */
   questionClass?: string | null;
   /**
@@ -477,6 +486,10 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
       ? `The next ${subjectName} meeting is on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`
       : `The most recent ${subjectName} meeting we hold was on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`;
     if (!add(lead)) return null;
+    if (input.includeLocation) {
+      const venue = sittingVenue(chosen);
+      if (!add(venue ? `The listed location is ${venue}` : "We do not hold a verified location for this meeting")) return null;
+    }
     if (!startTimePosted(chosen)) add("Its start time has not been posted");
     for (const sitting of input.sittings) {
       const url = meetingRecords.get(sitting.id)?.sourceUrl;

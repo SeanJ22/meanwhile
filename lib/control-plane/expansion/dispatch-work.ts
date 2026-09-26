@@ -347,7 +347,9 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
   const rowsByState = new Map<string, ReadonlyMap<string, Jurisdiction>>();
   for (const state of scope.states) {
     const reg = world.registries.get(state.toLowerCase());
-    if (reg) for (const jurisdiction of reg.jurisdictions) if (index.statewide.has(jurisdiction.id)) placed.push({ reg, jurisdiction });
+    // A bare state row is an ancestor, not an identified meeting body. Include its declared shared sources;
+    // do not invent a find-own-site meeting obligation for a synthetic registration ancestor.
+    if (reg) for (const jurisdiction of reg.jurisdictions) if (index.statewide.has(jurisdiction.id) && jurisdiction.sourceIds.length > 0) placed.push({ reg, jurisdiction });
   }
   for (const territory of index.bySubject.values()) {
     if (!certainlyOverlaps(territory, scope)) continue;

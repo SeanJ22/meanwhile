@@ -2,6 +2,13 @@
 import { createHash } from "node:crypto";
 import type { DerivedCampaignSiteRecord } from "../civic-data/derived-campaign-sites.ts";
 import type { ServedReaderReadback, ServedReaderWitness } from "./served-reader.ts";
+import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
+export interface PublicPageRead {
+  readonly status: number;
+  readonly html: string;
+  /** Observed after opening this exact candidate's Battlecard and Sources controls. */
+  readonly openedLinks?: readonly { readerKey: string; href: string; domSha256: string }[];
+}
 
 const entities = (v: string): string => v.replace(/&(?:amp|quot|apos|lt|gt|#\d+|#x[a-f\d]+);/gi, s => {
   const x = s.slice(1, -1).toLowerCase();
@@ -36,25 +43,26 @@ export async function collectServedReader(input: {
   readonly versionId: string;
   readonly destinations: ReadonlyMap<string, string>;
   readonly now: string;
-  readonly read: (url: string) => Promise<{ status: number; html: string }>;
+  readonly read: (url: string) => Promise<PublicPageRead>;
 }): Promise<ServedReaderReadback> {
-  const pages = new Map<string, Promise<{ status: number; html: string } | null>>();
+  const pages = new Map<string, Promise<PublicPageRead | null>>();
   const errors: string[] = [];
   const witnesses: ServedReaderWitness[] = [];
   for (const record of input.records) {
     const url = input.destinations.get(record.candidacyId);
     const base = { itemId: record.campaign.evidence.approvalItemId, approvalId: record.campaign.evidence.approvalRecordId,
       versionId: input.versionId, readerKey: record.id, url: url ?? "", checkedAt: input.now, responseSha256: null };
-    if (!url || !/^https:\/\/meanwhileusa\.com\/ballot\?zip=\d{5}$/.test(url)) {
+    if (!url || !url.startsWith(`${PUBLIC_SITE_ORIGIN}/ballot?zip=`) || !/^\d{5}$/.test(url.slice(`${PUBLIC_SITE_ORIGIN}/ballot?zip=`.length))) {
       witnesses.push({ ...base, state: "NOT_OBSERVED", reason: "No exact Census-backed ballot destination is held for this candidacy." });
       continue;
     }
     if (!pages.has(url)) pages.set(url, input.read(url).catch(() => { errors.push(`Public read failed: ${url}`); return null; }));
     const page = await pages.get(url)!;
-    const visible = page?.status === 200 && campaignVisibleInHtml(page.html, record.id, record.campaign.url);
-    witnesses.push({ ...base, responseSha256: page ? createHash("sha256").update(page.html).digest("hex") : null,
+    const opened = page?.openedLinks?.find(x => x.readerKey === record.id && x.href === record.campaign.url);
+    const visible = page?.status === 200 && (opened !== undefined || campaignVisibleInHtml(page.html, record.id, record.campaign.url));
+    witnesses.push({ ...base, responseSha256: opened?.domSha256 ?? (page ? createHash("sha256").update(page.html).digest("hex") : null),
       state: visible ? "CONFIRMED" : "NOT_OBSERVED",
-      reason: visible ? "Exact candidate container and verified campaign link observed on the public ballot." : `Exact candidate and campaign link not observed${page ? ` (HTTP ${page.status})` : " (read failed)"}.` });
+      reason: visible ? opened ? "Exact candidate Battlecard → Sources → verified campaign link observed on the public ballot." : "Exact candidate container and verified campaign link observed on the public ballot." : `Exact candidate and campaign link not observed${page ? ` (HTTP ${page.status})` : " (read failed)"}.` });
   }
   return { checkedAt: input.now, witnesses, errors };
 }

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 860,
-    "named": 8265,
+    "named": 8266,
     "dynamic": 33
   },
   "files": {
@@ -10672,6 +10672,7 @@
     },
     "tests/served-reader.test.ts": {
       "names": [
+        "Battlecard evidence belongs only to the candidate whose controls were opened",
         "a witness cannot transfer to a new approval or survive stale time",
         "collector shares one public read, records exact approvals and holds missing destinations",
         "public readback requires the exact candidate container, not another card or serialized script"

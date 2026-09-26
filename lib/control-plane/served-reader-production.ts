@@ -1,28 +1,77 @@
 import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites.ts";
 import { lowestZipByDivision } from "../geo/zip-division-index.ts";
-import { campaignSiteSubjectsFromHoldings } from "./promotion/campaign-site-cycle.ts";
-import { candidateEnrichmentHoldings, preloadCandidateEnrichmentAuthorities } from "./scheduler/providers/candidate-enrichment.ts";
+import { canonicalContestId, canonicalCandidacyId, type BallotDocument } from "../hunt/candidate-universe.ts";
+import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
+import { requiredRoutineContract } from "../civic-data/contracts.ts";
+import { readPromotedCivicData } from "../civic-data/read-model.ts";
 import { collectServedReader } from "./served-reader-collector.ts";
 import type { ServedReaderReadback } from "./served-reader.ts";
+import { createHash } from "node:crypto";
+import { launchGuarded } from "../../scripts/browser.mts";
+import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 
 export async function collectPublishedCampaignReadback(now: string): Promise<ServedReaderReadback> {
-  await preloadCandidateEnrichmentAuthorities();
   const derived = await readDerivedCampaignSites();
-  const holdings = candidateEnrichmentHoldings();
-  if (derived.kind !== "PROMOTED" || !holdings) return { checkedAt: now, witnesses: [], errors: [`Campaign publication readback unavailable: ${derived.kind}.`] };
-  const { subjects } = campaignSiteSubjectsFromHoldings(holdings, now);
+  if (derived.kind !== "PROMOTED") return { checkedAt: now, witnesses: [], errors: [`Campaign publication readback unavailable: ${derived.kind}.`] };
+  // Use the same canonical identity functions as the workers, from proven ballot values.
+  // Do not import the scheduler/Reader UI closure into this plain-Node collector.
+  const subjects = new Map<string, { stateCode: string; ocdId: string }>();
+  const authorities = [requiredManualProductionContract("az-sos-ballot"), requiredManualProductionContract("nh-curated-ballot"), requiredRoutineContract("nj-morris-filing")];
+  for (const authority of authorities) {
+    const result = await readPromotedCivicData<{ ballot: BallotDocument; candidateFilings?: BallotDocument }>(authority.recordClass, authority.scope);
+    if (result.kind !== "PROMOTED") continue;
+    const stateCode = /US-([A-Z]{2}):/.exec(authority.scope)?.[1];
+    const cycle = Number(/(?:^|:)(20\d{2})(?:-|:|$)/.exec(authority.scope)?.[1]);
+    if (!stateCode || !Number.isInteger(cycle)) continue;
+    for (const ballot of [result.value.ballot, result.value.candidateFilings]) {
+      if (!Array.isArray(ballot?.contests) || !Array.isArray(ballot?.candidacies)) continue;
+      const contests = new Map(ballot.contests.map(c => [c.id, c]));
+      for (const c of ballot.candidacies) {
+        const contest = contests.get(c.contestId);
+        if (contest) subjects.set(canonicalCandidacyId(canonicalContestId(stateCode, cycle, contest), c.familyName, c.givenName), { stateCode, ocdId: contest.ocdId });
+      }
+    }
+  }
   const destinations = new Map<string, string>();
   for (const record of derived.value.records) {
     const subject = subjects.get(record.candidacyId);
     if (!subject) continue;
-    const zip = (await lowestZipByDivision(subject.stateCode))?.get(subject.ocdId);
-    if (zip) destinations.set(record.candidacyId, `https://meanwhileusa.com/ballot?zip=${zip}`);
+    const lowest = await lowestZipByDivision(subject.stateCode);
+    const stateDivision = `ocd-division/country:us/state:${subject.stateCode.toLowerCase()}`;
+    const zip = lowest?.get(subject.ocdId) ?? (subject.ocdId === stateDivision ? [...(lowest ?? [])].filter(([id]) => id.startsWith(`${stateDivision}/`)).map(([, z]) => z).sort()[0] : undefined);
+    if (zip) destinations.set(record.candidacyId, `${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`);
   }
-  // Ordinary public reads, bounded across the pass. No model, search, publication or work admission.
-  const signal = AbortSignal.timeout(30_000);
-  return collectServedReader({ records: derived.value.records, versionId: derived.projection.versionId, destinations, now,
-    read: async url => {
-      const response = await fetch(url, { signal, redirect: "error", headers: { "user-agent": "Meanwhile-publication-readback/1" } });
-      return { status: response.status, html: await response.text() };
-    } });
+  // Campaign links deliberately live behind Battlecard → Sources. Serialized RSC props are not a public witness.
+  // This existing-runner browser is isolated from the owner's signed-in session and never submits Ask or Send.
+  const browserEnv = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => value !== undefined &&
+    /^(path|systemroot|windir|temp|tmp|userprofile|localappdata|appdata|home|playwright_browsers_path)$/i.test(key))) as Record<string, string>;
+  const browser = await launchGuarded({ label: "publication-readback", headless: true, env: browserEnv });
+  const deadline = setTimeout(() => { void browser.close().catch(() => undefined); }, 75_000);
+  try {
+    const report = await collectServedReader({ records: derived.value.records, versionId: derived.projection.versionId, destinations, now,
+      read: async url => {
+        const page = await browser.page();
+        page.setDefaultTimeout(3000);
+        try {
+          const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15_000 });
+          const openedLinks: { readerKey: string; href: string; domSha256: string }[] = [];
+          for (const record of derived.value.records.filter(r => destinations.get(r.candidacyId) === url)) {
+            const candidate = page.locator(`[data-candidate-target=${JSON.stringify(record.id)}]`);
+            try {
+              await candidate.getByRole("button", { name: "View Battlecard", exact: true }).click();
+              const dialog = page.getByRole("dialog", { name: record.candidateName, exact: true });
+              await dialog.getByRole("button", { name: "Sources", exact: true }).click();
+              const link = dialog.getByRole("link", { name: "campaign site", exact: true });
+              if (await link.isVisible()) {
+                const href = await link.getAttribute("href");
+                if (href) openedLinks.push({ readerKey: record.id, href, domSha256: createHash("sha256").update(await dialog.evaluate(el => el.outerHTML)).digest("hex") });
+              }
+            } catch { /* This exact record remains NOT_OBSERVED; later records are still owed. */ }
+            finally { await page.getByRole("dialog").getByRole("button", { name: "Close", exact: true }).click().catch(() => undefined); }
+          }
+          return { status: response?.status() ?? 0, html: await page.content(), openedLinks };
+        } finally { await page.close(); }
+      } });
+    return { ...report, syntheticRunId: browser.runId };
+  } finally { clearTimeout(deadline); await browser.close(); }
 }

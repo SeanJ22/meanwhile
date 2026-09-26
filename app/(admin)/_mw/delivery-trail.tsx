@@ -12,6 +12,7 @@
  */
 import type { DeliveryTrailView } from "@/lib/control-plane/delivery-trail.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 
 import { Dash, Pill, mw as s } from "./ui.tsx";
 
@@ -21,6 +22,7 @@ export function DeliveryTrailCard({ trail, note }: { readonly trail: DeliveryTra
       <h2 id="delivery-trail" className={s.h2Card}>
         Paid research, from finding to the public site
       </h2>
+      {trail !== null && note !== null && <p className={s.text14}>{note}</p>}
       {trail === null ? (
         <p className={s.goldNote}>{note !== null ? note : "The published snapshot carries no delivery trail, so where paid research stands is not shown. It is not empty."}</p>
       ) : (
@@ -83,7 +85,7 @@ export function DeliveryTrailCard({ trail, note }: { readonly trail: DeliveryTra
                   <div className={s.stack2}>
                     <span className={s.text14}>
                       {p.subjectId ?? p.recordClass} — approved for promotion {formatEastern(p.approvedAt ?? p.promotedAt ?? null)}, version {p.version}, to{" "}
-                      {p.destination.startsWith("https://meanwhileusa.com/") ? <a href={p.destination} target="_blank" rel="noreferrer">Open public reader page</a> : p.destination}
+                      {p.destination.startsWith(`${PUBLIC_SITE_ORIGIN}/`) ? <a href={p.destination} target="_blank" rel="noreferrer">Open public reader page</a> : p.destination}
                       {p.checkedAt ? `, checked ${formatEastern(p.checkedAt)}` : ", not yet checked on the public site"}.
                     </span>
                     <span className={s.text14}>

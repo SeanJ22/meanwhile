@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { campaignVisibleInHtml, collectServedReader } from "../lib/control-plane/served-reader-collector.ts";
 import { servedWitness, type ServedReaderWitness } from "../lib/control-plane/served-reader.ts";
 import type { DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 test("public readback requires the exact candidate container, not another card or serialized script", () => {
   const html = '<li data-candidate-target="a&amp;b"><div><a href="https://campaign.test/">Campaign</a></div></li><li data-candidate-target="wrong"><a href="https://else.test/">Campaign</a></li><script>"<li data-candidate-target=\"script\"><a href=\"https://campaign.test/\">"</script>';
@@ -14,7 +15,7 @@ test("public readback requires the exact candidate container, not another card o
 
 test("a witness cannot transfer to a new approval or survive stale time", () => {
   const checkedAt = "2026-09-26T09:00:00Z";
-  const w: ServedReaderWitness = { itemId: "a", approvalId: "v1", versionId: "d1", readerKey: "c", url: "https://meanwhileusa.com/ballot?zip=85635", checkedAt, state: "CONFIRMED", reason: "observed", responseSha256: "a".repeat(64) };
+  const w: ServedReaderWitness = { itemId: "a", approvalId: "v1", versionId: "d1", readerKey: "c", url: `${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`, checkedAt, state: "CONFIRMED", reason: "observed", responseSha256: "a".repeat(64) };
   const read = { checkedAt, witnesses: [w], errors: [] };
   assert.equal(servedWitness(read, "a", "v1", checkedAt), w);
   assert.equal(servedWitness(read, "a", "v2", checkedAt), null);
@@ -22,10 +23,17 @@ test("a witness cannot transfer to a new approval or survive stale time", () => 
   assert.equal(servedWitness(read, "a", "v1", "2026-09-26T12:00:01Z"), null);
 });
 
+test("Battlecard evidence belongs only to the candidate whose controls were opened", async () => {
+  const record = { id: "a", candidacyId: "a", campaign: { url: "https://campaign.test/", evidence: { approvalItemId: "a", approvalRecordId: "approved" } } } as DerivedCampaignSiteRecord;
+  const run = (readerKey: string) => collectServedReader({ now: "2026-09-26T09:00:00Z", versionId: "d1", records: [record], destinations: new Map([["a", `${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`]]), read: async () => ({ status: 200, html: "", openedLinks: [{ readerKey, href: record.campaign.url, domSha256: "b".repeat(64) }] }) });
+  assert.equal((await run("a")).witnesses[0].state, "CONFIRMED");
+  assert.equal((await run("b")).witnesses[0].state, "NOT_OBSERVED");
+});
+
 test("collector shares one public read, records exact approvals and holds missing destinations", async () => {
   const record = (id: string): DerivedCampaignSiteRecord => ({ id, candidacyId: id, candidateName: id, campaign: { url: "https://campaign.test/", verification: "fixture", attemptedAt: "2026-09-26", evidence: { approvalItemId: id, approvalRecordId: `${id}:approved` } as DerivedCampaignSiteRecord["campaign"]["evidence"] } });
   let reads = 0;
-  const url = "https://meanwhileusa.com/ballot?zip=85635";
+  const url = `${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`;
   const result = await collectServedReader({ now: "2026-09-26T09:00:00Z", versionId: "derived-v1", records: [record("a"), record("b"), record("c")], destinations: new Map([["a", url], ["b", url]]), read: async () => {
     reads++; return { status: 200, html: '<li data-candidate-target="a"><a href="https://campaign.test/">Campaign</a></li>' };
   } });

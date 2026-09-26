@@ -12,6 +12,7 @@ export interface ServedReaderWitness {
 }
 export interface ServedReaderReadback {
   readonly checkedAt: string;
+  readonly syntheticRunId?: string;
   readonly witnesses: readonly ServedReaderWitness[];
   readonly errors: readonly string[];
 }

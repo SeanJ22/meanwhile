@@ -185,6 +185,7 @@ import {
 import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
+import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
   closeAbandonedOccurrences,
@@ -670,7 +671,7 @@ await preloadCandidateEnrichmentAuthorities();
 const CYCLE_LEASE_HOLDER = `cycle@${HOST}#${process.pid}`;
 const CYCLE_LEASE_TTL_MS = 25 * 60_000;
 try {
-  await acquireWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso(), CYCLE_LEASE_TTL_MS);
+  await pending.step("startup:cycle-lease", () => acquireWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso(), CYCLE_LEASE_TTL_MS, startupReadRetry));
 } catch (error) {
   if (error instanceof WindowLockHeld) {
     console.error(`freshness:shadow · REFUSED under the nightly window: ${error.message}`);
@@ -2820,6 +2821,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
         routeHints: ROUTE_HINTS,
         ...(discoverySearch === null ? {} : { search: discoverySearch }),
+        searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
         recordCost: async (entry) => {
           costSeq += 1;
           await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`, entry, nowIso());

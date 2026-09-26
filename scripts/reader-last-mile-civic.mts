@@ -117,6 +117,10 @@ try {
     const input = page.locator(".welcome-overlay input").first();
     await input.fill(zip); await input.press("Enter");
     await page.locator(".welcome-overlay.hidden").waitFor({ state: "attached" });
+    // The welcome overlay can hide before the lazy map/sidebar has mounted.
+    // Do not interpret an absent pill cluster during mounting as a closed
+    // sidebar and then wait for a menu button that the open sidebar hides.
+    await page.locator("[data-pill-cluster]").first().waitFor({ state: "visible" });
     if (((await page.locator("html").getAttribute("data-theme")) === "light" ? "light" : "dark") !== view.theme) {
       const switcher = page.getByRole("button", { name: `Switch to ${view.theme} mode`, exact: true }).first();
       if (!(await switcher.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();

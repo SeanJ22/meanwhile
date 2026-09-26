@@ -189,6 +189,22 @@ function mesaSitting(insiteId: string): PersistedSittingOutcomes {
 
 const EMPTY_STORE: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] };
 
+test("minutes-local item numbers stay distinct when a question reads two sittings", () => {
+  const first = mesaSitting("1336059");
+  const second = { ...first, meetingId: `${first.meetingId}-second-sitting`, startsAt: "2026-07-27T19:00:00-07:00" };
+  useOutcomeSnapshotForTests(mergeSnapshot(EMPTY_STORE, [first, second], { generatedOn: "2026-09-25", generatedAt: "2026-09-25T18:00:00.000Z" }));
+  try {
+    const readings = [first, second].map(sitting => meetingOutcomeEvidenceFor({ bodyId: MESA, meetingId: sitting.meetingId, startsAt: sitting.startsAt!, question: "What did the Mesa City Council decide?" }));
+    assert.ok(readings.every(reading => reading.actions.length > 0));
+    const ids = readings.flatMap(reading => reading.actions.map(action => action.recordId));
+    assert.equal(new Set(ids).size, ids.length, "local item numbers cannot collapse distinct sitting records");
+    for (const reading of readings) for (const action of reading.actions) {
+      assert.ok(action.recordId.startsWith(`${action.meetingId}#`));
+      assert.ok(reading.records.some(record => record.id === action.recordId));
+    }
+  } finally { useOutcomeSnapshotForTests(null); }
+});
+
 test("Mesa: the council's decisions from its own minutes — each motion and its result in the minutes' words, and the minutes' standing", () => {
   const july27 = mesaSitting("1336059");
   // The store as the routine holds it: the sitting merged in, its minutes' standing applied.

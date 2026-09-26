@@ -101,9 +101,14 @@ import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { WorkItem, WorkItemState } from "./work-item.ts";
 import type { WorkQuestion } from "./work-question.ts";
+import { US_STATES } from "./readiness/catalog.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
+const STATE_CODE_BY_NAME = new Map(US_STATES.map(state => [state.name, state.code.toLowerCase()]));
+function assignmentStateCode(row: AssignmentRow): string | null {
+  return row.what.where.held ? STATE_CODE_BY_NAME.get(row.what.where.value.state ?? "") ?? null : null;
+}
 
 /** How many rows of one (state, lane) group the PUBLISHED view carries. Stated on the page. */
 export const ASSIGNMENT_ROWS_PER_GROUP = 20;
@@ -504,6 +509,10 @@ export interface AssignmentListRow {
   readonly subjectName: string | null;
   /** Null when no subject is on record. */
   readonly where: string | null;
+  /** Canonical attribution, retained separately from the human-readable place. */
+  readonly stateCode?: string | null;
+  /** Exact durable Send associations; absent only on older published snapshots. */
+  readonly assignmentKeys?: readonly string[];
   readonly band: 1 | 2 | 3 | null;
   /** Null when no worker has taken it yet. */
   readonly workers: readonly { readonly role: string; readonly model: WorkerModel; readonly attempts: number | null }[] | null;
@@ -562,6 +571,8 @@ export function listRowOf(row: AssignmentRow, textClip = ASSIGNMENT_TEXT_CLIP): 
     title: clip(row.what.title, textClip),
     subjectName: row.what.subjectName,
     where: row.what.where.held ? row.what.where.value.name : null,
+    stateCode: assignmentStateCode(row),
+    assignmentKeys: [...new Set((row.what.assignments ?? []).map(mark => mark.assignmentKey))],
     band: row.what.why.band?.band ?? null,
     workers: row.what.workers.held ? row.what.workers.value.map((x) => ({ role: x.role, model: x.model, attempts: x.attempts })) : null,
     discovered: discovered ? { routes: discovered.routes, records: discovered.records, pointers: discovered.pointers, sourceRows: discovered.sourceRows } : null,
@@ -2508,6 +2519,10 @@ export interface AssignmentView {
   readonly summary: AssignmentSummary;
   /** The bounded, ordered list; each row's full chain opens live by its id. */
   readonly rows: readonly AssignmentListRow[];
+  /** Counts over the entire holding, before bounded row selection. Empty key = shared or unplaced. */
+  readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
+  /** Complete counts before row trimming, keyed by the durable Send identity. */
+  readonly instructionCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   readonly selection: {
     readonly rule: string;
     readonly perGroup: number;
@@ -2743,6 +2758,18 @@ export function buildAssignmentView(
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP });
   const rows = built.rows;
 
+  const geographicCounts: Record<string, Record<AssignmentState, number>> = {};
+  const instructionCounts: Record<string, Record<AssignmentState, number>> = {};
+  for (const row of rows) {
+    const state = assignmentStateCode(row) ?? "";
+    const counts = geographicCounts[state] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
+    counts[row.state] += 1;
+    for (const key of new Set((row.what.assignments ?? []).map(mark => mark.assignmentKey))) {
+      const attributed = instructionCounts[key] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
+      attributed[row.state] += 1;
+    }
+  }
+
   const groups: AssignmentListRow[][] = [];
   for (const state of ASSIGNMENT_STATES) {
     const order = groupOrder(state, built.idx.now);
@@ -2783,6 +2810,8 @@ export function buildAssignmentView(
     builtAt: src.nowIso,
     summary: summarize(built, src, published),
     rows: kept,
+    geographicCounts,
+    instructionCounts,
     selection: {
       rule: ASSIGNMENT_SELECTION_RULE,
       perGroup,

@@ -409,7 +409,7 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
     ],
     addressesNote:
       sends.length > 0
-        ? "Each instruction of yours that reached this work is recorded on the work itself, with how it reached it. Your questions say what the instruction is for; they do not yet change how the work runs."
+        ? "Each instruction of yours that reached this work is recorded on the work itself, with how it reached it. Scouts receive its questions in their task brief; verified deterministic methods and publication checks still apply."
         : "No instruction of yours has reached this work. The record class, the subject and the question above are what it is for.",
     lanes,
     models,
@@ -537,6 +537,9 @@ export function instructionView(input: {
   readonly dispatchWork?: DispatchWorkReading | null;
 }): InstructionView {
   const d = input.decision;
+  const budgetDescription = d.budgetStartedAt
+    ? `${money(d.budgetUsd)} Anthropic token budget for this hunt`
+    : `${money(d.budgetUsd)} paid-model budget in any rolling 24 hours`;
   const rv = runnerViewFor(d, input.reading);
   const assignment = input.assignment ?? null;
   const sendBudget = assignment === null ? null : budgetOf(assignment, input.assignmentAt ?? null);
@@ -592,7 +595,7 @@ export function instructionView(input: {
   if (completion === null) {
     ack.push({ pill: "NOT COMPLETE", tone: "gold", text: "Not evaluated yet: the runner has not recorded whether the work this instruction reached is finished, so it is never shown as finished.", at: null });
   } else if (completion.kind === "COMPLETE") {
-    ack.push({ pill: "COMPLETE", tone: "teal", text: assignmentCompletionWords(completion), at: input.assignmentAt ?? null });
+    ack.push({ pill: "TRACKED WORK COMPLETE", tone: "teal", text: `${assignmentCompletionWords(completion)} This covers the registered work this instruction reached. It does not establish that every applicable body and information family has been discovered and delivered.`, at: input.assignmentAt ?? null });
   } else {
     const named = completion.kind === "NOT_COMPLETE"
       ? completion.exceptions.slice(0, 3).map((e) => `${e.obligationId}: ${e.says}`).join("; ")
@@ -623,15 +626,15 @@ export function instructionView(input: {
             ["Due that cycle", read.work ? String(read.work.dueThisCycle) : "—"],
             ["Governments with work", read.coverage ? `${read.coverage.withWork} of ${read.coverage.registeredJurisdictions}` : "—"],
           ],
-          note: "Plain-code reads are free and are not limited by the budget. Validation before promotion is preserved per record.",
+          note: "Plain-code reads use no Anthropic tokens. Search and other provider costs are tracked separately. Validation before promotion is preserved per record.",
         },
       ]
     : [];
 
   const spend =
     read?.spend
-      ? `In the geography: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there, against a ${money(d.budgetUsd)} rolling-24-hour budget`
-      : `In the geography: nothing measured yet, against a ${money(d.budgetUsd)} rolling-24-hour budget`;
+      ? `Geographic activity: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there. These activity windows do not reset the ${budgetDescription}; its accounting and reservations are shown separately.`
+      : `In the geography: nothing measured yet. The instruction has a ${budgetDescription}.`;
 
   const pill = rv.kind === "READ" ? (input.paidLaneClosedBecause ? { p: "READ · PARTLY BLOCKED", t: "gold" as Tone } : { p: "READ BY RUNNER", t: "teal" as Tone }) : { p: "SAVED · NOT YET READ", t: "cyan" as Tone };
   return {
@@ -643,8 +646,8 @@ export function instructionView(input: {
       title: `${d.geography.label} — ${SCOPE_TYPE_WORDS[d.geography.type].toLowerCase()}, priority ${d.priority}`,
       summary:
         rv.kind === "READ"
-          ? `Read by the runner at its cycle start. ${read?.work ? `${read.work.registeredObligations} ${read.work.registeredObligations === 1 ? "piece" : "pieces"} of standing work ${read.work.registeredObligations === 1 ? "is" : "are"} about governments here.` : read?.resolution.kind === "UNRESOLVED" ? `It could not be resolved: ${read.resolution.why}` : "What is in it was not recorded."}${assignment ? ` It created ${assignment.members.created} and put ${assignment.members.reordered} first, as recorded on the work.` : ""} Paid work here may spend ${money(d.budgetUsd)} in any rolling 24 hours.`
-          : `${rv.says} Paid work here may spend ${money(d.budgetUsd)} in any rolling 24 hours once it is read.`,
+          ? `Read by the runner at its cycle start. ${read?.work ? `${read.work.registeredObligations} ${read.work.registeredObligations === 1 ? "piece" : "pieces"} of standing work ${read.work.registeredObligations === 1 ? "is" : "are"} about governments here.` : read?.resolution.kind === "UNRESOLVED" ? `It could not be resolved: ${read.resolution.why}` : "What is in it was not recorded."}${assignment ? ` It created ${assignment.members.created} and put ${assignment.members.reordered} first, as recorded on the work.` : ""} This instruction has a ${budgetDescription}.`
+          : `${rv.says} This instruction has a ${budgetDescription}.`,
     },
     decision: d,
     reading: read,

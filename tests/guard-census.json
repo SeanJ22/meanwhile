@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 860,
-    "named": 8266,
+    "files": 866,
+    "named": 8291,
     "dynamic": 33
   },
   "files": {
@@ -601,6 +601,12 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-scope-preview.test.ts": {
+      "names": [
+        "scope preview retains body identity, shared records and partial ZIP coverage"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-select-contrast.test.ts": {
       "names": [
         "POSITIVE CONTROL: a shell select that stops pinning the dark scheme fails the checker",
@@ -1161,6 +1167,7 @@
         "a motion with no result recorded is SAID to have none — never read as passed or failed — and a contradictory result is named as one",
         "a same-day sitting is counted beside the chosen one, or its named outcome gap is said for it",
         "composition steps aside — and the model writes — whenever the records cannot carry the answer",
+        "minutes-local item numbers stay distinct when a question reads two sittings",
         "the held actions are read beside the records, never inside them: every quoted field is a span of its own record's text"
       ],
       "dynamic": 0
@@ -1426,6 +1433,9 @@
         "a composed answer ships only on a passing verdict, against the SAME validator",
         "a date-only posting is stated as its date, never as the midnight it is stored at",
         "a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap",
+        "a requested past date with agenda material but no held decisions states the dated gap",
+        "a time-and-place answer uses only the chosen meeting venue and names an acquisition gap",
+        "an explicit outcome date is preserved and invalid dates cannot enter code reading",
         "composition steps aside whenever there is something to summarise or a fact it cannot state",
         "gap wording is kept; only a machine timestamp is spelled out in the body's zone",
         "named-subject shapes read the subject kind they ask about, with the intent the models returned, and no tense",
@@ -1780,6 +1790,7 @@
         "an instruction lists what it created and reordered from the work itself, and its own budget with the window",
         "an opened piece of work names its question and the instructions recorded on it",
         "every charge the dispatcher writes names its obligation, its Sends, its record class, its question and what it came to",
+        "saved instruction wording preserves a hunt's token-only total and distinguishes legacy rolling budgets",
         "syncObligations keeps the Sends a row records when a provider's signals move, and withAssignment only appends",
         "the owner's questions travel typed through expansion.scope.set onto the decision, and onto every obligation the Send reaches",
         "the runner's reading names what each Send reached and its budget — spent, held, left — with the window",
@@ -1798,10 +1809,12 @@
         "an unmeasured cost (usd null on model work) is a named gap in the row, the list row and the summary — never $0",
         "eligibility is the later of the next-due and the backoff retry",
         "every number the view draws carries a denominator and a contract, and every stated N equals the rows",
+        "exact Send counts survive trimming and count shared work once per instruction without copying the work",
         "failed: a Scout that found nothing and a wall at the source read FAILED; REQUIRES_NEW_ADAPTER reads BLOCKED on engineering",
         "filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero",
         "routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered",
         "routine counts the projector could not state stay unknown — never replaced by a list length or a zero",
+        "state assignment counts cover omitted rows and retain shared or unplaced work separately",
         "succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded, needs-more-evidence counted, a guard refusal is not a rejection",
         "succeeded (plain code, INGESTED with a document): downloads counted, the parse gap named, the cost plain code — never $0",
         "the byte budget is spent one rank at a time across groups, so a large group never crowds out a small one",
@@ -2780,6 +2793,22 @@
         "the four Pima seats are identified, because their terms end together",
         "the seats are NONPARTISAN by statute, and no party is invented",
         "the statute's own composition rule matches the roster we read"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-district-edge.test.ts": {
+      "names": [
+        "85635 resolves through the request edge without a database and retains real local uncertainty",
+        "the compact edge preserves every published district membership and its whole/partial evidence",
+        "unknown ZIPs, mismatched versions and malformed overlaps never manufacture certainty"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-edge-publication.test.ts": {
+      "names": [
+        "failed pointer or replacement reads retain the exact prior proved Census version and report failure",
+        "only a proved promoted replacement advances Census; absent replacement keeps the prior copy",
+        "the unchanged pointer reuses the copy without rereading the dataset"
       ],
       "dynamic": 0
     },
@@ -3959,6 +3988,14 @@
       ],
       "dynamic": 0
     },
+    "tests/cycle-lease-startup.test.ts": {
+      "names": [
+        "a transient startup lease read recovers before one confirmed claim, without another cycle",
+        "an uncertain lease write is never retried or treated as a successful claim",
+        "persistent read failure is bounded; spent deadlines and latched circuits do not retry"
+      ],
+      "dynamic": 0
+    },
     "tests/cycle-stall-diagnostic.test.ts": {
       "names": [
         "WORKER, awaiting a hung store call: it names the labelled await and the call, with the event loop turning",
@@ -4585,7 +4622,9 @@
         "a piece of work's subject and state are read from its own id, never guessed",
         "a scope budget admits within it, reserves the worst case, and refuses by name past it",
         "a scope's geography, priority, budget, note and key are validated before anything is written",
+        "an unresolved hunt retains its budget period and holds unrelated model admissions too",
         "on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans",
+        "paid discovery follows exact hunt membership without consuming or requiring its token allowance",
         "registry governments join their Census unit territory by the generator's own id rule",
         "resolving against the lookup names every failure and never returns an empty scope as a resolved one",
         "setting a scope is an upsert that keeps the previous decision, and removing one leaves the rest",
@@ -5093,7 +5132,7 @@
         "A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD, names why, and hands the Scout nothing",
         "A WALK RECORD THE LANE CANNOT READ HOLDS ITS ROW: no known outcome or no finish time is never guessed at, and a lead without an address is dropped",
         "DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, a state it cannot read named, a moved basis left out, and walked first even outside the ledger",
-        "EVERY READING REACHES ITS HOLD DECISION: found and not-walked hold, a walk that confirmed nothing or no site to walk opens, unread holds; the newest walk decides",
+        "EVERY READING REACHES ITS HOLD DECISION: found and unread hold, not-walked or an unsuccessful walk permits paid discovery; the newest walk decides",
         "ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site are read, and none at all when none has one",
         "THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane can admit, and hands the reading to the hold, the Scout's brief and the walk list",
         "THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only"
@@ -5582,7 +5621,8 @@
         "Brave and Exa costs do not consume the Anthropic token-only cap",
         "an overlapping Send cannot override this hunt's remaining token budget",
         "atomic CAS reservations retry revision conflicts without relying on HTTP session locks",
-        "editing the current hunt preserves its accounting start; an explicit separate hunt gets a new start"
+        "editing the current hunt preserves its accounting start; an explicit separate hunt gets a new start",
+        "opening a selected hunt admits its shared records but not unrelated paid geographic acquisition"
       ],
       "dynamic": 0
     },
@@ -6829,7 +6869,8 @@
         "SEAM WORST CASE: every provider at its timeout, plus the ledger's calls",
         "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
         "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
-        "WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method"
+        "WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method",
+        "discovery search records hunt references on successful and failed charges, while an out-of-scope hold keeps free reads"
       ],
       "dynamic": 0
     },
@@ -10744,6 +10785,13 @@
       ],
       "dynamic": 0
     },
+    "tests/shared-scope-divisions.test.ts": {
+      "names": [
+        "a representative second state works without ZIP-specific logic and cross-state uncertainty remains visible",
+        "local scopes include shared ancestors without including other counties or states"
+      ],
+      "dynamic": 0
+    },
     "tests/ship-pr-checks.test.ts": {
       "names": [
         "a different remote head is refused before waiting or merging",
@@ -12514,6 +12562,13 @@
       "names": [
         "adding a duplicate corpus row turns a direct candidacy ambiguous without touching other assignments",
         "isolated planning resolves each assignment class from synthetic inputs, with no network or registration"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-census-districts.test.ts": {
+      "names": [
+        "85635's published full CD6 and LD19 overlap removes uncertainty the old district-less sample could not resolve",
+        "partial Census coverage remains partial, while missing reads and conflicting vintages cannot manufacture certainty"
       ],
       "dynamic": 0
     },

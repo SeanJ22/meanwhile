@@ -9,9 +9,12 @@ const moduleStarted = performance.now();
 let moduleMs = 0;
 // Begin loading once per instance and retain the same engine for every request.
 // These boundary timings include work the engine's answer trace cannot see.
-const engine = import("../../app/api/ask/grounded/route.ts").then(module => {
+const engine = Promise.all([
+  import("../../app/api/ask/grounded/route.ts"),
+  import("../../lib/registry/server.ts"),
+]).then(([module, registry]) => {
   moduleMs = performance.now() - moduleStarted;
-  return module;
+  return { POST: module.POST, prefetchReaderGeography: registry.prefetchReaderGeography };
 });
 
 const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<unknown>): void; server?: { region?: string } }): Promise<Response> => {
@@ -19,7 +22,11 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   const startedAt = Date.now();
   const processAgeMs = Math.round(process.uptime() * 1000);
   const ordinal = ++requests;
-  const { POST } = await engine;
+  const { POST, prefetchReaderGeography } = await engine;
+  // Start the same file reads used by the Reader beside the first request's
+  // manifest/network reads, as /api/meetings and representation already do.
+  // This is work for this cold invocation, not a timer or a keep-warm request.
+  prefetchReaderGeography();
   const response = await withResponseLifetime(work => context.waitUntil(work), () => POST(request));
   response.headers.set("x-wtp-ask-instance", instance);
   response.headers.set("x-wtp-ask-instance-request", String(ordinal));

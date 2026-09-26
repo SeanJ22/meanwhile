@@ -503,14 +503,14 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
   });
   assert.notEqual(closure, null, "the paid lane is closed");
 
-  /* Created discovery goes to the free walk first; a paid Scout only after it read the site and found nothing. */
+  /* Reuse prior free discoveries; no requirement to exhaust free routes before appropriate paid work. */
   const discovery = applied.written.find((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE))!;
   const jurisdictionId = parseMeetingsDiscoveryId(discovery)!.jurisdictionId;
   assert.equal(paidDiscoveryHold(discovery, UNREAD_FREE_DISCOVERY_WALKS)?.code, FREE_WALK_FIRST);
   const walks = (outcome: "FOUND" | "WALKED_NOT_FOUND" | "NOT_WALKED") => ({ latestFor: (id: string) => (id === jurisdictionId ? outcome : "NOT_WALKED" as const), source: "test" });
-  assert.equal(paidDiscoveryHold(discovery, walks("NOT_WALKED"))?.code, FREE_WALK_FIRST);
+  assert.equal(paidDiscoveryHold(discovery, walks("NOT_WALKED")), null, "the owner permits paid tools before exhausting free routes");
   assert.equal(paidDiscoveryHold(discovery, walks("FOUND"))?.code, FREE_WALK_FIRST);
-  assert.equal(paidDiscoveryHold(discovery, walks("WALKED_NOT_FOUND")), null, "only a free walk that found nothing opens the paid rung");
+  assert.equal(paidDiscoveryHold(discovery, walks("WALKED_NOT_FOUND")), null, "a failed free route does not end the obligation");
   assert.equal(paidDiscoveryHold("freshness:jurisdiction:az:county:county-of-pima#ballot-and-candidates-1", UNREAD_FREE_DISCOVERY_WALKS), null, "no other work is held by it");
 
   /* When the lane opens, the scope's own budget binds the created subjects — a $0 budget holds all paid work there. */
@@ -526,7 +526,7 @@ test("creating work opens no paid lane: the owner's PAUSE stands, nothing but ob
   assert.match(says, /need a model and wait: paused by owner intent pause-1/);
   assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this Send's own \$0\.00 rolling 24-hour budget over the work it reached, and this geography's\./);
   assert.doesNotMatch(says, /no per-assignment budget/);
-  assert.match(says, /the free discovery walk takes them first/);
+  assert.match(says, /without waiting for free routes to fail/);
 });
 
 test("a cycle that may not write plans, counts and writes nothing", async () => {

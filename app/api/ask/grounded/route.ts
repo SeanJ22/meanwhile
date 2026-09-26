@@ -51,7 +51,7 @@ import { unavailableInterpretation, type AskIntent, type AskInterpretation, type
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
 import { groupMoneyShapeForBoundSubject, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
-import { composeSittingAnswerWithBasis, settleSittingComposition, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
+import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
 import { resolveInterpretation } from "@/lib/ask/resolve";
@@ -1702,7 +1702,7 @@ export async function POST(request: Request) {
              from the subject — so the validator is checking the record against
              the subject rather than checking the subject against itself. */
           bodyId: chosen.bodyId,
-          text: `${listingGroupFor(chosen.id) ? "Calendar listing: " : ""}${subject.name}: ${label}, ${readableSitting(chosen)}.`,
+          text: `${listingGroupFor(chosen.id) ? "Calendar listing: " : ""}${subject.name}: ${label}, ${readableSitting(chosen)}.${sittingVenue(chosen) ? ` Listed location: ${sittingVenue(chosen)}.` : ""}`,
           meetingListingIdentity: listingGroupFor(chosen.id),
           occurredAt: chosen.startsAt,
           sourceUrl: chosen.provenance?.sourceUrl ?? chosen.agendaUrl ?? null,
@@ -2482,13 +2482,17 @@ export async function POST(request: Request) {
      * question goes to the model exactly as before, so a composition that fails
      * a check can never reach a reader.
      */
-    const sittingShape = !topicComposed && !topicFocus && !requestedMeetingDate && snapshot && subject?.kind === "BODY"
+    const candidateSittingShape = !topicComposed && !topicFocus && snapshot && subject?.kind === "BODY"
       ? shapeForBoundBody(question, inventory, subject.id) : null;
+    // An explicit outcome date uses its quoted actions or its named outcome
+    // gap. Tell the composer this is the requested date, never next/latest.
+    const sittingShape = !requestedMeetingDate || (requestedMeetingDate.date && candidateSittingShape === "MEETING_OUTCOME")
+      ? candidateSittingShape : null;
     /* "What did they decide" is read off the recorded actions (2026-09-25):
        each quoted action phrase must pass the same validator on its own, so an
        item titled with another government's name is left to the records. */
     const sittingComposition = sittingShape && subject
-      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, questionClass: outcomeQuestionClass(question),
+      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), requestedLocalDate: requestedMeetingDate?.date, questionClass: outcomeQuestionClass(question),
         actions: heldActions, admissible: (text) => validateAnswer(text, [], pack, bodies).kind === "PASSED" })
       : null;
     const sittingSettled = settleSittingComposition(

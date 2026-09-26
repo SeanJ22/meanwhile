@@ -29,12 +29,14 @@ import {
   type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
-import type { AuthorityFamily, ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
+import type { AuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { refreshCommentAccessFromPromoted, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { readCensusGeographyProjection } from "../lib/census-geography/reader.ts";
+import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/edge.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
@@ -53,6 +55,7 @@ import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
 import { readerEdgeCarriesForward } from "./lib/reader-edge-current.ts";
+import { censusEdgePublication } from "./lib/census-edge-publication.ts";
 import { readerVerifierClosureAttestor } from "./lib/reader-verifier-attestation.ts";
 
 function safeFailure(value: string): string {
@@ -185,12 +188,9 @@ if (meetingAggregate) {
     if (artifactStore === null) {
       console.log(JSON.stringify({ readerEdge: "SKIPPED_NO_STORE" }));
     } else {
-      let servedManifest: ReaderManifest | null = null;
-      try {
-        servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
-      } catch {
-        servedManifest = null;
-      }
+      // A failed read cannot establish that no serving copy exists. Let the
+      // outer publication error handler retain it and report a retryable error.
+      const servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
       // The other ready-to-display families the reader serves, read here (the
       // single clock, production DB) so the visitor never reads them from the DB.
       // A failed read leaves them out of the manifest; the reader then falls back
@@ -231,6 +231,15 @@ if (meetingAggregate) {
         return contract ? pointerVersion(contract.recordClass, contract.scope) : async () => null;
       };
       const authority: PublishAuthority = {};
+      authority["census-districts"] = await censusEdgePublication({
+        servedVersion: servedAuthorityVersion(servedManifest, "census-districts"),
+        readVersion: pointerVersion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
+        readProjection: () => readCensusGeographyProjection({ store, now: observedAt }),
+        onFailure: error => {
+          failed = true;
+          process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+        },
+      });
       try {
         const carried = await servedIfCurrent("registry-runtime", manualPointer("registry-runtime-bindings"));
         if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };

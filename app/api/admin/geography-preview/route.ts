@@ -21,6 +21,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { containerStanding, indexBodies } from "@/lib/control-plane/admin-view/coverage.ts";
+import { previewScopeBodies } from "@/lib/control-plane/admin-view/scope-preview.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 
@@ -56,7 +57,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const [container, registry, bodies] = await Promise.all([type === "zcta" ? loadZcta(geoid) : loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedStandings(nowIso)]);
   if (container.kind === "UNREAD") return NextResponse.json({ ok: false, says: container.detail }, { status: 200 });
   const g = container.value.geography;
-  const stateCode = g.stateAbbr.toLowerCase();
   /* How many governments a Send here creates work for, per state, and whether a reviewed registry or registration names them (2026-09-25). */
   const query = readerQuery();
   const sendStates = await Promise.all(
@@ -75,7 +75,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
   }
   const watched = bodies.kind === "HELD" ? bodies.views : [];
-  const index = indexBodies(registry.bodies.filter((b) => b.stateCode === stateCode || g.memberStates.map((m) => m.toLowerCase()).includes(b.stateCode ?? "")));
+  // The exact division join below selects applicability, including shared
+  // country bodies whose registry stateCode is null.
+  const index = indexBodies(registry.bodies);
   const standing = containerStanding(container.value.zctas, index, watched);
   const readerVisible = watched
     .filter((v) => v.ocdId !== null && container.value.zctas.some((z) => z.divisions.includes(v.ocdId!)))
@@ -84,6 +86,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     ok: true,
     geography: { type: g.type, geoid: g.geoid, version: g.version, label: g.label, stateAbbr: g.stateAbbr },
     codes: standing.perCode.map((c) => ({ zcta5: c.zcta5, whole: c.whole, fraction: c.fraction, indexed: c.indexed, counts: c.counts })),
+    scopeBodies: previewScopeBodies(container.value.zctas, index),
     totals: {
       ...standing.counts,
       codes: standing.codes,

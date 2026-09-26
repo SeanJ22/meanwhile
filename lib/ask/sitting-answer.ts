@@ -54,6 +54,14 @@ export interface ComposableSitting {
   /** `DAY`: a date-only posting — the date is stated and no time is printed. */
   startPrecision?: "MINUTE" | "DAY";
   status: string;
+  location?: { name: string; address: string | null } | null;
+}
+
+/** A venue is held meeting data, never a body's contact address. */
+export function sittingVenue(sitting: ComposableSitting): string {
+  return sitting.location
+    ? [...new Set([sitting.location.name, sitting.location.address].filter(Boolean))].join(", ")
+    : "";
 }
 
 /** " at 5:45 PM MST", or nothing for a date-only posting (its midnight is never a time). */
@@ -95,6 +103,9 @@ export interface SittingAnswerInput {
   /** The gaps the route attached to these sittings, in the order it attached them. */
   sittingGaps: readonly SittingGap[];
   now: number;
+  includeLocation?: boolean;
+  /** Exact date already selected by the route; never label it next or latest. */
+  requestedLocalDate?: string | null;
   /** The route's own reading of an outcome question (`outcomeQuestionClass`), when it made one. */
   questionClass?: string | null;
   /**
@@ -445,7 +456,8 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     const urls = [...new Set(input.sittings.flatMap((sitting) => meetings.find((record) => record.id === sitting.id)?.sourceUrl ?? []))];
     return composeVoteAnswer(input, chosen, urls);
   }
-  const summarisable = input.records.some((record) => CONTENT_KINDS.has(record.kind));
+  const summarisable = input.records.some((record) => CONTENT_KINDS.has(record.kind) &&
+    !(input.shape === "MEETING_OUTCOME" && (record.kind === "AGENDA_ITEM" || record.kind === "AGENDA_MENTION")));
   if (input.shape !== "MEETING_TIME" && summarisable) return null;
   /* An agenda or outcome question about a sitting is answered by the gap that
      says what is not held. Without one, there is no composed answer to give. */
@@ -473,10 +485,16 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
     // Every sitting described must be a record the reader is shown.
     if (!input.sittings.every((sitting) => meetingRecords.has(sitting.id))) return null;
     const upcoming = Date.parse(chosen.startsAt) >= input.now;
-    const lead = upcoming
+    const lead = input.requestedLocalDate
+      ? `The ${subjectName} meeting we hold for ${dayOf(chosen)}${atTime(chosen)} is listed as ${quoted(chosen.title)}`
+      : upcoming
       ? `The next ${subjectName} meeting is on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`
       : `The most recent ${subjectName} meeting we hold was on ${dayOf(chosen)}${atTime(chosen)}, listed as ${quoted(chosen.title)}`;
     if (!add(lead)) return null;
+    if (input.includeLocation) {
+      const venue = sittingVenue(chosen);
+      if (!add(venue ? `The listed location is ${venue}` : "We do not hold a verified location for this meeting")) return null;
+    }
     if (!startTimePosted(chosen)) add("Its start time has not been posted");
     for (const sitting of input.sittings) {
       const url = meetingRecords.get(sitting.id)?.sourceUrl;

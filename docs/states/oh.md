@@ -3,7 +3,7 @@
 
 The generated answer to “what do we hold for this state?” Registries, acquisitions, snapshots, databases and vaults remain authoritative. This page is a deterministic view of the inputs below, never a second source of truth.
 
-Session base: `3f9a138fd39f6160659329e17c496d2dd99cee00`. Current input digest: `69bbe83d2dc6a45670a39624d32c920452f305271cea7f8f0b26923a6efe072f`.
+Session base: `3f9a138fd39f6160659329e17c496d2dd99cee00`. Current input digest: `1a7241f0dc09ef718437ac8dabdeef29eae9cfa46c047a94207d0853b86aeed5`.
 Manifest obligation: within the frozen session denominator.
 Byte-current means current against committed inputs. External observations keep their own observed_at stamps; generation never refreshes them.
 

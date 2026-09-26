@@ -39,8 +39,10 @@
  * sampled point of a ZCTA falls in exactly one. Verified across all 33,791 zips
  * in the national source before being relied on, rather than assumed.
  *
- * `scripts/build-zip-division-shards.mts` does that arithmetic at build time and
- * writes each ZIP's `partial` list into its shard; this reads it.
+ * `scripts/build-zip-division-shards.mts` does that arithmetic at build time.
+ * The shared index additionally joins current congressional and legislative
+ * districts from the published Census overlap pointer used by Admin. Those
+ * layers use its explicit whole/partial flag, not the older local sample.
  *
  * ## What this is NOT
  *
@@ -93,15 +95,10 @@ export type GovernCertainty = "CERTAIN" | "AMBIGUOUS" | "UNKNOWN";
  * no sub-state extent to be partial about. The zip's state itself comes from
  * `resolveZipGeography`, which RULING 67 made check two independent publishers.
  *
- * A CONGRESSIONAL OR LEGISLATIVE DISTRICT IS DELIBERATELY NOT ON THIS LIST.
- * `cd:11` looks federal and is not statewide: a zip can cross a congressional
- * line exactly as it crosses a municipal one, and those layers are absent from
- * the lattice edge list, so this repo has NOT measured whether 07866 sits in
- * one district or two. What it does know is how the district got onto the page
- * — resolved from the ZCTA CENTROID, one point, which is the very thing
- * `CLAUDE.md` says a zip may never be used for. Rendering that with no marker
- * would assert it is the reader's House race on the strength of one point.
- * The pill is the honest render, and it is true.
+ * A congressional or legislative district is not statewide. Its certainty
+ * comes from the index's published Census whole/partial overlap. If that read
+ * cannot establish membership, UNKNOWN still renders the pill. A centroid is
+ * never used as proof that an entire ZCTA lies in one district.
  */
 const STATEWIDE_OR_NATIONAL = /^ocd-division\/country:us(\/state:[a-z]{2})?$/;
 

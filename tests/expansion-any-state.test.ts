@@ -22,7 +22,7 @@
  * 3. the next cycle's providers keep that work in the corpus;
  * 4. the FREE discovery walk takes the City of Columbus first, at the web
  *    address the Census of Governments records for it, robots first, while the
- *    paid lane waits on it;
+ *    paid lane remains governed by the owner's separate pause and budgets;
  * 5. it finds the city's iCal feed on the city's own host; the automatic
  *    reviewer accepts it for the city's registered body; the crosswalk, the
  *    wiring and Ohio's derived family promote; and the Reader shows the
@@ -66,11 +66,12 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gatewa
 import type { ActionRequest } from "../lib/control-plane/gateway/contract.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { buildAssignmentView } from "../lib/control-plane/assignment-view.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import { promotedRegistries, UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
 import {
-  FREE_WALK_FIRST,
   MEETINGS_DISCOVERY_NAMESPACE,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
@@ -335,6 +336,14 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   assert.equal(created.length, n, "the store holds exactly what the runner counted");
+  // The real gateway/runner marks survive the publisher's bounded list. This
+  // is the same exact-reference filter Admin reads, not a geographic guess.
+  const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
+  const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
+  const instruction = created[0]!.assignments![0]!.assignmentKey;
+  assert.equal(Object.values(publishedWork.instructionCounts?.[instruction] ?? {}).reduce((sum, count) => sum + count, 0), n);
+  assert.ok(publishedWork.selection.omitted > 0);
+  assert.ok(publishedWork.rows.every(row => row.assignmentKeys?.includes(instruction)));
   const placed = [...new Set(created.map((o) => o.subjectId))].sort();
   /* Admin's preview: every government it counts as certain is created, and nothing outside its edge is. */
   for (const id of preview.certain) assert.ok(placed.includes(id), `${id}: counted certain, and created`);
@@ -360,7 +369,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(pass.byProvider.map((p) => p.readFailure), [null]);
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "every created row stays in the corpus");
 
-  /* 4. The free walk goes first, at the address the Census recorded; the paid lane waits on it. */
+  /* 4. Use the free walk at the recorded address; paid work remains subject to the separate owner pause and budget. */
   const dispatched = materializedDiscoveryNeeds([...ids]);
   assert.deepEqual(dispatched.failures, []);
   const needs = dispatched.entries.map((e) => ({ ...e.need, addressSource: dispatchedAddressSource(e.reg, null) }));
@@ -369,7 +378,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(columbus.addressSource, { source: "REGISTRATION", versionId });
   const subjects = needs.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   const columbusId = `${MEETINGS_DISCOVERY_NAMESPACE}${COLUMBUS}#own-site-meetings`;
-  assert.equal(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects))?.code, FREE_WALK_FIRST);
+  assert.equal(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects)), null);
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
   const walked = await runMeetingsDiscovery(repos, {

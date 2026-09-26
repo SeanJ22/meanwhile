@@ -1,10 +1,10 @@
 {
-  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-  "buildId": "1urH9pt5HWdVFv5KE1SAg",
+  "exactHead": "814604f8a83a31442a5f3cec9cccda1416d29af5",
+  "buildId": "YDf1MQD597zmKGI_RgU_T",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
-    "commitShort": "9dfd9f8",
+    "commit": "814604f8a83a31442a5f3cec9cccda1416d29af5",
+    "commitShort": "814604f",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "79c09bda8037f45bdaec39ba4b94aadb4d538e212ac56c11e355d29e1f8ebf26",
+  "buildLogSha256": "6ab3b27cb4b150a0affe2d61559b5c47e9cac023fe205cbde0a5681c214c8ff4",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,
@@ -46,7 +46,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "f48687e72e51a85ff05678ef0cb00d4f012616265ee7cdf294c36f0e06fb51b0"
+      "sha256": "0f4d0f16ff5064e5dbee0b441fe42f76509dd03416f304a6062d221dbd460369"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -102,7 +102,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "10b6f8d6108e13e534b5d7cf196e928897643bc73caa7a5a185db3d3d79b6087"
+      "sha256": "6893dfa48c1ac0a31462158def677328ccd4de67e8eaef89f4b8bfe8688c7b2d"
     },
     {
       "path": "app/globals.css",
@@ -1902,7 +1902,7 @@
     },
     {
       "path": "lib/ask/lexical-reading.ts",
-      "sha256": "169c6f8fea6e03efec53c7f7630c11dd566b1f328306ce627111bc6cceaeeebc"
+      "sha256": "3ae5ebc50cca19d461cfafdc20a83646de4ffc9183cc706c0e912de193607caa"
     },
     {
       "path": "lib/ask/local-finance.ts",
@@ -1918,7 +1918,7 @@
     },
     {
       "path": "lib/ask/meeting-outcomes.ts",
-      "sha256": "4e9a230b24d86c8771f0851ac90f0099a8fd5aee4ea38527ddb5bd07adbd3f76"
+      "sha256": "7666f07389adb7a34244874e6682193c31b09d1559a8670e8cab85f614d39458"
     },
     {
       "path": "lib/ask/meeting-time.ts",
@@ -1986,7 +1986,7 @@
     },
     {
       "path": "lib/ask/sitting-answer.ts",
-      "sha256": "abd7e761e7df6809d79985e713d90f6a2afd4943e524c8d7887f234ea350b81f"
+      "sha256": "cb3674f01fe1ff24c3d7d983d59d9b70e6c3a783a72b4eddc2d30bf1434111ae"
     },
     {
       "path": "lib/ask/speculative-reading.ts",
@@ -2213,6 +2213,18 @@
       "sha256": "8af5eb5d3c538c03054b740b7ad1a94839fa457bf1f04d4a91cfa9d47cec06f7"
     },
     {
+      "path": "lib/census-geography/district-edge.ts",
+      "sha256": "d5a7e64489de945d9d23d50d3153d5ad8db60cc184b32ee7459b7d93ad45366f"
+    },
+    {
+      "path": "lib/census-geography/division-id.ts",
+      "sha256": "ab1834fd0b616f99309319d78b3dcd986ec074eecb2563155f73d24324565e59"
+    },
+    {
+      "path": "lib/census-geography/publication.ts",
+      "sha256": "ca2c2db76d7d3a21154b2a9f9e661257ec98b7c13c265d19ab3de9972f918a56"
+    },
+    {
       "path": "lib/civic-data/attested-promotion.ts",
       "sha256": "21d8f8d8ac9cb8b7b6c1f2b239c678fd7c5458738791187be638355c9e4ff7ed"
     },
@@ -2281,6 +2293,10 @@
       "sha256": "afbc5cc393c6318f19ce56da2f6a3002d302dbf3145aa46d6dc9ce74384922b6"
     },
     {
+      "path": "lib/civic-data/promoted-reader-query.ts",
+      "sha256": "06a74ae54c1fe7799e0e4e87c7ce1494a5ab4ffca838c2f40866bcdfc754c158"
+    },
+    {
       "path": "lib/civic-data/read-model.ts",
       "sha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89"
     },
@@ -2327,6 +2343,10 @@
     {
       "path": "lib/civic-data/validated-once.ts",
       "sha256": "05f8086d1fb83fdc0249381ecec9c593d5ec6eacae224b6f6a2ea1c151a98329"
+    },
+    {
+      "path": "lib/control-plane/admin-view/promoted-slices.ts",
+      "sha256": "290f1f5d8a5f67574e3845f82dd6fc950dae51f872cee5aa51114e501a1cf1f6"
     },
     {
       "path": "lib/control-plane/ask-gap-observations.ts",
@@ -2553,12 +2573,16 @@
       "sha256": "61d208ab905302a0259db03d9cba3cc61415a8b3794c223d0937a32d43e36cd9"
     },
     {
+      "path": "lib/geo/zip-census-districts.ts",
+      "sha256": "fc9fb21667a55c3a32e3e7a398eb35bdb146ab9829b69a8ccfa2d6bcba26cb84"
+    },
+    {
       "path": "lib/geo/zip-certainty.ts",
-      "sha256": "d00e27966283cf47663ead2f1281a21b0cf8a41c4ef5ddc40cd82ef720f7a10b"
+      "sha256": "6fe24669eb48c4e0fd51c4733501ff7ac615632981ed0677bbfe9fcc7b4cb2c4"
     },
     {
       "path": "lib/geo/zip-division-index.ts",
-      "sha256": "8b4ae14c3add888b5193557f4dfa1f32376f7578a2185bbd075b7b49b24a7ed9"
+      "sha256": "e17e9a930a6039c51ceb1724554bb73f523c77a15e0b095df57fe181ef7ffb51"
     },
     {
       "path": "lib/holdings/datasets.ts",
@@ -2666,11 +2690,11 @@
     },
     {
       "path": "lib/meetings/edge-artifacts.ts",
-      "sha256": "95c7a0cee400998a67ebd59d830e6fe25dcf17e065e3968e54973c2863b76596"
+      "sha256": "d5eea05e8941185a8b194d7bdc1fee45e29b9ff92068344a9ab9209896eab465"
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "a4b3aa0c5b1c423c23202246ea05b41fabd9fd63e6c78e53842604f1c3a96000"
+      "sha256": "ac8a533a496e84fb838dacb83088f955377312c318f19e3fa90594ae33eb669c"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -2775,6 +2799,10 @@
     {
       "path": "lib/ocd/district-tiers.ts",
       "sha256": "34c9fcfd6370eaff592816ee4a67f577519587a4c6b7cc01f96d4173e7b40b6b"
+    },
+    {
+      "path": "lib/ocd/divisions.ts",
+      "sha256": "2b813084f105696ab0ede932f8f407cf4c66848acfda3e9f99f7a4bc37208966"
     },
     {
       "path": "lib/ocd/fips.ts",
@@ -3066,7 +3094,7 @@
     },
     {
       "path": "lib/registry/runtime-edge.ts",
-      "sha256": "2f5eb5aa481e15545c96f2b9e7203f954784ab4a2391540894e139b6066375cd"
+      "sha256": "465f99d5bf3dc5e5bd89cc4711c7e6d268df5f57bf049c16a1bc602a3c5ad256"
     },
     {
       "path": "lib/registry/runtime-read-model.ts",

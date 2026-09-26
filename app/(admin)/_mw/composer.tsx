@@ -34,6 +34,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "@/lib/control-plane/work-question.ts";
+import type { PreviewScopeBody } from "@/lib/control-plane/admin-view/scope-preview.ts";
+import { scopeRouteDescription } from "@/lib/control-plane/admin-view/scope-preview-words.ts";
 
 import { fnv } from "./fnv.ts";
 import s from "./mw.module.css";
@@ -69,6 +71,7 @@ interface Preview {
   readonly ok: boolean;
   readonly says?: string;
   readonly codes?: readonly CodeRow[];
+  readonly scopeBodies?: readonly PreviewScopeBody[];
   readonly totals?: {
     readonly bodies: number;
     readonly wayIn: number;
@@ -314,11 +317,11 @@ export function Composer(props: {
             <div className={s.name14} style={{ fontSize: 13, marginBottom: 10 }}>
               The geographic scope you are about to send
             </div>
-            {chosen === null ? (
+            {key === "" ? (
               <p className={s.note}>Choose a kind, then a geography. Its codes and the bodies reaching them appear here before anything is sent.</p>
             ) : p === null ? (
               <p className={s.note} role="status">
-                Reading {chosen.label}…
+                Reading {chosen?.label ?? `ZIP ${geoid}`}…
               </p>
             ) : !p.ok ? (
               <p className={s.goldNote}>{p.says}</p>
@@ -337,11 +340,21 @@ export function Composer(props: {
                 </div>
                 <p className={`${s.note} ${s.dividerTight}`}>
                   {t
-                    ? `${t.codes} codes, ${t.wholeCodes} wholly inside; ${t.bodies} distinct bodies reach them, each counted once. A code partly inside is included whole — nothing is clipped to the boundary.${t.indexedCodes < t.codes ? ` ${t.codes - t.indexedCodes} codes are outside the ZIP index, so bodies reaching only those are not counted yet.` : ""}`
+                    ? `${t.codes} codes, ${t.wholeCodes} wholly inside; ${t.bodies} distinct registered bodies match the ZIP index, each counted once. A code partly inside is included whole — nothing is clipped to the boundary.${t.indexedCodes < t.codes ? ` ${t.codes - t.indexedCodes} codes are outside the ZIP index, so bodies reaching only those are not counted yet.` : ""}`
                     : typeof p.totalsGap === "string" && p.totalsGap !== ""
                       ? p.totalsGap
                       : "The preview returned no count of bodies, and no reason for it."}
                 </p>
+                {p.scopeBodies !== undefined && <details className={s.dividerTight}>
+                  <summary className={s.name14}>Bodies counted here ({p.scopeBodies.length})</summary>
+                  <p className={s.note}>This is the current registry and ZIP-index match. Missing bodies, information families and undiscovered sources remain work to establish; this count does not certify the full scope.</p>
+                  <ul className={s.stack8} style={{ maxHeight: 300, overflowY: "auto" }}>
+                    {p.scopeBodies.map(body => <li key={body.id}>
+                      <span className={s.name14}>{body.name}</span>
+                      <div className={s.note}>{body.codes.map(code => `${code.zcta5}${code.partial ? " (partial ZIP coverage)" : ""}`).join(", ")} · {scopeRouteDescription(body.coverageStatus)}</div>
+                    </li>)}
+                  </ul>
+                </details>}
                 {(p.send?.says ?? []).map((line) => (
                   <p key={line} className={s.note} style={{ marginTop: 8 }}>
                     {line}

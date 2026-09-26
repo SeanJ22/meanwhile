@@ -1,6 +1,6 @@
-import type { CensusGeographyLookup, GeographyRef } from "../../census-geography/contract.ts";
-import { districtIdentity } from "../../ocd/fips.ts";
-import { legislativeIdentity } from "../../ocd/divisions.ts";
+import type { CensusGeographyLookup } from "../../census-geography/contract.ts";
+import { censusWorkDivision } from "../../census-geography/division-id.ts";
+export { censusWorkDivision } from "../../census-geography/division-id.ts";
 import type { ResolvedScope } from "./membership.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 
@@ -16,15 +16,6 @@ export interface ScopedStandingWork {
  * The published Census lookup supplies sub-state overlap; state-wide source
  * records are reused in each applicable scope without duplicating their work.
  */
-export function censusWorkDivision(g: GeographyRef): string | null {
-  if (g.ocdId) return g.ocdId;
-  if (g.type === "congressional_district" && /^\d{4}$/.test(g.geoid)) return districtIdentity(g.geoid.slice(0, 2), g.geoid.slice(2))?.ocdId ?? null;
-  if ((g.type === "state_leg_upper" || g.type === "state_leg_lower") && /^\d{5}$/.test(g.geoid)) return legislativeIdentity(g.geoid.slice(0, 2), g.type === "state_leg_upper" ? "sldu" : "sldl", g.geoid.slice(2), g.label)?.ocdId ?? null;
-  // Named local divisions require the registry's held identity bridge. Never
-  // turn a geographic label (including a CDP) into a government identity.
-  return null;
-}
-
 export async function declaredWorkMembers(scopes: readonly ResolvedScope[], work: readonly ScopedStandingWork[], lookup: CensusGeographyLookup, localDivisions: ReadonlyMap<string, DivisionTerritory> = new Map()): Promise<Map<string, ReadonlySet<string>>> {
   const out = new Map<string, ReadonlySet<string>>();
   const wanted = new Set(work.flatMap(w => w.scopeDivisions ?? []));
@@ -47,6 +38,7 @@ export async function declaredWorkMembers(scopes: readonly ResolvedScope[], work
       }
     }
     const inside = (id: string): boolean => {
+      if (id === "ocd-division/country:us") return true;
       const state = /^ocd-division\/country:us\/state:([a-z]{2})$/.exec(id)?.[1];
       if (state) return scope.states.includes(state.toUpperCase());
       const territory: DivisionTerritory | undefined = territories.get(id) ?? localDivisions.get(id);

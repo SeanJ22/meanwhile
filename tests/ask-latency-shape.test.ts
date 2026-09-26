@@ -56,6 +56,8 @@ const INVENTORY: BindableEntity[] = [
 test("the canonical shapes are read, and anything with more in it is not", () => {
   const accepted: [string, string][] = [
     ["When does the Mesa City Council meet next?", "MEETING_TIME"],
+    ["When is the Vail school board meeting next, and where?", "MEETING_TIME"],
+    ["What did the Mesa City Council decide at its August 31, 2026 meeting?", "MEETING_OUTCOME"],
     ["When is the next Tucson City Council meeting?", "MEETING_TIME"],
     ["What time does the Pima County Board of Supervisors meet?", "MEETING_TIME"],
     ["When did the Mesa City Council last meet?", "MEETING_TIME"],
@@ -120,6 +122,14 @@ test("the lexical reading refuses what it cannot settle, so the model reads it a
   refuse("When does the Mesa City Council meet next?", twins); // two bodies, one name
 });
 
+test("an explicit outcome date is preserved and invalid dates cannot enter code reading", () => {
+  const read = (question: string) => lexicalReading({ question, inventory: INVENTORY, namedBodies: INVENTORY });
+  assert.deepEqual(read("What did the Mesa City Council decide at its August 31, 2026 meeting?")?.interpretation.temporal, { kind: "DATE", localDate: "2026-08-31" });
+  assert.equal(read("What did the Mesa City Council decide at its February 30, 2026 meeting?"), null);
+  assert.equal(read("What did the Mesa City Council decide at its August 31, 2026 meeting about taxes?"), null);
+  assert.equal(read("When is the Mesa City Council meeting next, and where?")?.shape, "MEETING_TIME");
+});
+
 test("named-subject shapes read the subject kind they ask about, with the intent the models returned, and no tense", () => {
   const HOBBS = "ballot-az-pima:governor|Katie Hobbs";
   const PROP = "ballot-az-pima:prop-141";
@@ -159,6 +169,27 @@ const meetingRecord = (sitting: ComposableSitting, url: string): EvidenceRecord 
 const RECORDS: EvidenceRecord[] = [meetingRecord(STUDY, "https://mesa.example.gov/m1"), meetingRecord(REGULAR, "https://mesa.example.gov/m2")];
 const AGENDA_GAP: SittingGap = { role: "AGENDA", gap: { whose: "OURS", statement: "We hold the agenda document for that meeting but could not extract its items." } };
 const NOW = Date.parse("2026-09-25T12:00:00Z");
+
+test("a time-and-place answer uses only the chosen meeting venue and names an acquisition gap", () => {
+  const base = { shape: "MEETING_TIME" as const, subjectName: "Mesa", records: RECORDS, sittingGaps: [], now: NOW, includeLocation: true };
+  const held = composeSittingAnswer({ ...base, sittings: [{ ...STUDY, location: { name: "Council Chambers", address: "57 E First Street" } }] });
+  assert.match(held?.answer ?? "", /The listed location is Council Chambers, 57 E First Street\./);
+  assert.deepEqual(held?.citedUrls, ["https://mesa.example.gov/m1"]);
+  const repeated = composeSittingAnswer({ ...base, sittings: [{ ...STUDY, location: { name: "Council Chambers", address: "Council Chambers" } }] });
+  assert.match(repeated?.answer ?? "", /The listed location is Council Chambers\./);
+  assert.doesNotMatch(repeated?.answer ?? "", /Council Chambers, Council Chambers/);
+  const missing = composeSittingAnswer({ ...base, sittings: [STUDY] });
+  assert.match(missing?.answer ?? "", /We do not hold a verified location for this meeting\./);
+  assert.doesNotMatch(missing?.answer ?? "", /not been posted|Council Chambers/);
+});
+
+test("a requested past date with agenda material but no held decisions states the dated gap", () => {
+  const answer = composeSittingAnswer({ shape: "MEETING_OUTCOME", subjectName: "Mesa", sittings: [STUDY], records: [RECORDS[0], { kind: "AGENDA_ITEM", id: "proposal", bodyId: MESA, text: "Proposed tax change" }], sittingGaps: [{ role: "OUTCOME", meetingId: STUDY.id, gap: { whose: "OURS", statement: "We have not acquired the decisions from that meeting." } }], now: Date.parse("2026-10-01T00:00:00Z"), requestedLocalDate: "2026-09-28" });
+  assert.ok(answer);
+  assert.match(answer.answer, /September 28th, 2026/);
+  assert.match(answer.answer, /We have not acquired the decisions/);
+  assert.doesNotMatch(answer.answer, /most recent|next Mesa|tax change/);
+});
 
 test("a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap", () => {
   const composed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Mesa", sittings: [STUDY, REGULAR], records: RECORDS, sittingGaps: [AGENDA_GAP], now: NOW });

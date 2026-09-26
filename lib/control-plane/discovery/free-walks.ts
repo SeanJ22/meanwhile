@@ -1,9 +1,9 @@
 /**
  * **WHAT THE FREE WALK LAST RECORDED, READ ONCE A CYCLE FOR THE PAID LANE.**
- * (2026-09-24. MW-028's free-walk-first hold.)
+ * (2026-09-26. Reuse known findings; do not require free-route exhaustion.)
  *
  * `paidDiscoveryHold` lets a paid Scout take an owner-dispatched meetings-
- * discovery row only after the unpaid walk has had its turn. This is the
+ * discovery row without repeating an already confirmed route. This is the
  * reading the hold asks for (`FreeDiscoveryWalks`), taken from the walk's own
  * attempt log (`cp_log_discovery_attempts`) in ONE batched read a cycle. It
  * reads the newest attempt of each dispatched government, cut down to its
@@ -16,7 +16,7 @@
  *                     nothing or only leads, was a wall, or could not be read.
  *                     The free lane had its turn. For a wall or an unreadable
  *                     site the paid lane is the other path (RULING 248)
- *   NOT_WALKED        no walk is recorded yet: the free walk goes first
+ *   NOT_WALKED        no walk is recorded yet: paid admission is not held by this
  *   NO_SITE_TO_WALK   no site the walk can open is recorded (find-own-site):
  *                     the free lane has nothing to try, so the paid lane may go
  *   UNREAD            the log could not be read, or the government's need

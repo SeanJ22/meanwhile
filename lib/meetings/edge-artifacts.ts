@@ -195,6 +195,7 @@ export function isPromotedAuthorityFamily(family: AuthorityFamily): family is Pr
 }
 
 export type AuthorityFamily =
+  | "census-districts"
   | "registry-runtime"
   | "federal-directory"
   | "campaign-sites"
@@ -204,6 +205,7 @@ export type AuthorityFamily =
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "census-districts",
   "registry-runtime",
   "federal-directory",
   "campaign-sites",

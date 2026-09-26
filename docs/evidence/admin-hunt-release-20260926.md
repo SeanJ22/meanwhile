@@ -1,8 +1,16 @@
 # Admin completion and 85635 launch preparation
 
-September 26, 2026, Arizona MST. Release owner: Codex, following the explicit handoff from Claude. Implementation branch: `codex/admin-completion-finish`, based on batch F `ea41bb15`. **Release verification is in progress; this file is not a READY declaration.**
+September 26, 2026, Arizona MST. Release owner: Codex, following the explicit handoff from Claude. Final integration branch: `codex/85635-reader-census`, preserving batch F and released PRs #426–428. **Release verification is in progress; this file is not a READY declaration.**
 
 The hunt remains paused. No Send, paid acquisition, search call, new expansion assignment or hunt budget activation occurred. The owner must test Admin and explicitly authorize the start. The approved budget is **$50 total Anthropic token usage for this hunt**, including all models, retries and escalations across concurrent work and restarts. Other services are accounted separately and do not consume this cap. No additional spending caps were introduced. Internal `lifetime` fields mean the duration of this one hunt, not an account-wide or perpetual budget.
+
+## September 26, 11:12 AM MST verification checkpoint
+
+The cf06b463 full gates passed 15/16, with 8,414 passing tests, one failed guard-census assertion and one skipped test. The failure named the old title of the deliberately changed paid-discovery test; the test itself ran. The normal census generator records the rename and newly added guards in 99f84fc1. The strict census assertion remains intact. Receipt: external `gate-run-cf06b463-failed.json`. Lease recovery 938e5dbe uses the existing bounded startup-read retry for the initial cycle lease read only. Lease writes are never retried, foreign holders still refuse, and failures identify the pending phase. It repairs the production 10:35 AM `cp_leases.read` timeout. Admin now names unavailable readings separately from failed live transport. Targeted tests (27) and the isolated change's type/lint checks pass; integration gates and production verification remain required. Neither commit changes a bound reader source.
+
+The full reader proof on 814604f8 passed, including all 29 required Census tests; its evidence is committed at 5fdf09f9. Final gates on 151f1034 passed 15/16 gates and found three test failures: stale budget wording, the superseded free-walk-first expectation, and an official-page extractor version that no longer matched its runtime dependency closure. The failed receipt remains in external evidence as `gate-run-151f1034-failed.json`. All three causes are corrected and 60 focused tests pass. This does not substitute for the pending final full suite.
+
+Repair a8901ffc also preserves hunt-budget identity when Census resolution fails and attributes deterministic discovery-search costs to exact hunt references, including unsuccessful charged attempts. Search remains outside the token allowance. Tests cover unresolved geography, cross-hunt shared members, stale scope plans, out-of-scope search holds that preserve free discovery, and exhausted token allowance not blocking separately controlled search. None of these source changes intersects the 577 bound reader-source hashes; the reader proof is reused on that basis.
 
 ## Integrated fixes
 
@@ -40,4 +48,32 @@ The preserved preparation directory is `C:/Users/seanj/dev/meanwhile-evidence/85
 
 Reuse Claude's valid registration, scheduler, carried-meeting, unchanged-last-checked, automatic campaign-site publication and reader-edge proofs wherever the integrated changes do not invalidate them. New closure proof covers changed reader paths. Remaining release checks are the exact committed reader closure, complete gates, normal deployment, runner SHA handoff, signed-in Admin preview and live updates, cached billing sync, affected reader behavior and genuinely cold Ask.
 
-The final release/readiness report and Admin improvement handoff must record actual outcomes, remaining defects and exact owner acceptance steps. Unrelated identity-authority gaps (Volk, Diaz, Innis and Sargent) remain named in Claude's handoff unless separately resolved with evidence. No successful subset completes the eventual 85635 hunt.
+The final release/readiness report and Admin improvement handoff must record actual outcomes, remaining defects and exact owner acceptance steps. Targeted held-data checks return validated single-person money answers for Lupe Diaz (LD 19, relevant to 85635) and Kevin Volk (LD 17). This does not prove every ballot/card identity symptom fixed. The Innis/Sargent no-model diagnostics were inconclusive; inspect the original surface before closing either identity issue. No successful subset completes the eventual 85635 hunt.
+
+
+## September 26, 5:10 AM MST integration checkpoint
+
+The full reader closure was renewed against production read-only authority at 4fd7e1cb: all executor and render passes completed, finalization succeeded and the required Census gate passed. Evidence is committed at bf85b4e1. The final integration also includes named/partial Admin scope previews, state-attributed standing assignment counts (computed before row trimming), and native cold-request geography prefetch. The prefetch overlaps the existing file read with network reads; it adds no timer or keep-warm mechanism. Focused checks pass; integrated local/CI gates and deployed verification remain required.
+
+Released production is 4cb9a6b9 (#428). Its actual 4096 MB / 2 vCPU native function is the documented provider maximum. Four genuine cold deterministic samples finished in 2.962–3.149 seconds, with two failing the three-second requirement. Boundary receipts preserve instance ordinals, process age, handler duration and complete client time. No average or first streamed token is counted as acceptance. The final eight-case production probe is prepared and must run only after deployment.
+
+Billing is connected for Anthropic reporting, GitHub metered billing and Neon consumption units; Neon dollar totals are unavailable. Exa, Brave and Netlify retain clearly labeled partial estimates. The observed account-period totals are platform accounting, not this hunt's spend. Isolated durable concurrent reservations enforce only the hunt's $50 Anthropic token limit. No hunt period was activated.
+
+Current full-scope blockers remain visible: the five-body preview is registered coverage, not a complete scope certificate; unregistered relevant branches need normal admission; automatic validation/publication must be established for every required family; and the entire hunt needs connected live progress. Existing owner-only manual contracts are not silently activated or treated as a substitute for these connections. Valid isolated Ohio/Puerto Rico Send-to-reader evidence proves representative workflow pieces, not the paid hunt or every family.
+
+
+## September 26 resumed release repair
+
+The 6 AM target was missed. Integrated commit 55ceeb1e failed five assertions locally and in CI: four cache-only Ask/ballot guards detected the newly introduced Census database read, and the render-source vocabulary guard detected an internal enum literal in the Admin mapping expression (not an observed raw label displayed to users). The first failing receipts are preserved outside the release tree. No merge occurred.
+
+Census district membership is now a compact, version-bound serving copy of the proved Census pointer, published by the existing reader-repair child and carried forward when unchanged. The ballot computes certainty inside its request's reader-edge context. An older/missing Census serving copy preserves the previous index's uncertainty; it does not invent full coverage or add a database call to a complete cached request. The ordinary non-edge promoted read remains available. The scope-status wording lives in the existing presentation layer. All 23 targeted regressions/parity/negative checks and 34 serving publisher/context tests pass; type checking and staged preflight pass. A renewed reader closure and all final integrated gates remain required.
+
+## September 26, 10:21 AM MST proof and integration
+
+The repaired reader passed its complete production read-only proof on 814604f8, including all executors, desktop/phone render checks, witness composition, finalization and the required Census gate. The proof is committed at 5fdf09f9. Lossless packaging retains exact logical artifact hashes. The original failed gate remains evidence; it was not weakened or relabeled.
+
+Nine tested isolated follow-ups are integrated through 70bf0bd5: exact Send-linked standing work and counts before trimming (including shared records); normal isolated Ohio/Puerto Rico workflow assertions; prior Census and manifest retention on failed refresh; removal of mandatory free-route exhaustion; per-hunt token-only budget wording; explicit tracked-subset completion; and selected-hunt model admission with durable reservations. Their 16 changed files do not intersect the reader closure's bound sources. No production assignment, budget or paid control changed. All unrelated services retain separate accounting and no new cap.
+
+The normal runner was verified clean at released 4cb9a6b9, PID 34156, using its existing status command. Anthropic/GitHub reporting and Neon consumption remain connected; Exa/Brave/Netlify limitations are labeled estimates. The exact collector file remains C:/Users/seanj/dev/we-the-people/.env.local. The 8:13 AM normal snapshot shows $227.08 Anthropic and $75.52 GitHub, a partial $302.60 platform/account total, not hunt spend.
+
+Final local/CI gates and production deployment remain owed. So do cold complete Ask timing and full-scope body/family-to-publication connections. All three outcomes—complete relevant coverage, incremental public delivery and live Admin visibility—remain mandatory. The owner must accept Admin and explicitly authorize the hunt before Send or paid acquisition.

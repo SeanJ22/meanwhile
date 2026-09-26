@@ -104,7 +104,7 @@ test("a resolved geography renders its ZCTAs, work, spend, coverage and budget â
   const view = await viewFor([scoutCost("az:county:county-of-pima", 0.25)]);
   const words = text(view);
   assert.match(words, /Pima County, Arizona â€” county, priority 1/);
-  assert.match(words, /Paid work here may spend \$5\.00 in any rolling 24 hours/);
+  assert.match(words, /This instruction has a \$5\.00 paid-model budget in any rolling 24 hours/);
   assert.match(words, /resolved 56 codes/);
   assert.match(words, /1 pieces of standing work are about governments here; 1 were due that cycle/);
   assert.match(words, /\$0\.25 in the rolling 24 hours/);

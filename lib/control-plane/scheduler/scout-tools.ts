@@ -25,6 +25,7 @@
  */
 
 import { accessControlIn } from "../../hunt/access-control.ts";
+import { runOcr } from "../../extract/ocr.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
@@ -329,11 +330,11 @@ function capText(text: string, cap: number = TEXT_CAP_CHARS): { readonly text: s
 }
 
 type PdfExtraction =
-  | { readonly kind: "TEXT"; readonly text: string; readonly pages: number }
+  | { readonly kind: "TEXT"; readonly text: string; readonly pages: number; readonly extractionNote: string }
   | { readonly kind: "EXTRACTION_UNAVAILABLE"; readonly why: string }
   | { readonly kind: "EXTRACTION_FAILED"; readonly why: string };
 
-async function extractPdf(bytes: Uint8Array): Promise<PdfExtraction> {
+export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr): Promise<PdfExtraction> {
   let getDocument: (typeof import("pdfjs-dist/legacy/build/pdf.mjs"))["getDocument"];
   try {
     ({ getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs"));
@@ -350,7 +351,22 @@ async function extractPdf(bytes: Uint8Array): Promise<PdfExtraction> {
         const content = await page.getTextContent();
         pages.push(content.items.map((item) => ("str" in item ? item.str : "")).join(" "));
       }
-      return { kind: "TEXT", text: pages.join("\n").replace(/[ \t]+/g, " ").trim(), pages: doc.numPages };
+      const empty = pages.flatMap((text, index) => text.trim().length < 2 ? [index] : []);
+      let extractionNote = "Text layer extracted; ordinary source and claim verification still required.";
+      if (empty.length) {
+        const scanned = await ocr(new Uint8Array(bytes), "vaulted PDF");
+        if (scanned.outcome === "EXTRACTED" && scanned.counts.pages === doc.numPages) {
+          const byPage = new Map(scanned.items.map(page => [page.page, page.text]));
+          for (const index of empty) pages[index] = byPage.get(index + 1) ?? "";
+          const unresolved = empty.filter(index => !pages[index].trim());
+          extractionNote = `OCR used on ${empty.length} page(s) without a text layer. ${unresolved.length ? `No text recognized on page(s) ${unresolved.map(index => index + 1).join(", ")}; this does not prove blank source pages. ` : ""}OCR is an unverified transcription; normal independent verification remains required.`;
+        } else {
+          const why = scanned.outcome === "EXTRACTED" ? "OCR page count disagrees with the PDF" : scanned.reason;
+          if (empty.length === pages.length) return { kind: "EXTRACTION_FAILED", why: `Scanned PDF OCR incomplete: ${why}` };
+          extractionNote = `PARTIAL EXTRACTION: page(s) ${empty.map(index => index + 1).join(", ")} remain unread. ${why}. Retained text from other pages is not complete-document evidence.`;
+        }
+      }
+      return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(), pages: doc.numPages, extractionNote };
     } finally {
       await doc.cleanup();
     }
@@ -966,7 +982,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const body = capText(extracted.text);
     return result(
       true,
-      [UNTRUSTED_CONTENT_HEADER, head, DATA_BEGIN, `PDF TEXT (${extracted.pages} page(s), ${body.note}):`, body.text, DATA_END].join("\n"),
+      [UNTRUSTED_CONTENT_HEADER, head, extracted.extractionNote, DATA_BEGIN, `PDF TEXT (${extracted.pages} page(s), ${body.note}):`, body.text, DATA_END].join("\n"),
       input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.pages} page(s)`), acc, input.permission
     );
   }

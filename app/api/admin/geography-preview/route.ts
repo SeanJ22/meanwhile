@@ -22,6 +22,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { containerStanding, indexBodies } from "@/lib/control-plane/admin-view/coverage.ts";
 import { previewScopeBodies } from "@/lib/control-plane/admin-view/scope-preview.ts";
+import { scopeWorkPreview } from "@/lib/control-plane/admin-view/scope-work.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 
@@ -33,6 +34,7 @@ import { loadWatchedStandings } from "../../../(admin)/_mw/data/load-bodies.ts";
 import { readerQuery } from "../../../(admin)/_mw/data/reader-query.ts";
 import { loadRegistryBodies } from "../../../(admin)/_mw/data/registry.ts";
 import { sendPreviewFor } from "../../../(admin)/_mw/data/send-preview.ts";
+import { loadScopeWork } from "../../../(admin)/_mw/data/scope-work.ts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -54,9 +56,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Name a county, district, metro area or legislative district by its type and Census id." }, { status: 400 });
   }
   const nowIso = new Date().toISOString();
-  const [container, registry, bodies] = await Promise.all([type === "zcta" ? loadZcta(geoid) : loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedStandings(nowIso)]);
+  const [container, registry, bodies, work] = await Promise.all([type === "zcta" ? loadZcta(geoid) : loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedStandings(nowIso), loadScopeWork()]);
   if (container.kind === "UNREAD") return NextResponse.json({ ok: false, says: container.detail }, { status: 200 });
   const g = container.value.geography;
+  const scopeBodies = registry.kind === "HELD" ? previewScopeBodies(container.value.zctas, indexBodies(registry.bodies), bodies.kind === "HELD" ? bodies.views : []) : [];
+  const scopeWork = work.kind === "HELD" ? scopeWorkPreview({ codes: container.value.zctas, states: [g.stateAbbr, ...g.memberStates], bodyIds: scopeBodies.map(body => body.id), obligations: work.obligations, readAt: work.readAt }) : null;
+  const scopeWorkGap = work.kind === "UNREAD" ? work.detail : null;
   /* How many governments a Send here creates work for, per state, and whether a reviewed registry or registration names them (2026-09-25). */
   const query = readerQuery();
   const sendStates = await Promise.all(
@@ -70,6 +75,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       codes: container.value.zctas.map((z) => ({ zcta5: z.zcta5, whole: z.whole, fraction: z.fraction, indexed: z.indexed, counts: null })),
       totals: null,
       totalsGap: registry.detail,
+      scopeWork, scopeWorkGap,
       send,
       lookup: { source: container.source, versionId: container.versionId },
     });
@@ -86,7 +92,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     ok: true,
     geography: { type: g.type, geoid: g.geoid, version: g.version, label: g.label, stateAbbr: g.stateAbbr },
     codes: standing.perCode.map((c) => ({ zcta5: c.zcta5, whole: c.whole, fraction: c.fraction, indexed: c.indexed, counts: c.counts })),
-    scopeBodies: previewScopeBodies(container.value.zctas, index),
+    scopeBodies,
+    scopeWork, scopeWorkGap,
     totals: {
       ...standing.counts,
       codes: standing.codes,

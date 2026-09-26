@@ -14,7 +14,8 @@ import {
   type ScoutToolContext,
   type VaultBytes,
 } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
 
@@ -643,6 +644,28 @@ function minimalPdf(text: string): Uint8Array {
     "trailer << /Root 1 0 R >>\n%%EOF\n";
   return new TextEncoder().encode(pdf);
 }
+
+test("Scout PDF access uses OCR only for unread scanned pages and preserves original vaulted bytes", async () => {
+  let calls = 0;
+  const scanned = minimalPdf("");
+  const result = await extractPdf(scanned, async bytes => {
+    calls++;
+    assert.deepEqual(bytes, scanned, "pdfjs must not detach the evidence supplied to OCR");
+    return extracted("OCR", "scan.pdf", bytes.length, [{ page: 1, text: "Public meeting September 30" }], { pages: 1, pagesWithText: 1, pagesEmpty: 0 });
+  });
+  assert.equal(result.kind, "TEXT");
+  if (result.kind !== "TEXT") throw new Error("OCR did not reach Scout");
+  assert.match(result.text, /\[Page 1\][\s\S]*Public meeting/);
+  assert.match(result.extractionNote, /unverified transcription/);
+  await extractPdf(minimalPdf("Born digital agenda"), async () => { throw new Error("unnecessary OCR"); });
+  assert.equal(calls, 1);
+});
+
+test("Scout reports unavailable scanned-PDF extraction instead of a successful empty document", async () => {
+  const result = await extractPdf(minimalPdf(""), async () => cannotRun("OCR", "scan.pdf", "rasterizer unavailable"));
+  assert.equal(result.kind, "EXTRACTION_FAILED");
+  assert.match(result.why, /rasterizer unavailable/);
+});
 
 function bytesTransport(routes: Readonly<Record<string, { status: number; bytes: Uint8Array; contentType: string }>>): { readonly openBytes: OpenBytes; readonly seen: string[] } {
   const seen: string[] = [];

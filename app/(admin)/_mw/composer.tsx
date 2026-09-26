@@ -35,6 +35,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "@/lib/control-plane/work-question.ts";
 import type { PreviewScopeBody } from "@/lib/control-plane/admin-view/scope-preview.ts";
+import type { ScopeWorkPreview } from "@/lib/control-plane/admin-view/scope-work.ts";
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { scopeRouteDescription } from "@/lib/control-plane/admin-view/scope-preview-words.ts";
 
 import { fnv } from "./fnv.ts";
@@ -72,6 +74,8 @@ interface Preview {
   readonly says?: string;
   readonly codes?: readonly CodeRow[];
   readonly scopeBodies?: readonly PreviewScopeBody[];
+  readonly scopeWork?: ScopeWorkPreview | null;
+  readonly scopeWorkGap?: string | null;
   readonly totals?: {
     readonly bodies: number;
     readonly wayIn: number;
@@ -352,6 +356,17 @@ export function Composer(props: {
                     {p.scopeBodies.map(body => <li key={body.id}>
                       <span className={s.name14}>{body.name}</span>
                       <div className={s.note}>{body.codes.map(code => `${code.zcta5}${code.partial ? " (partial ZIP coverage)" : ""}`).join(", ")} · {scopeRouteDescription(body.coverageStatus)}</div>
+                    </li>)}
+                  </ul>
+                </details>}
+                {p.scopeWorkGap && <p className={s.goldNote}>{p.scopeWorkGap}</p>}
+                {p.scopeWork && <details className={s.dividerTight}>
+                  <summary className={s.name14}>Registered work and shared information ({p.scopeWork.rows.length})</summary>
+                  <p className={s.note}>Read {formatEastern(p.scopeWork.readAt)}. Shared records are reused. Partial overlap requires confirmation. {p.scopeWork.unplaced} active records in these states or with unresolved geography lack enough placement evidence; missing and undiscovered work remains in scope.</p>
+                  <ul className={s.stack8} style={{ maxHeight: 300, overflowY: "auto" }}>
+                    {p.scopeWork.rows.map(row => <li key={row.id}>
+                      <Link href={`/admin/work?open=${encodeURIComponent(row.id)}#a-${encodeURIComponent(row.id)}`}>{row.recordClass} · {row.subjectId}</Link>
+                      <div className={s.note}>{row.applicability === "PARTIAL_UNRESOLVED" ? "Partial overlap — unresolved" : row.applicability === "DECLARED_SHARED" ? "Shared scope declared by the source provider" : "Exact registered body"} · {row.lastWorkedAt ? `Last worked ${formatEastern(row.lastWorkedAt)}` : "Not yet worked"}</div>
                     </li>)}
                   </ul>
                 </details>}

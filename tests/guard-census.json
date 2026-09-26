@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 842,
-    "named": 8135,
+    "named": 8142,
     "dynamic": 33
   },
   "files": {
@@ -2737,7 +2737,9 @@
         "0C: an ordinary 200 still comes back exactly as before",
         "A PRECONNECT HINT IS NOT A CHALLENGE: a real page that only warms the Turnstile host stays a page",
         "NHHUNT: the ambiguous marks keep their floor, so a real page stays a page",
-        "NHHUNT: the modern managed challenge is caught at 30 KB, not missed"
+        "NHHUNT: the modern managed challenge is caught at 30 KB, not missed",
+        "SVUSD: a page that redirects without a signed token, or a real page carrying one, stays a page",
+        "SVUSD: a script-only page that sends the browser back with a signed token is an access control"
       ],
       "dynamic": 0
     },
@@ -3814,12 +3816,16 @@
     },
     "tests/cycle-finalization.test.ts": {
       "names": [
+        "2026-09-26: late work still running at 835 s left the research state no time; the late-work deadline never admits the projection there",
         "a hung store call inside a step is cut at the step's budget under its own name, not the step's",
         "a hung store: the canonical outcome's append fails by name inside its budget, and the cycle records FAILED instead of hanging",
         "a step gets its own budget, cut so the canonical outcome and the local record keep theirs; none is started with no time",
         "a step whose await never settles fails by name after its budget; one with no time is not started",
         "an answering store gets the FAILED outcome, naming the timeout and what was pending",
         "the clock: the stall diagnostic fires 90 s before the wall and every record settles 15 s before it",
+        "the late work yields at 735 s on the fifteen-minute wall, which leaves every finalization step its whole budget",
+        "the late-work deadline is never before the process began and never after the stall point, on any wall",
+        "the research cycle bounds its late work by the late-work deadline: the metrics, the progression and the fact projection",
         "with no time left before the wall, the local crash record still carries the failure, and says the append was not tried"
       ],
       "dynamic": 0
@@ -6613,6 +6619,7 @@
         "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
         "A PAGE CARRYING A CREDENTIAL IS READ AS ITS SANITIZED DERIVATIVE, AND A VAULT THAT REFUSES ITS BYTES NEVER ENDS THE WALK",
         "A STALE RECORDED ADDRESS: the current official site a route hint records is walked first, and the walk says what it replaced",
+        "A TOKEN REDIRECT AT 200 IS A WALL: Sierra Vista Unified's homepage (2026-09-26) is recorded BLOCKED by an access control, never 'read and shows no route'",
         "A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other walks are recorded and their field manual is written",
         "BOUNDED: a walk stops at its request bound and says so",
         "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",

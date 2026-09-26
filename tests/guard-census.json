@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 841,
-    "named": 8123,
+    "files": 843,
+    "named": 8139,
     "dynamic": 33
   },
   "files": {
@@ -1134,6 +1134,19 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-decision-answer.test.ts": {
+      "names": [
+        "Mesa: the council's decisions from its own minutes — each motion and its result in the minutes' words, and the minutes' standing",
+        "Pima: the record now carries the item's title and the publisher's own result word, so a reader can see what was decided",
+        "Pima: what the board decided is its own record — the date, each result counted over the actions, each motion and result in the publisher's words",
+        "ROUTE: \\\"what did the Pima board decide at its last meeting\\\" is composed from its recorded actions — no model call, the same validator, nothing of the reader's",
+        "a motion with no result recorded is SAID to have none — never read as passed or failed — and a contradictory result is named as one",
+        "a same-day sitting is counted beside the chosen one, or its named outcome gap is said for it",
+        "composition steps aside — and the model writes — whenever the records cannot carry the answer",
+        "the held actions are read beside the records, never inside them: every quoted field is a span of its own record's text"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-destinations.test.ts": {
       "names": [
         "4d: a bare topic word is never hijacked by a destination",
@@ -1366,7 +1379,7 @@
         "ROUTE: a meeting-time question is read in code and answered from the sitting — no model call at all",
         "ROUTE: a named-subject question is read in code too — one writing call, no reading call",
         "ROUTE: a settled question whose records need writing makes ONE call — the fast writer, no reading call, no thinking",
-        "ROUTE: any other question reaches the model exactly as before — one reading, then one answer that depends on it",
+        "ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree",
         "ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded",
         "ROUTE: the same question over unchanged records is served from the cache, with no new call",
         "ROUTE: when every writer fails validation the answer still fails closed — an invented citation or an invented link",
@@ -1585,6 +1598,19 @@
         "a record with no source contributes no line at all",
         "an unparseable URL yields no label rather than an empty link",
         "six documents from one office are ONE source line"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-speculative-reading.test.ts": {
+      "names": [
+        "ROUTE: a model reading that disagrees discards the speculative answer — its call is stopped and the answer is written from the model's reading",
+        "ROUTE: a model reading that never comes discards the speculative answer too; the route falls back exactly as before",
+        "ROUTE: a pronoun follow-up the code cannot read overlaps too, bound to the earlier turn's body",
+        "ROUTE: nothing is started for a question the code reads itself, or where no model key is configured",
+        "ROUTE: the reading and the writing overlap — the answer arrives in about the longer call, not the sum",
+        "an abandoned writer stops, and the ladder never escalates past it",
+        "the code's best reading: a guess from the reader's words, the page or the earlier turn — never for a question nothing binds",
+        "the verdict keeps the speculative answer only on the same subject, body, question kind and writer input — and names the first difference"
       ],
       "dynamic": 0
     },

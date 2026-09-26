@@ -526,6 +526,13 @@ export interface SynthesizeOptions {
    * blended rate describes neither.
    */
   callerKey?: AskCallerKey;
+  /**
+   * The caller no longer wants this answer (2026-09-25): a writer started on
+   * the code's own reading of the question, which the model's reading then
+   * contradicted (`lib/ask/speculative-reading.ts`). An aborted call stops,
+   * and the ladder never escalates past it.
+   */
+  signal?: AbortSignal;
 }
 
 /**
@@ -608,6 +615,7 @@ async function synthesizeOnRung(
 
   const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key", ms: elapsed() };
+  if (options.signal?.aborted) return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "AbortError" };
   if (options.allowCall && !options.allowCall()) {
     return { kind: "UNAVAILABLE", why: "ceiling", ms: elapsed() };
   }
@@ -638,7 +646,7 @@ async function synthesizeOnRung(
       // A bounded wait (2026-09-24). Past the bound the records still ship as
       // the structured answer (or the next rung writes); an unbounded call
       // could outlive the platform limit and deliver the reader nothing at all.
-      signal: AbortSignal.timeout(rung.timeoutMs),
+      signal: options.signal ? AbortSignal.any([AbortSignal.timeout(rung.timeoutMs), options.signal]) : AbortSignal.timeout(rung.timeoutMs),
     });
     if (!response.ok) {
       /* The status, and Anthropic's own error TYPE token if it sent one. The
@@ -743,8 +751,10 @@ export async function synthesizeWithLadder(
   let escalation: string | null = null;
   let last: LadderResult | null = null;
   for (const [index, rung] of ladder.entries()) {
+    // An answer the caller has abandoned is never escalated to another writer.
+    if (options.signal?.aborted && last) return last;
     const outcome = await synthesizeOnRung(pack, rung, options);
-    const hasNext = index < ladder.length - 1;
+    const hasNext = index < ladder.length - 1 && !options.signal?.aborted;
     if (outcome.kind === "UNAVAILABLE") {
       attempts.push({ model: rung.model, role: rung.role, ms: outcome.ms, result: "UNAVAILABLE", detail: outcome.detail ? `${outcome.why}: ${outcome.detail}` : outcome.why });
       last = { outcome, verdict: null, attempts, escalation };

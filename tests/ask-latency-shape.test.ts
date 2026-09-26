@@ -175,7 +175,7 @@ test("composition steps aside whenever there is something to summarise or a fact
   const action: EvidenceRecord = { kind: "MEETING_ACTION", id: "1#action", bodyId: MESA, text: "The board's recorded action was \"approve\".", sourceUrl: "https://mesa.example.gov/m1" };
   const item: EvidenceRecord = { kind: "AGENDA_ITEM", id: "m1#0", bodyId: MESA, meetingId: "m1", text: "Approve the minutes.", sourceUrl: "https://mesa.example.gov/a1" };
   assert.ok(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", sittingGaps: [outcomeGap] }), "no outcome held: the gap is the answer");
-  assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", records: [RECORDS[0], action], sittingGaps: [] }), null, "recorded actions are for the model to summarise");
+  assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", records: [RECORDS[0], action], sittingGaps: [] }), null, "recorded actions outside a decisions question, with no held action read beside them, are for the model to summarise");
   assert.equal(composeSittingAnswer({ ...base, shape: "BODY_AGENDA", records: [RECORDS[0], item], sittingGaps: [] }), null, "held agenda items are for the model to summarise");
   assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", sittingGaps: [AGENDA_GAP] }), null, "an outcome question needs its outcome gap");
   assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_TIME", sittings: [{ ...STUDY, status: "CANCELED" }], sittingGaps: [] }), null, "a cancelled sitting is never offered as the next meeting");
@@ -251,6 +251,10 @@ let writerAnswers: Record<string, { answer: string; citedSources: unknown[] } | 
   default: { answer: "The board's next sitting is in the records below.", citedSources: [1] },
 };
 const PASSING = { answer: "The board's next sitting is in the records below.", citedSources: [1] };
+/** The model's reading of a question, by the question; CONTACT with no mention for any other. */
+const READINGS: Record<string, unknown> = {
+  "What did the Pima County Board of Supervisors decide on August 25, 2026?": { intent: "PAST_MEETING", entityMentions: ["Pima County Board of Supervisors"], normalizedMentions: ["Pima County Board of Supervisors"], temporal: { kind: "LAST" }, referent: null },
+};
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
@@ -263,9 +267,10 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   calls.push({ kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
   const planned = writerAnswers[body.model] ?? writerAnswers.default;
   if (synthesis && planned === "HTTP_529") return new Response(JSON.stringify({ error: { type: "overloaded_error" } }), { status: 529 });
+  const asked = synthesis ? null : (body as unknown as { messages: { content: string }[] }).messages.at(-1)?.content ?? "";
   const text = synthesis
     ? JSON.stringify(planned)
-    : JSON.stringify({ intent: "CONTACT", entityMentions: [], normalizedMentions: [], temporal: { kind: "NONE" }, referent: null });
+    : JSON.stringify(READINGS[asked ?? ""] ?? { intent: "CONTACT", entityMentions: [], normalizedMentions: [], temporal: { kind: "NONE" }, referent: null });
   return new Response(JSON.stringify({ content: [{ type: "text", text }], usage: { input_tokens: 10, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } }), {
     status: 200,
     headers: { "content-type": "application/json" },
@@ -281,6 +286,7 @@ interface Payload {
   denominators: Record<string, number>;
   trace: {
     interpretation: { ran: boolean; why?: string; cached?: boolean };
+    speculation?: { ran: boolean; why: string; delivered: string };
     synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
     validation: { ran: boolean; passed?: boolean; failed?: string[] };
     composition?: { shape: string; composed: boolean; passed?: boolean };
@@ -333,13 +339,14 @@ test("ROUTE: a named-subject question is read in code too — one writing call, 
   assert.equal(payload.mode, "GROUNDED_CLAUDE");
 });
 
-test("ROUTE: any other question reaches the model exactly as before — one reading, then one answer that depends on it", { concurrency: false }, async () => {
+test("ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who can I talk to at the Vail school board?", [AZ, PIMA, VAIL]);
-  assert.deepEqual(made.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"], "the answer needs the reading's binding, so these two are the only sequential calls");
+  assert.deepEqual(made.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"], "one reading and one answer: the answer was started on the code's reading, not written twice");
   assert.equal(made[0].model, ASK_SYNTHESIS_MODEL, "reading the question stays on the frontier model");
   assert.equal(payload.trace.interpretation.ran, true);
   assert.equal(payload.trace.composition, undefined, "no composition shape");
   assert.equal(payload.mode, "GROUNDED_CLAUDE");
+  assert.deepEqual([payload.trace.speculation?.delivered, payload.trace.speculation?.why], ["SPECULATIVE_ANSWER", "same-subject-body-kind-and-writer-input"]);
 });
 
 test("ROUTE: the same question over unchanged records is served from the cache, with no new call", { concurrency: false }, async () => {
@@ -409,11 +416,13 @@ test("ROUTE: 'how did they vote' is answered from the publisher's roll calls —
 });
 
 test("ROUTE: a large outcome sitting sends the writer a bounded selection; the reader's records and counts stay whole", { concurrency: false }, async () => {
-  const { payload, calls: made } = await ask("What did the Pima County Board of Supervisors decide at its last meeting?", [AZ, PIMA], { today: "2026-08-28" });
+  // A dated question is read by the model (the undated one is composed from the recorded actions, tests/ask-decision-answer.test.ts).
+  const { payload, calls: made } = await ask("What did the Pima County Board of Supervisors decide on August 25, 2026?", [AZ, PIMA], { today: "2026-08-28" });
   const rows = payload.records.filter((record) => record.kind === "MEETING_MEMBER_VOTE").length;
   assert.ok(rows > WRITER_MEMBER_VOTE_ROWS, `precondition: the committed sitting holds more rows (${rows}) than the bound`);
   assert.equal(payload.denominators.personVoteRowsInPack, rows, "the denominators state the full count");
-  assert.equal(made.length, 1);
+  assert.deepEqual(made.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"], "one reading and one answer, started on the code's reading while the model read");
+  assert.equal(payload.trace.speculation?.delivered, "SPECULATIVE_ANSWER");
   const sel = payload.trace.synthesis.writerSelection;
   assert.ok(sel && sel.memberVoteRowsShown <= WRITER_MEMBER_VOTE_ROWS && sel.memberVoteRowsShown + sel.memberVoteRowsWithheld === rows);
 });

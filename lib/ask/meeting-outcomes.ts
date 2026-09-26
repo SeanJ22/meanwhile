@@ -23,23 +23,64 @@ export function meetingRecordQuestionClass(question: string): QuestionClass | nu
   return outcomeQuestionClass(question) ?? (/\b(?:agenda|agendas|docket|noticed)\b/i.test(question) ? "WHAT_WAS_NOTICED" : null);
 }
 
+/**
+ * **ONE RECORDED ACTION, AS THE CODE THAT COMPOSES A "WHAT DID THEY DECIDE"
+ * ANSWER READS IT.** (2026-09-25, the Ask three-second repair.)
+ *
+ * Every string field is a verbatim span of the `MEETING_ACTION` record's own
+ * `text` — the text is built from these same values just below — so a composed
+ * answer can quote them and still quote only what the reader is shown.
+ * `lib/ask/sitting-answer.ts` checks that again before it quotes anything. The
+ * remaining fields (`disposition`, `divided`, `consent`) only ORDER the actions
+ * in a composed answer; none of them is ever printed.
+ *
+ * This travels beside the records, never inside them: the reader's records
+ * and the writer's input are unchanged by it.
+ */
+export interface HeldMeetingAction {
+  /** The `MEETING_ACTION` record this reads (`<eventItemId>#action`). */
+  recordId: string;
+  meetingId: string;
+  /** Where the action was read: the publisher's structured record, or the sitting's minutes. */
+  source: "PUBLISHER_RECORD" | "MINUTES";
+  /** The item as the publisher titles it, or as the minutes print it. */
+  item: string | null;
+  /** The minutes' own item number(s), "5-c". */
+  itemReference: string | null;
+  matterFile: string | null;
+  /** The clerk's verb ("approve") or the minutes' motion ("that Resolution No. 12559 be adopted"). */
+  motion: string | null;
+  /** The publisher's own result words ("Pass"; "Carried unanimously."), or null when none is recorded. */
+  result: string | null;
+  /** STATED: `result` is the publisher's words. ABSENT: none recorded. CONTRADICTORY: the record's two result fields disagree. */
+  resultState: "STATED" | "ABSENT" | "CONTRADICTORY";
+  /** The minutes' standing when it is not the approved record, in the record's own words. */
+  standing: string | null;
+  consent: boolean;
+  /** For ordering only: the store's reading of the result. */
+  disposition: LegistarOutcomeRecord["disposition"];
+  /** For ordering only: the item's per-member roll call records more than one value. */
+  divided: boolean;
+}
+
 /** The same exact body/sitting query serves current-calendar and older held outcomes. */
 export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: string; startsAt: string; question: string }) {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
   const denominators: Record<string, number> = {};
+  const actions: HeldMeetingAction[] = [];
   const questionClass = meetingRecordQuestionClass(input.question);
-  if (!questionClass) return { records, gaps, denominators };
-  if (loadedFrom() === "EMPTY_STORE") return { records, gaps: [{ whose: "OURS" as const, statement: "The held structured meeting records could not be read for this answer. This is a holding failure, not evidence that the body published no agenda, actions or votes." }], denominators: { outcomeLoaderFailures: 1 } };
+  if (!questionClass) return { records, gaps, denominators, actions };
+  if (loadedFrom() === "EMPTY_STORE") return { records, gaps: [{ whose: "OURS" as const, statement: "The held structured meeting records could not be read for this answer. This is a holding failure, not evidence that the body published no agenda, actions or votes." }], denominators: { outcomeLoaderFailures: 1 }, actions };
   const evidence = outcomeEvidenceFor({ bodyId: input.bodyId, meetingId: input.meetingId, questionClass });
   // The ordinary document/notice selector answers agenda availability when
   // this separate structured source has no sitting. Its outcome-store absence
   // must not become a claim that an already held document has no agenda.
-  if (questionClass === "WHAT_WAS_NOTICED" && evidence.state === "NO_SITTING_HELD") return { records, gaps, denominators };
+  if (questionClass === "WHAT_WAS_NOTICED" && evidence.state === "NO_SITTING_HELD") return { records, gaps, denominators, actions };
   // A minutes-read sitting holds decisions, never agenda items: its agenda is
   // answered by the meeting's own agenda document, exactly as for a sitting
   // this store does not hold.
-  if (questionClass === "WHAT_WAS_NOTICED" && evidence.sittings.length > 0 && evidence.sittings.every(isMinutesRouteSitting)) return { records, gaps, denominators };
+  if (questionClass === "WHAT_WAS_NOTICED" && evidence.sittings.length > 0 && evidence.sittings.every(isMinutesRouteSitting)) return { records, gaps, denominators, actions };
   const sitting = sittingsForBody(input.bodyId).find((row) => row.meetingId === input.meetingId);
   const titles = new Map((sitting?.agenda ?? []).map((record) => [record.eventItemId, record.title]));
   for (const rec of evidence.records) if (rec.recordClass === "AGENDA") {
@@ -53,9 +94,42 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
     const title = titles.get(rec.eventItemId);
     records.push({ kind: "MEETING_MEMBER_VOTE", id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`, bodyId: input.bodyId, text: title ? `On "${title}", ${vote.personName} voted ${vote.value}.` : `${vote.personName} voted ${vote.value}.`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
   }
+  const dividedItems = new Set(ranked.filter((row) => row.divided).map((row) => row.rec.eventItemId));
   for (const rec of evidence.records) if (rec.recordClass === "ACTION_SUMMARY") {
-    const parts = rec.quote ? [minutesActionText(rec, sitting)] : [rec.action ? `The board's recorded action was "${rec.action}".` : null, rec.mover ? `Moved by ${rec.mover}${rec.seconder ? `, seconded by ${rec.seconder}` : ""}.` : null, rec.tallyText ? `The clerk recorded: "${rec.tallyText}"` : null, rec.rollCall === "OUTCOME_WITHOUT_ROLL_CALL" ? "No per-member roll call was published for this item." : null].filter(Boolean);
-    records.push({ kind: "MEETING_ACTION", id: `${rec.eventItemId}#action`, bodyId: input.bodyId, text: `${rec.matterFile ? `${rec.matterFile}: ` : ""}${parts.join(" ")}`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
+    const recordId = `${rec.eventItemId}#action`;
+    const file = rec.matterFile ? `${rec.matterFile}: ` : "";
+    if (rec.quote) {
+      /* Read off the minutes: the motion and its result are spans of the quoted
+         passage. A result the parser could not read is said, in the store's words. */
+      const standing = sitting?.minutesDocument && sitting.minutesDocument.approval.state !== "APPROVED"
+        ? sitting.minutesDocument.approval.detail.split(" The council has since approved")[0]!
+        : null;
+      records.push({ kind: "MEETING_ACTION", id: recordId, bodyId: input.bodyId, text: `${file}${minutesActionText(rec, sitting)}${rec.dispositionGap ? ` ${rec.dispositionGap}` : ""}`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
+      actions.push({ recordId, meetingId: input.meetingId, source: "MINUTES", item: rec.itemQuote ?? null, itemReference: rec.itemReference ?? null, matterFile: rec.matterFile, motion: rec.action, result: rec.dispositionRaw, resultState: rec.dispositionRaw ? "STATED" : "ABSENT", standing, consent: rec.onConsentCalendar, disposition: rec.disposition, divided: false });
+      continue;
+    }
+    /*
+     * The publisher's structured record (Legistar event items). The item's own
+     * title and the publisher's pass/fail word now travel in the record's text
+     * (2026-09-25): before, a reader — and any writer — saw "File ID 20656: The
+     * board's recorded action was "approve"" and could not tell what the item
+     * was or whether the motion carried. The word is carried unmapped; a
+     * record whose two result fields disagree says so; a record with no result
+     * says so in the store's own sentence. None is ever read as a defeat.
+     */
+    const title = titles.get(rec.eventItemId) ?? null;
+    const resultState = rec.dispositionConflict ? "CONTRADICTORY" as const : rec.dispositionRaw ? "STATED" as const : "ABSENT" as const;
+    const parts = [
+      rec.action ? `${title ? `On "${title}", the` : "The"} board's recorded action was "${rec.action}".` : title ? `On "${title}":` : null,
+      resultState === "STATED" ? `The published result was "${rec.dispositionRaw}".`
+        : resultState === "CONTRADICTORY" ? `The published result contradicts itself: ${rec.dispositionConflict}`
+          : rec.dispositionGap ?? "The published record carries no pass or fail result for this item.",
+      rec.mover ? `Moved by ${rec.mover}${rec.seconder ? `, seconded by ${rec.seconder}` : ""}.` : null,
+      rec.tallyText ? `The clerk recorded: "${rec.tallyText}"` : null,
+      rec.rollCall === "OUTCOME_WITHOUT_ROLL_CALL" ? "No per-member roll call was published for this item." : null,
+    ].filter(Boolean);
+    records.push({ kind: "MEETING_ACTION", id: recordId, bodyId: input.bodyId, text: `${file}${parts.join(" ")}`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
+    actions.push({ recordId, meetingId: input.meetingId, source: "PUBLISHER_RECORD", item: title, itemReference: null, matterFile: rec.matterFile, motion: rec.action, result: resultState === "STATED" ? rec.dispositionRaw : null, resultState, standing: null, consent: rec.onConsentCalendar, disposition: rec.disposition, divided: dividedItems.has(rec.eventItemId) });
   }
   denominators.outcomeRecordsForThatMeeting = evidence.records.length;
   denominators.structuredAgendaItemsForThatMeeting = records.filter((record) => record.kind === "AGENDA_ITEM").length;
@@ -65,7 +139,7 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
   denominators.rollCallItemsHeldForThatMeeting = rolls.length;
   denominators.rollCallItemsInPack = ranked.length;
   if (evidence.gap) gaps.push({ whose: outcomeGapWhose(evidence.state), statement: evidence.gap });
-  return { records, gaps, denominators };
+  return { records, gaps, denominators, actions };
 }
 
 /** The source persists an ISO instant with its published offset; do not invent a zone. */

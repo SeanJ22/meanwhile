@@ -151,9 +151,34 @@ export interface AskTrace {
   composition?: {
     kind: "SITTING";
     shape: string;
+    /** Which records it was read from: recorded actions, roll calls, or the sitting and its named gaps. */
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS";
     composed: boolean;
     passed?: boolean;
     failed?: string[];
+  };
+  /**
+   * **WHICH READING THE DELIVERED ANSWER CAME FROM, AND WHY.** (2026-09-25,
+   * `lib/ask/speculative-reading.ts`.) For a question the code cannot settle,
+   * the answer path starts from the code's own best reading while the model
+   * reads the question; its answer is kept only when the model's reading
+   * agrees — same subject, same body, same question kind and byte-identical
+   * writer input — and is discarded otherwise. Facts about our machinery only:
+   * intents, tense kinds and times, never the question.
+   */
+  speculation?: {
+    /** Whether a speculative writer started. */
+    ran: boolean;
+    /** Why it did not start; or why its answer was kept or discarded. */
+    why: string;
+    /** SPECULATIVE_ANSWER: the writer started on the code's reading delivered. MODEL_READING: the answer path ran on the model's reading, as before. */
+    delivered: "SPECULATIVE_ANSWER" | "MODEL_READING";
+    codeIntent?: AskIntent;
+    codeTemporal?: AskTemporal;
+    /** Milliseconds from the request's start to the speculative writer's start. */
+    writerStartedAtMs?: number;
+    /** A discarded writer still running was stopped. */
+    aborted?: boolean;
   };
   /**
    * Wall-clock milliseconds per stage of the request, in order (2026-09-24):

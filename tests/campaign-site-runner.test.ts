@@ -635,6 +635,26 @@ test("the door verifies the vault again and holds by name what it cannot prove; 
   assert.match(derivedCampaignSitesPass({ approvals: [structural], held: () => heldBytes, profiles: null, gateOpen: false, now: T2 }).candidate.retrieval.failureDetail ?? "", /^GATE_CLOSED/);
 });
 
+test("newer fully verified campaign evidence refreshes the same reader URL automatically", () => {
+  const body = fixture("lilytangwilliams-endorsements.live.html");
+  const approval = approvalFor(LILY, body, "2026-09-25T21:00:05.000Z");
+  const heldBytes: HeldVerifyingRead = { body, sha256: sha256(body), tier: "RAW", permission: "ALLOWED" };
+  const key = subject(TANG_WILLIAMS).readerKeys[0]!;
+  const previous = { [key]: { official: null, campaign: { url: LILY, verification: "Earlier verified read", attemptedAt: "2026-08-13" } } };
+  const plan = (held: HeldVerifyingRead) => planDerivedCampaignSites({ approvals: [approval], held: () => held,
+    profiles: { input: { kind: "PROMOTED_VERSION", recordClass: "CANDIDATE_PROFILE", scope: "s", versionId: "v", readModelSha256: "b".repeat(64), promotedAt: T0 }, links: previous } });
+  const refreshed = plan(heldBytes);
+  assert.deepEqual(refreshed.held, []);
+  assert.equal(refreshed.records.length, subject(TANG_WILLIAMS).readerKeys.length);
+  const rendered = composeCampaignLinks(previous, refreshed.records);
+  assert.equal(rendered.links[key]?.campaign?.attemptedAt, "2026-09-25");
+  assert.ok(rendered.derivedKeys.has(key));
+  assert.deepEqual(plan({ ...heldBytes, sha256: "c".repeat(64) }).records, [], "a failed refresh never replaces working evidence");
+  const older = approvalFor(LILY, body, "2026-09-23T21:00:05.000Z");
+  const latest = planDerivedCampaignSites({ approvals: [older, approval], held: () => heldBytes, profiles: null });
+  assert.ok(latest.records.every(record => record.campaign.evidence.approvalRecordId === approval.recordId), "same-URL evidence chooses the newest verified read, not the first approval id");
+});
+
 test("the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key", () => {
   const link = (url: string) => ({ url, verification: "Fetched 2026-09-25 (campaign-site-verifier/1): 'x' — names A B, the office (\"mayor\"), and the 2026 election.", attemptedAt: "2026-09-25" });
   const record = (id: string, candidacyId: string, url: string): DerivedCampaignSiteRecord => ({ id, candidacyId, candidateName: "A B",

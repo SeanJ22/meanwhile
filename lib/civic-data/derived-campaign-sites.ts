@@ -20,9 +20,9 @@
  * the promoted `candidate-profiles` version it was composed against), and the
  * profile Reader composes the two:
  *
- * - a derived link fills a Reader key's `campaign` slot only when no key of
- *   the same candidacy already carries a campaign link in `candidate-profiles`:
- *   one person, one campaign link, and a reviewed link always wins;
+ * - a derived link fills a missing campaign slot or refreshes the same URL
+ *   with a newer fully verified observation; a conflicting URL or unproved
+ *   observation order preserves the prior link across the candidacy's keys;
  * - the key's official link, card and hunts stay exactly as `candidate-profiles`
  *   holds them;
  * - the link renders through the same slot and the same `{url, verification,
@@ -38,6 +38,7 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
+import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 
 /**
  * The Reader's link shapes (`VerifiedLink`, `CandidateLinks` in
@@ -198,10 +199,9 @@ export interface ComposedCandidateLinks<L extends CandidateLinksShape> {
 }
 
 /**
- * **A REVIEWED LINK ALWAYS WINS.** Compose the profile links with the derived
- * sites: a candidacy whose any Reader key already carries a campaign link in
- * `candidate-profiles` keeps it, on every key; otherwise each of its keys gets
- * the derived link, beside the official link profiles hold for that key. Pure.
+ * Compose fully verified links without a second approval step. Newer evidence
+ * for the same URL may refresh all keys of a candidacy; a conflict or unproved
+ * date preserves its profile links. Official links remain unchanged. Pure.
  */
 export function composeCampaignLinks<L extends CandidateLinksShape>(
   profiles: Readonly<Record<string, L>>,
@@ -212,7 +212,7 @@ export function composeCampaignLinks<L extends CandidateLinksShape>(
   const links: Record<string, L | CandidateLinksShape> = { ...profiles };
   const derivedKeys = new Set<string>();
   for (const records of byCandidacy.values()) {
-    if (records.some((record) => profiles[record.id]?.campaign)) continue;
+    if (records.some((record) => campaignLinkRefreshIssue(profiles[record.id]?.campaign, record.campaign) !== null)) continue;
     for (const record of records) {
       links[record.id] = { official: profiles[record.id]?.official ?? null, campaign: record.campaign };
       derivedKeys.add(record.id);

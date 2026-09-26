@@ -16,6 +16,7 @@ import {
   DELIVERY_TRAIL_VERSION,
   buildDeliveryTrail,
   pendingDelivery,
+  promotionChangeSummary,
   deliveryTrailRenderedNumbers,
   type DeliveryTrailInput,
 } from "../lib/control-plane/delivery-trail.ts";
@@ -56,6 +57,15 @@ const input = (over: Partial<DeliveryTrailInput> = {}): DeliveryTrailInput => ({
   costSummary: { measuredUsd: 153.73, attemptsMeasured: 2126 },
   costPerVerifiedRecord: NO_COST,
   ...over,
+});
+
+test("a campaign-site approval never presents the Scout biography or platform as verified publication", () => {
+  const item = state({ itemId: "site", stage: "APPROVED_FOR_PROMOTION", approved: { recordClass: "candidate-enrichment", at: "2026-09-26T10:00:00Z", recordId: "a", chain: { scouted: "s", confirmed: "c", verified: "v", audited: "u" } } });
+  const approval = { ...item.byStage.APPROVED_FOR_PROMOTION!, field: "campaignSite", campaignSite: { url: "https://campaign.example/" } };
+  const summary = promotionChangeSummary({ ...item, byStage: { ...item.byStage, APPROVED_FOR_PROMOTION: approval } });
+  assert.match(summary, /Verified campaign-site link: https:\/\/campaign.example\//);
+  assert.match(summary, /does not verify biography, positions/);
+  assert.match(summary, /requires the separate reader readback/);
 });
 
 test("pending records show the unresolved verification step without reviving historical duplicate-stage failures", () => {

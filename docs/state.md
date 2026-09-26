@@ -1,4 +1,14 @@
-## Current integrated release checkpoint — September 26, 2026
+## Current release checkpoint — September 26, 2026, 4:49 PM Arizona MST
+
+PR432 is deployed as e6fea8bf (4:38:09 PM, Netlify 6ab856facea8920008dfe6a9). All 16 local gates passed (8,449 tests passed, zero failed, one existing skip); hosted certification 36278963924, main build 36279971052 and post-deploy integrity 36279970988 passed. Signed-in Admin exposes 644 pending records with filtering, exact blockers, corrective paths and outcomes. Filtering LD19 shows four retained records. The live 85635 ballot no longer shows the three Pima-only notes. This is corrected public rendering, not newly acquired civic information.
+
+At 4:44 PM the clean permanent runner still used 82301164, with its existing research child started at 4:32 PM before deployment. Normal adoption and recovery of pending results on e6fea8bf are still owed; no process was stopped and no hunt instruction was created.
+
+The current follow-up fixes the Admin stop reason/time and a separate demonstrated publication hold: newer fully verified evidence for the same campaign URL can refresh an older reviewed link automatically. Conflicting URLs, unknown dates, older observations and failed verification preserve the working link. Same-URL approval selection prefers the newest verified observation. Admin summaries name the campaign-site field actually approved instead of presenting a Scout's wider biography/platform lead as verified. Eighteen focused publication/reader checks and seven delivery-trail checks pass. These follow-up changes require renewed reader proof and release gates before deployment.
+
+Hunt readiness remains NOT READY: cold Ask still exceeds three seconds under recorded failing conditions, full exact applicability and non-meeting producer connections remain open, and deployed runner recovery is not yet proven. The $50 cap is Anthropic tokens only for this hunt. The paid hunt stays paused pending the owner's Admin test and explicit start. No other cap or service was added.
+
+## Previous integrated release checkpoint — September 26, 2026
 
 PR431 is deployed as 82301164 at 2:09 PM Arizona MST. All 16 local gates and required CI/build/integrity checks passed. The permanent runner adopted the same clean revision through its normal handoff by 3:21 PM; no forced restart or paid-control change was used. It carries the PDF-to-image OCR repair. The hunt remains paused and NOT READY. Its only new cap is $50 Anthropic token usage for this hunt, including retries, cache, escalations and durable concurrent reservations; other providers are tracked separately.
 

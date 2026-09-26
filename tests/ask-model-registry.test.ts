@@ -24,7 +24,7 @@ import {
   canonicalAskModelId,
 } from "../lib/ask/model-registry.ts";
 import { interpretQuestion } from "../lib/ask/interpret.ts";
-import { synthesisRequestBody, synthesizeWithLadder, type SynthesisRung } from "../lib/ask/synthesize.ts";
+import { escalationFirstReason, synthesisLadder, synthesisRequestBody, synthesizeWithLadder, type SynthesisRung } from "../lib/ask/synthesize.ts";
 import { classifyQuestion, resetClassifierState } from "../lib/routing/classifier.ts";
 import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
@@ -140,9 +140,12 @@ test("each role has its own override, and the specific one beats the WTP_ASK_MOD
     assert.equal(resolved.model, other);
     assert.equal(resolved.overriddenBy, specific);
   }
-  /* The legacy alias still moves every frontier-default role. */
-  for (const role of ["READER", "ESCALATION_WRITER", "CLASSIFIER", "UNSOURCED"] as const) {
+  /* The legacy alias still moves every frontier-default role — and only those. */
+  for (const role of ["ESCALATION_WRITER", "UNSOURCED"] as const) {
     assert.equal(resolveAskRoleModel(role, { WTP_ASK_MODEL: "claude-sonnet-5" }), "claude-sonnet-5");
+  }
+  for (const role of ["READER", "CLASSIFIER"] as const) {
+    assert.equal(resolveAskRoleModel(role, { WTP_ASK_MODEL: "claude-sonnet-5" }), ASK_MODEL_ROLES[role].defaultModel, `${role} is not a frontier role`);
   }
   assert.equal(resolveAskModel({ WTP_ASK_MODEL: "claude-sonnet-5" }), "claude-sonnet-5");
   /* The fast writer keeps its own switch, including off. */
@@ -153,6 +156,42 @@ test("each role has its own override, and the specific one beats the WTP_ASK_MOD
   const reader = resolveAskRole("READER", { WTP_ASK_READER_MODEL: "off" });
   assert.equal(reader.model, ASK_MODEL_ROLES.READER.defaultModel);
   assert.equal(reader.refused.length, 1);
+});
+
+/* ── 2b. the routing the 2026-09-25 comparison decided ──────────────────── */
+
+test("the measured routing: Haiku 4.5 reads, writes first and labels; Opus 5.5 escalates", () => {
+  assert.deepEqual(
+    Object.fromEntries(ASK_MODEL_ROLE_NAMES.map((role) => [role, resolveAskRole(role, {}).model])),
+    { READER: "claude-haiku-4-5", FAST_WRITER: "claude-haiku-4-5", ESCALATION_WRITER: "claude-opus-5-5", CLASSIFIER: "claude-haiku-4-5", UNSOURCED: "claude-opus-5-5" },
+  );
+});
+
+test("money questions that ask WHO gave or COMPARE are written by the escalation writer first; how-much questions keep the fast writer", () => {
+  /* The measured questions, by what the fast writer did with them. */
+  for (const question of [
+    "Who funded the Vail school board candidates?", // Haiku 4.5 wrong 2 of 2
+    "Who donated to Katie Hobbs's campaign?", // wrong 2 of 2
+    "Has Cinde Warmington raised more money than Kelly Ayotte?", // wrong 2 of 2
+    "Who are Tayfun Selen's biggest donors?", // right 2 of 2, same kind: routed conservatively
+  ]) {
+    assert.equal(escalationFirstReason(question, {}), "money-who-or-comparison", question);
+    const ladder = synthesisLadder({}, { question });
+    assert.deepEqual(ladder.map((rung) => [rung.model, rung.role]), [["claude-opus-5-5", "FRONTIER"]], question);
+  }
+  for (const question of [
+    "How much campaign money has Katie Hobbs raised?", // right 2 of 2
+    "How much money has Tayfun Selen raised for his campaign?", // right 2 of 2
+    "How much has Kelly Ayotte raised and spent?", // right 2 of 2
+    "When does the Mesa City Council meet next?",
+    "Who sits on the Mesa City Council?",
+  ]) {
+    assert.equal(escalationFirstReason(question, {}), null, question);
+    assert.deepEqual(synthesisLadder({}, { question }).map((rung) => rung.role), ["FAST", "FRONTIER"], question);
+  }
+  /* One switch turns the kind routing off without a deploy. */
+  assert.equal(escalationFirstReason("Who donated to Katie Hobbs's campaign?", { WTP_ASK_WRITER_ROUTING: "off" }), null);
+  assert.deepEqual(synthesisLadder({ WTP_ASK_WRITER_ROUTING: "off" }, { question: "Who donated to Katie Hobbs's campaign?" }).map((rung) => rung.role), ["FAST", "FRONTIER"]);
 });
 
 /* ── 3. an unknown model fails safe ──────────────────────────────────────── */

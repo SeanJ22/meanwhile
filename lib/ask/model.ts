@@ -90,8 +90,8 @@ export const ASK_SYNTHESIS_EFFORT: AskEffort = "medium";
  *
  * The owner's bar (docs/rulings.md §6) is three seconds to a usable answer.
  * Measured 2026-09-25 on production read-only packs, streaming, the complete
- * model call: Haiku 4.5 median 1.9 s; Sonnet 5 (low) 2.7 s; Opus 5.5
- * (medium) and Opus 5 slower still. Only this model can write inside the bar.
+ * model call: Haiku 4.5 median 2.0 s; Sonnet 5 (low) 2.8 s; Opus 5.5
+ * (medium) 3.7 s. Only this model can write inside the bar.
  * Dateless alias; `claude-haiku-4-5-20251001` is the same model.
  */
 export const ASK_FAST_WRITER_MODEL = "claude-haiku-4-5";
@@ -124,15 +124,37 @@ export interface AskModelRoleSpec {
 /**
  * **THE ONE TABLE.** Every Ask model call resolves its model here.
  *
- * Defaults as decided by the 2026-09-25 controlled comparison (Haiku 4.5,
- * Sonnet 5, Opus 5.5 on identical inputs; evidence in
- * meanwhile-evidence/admin-completion/2026-09-25/ask-model-test/).
+ * Defaults as decided by the 2026-09-25 controlled comparison: Haiku 4.5,
+ * Sonnet 5 and Opus 5.5 given identical inputs, built by the production route
+ * over production read-only data (evidence, per-call ledger and grading in
+ * meanwhile-evidence/admin-completion/2026-09-25/ask-model-test/):
+ *
+ * - READER → Haiku 4.5. Complete call median 1.6 s, slowest 2.5 s over 37
+ *   calls (Opus 5.5: 1.9 s, slowest 3.5 s; Sonnet 5: 2.0 s, 3.1 s), about a
+ *   fifth of Opus 5.5's cost. Its reading differed from Opus 5.5's on 6 of 27 questions; the
+ *   answer written from each differing reading was checked against the
+ *   records and none was wrong. Sonnet 5 was no faster than Opus 5.5 and read
+ *   no better, so it has no role.
+ * - FAST_WRITER → Haiku 4.5: the only writer inside three seconds (complete
+ *   call median 2.0 s, 90th percentile 3.4 s; Sonnet 5 2.8 s / 5.0 s; Opus
+ *   5.5 3.7 s / 5.9 s). Every answer correct outside the money questions
+ *   below.
+ * - ESCALATION_WRITER → Opus 5.5: 32 of 34 answers correct, none rejected for
+ *   length (Sonnet 5: 28 of 34, including a miscounted list). It also writes
+ *   first for the money questions Haiku 4.5 got wrong (see
+ *   `escalationFirstReason` in lib/ask/synthesize.ts).
+ * - CLASSIFIER → Haiku 4.5: 17 of 17 labels right, 0.7-1.7 s. Sonnet 5 sent
+ *   the election-day weather question to "elections" 3 of 3 times; Opus 5.5
+ *   took 1.3-6.2 s.
+ * - UNSOURCED → Opus 5.5 (not part of the comparison; the rung is gated).
+ *
+ * `WTP_ASK_MODEL` is an alias only on roles whose default is the frontier.
  */
 export const ASK_MODEL_ROLES: Readonly<Record<AskModelRole, AskModelRoleSpec>> = {
   READER: {
     does: "reads the question (intent, tense, the government named)",
-    defaultModel: ASK_SYNTHESIS_MODEL,
-    env: ["WTP_ASK_READER_MODEL", ASK_MODEL_ENV],
+    defaultModel: ASK_FAST_WRITER_MODEL,
+    env: ["WTP_ASK_READER_MODEL"],
     effort: "low",
     thinking: "ADAPTIVE",
     canBeOff: false,
@@ -155,8 +177,8 @@ export const ASK_MODEL_ROLES: Readonly<Record<AskModelRole, AskModelRoleSpec>> =
   },
   CLASSIFIER: {
     does: "labels an unanswered question with a curated topic, or refuses it",
-    defaultModel: ASK_SYNTHESIS_MODEL,
-    env: ["WTP_ASK_CLASSIFIER_MODEL", ASK_MODEL_ENV],
+    defaultModel: ASK_FAST_WRITER_MODEL,
+    env: ["WTP_ASK_CLASSIFIER_MODEL"],
     effort: "low",
     thinking: "OFF",
     canBeOff: false,

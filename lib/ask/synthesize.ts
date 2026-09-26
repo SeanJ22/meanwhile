@@ -576,11 +576,47 @@ export function frontierRung(env: AskModelEnv = process.env): SynthesisRung {
  * `resolveAskFastWriter()`; `WTP_ASK_FAST_MODEL=off` collapses the ladder to
  * the frontier alone without a deploy.
  */
-export function synthesisLadder(env: AskModelEnv = process.env): SynthesisRung[] {
+export function synthesisLadder(env: AskModelEnv = process.env, context: { question?: string } = {}): SynthesisRung[] {
   const frontier = frontierRung(env);
   const fast = resolveAskFastWriter(env);
   if (!fast || fast === frontier.model) return [frontier];
+  /* A kind the fast writer measurably gets wrong is written by the escalation writer first. */
+  if (context.question && escalationFirstReason(context.question, env)) return [frontier];
   return [{ model: fast, effort: askModelTakesEffort(fast) ? "low" : null, role: "FAST", timeoutMs: ASK_FAST_WRITER_TIMEOUT_MS }, frontier];
+}
+
+/** `off` sends every question through the default ladder (fast writer first) without a deploy. */
+export const ASK_WRITER_ROUTING_ENV = "WTP_ASK_WRITER_ROUTING";
+
+const MONEY_WORDS = /\b(money|raised?|raising|donat\w*|donors?|contribut\w*|fund\w*|financ\w*|spent|spend\w*|pacs?|backers?)\b/i;
+const WHO_OR_COMPARISON = /\b(who|whom|whose|donors?|contributors?|backers?|funders?|biggest|largest|top|most|more|less|fewer|than|versus|vs|compare\w*)\b/i;
+
+/**
+ * **WHY THIS QUESTION'S ANSWER IS WRITTEN BY THE ESCALATION WRITER FIRST, OR
+ * NULL.** (2026-09-25, the Ask model-routing test.)
+ *
+ * Measured on production read-only packs, the same pack to each writer: on
+ * campaign-money questions that ask WHO gave or COMPARE candidates, Haiku 4.5
+ * was wrong 6 times in 8 — in ways the validator cannot see. It listed a
+ * committee's one contribution without saying the donor is not named ("Who
+ * funded the Vail school board candidates?"); it put our gap on the state
+ * ("Campaign money records filed with Arizona describe totals, not the
+ * identities of people who gave money"); it said we hold no fundraising for
+ * Kelly Ayotte when we do ("Has Cinde Warmington raised more money than Kelly
+ * Ayotte?"). Opus 5.5 was right 7 times in 8 on the same packs; Sonnet 5 was
+ * wrong on the same two kinds Haiku was. On money questions that ask HOW MUCH
+ * one candidate raised or spent, Haiku 4.5 was right every time, so those
+ * keep the fast writer.
+ *
+ * The price is time: Opus 5.5 writes in 2.7-6.1 s, so these answers do not
+ * meet the three-second bar — reported, not hidden. Deliberately a wording
+ * test on the reader's question (money words AND a who/comparison word): it
+ * must be decided before the pack exists, so the speculative and sequential
+ * paths use one ladder. It errs toward the stronger writer.
+ */
+export function escalationFirstReason(question: string, env: AskModelEnv = process.env): string | null {
+  if ((typeof env[ASK_WRITER_ROUTING_ENV] === "string" ? env[ASK_WRITER_ROUTING_ENV]!.trim() : "") === "off") return null;
+  return MONEY_WORDS.test(question) && WHO_OR_COMPARISON.test(question) ? "money-who-or-comparison" : null;
 }
 
 /** The ladder as strings for a cache key: a changed rung is a new key. */

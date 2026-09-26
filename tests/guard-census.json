@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 845,
-    "named": 8160,
+    "named": 8163,
     "dynamic": 33
   },
   "files": {
@@ -1377,6 +1377,7 @@
         "ROUTE: 'how did they vote' is answered from the publisher's roll calls — no model call, every value in its own word",
         "ROUTE: a large outcome sitting sends the writer a bounded selection; the reader's records and counts stay whole",
         "ROUTE: a meeting-time question is read in code and answered from the sitting — no model call at all",
+        "ROUTE: a money question asking WHO gave is written by the escalation writer first, and the trace says why",
         "ROUTE: a named-subject question is read in code too — one writing call, no reading call",
         "ROUTE: a settled question whose records need writing makes ONE call — the fast writer, no reading call, no thinking",
         "ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree",
@@ -1504,8 +1505,10 @@
         "both writing rungs send each registry model only what it accepts, and the ladder records the served model",
         "each role has its own override, and the specific one beats the WTP_ASK_MODEL alias",
         "every role's default is a registry model with a price and a cache minimum",
+        "money questions that ask WHO gave or COMPARE are written by the escalation writer first; how-much questions keep the fast writer",
         "no Ask call site names claude-opus-5 as a literal",
         "no role resolves to claude-opus-5 — not by default, not by override, not through an alias",
+        "the measured routing: Haiku 4.5 reads, writes first and labels; Opus 5.5 escalates",
         "the reading rung sends each registry model only what it accepts, and records the served model",
         "the topic classifier sends each registry model only what it accepts (no disabled thinking on Opus 5.5)",
         "the unsourced fallback sends each registry model only what it accepts"

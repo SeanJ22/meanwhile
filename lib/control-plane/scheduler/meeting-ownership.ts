@@ -5,6 +5,7 @@ import type { RegistrationReadModel } from "../../registration/candidate.ts";
 import { readRegistrationProjection } from "../../registration/reader.ts";
 import { loadRegistrationReference, type LoadedReference } from "../../registration/reference.ts";
 import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
+import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { promotedRegistries, type MeetingPartitionOwnership } from "./provider-inputs.ts";
 
 /** Registration intentionally omits governments already held by the reviewed registry.
@@ -59,7 +60,10 @@ export function createMeetingPartitionOwnership(input: {
     },
     reasonFor(jurisdictionId) {
       const ids = bodies.get(jurisdictionId);
-      if (!ids?.size) return `${jurisdictionId}: no exact registered governing-body identity; resolve its Census/registry pairing before assigning its meeting clock`;
+      if (!ids?.size) {
+        const readFailure = failures.get(jurisdictionId.split(":")[0]) ?? failures.get("reviewed");
+        return `${jurisdictionId}: no exact registered governing-body identity; ${readFailure ? `${readFailure}; recover the authority reading` : "resolve its Census/registry pairing"} before assigning its meeting clock`;
+      }
       if (ids.size !== 1) return `${jurisdictionId}: conflicting exact governing-body IDs (${[...ids].sort().join(", ")}); repair the identity conflict`;
       const body = [...ids][0]!;
       if (staticBodies.has(body) || derivedBodies.has(body)) return `${jurisdictionId}: the ${body} production partition owns this meeting clock`;
@@ -84,7 +88,7 @@ export function createMeetingPartitionOwnership(input: {
             }
           } else if (!wiringKnown) failures.set("wiring", `meeting source wiring is ${read.kind}`);
         } catch (error) {
-          failures.set("wiring", `meeting source wiring unread: ${error instanceof Error ? error.message : String(error)}`);
+          failures.set("wiring", `meeting source wiring unread: ${sanitizedErrorDiagnostic(error)}`);
         }
         if (input.root) {
           try {
@@ -92,7 +96,7 @@ export function createMeetingPartitionOwnership(input: {
             if (read.kind === "PROMOTED") reviewedBodies = new Set(read.value.registry.bodies.map(body => body.id));
             else failures.set("reviewed", `reviewed body registry is ${read.kind}; unpaired governments remain UNKNOWN`);
           } catch (error) {
-            failures.set("reviewed", `reviewed body registry unread: ${error instanceof Error ? error.name : "unknown error"}`);
+            failures.set("reviewed", `reviewed body registry unread: ${sanitizedErrorDiagnostic(error)}`);
           }
         }
       }
@@ -110,7 +114,7 @@ export function createMeetingPartitionOwnership(input: {
             for (const pair of reviewedGovernmentPairs(loadRegistrationReference(input.root, state), read.value.vintage.referenceSha256, reviewedBodies)) add(pair.id, pair.bodyId);
           }
         } catch (error) {
-          failures.set(state, `${state.toUpperCase()} registration unread: ${error instanceof Error ? error.message : String(error)}`);
+          failures.set(state, `${state.toUpperCase()} registration unread: ${sanitizedErrorDiagnostic(error)}`);
         }
       }
     },

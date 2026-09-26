@@ -659,6 +659,8 @@ export interface RoutineCivicDataReaderReadbackReference {
 }
 
 export interface RoutineCivicDataSupervisorOutcome {
+  /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
+  readonly campaignPublicationApprovalsAttempted?: number;
   readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";
   /** Source holds are contained data-plane outcomes; only supervisor faults make this FAILED. */
   readonly state: "SUCCEEDED" | "FAILED";

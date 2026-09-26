@@ -1,3 +1,12 @@
+## Current release checkpoint — September 26, 2026, 2:18 PM Arizona MST
+
+PR #431 is deployed at 82301164 (2:09:15 PM). All 16 local gates passed: 8,433 tests passed, zero failed, one skipped; all required CI gates passed. It ships the exact-identity Ask source-loading repair, scanned-page OCR, shared-work scope preview, named failed readbacks and automatic campaign-publication admission. No paid hunt was started.
+
+The production cold probe still fails the three-second requirement: six of seven first-instance requests passed, Mesa's recorded-action request took 3,040 ms, and a second request queued on one instance took 3,133 ms. Backend traces identify 571 ms of source preloads on the failed cold request, 816 ms total engine work and substantial pre-handler delay. Keep-warm is not an acceptance substitute. Normal runner adoption of this release still requires its completed main checks and exact receipt.
+
+Follow-up repairs scope retained Pima-only ballot notes to their supported territory, preserve independent ballot data when a note is invalid, reuse accepted pipeline evidence without changing its original receipt time, expose every pending pipeline item's blocker/corrective path/outcome in Admin, and acknowledge committed approval counts through exact normal publication receipts so late commits cannot miss admission. Isolated tests and type checks pass; the affected reader proof and full release gates remain required. The generic unimplemented checks are not treated as passes; complete applicable non-meeting source connections and full scope remain owed. Hunt status is NOT READY, paid acquisition paused, with $50 Anthropic token usage for this hunt only and no new other-service cap.
+
+## Prior checkpoint
 ## Current release checkpoint — September 26, 2026, 1:25 PM Arizona MST
 
 PRs #429 (401d84db) and #430 (00a8db9f) are deployed; the normal runner adopted #430 with successful passes at 12:38 and 12:42 PM. The hunt remains paused and NOT READY. Its only new spending cap is $50 of Anthropic tokens for this hunt; other service costs remain separate.

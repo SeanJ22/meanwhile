@@ -3,6 +3,7 @@ import { FilingChanges } from "@/components/ballot/filing-changes";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
+import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
   settleBallotAuxiliaryPreloads,
@@ -972,7 +973,7 @@ export default async function BallotPage({
         if (hit.contests.length > 0 || hit.absences.length > 0) {
           set = candidate;
           matched = hit;
-          coverageNotes = candidate.coverageNotes ?? [];
+          coverageNotes = coverageNotesForScope(candidate, zip, ocdIds);
           break;
         }
       } catch {

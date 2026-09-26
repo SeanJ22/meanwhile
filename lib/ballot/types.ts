@@ -150,6 +150,15 @@ export interface BallotSet {
    * are the *authority's* statements.
    */
   coverageNotes?: string[];
+  /** Source notes with explicit applicability; never widened from a county
+   * or one measured ZIP to every reader of a statewide source. */
+  scopedCoverageNotes?: readonly ScopedBallotCoverageNote[];
+}
+
+export interface ScopedBallotCoverageNote {
+  readonly text: string;
+  readonly scope: { readonly kind: "DIVISIONS"; readonly ids: readonly string[] }
+    | { readonly kind: "ZIPS"; readonly ids: readonly string[] };
 }
 
 /**

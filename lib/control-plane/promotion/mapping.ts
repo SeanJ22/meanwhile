@@ -13,6 +13,7 @@
  */
 
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import { readMethodCandidateStore } from "../scheduler/scout-candidates.ts";
 import {
@@ -25,7 +26,18 @@ import {
   stageCounts,
   type StageCounts,
 } from "./pipeline.ts";
-import type { PipelineItemState } from "./types.ts";
+import type { PipelineItemState, ScoutedRecord } from "./types.ts";
+
+/** Method-store lifecycle is not a new acquisition. Preserve the original
+ * SCOUTED receipt when that is the only change; any evidence, identity or
+ * source change still goes through the unchanged strict transition gate. */
+function sameScoutedEvidence(held: ScoutedRecord, offered: ScoutedRecord): boolean {
+  if (held.source.kind !== "METHOD_CANDIDATE" || offered.source.kind !== "METHOD_CANDIDATE") return canonicalJson(held) === canonicalJson(offered);
+  return canonicalJson(held) === canonicalJson({ ...offered,
+    source: { ...offered.source, lifecycle: held.source.lifecycle },
+    summary: offered.summary.replace(`(${offered.source.lifecycle}):`, `(${held.source.lifecycle}):`),
+  });
+}
 
 export interface MappingReport {
   readonly scoutResults: { readonly total: number; readonly refused: number; readonly eligible: number; readonly byOutcome: Readonly<Record<string, number>> };
@@ -51,6 +63,7 @@ export async function mapEvidenceIntoPipeline(
   }
   const ctx = await contextFromRepositories(repos);
   const artifacts = await repos.artifacts.readAll();
+  const heldStates = new Map((await readPipelineStates(repos)).map(state => [state.itemId, state]));
 
   const scoutedOffers = results.flatMap(scoutedFromScoutResult);
   const eligibleResults = results.filter((r) => scoutedFromScoutResult(r).length > 0).length;
@@ -78,7 +91,10 @@ export async function mapEvidenceIntoPipeline(
   let scoutedHeld = 0;
   let scoutedRefused = 0;
   for (const offer of scoutedOffers) {
+    const held = heldStates.get(offer.itemId)?.byStage.SCOUTED;
+    if (held && sameScoutedEvidence(held, offer)) { scoutedHeld += 1; continue; }
     const out = await appendTransition(repos, offer, ctx, now);
+    heldStates.set(offer.itemId, out.state);
     if (!out.accepted) scoutedRefused += 1;
     else if (out.appended) scoutedAppended += 1;
     else scoutedHeld += 1;
@@ -91,16 +107,25 @@ export async function mapEvidenceIntoPipeline(
   let withUrl = 0;
   for (const offer of scoutedOffers) {
     if (offer.canonicalUrl !== null) withUrl += 1;
+    // Rebuilding a confirmation with today's clock changed its bytes while
+    // retaining its id, creating STAGE_ALREADY_REACHED on every later pass.
+    // The accepted confirmation is already durable evidence; keep its date.
+    if (heldStates.get(offer.itemId)?.byStage.CONFIRMED) {
+      confirmedOffered += 1;
+      confirmedHeld += 1;
+      continue;
+    }
     const confirmation = confirmationFromArtifacts(offer, artifacts, ctx.attemptRoleById, now);
     if (confirmation === null) continue;
     confirmedOffered += 1;
     const out = await appendTransition(repos, confirmation, ctx, now);
+    heldStates.set(offer.itemId, out.state);
     if (!out.accepted) confirmedRefused += 1;
     else if (out.appended) confirmedAppended += 1;
     else confirmedHeld += 1;
   }
 
-  const states = await readPipelineStates(repos);
+  const states = [...heldStates.values()].sort((a, b) => a.itemId.localeCompare(b.itemId));
   return {
     scoutResults: { total: results.length, refused: refusedResults, eligible: eligibleResults, byOutcome },
     methodCandidates: { total: candidateTotal, eligible: eligibleCandidates, byLifecycle, storeRead, storeNote },

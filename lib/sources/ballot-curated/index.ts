@@ -1,4 +1,5 @@
 import type { BallotSet, BallotSource } from "../../ballot/types.ts";
+import { curatedCoverageNotes } from "../../ballot/coverage-notes.ts";
 import { validateBallotFile } from "../ballot-nj-morris/index.ts";
 import { CivicDataStoreUnavailableError, type CivicDataReadResult } from "../../civic-data/read-model.ts";
 import {
@@ -72,7 +73,7 @@ export function curatedBallotSource(name: string): BallotSource {
     normalize(raw: unknown[]): BallotSet {
       const [parsed] = raw;
       validateBallotFile(parsed);
-      const withNotes = parsed as { coverageNotes?: string[] };
+      const notes = curatedCoverageNotes(name, parsed as { coverageNotes?: unknown; scopedCoverageNotes?: unknown });
       const state = entry.state();
       const authorityNote = state.kind === "BOOTSTRAP"
         ? "This ballot is using its bundled first-bootstrap seed because the canonical store answered with no promoted pointer."
@@ -85,7 +86,8 @@ export function curatedBallotSource(name: string): BallotSource {
         candidacies: parsed.candidacies,
         measures: parsed.measures,
         absences: parsed.absences,
-        coverageNotes: [...(withNotes.coverageNotes ?? []), ...(authorityNote ? [authorityNote] : [])],
+        ...notes,
+        coverageNotes: [...(notes.coverageNotes ?? []), ...(authorityNote ? [authorityNote] : [])],
       };
     },
 

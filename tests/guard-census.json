@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 869,
-    "named": 8306,
+    "files": 870,
+    "named": 8313,
     "dynamic": 33
   },
   "files": {
@@ -2010,6 +2010,14 @@
       ],
       "dynamic": 0
     },
+    "tests/ballot-coverage-note-scope.test.ts": {
+      "names": [
+        "a changed legacy note needs new scope and cannot silently reuse the old geographic assertion",
+        "explicit future note scopes support shared divisions while statewide freshness warnings remain visible",
+        "retained Pima absence notes cannot become Cochise ballot claims; measured Vail notes survive"
+      ],
+      "dynamic": 0
+    },
     "tests/ballot-desktop-composition.test.ts": {
       "names": [
         "BAL-25: no ballot surface answers the desktop with a label/value column pair",
@@ -2565,8 +2573,9 @@
     },
     "tests/campaign-publication-due.test.ts": {
       "names": [
-        "new approvals enter the normal publication frontier before hourly cadence without changing other families",
-        "publication admission uses a bounded approval clock and preserves unread errors"
+        "committed approvals wake normal publication despite old acquisition clocks and survive restart",
+        "only an exact publication child receipt acknowledges the captured input count",
+        "publication admission reads one committed snapshot and refuses malformed accounting"
       ],
       "dynamic": 0
     },
@@ -4096,7 +4105,8 @@
         "MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records",
         "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
         "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
-        "empty pipeline: every stage is a named gap, the blockers are named, promotions empty"
+        "empty pipeline: every stage is a named gap, the blockers are named, promotions empty",
+        "pending records show the unresolved verification step without reviving historical duplicate-stage failures"
       ],
       "dynamic": 0
     },
@@ -8614,9 +8624,11 @@
         "a stage out of order is refused, the refusal is APPENDED as history, and it refuses the OFFER, not the item",
         "an identical re-offer of a held record is a NO-OP SUCCESS, so a re-map cannot refuse what it already mapped",
         "item states come from one paged read of the log, equal to reading every item's key",
+        "mapping reuses accepted confirmation at a later clock instead of stranding it behind a duplicate-stage refusal",
         "mapping: CONFIRMED exists only where an ACQUIRER artifact at the same URL comes from another Attempt",
         "mapping: ROUTE_CANDIDATE and EVIDENCE_FOUND become SCOUTED; refused and absence-shaped results map to nothing",
         "mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED",
+        "method lifecycle advancement reuses its scouting evidence but changed source identity is still refused",
         "the full chain is ACCEPTED when every burden is met — the positive control for every refusal below"
       ],
       "dynamic": 0

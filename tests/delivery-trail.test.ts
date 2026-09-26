@@ -15,6 +15,7 @@ import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import {
   DELIVERY_TRAIL_VERSION,
   buildDeliveryTrail,
+  pendingDelivery,
   deliveryTrailRenderedNumbers,
   type DeliveryTrailInput,
 } from "../lib/control-plane/delivery-trail.ts";
@@ -55,6 +56,19 @@ const input = (over: Partial<DeliveryTrailInput> = {}): DeliveryTrailInput => ({
   costSummary: { measuredUsd: 153.73, attemptsMeasured: 2126 },
   costPerVerifiedRecord: NO_COST,
   ...over,
+});
+
+test("pending records show the unresolved verification step without reviving historical duplicate-stage failures", () => {
+  const held = state({ itemId: "retained", stage: "CONFIRMED", refusedAt: [{ stage: "CONFIRMED", code: "STAGE_ALREADY_REACHED" }] });
+  const row = pendingDelivery(held)!;
+  assert.match(row.blocker, /Required VERIFIED evidence has not been accepted/);
+  assert.match(row.lastRefusal!, /STAGE_ALREADY_REACHED/);
+  assert.match(row.outcome, /Verification incomplete/);
+  assert.match(row.correctiveAction, /standing campaign-site verifier/);
+  const failed = pendingDelivery(state({ itemId: "failed", stage: "CONFIRMED", refusedAt: [{ stage: "VERIFIED", code: "VERIFICATION_CHECK_NOT_IMPLEMENTED" }] }))!;
+  assert.match(failed.blocker, /VERIFICATION_CHECK_NOT_IMPLEMENTED: fixture/);
+  const view = buildDeliveryTrail([held, state({ itemId: "approved", stage: "APPROVED_FOR_PROMOTION", approved: { recordClass: "candidate-enrichment", at: "2026-09-26T10:00:00Z", recordId: "approval", chain: { scouted: "s", confirmed: "c", verified: "v", audited: "a" } } })], input());
+  assert.equal(view.pending?.length, 1);
 });
 
 test("Admin retains failed readback reason and time without turning it into verified delivery", () => {

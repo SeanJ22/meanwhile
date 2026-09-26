@@ -176,7 +176,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
 
   const published = snapshotOut.kind === "HELD" ? snapshotOut.value.assignments ?? null : null;
   const view: AssignmentView | null = published && published.kind === "BUILT" ? published.view : null;
-  const rows: readonly AssignmentListRow[] = view?.rows ?? [];
+  const scopeState = base.scope.kind === "all" ? null : base.scope.state;
+  const allRows: readonly AssignmentListRow[] = view?.rows ?? [];
+  const rows = scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
+  const geographicCounts = scopeState === null ? null : view?.geographicCounts?.[scopeState];
+  const scopedTotal = scopeState === null ? view?.summary.total ?? null : view?.geographicCounts === undefined ? null : Object.values(geographicCounts ?? {}).reduce((n, count) => n + count, 0);
   const publishedTrail = snapshotOut.kind === "HELD" ? snapshotOut.value.deliveryTrail ?? null : null;
   const deliveryTrail = livePipeline.ok && publishedTrail ? buildDeliveryTrail(livePipeline.states, {
     activation: view?.activation ?? readActivationGate(""),
@@ -186,7 +190,6 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   // The opened routine read's body is drawn from its own fresh read, so its card and its detail say the same thing.
   const bodies: readonly BodyView[] =
     bodiesRead.kind === "HELD" ? bodiesRead.views.map((v) => (routineRead?.kind === "HELD" && v.id === routineRead.view.id ? routineRead.view : v)) : [];
-  const scopeState = base.scope.kind === "all" ? null : base.scope.state;
   const inScopeBodies = scopeState === null ? bodies : bodies.filter((b) => b.stateCode === scopeState);
 
   /* ------------------------------------------------------------ your instructions */
@@ -194,7 +197,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     instructionView({
       decision,
       reading,
-      rows: view ? rows : null,
+      rows: view ? allRows : null,
       totalAssignments: view?.summary.total ?? null,
       paidLaneClosedBecause: lane.open ? null : lane.closedBecause,
       runnerPaused: pause ? { since: pause.since ?? null } : null,
@@ -233,7 +236,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   /* ------------------------------------------------------------ the list */
   const groups = GROUP_ORDER.map((state) => {
     const listed = rows.filter((r) => r.state === state);
-    const total = view?.summary.byState.find((x) => x.state === state)?.count.value ?? listed.length;
+    const total = scopeState === null ? view?.summary.byState.find((x) => x.state === state)?.count.value ?? listed.length : geographicCounts?.[state] ?? listed.length;
     return { state, listed, total };
   }).filter((g) => g.total > 0 || g.listed.length > 0);
   const routineGroups = (["STUCK", "NEEDS ATTENTION", "WORKING", "NOT READ YET"] as const).map((st) => ({ st, bodies: inScopeBodies.filter((b) => b.status === st) })).filter((g) => g.bodies.length > 0);
@@ -246,7 +249,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const numbers: RenderedNumber[] = [];
   const claims: CountClaim[] = [{ label: "your instructions", stated: base.selected.length, rendered: instructions.length }];
   if (view) {
-    numbers.push({ label: "assignments listed", value: rows.length, denominator: view.summary.total, contract: "rows the published assignment list carries, of every assignment the control plane holds" });
+    if (scopedTotal !== null) numbers.push({ label: "assignments listed", value: rows.length, denominator: scopedTotal, contract: "published rows attributed to the selected state, or all held assignments when all scopes is selected" });
     numbers.push(...askGapRenderedNumbers(view));
     for (const g of groups) claims.push({ label: `listed ${g.state}`, stated: g.listed.length, rendered: g.listed.length });
   }
@@ -340,7 +343,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} says={opened.says} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
-            Standing work the system owes{view ? ` — ${view.summary.total.toLocaleString("en-US")}` : ""}
+            Standing work{scopeState === null ? " the system owes" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${scopedTotal.toLocaleString("en-US")}` : ""}
           </h3>
           {published === null ? (
             <p className={s.note}>The assignment list is not on the published snapshot, so no standing work is listed — not an empty list.</p>
@@ -348,10 +351,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             <p className={s.note}>The publisher could not build the assignment list at {formatEastern(published.at)}: {published.says}</p>
           ) : (
             <>
+              {scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " A finer assignment-to-geography join is not yet available; these are state totals, not totals for the selected county or district." : ""}</p>}
               <p className={s.note}>
-                {view!.selection.rule} {view!.selection.omitted > 0 ? `${view!.selection.omitted.toLocaleString("en-US")} rows are not carried on the published list; each group says how many it holds.` : ""}
+                {view!.selection.rule} {scopedTotal !== null && scopedTotal > rows.length ? `${(scopedTotal - rows.length).toLocaleString("en-US")} rows in this scope are not carried on the published list; each group says how many it holds.` : ""}
               </p>
-              <p className={s.note}>{askGapCountWords(view!)}</p>
+              <p className={s.note}>{scopeState !== null ? "Across all scopes: " : ""}{askGapCountWords(view!)}</p>
               <div className={s.rowCenter} style={{ gap: 8 }}>
                 {groups.map((g) => (
                   <Link key={g.state} href={`${here({ show: show === g.state ? null : g.state, open: null })}#assignments`} className={`${s.chip} ${show === g.state ? s.chipOn : ""}`}>

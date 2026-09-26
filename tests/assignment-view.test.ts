@@ -298,6 +298,22 @@ function empty(): AssignmentSources {
   };
 }
 
+test("state assignment counts cover omitted rows and retain shared or unplaced work separately", () => {
+  const src = { ...empty(), workItems: [
+    workItem("az-one", { subject: "ocd-division/country:us/state:az/county:cochise" }),
+    workItem("az-two", { subject: "ocd-division/country:us/state:az/place:sierra_vista" }),
+    workItem("nh-one", { subject: "ocd-division/country:us/state:nh/county:merrimack" }),
+    workItem("shared", { subject: "ocd-division/country:us" }),
+  ] };
+  const view = buildAssignmentView(src, { perGroup: 1 });
+  assert.equal(Object.values(view.geographicCounts?.az ?? {}).reduce((a, b) => a + b, 0), 2);
+  assert.equal(Object.values(view.geographicCounts?.nh ?? {}).reduce((a, b) => a + b, 0), 1);
+  assert.equal(Object.values(view.geographicCounts?.[""] ?? {}).reduce((a, b) => a + b, 0), 1);
+  assert.equal(Object.values(view.geographicCounts ?? {}).flatMap(Object.values).reduce((a, b) => a + b, 0), view.summary.total);
+  assert.ok(view.selection.omitted > 0);
+  for (const row of buildAssignmentView(src).rows) assert.equal(row.stateCode, row.id.startsWith("az") ? "az" : row.id.startsWith("nh") ? "nh" : null);
+});
+
 function merge(...parts: Partial<AssignmentSources>[]): AssignmentSources {
   const out = empty() as { -readonly [K in keyof AssignmentSources]: AssignmentSources[K] };
   for (const p of parts) {

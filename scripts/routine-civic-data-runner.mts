@@ -9,6 +9,8 @@
  * and never replaces a candidate's own source-through or retrieved-at facts.
  */
 import { hostname } from "node:os";
+import { neon } from "@neondatabase/serverless";
+import { campaignPublicationDue, readLatestCampaignApprovalAt, CAMPAIGN_PUBLICATION_TASK } from "../lib/civic-data/campaign-publication-due.ts";
 
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
@@ -427,6 +429,22 @@ if (!FORCE) {
   }
 }
 const honouredDueRequests = new Map<string, RoutineDueRequest>();
+// Newly verified findings need not wait for the hourly fallback clock. This
+// read changes no data; admission uses the same frontier and publication child.
+let latestCampaignApprovalAt: string | null = null;
+const publicationInputLines: string[] = [];
+if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK)) {
+  try {
+    const connection = controlPlaneUrlFromEnv();
+    if (!connection) throw new Error("control-plane reporting connection is unavailable");
+    const sql = neon(connection);
+    latestCampaignApprovalAt = await readLatestCampaignApprovalAt((query, params) => sql.query(query, params));
+  } catch (error) {
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    supervisorFailures.push({ taskId: CAMPAIGN_PUBLICATION_TASK, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
+    console.error(`RCD_INPUT_CHANGED ${CAMPAIGN_PUBLICATION_TASK}: ${detail}; normal cadence retained`);
+  }
+}
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -438,11 +456,17 @@ for (const read of clockReads) {
   const durableClock: RoutineTaskClock | undefined = read.clock;
   const sittingHot = sittingSignals.get(task.id);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null) {
+  const publicationDue = campaignPublicationDue({ taskId: task.id, approvalAt: latestCampaignApprovalAt, lastAttemptedAt: durableClock?.lastAttemptedAt, nowMs: admissionNowMs });
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null && !publicationDue) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
     continue;
+  }
+  if (publicationDue) {
+    const detail = `${task.id}: new complete approval at ${latestCampaignApprovalAt}; offered to the normal publication frontier without waiting for hourly cadence.`;
+    publicationInputLines.push(detail);
+    console.log(`RCD_INPUT_CHANGED ${detail}`);
   }
   if (dueRequest !== null) {
     honouredDueRequests.set(task.id, dueRequest);
@@ -514,7 +538,7 @@ const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, 
 for (const { task } of routinePassLaunchOrder(admitted)) pendingRuns.push(pendingByTaskId.get(task.id)!);
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
-  : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`);
+  : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
 // Every meeting partition child proves the registry-runtime pointer before it

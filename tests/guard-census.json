@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 868,
-    "named": 8304,
+    "files": 869,
+    "named": 8306,
     "dynamic": 33
   },
   "files": {
@@ -2560,6 +2560,13 @@
         "the host list is not a pattern over the word 'party'",
         "the label NEVER characterises the party's politics",
         "the pill row asks the shared module rather than testing the URL itself"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-publication-due.test.ts": {
+      "names": [
+        "new approvals enter the normal publication frontier before hourly cadence without changing other families",
+        "publication admission uses a bounded approval clock and preserves unread errors"
       ],
       "dynamic": 0
     },

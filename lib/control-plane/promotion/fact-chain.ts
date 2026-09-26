@@ -20,7 +20,7 @@
  *              parse of the same bytes
  *   APPROVED   a machine RELEASE_ORCHESTRATOR actor, once the chain holds and the
  *              deterministic burdens pass: checks, controls, currency, freshness,
- *              candidate class. The owner activates CLASSES at the gate; no fact is
+ *              candidate class. Implemented class-specific paths define the gate; no fact is
  *              approved by a person.
  * ```
  *
@@ -409,7 +409,7 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
         { name: "CONTROLS_MEASURED_CLEAN", result: clean.clean ? "PASS" : "FAIL", detail: clean.detail },
         { name: "FACT_CURRENT", result: currency.present && !currency.sameFact ? "FAIL" : "PASS", detail: currency.detail },
         { name: "FRESHNESS_NOT_STALE", result: reading.hold ? "FAIL" : "PASS", detail: `${reading.state}: ${reading.reason}` },
-        { name: "RECORD_CLASS_CANDIDATE", result: LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) && isMeetingFactClass(fact.recordClass) ? "PASS" : "FAIL", detail: `${fact.recordClass} ${LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) ? "is" : "is not"} in the owner's candidate set` },
+        { name: "RECORD_CLASS_CANDIDATE", result: LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) && isMeetingFactClass(fact.recordClass) ? "PASS" : "FAIL", detail: `${fact.recordClass} ${LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) ? "is" : "is not"} in the implemented fact-chain class set` },
       ];
       const approved: ApprovedRecord & { readonly readerMeeting: typeof fact.meeting; readonly publicationDoor: "PERMANENT_MEETING_PARTITION" } = {
         formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:approved:${audited.recordId}`, itemId, at: audited.at,

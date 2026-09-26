@@ -1,0 +1,12 @@
+import type { GeographyRef } from "./contract.ts";
+import { districtIdentity } from "../ocd/fips.ts";
+import { legislativeIdentity } from "../ocd/divisions.ts";
+
+/** Census identifiers joined by the existing district identity rules. A place
+ * name alone never establishes a government or a reader division. */
+export function censusWorkDivision(g: GeographyRef): string | null {
+  if (g.ocdId) return g.ocdId;
+  if (g.type === "congressional_district" && /^\d{4}$/.test(g.geoid)) return districtIdentity(g.geoid.slice(0, 2), g.geoid.slice(2))?.ocdId ?? null;
+  if ((g.type === "state_leg_upper" || g.type === "state_leg_lower") && /^\d{5}$/.test(g.geoid)) return legislativeIdentity(g.geoid.slice(0, 2), g.type === "state_leg_upper" ? "sldu" : "sldl", g.geoid.slice(2), g.label)?.ocdId ?? null;
+  return null;
+}

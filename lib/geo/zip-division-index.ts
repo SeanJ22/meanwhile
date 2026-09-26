@@ -26,6 +26,11 @@
  *
  * A shard that cannot be read is OUR gap: it answers null and is not cached, so
  * a transient failure never becomes permanent for the process.
+ *
+ * Congressional and legislative membership also reads the same narrow
+ * promoted Census slice Admin uses. Those layers were absent from the sample
+ * shards; the current published whole/partial overlap supplies their evidence.
+ * An unavailable or conflicting Census plan preserves the existing index.
  */
 import { readFileSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
@@ -90,8 +95,10 @@ function entryOf(shard: Shard, zip: string): ZipDivisionEntry | null {
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
 export async function zipDivisionEntry(zip: string | null): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;
-  const shard = await shardFor(zipShardOf(zip));
-  return shard === null ? null : entryOf(shard, zip);
+  const { publishedZipDistricts, withCensusDistricts } = await import("./zip-census-districts.ts");
+  const [shard, districts] = await Promise.all([shardFor(zipShardOf(zip)), publishedZipDistricts(zip)]);
+  const entry = shard === null ? null : entryOf(shard, zip);
+  return entry === null ? null : withCensusDistricts(entry, districts, zip);
 }
 
 const lowestByState = new Map<string, Promise<ReadonlyMap<string, string> | null>>();

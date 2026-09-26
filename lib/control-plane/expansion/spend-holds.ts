@@ -354,3 +354,65 @@ export function budgetGuardedTransport(input: {
     return response;
   };
 }
+
+/* ------------------------------------------------------------ autonomous work */
+
+/** The jurisdiction one piece of autonomous work researches: its subject, and its state when the subject's id does not say it. */
+export interface AutonomousJurisdiction {
+  readonly subjectId: string;
+  readonly state: string | null;
+}
+
+/**
+ * **AUTONOMOUS WORK: THE AREA IT RESEARCHES, NEVER ANOTHER SEND.** (MW-021,
+ * 2026-09-25; an engineering choice, the coordinator's correction.) The
+ * autonomous Fleet's Scouts and its auditor belong to no Send, so no Send's
+ * budget binds them and an unrelated Send running out never stops them. Each
+ * request must fit the Fleet ceiling (the wrapped transport's own guard) and
+ * the area budget(s) covering the jurisdiction the job researches — matched
+ * by the one rule the Scouts' areas use (`ScopeBudgetGate.bindingScopes`).
+ *
+ * Each request holds its own worst case on those areas before it is sent,
+ * atomically on the shared ledger, and settles to its measured cost; a
+ * request that failed after it may have been sent keeps its whole hold (what
+ * it was billed is unknown). Fail closed: an area budget that cannot be read,
+ * or a ledger that cannot, refuses the request before it is sent. No area
+ * covers the jurisdiction: the request passes to the Fleet guard unchanged.
+ */
+export function areaGuardedTransport(input: {
+  readonly transport: ModelTransport;
+  readonly holds: DurableSpendHolds;
+  readonly jurisdiction: AutonomousJurisdiction;
+  /** The area lines covering it, or why they cannot be read. */
+  readonly areasFor: (jurisdiction: AutonomousJurisdiction) => { readonly areas: readonly BudgetLine[] } | { readonly code: string; readonly why: string };
+  readonly worstCaseOf: (request: ModelRequest) => number | null;
+  readonly priceOf: (response: ModelResponse) => number | null;
+  /** A fresh hold id per request. */
+  readonly nextHoldId: () => string;
+  readonly now: () => string;
+  /** True for an error thrown before the request left (a Fleet refusal): its hold is released. */
+  readonly refusedBeforeSending?: (error: unknown) => boolean;
+}): ModelTransport {
+  return async (request) => {
+    const found = input.areasFor(input.jurisdiction);
+    if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
+    if (found.areas.length === 0) return input.transport(request);
+    const worst = input.worstCaseOf(request);
+    if (worst === null) throw new SendBudgetRefusal(SPEND_HOLD_CODE_AREA, `model ${request.model} has no stated rate, so the request's worst case cannot be held against the area budget`);
+    const holdId = input.nextHoldId();
+    const what = `an autonomous request on ${input.jurisdiction.subjectId}`;
+    const held = await input.holds.hold({ holdId, jobId: holdId, obligationId: input.jurisdiction.subjectId, lines: { sends: [], areas: found.areas }, usd: worst, what });
+    if (!held.admit) throw new SendBudgetRefusal(held.code, held.why);
+    let response: ModelResponse;
+    try {
+      response = await input.transport(request);
+    } catch (error) {
+      if (input.refusedBeforeSending?.(error) === true) await input.holds.release(holdId);
+      throw error;
+    }
+    const priced = input.priceOf(response);
+    /* Unpriced: the whole hold keeps counting. A failed settle leaves it standing too, which only holds work back. */
+    if (priced !== null) await input.holds.settle(holdId, priced, input.now());
+    return response;
+  };
+}

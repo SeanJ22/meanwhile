@@ -421,6 +421,13 @@ export type BudgetAdmission =
  * settled keeps its reservation for the rest of the cycle — conservative,
  * because a budget may only restrict.
  */
+/** A state hint as a state: a bare postal code (`AZ`) or any id `stateOfSubject` reads; null when it says none. */
+function stateOfHint(hint: string | null | undefined): string | null {
+  if (typeof hint !== "string" || hint.trim() === "") return null;
+  const h = hint.trim();
+  return /^[a-z]{2}$/i.test(h) ? stateOfSubject(`${h}:state`) : stateOfSubject(h);
+}
+
 export class ScopeBudgetGate {
   private readonly scopes: readonly BudgetScope[];
   private readonly worstCaseUsd: number;
@@ -449,32 +456,26 @@ export class ScopeBudgetGate {
   }
 
   /** The scopes a subject is bound by. */
-  bindingScopes(subjectId: string): BudgetScope[] {
-    const state = stateOfSubject(subjectId);
+  /**
+   * The scopes a subject is bound by. `stateHint` (2026-09-25, for autonomous
+   * work that carries its state beside its subject) is read only when the
+   * subject's own id does not say its state; absent, the rule is unchanged.
+   */
+  bindingScopes(subjectId: string, stateHint?: string | null): BudgetScope[] {
+    const state = stateOfSubject(subjectId) ?? stateOfHint(stateHint);
     return this.scopes.filter((s) =>
       s.resolved ? s.members.has(subjectId) : state === null || s.states.includes(state),
     );
-  }
-
-  /** Every area budget in force as a line, for paid work that names no subject — or the refusal when any cannot be checked. */
-  allLines(): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
-    const refusal = (why: string): { readonly refusal: Extract<BudgetAdmission, { admit: false }> } => ({ refusal: { admit: false, code: SCOPE_BUDGET_CODE, why } });
-    if (this.heldForMalformed > 0) return refusal(`${this.heldForMalformed} selected scope(s) on the owner's policy row could not be read, so no scope budget can be checked`);
-    const lines: BudgetLine[] = [];
-    for (const scope of this.scopes) {
-      if (!scope.resolved || scope.historicalUsd === null || this.cycleUnmeasured.has(scope.key)) return refusal(`${scope.label}'s $${scope.budgetUsd.toFixed(2)} budget cannot be checked (unresolved or unmeasured)`);
-      lines.push({ key: areaBudgetKey(scope.key), label: scope.label, budgetUsd: scope.budgetUsd, historicalUsd: scope.historicalUsd, historyReadAt: this.historyReadAt });
-    }
-    return { lines };
   }
 
   /**
    * The area budget lines a paid job on this subject is held against, for the
    * durable holds (`spend-holds.ts`): EVERY binding scope must have room — or
    * the refusal when a scope's budget cannot be checked at all. No lines: no
-   * area budget applies.
+   * area budget applies. The binding scopes are `bindingScopes`' — the one
+   * matching rule, for Scouts and autonomous work alike.
    */
-  linesFor(subjectId: string): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
+  linesFor(subjectId: string, stateHint?: string | null): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
     if (this.heldForMalformed > 0) {
       return {
         refusal: {
@@ -485,7 +486,7 @@ export class ScopeBudgetGate {
       };
     }
     const lines: BudgetLine[] = [];
-    for (const scope of this.bindingScopes(subjectId)) {
+    for (const scope of this.bindingScopes(subjectId, stateHint)) {
       if (!scope.resolved) {
         return { refusal: this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`) as Extract<BudgetAdmission, { admit: false }> };
       }

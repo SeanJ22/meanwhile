@@ -295,6 +295,7 @@ import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
+  FleetSafetyRefusal,
   resolveRollingCeiling,
   scheduledBlackoutAt,
   scoutEscalationReservation,
@@ -332,7 +333,8 @@ import {
 import {
   DurableSpendHolds,
   JobSpend,
-  SendBudgetRefusal,
+  areaGuardedTransport,
+  type AutonomousJurisdiction,
   budgetGuardedTransport,
   hasBudgetLines,
   type BudgetLine,
@@ -1801,33 +1803,30 @@ const budgetLinesFor = (obligationId: string, subjectId: string): { readonly lin
   if ("refusal" in areas) return { code: areas.refusal.code, why: areas.refusal.why };
   return { lines: { sends: sends.lines, areas: areas.lines } };
 };
-/**
- * A paid request that names no Send obligation (the autonomous Fleet's
- * auditor and Scouts) cannot be charged to one budget, so it must fit EVERY
- * Send and area budget in force — the gates' own over-count rule, which can
- * only hold work back. No budget in force: nothing changes.
+/*
+ * The autonomous Fleet's Scouts and auditor belong to no Send: each request
+ * must fit the Fleet ceiling (the wrapped guard) and the area budget(s)
+ * covering the jurisdiction the job researches, by the Scouts' own matching
+ * rule — never another Send's budget (`areaGuardedTransport`). An area that
+ * cannot be read, or the ledger, refuses.
  */
-const unattributedBudgetGuard = (transport: ModelTransport): ModelTransport => async (request) => {
-  const every = [assignmentBudget.allLines(), ...(expansionBudget === null ? [] : [expansionBudget.gate.allLines()])];
-  const lines: BudgetLine[] = [];
-  for (const part of every) {
-    if ("refusal" in part) throw new SendBudgetRefusal(part.refusal.code, part.refusal.why);
-    lines.push(...part.lines);
-  }
-  if (lines.length === 0) return transport(request);
-  const worst = modelRequestWorstCaseUsd(request);
-  if (worst === null) throw new SendBudgetRefusal("ASSIGNMENT_BUDGET", `model ${request.model} has no stated rate, so the request cannot be checked against the budgets in force`);
-  const left = await spendHolds.left(lines);
-  if (left === null) throw new SendBudgetRefusal("ASSIGNMENT_BUDGET", "the shared budget ledger could not be read, so the budgets in force cannot be checked; the request waits");
-  const short = left.find((l) => l.leftUsd < worst);
-  if (short !== undefined) {
-    throw new SendBudgetRefusal(
-      short.line.key.startsWith("area:") ? "SCOPE_BUDGET" : "ASSIGNMENT_BUDGET",
-      `${short.line.label} has $${Math.max(0, short.leftUsd).toFixed(2)} left of its $${short.line.budgetUsd.toFixed(2)} budget, and this request's worst case ($${worst.toFixed(2)}) names no Send, so it must fit every budget in force`,
-    );
-  }
-  return transport(request);
-};
+let autonomousHoldSeq = 0;
+const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: AutonomousJurisdiction): ModelTransport =>
+  areaGuardedTransport({
+    transport,
+    holds: spendHolds,
+    jurisdiction,
+    areasFor: (j) => {
+      if (expansionBudget === null) return { areas: [] };
+      const found = expansionBudget.gate.linesFor(j.subjectId, j.state);
+      return "refusal" in found ? { code: found.refusal.code, why: found.refusal.why } : { areas: found.lines };
+    },
+    worstCaseOf: modelRequestWorstCaseUsd,
+    priceOf: modelResponseUsd,
+    nextHoldId: () => `autonomous:${NOW}:${(autonomousHoldSeq += 1)}`,
+    now: nowIso,
+    refusedBeforeSending: (error) => error instanceof FleetSafetyRefusal,
+  });
 /* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
@@ -2959,12 +2958,13 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
         "fact approval remains held and no legacy acquisition clock is reopened",
       );
     }
+    /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
+    const fleetGuarded = modelLaneEnabled ? fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
-      /* MW-021: the auditor and the autonomous Scouts name no Send obligation, so each request must fit every Send and area budget in force. */
-      ...(modelLaneEnabled ? { transport: unattributedBudgetGuard(fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey))),
-        reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
+      /* MW-021: no Send binds the auditor or the autonomous Scouts; each request fits the Fleet ceiling and its job's area (`autonomousTransportFor`). */
+      ...(fleetGuarded !== null ? { transport: fleetGuarded, transportFor: autonomousTransportFor(fleetGuarded), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
       /* The auditor admits against the ceiling in force, the same one admitScout reads — not the static default. */
       auditCeilingUsd: effectiveCeilingUsd });
     // Retained civic bytes get one guaranteed stage before open-ended discovery.

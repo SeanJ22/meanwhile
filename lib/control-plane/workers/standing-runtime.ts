@@ -37,7 +37,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
   /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
-  reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"]}):Promise<AutonomousCoordinatorRuntime> {
+  reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
+  /** MW-021 (2026-09-25): the transport for the work on one jurisdiction, so its requests are held on the area budget covering it; absent, `transport` serves all. */
+  transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null})=>ModelTransport}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
@@ -61,7 +63,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         httpStatus: artifact.httpStatus, partial: artifact.httpStatus === 206 || Boolean(artifact.headers["content-range"]) || artifact.retentionPolicy === "DIAGNOSTIC" };
     } });
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
-    ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,
+    ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id})}),
       contextFor:()=>{

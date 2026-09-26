@@ -20,6 +20,7 @@ import {
   DurableSpendHolds,
   JobSpend,
   SendBudgetRefusal,
+  areaGuardedTransport,
   budgetGuardedTransport,
   committedUsd,
   type BudgetLine,
@@ -31,9 +32,14 @@ import {
   assignmentMembership,
   malformedAssignmentBudgetsOf,
 } from "../lib/control-plane/expansion/assignment-budget.ts";
-import { scoutAttemptWorstCaseUsd, scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { scoutAttemptWorstCaseUsd, scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { RESEARCH_BOUNDS, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
-import { modelRequestWorstCaseUsd } from "../lib/control-plane/fleet-safety.ts";
+import { modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
+import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansion/membership.ts";
+import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
+import type { IndependentAuditContext } from "../lib/control-plane/workers/types.ts";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 const NOW = "2026-09-26T05:00:00.000Z";
 const WORST = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch)!;
@@ -236,4 +242,117 @@ test("a ledger the store cannot read or write refuses the hold, by name: nothing
   const verdict = await new JobSpend(spend, "job", "ob-1", lines([send(100)])).admit(WORST, "one Scout job");
   assert.equal(verdict.admit, false);
   assert.match(!verdict.admit ? verdict.why : "", /shared budget ledger could not be read or written \(connection refused\)/);
+});
+
+/* ------------------------------------------------------------ autonomous work (no Send) */
+
+const PIMA = "az:county:county-of-pima";
+const MORRIS = "nj:county:county-of-morris";
+const azScope = (budgetUsd: number, historicalUsd: number, resolved = true): BudgetScope => ({
+  key: "zip-85701", label: "ZIP 85701", budgetUsd, resolved, members: new Set(resolved ? [PIMA] : []), states: ["AZ"], historicalUsd,
+});
+const areaGate = (scopes: BudgetScope[], malformedScopes = 0) => new ScopeBudgetGate({ scopes, worstCaseUsd: WORST, malformedScopes, historyReadAt: NOW });
+
+/** The runner's wiring, with a fake transport: the area covering the job's jurisdiction, by the Scouts' own matching rule. */
+function autonomous(spend: DurableSpendHolds, gate: ScopeBudgetGate | null, jurisdiction: { subjectId: string; state: string | null }, transport: ModelTransport, refusedBeforeSending?: (e: unknown) => boolean) {
+  let seq = 0;
+  return areaGuardedTransport({
+    transport, holds: spend, jurisdiction,
+    areasFor: (j) => {
+      if (gate === null) return { areas: [] };
+      const found = gate.linesFor(j.subjectId, j.state);
+      return "refusal" in found ? { code: found.refusal.code, why: found.refusal.why } : { areas: found.lines };
+    },
+    worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd, nextHoldId: () => `autonomous:${(seq += 1)}`, now: () => NOW,
+    ...(refusedBeforeSending ? { refusedBeforeSending } : {}),
+  });
+}
+
+test("an exhausted Send in NJ does not block an autonomous AZ job: autonomous work is never checked against a Send's budget", async () => {
+  const { repos, spend } = holds();
+  /* The NJ Send is spent out: a Scout it reached is refused. */
+  const njSend = send(WORST, 0, "send:dispatch:ri-nj");
+  assert.equal((await new JobSpend(spend, "nj-scout", "ob-nj", lines([njSend])).admit(WORST, "one Scout job")).admit, true);
+  assert.equal((await new JobSpend(spend, "nj-scout-2", "ob-nj-2", lines([njSend])).admit(WORST, "one Scout job")).admit, false, "the NJ Send has nothing left");
+  /* An autonomous job researching Pima County, AZ, inside an AZ area with room: it runs, held on the AZ area only. */
+  const { sent, transport } = fakeTransport();
+  await autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, transport)(request());
+  assert.equal(sent.length, 1);
+  const held = Object.values((await repos.budget.read()).value.spendHolds ?? {}).filter((h) => h.jobId.startsWith("autonomous:"));
+  assert.deepEqual(held.map((h) => h.keys), [["area:zip-85701"]], "held on the area it researches, on no Send");
+  assert.ok(held[0].settled !== null && held[0].settled.usd > 0 && held[0].settled.usd < held[0].usd, "settled to its measured cost");
+  /* Autonomous work in NJ, where no area budget stands, passes straight to the Fleet guard — the spent NJ Send does not bind it either. */
+  await autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: MORRIS, state: "NJ" }, transport)(request());
+  assert.equal(sent.length, 2);
+});
+
+test("an exhausted AZ area budget blocks an autonomous AZ job before it sends, whether the area is matched by member or by state", async () => {
+  const { spend } = holds();
+  const { sent, transport } = fakeTransport();
+  /* A resolved area with Pima as a member, $0.01 left. */
+  await assert.rejects(
+    autonomous(spend, areaGate([azScope(5, 4.99)]), { subjectId: PIMA, state: "AZ" }, transport)(request()),
+    (error: unknown) => error instanceof SendBudgetRefusal && error.code === "SCOPE_BUDGET" && /ZIP 85701 has \$0\.01 of its \$5\.00/.test(error.why),
+  );
+  /* An area not yet resolved binds by state: a subject whose id says no state is matched by the job's own state. */
+  const unresolved = areaGate([azScope(5, 0, false)]);
+  await assert.rejects(autonomous(spend, unresolved, { subjectId: "pima-legistar", state: "AZ" }, transport)(request()), SendBudgetRefusal);
+  assert.equal(sent.length, 0, "no request was sent");
+  /* A job in another state is not bound by the AZ area. */
+  await autonomous(spend, areaGate([azScope(5, 4.99)]), { subjectId: MORRIS, state: "NJ" }, transport)(request());
+  assert.equal(sent.length, 1);
+});
+
+test("autonomous work fails closed: an unreadable area budget or ledger refuses; a Fleet refusal before sending releases its hold", async () => {
+  const { sent, transport } = fakeTransport();
+  const { repos, spend } = holds();
+  /* The scope list could not be read: whether an area covers the job cannot be known. */
+  await assert.rejects(autonomous(spend, areaGate([], 1), { subjectId: PIMA, state: "AZ" }, transport)(request()), (e: unknown) => e instanceof SendBudgetRefusal && e.code === "SCOPE_BUDGET");
+  /* The area's spend is unmeasured. */
+  await assert.rejects(autonomous(spend, areaGate([azScope(50, null as unknown as number)]), { subjectId: PIMA, state: "AZ" }, transport)(request()), SendBudgetRefusal);
+  /* The ledger cannot be read or written. */
+  const broken = { read: async () => { throw new Error("connection refused"); }, install: async () => { throw new Error("connection refused"); }, mutate: async () => { throw new Error("connection refused"); } };
+  const deadLedger = new DurableSpendHolds({ budget: broken as never, now: () => NOW, sleep: async () => undefined });
+  await assert.rejects(autonomous(deadLedger, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, transport)(request()), /shared budget ledger could not be read or written/);
+  assert.equal(sent.length, 0, "nothing was sent unbudgeted");
+  /* The Fleet guard refuses before sending: the area hold is released, not left counting. */
+  class Refused extends Error {}
+  const refusing: ModelTransport = async () => { throw new Refused("ceiling"); };
+  await assert.rejects(autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, refusing, (e) => e instanceof Refused)(request()), Refused);
+  assert.equal(Object.keys((await repos.budget.read()).value.spendHolds ?? {}).length, 0);
+  /* A failure after it may have been sent keeps the whole hold: what it was billed is unknown. */
+  const failing: ModelTransport = async () => { throw new Error("socket hang up"); };
+  await assert.rejects(autonomous(spend, areaGate([azScope(50, 1)]), { subjectId: PIMA, state: "AZ" }, failing, (e) => e instanceof Refused)(request()), /socket hang up/);
+  const kept = Object.values((await repos.budget.read()).value.spendHolds ?? {});
+  assert.equal(kept.length, 1);
+  assert.equal(kept[0].settled, null);
+});
+
+test("the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure", async () => {
+  const asked: { subjectId: string; state: string | null }[] = [];
+  const reasoner = modelAuditReasoner(createMemoryRepositories(), async () => { throw new Error("the shared transport must not be used"); }, () => NOW, {
+    transportFor: (j) => {
+      asked.push(j);
+      return async () => { throw new SendBudgetRefusal("SCOPE_BUDGET", "ZIP 85701 has $0.00 left"); };
+    },
+  });
+  const context = {
+    subjectId: PIMA, contract: { recordClass: "CIVICCLERK_EVENTS", schemaVersion: 1, subjectId: PIMA, sourceBodyId: null, sourceBodyName: null, publisherSlug: "pima", requiredFields: ["id"], completenessScope: "captured", expectedSourceDate: null },
+    publisherSurfaces: ["https://pima.gov/"], methodVersion: 1, routes: [], evidence: [], surfaceEvidence: [], startedFrom: [], scope: "CAPTURED_ARTIFACT",
+  } as unknown as IndependentAuditContext;
+  await assert.rejects(reasoner.review(context, "auditor-attempt"), /DENIED_BY_POLICY:SCOPE_BUDGET; ZIP 85701 has \$0\.00 left/);
+  assert.deepEqual(asked, [{ subjectId: PIMA, state: null }]);
+});
+
+test("the runner wires autonomous work to its jurisdiction's area only, never to a Send's budget", () => {
+  const runner = readFileSync(join(process.cwd(), "scripts", "freshness-shadow.mts"), "utf8");
+  const start = runner.indexOf("const autonomousTransportFor =");
+  const end = runner.indexOf("});", start);
+  const block = runner.slice(start, end);
+  assert.ok(start > 0 && end > start);
+  assert.match(block, /expansionBudget\.gate\.linesFor\(j\.subjectId, j\.state\)/);
+  assert.doesNotMatch(block, /assignmentBudget|sends:/, "no Send budget is consulted for autonomous work");
+  assert.match(runner, /transportFor: autonomousTransportFor\(fleetGuarded\)/);
+  assert.match(runner, /const fleetGuarded = modelLaneEnabled \? fleetSafety\.guardedModelTransport\(/, "the autonomous transport exists only while the paid lane is open");
+  assert.doesNotMatch(runner, /unattributedBudgetGuard|allLines\(/);
 });

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 843,
-    "named": 8147,
+    "named": 8152,
     "dynamic": 33
   },
   "files": {
@@ -10471,8 +10471,13 @@
         "a missing Send record or an unreadable budget refuses; with no Send budget nothing changes",
         "a pre-warm holds its own worst case on the budget of the work it serves, and is refused when that does not fit",
         "a settled job's measured spend counts until the cost history carries it, never twice",
+        "an exhausted AZ area budget blocks an autonomous AZ job before it sends, whether the area is matched by member or by state",
+        "an exhausted Send in NJ does not block an autonomous AZ job: autonomous work is never checked against a Send's budget",
+        "autonomous work fails closed: an unreadable area budget or ledger refuses; a Fleet refusal before sending releases its hold",
         "settling releases the unused hold; a failed or unmeasured job keeps its hold; a retry re-reserves; a crash's hold counts until its window ends",
-        "the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60"
+        "the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure",
+        "the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60",
+        "the runner wires autonomous work to its jurisdiction's area only, never to a Send's budget"
       ],
       "dynamic": 0
     },

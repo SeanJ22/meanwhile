@@ -335,29 +335,6 @@ export class AssignmentBudgetGate {
   }
 
   /**
-   * Every Send budget in force as a line, for paid work that names no Send
-   * obligation and so must fit them all — or the refusal when any cannot be
-   * checked (an unreadable ledger or budget, unmeasured spend, an unread log).
-   */
-  allLines(): { readonly lines: readonly BudgetLine[] } | { readonly refusal: AssignmentRefusal } {
-    const unreadable = (why: string): { readonly refusal: AssignmentRefusal } => ({ refusal: { admit: false, code: ASSIGNMENT_BUDGET_CODE, why } });
-    if (this.malformed.size > 0) {
-      const bad = [...this.malformed.values()][0];
-      return unreadable(`assignment "${bad.label}" (${bad.key}) carries a budget that is not a readable amount (${bad.raw}), so the budgets in force cannot all be checked`);
-    }
-    if (!this.intentsReadable) return unreadable("the owner's instructions could not be read, so which Sends carry a budget is not known");
-    if (this.specs.size === 0) return { lines: [] };
-    if (!this.costsReadable) return unreadable("the cost ledger could not be read, so the Send budgets in force cannot be checked");
-    const lines: BudgetLine[] = [];
-    for (const spec of this.specs.values()) {
-      const hist = this.historical.get(spec.key);
-      if (hist === undefined || hist.usd === null || this.cycleUnmeasured.has(spec.key)) return unreadable(`assignment ${this.name(spec)}'s spend is unmeasured, so its budget cannot be checked`);
-      lines.push({ key: sendBudgetKey(spec.key), label: `assignment ${this.name(spec)}`, budgetUsd: spec.budgetUsd, historicalUsd: hist.usd, historyReadAt: this.historyReadAt });
-    }
-    return { lines };
-  }
-
-  /**
    * The budget lines a paid job on this obligation is held against, for the
    * durable holds (`spend-holds.ts`): every budgeted Send it belongs to, most
    * recent first (one with room suffices, the shared-work rule) — or the

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 866,
-    "named": 8291,
+    "named": 8293,
     "dynamic": 33
   },
   "files": {
@@ -122,6 +122,8 @@
     },
     "tests/admin-body-standing.test.ts": {
       "names": [
+        "a sibling body's successful reading cannot improve another body on the same division",
+        "normal published body readings advance the stale registry preview without hiding a later failed read",
         "the light read decides every standing exactly as the full read does",
         "the preview reads the standing alone, and production never loads the whole-payload readers",
         "the preview's counts are the same from either read"

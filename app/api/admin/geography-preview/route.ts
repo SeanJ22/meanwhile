@@ -86,7 +86,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     ok: true,
     geography: { type: g.type, geoid: g.geoid, version: g.version, label: g.label, stateAbbr: g.stateAbbr },
     codes: standing.perCode.map((c) => ({ zcta5: c.zcta5, whole: c.whole, fraction: c.fraction, indexed: c.indexed, counts: c.counts })),
-    scopeBodies: previewScopeBodies(container.value.zctas, index),
+    scopeBodies: previewScopeBodies(container.value.zctas, index, watched),
     totals: {
       ...standing.counts,
       codes: standing.codes,

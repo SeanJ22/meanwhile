@@ -12,10 +12,11 @@
  *   placement    a body is at a code when the reader's ZIP division index says
  *                its division's territory reaches that code — the reader's own
  *                rule for what governs a ZIP
- *   coverage     whether a body has a way in: its registry coverage status
- *                (LIVE or MANUAL = a recorded route; KNOWN_UNCOVERED and
- *                NO_SOURCE_FOUND = looked, no route; NOT_ATTEMPTED = never
- *                walked) — and, separately, whether we watch its meetings now
+ *   coverage     whether a body has a way in: its registry coverage status,
+ *                advanced by later confirmed reads for its exact body id.
+ *                Failed attempts without a confirmed route stay unresolved;
+ *                a clock alone cannot prove a read. Current meeting health
+ *                and public delivery remain separate measurements
  * ```
  *
  * A body reaching three codes is one body: every container and every state
@@ -28,7 +29,7 @@
 import { displayNameOf } from "../display-name.ts";
 import type { BodyStatus, BodyView } from "./bodies.ts";
 
-export type CoverageStatus = "LIVE" | "MANUAL" | "KNOWN_UNCOVERED" | "NO_SOURCE_FOUND" | "NOT_ATTEMPTED" | "OTHER";
+export type CoverageStatus = "LIVE" | "MANUAL" | "KNOWN_UNCOVERED" | "NO_SOURCE_FOUND" | "NOT_ATTEMPTED" | "READ_UNRESOLVED" | "OTHER";
 
 export interface RegistryBody {
   readonly id: string;
@@ -114,6 +115,16 @@ export function registryBodyOf(raw: {
 
 const NO_WATCH: Readonly<Record<BodyStatus, number>> = { WORKING: 0, "NEEDS ATTENTION": 0, STUCK: 0, "NOT READ YET": 0 };
 
+/** A later measured read supersedes an old registry label, for this exact body
+ * only. A retained publication still proves a route existed when a newer read
+ * fails; its current failure and freshness remain on the separate BodyView. */
+export function observedCoverageStatus(body: RegistryBody, watched?: BodyView): CoverageStatus {
+  if (!watched || watched.id !== body.id) return body.coverageStatus;
+  if (watched.recordSources > 0 || watched.lastSuccessAt) return "LIVE";
+  if (body.coverageStatus === "NOT_ATTEMPTED" && watched.lastReadAt) return "READ_UNRESOLVED";
+  return body.coverageStatus;
+}
+
 export function countBodies(bodies: readonly RegistryBody[], watchedById: ReadonlyMap<string, BodyView>): CoverageCounts {
   const watched: Record<BodyStatus, number> = { ...NO_WATCH };
   let wayIn = 0;
@@ -122,11 +133,12 @@ export function countBodies(bodies: readonly RegistryBody[], watchedById: Readon
   let other = 0;
   const seenWatched = new Set<string>();
   for (const b of bodies) {
-    if (b.coverageStatus === "LIVE" || b.coverageStatus === "MANUAL") wayIn += 1;
-    else if (b.coverageStatus === "KNOWN_UNCOVERED" || b.coverageStatus === "NO_SOURCE_FOUND") lookedNoRoute += 1;
-    else if (b.coverageStatus === "NOT_ATTEMPTED") neverWalked += 1;
-    else other += 1;
     const w = watchedById.get(b.id);
+    const status = observedCoverageStatus(b, w);
+    if (status === "LIVE" || status === "MANUAL") wayIn += 1;
+    else if (status === "KNOWN_UNCOVERED" || status === "NO_SOURCE_FOUND") lookedNoRoute += 1;
+    else if (status === "NOT_ATTEMPTED") neverWalked += 1;
+    else other += 1;
     if (w && !seenWatched.has(w.id)) {
       seenWatched.add(w.id);
       watched[w.status] += 1;
@@ -233,7 +245,7 @@ export function worstGapWords(c: ContainerStanding): string {
   const parts: string[] = [];
   if (k.neverWalked > 0) parts.push(`${k.neverWalked} never walked`);
   if (k.lookedNoRoute > 0) parts.push(`${k.lookedNoRoute} looked at with no route found`);
-  if (k.other > 0) parts.push(`${k.other} with no coverage status recorded`);
+  if (k.other > 0) parts.push(`${k.other} whose coverage is unresolved`);
   const who = k.bodies === 1 ? "its only body has" : missing === k.bodies ? `all ${k.bodies} of its bodies have` : `${missing} of its ${k.bodies} bodies have`;
   return `${w.zcta5} at ${pct(k.wayIn, k.bodies)} — ${who} no way in recorded (${parts.join(", ")}).`;
 }
@@ -255,6 +267,8 @@ export function coverageStatusPill(status: CoverageStatus): { readonly pill: str
       return { pill: "LOOKED · NO SOURCE", tone: "amber" };
     case "NOT_ATTEMPTED":
       return { pill: "NEVER WALKED", tone: "slate" };
+    case "READ_UNRESOLVED":
+      return { pill: "READ · UNRESOLVED", tone: "gold" };
     default:
       return { pill: "STATUS NOT RECORDED", tone: "gold" };
   }

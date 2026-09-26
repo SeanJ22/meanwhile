@@ -1,6 +1,11 @@
 {
   "entries": [
     {
+      "file": "app/(admin)/_mw/delivery-pending.tsx",
+      "text": "class not recorded",
+      "reason": "Names the missing recordClass field in Admin's held pipeline record. It does not assert that a publisher omitted information or that verification succeeded. The subject, blocker, corrective path and outcome remain independently visible; this is a gap in Meanwhile's own metadata, never a claim about a government or source."
+    },
+    {
       "file": "components/admin/fleet-operations-map.tsx",
       "text": "not measured",
       "reason": "The failing-item card prints lastActivity.at; when the read did not carry it the field is genuinely absent, so the default names the gap as 'not measured' rather than 0. On this page that distinction is the load-bearing invariant (BUILD.md/WIRING.md §6b): 0 would assert the work was owed nothing, the opposite of an unread timestamp. It is a neutral field-gap on an owner-facing console surface, never a claim about a government."

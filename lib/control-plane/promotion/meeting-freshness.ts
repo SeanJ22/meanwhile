@@ -2,9 +2,10 @@ import { meetingPartitionForRow, type MeetingPartitionContract } from "../../civ
 import { readMeetingFreshnessRows } from "../../civic-data/meeting-freshness-store.ts";
 import { projectRoutineDataObservability, type CurrentReaderBuildIdentity, type RoutineObservabilityRows } from "../../civic-data/observability.ts";
 import { factFreshnessFromPermanentMeetings, type PermanentMeetingsReceipt } from "./fact-freshness.ts";
+import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";
 
 export async function readDeployedReaderBuild(): Promise<CurrentReaderBuildIdentity> {
-  const response = await fetch("https://meanwhileusa.com/api/build", { cache: "no-store", signal: AbortSignal.timeout(5_000) });
+  const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { cache: "no-store", signal: AbortSignal.timeout(5_000) });
   if (!response.ok) throw new Error("MEETING_FRESHNESS_READER_BUILD_UNAVAILABLE");
   const body = await response.json();
   return { codeSha: typeof body.commit === "string" ? body.commit : null,

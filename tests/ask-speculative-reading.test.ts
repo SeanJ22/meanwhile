@@ -190,7 +190,11 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
   assert.equal(on.payload.trace.interpretation.ran, true, "the model still read the question");
   assert.deepEqual([on.payload.trace.speculation?.ran, on.payload.trace.speculation?.delivered, on.payload.trace.speculation?.why, on.payload.trace.speculation?.codeIntent],
     [true, "SPECULATIVE_ANSWER", "same-subject-body-kind-and-writer-input", "CONTACT"]);
-  assert.ok(on.ms >= WRITING_MS && on.ms < READING_MS + WRITING_MS, `total ${on.ms.toFixed(0)} ms is about the longer call, under the sum`);
+  // Measured on the two model calls themselves, first start to last end: the route's own work around them
+  // slows with the machine (7.2 s under the full suite on 2026-09-25) and is not what overlaps.
+  const modelWindow = (calls: typeof on.calls) => Math.max(...calls.map((call) => call.endedAt!)) - Math.min(...calls.map((call) => call.startedAt));
+  const onWindow = modelWindow(on.calls);
+  assert.ok(onWindow >= WRITING_MS && onWindow < READING_MS + WRITING_MS, `the model calls took ${onWindow.toFixed(0)} ms together: about the longer call, under the sum`);
 
   // The control: the same question with speculation switched off runs the two calls one after the other.
   process.env.WTP_ASK_SPECULATION = "off";
@@ -200,8 +204,9 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
     assert.ok(off.calls[1].startedAt >= off.calls[0].endedAt!, "switched off, the writer waits for the reading");
     assert.equal(off.payload.trace.speculation, undefined);
     assert.equal(off.payload.answer, on.payload.answer, "the same answer either way");
-    assert.ok(off.ms >= READING_MS + WRITING_MS, `sequential total ${off.ms.toFixed(0)} ms is the sum`);
-    assert.ok(off.ms - on.ms >= READING_MS - 300, `overlap saved ${(off.ms - on.ms).toFixed(0)} ms, about one reading`);
+    const offWindow = modelWindow(off.calls);
+    assert.ok(offWindow >= READING_MS + WRITING_MS, `sequential model calls took ${offWindow.toFixed(0)} ms: the sum`);
+    assert.ok(offWindow - onWindow >= READING_MS - 300, `overlap saved ${(offWindow - onWindow).toFixed(0)} ms, about one reading`);
     console.log(`fake-transport totals (reading ${READING_MS} ms, writing ${WRITING_MS} ms): overlapped ${on.ms.toFixed(0)} ms, sequential ${off.ms.toFixed(0)} ms`);
   } finally {
     delete process.env.WTP_ASK_SPECULATION;

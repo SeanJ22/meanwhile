@@ -522,6 +522,16 @@ function decision(): ExpansionScopeDecision {
   return withScopeSet([], { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, Arizona", stateAbbr: "AZ" }, priority: 1, budgetUsd: 5, note: null, questions: ["HAVE_IT"], decidedAt: JOINED, decidedBy: "adm", receiptId: "r-a" }).scopes[0];
 }
 
+test("saved instruction wording preserves a hunt's token-only total and distinguishes legacy rolling budgets", () => {
+  const input = { reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null };
+  const hunt = instructionView({ ...input, decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED } });
+  assert.match(hunt.card.summary, /\$50\.00 Anthropic token budget for this hunt/);
+  assert.doesNotMatch(hunt.card.summary, /rolling|lifetime/);
+  assert.match(hunt.spend, /\$50\.00 Anthropic token budget for this hunt/);
+  const legacy = instructionView({ ...input, decision: decision() });
+  assert.match(legacy.card.summary, /\$5\.00 paid-model budget in any rolling 24 hours/);
+});
+
 test("an instruction lists what it created and reordered from the work itself, and its own budget with the window", () => {
   const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }, row("ob-r", "s", [A.key])]);
   const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs: [charge({ obligationId: "ob-c", usd: 5.4 })], worstCaseUsd: 0.6, intentsReadable: true });

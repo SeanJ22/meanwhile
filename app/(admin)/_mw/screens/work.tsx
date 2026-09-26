@@ -359,7 +359,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               <p className={s.note}>
                 {view!.selection.rule} {scopedTotal !== null && scopedTotal > rows.length ? `${(scopedTotal - rows.length).toLocaleString("en-US")} rows in this scope are not carried on the published list; each group says how many it holds.` : ""}
               </p>
-              <p className={s.note}>{scopeState !== null ? "Across all scopes: " : ""}{askGapCountWords(view!)}</p>
+              <p className={s.note}>{scopeState !== null || instructionFilter !== null ? "Across all scopes: " : ""}{askGapCountWords(view!)}</p>
               <div className={s.rowCenter} style={{ gap: 8 }}>
                 {groups.map((g) => (
                   <Link key={g.state} href={`${here({ show: show === g.state ? null : g.state, open: null })}#assignments`} className={`${s.chip} ${show === g.state ? s.chipOn : ""}`}>
@@ -433,7 +433,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       {props.area === "fleet" && (
         <DeliveryTrailCard
           trail={deliveryTrail}
-          note={livePipeline.ok ? `Collection and validation read live at ${formatEastern(livePipeline.at)}. Public readbacks and cost summaries retain their recorded sync times.` : livePipeline.reason}
+          note={`${instructionFilter !== null ? "This pipeline shows all work, separately from the instruction filter above. " : ""}${livePipeline.ok ? `Collection and validation read live at ${formatEastern(livePipeline.at)}. Public readbacks and cost summaries retain their recorded sync times.` : livePipeline.reason}`}
         />
       )}
       <AuditFooter numbers={numbers} claims={claims} readAt={formatEastern(base.nowIso, { year: true })} />

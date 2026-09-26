@@ -494,6 +494,15 @@ export class ScopeBudgetGate {
     );
   }
 
+  /** A selected hunt authorizes its own work, including explicitly shared
+   * members. Opening the model lane for that hunt must not start unrelated
+   * geographic acquisition. Legacy rolling-only selections keep their rules. */
+  private outsideSelectedHunts(binding: readonly BudgetScope[]): Extract<BudgetAdmission, { admit: false }> | null {
+    return this.scopes.some(scope => scope.lifetime) && !binding.some(scope => scope.lifetime)
+      ? { admit: false, code: SCOPE_BUDGET_CODE, why: "This work is outside the selected hunts. Paid model acquisition waits for an applicable hunt instruction; plain-code work is unchanged." }
+      : null;
+  }
+
   /**
    * The area budget lines a paid job on this subject is held against, for the
    * durable holds (`spend-holds.ts`): EVERY binding scope must have room — or
@@ -511,8 +520,11 @@ export class ScopeBudgetGate {
         },
       };
     }
+    const binding = this.bindingScopes(subjectId, stateHint);
+    const outside = this.outsideSelectedHunts(binding);
+    if (outside !== null) return { refusal: outside };
     const lines: BudgetLine[] = [];
-    for (const scope of this.bindingScopes(subjectId, stateHint)) {
+    for (const scope of binding) {
       if (!scope.resolved) {
         return { refusal: this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`) as Extract<BudgetAdmission, { admit: false }> };
       }
@@ -533,6 +545,8 @@ export class ScopeBudgetGate {
       };
     }
     const binding = this.bindingScopes(subjectId);
+    const outside = this.outsideSelectedHunts(binding);
+    if (outside !== null) return outside;
     for (const scope of binding) {
       if (!scope.resolved) {
         return this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`);

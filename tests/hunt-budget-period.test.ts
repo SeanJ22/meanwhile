@@ -6,6 +6,7 @@ import type { BudgetLedger } from "../lib/control-plane/budget.ts";
 import { DurableSpendHolds, JobSpend, committedUsd, type BudgetLine } from "../lib/control-plane/expansion/spend-holds.ts";
 import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";
 import { aggregateModelSpend } from "../lib/control-plane/fleet-safety.ts";
+import { ScopeBudgetGate } from "../lib/control-plane/expansion/membership.ts";
 
 test("atomic CAS reservations retry revision conflicts without relying on HTTP session locks", async () => {
   const budget = budgetRepositoryFrom(memoryAggregateRepository<BudgetLedger>("BudgetLedger"), { withLock: async () => { throw new Error("session affinity is unavailable"); } }, "ATOMIC_COMPARE_AND_SET");
@@ -57,4 +58,18 @@ test("Brave and Exa costs do not consume the Anthropic token-only cap", () => {
   const out = aggregateModelSpend([row("SCOUT","api.anthropic.com",12), row("DISCOVERY_SEARCH","api.search.brave.com",5), row("DISCOVERY_SEARCH","api.exa.ai",8), row("FETCH","neon.tech",20), row("FETCH","api.github.com",10), row("FETCH","api.netlify.com",15)] as never, since, until);
   assert.equal(out.usd, 12);
   assert.equal(out.measured, 1);
+});
+
+test("opening a selected hunt admits its shared records but not unrelated paid geographic acquisition", () => {
+  const scope = { key: "85635", label: "85635 hunt", budgetUsd: 50, historicalUsd: 0, resolved: true,
+    members: new Set(["az:county:cochise", "shared:congress"]), states: ["AZ"] };
+  const hunt = new ScopeBudgetGate({ scopes: [{ ...scope, lifetime: true }], worstCaseUsd: 1 });
+  for (const subject of scope.members) {
+    assert.equal(hunt.admit(`job:${subject}`, subject).admit, true);
+    assert.ok("lines" in hunt.linesFor(subject));
+  }
+  assert.equal(hunt.admit("outside", "nj:county:morris").admit, false);
+  assert.ok("refusal" in hunt.linesFor("unplaced-new-body", "AZ"), "an unplaced identity cannot escape hunt accounting");
+  const legacy = new ScopeBudgetGate({ scopes: [scope], worstCaseUsd: 1 });
+  assert.equal(legacy.admit("old-behavior", "nj:county:morris").admit, true);
 });

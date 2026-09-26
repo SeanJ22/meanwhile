@@ -146,9 +146,8 @@ test("who gave: our records hold totals, not donor identities — said as OURS, 
   const held = heldEvidence("ballot-az-pima:governor:hobbs-katie", "Katie Hobbs");
   const composed = composeMoneyAnswer({ ask: { kind: "WHO_GAVE" }, subject: held.subject, records: held.records, gaps: held.gaps });
   assert.ok(composed);
-  assert.match(composed.answer, /^Our records for Katie Hobbs hold campaign totals, not the identities of donors\. /);
-  assert.match(composed.answer, /Money records we hold for Katie Hobbs that name a donor: 0 of 1\./);
-  assert.match(composed.answer, /reported raising \$11,109,719\.95 and spending \$14,355,612\.69/);
+  assert.match(composed.answer, /^Our records for Katie Hobbs hold campaign totals, not the identities of donors \(money records we hold for this candidate that name a donor: 0 of 1\)\. /);
+  assert.match(composed.answer, /The campaign committee, registered as "Elect Katie Hobbs", reported raising \$11,109,719\.95 and spending \$14,355,612\.69/);
   // The measured Haiku 4.5 failure: "Campaign money records filed with Arizona describe totals".
   assert.doesNotMatch(composed.answer, /filed with Arizona describe|Arizona (?:does not|doesn't) (?:list|publish|name)|state (?:does not|doesn't) (?:list|publish|name)/i);
   assert.equal(validateAnswer(composed.answer, composed.citedUrls, pack(held.subject, held.records, "Who donated to Katie Hobbs's campaign?")).kind, "PASSED");
@@ -160,9 +159,9 @@ test("compare: each person's own figure, and a verdict only on like-for-like fil
   const records = [...warmington.records, ...ayotte.records];
   const composed = composeMoneyAnswer({ ask: { kind: "COMPARE", measure: "RAISED" }, subject: warmington.subject, other: { id: AYOTTE, name: "Kelly Ayotte" }, records, gaps: warmington.gaps });
   assert.equal(composed?.answer,
-    "Cinde Warmington's campaign committee, registered as \"Friends of Cinde Warmington\", reported raising $888,256.70 for the 2026 Election Cycle. " +
-    "Kelly Ayotte's campaign committee, registered as \"Kelly for New Hampshire\", reported raising $5,995,303.26 for the 2026 Election Cycle. " +
-    "By these filings, Kelly Ayotte's committee reported raising more. " +
+    "Cinde Warmington's campaign committee, registered as \"Friends of Cinde Warmington\", reported raising $888,256.70, and " +
+    "Kelly Ayotte's campaign committee, registered as \"Kelly for New Hampshire\", reported raising $5,995,303.26, both for the 2026 Election Cycle. " +
+    "By these filings, \"Kelly for New Hampshire\" reported raising more. " +
     "Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 1st, 2026. " +
     "These are the campaigns' own filings; they do not show outside spending for or against either candidate.");
   assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack(warmington.subject, records, "Has Cinde Warmington raised more money than Kelly Ayotte?")).kind, "PASSED");
@@ -171,8 +170,15 @@ test("compare: each person's own figure, and a verdict only on like-for-like fil
   // A person with no filing on record is stated as the agency's record states them — and no verdict is drawn.
   const fife = heldEvidence("ballot-nh-merrimack:governor:fife-shaun", "Shaun Fife");
   const mixed = composeMoneyAnswer({ ask: { kind: "COMPARE", measure: "RAISED" }, subject: ayotte.subject, other: { id: fife.subject.id, name: "Shaun Fife" }, records: [...ayotte.records, ...fife.records], gaps: [] });
-  assert.match(mixed?.answer ?? "", /The New Hampshire Secretary of State — Campaign Finance System had no reports on file for Shaun Fife as of September 1st, 2026\./);
+  assert.match(mixed?.answer ?? "", /; the New Hampshire Secretary of State — Campaign Finance System had no reports on file for Shaun Fife as of September 1st, 2026\./);
   assert.doesNotMatch(mixed?.answer ?? "", /raising more|\$0\.00/);
+  // Filings over different periods are stated side by side, never compared.
+  const nj = SNAPSHOTS.nj.records.filter((record) => record.filingState === "FILED");
+  const single = [...new Set(nj.flatMap((record) => record.targetKeys))].filter((key) => nj.filter((record) => record.targetKeys.includes(key)).length === 1);
+  const [x, y] = [heldEvidence(single[0], "Pat Q. Example"), heldEvidence(single[1], "Lee R. Sample")];
+  const side = composeMoneyAnswer({ ask: { kind: "COMPARE", measure: "RAISED" }, subject: x.subject, other: { id: y.subject.id, name: "Lee R. Sample" }, records: [...x.records, ...y.records], gaps: [] });
+  assert.match(side?.answer ?? "", /The two filings cover different reporting periods, so the figures are stated side by side and not compared\./);
+  assert.equal(overLengthBudget(side!.answer), null, "two names with initials still fit: each person is named once");
 });
 
 test("every held AZ, NH and NJ filing state composes inside the length contract and passes the validator", () => {
@@ -182,7 +188,8 @@ test("every held AZ, NH and NJ filing state composes inside the length contract 
     for (const target of targets) {
       const shown = stateMoneyRecordsForDisplay(snap.records.filter((record: StateMoneyRecord) => record.targetKeys.includes(target)));
       if (!shown.length || shown.every((record) => record.filingState === "OURS_GAP")) continue;
-      const held = heldEvidence(target, "Pat Example");
+      // A name with an initial: "R. " counts as a sentence end in the length contract (measured on "James R. KELLY").
+      const held = heldEvidence(target, "Pat Q. Example");
       for (const ask of [{ kind: "HOW_MUCH", measures: ["RAISED", "SPENT"] }, { kind: "WHO_GAVE" }] as MoneyAsk[]) {
         const composed = composeMoneyAnswer({ ask, subject: held.subject, records: held.records, gaps: held.gaps });
         assert.ok(composed, `${state} ${target} ${ask.kind} composes`);
@@ -198,9 +205,10 @@ test("every held AZ, NH and NJ filing state composes inside the length contract 
 test("two committees are stated separately and never added; composition steps aside for what it cannot state", () => {
   const nj = SNAPSHOTS.nj.records.filter((record) => record.filingState === "FILED");
   const target = [...new Set(nj.flatMap((record) => record.targetKeys))].find((key) => nj.filter((record) => record.targetKeys.includes(key)).length === 2)!;
-  const held = heldEvidence(target, "Pat Example");
+  const held = heldEvidence(target, "Pat Q. Example");
   const composed = composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: held.subject, records: held.records, gaps: held.gaps });
-  assert.match(composed?.answer ?? "", /^We hold 2 committee filings for Pat Example, each stated on its own and not added together\./);
+  assert.match(composed?.answer ?? "", /^We hold 2 committee filings for Pat Q\. Example, each stated on its own and not added together\. One, registered as "[^"]+", reported raising \$[\d,.]+ and spending \$[\d,.]+ in \d+ reports? filed through [^;]+; the other, registered as/);
+  assert.doesNotMatch(composed?.answer ?? "", /total|combined|together raised/i, "never added");
   const ask: MoneyAsk = { kind: "HOW_MUCH", measures: ["RAISED"] };
   const ayotte = heldEvidence(AYOTTE, "Kelly Ayotte");
   assert.equal(composeMoneyAnswer({ ask, subject: ayotte.subject, records: [], gaps: [] }), null, "no record: the model writes");

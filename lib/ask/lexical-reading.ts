@@ -327,12 +327,17 @@ export function moneyShapeForBoundPerson(
 export function otherNamedPerson(question: string, inventory: readonly BindableEntity[], subjectId: string): BindableEntity | null {
   const words = new Set(normalizeName(question).split(" ").filter(Boolean));
   const own = new Set(inventory.filter((entity) => entity.id === subjectId).flatMap((entity) => distinctiveTokens(entity.name)));
+  /* The binder's own rule: more identifying words first. "Joseph M. MURPHY" in
+     full outranks another candidate's bare surname alias "Murphy". */
+  let best = 0;
   const named = new Map<string, BindableEntity>();
   for (const entity of inventory) {
     if (entity.id === subjectId || kindOf(entity) !== "PERSON") continue;
     const identifying = distinctiveTokens(entity.name);
     if (identifying.length === 0 || identifying.every((token) => COMMON_QUESTION_NOUNS.has(token))) continue;
-    if (identifying.every((token) => words.has(token)) && identifying.some((token) => !own.has(token))) named.set(entity.id, entity);
+    if (!identifying.every((token) => words.has(token)) || !identifying.some((token) => !own.has(token))) continue;
+    if (identifying.length > best) { best = identifying.length; named.clear(); }
+    if (identifying.length === best) named.set(entity.id, entity);
   }
   return named.size === 1 ? [...named.values()][0] : null;
 }

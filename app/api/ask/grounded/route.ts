@@ -52,7 +52,7 @@ import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-questio
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
 import { lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
 import { composeSittingAnswerWithBasis, settleSittingComposition, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
-import { composeMoneyAnswer } from "@/lib/ask/money-answer";
+import { composeMoneyAnswer, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
@@ -983,8 +983,13 @@ export async function POST(request: Request) {
       ? [{ whose: "OURS", statement: "No canonical meetings pointer has been recorded yet, so this answer is explicitly using the bundled first-bootstrap projection." }]
       : [];
   const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...meetingLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "Our canonical officeholder records could not be read for this answer. This is a holding failure, not a finding that there are no officials for this place or person." }] : [])];
+  /* A money comparison names two people. Bound on the whole question, the name
+     with more words wins ("Joseph M. MURPHY" over "Marilyn ALTHOFF") and the
+     other held filing never entered the inventory; each name slot is bound on
+     its own too (2026-09-25). */
+  const comparedSlots = ((shape) => shape?.otherSlot ? [shape.slot, shape.otherSlot] : [])(moneyQuestionShape(question));
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
-    [...preferredOfficialIds, ...namedSourceFilingIds(question, ballot.set)]);
+    [...preferredOfficialIds, ...[question, ...comparedSlots].flatMap((text) => namedSourceFilingIds(text, ballot.set))]);
 
   /*
    * **ONE HUMAN IS ONE SUBJECT, EVEN WHEN TWO STORES HOLD HER.**

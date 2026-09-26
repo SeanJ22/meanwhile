@@ -25,11 +25,16 @@ import { overLengthBudget } from "./length-contract.ts";
  *   and the read date. Two committees are stated separately and never added.
  * - **WHO_GAVE** — our records hold campaign TOTALS, not donor identities
  *   (RULING 167 renders no individual donor anywhere), so the answer says
- *   exactly that, names what we do hold, and counts it: "Money records we hold
- *   for X that name a donor: 0 of 1". It never says the state withholds donors.
+ *   exactly that, names what we do hold, and counts it: "money records we hold
+ *   for this candidate that name a donor: 0 of 1". It never says the state
+ *   withholds donors.
  * - **COMPARE** — each person's own figure for the asked measure, and a verdict
  *   only when both are one filing for the same period with the same agency.
  *   A person with no filing is stated as the record states them, never as $0.
+ *
+ * A person is named as few times as the answer allows: the length contract
+ * counts "R. " in "James R. KELLY" as a sentence end (measured 2026-09-25: two
+ * mentions of such a name pushed a two-committee answer past five sentences).
  *
  * It returns null — and the model writes, exactly as before — whenever the pack
  * holds anything this cannot state plainly: no state money record for a named
@@ -218,23 +223,31 @@ function facts(finance: Held["finance"], only?: MoneyMeasure): string | null {
   return parts.length ? parts.join(" and ") : null;
 }
 
-/** One held record, as one sentence about the person. Null for a state this cannot state. */
-function heldSentence(person: MoneyPerson, held: Held, only?: MoneyMeasure): string | null {
+/**
+ * One held record, as one clause. `committee` is how the clause opens ("Kelly
+ * Ayotte's campaign committee", "The campaign committee", "One", "the other"):
+ * the person is named as few times as the answer allows, because an initial
+ * ("James R. KELLY") counts as a sentence end in the length contract. Null for
+ * a state this cannot state.
+ */
+function heldClause(person: MoneyPerson, held: Held, committee: string, only?: MoneyMeasure): string | null {
   const { finance } = held;
   const read = formatDateLong(finance.checkedAt) ?? finance.checkedAt;
   if (finance.filingState === "FILED") {
     const stated = facts(finance, only);
     if (!stated) return null;
-    return `${possessive(person.name)} campaign committee, registered as ${quoted(finance.registeredName)}, reported ${stated} ${periodPhrase(finance)}`;
+    return `${committee}, registered as ${quoted(finance.registeredName)}, reported ${stated} ${periodPhrase(finance)}`;
   }
   if (finance.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") {
-    return `${possessive(person.name)} campaign committee, registered as ${quoted(finance.registeredName)}, has reported no money raised or spent to the ${finance.agency} as of ${read}; registration does not establish that no money was raised`;
+    return `${committee}, registered as ${quoted(finance.registeredName)}, has reported no money raised or spent to the ${finance.agency} as of ${read}; registration does not establish that no money was raised`;
   }
   if (finance.filingState === "NO_REPORTS_ON_FILE") {
-    return `The ${finance.agency} had no reports on file for ${person.name} as of ${read}`;
+    return `the ${finance.agency} had no reports on file for ${person.name} as of ${read}`;
   }
   return null;
 }
+
+const capitalized = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 /** "Filed with the <agency>; read <date>" — once when every record shares both. */
 function sourceSentence(held: readonly Held[]): string {
@@ -281,27 +294,38 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   if (input.ask.kind === "COMPARE") {
     const measure = input.ask.measure;
     const [mine, theirs] = heldBy as Held[][];
-    const sentences: string[] = [];
-    for (const [index, person] of people.entries()) {
-      const held = [mine, theirs][index];
+    // Each person in one clause, both clauses in one sentence: the people are named once each.
+    const chosen: Held[] = [];
+    for (const held of [mine, theirs]) {
       const filed = held.filter((entry) => entry.finance.filingState === "FILED");
       if (filed.length > 1) return null;
-      const sentence = heldSentence(person, filed[0] ?? held[0], measure);
-      if (!sentence) return null;
-      sentences.push(sentence);
+      chosen.push(filed[0] ?? held[0]);
     }
-    const [a, b] = [mine, theirs].map((held) => held.length === 1 && held[0].finance.filingState === "FILED" ? held[0] : null);
+    const [a, b] = chosen.map((held, index) => [mine, theirs][index].length === 1 && held.finance.filingState === "FILED" ? held : null);
     const amountOf = (held: Held) => held.finance.totals[MEASURE_WORDS[measure].key];
-    if (a && b && amountOf(a) !== null && amountOf(b) !== null) {
-      const comparable = a.finance.agency === b.finance.agency && a.finance.electionYear === b.finance.electionYear &&
-        (a.finance.totals.coveringPeriod ?? "") === (b.finance.totals.coveringPeriod ?? "");
-      if (!comparable) {
+    const figures = Boolean(a && b && amountOf(a) !== null && amountOf(b) !== null);
+    const samePeriod = Boolean(a && b && a.finance.agency === b.finance.agency && a.finance.electionYear === b.finance.electionYear &&
+      (a.finance.totals.coveringPeriod ?? "") === (b.finance.totals.coveringPeriod ?? "") && (a.finance.totals.reportCount ?? null) === (b.finance.totals.reportCount ?? null));
+    let pair: string;
+    if (figures && samePeriod) {
+      // One period, stated once: "..., both for the 2026 Election Cycle".
+      pair = `${possessive(people[0].name)} campaign committee, registered as ${quoted(a!.finance.registeredName)}, reported ${facts(a!.finance, measure)}, and ` +
+        `${possessive(people[1].name)} campaign committee, registered as ${quoted(b!.finance.registeredName)}, reported ${facts(b!.finance, measure)}, both ${periodPhrase(a!.finance)}`;
+    } else {
+      const clauses = chosen.map((held, index) => heldClause(people[index], held, `${possessive(people[index].name)} campaign committee`, measure));
+      if (clauses.some((clause) => clause === null)) return null;
+      pair = clauses.map((clause, index) => index === 0 ? capitalized(clause!) : clause!).join("; ");
+    }
+    const sentences = [pair];
+    if (figures) {
+      if (!samePeriod) {
         sentences.push("The two filings cover different reporting periods, so the figures are stated side by side and not compared");
       } else {
-        const [x, y] = [amountOf(a)!, amountOf(b)!];
+        const [x, y] = [amountOf(a!)!, amountOf(b!)!];
+        // The winner is named by its committee's registered name, the filer's own words, already tied to its candidate above.
         sentences.push(x === y
           ? `By these filings, the two committees reported the same ${MEASURE_WORDS[measure].noun}`
-          : `By these filings, ${possessive(x > y ? people[0].name : people[1].name)} committee reported ${MEASURE_WORDS[measure].more}`);
+          : `By these filings, ${quoted((x > y ? a! : b!).finance.registeredName)} reported ${MEASURE_WORDS[measure].more}`);
       }
     }
     const answer = assemble([...sentences, sourceSentence(all)],
@@ -311,31 +335,40 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
 
   const held = heldBy[0]!;
   const person = input.subject;
-  const statements: string[] = [];
   const filed = held.filter((entry) => entry.finance.filingState === "FILED");
-  const two = filed.length === 2 ? `We hold 2 committee filings for ${person.name}, each stated on its own and not added together` : null;
-  for (const entry of filed.length ? filed : held.slice(0, 1)) {
-    const sentence = heldSentence(person, entry);
-    if (!sentence) return null;
-    statements.push(sentence);
-  }
+  const shown = filed.length ? filed : held.slice(0, 1);
   const source = filed.length ? sourceSentence(held) : null;
+  /* The person is named once where the answer allows: the WHO_GAVE lead names
+     them, so the filing is "The campaign committee"; two filings are "One" and
+     "the other", in one sentence, after a lead that says they are not added. */
+  const statement = (named: boolean): string | null => {
+    if (shown.length === 2) {
+      const clauses = [heldClause(person, shown[0], "One"), heldClause(person, shown[1], "the other")];
+      return clauses.every(Boolean) ? clauses.join("; ") : null;
+    }
+    const clause = heldClause(person, shown[0], named ? `${possessive(person.name)} campaign committee` : "The campaign committee");
+    return clause ? capitalized(clause) : null;
+  };
 
   if (input.ask.kind === "WHO_GAVE") {
+    const count = floorLine(floored("money records we hold for this candidate that name a donor", where, held.length, 0));
     const lead = filed.length
-      ? `Our records for ${person.name} hold campaign totals, not the identities of donors`
-      : `Our records for ${person.name} name no donors`;
-    const donorCount = floorLine(floored(`Money records we hold for ${person.name} that name a donor`, where, held.length, 0));
-    // Two filings: the lead and the count leave no room for the "not added" note; two sentences are never a sum.
-    const answer = assemble([lead, ...statements, ...(source ? [source] : []), donorCount], caveat ? [caveat] : []);
+      ? `Our records for ${person.name} hold campaign totals, not the identities of donors (${count})`
+      : `Our records for ${person.name} name no donors (${count})`;
+    const body = statement(false);
+    if (!body) return null;
+    const answer = assemble([lead, ...(shown.length === 2 ? ["They are 2 committee filings, each stated on its own and not added together"] : []), body, ...(source ? [source] : [])], caveat ? [caveat] : []);
     return answer ? { answer, citedUrls: cited } : null;
   }
 
   // HOW_MUCH: a figure the reader asked for that the filing does not carry is said to be missing from OUR record.
+  const two = shown.length === 2 ? `We hold 2 committee filings for ${person.name}, each stated on its own and not added together` : null;
+  const body = statement(!two);
+  if (!body) return null;
   const missing = filed.length
     ? input.ask.measures.filter((measure) => filed.every((entry) => entry.finance.totals[MEASURE_WORDS[measure].key] === null))
     : [];
   const absent = missing.map((measure) => `Our record of ${filed.length === 1 ? "this filing" : "these filings"} does not include ${MEASURE_WORDS[measure].noun}`);
-  const answer = assemble([...(two ? [two] : []), ...statements, ...(source ? [source] : []), ...absent], caveat ? [caveat] : []);
+  const answer = assemble([...(two ? [two] : []), body, ...(source ? [source] : []), ...absent], caveat ? [caveat] : []);
   return answer ? { answer, citedUrls: cited } : null;
 }

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 847,
-    "named": 8184,
+    "named": 8186,
     "dynamic": 33
   },
   "files": {
@@ -1142,11 +1142,13 @@
         "ROUTE: 'who gave' says our records hold totals, not donors — composed, validated, no model",
         "ROUTE: Rebecca Harned, asked from Merrimack County, is found and her held filing is the answer — no model",
         "ROUTE: a New Jersey meeting question does not wait for New Jersey's roll calls (5.7-6.7 s cold, measured)",
+        "ROUTE: a comparison whose second name is SHORTER still reaches both people (the whole-question binder picks the longer name)",
         "a comparison binds the FIRST named person through the reader's own mention, and names the second exactly",
         "a held candidate the reader NAMES is a subject outside the reader's divisions — and nothing else from there is",
         "a named person's money question is read in code: the subject, PERSON_RECORD and no tense — the models' reading",
         "a state's roll calls are read for a state legislator only — never for a body or a county candidate",
-        "the code's guess for a pronoun money question is the models' reading: PERSON_RECORD, no tense"
+        "the code's guess for a pronoun money question is the models' reading: PERSON_RECORD, no tense",
+        "the other person named is the FULL name the reader typed, never another candidate's bare surname alias"
       ],
       "dynamic": 0
     },
@@ -1579,8 +1581,8 @@
     },
     "tests/ask-reader-edge.test.ts": {
       "names": [
-        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left",
-        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads"
+        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left",
+        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads"
       ],
       "dynamic": 0
     },

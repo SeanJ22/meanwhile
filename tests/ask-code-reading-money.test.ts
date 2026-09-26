@@ -188,16 +188,37 @@ test("ROUTE: 'Has Cinde Warmington raised more money than Kelly Ayotte?' retriev
   assert.ok(payload.records.some((record) => record.kind === "CANDIDACY" && record.subjectId === AYOTTE), "and who the second person is");
   assert.equal(payload.mode, "GROUNDED_COMPOSED");
   assert.equal(payload.trace.composition?.shape, "COMPARE");
-  assert.match(payload.answer ?? "", /By these filings, Kelly Ayotte's committee reported raising more\./);
+  assert.match(payload.answer ?? "", /Kelly Ayotte's campaign committee, registered as "Kelly for New Hampshire", reported raising \$[\d,.]+, both for the 2026 Election Cycle\. By these filings, "Kelly for New Hampshire" reported raising more\./);
   assert.doesNotMatch(payload.answer ?? "", /no (?:fundraising|money|records)/i);
+});
+
+test("ROUTE: a comparison whose second name is SHORTER still reaches both people (the whole-question binder picks the longer name)", { concurrency: false }, async () => {
+  // Measured 2026-09-25 on production: "Joseph M. MURPHY" outranked "Marilyn ALTHOFF" on the whole question, so her
+  // held filing (her contest is outside a Morris County reader's divisions) never entered the inventory.
+  const payload = await ask("Has Marilyn ALTHOFF raised more money than Joseph M. MURPHY?", ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris"]);
+  assert.equal(payload.subject?.id, "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn");
+  const money = payload.records.filter((record) => record.kind === "FINANCE_SUMMARY").map((record) => record.subjectId).sort();
+  assert.deepEqual(money, ["ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn", "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:murphy-joseph-m"]);
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.match(payload.answer ?? "", /The two filings cover different reporting periods, so the figures are stated side by side and not compared\./, "different NJ filing dates: never a verdict");
+});
+
+test("the other person named is the FULL name the reader typed, never another candidate's bare surname alias", () => {
+  const withAlias: BindableEntity[] = [
+    ...people,
+    { id: "ballot-nj-morris:x:murphy-joseph-m", name: "Joseph M. MURPHY", nameClass: "person", divisionType: "person" },
+    { id: "ballot-nj-morris:x:murphy-joseph-m", name: "MURPHY", nameClass: "person", divisionType: "person" },
+    { id: "ballot-nj-morris:y:murphy-pat", name: "MURPHY", nameClass: "person", divisionType: "person" },
+  ];
+  assert.equal(otherNamedPerson("Has Kelly Ayotte raised more money than Joseph M. Murphy?", withAlias, AYOTTE)?.id, "ballot-nj-morris:x:murphy-joseph-m");
+  assert.equal(otherNamedPerson("Has Kelly Ayotte raised more money than Murphy?", withAlias, AYOTTE), null, "a bare surname two people share names neither");
 });
 
 test("ROUTE: 'who gave' says our records hold totals, not donors — composed, validated, no model", { concurrency: false }, async () => {
   const payload = await ask("Who donated to Kelly Ayotte's campaign?", [NH, MERRIMACK]);
   assert.equal(payload.mode, "GROUNDED_COMPOSED");
   assert.equal(payload.trace.validation.passed, true);
-  assert.match(payload.answer ?? "", /^Our records for Kelly Ayotte hold campaign totals, not the identities of donors\./);
-  assert.match(payload.answer ?? "", /Money records we hold for Kelly Ayotte that name a donor: 0 of 1\./);
+  assert.match(payload.answer ?? "", /^Our records for Kelly Ayotte hold campaign totals, not the identities of donors \(money records we hold for this candidate that name a donor: 0 of 1\)\./);
 });
 
 test("a state's roll calls are read for a state legislator only — never for a body or a county candidate", () => {

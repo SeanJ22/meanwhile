@@ -235,7 +235,10 @@ if (meetingAggregate) {
         servedVersion: servedAuthorityVersion(servedManifest, "census-districts"),
         readVersion: pointerVersion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
         readProjection: () => readCensusGeographyProjection({ store, now: observedAt }),
-        onFailure: error => process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`),
+        onFailure: error => {
+          failed = true;
+          process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+        },
       });
       try {
         const carried = await servedIfCurrent("registry-runtime", manualPointer("registry-runtime-bindings"));

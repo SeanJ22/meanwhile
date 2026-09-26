@@ -4,9 +4,9 @@
  *
  * A Send places a government by the ZCTAs its Census unit covers (`data/derived/census-unit-zips.json`). A district
  * TIGER publishes no boundary for has none there, so no Send could place it: Cochise County's community college
- * district and its joint technical education district among them. Each rule here names, with its evidence, the
- * territory a district's own statute and records give it, built only from territories the committed data already
- * holds:
+ * district, its joint technical education district and its fire districts among them. Each rule here names, with
+ * its evidence, the territory a district's own statute and records give it, built only from territories the
+ * committed data already holds:
  *
  * - **COUNTY**: the district is its county. Arizona organizes a community college district "for a single county, two
  *   or more contiguous counties" (A.R.S. 15-1402(A)); Cochise County's was voted by the county's residents in 1961
@@ -16,8 +16,12 @@
  *   schools; one of them, Patagonia's, lies in Santa Cruz County, so the district is NOT Cochise County. A member
  *   whose own territory is unresolved is named and left out: the union is a floor, never a guess.
  *
- * A special district with no free, usable boundary source is named here too, as UNPLACEABLE, with the exact source
- * that would place it, so its unplaced reason says what is missing rather than only that TIGER has nothing.
+ * **APPROXIMATE, FOR WORK CREATION ONLY.** A special district no rule names may still be matched, by its exact name,
+ * in an approximate boundary extract (`data/derived/az-fire-district-territory.json`: the Arizona Department of
+ * Forestry and Fire Management's fire-district layer, whose own disclaimer calls it approximate and for wildfire
+ * dispatch). An engineering decision of 2026-09-26: such a boundary may decide where a Send creates discovery work,
+ * where an error costs one extra or one missed walk, and never a reader-facing governance claim. A ZCTA the
+ * district's sampled share of is under `APPROXIMATE_MIN_SHARE` is not placement.
  *
  * PURE: every territory is read from what it is handed.
  */
@@ -37,8 +41,7 @@ export type DistrictTerritoryRule =
       readonly members: readonly { readonly pid6: string; readonly name: string }[];
       /** Members the committed data holds no territory for: named, and left out of the union. */
       readonly unresolved: readonly { readonly pid6: string; readonly name: string; readonly why: string }[];
-    }
-  | { readonly kind: "UNPLACEABLE"; readonly missing: string };
+    };
 
 export interface DistrictTerritory {
   readonly state: string;
@@ -98,37 +101,32 @@ export const DISTRICT_TERRITORIES: readonly DistrictTerritory[] = [
     ],
     observed: RESEARCH,
   },
-  {
-    state: "AZ",
-    pid6: "183867",
-    name: "FRY FIRE DISTRICT",
-    rule: {
-      kind: "UNPLACEABLE",
-      missing:
-        "TIGER publishes no fire-district boundary. The one free public source is the Arizona Department of Forestry and Fire Management's " +
-        "\"Arizona Fire Districts\" layer on AZGeo (services6.arcgis.com/clPWQMwZfdWn4MQZ, Arizona_Fire_Districts_Spatial_Join), whose own " +
-        "disclaimer calls its boundaries approximate and its purpose wildfire dispatch; no step yet turns its polygons into ZCTA shares, and " +
-        "no county-published boundary (Cochise County GIS) or legal description was found",
-    },
-    evidence: ["data/derived/census-unit-zips.json: \"TIGER publishes NO special-district boundaries at any vintage\"", "data/states/az/hunt/az-district-layers.json: az-fire-service-areas"],
-    observed: RESEARCH,
-  },
-  {
-    state: "AZ",
-    pid6: "141324",
-    name: "PALOMINAS FIRE DISTRICT",
-    rule: {
-      kind: "UNPLACEABLE",
-      missing:
-        "TIGER publishes no fire-district boundary. The one free public source is the Arizona Department of Forestry and Fire Management's " +
-        "\"Arizona Fire Districts\" layer on AZGeo (services6.arcgis.com/clPWQMwZfdWn4MQZ, Arizona_Fire_Districts_Spatial_Join), whose own " +
-        "disclaimer calls its boundaries approximate and its purpose wildfire dispatch; no step yet turns its polygons into ZCTA shares, and " +
-        "no county-published boundary (Cochise County GIS) or legal description was found",
-    },
-    evidence: ["data/derived/census-unit-zips.json: \"TIGER publishes NO special-district boundaries at any vintage\"", "data/states/az/hunt/az-district-layers.json: az-fire-service-areas"],
-    observed: RESEARCH,
-  },
 ];
+
+/** Where the approximate boundary extract lives, relative to the repository root. Read only by the runner's Send placement. */
+export const APPROXIMATE_DISTRICT_EXTRACT_PATH = ["data", "derived", "az-fire-district-territory.json"] as const;
+
+/**
+ * The least share of a ZCTA an approximate boundary must hold for that ZCTA to place the district: 5%, the same
+ * margin the certain-overlap rule allows sampled and exact areas to differ by at a border. A sliver of an approximate
+ * dispatch boundary says nothing about who governs there.
+ */
+export const APPROXIMATE_MIN_SHARE = 0.05;
+
+/** One district an approximate extract matched to a Census unit, with its sampled share of each ZCTA it touches. */
+export interface ApproximateDistrict {
+  readonly name: string;
+  readonly pid6: string;
+  readonly unitName: string;
+  readonly zctas: Readonly<Record<string, number>>;
+}
+
+export interface ApproximateDistrictExtract {
+  readonly kind: "az-fire-district-territory";
+  readonly formatVersion: 1;
+  readonly provenance: { readonly source: string; readonly url: string; readonly dataLastEdit: string | null; readonly retrievedAt: string; readonly sha256: string; readonly approximate: string };
+  readonly districts: readonly ApproximateDistrict[];
+}
 
 /** A territory a rule gives, with the method it records; or why the unit stays unplaced. */
 export type RuledTerritory =
@@ -136,11 +134,12 @@ export type RuledTerritory =
   | { readonly unplaced: string };
 
 /**
- * The territory a committed rule gives a Census unit with none of its own, or null when no rule names it. A COUNTY
- * rule takes its county's ZCTAs and sampled shares; a MEMBER_UNION rule takes every member's ZCTAs and, in each, the
- * largest member's share (members may overlap, as a union high school district overlaps its elementary districts,
- * so shares are never added). A rule whose territory cannot be built from what it is handed leaves the unit unplaced,
- * by name.
+ * The territory a committed rule, or failing one the approximate extract, gives a Census unit with none of its own;
+ * null when neither names it. A COUNTY rule takes its county's ZCTAs and sampled shares; a MEMBER_UNION rule takes
+ * every member's ZCTAs and, in each, the largest member's share (members may overlap, as a union high school district
+ * overlaps its elementary districts, so shares are never added). An approximate district takes each ZCTA it holds at
+ * least `APPROXIMATE_MIN_SHARE` of. A rule whose territory cannot be built from what it is handed leaves the unit
+ * unplaced, by name.
  */
 export function ruledDistrictTerritory(
   unit: Pick<CensusUnitTerritory, "state" | "pid6">,
@@ -148,11 +147,22 @@ export function ruledDistrictTerritory(
   sharesFor: (key: string) => ReadonlyMap<string, number> | undefined,
   shareKeyOf: (unit: CensusUnitTerritory) => string | null,
   rules: readonly DistrictTerritory[] = DISTRICT_TERRITORIES,
+  approximate: ApproximateDistrictExtract | null = null,
 ): RuledTerritory | null {
-  const rule = rules.find((r) => r.state === unit.state.toUpperCase() && r.pid6 === unit.pid6);
-  if (rule === undefined) return null;
+  const state = unit.state.toUpperCase();
+  const rule = rules.find((r) => r.state === state && r.pid6 === unit.pid6);
+  if (rule === undefined) {
+    const found = state === "AZ" ? approximate?.districts.find((d) => d.pid6 === unit.pid6) : undefined;
+    if (found === undefined || approximate === null) return null;
+    const kept = Object.entries(found.zctas).filter(([, share]) => share >= APPROXIMATE_MIN_SHARE);
+    if (kept.length === 0) return { unplaced: `its approximate boundary (${approximate.provenance.source}) holds no ZCTA at a share of ${APPROXIMATE_MIN_SHARE} or more` };
+    return {
+      zctas: new Set(kept.map(([z]) => z)),
+      shares: new Map(kept),
+      method: `APPROXIMATE, for Send placement only: ${approximate.provenance.source} (${approximate.provenance.url}, data last edited ${approximate.provenance.dataLastEdit ?? "unknown"}, read ${approximate.provenance.retrievedAt})`,
+    };
+  }
   const r = rule.rule;
-  if (r.kind === "UNPLACEABLE") return { unplaced: `no boundary source places it: ${r.missing}` };
   if (r.kind === "COUNTY") {
     const county = [...units.values()].find((u) => u.type === "COUNTY" && u.state.toUpperCase() === rule.state && shareKeyOf(u) === `county:${r.countyGeoid}`);
     if (county === undefined || county.zips.length === 0) return { unplaced: `its rule takes county ${r.countyGeoid}'s territory, and the committed data holds none for it` };

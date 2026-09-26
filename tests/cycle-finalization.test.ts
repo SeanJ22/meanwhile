@@ -28,12 +28,14 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { isControlPlaneRequestTimeout, type ControlPlaneRequestTimeout } from "../lib/control-plane/repository/request-bounds.ts";
 import {
+  ADMIN_VISIBLE_FINALIZATION_MS,
   CYCLE_FINALIZATION_BUDGETS_MS,
   CycleStepTimeout,
   DIGEST_AND_RECORD_RESERVE_MS,
   LOCAL_RECORD_RESERVE_MS,
   RECORDS_MARGIN_BEFORE_WALL_MS,
   cycleClock,
+  lateWorkDeadlineMs,
   recordFailedCycle,
   runBoundedStep,
   stepBudgetMs,
@@ -258,4 +260,73 @@ test("with no time left before the wall, the local crash record still carries th
   assert.equal(failed.recordPath, "memory");
   assert.equal((written as Record<string, unknown> | null)?.crashed, true);
   assert.match(logged.join("\n"), /no time was left before the wall for the canonical FAILED outcome/);
+});
+
+/*
+ * **THE LATE WORK YIELDS BEFORE IT TAKES THE RECORDS ADMIN READS.** (2026-09-26.)
+ *
+ * The first research cycle on fb84b6f0 (2026-09-26 03:54:05Z) ran the worker fleet's fact projection from 737 s
+ * to 835 s of its fifteen-minute wall. Its finalization then began with no time before the digest's reserve:
+ * "the final research state was not written: CYCLE_STEP_TIMEOUT: research-state:final was not started; no time
+ * was left for it before the wall; the runner heartbeat could not be written" — while the digest said
+ * SUCCEEDED. Admin's runner card kept the previous cycle (03:49Z) and the previous code, and Fleet's lanes read
+ * "mid-cycle" from 03:55Z. The late work was bounded only by the stall point (810 s), which leaves 25 s for the
+ * 100 s the research state, the code identity and the heartbeat declare.
+ */
+test("the late work yields at 735 s on the fifteen-minute wall, which leaves every finalization step its whole budget", () => {
+  const clock = cycleClock({ processStartedMs: 0, wallMs: 15 * 60_000, stallLeadMs: 90_000 });
+  const deadline = lateWorkDeadlineMs(clock);
+  assert.equal(ADMIN_VISIBLE_FINALIZATION_MS, 100_000);
+  assert.equal(deadline, 735_000);
+  assert.ok(deadline < clock.stallAtMs, "earlier than the stall point, which left the Admin-visible steps 25 s");
+
+  /* Finalization that starts at the late-work deadline: each step is granted all of its own budget. */
+  let now = deadline;
+  for (const [label, budgetMs] of [
+    ["research-state:final", CYCLE_FINALIZATION_BUDGETS_MS.researchState],
+    ["code-identity", CYCLE_FINALIZATION_BUDGETS_MS.codeIdentity],
+    ["heartbeat", CYCLE_FINALIZATION_BUDGETS_MS.heartbeat],
+  ] as const) {
+    const granted = stepBudgetMs({ nowMs: now, budgetMs, deadlineMs: clock.recordsDeadlineMs, reservedAfterMs: DIGEST_AND_RECORD_RESERVE_MS });
+    assert.equal(granted, budgetMs, `${label} keeps its whole budget even when every earlier step spends all of its own`);
+    now += granted;
+  }
+  const digest = stepBudgetMs({ nowMs: now, budgetMs: CYCLE_FINALIZATION_BUDGETS_MS.digestAppend, deadlineMs: clock.recordsDeadlineMs, reservedAfterMs: LOCAL_RECORD_RESERVE_MS });
+  assert.equal(digest, CYCLE_FINALIZATION_BUDGETS_MS.digestAppend, "and the digest still has its own");
+});
+
+test("2026-09-26: late work still running at 835 s left the research state no time; the late-work deadline never admits the projection there", () => {
+  const clock = cycleClock({ processStartedMs: 0, wallMs: 15 * 60_000, stallLeadMs: 90_000 });
+  const researchStateBudgetFrom = (finalizationStartsMs: number): number =>
+    stepBudgetMs({ nowMs: finalizationStartsMs, budgetMs: CYCLE_FINALIZATION_BUDGETS_MS.researchState, deadlineMs: clock.recordsDeadlineMs, reservedAfterMs: DIGEST_AND_RECORD_RESERVE_MS });
+  /* The failure as it was: the late work ended at 835 s, and the research state was not started. */
+  assert.equal(researchStateBudgetFrom(835_000), 0);
+  /* That projection began at 737 s: past the late-work deadline, so it is granted nothing and never started. */
+  assert.equal(Math.max(0, lateWorkDeadlineMs(clock) - 737_000), 0);
+  /* One that began at 685 s (the 02:24Z cycle) is granted 50 s, and finalization then starts with its whole budgets. */
+  assert.equal(Math.max(0, lateWorkDeadlineMs(clock) - 685_000), 50_000);
+  assert.equal(researchStateBudgetFrom(lateWorkDeadlineMs(clock)), CYCLE_FINALIZATION_BUDGETS_MS.researchState);
+});
+
+test("the late-work deadline is never before the process began and never after the stall point, on any wall", () => {
+  for (const wallMs of [0, 30_000, 5 * 60_000, 15 * 60_000, 30 * 60_000]) {
+    const clock = cycleClock({ processStartedMs: 1_000, wallMs, stallLeadMs: 90_000 });
+    const deadline = lateWorkDeadlineMs(clock);
+    assert.ok(deadline >= clock.processStartedMs, `wall ${wallMs}: not before the process began`);
+    assert.ok(deadline <= clock.stallAtMs, `wall ${wallMs}: not after the stall point`);
+  }
+});
+
+test("the research cycle bounds its late work by the late-work deadline: the metrics, the progression and the fact projection", () => {
+  const source = readFileSync(join(process.cwd(), "scripts", "freshness-shadow.mts"), "utf8");
+  assert.match(source, /const lateWorkBudgetMs = \(\): number => Math\.max\(0, lateWorkDeadlineMs\(CLOCK\) - Date\.now\(\)\);/);
+  assert.doesNotMatch(source, /CLOCK\.stallAtMs - Date\.now\(\)/, "no late work is bounded by the stall point alone");
+  assert.match(source, /withStoreBudget\("metrics", lateWorkBudgetMs\(\), computeMetrics\)/);
+  assert.match(source, /withStoreBudget\("research-progression", lateWorkBudgetMs\(\)/);
+  /* The projection runs inside a bounded step whose budget is the late work's, and a yield is named, never a crash. */
+  assert.match(
+    source,
+    /pending\.step\("autonomous-workers:fact-projection", \(\) => runBoundedStep\(\{\s*label: "autonomous-workers:fact-projection",\s*budgetMs: lateWorkBudgetMs\(\),\s*fn: \(\) => projectFleetPipeline\(/,
+  );
+  assert.match(source, /the worker fleet's fact projection yielded to the cycle's records/);
 });

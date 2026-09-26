@@ -343,7 +343,9 @@ import {
   CYCLE_FINALIZATION_BUDGETS_MS,
   DIGEST_AND_RECORD_RESERVE_MS,
   LOCAL_RECORD_RESERVE_MS,
+  CycleStepTimeout,
   cycleClock,
+  lateWorkDeadlineMs,
   recordFailedCycle,
   runBoundedStep,
   stepBudgetMs,
@@ -532,6 +534,12 @@ const scheduledBlackout = scheduledBlackoutAt(NOW);
  * stderr was empty (request-bounds.ts, cycle-stall.ts).
  */
 CLOCK = cycleClock({ processStartedMs: PROCESS_STARTED_MS, wallMs: BUDGET_MIN * 60_000, stallLeadMs: CYCLE_STALL_LEAD_MS });
+/*
+ * The late work (the metrics, the research progression, the worker fleet's fact projection) yields here, so
+ * the research state and the heartbeat Admin reads keep their whole budgets (cycle-finalization.ts,
+ * `lateWorkDeadlineMs`: 735 s on the fifteen-minute wall).
+ */
+const lateWorkBudgetMs = (): number => Math.max(0, lateWorkDeadlineMs(CLOCK) - Date.now());
 stallDiagnostic = startCycleStallDiagnostic({
   pending,
   fireAtMs: CLOCK.stallAtMs,
@@ -2789,15 +2797,30 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleetDispatches = [...legacy, ...autonomous.dispatches];
     autonomousDispatchedThisCycle = fleetDispatches.filter(row => row.attemptId !== null).length;
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
-    /* PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result keeps the generic offer. */
-    const factReport = await pending.step("autonomous-workers:fact-projection", () => projectFleetPipeline(repos, {
-      readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
-      now: nowIso(),
-      root: ROOT,
-      freshness: async (input) => factFreshnessFromPermanentMeetings(meetingsReceipt, input),
-    }));
-    if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+    /*
+     * PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result
+     * keeps the generic offer. The projection re-reads the store whole every cycle, and its appends are keyed by
+     * record id, so it is late work: it yields at the late-work deadline (2026-09-26: it ran a cycle to 835 s and
+     * the research state and the heartbeat Admin reads were never written), and the next cycle projects again.
+     */
+    let factReport: Awaited<ReturnType<typeof projectFleetPipeline>> = null;
+    try {
+      factReport = await pending.step("autonomous-workers:fact-projection", () => runBoundedStep({
+        label: "autonomous-workers:fact-projection",
+        budgetMs: lateWorkBudgetMs(),
+        fn: () => projectFleetPipeline(repos, {
+          readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
+          now: nowIso(),
+          root: ROOT,
+          freshness: async (input) => factFreshnessFromPermanentMeetings(meetingsReceipt, input),
+        }),
+      }));
+    } catch (error) {
+      if (!(error instanceof CycleStepTimeout) && !isControlPlaneRequestTimeout(error)) throw error;
+      runtimeConditions.push(`the worker fleet's fact projection yielded to the cycle's records (${error.message}); the next cycle projects again`);
+    }
+    if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
   } catch (error) {
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
   } finally {
@@ -2965,11 +2988,11 @@ let cacheThisCycle: CacheHitRate[] | null = null;
 /*
  * The metrics and the research progression are the cycle's largest reads
  * (about 49 MB across eleven logs and aggregates on 2026-09-23), and both are
- * withheld by name when a read fails. From the stall diagnostic's moment they
- * yield: their store calls are refused by name so the records below keep their
- * time. A cycle on its usual ten minutes never meets this deadline.
+ * withheld by name when a read fails. From the late-work deadline they yield
+ * (`lateWorkBudgetMs`, set with the clock): their store calls are refused by
+ * name so the records below keep their whole budgets. A cycle on its usual ten
+ * minutes never meets this deadline.
  */
-const lateWorkBudgetMs = (): number => Math.max(0, CLOCK.stallAtMs - Date.now());
 if (canary) {
   runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
   metrics = null;

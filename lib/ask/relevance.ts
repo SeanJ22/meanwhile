@@ -79,15 +79,18 @@ const MEASURE_OWN_KINDS: ReadonlySet<EvidenceRecord["kind"]> = new Set([
 ]);
 
 /** Is this record OFF the resolved subject — a positive, id-first decision. */
-function recordIsOffSubject(record: EvidenceRecord, subject: EvidenceSubject): boolean {
+function recordIsOffSubject(record: EvidenceRecord, subject: EvidenceSubject, alsoAbout: ReadonlySet<string>): boolean {
   /*
    * The general mechanism, and it binds for every subject kind: a record
    * stamped as another subject's evidence is not this answer's, whatever its
    * kind. A null/absent stamp is NOT a foreign stamp — it means the producer did
-   * not assert a subject, and the kind rules below decide it.
+   * not assert a subject, and the kind rules below decide it. The one
+   * exception is a subject the READER'S OWN QUESTION also named for comparison
+   * ("Has Cinde Warmington raised more money than Kelly Ayotte?"): the route
+   * passes its exact id, and only records stamped with that id are kept.
    */
   if (typeof record.subjectId === "string" && record.subjectId.length > 0) {
-    return record.subjectId !== subject.id;
+    return record.subjectId !== subject.id && !alsoAbout.has(record.subjectId);
   }
 
   /*
@@ -129,12 +132,14 @@ function recordIsOffSubject(record: EvidenceRecord, subject: EvidenceSubject): b
 export function gateRecordsToSubject(
   subject: EvidenceSubject | null,
   records: readonly EvidenceRecord[],
+  /** Exact ids of a second subject the reader named to compare against (never a context default). */
+  alsoAbout: ReadonlySet<string> = new Set(),
 ): { records: EvidenceRecord[]; excluded: EvidenceRecord[] } {
   if (!subject) return { records: [...records], excluded: [] };
   const kept: EvidenceRecord[] = [];
   const excluded: EvidenceRecord[] = [];
   for (const record of records) {
-    (recordIsOffSubject(record, subject) ? excluded : kept).push(record);
+    (recordIsOffSubject(record, subject, alsoAbout) ? excluded : kept).push(record);
   }
   return { records: kept, excluded };
 }

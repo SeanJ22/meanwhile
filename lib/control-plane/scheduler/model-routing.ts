@@ -12,7 +12,7 @@
  *       deterministic step is a thrown defect, never a billed one.
  *   EACH MODEL STEP ROUTES TO THE CHEAPEST CLASS THAT MEETS ITS STANDARD
  *       extraction / classification: Haiku, then Sonnet on escalation; the
- *       Scout research loop: Sonnet, then the frontier on escalation
+ *       Scout research loop: Haiku, then Sonnet and the frontier on escalation
  *       (MW-033, 2026-09-25); adversarial audit: the frontier model, by
  *       MW-035's selective-expensive-step rule. A cheaper model that fails a
  *       step's standard ESCALATES only for a reason in the closed
@@ -42,7 +42,7 @@ export type ModelClass = (typeof MODEL_CLASSES)[number];
 
 /** The exact model id each class runs today. Ids as the claude-api reference lists them. */
 export const MODEL_FOR_CLASS: Readonly<Record<ModelClass, string>> = {
-  haiku: "claude-haiku-4-5",
+  haiku: "claude-haiku-4-5-20251001",
   sonnet: "claude-sonnet-5",
   frontier: "claude-opus-5-5",
 };
@@ -79,23 +79,15 @@ export type StepRoute =
  * and the deterministic ones say where the code is.
  */
 export const SCOUT_STEPS = {
-  /**
-   * The research loop itself: novelty, ambiguity, an unknown route. Sonnet 5
-   * FIRST, the frontier only for a recorded reason (MW-033, 2026-09-25). Until
-   * that date the loop started on the frontier and nothing ever escalated.
-   * Haiku 4.5 is cheaper but unsuitable for THIS request: it rejects the
-   * `output_config.effort` the loop sends and caps context at 200K (claude-api
-   * reference, read 2026-09-25). The escalation rule and its closed reason list
-   * are `MODEL_ESCALATION_REASONS` below; the executor applies them.
-   */
+  /** Acquisition starts with Haiku. Unsupported adaptive-thinking/effort fields
+   * are omitted by the request builder; configuration is not evidence of quality.
+   * A failed standard must carry an observed reason before escalation. */
   "scout-research-loop": {
     kind: "MODEL",
-    modelClass: "sonnet",
+    modelClass: "haiku",
     role: "SCOUT",
-    escalateTo: "frontier",
-    why:
-      "Sonnet 5 is the cheapest class that accepts this loop's request (its effort setting, tool use and long context — Haiku 4.5 rejects the effort setting); " +
-      "it moves up to the frontier only when the Sonnet attempt shows a recorded reason (MW-033)",
+    escalateTo: "sonnet",
+    why: "Acquisition starts with Haiku after deterministic routes; an evidenced failure may escalate to Sonnet. Ask comparisons do not establish acquisition routing.",
   },
   /** HTML/JSON/PDF -> title, visible text, links, extracted text. Code, in scout-tools.ts. */
   "page-to-representation": {
@@ -259,8 +251,13 @@ export class UnrecordedEscalation extends Error {
 /** The class a MODEL step escalates to, or null at the top of its ladder (or for a deterministic/unknown step, which throws first). */
 export function escalationTargetFor(
   step: string,
+  from?: ModelClass,
 ): { readonly model: string; readonly modelClass: ModelClass; readonly effort: ModelEffort; readonly role: ModelRole } | null {
   const base = assertStepMayInvokeModel(step);
+  if (step === "scout-research-loop" && from !== undefined) {
+    const next = MODEL_CLASSES[MODEL_CLASSES.indexOf(from) + 1];
+    return next ? { ...base, model: MODEL_FOR_CLASS[next], modelClass: next } : null;
+  }
   const up = assertStepMayInvokeModel(step, true);
   return up.modelClass === base.modelClass ? null : up;
 }
@@ -275,14 +272,15 @@ export function escalationTargetFor(
 export function assertStepMayEscalate(
   step: string,
   reason: ModelEscalationReason,
+  from?: ModelClass,
 ): { readonly model: string; readonly modelClass: ModelClass; readonly effort: ModelEffort; readonly role: ModelRole; readonly escalatedFrom: ModelClass } {
   if (!(MODEL_ESCALATION_REASONS as readonly string[]).includes(reason)) throw new UnrecordedEscalation(step, `names no recorded reason (${JSON.stringify(reason)})`);
   const base = assertStepMayInvokeModel(step);
-  const up = escalationTargetFor(step);
+  const up = escalationTargetFor(step, from);
   if (up === null) throw new UnrecordedEscalation(step, `is already at the top of its ladder (${base.modelClass})`);
   const violation = modelCeilingViolation(up.model);
   if (violation !== null) throw new ModelAboveCeiling(up.modelClass, up.model, violation);
-  return { ...up, escalatedFrom: base.modelClass };
+  return { ...up, escalatedFrom: from ?? base.modelClass };
 }
 
 /* ------------------------------------------------------- the model ceiling */

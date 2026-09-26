@@ -499,7 +499,7 @@ function reachOf(a: AssignmentReading): InstructionReach {
 function budgetOf(a: AssignmentReading, readAt: string | null): InstructionBudget | null {
   const b = a.budget;
   if (b === null) return null;
-  const window = `rolling ${b.windowHours} hours to ${formatEastern(b.until)}`;
+  const window = b.lifetime ? `Anthropic tokens for this hunt, since ${formatEastern(b.since)}` : `rolling ${b.windowHours} hours to ${formatEastern(b.until)}`;
   const spent = b.spentUsd === null ? "unknown — a charge on its work reported no dollar figure, so it is held" : money(b.spentUsd);
   const left = b.leftUsd === null ? "unknown" : b.leftUsd < 0 ? `none — over by ${money(-b.leftUsd)}` : money(b.leftUsd);
   return {

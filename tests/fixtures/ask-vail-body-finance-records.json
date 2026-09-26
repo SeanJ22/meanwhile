@@ -1,0 +1,102 @@
+{
+ "recordedAt": "2026-09-25T22:05:00-07:00",
+ "note": "The Vail Unified School District Governing Board finance records the Ask route retrieved (lib/ask/local-finance.ts over the promoted Pima County campaign-finance holding), read from production read-only on 2026-09-25 at about 10:05 PM MST for the Ask race-money composition test. Recorded, never minted.",
+ "records": [
+  {
+   "kind": "FINANCE_COMMITTEE",
+   "id": "easyvote:pima:C0CD8DC5-E88A-44CB-8782-3284DD39D628",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "\"Ed Buster for VUSD Board\" is an active candidate committee in the Pima County Elections campaign-finance register, registered for the office the register names \"School Governing Board - Vail\", with 8 campaign-finance filings on record.",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/filer/documentsearch/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_COMMITTEE",
+   "id": "easyvote:pima:746219C7-F5BC-49C6-BCCB-9FD216A484E7",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "\"Jen Anderson for VUSD Board\" is an inactive candidate committee in the Pima County Elections campaign-finance register, registered for the office the register names \"School Governing Board - Vail\", with 6 campaign-finance filings on record.",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/filer/documentsearch/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_COMMITTEE",
+   "id": "easyvote:pima:73420322-BC3E-4978-ABBC-676A064A61AA",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "\"Leroy Smith for Vail School Board\" is an inactive candidate committee in the Pima County Elections campaign-finance register, registered for the office the register names \"School Governing Board - Vail\", with 3 campaign-finance filings on record.",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/filer/documentsearch/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_COMMITTEE",
+   "id": "easyvote:pima:AFA7574E-E0A2-4444-AC0D-DF45E7775125",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "\"Anastasia 4 Vail Committee\" is an active candidate committee in the Pima County Elections campaign-finance register, registered for the office the register names \"School Governing Board - Vail\", with 2 campaign-finance filings on record.",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/filer/documentsearch/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_TRANSACTION",
+   "id": "cf:B61008B9-2A5C-4D41-8084-AE36FF063007_Redacted:spending:4",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "Ed Buster for VUSD Board reported spending $16.00, paid to Bank of  America N.A., on July 30th, 2026, in a campaign-finance report filed with Pima County Elections.",
+   "occurredAt": "2026-07-30",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/advancedsearch/distributions/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_TRANSACTION",
+   "id": "cf:DE053F13-583F-4A1F-AB18-7518B3A5ACAF_Redacted:spending:3",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "Ed Buster for VUSD Board reported spending $16.00, paid to Bank of  America N.A., on March 31st, 2026, in a campaign-finance report filed with Pima County Elections.",
+   "occurredAt": "2026-03-31",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/advancedsearch/distributions/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_TRANSACTION",
+   "id": "cf:DE053F13-583F-4A1F-AB18-7518B3A5ACAF_Redacted:spending:2",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "Ed Buster for VUSD Board reported spending $16.00, paid to Bank of  America N.A., on February 27th, 2026, in a campaign-finance report filed with Pima County Elections.",
+   "occurredAt": "2026-02-27",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/advancedsearch/distributions/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_TRANSACTION",
+   "id": "cf:DE053F13-583F-4A1F-AB18-7518B3A5ACAF_Redacted:spending:1",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "Ed Buster for VUSD Board reported spending $16.00, paid to Bank of America, N.A., on January 31st, 2026, in a campaign-finance report filed with Pima County Elections.",
+   "occurredAt": "2026-01-31",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/advancedsearch/distributions/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_TRANSACTION",
+   "id": "cf:82733E4F-3C92-44DD-AC6D-188357884A7A_Redacted:spending:0",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "Ed Buster for VUSD Board reported spending $16.00, paid to Bank of America, N.A., on December 31st, 2025, in a campaign-finance report filed with Pima County Elections.",
+   "occurredAt": "2025-12-31",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/advancedsearch/distributions/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  },
+  {
+   "kind": "FINANCE_TRANSACTION",
+   "id": "cf:82733E4F-3C92-44DD-AC6D-188357884A7A_Redacted:contribution:0",
+   "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board",
+   "text": "Ed Buster for VUSD Board reported receiving a $297.86 contribution, on February 27th, 2025, in a campaign-finance report filed with Pima County Elections.",
+   "occurredAt": "2025-02-27",
+   "sourceUrl": "https://ecf-api.easyvoteapp.com/advancedsearch/contributions/19626734-D3E9-449C-BB5D-EDB9C0034907",
+   "sourceOrg": "Pima County Elections",
+   "retrievedAt": "2026-09-08"
+  }
+ ]
+}

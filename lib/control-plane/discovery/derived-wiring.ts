@@ -70,6 +70,7 @@ export type { DerivedWiringRow };
 const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>> = {
   ICAL: ["ical"],
   OFFICIAL_PAGE_EVENTS: ["official-page-events"],
+  DILIGENT: ["diligent"],
 };
 
 /** A discovery vendor's route as the wiring kind the reader runs, or why it cannot be one. */
@@ -85,6 +86,7 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
+  if (find.vendor === "diligent" && url.pathname === "/Services/MeetingsService.svc/meetings") return { kind: "DILIGENT", endpoint: { serviceBase: url.origin } };
   if (find.vendor === "official-page-events") return { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: url.toString(), officialHost: url.host } };
   if (find.vendor === "civicplus-agendacenter") {
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: "CIVICPLUS wiring reads the site's iCal feed (icalUrl); an AgendaCenter page alone cannot be wired" };

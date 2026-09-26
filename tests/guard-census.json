@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 845,
-    "named": 8163,
+    "files": 860,
+    "named": 8266,
     "dynamic": 33
   },
   "files": {
@@ -1134,6 +1134,24 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-code-reading-money.test.ts": {
+      "names": [
+        "'is there a meeting soon' wording and contact and person wording are canonical shapes now",
+        "ROUTE: 'Has Cinde Warmington raised more money than Kelly Ayotte?' retrieves BOTH and composes the comparison",
+        "ROUTE: 'Is there a Vail school board meeting coming up soon?' is read in code and composed from the sitting",
+        "ROUTE: 'who gave' says our records hold totals, not donors — composed, validated, no model",
+        "ROUTE: Rebecca Harned, asked from Merrimack County, is found and her held filing is the answer — no model",
+        "ROUTE: a New Jersey meeting question does not wait for New Jersey's roll calls (5.7-6.7 s cold, measured)",
+        "ROUTE: a comparison whose second name is SHORTER still reaches both people (the whole-question binder picks the longer name)",
+        "a comparison binds the FIRST named person through the reader's own mention, and names the second exactly",
+        "a held candidate the reader NAMES is a subject outside the reader's divisions — and nothing else from there is",
+        "a named person's money question is read in code: the subject, PERSON_RECORD and no tense — the models' reading",
+        "a state's roll calls are read for a state legislator only — never for a body or a county candidate",
+        "the code's guess for a pronoun money question is the models' reading: PERSON_RECORD, no tense",
+        "the other person named is the FULL name the reader typed, never another candidate's bare surname alias"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-decision-answer.test.ts": {
       "names": [
         "Mesa: the council's decisions from its own minutes — each motion and its result in the minutes' words, and the minutes' standing",
@@ -1310,6 +1328,26 @@
         "a MEETING record belonging to another body FAILS validation",
         "a record carrying the RESOLVED body's id passes",
         "a record with NO body id is not failed — it belongs to no single body"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-group-money-answer.test.ts": {
+      "names": [
+        "Vail: no race on the ballot, in the authority's words, then the county register's committees by their registered names, never a total",
+        "a bound body reaches a contest only through its own office, never another office sharing its division",
+        "a candidate whose ballot listing is not matched to a filing identity is never said to have no filing",
+        "a contest with a candidate lacking a record names the gap as ours, with the count",
+        "candidates who share a gap are named together, in ballot order, where the first of them stands",
+        "every held contest in AZ, NH and NJ composes, names every candidate with its own figures and a counted denominator, and passes the validator",
+        "race money wording is recognised with its race words, and a named person's money question is not a race question",
+        "the race composer steps aside for anything it cannot state plainly"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-identity-bridge.test.ts": {
+      "names": [
+        "Amalia DUARTE: the Mendham Township Committee roster row and her 2026 Township Committee candidacy are one committed person",
+        "Teri Ann Hourihan: the certified card and her filing are the committed party-conflict pair, one subject with both parties and sources"
       ],
       "dynamic": 0
     },
@@ -1522,6 +1560,28 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-money-answer.test.ts": {
+      "names": [
+        "Rebecca Harned and Cinde Warmington: the held NH filings are what the answer states",
+        "a race the reader names must be the person's own office",
+        "compare: each person's own figure, and a verdict only on like-for-like filings",
+        "every held AZ, NH and NJ filing state composes inside the length contract and passes the validator",
+        "how much: the committee's own figures, period, agency and read date — and it passes the validator",
+        "the comparison that retrieved no money is now a money question, and so is every shape composed here",
+        "the period is the agency's own, spelled for a reader; New Jersey's report codes are not read out",
+        "the relevance gate keeps a compared person's records by exact id, and nobody else's",
+        "two committees are stated separately and never added; composition steps aside for what it cannot state",
+        "who gave: our records hold totals, not donor identities — said as OURS, counted, never put on the state"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-native-adapter.test.ts": {
+      "names": [
+        "native Ask uses the public route and preserves validation and origin rejection",
+        "request lifetimes retain background receipts and stay isolated across concurrent calls"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-prompt-cache.test.ts": {
       "names": [
         "H1: a LOCAL PRODUCTION BUILD's harness traffic is never pooled with production readers",
@@ -1548,8 +1608,11 @@
     },
     "tests/ask-reader-edge.test.ts": {
       "names": [
-        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: 1 pointer read left",
-        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 14 pointer reads"
+        "a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch",
+        "an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write",
+        "the warm call settles exactly the sources the Ask preloads, by the names its trace times them under",
+        "with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left",
+        "with the C20 edge, a cold Mesa question reads every deferrable source from the database: 13 pointer reads"
       ],
       "dynamic": 0
     },
@@ -1793,7 +1856,8 @@
         "ROBOTS IS RECORDED, NOT BLOCKING: a robots.txt that disallows every path, or cannot be read, holds no row; an access control on the naming page does",
         "THE C16 TRIGGERS APPLY TO AUTOMATIC ROWS EXACTLY: a 404 suspends it, an outage never drops it, and only a later automatic review restores it",
         "THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does",
-        "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused"
+        "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused",
+        "an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection"
       ],
       "dynamic": 0
     },
@@ -2503,16 +2567,19 @@
     },
     "tests/campaign-site-runner.test.ts": {
       "names": [
+        "a fetch that never answers cannot hold the pass: it ends at its wall-time budget and every unread lead stays owed, never refused",
         "a refused lead publishes nothing and keeps its typed reason where Admin reads it",
         "a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it",
         "a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved",
         "per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest",
         "the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key",
         "the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget",
+        "the budget runs from the pass's start, loading included, and a store call that never returns is abandoned at the hard stop",
         "the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins",
         "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it",
         "the pass reads the leads of candidates with no campaign link first; a linked candidate's leads wait, deferred and never refused, and are read once the others are",
-        "who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys"
+        "who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys",
+        "withinWallTime ends a promise that never settles and clears its timer when one does"
       ],
       "dynamic": 0
     },
@@ -2780,7 +2847,9 @@
         "0C: an ordinary 200 still comes back exactly as before",
         "A PRECONNECT HINT IS NOT A CHALLENGE: a real page that only warms the Turnstile host stays a page",
         "NHHUNT: the ambiguous marks keep their floor, so a real page stays a page",
-        "NHHUNT: the modern managed challenge is caught at 30 KB, not missed"
+        "NHHUNT: the modern managed challenge is caught at 30 KB, not missed",
+        "SVUSD: a page that redirects without a signed token, or a real page carrying one, stays a page",
+        "SVUSD: a script-only page that sends the browser back with a signed token is an access control"
       ],
       "dynamic": 0
     },
@@ -3009,6 +3078,25 @@
         "the Reader-evidence door's narrow read decides authority exactly as the whole envelope does",
         "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt",
         "the prepared projection's coupling read carries no composed payload"
+      ],
+      "dynamic": 0
+    },
+    "tests/civicplus-calendar-feeds.test.ts": {
+      "names": [
+        "AN INDEX THAT CANNOT BE READ IS A LEAD THAT SAYS SO, AND THE WALK GOES ON",
+        "NOT CIVICPLUS, NO INDEX: a site whose markup shows no CivicPlus is never asked for /iCalendar.aspx",
+        "THE INDEX: every category calendar feed the county lists, with the name it gives it, on its own host only",
+        "THE MATCH: only a category that is exactly the governing body's name of its kind of government names a registered body; every other is unmatched, with its reason",
+        "THE WALK: a CivicPlus site's index is read robots-first, and only the governing body's category feed is requested and found, attested through the index"
+      ],
+      "dynamic": 0
+    },
+    "tests/civicplus-category-feed-wiring.test.ts": {
+      "names": [
+        "COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-feed row, cites the index that names it, and the adapter reads its sittings at their MST times",
+        "STRICT: a category naming another body, a generic category, a partial name and a feed on another host never give a whole-feed row",
+        "THE ADAPTER: a title or category filter reads exactly as before; only a whole-feed filter selects every event",
+        "THE ROW CHECK: a whole-feed filter stands only as \\\"category\\\", alone, on a category-scoped feed"
       ],
       "dynamic": 0
     },
@@ -3857,12 +3945,16 @@
     },
     "tests/cycle-finalization.test.ts": {
       "names": [
+        "2026-09-26: late work still running at 835 s left the research state no time; the late-work deadline never admits the projection there",
         "a hung store call inside a step is cut at the step's budget under its own name, not the step's",
         "a hung store: the canonical outcome's append fails by name inside its budget, and the cycle records FAILED instead of hanging",
         "a step gets its own budget, cut so the canonical outcome and the local record keep theirs; none is started with no time",
         "a step whose await never settles fails by name after its budget; one with no time is not started",
         "an answering store gets the FAILED outcome, naming the timeout and what was pending",
         "the clock: the stall diagnostic fires 90 s before the wall and every record settles 15 s before it",
+        "the late work yields at 735 s on the fifteen-minute wall, which leaves every finalization step its whole budget",
+        "the late-work deadline is never before the process began and never after the stall point, on any wall",
+        "the research cycle bounds its late work by the late-work deadline: the metrics, the progression and the fact projection",
         "with no time left before the wall, the local crash record still carries the failure, and says the append was not tried"
       ],
       "dynamic": 0
@@ -3915,6 +4007,12 @@
         "a LIVE task's expired lease is still reclaimed and the task reopened, in the same sweep that releases a settled one",
         "an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released",
         "attemptsForRouteTask's filtered read returns exactly what the old full-list filter returned, row for row and in order, on memory and file"
+      ],
+      "dynamic": 0
+    },
+    "tests/declared-work-scope.test.ts": {
+      "names": [
+        "a ZIP hunt reaches its shared candidates and finance, records the Send on existing work, and binds its token budget"
       ],
       "dynamic": 0
     },
@@ -4225,6 +4323,16 @@
       ],
       "dynamic": 0
     },
+    "tests/district-territory.test.ts": {
+      "names": [
+        "A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECHNOLOGY DISTRICT; SANTA CRUZ COUNTY DOES NOT GET THE COLLEGE",
+        "A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a ZCTA is not placed by it",
+        "NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send placement names the extract, and nothing the reader closure binds reaches it",
+        "THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY IN 85635, PALOMINAS IN THE COUNTY BUT NOT 85635",
+        "THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule"
+      ],
+      "dynamic": 0
+    },
     "tests/districts.test.ts": {
       "names": [
         "DC uses the district prefix rather than being forced into state:",
@@ -4472,6 +4580,7 @@
     "tests/expansion-scopes.test.ts": {
       "names": [
         "a $0 budget holds all paid work in the scope, and a subject in two scopes must pass both",
+        "a ZIP hunt resolves only that published Census ZCTA, with no neighboring ZIP expansion",
         "a malformed stored scope is counted, never dropped as if no restriction stood",
         "a piece of work's subject and state are read from its own id, never guessed",
         "a scope budget admits within it, reserves the worst case, and refuses by name past it",
@@ -5339,6 +5448,13 @@
       ],
       "dynamic": 0
     },
+    "tests/held-filing-subjects.test.ts": {
+      "names": [
+        "published source-filing profiles retain exact identities outside the mapped ballot without duplicating joined people",
+        "the real Ask route binds published source IDs even when the mapped ballot does not carry them"
+      ],
+      "dynamic": 0
+    },
     "tests/held-meeting-partition.test.ts": {
       "names": [
         "a Reader proof pin captured while the succession is held keeps composing the held version for the whole run",
@@ -5457,6 +5573,16 @@
         "http: retries are BOUNDED — a permanently failing host is not hammered",
         "http: the client identifies itself on every request, and there is no browser rung",
         "http: the content type is carried through, never inferred from the body"
+      ],
+      "dynamic": 0
+    },
+    "tests/hunt-budget-period.test.ts": {
+      "names": [
+        "$50 is shared across concurrent work in one hunt and cannot reset after a day or restart",
+        "Brave and Exa costs do not consume the Anthropic token-only cap",
+        "an overlapping Send cannot override this hunt's remaining token budget",
+        "atomic CAS reservations retry revision conflicts without relying on HTTP session locks",
+        "editing the current hunt preserves its accounting start; an explicit separate hunt gets a new start"
       ],
       "dynamic": 0
     },
@@ -6656,6 +6782,7 @@
         "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
         "A PAGE CARRYING A CREDENTIAL IS READ AS ITS SANITIZED DERIVATIVE, AND A VAULT THAT REFUSES ITS BYTES NEVER ENDS THE WALK",
         "A STALE RECORDED ADDRESS: the current official site a route hint records is walked first, and the walk says what it replaced",
+        "A TOKEN REDIRECT AT 200 IS A WALL: Sierra Vista Unified's homepage (2026-09-26) is recorded BLOCKED by an access control, never 'read and shows no route'",
         "A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other walks are recorded and their field manual is written",
         "BOUNDED: a walk stops at its request bound and says so",
         "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
@@ -6702,7 +6829,7 @@
         "SEAM WORST CASE: every provider at its timeout, plus the ledger's calls",
         "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
         "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
-        "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
+        "WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method"
       ],
       "dynamic": 0
     },
@@ -8470,6 +8597,18 @@
       ],
       "dynamic": 0
     },
+    "tests/provider-billing.test.ts": {
+      "names": [
+        "a fresh cached sync makes no provider calls; failure retains last report and its actual period",
+        "an incomplete report cannot silently replace a previously complete provider total",
+        "collector reloads the exact absolute file after rotation; siblings receive neither reporting keys nor its path",
+        "hunt attribution does not add account reports or count shared reservation keys twice",
+        "missing Exa service access uses priced requests as estimates, without searching or claiming provider charges",
+        "missing reporting credentials and unread request ledger remain unknown; search keys are unchanged",
+        "provider reporting uses documented GETs, cents/discounts correctly, and preserves historical model labels"
+      ],
+      "dynamic": 0
+    },
     "tests/questionnaire-store.test.ts": {
       "names": [
         "RULING 112 — verbatim, swept by SHAPE",
@@ -9776,6 +9915,14 @@
       ],
       "dynamic": 0
     },
+    "tests/route-hints-85635.test.ts": {
+      "names": [
+        "FORT HUACHUCA: the walk reads the district's current site in place of its dead k12.az.us host, while that site still names the district",
+        "SIERRA VISTA, THE WALK: the hinted page is read robots-first and found, attested by the hint",
+        "SIERRA VISTA: the meeting list page is confirmed for the city only under the body its events name, by the adapter's own rules"
+      ],
+      "dynamic": 0
+    },
     "tests/route-refusals.test.ts": {
       "names": [
         "/api/directory names an unknown parameter rather than ignoring it",
@@ -10324,13 +10471,15 @@
         "8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt",
         "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open",
         "EARLY STOP: a walk that stalls past minRungs finishes early instead of running to the turn bound",
+        "a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication",
         "full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows"
       ],
       "dynamic": 0
     },
     "tests/scout-model-ladder.test.ts": {
       "names": [
-        "L1: the loop's first request goes to Sonnet 5 — the cheapest suitable class — with every cache breakpoint placed and a prefix that clears Sonnet's minimum",
+        "Haiku then Sonnet then Opus records both justified escalations and all costs without repeating discovery",
+        "L1: acquisition starts with Haiku and omits unsupported effort and adaptive thinking",
         "L2: a Sonnet attempt that produces an accepted typed result is the whole Attempt — no escalation, no reservation, one attempt's cost",
         "L4: a provider overload (HTTP 529) is not the model's failing and never escalates — a dearer model is not a retry",
         "L5 CEILING (positive control): under a ceiling that covers both attempts the real controller holds the escalation, and after it every cent of the hold is drawn or released",
@@ -10499,6 +10648,34 @@
         "no real credential value appears anywhere in the repository",
         "parsing takes long values, skips comments, and drops short configuration",
         "the placeholder names WHICH credential, so the line stays diagnostic"
+      ],
+      "dynamic": 0
+    },
+    "tests/send-budget-hard-cap.test.ts": {
+      "names": [
+        "N jobs racing for a budget that fits N−1 admit exactly N−1, on one ledger, whatever the interleaving",
+        "a follow-up that would exceed is refused before it is sent: an escalation, and a request past the job's hold",
+        "a job that would exceed the Send's budget is refused before any spend",
+        "a ledger the store cannot read or write refuses the hold, by name: nothing runs unbudgeted",
+        "a missing Send record or an unreadable budget refuses; with no Send budget nothing changes",
+        "a pre-warm holds its own worst case on the budget of the work it serves, and is refused when that does not fit",
+        "a settled job's measured spend counts until the cost history carries it, never twice",
+        "an exhausted AZ area budget blocks an autonomous AZ job before it sends, whether the area is matched by member or by state",
+        "an exhausted Send in NJ does not block an autonomous AZ job: autonomous work is never checked against a Send's budget",
+        "autonomous work fails closed: an unreadable area budget or ledger refuses; a Fleet refusal before sending releases its hold",
+        "settling releases the unused hold; a failed or unmeasured job keeps its hold; a retry re-reserves; a crash's hold counts until its window ends",
+        "the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure",
+        "the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60",
+        "the runner wires autonomous work to its jurisdiction's area only, never to a Send's budget"
+      ],
+      "dynamic": 0
+    },
+    "tests/served-reader.test.ts": {
+      "names": [
+        "Battlecard evidence belongs only to the candidate whose controls were opened",
+        "a witness cannot transfer to a new approval or survive stale time",
+        "collector shares one public read, records exact approvals and holds missing destinations",
+        "public readback requires the exact candidate container, not another card or serialized script"
       ],
       "dynamic": 0
     },
@@ -12076,6 +12253,7 @@
     },
     "tests/worker-fleet-novelty.test.ts": {
       "names": [
+        "one running worker runtime saves a new observed route and hands it to its next Scout",
         "the actual Scout request inherits a learned method and the failed Hunter route before novelty"
       ],
       "dynamic": 0

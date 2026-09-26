@@ -1,3 +1,10 @@
+## Current release checkpoint — September 26, 2026, 2:10 AM Arizona MST
+
+Codex owns Claude's batch F handoff in `codex/admin-completion-finish`. The hunt remains paused; no Send or paid hunt execution is authorized. Its only new cap is $50 Anthropic tokens for this hunt, including concurrent reservations, retries and escalations. Other providers are reported separately.
+
+Reader repairs are committed at `9dfd9f81` after integrated release `2be9d492`. The full production-authority reader reproof passed 20,480 component cases, zero closure failures and the required census gate (29/29). Shared state/candidate scope binding, objective propagation to Scout, and exact public-publication witnesses are added; focused checks pass. Full release gates, canonical merge/deploy, runner handoff and genuine cold Ask remain in progress. This is NOT a readiness declaration. Details: `docs/evidence/admin-hunt-release-20260926.md`.
+
+The following historical records retain their original dates and claims; they do not override this checkpoint.
 # Project state
 
 Written for someone opening this repository with no prior context. It describes

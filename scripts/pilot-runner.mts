@@ -188,6 +188,7 @@ import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
+import { BILLING_SECRET_NAMES, withoutBillingSecrets } from "../lib/control-plane/provider-billing.ts";
 import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.ts";
 import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/promotion/window.ts";
 
@@ -199,6 +200,13 @@ installConnectAttemptWindow();
 const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
+// Keep the exact launch path, but do not pass reporting secrets to workers.
+// The owner-snapshot collector reloads only those keys from this private file.
+if (!process.env.WTP_BILLING_ENV_FILE) {
+  const launchFile = process.execArgv.find(a => a.startsWith("--env-file="));
+  if (launchFile) process.env.WTP_BILLING_ENV_FILE = launchFile.slice("--env-file=".length);
+}
+for (const name of BILLING_SECRET_NAMES) delete process.env[name];
 const argv = process.argv.slice(2);
 const AUTO_RELEASE_HANDOFF = argv.includes("--release-handoff");
 const provider = argv.includes("--provider=file") ? "file" : "postgres";
@@ -212,6 +220,7 @@ if (provider === "postgres") {
 function standingChildEnvironment(
   capability: Parameters<typeof admittedRuntimeChildEnvironment>[0]["capability"],
   parentEnv: NodeJS.ProcessEnv = process.env,
+  billingCollector = false,
 ): NodeJS.ProcessEnv {
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
@@ -220,8 +229,9 @@ function standingChildEnvironment(
         : parentEnv,
       capability,
       parentPid: process.pid,
+      billingCollector,
     })
-    : { ...parentEnv };
+    : billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
 }
 
 // The installed dispatcher, the scheduled task, and any stale Startup entry
@@ -714,11 +724,10 @@ async function publishConsole(): Promise<void> {
     const [run] = await runBoundedChildPass([{
       id: `console-publish:${publisher.name}`,
       executable: process.execPath,
-      /* The scheduled parent loaded the one absolute environment file.  Every
-       * child inherits that exact snapshot; no child reopens a cwd-relative
-       * `.env.local` that could belong to a different checkout. */
+      /* Workers inherit the launch environment. Only the owner snapshot reloads
+       * five billing keys from the same absolute private file, never cwd-relative. */
       args: ["--experimental-strip-types", ...publisher.args],
-      env: standingChildEnvironment("CONSOLE_PUBLISHER"),
+      env: standingChildEnvironment("CONSOLE_PUBLISHER", process.env, publisher.name === "owner snapshot"),
     }], {
       cwd: ROOT,
       env: process.env,

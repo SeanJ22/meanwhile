@@ -52,7 +52,10 @@ export function campaignMoneyEvidenceFor(
       subjectId: subject.id, canonicalSubjectId: money.state.resolvedTargetKey ?? targetKey,
       text: stateText(record), sourceUrl: record.filingsUrl ?? record.provenance.sourceUrl,
       sourceOrg: record.provenance.sourceOrg, retrievedAt: record.checkedAt,
-      finance: { jurisdiction: record.jurisdiction, filingState: record.filingState, totals: record.totals },
+      finance: {
+        jurisdiction: record.jurisdiction, filingState: record.filingState, totals: record.totals,
+        registeredName: record.registeredName.trim(), agency: record.agency, electionYear: record.electionYear, checkedAt: record.checkedAt,
+      },
     });
   }
   denominators.stateFinanceRecordsReturned = records.length;

@@ -53,6 +53,10 @@ import {
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
+import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
+import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
+import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
   CACHE_OBSERVATION_ID,
@@ -74,6 +78,8 @@ import {
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
 import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
 import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
+import { collectPublishedCampaignReadback } from "../lib/control-plane/served-reader-production.ts";
+import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
@@ -405,6 +411,8 @@ const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
  * gap rather than a zero.
  */
 interface ControlPlaneReads {
+  readonly billingScopes: Parameters<typeof providerBillingAttribution>[0]["scopes"];
+  readonly billingHolds: Parameters<typeof providerBillingAttribution>[0]["holds"];
   readonly costs: Awaited<ReturnType<ControlPlaneRepositories["costs"]["readAll"]>>;
   readonly attempts: { readonly id: string; readonly worker: { readonly version: string; readonly provider: string } }[];
   readonly obligations: { readonly id: string; readonly subjectId: string }[];
@@ -422,6 +430,10 @@ interface ControlPlaneReads {
 }
 
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
+  const [billingScopes, billingHolds] = await Promise.all([
+    repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
+    repos.budget.read().then(r => r.value.spendHolds ?? {}).catch(() => null),
+  ]);
   const [costs, attempts, obligations, research] = await Promise.all([
     repos.costs.readAll(),
     repos.attempts.list(),
@@ -462,6 +474,7 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   }
   const metrics = research?.value.metrics ?? null;
   return {
+    billingScopes, billingHolds,
     costs,
     attempts: attempts.map((a) => ({ id: a.value.id, worker: a.value.worker })),
     obligations: obligations.map((o) => ({ id: o.value.id, subjectId: o.value.subjectId })),
@@ -535,6 +548,7 @@ function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obl
 function buildSnapshot(
   reads: ControlPlaneReads | null,
   maptiler: OwnerSnapshot["maptiler"],
+  servedReader: ServedReaderReadback | null = null,
 ): OwnerSnapshot {
   const risk = cycle?.record.risk ?? {};
   const debtRows = typeof risk.debtRows === "number" ? risk.debtRows : null;
@@ -593,15 +607,15 @@ function buildSnapshot(
     deliveryTrail: reads
       ? buildDeliveryTrail(reads.pipelineStates, {
           activation: readActivationGate(process.cwd()),
-          // No served-reader readback producer is wired yet (the witness bridge);
-          // the trail renders public availability as its named gap, never a zero.
-          servedReader: null,
+          servedReader,
+          now: NOW_ISO,
           costSummary: cost ? cost.summary : null,
           costPerVerifiedRecord: cost ? cost.costPerVerifiedRecord : notOpened,
         })
       : undefined,
     // The assignment view: whole-universe counts and a bounded, ordered list (absent when the store was not opened).
-    assignments: reads ? assignmentPublication(reads) : undefined,
+    assignments: reads ? assignmentPublication(reads.assignmentSources.ok ? { ...reads, assignmentSources: { ok: true, value: { ...reads.assignmentSources.value, servedReader } } } : reads) : undefined,
+    servedReaderReadback: servedReader,
     maptiler,
 
     obligationsByState: obligationsByState(reads),
@@ -734,7 +748,10 @@ async function main(): Promise<void> {
       ],
     });
   }
-  const snapshot = buildSnapshot(reads, maptiler);
+  const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
+  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, readings: providerBilling.readings }) : null;
+  const servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");

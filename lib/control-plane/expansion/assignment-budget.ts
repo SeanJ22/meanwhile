@@ -52,6 +52,7 @@ import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
+import type { BudgetLine } from "./spend-holds.ts";
 
 export const ASSIGNMENT_BUDGET_CODE = "ASSIGNMENT_BUDGET";
 export const ASSIGNMENT_BUDGET_FORMAT_VERSION = 1;
@@ -66,6 +67,7 @@ const LABEL_MAX = 80;
 
 /** One Send's budget in force. */
 export interface AssignmentBudgetSpec {
+  readonly budgetStartedAt?: string;
   readonly key: string;
   readonly kind: "SCOPE" | "DISPATCH";
   readonly label: string;
@@ -77,6 +79,34 @@ export interface AssignmentBudgetSpec {
 
 /** The DISPATCH key a Send carries on the rows it reached (`dispatch-work.ts`). */
 export const dispatchAssignmentKey = (intentId: string): string => `dispatch:${intentId}`;
+
+/**
+ * A DISPATCH that carries a budget field that is not a readable amount (not a
+ * finite number at or above zero). Fail closed (2026-09-25): its work is held
+ * by name, never run as if it had no budget.
+ */
+export interface MalformedAssignmentBudget {
+  readonly key: string;
+  readonly label: string;
+  /** The value as read, for the refusal. */
+  readonly raw: string;
+}
+
+/** Every DISPATCH whose budget field is present and unreadable. */
+export function malformedAssignmentBudgetsOf(intents: readonly ResearchIntent[]): MalformedAssignmentBudget[] {
+  const out: MalformedAssignmentBudget[] = [];
+  for (const i of intents) {
+    if (i.kind !== "INTENT" || i.action !== "DISPATCH" || !("budgetUsd" in i) || i.budgetUsd === undefined) continue;
+    const b: unknown = i.budgetUsd;
+    if (typeof b === "number" && Number.isFinite(b) && b >= 0) continue;
+    const words = (i.note ?? "").replace(/\s+/g, " ").trim();
+    out.push({ key: dispatchAssignmentKey(i.intentId), label: words === "" ? i.intentId : words.slice(0, LABEL_MAX), raw: JSON.stringify(b) ?? String(b) });
+  }
+  return out;
+}
+
+/** One budget line a hold is checked against: `send:<assignment key>` (see `spend-holds.ts`). */
+export const sendBudgetKey = (assignmentKey: string): string => `send:${assignmentKey}`;
 
 /**
  * The budgets in force: every selected scope's, and every DISPATCH the owner
@@ -93,6 +123,7 @@ export function assignmentBudgetsOf(input: {
     ref: d.receiptId,
     budgetUsd: d.budgetUsd,
     sentAt: d.decidedAt,
+    ...(d.budgetStartedAt ? { budgetStartedAt: d.budgetStartedAt } : {}),
   }));
   for (const i of input.intents) {
     if (i.kind !== "INTENT" || i.action !== "DISPATCH") continue;
@@ -207,7 +238,8 @@ export function assignmentSpend(costs: readonly CostEntry[], members: Assignment
 
 export type AssignmentAdmission =
   | { readonly admit: true; readonly runsUnder: string | null; readonly keys: readonly string[] }
-  | { readonly admit: false; readonly code: typeof ASSIGNMENT_BUDGET_CODE; readonly why: string };
+  | AssignmentRefusal;
+export type AssignmentRefusal = { readonly admit: false; readonly code: typeof ASSIGNMENT_BUDGET_CODE; readonly why: string };
 
 export interface AssignmentBudgetState {
   readonly budgetUsd: number;
@@ -239,6 +271,9 @@ export class AssignmentBudgetGate {
   private readonly reservations = new Map<string, readonly string[]>();
   private readonly admittedBy = new Map<string, number>();
   private readonly refusedBy = new Map<string, number>();
+  private readonly malformed: ReadonlyMap<string, MalformedAssignmentBudget>;
+  private readonly reachedThisCycle: ReadonlyMap<string, readonly string[]>;
+  private readonly historyReadAt: string;
 
   constructor(input: {
     readonly specs: readonly AssignmentBudgetSpec[];
@@ -249,6 +284,17 @@ export class AssignmentBudgetGate {
     readonly costsReadable: boolean;
     /** False when the owner's instruction log could not be read: no DISPATCH budget can then be known. */
     readonly intentsReadable: boolean;
+    /** DISPATCHes whose budget field is unreadable: the work they reach is held. */
+    readonly malformed?: readonly MalformedAssignmentBudget[];
+    /**
+     * The Sends this cycle's own reading reached each obligation under (a
+     * pending DISPATCH's match), whether or not the row's record says so yet.
+     * A budgeted Send missing from the row's record is held, never run
+     * unbudgeted (2026-09-25).
+     */
+    readonly reachedThisCycle?: ReadonlyMap<string, readonly string[]>;
+    /** When `historical` was read (the cycle's instant). */
+    readonly historyReadAt?: string;
   }) {
     this.specs = new Map(input.specs.map((s) => [s.key, s]));
     this.keysOf = input.membership.keysOf;
@@ -256,6 +302,71 @@ export class AssignmentBudgetGate {
     this.worstCaseUsd = input.worstCaseUsd;
     this.costsReadable = input.costsReadable;
     this.intentsReadable = input.intentsReadable;
+    this.malformed = new Map((input.malformed ?? []).map((m) => [m.key, m]));
+    this.reachedThisCycle = input.reachedThisCycle ?? new Map();
+    this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
+  }
+
+  /**
+   * The fail-closed conditions that hold an obligation's paid work whatever
+   * the dollars say, or null: a Send the cycle reached it under whose record on
+   * the row is missing, a Send whose budget is unreadable, a DISPATCH whose
+   * budget cannot be known because the owner's instructions were unreadable.
+   */
+  private failClosed(obligationId: string, keys: readonly string[]): AssignmentRefusal | null {
+    const reached = this.reachedThisCycle.get(obligationId) ?? [];
+    for (const key of reached) {
+      if (keys.includes(key)) continue;
+      const spec = this.specs.get(key);
+      if (spec !== undefined || this.malformed.has(key) || !this.intentsReadable) {
+        const named = spec !== undefined ? `${this.name(spec)}'s ${usd(spec.budgetUsd)} budget` : `the budget of assignment ${key}`;
+        return this.refused([key], `this cycle's reading reached this work under assignment ${key}, but the record that it belongs to that Send was not written, so ${named} cannot be applied; the work waits until the record is written`);
+      }
+    }
+    for (const key of [...keys, ...reached]) {
+      const bad = this.malformed.get(key);
+      if (bad !== undefined) {
+        return this.refused([key], `assignment "${bad.label}" (${key}) carries a budget that is not a readable amount (${bad.raw}), so it cannot be checked; paid work it reached is held`);
+      }
+    }
+    const unreadDispatch = this.intentsReadable ? undefined : keys.find((k) => k.startsWith("dispatch:"));
+    if (unreadDispatch !== undefined) {
+      return this.refused([unreadDispatch], `the owner's instructions could not be read, so the budget of assignment ${unreadDispatch} cannot be known; paid work it reached is held`);
+    }
+    return null;
+  }
+
+  /**
+   * The budget lines a paid job on this obligation is held against, for the
+   * durable holds (`spend-holds.ts`): every budgeted Send it belongs to, most
+   * recent first (one with room suffices, the shared-work rule) — or the
+   * refusal when the budget cannot be checked at all. No lines: no Send budget
+   * applies.
+   */
+  linesFor(obligationId: string): { readonly lines: readonly BudgetLine[] } | { readonly refusal: AssignmentRefusal } {
+    const keys = this.keysOf.get(obligationId) ?? [];
+    const closed = this.failClosed(obligationId, keys);
+    if (closed !== null) return { refusal: closed };
+    const budgeted = this.budgetedFor(obligationId);
+    if (budgeted.length === 0) return { lines: [] };
+    if (!this.costsReadable) {
+      const b = budgeted[0];
+      return { refusal: this.refused(budgeted.map((s) => s.key), `the cost ledger could not be read, so assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked; paid work it reached is held`) };
+    }
+    const lines: BudgetLine[] = [];
+    for (const b of budgeted) {
+      const hist = this.historical.get(b.key);
+      if (hist === undefined || hist.usd === null || this.cycleUnmeasured.has(b.key)) {
+        return {
+          refusal: this.refused(
+            budgeted.map((s) => s.key),
+            `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked: a charge on its work in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours reported no dollar figure`,
+          ),
+        };
+      }
+      lines.push({ key: sendBudgetKey(b.budgetStartedAt ? `${b.key}@${b.budgetStartedAt}` : b.key), label: `assignment ${this.name(b)}`, budgetUsd: b.budgetUsd, historicalUsd: hist.usd, historyReadAt: this.historyReadAt, lifetime: Boolean(b.budgetStartedAt) });
+    }
+    return { lines };
   }
 
   /** The budgeted Sends an obligation belongs to, most recent first. */
@@ -284,33 +395,37 @@ export class AssignmentBudgetGate {
 
   check(obligationId: string): AssignmentAdmission {
     const keys = this.keysOf.get(obligationId) ?? [];
+    /* Fail closed before anything else: a missing record, an unreadable budget, an unread instruction log. */
+    const closed = this.failClosed(obligationId, keys);
+    if (closed !== null) return closed;
     if (keys.length === 0) return { admit: true, runsUnder: null, keys };
-    const unreadDispatch = this.intentsReadable ? null : keys.find((k) => k.startsWith("dispatch:"));
-    if (unreadDispatch !== undefined && unreadDispatch !== null) {
-      return this.refused([unreadDispatch], `the owner's instructions could not be read, so the budget of assignment ${unreadDispatch} cannot be known; paid work it reached is held`);
-    }
     const budgeted = this.budgetedFor(obligationId);
     if (budgeted.length === 0) return { admit: true, runsUnder: null, keys };
     if (!this.costsReadable) {
       const b = budgeted[0];
       return this.refused(budgeted.map((s) => s.key), `the cost ledger could not be read, so assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked; paid work it reached is held`);
     }
-    for (const b of budgeted) {
+    const blockedHunt = budgeted.find(b => b.budgetStartedAt && (() => {
+      const s = this.state(b.key);
+      return s === null || s.spentUsd === null || s.spentUsd + s.heldUsd + this.worstCaseUsd > b.budgetUsd;
+    })());
+    for (const b of blockedHunt ? [] : budgeted) {
       const s = this.state(b.key);
       if (s !== null && s.spentUsd !== null && s.spentUsd + s.heldUsd + this.worstCaseUsd <= b.budgetUsd) return { admit: true, runsUnder: b.key, keys };
     }
-    const b = budgeted[0];
+    const b = blockedHunt ?? budgeted[0];
     const s = this.state(b.key);
-    const others = budgeted.length > 1 ? `; the ${budgeted.length - 1} other Send(s) this work belongs to have no room either` : "";
+    const period = b.budgetStartedAt ? "for this hunt" : `in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours`;
+    const others = blockedHunt ? "; every hunt cap remains binding when work is shared with other Sends" : budgeted.length > 1 ? `; the ${budgeted.length - 1} other Send(s) this work belongs to have no room either` : "";
     if (s === null || s.spentUsd === null) {
       return this.refused(
         budgeted.map((x) => x.key),
-        `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked: a charge on its work in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours reported no dollar figure, ${usd(s?.heldUsd ?? 0)} held${others}`,
+        `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget cannot be checked: a charge on its work ${period} reported no dollar figure, ${usd(s?.heldUsd ?? 0)} held${others}`,
       );
     }
     return this.refused(
       budgeted.map((x) => x.key),
-      `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget is spent: ${usd(s.spentUsd)} spent, ${usd(s.heldUsd)} held in the rolling ${ASSIGNMENT_BUDGET_WINDOW_HOURS} hours, ` +
+      `assignment ${this.name(b)}'s ${usd(b.budgetUsd)} budget is spent: ${usd(s.spentUsd)} spent, ${usd(s.heldUsd)} held ${period}, ` +
         `and one more Scout's worst case (${usd(this.worstCaseUsd)}) does not fit${others}`,
     );
   }
@@ -343,7 +458,7 @@ export class AssignmentBudgetGate {
   }
 
   /** Counted against every budgeted Send that had no room — each held work it reached. */
-  private refused(keys: readonly string[], why: string): AssignmentAdmission {
+  private refused(keys: readonly string[], why: string): AssignmentRefusal {
     for (const key of keys) this.refusedBy.set(key, (this.refusedBy.get(key) ?? 0) + 1);
     return { admit: false, code: ASSIGNMENT_BUDGET_CODE, why };
   }
@@ -360,12 +475,14 @@ export function armAssignmentBudget(input: {
   readonly costs: readonly CostEntry[] | null;
   readonly worstCaseUsd: number;
   readonly intentsReadable: boolean;
+  readonly malformed?: readonly MalformedAssignmentBudget[];
+  readonly reachedThisCycle?: ReadonlyMap<string, readonly string[]>;
 }): AssignmentBudgetGate {
   const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
   const historical = new Map<string, AssignmentSpend>();
   if (input.costs !== null) {
     const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(input.costs, input.membership.byKey.get(spec.key) ?? empty, since, input.now));
+    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(input.costs, input.membership.byKey.get(spec.key) ?? empty, spec.budgetStartedAt ?? since, input.now));
   }
   return new AssignmentBudgetGate({
     specs: input.specs,
@@ -374,12 +491,16 @@ export function armAssignmentBudget(input: {
     worstCaseUsd: input.worstCaseUsd,
     costsReadable: input.costs !== null,
     intentsReadable: input.intentsReadable,
+    malformed: input.malformed ?? [],
+    reachedThisCycle: input.reachedThisCycle ?? new Map(),
+    historyReadAt: input.now,
   });
 }
 
 /* ------------------------------------------------------------ the reading */
 
 export interface AssignmentBudgetReading {
+  readonly lifetime?: boolean;
   readonly budgetUsd: number;
   readonly windowHours: number;
   readonly since: string;
@@ -427,7 +548,8 @@ export interface AssignmentCycleReading {
 
 export const SHARED_WORK_RULE =
   "A charge counts toward every Send its work belongs to, so each shows the whole of what its work cost. " +
-  "Work several Sends reached runs while any of them with a budget has room — under the most recent — and is held only when none does.";
+  "Every applicable total-hunt Anthropic token budget must have room, including concurrent reservations. " +
+  "Among rolling-window Sends, shared work may run under the most recent one with room. Other service costs are tracked separately.";
 
 /** The reading the runner writes onto the research state, and the instruction view reads. */
 export function assignmentCycleReading(input: {
@@ -451,7 +573,7 @@ export function assignmentCycleReading(input: {
     const spec = specs.get(key) ?? null;
     const m = input.membership.byKey.get(key) ?? empty;
     const state = input.gate.state(key);
-    const spend = spec !== null && input.costs !== null ? assignmentSpend(input.costs, m, since, input.now) : null;
+    const spend = spec !== null && input.costs !== null ? assignmentSpend(input.costs, m, spec.budgetStartedAt ?? since, input.now) : null;
     const kind = key.startsWith("dispatch:") ? "DISPATCH" : "SCOPE";
     return {
       key,
@@ -470,7 +592,8 @@ export function assignmentCycleReading(input: {
           : {
               budgetUsd: spec.budgetUsd,
               windowHours: ASSIGNMENT_BUDGET_WINDOW_HOURS,
-              since,
+              since: spec.budgetStartedAt ?? since,
+              lifetime: Boolean(spec.budgetStartedAt),
               until: input.now,
               spentUsd: state.spentUsd,
               heldUsd: state.heldUsd,

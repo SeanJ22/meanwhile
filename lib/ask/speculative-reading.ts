@@ -3,6 +3,7 @@ import { asksForBodyAgenda, type BindableEntity } from "../routing/named-entity.
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
 import { shapeIntentFor, subjectKindOf } from "./lexical-reading.ts";
+import { moneyQuestionShape } from "./money-answer.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import { isReferential, resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
@@ -111,6 +112,14 @@ export function codeBestReading(input: CodeReadingInput): CodeReading | null {
   if (resolved.binding.kind !== "BOUND") return null;
   const entity = resolved.binding.entity;
   const kind = subjectKindOf(entity);
+  /*
+   * A campaign-money question about a person ("How much has she raised?"
+   * with her card open) reads PERSON_RECORD with no tense on the models
+   * (2026-09-25), whatever tense word it carries: it selects no sitting.
+   */
+  if (kind === "PERSON" && moneyQuestionShape(input.question)) {
+    return { interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD", temporal: { kind: "NONE" }, referent }, basis: "SHAPE", subjectId: entity.id };
+  }
   const shaped = shapeIntentFor(input.question, kind, temporal);
   const intent = shaped?.intent ?? wordingIntent(input.question, temporal, kind);
   if (!intent) return null;

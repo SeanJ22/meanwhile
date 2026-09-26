@@ -1552,6 +1552,7 @@ export interface OwnerSnapshot {
    * honesty helpers from this file, so a value import here would be circular.
    */
   readonly deliveryTrail?: import("./delivery-trail.ts").DeliveryTrailView | null;
+  readonly servedReaderReadback?: import("./served-reader.ts").ServedReaderReadback | null;
 
   /**
    * The assignment view (owner ask, 2026-09-22): every unit of work — standing
@@ -1586,6 +1587,9 @@ export interface OwnerSnapshot {
    * CONNECTED — never as zero usage, which would read as headroom.
    */
   readonly maptiler?: MapTilerUsageSnapshot | null;
+  /** Cached GET-only billing reports, written by the existing standing publisher. */
+  readonly providerBilling?: import("./provider-billing.ts").ProviderBillingSnapshot | null;
+  readonly billingAttribution?: import("./provider-billing-attribution.ts").BillingAttribution | null;
 
   /** Bounded runner reading of historical receipts; absent until the authorized publisher supplies it. */
   readonly fleetReceipts?: FleetReceiptSnapshot | null;

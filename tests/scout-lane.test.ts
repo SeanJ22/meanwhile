@@ -279,6 +279,19 @@ function executorWith(
 
 /* ---------------------------------------------------------------------- 1 */
 
+test("a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication", async () => {
+  const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
+  const { exec } = executorWith(transport, fakeToolkit(), { bound: { maxTurns: 1 } });
+  const obligation = { ...OBLIGATION, assignments: [{ assignmentKey: "zcta:2020/85635", ref: "isolated-send", relation: "REORDERED" as const, at: NOW, questions: ["ANYTHING_MISSING", "READER_CAN_SEE"] as const }] };
+  const { repos, task } = await registered(createMemoryRepositories(), obligation);
+  await dispatchOne(repos, { obligation: scheduledFixture(obligation, NOW_MS), routeTaskId: task.id, holder: "test", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec, decision: { kind: "BOUNDED_MODEL_WORKER", why: "source investigation", disagreement: null } });
+  const sent = JSON.stringify(transport.requests[0]?.messages);
+  assert.match(sent, /OWNER'S QUESTION ANYTHING_MISSING/);
+  assert.match(sent, /OWNER'S QUESTION READER_CAN_SEE/);
+  assert.match(sent, /real reader link and public readback/);
+  assert.doesNotMatch(sent, /OWNER'S QUESTION CONSISTENT/);
+});
+
 test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async () => {
   const det = decideExecutor({
     routeId: "known-get",
@@ -667,7 +680,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(attempt.outcome, "COMPLETED");
   assert.equal(attempt.worker.role, "SCOUT");
   assert.equal(attempt.worker.provider, "anthropic");
-  assert.equal(attempt.worker.version, "claude-sonnet-5", "MW-033: the Scout loop starts on the cheapest suitable class, Sonnet 5");
+  assert.equal(attempt.worker.version, "claude-haiku-4-5-20251001", "MW-033: the Scout loop starts on the cheapest suitable class, Sonnet 5");
   assert.equal(attempt.cost.inputTokens, 3 * 1500, "input tokens include cache reads, summed over turns");
   assert.equal(attempt.cost.outputTokens, 300);
   assert.ok((attempt.cost.usd ?? 0) > 0);
@@ -687,8 +700,8 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   const r = results[0];
   assert.equal(r.outcome, "ROUTE_CANDIDATE");
   assert.equal(r.rungs[1].note, "meetings page", "the model's per-rung note travels; the rung itself is machine-derived");
-  assert.equal(r.worker.modelReported, "claude-sonnet-5");
-  assert.equal(r.modelClass, "sonnet");
+  assert.equal(r.worker.modelReported, "claude-haiku-4-5-20251001");
+  assert.equal(r.modelClass, "haiku");
   assert.equal(r.escalatedFrom, null, "a Sonnet attempt that finished never moved up");
   assert.equal(r.usage.turns, 3);
   assert.equal(r.usage.toolCalls, 2);
@@ -998,8 +1011,8 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   assert.deepEqual(third.cache_control, { type: "ephemeral" }, "the top-level moving breakpoint is on every turn's request");
   assert.deepEqual(requests[0].cache_control, { type: "ephemeral" });
   assert.equal(cacheTtlOrderProblems(third).length, 0, "the request's markers are in the order the API requires");
-  assert.equal(third.output_config?.effort, "medium", "effort is the SCOUT role's, recorded per request");
-  assert.equal(results[0].effort, "medium");
+  assert.equal(third.output_config?.effort, undefined, "effort is the SCOUT role's, recorded per request");
+  assert.equal(results[0].effort, null);
 
   /* The LAST_BLOCK fallback (a platform that rejects the top-level field) marks only the newest user turn's last block. */
   const fallback = withCacheBreakpoints(third.messages, "LAST_BLOCK");
@@ -1021,10 +1034,10 @@ test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED
   assert.throws(() => assertStepMayInvokeModel("date-parsing"), DeterministicStepInvokedModel);
   assert.throws(() => assertStepMayInvokeModel("made-up-step"), UnknownStepInvokedModel);
   const loop = assertStepMayInvokeModel("scout-research-loop");
-  assert.deepEqual(loop, { model: "claude-sonnet-5", modelClass: "sonnet", effort: "medium", role: "SCOUT" }, "MW-033: the loop starts on Sonnet 5");
-  assert.equal(assertStepMayInvokeModel("scout-research-loop", true).modelClass, "frontier", "and escalates to the frontier");
+  assert.deepEqual(loop, { model: "claude-haiku-4-5-20251001", modelClass: "haiku", effort: "medium", role: "SCOUT" }, "the loop starts on Haiku");
+  assert.equal(assertStepMayInvokeModel("scout-research-loop", true).modelClass, "sonnet", "and escalates to Sonnet");
   const extraction = assertStepMayInvokeModel("extraction");
-  assert.deepEqual(extraction, { model: "claude-haiku-4-5", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
+  assert.deepEqual(extraction, { model: "claude-haiku-4-5-20251001", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
   const escalated = assertStepMayInvokeModel("extraction", true);
   assert.equal(escalated.modelClass, "sonnet", "a cheaper model that fails the standard escalates one class");
   assert.equal(assertStepMayInvokeModel("summarization", true).modelClass, "frontier");
@@ -1187,8 +1200,8 @@ test("19. every turn is a recorded step: model, effort, tokens by category and c
   assert.equal(model.length, 3);
   for (const [i, s] of model.entries()) {
     assert.equal(s.turn, i + 1);
-    assert.equal(s.model, "claude-sonnet-5", "MW-033: the loop's turns run on Sonnet 5 unless it escalates");
-    assert.equal(s.effort, "medium");
+    assert.equal(s.model, "claude-haiku-4-5-20251001", "MW-033: the loop's turns run on Sonnet 5 unless it escalates");
+    assert.equal(s.effort, null);
     assert.deepEqual(s.tokens, { cacheRead: 500, cacheWrite: 0, uncachedInput: 1000, output: 100 });
     assert.ok((s.usd ?? 0) > 0);
   }

@@ -27,6 +27,7 @@ import {
   type RenderedNumber,
 } from "./owner-surface.ts";
 import { formatEastern } from "./eastern-time.ts";
+import { servedWitness, type ServedReaderReadback } from "./served-reader.ts";
 import { stageCounts, type StageCounts } from "./promotion/pipeline.ts";
 import {
   PIPELINE_STAGES,
@@ -146,7 +147,8 @@ export interface DeliveryTrailView {
 export interface DeliveryTrailInput {
   readonly activation: ActivationGateReading;
   /** The served-reader readback, when a producer is wired. Null = no producer yet (the witness bridge). */
-  readonly servedReader: { readonly count: number; readonly checkedAt: string } | null;
+  readonly servedReader: ServedReaderReadback | null;
+  readonly now?: string;
   readonly costSummary: { readonly measuredUsd: number | null; readonly attemptsMeasured: number } | null;
   readonly costPerVerifiedRecord: Held<Measured>;
 }
@@ -164,6 +166,12 @@ export function buildDeliveryTrail(
   input: DeliveryTrailInput,
 ): DeliveryTrailView {
   const items = states.length;
+  const readAt = input.now ?? input.servedReader?.checkedAt ?? "";
+  const witnessed = new Map(states.flatMap(s => {
+    const approval = s.byStage.APPROVED_FOR_PROMOTION;
+    const witness = approval ? servedWitness(input.servedReader, s.itemId, approval.recordId, readAt) : null;
+    return witness ? [[s.itemId, witness] as const] : [];
+  }));
   const source = "cp_log_promotion_pipeline via deriveItemState, over every pipeline item";
   const reachedRow = (stage: PipelineStage, contract: string): Held<Measured> =>
     items === 0
@@ -208,7 +216,7 @@ export function buildDeliveryTrail(
             ? gap<Measured>("OURS", "no records have entered the promotion pipeline yet.")
             : held(
                 measured(
-                  Math.min(input.servedReader.count, items),
+                  witnessed.size,
                   items,
                   "records confirmed on a public reader page by readback",
                   `served-reader readback checked ${input.servedReader.checkedAt}`,
@@ -254,6 +262,7 @@ export function buildDeliveryTrail(
         "No served-reader readback producer is wired yet. Until a readback confirms a promoted record on a reader page, public availability stays a named gap, not a measured zero.",
     });
   }
+  for (const error of input.servedReader?.errors ?? []) blockers.push({ what: "Public readback", says: error });
 
   const promotions: DeliveryPromotionRow[] = [];
   for (const s of states) {
@@ -267,11 +276,8 @@ export function buildDeliveryTrail(
       approvedAt: approved.at,
       changeSummary: promotionChangeSummary(s),
       version: approved.recordId,
-      destination:
-        input.servedReader === null
-          ? "NOT_OBSERVED — no served-reader readback producer wired"
-          : "reader page (see served-reader readback)",
-      checkedAt: input.servedReader?.checkedAt ?? null,
+      destination: witnessed.get(s.itemId)?.url ?? "NOT_OBSERVED — no current public readback for this exact approval",
+      checkedAt: witnessed.get(s.itemId)?.checkedAt ?? null,
     });
   }
 
@@ -291,7 +297,7 @@ export function buildDeliveryTrail(
     servedReader:
       input.servedReader === null
         ? { state: "NO_PRODUCER", says: "No served-reader readback producer is wired (the witness bridge)." }
-        : { state: "OBSERVED", says: `Served-reader readback checked ${input.servedReader.checkedAt}.` },
+        : { state: "OBSERVED", says: `${witnessed.size} exact approvals confirmed on public pages. Checked ${input.servedReader.checkedAt}; other items remain unconfirmed. Witnesses expire after three hours.` },
   };
 }
 

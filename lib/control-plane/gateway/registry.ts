@@ -845,7 +845,9 @@ const REGISTRY: readonly RegisteredAction[] = [
       /* MW-002: the owner's questions travel typed, never folded into the note. */
       const questions = validateWorkQuestions(input.questions);
       if (!questions.ok) return bad(questions.why);
-      return { ok: true, value: { geography: geography.value, priority: priority.value, budgetUsd: budget.value, note: note.value, questions: questions.value } };
+      if (input.huntBudget !== undefined && typeof input.huntBudget !== "boolean") return bad("Choose a budget for this hunt or a rolling budget.");
+      if (input.newHunt !== undefined && typeof input.newHunt !== "boolean") return bad("Choose whether this is a separate hunt.");
+      return { ok: true, value: { geography: geography.value, priority: priority.value, budgetUsd: budget.value, huntBudget: input.huntBudget === true, newHunt: input.newHunt === true, note: note.value, questions: questions.value } };
     },
     async execute(deps, context, input) {
       const geography = input.geography as ExpansionScopeGeography;
@@ -855,6 +857,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       const at = context.at;
       let previous: { readonly priority: number; readonly budgetUsd: number } | null = null;
       let ceilingUsd: number;
+      let lifetime = false;
       try {
         const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
@@ -870,6 +873,8 @@ const REGISTRY: readonly RegisteredAction[] = [
           geography,
           priority,
           budgetUsd,
+          huntBudget: input.huntBudget === true,
+          newHunt: input.newHunt === true,
           note: input.note === null ? null : String(input.note),
           questions,
           decidedAt: at,
@@ -877,6 +882,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           receiptId: context.receiptId,
         });
         previous = next.previous === null ? null : { priority: next.previous.priority, budgetUsd: next.previous.budgetUsd };
+        lifetime = Boolean(next.scopes.find(s => s.key === scopeKeyOf(geography))?.budgetStartedAt);
         const written = withExpansionScopes(current, { scopes: next.scopes, decidedAt: at });
         if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
         else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
@@ -890,7 +896,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         outcome: "DONE",
         subject: scopeKeyOf(geography),
         says:
-          `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} rolling 24-hour budget for paid work there (${was}), and that survives a restart. ` +
+          `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} ${lifetime ? "Anthropic token budget for this hunt" : "rolling 24-hour budget"} for paid work there (${was}), and that survives a restart. ` +
           "Recording it starts nothing itself. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
           `(${CREATION_BOUNDS} geography) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
           "Work that needs a model waits: the paid lane stays exactly as it is, " +

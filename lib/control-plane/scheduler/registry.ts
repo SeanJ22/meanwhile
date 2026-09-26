@@ -216,6 +216,8 @@ export interface ProvidedObligation {
   readonly recordClass: string;
   /** The canonical subject: a body id, a jurisdiction-and-cycle key. */
   readonly subjectId: string;
+  /** Exact divisions from this record's authority, for shared-work Send attribution. */
+  readonly scopeDivisions?: readonly string[];
   readonly readerImpactAt: string | null;
   readonly observedChangeRateHours: number | null;
   readonly declaredCycleHours?: number | null;

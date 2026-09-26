@@ -162,10 +162,11 @@ export interface AskTrace {
    * named here and was never shown; the model wrote the answer instead.
    */
   composition?: {
-    kind: "SITTING";
+    /** SITTING: a body's sitting (`lib/ask/sitting-answer.ts`); MONEY: a person's held campaign-money records (`lib/ask/money-answer.ts`). */
+    kind: "SITTING" | "MONEY";
     shape: string;
-    /** Which records it was read from: recorded actions, roll calls, or the sitting and its named gaps. */
-    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS";
+    /** Which records it was read from: recorded actions, roll calls, the sitting and its named gaps, or state committee filings. */
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER";
     composed: boolean;
     passed?: boolean;
     failed?: string[];

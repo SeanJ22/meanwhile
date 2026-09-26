@@ -107,6 +107,7 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
+import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
 import {
@@ -240,6 +241,11 @@ export const SCOUT_THINKING = {
   type: "adaptive",
   block_binding: { prefix_mismatch_behavior: "drop_block" },
 } as const;
+
+/** Haiku 4.5 rejects adaptive thinking and effort; do not pay for a known-invalid request. */
+export function scoutThinkingOptions(model: string, effort: ModelEffort): Pick<ModelRequest, "thinking" | "output_config"> {
+  return model.startsWith("claude-haiku-4-5") ? {} : { thinking: SCOUT_THINKING, output_config: { effort } };
+}
 
 /** The beta header value `thinking.block_binding` requires. */
 export const THINKING_BINDING_BETA = "thinking-binding-controls-2026-08-01";
@@ -483,6 +489,7 @@ export function scoutBrief(
   providerId: string | null,
   reason: string,
   inherited: InheritedEvidence,
+  ownerQuestions: readonly WorkQuestion[] = (row.obligation.assignments ?? []).flatMap(a => a.questions ?? []),
 ): string {
   const o = row.obligation;
   const prior = inherited.priorRungs ?? [];
@@ -521,6 +528,8 @@ export function scoutBrief(
         : "",
     route?.awaitingAdapter ? `next move recorded by the provider: ${route.awaitingAdapter}` : "",
     route ? `citation: ${route.citation}` : "",
+    ...WORK_QUESTIONS.filter(q => ownerQuestions.includes(q)).map(q => `OWNER'S QUESTION ${q}: ${WORK_QUESTION_WORDS[q]}`),
+    ...(ownerQuestions.length ? ["Investigate these owner questions for this subject and record class. Compare current source evidence with inherited holdings, preserve independently verified fields, and name unresolved differences. READER_CAN_SEE requires a real reader link and public readback; a captured source or proposed route alone does not prove delivery. Questions never authorize changing identity, skipping validation, or claiming a missing record was not published."] : []),
     "",
     "INHERITED PROJECT CONTEXT (sanitized; artifact ids here may be cited as inherited evidence)",
     inherited.summary.trim() === "" ? "(none recorded)" : inherited.summary,
@@ -548,6 +557,8 @@ export interface ScoutExecutorDeps {
     readonly providerId: string | null;
     readonly reason: string;
     readonly inherited: InheritedEvidence;
+    /** Current recorded Send questions, including marks saved during this cycle. */
+    readonly ownerQuestions?: readonly WorkQuestion[];
     readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs">;
     /**
      * The canonical executor decision for this row (`decideExecutor`). A
@@ -627,6 +638,20 @@ export function scoutAttemptWorstCaseUsd(model: string, bound: ScoutBound): numb
   if (rate === null) return null;
   const dearest = Math.max(rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation, rate.outputUsdPerMillion);
   return ((bound.maxTokens + bound.maxOutputTokensPerTurn) / 1_000_000) * dearest;
+}
+
+/**
+ * **WHAT ONE SCOUT JOB HOLDS AGAINST A SEND OR AREA BUDGET BEFORE IT STARTS.**
+ * (MW-021, 2026-09-25.) Its first attempt's worst case at the model the loop
+ * starts on (`scoutAttemptWorstCaseUsd`, from the same bound the loop
+ * enforces), replacing the flat $0.60 the budgets held. An escalation holds
+ * its own worst case before it runs, and every request past the job's hold
+ * must win a further hold first (`spend-holds.ts`), so this need not cover
+ * them. Null when the start model has no stated rate: no budget can be held,
+ * and budgeted work waits.
+ */
+export function scoutJobWorstCaseUsd(bound: ScoutBound, modelOverride?: string): number | null {
+  return scoutAttemptWorstCaseUsd(scoutLoopBase(modelOverride).model, bound);
 }
 
 interface ToolResultBlock {
@@ -922,8 +947,7 @@ export function scoutPrewarmRequest(input: {
     system: prefix.system,
     tools: prefix.tools,
     tool_choice: { type: "auto" },
-    thinking: SCOUT_THINKING,
-    output_config: { effort: input.effort },
+    ...scoutThinkingOptions(input.model, input.effort),
     messages: [{ role: "user", content: [{ type: "text", text: SCOUT_PREWARM_PLACEHOLDER }] }],
   };
 }
@@ -1152,8 +1176,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
   const base = scoutLoopBase(deps.model);
   const model = base.model;
   const effort: ModelEffort = base.effort;
-  const up = escalationTargetFor(SCOUT_LOOP_STEP);
-  const escalationTarget = up !== null && up.model !== model ? up : null;
 
   return {
     lane: "BOUNDED_MODEL_WORKER",
@@ -1185,7 +1207,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs });
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
-      const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited);
+      const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited, ctx.ownerQuestions);
       /*
        * APPEND-ONLY (2026-09-25). Nothing already sent in this array is ever
        * changed: turns are pushed, and the only other move is a RESTART that
@@ -1330,6 +1352,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
        * model call; `onPriced` converts an escalation hold into settled spend.
        */
       interface ModelAttemptRun {
+        readonly escalation?: ScoutModelAttempt["escalation"];
         readonly model: string;
         readonly modelClass: ModelClass;
         readonly consult: () => { readonly effort: ModelEffort };
@@ -1376,8 +1399,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                */
               tool_choice: { type: "auto" },
               /* Preserved thinking, stated on every turn of both models (`SCOUT_THINKING`); the pre-warm sends the same. */
-              thinking: SCOUT_THINKING,
-              output_config: { effort: step.effort },
+              ...scoutThinkingOptions(current.model, step.effort),
               messages: withCacheBreakpoints(messages),
               ...(SCOUT_CACHE_POLICY.movingBreakpoint === "TOP_LEVEL" ? { cache_control: SCOUT_CACHE_POLICY.cacheControl } : {}),
             };
@@ -1424,7 +1446,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             kind: "MODEL",
             turn: turns,
             model: response.model ?? current.model,
-            effort: step.effort,
+            effort: current.modelClass === "haiku" ? null : step.effort,
             tokens: turnTokens,
             usd: priced?.usd ?? null,
             representationBytes: representationBytesThisTurn,
@@ -1626,6 +1648,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const closeAttempt = (ran: ModelAttemptRun, firstTurn: number): void => {
         const own = steps.filter((s) => s.kind === "MODEL" && s.turn !== null && s.turn >= firstTurn);
         modelAttempts.push({
+          ...(ran.escalation ? { escalation: ran.escalation } : {}),
           modelClass: ran.modelClass,
           model: ran.model,
           turns: own.length,
@@ -1681,11 +1704,14 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       await runModelAttempt(first);
       if (!graduated) closeAttempt(first, 1);
 
-      const observed = escalationTarget === null ? null : observedEscalation();
-      if (escalationTarget !== null && observed !== null) {
+      let previousAttempt = first;
+      for (let rung = 1; rung < MODEL_CLASSES.length; rung++) {
+        const escalationTarget = escalationTargetFor(SCOUT_LOOP_STEP, previousAttempt.modelClass);
+        const observed = escalationTarget === null ? null : observedEscalation();
+        if (escalationTarget === null || observed === null) break;
         escalationReason = observed.reason;
         escalationEvidence = observed.evidence;
-        const spentUsd = modelAttempts[0]?.usd ?? null;
+        const spentUsd = modelAttempts.some(a => a.usd === null) ? null : modelAttempts.reduce((n,a) => n + (a.usd ?? 0),0);
         const worstCaseUsd = scoutAttemptWorstCaseUsd(escalationTarget.model, bound);
         const remainingWallMs = bound.maxWallMs - (Date.now() - startedMs);
         let admission: ScoutEscalationAdmission;
@@ -1711,7 +1737,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             admission = await deps.reserveEscalation({
               attemptId,
               obligationId: row.obligation.id,
-              from: { modelClass: base.modelClass, model },
+              from: { modelClass: previousAttempt.modelClass, model: previousAttempt.model },
               to: { modelClass: escalationTarget.modelClass, model: escalationTarget.model },
               reason: observed.reason,
               evidence: observed.evidence,
@@ -1725,7 +1751,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
 
         if (admission.admit) {
           const reason = observed.reason;
-          escalatedFrom = base.modelClass;
+          escalatedFrom = previousAttempt.modelClass;
           /*
            * A fresh turn and token bound for the second attempt; the wall,
            * tool-call and host bounds stay shared. The early-absence memory is
@@ -1781,7 +1807,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               {
                 type: "text",
                 text:
-                  `ESCALATED: this investigation moves from ${model} to ${escalationTarget.model} because ${reason}: ${observed.evidence}. ` +
+                  `ESCALATED: this investigation moves from ${previousAttempt.model} to ${escalationTarget.model} because ${reason}: ${observed.evidence}. ` +
                   "Everything above carries forward — the rungs walked, the vaulted artifacts and their representations; do not re-walk or re-read them (a re-read is refused). " +
                   `The Attempt's public-host bounds are shared: ${toolsLeft} research tool call(s) remain. Continue from what is established and call finish with the typed result.`,
               },
@@ -1790,7 +1816,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           const second: ModelAttemptRun = {
             model: escalationTarget.model,
             modelClass: escalationTarget.modelClass,
-            consult: () => assertStepMayEscalate(SCOUT_LOOP_STEP, reason),
+            consult: () => assertStepMayEscalate(SCOUT_LOOP_STEP, reason, previousAttempt.modelClass),
+            escalation: { from: previousAttempt.model, at: clock(), reason, evidence: observed.evidence },
             onPriced: admission.draw,
           };
           const secondFirstTurn = turns + 1;
@@ -1800,8 +1827,10 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             admission.release();
           }
           closeAttempt(second, secondFirstTurn);
+          previousAttempt = second;
         } else {
           escalationRefused = { code: admission.code, detail: admission.why, wouldEscalateTo: escalationTarget.modelClass };
+          break;
         }
       }
       const last = modelAttempts.at(-1) ?? { modelClass: base.modelClass, model };
@@ -1999,7 +2028,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         refusal,
         startedAt,
         recordedAt: clock(),
-        effort,
+        effort: last.modelClass === "haiku" ? null : effort,
         steps,
         cacheDefect,
         guardRefusals,

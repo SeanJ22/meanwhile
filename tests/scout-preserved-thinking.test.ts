@@ -157,6 +157,7 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
   const b: ScoutBound = { ...RESEARCH_BOUNDS.perDispatch, ...bound };
   const toolkit = bigPageToolkit();
   const exec = scoutExecutor({
+    model: SONNET, // This suite specifically verifies Sonnet → Opus preserved thinking.
     transport,
     bound: b,
     toolkitFor: () => toolkit,

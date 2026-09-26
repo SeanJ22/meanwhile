@@ -283,6 +283,28 @@ test("A CHALLENGE AT 200 IS A WALL: the walk records the access control on the s
   assert.match(doors[0].summary, /a bot challenge/);
 });
 
+test("A TOKEN REDIRECT AT 200 IS A WALL: Sierra Vista Unified's homepage (2026-09-26) is recorded BLOCKED by an access control, never 'read and shows no route'", async () => {
+  /* The real page's shape (490 bytes, "Loading...", a script sending the browser back with a signed token), made-up token. */
+  const redirect =
+    "<html><head><title>Loading...</title></head><body><script type='text/javascript'>" +
+    "window.location.replace('https://district.example/?ch=1&js=fixture-header.fixture-claims.fixture-signature&sid=fixture-session');" +
+    "</script></body></html>";
+  const { open, seen } = fakeOpen({
+    "https://district.example/robots.txt": DENY,
+    "https://district.example/": { status: 200, body: redirect },
+    "https://www.district.example/robots.txt": DENY,
+    "https://www.district.example/": { status: 200, body: redirect },
+  });
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:school:token-district", "district.example"), runtime(open));
+  assert.equal(attempt.outcome, "BLOCKED", attempt.note);
+  const home = attempt.steps.filter((s) => s.purpose === "homepage");
+  assert.ok(home.length > 0 && home.every((s) => /JavaScript token redirect/.test(s.accessControl ?? "")), JSON.stringify(home));
+  assert.equal(seen.some((u) => u.includes("js=")), false, "the tokened URL is never requested: that would be passing the challenge");
+  const doors = discoveryFieldManualEntries(attempt).filter((e) => e.kind === "DEAD_DOOR");
+  assert.equal(doors.length, 1);
+  assert.match(doors[0].summary, /a bot challenge/);
+});
+
 test("WALL: a recorded wall is never requested, not even its robots.txt", async () => {
   assert.ok(RECORDED_WALLS.some((w) => w.host === "go.boarddocs.com"));
   const { open, seen } = fakeOpen({ "https://boarddocs.com/robots.txt": DENY });

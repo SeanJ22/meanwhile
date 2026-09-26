@@ -63,6 +63,9 @@ import { loadWatchedBodies, loadWatchedBody } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
 import { TRACKED_STATE_CODES, stateName, statesByStanding } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
+import { loadLivePipeline } from "../data/live-pipeline.ts";
+import { buildDeliveryTrail } from "@/lib/control-plane/delivery-trail.ts";
+import { readActivationGate } from "@/lib/control-plane/promotion/activation-gate.ts";
 import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
@@ -140,7 +143,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const openedContract = openId === null ? null : routineContractIdOf(openId);
   const standingId = openId !== null && !openId.startsWith("scope:") && openedContract === null ? openId : null;
 
-  const [containers, snapshotOut, researchOut, heartbeatOut, bodiesRead, intentsOut, digestOut, standingRead, routineRead] = await Promise.all([
+  const [containers, snapshotOut, researchOut, heartbeatOut, bodiesRead, intentsOut, digestOut, standingRead, routineRead, livePipeline] = await Promise.all([
     listContainers(composerState.toUpperCase(), TYPES),
     readSnapshot(base.repos),
     readFleetSafety(base.repos),
@@ -152,6 +155,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     standingId === null ? Promise.resolve(null) : readAssignmentSourcesById(base.repos, standingId, { nowIso: base.nowIso, activation: null, pilotZips: PILOT_ZIPS }),
     // An opened routine read draws its body's delivery trail, which the list's body read leaves out: that one body is read whole, now.
     openedContract === null ? Promise.resolve(null) : loadWatchedBody(base.nowIso, openedContract),
+    loadLivePipeline(),
   ]);
 
   const geographies: Record<string, GeoOption[]> = {};
@@ -173,6 +177,12 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const published = snapshotOut.kind === "HELD" ? snapshotOut.value.assignments ?? null : null;
   const view: AssignmentView | null = published && published.kind === "BUILT" ? published.view : null;
   const rows: readonly AssignmentListRow[] = view?.rows ?? [];
+  const publishedTrail = snapshotOut.kind === "HELD" ? snapshotOut.value.deliveryTrail ?? null : null;
+  const deliveryTrail = livePipeline.ok && publishedTrail ? buildDeliveryTrail(livePipeline.states, {
+    activation: view?.activation ?? readActivationGate(""),
+    servedReader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null,
+    now: base.nowIso, costSummary: publishedTrail.costs, costPerVerifiedRecord: publishedTrail.costs.costPerVerifiedRecord,
+  }) : publishedTrail;
   // The opened routine read's body is drawn from its own fresh read, so its card and its detail say the same thing.
   const bodies: readonly BodyView[] =
     bodiesRead.kind === "HELD" ? bodiesRead.views.map((v) => (routineRead?.kind === "HELD" && v.id === routineRead.view.id ? routineRead.view : v)) : [];
@@ -211,7 +221,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       if (read.kind === "HELD") {
         // The drilldown was read beside the snapshot, so the activation reading it is projected with is joined here.
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
-        const sources = { ...read.value, activation: view?.activation ?? null };
+        const sources = { ...read.value, activation: view?.activation ?? null, servedReader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null };
         const row = buildAssignments(sources, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
           ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
@@ -414,8 +424,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       )}
       {props.area === "fleet" && (
         <DeliveryTrailCard
-          trail={snapshotOut.kind === "HELD" ? snapshotOut.value.deliveryTrail ?? null : null}
-          note={snapshotOut.kind === "HELD" ? null : snapshotOut.detail}
+          trail={deliveryTrail}
+          note={livePipeline.ok ? `Collection and validation read live at ${formatEastern(livePipeline.at)}. Public readbacks and cost summaries retain their recorded sync times.` : livePipeline.reason}
         />
       )}
       <AuditFooter numbers={numbers} claims={claims} readAt={formatEastern(base.nowIso, { year: true })} />
@@ -664,4 +674,3 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
     </div>
   );
 }
-

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { accessControlIn, TOKEN_REDIRECT_CHALLENGE } from "../lib/hunt/access-control.ts";
 import { challengeIn, politeGetText, SourceHttpError } from "../lib/sources/http.ts";
 
 /**
@@ -188,4 +189,37 @@ test("NHHUNT: the ambiguous marks keep their floor, so a real page stays a page"
     challengeIn(`<html><body>${beacon}</body></html>`),
     "Cloudflare interstitial",
   );
+});
+
+/*
+ * 2026-09-26: Sierra Vista Unified School District's homepage (ZIP 85635) answered the discovery walk with a
+ * 490-byte page titled "Loading..." whose only content is a script sending the browser back with a signed token
+ * and a session cookie. The walk read it as the homepage and recorded "shows no route". The fixture keeps the
+ * page's shape with made-up token segments.
+ */
+const TOKEN_REDIRECT =
+  "<html><head><title>Loading...</title></head><body><script type='text/javascript'>" +
+  "window.location.replace('https://district.example/?ch=1&js=fixture-header.fixture-claims.fixture-signature&sid=fixture-session');" +
+  "</script></body></html>";
+
+test("SVUSD: a script-only page that sends the browser back with a signed token is an access control", () => {
+  assert.ok(TOKEN_REDIRECT.length < 1_000);
+  for (const page of [TOKEN_REDIRECT, TOKEN_REDIRECT.replace("location.replace(", "location.assign(")]) {
+    const wall = accessControlIn({ status: 200, text: page });
+    assert.equal(wall?.kind, "CHALLENGE");
+    assert.match(wall?.detail ?? "", /a bot challenge \(JavaScript token redirect\) answered in place of the page with HTTP 200/);
+  }
+  /* The shared signatures, which the source adapters read, are unchanged until the next reader re-proof moves it there. */
+  assert.equal(challengeIn(TOKEN_REDIRECT), null);
+});
+
+test("SVUSD: a page that redirects without a signed token, or a real page carrying one, stays a page", () => {
+  /* An ordinary script redirect to the district's new site: no token, nothing to pass. */
+  assert.equal(accessControlIn({ status: 200, text: "<html><script>window.location.replace('https://newsite.example/board');</script></html>" }), null);
+  /* A query value that is not a three-part token. */
+  assert.equal(accessControlIn({ status: 200, text: "<html><script>window.location.replace('/calendar?js=1&view=month');</script></html>" }), null);
+  /* A real page is larger than the floor: a token redirect quoted inside one is not the page being a wall. */
+  const realPage = `<html><body><h1>Governing Board</h1>${"<p>agenda item</p>".repeat(400)}<script>${TOKEN_REDIRECT}</script></body></html>`;
+  assert.ok(realPage.length > TOKEN_REDIRECT_CHALLENGE.maxBytes);
+  assert.equal(accessControlIn({ status: 200, text: realPage }), null);
 });

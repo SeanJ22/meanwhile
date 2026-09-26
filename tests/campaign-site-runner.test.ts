@@ -27,6 +27,7 @@ import {
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaFromManifest,
   runCampaignSiteCycle,
+  withinWallTime,
   type CampaignSiteCycleInput,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
@@ -449,6 +450,64 @@ test("the audit's second read comes before new leads: an item one read from appr
   assert.ok(report.chain.approved.some((a) => a.campaignSite.candidacyId === TANG_WILLIAMS));
 });
 
+/*
+ * 2026-09-25: the pass overran its 60 s budget (93–160 s) and once hung past
+ * 4.5 minutes, so the research cycle was killed at its 900 s limit with no
+ * record. On the REAL clock, with a fetch that never answers and a store call
+ * that never returns, the pass ends at its budget plus the stop grace, and
+ * every unread lead stays owed (NOT_READ), never refused.
+ */
+const HANG = <T>(): Promise<T> => new Promise<T>(() => undefined);
+const realSleep = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
+
+test("a fetch that never answers cannot hold the pass: it ends at its wall-time budget and every unread lead stays owed, never refused", async (t) => {
+  const p = await plane(t);
+  const started = Date.now();
+  const { report } = await cycle(p, T1, { budgetMs: 400, stopGraceMs: 300, clock: () => Date.now(), sleep: realSleep, open: () => HANG() });
+  const elapsed = Date.now() - started;
+  assert.ok(elapsed < 400 + 300 + 1_500, `the pass returned in ${elapsed} ms, not held by the stalled fetch`);
+  assert.ok(report.budgetSpent, "the time budget is what ended the pass");
+  assert.equal(report.chain.readsUsed, 0, "no read completed");
+  assert.ok((report.byCode.NOT_READ ?? 0) > 0, "the leads the stalled fetch never read stay owed");
+  /* Only a lead the verifier refuses before any request (a file, a news host) may be refused; nothing a request would have decided. */
+  const notRead = report.chain.leads.filter((l) => l.refusals[0]?.code === "NOT_READ");
+  for (const lead of notRead) assert.equal(lead.outcome, "DEFERRED", `${lead.lead.url} is deferred, never refused`);
+  for (const code of Object.keys(report.byCode)) assert.doesNotMatch(code, /TRANSPORT|ROBOTS|HTTP|TIMEOUT|STATUS/, "a stalled read is never filed as a refusal a request decided");
+});
+
+test("the budget runs from the pass's start, loading included, and a store call that never returns is abandoned at the hard stop", async (t) => {
+  const p = await plane(t);
+  /* Loading already spent the whole budget: nothing is read, and the pass still returns. */
+  const loaded = await cycle(p, T1, { budgetMs: 400, stopGraceMs: 300, startedAtMs: Date.now() - 400, clock: () => Date.now(), sleep: realSleep });
+  assert.equal(loaded.report.chain.readsUsed, 0, "no read starts once the budget measured from the pass's start is spent");
+  assert.equal(p.requests.length, 0);
+
+  /* The projection's own store read hangs: the pass is abandoned at budget + grace, with a report that says so. */
+  const hung = new Proxy(p.repos.artifacts, {
+    get(target, key) {
+      if (key === "readAll") return () => HANG();
+      const value = (target as unknown as Record<string | symbol, unknown>)[key];
+      return typeof value === "function" ? (value as (...a: unknown[]) => unknown).bind(target) : value;
+    },
+  });
+  const started = Date.now();
+  const { report } = await cycle({ ...p, repos: { ...p.repos, artifacts: hung } }, T1, { budgetMs: 400, stopGraceMs: 300, clock: () => Date.now(), sleep: realSleep });
+  const elapsed = Date.now() - started;
+  assert.ok(elapsed >= 400 && elapsed < 400 + 300 + 1_500, `abandoned at the hard stop after ${elapsed} ms`);
+  assert.equal(report.stoppedAtDeadline, true);
+  assert.equal(report.chain.offers.length, 0, "an abandoned pass vouches for no offer");
+  assert.match(campaignSiteCycleLine(report), /STOPPED at its hard deadline/);
+});
+
+test("withinWallTime ends a promise that never settles and clears its timer when one does", async () => {
+  const started = Date.now();
+  assert.deepEqual(await withinWallTime(HANG<number>(), 50), { done: false });
+  assert.ok(Date.now() - started < 1_000);
+  assert.deepEqual(await withinWallTime(Promise.resolve(7), 60_000), { done: true, value: 7 });
+  assert.deepEqual(await withinWallTime(Promise.resolve(7), 0), { done: false }, "no time left: nothing is awaited");
+  await assert.rejects(withinWallTime(Promise.reject(new Error("store down")), 1_000), /store down/);
+});
+
 test("who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys", () => {
   const az = JSON.parse(readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8")) as unknown;
   const link = { url: "https://www.krismayes.com", verification: "Fetched 2026-08-13: 'Kris Mayes for Arizona Attorney General'.", attemptedAt: "2026-08-13" };
@@ -487,7 +546,9 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   const block = runner.slice(start, end);
   assert.doesNotMatch(block, /modelLaneEnabled|laneClosure|guardedModelTransport|scoutFor|workerKey/);
   assert.match(block, /intents\.runnerPause\.paused/);
-  assert.match(block, /CAMPAIGN_SITE_BUDGET_MS > DISPATCH_DEADLINE_MS/);
+  /* The pass starts only with its whole budget and the cycle's backstop left, and the backstop bounds it in wall time (2026-09-25). */
+  assert.match(block, /CAMPAIGN_SITE_BUDGET_MS \+ 2 \* CAMPAIGN_SITE_STOP_GRACE_MS > DISPATCH_DEADLINE_MS/);
+  assert.match(block, /withinWallTime\(\(async \(\) => \{[\s\S]*startedAtMs: campaignStartedMs[\s\S]*\}\)\(\), campaignHardStopMs - \(Date\.now\(\) - campaignStartedMs\)\)/);
   assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", fetch, \{ followRedirects: false \}\)/);
   assert.match(block, /spaceOut: spacer/);
   assert.match(runner, /campaignSiteCycleLine\(campaignSites\)/, "the pass reaches the cycle's digest");

@@ -100,6 +100,20 @@ const FINANCE_PHRASES: readonly RegExp[] = [
   /\bwho (?:has |have )?donated\b/,
   /\bhow much (?:money )?(?:has|have|did|was|were) (?:\w+ ){0,8}(?:raised|spent)\b/,
   /\braised? money\b/,
+  /*
+   * **A COMPARISON IS A MONEY QUESTION TOO.** (2026-09-25, the Ask model
+   * comparison.) *"Has Cinde Warmington raised more money than Kelly Ayotte?"*
+   * matched none of these ("raised MORE money"), so no money record was
+   * retrieved and every writer said we hold no fundraising for either of them
+   * — over a New Hampshire file that holds both committees. The verb and a
+   * comparing word, in the same breath: "raised more", "spent the most",
+   * "outraised".
+   */
+  /\b(?:raised?|raising|spent|spend|spending) (?:more|less|the most|the least|as much)\b/,
+  /\bout ?(?:raised|raising|spent|spending)\b/,
+  /\bcash on hand\b/,
+  /\bfundrais(?:ing|ed|er|ers)\b/,
+  /\bwho (?:gave|gives|has given) (?:money )?to\b/,
   /\bwar chest\b/,
   /\bindependent expenditures?\b/,
   /\boutside spending\b/,

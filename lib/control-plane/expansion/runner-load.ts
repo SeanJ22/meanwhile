@@ -32,6 +32,7 @@ import { loadPublishedLookupState, type PublishedLookupSource } from "../../cens
 import { requiredOperationalReferenceBundle } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { APPROXIMATE_DISTRICT_EXTRACT_PATH, type ApproximateDistrictExtract } from "./district-territory.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   buildTerritoryIndex,
@@ -44,6 +45,7 @@ import {
 } from "./membership.ts";
 import type { ExpansionCycleReading } from "./reading.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
+import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
 
 /** Where the committed Census unit territories live, relative to the repository root. */
 export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
@@ -102,7 +104,20 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
   return buildTerritoryIndex(registries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
     return own === undefined ? undefined : { zctas: new Set(own.keys()), shares: own };
-  });
+  }, readApproximateDistrictExtract(root));
+}
+
+/**
+ * The approximate special-district boundary extract (`district-territory.ts`): read here, for Send placement only,
+ * and nowhere on a reader path (tests/district-territory.test.ts holds that). A missing or malformed file is named.
+ */
+export function readApproximateDistrictExtract(root: string): ApproximateDistrictExtract {
+  const path = join(root, ...APPROXIMATE_DISTRICT_EXTRACT_PATH);
+  const parsed = JSON.parse(readFileSync(path, "utf8")) as ApproximateDistrictExtract;
+  if (parsed.kind !== "az-fire-district-territory" || parsed.formatVersion !== 1 || !Array.isArray(parsed.districts) || !/APPROXIMATE/.test(parsed.provenance?.approximate ?? "")) {
+    throw new Error(`${APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/")} is not an approximate district extract this build reads`);
+  }
+  return parsed;
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
@@ -155,6 +170,20 @@ export async function resolveScopes(
   for (const decision of decisions) {
     const g = decision.geography;
     try {
+      if (g.type === "zcta") {
+        const [result, manifest] = await Promise.all([state.lookup.groupingsForZcta(g.geoid), state.lookup.manifest()]);
+        const vintages = new Set(manifest.versions.map(v => `zcta:${v.zctaTabulation}`));
+        if (result.status.kind !== "OK" || !vintages.has(g.version)) {
+          scopes.push({ kind: "UNRESOLVED", decision, why: result.status.kind !== "OK" ? result.status.note : "The selected Census ZCTA vintage is not published.", states: [g.stateAbbr] });
+        } else {
+          // A metro can span states this ZIP does not touch. Counties partition
+          // the ZIP itself; the metro's other member states are not its scope.
+          const states = [...new Set(result.memberships.filter(m => m.geography.type === "county").map(m => m.geography.stateAbbr.toUpperCase()))];
+          if (states.length === 0) throw new Error("The published ZIP has no county membership to establish its states.");
+          scopes.push({ kind: "RESOLVED", decision, zctas: new Set([g.geoid]), whole: new Set([g.geoid]), fractions: new Map(), states });
+        }
+        continue;
+      }
       const result = await state.lookup.zctasForGrouping({ type: g.type as GeographyType, geoid: g.geoid, version: g.version });
       if (result.status.kind !== "OK") {
         scopes.push({
@@ -217,7 +246,7 @@ export async function loadExpansionPlan(input: {
   readonly repos: ControlPlaneRepositories;
   readonly root: string;
   readonly now: string;
-  readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
+  readonly obligations: readonly ScopedStandingWork[];
   /** Injected in tests; the runner uses the published lookup. */
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
@@ -298,8 +327,14 @@ export async function loadExpansionPlan(input: {
     }
   }
 
+  let declaredMembers: ReadonlyMap<string, ReadonlySet<string>> = new Map();
+  if (state?.source === "published") {
+    try { declaredMembers = await declaredWorkMembers(resolved.scopes, input.obligations, state.lookup, territory?.byDivision); }
+    catch (error) { malformed += 1; conditions.push(`Shared-work scope attribution failed; paid work is held: ${error instanceof Error ? error.message : String(error)}`); }
+  }
   return {
     plan: planExpansion({
+      declaredMembers,
       now: input.now,
       scopes: resolved.scopes,
       malformedScopes: malformed,

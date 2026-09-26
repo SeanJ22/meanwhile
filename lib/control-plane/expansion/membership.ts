@@ -68,8 +68,10 @@ import {
   type ExpansionScopeReading,
   type ScopeCoverageReading,
 } from "./reading.ts";
+import { DISTRICT_TERRITORIES, ruledDistrictTerritory, type ApproximateDistrictExtract } from "./district-territory.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
+import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
 import { stateOfSubject } from "./subjects.ts";
 
 /* ------------------------------------------------------------ territory */
@@ -152,7 +154,9 @@ export interface TerritoryIndex {
   readonly bySubject: ReadonlyMap<string, Territory>;
   /** Registered governments the join could not place, and why. */
   readonly unplaced: ReadonlyMap<string, string>;
-  /** Statewide subjects (the STATE rows): in no sub-state scope. */
+  /** Held OCD identity bridges for shared candidate/source work. */
+  readonly byDivision?: ReadonlyMap<string, DivisionTerritory>;
+  /** Statewide subjects (the STATE rows), reused by applicable sub-state scopes. */
   readonly statewide: ReadonlySet<string>;
   /** Census units in states NO registry covers, for the "not registered" count. Keyed by state (upper). */
   readonly unregisteredUnitsByState: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
@@ -189,8 +193,11 @@ export function buildTerritoryIndex(
   units: readonly CensusUnitTerritory[],
   sharesFor: (key: string) => ReadonlyMap<string, number> | undefined = () => undefined,
   divisionTerritory: (j: Jurisdiction) => DivisionTerritory | undefined = () => undefined,
+  /* An approximate boundary extract, for Send placement only (`district-territory.ts`); absent, none is read. */
+  approximate: ApproximateDistrictExtract | null = null,
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
+  const unitsByPid = new Map(units.map((u) => [`${u.state.toUpperCase()}:${u.pid6}`, u] as const));
   const unitsByKey = new Map<string, CensusUnitTerritory[]>();
   const unregisteredUnitsByState = new Map<string, CensusUnitTerritory[]>();
   for (const unit of units) {
@@ -256,7 +263,13 @@ export function buildTerritoryIndex(
       if (unit === null) continue;
       claimed.add(unit);
       if (unit.zips.length === 0) {
-        unplaced.set(j.id, "its Census unit carries no ZCTA territory");
+        /* A district TIGER draws no boundary for may still have one its own law gives (`district-territory.ts`). */
+        const ruled = ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey, DISTRICT_TERRITORIES, approximate);
+        if (ruled !== null && !("unplaced" in ruled)) {
+          bySubject.set(j.id, { subjectId: j.id, name: j.name, govClass: j.govClass, stateCode: j.stateCode.toUpperCase(), zctas: ruled.zctas, shares: ruled.shares });
+          continue;
+        }
+        unplaced.set(j.id, ruled === null ? "its Census unit carries no ZCTA territory" : `its Census unit carries no ZCTA territory, and ${ruled.unplaced}`);
         continue;
       }
       const key = unitShareKey(unit);
@@ -282,7 +295,19 @@ export function buildTerritoryIndex(
     const key = unitShareKey(unit);
     return key === null ? undefined : sharesFor(key);
   };
-  return { bySubject, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
+  const byDivision = new Map<string, DivisionTerritory>();
+  for (const registry of registries) for (const j of registry.jurisdictions) {
+    const territory = bySubject.get(j.id);
+    if (!j.ocdId || !territory) continue;
+    const prior = byDivision.get(j.ocdId);
+    if (!prior) byDivision.set(j.ocdId, territory);
+    else {
+      const shares = new Map(prior.shares);
+      for (const [zcta, share] of territory.shares) shares.set(zcta, Math.max(shares.get(zcta) ?? 0, share));
+      byDivision.set(j.ocdId, { zctas: new Set([...prior.zctas, ...territory.zctas]), shares });
+    }
+  }
+  return { bySubject, byDivision, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
 }
 
 /**
@@ -394,6 +419,8 @@ export function scopeModelSpend(
 export const SCOPE_BUDGET_CODE = "SCOPE_BUDGET";
 
 export interface BudgetScope {
+  readonly lifetime?: boolean;
+  readonly budgetStartedAt?: string;
   readonly key: string;
   readonly label: string;
   readonly budgetUsd: number;
@@ -420,6 +447,13 @@ export type BudgetAdmission =
  * settled keeps its reservation for the rest of the cycle — conservative,
  * because a budget may only restrict.
  */
+/** A state hint as a state: a bare postal code (`AZ`) or any id `stateOfSubject` reads; null when it says none. */
+function stateOfHint(hint: string | null | undefined): string | null {
+  if (typeof hint !== "string" || hint.trim() === "") return null;
+  const h = hint.trim();
+  return /^[a-z]{2}$/i.test(h) ? stateOfSubject(`${h}:state`) : stateOfSubject(h);
+}
+
 export class ScopeBudgetGate {
   private readonly scopes: readonly BudgetScope[];
   private readonly worstCaseUsd: number;
@@ -431,23 +465,63 @@ export class ScopeBudgetGate {
   private readonly refusedBy = new Map<string, number>();
   private readonly admittedBy = new Map<string, number>();
 
+  private readonly historyReadAt: string;
+
   constructor(input: {
     readonly scopes: readonly BudgetScope[];
     readonly worstCaseUsd: number;
     /** Entries on the policy row that are not readable scopes: while > 0, every paid Scout is held. */
     readonly malformedScopes?: number;
+    /** When the scopes' historical spend was read (the cycle's instant). */
+    readonly historyReadAt?: string;
   }) {
     this.scopes = input.scopes;
     this.worstCaseUsd = input.worstCaseUsd;
     this.heldForMalformed = input.malformedScopes ?? 0;
+    this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
   /** The scopes a subject is bound by. */
-  bindingScopes(subjectId: string): BudgetScope[] {
-    const state = stateOfSubject(subjectId);
+  /**
+   * The scopes a subject is bound by. `stateHint` (2026-09-25, for autonomous
+   * work that carries its state beside its subject) is read only when the
+   * subject's own id does not say its state; absent, the rule is unchanged.
+   */
+  bindingScopes(subjectId: string, stateHint?: string | null): BudgetScope[] {
+    const state = stateOfSubject(subjectId) ?? stateOfHint(stateHint);
     return this.scopes.filter((s) =>
       s.resolved ? s.members.has(subjectId) : state === null || s.states.includes(state),
     );
+  }
+
+  /**
+   * The area budget lines a paid job on this subject is held against, for the
+   * durable holds (`spend-holds.ts`): EVERY binding scope must have room — or
+   * the refusal when a scope's budget cannot be checked at all. No lines: no
+   * area budget applies. The binding scopes are `bindingScopes`' — the one
+   * matching rule, for Scouts and autonomous work alike.
+   */
+  linesFor(subjectId: string, stateHint?: string | null): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
+    if (this.heldForMalformed > 0) {
+      return {
+        refusal: {
+          admit: false,
+          code: SCOPE_BUDGET_CODE,
+          why: `${this.heldForMalformed} selected scope(s) on the owner's policy row could not be read, so no scope budget can be checked; paid work is held until the scope list is readable`,
+        },
+      };
+    }
+    const lines: BudgetLine[] = [];
+    for (const scope of this.bindingScopes(subjectId, stateHint)) {
+      if (!scope.resolved) {
+        return { refusal: this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`) as Extract<BudgetAdmission, { admit: false }> };
+      }
+      if (scope.historicalUsd === null || this.cycleUnmeasured.has(scope.key)) {
+        return { refusal: this.refuse(scope, `model spend in ${scope.label} is unmeasured, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked`) as Extract<BudgetAdmission, { admit: false }> };
+      }
+      lines.push({ key: areaBudgetKey(scope.budgetStartedAt ? `${scope.key}@${scope.budgetStartedAt}` : scope.key), label: scope.label, budgetUsd: scope.budgetUsd, historicalUsd: scope.historicalUsd, historyReadAt: this.historyReadAt, lifetime: scope.lifetime });
+    }
+    return { lines };
   }
 
   admit(obligationId: string, subjectId: string): BudgetAdmission {
@@ -513,6 +587,7 @@ export class ScopeBudgetGate {
 /* ------------------------------------------------------------ the plan */
 
 export interface ExpansionPlanInput {
+  readonly declaredMembers?: ReadonlyMap<string, ReadonlySet<string>>;
   readonly now: string;
   readonly scopes: readonly ResolvedScope[];
   readonly malformedScopes: number;
@@ -611,7 +686,10 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
           : `the territory index could not be built (${input.territoryDetail ?? "no detail"}), so nothing can be placed in it`;
       return { kind: "UNRESOLVED" as const, decision: scope.decision, why, states: scope.states, members: new Set<string>() };
     }
-    return { ...scope, members: scopeMembers(scope, subjectsWithWork, input.territory) };
+    const members = scopeMembers(scope, subjectsWithWork, input.territory);
+    for (const subject of input.declaredMembers?.get(scope.decision.key) ?? []) members.add(subject);
+    for (const subject of input.territory.statewide) if (scope.states.includes(stateOfSubject(subject) ?? "")) members.add(subject);
+    return { ...scope, members };
   });
   const placementOf = placementIndex(scopes.map((s) => ({ members: s.members })));
   const placedSubjects = new Set<string>();
@@ -659,7 +737,8 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
   });
 
   const territory = input.territory;
-  const placed = territory === null ? 0 : [...subjectsWithWork].filter((s) => territory.bySubject.has(s)).length;
+  const declaredPlaced = new Set([...(input.declaredMembers?.values() ?? [])].flatMap(members => [...members]));
+  const placed = territory === null ? 0 : [...subjectsWithWork].filter((s) => !territory.statewide.has(s) && (territory.bySubject.has(s) || declaredPlaced.has(s))).length;
   const statewideSubjects = territory === null ? 0 : [...subjectsWithWork].filter((s) => territory.statewide.has(s)).length;
   const reading: ExpansionCycleReading = {
     formatVersion: 1,
@@ -704,6 +783,8 @@ export function armExpansionBudget(
       return reading;
     }
     const spend24 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since24, input.now);
+    const budgetSpend = d.budgetStartedAt && input.costs !== null ? scopeModelSpend(input.costs, scope.members, d.budgetStartedAt, input.now) : spend24;
+    const period = d.budgetStartedAt ? "for this hunt (Anthropic tokens)" : "in the rolling 24 hours";
     const spend7 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since7, input.now);
     budgetScopes.push({
       key: d.key,
@@ -712,7 +793,9 @@ export function armExpansionBudget(
       resolved: true,
       members: scope.members,
       states: scope.states,
-      historicalUsd: spend24 === null ? null : spend24.usd,
+      historicalUsd: budgetSpend === null ? null : budgetSpend.usd,
+      lifetime: Boolean(d.budgetStartedAt),
+      budgetStartedAt: d.budgetStartedAt,
     });
     return {
       ...reading,
@@ -728,16 +811,16 @@ export function armExpansionBudget(
               unmeasuredRows7d: spend7.unmeasured,
             },
       budgetSays:
-        spend24 === null
+        budgetSpend === null
           ? `The cost ledger could not be read, so the $${d.budgetUsd.toFixed(2)} budget cannot be checked: paid work in this scope is held.`
-          : spend24.usd === null
-            ? `${spend24.unmeasured} model row(s) in this scope reported no dollar figure, so the $${d.budgetUsd.toFixed(2)} budget cannot be checked: paid work here is held.`
-            : spend24.usd + input.worstCaseUsd > d.budgetUsd
-              ? `$${spend24.usd.toFixed(2)} spent in the rolling 24 hours of a $${d.budgetUsd.toFixed(2)} budget: one more Scout would exceed it, so paid work here is held.`
-              : `$${spend24.usd.toFixed(2)} spent in the rolling 24 hours of a $${d.budgetUsd.toFixed(2)} budget: room for paid work here, when the paid lane is open.`,
+          : budgetSpend.usd === null
+            ? `${budgetSpend.unmeasured} model row(s) in this scope reported no dollar figure, so the $${d.budgetUsd.toFixed(2)} budget cannot be checked: paid work here is held.`
+            : budgetSpend.usd + input.worstCaseUsd > d.budgetUsd
+              ? `$${budgetSpend.usd.toFixed(2)} spent ${period} of a $${d.budgetUsd.toFixed(2)} budget: one more Scout would exceed it, so paid work here is held.`
+              : `$${budgetSpend.usd.toFixed(2)} spent ${period} of a $${d.budgetUsd.toFixed(2)} budget: room for paid work here, when the paid lane is open.`,
     };
   });
-  const gate = new ScopeBudgetGate({ scopes: budgetScopes, worstCaseUsd: input.worstCaseUsd, malformedScopes: plan.malformedScopes });
+  const gate = new ScopeBudgetGate({ scopes: budgetScopes, worstCaseUsd: input.worstCaseUsd, malformedScopes: plan.malformedScopes, historyReadAt: input.now });
   return { gate, reading: { ...plan.reading, scopes: readings } };
 }
 

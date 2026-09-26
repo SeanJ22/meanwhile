@@ -91,7 +91,14 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   }));
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
-  assert.equal(body.answer, null, "no general-model knowledge can supply the factual answer");
+  /* No general-model knowledge can supply the factual answer. Since 2026-09-25 a
+     named person's campaign-money question is answered in code from the held
+     filings (lib/ask/money-answer.ts), exactly as a sitting is: that prose is
+     the records' own figures, composed with no model, and nothing else may write. */
+  if (body.answer !== null) {
+    assert.equal(body.mode, "GROUNDED_COMPOSED", "no general-model knowledge can supply the factual answer");
+    assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
+  }
   if (body.records) assert.equal(body.trace.retrieval.recordCount, body.records.length);
   return body;
 }
@@ -114,6 +121,9 @@ for (const row of [
     assert.equal(record.retrievedAt, selected.checkedAt);
     assert.equal(body.denominators.stateFinanceRecordsReturned, body.records.filter((r) => r.finance).length);
     assert.ok(body.records.filter((record) => record.finance).every((record) => record.finance!.filingState === "FILED"), "a held filing cannot be contradicted by the fallback agency-absence row");
+    // The composed answer states exactly the selector's figures.
+    const dollars = (amount: number) => `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    assert.ok((body.answer ?? "").includes(`raising ${dollars(row.receipts)} and spending ${dollars(row.expenditures)}`), body.answer ?? "no answer");
     if (row.state !== "AZ") {
       assert.doesNotMatch(body.gaps.map((gap) => gap.statement).join(" "), /Pima County|Arizona legislature|bills she signed|her letters|executive orders/i,
         "an unrelated state's action and county-finance diagnostics cannot contaminate the answer");

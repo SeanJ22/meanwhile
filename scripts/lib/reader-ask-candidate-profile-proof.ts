@@ -8,6 +8,7 @@ import { lineupForContest } from "../../lib/ballot/general-lineup.ts";
 import { ballotAskInventory } from "../../lib/ask/ballot-inventory.ts";
 import { candidateProfileEvidenceFor } from "../../lib/ask/candidate-profile.ts";
 import { reconciledCandidacyIdForCard } from "../../lib/identity/az-2026.ts";
+import { azHeldFilingSubjects } from "../../lib/ask/held-filing-subjects.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 
 export async function candidateProfileAskProof() {
@@ -30,6 +31,9 @@ export async function candidateProfileAskProof() {
     }
   }
   const cards = allCandidateCards().cards;
+  for (const row of azHeldFilingSubjects()) {
+    identities.set(row.entity.id, { id: row.entity.id, name: row.entity.name, ocdId: row.ocdId });
+  }
   const links = allCandidateLinks().links;
   const keys = [...new Set([...Object.keys(cards), ...Object.keys(links)])].sort();
   const proofs = [];

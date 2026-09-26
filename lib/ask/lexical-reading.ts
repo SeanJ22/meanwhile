@@ -10,6 +10,7 @@ import {
 import { decideNamedBody } from "./body-confirmation.ts";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
+import { groupMoneyQuestionShape, moneyQuestionShape, raceWordsFitOffice, type GroupMoneyAsk, type MoneyAsk } from "./money-answer.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import { resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
@@ -59,8 +60,14 @@ import type { AskSubjectRef } from "./subject.ts";
 
 /** The shapes about one body's sittings — the ones `lib/ask/sitting-answer.ts` can compose. */
 export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
-/** The closed set of question shapes this module reads. */
-export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD";
+/**
+ * The closed set of question shapes this module reads. `MONEY` (2026-09-25)
+ * is a named person's campaign money — how much, who gave, or a comparison of
+ * two named people — read by `moneyQuestionShape` in `lib/ask/money-answer.ts`,
+ * the module that composes its answer. `CONTACT` is how to reach a named
+ * person or body.
+ */
+export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY";
 
 export type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
@@ -91,6 +98,14 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s|was) (?:the )?(.+?)(?: s)? (?:next|upcoming|last|latest|most recent|previous) (?:meeting|session)$/ },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^what (?:time|day|date) (?:does|do|will|is) (?:the )?(.+?) (?:(?:next )?meet|meeting)${WHEN_TAIL}$`) },
   { shape: "MEETING_TIME", kind: "BODY", pattern: /^what (?:is|s) the (?:date|time|date and time|day) of the (?:next|upcoming|last|latest|most recent) (.+?) (?:meeting|session)$/ },
+  /* "Is there a meeting soon?" (2026-09-25): the answer is the next sitting, stated with its date, so the reader judges "soon". */
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^is there (?:a|an) (?:upcoming |next )?(.+?) (?:meeting|session)(?: coming up)?(?: soon)?$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^is there (?:a|an) (?:upcoming |next )?(?:meeting|session) of (?:the )?(.+?)(?: coming up)?(?: soon)?$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^does (?:the )?(.+?) have (?:a|an) (?:upcoming |next )?(?:meeting|session)(?: coming up)?(?: soon)?$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^is (?:the )?(.+?) meeting (?:soon|any ?time soon)$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s) (?:the )?(.+?) (?:meeting|session)$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^(?:when|what) (?:is|s) the (?:next|upcoming) (?:meeting|session) of (?:the )?(.+?)$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: /^what (?:is|s) the (?:next|upcoming) (.+?) (?:meeting|session)$/ },
   /* BODY_AGENDA — what is on a named body's own docket. */
   { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on (?:the )?(.+?)(?: s)? (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:meeting )?(?:agenda|docket)$/ },
   { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on the (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:agenda|docket) (?:for|of|at) (?:the )?(.+?)(?: (?:next )?meeting)?$/ },
@@ -115,6 +130,16 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what has (.+?) done$/ },
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^how has (.+?) voted$/ },
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^tell me about (.+?)$/ },
+  /* More of what a reader asks about one named person (2026-09-25); each reads PERSON_RECORD, as the models read them. */
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:office|seat|position) is (.+?) running for$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what party is (.+?)(?: in| with| running as| registered with)?$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^is (.+?) (?:the |an )?incumbent$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:does|do) (.+?) stand for$/ },
+  { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:background|record|voting record|platform|biography|bio)$/ },
+  /* CONTACT — how to reach a named person or body; the models read CONTACT (2026-09-25, "How do I contact Katie Hobbs?"). */
+  { shape: "CONTACT", kind: "PERSON", pattern: /^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|write to|talk to|speak to|speak with) (.+?)$/ },
+  { shape: "CONTACT", kind: "BODY", pattern: /^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|write to|talk to|speak to|speak with) (?:the )?(.+?)$/ },
+  { shape: "CONTACT", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:contact information|contact info|phone number|email address)$/ },
 ];
 
 const SITTING_SHAPES: ReadonlySet<LexicalShape> = new Set<LexicalShape>(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
@@ -135,6 +160,13 @@ const SHAPE_INTENT: Readonly<Record<Exclude<LexicalShape, SittingShape>, AskInte
   MEASURE_EXPLAIN: "MEASURE",
   CONTEST_FIELD: "PERSON_RECORD",
   PERSON_RECORD: "PERSON_RECORD",
+  /* "How do I contact Katie Hobbs?": CONTACT on all four models, 2026-09-25. */
+  CONTACT: "CONTACT",
+  /* A named person's campaign-money question, 2026-09-25 comparison: PERSON_RECORD in 25 of the 29
+     distinct readings logged (UNKNOWN twice, MEASURE, CIVICS), and no tense in all 29. */
+  MONEY: "PERSON_RECORD",
+  /* A race's candidates' money (2026-09-25): the same reading as one person's; no sitting is selected for it. */
+  GROUP_MONEY: "PERSON_RECORD",
 };
 
 const SLOT_PRONOUNS: ReadonlySet<string> = new Set([
@@ -222,11 +254,12 @@ function slotIsOnlyTheName(slot: string, entity: BindableEntity): boolean {
  * and "Prop 141" are two subjects, and a model's first mention could bind
  * either, so such a question is left to the model.
  */
-function namesAnotherSubject(question: string, inventory: readonly BindableEntity[], id: string): boolean {
+function namesAnotherSubject(question: string, inventory: readonly BindableEntity[], id: string | ReadonlySet<string>): boolean {
+  const ids = typeof id === "string" ? new Set([id]) : id;
   const words = new Set(normalizeName(question).split(" ").filter(Boolean));
-  const own = new Set(inventory.filter((entity) => entity.id === id).flatMap((entity) => distinctiveTokens(entity.name)));
+  const own = new Set(inventory.filter((entity) => ids.has(entity.id)).flatMap((entity) => distinctiveTokens(entity.name)));
   return inventory.some((entity) => {
-    if (entity.id === id) return false;
+    if (ids.has(entity.id)) return false;
     const identifying = distinctiveTokens(entity.name);
     if (identifying.length === 0 || identifying.every((token) => COMMON_QUESTION_NOUNS.has(token))) return false;
     return identifying.every((token) => words.has(token)) && identifying.some((token) => !own.has(token));
@@ -256,6 +289,116 @@ export function shapeForBoundBody(
   return slotNames(found.slot, inventory, bodyId) ? found.shape as SittingShape : null;
 }
 
+/** A person the words bind to, through a name variant that is the words and nothing else. */
+function boundPersonFor(words: string | undefined, inventory: readonly BindableEntity[]): BindableEntity | null {
+  if (!words || words.split(" ").some((word) => SLOT_PRONOUNS.has(word))) return null;
+  const binding = bindNamedEntity(words, inventory);
+  if (binding.kind !== "BOUND" || kindOf(binding.entity) !== "PERSON") return null;
+  return slotNames(words, inventory, binding.entity.id) ? binding.entity : null;
+}
+
+/**
+ * **THE MONEY SHAPE OF A QUESTION ALREADY BOUND TO `personId`.** (2026-09-25.)
+ * The composer (`lib/ask/money-answer.ts`) asks this whichever rung read the
+ * question, exactly as the sitting composer asks `shapeForBoundBody`: the name
+ * slot must be that person's name and nothing else; a race the reader named
+ * must be that person's own office; and for a comparison the second slot must
+ * name one other held person. Null means the model writes the answer.
+ */
+export function moneyShapeForBoundPerson(
+  question: string,
+  inventory: readonly BindableEntity[],
+  personId: string,
+  officeOf: (id: string) => string | null | undefined = () => null,
+): { ask: MoneyAsk; otherId: string | null } | null {
+  const money = moneyQuestionShape(question);
+  if (!money || !slotNames(money.slot, inventory, personId)) return null;
+  if (money.raceWords && !raceWordsFitOffice(money.raceWords, officeOf(personId))) return null;
+  if (money.ask.kind !== "COMPARE") return { ask: money.ask, otherId: null };
+  const other = boundPersonFor(money.otherSlot, inventory);
+  return other && other.id !== personId ? { ask: money.ask, otherId: other.id } : null;
+}
+
+/**
+ * **THE RACE MONEY SHAPE OF A QUESTION ALREADY BOUND TO `subjectId`.**
+ * (2026-09-25.) "Who funded the Vail school board candidates?", "How much have
+ * the candidates for governor raised?": the race words must name that contest
+ * or body and nothing else, and nothing in the question names a person. The
+ * composer asks this whichever rung read the question. Null means the model
+ * writes the answer.
+ */
+export function groupMoneyShapeForBoundSubject(
+  question: string,
+  inventory: readonly BindableEntity[],
+  subjectId: string,
+): GroupMoneyAsk | null {
+  const group = groupMoneyQuestionShape(question);
+  if (!group || !slotNames(group.group, inventory, subjectId)) return null;
+  const bound = bindNamedEntity(group.group, inventory);
+  if (bound.kind !== "BOUND" || bound.entity.id !== subjectId) return null;
+  const kind = kindOf(bound.entity);
+  if (kind !== "CONTEST" && kind !== "BODY") return null;
+  return namesAnotherSubject(question, inventory, subjectId) ? null : group.ask;
+}
+
+/**
+ * **A RACE'S CANDIDATES' MONEY, READ IN CODE.** (2026-09-25.) Undefined when
+ * the question is not a race money shape; null when it is and cannot be
+ * settled here. The same conditions as every other shape: the race words bind
+ * one contest or body and are its name and nothing else; the route's own
+ * resolver binds the same subject on the whole question; nothing else is named;
+ * and for a body, the route's named-body decision binds the same body on the
+ * reader's words alone. No tense is read.
+ */
+function groupMoneyReading(input: LexicalReadingInput): LexicalReading | null | undefined {
+  const group = groupMoneyQuestionShape(input.question);
+  if (!group) return undefined;
+  if (outcomeQuestionClass(input.question)) return null;
+  const bound = bindNamedEntity(group.group, input.inventory);
+  if (bound.kind !== "BOUND") return null;
+  const kind = kindOf(bound.entity);
+  if (kind !== "CONTEST" && kind !== "BODY") return null;
+  if (!groupMoneyShapeForBoundSubject(input.question, input.inventory, bound.entity.id)) return null;
+  const temporal = { kind: "NONE" as const };
+  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
+    activeSubjects: input.activeSubjects ?? [],
+    priorSubjects: input.priorSubjects ?? [],
+  });
+  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION" || resolved.binding.entity.id !== bound.entity.id) return null;
+  if (kind === "BODY") {
+    const decision = decideNamedBody(input.question, input.namedBodies, input.confirmation, []);
+    if (decision.kind !== "BOUND" || decision.confirmed || decision.entity.id !== bound.entity.id) return null;
+  } else if (classPhraseIn(input.question)) {
+    return null;
+  }
+  return { shape: "GROUP_MONEY", interpretation: { ...unavailableInterpretation(), intent: SHAPE_INTENT.GROUP_MONEY, temporal }, subjectId: bound.entity.id };
+}
+
+/**
+ * The one OTHER held person a money question names beside its subject —
+ * "...raised more money than Kelly Ayotte" — or null. Every identifying word of
+ * that person's name is in the question and at least one is not the subject's
+ * own; more than one such person is null (never a guess). The route retrieves
+ * that person's money too, so no writer is handed a comparison with half of it.
+ */
+export function otherNamedPerson(question: string, inventory: readonly BindableEntity[], subjectId: string): BindableEntity | null {
+  const words = new Set(normalizeName(question).split(" ").filter(Boolean));
+  const own = new Set(inventory.filter((entity) => entity.id === subjectId).flatMap((entity) => distinctiveTokens(entity.name)));
+  /* The binder's own rule: more identifying words first. "Joseph M. MURPHY" in
+     full outranks another candidate's bare surname alias "Murphy". */
+  let best = 0;
+  const named = new Map<string, BindableEntity>();
+  for (const entity of inventory) {
+    if (entity.id === subjectId || kindOf(entity) !== "PERSON") continue;
+    const identifying = distinctiveTokens(entity.name);
+    if (identifying.length === 0 || identifying.every((token) => COMMON_QUESTION_NOUNS.has(token))) continue;
+    if (!identifying.every((token) => words.has(token)) || !identifying.some((token) => !own.has(token))) continue;
+    if (identifying.length > best) { best = identifying.length; named.clear(); }
+    if (identifying.length === best) named.set(entity.id, entity);
+  }
+  return named.size === 1 ? [...named.values()][0] : null;
+}
+
 export interface LexicalReadingInput {
   question: string;
   /** The same inventory the route hands the model and the resolver. */
@@ -266,6 +409,8 @@ export interface LexicalReadingInput {
   confirmation?: unknown;
   activeSubjects?: readonly AskSubjectRef[];
   priorSubjects?: readonly AskSubjectRef[];
+  /** The office a held person is on the ballot for, so a race the reader names can be checked against it. */
+  officeOf?: (id: string) => string | null | undefined;
 }
 
 export interface LexicalReading {
@@ -280,6 +425,10 @@ export interface LexicalReading {
  * code — or null, in which case the caller asks the model exactly as before.
  */
 export function lexicalReading(input: LexicalReadingInput): LexicalReading | null {
+  const money = moneyReading(input);
+  if (money !== undefined) return money;
+  const group = groupMoneyReading(input);
+  if (group !== undefined) return group;
   const matches = shapeMatches(input.question);
   if (matches.length === 0) return null;
 
@@ -330,4 +479,43 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   }
 
   return { shape: found.shape, interpretation: { ...unavailableInterpretation(), intent, temporal }, subjectId: entity.id };
+}
+
+/**
+ * **A NAMED PERSON'S CAMPAIGN MONEY, READ IN CODE.** (2026-09-25.) Undefined
+ * when the question is not a money shape; null when it is and cannot be
+ * settled here (the model reads it, as before). The same four conditions as
+ * every other shape: the slot is the person's name and nothing else; the
+ * route's own resolver binds that person on the reader's words; no other
+ * subject is named (a comparison names exactly the second person, in its
+ * second slot); and no tense is read — the anchored shapes admit no window
+ * words, and a money question selects no sitting.
+ *
+ * A comparison carries its first slot as the reader's own mention, so the
+ * resolver binds the first person rather than asking which of the two was
+ * meant — the model's reading of the same question names both and binds the
+ * first the same way.
+ */
+function moneyReading(input: LexicalReadingInput): LexicalReading | null | undefined {
+  const money = moneyQuestionShape(input.question);
+  if (!money) return undefined;
+  if (classPhraseIn(input.question) || outcomeQuestionClass(input.question)) return null;
+  const first = boundPersonFor(money.slot, input.inventory);
+  if (!first) return null;
+  if (money.raceWords && !raceWordsFitOffice(money.raceWords, input.officeOf?.(first.id))) return null;
+  const context = { activeSubjects: input.activeSubjects ?? [], priorSubjects: input.priorSubjects ?? [] };
+  const temporal = { kind: "NONE" as const };
+  if (money.ask.kind === "COMPARE") {
+    const second = boundPersonFor(money.otherSlot, input.inventory);
+    if (!second || second.id === first.id) return null;
+    if (namesAnotherSubject(input.question, input.inventory, new Set([first.id, second.id]))) return null;
+    const interpretation: AskInterpretation = { ...unavailableInterpretation(), intent: SHAPE_INTENT.MONEY, temporal, entityMentions: [money.slot] };
+    const resolved = resolveInterpretation(interpretation, input.question, input.inventory, context);
+    if (resolved.binding.kind !== "BOUND" || resolved.binding.entity.id !== first.id) return null;
+    return { shape: "MONEY", interpretation, subjectId: first.id };
+  }
+  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, context);
+  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION" || resolved.binding.entity.id !== first.id) return null;
+  if (namesAnotherSubject(input.question, input.inventory, first.id)) return null;
+  return { shape: "MONEY", interpretation: { ...unavailableInterpretation(), intent: SHAPE_INTENT.MONEY, temporal }, subjectId: first.id };
 }

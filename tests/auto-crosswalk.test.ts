@@ -31,7 +31,9 @@ import {
 import { deriveWiringDecisions, type DerivedWiringInputs } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { planDerivedVersion } from "../lib/civic-data/derived-authority.ts";
-import { bodySourceWiringFor } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { bodySourceWiringFor, derivedAdapterConfig, type DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
+import { meetingEndpointCandidates } from "../lib/hunt/meetings-site-discovery.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
@@ -105,6 +107,40 @@ const SITE = (feed = FEED, home = HOME): Record<string, RecordedReply> => ({
   [`https://${HOST}/robots.txt`]: ALLOW,
   [`https://${HOST}/`]: { status: 200, body: home },
   [ROUTE]: { status: 200, body: feed, contentType: "text/calendar" },
+});
+
+test("an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection", async () => {
+  const portal = "https://fixture.community.highbond.com/Portal/";
+  const portalHtml = '<h1>Fixture Accommodation Schools</h1><h2>Governing Board</h2><a href="/Portal/MeetingSchedule.aspx">Calendar</a>';
+  const route = meetingEndpointCandidates(portalHtml, portal, T_WALK).find(c => c.vendor === "diligent")!.url;
+  const rows = [
+    { Id: 217, Name: "Regular Board Meeting - Oct 14 2026", MeetingTypeName: "Regular Board Meeting", MeetingDateTime: "2026-10-14 16:15", MeetingLocation: "Support Center", Published: false },
+    { Id: 218, Name: "Finance Committee Meeting", MeetingTypeName: "Finance Committee", MeetingDateTime: "2026-10-15 12:00", MeetingLocation: "Support Center", Published: true },
+  ];
+  const jurisdictionId = "az:depschool:fixture-accommodation-school";
+  const ocdId = "ocd-division/country:us/state:az/school_district:fixture";
+  const recorded = await walk({
+    [`https://${HOST}/robots.txt`]: ALLOW,
+    [`https://${HOST}/`]: { status: 200, body: `<h1>Fixture Accommodation Schools</h1><a href="${portal}">Governing Board Agenda/Minutes</a>` },
+    "https://fixture.community.highbond.com/robots.txt": ALLOW,
+    [portal]: { status: 200, body: portalHtml },
+    [route]: { status: 200, body: JSON.stringify(rows), contentType: "application/json" },
+  }, { jurisdictionId, stateCode: "AZ", name: "Fixture Accommodation Schools" });
+  const result = review(recorded.attempt, recorded.bodies, { registered: { bodyId: `${ocdId}#board`, ocdId, publishingOrg: "Fixture Accommodation Schools", input: { ...REGISTRATION, scope: "US-AZ:registration:v1" } } });
+  const accepted = result.accepted.find(a => a.row.bodyId === `${ocdId}#board`);
+  assert.ok(accepted, JSON.stringify(result.held));
+  assert.equal(accepted.row.kind, "DILIGENT");
+  assert.equal(accepted.row.filter.titleMatch, "Regular Board Meeting");
+  assert.equal(crosswalkRowIssue(accepted.row), null);
+  const row = { ...accepted.row, officialHost: new URL(route).hostname, state: "US-AZ", config: derivedAdapterConfig({ ...accepted.row, officialHost: new URL(route).hostname }), crosswalkRowId: accepted.row.id, verifiedAt: T_WALK } as DerivedWiringRow;
+  const source = makeDiligentSource([bodySourceWiringFor(row)]);
+  const read = source.normalizeWithDrops([{ wiring: bodySourceWiringFor(row), meetings: rows, collectedAt: T_WALK }], new Date(NOW));
+  assert.equal(read.meetings.length, 1, "the other committee is not misattributed to the board");
+  assert.equal(Date.parse(read.meetings[0].startsAt), Date.parse("2026-10-14T23:15:00.000Z"));
+  assert.equal(read.meetings[0].agendaUrl, null, "the schedule publishes even while the portal has not published its agenda");
+  assert.equal(read.meetings[0].bodyId, `${ocdId}#board`);
+  const unattested = review({ ...recorded.attempt, site: undefined }, recorded.bodies);
+  assert.equal(unattested.accepted.length, 0, "recognizing a vendor alone never establishes body identity");
 });
 
 function review(attempt: MeetingsDiscoveryAttempt, bodies: ReadonlyMap<string, HeldBytes>, over: Partial<Parameters<typeof reviewDiscoveryWalk>[0]> = {}) {

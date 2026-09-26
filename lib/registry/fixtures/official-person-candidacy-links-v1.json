@@ -97,6 +97,13 @@
       "basis": "Same sourced named person in the held municipal or school governing-body roster and held candidacy. Published roster role and elected contest title are not interchangeable office labels; finance is labeled by the candidacy."
     },
     {
+      "officialId": "roster:nj-morris-mendham_township#2",
+      "holderName": "Amalia Duarte, Member",
+      "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+      "holderSourceUrl": "https://www.mendhamtownship.org/266/Township-Committee",
+      "basis": "Same sourced named person in the held municipal governing-body roster and held candidacy: Mendham Township's own Township Committee page lists Amalia Duarte, Member, term expiring December 2026 (the role rides in the published name cell), and the Morris County Clerk's 2026 general-election candidate list names Amalia DUARTE for Mendham Township's Member of the Township Committee contest. Published roster role and elected contest title are not interchangeable office labels; finance is labeled by the candidacy."
+    },
+    {
       "officialId": "roster:nj-morris-morris_plains#2",
       "holderName": "Nancy Verga",
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",

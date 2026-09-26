@@ -5,9 +5,9 @@ type                  resolved /   total     %
 COUNTY                  3031 /    3031  100.00%
 MUNICIPAL              19471 /   19491   99.90%
 TOWNSHIP               16205 /   16214   99.94%
-SCHOOL DISTRICT         9127 /   12546   72.75%
+SCHOOL DISTRICT         9162 /   12546   73.03%
 SPECIAL DISTRICT           0 /   39555    0.00%
-ALL                    47834 /   90837   52.66%
+ALL                    47869 /   90837   52.70%
 
 *** THE CEILING (item 5.3) ***
 SPECIAL DISTRICTS UNRESOLVED: 39555 of 39555 (100.00%)
@@ -34,7 +34,7 @@ SEEDS FOR THAT HUNT — administrative facts, NEVER territory:
   A county water authority head-quartered downtown serves the county.
 
 UNRESOLVED BY TYPE, AND WHY:
-   3373  SCHOOL DISTRICT: no NCES match in the crosswalk — UNRESOLVED, a work item
+   3338  SCHOOL DISTRICT: no NCES match in the crosswalk — UNRESOLVED, a work item
      20  MUNICIPAL: place GEOID not found in TIGER
       9  TOWNSHIP: neither a cousub nor a place GEOID matched in TIGER
       1  SCHOOL DISTRICT: crosswalk gave LEAID 0400345 but TIGER publishes no boundary for it

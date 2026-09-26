@@ -100,6 +100,33 @@ export interface BudgetLedger {
   readonly credentials: Readonly<Record<string, CredentialBudget>>;
   readonly hostState: Readonly<Record<string, HostState>>;
   readonly credentialState: Readonly<Record<string, CredentialState>>;
+  /**
+   * MW-021 (2026-09-25): the dollar holds paid work took against the owner's
+   * Send and area budgets, on this ONE shared ledger so concurrent Scouts and
+   * overlapping cycles decide against the same remaining budget under its
+   * compare-and-set (`lib/control-plane/expansion/spend-holds.ts`). Absent on
+   * a ledger no budgeted work has touched.
+   */
+  readonly spendHolds?: Readonly<Record<string, SpendHold>>;
+}
+
+/** One hold on a Send or area budget (`spend-holds.ts` carries the rule). */
+export interface SpendHold {
+  readonly holdId: string;
+  /** The job (one Scout dispatch) the hold is for; a job's holds settle together. */
+  readonly jobId: string;
+  readonly obligationId: string;
+  /** Budget keys: `send:<assignment key>` and `area:<scope key>`. */
+  readonly keys: readonly string[];
+  /** These lines never expire at midnight or after a restart. */
+  readonly lifetimeKeys?: readonly string[];
+  /** The worst case reserved. */
+  readonly usd: number;
+  readonly heldAt: string;
+  /** What the hold is for, in words: the job, an escalation, a pre-warm, a request past the job's hold. */
+  readonly what: string;
+  /** Null while the work runs (or after a crash): the whole hold counts until its window ends. */
+  readonly settled: { readonly usd: number; readonly costRecordedAt: string } | null;
 }
 
 /**

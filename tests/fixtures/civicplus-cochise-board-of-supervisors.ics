@@ -1,0 +1,82 @@
+BEGIN:VCALENDAR
+PRODID:iCalendar-Ruby
+VERSION:2.0
+X-WR-TIMEZONE:America/Phoenix
+BEGIN:VTIMEZONE
+TZID:America/Phoenix
+X-LIC-LOCATION:America/Phoenix
+BEGIN:STANDARD
+DTSTART:19671029T020000
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+TZNAME:MST
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0700
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DESCRIPTION:The Development Services Department will facilitate a voluntary
+  training session for the Cochise County Planning and Zoning Commission on
+  Friday\, October 2\, 2026. Commissioners will not discuss or deliberate o
+ n official County business. This session is for Commission members only an
+ d is not open to the public or subject to open meeting law. A quorum may b
+ e present. https://www.cochise.az.gov/calendar.aspx?EID=2973
+DTEND;TZID=America/Phoenix:20261002T133000
+DTSTAMP;TZID=America/Phoenix:20260916T110347
+DTSTART;TZID=America/Phoenix:20261002T113000
+LAST-MODIFIED;TZID=America/Phoenix:20260916T110347
+LOCATION: - 102 Colonia de Salud Building B\, Ste. R100 Sierra Vista AZ 856
+ 35
+SEQUENCE:0
+SUMMARY:Public Notice for Planning and Zoning Commission Lunch and Learn
+UID:2973
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=31
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.cochise.az.gov/calendar.aspx?EID=2979
+DTEND;TZID=America/Phoenix:20260929T235900
+DTSTAMP;TZID=America/Phoenix:20260925T144531
+DTSTART;TZID=America/Phoenix:20260929T100000
+LAST-MODIFIED;TZID=America/Phoenix:20260925T144531
+LOCATION: - 1415 W Melody Ln Bldg G Bisbee AZ 85603
+SEQUENCE:0
+SUMMARY:Special Board Meeting
+UID:2979
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=31
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.cochise.az.gov/calendar.aspx?EID=2980
+DTEND;TZID=America/Phoenix:20260929T235900
+DTSTAMP;TZID=America/Phoenix:20260925T144506
+DTSTART;TZID=America/Phoenix:20260929T100000
+LAST-MODIFIED;TZID=America/Phoenix:20260925T144506
+LOCATION: - 1415 W Melody Ln Bldg G Bisbee AZ 85603
+SEQUENCE:0
+SUMMARY:Library District Meeting
+UID:2980
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=31
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.cochise.az.gov/calendar.aspx?EID=2981
+DTEND;TZID=America/Phoenix:20260929T235900
+DTSTAMP;TZID=America/Phoenix:20260925T144649
+DTSTART;TZID=America/Phoenix:20260929T100000
+LAST-MODIFIED;TZID=America/Phoenix:20260925T144649
+LOCATION: - 1415 W Melody Ln Bldg G Bisbee AZ 85603
+SEQUENCE:0
+SUMMARY:Flood Control District Meeting
+UID:2981
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=31
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION: https://www.cochise.az.gov/calendar.aspx?EID=2982
+DTEND;TZID=America/Phoenix:20260929T235900
+DTSTAMP;TZID=America/Phoenix:20260925T144816
+DTSTART;TZID=America/Phoenix:20260929T100000
+LAST-MODIFIED;TZID=America/Phoenix:20260925T144816
+LOCATION: - 1415 W Melody Ln Bldg G Bisbee AZ 85603
+SEQUENCE:0
+SUMMARY:Jail District Meeting
+UID:2982
+URL:/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=31
+END:VEVENT
+END:VCALENDAR

@@ -172,8 +172,8 @@ export function scoutModelLine(
       escalation: null,
     };
   }
-  const started: ModelClass = result.escalatedFrom ?? result.modelClass;
   const attempts = result.modelAttempts ?? [];
+  const started: ModelClass = attempts[0]?.modelClass ?? result.escalatedFrom ?? result.modelClass;
   const fact: EscalationFact | null =
     result.escalationReason === null || result.escalationReason === undefined
       ? null
@@ -192,6 +192,6 @@ export function scoutModelLine(
   return {
     chosen: className(started),
     why: result.modelClassWhy ?? "No reason was recorded for the class.",
-    escalation: fact === null ? null : escalationSentence(fact),
+    escalation: attempts.some(a => a.escalation) ? attempts.filter(a => a.escalation).map(a => `${a.escalation!.at}: ${a.escalation!.from} → ${a.model}; ${a.escalation!.reason}: ${a.escalation!.evidence}. ${a.accepted ? "Typed result accepted; public delivery requires the linked validation and publication receipts." : "No accepted result."} Cost ${a.usd === null ? "unmeasured" : `$${a.usd.toFixed(4)}`}.`).join(" ") + (result.escalationRefused && fact ? ` ${escalationSentence(fact)}` : "") : fact === null ? null : escalationSentence(fact),
   };
 }

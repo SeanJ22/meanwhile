@@ -1,6 +1,6 @@
 {
-  "exactHead": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
-  "buildId": "x-g3IjEB-gcdZ6Ummnn_T",
+  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
+  "buildId": "1urH9pt5HWdVFv5KE1SAg",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -20,7 +20,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "4537ec81290a1beae531643d15ff445485898f836fbfa03ba08fe7d8f8589cec"
+      "sha256": "f48687e72e51a85ff05678ef0cb00d4f012616265ee7cdf294c36f0e06fb51b0"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -504,11 +504,11 @@
     },
     {
       "path": "data/derived/census-nces-crosswalk.csv",
-      "sha256": "ea5ce9c11e87511562302ff9ef719d2cab3e28382a4b5251e4dc492a0163f308"
+      "sha256": "2b7d46fc8cbf41bc7c193408562162be5726229fea827d881fdada2c9e315b2f"
     },
     {
       "path": "data/derived/census-unit-zips.json",
-      "sha256": "13059ca501f8a8527ad34a93b1d6564721afb9745ef605e322e65e17fb6117c9"
+      "sha256": "4798468cc473043b4d8a46e2d169c2f25ba0e77b55e40bac872852ace3278c56"
     },
     {
       "path": "data/derived/gap-ledger.json",
@@ -1792,7 +1792,7 @@
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
-      "sha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125"
+      "sha256": "d9f13410dc089047d04fabfd090dad2dd2dc1368390429a60f30150a90e615f7"
     },
     {
       "path": "lib/ask/body-confirmation.ts",
@@ -1804,7 +1804,7 @@
     },
     {
       "path": "lib/ask/campaign-money.ts",
-      "sha256": "c6b2e0c23ad515fc9fa383d9a2b537e18282923cd69a0c08bea29406a1c05e28"
+      "sha256": "a1ebce2776caffd92cf46324aa58a50341587dd0b8f55f85d23eb9c2f091356d"
     },
     {
       "path": "lib/ask/candidate-contact.ts",
@@ -1824,7 +1824,7 @@
     },
     {
       "path": "lib/ask/evidence.ts",
-      "sha256": "ecf6a34c344fd72df5178661e07de4e1a199f08b30ea67135aebd8d9a638dc9f"
+      "sha256": "7aa61cde6a978a22172a0171e7d93dafff95b2f234da160802a57b55a55e5420"
     },
     {
       "path": "lib/ask/gap-codes.ts",
@@ -1837,6 +1837,10 @@
     {
       "path": "lib/ask/held-agenda.ts",
       "sha256": "6c14199f75505e0ad8a66f90578c8dbeb473395a883f5db02f43ef8d2693254e"
+    },
+    {
+      "path": "lib/ask/held-filing-subjects.ts",
+      "sha256": "e89f9bb9a7bd4228d0cac1e292a121226351ce5fff064ef978161a23d166b445"
     },
     {
       "path": "lib/ask/held-gaps.ts",
@@ -1872,11 +1876,11 @@
     },
     {
       "path": "lib/ask/lexical-reading.ts",
-      "sha256": "91486e890cc505520dcf5cb0f5fc548d0f75040d713064535c019f337c458510"
+      "sha256": "169c6f8fea6e03efec53c7f7630c11dd566b1f328306ce627111bc6cceaeeebc"
     },
     {
       "path": "lib/ask/local-finance.ts",
-      "sha256": "2106091a96e3134c27b37b35a6db29a6ce23663eb14179c706750516bce1adae"
+      "sha256": "dabec8c2d080e3a45b4ecad948098200e2710055874b8f7683db126a50a1e0dc"
     },
     {
       "path": "lib/ask/meeting-date.ts",
@@ -1907,6 +1911,10 @@
       "sha256": "284b73136943d6e94ea874e20cf06bdce2234be970451bbe77766f0a69cf4682"
     },
     {
+      "path": "lib/ask/money-answer.ts",
+      "sha256": "27a27c0f71da2a68fde9931322ab1a8e38d03bae1409a4b58ba33217889976c0"
+    },
+    {
       "path": "lib/ask/office-question.ts",
       "sha256": "1bd14338fcd977ede0b9d10e6c470f0733977f799cb04c269d2467af0a1c29da"
     },
@@ -1928,7 +1936,7 @@
     },
     {
       "path": "lib/ask/relevance.ts",
-      "sha256": "903b66e10d47cab19f81cf8781d3622530b7479c30c070afafc6c85e713d06b7"
+      "sha256": "5a54fa59dafd98ea28e03e0020761222bc0f9a5bbd7c83c99f09cf05437f0428"
     },
     {
       "path": "lib/ask/residency.ts",
@@ -1956,7 +1964,7 @@
     },
     {
       "path": "lib/ask/speculative-reading.ts",
-      "sha256": "90c8c1a0be84c5bba99596071b57a22ea2ee4b2f4f943aa957901d4a5d243526"
+      "sha256": "9015932384940452a93dc4039cfed57a064673e28096ff7fb5671cddfa970749"
     },
     {
       "path": "lib/ask/statements.ts",
@@ -1976,7 +1984,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "59d87d277af561a0430b9ec01a94c02f3fb84f01de69f4e9cb9e2471586ffe9c"
+      "sha256": "16b9f47d086e3155f3c18d284125cacf952f56c7d0f0bfc21beadf88a023953b"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -1984,7 +1992,7 @@
     },
     {
       "path": "lib/ask/votes.ts",
-      "sha256": "6ce0d91bea06c22a58e61457c0d3d1f3838024688d80d432aa75260ded816e9c"
+      "sha256": "9c900c24a5ddf5d9342d41e8bb7931ba2c56eb914b36eb86dc2bbb58d1dafeeb"
     },
     {
       "path": "lib/ask/writer-selection.ts",
@@ -2232,7 +2240,7 @@
     },
     {
       "path": "lib/civic-data/meeting-body-crosswalk.ts",
-      "sha256": "b019666b3e6ad670bde4d3dca023913619ed32c91a90af081f5bc0486243d656"
+      "sha256": "4caefb78e380452ad20299f9b79a6e1318f6293408e6d426c1fadffbd0c01ee5"
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
@@ -2260,7 +2268,7 @@
     },
     {
       "path": "lib/civic-data/runtime-authority.ts",
-      "sha256": "2a517f2449a1503b80ffee1107f83a6719d58344403eb9739ad54e85a14d5512"
+      "sha256": "63d54545bf79826ab6e6b808e2c376f22abb5c83455912ddac437fe7c1e2368e"
     },
     {
       "path": "lib/civic-data/source-acquisition-error.ts",
@@ -2305,6 +2313,10 @@
     {
       "path": "lib/control-plane/model-cost.ts",
       "sha256": "408d3899060842a89c68568b7638caf521679d5c88fa85668db592c031a5c542"
+    },
+    {
+      "path": "lib/control-plane/provider-billing.ts",
+      "sha256": "e550b2f8c429121db0ba348d7e90934576e77f4d1d2c3f0791c616a0e2200bb3"
     },
     {
       "path": "lib/control-plane/repository/request-bounds.ts",
@@ -2536,7 +2548,7 @@
     },
     {
       "path": "lib/identity/az-2026.ts",
-      "sha256": "b33a3cb9cfb1c3ff8b46c4fbd2ebf672e13bc30b4d05f7d7f31c04c1a5843811"
+      "sha256": "9559c044ef19c427d06f8cda5c1fd47a5996362bb319ab3ae27b1d510c975a3d"
     },
     {
       "path": "lib/identity/reader-person.ts",
@@ -2544,7 +2556,7 @@
     },
     {
       "path": "lib/log/after-response.ts",
-      "sha256": "b8ba715e0bd2de69f23cc48474ad83f5d0b1dcaf312e1058c843a2cc9dda7f85"
+      "sha256": "a35508b996a799a66a8452d74f2561f7ab2602faf93b611e10e5879eb5dbca7b"
     },
     {
       "path": "lib/log/client.ts",
@@ -3192,7 +3204,7 @@
     },
     {
       "path": "lib/sources/diligent/index.ts",
-      "sha256": "6935da70c6a165c8121b18d89a9826712044c0781a1acc082d11cf6768b3cea0"
+      "sha256": "6d5dc7144cc8ed8d984e756164b66baedb1d101759d4c7bc48111a41e14e557d"
     },
     {
       "path": "lib/sources/diligent/schedule-union.ts",
@@ -3212,7 +3224,7 @@
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "70ca28148129d8121d827016a4cd52d0fcc2e2534f82745ff6d42f00e5d6cdd4"
+      "sha256": "afa751cd936617473497c1142ea076779201cf5e6864cd46f191c1470877315a"
     },
     {
       "path": "lib/sources/ical/recurrence.ts",

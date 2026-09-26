@@ -610,8 +610,8 @@ test("succeeded (plain code, INGESTED with a document): downloads counted, the p
   // 3 — acquisition-only: a named gap, not "0 usable records".
   assert.equal(a.parsing.parsed.held, false);
   assert.match(!a.parsing.parsed.held ? a.parsing.parsed.gap.says : "", /acquisition-only.*20 rows/);
-  // 5 — promotion gate off; public availability a named gap of ours.
-  assert.ok(a.delivery.promoted.held && a.delivery.promoted.value.state === "NOT_PROMOTED");
+  // 5 — the live gate is open; acquisition alone proves no publication.
+  assert.equal(a.delivery.promoted.held, false);
   assert.equal(a.delivery.publiclyAvailable.held, false);
   assert.equal(!a.delivery.publiclyAvailable.held && a.delivery.publiclyAvailable.gap.whose, "OURS");
   // 6 — plain code: no model charge, and no $0 figure pretending to be one.

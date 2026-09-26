@@ -27,7 +27,7 @@ import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { DISPATCH_WORK_TARGET_CAP } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 import { stateSendPreviewSentence } from "@/lib/control-plane/expansion/send-preview.ts";
 
-import { loadContainer } from "../../../(admin)/_mw/data/geography.ts";
+import { loadContainer, loadZcta } from "../../../(admin)/_mw/data/geography.ts";
 import { loadWatchedStandings } from "../../../(admin)/_mw/data/load-bodies.ts";
 import { readerQuery } from "../../../(admin)/_mw/data/reader-query.ts";
 import { loadRegistryBodies } from "../../../(admin)/_mw/data/registry.ts";
@@ -49,11 +49,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const type = request.nextUrl.searchParams.get("type") ?? "";
   const geoid = request.nextUrl.searchParams.get("geoid") ?? "";
-  if (!(TYPES as readonly string[]).includes(type) || !/^[0-9A-Za-z]{2,16}$/.test(geoid)) {
+  if ((type !== "zcta" && !(TYPES as readonly string[]).includes(type)) || !/^[0-9A-Za-z]{2,16}$/.test(geoid)) {
     return NextResponse.json({ error: "Name a county, district, metro area or legislative district by its type and Census id." }, { status: 400 });
   }
   const nowIso = new Date().toISOString();
-  const [container, registry, bodies] = await Promise.all([loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedStandings(nowIso)]);
+  const [container, registry, bodies] = await Promise.all([type === "zcta" ? loadZcta(geoid) : loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedStandings(nowIso)]);
   if (container.kind === "UNREAD") return NextResponse.json({ ok: false, says: container.detail }, { status: 200 });
   const g = container.value.geography;
   const stateCode = g.stateAbbr.toLowerCase();

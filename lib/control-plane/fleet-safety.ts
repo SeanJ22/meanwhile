@@ -235,11 +235,15 @@ export function aggregateModelSpend(
   let measured = 0;
   let unmeasured = 0;
   for (const entry of costs) {
+    // Search invoices are tracked separately; the Anthropic token budget must
+    // never consume Brave/Exa charges merely because they carry a dollar value.
+    if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") continue;
     const isModelBacked =
       entry.role === "SCOUT" ||
       entry.cost.inputTokens !== null ||
       entry.cost.outputTokens !== null ||
-      (entry.cost.usd !== null && entry.cost.usd !== undefined && entry.cost.usd > 0);
+        entry.source === "api.anthropic.com" ||
+        entry.byModel?.some((part) => part.model.startsWith("claude-"));
     if (!isModelBacked) continue;
     const at = Date.parse(entry.recordedAt);
     if (at < Date.parse(since) || at > Date.parse(until)) continue;
@@ -309,6 +313,33 @@ export function parseContentRangeTotal(header: string | null): number | null {
   if (match === null) return null;
   const total = Number(match[1]);
   return Number.isFinite(total) ? total : null;
+}
+
+/**
+ * The most one model request can cost: every UTF-8 byte of its body as an
+ * input token at the cache-write rate (a conservative upper bound on input
+ * tokens, and the multiplier even though only marked blocks can incur it),
+ * plus its whole `max_tokens` at the output rate. Null for a model with no
+ * stated rate. The per-request guard reserves exactly this against the rolling
+ * ceiling, and the Send and area budgets against theirs (MW-021, 2026-09-25).
+ */
+export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
+  const rate = rateFor(request.model);
+  if (rate === null) return null;
+  const bodyBytes = Buffer.byteLength(JSON.stringify(request));
+  const worstInput = (bodyBytes / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation;
+  const worstOutput = (request.max_tokens / 1_000_000) * rate.outputUsdPerMillion;
+  return worstInput + worstOutput;
+}
+
+/** What a model response cost, from its provider-reported usage; null when the usage is incomplete. */
+export function modelResponseUsd(response: ModelResponse): number | null {
+  return usdForModelUsage(response.model, {
+    inputTokens: response.usage.input_tokens ?? null,
+    outputTokens: response.usage.output_tokens ?? null,
+    cacheReadInputTokens: response.usage.cache_read_input_tokens ?? null,
+    cacheCreationInputTokens: response.usage.cache_creation_input_tokens ?? null,
+  });
 }
 
 export class FleetSafetyController {
@@ -462,13 +493,8 @@ export class FleetSafetyController {
     if (this.modelHold !== null) this.refuse(work, "MODEL_LANE_CLOSED", this.modelHold);
     if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
     const bodyBytes = Buffer.byteLength(JSON.stringify(request));
-    const rate = rateFor(request.model);
-    if (rate === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", `model ${request.model} has no stated rate`);
-    // UTF-8 bytes are a conservative upper bound on input tokens. Include the
-    // cache-write multiplier even though only marked blocks can incur it.
-    const worstInput = (bodyBytes / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation;
-    const worstOutput = (request.max_tokens / 1_000_000) * rate.outputUsdPerMillion;
-    const reserve = worstInput + worstOutput;
+    const reserve = modelRequestWorstCaseUsd(request);
+    if (reserve === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", `model ${request.model} has no stated rate`);
     // The rolling 24-hour ceiling is the only spend limit now — no per-cycle or
     // operational-night model-spend cap. A model response's size is bounded by
     // its own `max_tokens`, so it needs no per-cycle payload check.

@@ -1,4 +1,11 @@
-import { after } from "next/server";
+import { AsyncLocalStorage } from "node:async_hooks";
+
+const responseLifetime = new AsyncLocalStorage<(work: Promise<unknown>) => void>();
+
+/** Host adapter supplies its own request lifetime without starting the Next server. */
+export function withResponseLifetime<T>(waitUntil: (work: Promise<unknown>) => void, run: () => Promise<T>): Promise<T> {
+  return responseLifetime.run(waitUntil, run);
+}
 
 /**
  * **WORK THE READER MUST NOT WAIT FOR, THAT THE RUNTIME MUST NOT DROP.**
@@ -37,11 +44,14 @@ import { after } from "next/server";
  * and moving that decision in here would hide it from the file where RULING 25
  * is being obeyed.
  */
-export function afterResponse(work: () => Promise<unknown>): Promise<void> | void {
+export async function afterResponse(work: () => Promise<unknown>): Promise<void> {
+  const waitUntil = responseLifetime.getStore();
+  if (waitUntil) { waitUntil(Promise.resolve().then(work)); return; }
   try {
+    const { after } = await import("next/server");
     after(work);
     return;
   } catch {
-    return work().then(() => undefined);
+    await work();
   }
 }

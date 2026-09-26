@@ -71,6 +71,7 @@ import type { Attempt, ExecutionLease, WorkerRef } from "./attempt.ts";
 import { isProofProject, type CostEntry } from "./cost.ts";
 import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
 import { displayNameOf, words } from "./display-name.ts";
+import { servedWitness } from "./served-reader.ts";
 import {
   gap,
   held,
@@ -621,7 +622,7 @@ export interface AssignmentSources {
   readonly pipeline: readonly PipelineItemState[] | null;
   readonly activation: ActivationGateReading | null;
   /** No served-reader readback producer is wired yet (the witness bridge), so this is always null today. */
-  readonly servedReader: null;
+  readonly servedReader: import("./served-reader.ts").ServedReaderReadback | null;
   /** The installed release's pilot ZIPs, for the reader-impact band (the runner's own list). */
   readonly pilotZips: readonly string[];
   /**
@@ -1769,9 +1770,17 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
         ? gap("OURS", "nothing from this assignment has entered the promotion pipeline, so there is nothing to approve yet")
         : held(measured(approved, items, "items approved for promotion, of items offered", "cp_log_promotion_pipeline"));
   let promoted: Held<PromotionStatus>;
-  if (src.activation === null) {
+  const witnesses = g.pipeline.flatMap(s => {
+    const a = s.byStage.APPROVED_FOR_PROMOTION;
+    const w = a ? servedWitness(src.servedReader, s.itemId, a.recordId, src.nowIso) : null;
+    return w ? [w] : [];
+  });
+  const witness = witnesses[0];
+  if (witness) {
+    promoted = held({ state: "PROMOTED", says: `${witnesses.length} exact approval(s) observed on the public site.`, versionId: witness.versionId, at: witness.checkedAt });
+  } else if (src.activation === null) {
     promoted = gap("OURS", "the activation gate was not read on this publish, so whether promotion is on is not shown");
-  } else {
+  } else if (!src.activation.promotionEnabled) {
     // The gate's full reason is carried once, on the view; each row names the fact.
     promoted = held({
       state: "NOT_PROMOTED",
@@ -1780,12 +1789,15 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
       at: null,
     });
     blockers.push("The activation gate is off: nothing reaches a reader until it opens.");
+  } else {
+    promoted = gap("OURS", "The activation gate is open, but no current public readback proves delivery for this assignment.");
   }
-  blockers.push("No served-reader readback exists yet.");
+  if (!witness) blockers.push("No current public readback confirms this assignment's exact approvals.");
+  if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {
     approved: approvedHeld,
     promoted,
-    publiclyAvailable: gap<PublicAvailability>(
+    publiclyAvailable: witness ? held<PublicAvailability>({ state: "CONFIRMED", at: witness.checkedAt, says: `${witnesses.length} item(s) confirmed; this does not complete outstanding assignment scope.`, proof: witness.url }) : gap<PublicAvailability>(
       "OURS",
       "no served-reader readback exists yet (the witness bridge), so reaching a reader is not observed — our gap, not a measured zero",
     ),

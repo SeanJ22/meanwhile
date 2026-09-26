@@ -396,6 +396,7 @@ function builtInRecords(): ProvidedObligation[] {
     {
       recordClass: "campaign-finance",
       subjectId: "az-sos-cfs-2026",
+      scopeDivisions: ["ocd-division/country:us/state:az"],
       readerImpactAt: null,
       observedChangeRateHours: null,
       lastWorkedAt: null,
@@ -404,6 +405,7 @@ function builtInRecords(): ProvidedObligation[] {
     {
       recordClass: "campaign-finance",
       subjectId: "nh-sos-cfs-2026",
+      scopeDivisions: ["ocd-division/country:us/state:nh"],
       readerImpactAt: null,
       observedChangeRateHours: null,
       lastWorkedAt: null,

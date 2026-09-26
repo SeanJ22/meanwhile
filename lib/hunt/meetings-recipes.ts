@@ -412,6 +412,7 @@ export function recordRecipeOutcome(
 
 /** The publisher platform a confirmed vendor route belongs to; null for a government's own pages. */
 const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
+  diligent: "diligent",
   ical: null,
   "legistar-insite": "legistar",
   "legistar-api": "legistar",
@@ -423,6 +424,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
 };
 
 const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
+  diligent: "a public Diligent service list with meeting ids, names and local dates; body attribution requires its attested portal",
   ical: "a VCALENDAR with at least one VEVENT",
   "legistar-insite": "a Legistar calendar page that publishes its calendar feed",
   "legistar-api": "a Legistar events list whose rows carry EventId",

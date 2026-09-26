@@ -89,6 +89,8 @@ export interface BallotSubjectRecord {
   removedFromFiling?: boolean;
   /** A held source filing queried directly, outside the current certified lineup. */
   historicalFiling?: boolean;
+  /** A filing the reader named whose contest is not one of the reader's divisions: not on their ballot. */
+  outsideReaderDivisions?: boolean;
 }
 
 export interface BallotAskInventory {
@@ -287,14 +289,32 @@ export function ballotAskInventory(
     }
   }
 
-  // Exact held filings remain answerable without becoming current ballot cards.
+  /*
+   * Exact held filings remain answerable without becoming current ballot cards.
+   *
+   * **A PERSON THE READER NAMES IS ANSWERABLE WHEREVER THE READER STANDS.**
+   * (2026-09-25, the Ask model comparison.) *"How much has Rebecca Harned
+   * raised?"*, asked by a reader in Merrimack County, came back UNRESOLVED over
+   * a state holding that files her committee: her contest (State Senator,
+   * District 7) is not one of the reader's divisions, and this loop required
+   * that it be. The division scope exists so a MEASURE or a CONTEST from
+   * somewhere else is never handed to a reader as though it were on their
+   * ballot — and it still is not: only a filing the reader's own words named
+   * (`namedSourceFilingIds`) is admitted, as that one person, marked
+   * `outsideReaderDivisions` so no record says it is on this reader's ballot.
+   * The same rule `namedOfficeholders` follows for a held official.
+   */
   const requested = new Set(requestedFilingIds);
   for (const candidacy of set.candidacies) {
     if (!requested.has(candidacy.id) || [...subjects.values()].some((subject) => subject.id === candidacy.id || subject.candidacyId === candidacy.id)) continue;
-    const contest = contests.find((row) => row.id === candidacy.contestId);
-    if (!contest) continue;
+    const matched = contests.find((row) => row.id === candidacy.contestId);
+    const contest = matched ?? set.contests.find((row) => row.id === candidacy.contestId);
+    if (!contest || contest.type === "MEASURE") continue;
     const name = candidacyDisplayName(candidacy);
-    add(candidacy.id, name, "person", "person", { kind: "PERSON", id: candidacy.id, candidacyId: candidacy.id, name, contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId, historicalFiling: true });
+    add(candidacy.id, name, "person", "person", {
+      kind: "PERSON", id: candidacy.id, candidacyId: candidacy.id, name, contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId,
+      ...(matched ? { historicalFiling: true } : { outsideReaderDivisions: true }),
+    });
   }
   return { entities, subjects };
 }
@@ -377,7 +397,7 @@ export function ballotRecordsFor(
     return { records: removal ? removalRecords(removal) : [], denominators: { removedFilingsForThisSubject: removal ? 1 : 0 } };
   }
 
-  if (contest && !record.historicalFiling) {
+  if (contest && !record.historicalFiling && !record.outsideReaderDivisions) {
     const nominees = deps.nominees?.(contest.id) ?? [];
     const certified = nominees[0];
     const scope = readerContestScope(contest, {

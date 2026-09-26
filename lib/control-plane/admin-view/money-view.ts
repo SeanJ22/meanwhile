@@ -299,6 +299,7 @@ function factRow(f: BillingFact, name: string): Omit<ProviderRow, "key" | "share
  * their own rows, never merged into a bill's row.
  */
 export function providerRows(input: {
+  readonly automatic?: import("../provider-billing.ts").ProviderBillingSnapshot | null;
   readonly month: LedgerMonth | null;
   readonly rolling: RollingSpend | null;
   readonly maptiler: MapTilerReading | null;
@@ -351,7 +352,14 @@ export function providerRows(input: {
   ];
   for (const def of PROVIDER_DEFINITIONS) {
     const mine = input.facts.filter((f) => f.provider === def.key && f.kind !== "LIMIT");
+    const auto = input.automatic?.readings.find(r => r.provider === def.key);
+    if (auto) rows.push({ key: `${def.key}-synced`, name: def.name, amount: auto.reportedUsd !== null ? usd(auto.reportedUsd) : auto.estimatedUsd !== null ? usd(auto.estimatedUsd) : null,
+      amountTone: "text", kind: auto.reportedUsd !== null ? "Provider-reported accrued usage — not a final invoice" : "Estimate / usage only",
+      period: `${auto.periodStart} to ${auto.periodEnd} (UTC reporting window)`,
+      how: `${auto.source || "Automatic collector"}. Last successful sync: ${auto.syncedAt ? eastern(auto.syncedAt) : "never"}. ${auto.error ? `Latest attempt: ${auto.error}; previous values kept. ` : ""}${auto.detail}`,
+      shared: def.shared, controllable: def.controllable, factId: null });
     if (mine.length === 0) {
+      if (auto) continue;
       if (def.key === "other") continue;
       rows.push({
         key: def.key,

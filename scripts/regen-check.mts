@@ -86,13 +86,16 @@ const recorded = loadDigests();
  */
 const changed: string[] = [];
 if (RUN_PURE) {
-  for (const a of GENERATED.filter((x) => x.pure)) {
-    const full = join(ROOT, a.path);
-    const before = existsSync(full) ? readFileSync(full, "utf8") : null;
-    process.stdout.write(`re-running ${a.command}\n`);
-    execSync(a.command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
-    const after = readFileSync(full, "utf8");
-    if (before !== after) changed.push(a.path);
+  const pure = GENERATED.filter((x) => x.pure);
+  const before = new Map(pure.map(a => [a.path, existsSync(join(ROOT, a.path)) ? readFileSync(join(ROOT, a.path), "utf8") : null]));
+  // A single generator may own many artifacts (state-manifest owns 56).
+  // Run each command once, then compare every registered output as before.
+  for (const command of new Set(pure.map(a => a.command))) {
+    process.stdout.write(`re-running ${command}\n`);
+    execSync(command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
+  }
+  for (const a of pure) {
+    if (before.get(a.path) !== readFileSync(join(ROOT, a.path), "utf8")) changed.push(a.path);
   }
 }
 
@@ -216,7 +219,7 @@ console.log(
     `   of ${checks.length}`,
 );
 if (RUN_PURE) {
-  console.log(`  pure generators re-run: ${GENERATED.filter((x) => x.pure).length}`);
+  console.log(`  pure generator commands re-run: ${new Set(GENERATED.filter((x) => x.pure).map(x => x.command)).size}`);
   console.log(`  artifacts CHANGED by the re-run: ${changed.length}`);
   for (const p of changed) console.log(`    ${p}`);
 }

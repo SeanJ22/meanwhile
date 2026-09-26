@@ -45,6 +45,8 @@
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
+import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../meetings/constants.ts";
+import { parseDiligentMeetings } from "../sources/diligent/index.ts";
 
 /**
  * How a candidate was evidenced. The first three come from the government's
@@ -67,6 +69,7 @@ export const VERIFIABLE_VENDORS = [
   "civicclerk-api",
   "iqm2",
   "boardbook",
+  "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
 ] as const;
@@ -156,13 +159,19 @@ const OWN_SITE_MEETINGS = /agenda|minutes|meetings?\b|public-?notices?|boards?-?
  * candidate is unique by URL. Own-site meeting pages are leads only: a page is
  * not a route until an adapter can read it.
  */
-export function meetingEndpointCandidates(html: string, pageUrl: string): readonly EndpointCandidate[] {
+export function meetingEndpointCandidates(html: string, pageUrl: string, now?: string): readonly EndpointCandidate[] {
   const page = new URL(pageUrl);
   const origin = `${page.protocol}//${page.host}`;
   const found = new Map<string, EndpointCandidate>();
   const add = (c: EndpointCandidate): void => {
     if (!found.has(c.url)) found.set(c.url, c);
   };
+  // A recorded public Diligent portal uses the same service already read by
+  // the standing adapter. The caller supplies the clock; no tenant is guessed.
+  if (now && /(^|\.)(highbond\.com|civicweb\.net|diligentoneplatform\.com)$/i.test(page.hostname) && /MeetingSchedule\.aspx/i.test(html)) {
+    const day = (delta: number) => new Date(Date.parse(now) + delta * 86_400_000).toISOString().slice(0, 10);
+    add({ vendor: "diligent", url: `${origin}/Services/MeetingsService.svc/meetings?from=${day(-CONCLUDED_LOOKBACK_DAYS)}&to=${day(UPCOMING_HORIZON_DAYS)}`, basis: "SERVED_BY", evidence: "Diligent public portal links MeetingSchedule.aspx; existing MeetingsService adapter", verifiable: true });
+  }
 
   for (const href of pageLinks(html, pageUrl)) {
     const url = new URL(href);
@@ -226,6 +235,48 @@ export function meetingEndpointCandidates(html: string, pageUrl: string): readon
   ];
 }
 
+/* ------------------------------------------------ CivicPlus calendar feeds */
+
+/**
+ * **A CIVICPLUS SITE LISTS ITS CALENDAR FEEDS, ONE PER CATEGORY.** (2026-09-25, the 85635 expansion.)
+ *
+ * An AgendaCenter page cannot be wired: the ICAL wiring reads a feed. But every CivicPlus (CivicEngage) site serves
+ * `/iCalendar.aspx`, a page listing one iCal feed per calendar category
+ * (`/common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar`), each linked under the category's own name.
+ * Cochise County, AZ lists 25, "Board of Supervisors" among them (catID 31, read 2026-09-26). The index is
+ * CivicPlus-wide, like the AgendaCenter route, so it is read only on a site whose own markup shows CivicPlus.
+ */
+export const CIVICPLUS_CALENDAR_INDEX_PATH = "/iCalendar.aspx";
+
+/** One category feed a CivicPlus iCalendar index lists: the feed and the name the site gives it. */
+export interface CivicPlusCategoryFeed {
+  readonly catId: string;
+  /** The category as the site names it, entities decoded ("Engineering & Natural Resources"). */
+  readonly name: string;
+  readonly url: string;
+}
+
+const CIVICPLUS_FEED = /\/iCalendar\.aspx$/i;
+
+/**
+ * The category calendar feeds a CivicPlus iCalendar index lists, in page order, one per category id. Only a link on
+ * the index's own host, to a `feed=calendar` feed with a `catID`, carrying a visible name, counts: the news and alert
+ * feeds the same page lists are not calendars, and a feed with no name cannot be matched to a body.
+ */
+export function civicPlusCategoryFeeds(html: string, pageUrl: string): readonly CivicPlusCategoryFeed[] {
+  const host = new URL(pageUrl).hostname.toLowerCase();
+  const out = new Map<string, CivicPlusCategoryFeed>();
+  for (const link of anchorLinks(html, pageUrl)) {
+    const url = new URL(link.url);
+    if (url.hostname.toLowerCase() !== host || !CIVICPLUS_FEED.test(url.pathname)) continue;
+    const params = new Map([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
+    const catId = params.get("catid") ?? "";
+    if (!/^\d+$/.test(catId) || (params.get("feed") ?? "").toLowerCase() !== "calendar" || link.text === "") continue;
+    if (!out.has(catId)) out.set(catId, { catId, name: link.text, url: url.toString() });
+  }
+  return [...out.values()];
+}
+
 export type EndpointVerdict = "YIELDED" | "EMPTY" | "NOT_CONFIRMED";
 
 export interface EndpointVerification {
@@ -247,7 +298,7 @@ export interface EndpointVerification {
  * until this is bumped, and anything keyed on it (a saved method, a wiring row)
  * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@cd7f0852192b";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@635c08160afa";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -499,6 +550,11 @@ export function verifyEndpointBody(
       return rows > 0
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
+    }
+    case "diligent": {
+      const rows = parseDiligentMeetings(body);
+      return rows === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "not a Diligent list with meeting identities and local dates" }
+        : { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Diligent meeting record(s)` };
     }
     case "official-page-events":
       return verifyOfficialPage(response, identity);

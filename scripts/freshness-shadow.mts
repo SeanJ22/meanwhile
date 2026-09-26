@@ -144,12 +144,12 @@ import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
-  UNREAD_MEETING_PARTITIONS,
   promotedRegistries,
   trackedStatesFromOperationalReference,
   type FreeDiscoveryWalks,
   type MaterializedReading,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
+import { createMeetingPartitionOwnership } from "../lib/control-plane/scheduler/meeting-ownership.ts";
 import { readFreeDiscoveryWalks, type FreeWalkSubject } from "../lib/control-plane/discovery/free-walks.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import {
@@ -716,6 +716,7 @@ try {
  * their retirement for the cycle rather than retiring the owner's work.
  */
 const trackedStates = trackedStatesFromOperationalReference();
+const meetingPartitions = createMeetingPartitionOwnership({ root: ROOT });
 let materialized: MaterializedReading;
 try {
   const rows = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
@@ -727,11 +728,16 @@ try {
 if ("ids" in materialized) {
   await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => stateOfJurisdictionId(id) ?? []), options: { bypassCache: true } });
 }
+const ownershipStates = trackedStates.read();
+await meetingPartitions.readStates([
+  ...("states" in ownershipStates ? ownershipStates.states : []),
+  ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
+]);
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
     trackerIntakeProvider(),
-    localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
+    localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
     candidateEnrichmentProvider({ trackedStates }),
     meetingsDiscoveryProvider({ materialized: () => materialized }),
     /*
@@ -1227,10 +1233,13 @@ const expansionLoad = await loadExpansionPlan({
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId, scopeDivisions: scopeDivisionsByObligation.get(o.id) })),
   /* Each scope state with no reviewed registry is read from its registration before the territory (2026-09-25). */
-  beforeTerritory: async (states) =>
-    [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } })).refused].map(
+  beforeTerritory: async (states) => {
+    const registration = await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } });
+    await meetingPartitions.readStates(states);
+    return [...registration.refused].map(
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
-    ),
+    );
+  },
   ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
@@ -1685,6 +1694,7 @@ if (dispatchTargets.length > 0) {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
     /* A DISPATCH's states with no reviewed registry are read from their registration, as a scope's were (2026-09-25). */
     await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
+    await meetingPartitions.readStates(dispatchTargets.flatMap(t => t.kind === "DISPATCH" ? t.target.states : []));
     const current = promotedRegistries();
     const registries = "registries" in current ? current.registries : promoted.registries;
     const refusedRegistries = "refused" in current ? current.refused : promoted.refused;
@@ -1710,7 +1720,7 @@ if (dispatchTargets.length > 0) {
         territoryDetail: expansionLoad.territoryDetail ?? null,
         corpus: allUnits.map((u) => ({ id: u.obligation.id, subjectId: u.obligation.subjectId })),
         durable,
-        meetingPartitions: UNREAD_MEETING_PARTITIONS,
+        meetingPartitions,
         censusUnitsByState,
         refusedRegistries,
       },

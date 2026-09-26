@@ -1,3 +1,10 @@
+## Current release checkpoint — September 26, 2026, 2:40 PM Arizona MST
+
+PR431 is deployed as82301164 (2:09PM), with16local gates, PRCI, main build and production integrity passing. Cold Ask remains a required failure: one cold response3040ms and one queued response3133ms. The hunt remains paused and NOT READY; the sole new cap is $50 Anthropic token usage for this hunt.
+
+The next bounded scheduling repair replaces blanket unread meeting-partition ownership with exact registered government/body IDs, source-vintage-bound Census reference joins for governments held by the reviewed registry, and actual static/derived production membership. A committee cannot claim its government's clock; contradictory/unpaired identity remains held with its reason in Admin. Previously materialized work survives failed ownership reads. Four new regression guards plus17existing dispatch checks pass; typecheck passes. Read-only production joins resolve the five 85635 preview bodies; they currently have no existing meeting partitions. Nearby districts with unresolved identity remain UNKNOWN, and the diagnostic selection is not the applicability ledger. This repair is not deployed yet.
+
+The ballot/publication follow-up at e9181066 is independently running its required reader proof. Existing worker-to-reader publication tests pass; exact deployment and recovery of old production records remain owed. Full applicable scope and other source/publication connections remain required work.
 ## Current release checkpoint — September 26, 2026, 1:25 PM Arizona MST
 
 PRs #429 (401d84db) and #430 (00a8db9f) are deployed; the normal runner adopted #430 with successful passes at 12:38 and 12:42 PM. The hunt remains paused and NOT READY. Its only new spending cap is $50 of Anthropic tokens for this hunt; other service costs remain separate.
@@ -23512,3 +23519,4 @@ No additional civic truth reached a reader. The owner explicitly authorized the 
 W1/W2/W3/W5/W6/W7 remain MET; W4/W8 remain NOT MET. The full original controls and proof remain inherited. The genuine integration conflicts passed 48 focused checks; approval reconciliation passed 62 focused checks after correcting its predicate census and evidence citations. No new full shipping-gate run, canonical merge or post-merge readback is claimed. WF01 moved to resolved through the existing tracker mechanism: consent is granted, but civic verification is still unmet. The WorkItem stays BLOCKED, pipeline items SCOUTED and promotion OFF.
 
 Resume model spend was $0.1120425; cumulative measured worker spend is $0.1605625 across two measured of seven recorded Attempts, with zero surviving verified records and null cost per survivor. The exact chain, tokens, durations, source-grounding errors and W8 decision are in `docs/evidence/worker-fleet-resume.md`. The owner's conditional stop instruction applies. PR 268 remains draft; no further worker execution or shipping proceeds under this resume.
+

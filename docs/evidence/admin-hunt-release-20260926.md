@@ -1,6 +1,6 @@
 # Admin completion and 85635 launch preparation
 
-September 26, 2026, Arizona MST. Release owner: Codex, following the explicit handoff from Claude. Implementation branch: `codex/admin-completion-finish`, based on batch F `ea41bb15`. **Release verification is in progress; this file is not a READY declaration.**
+September 26, 2026, Arizona MST. Release owner: Codex, following the explicit handoff from Claude. Final integration branch: `codex/85635-reader-census`, preserving batch F and released PRs #426–428. **Release verification is in progress; this file is not a READY declaration.**
 
 The hunt remains paused. No Send, paid acquisition, search call, new expansion assignment or hunt budget activation occurred. The owner must test Admin and explicitly authorize the start. The approved budget is **$50 total Anthropic token usage for this hunt**, including all models, retries and escalations across concurrent work and restarts. Other services are accounted separately and do not consume this cap. No additional spending caps were introduced. Internal `lifetime` fields mean the duration of this one hunt, not an account-wide or perpetual budget.
 
@@ -40,4 +40,15 @@ The preserved preparation directory is `C:/Users/seanj/dev/meanwhile-evidence/85
 
 Reuse Claude's valid registration, scheduler, carried-meeting, unchanged-last-checked, automatic campaign-site publication and reader-edge proofs wherever the integrated changes do not invalidate them. New closure proof covers changed reader paths. Remaining release checks are the exact committed reader closure, complete gates, normal deployment, runner SHA handoff, signed-in Admin preview and live updates, cached billing sync, affected reader behavior and genuinely cold Ask.
 
-The final release/readiness report and Admin improvement handoff must record actual outcomes, remaining defects and exact owner acceptance steps. Unrelated identity-authority gaps (Volk, Diaz, Innis and Sargent) remain named in Claude's handoff unless separately resolved with evidence. No successful subset completes the eventual 85635 hunt.
+The final release/readiness report and Admin improvement handoff must record actual outcomes, remaining defects and exact owner acceptance steps. Targeted held-data checks return validated single-person money answers for Lupe Diaz (LD 19, relevant to 85635) and Kevin Volk (LD 17). This does not prove every ballot/card identity symptom fixed. The Innis/Sargent no-model diagnostics were inconclusive; inspect the original surface before closing either identity issue. No successful subset completes the eventual 85635 hunt.
+
+
+## September 26, 5:10 AM MST integration checkpoint
+
+The full reader closure was renewed against production read-only authority at 4fd7e1cb: all executor and render passes completed, finalization succeeded and the required Census gate passed. Evidence is committed at bf85b4e1. The final integration also includes named/partial Admin scope previews, state-attributed standing assignment counts (computed before row trimming), and native cold-request geography prefetch. The prefetch overlaps the existing file read with network reads; it adds no timer or keep-warm mechanism. Focused checks pass; integrated local/CI gates and deployed verification remain required.
+
+Released production is 4cb9a6b9 (#428). Its actual 4096 MB / 2 vCPU native function is the documented provider maximum. Four genuine cold deterministic samples finished in 2.962–3.149 seconds, with two failing the three-second requirement. Boundary receipts preserve instance ordinals, process age, handler duration and complete client time. No average or first streamed token is counted as acceptance. The final eight-case production probe is prepared and must run only after deployment.
+
+Billing is connected for Anthropic reporting, GitHub metered billing and Neon consumption units; Neon dollar totals are unavailable. Exa, Brave and Netlify retain clearly labeled partial estimates. The observed account-period totals are platform accounting, not this hunt's spend. Isolated durable concurrent reservations enforce only the hunt's $50 Anthropic token limit. No hunt period was activated.
+
+Current full-scope blockers remain visible: the five-body preview is registered coverage, not a complete scope certificate; unregistered relevant branches need normal admission; automatic validation/publication must be established for every required family; and the entire hunt needs connected live progress. Existing owner-only manual contracts are not silently activated or treated as a substitute for these connections. Valid isolated Ohio/Puerto Rico Send-to-reader evidence proves representative workflow pieces, not the paid hunt or every family.

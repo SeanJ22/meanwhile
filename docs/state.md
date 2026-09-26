@@ -1,8 +1,10 @@
-## Current release checkpoint — September 26, 2026, 2:10 AM Arizona MST
+## Current release checkpoint — September 26, 2026, 5:10 AM Arizona MST
 
-Codex owns Claude's batch F handoff in `codex/admin-completion-finish`. The hunt remains paused; no Send or paid hunt execution is authorized. Its only new cap is $50 Anthropic tokens for this hunt, including concurrent reservations, retries and escalations. Other providers are reported separately.
+Codex owns Claude's batch F handoff. The hunt remains paused: no Send, hunt-budget activation or paid acquisition is authorized. Its only new cap is $50 Anthropic tokens for this hunt, including concurrent reservations, retries and escalations across restarts. Other services are reported separately and do not consume that cap.
 
-Reader repairs are committed at `9dfd9f81` after integrated release `2be9d492`. The full production-authority reader reproof passed 20,480 component cases, zero closure failures and the required census gate (29/29). Shared state/candidate scope binding, objective propagation to Scout, and exact public-publication witnesses are added; focused checks pass. Full release gates, canonical merge/deploy, runner handoff and genuine cold Ask remain in progress. This is NOT a readiness declaration. Details: `docs/evidence/admin-hunt-release-20260926.md`.
+Released PRs #426–428 repair batch F, provider reporting and the native Ask path; production is at 4cb9a6b9. The next integrated release contains Census CD/legislative certainty, deterministic meeting answers, scoped minutes-action identities, shared scope membership, visible preview body names, state-attributed standing-work totals and truthful Learning copy. Its full production-authority reader reproof passed at 4fd7e1cb, followed by the required Census gate; the renewal is committed at bf85b4e1. No gate was bypassed. Full integrated local/CI gates, deployment and affected production verification are next.
+
+Cold Ask remains unresolved on released #428 (two of four genuine cold samples exceeded three seconds). A native geography-prefetch improvement is included but has no production timing claim yet. Full 85635 scope admission, all required automatic family publication connections and exact hunt-level progress remain required work; this is NOT a readiness declaration. Details: docs/evidence/admin-hunt-release-20260926.md.
 
 The following historical records retain their original dates and claims; they do not override this checkpoint.
 # Project state

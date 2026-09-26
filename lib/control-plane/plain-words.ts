@@ -52,8 +52,8 @@ export interface PlainWord {
 export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
   /* --------------------------------- fleet safety: why a cycle stopped */
   CYCLE_DEFERRED: {
-    words: "Budget reached",
-    means: "The cycle spent its budget before it reached this item. The item keeps its place in line and a later cycle picks it up.",
+    words: "Cycle time used",
+    means: "The cycle ran out of dispatch time before it reached this item. This is not a dollar spending limit. The item keeps its place in line for a later cycle.",
   },
   WALL_CLOCK_CEILING: {
     words: "Time limit reached",

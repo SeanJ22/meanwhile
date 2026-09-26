@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 871,
-    "named": 8322,
+    "named": 8323,
     "dynamic": 33
   },
   "files": {
@@ -154,6 +154,7 @@
         "ADM-30 · thirty incident lines become owner groups with actions",
         "ADM-33 · a model id renders as a name",
         "a cause the owner will read has a meaning, not only a label",
+        "a cycle-time stop never borrows the paid-pause timestamp or claims a dollar limit",
         "an unmeasured window says so instead of showing $0.00",
         "counts read as a person reads them",
         "every dictionary entry is sentence case and free of underscores"

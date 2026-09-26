@@ -10,17 +10,16 @@ import {
 } from "../../lib/civic-data/bounded-child-pass.ts";
 import {
   HOT_READ_CATCH_UP_CONCURRENCY,
-  hotReadRoundAdmission,
-  hotReadRoundWorstCaseMs,
+  hotReadCatchUpAdmission,
   repairDomainRacesHotReads,
+  routinePassSourceCatchUpDeadlineMs,
   routinePassWorkDeadlineMs,
-  runHotReadCatchUp,
+  runRoutinePassWithHotReadCatchUp,
 } from "../../lib/civic-data/hot-read-catch-up.ts";
 import { ROUTINE_READER_CHILD_CONCURRENCY, routineReaderRepairDomains } from "../../lib/civic-data/reader-repair-protocol.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_TASKS,
-  routineFailureDomainRotationSeed,
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../../lib/civic-data/runner.ts";
@@ -32,10 +31,10 @@ import {
  * tests/meeting-refresh-schedule-clock.test.ts decide each pass's admission
  * with the runner's own functions. This runs the pass itself with production's
  * code, not a copy: the source reads through `runBoundedChildPass` (four
- * children, the same-host gap), then the Reader repair with the catch-up rounds
- * of lib/civic-data/hot-read-catch-up.ts (`runHotReadCatchUp`,
- * `hotReadRoundAdmission`, the round's worst case against the pass's work
- * limit, two children, the same-host gap and the racing repairs' gate), as
+ * children, the same-host gap), then the Reader repair, with the catch-up of
+ * lib/civic-data/hot-read-catch-up.ts for as long as either holds the pass open
+ * (`runRoutinePassWithHotReadCatchUp`, `hotReadCatchUpAdmission`, two children,
+ * the same-host gap, the pass's time limits and the racing repairs' gate), as
  * scripts/routine-civic-data-runner.mts composes them. `Date.now` and
  * `setTimeout` read the controlled clock while a replay runs, so the pool's own
  * gap timers move with it and nothing waits in real time.
@@ -225,46 +224,43 @@ export async function replayPass(input: ReplayPassInput): Promise<ReplayPassResu
   }, launch);
 
   const clockReads = input.windowed.map((task) => ({ task, ok: true as const, clock: input.passClocks.get(task.id) }));
-  const workDeadlineMs = routinePassWorkDeadlineMs(admittedAtMs, READER_DOMAINS);
-  const rotationSeed = routineFailureDomainRotationSeed(new Date(admittedAtMs).toISOString());
-  let catchUpReads = 0;
-  // As the runner composes them: the source reads, then the Reader repair with
-  // catch-up rounds on the five-minute cadence while it runs.
-  await source;
-  const sourceEndedAtMs = clock.now();
-  const repairEndsMs = sourceEndedAtMs + repairMs;
-  const { rounds } = await runHotReadCatchUp({
-    repair: clock.sleepUntil(repairEndsMs),
-    unblocked: clock.sleepUntil(Math.min(repairEndsMs, sourceEndedAtMs + RACING_REPAIRS_WORST_MS)),
-    admittedAtMs,
-    intervalMs: ROUTINE_DATA_ADMISSION_MS,
+  const limits = {
+    SOURCE: routinePassSourceCatchUpDeadlineMs(admittedAtMs, READER_DOMAINS),
+    REPAIR: routinePassWorkDeadlineMs(admittedAtMs, READER_DOMAINS),
+  };
+  let sourceEndedAtMs = Number.NaN;
+  const pass = await runRoutinePassWithHotReadCatchUp({
+    source,
+    startRepair: () => {
+      sourceEndedAtMs = clock.now();
+      const repairEndsMs = sourceEndedAtMs + repairMs;
+      return {
+        repair: clock.sleepUntil(repairEndsMs),
+        unblocked: clock.sleepUntil(Math.min(repairEndsMs, sourceEndedAtMs + RACING_REPAIRS_WORST_MS)),
+      };
+    },
     now: clock.now,
     sleepUntil: clock.sleepUntil,
-    round: async (atMs) => {
-      const admitted = hotReadRoundAdmission({
-        nowMs: atMs,
-        candidates: input.windowed
-          .filter(({ id }) => !launchedIds.has(id))
-          .map((task) => ({ task, clock: input.passClocks.get(task.id), lastConsideredAt: input.passClocks.get(task.id)?.lastAttemptedAt ?? null })),
-        clockReads,
-        statedEnds: new Map(),
-        laneLastEndedMs,
-        rotationSeed,
-      });
-      if (admitted.length === 0) return [];
-      if (atMs + hotReadRoundWorstCaseMs(admitted) > workDeadlineMs) return [];
-      for (const { id } of admitted) launchedIds.add(id);
-      catchUpReads += admitted.length;
-      await runBoundedChildPass(admitted.map(command), {
-        ...options,
-        concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
-        onSettled: (_result, index) => settle(admitted[index]!),
-      }, launch);
-      return admitted.map(({ id }) => id);
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: (phase, nowMs, slots, runningLanes) => hotReadCatchUpAdmission({
+      nowMs,
+      candidates: input.windowed
+        .filter(({ id }) => !launchedIds.has(id))
+        .map((task) => ({ task, clock: input.passClocks.get(task.id), lastConsideredAt: input.passClocks.get(task.id)?.lastAttemptedAt ?? null })),
+      clockReads,
+      statedEnds: new Map(),
+      laneLastEndedMs,
+      busyLanes: new Set([...runningLanes, ...[...unsettledSource].map((id) => byId.get(id)!.acquisitionFailureDomain)]),
+      slots,
+      limitMs: limits[phase],
+    }),
+    read: async (task) => {
+      launchedIds.add(task.id);
+      await runBoundedChildPass([command(task)], { ...options, concurrency: 1, onSettled: () => settle(task) }, launch);
     },
   });
-  assert.deepEqual(rounds.filter(({ error }) => error !== undefined), []);
-  return { endedAtMs: clock.now(), sourceEndedAtMs, catchUpReads };
+  assert.deepEqual(pass.errors, []);
+  return { endedAtMs: clock.now(), sourceEndedAtMs, catchUpReads: pass.reads.length };
 }
 
 /** The pilot admits the lane on the first one-minute tick at least five minutes after the last pass started and after it ended. */

@@ -4,17 +4,19 @@ import test from "node:test";
 
 import {
   HOT_READ_CATCH_UP_CONCURRENCY,
-  hotReadRoundAdmission,
-  hotReadRoundWorstCaseMs,
+  HOT_READ_CATCH_UP_RECHECK_MS,
+  hotReadCatchUpAdmission,
+  hotReadCatchUpReadWorstCaseMs,
   repairDomainRacesHotReads,
+  routinePassSourceCatchUpDeadlineMs,
   routinePassWorkDeadlineMs,
   runHotReadCatchUp,
+  runRoutinePassWithHotReadCatchUp,
   type HotReadCandidate,
 } from "../lib/civic-data/hot-read-catch-up.ts";
 import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
-  ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_TASKS,
   routineFrontierPassBound,
   routineTaskDeadlineMs,
@@ -76,7 +78,7 @@ class FakeClock {
 const meetingTasks = ROUTINE_SOURCE_TASKS.filter((task) =>
   task.recordClass === "MEETING" && task.contract.schedule?.kind === "SITTING_WINDOW");
 
-/** A body with a sitting in two days, last read 34 minutes before the pass: hot, owed by T0 + 26 min. */
+/** A body with a sitting in two days, last read at `lastReadMs`: hot, owed an hour later, eligible 25 minutes before that. */
 function hotClock(lastReadMs: number): RoutineTaskClock {
   return {
     lastAttemptedAt: iso(lastReadMs),
@@ -90,10 +92,55 @@ function candidateFor(task: RoutineSourceTask, clock: RoutineTaskClock): HotRead
   return { task, clock, lastConsideredAt: clock.lastAttemptedAt ?? null };
 }
 
+function busiestLane(): readonly [string, readonly RoutineSourceTask[]] {
+  const byLane = new Map<string, RoutineSourceTask[]>();
+  for (const task of meetingTasks) byLane.set(task.acquisitionFailureDomain, [...(byLane.get(task.acquisitionFailureDomain) ?? []), task]);
+  return [...byLane.entries()].sort((left, right) => right[1].length - left[1].length)[0]!;
+}
+
+/**
+ * Catch-up over `candidates` with the production admission and dispatcher; each
+ * read takes `readMs` and is recorded as it starts.
+ */
+function catchUpOver(input: {
+  readonly fake: FakeClock;
+  readonly candidates: readonly HotReadCandidate[];
+  readonly work: Promise<unknown>;
+  readonly unblocked: Promise<void>;
+  readonly readMs: number;
+  readonly started: { readonly id: string; readonly atMs: number }[];
+}) {
+  const launched = new Set<string>();
+  const laneLastEndedMs = new Map<string, number>();
+  const clockReads = input.candidates.map(({ task, clock }) => ({ task, ok: true as const, clock }));
+  return runHotReadCatchUp({
+    work: input.work,
+    unblocked: input.unblocked,
+    now: input.fake.now,
+    sleepUntil: input.fake.sleepUntil,
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: (nowMs, slots, runningLanes) => hotReadCatchUpAdmission({
+      nowMs,
+      candidates: input.candidates.filter(({ task }) => !launched.has(task.id)),
+      clockReads,
+      statedEnds: new Map(),
+      laneLastEndedMs,
+      busyLanes: runningLanes,
+      slots,
+      limitMs: Number.POSITIVE_INFINITY,
+    }),
+    read: async (task, atMs) => {
+      launched.add(task.id);
+      input.started.push({ id: task.id, atMs });
+      await input.fake.sleepUntil(atMs + input.readMs);
+      laneLastEndedMs.set(task.acquisitionFailureDomain, input.fake.now());
+    },
+  });
+}
+
 test("C6: a due hourly read is admitted within its deadline while a long Reader repair is in flight", async () => {
   const task = meetingTasks[0]!;
   const clock = hotClock(T0 - 34 * MIN);
-  const clockReads = [{ task, ok: true as const, clock }];
   // The pass's own admission: not yet due at T0, due a minute later, owed by T0 + 26 min.
   assert.equal(routineTaskDue(task, clock, T0, true), false);
   assert.equal(routineTaskDue(task, clock, T0 + MIN, true), true);
@@ -102,162 +149,249 @@ test("C6: a due hourly read is admitted within its deadline while a long Reader 
 
   const fake = new FakeClock(T0 + 90_000);
   const repairEndsMs = T0 + 28 * MIN;
-  const repair = fake.sleepUntil(repairEndsMs).then(() => "repair settled" as const);
-  const gate = fake.sleepUntil(T0 + 2 * MIN);
-  const launched = new Set<string>();
-  const laneLastEndedMs = new Map<string, number>();
-  const admissions: { readonly id: string; readonly atMs: number }[] = [];
-  const run = runHotReadCatchUp({
-    repair,
-    unblocked: gate,
-    admittedAtMs: T0,
-    intervalMs: ROUTINE_DATA_ADMISSION_MS,
-    now: fake.now,
-    sleepUntil: fake.sleepUntil,
-    round: async (atMs) => {
-      const admitted = hotReadRoundAdmission({
-        nowMs: atMs,
-        candidates: [task].filter(({ id }) => !launched.has(id)).map((row) => candidateFor(row, clock)),
-        clockReads,
-        statedEnds: new Map(),
-        laneLastEndedMs,
-        rotationSeed: 0,
-      });
-      for (const row of admitted) {
-        launched.add(row.id);
-        admissions.push({ id: row.id, atMs });
-      }
-      if (admitted.length > 0) {
-        await fake.sleepUntil(atMs + MIN); // the read itself
-        for (const row of admitted) laneLastEndedMs.set(row.acquisitionFailureDomain, fake.now());
-      }
-      return admitted.map(({ id }) => id);
-    },
+  const started: { readonly id: string; readonly atMs: number }[] = [];
+  const run = catchUpOver({
+    fake,
+    candidates: [candidateFor(task, clock)],
+    work: fake.sleepUntil(repairEndsMs).then(() => "repair settled" as const),
+    unblocked: fake.sleepUntil(T0 + 2 * MIN),
+    readMs: MIN,
+    started,
   });
   await fake.runUntil(run);
   const result = await run;
 
-  assert.equal(result.repair, "repair settled", "the pass still waits for, and reports, its whole repair");
-  assert.deepEqual(admissions, [{ id: task.id, atMs: T0 + 5 * MIN }], "admitted on the lane's next five-minute admission");
-  assert.ok(admissions[0]!.atMs <= deadlineMs, "admitted before its deadline");
-  assert.ok(result.rounds.every(({ atMs }) => atMs < repairEndsMs), "no round after the repair settled");
-  assert.deepEqual(result.rounds.map(({ atMs }) => (atMs - T0) / MIN), [5, 10, 15, 20, 25]);
-  // Before this change the read waited for the whole repair: the next pass
-  // could start no earlier than the repair's end, after the deadline.
+  assert.equal(result.work, "repair settled", "the pass still waits for, and reports, its whole repair");
+  assert.equal(result.error, undefined);
+  assert.deepEqual(started, [{ id: task.id, atMs: T0 + 2 * MIN }], "started the moment the racing repairs settled");
+  assert.ok(started[0]!.atMs <= deadlineMs, "started before its deadline");
+  assert.deepEqual(result.reads, [{ atMs: T0 + 2 * MIN, taskId: task.id }]);
+  // Without catch-up the read waited for the whole repair: the next pass could
+  // start no earlier than the repair's end, after the deadline.
   assert.ok(repairEndsMs > deadlineMs, "the same repair held the read past its deadline before");
 });
 
-test("C6: a round due while a racing repair runs starts as soon as that repair settles", async () => {
+test("C6: a read due while a racing repair runs starts as soon as that repair settles", async () => {
+  const task = meetingTasks[0]!;
   const fake = new FakeClock(T0 + 30_000);
-  const repair = fake.sleepUntil(T0 + 20 * MIN).then(() => 1);
-  const gate = fake.sleepUntil(T0 + 7 * MIN);
-  const run = runHotReadCatchUp({
-    repair,
-    unblocked: gate,
-    admittedAtMs: T0,
-    intervalMs: ROUTINE_DATA_ADMISSION_MS,
-    now: fake.now,
-    sleepUntil: fake.sleepUntil,
-    round: async () => [],
+  const started: { readonly id: string; readonly atMs: number }[] = [];
+  const run = catchUpOver({
+    fake,
+    candidates: [candidateFor(task, hotClock(T0 - 34 * MIN))],
+    work: fake.sleepUntil(T0 + 20 * MIN).then(() => 1),
+    unblocked: fake.sleepUntil(T0 + 7 * MIN),
+    readMs: 30_000,
+    started,
   });
   await fake.runUntil(run);
-  assert.deepEqual((await run).rounds.map(({ atMs }) => (atMs - T0) / MIN), [7, 10, 15]);
+  assert.deepEqual(started.map(({ atMs }) => (atMs - T0) / MIN), [7]);
 });
 
-test("C6: an ordinary short repair runs no round, and a failed repair still fails the phase", async () => {
-  const fake = new FakeClock(T0 + 30_000);
-  let rounds = 0;
-  const short = runHotReadCatchUp({
-    repair: fake.sleepUntil(T0 + 90_000).then(() => "done"),
-    unblocked: Promise.resolve(),
-    admittedAtMs: T0,
-    intervalMs: ROUTINE_DATA_ADMISSION_MS,
+test("C6: a lane with many due reads keeps reading, one read at a time a minute apart, while a pass is held open; lanes take the two children earliest deadline first", async () => {
+  const [lane, busy] = busiestLane();
+  assert.ok(busy.length >= 5, `the busiest lane (${lane}) has at least five bodies`);
+  const other = meetingTasks.find((task) => task.acquisitionFailureDomain !== lane)!;
+  const third = meetingTasks.find((task) => task.acquisitionFailureDomain !== lane && task.acquisitionFailureDomain !== other.acquisitionFailureDomain)!;
+  const now = T0 + 5 * MIN;
+  // Five due bodies on the busy lane, owed at +20..+16 minutes (the soonest last
+  // in registry order); one on each of two other lanes, owed at +24 and +25.
+  const laneCandidates = busy.slice(0, 5).map((task, index) => candidateFor(task, hotClock(now - (40 + index) * MIN)));
+  const candidates = [
+    ...laneCandidates,
+    candidateFor(third, hotClock(now - 35 * MIN)),
+    candidateFor(other, hotClock(now - 36 * MIN)),
+  ];
+  const fake = new FakeClock(now);
+  const started: { readonly id: string; readonly atMs: number }[] = [];
+  const run = catchUpOver({ fake, candidates, work: fake.sleepUntil(now + 30 * MIN), unblocked: Promise.resolve(), readMs: 30_000, started });
+  await fake.runUntil(run);
+
+  const onLane = started.filter(({ id }) => busy.some((task) => task.id === id));
+  assert.deepEqual(
+    onLane.map(({ id }) => id),
+    [...laneCandidates].reverse().map(({ task }) => task.id),
+    "the lane's reads go soonest owed first",
+  );
+  // One at a time: each starts 30 s (the read) + 60 s (the same-host gap) after the last.
+  assert.deepEqual(onLane.map(({ atMs }) => (atMs - now) / 1_000), [0, 90, 180, 270, 360]);
+  // The busy lane (owed soonest) and the next-soonest lane take the two
+  // children first, whatever the registry order; the last lane starts when the
+  // first read settles.
+  assert.deepEqual(started.slice(0, 2), [{ id: laneCandidates[4]!.task.id, atMs: now }, { id: other.id, atMs: now }]);
+  assert.deepEqual(started.find(({ id }) => id === third.id), { id: third.id, atMs: now + 30_000 });
+  assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, 2);
+});
+
+test("C6: catch-up runs beside the source reads, and the Reader repair starts only once every read begun there has settled", async () => {
+  const task = meetingTasks[0]!;
+  const clock = hotClock(T0 - 44 * MIN); // due from T0 - 9 min: read beside the source reads
+  const late = meetingTasks.find((row) => row.acquisitionFailureDomain !== task.acquisitionFailureDomain)!;
+  const lateClock = hotClock(T0 - 26 * MIN); // due from T0 + 9 min
+  const fake = new FakeClock(T0);
+  const started: { readonly id: string; readonly atMs: number; readonly phase: string }[] = [];
+  let repairStartedAtMs = Number.NaN;
+  const launched = new Set<string>();
+  const laneLastEndedMs = new Map<string, number>();
+  const candidates = [candidateFor(task, clock), candidateFor(late, lateClock)];
+  const clockReads = candidates.map((row) => ({ task: row.task, ok: true as const, clock: row.clock }));
+  const run = runRoutinePassWithHotReadCatchUp({
+    source: fake.sleepUntil(T0 + 10 * MIN).then(() => "source settled" as const),
+    startRepair: (source) => {
+      assert.equal(source, "source settled", "the repair receives the source reads' result");
+      repairStartedAtMs = fake.now();
+      return { repair: fake.sleepUntil(fake.now() + 4 * MIN).then(() => "repair settled" as const), unblocked: fake.sleepUntil(fake.now() + MIN) };
+    },
     now: fake.now,
     sleepUntil: fake.sleepUntil,
-    round: async () => { rounds += 1; return []; },
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: (phase, nowMs, slots, runningLanes) => {
+      const plan = hotReadCatchUpAdmission({
+        nowMs,
+        candidates: candidates.filter((row) => !launched.has(row.task.id)),
+        clockReads,
+        statedEnds: new Map(),
+        laneLastEndedMs,
+        busyLanes: runningLanes,
+        slots,
+        limitMs: Number.POSITIVE_INFINITY,
+      });
+      for (const row of plan.start) started.push({ id: row.id, atMs: nowMs, phase });
+      return plan;
+    },
+    read: async (row, atMs) => {
+      launched.add(row.id);
+      await fake.sleepUntil(atMs + 3 * MIN);
+      laneLastEndedMs.set(row.acquisitionFailureDomain, fake.now());
+    },
   });
-  await fake.runUntil(short);
-  assert.deepEqual(await short, { repair: "done", rounds: [] });
-  assert.equal(rounds, 0);
+  await fake.runUntil(run);
+  const result = await run;
+  assert.equal(result.source, "source settled");
+  assert.equal(result.repair, "repair settled");
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(started, [
+    { id: task.id, atMs: T0, phase: "SOURCE" },
+    // Due at T0 + 9 min, seen by the minute's recheck.
+    { id: late.id, atMs: T0 + 9 * MIN, phase: "SOURCE" },
+  ]);
+  assert.ok(HOT_READ_CATCH_UP_RECHECK_MS <= MIN);
+  // The source reads ended at +10; the read begun at +9 ran until +12, and only then did the repair start.
+  assert.equal(repairStartedAtMs, T0 + 12 * MIN);
+});
+
+test("C6: a short phase with nothing due starts no read, a failed phase still fails, and a catch-up defect stops catch-up without costing the phase", async () => {
+  const fake = new FakeClock(T0 + 30_000);
+  let admissions = 0;
+  const idle = runHotReadCatchUp({
+    work: fake.sleepUntil(T0 + 90_000).then(() => "done"),
+    unblocked: Promise.resolve(),
+    now: fake.now,
+    sleepUntil: fake.sleepUntil,
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: (nowMs) => { admissions += 1; return { start: [], recheckAtMs: nowMs + HOT_READ_CATCH_UP_RECHECK_MS }; },
+    read: async () => { throw new Error("never called"); },
+  });
+  await fake.runUntil(idle);
+  assert.deepEqual(await idle, { work: "done", reads: [] });
+  assert.equal(admissions, 1, "one look, then the phase ended before the next");
 
   const failing = runHotReadCatchUp({
-    repair: fake.sleepUntil(T0 + 6 * MIN).then(() => { throw new Error("READER_PASS_FAILED"); }),
+    work: fake.sleepUntil(T0 + 6 * MIN).then(() => { throw new Error("READER_PASS_FAILED"); }),
     unblocked: Promise.resolve(),
-    admittedAtMs: T0,
-    intervalMs: ROUTINE_DATA_ADMISSION_MS,
     now: fake.now,
     sleepUntil: fake.sleepUntil,
-    round: async () => [],
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: (nowMs) => ({ start: [], recheckAtMs: nowMs + HOT_READ_CATCH_UP_RECHECK_MS }),
+    read: async () => undefined,
   });
   await fake.runUntil(failing);
   await assert.rejects(failing, /READER_PASS_FAILED/);
 
-  // A round that throws stops the rounds, never the repair or its result.
+  // An admission that throws stops catch-up, never the phase or its result.
   let calls = 0;
   const defective = runHotReadCatchUp({
-    repair: fake.sleepUntil(fake.now() + 20 * MIN).then(() => "repaired"),
+    work: fake.sleepUntil(fake.now() + 20 * MIN).then(() => "repaired"),
     unblocked: Promise.resolve(),
-    admittedAtMs: fake.now(),
-    intervalMs: ROUTINE_DATA_ADMISSION_MS,
     now: fake.now,
     sleepUntil: fake.sleepUntil,
-    round: async () => { calls += 1; throw new Error("ROUTINE_FAILURE_DOMAIN_INVALID:x"); },
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: () => { calls += 1; throw new Error("ROUTINE_FAILURE_DOMAIN_INVALID:x"); },
+    read: async () => undefined,
   });
   await fake.runUntil(defective);
   const result = await defective;
-  assert.equal(result.repair, "repaired");
+  assert.equal(result.work, "repaired");
   assert.equal(calls, 1);
-  assert.equal(result.rounds.length, 1);
-  assert.match(result.rounds[0]!.error ?? "", /ROUTINE_FAILURE_DOMAIN_INVALID/);
+  assert.match(result.error ?? "", /ROUTINE_FAILURE_DOMAIN_INVALID/);
+
+  // A read that throws does the same once it settles; the other read in flight still settles.
+  const task = meetingTasks[0]!;
+  const second = meetingTasks.find((row) => row.acquisitionFailureDomain !== task.acquisitionFailureDomain)!;
+  let settled = 0;
+  const broken = runHotReadCatchUp({
+    work: fake.sleepUntil(fake.now() + 20 * MIN).then(() => "repaired"),
+    unblocked: Promise.resolve(),
+    now: fake.now,
+    sleepUntil: fake.sleepUntil,
+    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
+    admit: (nowMs, slots) => ({ start: settled === 0 && slots === 2 ? [task, second] : [], recheckAtMs: nowMs + MIN }),
+    read: async (row, atMs) => {
+      await fake.sleepUntil(atMs + (row === task ? 10_000 : 40_000));
+      settled += 1;
+      if (row === task) throw new Error("SETTLEMENT_DEFECT");
+    },
+  });
+  await fake.runUntil(broken);
+  const brokenResult = await broken;
+  assert.equal(brokenResult.work, "repaired");
+  assert.equal(settled, 2);
+  assert.deepEqual(brokenResult.reads.map(({ taskId }) => taskId), [task.id, second.id]);
+  assert.match(brokenResult.error ?? "", /SETTLEMENT_DEFECT/);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /code: "HOT_READ_CATCH_UP_FAILED"/, "the runner records a failed round as a supervisor failure");
+  assert.match(runner, /code: "HOT_READ_CATCH_UP_FAILED"/, "the runner records a catch-up defect as a supervisor failure");
 });
 
-test("C6: a round admits only due sitting-window reads, earliest deadline first, three a lane, after the same-host gap", () => {
-  const byLane = new Map<string, RoutineSourceTask[]>();
-  for (const task of meetingTasks) byLane.set(task.acquisitionFailureDomain, [...(byLane.get(task.acquisitionFailureDomain) ?? []), task]);
-  const [lane, busy] = [...byLane.entries()].sort((left, right) => right[1].length - left[1].length)[0]!;
+test("C6: catch-up starts only due sitting-window reads, one a lane, the lane's soonest owed first, after the same-host gap and never on a lane the pass is still reading", () => {
+  const [lane, busy] = busiestLane();
   assert.ok(busy.length >= 4, `the busiest lane (${lane}) has at least four bodies`);
   const now = T0 + 10 * MIN;
   // Four due hot bodies on one lane, last read 40..43 minutes ago: owed at +20..+17 minutes.
   const candidates = busy.slice(0, 4).map((task, index) => candidateFor(task, hotClock(now - (40 + index) * MIN)));
   const clockReads = candidates.map(({ task, clock }) => ({ task, ok: true as const, clock }));
   const nonMeeting = ROUTINE_SOURCE_TASKS.find((task) => task.contract.schedule === undefined)!;
-  const admitted = hotReadRoundAdmission({
+  const base = {
     nowMs: now,
     candidates: [...candidates, { task: nonMeeting, clock: undefined, lastConsideredAt: null }],
     clockReads,
     statedEnds: new Map(),
-    laneLastEndedMs: new Map(),
-    rotationSeed: 0,
-  });
-  assert.deepEqual(
-    admitted.map(({ id }) => id).sort(),
-    [candidates[3]!, candidates[2]!, candidates[1]!].map(({ task }) => task.id).sort(),
-    "the three earliest deadlines on the lane; never another data family",
-  );
-  // A lane read less than the same-host gap ago waits for the next round.
-  assert.deepEqual(hotReadRoundAdmission({
-    nowMs: now,
-    candidates,
-    clockReads,
-    statedEnds: new Map(),
-    laneLastEndedMs: new Map([[lane, now - ROUTINE_SAME_DOMAIN_CHILD_GAP_MS + 1]]),
-    rotationSeed: 0,
-  }), []);
-  // Not due yet (read 20 minutes ago): nothing is admitted early.
+    laneLastEndedMs: new Map<string, number>(),
+    busyLanes: new Set<string>(),
+    slots: HOT_READ_CATCH_UP_CONCURRENCY,
+    limitMs: Number.POSITIVE_INFINITY,
+  };
+  const admitted = hotReadCatchUpAdmission(base);
+  assert.deepEqual(admitted.start.map(({ id }) => id), [candidates[3]!.task.id], "the lane's soonest owed; never another data family");
+  assert.deepEqual(admitted.pastLimit, []);
+  // A lane read less than the same-host gap ago waits for the gap, and is looked at again as it ends.
+  const endedMs = now - ROUTINE_SAME_DOMAIN_CHILD_GAP_MS + 1_000;
+  const gapped = hotReadCatchUpAdmission({ ...base, laneLastEndedMs: new Map([[lane, endedMs]]) });
+  assert.deepEqual(gapped.start, []);
+  assert.equal(gapped.recheckAtMs, endedMs + ROUTINE_SAME_DOMAIN_CHILD_GAP_MS);
+  // A lane the pass is still reading, or no free child, starts nothing.
+  assert.deepEqual(hotReadCatchUpAdmission({ ...base, busyLanes: new Set([lane]) }).start, []);
+  assert.deepEqual(hotReadCatchUpAdmission({ ...base, slots: 0 }).start, []);
+  // Not due yet (read 20 minutes ago): nothing starts early, and it is looked at again within the minute.
   const fresh = busy.slice(0, 1).map((task) => candidateFor(task, hotClock(now - 20 * MIN)));
-  assert.deepEqual(hotReadRoundAdmission({
-    nowMs: now,
-    candidates: fresh,
-    clockReads: fresh.map(({ task, clock }) => ({ task, ok: true as const, clock })),
-    statedEnds: new Map(),
-    laneLastEndedMs: new Map(),
-    rotationSeed: 0,
-  }), []);
+  const early = hotReadCatchUpAdmission({ ...base, candidates: fresh, clockReads: fresh.map(({ task, clock }) => ({ task, ok: true as const, clock })) });
+  assert.deepEqual(early.start, []);
+  assert.equal(early.recheckAtMs, now + HOT_READ_CATCH_UP_RECHECK_MS);
+  // A read that could outlast the pass's limit waits for the next pass.
+  const limited = hotReadCatchUpAdmission({ ...base, limitMs: now + hotReadCatchUpReadWorstCaseMs() - 1 });
+  assert.deepEqual(limited.start, []);
+  assert.deepEqual(limited.pastLimit.map(({ id }) => id), [candidates[3]!.task.id]);
 });
 
-test("C6: no round may outlast the pilot's own outer limit on the pass", () => {
+test("C6: no catch-up read may outlast the pilot's own outer limit on the pass, and one begun beside the source reads leaves the repair its own worst case", () => {
   const domains = routineReaderRepairDomains();
   const bound = routineFrontierPassBound();
   const outer = routineRunnerOuterTimeoutMs(bound.commandCount, bound.largestFailureDomainSize, {
@@ -273,19 +407,19 @@ test("C6: no round may outlast the pilot's own outer limit on the pass", () => {
     readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
     readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,
   });
-  assert.equal(
-    routinePassWorkDeadlineMs(T0, domains),
-    T0 + outer - ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS - ROUTINE_RUNNER_OUTER_GRACE_MS,
-  );
+  const work = T0 + outer - ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS - ROUTINE_RUNNER_OUTER_GRACE_MS;
+  assert.equal(routinePassWorkDeadlineMs(T0, domains), work);
+  // The Reader repair's worst case: its singles four at a time, then the meeting aggregate.
+  const readerWorst = Math.ceil(domains.filter(({ mode }) => mode === "SINGLE").length / ROUTINE_READER_CHILD_CONCURRENCY) * ROUTINE_READER_SINGLE_TIMEOUT_MS +
+    domains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length * ROUTINE_READER_MEETING_TIMEOUT_MS;
+  assert.equal(routinePassSourceCatchUpDeadlineMs(T0, domains), work - readerWorst);
   // The pilot sizes its limit from exactly these inputs.
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\(\s*ROUTINE_PASS_BOUND\.commandCount,\s*ROUTINE_PASS_BOUND\.largestFailureDomainSize,\s*\{\s*neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,\s*settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,\s*clockTaskCount: ROUTINE_SOURCE_TASKS\.length,\s*clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,\s*clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,[\s\S]*?coordinationRequests: 4,\s*readerSingleDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "SINGLE"\)\.length,\s*readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,\s*readerMeetingDomains: ROUTINE_READER_DOMAINS\.filter\(\(\{ mode \}\) => mode === "MEETING_AGGREGATE"\)\.length,\s*readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,\s*readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,/);
-  // One lane's three reads, one after another with the gaps, settle within the worst case.
-  const three = meetingTasks.filter((task) => task.acquisitionFailureDomain === meetingTasks[0]!.acquisitionFailureDomain).slice(0, 3);
+  // One read settles within its child's ceiling and its durable settlement.
   const settlementMs = ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS * STANDING_NEON_REQUEST_DEADLINE_MS;
-  assert.ok(hotReadRoundWorstCaseMs(three) >= three.length * (ROUTINE_CHILD_TIMEOUT_MS + settlementMs) + (three.length - 1) * ROUTINE_SAME_DOMAIN_CHILD_GAP_MS);
-  assert.equal(hotReadRoundWorstCaseMs([]), 0);
-  assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, ROUTINE_CHILD_CONCURRENCY / 2, "four repair children plus two reads at the peak");
+  assert.equal(hotReadCatchUpReadWorstCaseMs(), ROUTINE_CHILD_TIMEOUT_MS + settlementMs);
+  assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, ROUTINE_CHILD_CONCURRENCY / 2, "four pass children plus two reads at the peak");
 });
 
 test("C6: the repairs a catch-up read could race run first", () => {
@@ -295,14 +429,16 @@ test("C6: the repairs a catch-up read could race run first", () => {
   assert.ok(racing.includes("reader-readback:meetings-aggregate"));
   assert.ok(racing.includes("reader-readback:pima-legistar-outcomes"), "the outcome routine follows the Board's sittings");
   assert.ok(!racing.includes("reader-readback:fec-funding"));
-  assert.ok(racing.length < domains.length / 4, "most repairs never delay a round");
+  assert.ok(racing.length < domains.length / 4, "most repairs never delay catch-up");
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const readerLaunch = \[\s*\.\.\.readerDomains\.filter\(\(domain\) => repairDomainRacesHotReads\(domain, hotReadTaskIds\)\),\s*\.\.\.readerDomains\.filter\(\(domain\) => !repairDomainRacesHotReads/);
   assert.match(runner, /const readerPass = runBoundedChildPass\(\s*readerLaunch\.map/);
-  assert.match(runner, /await runHotReadCatchUp\(\{\s*repair: readerPass,\s*unblocked: hotReadRoundsOpen,\s*admittedAtMs: admissionNowMs,\s*intervalMs: ROUTINE_DATA_ADMISSION_MS,/);
-  assert.match(runner, /onSettled: async \(run, index\) => settlePendingRun\(runs\[index\]!, run\)/, "catch-up reads settle exactly as the pass's own");
-  assert.match(runner, /if \(atMs \+ hotReadRoundWorstCaseMs\(admittedTasks\) > passWorkDeadlineMs\)/);
+  assert.match(runner, /return \{ repair: readerPass, unblocked: hotReadCatchUpOpen \};/);
+  assert.match(runner, /await runRoutinePassWithHotReadCatchUp\(\{\s*source: sourcePass,\s*startRepair: startReaderRepair,/);
+  assert.match(runner, /onSettled: async \(result\) => settlePendingRun\(run, result\)/, "catch-up reads settle exactly as the pass's own");
+  assert.match(runner, /\.\.\.\[\.\.\.unsettledSourceRuns\]\.map\(\(id\) => pendingByTaskId\.get\(id\)!\.task\.acquisitionFailureDomain\)/, "never beside a read of the same lane");
+  assert.match(runner, /limitMs: hotReadLimitsMs\[phase\]/);
   assert.match(runner, /setTimeout\(resolve, Math\.max\(0, atMs - Date\.now\(\)\)\)\.unref\(\)/);
   assert.match(runner, /const hotReadTasks = FORCE\s*\? \[\]/, "a forced pass keeps its exact selection");
 });
@@ -311,11 +447,14 @@ test("C6: the parent's account of a killed pass counts the reads admitted during
   const evidence = routineSupervisorOuterEvidence({
     output: [
       "RCD_PASS launching 3 isolated command(s) through a bounded pool; concurrency=4",
-      "RCD_PASS catch-up at 2026-10-12T15:05:00.000Z: launching 2 due meeting read(s) while Reader repair runs; concurrency=2",
-      "RCD_PASS catch-up at 2026-10-12T15:10:00.000Z: launching 1 due meeting read(s) while Reader repair runs; concurrency=2",
+      "RCD_PASS catch-up at 2026-10-12T15:05:00.000Z: launching 1 due meeting read(s) while the pass is held open; concurrency=2",
+      "RCD_PASS catch-up at 2026-10-12T15:06:30.000Z: launching 1 due meeting read(s) while the pass is held open; concurrency=2",
+      "RCD_PASS catch-up at 2026-10-12T15:10:00.000Z: launching 1 due meeting read(s) while the pass is held open; concurrency=2",
     ].join("\n"),
     termination: "TIMED_OUT",
     exitStatus: null,
   });
   assert.equal(evidence.attemptedTasks, 6);
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(runner, /`RCD_PASS catch-up at \$\{new Date\(atMs\)\.toISOString\(\)\}: launching 1 due meeting read\(s\) while the pass is held open; `/);
 });

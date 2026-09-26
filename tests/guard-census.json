@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 841,
-    "named": 8123,
+    "named": 8125,
     "dynamic": 33
   },
   "files": {
@@ -5324,10 +5324,12 @@
     "tests/hot-read-catch-up.test.ts": {
       "names": [
         "C6: a due hourly read is admitted within its deadline while a long Reader repair is in flight",
-        "C6: a round admits only due sitting-window reads, earliest deadline first, three a lane, after the same-host gap",
-        "C6: a round due while a racing repair runs starts as soon as that repair settles",
-        "C6: an ordinary short repair runs no round, and a failed repair still fails the phase",
-        "C6: no round may outlast the pilot's own outer limit on the pass",
+        "C6: a lane with many due reads keeps reading, one read at a time a minute apart, while a pass is held open; lanes take the two children earliest deadline first",
+        "C6: a read due while a racing repair runs starts as soon as that repair settles",
+        "C6: a short phase with nothing due starts no read, a failed phase still fails, and a catch-up defect stops catch-up without costing the phase",
+        "C6: catch-up runs beside the source reads, and the Reader repair starts only once every read begun there has settled",
+        "C6: catch-up starts only due sitting-window reads, one a lane, the lane's soonest owed first, after the same-host gap and never on a lane the pass is still reading",
+        "C6: no catch-up read may outlast the pilot's own outer limit on the pass, and one begun beside the source reads leaves the repair its own worst case",
         "C6: the parent's account of a killed pass counts the reads admitted during repair",
         "C6: the repairs a catch-up read could race run first"
       ],

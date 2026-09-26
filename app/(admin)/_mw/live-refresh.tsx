@@ -9,6 +9,7 @@ import s from "./mw.module.css";
 export function LiveRefresh() {
   const router = useRouter();
   const [failed, setFailed] = useState(false);
+  const [unread, setUnread] = useState<readonly string[]>([]);
   useEffect(() => {
     let stopped = false;
     let pending = false;
@@ -23,7 +24,8 @@ export function LiveRefresh() {
         const pulse = await response.json() as LivePulse;
         if (!response.ok || !pulse.revision || pulse.revision === "unread") throw new Error("pulse unread");
         if (stopped) return;
-        setFailed(pulse.unread.length > 0);
+        setFailed(false);
+        setUnread(pulse.unread);
         window.dispatchEvent(new CustomEvent("meanwhile:admin-pulse", { detail: pulse }));
         // The first successful pulse also reconciles work done since the server render.
         if (revision !== pulse.revision) { revision = pulse.revision; router.refresh(); }
@@ -40,5 +42,9 @@ export function LiveRefresh() {
     void tick();
     return () => { stopped = true; clearTimeout(timer); document.removeEventListener("visibilitychange", visibility); };
   }, [router]);
-  return <p className={s.note} role="status">{failed ? "Live updates could not be fully read. The last successful readings remain visible." : "Live updates on while this page is visible."}</p>;
+  return <p className={s.note} role="status">{failed
+    ? "Live updates could not be read. The last successful readings remain visible."
+    : unread.length
+      ? `Live updates on. Unavailable: ${unread.join("; ")}. Other readings continue to update.`
+      : "Live updates on while this page is visible."}</p>;
 }

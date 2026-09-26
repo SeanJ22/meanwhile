@@ -20,6 +20,7 @@
 import { claim, isExpired, release, type ExecutionLease } from "../attempt.ts";
 import { fingerprint } from "../ids.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { retryStartupRead, type StartupReadRetryOptions } from "../startup-read-retry.ts";
 import type { PipelineItemState } from "./types.ts";
 import type {
   ActivationGateReading,
@@ -194,8 +195,13 @@ export async function acquireWindowLease(
   holder: string,
   now: string,
   ttlMs: number = WINDOW_LEASE_TTL_MS,
+  readRetry?: StartupReadRetryOptions,
 ): Promise<{ readonly lease: ExecutionLease; readonly revision: number }> {
-  const existing = await repos.leases.read(WINDOW_LEASE_ID);
+  // Retry only the idempotent read. An uncertain put/CAS response must never
+  // re-run the claim or allow work to start without a confirmed lease.
+  const existing = readRetry
+    ? await retryStartupRead(() => repos.leases.read(WINDOW_LEASE_ID), () => null, readRetry)
+    : await repos.leases.read(WINDOW_LEASE_ID);
   if (existing !== null && !isExpired(existing.value, now) && existing.value.holder !== holder) {
     throw new WindowLockHeld(existing.value.holder, existing.value.expiresAt);
   }

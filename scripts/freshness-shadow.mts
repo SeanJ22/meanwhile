@@ -671,7 +671,7 @@ await preloadCandidateEnrichmentAuthorities();
 const CYCLE_LEASE_HOLDER = `cycle@${HOST}#${process.pid}`;
 const CYCLE_LEASE_TTL_MS = 25 * 60_000;
 try {
-  await acquireWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso(), CYCLE_LEASE_TTL_MS);
+  await pending.step("startup:cycle-lease", () => acquireWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso(), CYCLE_LEASE_TTL_MS, startupReadRetry));
 } catch (error) {
   if (error instanceof WindowLockHeld) {
     console.error(`freshness:shadow · REFUSED under the nightly window: ${error.message}`);

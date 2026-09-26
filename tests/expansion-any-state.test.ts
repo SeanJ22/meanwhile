@@ -22,7 +22,7 @@
  * 3. the next cycle's providers keep that work in the corpus;
  * 4. the FREE discovery walk takes the City of Columbus first, at the web
  *    address the Census of Governments records for it, robots first, while the
- *    paid lane waits on it;
+ *    paid lane remains governed by the owner's separate pause and budgets;
  * 5. it finds the city's iCal feed on the city's own host; the automatic
  *    reviewer accepts it for the city's registered body; the crosswalk, the
  *    wiring and Ohio's derived family promote; and the Reader shows the
@@ -72,7 +72,6 @@ import type { ControlPlaneRepositories } from "../lib/control-plane/repository/t
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import { promotedRegistries, UNREAD_MEETING_PARTITIONS } from "../lib/control-plane/scheduler/provider-inputs.ts";
 import {
-  FREE_WALK_FIRST,
   MEETINGS_DISCOVERY_NAMESPACE,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
@@ -370,7 +369,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(pass.byProvider.map((p) => p.readFailure), [null]);
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "every created row stays in the corpus");
 
-  /* 4. The free walk goes first, at the address the Census recorded; the paid lane waits on it. */
+  /* 4. Use the free walk at the recorded address; paid work remains subject to the separate owner pause and budget. */
   const dispatched = materializedDiscoveryNeeds([...ids]);
   assert.deepEqual(dispatched.failures, []);
   const needs = dispatched.entries.map((e) => ({ ...e.need, addressSource: dispatchedAddressSource(e.reg, null) }));
@@ -379,7 +378,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(columbus.addressSource, { source: "REGISTRATION", versionId });
   const subjects = needs.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   const columbusId = `${MEETINGS_DISCOVERY_NAMESPACE}${COLUMBUS}#own-site-meetings`;
-  assert.equal(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects))?.code, FREE_WALK_FIRST);
+  assert.equal(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects)), null);
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
   const walked = await runMeetingsDiscovery(repos, {

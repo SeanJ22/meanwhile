@@ -10,8 +10,8 @@
  * 1. the owner's Send for "Franklin County, Ohio" creates a meetings-discovery
  *    obligation for each government it names (MW-028);
  * 2. the FREE discovery walk walks them first, though the committed gap ledger
- *    holds only Arizona, New Hampshire and New Jersey, while the paid lane
- *    waits on it (FREE_WALK_FIRST);
+ *    holds only Arizona, New Hampshire and New Jersey; the paid lane remains
+ *    governed by the owner's separate pause and budgets;
  * 3. the walk finds each government's iCal feed on its own host, robots first,
  *    and vaults every byte;
  * 4. the runner's deterministic reviewer accepts the county's calendar for its
@@ -62,7 +62,6 @@ import { discoveryNeedsToWalk, runMeetingsDiscovery, walkableByFreeWalk } from "
 import { applyDispatchWork, dispatchWorkTarget, planDispatchWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
-  FREE_WALK_FIRST,
   MEETINGS_DISCOVERY_NAMESPACE,
   materializedDiscoveryNeeds,
   paidDiscoveryHold,
@@ -195,7 +194,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   const needs = discoveryNeedsToWalk(ledger.needs, dispatched);
   const subjects = dispatched.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   const before = await readFreeDiscoveryWalks(repos, subjects);
-  for (const id of ids) assert.equal(paidDiscoveryHold(id, before)?.code, FREE_WALK_FIRST, "the paid lane waits for the free walk");
+  for (const id of ids) assert.equal(paidDiscoveryHold(id, before), null, "an unattempted free walk is no paid-admission prerequisite");
 
   const site: Record<string, RecordedReply> = {
     [`https://${COUNTY_HOST}/robots.txt`]: ALLOW,

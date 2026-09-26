@@ -118,16 +118,15 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
 }
 
 /**
- * **THE FREE WALK IS THE FIRST RUNG.** (2026-09-23.)
+ * **REUSE THE FREE WALK WITHOUT REQUIRING IT FIRST.** (2026-09-26.)
  *
  * A meetings-discovery obligation is model-class, so it would otherwise go to
  * the paid Scout lane whenever that lane is open. The unpaid discovery
  * executor walks the same governments first — the ones the owner's dispatch
  * materialized, then the gap ledger's backlog — and the paid lane may never
- * re-walk what the free lane read. So a paid Scout is admitted for one of these
- * only after the free walk had its turn and confirmed nothing, or when no site
- * is recorded for the free walk to try (NO_SITE_TO_WALK). Everything else is
- * held by name, before any occurrence is opened. An unread walk log holds too,
+ * re-walk an already confirmed route. An unattempted free walk is not a paid
+ * admission prerequisite: the owner permits an appropriate paid route early,
+ * within the existing authorization and token reservations. An unread log holds,
  * so a failed read never opens the paid lane.
  *
  * Returns null for any other obligation, and for one the paid lane may take.
@@ -141,13 +140,11 @@ export function paidDiscoveryHold(
   const parsed = parseMeetingsDiscoveryId(obligationId);
   if (parsed === null) return null;
   const outcome = walks.latestFor(parsed.jurisdictionId);
-  if (outcome === "WALKED_NOT_FOUND" || outcome === "NO_SITE_TO_WALK") return null;
+  if (outcome === "WALKED_NOT_FOUND" || outcome === "NO_SITE_TO_WALK" || outcome === "NOT_WALKED") return null;
   const why =
     outcome === "FOUND"
       ? "the free discovery walk already found this government's meetings, and the paid lane never re-walks what the free lane read"
-      : outcome === "NOT_WALKED"
-        ? "the free discovery walk has not reached this government yet; it goes first, and the paid lane takes over only where it read the site and found nothing"
-        : `the free discovery walk's record could not be read (${walks.source}), so the paid lane waits rather than risk re-walking what the free lane read`;
+      : `the free discovery walk's record could not be read (${walks.source}), so the paid lane waits rather than risk re-walking what the free lane read`;
   return { code: FREE_WALK_FIRST, why };
 }
 

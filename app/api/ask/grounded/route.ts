@@ -50,8 +50,9 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { lexicalReading, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
 import { composeSittingAnswerWithBasis, settleSittingComposition, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
+import { composeMoneyAnswer } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
@@ -146,7 +147,7 @@ import {
   financeScopeGapFor,
   localFinanceEvidenceFor,
 } from "@/lib/ask/local-finance";
-import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
+import { statesOf, voteEvidenceFor, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
 
 /**
  * **POST /api/ask/grounded — the grounded civic answer (ASK01, 2026-08-27;
@@ -799,11 +800,29 @@ export async function POST(request: Request) {
    * the manifest does not carry. The state roll calls stay on the database:
    * New Jersey's is 9.4 MB, read only for a New Jersey question.
    */
+  /*
+   * **A STATE'S ROLL CALLS ARE WAITED FOR ONLY BY A QUESTION ABOUT A PERSON.**
+   * (2026-09-25, the Ask three-second repair.) Measured locally that evening
+   * on production read-only data: the first New Jersey question on an instance
+   * spent 5.7-6.7 s in `stateVotes:US-NJ` (9.4 MB) before anything else ran —
+   * for any Rockaway meeting question, which reads no state roll call. So the
+   * read is made by `answerPath`, for a PERSON subject only, right before the
+   * vote retrieval that reads it — never for a body, and never left running
+   * after a response (a frozen serverless instance would restart it). A
+   * person question waits for it exactly as before.
+   */
+  let stateVotesRead: Promise<unknown> | null = null;
+  let deferrableSourcesLoaded = false;
+  const personStateVotes = () => {
+    if (!deferrableSourcesLoaded || stateVoteScopes.size === 0) return null;
+    stateVotesRead ??= settleGroundedSourcePreloads([...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))));
+    return stateVotesRead;
+  };
   const deferrablePreloads = [
+    () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
     timed("stateMoney", settleStateMoneyReads),
     timed("azPimaFinance", settleAzPimaFinanceRead),
-    ...[...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))),
     timed("federalVotes", settleFederalVotesRead),
     timed("federalKeyVotes", settleFederalKeyVotesRead),
     timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
@@ -999,6 +1018,8 @@ export async function POST(request: Request) {
     ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities,
   ];
+  /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
+  const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
 
   /*
    * Today is SUPPLIED, never derived from a model and never guessed. It is
@@ -1108,7 +1129,7 @@ export async function POST(request: Request) {
    * `lib/ask/lexical-reading.ts` for the conditions.
    */
   const lexical = modelFreeTopicRoute ? null : lexicalReading({
-    question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects,
+    question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
   });
   const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskRoleModel("READER"));
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
@@ -1522,6 +1543,7 @@ export async function POST(request: Request) {
        * running for.
        */
       if (ballotRecord.kind === "PERSON") {
+        if (candidateSeats.some((seat) => voteEvidenceReadsStateRollCalls(ballotRecord.name, { officeholderId: seat.id }))) await personStateVotes();
         const candidates = candidateSeats.map((seat) => voteEvidenceFor(ballotRecord.name, { officeholderId: seat.id }));
         const joined = candidates.filter((votes) => votes.identity.kind === "JOINED");
         for (const votes of joined) {
@@ -1974,6 +1996,7 @@ export async function POST(request: Request) {
       /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
          sitting legislator asked about by name reaches their own roll calls; a
          governor reaches the honest gap, because a governor casts none. */
+      if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
       const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
       if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
       records.push(...votes.records);
@@ -2034,6 +2057,36 @@ export async function POST(request: Request) {
       records.push(...keyVotes.records);
       gaps.push(...keyVotes.gaps);
       Object.assign(denominators, keyVotes.denominators);
+    }
+
+    /*
+     * **A COMPARISON RETRIEVES BOTH PEOPLE'S MONEY.** (2026-09-25, the Ask model
+     * comparison.) *"Has Cinde Warmington raised more money than Kelly Ayotte?"*
+     * bound Warmington and retrieved hers alone, and every writer then told the
+     * reader we hold no fundraising for Ayotte — a false statement about us, over
+     * a held filing. The one other held person the question names (exact id,
+     * never a context default; two or more is none) has the same money records
+     * retrieved and stamped as hers, and the relevance gate keeps exactly those.
+     */
+    const comparedIds = new Set<string>();
+    if (subject?.kind === "PERSON" && financeQuestionAsked(question)) {
+      const other = otherNamedPerson(question, inventory, subject.id);
+      const otherRecord = other ? ballotInventory.subjects.get(other.id) ?? null : null;
+      const otherSubject: EvidenceSubject | null = other
+        ? otherRecord ? ballotSubject(otherRecord) : { kind: "PERSON", id: other.id, name: titleCaseName(other.name) }
+        : null;
+      if (otherSubject?.kind === "PERSON") {
+        comparedIds.add(otherSubject.id);
+        const theirs = campaignMoneyEvidenceFor(otherSubject, otherRecord?.id ?? otherSubject.id, otherRecord?.contestId);
+        records.push(...theirs.records);
+        gaps.push(...theirs.gaps);
+        denominators.comparedPersonStateFinanceRecordsReturned = theirs.denominators.stateFinanceRecordsReturned;
+        denominators.comparedPersonFederalFinanceRecordsReturned = theirs.denominators.federalFinanceRecordsReturned;
+        if (otherRecord && ballot.set) {
+          const filing = ballotRecordsFor(otherRecord, { set: ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees });
+          records.push(...filing.records.filter((record) => record.kind === "CANDIDACY").map((record) => ({ ...record, subjectId: otherSubject.id })));
+        }
+      }
     }
 
     if (subject && financeQuestionAsked(question)) {
@@ -2262,7 +2315,7 @@ export async function POST(request: Request) {
      * drops one that is not. A null subject — the ballot-at-large question — gates
      * nothing.
      */
-    const relevant = gateRecordsToSubject(subject, records);
+    const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
 
@@ -2344,10 +2397,38 @@ export async function POST(request: Request) {
         ...(sittingSettled.verdict?.kind === "FAILED" ? { failed: sittingSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed;
+    /*
+     * **A PERSON'S CAMPAIGN MONEY IS COMPOSED FROM THE FILINGS WE HOLD.**
+     * (2026-09-25, the Ask three-second repair; `lib/ask/money-answer.ts`.) How
+     * much a named person's committee raised or spent, who gave (our records
+     * hold totals, not donors), or a comparison of two named people, stated from
+     * their state committee records alone. The model spent 1.4-9.1 s writing the
+     * same figures, and got the who/comparison kinds wrong 6 times in 8 on the
+     * fast writer. The same validator decides; a refusal goes to the model.
+     */
+    const moneyShape = !topicComposed && !sittingSettled.composed && subject?.kind === "PERSON" && financeQuestionAsked(question)
+      ? moneyShapeForBoundPerson(question, inventory, subject.id, officeOf) : null;
+    const moneyOther = moneyShape?.otherId ? ballotInventory.subjects.get(moneyShape.otherId)?.name ?? inventory.find((entity) => entity.id === moneyShape.otherId)?.name ?? null : null;
+    const moneySettled = settleSittingComposition(
+      moneyShape && subject && (moneyShape.otherId === null || (moneyOther && comparedIds.has(moneyShape.otherId)))
+        ? composeMoneyAnswer({ ask: moneyShape.ask, subject: { id: subject.id, name: subject.name }, other: moneyShape.otherId && moneyOther ? { id: moneyShape.otherId, name: moneyOther } : null, records: packRecords, gaps: packGaps })
+        : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (moneyShape) {
+      trace.composition = {
+        kind: "MONEY",
+        shape: moneyShape.ask.kind,
+        basis: "STATE_COMMITTEE_FILINGS",
+        composed: Boolean(moneySettled.verdict),
+        ...(moneySettled.verdict ? { passed: moneySettled.verdict.kind === "PASSED" } : {}),
+        ...(moneySettled.verdict?.kind === "FAILED" ? { failed: moneySettled.verdict.failed } : {}),
+      };
+    }
+    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed;
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
-      shownContacts, resolvedSittings, agendaQuestion, capture,
+      shownContacts, resolvedSittings, agendaQuestion, capture, moneyComposed: Boolean(moneySettled.composed) && !topicComposed && !sittingSettled.composed,
     };
   }
 
@@ -2381,7 +2462,7 @@ export async function POST(request: Request) {
     return path.respond();
   }
   lapAt("resolutionAndRetrieval", path.retrievedAt);
-  const { pack, packRecords, packGaps, subject, composed, topicComposed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture } = path;
+  const { pack, packRecords, packGaps, subject, composed, topicComposed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, moneyComposed } = path;
   /*
    * **THE WRITING LADDER.** (2026-09-25, the Ask latency repair.) The fast
    * writer answers first; the frontier model writes only when that answer fails
@@ -2421,7 +2502,7 @@ export async function POST(request: Request) {
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (composed) {
-    trace.synthesis = { ran: false, why: topicComposed ? "composed-from-structured-evidence" : "composed-from-sitting-records", ms: 0 };
+    trace.synthesis = { ran: false, why: topicComposed ? "composed-from-structured-evidence" : moneyComposed ? "composed-from-money-records" : "composed-from-sitting-records", ms: 0 };
     const verdict = validateAnswer(composed.answer, composed.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {

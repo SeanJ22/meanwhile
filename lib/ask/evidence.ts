@@ -186,8 +186,17 @@ export interface EvidenceRecord {
     sourceNote?: string | null;
     provenanceLimitation?: string | null;
   };
-  /** Exact normalized totals accompany the grounded prose for cross-surface parity. */
-  finance?: { jurisdiction: string; filingState: string; totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null } };
+  /**
+   * Exact normalized totals accompany the grounded prose for cross-surface parity.
+   * The filer's registered committee name, the agency, the cycle and the read
+   * date ride with them (2026-09-25), so a composed money answer states the
+   * record's own fields rather than re-reading its sentence.
+   */
+  finance?: {
+    jurisdiction: string; filingState: string;
+    totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null };
+    registeredName?: string; agency?: string; electionYear?: number; checkedAt?: string;
+  };
   /**
    * **WHOSE RECORD THIS IS — the canonical body id.** (2026-08-29.)
    *

@@ -485,6 +485,25 @@ export interface VoteEvidence {
  * it — never silence, which reads as "they did not vote", and never "no votes
  * cast", which is a claim about a person built out of our collection state.
  */
+/**
+ * Would `voteEvidenceFor` read a STATE legislature's roll calls for this
+ * person? (2026-09-25, the Ask three-second repair.) The route reads a state's
+ * roll-call holding — New Jersey's is 9.4 MB, 5.7-6.7 s cold — only when this
+ * says so. Decided from the rosters alone, which never read a roll call.
+ */
+export function voteEvidenceReadsStateRollCalls(
+  personName: string,
+  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
+): boolean {
+  if (options.officeholderId) {
+    if (officialStateVoteScopeForOfficeholderId(options.officeholderId)) return true;
+    const seat = loadRoster().find((row) => row.officeholderId === options.officeholderId);
+    return Boolean(seat && seat.rosterScope !== "us");
+  }
+  const identity = resolveVoteIdentity(personName, options);
+  return identity.kind === "JOINED" && identity.seat.rosterScope !== "us";
+}
+
 export function voteEvidenceFor(
   personName: string,
   options: { withinStates?: readonly string[]; officeholderId?: string } = {},

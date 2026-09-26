@@ -2484,15 +2484,15 @@ export async function POST(request: Request) {
      */
     const candidateSittingShape = !topicComposed && !topicFocus && snapshot && subject?.kind === "BODY"
       ? shapeForBoundBody(question, inventory, subject.id) : null;
-    // An explicit date may use the quoted decisions for that exact date. The
-    // generic next/most-recent sitting prose must never describe another date.
-    const sittingShape = !requestedMeetingDate || (requestedMeetingDate.date && candidateSittingShape === "MEETING_OUTCOME" && heldActions.length > 0)
+    // An explicit outcome date uses its quoted actions or its named outcome
+    // gap. Tell the composer this is the requested date, never next/latest.
+    const sittingShape = !requestedMeetingDate || (requestedMeetingDate.date && candidateSittingShape === "MEETING_OUTCOME")
       ? candidateSittingShape : null;
     /* "What did they decide" is read off the recorded actions (2026-09-25):
        each quoted action phrase must pass the same validator on its own, so an
        item titled with another government's name is left to the records. */
     const sittingComposition = sittingShape && subject
-      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), questionClass: outcomeQuestionClass(question),
+      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), requestedLocalDate: requestedMeetingDate?.date, questionClass: outcomeQuestionClass(question),
         actions: heldActions, admissible: (text) => validateAnswer(text, [], pack, bodies).kind === "PASSED" })
       : null;
     const sittingSettled = settleSittingComposition(

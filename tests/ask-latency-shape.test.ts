@@ -175,9 +175,20 @@ test("a time-and-place answer uses only the chosen meeting venue and names an ac
   const held = composeSittingAnswer({ ...base, sittings: [{ ...STUDY, location: { name: "Council Chambers", address: "57 E First Street" } }] });
   assert.match(held?.answer ?? "", /The listed location is Council Chambers, 57 E First Street\./);
   assert.deepEqual(held?.citedUrls, ["https://mesa.example.gov/m1"]);
+  const repeated = composeSittingAnswer({ ...base, sittings: [{ ...STUDY, location: { name: "Council Chambers", address: "Council Chambers" } }] });
+  assert.match(repeated?.answer ?? "", /The listed location is Council Chambers\./);
+  assert.doesNotMatch(repeated?.answer ?? "", /Council Chambers, Council Chambers/);
   const missing = composeSittingAnswer({ ...base, sittings: [STUDY] });
   assert.match(missing?.answer ?? "", /We do not hold a verified location for this meeting\./);
   assert.doesNotMatch(missing?.answer ?? "", /not been posted|Council Chambers/);
+});
+
+test("a requested past date with agenda material but no held decisions states the dated gap", () => {
+  const answer = composeSittingAnswer({ shape: "MEETING_OUTCOME", subjectName: "Mesa", sittings: [STUDY], records: [RECORDS[0], { kind: "AGENDA_ITEM", id: "proposal", bodyId: MESA, text: "Proposed tax change" }], sittingGaps: [{ role: "OUTCOME", meetingId: STUDY.id, gap: { whose: "OURS", statement: "We have not acquired the decisions from that meeting." } }], now: Date.parse("2026-10-01T00:00:00Z"), requestedLocalDate: "2026-09-28" });
+  assert.ok(answer);
+  assert.match(answer.answer, /September 28th, 2026/);
+  assert.match(answer.answer, /We have not acquired the decisions/);
+  assert.doesNotMatch(answer.answer, /most recent|next Mesa|tax change/);
 });
 
 test("a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap", () => {

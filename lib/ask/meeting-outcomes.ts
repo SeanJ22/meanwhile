@@ -38,7 +38,7 @@ export function meetingRecordQuestionClass(question: string): QuestionClass | nu
  * and the writer's input are unchanged by it.
  */
 export interface HeldMeetingAction {
-  /** The `MEETING_ACTION` record this reads (`<eventItemId>#action`). */
+  /** The `MEETING_ACTION` record; minutes-local item IDs also name their sitting. */
   recordId: string;
   meetingId: string;
   /** Where the action was read: the publisher's structured record, or the sitting's minutes. */
@@ -96,7 +96,9 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
   }
   const dividedItems = new Set(ranked.filter((row) => row.divided).map((row) => row.rec.eventItemId));
   for (const rec of evidence.records) if (rec.recordClass === "ACTION_SUMMARY") {
-    const recordId = `${rec.eventItemId}#action`;
+    // Parsed minutes number their items locally. Two same-day sittings can
+    // both have item 1; preserve both records with distinct sitting identity.
+    const recordId = rec.quote ? `${input.meetingId}#${rec.eventItemId}#action` : `${rec.eventItemId}#action`;
     const file = rec.matterFile ? `${rec.matterFile}: ` : "";
     if (rec.quote) {
       /* Read off the minutes: the motion and its result are spans of the quoted

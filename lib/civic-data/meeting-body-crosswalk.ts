@@ -46,7 +46,8 @@ export type CrosswalkKind = (typeof CROSSWALK_KINDS)[number];
 
 /** The filter keys each kind's reader adapter reads, and the ones that select (one of which is required). */
 const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly string[]; readonly selecting: readonly string[] }>> = {
-  ICAL: { allowed: ["titleMatch", "categoryMatch", "titleExclude"], selecting: ["titleMatch", "categoryMatch"] },
+  /* `feedScope: "category"`: the whole of a category-scoped feed is the body's (2026-09-26); see `categoryFeedIssue`. */
+  ICAL: { allowed: ["titleMatch", "categoryMatch", "titleExclude", "feedScope"], selecting: ["titleMatch", "categoryMatch", "feedScope"] },
   OFFICIAL_PAGE_EVENTS: { allowed: ["nameTerms"], selecting: ["nameTerms"] },
 };
 
@@ -100,6 +101,28 @@ export function crosswalkRowId(bodyId: string, kind: CrosswalkKind): string {
   return `${bodyId}|${kind}`;
 }
 
+/**
+ * **A WHOLE FEED IS ONE BODY'S ONLY WHEN THE FEED IS ONE CATEGORY.** (2026-09-26, the 85635 expansion.) A
+ * `feedScope: "category"` filter selects every event of its feed, so it stands only on a CivicPlus category feed
+ * (`/iCalendar.aspx?catID=<n>&feed=calendar`), whose category the government names, and never beside a title or a
+ * category filter: one rule selects. Why it does not stand, or null when it does.
+ */
+export function categoryFeedIssue(route: string, filter: Readonly<Record<string, string>>): string | null {
+  if (filter.feedScope !== "category") return `feedScope is "category" or absent, never "${filter.feedScope}"`;
+  if ("titleMatch" in filter || "categoryMatch" in filter) return "a whole-feed filter stands alone: no titleMatch or categoryMatch beside it";
+  let url: URL;
+  try {
+    url = new URL(route);
+  } catch {
+    return "a whole-feed filter needs a category feed URL";
+  }
+  const params = new Map([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
+  if (!/\/iCalendar\.aspx$/i.test(url.pathname) || !/^\d+$/.test(params.get("catid") ?? "") || (params.get("feed") ?? "").toLowerCase() !== "calendar") {
+    return `a whole-feed filter stands only on a category-scoped feed (/iCalendar.aspx?catID=<n>&feed=calendar), not ${route}`;
+  }
+  return null;
+}
+
 /** Why one row does not establish its body and its meetings, or null when it does. */
 export function crosswalkRowIssue(value: unknown): string | null {
   const row = value as Partial<MeetingBodyCrosswalkRow> | null;
@@ -132,6 +155,10 @@ export function crosswalkRowIssue(value: unknown): string | null {
     return `${who}: a ${kind} calendar is this body's only through a filter naming it (${rule.selecting.join(" or ")})`;
   }
   if (keys.some((key) => typeof filter[key] !== "string")) return `${who}: a filter value is not text`;
+  if ("feedScope" in filter) {
+    const issue = categoryFeedIssue(row.route ?? "", filter);
+    if (issue !== null) return `${who}: ${issue}`;
+  }
   if (!text(row.publishingOrg) || !text(row.timeZone) || !/^[A-Za-z_]+\/[A-Za-z_]+/.test(row.timeZone)) return `${who} has no publisher or time zone`;
 
   const evidence = row.evidence;

@@ -108,7 +108,7 @@ export function derivedAdapterConfig(input: {
 }): Readonly<Record<string, string>> {
   const common = { slug: derivedMeetingSlug(input.bodyId), bodyName: input.bodyName };
   return input.kind === "ICAL"
-    ? { ...common, feedUrl: input.route, ...pick(input.filter, ["titleMatch", "categoryMatch", "titleExclude"]) }
+    ? { ...common, feedUrl: input.route, ...pick(input.filter, ["titleMatch", "categoryMatch", "titleExclude", "feedScope"]) }
     : { ...common, pageUrl: input.route, officialHost: input.officialHost, ...pick(input.filter, ["nameTerms"]) };
 }
 

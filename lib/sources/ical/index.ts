@@ -981,7 +981,20 @@ export function makeIcalSource(
        * it at Newbury today; it exists because the first town whose "Planning
        * Board" also runs a "Planning Board Budget Hearing (staff only)" should
        * be a wiring row and not a code change.
+       *
+       * `feedScope: "category"` — the feed IS the body's calendar (2026-09-26,
+       * the 85635 expansion). A CivicPlus site serves one feed per calendar
+       * category, and Cochise County files its Board of Supervisors' sittings
+       * in a "Board of Supervisors" feed whose events carry no `CATEGORIES`
+       * and whose titles never name the board ("Special Board Meeting",
+       * "Jail District Meeting"). The site's own category name is the
+       * publisher's classification, the signal `categoryMatch` reads, stated
+       * once for the whole feed. Every event of the feed is the body's, less
+       * any `titleExclude` names. Only a reviewed row sets it, and the row check
+       * (`crosswalkRowIssue`) admits it only on a category-scoped feed and
+       * never beside `titleMatch` or `categoryMatch`.
        */
+      const feedScope = wiring.config.feedScope ?? "";
       const category = wiring.config.categoryMatch ?? "";
       const titleTerms = (wiring.config.titleMatch ?? "")
         .split(",")
@@ -1031,6 +1044,7 @@ export function makeIcalSource(
           .split(",")
           .map((c) => c.trim().toLowerCase());
         const summary = (event.summary ?? "").toLowerCase();
+        if (feedScope === "category") return !excludeTerms.some((t) => summary.includes(t));
         return category
           ? cats.includes(category.toLowerCase())
           : titleTerms.length > 0 &&

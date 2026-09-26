@@ -67,6 +67,6 @@ export function readActivationGate(root: string): ActivationGateReading {
       "Standing rulings §3 authorize automatic publication after the complete verification chain. " +
       "Campaign sites publish through their derived civic-data contract. Other generic research fields still " +
       "require class-specific verification and Reader connections; this is an implementation gap, not an owner approval wait. " +
-      "Dedicated routine data contracts keep their existing automatic publication paths. Paid acquisition remains subject to its own pause and budget.",
+      "Dedicated routine data contracts keep their existing automatic publication paths. Local shadow run records remain non-authoritative diagnostics after PDC. Paid acquisition remains subject to its own pause and budget.",
   };
 }

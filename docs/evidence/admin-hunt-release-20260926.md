@@ -4,6 +4,12 @@ September 26, 2026, Arizona MST. Release owner: Codex, following the explicit ha
 
 The hunt remains paused. No Send, paid acquisition, search call, new expansion assignment or hunt budget activation occurred. The owner must test Admin and explicitly authorize the start. The approved budget is **$50 total Anthropic token usage for this hunt**, including all models, retries and escalations across concurrent work and restarts. Other services are accounted separately and do not consume this cap. No additional spending caps were introduced. Internal `lifetime` fields mean the duration of this one hunt, not an account-wide or perpetual budget.
 
+## September 26, 10:47 AM MST verification checkpoint
+
+The full reader proof on 814604f8 passed, including all 29 required Census tests; its evidence is committed at 5fdf09f9. Final gates on 151f1034 passed 15/16 gates and found three test failures: stale budget wording, the superseded free-walk-first expectation, and an official-page extractor version that no longer matched its runtime dependency closure. The failed receipt remains in external evidence as `gate-run-151f1034-failed.json`. All three causes are corrected and 60 focused tests pass. This does not substitute for the pending final full suite.
+
+Repair a8901ffc also preserves hunt-budget identity when Census resolution fails and attributes deterministic discovery-search costs to exact hunt references, including unsuccessful charged attempts. Search remains outside the token allowance. Tests cover unresolved geography, cross-hunt shared members, stale scope plans, out-of-scope search holds that preserve free discovery, and exhausted token allowance not blocking separately controlled search. None of these source changes intersects the 577 bound reader-source hashes; the reader proof is reused on that basis.
+
 ## Integrated fixes
 
 - Complete the handed-off Ask group-money/identity changes and Cochise category-feed wiring. Move the fire-district placement reference out of canonical reader holdings; retain both the manifest and reader closure gates.

@@ -35,6 +35,9 @@ import { refreshCommentAccessFromPromoted, readCuratedReaderProjection } from ".
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { readCensusGeographyProjection } from "../lib/census-geography/reader.ts";
+import { buildCensusDistrictEdge, censusDistrictEdgeVersion } from "../lib/census-geography/district-edge.ts";
+import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/edge.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
@@ -231,6 +234,22 @@ if (meetingAggregate) {
         return contract ? pointerVersion(contract.recordClass, contract.scope) : async () => null;
       };
       const authority: PublishAuthority = {};
+      try {
+        const carried = await servedIfCurrent("census-districts", async () => {
+          const source = await pointerVersion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE)();
+          return source === null ? null : censusDistrictEdgeVersion(source);
+        });
+        if (carried !== null) authority["census-districts"] = { versionId: carried, carried: true };
+        else {
+          const geography = await readCensusGeographyProjection({ store, now: observedAt });
+          if (geography.kind === "PROMOTED" && geography.metadata.versionId) {
+            const value = buildCensusDistrictEdge(geography.value, geography.metadata.versionId);
+            authority["census-districts"] = { value, versionId: value.versionId };
+          } else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: census-districts kind=${geography.kind}\n`);
+        }
+      } catch (error) {
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
       try {
         const carried = await servedIfCurrent("registry-runtime", manualPointer("registry-runtime-bindings"));
         if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };

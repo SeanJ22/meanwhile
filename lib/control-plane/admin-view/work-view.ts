@@ -409,7 +409,7 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
     ],
     addressesNote:
       sends.length > 0
-        ? "Each instruction of yours that reached this work is recorded on the work itself, with how it reached it. Your questions say what the instruction is for; they do not yet change how the work runs."
+        ? "Each instruction of yours that reached this work is recorded on the work itself, with how it reached it. Scouts receive its questions in their task brief; verified deterministic methods and publication checks still apply."
         : "No instruction of yours has reached this work. The record class, the subject and the question above are what it is for.",
     lanes,
     models,

@@ -511,6 +511,8 @@ export interface AssignmentListRow {
   readonly where: string | null;
   /** Canonical attribution, retained separately from the human-readable place. */
   readonly stateCode?: string | null;
+  /** Exact durable Send associations; absent only on older published snapshots. */
+  readonly assignmentKeys?: readonly string[];
   readonly band: 1 | 2 | 3 | null;
   /** Null when no worker has taken it yet. */
   readonly workers: readonly { readonly role: string; readonly model: WorkerModel; readonly attempts: number | null }[] | null;
@@ -570,6 +572,7 @@ export function listRowOf(row: AssignmentRow, textClip = ASSIGNMENT_TEXT_CLIP): 
     subjectName: row.what.subjectName,
     where: row.what.where.held ? row.what.where.value.name : null,
     stateCode: assignmentStateCode(row),
+    assignmentKeys: [...new Set((row.what.assignments ?? []).map(mark => mark.assignmentKey))],
     band: row.what.why.band?.band ?? null,
     workers: row.what.workers.held ? row.what.workers.value.map((x) => ({ role: x.role, model: x.model, attempts: x.attempts })) : null,
     discovered: discovered ? { routes: discovered.routes, records: discovered.records, pointers: discovered.pointers, sourceRows: discovered.sourceRows } : null,
@@ -2518,6 +2521,8 @@ export interface AssignmentView {
   readonly rows: readonly AssignmentListRow[];
   /** Counts over the entire holding, before bounded row selection. Empty key = shared or unplaced. */
   readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
+  /** Complete counts before row trimming, keyed by the durable Send identity. */
+  readonly instructionCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   readonly selection: {
     readonly rule: string;
     readonly perGroup: number;
@@ -2754,10 +2759,15 @@ export function buildAssignmentView(
   const rows = built.rows;
 
   const geographicCounts: Record<string, Record<AssignmentState, number>> = {};
+  const instructionCounts: Record<string, Record<AssignmentState, number>> = {};
   for (const row of rows) {
     const state = assignmentStateCode(row) ?? "";
     const counts = geographicCounts[state] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
     counts[row.state] += 1;
+    for (const key of new Set((row.what.assignments ?? []).map(mark => mark.assignmentKey))) {
+      const attributed = instructionCounts[key] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
+      attributed[row.state] += 1;
+    }
   }
 
   const groups: AssignmentListRow[][] = [];
@@ -2801,6 +2811,7 @@ export function buildAssignmentView(
     summary: summarize(built, src, published),
     rows: kept,
     geographicCounts,
+    instructionCounts,
     selection: {
       rule: ASSIGNMENT_SELECTION_RULE,
       perGroup,

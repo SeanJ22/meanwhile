@@ -314,6 +314,23 @@ test("state assignment counts cover omitted rows and retain shared or unplaced w
   for (const row of buildAssignmentView(src).rows) assert.equal(row.stateCode, row.id.startsWith("az") ? "az" : row.id.startsWith("nh") ? "nh" : null);
 });
 
+test("exact Send counts survive trimming and count shared work once per instruction without copying the work", () => {
+  const mark = (assignmentKey: string, relation: "CREATED" | "REORDERED" = "CREATED") => ({ assignmentKey, relation, ref: `receipt:${assignmentKey}`, at: NOW });
+  const src = { ...empty(), obligations: [
+    obligation("hunt-local", { subjectId: "ocd-division/country:us/state:az/place:sierra_vista", assignments: [mark("zip:85635"), mark("zip:85635", "REORDERED")] }),
+    obligation("hunt-shared", { subjectId: "ocd-division/country:us", assignments: [mark("zip:85635"), mark("zip:85650")] }),
+    obligation("other", { subjectId: "ocd-division/country:us/state:az", assignments: [mark("zip:85001")] }),
+  ] };
+  const bounded = buildAssignmentView(src, { perGroup: 1 });
+  const total = (key: string) => Object.values(bounded.instructionCounts?.[key] ?? {}).reduce((a, b) => a + b, 0);
+  assert.deepEqual([total("zip:85635"), total("zip:85650"), total("zip:85001")], [2, 1, 1]);
+  assert.equal(bounded.summary.total, 3, "overlapping instructions do not manufacture another work item");
+  assert.ok(bounded.selection.omitted > 0);
+  const complete = buildAssignmentView(src);
+  assert.deepEqual(complete.rows.find(row => row.id === "hunt-shared")?.assignmentKeys, ["zip:85635", "zip:85650"]);
+  assert.deepEqual(complete.rows.find(row => row.id === "hunt-local")?.assignmentKeys, ["zip:85635"]);
+});
+
 function merge(...parts: Partial<AssignmentSources>[]): AssignmentSources {
   const out = empty() as { -readonly [K in keyof AssignmentSources]: AssignmentSources[K] };
   for (const p of parts) {

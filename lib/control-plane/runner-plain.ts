@@ -191,7 +191,7 @@ export function runnerFace(input: {
     const lead = plainCode(codes[0]);
     const when = input.stoppedAtWords ? ` at ${input.stoppedAtWords}` : "";
     const resumes = input.resumesAtWords
-      ? ` Work resumes with the next cycle at ${input.resumesAtWords}.`
+      ? ` The next cycle is scheduled for ${input.resumesAtWords}; work remains subject to its current pauses, budgets and source checks.`
       : " The runner did not write down when the next cycle is due, so this page will not guess.";
     stopped = `${lead}${when}.${resumes}`;
   }

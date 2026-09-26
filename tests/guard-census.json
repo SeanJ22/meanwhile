@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 870,
-    "named": 8313,
+    "files": 871,
+    "named": 8317,
     "dynamic": 33
   },
   "files": {
@@ -6773,6 +6773,15 @@
         "production membership and scopes are one-to-one and the global disposition is absent",
         "the batched Reader bounds database calls and isolates a corrupt partition",
         "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-partition-ownership.test.ts": {
+      "names": [
+        "later Admin scopes reuse readings and load each newly reached state once",
+        "meeting ownership joins exact bodies, never a county's committees or neighboring governments",
+        "reviewed government joins require the promoted Census vintage and preserve conflicting exact IDs",
+        "unread wiring holds only unowned routes and conflicting government identities stay held"
       ],
       "dynamic": 0
     },

@@ -145,6 +145,7 @@ export interface JurisdictionRequirement {
   readonly source: JurisdictionSource;
   readonly route: RouteDescriptor;
   readonly carriage: RequirementCarriage;
+  readonly heldReason?: string;
 }
 
 /** Custodian dedupe, the header's rules 1 and 2: whose record a source is. */
@@ -252,6 +253,7 @@ export function jurisdictionRequirements(
       source: s,
       route: descriptorFor(j, s, routeId),
       carriage: owner === "NONE" ? "HERE" : owner === "PARTITION" ? "MEETING_PARTITION" : "HELD_UNREAD_WIRING",
+      ...(owner === "UNKNOWN" ? { heldReason: meetingPartitions.reasonFor?.(j.id) ?? meetingPartitions.source } : {}),
     });
   }
   return out;
@@ -363,6 +365,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
           if (j === undefined) continue;
           const r = jurisdictionRequirements(reg, j, meetingPartitions).find((x) => x.obligationId === id);
           if (r !== undefined && r.carriage === "HERE") add(j.id, r.route);
+          if (r?.carriage === "HELD_UNREAD_WIRING") failures.push(r.heldReason ?? `${id}: meeting partition ownership unread; retain the owner's existing work`);
         }
       }
 

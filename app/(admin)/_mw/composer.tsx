@@ -498,8 +498,9 @@ export function Composer(props: {
               {sendCount !== null
                 ? ` Here that is ${sendCount} ${sendCount === 1 ? "government" : "governments"} from registration${sendEdge > 0 ? `, and up to ${sendEdge} more at the edge` : ""}.`
                 : ""}
-              {t && t.neverWalked > 0 ? ` ${t.neverWalked} bodies here have never been walked; finding a way in is paid research` : " Finding a way in to a body is paid research"}
-              {props.paidLaneClosedBecause ? `, and that lane is ${props.paidLaneClosedBecause}` : ", which this budget bounds."}
+              {t && t.neverWalked > 0 ? ` ${t.neverWalked} bodies here have never been walked.` : ""}
+              {" Finding sources can use plain code, saved methods and search. This budget limits Anthropic tokens only; search keeps its existing controls."}
+              {props.paidLaneClosedBecause ? ` Model-assisted research is ${props.paidLaneClosedBecause}. Plain-code discovery can continue.` : ""}
             </span>
           </div>
           <div className={s.row}>

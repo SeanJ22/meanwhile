@@ -224,10 +224,10 @@ export function buildDeliveryTrail(
     },
     {
       key: "validation",
-      label: "Verification checks passed",
+      label: "Validation stage passed",
       anchor: "VERIFIED",
-      reached: reachedRow("VERIFIED", "records independently verified (reached VERIFIED or beyond)"),
-      note: `${items === 0 ? 0 : reachedAtLeast(states, "AUDITED")} also survived the adversarial audit (AUDITED).`,
+      reached: reachedRow("VERIFIED", "records that passed the five validation-stage checks; audit and publication checks may still remain"),
+      note: `${items === 0 ? 0 : reachedAtLeast(states, "AUDITED")} also passed adversarial audit. This stage alone does not establish complete verification or public delivery.`,
     },
     {
       key: "publication",

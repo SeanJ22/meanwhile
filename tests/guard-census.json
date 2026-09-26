@@ -6528,7 +6528,7 @@
         "a failed read never waits longer than the schedule it failed: a published derived family retries within the hour while hourly",
         "a pass starts the read owed soonest first; tasks without a deadline keep their registry place at the front",
         "controlled clock through the real store: a Pima-shaped body read across cold, an upcoming meeting, its conclusion and cooling, with changed versions, unchanged confirmations, failed reads and a dead child",
-        "controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52): prioritising hourly bodies never pushes any body past 12 hours",
+        "controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52), with catch-up while a pass is held open: every hourly body is read within 60:00 and prioritising hourly bodies never pushes any body past 12 hours",
         "controlled clock, whole registry: every sitting-window task on its real lane shares the four-child pool, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00",
         "rehearsal of the accelerated production test: a due request brings a cold partition forward, the ordinary pass reads it, and the next due is the normal rule's"
       ],
@@ -9747,7 +9747,7 @@
     },
     "tests/routine-civic-data-frontier.test.ts": {
       "names": [
-        "C6 residual, open: with production's recorded passes (up to 15:52, drawn at random) a Tucson-shaped lane still misses the hour, rarely and by at most two minutes",
+        "C6: 30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00",
         "C6: 30 days on a lane shaped like Tucson's, passes of normal length, the same-host gap and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00",
         "C6: a meeting lane is read earliest deadline first, up to three a pass; every other lane keeps one least-recently-considered",
         "C6: no production lane mixes sitting-window tasks with any other task, so deadline order and the extra slots touch meeting lanes only",

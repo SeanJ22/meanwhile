@@ -136,7 +136,9 @@ export async function meetingsAskProof(
       for (const sitting of held) {
         const meeting = group.find((row) => row.id === sitting.meetingId)!;
         if (kind === "MEETING_MEMBER_VOTE") for (const rec of sitting.rollCalls) for (const vote of rec.votes.filter((vote) => vote.personName && vote.value)) expected.push({ kind, id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`, bodyId: sitting.bodyId, occurredAt: meeting.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
-        if (kind === "MEETING_ACTION") for (const rec of sitting.outcomes) expected.push({ kind, id: `${rec.eventItemId}#action`, bodyId: sitting.bodyId, occurredAt: meeting.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
+        // Minutes item numbers belong to their sitting. The independent proof
+        // must require both same-day item 1 records, not treat them as one ID.
+        if (kind === "MEETING_ACTION") for (const rec of sitting.outcomes) expected.push({ kind, id: rec.quote ? `${sitting.meetingId}#${rec.eventItemId}#action` : `${rec.eventItemId}#action`, bodyId: sitting.bodyId, occurredAt: meeting.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
         if (kind === "AGENDA_ITEM") for (const rec of sitting.agenda) expected.push({ kind, id: `${rec.eventItemId}#agenda`, bodyId: sitting.bodyId, text: rec.title, occurredAt: meeting.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
       }
       proofs.push(await prove("meeting-outcomes", group, `${kind === "MEETING_MEMBER_VOTE" ? "How did this body's members vote" : kind === "MEETING_ACTION" ? "What did this body decide" : "What was on this body's agenda"} on ${date}?`, [kind], expected, date, kind === "AGENDA_ITEM"));

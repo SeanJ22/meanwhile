@@ -658,6 +658,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
           records.push({
             recordClass: "candidate-enrichment",
             subjectId: c.id,
+            scopeDivisions: [c.ocdId],
             /*
              * NULL ON BOTH SIGNALS, for the reason the campaign-finance records
              * carry: a candidate with no campaign site on their card costs a

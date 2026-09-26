@@ -345,6 +345,10 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
   }
   const placed: PlacedUnit[] = [];
   const rowsByState = new Map<string, ReadonlyMap<string, Jurisdiction>>();
+  for (const state of scope.states) {
+    const reg = world.registries.get(state.toLowerCase());
+    if (reg) for (const jurisdiction of reg.jurisdictions) if (index.statewide.has(jurisdiction.id)) placed.push({ reg, jurisdiction });
+  }
   for (const territory of index.bySubject.values()) {
     if (!certainlyOverlaps(territory, scope)) continue;
     const state = territory.stateCode.toLowerCase();
@@ -627,7 +631,16 @@ export function planDispatchWork(input: {
       }
     }
 
-    const members = new Set(units.placed.map((u) => u.jurisdiction.id));
+    const members = new Set([...units.placed.map((u) => u.jurisdiction.id), ...(target.kind === "SCOPE" ? target.scope.members : [])]);
+    // Shared candidate/finance work already has its own standing provider. Mark
+    // the existing row with this Send so retries and later cycles retain its
+    // hunt budget; never manufacture a second acquisition clock.
+    if (target.kind === "SCOPE") for (const obligation of world.corpus) {
+      const row = world.durable.get(obligation.id);
+      if (members.has(obligation.subjectId) && row?.active !== false && row !== undefined && !recorded(row) && !marks.some(m => m.obligationId === obligation.id && m.target.key === target.key)) {
+        marks.push({ obligationId: obligation.id, target });
+      }
+    }
     const reordered =
       target.kind === "SCOPE"
         ? world.corpus.filter((o) => members.has(o.subjectId) && world.durable.get(o.id)?.materializedBy !== OWNER_DISPATCH).length

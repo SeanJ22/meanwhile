@@ -82,8 +82,8 @@ export function DeliveryTrailCard({ trail, note }: { readonly trail: DeliveryTra
                 <div key={`${p.version}-${p.subjectId ?? ""}`} className={s.insetRow}>
                   <div className={s.stack2}>
                     <span className={s.text14}>
-                      {p.subjectId ?? p.recordClass} — approved for promotion {formatEastern(p.approvedAt ?? p.promotedAt ?? null)} (when readers could first see it is not recorded), version {p.version}, to{" "}
-                      {p.destination}
+                      {p.subjectId ?? p.recordClass} — approved for promotion {formatEastern(p.approvedAt ?? p.promotedAt ?? null)}, version {p.version}, to{" "}
+                      {p.destination.startsWith("https://meanwhileusa.com/") ? <a href={p.destination} target="_blank" rel="noreferrer">Open public reader page</a> : p.destination}
                       {p.checkedAt ? `, checked ${formatEastern(p.checkedAt)}` : ", not yet checked on the public site"}.
                     </span>
                     <span className={s.text14}>

@@ -22,8 +22,8 @@
  * government serves. A government's territory comes from the Census of
  * Governments unit it was enumerated from (`data/derived/census-unit-zips.json`
  * and the sampled overlap behind it, `data/derived/zip-governments.json`).
- * Statewide work (the state's own records) is in no sub-state scope: it serves
- * every scope in the state alike.
+ * Statewide work is reused in each scope in its state. Candidate and shared
+ * source work uses its provider-declared OCD divisions and Census membership.
  *
  * Every count here is either a real count or null, and null renders as the
  * named reason it is null — never as zero.
@@ -38,7 +38,8 @@ export const MEMBERSHIP_METHOD =
   "In this geography means: the government the work is about certainly overlaps it inside at least one ZCTA (Census ZIP-code " +
   "tabulation areas, compared by area share — not USPS ZIP codes). Either the government reaches a ZCTA lying wholly inside the " +
   "geography, or inside one ZCTA the government's share and the geography's share add up to more than the whole. Sharing a " +
-  "border ZCTA is not enough, so a neighbouring county is not pulled in. Statewide work is in no single geography.";
+  "border ZCTA is not enough, so a neighbouring county is not pulled in. Shared statewide records are reused in each applicable scope; " +
+  "candidate and source work uses its declared divisions and the Census crosswalk.";
 
 /** At most this many names travel in a list; the count beside it is always the whole count. */
 export const READING_LIST_CAP = 25;

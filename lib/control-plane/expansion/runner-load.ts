@@ -45,6 +45,7 @@ import {
 } from "./membership.ts";
 import type { ExpansionCycleReading } from "./reading.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
+import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
 
 /** Where the committed Census unit territories live, relative to the repository root. */
 export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
@@ -245,7 +246,7 @@ export async function loadExpansionPlan(input: {
   readonly repos: ControlPlaneRepositories;
   readonly root: string;
   readonly now: string;
-  readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
+  readonly obligations: readonly ScopedStandingWork[];
   /** Injected in tests; the runner uses the published lookup. */
   readonly loadLookup?: () => Promise<LookupState>;
   /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
@@ -326,8 +327,14 @@ export async function loadExpansionPlan(input: {
     }
   }
 
+  let declaredMembers: ReadonlyMap<string, ReadonlySet<string>> = new Map();
+  if (state?.source === "published") {
+    try { declaredMembers = await declaredWorkMembers(resolved.scopes, input.obligations, state.lookup, territory?.byDivision); }
+    catch (error) { malformed += 1; conditions.push(`Shared-work scope attribution failed; paid work is held: ${error instanceof Error ? error.message : String(error)}`); }
+  }
   return {
     plan: planExpansion({
+      declaredMembers,
       now: input.now,
       scopes: resolved.scopes,
       malformedScopes: malformed,

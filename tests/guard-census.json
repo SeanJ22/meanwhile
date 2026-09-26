@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 858,
-    "named": 8260,
+    "files": 860,
+    "named": 8265,
     "dynamic": 33
   },
   "files": {
@@ -4007,6 +4007,12 @@
         "a LIVE task's expired lease is still reclaimed and the task reopened, in the same sweep that releases a settled one",
         "an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released",
         "attemptsForRouteTask's filtered read returns exactly what the old full-list filter returned, row for row and in order, on memory and file"
+      ],
+      "dynamic": 0
+    },
+    "tests/declared-work-scope.test.ts": {
+      "names": [
+        "a ZIP hunt reaches its shared candidates and finance, records the Send on existing work, and binds its token budget"
       ],
       "dynamic": 0
     },
@@ -10465,6 +10471,7 @@
         "8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt",
         "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open",
         "EARLY STOP: a walk that stalls past minRungs finishes early instead of running to the turn bound",
+        "a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication",
         "full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows"
       ],
       "dynamic": 0
@@ -10660,6 +10667,14 @@
         "the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure",
         "the job's worst case is derived from the loop's own bound and the start model's rate, not a flat $0.60",
         "the runner wires autonomous work to its jurisdiction's area only, never to a Send's budget"
+      ],
+      "dynamic": 0
+    },
+    "tests/served-reader.test.ts": {
+      "names": [
+        "a witness cannot transfer to a new approval or survive stale time",
+        "collector shares one public read, records exact approvals and holds missing destinations",
+        "public readback requires the exact candidate container, not another card or serialized script"
       ],
       "dynamic": 0
     },

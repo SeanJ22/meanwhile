@@ -548,7 +548,8 @@ export interface AssignmentCycleReading {
 
 export const SHARED_WORK_RULE =
   "A charge counts toward every Send its work belongs to, so each shows the whole of what its work cost. " +
-  "Work several Sends reached runs while any of them with a budget has room — under the most recent — and is held only when none does.";
+  "Every applicable total-hunt Anthropic token budget must have room, including concurrent reservations. " +
+  "Among rolling-window Sends, shared work may run under the most recent one with room. Other service costs are tracked separately.";
 
 /** The reading the runner writes onto the research state, and the instruction view reads. */
 export function assignmentCycleReading(input: {

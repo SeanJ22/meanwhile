@@ -1552,6 +1552,7 @@ export interface OwnerSnapshot {
    * honesty helpers from this file, so a value import here would be circular.
    */
   readonly deliveryTrail?: import("./delivery-trail.ts").DeliveryTrailView | null;
+  readonly servedReaderReadback?: import("./served-reader.ts").ServedReaderReadback | null;
 
   /**
    * The assignment view (owner ask, 2026-09-22): every unit of work — standing

@@ -22,8 +22,8 @@
  *   other clock read before is HAS_CHANGED. Never from the job type.
  * - **The owner's instruction** carries the questions the owner chose, typed
  *   (`expansion.scope.set`), onto the scope decision and onto every obligation
- *   the Send reaches. They say what the Send is for; they do not yet change how
- *   the work runs.
+ *   the Send reaches. Scouts receive these questions in their task brief;
+ *   deterministic checks retain their verified methods.
  * - **Anything else** carries no question, and a page says "not recorded" —
  *   never a guessed default.
  *

@@ -107,6 +107,7 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
+import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
 import {
@@ -488,6 +489,7 @@ export function scoutBrief(
   providerId: string | null,
   reason: string,
   inherited: InheritedEvidence,
+  ownerQuestions: readonly WorkQuestion[] = (row.obligation.assignments ?? []).flatMap(a => a.questions ?? []),
 ): string {
   const o = row.obligation;
   const prior = inherited.priorRungs ?? [];
@@ -526,6 +528,8 @@ export function scoutBrief(
         : "",
     route?.awaitingAdapter ? `next move recorded by the provider: ${route.awaitingAdapter}` : "",
     route ? `citation: ${route.citation}` : "",
+    ...WORK_QUESTIONS.filter(q => ownerQuestions.includes(q)).map(q => `OWNER'S QUESTION ${q}: ${WORK_QUESTION_WORDS[q]}`),
+    ...(ownerQuestions.length ? ["Investigate these owner questions for this subject and record class. Compare current source evidence with inherited holdings, preserve independently verified fields, and name unresolved differences. READER_CAN_SEE requires a real reader link and public readback; a captured source or proposed route alone does not prove delivery. Questions never authorize changing identity, skipping validation, or claiming a missing record was not published."] : []),
     "",
     "INHERITED PROJECT CONTEXT (sanitized; artifact ids here may be cited as inherited evidence)",
     inherited.summary.trim() === "" ? "(none recorded)" : inherited.summary,
@@ -553,6 +557,8 @@ export interface ScoutExecutorDeps {
     readonly providerId: string | null;
     readonly reason: string;
     readonly inherited: InheritedEvidence;
+    /** Current recorded Send questions, including marks saved during this cycle. */
+    readonly ownerQuestions?: readonly WorkQuestion[];
     readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs">;
     /**
      * The canonical executor decision for this row (`decideExecutor`). A
@@ -1201,7 +1207,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs });
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
-      const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited);
+      const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited, ctx.ownerQuestions);
       /*
        * APPEND-ONLY (2026-09-25). Nothing already sent in this array is ever
        * changed: turns are pushed, and the only other move is a RESTART that

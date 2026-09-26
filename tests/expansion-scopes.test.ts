@@ -424,11 +424,11 @@ test("the plan places work by ZCTA overlap, orders scopes by priority, and state
   });
   assert.equal(plan.placementOf("az:county:county-of-pima"), 0, "Pima County overlaps CD 6, the priority-1 scope");
   assert.equal(plan.placementOf("az:county:county-of-coconino"), null, "Coconino is in neither scope");
-  assert.equal(plan.placementOf("az:state:arizona"), null, "statewide work is in no sub-state scope");
+  assert.equal(plan.placementOf("az:state:arizona"), 0, "the hunt reuses relevant shared statewide work");
   const pimaReading = plan.reading.scopes.find((s) => s.key === "county:2020/04019");
   assert.equal(pimaReading?.resolution.kind, "RESOLVED");
-  assert.deepEqual(pimaReading?.work?.subjectIds, ["az:city:city-of-tucson", "az:county:county-of-pima"]);
-  assert.equal(pimaReading?.work?.registeredObligations, 2);
+  assert.deepEqual(pimaReading?.work?.subjectIds, ["az:city:city-of-tucson", "az:county:county-of-pima", "az:state:arizona"]);
+  assert.equal(pimaReading?.work?.registeredObligations, 3);
   assert.equal(pimaReading?.coverage?.withWork, 2);
   assert.equal(pimaReading?.coverage?.zctasWithLocalWork, 56);
   assert.equal(pimaReading?.coverage?.gapZctas, 0, "every Pima ZCTA has a local government with work");
@@ -439,7 +439,7 @@ test("the plan places work by ZCTA overlap, orders scopes by priority, and state
   assert.ok(isExpansionCycleReading(plan.reading));
 
   const due = countByScope(plan, obligations.map((o) => o.subjectId));
-  assert.equal(due.get("county:2020/04019"), 2);
+  assert.equal(due.get("county:2020/04019"), 3);
 });
 
 test("the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and the verdict in words", async () => {

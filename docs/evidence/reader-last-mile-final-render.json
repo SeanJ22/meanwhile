@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "e3ae81eda34fa13dc0177d6d20f1dac95207442f",
-  "buildId": "DhtpOn9xDUi6cBgH3S-2a",
+  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
+  "buildId": "1urH9pt5HWdVFv5KE1SAg",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-26T05:36:32.756Z",
+  "runId": "reader-last-mile-final-render@2026-09-26T09:02:54.819Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -23,7 +23,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "e887ca91ebce5fb118cee4de6d6b903ce8d5e4b6cb3f2ad97a193bae0cca09e0"
+      "sha256": "f48687e72e51a85ff05678ef0cb00d4f012616265ee7cdf294c36f0e06fb51b0"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -507,11 +507,11 @@
     },
     {
       "path": "data/derived/census-nces-crosswalk.csv",
-      "sha256": "ea5ce9c11e87511562302ff9ef719d2cab3e28382a4b5251e4dc492a0163f308"
+      "sha256": "2b7d46fc8cbf41bc7c193408562162be5726229fea827d881fdada2c9e315b2f"
     },
     {
       "path": "data/derived/census-unit-zips.json",
-      "sha256": "13059ca501f8a8527ad34a93b1d6564721afb9745ef605e322e65e17fb6117c9"
+      "sha256": "4798468cc473043b4d8a46e2d169c2f25ba0e77b55e40bac872852ace3278c56"
     },
     {
       "path": "data/derived/gap-ledger.json",
@@ -1842,6 +1842,10 @@
       "sha256": "6c14199f75505e0ad8a66f90578c8dbeb473395a883f5db02f43ef8d2693254e"
     },
     {
+      "path": "lib/ask/held-filing-subjects.ts",
+      "sha256": "e89f9bb9a7bd4228d0cac1e292a121226351ce5fff064ef978161a23d166b445"
+    },
+    {
       "path": "lib/ask/held-gaps.ts",
       "sha256": "df6fb91f19af798f5bbbcf8f424620634183b6164c651455054fc9d491a2b586"
     },
@@ -1875,7 +1879,7 @@
     },
     {
       "path": "lib/ask/lexical-reading.ts",
-      "sha256": "82995c094e3d6d4b8b5180aa7ea8944110be1e392eb516fa73872727d1f4218b"
+      "sha256": "169c6f8fea6e03efec53c7f7630c11dd566b1f328306ce627111bc6cceaeeebc"
     },
     {
       "path": "lib/ask/local-finance.ts",
@@ -1911,7 +1915,7 @@
     },
     {
       "path": "lib/ask/money-answer.ts",
-      "sha256": "f164bf3d4825df601be48e37338251dd777356adbf32da8ee26ff16014991ee6"
+      "sha256": "27a27c0f71da2a68fde9931322ab1a8e38d03bae1409a4b58ba33217889976c0"
     },
     {
       "path": "lib/ask/office-question.ts",
@@ -1983,7 +1987,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "c6d79f88509633db9ecebc313472fe7632e85a34cd3943a882e408c66ec0e52c"
+      "sha256": "16b9f47d086e3155f3c18d284125cacf952f56c7d0f0bfc21beadf88a023953b"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2239,7 +2243,7 @@
     },
     {
       "path": "lib/civic-data/meeting-body-crosswalk.ts",
-      "sha256": "b019666b3e6ad670bde4d3dca023913619ed32c91a90af081f5bc0486243d656"
+      "sha256": "4caefb78e380452ad20299f9b79a6e1318f6293408e6d426c1fadffbd0c01ee5"
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
@@ -2267,7 +2271,7 @@
     },
     {
       "path": "lib/civic-data/runtime-authority.ts",
-      "sha256": "2a517f2449a1503b80ffee1107f83a6719d58344403eb9739ad54e85a14d5512"
+      "sha256": "63d54545bf79826ab6e6b808e2c376f22abb5c83455912ddac437fe7c1e2368e"
     },
     {
       "path": "lib/civic-data/source-acquisition-error.ts",
@@ -2312,6 +2316,10 @@
     {
       "path": "lib/control-plane/model-cost.ts",
       "sha256": "408d3899060842a89c68568b7638caf521679d5c88fa85668db592c031a5c542"
+    },
+    {
+      "path": "lib/control-plane/provider-billing.ts",
+      "sha256": "e550b2f8c429121db0ba348d7e90934576e77f4d1d2c3f0791c616a0e2200bb3"
     },
     {
       "path": "lib/control-plane/repository/request-bounds.ts",
@@ -2543,7 +2551,7 @@
     },
     {
       "path": "lib/identity/az-2026.ts",
-      "sha256": "b33a3cb9cfb1c3ff8b46c4fbd2ebf672e13bc30b4d05f7d7f31c04c1a5843811"
+      "sha256": "9559c044ef19c427d06f8cda5c1fd47a5996362bb319ab3ae27b1d510c975a3d"
     },
     {
       "path": "lib/identity/reader-person.ts",
@@ -2551,7 +2559,7 @@
     },
     {
       "path": "lib/log/after-response.ts",
-      "sha256": "b8ba715e0bd2de69f23cc48474ad83f5d0b1dcaf312e1058c843a2cc9dda7f85"
+      "sha256": "a35508b996a799a66a8452d74f2561f7ab2602faf93b611e10e5879eb5dbca7b"
     },
     {
       "path": "lib/log/client.ts",
@@ -3199,7 +3207,7 @@
     },
     {
       "path": "lib/sources/diligent/index.ts",
-      "sha256": "6935da70c6a165c8121b18d89a9826712044c0781a1acc082d11cf6768b3cea0"
+      "sha256": "6d5dc7144cc8ed8d984e756164b66baedb1d101759d4c7bc48111a41e14e557d"
     },
     {
       "path": "lib/sources/diligent/schedule-union.ts",
@@ -3219,7 +3227,7 @@
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "70ca28148129d8121d827016a4cd52d0fcc2e2534f82745ff6d42f00e5d6cdd4"
+      "sha256": "afa751cd936617473497c1142ea076779201cf5e6864cd46f191c1470877315a"
     },
     {
       "path": "lib/sources/ical/recurrence.ts",
@@ -8388,8 +8396,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-25",
-                "collectedAt": "2026-09-25"
+                "verifiedAt": "2026-09-26",
+                "collectedAt": "2026-09-26"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -8480,8 +8488,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-25",
-                "collectedAt": "2026-09-25"
+                "verifiedAt": "2026-09-26",
+                "collectedAt": "2026-09-26"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -8593,7 +8601,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-25"
+          "collectedAt": "2026-09-26"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -8601,19 +8609,19 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-1036fda32df59c238b1f2123fc0a8604",
-          "lastKnownGoodVersionId": "cv-1036fda32df59c238b1f2123fc0a8604",
+          "versionId": "cv-55543ec011996087126138929cba7e47",
+          "lastKnownGoodVersionId": "cv-55543ec011996087126138929cba7e47",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-26T01:56:48.350Z",
-          "promotedAt": "2026-09-26T01:56:48.577Z",
+          "retrievedAt": "2026-09-26T08:10:42.928Z",
+          "promotedAt": "2026-09-26T08:10:43.213Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-03T01:56:48.350Z"
+          "staleAt": "2026-10-03T08:10:42.928Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 25th, 2026",
-      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 25th, 2026",
+      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 26th, 2026",
+      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 26th, 2026",
       "componentReadback": {
         "contacts": 7,
         "committees": 0,
@@ -8627,7 +8635,7 @@
       "candidacyId": "ballot-nj-morris:us-house-11:mejia",
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/07866-filed-contact.png",
-        "sha256": "a3b71b5b2b73a876e55701a4b3889f5b958a30bb929f28e997d295ddd9cb6aa9"
+        "sha256": "ea744b26d9bee3c866194387ce4f2ce1892656692e82d9a811bac35f6abea926"
       }
     },
     {
@@ -8686,7 +8694,7 @@
     },
     {
       "path": "screenshots/reader-last-mile/final/07866-filed-contact.png",
-      "sha256": "a3b71b5b2b73a876e55701a4b3889f5b958a30bb929f28e997d295ddd9cb6aa9"
+      "sha256": "ea744b26d9bee3c866194387ce4f2ce1892656692e82d9a811bac35f6abea926"
     },
     {
       "path": "screenshots/reader-last-mile/final/03255-newbury-listings-resolved.png",

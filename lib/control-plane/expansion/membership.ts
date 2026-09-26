@@ -154,7 +154,9 @@ export interface TerritoryIndex {
   readonly bySubject: ReadonlyMap<string, Territory>;
   /** Registered governments the join could not place, and why. */
   readonly unplaced: ReadonlyMap<string, string>;
-  /** Statewide subjects (the STATE rows): in no sub-state scope. */
+  /** Held OCD identity bridges for shared candidate/source work. */
+  readonly byDivision?: ReadonlyMap<string, DivisionTerritory>;
+  /** Statewide subjects (the STATE rows), reused by applicable sub-state scopes. */
   readonly statewide: ReadonlySet<string>;
   /** Census units in states NO registry covers, for the "not registered" count. Keyed by state (upper). */
   readonly unregisteredUnitsByState: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
@@ -293,7 +295,19 @@ export function buildTerritoryIndex(
     const key = unitShareKey(unit);
     return key === null ? undefined : sharesFor(key);
   };
-  return { bySubject, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
+  const byDivision = new Map<string, DivisionTerritory>();
+  for (const registry of registries) for (const j of registry.jurisdictions) {
+    const territory = bySubject.get(j.id);
+    if (!j.ocdId || !territory) continue;
+    const prior = byDivision.get(j.ocdId);
+    if (!prior) byDivision.set(j.ocdId, territory);
+    else {
+      const shares = new Map(prior.shares);
+      for (const [zcta, share] of territory.shares) shares.set(zcta, Math.max(shares.get(zcta) ?? 0, share));
+      byDivision.set(j.ocdId, { zctas: new Set([...prior.zctas, ...territory.zctas]), shares });
+    }
+  }
+  return { bySubject, byDivision, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
 }
 
 /**
@@ -573,6 +587,7 @@ export class ScopeBudgetGate {
 /* ------------------------------------------------------------ the plan */
 
 export interface ExpansionPlanInput {
+  readonly declaredMembers?: ReadonlyMap<string, ReadonlySet<string>>;
   readonly now: string;
   readonly scopes: readonly ResolvedScope[];
   readonly malformedScopes: number;
@@ -671,7 +686,10 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
           : `the territory index could not be built (${input.territoryDetail ?? "no detail"}), so nothing can be placed in it`;
       return { kind: "UNRESOLVED" as const, decision: scope.decision, why, states: scope.states, members: new Set<string>() };
     }
-    return { ...scope, members: scopeMembers(scope, subjectsWithWork, input.territory) };
+    const members = scopeMembers(scope, subjectsWithWork, input.territory);
+    for (const subject of input.declaredMembers?.get(scope.decision.key) ?? []) members.add(subject);
+    for (const subject of input.territory.statewide) if (scope.states.includes(stateOfSubject(subject) ?? "")) members.add(subject);
+    return { ...scope, members };
   });
   const placementOf = placementIndex(scopes.map((s) => ({ members: s.members })));
   const placedSubjects = new Set<string>();
@@ -719,7 +737,8 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
   });
 
   const territory = input.territory;
-  const placed = territory === null ? 0 : [...subjectsWithWork].filter((s) => territory.bySubject.has(s)).length;
+  const declaredPlaced = new Set([...(input.declaredMembers?.values() ?? [])].flatMap(members => [...members]));
+  const placed = territory === null ? 0 : [...subjectsWithWork].filter((s) => !territory.statewide.has(s) && (territory.bySubject.has(s) || declaredPlaced.has(s))).length;
   const statewideSubjects = territory === null ? 0 : [...subjectsWithWork].filter((s) => territory.statewide.has(s)).length;
   const reading: ExpansionCycleReading = {
     formatVersion: 1,

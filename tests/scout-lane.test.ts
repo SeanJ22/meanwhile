@@ -279,6 +279,19 @@ function executorWith(
 
 /* ---------------------------------------------------------------------- 1 */
 
+test("a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication", async () => {
+  const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
+  const { exec } = executorWith(transport, fakeToolkit(), { bound: { maxTurns: 1 } });
+  const obligation = { ...OBLIGATION, assignments: [{ assignmentKey: "zcta:2020/85635", ref: "isolated-send", relation: "REORDERED" as const, at: NOW, questions: ["ANYTHING_MISSING", "READER_CAN_SEE"] as const }] };
+  const { repos, task } = await registered(createMemoryRepositories(), obligation);
+  await dispatchOne(repos, { obligation: scheduledFixture(obligation, NOW_MS), routeTaskId: task.id, holder: "test", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec, decision: { kind: "BOUNDED_MODEL_WORKER", why: "source investigation", disagreement: null } });
+  const sent = JSON.stringify(transport.requests[0]?.messages);
+  assert.match(sent, /OWNER'S QUESTION ANYTHING_MISSING/);
+  assert.match(sent, /OWNER'S QUESTION READER_CAN_SEE/);
+  assert.match(sent, /real reader link and public readback/);
+  assert.doesNotMatch(sent, /OWNER'S QUESTION CONSISTENT/);
+});
+
 test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async () => {
   const det = decideExecutor({
     routeId: "known-get",

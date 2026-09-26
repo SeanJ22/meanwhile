@@ -211,7 +211,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       if (read.kind === "HELD") {
         // The drilldown was read beside the snapshot, so the activation reading it is projected with is joined here.
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
-        const sources = { ...read.value, activation: view?.activation ?? null };
+        const sources = { ...read.value, activation: view?.activation ?? null, servedReader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null };
         const row = buildAssignments(sources, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
           ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
@@ -664,4 +664,3 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
     </div>
   );
 }
-

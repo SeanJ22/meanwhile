@@ -1,6 +1,6 @@
 {
-  "exactHead": "e3ae81eda34fa13dc0177d6d20f1dac95207442f",
-  "buildId": "DhtpOn9xDUi6cBgH3S-2a",
+  "exactHead": "9dfd9f8159c17e686bda7349a9aba22039ae7fc8",
+  "buildId": "1urH9pt5HWdVFv5KE1SAg",
   "sourceHashes": {
     "data/candidates/corpus-2026.json": "6aa106eabc191a3eddbcfd721d301fcbe094454a1a207c0aa11d06ee07bf638d",
     "data/corpus/statements.json": "01e27fd3179e311aa207d0c51f2bf26172d9baa989ee466338ce0cffd5e50b61",
@@ -10,7 +10,7 @@
     "lib/registry/runtime-data-plane.ts": "4893ff9a22bb3df6e3ce719dd296de219b2c5cfc0ca1f1bc9d5fd0e80a694479",
     "lib/registry/runtime-read-model.ts": "6c81d7d8735bf0b372a7f7d3cdc3fab013c467b3d57fc5b20104883e6df25448",
     "lib/identity/reader-person.ts": "e6e3ce856884b353aabb6bd2911efe441688e5f91e202687310558cdf5a73b13",
-    "lib/identity/az-2026.ts": "b33a3cb9cfb1c3ff8b46c4fbd2ebf672e13bc30b4d05f7d7f31c04c1a5843811",
+    "lib/identity/az-2026.ts": "9559c044ef19c427d06f8cda5c1fd47a5996362bb319ab3ae27b1d510c975a3d",
     "lib/corpus/unified.ts": "c13590b0deee7bc342693c8f128146754f600dc5ff4a644e08cedf7883572ad8",
     "lib/corpus/positions.ts": "d7107262397f28760901252b79122d387dee24cc1408a52b85b1c160b1ef3112",
     "lib/corpus/reader-positions.ts": "7fdbd494e16c938241333cdbdabadac7f43c9db810920a1e3053c3816bfd27b5",

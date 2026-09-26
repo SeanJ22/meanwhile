@@ -380,7 +380,7 @@ export function Composer(props: {
           </div>
           <p className={s.note} style={{ marginTop: 12 }}>
             Sent as the instruction&rsquo;s questions, and recorded by the runner on every piece of work it creates or puts first. They say what the instruction is for; they
-            do not yet change how the work runs.
+            guide Scout investigations. Existing deterministic checks still follow their verified methods.
           </p>
           <div className={`${s.label} ${s.labelSpaced}`}>3 · Categories</div>
           <div className={s.rowCenter} style={{ gap: 8 }}>

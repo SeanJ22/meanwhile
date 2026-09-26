@@ -1219,11 +1219,12 @@ if ("refused" in promoted) {
     runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
   }
 }
+const scopeDivisionsByObligation = new Map(allUnits.map(u => [u.obligation.id, u.record.scopeDivisions]));
 const expansionLoad = await loadExpansionPlan({
   repos,
   root: ROOT,
   now: NOW,
-  obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
+  obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId, scopeDivisions: scopeDivisionsByObligation.get(o.id) })),
   /* Each scope state with no reviewed registry is read from its registration before the territory (2026-09-25). */
   beforeTerritory: async (states) =>
     [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } })).refused].map(
@@ -2359,6 +2360,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         /* RULING 244: a DETERMINISTIC decision reaching the Scout is refused before any request. */
         decision: decisionFor(row.obligation.id, row.obligation.routeId).kind,
         inherited: inheritedFor(row),
+        ownerQuestions: [...(row.obligation.assignments ?? []).flatMap(a => a.questions ?? []), ...dispatchRecorded.filter(d => d.obligationId === row.obligation.id).flatMap(d => d.entry.questions ?? [])],
         tools: {
           vault: vault.put,
           vaultBytes: vault.putBytes,

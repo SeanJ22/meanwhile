@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 841,
-    "named": 8125,
+    "files": 842,
+    "named": 8130,
     "dynamic": 33
   },
   "files": {
@@ -6409,6 +6409,16 @@
         "MTG-9: the building is still the last rung, and still says so",
         "MTG-9: the shape does not fire on a real body name",
         "MTG-9: the sweep reaches the corpus it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-carried-collapse.test.ts": {
+      "names": [
+        "a carried row with no report of its kind to charge is left unaccounted, and validation refuses the snapshot as before",
+        "a dropped fresh row is still a collapsed duplicate, whichever row wins",
+        "a row carried after a failed read is charged to the failed report, never to a successful one",
+        "a stated carriedCollapsed must be a positive integer",
+        "the Flagstaff shape: a carried row collapsed into a fresh listing of the same sitting reconciles, and the collapse is stated on its own report"
       ],
       "dynamic": 0
     },

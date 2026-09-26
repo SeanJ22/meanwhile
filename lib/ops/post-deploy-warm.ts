@@ -10,8 +10,9 @@
  * So when Netlify reports a production deploy succeeded
  * (`netlify/functions/deploy-succeeded.mts`), this waits until `/api/build`
  * serves that commit, then at once makes the pinger's fourteen marked warm
- * calls (each loads the reader edge and resolves one place per published
- * state on its instance, app/api/warm/route.ts) and asks `/api/meetings` for
+ * calls (each loads the reader edge, resolves one place per published state
+ * and loads the Ask route's code and sources on its instance,
+ * app/api/warm/route.ts) and asks `/api/meetings` for
  * each pilot ZIP exactly as the map asks, so the CDN holds those answers
  * before a reader arrives. It then asks each pilot once more and records
  * whether the CDN answered: the evidence, in the function log, that the fill

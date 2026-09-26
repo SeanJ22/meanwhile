@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 847,
-    "named": 8186,
+    "files": 849,
+    "named": 8194,
     "dynamic": 33
   },
   "files": {
@@ -1328,6 +1328,24 @@
         "a MEETING record belonging to another body FAILS validation",
         "a record carrying the RESOLVED body's id passes",
         "a record with NO body id is not failed — it belongs to no single body"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-group-money-answer.test.ts": {
+      "names": [
+        "Vail: no race on the ballot, in the authority's words, then the county register's committees by their registered names, never a total",
+        "a candidate whose ballot listing is not matched to a filing identity is never said to have no filing",
+        "a contest with a candidate lacking a record names the gap as ours, with the count",
+        "every held contest in AZ, NH and NJ composes, names every candidate with its own figures and a counted denominator, and passes the validator",
+        "race money wording is recognised with its race words, and a named person's money question is not a race question",
+        "the race composer steps aside for anything it cannot state plainly"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-identity-bridge.test.ts": {
+      "names": [
+        "Amalia DUARTE: the Mendham Township Committee roster row and her 2026 Township Committee candidacy are one committed person",
+        "Teri Ann Hourihan: the certified card and her filing are the committed party-conflict pair, one subject with both parties and sources"
       ],
       "dynamic": 0
     },

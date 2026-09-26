@@ -166,7 +166,7 @@ export interface AskTrace {
     kind: "SITTING" | "MONEY";
     shape: string;
     /** Which records it was read from: recorded actions, roll calls, the sitting and its named gaps, or state committee filings. */
-    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS";
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER";
     composed: boolean;
     passed?: boolean;
     failed?: string[];

@@ -49,7 +49,7 @@
     },
     {
       "path": "lib/registry/fixtures/official-person-candidacy-links-v1.json",
-      "sha256": "96c1849754bf3e4c0fd4553a8917260f8b844d857622f2ae5f4ba47a9d23507e"
+      "sha256": "abf680c2b9d1070f44e31985befbaa34fe1b38a1b8b1a83ec143464d5aa51a58"
     },
     {
       "path": "lib/officials/statewide-executives.ts",
@@ -12164,9 +12164,18 @@
         "sourcePath": "lib/registry/body-rosters.ts",
         "sourceUrl": "https://www.mendhamtownship.org/266/Township-Committee"
       },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
+      "status": "RESOLVED",
+      "candidacy": {
+        "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+        "contestId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township",
+        "contestTitle": "Member of the Township Committee",
+        "divisionId": "ocd-division/country:us/state:nj/county:morris/place:mendham_township",
+        "electionId": "nj-2026-11-03",
+        "candidateName": "Amalia DUARTE",
+        "sourcePath": "data/states/nj/ballot/nj-morris-2026.json",
+        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf"
+      },
+      "reason": "Same sourced named person in the held municipal or school governing-body roster and held candidacy. Published roster role and elected contest title are not interchangeable office labels; finance is labeled by the candidacy.",
       "unresolvedCandidacyIds": []
     },
     {

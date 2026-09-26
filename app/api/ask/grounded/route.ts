@@ -41,7 +41,7 @@ import { statementEvidenceFor } from "@/lib/ask/statements";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
+import { partyConflictCardForFiling, reconciledCandidacyIdForCard, type PartyConflictFiling } from "@/lib/identity/az-2026";
 import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass, type HeldMeetingAction } from "@/lib/ask/meeting-outcomes";
 import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor, meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { officeholderEvidence } from "@/lib/ask/officeholder";
@@ -50,9 +50,9 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { groupMoneyShapeForBoundSubject, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
 import { composeSittingAnswerWithBasis, settleSittingComposition, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
-import { composeMoneyAnswer, moneyQuestionShape } from "@/lib/ask/money-answer";
+import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
@@ -1018,10 +1018,27 @@ export async function POST(request: Request) {
     ballotOfficialIds.set(candidate.id, officialIds);
     for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
   }
+  /*
+   * **ONE NAME, TWO PARTIES, ONE SUBJECT.** (2026-09-25.) Teri Ann Hourihan is
+   * a certified card ("No Labels", the canvass) and a filing ("Arizona
+   * Independent Party", the Secretary of State's list): the committed AZ
+   * reconciliation holds the pair as a PARTY_CONFLICT and never makes them one
+   * candidacy. A reader who types her name meant her, not a choice between two
+   * of our rows, so the filing's name binds to the card; the answer then carries
+   * both records and both parties with their sources (below), never one merged.
+   */
+  const partyConflictFilings = new Map<string, PartyConflictFiling>();
+  /* A surface that focuses the filing record itself means that record: it keeps its own id. */
+  const surfaceIds = new Set(preferredOfficialIds);
   const inventory = [
     ...bodies,
     ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
-    ...ballotInventory.entities,
+    ...ballotInventory.entities.map((entity) => {
+      const pair = entity.id.startsWith("ballot-az-") && !surfaceIds.has(entity.id) ? partyConflictCardForFiling(entity.id) : null;
+      if (!pair || !ballotInventory.subjects.has(pair.cardKey) || !ballotInventory.subjects.has(pair.filingCandidacyId)) return entity;
+      partyConflictFilings.set(pair.cardKey, pair);
+      return { ...entity, id: pair.cardKey };
+    }),
   ];
   /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
   const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
@@ -1413,6 +1430,8 @@ export async function POST(request: Request) {
     };
     const contacts: AskContact[] = [];
     const canonicalSubjectKeys = new Set<string>(subject ? [subject.id] : []);
+    /* A party-conflict card's filing (Hourihan): retrieved beside the card, its money kept under its own id. */
+    let partyConflictFiling: BallotSubjectRecord | null = null;
     if (subject?.kind === "PERSON") for (const [id, canonicalId] of officialAliases) {
       if (canonicalId === subject.id) canonicalSubjectKeys.add(id);
     }
@@ -1456,6 +1475,20 @@ export async function POST(request: Request) {
       });
       records.push(...retrieved.records);
       Object.assign(denominators, retrieved.denominators);
+      /* The party-conflict pair: the filing's own records beside the card's, and both parties with their sources, as ours to reconcile. */
+      const conflict = ballotRecord.kind === "PERSON" ? partyConflictFilings.get(ballotRecord.id) ?? null : null;
+      const conflictFiling = conflict ? ballotInventory.subjects.get(conflict.filingCandidacyId) ?? null : null;
+      if (conflict && conflictFiling) {
+        partyConflictFiling = conflictFiling;
+        records.push(...ballotRecordsFor(conflictFiling, { set: ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees }).records
+          .filter((record) => record.kind === "CANDIDACY"));
+        gaps.push({
+          whose: "OURS",
+          statement: `Arizona's certified canvass lists ${conflict.name} as ${conflict.canvassParty ?? "no party"}; the Secretary of State's candidate-filing list lists ${conflict.name} as ${conflict.filingParty ?? "no party"}.` +
+            (conflict.readerGapSentence ? ` ${conflict.readerGapSentence}` : ""),
+        });
+        denominators.partyConflictRecordsHeld = 2;
+      }
       if (ballotRecord.kind === "MEASURE" && ballot.analysisLoaderFailed) {
         denominators.measureAnalysisLoaderFailures = 1;
         gaps.push({ whose: "OURS", statement: "The held official measure analysis could not be read for this answer. This is a holding failure, not a finding that the authority has no analysis." });
@@ -2094,6 +2127,61 @@ export async function POST(request: Request) {
       }
     }
 
+    /* The party-conflict card's money is its filing's, retrieved under the filing's own id (never restamped as the card's). */
+    if (partyConflictFiling && subject?.kind === "PERSON" && financeQuestionAsked(question)) {
+      comparedIds.add(partyConflictFiling.id);
+      const filed = campaignMoneyEvidenceFor(ballotSubject(partyConflictFiling), partyConflictFiling.id, partyConflictFiling.contestId);
+      records.push(...filed.records);
+      gaps.push(...filed.gaps);
+      denominators.partyConflictFilingStateFinanceRecordsReturned = filed.denominators.stateFinanceRecordsReturned;
+    }
+
+    /*
+     * **A RACE'S CANDIDATES' MONEY.** (2026-09-25, the Ask three-second repair,
+     * part two; `lib/ask/money-answer.ts`.) *"How much have the candidates for
+     * governor raised?"* names one contest: every candidate the held ballot lists
+     * for it has their own money records retrieved and stamped as theirs (exact
+     * ids, the same selector the card uses), and the relevance gate keeps exactly
+     * those. *"Who funded the Vail school board candidates?"* names a body whose
+     * race the authority says is not on the ballot: that statement, for the
+     * body's own division, is retrieved beside the body's register records.
+     */
+    const groupAsk = subject && (subject.kind === "CONTEST" || subject.kind === "BODY") && financeQuestionAsked(question)
+      ? groupMoneyShapeForBoundSubject(question, inventory, subject.id) : null;
+    const groupCandidates: { id: string; name: string; matched: boolean }[] = [];
+    let groupStateRecords = 0;
+    let groupAbsence: EvidenceRecord | null = null;
+    /* The one held contest: the bound contest, or the only contest the ballot
+       holds in a bound body's own division ("the Mendham Township Committee
+       candidates"). Two or none is not one; the model reads it as before. */
+    const groupContest = !groupAsk ? null : subject?.kind === "CONTEST" && ballotRecord?.kind === "CONTEST" ? ballotRecord
+      : subject?.kind === "BODY" ? ((held) => held.length === 1 ? held[0] : null)(
+        [...new Map([...ballotInventory.subjects.values()].filter((row) => row.kind === "CONTEST" && row.ocdId === subject.id.split("#")[0]).map((row) => [row.id, row])).values()])
+        : null;
+    if (groupContest) {
+      for (const candidate of ballotInventory.subjects.values()) {
+        if (candidate.kind !== "PERSON" || candidate.contestId !== groupContest.contestId || candidate.removedFromFiling ||
+          candidate.historicalFiling || candidate.outsideReaderDivisions || groupCandidates.some((held) => held.id === candidate.id)) continue;
+        comparedIds.add(candidate.id);
+        const theirs = campaignMoneyEvidenceFor(ballotSubject(candidate), candidate.id, candidate.contestId);
+        records.push(...theirs.records);
+        gaps.push(...theirs.gaps);
+        groupStateRecords += theirs.denominators.stateFinanceRecordsReturned;
+        // A ballot listing not joined to a filing identity is never "no filing": that would be false about a filing held under another record.
+        groupCandidates.push({ id: candidate.id, name: candidate.name, matched: Boolean(candidate.candidacyId) && theirs.denominators.financeIdentityUnresolved === 0 });
+      }
+      denominators.raceCandidatesListed = groupCandidates.length;
+      denominators.raceStateFinanceRecordsReturned = groupStateRecords;
+    }
+    if (groupAsk && !groupContest && subject?.kind === "BODY") {
+      const said = absencesForDivisions([subject.id.split("#")[0]], absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? []));
+      // Only the authority's own statement that the race is NOT on this ballot.
+      if (said.length === 1 && /^There is no .+ race on the /.test(said[0].text)) {
+        groupAbsence = said[0];
+        records.push(said[0]);
+      }
+    }
+
     if (subject && financeQuestionAsked(question)) {
       const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
       records.push(...normalized.records);
@@ -2104,12 +2192,12 @@ export async function POST(request: Request) {
         records.push(...finance.records);
         gaps.push(...finance.gaps);
         Object.assign(denominators, finance.denominators);
-      } else if (normalized.records.length === 0 && normalized.gaps.length === 0) {
+      } else if (normalized.records.length === 0 && normalized.gaps.length === 0 && groupCandidates.length === 0) {
         gaps.push(financeScopeGapFor(subject));
       }
       // Every regime, on every money answer, whether or not records were found.
       for (const note of financeRegimeNotesFor(subject, {
-        state: normalized.denominators.stateFinanceRecordsReturned > 0,
+        state: normalized.denominators.stateFinanceRecordsReturned > 0 || groupStateRecords > 0 || (denominators.partyConflictFilingStateFinanceRecordsReturned ?? 0) > 0,
         federal: normalized.denominators.federalFinanceRecordsReturned > 0,
         county: Boolean(finance?.records.length),
       })) gaps.push(note.gap);
@@ -2416,7 +2504,13 @@ export async function POST(request: Request) {
     const moneyOther = moneyShape?.otherId ? ballotInventory.subjects.get(moneyShape.otherId)?.name ?? inventory.find((entity) => entity.id === moneyShape.otherId)?.name ?? null : null;
     const moneySettled = settleSittingComposition(
       moneyShape && subject && (moneyShape.otherId === null || (moneyOther && comparedIds.has(moneyShape.otherId)))
-        ? composeMoneyAnswer({ ask: moneyShape.ask, subject: { id: subject.id, name: subject.name }, other: moneyShape.otherId && moneyOther ? { id: moneyShape.otherId, name: moneyOther } : null, records: packRecords, gaps: packGaps })
+        ? composeMoneyAnswer({
+          ask: moneyShape.ask,
+          // A party-conflict card's money is its filing's: stated under the filing's id, after both parties and their authorities.
+          subject: { id: partyConflictFiling && moneyShape.ask.kind !== "COMPARE" ? partyConflictFiling.id : subject.id, name: subject.name },
+          other: moneyShape.otherId && moneyOther ? { id: moneyShape.otherId, name: moneyOther } : null, records: packRecords, gaps: packGaps,
+          ...((conflict) => conflict ? { lead: `Arizona's certified canvass lists ${conflict.name} as ${conflict.canvassParty ?? "no party"}; the Secretary of State's candidate-filing list lists ${conflict.filingParty ?? "no party"}, and the figures here are held under that filing` } : {})(partyConflictFiling ? partyConflictFilings.get(subject.id) : null),
+        })
         : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
     );
@@ -2430,10 +2524,36 @@ export async function POST(request: Request) {
         ...(moneySettled.verdict?.kind === "FAILED" ? { failed: moneySettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed;
+    /* A race's candidates, or a body whose race is not on the ballot (2026-09-25): the same validator decides; a refusal goes to the model. */
+    const groupReady = groupAsk && subject && !topicComposed && !sittingSettled.composed && !moneySettled.composed ? { ask: groupAsk, subject } : null;
+    const groupSettled = settleSittingComposition(
+      groupReady && groupContest && groupCandidates.length > 0
+        ? composeGroupMoneyAnswer({
+          ask: groupReady.ask,
+          // A body's contest is named with its body: "Member of the Township Committee" alone is every township's title.
+          contest: { id: groupContest.contestId, title: groupReady.subject.kind === "BODY" ? `${groupContest.contestTitle} (${groupReady.subject.name})` : groupContest.contestTitle },
+          candidates: groupCandidates, records: packRecords, gaps: packGaps,
+        })
+        : groupReady?.subject.kind === "BODY" && groupAbsence
+          ? composeNoRaceMoneyAnswer({ ask: groupReady.ask, body: { id: groupReady.subject.id, name: groupReady.subject.name }, absence: groupAbsence, records: packRecords })
+          : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (groupReady) {
+      trace.composition = {
+        kind: "MONEY",
+        shape: `RACE_${groupReady.ask.kind}`,
+        basis: groupContest ? "STATE_COMMITTEE_FILINGS" : "BALLOT_ABSENCE_AND_COUNTY_REGISTER",
+        composed: Boolean(groupSettled.verdict),
+        ...(groupSettled.verdict ? { passed: groupSettled.verdict.kind === "PASSED" } : {}),
+        ...(groupSettled.verdict?.kind === "FAILED" ? { failed: groupSettled.verdict.failed } : {}),
+      };
+    }
+    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed;
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
-      shownContacts, resolvedSittings, agendaQuestion, capture, moneyComposed: Boolean(moneySettled.composed) && !topicComposed && !sittingSettled.composed,
+      shownContacts, resolvedSittings, agendaQuestion, capture,
+      moneyComposed: Boolean(moneySettled.composed ?? groupSettled.composed) && !topicComposed && !sittingSettled.composed,
     };
   }
 

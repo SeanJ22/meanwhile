@@ -128,34 +128,6 @@ export type PermanentMeetingsReceipt =
   | { readonly kind: "HELD"; readonly value: readonly PermanentMeetingsContractReceipt[] }
   | { readonly kind: "UNAVAILABLE"; readonly detail: string };
 
-/**
- * **THE RESEARCH CYCLE DOES NOT READ THE CANONICAL OBSERVABILITY PROJECTION.**
- * (2026-09-23.)
- *
- * The cycle used to build this receipt from
- * `readRoutineDataObservabilityFromConnection`, the read Admin makes. That read
- * selects every candidate version from the rolling 30 days with its full
- * payload: 18,961 rows and 3.8 GB of candidate JSON on 2026-09-23. It first
- * spends minutes in correlated scans that unpack each row's JSON. On the
- * standing host it ended every cycle that reached it with "FATAL ERROR:
- * Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap
- * out of memory" at the 4 GB heap limit (01:38Z). The cycle wrote no record, and
- * its window lease stayed held.
- *
- * Until that read is bounded, the cycle carries the receipt as UNAVAILABLE, by
- * name. `factFreshnessFromPermanentMeetings` then holds every meeting fact's
- * approval. That is the fail-closed direction: no fact is approved on a
- * missing receipt, none is deleted, and no source clock is reopened.
- * Promotion is off, so no reader surface reads these approvals.
- */
-export const RESEARCH_CYCLE_MEETINGS_RECEIPT: PermanentMeetingsReceipt = {
-  kind: "UNAVAILABLE",
-  detail:
-    "not read by the research cycle: the canonical routine observability read selects every candidate version " +
-    "with its full payload (3.8 GB on 2026-09-23) and exhausted this cycle's 4 GB heap; fact approval stays held " +
-    "until that read is bounded",
-};
-
 export function permanentMeetingsReceiptId(contractId: string, scope: string): string {
   return `routine-civic-data:${contractId}/MEETING/${scope}`;
 }

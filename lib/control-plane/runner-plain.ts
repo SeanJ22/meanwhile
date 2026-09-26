@@ -201,7 +201,9 @@ export function runnerFace(input: {
     (safety === null
       ? "This cycle's activity has not been recorded yet."
       : safety.cycle.dispatches === 0
-        ? "Nothing was started this cycle — it reached a limit before it got to any work. Everything it owed is still owed."
+        ? codes.length > 0
+          ? "No work started in this cycle's recorded activity. The recorded stop reasons are shown below; unfinished work remains owed."
+          : "No dispatch is recorded for this cycle yet. No stop reason has been recorded."
         : `Started ${count(safety.cycle.dispatches)} piece${safety.cycle.dispatches === 1 ? "" : "s"} of work and made ${count(safety.cycle.requests)} request${safety.cycle.requests === 1 ? "" : "s"} to outside sources.`);
 
   const live = (safety?.providerCircuits ?? []).filter((c) => c.eligibleAt !== "");

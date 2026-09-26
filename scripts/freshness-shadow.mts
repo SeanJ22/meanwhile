@@ -168,11 +168,7 @@ import {
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
-import {
-  factFreshnessFromPermanentMeetings,
-  RESEARCH_CYCLE_MEETINGS_RECEIPT,
-  type PermanentMeetingsReceipt,
-} from "../lib/control-plane/promotion/fact-freshness.ts";
+import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
@@ -2985,13 +2981,10 @@ if (!dry && !canary) {
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    const meetingsReceipt: PermanentMeetingsReceipt = RESEARCH_CYCLE_MEETINGS_RECEIPT;
-    if (meetingsReceipt.kind === "UNAVAILABLE") {
-      runtimeConditions.push(
-        `permanent meetings receipt unavailable to immutable fact projection: ${meetingsReceipt.detail}; ` +
-        "fact approval remains held and no legacy acquisition clock is reopened",
-      );
-    }
+    const meetingFreshness = createPermanentMeetingFreshness({
+      connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
+      onUnavailable: detail => runtimeConditions.push(detail),
+    });
     /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
     const fleetGuarded = modelLaneEnabled ? fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
@@ -3047,7 +3040,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
           readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
           now: nowIso(),
           root: ROOT,
-          freshness: async (input) => factFreshnessFromPermanentMeetings(meetingsReceipt, input),
+          freshness: meetingFreshness,
         }),
       }));
     } catch (error) {

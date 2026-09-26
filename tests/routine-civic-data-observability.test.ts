@@ -19,11 +19,67 @@ import { VALIDATION_CHECKS, type RoutineChangeSet, type ValidationReceipt } from
 import { READER_PROJECTION_READBACK_PREFIX, serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import { ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS } from "../lib/civic-data/observability-store.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 
 const NOW = "2026-09-08T12:00:00.000Z";
 const READER_CODE_SHA = "a".repeat(40);
 const LATER_READER_CODE_SHA = "b".repeat(40);
 const READER_BUILD = { codeSha: READER_CODE_SHA, branch: "main", context: "production" } as const;
+
+test("bounded worker freshness reuses full canonical proof and shares one read across fact classes", async () => {
+  const contract = MEETING_PARTITION_CONTRACTS.find(c => c.meetingSource === "legistar")!;
+  const candidate = candidateRow(contract, { id: "bounded-authority", at: NOW });
+  const rows = { candidates: [candidate], promotions: [promotion(contract, candidate)], events: [...sourceHistory(candidate), readerEvent(contract, candidate)] };
+  let reads = 0;
+  let builds = 0;
+  const freshness = createPermanentMeetingFreshness({ connection: "isolated", now: () => NOW,
+    readBuild: async () => { builds++; return READER_BUILD; },
+    readRows: async (_connection, selected) => { reads++; assert.equal(selected.id, contract.id); return rows; },
+  });
+  const fact = { subjectId: contract.bodyId, meetingSource: contract.meetingSource, lastSuccessfulAcquisitionAt: NOW };
+  const results = await Promise.all([freshness({ ...fact, recordClass: "meeting-times" }), freshness({ ...fact, recordClass: "agendas" })]);
+  assert.ok(results.every(r => !r.hold), JSON.stringify(results));
+  assert.equal(reads, 1);
+  assert.equal(builds, 1);
+  const older = await freshness({ ...fact, recordClass: "meeting-times", lastSuccessfulAcquisitionAt: "2026-09-07T00:00:00.000Z" });
+  assert.equal(older.state, "STALE");
+  assert.equal(older.hold, true, "new authority cannot refresh old fact evidence by association");
+});
+
+test("bounded worker freshness rejects missing readback, bad pointer, stale authority and another deployed build", async () => {
+  const contract = MEETING_PARTITION_CONTRACTS.find(c => c.meetingSource === "legistar")!;
+  const candidate = candidateRow(contract, { id: "bounded-negative", at: NOW });
+  const rows = { candidates: [candidate], promotions: [promotion(contract, candidate)], events: [...sourceHistory(candidate), readerEvent(contract, candidate)] };
+  for (const variant of [
+    { rows: { ...rows, events: sourceHistory(candidate) }, build: READER_BUILD, now: NOW },
+    { rows: { ...rows, promotions: [{ ...rows.promotions[0], currentVersionId: "missing" }] }, build: READER_BUILD, now: NOW },
+    { rows, build: { ...READER_BUILD, codeSha: LATER_READER_CODE_SHA }, now: NOW },
+    { rows, build: READER_BUILD, now: "2026-09-20T12:00:00.000Z" },
+  ]) {
+    const freshness = createPermanentMeetingFreshness({ connection: "isolated", now: () => variant.now,
+      readBuild: async () => variant.build, readRows: async () => variant.rows });
+    const reading = await freshness({ subjectId: contract.bodyId, meetingSource: contract.meetingSource, recordClass: "meeting-times", lastSuccessfulAcquisitionAt: NOW });
+    assert.equal(reading.hold, true, JSON.stringify(reading));
+  }
+});
+
+test("bounded worker proof failure stays named, cached and secret-free", async () => {
+  const contract = MEETING_PARTITION_CONTRACTS.find(c => c.meetingSource === "legistar")!;
+  let reads = 0;
+  const conditions: string[] = [];
+  const freshness = createPermanentMeetingFreshness({ connection: "private-credential", now: () => NOW,
+    readBuild: async () => READER_BUILD, readRows: async () => { reads++; throw new Error("private-credential"); },
+    onUnavailable: detail => conditions.push(detail) });
+  const fact = { subjectId: contract.bodyId, meetingSource: contract.meetingSource, recordClass: "meeting-times" as const, lastSuccessfulAcquisitionAt: NOW };
+  const reading = await freshness(fact);
+  assert.equal(reading.hold, true);
+  assert.equal(reading.state, "UNKNOWN");
+  assert.match(reading.reason, /MEETING_FRESHNESS_READ_OR_PROOF_FAILED/);
+  await freshness(fact);
+  assert.equal(reads, 1);
+  assert.equal(conditions.length, 1);
+  assert.doesNotMatch(JSON.stringify([reading, conditions]), /private-credential/);
+});
 
 function validationReceipt(
   contract: RoutineSourceContract | ManualProductionSourceContract,
@@ -1864,6 +1920,16 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
   assert.equal(source.cadence.operationalState, "HEALTHY");
   assert.equal(source.cadence.nextDue.kind, "MEASURED");
   if (source.cadence.nextDue.kind === "MEASURED") assert.ok(Date.parse(source.cadence.nextDue.value) > Date.parse(confirmedAt));
+  const { serializeUnchangedConfirmationSources } = await import("../lib/civic-data/unchanged-confirmation.ts");
+  const sources = { ...confirmation, id: "retained-sources", sequence: confirmation.sequence + 1,
+    detail: serializeUnchangedConfirmationSources(built.confirmation, []) };
+  const laterReader = readerEvent(contract, { ...row, retrievedAt: confirmedAt }, sources.sequence + 1);
+  const historyAfterRecheck = [...history, confirmation, sources, laterReader];
+  const readAfterRecheck = (events: RoutineCandidateEventRow[]) => projectRoutineDataObservability(
+    { candidates: [row], events, promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD).contracts[0].readerVisible;
+  assert.equal(readAfterRecheck(historyAfterRecheck).kind, "MEASURED", "legitimate source receipts between reader checks are not missing events");
+  assert.equal(readAfterRecheck(historyAfterRecheck.filter(e => e.id !== sources.id)).kind, "UNKNOWN", "a real missing companion sequence still holds");
+  assert.equal(readAfterRecheck(historyAfterRecheck.map(e => e.id === sources.id ? { ...e, detail: "UNCHANGED_CONFIRMATION_SOURCES_V1 {}" } : e)).kind, "UNKNOWN", "malformed companion evidence cannot fill the sequence gap");
   const day = source.histories["24h"];
   assert.deepEqual(day.events.map((item) => item.domain), ["UNCHANGED_CONFIRMATION"], "labelled as a confirmation, not a source state");
   for (const [name, count] of Object.entries(day.counts)) {

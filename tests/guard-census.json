@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 871,
-    "named": 8317,
+    "named": 8321,
     "dynamic": 33
   },
   "files": {
@@ -6078,7 +6078,8 @@
         "MW-014: the coordinator's BLOCKED and STAGED decisions are counted, not silent",
         "MW-014: the persisted reading's reasons sum to the skipped count on the runner card",
         "MW-071: mid-cycle lanes count running Scouts as active and the oldest row neither started nor running",
-        "MW-071: the pulse carries the lane gauges from the research state it already reads"
+        "MW-071: the pulse carries the lane gauges from the research state it already reads",
+        "a cycle without dispatches does not invent a spending-limit stop"
       ],
       "dynamic": 0
     },
@@ -10117,7 +10118,10 @@
         "PDC-13: the pure source-state classifier refuses skipped, revived, and repeated dispositions",
         "PDC-13: tied latest attempts cannot be ordered by UUID or database return order",
         "R20: Admin shows the retry the runner admits on; a meeting partition never published is next due at the base cadence",
-        "a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion"
+        "a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion",
+        "bounded worker freshness rejects missing readback, bad pointer, stale authority and another deployed build",
+        "bounded worker freshness reuses full canonical proof and shares one read across fact classes",
+        "bounded worker proof failure stays named, cached and secret-free"
       ],
       "dynamic": 0
     },
@@ -10282,11 +10286,11 @@
     "tests/routine-observability-bounded.test.ts": {
       "names": [
         "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
+        "a missing permanent receipt continues to hold approval fail-closed",
         "a read that runs past its statement limit is a named store failure, never an empty or zero outcome",
         "any other read failure stays an untyped store failure",
         "the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it",
         "the research cycle never makes the unbounded observability read",
-        "the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed",
         "the statement limit is validated before any connection is opened"
       ],
       "dynamic": 0

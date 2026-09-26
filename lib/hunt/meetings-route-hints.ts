@@ -184,6 +184,33 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
     ],
     observed: { at: "2026-09-24T19:33:49Z", by: DOTGOV_SWEEP },
   }),
+  {
+    /*
+     * The 85635 expansion (2026-09-26). The city publishes its sittings on its own "Calendar Meeting List" page as
+     * schema.org Event JSON-LD, which the official-page-events adapter already reads. The page never names the city
+     * in an event's title, so the walk could not confirm it for the city by name; the body this hint names, "City
+     * Council", is the name its governing body's events carry. No other route exists that an adapter reads: neither
+     * this page nor the council's own meetings page links an iCal or RSS feed or an agenda portal (only a YouTube
+     * channel and the city's own agendas-and-minutes document page), read 2026-09-26.
+     */
+    jurisdictionId: "az:city:city-of-sierra-vista",
+    officialSite: null,
+    routes: [
+      {
+        url: "https://www.sierravistaaz.gov/our-city/calendar-meeting-list",
+        kind: "PAGE",
+        body: "City Council",
+        platform: "granicus-govaccess",
+        verifyAs: "official-page-events",
+        evidence:
+          "The city's own \"Calendar Meeting List | City of Sierra Vista, AZ\" page: 20 schema.org Event records with dates and " +
+          "America/Phoenix start times, among them \"City Council Work Session\" (2026-10-06, 3 PM) and \"City Council Regular " +
+          "Meeting\" (2026-10-08, 5 PM), besides the Neighborhoods and the Parks and Recreation Commissions. Read robots-first; " +
+          "official-page-events@cd7f0852192b verifies 8 City Council events from it.",
+        observed: { at: "2026-09-26T04:58:00Z", by: "85635 acquisition session: one honest request per page, robots.txt read first" },
+      },
+    ],
+  },
   siteHint("az:city:town-of-kearny", {
     origin: "https://www.kearnyaz.gov",
     selfName: "Town of Kearny",

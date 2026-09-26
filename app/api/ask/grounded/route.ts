@@ -132,6 +132,7 @@ import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
 import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
+import { azHeldFilingSubjects, requestedHeldFilings, type HeldFilingSubject } from "@/lib/ask/held-filing-subjects";
 import {
   askAnswer,
   clarifyAnswer,
@@ -990,6 +991,15 @@ export async function POST(request: Request) {
   const comparedSlots = ((shape) => shape?.otherSlot ? [shape.slot, shape.otherSlot] : [])(moneyQuestionShape(question));
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
     [...preferredOfficialIds, ...[question, ...comparedSlots].flatMap((text) => namedSourceFilingIds(text, ballot.set))]);
+  let heldFilings: HeldFilingSubject[] = [];
+  if (ocdIds.some(id => /\/state:az(?:\/|$)/.test(id)) && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) {
+    try {
+      const represented = new Set([...ballotInventory.subjects.values()].flatMap(row => [row.id, ...(row.kind === "PERSON" && row.candidacyId ? [row.candidacyId] : [])]));
+      heldFilings = requestedHeldFilings(azHeldFilingSubjects(), question, preferredOfficialIds, represented);
+    } catch {
+      holdingLoadGaps.push({ whose: "OURS", statement: "Our source filing identities could not be read; this is not evidence that a candidate or their profile is absent." });
+    }
+  }
 
   /*
    * **ONE HUMAN IS ONE SUBJECT, EVEN WHEN TWO STORES HOLD HER.**
@@ -1032,6 +1042,7 @@ export async function POST(request: Request) {
   const surfaceIds = new Set(preferredOfficialIds);
   const inventory = [
     ...bodies,
+    ...heldFilings.map(row => row.entity),
     ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities.map((entity) => {
       const pair = entity.id.startsWith("ballot-az-") && !surfaceIds.has(entity.id) ? partyConflictCardForFiling(entity.id) : null;
@@ -1404,6 +1415,8 @@ export async function POST(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
+    if (heldFiling) records.push(heldFiling.record);
     /** The sittings this request resolved, for the structured half of the payload. */
     const resolvedSittings: AskSitting[] = [];
     /** A topic question's dated timeline for the bound body, when one was built. */

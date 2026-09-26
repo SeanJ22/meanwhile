@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 857,
-    "named": 8258,
+    "files": 858,
+    "named": 8260,
     "dynamic": 33
   },
   "files": {
@@ -5439,6 +5439,13 @@
         "Ask, Tucson Unified 499: 89 stored rows (88 re-reads of its portal page plus the site root) are two index records with no revision language",
         "Ask, a real revision: two distinct contents are two agenda records, each with its own source",
         "Ask, a sitting holding only the site root: its listing pages are named as publication indexes, never as an agenda"
+      ],
+      "dynamic": 0
+    },
+    "tests/held-filing-subjects.test.ts": {
+      "names": [
+        "published source-filing profiles retain exact identities outside the mapped ballot without duplicating joined people",
+        "the real Ask route binds published source IDs even when the mapped ballot does not carry them"
       ],
       "dynamic": 0
     },

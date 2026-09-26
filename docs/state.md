@@ -1,4 +1,6 @@
-## Current release checkpoint — September 26, 2026, 10:47 AM Arizona MST
+## Current release checkpoint — September 26, 2026, 11:12 AM Arizona MST
+
+The cf06b463 full gates again passed 15/16: 8,414 tests passed, one failed and one was skipped. The remaining failure was the committed guard census retaining the old name of the deliberately corrected free-discovery test. Its explicit generated rename is committed in 99f84fc1; no test was removed and the census gate is unchanged. The failed receipt is preserved as gate-run-cf06b463-failed.json. Repair 938e5dbe also recovers transient cycle-lease reads within existing bounded retry rules and names partial Admin readings. Lease writes remain single attempt, another holder remains exclusive, and persistent read failures remain failures. Targeted census/discovery/lease/parser checks pass (27 tests); final full gates are still required. The production 10:35 AM cycle's lease-read timeout is the recorded trigger.
 
 Codex owns Claude's batch F handoff. The hunt remains paused: no Send, hunt-budget activation or paid acquisition is authorized. Its only new cap is $50 Anthropic tokens for this hunt, including concurrent reservations, retries and escalations across restarts. Other services are reported separately and do not consume that cap. The 6 AM readiness target was missed.
 

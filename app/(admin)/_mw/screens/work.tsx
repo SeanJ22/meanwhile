@@ -131,6 +131,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   })();
   const openId = param(sp, "open");
   const show = param(sp, "show");
+  const instructionFilter = param(sp, "instruction");
   /*
    * An opened assignment is read beside the page's other reads, not after
    * them: it needs nothing they return. A piece of standing work is read by its
@@ -178,9 +179,12 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const view: AssignmentView | null = published && published.kind === "BUILT" ? published.view : null;
   const scopeState = base.scope.kind === "all" ? null : base.scope.state;
   const allRows: readonly AssignmentListRow[] = view?.rows ?? [];
-  const rows = scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
-  const geographicCounts = scopeState === null ? null : view?.geographicCounts?.[scopeState];
-  const scopedTotal = scopeState === null ? view?.summary.total ?? null : view?.geographicCounts === undefined ? null : Object.values(geographicCounts ?? {}).reduce((n, count) => n + count, 0);
+  // An instruction may reach shared country/state work. Its exact marks take
+  // precedence over the sidebar's state; no inferred county/ZIP/name join.
+  const rows = instructionFilter !== null ? allRows.filter(row => row.assignmentKeys?.includes(instructionFilter)) : scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
+  const geographicCounts = instructionFilter !== null ? view?.instructionCounts?.[instructionFilter] : scopeState === null ? null : view?.geographicCounts?.[scopeState];
+  const countsUnavailable = instructionFilter !== null ? view?.instructionCounts === undefined : view?.geographicCounts === undefined;
+  const scopedTotal = instructionFilter === null && scopeState === null ? view?.summary.total ?? null : countsUnavailable ? null : Object.values(geographicCounts ?? {}).reduce((n, count) => n + count, 0);
   const publishedTrail = snapshotOut.kind === "HELD" ? snapshotOut.value.deliveryTrail ?? null : null;
   const deliveryTrail = livePipeline.ok && publishedTrail ? buildDeliveryTrail(livePipeline.states, {
     activation: view?.activation ?? readActivationGate(""),
@@ -236,7 +240,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   /* ------------------------------------------------------------ the list */
   const groups = GROUP_ORDER.map((state) => {
     const listed = rows.filter((r) => r.state === state);
-    const total = scopeState === null ? view?.summary.byState.find((x) => x.state === state)?.count.value ?? listed.length : geographicCounts?.[state] ?? listed.length;
+    const total = scopeState === null && instructionFilter === null ? view?.summary.byState.find((x) => x.state === state)?.count.value ?? listed.length : geographicCounts?.[state] ?? listed.length;
     return { state, listed, total };
   }).filter((g) => g.total > 0 || g.listed.length > 0);
   const routineGroups = (["STUCK", "NEEDS ATTENTION", "WORKING", "NOT READ YET"] as const).map((st) => ({ st, bodies: inScopeBodies.filter((b) => b.status === st) })).filter((g) => g.bodies.length > 0);
@@ -249,14 +253,14 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const numbers: RenderedNumber[] = [];
   const claims: CountClaim[] = [{ label: "your instructions", stated: base.selected.length, rendered: instructions.length }];
   if (view) {
-    if (scopedTotal !== null) numbers.push({ label: "assignments listed", value: rows.length, denominator: scopedTotal, contract: "published rows attributed to the selected state, or all held assignments when all scopes is selected" });
+    if (scopedTotal !== null) numbers.push({ label: "assignments listed", value: rows.length, denominator: scopedTotal, contract: "published rows carrying this exact instruction when filtered, otherwise rows attributed to the selected state or all held assignments" });
     numbers.push(...askGapRenderedNumbers(view));
     for (const g of groups) claims.push({ label: `listed ${g.state}`, stated: g.listed.length, rendered: g.listed.length });
   }
   const na = auditRenderedNumbers(numbers);
   const ca = checkStatedEqualsRendered(claims);
 
-  const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
+  const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, instruction: instructionFilter, ...extra });
   /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — tracked ones first, then registered ones, each named for where it stands. */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
@@ -334,7 +338,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               card(
                 i.card,
                 opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? (
-                  <InstructionDetail view={i} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
+                  <InstructionDetail view={i} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
                 ) : null,
               ),
             )
@@ -343,7 +347,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} says={opened.says} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
-            Standing work{scopeState === null ? " the system owes" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${scopedTotal.toLocaleString("en-US")}` : ""}
+            Standing work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " the system owes" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${scopedTotal.toLocaleString("en-US")}` : ""}
           </h3>
           {published === null ? (
             <p className={s.note}>The assignment list is not on the published snapshot, so no standing work is listed — not an empty list.</p>
@@ -351,7 +355,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             <p className={s.note}>The publisher could not build the assignment list at {formatEastern(published.at)}: {published.says}</p>
           ) : (
             <>
-              {scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " A finer assignment-to-geography join is not yet available; these are state totals, not totals for the selected county or district." : ""}</p>}
+              {instructionFilter !== null ? <p className={s.note}>{countsUnavailable ? "The published snapshot has no instruction attribution yet; no count is inferred from geography." : "These are exact Send references recorded on the work, including shared work. Totals include rows omitted from this bounded list. They describe work reached, not proof of complete geographic coverage."} <Link className={s.btnLink} href={here({ instruction: null, show: null })}>Show all standing work in this scope</Link></p> : scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " Select an instruction to see its exact work; these are state totals, not inferred totals for the selected county or district." : ""}</p>}
               <p className={s.note}>
                 {view!.selection.rule} {scopedTotal !== null && scopedTotal > rows.length ? `${(scopedTotal - rows.length).toLocaleString("en-US")} rows in this scope are not carried on the published list; each group says how many it holds.` : ""}
               </p>
@@ -386,7 +390,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           )}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
-            Routine meeting reads{bodiesRead.kind === "HELD" ? ` — ${inScopeBodies.reduce((n, b) => n + b.contractIds.length, 0)}` : ""}
+            Routine meeting reads{instructionFilter !== null ? " in the sidebar scope (separate from this instruction)" : ""}{bodiesRead.kind === "HELD" ? ` — ${inScopeBodies.reduce((n, b) => n + b.contractIds.length, 0)}` : ""}
           </h3>
           {bodiesRead.kind === "UNREAD" ? (
             <p className={s.note}>{bodiesRead.detail}</p>
@@ -437,7 +441,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view, openHref }: { view: InstructionView; openHref: (id: string) => string }) {
+function InstructionDetail({ view, openHref, workHref }: { view: InstructionView; openHref: (id: string) => string; workHref: string }) {
   const d = view.decision;
   const r = view.reach;
   const links = (ids: readonly string[], more: number) => (
@@ -488,6 +492,7 @@ function InstructionDetail({ view, openHref }: { view: InstructionView; openHref
         </p>
       </div>
       <h4 className={s.h4}>What it reached</h4>
+      <Link href={workHref} className={s.btnLink}>Show this instruction&rsquo;s work</Link>
       <div style={{ marginBottom: 24 }}>
         {r === null ? (
           <p className={s.note}>{view.reachWhyNot}</p>

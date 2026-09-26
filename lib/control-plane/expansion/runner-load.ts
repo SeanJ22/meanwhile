@@ -32,6 +32,7 @@ import { loadPublishedLookupState, type PublishedLookupSource } from "../../cens
 import { requiredOperationalReferenceBundle } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { APPROXIMATE_DISTRICT_EXTRACT_PATH, type ApproximateDistrictExtract } from "./district-territory.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   buildTerritoryIndex,
@@ -102,7 +103,20 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
   return buildTerritoryIndex(registries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
     return own === undefined ? undefined : { zctas: new Set(own.keys()), shares: own };
-  });
+  }, readApproximateDistrictExtract(root));
+}
+
+/**
+ * The approximate special-district boundary extract (`district-territory.ts`): read here, for Send placement only,
+ * and nowhere on a reader path (tests/district-territory.test.ts holds that). A missing or malformed file is named.
+ */
+export function readApproximateDistrictExtract(root: string): ApproximateDistrictExtract {
+  const path = join(root, ...APPROXIMATE_DISTRICT_EXTRACT_PATH);
+  const parsed = JSON.parse(readFileSync(path, "utf8")) as ApproximateDistrictExtract;
+  if (parsed.kind !== "az-fire-district-territory" || parsed.formatVersion !== 1 || !Array.isArray(parsed.districts) || !/APPROXIMATE/.test(parsed.provenance?.approximate ?? "")) {
+    throw new Error(`${APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/")} is not an approximate district extract this build reads`);
+  }
+  return parsed;
 }
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */

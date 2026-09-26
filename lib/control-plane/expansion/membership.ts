@@ -68,7 +68,7 @@ import {
   type ExpansionScopeReading,
   type ScopeCoverageReading,
 } from "./reading.ts";
-import { ruledDistrictTerritory } from "./district-territory.ts";
+import { DISTRICT_TERRITORIES, ruledDistrictTerritory, type ApproximateDistrictExtract } from "./district-territory.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { stateOfSubject } from "./subjects.ts";
@@ -190,6 +190,8 @@ export function buildTerritoryIndex(
   units: readonly CensusUnitTerritory[],
   sharesFor: (key: string) => ReadonlyMap<string, number> | undefined = () => undefined,
   divisionTerritory: (j: Jurisdiction) => DivisionTerritory | undefined = () => undefined,
+  /* An approximate boundary extract, for Send placement only (`district-territory.ts`); absent, none is read. */
+  approximate: ApproximateDistrictExtract | null = null,
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const unitsByPid = new Map(units.map((u) => [`${u.state.toUpperCase()}:${u.pid6}`, u] as const));
@@ -259,7 +261,7 @@ export function buildTerritoryIndex(
       claimed.add(unit);
       if (unit.zips.length === 0) {
         /* A district TIGER draws no boundary for may still have one its own law gives (`district-territory.ts`). */
-        const ruled = ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey);
+        const ruled = ruledDistrictTerritory(unit, unitsByPid, sharesFor, unitShareKey, DISTRICT_TERRITORIES, approximate);
         if (ruled !== null && !("unplaced" in ruled)) {
           bySubject.set(j.id, { subjectId: j.id, name: j.name, govClass: j.govClass, stateCode: j.stateCode.toUpperCase(), zctas: ruled.zctas, shares: ruled.shares });
           continue;

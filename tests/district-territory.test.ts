@@ -4,19 +4,25 @@
  *
  * On the committed data: Cochise County's community college district takes the county's territory (A.R.S. 15-1402);
  * Cochise Technology District takes its member districts' (A.R.S. 15-393), which is NOT the county, since Patagonia's
- * high school district lies in Santa Cruz County; the Fry and Palominas fire districts stay unplaced, naming the one
- * free boundary source and why it does not place them yet.
+ * high school district lies in Santa Cruz County; the Fry and Palominas fire districts are placed for Sends by the
+ * approximate DFFM boundary extract, sliver ZCTAs aside, and no reader path ever reads that extract.
  */
 
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
 import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
-import { DISTRICT_TERRITORIES, ruledDistrictTerritory } from "@/lib/control-plane/expansion/district-territory.ts";
+import {
+  APPROXIMATE_DISTRICT_EXTRACT_PATH,
+  APPROXIMATE_MIN_SHARE,
+  DISTRICT_TERRITORIES,
+  ruledDistrictTerritory,
+} from "@/lib/control-plane/expansion/district-territory.ts";
 import { certainlyOverlaps, unitShareKey, type CensusUnitTerritory, type ScopeZctas } from "@/lib/control-plane/expansion/membership.ts";
-import { readCensusUnitTerritories, readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
+import { readApproximateDistrictExtract, readCensusUnitTerritories, readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -34,6 +40,17 @@ async function countyScope(geoid: string): Promise<ScopeZctas> {
   const fractions = new Map<string, number>();
   for (const o of result.overlaps) if (!o.whole && o.fraction !== null) fractions.set(o.zcta5, o.fraction);
   return { zctas: new Set(result.overlaps.map((o) => o.zcta5)), whole: new Set(result.overlaps.filter((o) => o.whole).map((o) => o.zcta5)), fractions };
+}
+
+/** The tracked files under app, components and lib naming any pattern; none is an empty list, never an error. */
+function trackedFilesNaming(patterns: readonly string[]): string[] {
+  let out = "";
+  try {
+    out = execFileSync("git", ["grep", "-l", ...patterns, "--", "app", "components", "lib"], { cwd: ROOT, encoding: "utf8" });
+  } catch (error) {
+    if ((error as { status?: number }).status !== 1) throw error;
+  }
+  return out.split("\n").filter(Boolean).sort();
 }
 
 const index = () => readTerritoryIndex(ROOT, ["az", "nh", "nj"].map(
@@ -58,12 +75,57 @@ test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECH
   assert.ok(!jted.zctas.has("85624"), "Patagonia's own ZCTA is left out: its member district's territory is unresolved, so the union is a floor");
 });
 
-test("THE FIRE DISTRICTS STAY UNPLACED, NAMING THE SOURCE THAT WOULD PLACE THEM", () => {
+test("THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY IN 85635, PALOMINAS IN THE COUNTY BUT NOT 85635", async () => {
   const idx = index();
-  for (const id of [FRY, PALOMINAS]) {
-    assert.equal(idx.bySubject.get(id), undefined, `${id} is not placed`);
-    assert.match(idx.unplaced.get(id) ?? "", /no ZCTA territory, and no boundary source places it: .*Arizona Fire Districts.*approximate/);
+  const fry = idx.bySubject.get(FRY);
+  const palominas = idx.bySubject.get(PALOMINAS);
+  assert.ok(fry !== undefined && palominas !== undefined, `placed: ${idx.unplaced.get(FRY)} / ${idx.unplaced.get(PALOMINAS)}`);
+  assert.ok(certainlyOverlaps(fry, ZIP_85635), "Fry Fire District covers part of 85635");
+  assert.ok(!certainlyOverlaps(palominas, ZIP_85635), "Palominas lies south of Sierra Vista: not in an 85635 Send");
+  const cochise = await countyScope("04003");
+  assert.ok(certainlyOverlaps(fry, cochise) && certainlyOverlaps(palominas, cochise), "a Send in Cochise County places both");
+  for (const t of [fry, palominas]) for (const share of t.shares.values()) assert.ok(share >= APPROXIMATE_MIN_SHARE, "no sliver places a district");
+  const extract = readApproximateDistrictExtract(ROOT);
+  assert.match(extract.provenance.approximate, /APPROXIMATE.*approximate.*wildfire dispatch.*never for a reader-facing governance claim/);
+  assert.match(extract.provenance.url, /Arizona_Fire_Districts_Spatial_Join\/FeatureServer\/0$/);
+  assert.match(extract.provenance.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(APPROXIMATE_MIN_SHARE, 0.05);
+});
+
+test("A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a ZCTA is not placed by it", () => {
+  const extract = {
+    ...readApproximateDistrictExtract(ROOT),
+    districts: [{ name: "Sliver Fire District", pid6: "999999", unitName: "SLIVER FIRE DISTRICT", zctas: { "85001": 0.049, "85002": 0.3 } }],
+  };
+  const ruled = ruledDistrictTerritory({ state: "AZ", pid6: "999999" }, new Map(), () => undefined, unitShareKey, [], extract);
+  assert.ok(ruled !== null && "zctas" in ruled);
+  assert.deepEqual([...ruled.zctas], ["85002"]);
+  assert.match(ruled.method, /^APPROXIMATE, for Send placement only/);
+  const none = ruledDistrictTerritory({ state: "AZ", pid6: "999999" }, new Map(), () => undefined, unitShareKey, [], { ...extract, districts: [{ ...extract.districts[0]!, zctas: { "85001": 0.01 } }] });
+  assert.ok(none !== null && "unplaced" in none);
+  assert.equal(ruledDistrictTerritory({ state: "NM", pid6: "999999" }, new Map(), () => undefined, unitShareKey, [], extract), null, "an Arizona extract places no other state's unit");
+});
+
+test("NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send placement names the extract, and nothing the reader closure binds reaches it", () => {
+  const receipt = JSON.parse(readFileSync(join(ROOT, "docs", "evidence", "reader-last-mile-final-closure-receipt.json"), "utf8")) as { sourceHashes: { path: string }[] };
+  const bound = receipt.sourceHashes.map((s) => s.path);
+  for (const path of ["lib/control-plane/expansion/district-territory.ts", "lib/control-plane/expansion/runner-load.ts", "lib/control-plane/expansion/membership.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/")]) {
+    assert.ok(!bound.includes(path), `${path} is not in the reader's closure`);
   }
+  for (const path of bound.filter((p) => /\.(ts|tsx|mts|js|mjs)$/.test(p))) {
+    let text: string;
+    try {
+      text = readFileSync(join(ROOT, path), "utf8");
+    } catch {
+      continue;
+    }
+    assert.ok(!/district-territory|az-fire-district-territory|expansion\/runner-load|expansion\/membership/.test(text), `${path}, on the reader's closure, never reaches the approximate boundaries`);
+  }
+  /* Outside tests and the generator, the extract is named only where the runner reads it. */
+  const namers = trackedFilesNaming(["-e", "az-fire-district-territory", "-e", "APPROXIMATE_DISTRICT_EXTRACT_PATH", "-e", "readApproximateDistrictExtract"]);
+  assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", "lib/control-plane/expansion/runner-load.ts"]);
+  const importers = trackedFilesNaming(["-e", "expansion/runner-load"]);
+  assert.deepEqual(importers, [], "no app page, component or library module loads the runner's placement");
 });
 
 test("THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule", () => {

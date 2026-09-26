@@ -43,6 +43,15 @@
  *   approvals publish through the derived contract
  *   `candidate-campaign-sites-derived` on its own hourly clock.
  *
+ * **THE ORDER, AND WHY.** (2026-09-25, measured read-only on production.) The
+ * time budget, not the read bound, ends each pass: 4 to 6 reads a cycle. So
+ * the audit's second reads come first (an item one read from approval never
+ * waits behind new leads), and a candidacy whose promoted profile already
+ * carries a campaign link (`linked` below, the door's PRIOR_CAMPAIGN_LINK_HELD
+ * rule) or already holds an approval is read after every other candidacy: a
+ * site approved for them is held, never published. The design note is in
+ * `projectCampaignSiteChains`.
+ *
  * Where Admin reads the results: every offer is a pipeline record, accepted or
  * REFUSED with its typed reasons (the delivery trail); every lead's verdict and
  * refusal code is counted in the cycle's digest line and run record.
@@ -83,6 +92,8 @@ const BUDGET_SPENT = "CAMPAIGN_SITE_BUDGET_SPENT";
 export interface CampaignSiteCycleInput {
   readonly repos: ControlPlaneRepositories;
   readonly subjects: ReadonlyMap<string, CampaignSiteSubject>;
+  /** Candidacies whose promoted profile already carries a campaign link: their leads are read after every other candidacy's. */
+  readonly linkedCandidacies?: ReadonlySet<string>;
   readonly marginalia: readonly HeldMarginaliaResponse[];
   readonly gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "openFields">;
   /** The cycle's instant: the chain's clock for freshness and the rotation's hour. */
@@ -170,6 +181,7 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
   });
   const chain = await projectCampaignSiteChains(input.repos, {
     subjects: input.subjects,
+    linkedCandidacies: input.linkedCandidacies,
     marginalia: input.marginalia,
     readLead,
     recordRead: recorder.recordRead,
@@ -266,7 +278,7 @@ export async function heldMarginaliaFromManifest(
 export function campaignSiteSubjectsFromHoldings(
   holdings: CandidateEnrichmentAuthorityHoldings,
   nowIso: string,
-): { readonly subjects: Map<string, CampaignSiteSubject>; readonly failures: readonly string[] } {
+): { readonly subjects: Map<string, CampaignSiteSubject>; readonly failures: readonly string[]; readonly linked: ReadonlySet<string> } {
   const { universes, failures } = candidateEnrichmentUniversesFromHoldings(holdings, nowIso);
   const lineups = ((holdings.az?.generalLineup as { contests?: unknown } | undefined)?.contests ?? []) as LineupContest[];
   const contacts = (holdings.nj?.contacts as { contacts?: unknown } | undefined)?.contacts;
@@ -279,5 +291,12 @@ export function campaignSiteSubjectsFromHoldings(
       if (typeof c.id === "string" && typeof c.websiteUrl === "string") filings.push({ candidacyId: c.id, websiteUrl: c.websiteUrl });
     }
   }
-  return { subjects: campaignSiteSubjects({ universes: Object.values(universes), lineups, filings }), failures };
+  const subjects = campaignSiteSubjects({ universes: Object.values(universes), lineups, filings });
+  /*
+   * Who already carries a campaign link: the publication door's own rule (PRIOR_CAMPAIGN_LINK_HELD), a reviewed
+   * campaign link on any of the candidacy's Reader keys in the promoted profiles. The pass reads their leads last.
+   */
+  const links = holdings.profiles?.links.links ?? {};
+  const linked = new Set([...subjects.values()].filter((s) => s.readerKeys.some((key) => links[key]?.campaign)).map((s) => s.candidacyId));
+  return { subjects, failures, linked };
 }

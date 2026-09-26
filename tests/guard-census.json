@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 844,
-    "named": 8146,
+    "named": 8149,
     "dynamic": 33
   },
   "files": {
@@ -2491,8 +2491,11 @@
         "a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved",
         "per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest",
         "the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key",
+        "the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget",
         "the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins",
-        "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it"
+        "the paid lane stays closed under the owner's pause, and the pass is plain code that never consults it",
+        "the pass reads the leads of candidates with no campaign link first; a linked candidate's leads wait, deferred and never refused, and are read once the others are",
+        "who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys"
       ],
       "dynamic": 0
     },

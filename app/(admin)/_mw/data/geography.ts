@@ -33,13 +33,15 @@ import type { GeographyRef, GeographyType } from "@/lib/census-geography/contrac
 import type { PublishedLookupSource, PublishedLookupState } from "@/lib/census-geography/reader.ts";
 import { containersOfCode, oneContainer, stateContainers, type Slice } from "@/lib/control-plane/admin-view/promoted-slices.ts";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index.ts";
+import { withSharedScopeDivisions } from "@/lib/control-plane/expansion/scope-divisions.ts";
 
 import { readerQuery } from "./reader-query.ts";
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead, type SharedRead } from "./shared-read.ts";
 
 /** One code's place in the index: every division whose territory reaches it, or not indexed. */
 async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[]; readonly partial: readonly string[] }> {
-  const entry = await zipDivisionEntry(zcta5);
+  const held = await zipDivisionEntry(zcta5);
+  const entry = held ? withSharedScopeDivisions(held) : null;
   return entry === null ? { indexed: false, divisions: [], partial: [] } : { indexed: true, divisions: entry.ids, partial: entry.partial };
 }
 

@@ -14,6 +14,7 @@ import "server-only";
  */
 import { buildLearningTrends, pointWords, weekRange, type LearningSeries, type LearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { SCOUT_MODEL } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
 
@@ -176,7 +177,7 @@ export async function LearningScreen(props: { readonly searchParams: Promise<Sea
       lines:
         weeks.length > 0 || costSeries.length > 0
           ? [
-              "By week: what paid Scout work cost against what it found. A find is an attempt that found a way in or the record; it is not yet a record a reader can see, because paid research promotes nothing today. So this prices finds, not records, and a cost per record stays unmeasured until charges say what the work was for.",
+              "By week: what paid Scout work cost against what it found. A find is an attempt that found a way in or the record; this series does not join those finds to verified public delivery. It therefore prices finds, not records delivered to readers. Work and Money show the available publication and cost evidence separately.",
             ]
           : ["Needs a cost per result first, which needs every charge to say what the work was for."],
       needs: "MW-013 then MW-027",
@@ -188,7 +189,7 @@ export async function LearningScreen(props: { readonly searchParams: Promise<Sea
       lines: [
         ...(month && modelCharges > 0
           ? [
-              `${n(topCharges)} of ${n(modelCharges)} model charges this month (${month.window.label}, UTC) were on the most capable class. Until Sep 25 the Scout loop and the audit started at the top by design; the Scout loop now starts on Sonnet 5 and records every move up (Fleet · Money counts them).`,
+              `${n(topCharges)} of ${n(modelCharges)} model charges this month (${month.window.label}, UTC) were on the most capable class. Until Sep 25 the Scout loop and the audit started at the top by design. The current configured Scout starting model is ${SCOUT_MODEL}; actual request receipts and recorded escalations appear in Fleet · Money. This configuration is not evidence that a new paid walk ran.`,
               "A trend needs a ladder that is used, and the reason for each move recorded.",
             ]
           : ["Escalation is not counted, so the rate over time cannot be drawn."]),

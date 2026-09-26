@@ -38,6 +38,7 @@ export async function declaredWorkMembers(scopes: readonly ResolvedScope[], work
       }
     }
     const inside = (id: string): boolean => {
+      if (id === "ocd-division/country:us") return true;
       const state = /^ocd-division\/country:us\/state:([a-z]{2})$/.exec(id)?.[1];
       if (state) return scope.states.includes(state.toUpperCase());
       const territory: DivisionTerritory | undefined = territories.get(id) ?? localDivisions.get(id);

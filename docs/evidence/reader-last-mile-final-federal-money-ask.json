@@ -1,15 +1,15 @@
 {
-  "exactHead": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
+  "exactHead": "e3ae81eda34fa13dc0177d6d20f1dac95207442f",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "4537ec81290a1beae531643d15ff445485898f836fbfa03ba08fe7d8f8589cec"
+      "sha256": "e887ca91ebce5fb118cee4de6d6b903ce8d5e4b6cb3f2ad97a193bae0cca09e0"
     },
     {
       "path": "lib/ask/campaign-money.ts",
-      "sha256": "c6b2e0c23ad515fc9fa383d9a2b537e18282923cd69a0c08bea29406a1c05e28"
+      "sha256": "a1ebce2776caffd92cf46324aa58a50341587dd0b8f55f85d23eb9c2f091356d"
     },
     {
       "path": "lib/ask/subject.ts",
@@ -21,7 +21,7 @@
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
-      "sha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125"
+      "sha256": "d9f13410dc089047d04fabfd090dad2dd2dc1368390429a60f30150a90e615f7"
     },
     {
       "path": "lib/funding/campaign-money.ts",
@@ -100,7 +100,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "60cc40552f4fd205cfba1e4cb228367036dd93a046149a1b976f00ab67b5e709",
+      "payloadSha256": "fd28ab929bd22315e318609b326a8f86709ad35d008503bb425e53e361a26e03",
       "gaps": [
         {
           "whose": "OURS",
@@ -219,7 +219,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "6111e5dc249499f071ee26455fd537bd51047dfc087f85f47644f51bab167bce",
+      "payloadSha256": "062c66173f9e64d5fc950ddcf50a64f8ed69f0890d69c01a3cea9c9763756624",
       "gaps": [
         {
           "whose": "OURS",
@@ -337,7 +337,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "0c178450d80299c3f098d2052ebad546290295f8b597c64d93d8dc44c6276a4b",
+      "payloadSha256": "84421d1833da49359d170210df719718dac01d4f51d9a34db09086894c6c03bf",
       "gaps": [
         {
           "whose": "OURS",
@@ -547,7 +547,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "2378a2e83a40184b8d14c19b85413004c6b25a42ce2abbf886f39eabc41fe6cc",
+      "payloadSha256": "11a4e1e9952a40d39a994be5a947d5b34a516a318d2d0d503982766c1c47a92b",
       "gaps": [
         {
           "whose": "OURS",
@@ -665,7 +665,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "b1f975293082bab0a3d382ffa1c9de939558deebd6725ddfbac4a224dbc844c2",
+      "payloadSha256": "848fe491920cc059254e07aabb2bb2143f7059afe6b080978b848c6c74fe3b53",
       "gaps": [
         {
           "whose": "OURS",
@@ -871,7 +871,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "0eda2541b3cf2719a307bb799e39d278dc20f10eea8a56189a5c714ecc578a29",
+      "payloadSha256": "3912220b8124c7af12887048abbedf38954b25153498746f4de7f314cbb0a68d",
       "gaps": [
         {
           "whose": "OURS",
@@ -999,7 +999,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "30c56cb35735d914c8da03c590bfe8b212143a534fe4dfca14ec772d58ffee84",
+      "payloadSha256": "b0481b90df40ee2b481ebf3825d25eae7384f976c0f3f6093bdd655e6c26e1d8",
       "gaps": [
         {
           "whose": "OURS",
@@ -1146,7 +1146,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "4d802ddbad7523573ba30e2a698b4c210e54d395fd70e50ea70c9934563c69c4",
+      "payloadSha256": "582cab14429414001a3a80975bcfca2edceee06d5780cd10e8a15a1e0753d5af",
       "gaps": [
         {
           "whose": "OURS",
@@ -1318,7 +1318,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "40eae87554ebc20e38f8dbe9099201a2e70d39a7d6eeb22e2640d601e04260c0",
+      "payloadSha256": "1b5f90dc50d62dfabcc68ca3565ef583dedae5facde081dbc017c54fe102ac26",
       "gaps": [
         {
           "whose": "OURS",
@@ -1501,7 +1501,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "df48dc6c5001274dc9363622850bb703ada139daec951d5f6ed8d63b6ac4cf1f",
+      "payloadSha256": "fe6b70a0be190d72a6a7ee36ecd1d90abbc9b9aad34a5b5a2556d9a5e5a22db6",
       "gaps": [
         {
           "whose": "OURS",
@@ -1689,7 +1689,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "f5e34e9239c0c191329d0dea49c04862dcccafe3df1590136ce5cb7fc5ea81cf",
+      "payloadSha256": "20c434bc98fc794fbdfa46b5b6a54cb815e6fafd78917c544cdd0a789a8e2265",
       "gaps": [
         {
           "whose": "OURS",
@@ -1804,7 +1804,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "44dd6d3dd9fc5bac45be24f39e6e441ed4228d7a102086b4ab425d0c3bcd433a",
+      "payloadSha256": "76512f87a7367f3069c7557f79ad8ab0752ae8b865fdbf9f56955bbdb8aa704c",
       "gaps": [
         {
           "whose": "OURS",
@@ -1920,7 +1920,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "ab3d99a26d9cd94497be3f002ad21da7c84bfdc6799e7e71d684fe2e304c9b10",
+      "payloadSha256": "52a19668e4a9fd7b65ce3e0b3a1ab9f53078fb01f57f935714ad3e6105e9204f",
       "gaps": [
         {
           "whose": "OURS",
@@ -2035,7 +2035,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "8f5287cb7bc1e76c373149ac17592582ad8179985dad7ae3e5119c06060328a0",
+      "payloadSha256": "a222b051ef6189808dfee46fa4ee94598f3b14215badbfa2ea3b3cdcf92257f4",
       "gaps": [
         {
           "whose": "OURS",
@@ -2151,7 +2151,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "5ebe831b3ce96642adf57d4558428db413cdab315e70e064483bb7825f2f713e",
+      "payloadSha256": "78f41da4effc45e69b451a31b6615e03b85a8293d42e21db7573c54ef15edd7e",
       "gaps": [
         {
           "whose": "OURS",
@@ -2267,7 +2267,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "d63d1b7d10f1ee9a07d032a8643fd8648d94a8f41c982328c6f9a20189bba6b0",
+      "payloadSha256": "d6e5a561154d04b5ffd0bf8b6bf3007d837c7423775a0d7876d5b21fbebe27a2",
       "gaps": [
         {
           "whose": "OURS",
@@ -2382,7 +2382,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "a5e67ded883fa25652886820879e438d6382a209074dc9e240d139fb8855f7e0",
+      "payloadSha256": "9e110931d53a382f0d1a942506afbddf71c4196be3c6a7f8ce64b66828b473ab",
       "gaps": [
         {
           "whose": "OURS",
@@ -2497,7 +2497,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "1c1289b9191400b2257253fdce26d217a3ff9529bacc0c90cd44571ac6fdd231",
+      "payloadSha256": "69854a31ca0d2f560b1eca08c9188ef1415d25288a37e34fb322e4f3590191ed",
       "gaps": [
         {
           "whose": "OURS",
@@ -2619,7 +2619,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "74208d756030e4fd347dc3ac13e7feada3e01cc3a9c524664e802aaa71ef14e3",
+      "payloadSha256": "d6d00b037c009f5aed3e52ba045414bd02e28d0147c396364f07f3a4a8f8ad0a",
       "gaps": [
         {
           "whose": "OURS",
@@ -2734,7 +2734,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "e3e5aa01d66a976d6137587165b30615cbde4273a929c034554ab353f086b932",
+      "payloadSha256": "7b95c098d9fc2630d5f46276fdcccc52fa16d1390ed42a2d6bf2dab333c1fce4",
       "gaps": [
         {
           "whose": "OURS",
@@ -2849,7 +2849,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "b99b0e88395beeea1b08689162f3b831713a58f24b6e01bed181e1485814b382",
+      "payloadSha256": "fb1c87bddb74cfe9f12394a7dada4715aadbb6f2114b6dcca0315314b19535b6",
       "gaps": [
         {
           "whose": "OURS",
@@ -2964,7 +2964,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "c197662068dcc7e2a8141b429cc3b769eae4f4ccc49961b713ab00cd0766ab93",
+      "payloadSha256": "40b2629d6578e3b946bba3b43be4952119b646f8b32fbf06e6d996c0998a9ae9",
       "gaps": [
         {
           "whose": "OURS",
@@ -3079,7 +3079,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "cda645880b00e5f4d978909dab7425d41eac41886c395aa272d5c83162ca4865",
+      "payloadSha256": "0b984a2afdc2c74de877de6c7c1c92710ba62a040c7e67cda295f32a92c5c719",
       "gaps": [
         {
           "whose": "OURS",
@@ -3194,7 +3194,7 @@
           "retrievedAt": "2026-09-25"
         }
       ],
-      "payloadSha256": "0cfd3d90f18d3c1eba22e2b5b74b686676a597b0b42290643ca8606a0a8bff59",
+      "payloadSha256": "2bca95c97d0ddad68d416469d122dcd8633d1b5bd3c01e37379ac0ac5aa8b5fa",
       "gaps": [
         {
           "whose": "OURS",

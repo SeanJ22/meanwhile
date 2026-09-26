@@ -1,6 +1,6 @@
 {
-  "exactHead": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
-  "buildId": "x-g3IjEB-gcdZ6Ummnn_T",
+  "exactHead": "e3ae81eda34fa13dc0177d6d20f1dac95207442f",
+  "buildId": "DhtpOn9xDUi6cBgH3S-2a",
   "sourceHashes": {
     "lib/routing/everyday.ts": "b00840fba176f775797dc300c5121285e03b49826dd589a95bf6385bb92600c5",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
@@ -187,7 +187,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "b2367a71b1f7f68a187ba82d45e23cf83d1b33e8336a1cd8fbb06e35338e0103",
+      "canonicalAnswerSha256": "3809a5d9678dd3f17a87d613a0f9ef2dcafcac758a50e784f410833bc83d45ac",
       "renderedTextSha256": "9c0fabfbac5455453cb94d888dd45ec73e19bd9d3c4c90226a835f923fedd50b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -235,7 +235,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "7db25022f76fd9d8642a3d0622e4dbbd23f29a57291e61987abb2b42014d6b2b",
+      "canonicalAnswerSha256": "c9e402473375a4bcda939440bea9366052d7ffd93b7dc57cab2aea8af80b5618",
       "renderedTextSha256": "6387e74e9d8d6777f5e547e77a6740b6d1269bff618508e8e563ed77d6800fb9",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },

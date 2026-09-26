@@ -1,10 +1,10 @@
 {
-  "exactHead": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
-  "buildId": "x-g3IjEB-gcdZ6Ummnn_T",
+  "exactHead": "e3ae81eda34fa13dc0177d6d20f1dac95207442f",
+  "buildId": "DhtpOn9xDUi6cBgH3S-2a",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "72ec05e777b41edf5cb00531f9b8d8a75a2213b5",
-    "commitShort": "72ec05e",
+    "commit": "e3ae81eda34fa13dc0177d6d20f1dac95207442f",
+    "commitShort": "e3ae81e",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "496959e0df062401f68379b4d1210534c1164f68128577e57cfb58141cf21d30",
+  "buildLogSha256": "bfefdfa59f6b41ce53ca76f0f1a387d507a8dec353f34de43e5be6e0ebb06889",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,
@@ -46,7 +46,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "4537ec81290a1beae531643d15ff445485898f836fbfa03ba08fe7d8f8589cec"
+      "sha256": "e887ca91ebce5fb118cee4de6d6b903ce8d5e4b6cb3f2ad97a193bae0cca09e0"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1818,7 +1818,7 @@
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
-      "sha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125"
+      "sha256": "d9f13410dc089047d04fabfd090dad2dd2dc1368390429a60f30150a90e615f7"
     },
     {
       "path": "lib/ask/body-confirmation.ts",
@@ -1830,7 +1830,7 @@
     },
     {
       "path": "lib/ask/campaign-money.ts",
-      "sha256": "c6b2e0c23ad515fc9fa383d9a2b537e18282923cd69a0c08bea29406a1c05e28"
+      "sha256": "a1ebce2776caffd92cf46324aa58a50341587dd0b8f55f85d23eb9c2f091356d"
     },
     {
       "path": "lib/ask/candidate-contact.ts",
@@ -1850,7 +1850,7 @@
     },
     {
       "path": "lib/ask/evidence.ts",
-      "sha256": "ecf6a34c344fd72df5178661e07de4e1a199f08b30ea67135aebd8d9a638dc9f"
+      "sha256": "7aa61cde6a978a22172a0171e7d93dafff95b2f234da160802a57b55a55e5420"
     },
     {
       "path": "lib/ask/gap-codes.ts",
@@ -1898,11 +1898,11 @@
     },
     {
       "path": "lib/ask/lexical-reading.ts",
-      "sha256": "91486e890cc505520dcf5cb0f5fc548d0f75040d713064535c019f337c458510"
+      "sha256": "82995c094e3d6d4b8b5180aa7ea8944110be1e392eb516fa73872727d1f4218b"
     },
     {
       "path": "lib/ask/local-finance.ts",
-      "sha256": "2106091a96e3134c27b37b35a6db29a6ce23663eb14179c706750516bce1adae"
+      "sha256": "dabec8c2d080e3a45b4ecad948098200e2710055874b8f7683db126a50a1e0dc"
     },
     {
       "path": "lib/ask/meeting-date.ts",
@@ -1933,6 +1933,10 @@
       "sha256": "284b73136943d6e94ea874e20cf06bdce2234be970451bbe77766f0a69cf4682"
     },
     {
+      "path": "lib/ask/money-answer.ts",
+      "sha256": "f164bf3d4825df601be48e37338251dd777356adbf32da8ee26ff16014991ee6"
+    },
+    {
       "path": "lib/ask/office-question.ts",
       "sha256": "1bd14338fcd977ede0b9d10e6c470f0733977f799cb04c269d2467af0a1c29da"
     },
@@ -1954,7 +1958,7 @@
     },
     {
       "path": "lib/ask/relevance.ts",
-      "sha256": "903b66e10d47cab19f81cf8781d3622530b7479c30c070afafc6c85e713d06b7"
+      "sha256": "5a54fa59dafd98ea28e03e0020761222bc0f9a5bbd7c83c99f09cf05437f0428"
     },
     {
       "path": "lib/ask/residency.ts",
@@ -1982,7 +1986,7 @@
     },
     {
       "path": "lib/ask/speculative-reading.ts",
-      "sha256": "90c8c1a0be84c5bba99596071b57a22ea2ee4b2f4f943aa957901d4a5d243526"
+      "sha256": "9015932384940452a93dc4039cfed57a064673e28096ff7fb5671cddfa970749"
     },
     {
       "path": "lib/ask/statements.ts",
@@ -2002,7 +2006,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "59d87d277af561a0430b9ec01a94c02f3fb84f01de69f4e9cb9e2471586ffe9c"
+      "sha256": "c6d79f88509633db9ecebc313472fe7632e85a34cd3943a882e408c66ec0e52c"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2010,7 +2014,7 @@
     },
     {
       "path": "lib/ask/votes.ts",
-      "sha256": "6ce0d91bea06c22a58e61457c0d3d1f3838024688d80d432aa75260ded816e9c"
+      "sha256": "9c900c24a5ddf5d9342d41e8bb7931ba2c56eb914b36eb86dc2bbb58d1dafeeb"
     },
     {
       "path": "lib/ask/writer-selection.ts",

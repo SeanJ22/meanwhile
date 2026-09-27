@@ -327,6 +327,8 @@
     "sweep:refusal": "tsx scripts/sweep-refusal-copy.mts",
     "tenancy": "tsx scripts/tenancy.mts",
     "territory:resolve": "tsx scripts/resolve-census-territory.mts",
+    "territory:dependent-schools": "tsx scripts/build-dependent-school-territories.mts",
+    "territory:school-observations": "tsx scripts/build-census-school-scope-observations.mts",
     "test": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/**/*.test.ts tests/**/*.test.tsx",
     "test:bundle": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/feedback.test.ts",
     "tier:directory": "tsx scripts/tier-directory.mts",

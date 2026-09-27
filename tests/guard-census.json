@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 872,
-    "named": 8326,
+    "named": 8329,
     "dynamic": 33
   },
   "files": {
@@ -4405,7 +4405,8 @@
         "A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a ZCTA is not placed by it",
         "NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send placement names the extract, and nothing the reader closure binds reaches it",
         "THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY IN 85635, PALOMINAS IN THE COUNTY BUT NOT 85635",
-        "THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule"
+        "THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule",
+        "full Census school intersections reach both Admin scope and actual dispatch, including small slivers"
       ],
       "dynamic": 0
     },
@@ -10779,6 +10780,8 @@
       "names": [
         "Battlecard evidence belongs only to the candidate whose controls were opened",
         "a witness cannot transfer to a new approval or survive stale time",
+        "absent campaign candidates consume no action or nonexistent cleanup waits",
+        "campaign readback identifies the failing action and stops after a panel cannot close",
         "collector shares one public read, records exact approvals and holds missing destinations",
         "failed public controls retain the exact blocker for only that reader key",
         "public readback requires the exact candidate container, not another card or serialized script"

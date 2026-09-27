@@ -2,11 +2,21 @@
  * No alternative acquisition, interpretation, validation or publication path. */
 import { randomUUID } from "node:crypto";
 import { withResponseLifetime } from "../../lib/log/after-response.ts";
+import { preloadNativeAskSources } from "../../lib/ask/native-source-preload.ts";
 
 const instance = randomUUID();
 let requests = 0;
 const moduleStarted = performance.now();
 let moduleMs = 0;
+let sourcePreloadMs: number | null = null;
+let sourcePreloadState = "PENDING";
+// This function instance exists because a real request arrived. Overlap its
+// cold edge I/O with engine initialization; no keep-warm request or timer.
+// The ordinary route uses the same versioned in-flight cache and rechecks the
+// current manifest. Never enter its AsyncLocalStorage authority here.
+const sourcePreload = preloadNativeAskSources(() => import("../../lib/meetings/edge-serving.ts"))
+  .then(state => { sourcePreloadState = state; })
+  .finally(() => { sourcePreloadMs = performance.now() - moduleStarted; });
 // Begin loading once per instance and retain the same engine for every request.
 // These boundary timings include work the engine's answer trace cannot see.
 const engine = Promise.all([
@@ -22,6 +32,7 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   const startedAt = Date.now();
   const processAgeMs = Math.round(process.uptime() * 1000);
   const ordinal = ++requests;
+  context.waitUntil(sourcePreload);
   const { POST, prefetchReaderGeography } = await engine;
   // Start the same file reads used by the Reader beside the first request's
   // manifest/network reads, as /api/meetings and representation already do.
@@ -31,6 +42,8 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   response.headers.set("x-wtp-ask-instance", instance);
   response.headers.set("x-wtp-ask-instance-request", String(ordinal));
   response.headers.set("x-wtp-ask-module-ms", String(Math.round(moduleMs)));
+  response.headers.set("x-wtp-ask-source-preload-ms", sourcePreloadMs === null ? "pending" : String(Math.round(sourcePreloadMs)));
+  response.headers.set("x-wtp-ask-source-preload-state", sourcePreloadState);
   response.headers.set("x-wtp-ask-handler-ms", String(Math.round(performance.now() - started)));
   response.headers.set("x-wtp-ask-handler-started-at", String(startedAt));
   response.headers.set("x-wtp-ask-process-age-ms", String(processAgeMs));

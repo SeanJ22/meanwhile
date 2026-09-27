@@ -13,8 +13,8 @@
  *   EACH MODEL STEP ROUTES TO THE CHEAPEST CLASS THAT MEETS ITS STANDARD
  *       extraction / classification: Haiku, then Sonnet on escalation; the
  *       Scout research loop: Haiku, then Sonnet and the frontier on escalation
- *       (MW-033, 2026-09-25); adversarial audit: the frontier model, by
- *       MW-035's selective-expensive-step rule. A cheaper model that fails a
+ *       (MW-033, 2026-09-25); independent audit: the same cheaper-first order,
+ *       with durable evidence-backed escalations. A cheaper model that fails a
  *       step's standard ESCALATES only for a reason in the closed
  *       `MODEL_ESCALATION_REASONS`, and the reason, its evidence and the cost
  *       of both attempts are recorded on the step's result, never silent.
@@ -131,20 +131,15 @@ export const SCOUT_STEPS = {
     escalateTo: "frontier",
     why: "summarization for a reader-facing owner surface needs Sonnet's standard; ambiguity escalates to the frontier and is recorded",
   },
-  /**
-   * An adversarial audit of a Scout result. Frontier, and no cheaper class is
-   * tried first: this is one of the expensive steps MW-035 allows because it is
-   * selective — it runs once per record the parser and validator already
-   * passed, on its way to promotion — and its whole job is to catch what a
-   * cheaper pass missed, so a cheaper auditor would repeat the blind spot it
-   * exists to check (workers/model-audit.ts).
-   */
+  /** Independent evidence context and machine verification remain mandatory.
+   * Acquisition routing follows the owner's cheaper-first hunt instruction;
+   * an inconclusive response can escalate through separate durable attempts. */
   "adversarial-audit": {
     kind: "MODEL",
-    modelClass: "frontier",
+    modelClass: "haiku",
     role: "SUB_STEP",
-    escalateTo: null,
-    why: "an adversarial audit exists to find what the cheaper pass missed; it runs on the frontier model by RULING 244",
+    escalateTo: "sonnet",
+    why: "Start with Haiku on independent source evidence; escalate unresolved model responses with a recorded reason. Grounded challenges require evidence repair, not another model's approval.",
   },
 } as const satisfies Record<string, StepRoute>;
 

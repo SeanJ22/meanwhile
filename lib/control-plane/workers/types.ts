@@ -256,6 +256,7 @@ export interface AuditorResult {
 export type FleetInput = ParserWorkerInput | ValidatorWorkerInput | AuditorWorkerInput;
 export type FleetResult = ParserResult | ValidatorResult | AuditorResult | AcquirerResult | DetectiveResult | EngineeringResult;
 export interface WorkerTaskSpec {
+  readonly auditEscalation?: { readonly previousResultId: string; readonly from: string; readonly to: "sonnet" | "frontier"; readonly reason: string };
   readonly acquisition?: AcquirerTaskSpec;
   readonly detective?: DetectiveTaskSpec;
   readonly engineering?: EngineeringTaskSpec;
@@ -286,6 +287,7 @@ export interface WorkerResultRecord {
     readonly authorityEvidence?: readonly Omit<WorkerEvidence, "text">[];
   };
   readonly modelReview?: {
+    readonly escalation?: NonNullable<WorkerTaskSpec["auditEscalation"]> & { readonly at: string };
     readonly step: "adversarial-audit";
     readonly model: string;
     readonly effort: string;

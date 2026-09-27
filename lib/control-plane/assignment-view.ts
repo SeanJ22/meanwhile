@@ -1764,7 +1764,7 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
         who: plainCode(result.role),
         verdict: result.verdict,
         at: r.endedAt,
-        says: clip(result.findings[0]?.detail ?? `${plural(result.survivingRecordCount, "record")} survived`, clips.text),
+        says: clip(`${r.modelReview?.escalation ? `Escalated ${r.modelReview.escalation.from} → ${r.modelReview.model} at ${r.modelReview.escalation.at}: ${r.modelReview.escalation.reason}. ` : ""}${r.modelReview?.validationError ?? result.findings[0]?.detail ?? `${plural(result.survivingRecordCount, "record")} survived`}`, clips.text),
         resultId: r.id,
       });
     }

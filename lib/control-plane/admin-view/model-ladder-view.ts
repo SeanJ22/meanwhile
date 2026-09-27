@@ -43,6 +43,7 @@ export const ESCALATION_REFUSAL_WORDS: Readonly<Record<ModelEscalationRefusal, s
 
 /** One escalation (or refused escalation) on record, as the spend store aggregates it. */
 export interface EscalationFact {
+  readonly role?: "ADVERSARIAL_AUDITOR";
   readonly at: string | null;
   readonly obligationId: string;
   readonly subjectId: string | null;
@@ -133,6 +134,7 @@ export function ladderHeadline(input: {
 export function escalationSentence(e: EscalationFact): string {
   const when = e.at === null ? "" : ` on ${day(e.at)}`;
   const shown = e.evidence ? ` (${e.evidence})` : "";
+  if (e.role === "ADVERSARIAL_AUDITOR") return `An independent audit moved from ${className(e.from)} to ${className(e.to)}${when} because ${reasonWords(e.reason)}${shown}. This attempt cost ${money(e.combinedUsd)}; earlier attempts remain in the spending ledger.`;
   if (e.to === null || e.refused !== null) {
     return (
       `A Scout stayed on ${className(e.from)}${when} although ${reasonWords(e.reason)}${shown}, because ` +

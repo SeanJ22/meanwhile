@@ -14,6 +14,7 @@ import { dispatchOne, proofChargeOf, type DeclaredExecutor, type DispatchResult 
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
+import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
 import { normalizedParserResult } from "./parser.ts";
@@ -55,7 +56,7 @@ export interface FleetRuntime {
   readonly auditReasoner?: {
     readonly workerProvider: string;
     readonly workerVersion: string;
-    readonly review: (context: IndependentAuditContext, attemptId: string) => Promise<{
+    readonly review: (context: IndependentAuditContext, attemptId: string, escalation?: WorkerTaskSpec["auditEscalation"]) => Promise<{
       review: NonNullable<WorkerResultRecord["modelReview"]>; usage: WorkerUsage; usd: number | null;
       /** The six ledger fields from the provider's usage block (2026-09-06). Absent from an older reasoner: the row reads UNREPORTED. */
       metering?: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch">;
@@ -68,10 +69,12 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   producerResultId?: string; validatorResultId?: string; auditScope?: WorkerTaskSpec["auditScope"]; replayLabel?: string;
   purpose?: WorkerTaskSpec["purpose"];
   acquisition?: WorkerTaskSpec["acquisition"]; detective?: WorkerTaskSpec["detective"]; engineering?: WorkerTaskSpec["engineering"];
+  auditEscalation?: WorkerTaskSpec["auditEscalation"];
 }): Promise<RouteTask> {
   const spec: WorkerTaskSpec = { schemaVersion: 1, role: input.role, artifactId: input.artifactId, contract: input.contract,
     producerResultId: input.producerResultId ?? null, validatorResultId: input.validatorResultId ?? null,
     auditScope: input.auditScope ?? "CAPTURED_ARTIFACT", implementationVersion: FLEET_IMPLEMENTATION_VERSION,
+    ...(input.auditEscalation ? { auditEscalation: input.auditEscalation } : {}),
     ...(input.purpose ? { purpose: input.purpose } : {}),
     ...(input.acquisition ? { acquisition: input.acquisition } : {}), ...(input.detective ? { detective: input.detective } : {}),
     ...(input.engineering ? { engineering: input.engineering } : {}) };
@@ -95,7 +98,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
   const assisted = role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined;
   const lane = assisted ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC";
   const worker: WorkerRef = { role, provider: assisted ? runtime.auditReasoner!.workerProvider : "we-the-people",
-    version: assisted ? runtime.auditReasoner!.workerVersion : FLEET_IMPLEMENTATION_VERSION, instance: holder };
+    version: assisted ? spec.auditEscalation ? MODEL_FOR_CLASS[spec.auditEscalation.to] : runtime.auditReasoner!.workerVersion : FLEET_IMPLEMENTATION_VERSION, instance: holder };
   return { lane, workerFor: () => worker, run: async ({ attemptId, workItemId, routeTaskId, bound }) => {
     const started = performance.now();
     const now = runtime.now ?? (() => new Date().toISOString());
@@ -119,7 +122,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       if (runtime.auditReasoner) {
         requireCapability(grant, "NETWORK_PUBLIC_READ");
         modelRequested = true;
-        model = await runtime.auditReasoner.review(independent, attemptId);
+        model = await runtime.auditReasoner.review(independent, attemptId, spec.auditEscalation);
       }
     }
     const evidence = evidenceProjection(await runtime.readEvidence(spec.artifactId));

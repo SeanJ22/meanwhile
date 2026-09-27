@@ -23,8 +23,12 @@ import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
 import { workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
+import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
+import type { ModelRequest, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { nextAuditEscalation } from "../lib/control-plane/workers/audit-escalation.ts";
 
-async function proveRosterPublication(partial = false) {
+async function proveRosterPublication(partial = false, auditLadder = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -66,15 +70,36 @@ async function proveRosterPublication(partial = false) {
   if (plan.contract.schemaVersion !== 2) throw new Error("fixture contract");
   await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value, autonomousPlan: { ...plan, ownerInstructions: ["offline-owner-send"], publication: { contractId: "registry-runtime-bindings", bodyId: body.id }, auditScope: "SOURCE_UNIVERSE", contract: { ...plan.contract, requiredFields: ["id", "name", "office"], extraction, verification: { required: true, authorities: [{ id: "register", type: "GOVERNMENT_REGISTER", publisher: "Independent Register", sourceId: "register.example.gov", canonicalUrls: [artifact.canonicalUrl], artifactIds: [artifact.id], authorityEvidenceArtifactIds: [artifact.id], independenceBasis: "DISTINCT_AUTHORITY", independenceExplanation: "Separately published official register retained independently.", extraction, comparison: { kind: "RECORD_VALUES", keyFields: ["id"], fields: ["id", "name", "office"] } }] } } } }, h.now());
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
-  const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
+  const requests: ModelRequest[] = [];
+  const transport: ModelTransport = async request => {
+    requests.push(request);
+    return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 10, output_tokens: 5 },
+      content: [{ type: "tool_use", id: "audit", name: "record_audit", input: {
+        verdict: request.model === MODEL_FOR_CLASS.frontier ? "SURVIVED" : "INCONCLUSIVE", challenges: [] } }] };
+  };
+  const runtime = { ...h.runtime, ...(auditLadder ? { auditReasoner: modelAuditReasoner(h.repos, transport, h.now) } : {}),
+    independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", ...(auditLadder ? ["ADVERSARIAL_AUDITOR", "ADVERSARIAL_AUDITOR"] : [])]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
     const dispatch = await dispatchWorkerTask(runtime, next.task!);
     assert.equal(dispatch.outcome, "WORKED", JSON.stringify(dispatch));
   }
   const results = await h.repos.workerResults.read(h.item.id);
-  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
+  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", ...(auditLadder ? ["INCONCLUSIVE", "INCONCLUSIVE"] : []), "SURVIVED"]);
+  if (auditLadder) {
+    assert.deepEqual(requests.map(request => request.model), Object.values(MODEL_FOR_CLASS));
+    const audits = results.filter(row => row.result.role === "ADVERSARIAL_AUDITOR");
+    assert.deepEqual(audits.map(row => row.worker.version), Object.values(MODEL_FOR_CLASS));
+    assert.ok(audits.every(row => row.cost.requestCount === 1 && row.cost.usd! > 0), "every failed and successful request retains its own model-priced receipt");
+    assert.equal(audits[1].modelReview?.escalation?.previousResultId, audits[0].id);
+    assert.equal(audits[2].modelReview?.escalation?.previousResultId, audits[1].id);
+    assert.equal(nextAuditEscalation({ ...audits[0], modelReview: { ...audits[0].modelReview!, challenges: [{ code: "GROUNDED", detail: "Repair source", artifactId: artifact.id, quote: "records" }] } }), null,
+      "a grounded challenge routes to evidence repair, never another model's approval");
+    await assert.rejects(runtime.auditReasoner!.review(await runtime.independentContext({ ...audits[0].completion.completedTask.workerTask!, methodVersion: runtime.methodVersion }),
+      audits[2].attemptId, { ...audits[1].modelReview!.escalation!, to: "frontier" }), /AUDIT_ESCALATION_EVIDENCE_MISMATCH/);
+    assert.equal(requests.length, 3, "a fabricated escalation cannot send another request");
+  }
   const input = { repos: h.repos, store, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
     const evidence = evidenceProjection(await runtime.readEvidence(id));
     return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
@@ -94,6 +119,7 @@ async function proveRosterPublication(partial = false) {
   assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length });
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
+  if (auditLadder) assert.ok(deliveredAdmin.find(row => row.id === h.item.id)?.verification.checks.some(check => check.says.includes("Escalated")), "Admin shows the reason and exact model transition");
   const read = await readRegistryRuntimeProjection({ store, bypassCache: true, now: h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader projection missing");
@@ -161,3 +187,4 @@ async function proveRosterPublication(partial = false) {
 
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
+test("normal audit work escalates unresolved Haiku and Sonnet attempts then publishes after independent checks pass", () => proveRosterPublication(false, true));

@@ -51,7 +51,7 @@ async function main(): Promise<void> {
         return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!,
           httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" };
       } });
-    const published = report.filter(row => row.outcome.status === "PUBLISHED");
+    const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
     const held = report.filter(row => row.outcome.status === "HELD");
     console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? null,
       promotedVersionId: published.at(-1)?.outcome.versionId ?? null, workerPublications: report }, null, 2));

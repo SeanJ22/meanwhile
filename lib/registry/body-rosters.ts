@@ -23,6 +23,8 @@ import { AZ_CAWCD_ROSTERS } from "./cawcd-rosters.ts";
 import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 
 export interface RosterMember {
+  /** An unresolved update must retain an older member on its actual source/date. */
+  membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
   /** Stable within the roster: `roster:<bodyId>#<n>`. */
   id: string;
   name: string;
@@ -2619,14 +2621,14 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     // that null means "no party to state" or "not sourced yet".
     partyLabel: member.partyLabel ?? null,
     websiteUrl: member.websiteUrl,
-    sourceUrl: roster.sourceUrl,
+    sourceUrl: member.membershipSource?.sourceUrl ?? roster.sourceUrl,
     // Item 1 (2026-08-16): the roster's own publisher and read date travel
     // with every member, so a card listing them can say who published the
     // claim rather than only where it lives.
     provenance: {
-      sourceUrl: roster.sourceUrl,
-      sourceOrg: roster.sourceOrg,
-      collectedAt: roster.collectedAt,
+      sourceUrl: member.membershipSource?.sourceUrl ?? roster.sourceUrl,
+      sourceOrg: member.membershipSource?.sourceOrg ?? roster.sourceOrg,
+      collectedAt: member.membershipSource?.collectedAt ?? roster.collectedAt,
       verifiedAt: null,
     },
     email: member.email,

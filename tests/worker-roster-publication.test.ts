@@ -22,6 +22,7 @@ import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.t
 import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
 import { workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
+import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 
 async function proveRosterPublication(partial = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -42,7 +43,10 @@ async function proveRosterPublication(partial = false) {
   assert.ok(body.name);
   const rows = existing.members.map(member => ({ id: member.id, name: member.name, office: member.officeTitle }));
   rows.push({ id: "fixture-new-holder", name: "Morgan Example", office: "Fixture Board Member" });
-  if (partial) rows.push({ id: "fixture-unresolved-holder", name: "Contact us", office: "Contact information" });
+  if (partial) {
+    rows.shift(); // An incomplete update must not erase this prior verified person.
+    rows.push({ id: "fixture-unresolved-holder", name: "Contact us", office: "Contact information" });
+  }
   const text = JSON.stringify({ body: body.name, records: rows });
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text } });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-register", routeLabel: "Recorded independent roster fixture", target: "https://register.example.gov/roster.json", inherited: false, now: h.now() });
@@ -95,7 +99,11 @@ async function proveRosterPublication(partial = false) {
   if (read.kind !== "PROMOTED") throw new Error("reader projection missing");
   const delivered = read.value.bodyRosters.find(roster => roster.bodyId === body.id)!;
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
-  assert.deepEqual(delivered.members.slice(0, existing.members.length), existing.members, "independent existing fields and stable identities survive");
+  for (const previous of existing.members) {
+    const retained = delivered.members.find(member => member.id === previous.id)!;
+    const { membershipSource: _source, ...facts } = retained;
+    assert.deepEqual(facts, previous, "independent existing fields and stable identities survive");
+  }
   const added = delivered.members.find(member => member.name === "Morgan Example")!;
   assert.ok(added, "a newly verified holder reaches the existing reader projection");
   assert.equal(read.value.officialCandidacies.rows.find(row => row.holder.id === added.id)?.status, "NOT_CHECKED", "unknown candidacy does not hold verified officeholding or assert absence");
@@ -111,6 +119,18 @@ async function proveRosterPublication(partial = false) {
     const partialAdmin = deliveredAdmin.find(row => row.id === h.item.id)!;
     assert.equal(partialAdmin.state, "WAITING");
     assert.ok(partialAdmin.delivery.blockers.some(reason => reason.includes("ROSTER_IDENTITIES_REQUIRE_REPAIR")));
+    const retained = delivered.members.find(member => member.id === existing.members[0].id)!;
+    assert.deepEqual(retained.membershipSource, { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt },
+      "an omitted prior member retains its source and age, not this update's date");
+    const readerHolder = rosterHoldersForBody(body.id).find(member => member.id === retained.id)!;
+    assert.equal(readerHolder.sourceUrl, existing.sourceUrl);
+    assert.equal(readerHolder.provenance.collectedAt, existing.collectedAt, "the actual person Reader keeps the prior date");
+    const candidate = (await store.readCandidate(published[0].outcome.versionId!))!;
+    const base = (await store.readCandidate(prior.versionId))!;
+    assert.equal(manualPriorAuthorityIssue(candidate.candidate, base), null);
+    const tampered = structuredClone(candidate.candidate);
+    (tampered.readModel as typeof prior.payload).bodyRosters.find(row => row.bodyId === body.id)!.members.find(member => member.id === retained.id)!.name = "Unverified replacement";
+    assert.ok(manualPriorAuthorityIssue(tampered, base), "retained membership cannot smuggle a changed person under old authority");
     assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "partial delivery automatically returns unresolved identities to repair");
     return;
   }

@@ -181,7 +181,7 @@ function bodyRosterUrls(roster: BodyRoster): string[] {
   return httpsUrls([
     roster.sourceUrl,
     roster.partisanshipSourceUrl,
-    ...roster.members.flatMap((member) => [member.websiteUrl, member.partySourceUrl]),
+    ...roster.members.flatMap((member) => [member.websiteUrl, member.partySourceUrl, member.membershipSource?.sourceUrl]),
   ]);
 }
 
@@ -340,7 +340,8 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
     const roster = record.value;
     return !roster.bodyId || !roster.bodyName || !roster.sourceOrg || !roster.collectedAt ||
         registryIsolationUrls(member).length === 0 || duplicate(roster.members.map((row) => row.id)) ||
-        roster.members.some((row) => !row.name || !row.officeTitle)
+        roster.members.some((row) => !row.name || !row.officeTitle || (row.membershipSource &&
+          (!/^https:\/\//.test(row.membershipSource.sourceUrl) || !row.membershipSource.sourceOrg || !Number.isFinite(Date.parse(row.membershipSource.collectedAt)))))
       ? `${member.key} lacks exact roster identity, provenance, or unique person rows.`
       : null;
   }

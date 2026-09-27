@@ -106,7 +106,8 @@ export function workerRosterPublication(input: {
       requireThat(typeof name === "string" && name.trim() && typeof officeTitle === "string" && officeTitle.trim(), "ROSTER_PERSON_FIELDS_MISSING");
       const matching = previous?.members.filter(member => member.name === name && member.officeTitle === officeTitle) ?? [];
       requireThat(matching.length <= 1, "ROSTER_PRIOR_PERSON_IDENTITY_CONFLICT");
-      return { ...(matching[0] ?? { id: `roster:${body.id}#${digest(record.id).slice(0, 16)}`, termNote: null, email: null, phone: null, websiteUrl: null }),
+      const { membershipSource: _oldMembership, ...identity } = matching[0] ?? { id: `roster:${body.id}#${digest(record.id).slice(0, 16)}`, termNote: null, email: null, phone: null, websiteUrl: null };
+      return { ...identity,
         name: name as string, officeTitle: officeTitle as string };
     }),
   };
@@ -114,6 +115,16 @@ export function workerRosterPublication(input: {
   requireThat(rendered.roster.members.length > 0, "ROSTER_NO_READER_ELIGIBLE_MEMBERS");
   requireThat(rendered.dispositions.length === extraction.records.length && rendered.roster.members.every(member =>
     proposed.members.some(source => source.id === member.id && canonicalJson(source) === canonicalJson(member))), "ROSTER_RENDERING_MISMATCH");
+  if (rendered.dispositions.some(row => row.state === "IDENTITY_UNRESOLVED") && previous) {
+    // An incomplete identity update proves no departure. Keep omitted prior
+    // members with their own authority/date while the normal repair resolves it.
+    for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
+      rendered.roster.members.push({ ...member, membershipSource: member.membershipSource ?? {
+        sourceUrl: previous.sourceUrl, sourceOrg: previous.sourceOrg, collectedAt: previous.collectedAt } });
+      rendered.dispositions.push({ sourceId: member.id, canonicalId: member.id, state: "READER_ELIGIBLE",
+        reason: "Retained from the prior verified roster; the incomplete update does not establish a departure." });
+    }
+  }
   // Officeholding and ballot candidacy are separate assertions. New verified
   // holders reach readers while the already owed election work checks candidacy;
   // an unchecked link is never represented as no candidacy or no funding.
@@ -170,10 +181,11 @@ export async function publishWorkerRosterResults(input: {
       const prepared = workerRosterPublication({ plan, parser, validator, auditor, captures, prior, now: input.now });
       const before = prior.payload.bodyRosters.find(roster => roster.bodyId === plan.publication?.bodyId)?.members ?? [];
       const counts = { added: 0, changed: 0, reused: 0 };
+      const memberFacts = (member: BodyRoster["members"][number]) => canonicalJson(Object.fromEntries(Object.entries(member).filter(([field]) => field !== "membershipSource")));
       for (const member of prepared.payload.bodyRosters[0].members) {
         const previous = before.find(held => held.id === member.id);
         if (!previous) counts.added++;
-        else if (canonicalJson(previous) === canonicalJson(member)) counts.reused++;
+        else if (memberFacts(previous) === memberFacts(member)) counts.reused++;
         else counts.changed++;
       }
       const candidate = registryRuntimeCandidate(prepared, { prior });

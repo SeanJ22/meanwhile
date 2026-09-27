@@ -27,6 +27,7 @@ import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts"
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
 import type { ModelRequest, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { nextAuditEscalation } from "../lib/control-plane/workers/audit-escalation.ts";
+import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
 async function proveRosterPublication(partial = false, auditLadder = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -120,6 +121,26 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
   if (auditLadder) assert.ok(deliveredAdmin.find(row => row.id === h.item.id)?.verification.checks.some(check => check.says.includes("Escalated")), "Admin shows the reason and exact model transition");
+  const deliveredItems = [(await h.repos.workItems.mustRead(h.item.id)).value];
+  let observations = 0;
+  const collector = { items: deliveredItems, store, now: h.now(), previous: null,
+    zipForDivision: async (division: string) => { assert.equal(division, body.ocdId); return "99999"; }, // isolated destination dependency; no geographic proof claimed
+    observe: async (input: { roster: typeof existing; zip: string }) => {
+      observations++;
+      assert.equal(input.roster.bodyId, body.id);
+      assert.ok(input.roster.members.some(member => member.name === "Morgan Example"));
+      return { confirmed: true, reason: "Isolated public-control observation", responseSha256: "a".repeat(64) };
+    } };
+  const readback = await collectWorkerRosterReadback(collector);
+  assert.equal(readback.witnesses[0]?.approvalId, published[0].outcome.workerResultId);
+  const deliveredSources = await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] });
+  const witnessed = buildAssignments({ ...deliveredSources, servedReader: readback }).find(row => row.id === h.item.id)!;
+  assert.equal(witnessed.delivery.publiclyAvailable.held, true, "actual observation joins this exact worker publication in Admin");
+  if (partial) assert.ok(witnessed.delivery.blockers.some(reason => reason.includes("ROSTER_IDENTITIES_REQUIRE_REPAIR")), "a public subset does not hide unfinished identity verification");
+  const wrong = { ...readback, witnesses: readback.witnesses.map(w => ({ ...w, versionId: "different-version" })) };
+  assert.equal(buildAssignments({ ...deliveredSources, servedReader: wrong }).find(row => row.id === h.item.id)!.delivery.publiclyAvailable.held, false);
+  await collectWorkerRosterReadback({ ...collector, now: h.now(), previous: readback });
+  assert.equal(observations, 1, "the existing cycle reuses fresh exact public evidence instead of repeating unchanged browser visits");
   const read = await readRegistryRuntimeProjection({ store, bypassCache: true, now: h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader projection missing");

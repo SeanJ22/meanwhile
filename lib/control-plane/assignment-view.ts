@@ -1787,21 +1787,27 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
 }
 
 function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
-  const items = g.pipeline.length;
-  const approved = g.pipeline.filter((s) => s.stage === "APPROVED_FOR_PROMOTION").length;
+  const workerPublications = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : []);
+  const items = g.pipeline.length + workerPublications.length;
+  const approved = g.pipeline.filter((s) => s.stage === "APPROVED_FOR_PROMOTION").length + workerPublications.filter(p => p.status === "PUBLISHED").length;
   const blockers: string[] = [];
   const approvedHeld: Held<Measured> =
-    src.pipeline === null
+    src.pipeline === null && !workerPublications.length
       ? gap("OURS", "the promotion pipeline could not be read on this publish")
       : items === 0
         ? gap("OURS", "nothing from this assignment has entered the promotion pipeline, so there is nothing to approve yet")
-        : held(measured(approved, items, "items approved for promotion, of items offered", "cp_log_promotion_pipeline"));
+        : held(measured(approved, items, "items with all required publication checks passed, of items offered", "cp_log_promotion_pipeline + WorkItem.publicationOutcome"));
   let promoted: Held<PromotionStatus>;
-  const witnesses = g.pipeline.flatMap(s => {
+  const witnesses = [...g.pipeline.flatMap(s => {
     const a = s.byStage.APPROVED_FOR_PROMOTION;
     const w = a ? servedWitness(src.servedReader, s.itemId, a.recordId, src.nowIso) : null;
     return w ? [w] : [];
-  });
+  }), ...g.workItems.flatMap(item => {
+    const publication = item.publicationOutcome;
+    if (!publication || publication.status === "HELD") return [];
+    const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso);
+    return witness?.versionId === publication.versionId ? [witness] : [];
+  })];
   const witness = witnesses[0];
   const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
     .sort((left, right) => right.at.localeCompare(left.at))[0];
@@ -1810,7 +1816,6 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   } else if (workerPublication) {
     promoted = held({ state: workerPublication.status !== "HELD" ? "PROMOTED" : "NOT_PROMOTED",
       says: `${workerPublication.code}: ${workerPublication.detail}`, versionId: workerPublication.versionId, at: workerPublication.at });
-    if (workerPublication.status !== "PUBLISHED") blockers.push(`${workerPublication.code}: ${workerPublication.detail}`);
   } else if (src.activation === null) {
     promoted = gap("OURS", "the activation gate was not read on this publish, so whether promotion is on is not shown");
   } else if (!src.activation.promotionEnabled) {
@@ -1825,6 +1830,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   } else {
     promoted = gap("OURS", "The activation gate is open, but no current public readback proves delivery for this assignment.");
   }
+  for (const publication of workerPublications) if (publication.status !== "PUBLISHED") blockers.push(`${publication.code}: ${publication.detail}`);
   if (!witness) blockers.push("No current public readback confirms this assignment's exact approvals.");
   if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {

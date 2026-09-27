@@ -76,7 +76,13 @@ import {
   routineDueRequestFor,
   type RoutineDueRequest,
 } from "../lib/civic-data/routine-due-request.ts";
-import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
+import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
+import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
+import { scheduledBlackoutAt } from "../lib/control-plane/fleet-safety.ts";
+import { huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -227,14 +233,14 @@ function safeFailure(value: string): string {
  * owner log Admin consumes prevents one broken partition from monopolizing a
  * shared publisher frontier without fabricating a source attempt.
  */
-async function latestUnreceiptedSupervisorAttempts(): Promise<RoutineSupervisorAttemptHistory> {
+async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[]): Promise<RoutineSupervisorAttemptHistory> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) {
     throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured; provider-frontier fairness cannot be proved.`);
   }
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
   assertDurableRepositories(repos, "routine civic-data provider-frontier history");
-  const taskIds = new Set(ROUTINE_SOURCE_TASKS.map(({ id }) => id));
+  const taskIds = new Set(selectedTasks.map(({ id }) => id));
   /* skipBootstrap does no I/O, so this read is the supervisor's first connect;
      a transient Neon connect blip here would otherwise abort the whole routine
      civic-data pass at its start. The read is idempotent, so retry it — same
@@ -272,6 +278,29 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
   const row = await withControlPlaneConnectRetry(() => repos.adminConfig.read(ADMIN_CONFIG_ID));
   return parseRoutineDueRequests(row?.value.routineDueRequests);
+}
+
+/** Resolve the actual Admin Send. No scope, paused runner or unreadable control admits no hunt work. */
+async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
+  if (FORCE || ONLY || scheduledBlackoutAt(RUN_STARTED_AT)) return [];
+  const connection = controlPlaneUrlFromEnv();
+  if (!connection) throw new Error("control-plane reporting connection is unavailable");
+  const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  if (row === null) return [];
+  if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
+  const held = expansionScopesOf(row.value);
+  if (held.malformed) throw new Error("the owner's scope list contains unreadable decisions");
+  const currentSends = held.scopes.filter(scope => scope.sourceWorkVersion === 1);
+  if (currentSends.length === 0) return [];
+  const intents = readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]);
+  if (intents.runnerPause.paused) return [];
+  const lookup = await loadPublishedLookupState({ bypassCache: true });
+  const resolved = await resolveScopes(currentSends, lookup, null);
+  for (const scope of resolved.scopes) {
+    if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
+  }
+  return huntSourceTasks(resolved.scopes, RUN_STARTED_AT);
 }
 
 function newestConsideredAt(
@@ -380,6 +409,7 @@ function captureTaskReceipt(
     scope: pending.task.scope,
     classification,
     receipt,
+    ...(pending.task.ownerInvocation ? { instructionIds: pending.task.ownerInvocation.instructions } : {}),
   });
 }
 
@@ -392,7 +422,15 @@ function captureTaskReceipt(
 // single pass to 32 child ceilings and prevent a newly due unrelated source
 // from entering the next pass.
 const admissionNowMs = Date.now();
-const selectedTasks = ROUTINE_SOURCE_TASKS.filter((task) => !ONLY || ONLY.has(task.id));
+let huntTasks: readonly RoutineSourceTask[] = [];
+try {
+  huntTasks = await readHuntSourceTasks();
+} catch (error) {
+  const detail = safeFailure(sanitizedErrorDiagnostic(error));
+  supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });
+  console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+}
+const selectedTasks = [...ROUTINE_SOURCE_TASKS, ...huntTasks].filter((task) => !ONLY || ONLY.has(task.id));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
@@ -459,6 +497,12 @@ for (const read of clockReads) {
   const sittingHot = sittingSignals.get(task.id);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
+  if (task.ownerInvocation) {
+    const due = routineTaskDue(task, durableClock, admissionNowMs);
+    const succeeded = Date.parse(durableClock?.lastSucceededObservedAt ?? durableClock?.lastSucceededAt ?? "");
+    const reused = Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
+    publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
+  }
   if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null && !publicationDue) {
     console.log(`RCD_SKIP ${task.id}: cadence not due${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
@@ -493,7 +537,7 @@ for (const read of clockReads) {
 step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
 try {
-  const history = await latestUnreceiptedSupervisorAttempts();
+  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
   supervisorAttempts = history.attempts;
   for (const issue of history.issues) {
     const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);
@@ -584,12 +628,17 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
-      ...admittedRuntimeChildEnvironment({
+      ...(pending.task.ownerInvocation ? admittedRuntimeChildEnvironment({
+        parentEnv: process.env,
+        capability: "MANUAL_CONTRACT",
+        contract: pending.task.id,
+        parentPid: process.pid,
+      }) : admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "ROUTINE_CONTRACT",
         contract: pending.task.id,
         parentPid: process.pid,
-      }),
+      })),
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
   };

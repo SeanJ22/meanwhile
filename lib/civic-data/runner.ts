@@ -44,7 +44,12 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
-  readonly contract: RoutineSourceContract;
+  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
+  /** Only a resolved owner Send can admit one of the existing explicit source commands. */
+  readonly ownerInvocation?: {
+    readonly requestedAt: string;
+    readonly instructions: readonly string[];
+  };
 }
 
 /**
@@ -640,6 +645,13 @@ export function routineTaskDue(
   nowMs: number,
   sittingHot?: boolean,
 ): boolean {
+  if (task.ownerInvocation) {
+    const requested = Date.parse(task.ownerInvocation.requestedAt);
+    const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
+    if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return false;
+    const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+    return !Number.isFinite(attempted) || attempted < requested || nowMs - attempted >= task.retryMs;
+  }
   const schedule = task.contract?.schedule;
   if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);
   if (!clock?.lastAttemptedAt) return true;

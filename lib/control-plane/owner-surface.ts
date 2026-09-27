@@ -635,6 +635,8 @@ export interface RoutineCivicDataTaskReceiptReference {
   readonly classification: "VERIFIED_SOURCE_SUCCESS" | "VERIFIED_SOURCE_FAILURE";
   /** Exact child receipt already checked against the durable candidate and pointer. */
   readonly receipt: RoutineRunnerReceipt;
+  /** Exact Send receipts which requested this shared source refresh. */
+  readonly instructionIds?: readonly string[];
 }
 
 export type RoutineCivicDataReaderReadbackDisposition =

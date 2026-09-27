@@ -60,6 +60,7 @@ import { failedFederalDirectoryCandidate, federalDirectoryCandidate, type Federa
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import type { DirectoryFile } from "../lib/officials/directory.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { currentCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
@@ -403,7 +404,7 @@ async function main() {
     state: member.state ?? undefined,
     chamber: member.chamber ?? undefined,
     provenance: {
-      sourceUrl: `${RAW}/legislators-current.yaml`,
+      sourceUrl: `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`,
       sourceOrg: snapshot.source.sourceOrg,
       collectedAt,
       verifiedAt: null,
@@ -449,6 +450,7 @@ async function main() {
   const candidate = federalDirectoryCandidate({ acquisitions, retrievedAt: collectedAt, projection });
   attemptPersisted = true;
   const outcome = await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "congress-bulk-roster", candidate, collectedAt);
+  printSourceRunnerReceipt("congress-bulk-roster", candidate, outcome);
   if (!outcome.promoted) throw new Error(`Federal directory candidate ${candidate.id} was held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
 
   console.log("\nFederal directory promoted. Counts and their denominators:");
@@ -465,12 +467,14 @@ void main().catch(async (error: unknown) => {
   if (writePrepared && !attemptPersisted) {
     const attemptedAt = stamp();
     try {
-      await processRegisteredManualCandidate(
+      const failed = failedFederalDirectoryCandidate(attemptedAt, detail);
+      const outcome = await processRegisteredManualCandidate(
         new PostgresRoutineDataStore(),
         "congress-bulk-roster",
-        failedFederalDirectoryCandidate(attemptedAt, detail),
+        failed,
         attemptedAt,
       );
+      printSourceRunnerReceipt("congress-bulk-roster", failed, outcome);
     } catch (receiptError) {
       console.error(`Could not persist the failed federal-directory attempt: ${receiptError instanceof Error ? receiptError.message : receiptError}`);
     }

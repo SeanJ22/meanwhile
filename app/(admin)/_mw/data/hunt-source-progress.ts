@@ -3,12 +3,12 @@ import { neon } from "@neondatabase/serverless";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, type HuntSourceProgress } from "@/lib/control-plane/owner-surface.ts";
 import { sharedRead } from "./shared-read.ts";
 
-export type HuntSourceProgressRead = { ok: true; at: string; rows: readonly HuntSourceProgress[] } | { ok: false; reason: string };
-type Read = HuntSourceProgressRead;
+type Read = { ok: true; at: string; rows: readonly HuntSourceProgress[] } | { ok: false; reason: string };
+export type HuntSourceProgressRead = Read & { stale: boolean };
 const caches = new Map<string, ReturnType<typeof sharedRead<Read>>>();
 const stages = new Set(["QUEUED", "COLLECTING_AND_VERIFYING", "PUBLISHED", "REUSED", "HELD", "FAILED"]);
 
-export function loadHuntSourceProgress(instructionId: string): Promise<Read> {
+export async function loadHuntSourceProgress(instructionId: string): Promise<HuntSourceProgressRead> {
   let cache = caches.get(instructionId);
   if (!cache) {
     cache = sharedRead<Read>({ freshMs: 2000, staleMs: 12_000, deadlineMs: 1800, keep: value => value.ok,
@@ -16,7 +16,7 @@ export function loadHuntSourceProgress(instructionId: string): Promise<Read> {
     if (caches.size >= 32) caches.delete(caches.keys().next().value!);
     caches.set(instructionId, cache);
   }
-  return cache.read(async () => {
+  const reading = await cache.read(async () => {
     const url = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
     if (!url) return { ok: false, reason: "Shared source activity storage is unavailable." };
     try {
@@ -34,4 +34,5 @@ export function loadHuntSourceProgress(instructionId: string): Promise<Read> {
       return { ok: true, at: new Date().toISOString(), rows: progress };
     } catch { return { ok: false, reason: "Shared source activity could not be read. This does not mean there is no work." }; }
   });
+  return { ...reading, stale: reading.ok && Date.now() - Date.parse(reading.at) > 12_000 };
 }

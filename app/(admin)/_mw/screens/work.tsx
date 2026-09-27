@@ -464,7 +464,7 @@ function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: 
       {d.note ? <p className={s.record}>“{d.note}”</p> : <p className={s.note} style={{ marginBottom: 22 }}>You sent this without words of your own.</p>}
       {sharedSources !== null && <>
         <h4 className={s.h4}>Shared source work for this instruction</h4>
-        {sharedSources.ok && <p className={s.note}>Activity read {formatEastern(sharedSources.at)}{Date.now() - Date.parse(sharedSources.at) > 12_000 ? " · stale; retaining the last readable activity" : ""}.</p>}
+        {sharedSources.ok && <p className={s.note}>Activity read {formatEastern(sharedSources.at)}{sharedSources.stale ? " · stale; retaining the last readable activity" : ""}.</p>}
         {!sharedSources.ok ? <p className={s.note}>{sharedSources.reason}</p> : sharedSources.rows.length === 0
           ? <p className={s.note}>No source-worker receipt is recorded for this Send yet. This is not a coverage or completion claim.</p>
           : <div className={s.stack8} style={{ marginBottom: 24 }}>{sharedSources.rows.map(row => <div key={row.taskId} className={s.inset}>

@@ -30,6 +30,8 @@
  * receipt states it exactly. PURE.
  */
 import { certainlyOverlaps, OVERLAP_CERTAINTY_MARGIN, type DivisionTerritory, type ScopeGeometry } from "./overlap.ts";
+import type { TerritoryIndex } from "./membership.ts";
+import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 
 /** A government a state's registration holds a body for, on its Census division. */
 export interface RegisteredGovernment {
@@ -47,7 +49,7 @@ export interface PreviewCode {
 }
 
 export type StateSendPreview =
-  | { readonly kind: "REVIEWED_REGISTRY"; readonly state: string }
+  | { readonly kind: "REVIEWED_REGISTRY"; readonly state: string; readonly versionId?: string; readonly governments?: readonly PlacedGovernment[]; readonly unplaced?: readonly { readonly id: string; readonly name: string; readonly why: string }[] }
   | {
       readonly kind: "REGISTRATION";
       readonly state: string;
@@ -59,6 +61,38 @@ export type StateSendPreview =
       readonly edge: readonly string[];
     }
   | { readonly kind: "NOT_READ"; readonly state: string; readonly why: string };
+
+export interface PlacedGovernment {
+  readonly id: string;
+  readonly name: string;
+  readonly basis: string;
+}
+
+/** Uses the dispatch index itself, including district rules. An unresolved
+ * territory remains a named gap, never a claim that the body is outside. */
+export function reviewedGovernmentsPlaced(codes: readonly PreviewCode[], registry: JurisdictionRegistry, index: TerritoryIndex): {
+  governments: PlacedGovernment[];
+  unplaced: { id: string; name: string; why: string }[];
+} {
+  const scope = previewScope(codes);
+  const governments: PlacedGovernment[] = [];
+  const unplaced: { id: string; name: string; why: string }[] = [];
+  for (const jurisdiction of registry.jurisdictions) {
+    const territory = index.bySubject.get(jurisdiction.id);
+    if (index.statewide.has(jurisdiction.id) || (territory && certainlyOverlaps(territory, scope))) {
+      governments.push({ id: jurisdiction.id, name: jurisdiction.name, basis: index.statewide.has(jurisdiction.id)
+        ? "Shared statewide government"
+        : jurisdiction.govClass === "SPECIAL_DISTRICT"
+          ? "Dispatch territory; approximate fire boundaries are discovery leads, not verified reader governance"
+          : "Dispatch Census territory and adopted district membership rules" });
+    } else if (index.unplaced.has(jurisdiction.id)) {
+      unplaced.push({ id: jurisdiction.id, name: jurisdiction.name, why: index.unplaced.get(jurisdiction.id)! });
+    }
+  }
+  governments.sort((a, b) => a.name.localeCompare(b.name));
+  unplaced.sort((a, b) => a.name.localeCompare(b.name));
+  return { governments, unplaced };
+}
 
 /** The scope's geometry, as the runner resolves it from the same published lookup. */
 export function previewScope(codes: readonly PreviewCode[]): ScopeGeometry {
@@ -120,6 +154,7 @@ export function registrationGovernmentsPlaced(
 /** One sentence for the composer, per state. */
 export function stateSendPreviewSentence(p: StateSendPreview, cap: number): string {
   if (p.kind === "REVIEWED_REGISTRY") {
+    if (p.governments) return `${p.state}: the runner's territory rules place ${p.governments.length} governments in this scope, using promoted registry ${p.versionId}. ${p.unplaced?.length ?? 0} other registered governments have unresolved territory; their applicability remains unverified. Existing work is reused. This is work placement, not proof of completed coverage.`;
     return `${p.state}: its governments come from the reviewed ${p.state} jurisdiction registry. The runner places them by their Census territory and counts what it creates at its next cycle.`;
   }
   if (p.kind === "NOT_READ") return `${p.state}: its registration could not be read (${p.why}), so no count is claimed.`;

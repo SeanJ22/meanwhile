@@ -60,7 +60,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (container.kind === "UNREAD") return NextResponse.json({ ok: false, says: container.detail }, { status: 200 });
   const g = container.value.geography;
   const scopeBodies = registry.kind === "HELD" ? previewScopeBodies(container.value.zctas, indexBodies(registry.bodies), bodies.kind === "HELD" ? bodies.views : []) : [];
-  const scopeWork = work.kind === "HELD" ? scopeWorkPreview({ codes: container.value.zctas, states: [g.stateAbbr, ...g.memberStates], bodyIds: scopeBodies.map(body => body.id), obligations: work.obligations, readAt: work.readAt }) : null;
   const scopeWorkGap = work.kind === "UNREAD" ? work.detail : null;
   /* How many governments a Send here creates work for, per state, and whether a reviewed registry or registration names them (2026-09-25). */
   const query = readerQuery();
@@ -68,6 +67,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     [...new Set([g.stateAbbr, ...g.memberStates].map((s) => s.toUpperCase()))].sort().map((st) => sendPreviewFor(st, container.value.zctas, query)),
   );
   const send = { states: sendStates, says: sendStates.map((p) => stateSendPreviewSentence(p, DISPATCH_WORK_TARGET_CAP)) };
+  const dispatchIds = sendStates.flatMap(state => state.kind === "REVIEWED_REGISTRY" ? (state.governments ?? []).map(body => body.id) : []);
+  const scopeWork = work.kind === "HELD" ? scopeWorkPreview({ codes: container.value.zctas, states: [g.stateAbbr, ...g.memberStates], bodyIds: [...scopeBodies.map(body => body.id), ...dispatchIds], obligations: work.obligations, readAt: work.readAt }) : null;
   if (registry.kind === "UNREAD") {
     return NextResponse.json({
       ok: true,

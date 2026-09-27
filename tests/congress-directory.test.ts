@@ -7,6 +7,23 @@ import { directoryFor, directorySource } from "../lib/officials/directory.ts";
 import { identityChipsFor } from "../lib/officials/identity-chips.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { currentCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
+
+test("directory refresh resolves one current immutable revision and refuses unavailable or malformed revisions", async () => {
+  let calls = 0;
+  const sha = "a".repeat(40);
+  const revision = await currentCongressSourceRevision((async (url) => {
+    calls++;
+    assert.equal(String(url), "https://api.github.com/repos/unitedstates/congress-legislators/commits?per_page=1");
+    return Response.json([{ sha }]);
+  }) as typeof fetch);
+  assert.equal(revision, sha);
+  assert.equal(calls, 1);
+  for (const body of [[], [{ sha: "main" }], { sha }]) {
+    await assert.rejects(currentCongressSourceRevision((async () => Response.json(body)) as typeof fetch), /REVISION_INVALID/);
+  }
+  await assert.rejects(currentCongressSourceRevision((async () => new Response("", { status: 403 })) as typeof fetch), /REVISION_HTTP_403/);
+});
 
 await installRegistryRuntimeFirstSeeds();
 

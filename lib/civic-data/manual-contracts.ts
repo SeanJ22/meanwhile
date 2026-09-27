@@ -4,8 +4,9 @@ import type { SourceAuthorityId } from "./source-authority.ts";
 /**
  * A production authority which is deliberately owner-invoked rather than
  * clock-driven. These records still use the same candidate/event/promotion
- * plane and GOOD receipt as routine sources; this registry cannot be consumed
- * by the standing runner and contains no cadence or retry policy.
+ * plane and GOOD receipt as routine sources. A resolved owner Send may invoke
+ * the deterministic subset in hunt-source-tasks.ts through the supervisor;
+ * these contracts are not part of its standing cadence portfolio.
  */
 export interface ManualProductionSourceContract {
   readonly id: string;

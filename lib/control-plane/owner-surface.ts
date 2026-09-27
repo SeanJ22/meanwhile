@@ -496,6 +496,8 @@ export interface OwnerDigestRecord {
   readonly lines: readonly string[];
   readonly cycleOk: boolean | null;
   readonly testedSha: string | null;
+  /** Source progress for an exact Admin Send, in this existing append-only activity log. */
+  readonly huntSourceProgress?: HuntSourceProgress;
   /**
    * Structured runtime outcome carried beside the exact human digest. Optional
    * only for historical rows written before PDC. Distinct kinds keep a civic
@@ -509,6 +511,21 @@ export interface OwnerDigestRecord {
     | IntakeRuntimeObservationOutcome
     | MapTilerUsageCollectionOutcome
     | MethodCandidateAuthorityAdoptionOutcome;
+}
+
+/** Separate key in the existing log so task activity never replaces the runner's latest cycle digest. */
+export const HUNT_SOURCE_PROGRESS_LOG_KEY = "hunt-source-progress";
+
+export interface HuntSourceProgress {
+  readonly instructionIds: readonly string[];
+  readonly taskId: string;
+  readonly sourceId: string;
+  readonly scope: string;
+  readonly stage: "QUEUED" | "COLLECTING_AND_VERIFYING" | "PUBLISHED" | "REUSED" | "HELD" | "FAILED";
+  readonly at: string;
+  readonly detail: string;
+  readonly candidateId: string | null;
+  readonly readerPaths: readonly string[];
 }
 
 /** One append-only receipt from the standing MapTiler observer. */
@@ -635,6 +652,8 @@ export interface RoutineCivicDataTaskReceiptReference {
   readonly classification: "VERIFIED_SOURCE_SUCCESS" | "VERIFIED_SOURCE_FAILURE";
   /** Exact child receipt already checked against the durable candidate and pointer. */
   readonly receipt: RoutineRunnerReceipt;
+  /** Exact Send receipts which requested this shared source refresh. */
+  readonly instructionIds?: readonly string[];
 }
 
 export type RoutineCivicDataReaderReadbackDisposition =

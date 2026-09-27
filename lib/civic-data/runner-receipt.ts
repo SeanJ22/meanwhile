@@ -54,6 +54,11 @@ export function routineReceiptFields(
   };
 }
 
+/** Exact existing candidate receipt, including holds; no source content or credentials. */
+export function printSourceRunnerReceipt(source: string, candidate: { readonly id: string }, outcome: PromotionOutcome): void {
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+}
+
 /** Candidate plus canonical pointer/LKG proof needs at most four Neon requests. */
 export const ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS = 4;
 

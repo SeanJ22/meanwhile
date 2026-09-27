@@ -44,6 +44,7 @@ import {
 } from "../lib/votes/snapshot.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
@@ -76,7 +77,8 @@ async function recordFailure(url: string, detail: string): Promise<void> {
     failureDetail: detail,
     parserVersion: FEDERAL_VOTES_PARSER_VERSION,
   });
-  await processRegisteredManualCandidate(store, "congress-rollcalls", failed, attemptedAt);
+  const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", failed, attemptedAt);
+  printSourceRunnerReceipt("congress-rollcalls", failed, outcome);
 }
 
 async function get(url: string, proveOfficial: boolean = true): Promise<string> {
@@ -384,6 +386,7 @@ const candidate = federalRollCallsCandidate({
   billSummaries,
 });
 const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt);
+printSourceRunnerReceipt("congress-rollcalls", candidate, outcome);
 
 console.log(
   `house: ${houseRolls.length} rolls (${houseRolls[0]}–${houseRolls[houseRolls.length - 1]}), identifier match ${houseMatched}/${houseTotal}`,

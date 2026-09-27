@@ -70,19 +70,29 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   requireThat(plan.contract.verification.required && authorities.length >= plan.contract.verification.authorities.length, "REPAIR_VERIFICATION_CANNOT_WEAKEN");
   requireThat(plan.contract.verification.authorities.every(prior => authorities.some(next => canonicalJson(next) === canonicalJson(prior))), "REPAIR_AUTHORITY_CANNOT_REMOVE");
   for (const authority of authorities) {
-    requireThat(authority && authority.type === "GOVERNMENT_REGISTER" && authority.independenceBasis === "DISTINCT_AUTHORITY" &&
+    requireThat(authority && ["GOVERNMENT_REGISTER", "STATUTORY_RECORD", "OFFICIAL_DENOMINATOR"].includes(authority.type) &&
+      ["DISTINCT_AUTHORITY", "INDEPENDENT_OFFICIAL_RECORD"].includes(authority.independenceBasis) &&
       typeof authority.publisher === "string" && authority.publisher.trim().length >= 4 && typeof authority.independenceExplanation === "string" && authority.independenceExplanation.trim().length >= 20,
-      "REPAIR_DISTINCT_GOVERNMENT_AUTHORITY_REQUIRED");
+      "REPAIR_OFFICIAL_AUTHORITY_REQUIRED");
     requireThat(Array.isArray(authority.artifactIds) && authority.artifactIds.length > 0 && Array.isArray(authority.authorityEvidenceArtifactIds) && authority.authorityEvidenceArtifactIds.length > 0 &&
       [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds].every(id => cited.has(id)), "REPAIR_AUTHORITY_EVIDENCE_MISSING");
-    requireThat(authority.sourceId !== primary.sourceId && authority.comparison?.kind === "RECORD_VALUES" && authority.comparison.fields.length > 0 &&
+    requireThat((authority.sourceId !== primary.sourceId || authority.independenceBasis === "INDEPENDENT_OFFICIAL_RECORD") && authority.comparison?.kind === "RECORD_VALUES" && authority.comparison.fields.length > 0 &&
       [...plan.contract.requiredFields, ...plan.contract.identity.keyFields].every(field => authority.comparison.fields.includes(field)), "REPAIR_AUTHORITY_BURDEN_MISMATCH");
     shape(authority.extraction);
     for (const id of [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds]) {
       const row = evidence.find(entry => entry.artifactId === id)!;
       const host = new URL(row.canonicalUrl).hostname;
-      requireThat((host.endsWith(".gov") || host.endsWith(".state.nj.us")) && row.sourceId === authority.sourceId &&
-        origin(row.canonicalUrl) !== origin(primary.canonicalUrl) && row.contentHash !== primary.contentHash, "REPAIR_AUTHORITY_NOT_INDEPENDENT");
+      // Public schools and colleges often publish on .org/.edu. Accept their
+      // already established publisher, not an arbitrary newly proposed host.
+      const knownPublisher = plan.sources.some(source => source.sourceId === authority.sourceId &&
+        source.publisher === authority.publisher && origin(source.url) === origin(row.canonicalUrl));
+      const samePublisherRecord = authority.independenceBasis === "INDEPENDENT_OFFICIAL_RECORD" &&
+        authority.sourceId === primary.sourceId && authority.publisher === plan.contract.sourceScope.publisher &&
+        origin(row.canonicalUrl) === origin(primary.canonicalUrl);
+      requireThat((host.endsWith(".gov") || host.endsWith(".state.nj.us") || knownPublisher || samePublisherRecord) &&
+        row.sourceId === authority.sourceId && row.canonicalUrl !== primary.canonicalUrl && row.contentHash !== primary.contentHash &&
+        (authority.independenceBasis === "INDEPENDENT_OFFICIAL_RECORD" || origin(row.canonicalUrl) !== origin(primary.canonicalUrl)),
+        "REPAIR_AUTHORITY_NOT_INDEPENDENT");
     }
     requireThat(authority.authorityEvidenceArtifactIds.some(id => evidence.find(row => row.artifactId === id)!.text.includes(authority.publisher)), "REPAIR_AUTHORITY_IDENTITY_UNPROVEN");
   }
@@ -117,7 +127,7 @@ export function planRepairBrief(plan: AutonomousWorkPlan): string {
     independenceExplanation: "Replace with the evidenced reason this distinct government authority independently publishes these records.", extraction: examples[0],
     comparison: { kind: "RECORD_VALUES", keyFields: [...plan.contract.identity.keyFields], fields: Object.keys(fields) } };
   const grammar = ` Exact extraction descriptor examples: ${JSON.stringify(examples)}. Replace every example locator with one inspected in retained bytes. JSON rowsPointer is an RFC6901 pointer to an array (empty string selects a root array); optional countPointer locates a published count. JSON field source is an RFC6901 pointer relative to each row. XML rowTag and field source are element names. HTML tableIndex and numeric field source are zero-based indexes; headerRows counts excluded headers. Delimited text accepts only comma or tab. Every fields entry is {source:string|number,type:STRING|NUMBER|BOOLEAN|SCALAR}; map every required and identity field, at most32. Exact authority descriptor example: ${JSON.stringify(authority)}. At most4 authorities and16 cited artifacts. Examples are grammar only, never evidence or permission to guess values.`;
-  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE or DELIMITED_TEXT mapping; cite every source/authority artifact in evidenceArtifactIds. Missing PDF/OCR adapters remain REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED, not successful parsing. Each proposed authority needs an actual distinct government register on .gov or .state.nj.us, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, independenceBasis:DISTINCT_AUTHORITY, independenceExplanation, extraction and a RECORD_VALUES comparison covering all required/identity fields. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
+  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE or DELIMITED_TEXT mapping; cite every source/authority artifact in evidenceArtifactIds. Missing PDF/OCR adapters remain REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED, not successful parsing. Each proposed authority needs an actual government register, statutory record or official denominator, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, a documented DISTINCT_AUTHORITY or INDEPENDENT_OFFICIAL_RECORD basis, extraction and a RECORD_VALUES comparison covering all required/identity fields. A .org/.edu or other non-government-suffix publisher must already be established by the parent plan with the same source ID, publisher and origin. A separate record from the primary publisher must name that exact publisher and use different captured bytes and a different URL; repeating the source is refused. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
   return brief + grammar;
 }
 

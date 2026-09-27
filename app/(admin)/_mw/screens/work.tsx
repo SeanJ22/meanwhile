@@ -20,6 +20,7 @@ import "server-only";
  */
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 
 import { readFleetSafety, readHeartbeat, readLatestDigest, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
@@ -64,6 +65,7 @@ import { paidLaneOf } from "../data/research-lane.ts";
 import { TRACKED_STATE_CODES, stateName, statesByStanding } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
 import { loadLivePipeline } from "../data/live-pipeline.ts";
+import { loadHuntSourceProgress, type HuntSourceProgressRead } from "../data/hunt-source-progress.ts";
 import { buildDeliveryTrail } from "@/lib/control-plane/delivery-trail.ts";
 import { readActivationGate } from "@/lib/control-plane/promotion/activation-gate.ts";
 import { LaneStrip } from "../lane-strip.tsx";
@@ -143,8 +145,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
    */
   const openedContract = openId === null ? null : routineContractIdOf(openId);
   const standingId = openId !== null && !openId.startsWith("scope:") && openedContract === null ? openId : null;
+  const sourceInstruction = base.selected.find(decision => instructionKey(decision) === openId && decision.sourceWorkVersion === 1);
 
-  const [containers, snapshotOut, researchOut, heartbeatOut, bodiesRead, intentsOut, digestOut, standingRead, routineRead, livePipeline] = await Promise.all([
+  const [containers, snapshotOut, researchOut, heartbeatOut, bodiesRead, intentsOut, digestOut, standingRead, routineRead, livePipeline, sharedSources] = await Promise.all([
     listContainers(composerState.toUpperCase(), TYPES),
     readSnapshot(base.repos),
     readFleetSafety(base.repos),
@@ -157,6 +160,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     // An opened routine read draws its body's delivery trail, which the list's body read leaves out: that one body is read whole, now.
     openedContract === null ? Promise.resolve(null) : loadWatchedBody(base.nowIso, openedContract),
     loadLivePipeline(),
+    sourceInstruction ? loadHuntSourceProgress(sourceInstruction.receiptId) : Promise.resolve(null),
   ]);
 
   const geographies: Record<string, GeoOption[]> = {};
@@ -338,7 +342,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               card(
                 i.card,
                 opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? (
-                  <InstructionDetail view={i} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
+                  <InstructionDetail view={i} sharedSources={sharedSources} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
                 ) : null,
               ),
             )
@@ -441,7 +445,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view, openHref, workHref }: { view: InstructionView; openHref: (id: string) => string; workHref: string }) {
+function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null }) {
   const d = view.decision;
   const r = view.reach;
   const links = (ids: readonly string[], more: number) => (
@@ -458,6 +462,19 @@ function InstructionDetail({ view, openHref, workHref }: { view: InstructionView
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
       {d.note ? <p className={s.record}>“{d.note}”</p> : <p className={s.note} style={{ marginBottom: 22 }}>You sent this without words of your own.</p>}
+      {sharedSources !== null && <>
+        <h4 className={s.h4}>Shared source work for this instruction</h4>
+        {sharedSources.ok && <p className={s.note}>Activity read {formatEastern(sharedSources.at)}{sharedSources.stale ? " · stale; retaining the last readable activity" : ""}.</p>}
+        {!sharedSources.ok ? <p className={s.note}>{sharedSources.reason}</p> : sharedSources.rows.length === 0
+          ? <p className={s.note}>No source-worker receipt is recorded for this Send yet. This is not a coverage or completion claim.</p>
+          : <div className={s.stack8} style={{ marginBottom: 24 }}>{sharedSources.rows.map(row => <div key={row.taskId} className={s.inset}>
+              <div className={s.row10}><span className={s.name14}>{row.taskId}</span><Pill tone={row.stage === "PUBLISHED" || row.stage === "REUSED" ? "teal" : row.stage === "FAILED" || row.stage === "HELD" ? "stone" : "cyan"}>{row.stage.replaceAll("_", " ")}</Pill></div>
+              <p className={s.note}>{row.detail}</p>
+              <p className={s.note}>Deterministic source worker · {formatEastern(row.at)} · shared scope {row.scope}</p>
+              {row.candidateId && <p className={s.monoId}>{row.stage === "PUBLISHED" || row.stage === "REUSED" ? "Reader version" : "Held candidate"}: {row.candidateId}</p>}
+              {row.readerPaths.map(path => <a key={path} className={s.btnLink} href={`${PUBLIC_SITE_ORIGIN}${path}`} target="_blank" rel="noreferrer">Open public result {path}</a>)}
+            </div>)}</div>}
+      </>}
       <h4 className={s.h4}>The runner&rsquo;s acknowledgement</h4>
       <div className={s.stack2} style={{ marginBottom: 24 }}>
         {view.ack.map((f) => (

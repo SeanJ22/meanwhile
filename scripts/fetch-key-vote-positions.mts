@@ -14,6 +14,7 @@
  */
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
@@ -52,7 +53,8 @@ async function blocked(detail: string): Promise<never> {
     failureDetail: detail,
     parserVersion: FEDERAL_VOTES_PARSER_VERSION,
   });
-  await processRegisteredManualCandidate(store, "federal-key-votes", failed, attemptedAt);
+  const outcome = await processRegisteredManualCandidate(store, "federal-key-votes", failed, attemptedAt);
+  printSourceRunnerReceipt("federal-key-votes", failed, outcome);
   throw new Error(detail);
 }
 
@@ -184,6 +186,7 @@ const positions: FederalKeyVotePositions = {
 const refreshedSnapshot: FederalKeyVotesSnapshot = { ...snapshot, fetchedAt: retrievedAt };
 const candidate = federalKeyVotesCandidate({ acquisitions, retrievedAt, snapshot: refreshedSnapshot, positions });
 const outcome = await processRegisteredManualCandidate(store, "federal-key-votes", candidate, retrievedAt);
+printSourceRunnerReceipt("federal-key-votes", candidate, outcome);
 
 console.log([
   `refs: ${byRef.size} acquired of ${refsSeen} selected`,

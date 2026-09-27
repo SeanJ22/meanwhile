@@ -433,6 +433,26 @@ test("a launcher exception is contained as one result after every sibling starts
   assert.equal(results[1]?.stdout, "done");
 });
 
+test("source progress is persisted before acquisition and an unavailable progress store holds only that command", async () => {
+  const events: string[] = [];
+  const results = await runBoundedChildPass([
+    { id: "unobservable", executable: "ignored", args: [] },
+    { id: "visible", executable: "ignored", args: [] },
+  ], { cwd: process.cwd(), env: { NODE_ENV: "test" }, concurrency: 1,
+    onStarting: async command => {
+      events.push(`progress:${command.id}`);
+      if (command.id === "unobservable") throw new Error("activity store unavailable");
+    },
+    onSettled: async result => { events.push(`settled:${result.id}`); },
+  }, async command => {
+    events.push(`acquire:${command.id}`);
+    return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+  });
+  assert.deepEqual(events, ["progress:unobservable", "settled:unobservable", "progress:visible", "acquire:visible", "settled:visible"]);
+  assert.equal(results[0]!.termination, "SPAWN_FAILED");
+  assert.equal(results[1]!.termination, "EXITED");
+});
+
 test("the fixed pool caps host load and drains queued siblings after timeout and launcher failure", async () => {
   const commands = Array.from({ length: 7 }, (_, index) => ({
     id: `source-${index}`,

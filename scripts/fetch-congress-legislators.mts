@@ -60,17 +60,10 @@ import { failedFederalDirectoryCandidate, federalDirectoryCandidate, type Federa
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import type { DirectoryFile } from "../lib/officials/directory.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-
-/**
- * The pin. Re-read on 2026-09-07 after official House roll calls introduced
- * B001328 and W000832, both absent from the prior directory pin. Bumping this
- * is a deliberate act with a diff, which is the whole point of pinning.
- */
-const SHA = "8a3c7e6987f890b32e56058f7ddbdf380860b4a3";
-
-const RAW = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}`;
+import { currentCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
 
 const UA = "we-the-people/1.0 (civic data; contact seanj22@gmail.com)";
 
@@ -159,8 +152,8 @@ interface RawMembership {
   bioguide?: string;
 }
 
-async function fetchFile(name: string): Promise<{ parsed: unknown; acquisition: FederalDirectoryAcquisition }> {
-  const url = `${RAW}/${name}.yaml`;
+async function fetchFile(name: string, sha: string): Promise<{ parsed: unknown; acquisition: FederalDirectoryAcquisition }> {
+  const url = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${sha}/${name}.yaml`;
   const response = await fetch(url, { headers: { "User-Agent": UA } });
   if (!response.ok) {
     throw new Error(`${name}: HTTP ${response.status} from ${url}`);
@@ -229,6 +222,7 @@ async function main() {
   }
   prepareProductionCivicDataWrite();
   writePrepared = true;
+  const SHA = await currentCongressSourceRevision();
   const collectedAt = stamp();
   const counts: Record<string, number> = {};
   const acquisitions: FederalDirectoryAcquisition[] = [];
@@ -237,7 +231,7 @@ async function main() {
   for (const file of FILES) {
     // Serialized, per the public-records rule: one request at a time, an
     // identified User-Agent with a contact address.
-    const { parsed, acquisition } = await fetchFile(file.name);
+    const { parsed, acquisition } = await fetchFile(file.name, SHA);
     acquisitions.push(acquisition);
     counts[file.name] = guard(file.name, parsed, file.min, file.shape);
     raw[file.name] = parsed;
@@ -410,7 +404,7 @@ async function main() {
     state: member.state ?? undefined,
     chamber: member.chamber ?? undefined,
     provenance: {
-      sourceUrl: `${RAW}/legislators-current.yaml`,
+      sourceUrl: `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`,
       sourceOrg: snapshot.source.sourceOrg,
       collectedAt,
       verifiedAt: null,
@@ -456,6 +450,7 @@ async function main() {
   const candidate = federalDirectoryCandidate({ acquisitions, retrievedAt: collectedAt, projection });
   attemptPersisted = true;
   const outcome = await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "congress-bulk-roster", candidate, collectedAt);
+  printSourceRunnerReceipt("congress-bulk-roster", candidate, outcome);
   if (!outcome.promoted) throw new Error(`Federal directory candidate ${candidate.id} was held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
 
   console.log("\nFederal directory promoted. Counts and their denominators:");
@@ -472,12 +467,14 @@ void main().catch(async (error: unknown) => {
   if (writePrepared && !attemptPersisted) {
     const attemptedAt = stamp();
     try {
-      await processRegisteredManualCandidate(
+      const failed = failedFederalDirectoryCandidate(attemptedAt, detail);
+      const outcome = await processRegisteredManualCandidate(
         new PostgresRoutineDataStore(),
         "congress-bulk-roster",
-        failedFederalDirectoryCandidate(attemptedAt, detail),
+        failed,
         attemptedAt,
       );
+      printSourceRunnerReceipt("congress-bulk-roster", failed, outcome);
     } catch (receiptError) {
       console.error(`Could not persist the failed federal-directory attempt: ${receiptError instanceof Error ? receiptError.message : receiptError}`);
     }

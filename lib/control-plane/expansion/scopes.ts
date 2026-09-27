@@ -108,6 +108,8 @@ export interface ExpansionScopeDecision {
   readonly budgetUsd: number;
   /** Absent on legacy rolling budgets. Immutable start of a lifetime Anthropic budget. */
   readonly budgetStartedAt?: string;
+  /** Send implementation version: old saved scopes do not silently launch newly connected acquisition. */
+  readonly sourceWorkVersion?: 1;
   readonly note: string | null;
   /**
    * MW-002: the questions the owner asked of this Send, typed — not folded into
@@ -212,6 +214,7 @@ export function isExpansionScopeDecision(value: unknown): value is ExpansionScop
     Number.isFinite(v.budgetUsd) &&
     v.budgetUsd >= 0 &&
     (v.budgetStartedAt === undefined || (typeof v.budgetStartedAt === "string" && Number.isFinite(Date.parse(v.budgetStartedAt)))) &&
+    (v.sourceWorkVersion === undefined || v.sourceWorkVersion === 1) &&
     typeof v.decidedAt === "string" &&
     typeof v.decidedBy === "string" &&
     typeof v.receiptId === "string" &&
@@ -294,6 +297,7 @@ export function withScopeSet(
     ...(change.questions !== undefined && change.questions.length > 0 ? { questions: [...change.questions] } : {}),
     decidedAt: change.decidedAt,
     decidedBy: change.decidedBy,
+    sourceWorkVersion: 1,
     receiptId: change.receiptId,
     previous: previous === null ? null : { priority: previous.priority, budgetUsd: previous.budgetUsd },
   };

@@ -35,6 +35,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { withCensusSchoolDivisions } from "../control-plane/expansion/census-scope-observations.ts";
 
 export interface ZipDivisionEntry {
   /** Every division whose territory reaches inside this ZIP. */
@@ -98,7 +99,7 @@ export async function zipDivisionEntry(zip: string | null): Promise<ZipDivisionE
   const { publishedZipDistricts, withCensusDistricts } = await import("./zip-census-districts.ts");
   const [shard, districts] = await Promise.all([shardFor(zipShardOf(zip)), publishedZipDistricts(zip)]);
   const entry = shard === null ? null : entryOf(shard, zip);
-  return entry === null ? null : withCensusDistricts(entry, districts, zip);
+  return entry === null ? null : withCensusSchoolDivisions(withCensusDistricts(entry, districts, zip), zip);
 }
 
 const lowestByState = new Map<string, Promise<ReadonlyMap<string, string> | null>>();

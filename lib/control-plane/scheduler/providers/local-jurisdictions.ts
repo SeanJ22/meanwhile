@@ -230,6 +230,7 @@ export function jurisdictionRequirements(
   reg: JurisdictionRegistry,
   j: Jurisdiction,
   meetingPartitions: MeetingPartitionOwnership = UNREAD_MEETING_PARTITIONS,
+  discoverMissingFamilies = false,
 ): readonly JurisdictionRequirement[] {
   const out: JurisdictionRequirement[] = [];
   let n = 0;
@@ -255,6 +256,32 @@ export function jurisdictionRequirements(
       carriage: owner === "NONE" ? "HERE" : owner === "PARTITION" ? "MEETING_PARTITION" : "HELD_UNREAD_WIRING",
       ...(owner === "UNKNOWN" ? { heldReason: meetingPartitions.reasonFor?.(j.id) ?? meetingPartitions.source } : {}),
     });
+  }
+  if (discoverMissingFamilies) {
+    // A registered government with no source entry still owes discovery. These
+    // are questions, not invented sources, filing authorities or absence claims.
+    // Known shared custodians remain on their existing routes instead of being
+    // copied under every district they serve. Meetings retain their own provider.
+    const represented = new Set(j.sourceIds.map(key => sourceOf(reg, j, key).recordClass));
+    const families = [
+      ["OFFICEHOLDERS", "Find the governing bodies, subordinate boards, current offices and members, their official pages, contacts and published statements. Establish exact authority and identity before extraction."],
+      ["BALLOT_AND_CANDIDATES", "Find the responsible election authorities and their current candidate filings, contests, measures and certified results. Follow candidate identities into verified profiles, campaign publications and positions. Determine applicability from evidence, not from an empty queue."],
+      ["CAMPAIGN_FINANCE", "Establish the legally responsible filing custodian and applicable committee, contribution and expenditure records. Reuse that custodian's shared work; do not assume this government operates a separate filing system."],
+    ] as const;
+    for (const [recordClass, owed] of families) {
+      if (represented.has(recordClass)) continue;
+      const routeId = `coverage-discovery:${recordClass.toLowerCase()}`;
+      const source: JurisdictionSource = { recordClass, authority: j.name,
+        authorityBasis: "The registered government's missing information family requires discovery; publisher, custodian and applicability have not yet been established.",
+        scope: "THIS_JURISDICTION", routeId, url: j.ownWebAddress, state: "DISCOVERY_OWED", owed,
+        citation: `Government ${j.id}, enumerated by ${j.enumeratedFrom}; no ${recordClass} source entry is held.` };
+      const route: RouteDescriptor = { ...descriptorFor(j, source, routeId),
+        executorReason: "The government is registered, but this information family's publisher, custodian and applicability remain unresolved. Discover and verify them using inherited methods.",
+        open: { kind: "NOT_MACHINE_EXECUTABLE", target: j.ownWebAddress ?? j.name, reason: owed },
+        awaitingAdapter: `verified source applicability and extraction for ${recordClass}` };
+      out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: routeId,
+        source, route, carriage: "HERE" });
+    }
   }
   return out;
 }
@@ -363,7 +390,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
           }
           const j = rows.get(jurisdictionId);
           if (j === undefined) continue;
-          const r = jurisdictionRequirements(reg, j, meetingPartitions).find((x) => x.obligationId === id);
+          const r = jurisdictionRequirements(reg, j, meetingPartitions, true).find((x) => x.obligationId === id);
           if (r !== undefined && r.carriage === "HERE") add(j.id, r.route);
           if (r?.carriage === "HELD_UNREAD_WIRING") failures.push(r.heldReason ?? `${id}: meeting partition ownership unread; retain the owner's existing work`);
         }

@@ -35,13 +35,18 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
     platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
     observedAt:"2026-09-19",tier:null,payload:{}}],h.now()),h.now());
   const requests:ModelRequest[]=[];
-  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,transport:async request=>{
+  const searches: string[] = [];
+  const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,
+    search: async input => { searches.push(input.query); return { hits: [], requestCount: 1, bytesFetched: 0, providersUsed: ["offline-fixture"], errors: [] }; },
+    transport:async request=>{
     requests.push(request);
+    if (requests.length === 1) return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "offline-search", name: "search", input: { query: "fixture clerk alternate official roster", rung: "other:source-discovery", why: "The recorded direct route timed out" } }], usage: { input_tokens: 10, output_tokens: 10 } };
     throw new Error("OFFLINE_REQUEST_CAPTURE_COMPLETE");
   }});
   const run=await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1,maxScoutDispatches:1});
   assert.equal(run.decisions[0].action,"SCOUT");
-  assert.equal(requests.length,1,"the transport is an offline recorder, never a provider call");
+  assert.equal(requests.length,2,"the transport is an offline recorder, never a provider call");
+  assert.deepEqual(searches, ["fixture clerk alternate official roster"], "an autonomous repair can invoke the same injected guarded search capability");
   const request=JSON.stringify(requests[0]);
   assert.match(request,/fixture-learned-roster-route/);
   assert.match(request,/EXPLORATORY/);

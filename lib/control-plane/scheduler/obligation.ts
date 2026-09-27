@@ -86,6 +86,8 @@ export const MAX_DERIVED_CADENCE_HOURS = 24 * 30;
  * re-opens itself would make "complete" mean two different things in one store.
  */
 export interface FreshnessObligation {
+  /** Owner-dispatched instructions, not evidence. Copied to each occurrence and retained across scheduler restarts. */
+  readonly autonomousPlan?: import("../workers/autonomous-plan.ts").AutonomousWorkPlan;
   /** Durable scheduling hint: retain the first owed time until this obligation is actually worked. */
   readonly nextDueAt?: string | null;
   readonly id: string;

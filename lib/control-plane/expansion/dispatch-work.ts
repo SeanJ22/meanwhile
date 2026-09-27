@@ -116,6 +116,7 @@
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
+import { jurisdictionDiscoveryPlan } from "../workers/autonomous-plan.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
 import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../scheduler/dispatch-target.ts";
@@ -176,6 +177,8 @@ export type DispatchWorkTarget =
       readonly scope: PlannedScope;
       /** MW-002: the questions the owner asked of this Send; recorded on every obligation it reaches. */
       readonly questions?: readonly WorkQuestion[];
+      /** Only a new Send opts into missing-family discovery; deployment does not expand old instructions. */
+      readonly sourceWorkVersion?: 1;
     }
   | {
       readonly kind: "DISPATCH";
@@ -257,12 +260,15 @@ export function requirementsFor(
   j: Jurisdiction,
   need: MeetingsDiscoveryNeed | null,
   meetingPartitions: MeetingPartitionOwnership,
+  discoverMissingFamilies = false,
 ): RequirementInstance[] {
   const out: RequirementInstance[] = [];
   const from = registrySourceOf(reg);
-  for (const r of jurisdictionRequirements(reg, j, meetingPartitions)) {
+  for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies)) {
+    const autonomousPlan = discoverMissingFamilies ? jurisdictionDiscoveryPlan(j, r.source, r.route.routeId,
+      meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null) : null;
     out.push({
-      obligation: obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from),
+      obligation: { ...obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from), ...(autonomousPlan ? { autonomousPlan } : {}) },
       kind: "REGISTRY_ROUTE",
       executor: r.route.executorClass,
       carriage: r.carriage === "HERE" ? "OWED" : r.carriage,
@@ -589,7 +595,8 @@ export function planDispatchWork(input: {
     const units = target.kind === "SCOPE" ? scopeUnits(target.scope, world) : dispatchUnits(target.target, world);
     const instances: RequirementInstance[] = [];
     for (const { reg, jurisdiction } of units.placed) {
-      instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions));
+      instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions,
+        target.kind === "SCOPE" && target.sourceWorkVersion === 1));
     }
     /* MW-001: does the row already record this Send, in any relation? */
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key);
@@ -732,6 +739,7 @@ export async function applyDispatchWork(
               active: true,
               nextDueAt: held.value.active ? held.value.nextDueAt : null,
               materializedBy: OWNER_DISPATCH,
+              ...(held.value.autonomousPlan || !entry.instance.obligation.autonomousPlan ? {} : { autonomousPlan: entry.instance.obligation.autonomousPlan }),
               assignments: withAssignment(held.value.assignments, created),
               ...(entry.instance.obligation.materializedFrom === undefined ? {} : { materializedFrom: entry.instance.obligation.materializedFrom }),
               updatedAt: input.now,
@@ -766,8 +774,11 @@ export async function applyDispatchWork(
     try {
       const held = await repos.obligations.mustRead(mark.obligationId);
       const next = withAssignment(held.value.assignments, reordered);
-      if (next !== held.value.assignments) {
-        await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next, updatedAt: input.now }, input.now);
+      const autonomousPlan = held.value.autonomousPlan ?? plan.targets.find(target => target.target.key === mark.target.key)?.instances
+        .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan;
+      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
+        await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
+          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now);
       }
       marked.push(key);
       recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });
@@ -1103,6 +1114,7 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
     budgetUsd: d.budgetUsd,
     scope,
     ...(d.questions !== undefined && d.questions.length > 0 ? { questions: d.questions } : {}),
+    ...(d.sourceWorkVersion === 1 ? { sourceWorkVersion: 1 as const } : {}),
   };
 }
 

@@ -20,6 +20,7 @@ import {
   isDispatchWorkReading,
   ownerDispatchWorkOf,
   planDispatchWork,
+  requirementsFor,
   scopeWorkTarget,
   type DispatchWorkContext,
   type DispatchWorkReading,
@@ -47,7 +48,7 @@ import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/ty
 import { readActivationGate } from "@/lib/control-plane/promotion/activation-gate.ts";
 import { modelLaneClosure } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { OWNER_DISPATCH } from "@/lib/control-plane/scheduler/obligation.ts";
-import { planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { openOccurrence, resumeOpenOccurrence, planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
 import { parseDispatchTarget } from "@/lib/control-plane/scheduler/dispatch-target.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/registry.ts";
@@ -101,7 +102,53 @@ const REGISTRIES: Record<"az" | "nh" | "nj", JurisdictionRegistry> = {
   nh: JSON.parse(readFileSync(join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
   nj: JSON.parse(readFileSync(join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
 };
+
+test("a new hunt discovers missing information families without inventing publishers or duplicating a shared custodian", () => {
+  const reg = REGISTRIES.az;
+  const held = reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!;
+  const unknown = { ...held, sourceIds: [] };
+  assert.equal(jurisdictionRequirements(reg, unknown).length, 0, "deploying the change does not expand old standing work");
+  const missing = jurisdictionRequirements(reg, unknown, UNREAD_MEETING_PARTITIONS, true);
+  assert.deepEqual(missing.map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS"]);
+  assert.ok(missing.every(r => r.route.executorClass === "BOUNDED_MODEL_WORKER" && r.source.state === "DISCOVERY_OWED"));
+  assert.ok(missing.every(r => /not yet been established/.test(r.source.authorityBasis)));
+  const financeKey = held.sourceIds.find(key => sourcesOf(reg, { ...held, sourceIds: [key] })[0].recordClass === "CAMPAIGN_FINANCE");
+  assert.ok(financeKey, "the fixture carries its real shared filing route");
+  const shared = jurisdictionRequirements(reg, { ...held, sourceIds: [financeKey] }, UNREAD_MEETING_PARTITIONS, true);
+  assert.equal(shared.filter(r => r.source.recordClass === "CAMPAIGN_FINANCE").length, 0, "district finance stays with the recorded shared custodian");
+});
 installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
+
+test("owner-created family work reaches autonomous workers and survives registration and an interrupted occurrence", async () => {
+  const reg = REGISTRIES.az;
+  const government = { ...reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [] };
+  const requirements = requirementsFor(reg, government, null, UNREAD_MEETING_PARTITIONS, true);
+  const repos = createMemoryRepositories();
+  for (const requirement of requirements) {
+    const obligation = standing(requirement.obligation, T0);
+    const plan = obligation.autonomousPlan!;
+    assert.equal(plan.contract.schemaVersion, 2);
+    assert.equal(plan.contract.subjectId, government.id);
+    assert.deepEqual(plan.sources, [], "a registry address is not evidence of a source read");
+    if (plan.contract.schemaVersion === 2) {
+      assert.equal(plan.contract.extraction.format, "UNSUPPORTED");
+      assert.equal(plan.contract.verification.required, true);
+      assert.deepEqual(plan.contract.sourceScope.observationArtifactIds, []);
+    }
+    await repos.obligations.put(obligation.id, obligation, T0);
+    const occurrence = await openOccurrence(repos, { obligation, dueAt: T0, now: T0 });
+    assert.deepEqual(occurrence?.workItem.autonomousPlan, { ...plan, ownerInstructions: [] }, "normal scheduler-created work carries executable discovery/repair instructions");
+    const { autonomousPlan: _plan, ...providerReading } = requirement.obligation;
+    await syncObligations(repos, [providerReading], T1);
+    const retained = (await repos.obligations.mustRead(obligation.id)).value;
+    assert.deepEqual(retained.autonomousPlan, plan, "a fresh provider reading cannot erase the Send's instructions");
+    const item = await repos.workItems.mustRead(occurrence!.workItem.id);
+    const { autonomousPlan: _interrupted, ...withoutPlan } = item.value;
+    await repos.workItems.compareAndSet(item.id, item.revision, withoutPlan, T1);
+    await resumeOpenOccurrence(repos, retained);
+    assert.deepEqual((await repos.workItems.mustRead(item.id)).value.autonomousPlan, { ...plan, ownerInstructions: [] }, "already-open work is repaired without another occurrence or lost evidence");
+  }
+});
 
 let territoryAll: TerritoryIndex | null = null;
 /** The runner's own territory index over every promoted registry, read once for the file. */
@@ -188,6 +235,10 @@ test("sending the fleet to Pima County creates what the registry defines there a
   const repos = createMemoryRepositories();
   const { world } = await cycleWorld(repos, T0);
   const target = scopeWorkTarget(await planned(decision(PIMA)));
+  assert.equal(target.kind, "SCOPE");
+  if (target.kind !== "SCOPE") throw new Error("Expected the gateway's scope target");
+  const legacyPlan = planDispatchWork({ targets: [{ ...target, sourceWorkVersion: undefined }], world });
+  assert.ok(legacyPlan.writes.every(write => write.instance.kind === "MEETINGS_DISCOVERY"), "an older instruction acquires no new information-family work merely because code deployed");
   const plan = planDispatchWork({ targets: [target], world });
   const applied = await applyDispatchWork(repos, plan, { now: T0 });
   const reading = dispatchWorkReading(plan, applied, CONTEXT);
@@ -201,7 +252,9 @@ test("sending the fleet to Pima County creates what the registry defines there a
   assert.equal(pima.requirements.created, pima.requirements.createdThisCycle, "nothing existed before this Send");
   assert.equal(pima.requirements.created, applied.written.length);
   assert.ok(pima.requirements.created > 0 && pima.requirements.created <= DISPATCH_WORK_WRITE_BUDGET);
-  assert.equal(pima.requirements.createdMeetingsDiscovery, pima.requirements.created, "in a tracked state, what is missing is meetings discovery");
+  const familyDiscovery = applied.written.filter(id => id.includes("#coverage-discovery:"));
+  assert.ok(familyDiscovery.length > 0, "the new Send finds missing source families as well as meetings");
+  assert.equal(pima.requirements.createdMeetingsDiscovery + familyDiscovery.length, pima.requirements.created, "every newly created row is accounted for without redefining missing work as excluded");
   assert.equal(pima.units.blocked, 0, "every government the lookup puts in Pima is in the AZ registry");
   assert.equal(applied.failed.length, 0);
 

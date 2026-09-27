@@ -82,7 +82,8 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { scheduledBlackoutAt } from "../lib/control-plane/fleet-safety.ts";
-import { huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { huntSourceTasks, workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -301,7 +302,9 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   for (const scope of resolved.scopes) {
     if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
   }
-  return huntSourceTasks(resolved.scopes, RUN_STARTED_AT);
+  const items = (await repos.workItems.list()).map(row => row.value);
+  const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
+  return [...huntSourceTasks(resolved.scopes, RUN_STARTED_AT), ...workerRosterSourceTasks(resolved.scopes, items, workers, RUN_STARTED_AT)];
 }
 
 function newestConsideredAt(
@@ -519,7 +522,7 @@ for (const read of clockReads) {
   if (task.ownerInvocation) {
     const due = routineTaskDue(task, durableClock, admissionNowMs);
     const succeeded = Date.parse(durableClock?.lastSucceededObservedAt ?? durableClock?.lastSucceededAt ?? "");
-    const reused = Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
+    const reused = !task.ownerInvocation.publicationPending && Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot) && dueRequest === null && !publicationDue) {

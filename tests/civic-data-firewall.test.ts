@@ -1457,3 +1457,19 @@ test("terminal PDC guard preserves historical trusted-LKG receipt validation and
     [],
   );
 });
+
+test("publication closure follows runtime imports but not erased TypeScript interfaces", () => {
+  for (const [declaration, reachable] of [
+    ['import type { CandidateStore } from "../lib/fixture-writer.ts";', false],
+    // Node retains an empty named import, which still executes the module.
+    ['import { type CandidateStore } from "../lib/fixture-writer.ts";', true],
+    ['import { type CandidateStore, write } from "../lib/fixture-writer.ts"; write();', true],
+    ['import "../lib/fixture-writer.ts";', true],
+    ['await import("../lib/fixture-writer.ts");', true],
+  ] as const) {
+    const files = minimalFiles();
+    files["scripts/promote-registry-runtime.mts"] += declaration;
+    files["lib/fixture-writer.ts"] = 'import { writeFileSync } from "node:fs"; export function write() { writeFileSync("data/held.json", "bad"); } export interface CandidateStore { read(): void; }';
+    assert.equal(audit(files).some(row => row.code === "MANUAL_DATA_PATH_WRITES_REPOSITORY" && row.path === "lib/fixture-writer.ts"), reachable, declaration);
+  }
+});

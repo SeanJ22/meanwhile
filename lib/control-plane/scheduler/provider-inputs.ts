@@ -170,6 +170,8 @@ export type MeetingRouteOwner = "PARTITION" | "NONE" | "UNKNOWN";
 
 export interface MeetingPartitionOwnership {
   ownerOf(jurisdictionId: string): MeetingRouteOwner;
+  /** The same exact, conflict-free government/body join; no name or host inference. */
+  bodyIdFor?(jurisdictionId: string): string | null;
   reasonFor?(jurisdictionId: string): string;
   readonly source: string;
 }

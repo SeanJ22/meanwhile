@@ -296,9 +296,9 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
 
   const refusedCount = (pipeline?.rejected.value ?? 0) + row.verification.refusedFinishCount;
   const outcomes: OutcomeCell[] = [
-    { key: "new", label: "New", value: d ? d.records : null, unknown: "NOT RUN", tone: "text" },
-    { key: "changed", label: "Changed", value: null, unknown: "NOT RECORDED", tone: "text" },
-    { key: "unchanged", label: "Unchanged", value: null, unknown: "NOT RECORDED", tone: "text" },
+    { key: "new", label: "New", value: row.delivery.records?.added ?? null, unknown: "NOT COMPARED", tone: "text" },
+    { key: "changed", label: "Changed", value: row.delivery.records?.changed ?? null, unknown: "NOT COMPARED", tone: "text" },
+    { key: "unchanged", label: "Reused", value: row.delivery.records?.reused ?? null, unknown: "NOT COMPARED", tone: "text" },
     { key: "refused", label: "Refused", value: refusedCount, unknown: "", tone: refusedCount > 0 ? "gold" : "muted" },
     { key: "unsettled", label: "Unsettled", value: pipeline ? pipeline.needsMoreEvidence.value : null, unknown: "NOT RUN", tone: pipeline && pipeline.needsMoreEvidence.value > 0 ? "gold" : "muted" },
   ];

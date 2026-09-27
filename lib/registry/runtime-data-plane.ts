@@ -11,7 +11,7 @@ import { readPromotedCivicData, type CivicDataReadStore } from "../civic-data/re
 import type { ManualSuccessorCandidate } from "../civic-data/manual-prior-authority.ts";
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineCandidate, type RoutineRemovalEvidence } from "../civic-data/types.ts";
-import { registryMemberCitedUrls } from "./cited-urls.ts";
+import { registryMemberCitedUrls, inheritedRosterSourceFacts } from "./cited-urls.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
@@ -41,7 +41,7 @@ export interface OfficialCandidacyBridgeRow {
     readonly authority: "FEDERAL_DIRECTORY" | "REGISTRY_STATEWIDE_EXECUTIVE" | "REGISTRY_BODY_ROSTER";
     readonly sourceUrl: string | null;
   };
-  readonly status: "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED";
+  readonly status: "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED" | "NOT_CHECKED";
   readonly candidacy: {
     readonly candidacyId: string;
     readonly contestId: string;
@@ -209,6 +209,7 @@ function candidacyEvidenceUrls(
   row: OfficialCandidacyBridgeRow,
   fallback: readonly string[],
 ): string[] {
+  if (row.status === "NOT_CHECKED") return httpsUrls([row.holder.sourceUrl]);
   if (row.candidacy?.sourceUrl) return httpsUrls([row.candidacy.sourceUrl]);
   if (row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE") {
     const source = payload.statewideExecutives.find((entry) => entry.holder.id === row.holder.id);
@@ -275,7 +276,7 @@ function registryIsolationMembers(
           kind: "ROSTER_DISPOSITION" as const,
           value: {
             disposition,
-            evidenceUrls: owner ? bodyRosterUrls(owner) : allEvidenceUrls,
+            evidenceUrls: owner ? [owner.sourceUrl] : allEvidenceUrls,
           },
         },
       };
@@ -427,6 +428,7 @@ function sourceScopedRegistryProjection(
   prior: RegistryRuntimePrior | null,
 ): RegistryIsolationResult {
   const currentMembers = registryIsolationMembers(input.payload, input.sourceReceipt);
+  const priorRosters = new Map(prior?.payload.bodyRosters.map(roster => [roster.bodyId, roster]) ?? []);
   const reconciled = reconcileSourceScopedMembers({
     current: currentMembers,
     currentReceipt: input.sourceReceipt,
@@ -435,7 +437,12 @@ function sourceScopedRegistryProjection(
       sourceReceipt: prior.sourceReceipt,
     } : null,
     memberIssue: registryIsolationIssue,
-    sourceUrls: registryIsolationUrls,
+    sourceUrls: member => {
+      const urls = registryIsolationUrls(member);
+      if (member.record.kind !== "BODY_ROSTER") return urls;
+      const inherited = inheritedRosterSourceFacts(priorRosters.get(member.record.value.bodyId), member.record.value);
+      return urls.filter(url => !inherited.has(url));
+    },
   });
   const metadataAccepted = input.sourceReceipt.sources.every((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED") &&
     registryIsolationIssue(currentMembers[0]!) === null;
@@ -554,6 +561,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (bridgeRows.some((row) => row.status === "RESOLVED"
     ? !row.candidacy?.candidacyId || !row.candidacy.contestId || !row.candidacy.divisionId || !row.candidacy.sourceUrl
     : row.candidacy !== null)) issues.push("OFFICIAL_CANDIDACY_STATUS_PAYLOAD_INVALID");
+  if (bridgeRows.some((row) => !["RESOLVED", "NO_APPLICABLE_CANDIDACY", "IDENTITY_UNRESOLVED", "NOT_CHECKED"].includes(row.status))) issues.push("OFFICIAL_CANDIDACY_STATUS_INVALID");
   if (duplicate(bridgeRows.filter((row) => row.status === "RESOLVED").map((row) => row.candidacy?.candidacyId ?? ""))) issues.push("OFFICIAL_CANDIDACY_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => row.status === "IDENTITY_UNRESOLVED" ? !row.unresolvedCandidacyIds.length : row.unresolvedCandidacyIds.length > 0)) issues.push("OFFICIAL_CANDIDACY_UNRESOLVED_SET_INVALID");
   const executiveIdSet = new Set(executiveIds);
@@ -714,10 +722,15 @@ export function registryRuntimeCandidate(
   const receipted = new Set(promotionReceipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
   // A member carried on its base's authority cites nothing this review must cover; every other member's sources must be receipted.
   const inherited = inheritedRegistryMembers(payload, options.prior ?? null, receipted);
+  const priorRosters = new Map(options.prior?.payload.bodyRosters.map(roster => [roster.bodyId, roster]) ?? []);
+  const retainedRosterSources = payload.bodyRosters.flatMap(roster => [...inheritedRosterSourceFacts(priorRosters.get(roster.bodyId), roster)]
+    .filter(([url]) => !receipted.has(url)).map(([url, facts]) => ({ key: `body-roster:${roster.bodyId}`, url, sha256: sha256(canonicalCivicDataJson(facts)) }))
+    .filter(source => !inherited.has(source.key)));
+  const inheritedSourceKeys = new Set(retainedRosterSources.map(source => `${source.key}\n${source.url}`));
   const unreceipted = new Set<string>();
   for (const [key, urls] of citedRuntimeUrlsByMember(payload)) {
     if (inherited.has(key)) continue;
-    for (const url of urls) if (!receipted.has(url)) unreceipted.add(url);
+    for (const url of urls) if (!receipted.has(url) && !inheritedSourceKeys.has(`${key}\n${url}`)) unreceipted.add(url);
   }
   for (const url of [...unreceipted].sort()) issues.push(`RUNTIME_SOURCE_NOT_RECEIPTED:${url}`);
   const removalEvidence = placeholderBodyRemovals(payload, options.prior ?? null);
@@ -831,13 +844,14 @@ export function registryRuntimeCandidate(
     civicRecords: records,
     excludedFacts: isolated.excludedFacts,
     ...(removalEvidence.length > 0 ? { removalEvidence } : {}),
-    ...(options.prior && inherited.size > 0
+    ...(options.prior && (inherited.size > 0 || retainedRosterSources.length > 0)
       ? {
         manualPriorAuthority: {
           kind: "VALIDATED_PRIOR_PROJECTION" as const,
           versionId: options.prior.versionId,
           readModelSha256: options.prior.readModelSha256,
           retainedMembers: [...inherited].map(([key, digest]) => ({ key, sha256: digest })),
+          ...(retainedRosterSources.length ? { retainedRosterSources } : {}),
         },
       }
       : {}),

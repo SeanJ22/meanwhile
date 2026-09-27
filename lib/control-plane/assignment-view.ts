@@ -367,6 +367,8 @@ export interface PublicAvailability {
 
 /** Part 5 — what was promoted versus what is confirmed publicly available. */
 export interface AssignmentDelivery {
+  /** Exact latest publication comparison, never downloads presented as new findings. */
+  readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
   /** Research items approved for promotion; null where promotion does not run through the research pipeline. */
   readonly approved: Held<Measured> | null;
   readonly promoted: Held<PromotionStatus>;
@@ -1733,6 +1735,11 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
         });
 
   const checks: AssignmentCheck[] = [];
+  for (const item of g.workItems) {
+    const publication = item.publicationOutcome;
+    if (publication) checks.push({ who: "Publication checks", verdict: publication.status === "PUBLISHED" ? "PASS" : "HELD",
+      at: publication.at, says: clip(`${publication.code}: ${publication.detail}`, clips.text), resultId: publication.workerResultId });
+  }
   for (const r of [...g.workerResults].reverse()) {
     const result = r.result;
     if (result.role === "VALIDATOR") {
@@ -1787,8 +1794,14 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
     return w ? [w] : [];
   });
   const witness = witnesses[0];
+  const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
+    .sort((left, right) => right.at.localeCompare(left.at))[0];
   if (witness) {
     promoted = held({ state: "PROMOTED", says: `${witnesses.length} exact approval(s) observed on the public site.`, versionId: witness.versionId, at: witness.checkedAt });
+  } else if (workerPublication) {
+    promoted = held({ state: workerPublication.status === "PUBLISHED" ? "PROMOTED" : "NOT_PROMOTED",
+      says: `${workerPublication.code}: ${workerPublication.detail}`, versionId: workerPublication.versionId, at: workerPublication.at });
+    if (workerPublication.status === "HELD") blockers.push(`${workerPublication.code}: ${workerPublication.detail}`);
   } else if (src.activation === null) {
     promoted = gap("OURS", "the activation gate was not read on this publish, so whether promotion is on is not shown");
   } else if (!src.activation.promotionEnabled) {
@@ -1807,6 +1820,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {
     approved: approvedHeld,
+    ...(workerPublication?.status === "PUBLISHED" && workerPublication.records ? { records: workerPublication.records } : {}),
     promoted,
     publiclyAvailable: witness ? held<PublicAvailability>({ state: "CONFIRMED", at: witness.checkedAt, says: `${witnesses.length} item(s) confirmed; this does not complete outstanding assignment scope.`, proof: witness.url }) : gap<PublicAvailability>(
       "OURS",
@@ -2412,7 +2426,16 @@ function attributedUsd(all: readonly Gathered[], idx: Index): number | null {
 
 function buildRow(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips, denominatorUsd: number | null): AssignmentRow {
   const what = g.members.kind === "STANDING_OBLIGATION" ? whatOfStanding(g, idx, src, clips) : whatOfWorkItem(g, clips);
-  const derived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(g, idx, what, clips) : deriveWorkItem(g, idx, clips);
+  const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(g, idx, what, clips) : deriveWorkItem(g, idx, clips);
+  const publication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
+    .sort((left, right) => right.at.localeCompare(left.at))[0];
+  const derived: Derived = publication?.status === "HELD" && baseDerived.state !== "WORKING"
+    ? { state: "WAITING", stateSays: `${publication.code}: ${publication.detail}`,
+      waiting: { ...baseDerived.waiting, waiting: true, since: publication.at, owner: "FLEET",
+        blocker: { kind: "NAMED", says: publication.code },
+        nextAction: publication.recovery === "PUBLISHER" ? "The existing publisher retries with retained verified evidence; no new research or owner approval is needed."
+          : "The worker receives the exact failed check and continues verification or source repair automatically." } }
+    : baseDerived;
   return {
     id: g.members.id,
     kind: g.members.kind,

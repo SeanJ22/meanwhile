@@ -283,6 +283,13 @@ export function createEscalation(input: {
 }
 
 export interface WorkItem {
+  readonly publicationOutcome?: {
+    readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "HELD";
+    readonly code: string; readonly detail: string; readonly candidateId: string | null; readonly versionId: string | null;
+    readonly recovery?: "WORKER" | "PUBLISHER";
+    /** Verified reader records compared with this body's previous published records. */
+    readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
+  };
   /** Additive instructions for the standing fleet; observations remain in canonical results. */
   readonly autonomousPlan?: import("./workers/autonomous-plan.ts").AutonomousWorkPlan;
   readonly id: string;

@@ -4,6 +4,7 @@ import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
 import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
+import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 
 /** Initial instructions for an owner-requested family. Registry addresses are
  * leads, never invented observations. An evidence-backed repair must supply
@@ -13,6 +14,10 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   if (source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(jurisdiction, bodyId);
   const spec = source.recordClass === "OFFICEHOLDERS"
     ? { recordClass: "OFFICIAL_ROSTER", fields: ["name", "office"] }
+    : source.recordClass === "PUBLIC_SERVICES"
+      ? { recordClass: "SERVICE_CONTACT", fields: ["bodyName", "topicId", "serviceZip", "service", "serviceAreaEvidence"] }
+    : source.recordClass === "VOTER_ACCESS"
+      ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
       ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["candidateName", "office"] }
       : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["committeeName", "filingPeriod", "documentUrl"] };
@@ -24,6 +29,8 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
+    ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
+    ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
@@ -80,7 +87,7 @@ export interface AutonomousWorkPlan {
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | "comment-access"; readonly bodyId: string };
+    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

@@ -69,6 +69,8 @@ export type JurisdictionRecordClass =
   | "BALLOT_AND_CANDIDATES"
   | "OFFICEHOLDERS"
   | "PUBLIC_COMMENT"
+  | "PUBLIC_SERVICES"
+  | "VOTER_ACCESS"
   | "MEETINGS";
 
 /**

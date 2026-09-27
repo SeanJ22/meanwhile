@@ -267,6 +267,8 @@ export function jurisdictionRequirements(
       ["OFFICEHOLDERS", "Find the governing bodies, subordinate boards, current offices and members, their official pages, contacts and published statements. Establish exact authority and identity before extraction."],
       ["BALLOT_AND_CANDIDATES", "Find the responsible election authorities and their current candidate filings, contests, measures and certified results. Follow candidate identities into verified profiles, campaign publications and positions. Determine applicability from evidence, not from an empty queue."],
       ["CAMPAIGN_FINANCE", "Establish the legally responsible filing custodian and applicable committee, contribution and expenditure records. Reuse that custodian's shared work; do not assume this government operates a separate filing system."],
+      ["PUBLIC_SERVICES", "Find the actual responsible service offices and usable contact channels. Independently verify topic, service responsibility and service-area ZIP applicability; a mailing address or county boundary is not evidence that an office serves that ZIP. Reuse shared authorities and retain unresolved topic/area gaps."],
+      ["VOTER_ACCESS", "Find the responsible election authority's polling-place and registration lookup routes. Independently verify the state, route kind and destination; do not infer that a local route serves an entire state. Publish only verified statewide lookup routes through the statewide Reader; retain narrower applicability as unresolved work."],
     ] as const;
     for (const [recordClass, owed] of families) {
       if (represented.has(recordClass)) continue;

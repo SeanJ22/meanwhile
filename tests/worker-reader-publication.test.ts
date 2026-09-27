@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
-import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
+import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
+import { WORKER_READER_CLASSES, type WorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetadata, disposeRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
@@ -21,21 +22,22 @@ import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-re
 import { projectedCommentAccessFor, type CommentAccess } from "../lib/registry/comment-access-client.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
+import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 
-test("independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence", async () => {
+async function workerFixture(contractId: WorkerReaderContract, facts: Record<string, string>) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const body = prior.payload.registry.bodies.find(row => row.name)!;
-  const rows = [{ bodyName: body.name, commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." }];
+  const rows: Record<string, string>[] = [{ bodyName: body.name!, ...facts }];
   const text = JSON.stringify(rows);
   const fields = Object.fromEntries(Object.keys(rows[0]).map(field => [field, { source: `/${field}`, type: "STRING" as const }]));
   const extraction = { format: "JSON_RECORDS" as const, rowsPointer: "", fields };
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text }, plan: plan => ({ ...plan,
-    ownerInstructions: ["offline-send"], publication: { contractId: "comment-access", bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
-    sources: plan.sources.map(route => ({ ...route, recordClass: "PUBLIC_COMMENT_RULE" })),
-    contract: { ...plan.contract, schemaVersion: 2, recordClass: "PUBLIC_COMMENT_RULE", identity: { namespace: "comment", keyFields: ["bodyName"] },
+    ownerInstructions: ["offline-send"], publication: { contractId, bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
+    sources: plan.sources.map(route => ({ ...route, recordClass: WORKER_READER_CLASSES[contractId] })),
+    contract: { ...plan.contract, schemaVersion: 2, recordClass: WORKER_READER_CLASSES[contractId], identity: { namespace: contractId, keyFields: ["bodyName"] },
       requiredFields: Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-rule", routeLabel: "Offline independent rule record", target: "https://register.example.gov/rules.json", inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
@@ -75,11 +77,17 @@ test("independent normal workers automatically publish public-comment rules thro
   const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-send" } } as ResolvedScope;
   const queued = workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
-  assert.ok(queued[0].command.includes("--contract=comment-access"));
+  assert.ok(queued[0].command.includes(`--contract=${contractId}`));
   assert.ok(queued[0].command.some(arg => arg === `--worker-results=${h.item.id}`));
-  const input = { repos: h.repos, store, contractId: "comment-access" as const, workItemIds: [h.item.id], now: h.now(),
+  const input = { repos: h.repos, store, contractId, workItemIds: [h.item.id], now: h.now(),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };
+  return { input, h, store, body, rows, scope, results, artifact, ready, prior, runtime };
+}
+
+test("independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence", async () => {
+  const { input, h, store, body, rows, scope, results, artifact, ready, prior } = await workerFixture("comment-access", {
+    commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." });
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
   assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: 0 });
@@ -87,7 +95,7 @@ test("independent normal workers automatically publish public-comment rules thro
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   const rendered = projectedCommentAccessFor(body.ocdId ?? null, body.name ?? undefined, body.id, read.value.records as unknown as CommentAccess[]);
-  assert.equal(rendered?.signup, rows[0].signup);
+  assert.equal(rendered?.signup, rows[0]["signup"]);
   assert.deepEqual(await publishWorkerReaderResults(input), published, "restart reuses the publication and spends nothing");
   assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0);
   const parser = results.find(row => row.result.role === "PARSER")!, validator = results.find(row => row.result.role === "VALIDATOR")!, auditor = results.find(row => row.result.role === "ADVERSARIAL_AUDITOR")!;
@@ -103,7 +111,7 @@ test("independent normal workers automatically publish public-comment rules thro
   const commentPrior = await readManualProjectionPrior("comment-access", store, h.now());
   const complementary = inheritVerifiedCommentDetails({ ...packageNow, payload: { kind: "comment-access", records: [{ ...currentRule, signup: null }] } }, commentPrior);
   const merged = (complementary.payload as CuratedReaderProjection).records[0];
-  assert.equal(merged.signup, rows[0].signup);
+  assert.equal(merged.signup, rows[0]["signup"]);
   const sources = merged.fieldSources as NonNullable<CommentAccess["fieldSources"]>;
   assert.equal(sources.signup?.retainedFromVersion, commentPrior!.versionId);
   assert.equal(sources.signup?.collectedAt, rendered!.collectedAt, "old proof is not relabeled as a fresh verification");
@@ -112,4 +120,42 @@ test("independent normal workers automatically publish public-comment rules thro
   await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
   const spoken = commentAccessEvidenceFor(body.id, body.ocdId ?? null, body.name!);
   assert.equal(spoken.records.find(row => row.accessRule?.field === "signup")?.sourceUrl, sources.signup?.sourceUrl);
+});
+
+test("normal service workers publish verified applicability and channels while leaving missing topics visibly unacquired", async () => {
+  const { input, store, h } = await workerFixture("everyday-routing", { topicId: "roads-local", serviceZip: "12345",
+    service: "Report a damaged public road", serviceAreaEvidence: "The official service directory explicitly covers ZIP 12345.", phone: "555-0100" });
+  const result = await publishWorkerReaderResults(input);
+  assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
+  const read = await readEverydayRoutingProjection({ store, now: h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("reader missing");
+  assert.equal(read.value.records.length, 1);
+  assert.equal(read.value.denominator?.unacquiredCells, 8);
+  assert.equal(read.value.records[0].zip, "12345");
+  assert.equal((read.value.records[0].contact as { phone: string }).phone, "555-0100");
+  assert.deepEqual(await publishWorkerReaderResults(input), result);
+});
+
+test("a service record without a usable channel returns to automatic repair instead of a manual approval queue", async () => {
+  const { input, runtime, h } = await workerFixture("everyday-routing", { topicId: "roads-local", serviceZip: "12345",
+    service: "Road maintenance", serviceAreaEvidence: "The service territory explicitly includes ZIP 12345." });
+  const result = await publishWorkerReaderResults(input);
+  assert.equal(result[0].outcome.status, "HELD");
+  assert.equal(result[0].outcome.code, "WORKER_PUBLICATION_SERVICE_CHANNEL_MISSING");
+  assert.equal(result[0].outcome.recovery, "WORKER");
+  assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED");
+});
+
+test("normal voter-access workers publish the independently verified statewide route through the existing navigation reader", async () => {
+  const { input, store, h } = await workerFixture("ballot-navigation", { state: "NH", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
+    coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
+  const result = await publishWorkerReaderResults(input);
+  assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
+  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("reader missing");
+  assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");
+  assert.equal((read.value.records[0].value as { url: string }).url, FIXTURE_URL);
+  assert.deepEqual(await publishWorkerReaderResults(input), result);
 });

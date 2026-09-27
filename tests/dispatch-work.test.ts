@@ -109,7 +109,7 @@ test("a new hunt discovers missing information families without inventing publis
   const unknown = { ...held, sourceIds: [] };
   assert.equal(jurisdictionRequirements(reg, unknown).length, 0, "deploying the change does not expand old standing work");
   const missing = jurisdictionRequirements(reg, unknown, UNREAD_MEETING_PARTITIONS, true);
-  assert.deepEqual(missing.map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS"]);
+  assert.deepEqual(missing.map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS"]);
   assert.ok(missing.every(r => r.route.executorClass === "BOUNDED_MODEL_WORKER" && r.source.state === "DISCOVERY_OWED"));
   assert.ok(missing.every(r => /not yet been established/.test(r.source.authorityBasis)));
   const financeKey = held.sourceIds.find(key => sourcesOf(reg, { ...held, sourceIds: [key] })[0].recordClass === "CAMPAIGN_FINANCE");

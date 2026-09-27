@@ -17,6 +17,7 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { WORKER_READER_CLASSES, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
+import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const COMMENT_FIELDS = ["commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"] as const;
@@ -70,6 +71,32 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
   const records = checked.extraction.records.map(record => {
     const f = record.fields;
     requirePublication(words(text(f.bodyName)) === words(body.name!), "CANONICAL_BODY_MISMATCH");
+    if (contractId === "everyday-routing") {
+      const allowed = new Set(["bodyName", "topicId", "serviceZip", "service", "serviceAreaEvidence", "phone", "email", "requestUrl", "note"]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "SERVICE_FIELD_UNSUPPORTED");
+      requirePublication((EVERYDAY_TOPIC_IDS as readonly string[]).includes(text(f.topicId)) && /^\d{5}$/.test(text(f.serviceZip)) &&
+        text(f.service).trim() && text(f.serviceAreaEvidence).trim(), "SERVICE_APPLICABILITY_UNVERIFIED");
+      requirePublication(text(f.phone).trim() || text(f.email).trim() || /^https:\/\//.test(text(f.requestUrl)), "SERVICE_CHANNEL_MISSING");
+      requirePublication(!f.requestUrl || /^https:\/\//.test(text(f.requestUrl)), "SERVICE_CHANNEL_INVALID");
+      return { id: `everyday-contact:${f.topicId}:${f.serviceZip}:${checked.primary.evidence.canonicalUrl}`, kind: "CONTACT",
+        topicId: f.topicId, zip: f.serviceZip, serviceAreaEvidence: f.serviceAreaEvidence,
+        contact: { topicId: f.topicId, zips: [f.serviceZip], body: body.name, service: f.service,
+          phone: f.phone ?? null, email: f.email ?? null, requestUrl: f.requestUrl ?? null, note: f.note ?? null,
+          sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.primary.evidence.sourceId,
+          collectedAt: checked.primary.observedAt, verification: "PAGE_FETCHED" } };
+    }
+    if (contractId === "ballot-navigation") {
+      const allowed = new Set(["bodyName", "state", "kind", "url", "coverage", "coverageEvidence", "note"]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "NAVIGATION_FIELD_UNSUPPORTED");
+      requirePublication(text(f.state) === checked.contract.jurisdiction.state.toUpperCase() && /^[A-Z]{2}$/.test(text(f.state)) &&
+        f.coverage === "STATEWIDE" && text(f.coverageEvidence).trim(), "NAVIGATION_APPLICABILITY_UNVERIFIED");
+      requirePublication(["POLLING_PLACE_LINK", "REGISTRATION_LINK"].includes(text(f.kind)) && /^https:\/\//.test(text(f.url)), "NAVIGATION_ROUTE_INVALID");
+      return { id: `ballot-navigation:${f.kind}:${f.state}`, kind: f.kind, sourceUrl: checked.primary.evidence.canonicalUrl,
+        coverageEvidence: f.coverageEvidence, value: { state: f.state, url: f.url,
+          label: f.kind === "POLLING_PLACE_LINK" ? "Find your polling place" : "Check whether you're registered to vote",
+          note: f.note ?? "", sourceOrg: checked.primary.evidence.sourceId,
+          verification: `Source and independent authority verified at ${input.now}.`, verifiedAt: input.now } };
+    }
       requirePublication(["YES", "NO", "UNKNOWN"].includes(text(f.commentPeriod)) && text(f.commentPeriodDetail).trim(), "COMMENT_RULE_MISSING");
       const allowed = new Set(["bodyName", "commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"]);
       requirePublication(Object.keys(f).every(field => allowed.has(field)), "COMMENT_FIELD_UNSUPPORTED");
@@ -80,7 +107,8 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
   });
   requirePublication(records.length === checked.extraction.actualRowCount && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
   return { contractId, version: `worker:${input.auditor.id}`, sourceThrough: input.now,
-    sourceReceipt: checked.sourceReceipt, payload: { kind: contractId, records } };
+    sourceReceipt: checked.sourceReceipt, payload: contractId === "everyday-routing"
+      ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } };
 }
 
 export async function publishWorkerReaderResults(input: {
@@ -110,7 +138,7 @@ export async function publishWorkerReaderResults(input: {
       const checked = workerReaderPackage({ plan, parser, validator, auditor, captures, registry, now: input.now });
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
-      const prepared = inheritVerifiedCommentDetails(checked, prior);
+      const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
       const delivered = (prepared.payload as CuratedReaderProjection).records;
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now);
       const composed = candidate.readModel as CuratedReaderProjection;

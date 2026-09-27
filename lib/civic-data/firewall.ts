@@ -1,5 +1,5 @@
 import { posix } from "node:path";
-import { stripTypeScriptTypes } from "node:module";
+import * as nodeModule from "node:module";
 
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -776,7 +776,9 @@ function executableDependencyClosure(
     // unrelated writers. Unparseable syntax retains the conservative closure.
     let importSource = source;
     if (/\b(?:import|export)\s+(?:type\b|\{[^}]*\btype\b)/.test(source)) {
-      try { importSource = stripTypeScriptTypes(source); } catch { /* fail closed */ }
+      // Runtime Node exposes this API before this repository's @types/node.
+      const strip = (nodeModule as typeof nodeModule & { stripTypeScriptTypes?: (code: string) => string }).stripTypeScriptTypes;
+      try { if (strip) importSource = strip(source); } catch { /* fail closed */ }
     }
     const references = importSource.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*|\bimport\s*)["'`]([^"'`]+)["'`]/g);
     for (const match of references) {

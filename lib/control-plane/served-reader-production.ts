@@ -11,7 +11,7 @@ import { launchGuarded } from "../../scripts/browser.mts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { PostgresRoutineDataStore } from "../civic-data/store.ts";
 import type { WorkItem } from "./work-item.ts";
-import { collectWorkerRosterReadback, observePublishedRoster } from "./worker-reader-readback.ts";
+import { collectWorkerRosterReadback, observePublishedRoster, observePublishedFilings } from "./worker-reader-readback.ts";
 
 export async function collectPublishedCampaignReadback(now: string): Promise<ServedReaderReadback> {
   const derived = await readDerivedCampaignSites();
@@ -90,7 +90,7 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
         try {
           const page = await context.newPage();
           page.setDefaultTimeout(3000);
-          return await observePublishedRoster(page, input);
+          return await ("filings" in input ? observePublishedFilings(page, input) : observePublishedRoster(page, input));
         } finally { await context.close(); }
       } });
     return { ...result, ...(browser ? { syntheticRunId: (browser as Awaited<ReturnType<typeof launchGuarded>>).runId } : {}) };

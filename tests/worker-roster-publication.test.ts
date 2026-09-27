@@ -27,7 +27,7 @@ import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts"
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
 import type { ModelRequest, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { nextAuditEscalation } from "../lib/control-plane/workers/audit-escalation.ts";
-import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
+import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/control-plane/worker-reader-readback.ts";
 
 async function proveRosterPublication(partial = false, auditLadder = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -125,8 +125,9 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   let observations = 0;
   const collector = { items: deliveredItems, store, now: h.now(), previous: null,
     zipForDivision: async (division: string) => { assert.equal(division, body.ocdId); return "99999"; }, // isolated destination dependency; no geographic proof claimed
-    observe: async (input: { roster: typeof existing; zip: string }) => {
+    observe: async (input: PublishedWorkerRead) => {
       observations++;
+      assert.ok("roster" in input);
       assert.equal(input.roster.bodyId, body.id);
       assert.ok(input.roster.members.some(member => member.name === "Morgan Example"));
       return { confirmed: true, reason: "Isolated public-control observation", responseSha256: "a".repeat(64) };

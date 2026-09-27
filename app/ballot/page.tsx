@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { FilingChanges } from "@/components/ballot/filing-changes";
+import { OfficialFilings } from "@/components/ballot/official-filings";
+import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/official-filings";
+import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
@@ -884,6 +887,7 @@ export default async function BallotPage({
 }) {
   const { zip: zipParam } = await searchParams;
   const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
 
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
@@ -947,6 +951,7 @@ export default async function BallotPage({
   if (centroid) {
     readerEdge = await readerEdgeRead;
     if (readerEdge) enterReaderAuthorityEdge(readerEdge);
+    filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     let pointDivisionIds: string[] = [];
     try {
@@ -988,6 +993,9 @@ export default async function BallotPage({
    * controls only their own section; none can erase or replace `set`.
    */
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
+  // Verified registration/polling routes are useful before a ballot or an
+  // election calendar has been acquired. Neither is a publication dependency.
+  if (centroid) auxiliaryPreloads.set("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
   if (set && matched) {
     // Each edge first (2026-09-25): the edge's proven copy through the family's own Reader, else the database.
     auxiliaryPreloads.set("candidate-profiles", settleCandidateProfilesRead);
@@ -1004,12 +1012,6 @@ export default async function BallotPage({
       // explicitly incomplete and is surfaced in the holding-gap list below.
       auxiliaryPreloads.set("nh-members", settleNhSeatHolders);
     }
-    auxiliaryPreloads.set(
-      "ballot-navigation",
-      process.env.NODE_ENV === "production"
-        ? settleBallotNavigationRead
-        : async () => null,
-    );
     if (matched.contests.some((contest) => isFederalContest(contest))) {
       auxiliaryPreloads.set("federal-funding", settleFundingRead);
     }
@@ -1333,6 +1335,10 @@ export default async function BallotPage({
       : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
   };
 
+  const filingProjection = await filingRead;
+  const filingRows = filingProjection?.kind === "PROMOTED"
+    ? filingsForDivisions(filingProjection.value.records as unknown as OfficialFiling[], askOcdIds) : [];
+
   return (
     /*
       **BAL-25 (2026-08-28) — THE BALLOT'S FIRST BREAKPOINT.**
@@ -1500,6 +1506,18 @@ export default async function BallotPage({
         </div>
       )}
 
+      <OfficialFilings rows={filingRows} />
+      {[...new Set(askOcdIds.flatMap(id => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase() ?? []))]
+        .filter(state => !(dates && set?.election.state === state)).map(state => {
+          const registration = registrationLinkFor(state, registrationLinks);
+          const polling = pollingPlaceLinkFor(state, pollingPlaceLinks);
+          if (!registration && !polling) return null;
+          return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
+            <h2 className="text-lg font-semibold">{state} voting information</h2>
+            {registration && <p><a href={registration.url}>{registration.label}</a></p>}
+            {polling && <p><a href={polling.url}>{polling.label}</a></p>}
+          </section>;
+        })}
       {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
         <section
           className="mt-4 rounded-[8px] border border-line bg-panel p-4 text-[0.8125rem] leading-relaxed text-voice lg:max-w-3xl"

@@ -116,7 +116,7 @@
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
-import { bodyDirectoryDiscoveryPlan, jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan } from "../workers/autonomous-plan.ts";
+import { bodyDirectoryDiscoveryPlan, jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan, inheritPublicationConnection } from "../workers/autonomous-plan.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
 import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../scheduler/dispatch-target.ts";
@@ -741,7 +741,8 @@ export async function applyDispatchWork(
               active: true,
               nextDueAt: held.value.active ? held.value.nextDueAt : null,
               materializedBy: OWNER_DISPATCH,
-              ...(held.value.autonomousPlan || !entry.instance.obligation.autonomousPlan ? {} : { autonomousPlan: entry.instance.obligation.autonomousPlan }),
+              ...(inheritPublicationConnection(held.value.autonomousPlan, entry.instance.obligation.autonomousPlan)
+                ? { autonomousPlan: inheritPublicationConnection(held.value.autonomousPlan, entry.instance.obligation.autonomousPlan) } : {}),
               assignments: withAssignment(held.value.assignments, created),
               ...(entry.instance.obligation.materializedFrom === undefined ? {} : { materializedFrom: entry.instance.obligation.materializedFrom }),
               updatedAt: input.now,
@@ -776,8 +777,8 @@ export async function applyDispatchWork(
     try {
       const held = await repos.obligations.mustRead(mark.obligationId);
       const next = withAssignment(held.value.assignments, reordered);
-      const autonomousPlan = held.value.autonomousPlan ?? plan.targets.find(target => target.target.key === mark.target.key)?.instances
-        .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan;
+      const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
+        .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
       if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
         await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
           ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now);

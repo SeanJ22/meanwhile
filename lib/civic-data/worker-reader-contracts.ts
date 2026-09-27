@@ -3,8 +3,12 @@ export const WORKER_READER_CLASSES = {
   "comment-access": "PUBLIC_COMMENT_RULE",
   "everyday-routing": "SERVICE_CONTACT",
   "ballot-navigation": "VOTER_ACCESS_ROUTE",
+  "official-filings": "CANDIDATE_FILING_DOCUMENT",
 } as const;
 export type WorkerReaderContract = keyof typeof WORKER_READER_CLASSES;
+export function workerReaderClassMatches(id: WorkerReaderContract, recordClass: string): boolean {
+  return recordClass === WORKER_READER_CLASSES[id] || id === "official-filings" && recordClass === "CAMPAIGN_FINANCE_FILING";
+}
 export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
   return Object.hasOwn(WORKER_READER_CLASSES, id);
 }

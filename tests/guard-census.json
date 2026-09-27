@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 875,
-    "named": 8354,
+    "named": 8356,
     "dynamic": 33
   },
   "files": {
@@ -2066,7 +2066,7 @@
         "a cold /ballot?zip=85701 with the whole ballot edge makes no database read at all, in the page or in any card",
         "one promoted version is one authority key, whether the edge primed it (BOOTSTRAP) or the database read it (PROMOTED)",
         "with no edge published, the same render reads those families from the database: the fallback stays",
-        "with only the map's families on the edge (R30), a cold /ballot?zip=85701 reads exactly the six proven pointers this change moves, none from a card"
+        "with only map families on the edge, a cold ballot reads exactly its missing ballot and filing pointers, none from a card"
       ],
       "dynamic": 0
     },
@@ -3974,7 +3974,7 @@
     },
     "tests/curated-reader-data-plane.test.ts": {
       "names": [
-        "Admin projects the five manual authorities without inventing a clock",
+        "Admin projects every curated authority including official filings without inventing a clock",
         "a bad curated family is held against its own LKG and cannot affect another family",
         "comment-access drops the control-plane transport id at the Reader boundary",
         "curated Reader evidence is source-scoped and never names software certification",
@@ -12512,6 +12512,8 @@
     "tests/worker-reader-publication.test.ts": {
       "names": [
         "a service record without a usable channel returns to automatic repair instead of a manual approval queue",
+        "a verified shared directory body serves its exact listed Census divisions without countywide coverage or duplicate identities",
+        "independent candidate and committee filings automatically publish source facts through the existing promotion and ballot reader",
         "independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence",
         "normal service workers publish verified applicability and channels while leaving missing topics visibly unacquired",
         "normal voter-access workers publish the independently verified statewide route through the existing navigation reader",

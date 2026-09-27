@@ -15,7 +15,9 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
-import { WORKER_READER_CLASSES, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
+import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
+import { createHash } from "node:crypto";
+import { officialFilingIssue } from "./official-filings.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
@@ -65,12 +67,25 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
   const contractId = target.contractId as WorkerReaderContract;
   const checked = verifiedWorkerRecords(input);
-  requirePublication(checked.contract.recordClass === WORKER_READER_CLASSES[contractId], "READER_CLASS_MISMATCH");
+  requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
   requirePublication(body?.name, "CANONICAL_BODY_MISSING");
   const records = checked.extraction.records.map(record => {
     const f = record.fields;
     requirePublication(words(text(f.bodyName)) === words(body.name!), "CANONICAL_BODY_MISMATCH");
+    if (contractId === "official-filings") {
+      requirePublication(body.ocdId && input.registry?.payload.registry.divisions.some(row => row.ocdId === body.ocdId), "FILING_TERRITORY_UNRESOLVED");
+      const territories = input.registry?.payload.registry.divisions.filter(row => row.state.toUpperCase() === checked.contract.jurisdiction.state.toUpperCase() &&
+        words(row.label) === words(text(f.jurisdictionName))) ?? [];
+      requirePublication(territories.length === 1, "FILING_EXACT_JURISDICTION_UNRESOLVED");
+      const facts = Object.fromEntries(Object.entries(f).filter(([key]) => !["bodyName", "documentUrl", "jurisdictionName"].includes(key)));
+      const id = `official-filing:${createHash("sha256").update(canonicalJson([body.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
+        f.candidateName ?? f.committeeName, f.office ?? f.filingPeriod])).digest("hex")}`;
+      const row = { id, kind: checked.contract.recordClass, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
+        sourceUrl: checked.primary.evidence.canonicalUrl, documentUrl: f.documentUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now, facts };
+      requirePublication(officialFilingIssue(row) === null, `FILING_FIELDS_UNVERIFIED:${officialFilingIssue(row)}`);
+      return row;
+    }
     if (contractId === "everyday-routing") {
       const allowed = new Set(["bodyName", "topicId", "serviceZip", "service", "serviceAreaEvidence", "phone", "email", "requestUrl", "note"]);
       requirePublication(Object.keys(f).every(field => allowed.has(field)), "SERVICE_FIELD_UNSUPPORTED");
@@ -142,7 +157,8 @@ export async function publishWorkerReaderResults(input: {
       const delivered = (prepared.payload as CuratedReaderProjection).records;
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now);
       const composed = candidate.readModel as CuratedReaderProjection;
-      requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))), "READER_FACTS_HELD");
+      requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
+        `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);
       candidateId = candidate.id;
       workerChecksComplete = true;
       const published = await processRegisteredManualCandidate(input.store, input.contractId, candidate, input.now, expectedBaseVersionId);

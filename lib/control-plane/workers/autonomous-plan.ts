@@ -19,8 +19,8 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     : source.recordClass === "VOTER_ACCESS"
       ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
-      ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["candidateName", "office"] }
-      : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["committeeName", "filingPeriod", "documentUrl"] };
+      ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["bodyName", "jurisdictionName", "candidateName", "office", "documentUrl"] }
+      : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["bodyName", "jurisdictionName", "committeeName", "filingPeriod", "documentUrl"] };
   const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
     if (!url) return false;
     try { const parsed = new URL(url); return parsed.protocol === "https:" && !parsed.username && !parsed.password; } catch { return false; }
@@ -31,6 +31,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
+    ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
@@ -82,7 +83,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
     contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
       requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
       identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] },
-      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record needs independent evidence for identity, classification and actual territory. Unresolved or partial territory remains owed and must not be inferred from a mailing address.` } };
+      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record needs independent evidence for identity, classification and actual territory. When legal coverage is the entirety of specific Census divisions rather than the parent jurisdiction, extract territoryNames as the source's semicolon-separated division names, coverage as "entire listed divisions", and coverageEvidence containing the independently verified legal coverage statement. Every name must join exactly one registered division in this state. A partial division, ambiguous name or unrecorded boundary remains owed; do not infer territory from a mailing address.` } };
 }
 
 /**
@@ -122,6 +123,16 @@ export interface AutonomousWorkPlan {
   readonly detective: readonly DetectiveTaskSpec[];
   readonly engineering: readonly EngineeringTaskSpec[];
   readonly auditScope: "CAPTURED_ARTIFACT" | "SOURCE_UNIVERSE";
+}
+
+/** Attach a newly implemented Reader connection without replacing retained
+ * extraction instructions, acquired evidence, or independent worker results. */
+export function inheritPublicationConnection(existing: AutonomousWorkPlan | undefined, current: AutonomousWorkPlan | undefined): AutonomousWorkPlan | undefined {
+  if (!existing) return current;
+  if (!current?.publication || existing.publication || existing.contract.subjectId !== current.contract.subjectId ||
+    existing.contract.recordClass !== current.contract.recordClass) return existing;
+  return { ...existing, publication: current.publication,
+    ...(current.directorySubject ? { directorySubject: current.directorySubject } : {}) };
 }
 
 /** A content-addressed artifact keeps its first retrieval stamp; a later successful

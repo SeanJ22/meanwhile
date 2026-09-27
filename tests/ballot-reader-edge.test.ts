@@ -12,6 +12,7 @@ import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../li
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import {
   azBallotReadState,
   candidateCorpusReadState,
@@ -115,6 +116,7 @@ const PROMOTED_BALLOT_FAMILIES: Partial<Record<PromotedAuthorityFamily, { value:
   ], EDGE.profiles),
   "candidate-publications": promotedFamily([manual("candidate-corpus", corpus, EDGE.corpus)], EDGE.corpus),
   "ballot-navigation": promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation"),
+  "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "edge-test:filings:absent"),
   "nh-members": promotedFamily([provenEdgeEntry({ recordClass: nhRoster.recordClass, scope: nhRoster.scope, sourceId: nhRoster.sourceId, versionId: EDGE.nhMembers, value: nhMembers })], EDGE.nhMembers),
   "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: funding })], EDGE.funding),
   "state-money": promotedFamily(stateMoneyFixtureEntries(EDGE.stateMoney), "edge-test:ballot:money"),
@@ -214,7 +216,7 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
 /** What a cold /ballot?zip=85701 read from the database with only the map's families on the edge (R30). */
-const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"];
+const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "CURATED_READER_RECORD", "CURATED_READER_RECORD", "FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {
   // Next's own compiled React Flight server, with the react-server condition it runs under.
@@ -254,7 +256,7 @@ test("React renders the page's async components outside the page's context: they
   assert.match(out, /card:none:flight-probe/, `a component sees the page's edge only through withReaderAuthorityEdge: ${out}`);
 });
 
-test("with only the map's families on the edge (R30), a cold /ballot?zip=85701 reads exactly the six proven pointers this change moves, none from a card", async () => {
+test("with only map families on the edge, a cold ballot reads exactly its missing ballot and filing pointers, none from a card", async () => {
   process.env.WTP_READER_EDGE_DIR = mapEdgeDir;
   const { components } = await renderBallot("85701");
   assert.ok((components.get("BallotBattlecard") ?? 0) >= 10, `the render reached the cards: ${JSON.stringify([...components])}`);

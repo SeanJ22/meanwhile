@@ -49,26 +49,39 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
   for (const record of checked.extraction.records) {
     try {
       const f = record.fields;
-      requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
+      requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence", "territoryNames"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
       const classification = bodyClasses[words(f.bodyClass)];
       requirePublication(classification && words(f.bodyName) && typeof f.homepageUrl === "string", "DIRECTORY_BODY_IDENTITY_MISSING");
       const url = new URL(f.homepageUrl as string);
       requirePublication(url.protocol === "https:" && !url.username && !url.password, "DIRECTORY_PUBLIC_URL_INVALID");
-      requirePublication([words(subject.jurisdiction.name), words(division.label)].includes(words(f.jurisdictionName)) &&
+      requirePublication([words(subject.jurisdiction.name), words(division.label)].includes(words(f.jurisdictionName)), "DIRECTORY_JURISDICTION_MISMATCH");
+      const named = typeof f.territoryNames === "string" ? f.territoryNames.split(";").map(name => name.trim()).filter(Boolean) : [];
+      const territory = named.length ? named.map(name => {
+        // These are independently captured legal coverage statements, not
+        // address geocoding. Ambiguous same-name divisions never become joins.
+        const matches = input.prior.payload.registry.divisions.filter(row => row.state === division.state && words(row.label) === words(name));
+        requirePublication(matches.length === 1 && words(f.coverageEvidence).includes(words(name)), "DIRECTORY_NAMED_TERRITORY_UNRESOLVED");
+        return matches[0];
+      }) : [division];
+      requirePublication(named.length ? words(f.coverage) === "entire listed divisions" :
         ["entire jurisdiction", "entire division", "citywide", "townwide", "countywide", "statewide", "districtwide"].includes(words(f.coverage)) &&
         words(f.coverageEvidence).includes(words(f.jurisdictionName)), "DIRECTORY_TERRITORY_REQUIRES_REPAIR");
-      const existing = input.prior.payload.registry.bodies.filter(body => body.ocdId === division.ocdId &&
+      const territoryIds = [...new Set(territory.map(row => row.ocdId))].sort();
+      requirePublication(territoryIds.length === territory.length, "DIRECTORY_DUPLICATE_TERRITORY");
+      const existing = input.prior.payload.registry.bodies.filter(body => (body.ocdId !== null && territoryIds.includes(body.ocdId) ||
+        words(body.name) === words(f.bodyName) && body.homepageUrl === url.href) &&
         (words(body.name) === words(f.bodyName) || (body.id === input.plan.publication?.bodyId && !body.name && body.bodyClass === classification)));
       requirePublication(existing.length <= 1, "DIRECTORY_BODY_IDENTITY_AMBIGUOUS");
       // Same name on another territory is a cross-territory identity question,
       // not permission to duplicate a regional body under a second government.
-      requirePublication(existing.length || !input.prior.payload.registry.bodies.some(body => body.ocdId !== division.ocdId &&
-        words(body.name) === words(f.bodyName) && body.homepageUrl === url.href), "DIRECTORY_SHARED_BODY_TERRITORY_REQUIRES_REPAIR");
       const prior = existing[0];
-      const id = prior?.id ?? subBodyId(division.ocdId, String(f.bodyName));
+      requirePublication(!prior || [prior.ocdId, ...(prior.alsoServesOcdIds ?? [])].every(id => id !== null && territoryIds.includes(id)), "DIRECTORY_SHARED_BODY_TERRITORY_REQUIRES_REPAIR");
+      const primaryDivision = prior?.ocdId ?? territoryIds[0];
+      const id = prior?.id ?? subBodyId(primaryDivision, String(f.bodyName));
       requirePublication(!bodies.some(body => body.id === id), "DIRECTORY_DUPLICATE_BODY");
-      bodies.push({ ...(prior ?? { id, ocdId: division.ocdId, coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE",
+      bodies.push({ ...(prior ?? { id, ocdId: primaryDivision, coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE",
         agendaSourceRef: null, meetingCadence: null, demandCount: 0 }), name: String(f.bodyName), bodyClass: classification,
+        alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
         homepageUrl: url.href, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         provenance: { sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: checked.primary.observedAt, verifiedAt: input.now } });

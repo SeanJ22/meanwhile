@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { officialFilingIssue } from "./official-filings.ts";
 
 import type { BallotSet } from "../ballot/types.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
@@ -45,6 +46,7 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "candidate-profiles",
   "candidate-corpus",
   "officeholder-statements",
+  "official-filings",
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
@@ -85,7 +87,7 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
-  readonly kind: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk";
+  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   /** Present on denominator-governed Reader families such as everyday routing. */
@@ -175,6 +177,7 @@ const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
   "candidate-profiles",
   "candidate-corpus",
   "officeholder-statements",
+  "official-filings",
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
@@ -193,10 +196,11 @@ interface IsolatedManualProjection {
 }
 
 function curatedRecordIssue(
-  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
   row: Record<string, unknown>,
 ): string | null {
   if (!string(row.id)) return `A ${contractId} row has no stable id.`;
+  if (contractId === "official-filings") return officialFilingIssue(row);
   if (contractId === "meeting-body-crosswalk") return crosswalkRowIssue(row);
   if (contractId === "everyday-routing") {
     const contact = object(row.contact);
@@ -292,7 +296,7 @@ function sourceScopedMembers(
   if (contractId === "candidate-profiles") return profileMembers(payload);
   if (contractId === "candidate-corpus") return corpusMembers(payload);
   if (contractId === "officeholder-statements") return statementMembers(payload);
-  if (contractId === "comment-access" || contractId === "ballot-navigation" ||
+  if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
       contractId === "campaign-sites" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
     return curatedMembers(payload);
@@ -373,7 +377,7 @@ function sourceScopedMemberIssue(
     }
     return null;
   }
-  if (contractId === "comment-access" || contractId === "ballot-navigation" ||
+  if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
       contractId === "campaign-sites" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
     const row = object(member.record);
@@ -774,7 +778,7 @@ function officeholderStatementProjection(
 }
 
 function curatedReaderProjection(
-  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
+  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
 ): BuiltProjection {
@@ -814,7 +818,7 @@ function curatedReaderProjection(
 
   const identities = records.map((row) => {
     const value = object(row.value);
-    const subjectId = contractId === "comment-access" || contractId === "meeting-body-crosswalk"
+    const subjectId = contractId === "official-filings" ? string(row.id) : contractId === "comment-access" || contractId === "meeting-body-crosswalk"
       ? string(row.bodyId)
       : contractId === "campaign-sites"
         ? string(row.officeholderId)
@@ -842,7 +846,7 @@ function curatedReaderProjection(
     violations: [...duplicateProblems(ids, "Curated Reader record"), ...shapeProblems],
     schemaVersion: `curated-reader-records:${contractId}:2`,
     consumerChecks: [{
-      consumer: contractId === "comment-access"
+      consumer: contractId === "official-filings" ? "/ballot official filing records" : contractId === "comment-access"
         ? "meeting/map/Ask public-comment projection"
         : contractId === "ballot-navigation"
           ? "ballot and where-to-vote official navigation"

@@ -22,6 +22,7 @@ import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts"
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
 const URLS = {
+  "official-filings": ["https://elections.example.gov/filing.json"],
   "comment-access": ["https://public.example.gov/comment-policy"],
   "ballot-navigation": [
     "https://elections.example.gov/polling-place",
@@ -65,6 +66,9 @@ function payloadFor(
   at: string,
   hashCharacter = "a",
 ): CuratedReaderProjection {
+  if (id === "official-filings") return { kind: id, records: [{ id: "filing:fixture", kind: "CANDIDATE_FILING_DOCUMENT",
+    bodyId: "body:fixture", ocdId: "ocd-division/country:us/state:nh/place:fixture", bodyName: "Fixture Board", jurisdictionName: "Fixture",
+    sourceUrl: URLS[id][0], documentUrl: URLS[id][0], collectedAt: at, verifiedAt: at, facts: { candidateName: "Fixture Person", office: "Board" } }] };
   if (id === "meeting-body-crosswalk") {
     const ocdId = "ocd-division/country:us/state:az/place:test";
     return {
@@ -280,10 +284,10 @@ test("store failure does not reopen any curated tracked first seed", async () =>
   assert.equal(candidateReads, 0);
 });
 
-test("Admin projects the five manual authorities without inventing a clock", () => {
+test("Admin projects every curated authority including official filings without inventing a clock", () => {
   const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
-  assert.equal(contracts.length, 5);
+  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions", "meeting-body-crosswalk"].sort());
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);

@@ -46,6 +46,7 @@
 
 import { createRouteTask, type RouteDisposition, type RouteTask } from "../route-task.ts";
 import { createWorkItem, type WorkItem } from "../work-item.ts";
+import { inheritPublicationConnection } from "../workers/autonomous-plan.ts";
 import { questionOfObligation } from "../work-question.ts";
 import { registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -792,9 +793,12 @@ export async function resumeOpenOccurrence(
   // missing worker instructions. Existing/repaired instructions stay immutable.
   if (obligation.autonomousPlan) {
     const item = await repos.workItems.mustRead(held.value.workItemId);
-    if (!item.value.autonomousPlan) await repos.workItems.compareAndSet(item.id, item.revision,
-      { ...item.value, autonomousPlan: { ...obligation.autonomousPlan,
-        ownerInstructions: [...new Set((obligation.assignments ?? []).map(assignment => assignment.ref))] } }, obligation.updatedAt);
+    const connected = inheritPublicationConnection(item.value.autonomousPlan, obligation.autonomousPlan)!;
+    const ownerInstructions = [...new Set([...(connected.ownerInstructions ?? []), ...(obligation.assignments ?? []).map(assignment => assignment.ref)])];
+    if (connected !== item.value.autonomousPlan || JSON.stringify(ownerInstructions) !== JSON.stringify(connected.ownerInstructions)) {
+      await repos.workItems.compareAndSet(item.id, item.revision,
+        { ...item.value, autonomousPlan: { ...connected, ownerInstructions } }, obligation.updatedAt);
+    }
   }
   const task = await repos.routeTasks.read(held.value.routeTaskId);
   /* `disposition !== null` is the test `reclaim` and `disposeRoute` apply, and it

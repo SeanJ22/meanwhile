@@ -24,6 +24,8 @@ import {
 import { certainlyOverlaps, unitShareKey, type CensusUnitTerritory, type ScopeZctas } from "@/lib/control-plane/expansion/membership.ts";
 import { readApproximateDistrictExtract, readCensusUnitTerritories, readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
+import { withSharedScopeDivisions } from "@/lib/control-plane/expansion/scope-divisions.ts";
+import { CENSUS_SCHOOL_INTERSECTIONS } from "@/lib/control-plane/expansion/census-scope-observations.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const COLLEGE = "az:school:cochise-county-community-college-district";
@@ -56,6 +58,32 @@ function trackedFilesNaming(patterns: readonly string[]): string[] {
 const index = () => readTerritoryIndex(ROOT, ["az", "nh", "nj"].map(
   (s) => JSON.parse(readFileSync(join(ROOT, "data", "states", s, "jurisdictions", `${s}.json`), "utf8")) as JurisdictionRegistry,
 ));
+
+test("full Census school intersections reach both Admin scope and actual dispatch, including small slivers", () => {
+  const idx = index();
+  const preview = withSharedScopeDivisions({ ids: [], partial: [], samples: 0 }, "85635");
+  const expected = [
+    "az:school:sierra-vista-unified-school-district-68",
+    "az:school:tombstone-school-district-1",
+    "az:school:bisbee-unified-school-district-2",
+    "az:depschool:fort-huachuca-accommodation-school",
+    "az:school:palominas-school-district-49",
+  ];
+  assert.equal(CENSUS_SCHOOL_INTERSECTIONS.length, 5);
+  for (const id of expected) {
+    const territory = idx.bySubject.get(id);
+    assert.ok(territory && certainlyOverlaps(territory, ZIP_85635), `${id} must be eligible for normal work creation`);
+    assert.ok(territory.shares.get("85635")! > 0);
+  }
+  for (const row of CENSUS_SCHOOL_INTERSECTIONS) {
+    assert.ok(preview.ids.includes(row.ocdId) && preview.partial.includes(row.ocdId));
+    assert.equal(row.zctaVintage, "2020");
+    assert.match(row.sourceVintage, /January 1, 2026/);
+  }
+  assert.ok(idx.bySubject.get(expected[2])!.shares.get("85635")! < 0.000001, "do not discard the Census-positive Bisbee sliver");
+  assert.deepEqual(withSharedScopeDivisions(preview, "85635"), preview, "repeat previews reuse the same identities");
+  assert.deepEqual(withSharedScopeDivisions({ ids: [], partial: [], samples: 0 }, "03255").ids, [], "observations do not leak into other scopes");
+});
 
 test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECHNOLOGY DISTRICT; SANTA CRUZ COUNTY DOES NOT GET THE COLLEGE", async () => {
   const idx = index();

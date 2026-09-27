@@ -46,6 +46,8 @@ import {
 import type { ExpansionCycleReading } from "./reading.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
+import { addCensusSchoolShares, withCensusSchoolTerritories } from "./census-scope-observations.ts";
+import dependentSchools from "./reference/census-dependent-school-territories.json" with { type: "json" };
 
 /** Where the committed Census unit territories live, relative to the repository root. */
 export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
@@ -101,6 +103,7 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
     for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
   }
   const shares = readZctaShares(root, wanted);
+  addCensusSchoolShares(shares);
   return buildTerritoryIndex(registries, units, (key) => shares.get(key), (j) => {
     const own = j.censusDivision ? shares.get(j.censusDivision) : undefined;
     return own === undefined ? undefined : { zctas: new Set(own.keys()), shares: own };
@@ -127,7 +130,9 @@ export function readCensusUnitTerritories(root: string): readonly CensusUnitTerr
   if (!Array.isArray(parsed.units) || parsed.units.length === 0) {
     throw new Error(`${CENSUS_UNIT_TERRITORY_PATH.join("/")} carries no units — a failed read, never a country with no governments`);
   }
-  return parsed.units as readonly CensusUnitTerritory[];
+  const units = parsed.units as readonly CensusUnitTerritory[];
+  const ids = new Set(units.map(unit => unit.pid6));
+  return withCensusSchoolTerritories([...units, ...dependentSchools.units.filter(unit => !ids.has(unit.pid6))]);
 }
 
 /**

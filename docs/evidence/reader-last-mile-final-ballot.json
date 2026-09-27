@@ -1,6 +1,6 @@
 {
-  "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
-  "buildId": "YWpqvNs8garpWZ2Sl32T1",
+  "exactHead": "be9095a8b2053013053f54e72aa0ad2b071222a0",
+  "buildId": "PqwyS9a8EIJNkC-_HNM9V",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -1888,7 +1888,7 @@
     },
     {
       "path": "lib/ask/meeting-knowledge.ts",
-      "sha256": "757b5f434987dcb1173a426a7331282f13ee94de1389ea7e49b05b411110ea66"
+      "sha256": "09c956a45e1e2ce3bc860624ee2e8ca1eb7dfa7e2c609bf01c991b85a386a0db"
     },
     {
       "path": "lib/ask/meeting-outcomes.ts",
@@ -2180,7 +2180,7 @@
     },
     {
       "path": "lib/candidates/corpus.ts",
-      "sha256": "4c1a762a3e569bad942b173cb3c61326682281d4bd6b2ce90af2e9d13cd34d9d"
+      "sha256": "c13ce5f619a455ab4466f1136cc5f4493e6b8c5f7760b760a6e9d5e700ff42fa"
     },
     {
       "path": "lib/candidates/issues.ts",
@@ -2232,7 +2232,7 @@
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
-      "sha256": "2373139e7acdcfbdad4a525093d5311da4bf9049eba59ce5f17ff2f3d963b708"
+      "sha256": "4155076d8ffd6796b7f506247500f01c19b069dc58722926729eedec21f322ac"
     },
     {
       "path": "lib/civic-data/derived-door.ts",
@@ -2252,7 +2252,7 @@
     },
     {
       "path": "lib/civic-data/manual-read-models.ts",
-      "sha256": "b4e5ab4fe5c864487f6543a13947c9d30bd2feb076ebc26b186933621f1e07ad"
+      "sha256": "1aedafda7aa6658bc22911ee6289e6e150e73d37135b6f2f2943a325435e3210"
     },
     {
       "path": "lib/civic-data/manual-source-isolation.ts",
@@ -2300,7 +2300,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "fc088f36d0745854e4deb72829d8abbe4a8d85870f4f89cbf5c91aea8671e7b6"
+      "sha256": "c7a24803b68b45a7f6255543f3a86afd6c68ef3e77fc63ece71829db6fdbca82"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2453,6 +2453,10 @@
     {
       "path": "lib/extract/html-content.ts",
       "sha256": "01a3ed617d9d2ea8a73f552e7ea851c5ca576b3530e8f2d4bbd00570c1710d94"
+    },
+    {
+      "path": "lib/extract/html-text.ts",
+      "sha256": "59d50369491bb72105de3aef60710046d2f7e21d632da9c4f6840d3f25fa5a73"
     },
     {
       "path": "lib/funding/campaign-money.ts",
@@ -2668,7 +2672,7 @@
     },
     {
       "path": "lib/meetings/agenda-documents.ts",
-      "sha256": "0caacd116efa5f0e40b9e2cdd1a8feefdb14bc1cce7ed2f6fe4473f67358484d"
+      "sha256": "393bb0fcefc8af2a99f7c9e5001bd487a41dcd5373e4d15da3875d28f5d2f3a7"
     },
     {
       "path": "lib/meetings/attribution.ts",
@@ -3024,7 +3028,7 @@
     },
     {
       "path": "lib/registry/comment-access-client.ts",
-      "sha256": "f5c5203260f5af16c4ba39bd2f4e5d42fe4ba8c14fe8e17e104114d4b54d994b"
+      "sha256": "191312ebc4fb431399a7fb6942c20cbda6d913fb1c589b5894067b370c69e4bd"
     },
     {
       "path": "lib/registry/comment-access.ts",
@@ -3148,7 +3152,7 @@
     },
     {
       "path": "lib/routing/everyday.ts",
-      "sha256": "b00840fba176f775797dc300c5121285e03b49826dd589a95bf6385bb92600c5"
+      "sha256": "953572cf5c682372c569f576086f9a9e77ae2acb394d9a5187375c43c1d33b9f"
     },
     {
       "path": "lib/routing/exact-name.ts",

@@ -1,6 +1,6 @@
 {
-  "exactHead": "5f43ff9a26cc54c74890654ac8a1a3e7b8ecc49d",
-  "buildId": "PUigiHOd9ofZ_uHDQU7Ed",
+  "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+  "buildId": "df96ykxXTbRNTCF06Yput",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -2244,7 +2244,7 @@
     },
     {
       "path": "lib/civic-data/manual-contracts.ts",
-      "sha256": "f299b33f3316d93b2ea2a5b04bb92eadd9734d91663cbae94937975573bde88a"
+      "sha256": "97fa24d947b76c900ab44fa363660e41a1aace51858c8c35b09c2f361165220b"
     },
     {
       "path": "lib/civic-data/manual-projections.ts",
@@ -2337,6 +2337,14 @@
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
       "sha256": "b45347c316050792eb7e8e793b0ccc3f6227f2ff22bbeca1ef83791efd7a8856"
+    },
+    {
+      "path": "lib/control-plane/expansion/census-scope-observations.ts",
+      "sha256": "eb131b491af3746521d5d105d4682304bc2b36dc77c76547d2a8277d97cc87d6"
+    },
+    {
+      "path": "lib/control-plane/expansion/reference/census-school-intersections.json",
+      "sha256": "a3e71ffeb8df300a89bd04eb6d22237ad2fc5bd2dfa34ab6794ee8b224d570a4"
     },
     {
       "path": "lib/control-plane/model-cost.ts",
@@ -2564,7 +2572,7 @@
     },
     {
       "path": "lib/geo/zip-division-index.ts",
-      "sha256": "e17e9a930a6039c51ceb1724554bb73f523c77a15e0b095df57fe181ef7ffb51"
+      "sha256": "15779aa71d600a9b693a6769aff29059c1b88a64c1d1cd82f410914dd13c4a73"
     },
     {
       "path": "lib/holdings/datasets.ts",
@@ -3564,11 +3572,11 @@
     },
     {
       "path": "next.config.ts",
-      "sha256": "fab99408fd1803862a00ffaf8845f9b6fa6f87e334b34322604e6f1936a3999f"
+      "sha256": "c6327bc7c84a9a857512f1bedf89425db7b77f762f08c00ff5738d5bcf86b02c"
     },
     {
       "path": "package.json",
-      "sha256": "b420951349d1d2ff82f989b8c87d654299fb520d875208bb610b087b10be76f4"
+      "sha256": "ea82ceb483abda26a46d17f1d156dce0fba4b4e9fe3f21d4367c050928917c1d"
     },
     {
       "path": "pnpm-lock.yaml",

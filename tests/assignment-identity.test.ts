@@ -540,9 +540,42 @@ test("a Send during an active cycle is shown as saved and waiting, never as runn
     nextCycleDueAt: "2026-09-25T01:00:00.000Z",
   });
   assert.equal(view.card.pill, "SAVED · NOT YET READ");
-  assert.match(view.card.summary, /must finish before the runner can read/);
+  assert.match(view.card.summary, /has not reported finishing/);
   assert.match(view.card.summary, /saved work, not running work/);
-  assert.match(view.ack.find((fact) => fact.pill === "NOT YET READ")?.text ?? "", /next eligible cycle promptly/);
+  assert.match(view.ack.find((fact) => fact.pill === "NOT YET READ")?.text ?? "", /next eligible cycle after it finishes or recovers/);
+});
+
+test("a Send's completion uses the same created and reordered members as its linked work list", async () => {
+  const { evaluateAssignmentFromRecords, memberRecordsForSend } = await import("../lib/control-plane/assignment-completion.ts");
+  const membership = assignmentMembership([], [
+    { obligationId: "created", subjectId: "s1", entry: { assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED } },
+    { obligationId: "reordered", subjectId: "s2", entry: { assignmentKey: A.key, ref: "r-a", relation: "REORDERED", at: JOINED } },
+  ]);
+  const members = memberRecordsForSend(A.key, membership, [{ id: "reordered", lastWorkedAt: JOINED }]);
+  const completion = evaluateAssignmentFromRecords({ assignmentKey: A.key, obligations: members, debtFor: () => null, now: T0 });
+  assert.equal(completion.kind, "NOT_COMPLETE");
+  if (completion.kind !== "NOT_COMPLETE") return;
+  assert.equal(completion.members, 2);
+  assert.equal(completion.settled, 1);
+  assert.deepEqual(completion.exceptions.map((e) => e.obligationId), ["created"]);
+});
+
+test("the hunt card uses its current ledger, labels last-cycle admissions, and separates current Scouts", () => {
+  const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }]);
+  const costs = [charge({ obligationId: "ob-c", usd: 1.09 })];
+  const gate = armAssignmentBudget({ now: T0, specs: [{ ...A, budgetUsd: 50, budgetStartedAt: JOINED }], membership, costs, worstCaseUsd: 0.6, intentsReadable: true });
+  const assignment = assignmentCycleReading({ at: T0, now: T0, gate, specs: [{ ...A, budgetUsd: 50, budgetStartedAt: JOINED }], membership, costs, intentsReadable: true }).assignments[0];
+  const scope = { key: decision().key, work: { scoutAdmitted: 11, subjectIds: [], subjectIdsComplete: true, registeredObligations: 132, dueThisCycle: 132, scoutRowsPlacedFirst: 29 }, budgetSays: "$0 spent for this hunt", spend: { rolling24hUsd: 0, sevenDayUsd: 0 }, heldThisCycle: 0, resolution: { kind: "RESOLVED", zctaCount: 1 }, coverage: null };
+  const expansion = { at: T0, scopes: [scope] } as unknown as import("../lib/control-plane/expansion/reading.ts").ExpansionCycleReading;
+  const view = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment, assignmentAt: T0 });
+  assert.match(view.spend, /\$1\.09/);
+  assert.doesNotMatch(view.spend, /\$0\.00/);
+  assert.equal(view.lanes[0]?.pill, "ADMITTED LAST CYCLE");
+  assert.doesNotMatch(view.lanes[0]?.note ?? "", /\$0 spent/);
+  assert.match(view.ack.find((fact) => fact.pill === "CURRENT SCOUTS")?.text ?? "", /no Scout running across the fleet/);
+  const prior = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment: { ...assignment, completion: { kind: "NO_MEMBERS", assignmentKey: A.key, says: "No obligation names this assignment" } }, assignmentAt: T0 });
+  assert.match(prior.ack.find((fact) => fact.pill === "COMPLETION RECHECK")?.text ?? "", /1 linked obligation on this Send/);
+  assert.doesNotMatch(prior.ack.map((fact) => fact.text).join(" "), /No obligation names this assignment/);
 });
 
 test("an instruction lists what it created and reordered from the work itself, and its own budget with the window", () => {

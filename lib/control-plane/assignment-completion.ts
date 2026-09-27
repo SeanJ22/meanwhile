@@ -19,6 +19,7 @@
  * PURE and TOTAL, like the evaluator it applies.
  */
 import { evaluateCompletion, type CompletionSnapshot, type RefusalCode } from "./completion.ts";
+import type { AssignmentMembership as SendMembership } from "./expansion/assignment-budget.ts";
 import type { WorkItemState } from "./work-item.ts";
 
 /** One membership record, as the obligation carries it. */
@@ -154,6 +155,29 @@ export interface MemberRecord {
   readonly lastWorkedAt?: string | null;
   readonly openOccurrenceId?: string | null;
   readonly absentUntil?: string | null;
+}
+
+/** Use the same recorded membership that the Send's created/reordered counts use.
+ * A newly created obligation may not be in the cycle's earlier sync snapshot;
+ * it is still a real, unsettled member, never an empty completed assignment.
+ */
+export function memberRecordsForSend(
+  key: string,
+  membership: SendMembership,
+  records: readonly MemberRecord[],
+): MemberRecord[] {
+  const slot = membership.byKey.get(key);
+  if (!slot) return [];
+  const byId = new Map(records.map((record) => [record.id, record]));
+  return [...slot.created.values(), ...slot.reordered.values()].map((member) => {
+    const held = byId.get(member.obligationId);
+    const relation = slot.created.has(member.obligationId) ? "CREATED" : "REORDERED";
+    return {
+      ...held,
+      id: member.obligationId,
+      assignments: [...(held?.assignments ?? []), { assignmentKey: key, relation, at: member.joinedAt }],
+    };
+  });
 }
 
 export interface MemberDebt {

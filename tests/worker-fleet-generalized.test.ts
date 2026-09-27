@@ -62,6 +62,27 @@ test("external official comparison is a distinct durable receipt with exact auth
   const audit = auditor(parser); assert.equal(auditExtraction({ ...audit, context: { ...audit.context, authorityEvidence: [held] } }).verdict, "SURVIVED");
 });
 
+test("retained document text uses literal record boundaries and still requires independent official agreement", () => {
+  const extraction: RecordExtractionShape = { format: "TEXT_BLOCKS", recordStart: "ID:", recordEnd: "End of record", fields: { id: { source: "ID:", type: "STRING" }, name: { source: "Name:", type: "STRING" } } };
+  const source = request("[Page 1]\nID: 1 Name: Member A End of record\nID: 2 Name: Member B End of record", extraction);
+  const { held, parser: authority } = withAuthority();
+  const parser = { ...source, contract: { ...source.contract, verification: authority.contract.verification } };
+  const parsed = parseCivicRecords(parser);
+  assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
+  assert.equal(parsed.actualRowCount, 2);
+  assert.equal(validateExtraction(validator(parser)).verdict, "INCONCLUSIVE");
+  assert.equal(validateExtraction({ ...validator(parser), authorityEvidence: [held] }).verdict, "PASS");
+  const audit = auditor(parser);
+  assert.equal(auditExtraction({ ...audit, context: { ...audit.context, authorityEvidence: [held] } }).verdict, "SURVIVED");
+  for (const span of parsed.spans) assert.equal(parser.evidence.text.slice(span.start, span.end), span.quote);
+  for (const bad of [parser.evidence.text.replace("Name: Member A", "Name: Member A Name: Duplicate"), parser.evidence.text.replace("End of record", "No ending")]) {
+    const broken = request(bad, extraction);
+    assert.notEqual(parseCivicRecords(broken).verdict, "EXTRACTED");
+  }
+  const conflict = evidence(held.text.replace("Member B", "Wrong person"), held.artifactId, held.sourceId, held.canonicalUrl);
+  assert.equal(validateExtraction({ ...validator(parser), authorityEvidence: [conflict] }).verdict, "FAIL");
+});
+
 test("acquired but unverified remains distinct from external disagreement and self-verification", () => {
   const { parser, held } = withAuthority();
   const missing = validateExtraction(validator(parser)); assert.equal(missing.extractionVerdict, "PASS"); assert.equal(missing.verdict, "INCONCLUSIVE"); assert.equal(missing.externalVerifications![0].verdict, "INCONCLUSIVE");

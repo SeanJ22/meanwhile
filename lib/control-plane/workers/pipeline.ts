@@ -7,6 +7,7 @@ import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
+import { isWorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 
 /**
  * PRDY-3 (2026-09-06): a completed extraction under a meeting-fact contract
@@ -34,8 +35,10 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
   }
   const factPath = options !== undefined;
   const states = await readPipelineStates(repos);
-  const registryWork = new Set((await repos.workItems.list()).filter(row =>
-    row.value.autonomousPlan?.publication?.contractId === "registry-runtime-bindings").map(row => row.id));
+  const registryWork = new Set((await repos.workItems.list()).filter(row => {
+    const id = row.value.autonomousPlan?.publication?.contractId;
+    return id === "registry-runtime-bindings" || (id !== undefined && isWorkerReaderContract(id));
+  }).map(row => row.id));
   for (const result of results) {
     if (result.result.role !== "VALIDATOR" && result.result.role !== "ADVERSARIAL_AUDITOR") continue;
     if (factPath && meetingFactContract(result) !== null) continue;

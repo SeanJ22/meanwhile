@@ -282,6 +282,17 @@ export function jurisdictionRequirements(
       out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: routeId,
         source, route, carriage: "HERE" });
     }
+    const bodyId = meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
+    if (bodyId && !represented.has("PUBLIC_COMMENT")) {
+      const routeId = "coverage-discovery:public-comment";
+      const source: JurisdictionSource = { recordClass: "PUBLIC_COMMENT", authority: j.name,
+        authorityBasis: `Exact registered governing body ${bodyId}; its participation rules remain to be verified.`,
+        scope: "THIS_JURISDICTION", routeId, url: j.ownWebAddress, state: "DISCOVERY_OWED",
+        owed: "Find and independently verify the body's published public-comment rules, signup, written comments, attendance and speaking limits.",
+        citation: `Registered government ${j.id}, body ${bodyId}.` };
+      out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: routeId, source,
+        route: descriptorFor(j, source, routeId), carriage: "HERE" });
+    }
   }
   return out;
 }

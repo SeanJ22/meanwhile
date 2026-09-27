@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_BODY, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { evaluatePlanRepair, consumePlanRepairs, planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
+import { evaluatePlanRepair, consumePlanRepairs, planRepairBrief, planRepairFailureBrief, type PlanRepairLink } from "../lib/control-plane/workers/plan-repair.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask, claimRouteTask, beginAttemptFor, disposeRouteTask, recordArtifactMetadata } from "../lib/control-plane/repository/coordinator.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
@@ -199,7 +199,7 @@ test("completed fresh fetch can reobserve unchanged old bytes without rewriting 
   assert.equal(evidenceProjection(await f.h.runtime.readEvidence(f.evidence[0].artifactId)).retrievedAt, f.evidence[0].retrievedAt);
 });
 
-test("successors preserve parent Detective burdens and refuse depth-unbounded replacements", async () => {
+test("successors preserve Detective burdens and continue beyond three repairs only on new evidence", async () => {
   const f = await fixture();
   const row = await f.h.repos.workItems.mustRead(f.h.item.id);
   const detective = { question: { id: "unresolved-identity", text: "Official canonical identity remains owed", subjectId: f.h.item.subject } } as never;
@@ -211,12 +211,44 @@ test("successors preserve parent Detective burdens and refuse depth-unbounded re
   assert.match(first[0].detail, /PARENT_DETECTIVE_BURDENS_RETAINED/);
   const bounded = await fixture();
   const current = await bounded.h.repos.workItems.mustRead(bounded.h.item.id);
-  const atBound = { ...current.value, planRepair: { depth: 3, parentWorkItemId: "retained-parent", rootWorkItemId: "retained-root" } };
+  const link = (depth: number, parentWorkItemId: string) => ({ depth, parentWorkItemId, rootWorkItemId: "retained-root",
+    proposalHash: `older-evidence-${depth}`, authority: "WORK_INSTRUCTIONS_ONLY" as const,
+    scoutAttemptId: `prior-scout-${depth}`, sourceArtifactId: `prior-source-${depth}`, retainedEvidenceIds: [], admittedAt: bounded.h.now(), unresolved: [] });
+  await bounded.h.repos.workItems.put("retained-root", { ...current.value, id: "retained-root" }, bounded.h.now());
+  const one = { ...current.value, id: "retained-one", planRepair: link(1, "retained-root") };
+  const two = { ...current.value, id: "retained-two", planRepair: link(2, "retained-one") };
+  await bounded.h.repos.workItems.put(one.id, one, bounded.h.now());
+  await bounded.h.repos.workItems.put(two.id, two, bounded.h.now());
+  const atBound = { ...current.value, planRepair: link(3, "retained-two") };
   await bounded.h.repos.workItems.compareAndSet(current.id, current.revision, atBound, bounded.h.now());
   const result = await bounded.consume();
-  assert.equal(result[0].code, "REPAIR_SUCCESSOR_DEPTH_BOUND");
-  assert.equal((await bounded.h.repos.workItems.list()).length, 1);
+  assert.equal(result[0].code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(result));
+  const continued = (await bounded.h.repos.workItems.mustRead(result[0].successorWorkItemId!)).value;
+  assert.equal((continued as typeof continued & { planRepair: PlanRepairLink }).planRepair.depth, 4);
+  assert.equal(continued.autonomousPlan?.contract.schemaVersion === 2 && continued.autonomousPlan.contract.verification.required, true);
+  assert.equal((await bounded.h.repos.workItems.list()).length, 5);
   assert.equal((await f.h.repos.workItems.list()).length, 2);
+});
+
+test("repair refuses unchanged ancestor proposals and invalid lineage without clearing the obligation", async () => {
+  for (const invalid of [false, true]) {
+    const f = await fixture();
+    const row = await f.h.repos.workItems.mustRead(f.h.item.id);
+    const evaluated = evaluatePlanRepair({ plan: row.value.autonomousPlan!, candidate: f.candidate, evidence: f.evidence, now: f.h.now() });
+    const root = { ...row.value, id: "prior-root" };
+    await f.h.repos.workItems.put(root.id, root, f.h.now());
+    const planRepair = { depth: 1, parentWorkItemId: invalid ? "missing-parent" : root.id, rootWorkItemId: root.id,
+      proposalHash: invalid ? "different" : evaluated.proposalHash, authority: "WORK_INSTRUCTIONS_ONLY" as const,
+      scoutAttemptId: "prior-scout", sourceArtifactId: f.evidence[0].artifactId, retainedEvidenceIds: [], admittedAt: f.h.now(), unresolved: [] };
+    const linked = { ...row.value, planRepair };
+    await f.h.repos.workItems.compareAndSet(row.id, row.revision, linked, f.h.now());
+    assert.equal((await f.consume())[0].code, invalid ? "REPAIR_LINEAGE_INVALID" : "REPAIR_UNCHANGED_PROPOSAL_NEEDS_NEW_EVIDENCE");
+    assert.equal((await f.h.repos.workItems.list()).length, 2);
+    assert.deepEqual((await f.h.repos.workItems.mustRead(row.id)).value.autonomousPlan, row.value.autonomousPlan);
+    const inherited = planRepairFailureBrief((await f.h.repos.workItems.mustRead(row.id)).value).join("\n");
+    assert.match(inherited, invalid ? /REPAIR_LINEAGE_INVALID/ : /REPAIR_UNCHANGED_PROPOSAL_NEEDS_NEW_EVIDENCE/);
+    assert.match(inherited, /do not resubmit the unchanged proposal/);
+  }
 });
 
 test("seven already observed proposals cannot starve an older actionable repair", async () => {

@@ -279,6 +279,7 @@ export const IMMUTABLE_IDENTITY_FIELDS: readonly string[] = [
   "sourceId",
   "workItemId",
   "retentionPolicy",
+  "extraction",
 ];
 
 /** Attempt-scoped facts. Listed so the split is readable, not just the half that binds. */
@@ -515,6 +516,7 @@ export function artifactMeta(artifact: Artifact): ObjectMeta {
       canonicalUrl: artifact.canonicalUrl,
       retrievedAt: artifact.retrievedAt,
       httpStatus: String(artifact.httpStatus),
+      ...(artifact.extraction ? { extraction: JSON.stringify(artifact.extraction) } : {}),
     },
   };
 }
@@ -554,6 +556,20 @@ export function artifactMeta(artifact: Artifact): ObjectMeta {
  * call `put`, and the provider is what makes them converge on one object. That
  * is reported honestly rather than papered over with a second read.
  */
+async function requireDocumentOriginal(store: EvidenceStore, project: string, artifact: Artifact): Promise<void> {
+  if (artifact.tier !== "EXTRACTED_DERIVED") return;
+  const extraction = artifact.extraction;
+  if (!extraction || extraction.parent.tier !== "RAW" || extraction.parent.canonicalUrl !== artifact.canonicalUrl ||
+    extraction.parent.workItemId !== artifact.workItemId || !Number.isSafeInteger(extraction.pages) || extraction.pages < 1 ||
+    extraction.version !== "pdf-transcription/1" || !["PDF_TEXT", "PDF_TABLES"].includes(extraction.kind)) {
+    throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_PROVENANCE_INVALID");
+  }
+  const parent = await store.get(objectKey(project, extraction.parent));
+  if (!parent || contentHash(parent.bytes) !== extraction.parent.contentHash || parent.meta.custom?.tier !== "RAW" ||
+    parent.meta.custom?.canonicalUrl !== artifact.canonicalUrl || parent.meta.custom?.sourceId !== artifact.sourceId ||
+    parent.meta.custom?.workItemId !== artifact.workItemId) throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_ORIGINAL_MISSING");
+}
+
 export async function putArtifact(
   store: EvidenceStore,
   project: string,
@@ -561,6 +577,8 @@ export async function putArtifact(
   bytes: Uint8Array,
 ): Promise<{ key: string; written: boolean }> {
   const key = objectKey(project, artifact);
+
+  await requireDocumentOriginal(store, project, artifact);
 
   if (bytes.byteLength !== artifact.byteLength) {
     throw new EvidenceStoreRefusal(
@@ -686,6 +704,11 @@ export async function readArtifact(
       `Artifact ${target.id} is recorded at ${key} and the store does not hold it. ` +
         "A missing body is a failed read, never an empty document.",
     );
+  }
+
+  if (target.tier === "EXTRACTED_DERIVED") {
+    if (object.meta.custom?.extraction !== JSON.stringify(target.extraction)) throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_METADATA_MISMATCH");
+    await requireDocumentOriginal(store, project, target);
   }
 
   return {

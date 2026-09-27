@@ -21,7 +21,8 @@ export function researchVaultResolver(repos: ControlPlaneRepositories, store: Ev
           retrievedAt: m.retrievedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
           methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
           permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
-          retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"] };
+          retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
+          ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
         return { artifact, key, bytes: (await readArtifact(store, project, artifact, "ACQUIRER")).bytes };
       }
     }

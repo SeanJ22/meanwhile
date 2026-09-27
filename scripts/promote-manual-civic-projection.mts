@@ -19,9 +19,26 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { assignment } from "./cli-args.mts";
+import { isWorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
+import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
+import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 
 const contractId = assignment(process.argv, "contract") as ManualProjectionContractId | null;
 const packageArgument = assignment(process.argv, "package");
+const workerResults = assignment(process.argv, "worker-results");
+if (workerResults) {
+  if (!contractId || !isWorkerReaderContract(contractId) || packageArgument) throw new Error("WORKER_PUBLICATION_CONTRACT_ARGUMENT_INVALID");
+  prepareProductionCivicDataWrite();
+  const now = new Date().toISOString();
+  const context = await workerPublicationContext(now);
+  const report = await publishWorkerReaderResults({ ...context, store: new PostgresRoutineDataStore(), contractId,
+    workItemIds: workerResults.split(",").filter(Boolean), now });
+  const published = report.filter(row => row.outcome.status === "PUBLISHED");
+  console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({ contractId,
+    candidateId: published.at(-1)?.outcome.candidateId ?? null, promotedVersion: published.at(-1)?.outcome.versionId ?? null,
+    workerPublications: report, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  if (report.some(row => row.outcome.status !== "PUBLISHED")) process.exitCode = 2;
+} else {
 if (!contractId || !MANUAL_PROJECTION_CONTRACT_IDS.includes(contractId) || !packageArgument) {
   throw new Error(
     `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${MANUAL_PROJECTION_CONTRACT_IDS.join("|")} --package=<absolute path outside repository>`,
@@ -62,3 +79,4 @@ console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({
   structuralReleaseContract: ZERO_RELEASE_EVENTS,
 }));
 if (!outcome.promoted) process.exitCode = 2;
+}

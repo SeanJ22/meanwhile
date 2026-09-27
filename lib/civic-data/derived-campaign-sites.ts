@@ -39,6 +39,8 @@ import {
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
+import { createHash } from "node:crypto";
+import type { CandidateDocument } from "../candidates/corpus.ts";
 
 /**
  * The Reader's link shapes (`VerifiedLink`, `CandidateLinks` in
@@ -90,6 +92,9 @@ export interface DerivedCampaignSiteRecord {
   readonly candidacyId: string;
   readonly candidateName: string;
   readonly campaign: DerivedCampaignLink;
+  /** Already verified page versions, deterministically transcribed from the
+   * same vault. Older GOOD versions without this field remain readable. */
+  readonly publications?: readonly { readonly document: CandidateDocument; readonly evidence: DerivedCampaignSiteEvidence }[];
 }
 
 export interface DerivedCampaignSitesProjection {
@@ -142,6 +147,19 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
     const prior = urlByCandidacy.get(record.candidacyId);
     if (prior !== undefined && prior !== link.url) return `${record.candidacyId} carries two campaign links (${prior}, ${link.url})`;
     urlByCandidacy.set(record.candidacyId, link.url);
+    const documentIds = new Set<string>();
+    for (const publication of record.publications ?? []) {
+      const { document: d, evidence: e } = publication;
+      if (!d || !e || d.candidateKey !== record.id || documentIds.has(d.id) || d.id !== `${d.candidateKey}@${d.contentHash}` ||
+          d.sourceClass !== "CAMPAIGN_SITE" || d.basis !== "HUNTED_AND_VERIFIED" || d.extraction !== "html" || !text(d.text) ||
+          createHash("sha256").update(d.text).digest("hex") !== d.contentHash ||
+          !SHA256.test(e.sha256) || d.sourceContentHash !== e.sha256 || d.documentUrl !== e.finalUrl ||
+          !https(d.documentUrl) || new URL(d.documentUrl).hostname !== new URL(link.url).hostname ||
+          d.retrievedAt !== e.readAt || !instant(e.readAt) || !text(e.artifactId) || !text(e.approvalRecordId) ||
+          !text(e.approvalItemId) || !text(e.attemptId) || !text(e.secondSignal) || !instant(e.approvedAt) ||
+          e.httpStatus < 200 || e.httpStatus >= 300) return `${record.id}: candidate publication lacks exact text, identity or captured-byte evidence`;
+      documentIds.add(d.id);
+    }
   }
   return null;
 }
@@ -169,7 +187,7 @@ export async function readDerivedCampaignSites(
  * failure domain: whatever happens here, the profile read it accompanies is
  * unaffected, and a failure is kept as this store's read state.
  */
-export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+async function refreshDerivedCampaignSitesOnce(options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
   try {
     return await readDerivedCampaignSites(options);
   } catch (error) {
@@ -181,6 +199,19 @@ export async function refreshDerivedCampaignSites(options: PromotedCivicDataRead
     };
     return installed;
   }
+}
+
+// Profiles and publication text now load this same pointer concurrently. Share
+// only an in-flight default read, including NOT_RECORDED; no result is retained
+// here and explicit stores, clocks, cache bypasses and edge versions stay isolated.
+let defaultRefresh: Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> | null = null;
+export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+  if (Object.values(options).some(value => value !== undefined)) return refreshDerivedCampaignSitesOnce(options);
+  if (defaultRefresh) return defaultRefresh;
+  const pending = refreshDerivedCampaignSitesOnce(options);
+  defaultRefresh = pending;
+  try { return await pending; }
+  finally { if (defaultRefresh === pending) defaultRefresh = null; }
 }
 
 export function derivedCampaignSitesReadState(): CivicDataReadResult<DerivedCampaignSitesProjection> {
@@ -227,4 +258,8 @@ const NO_RECORDS: readonly DerivedCampaignSiteRecord[] = [];
 export function currentDerivedCampaignSiteRecords(): readonly DerivedCampaignSiteRecord[] {
   const state = derivedCampaignSitesReadState();
   return state.kind === "PROMOTED" ? state.value.records : NO_RECORDS;
+}
+
+export function currentDerivedCandidateDocuments(): CandidateDocument[] {
+  return currentDerivedCampaignSiteRecords().flatMap(record => (record.publications ?? []).map(row => row.document));
 }

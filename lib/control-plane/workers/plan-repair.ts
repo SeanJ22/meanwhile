@@ -13,8 +13,7 @@ import { assertGeneralizedScope } from "./record-evidence.ts";
 import { createHash } from "node:crypto";
 import { PERMISSION_STATES } from "../../workstate/types.ts";
 
-export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING"] as const;
-const MAX_REPAIR_DEPTH = 3;
+export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING", "PUBLIC_COMMENT_RULE"] as const;
 export interface PlanRepairLink {
   readonly parentWorkItemId: string; readonly rootWorkItemId: string; readonly depth: number;
   readonly proposalHash: string; readonly scoutAttemptId: string; readonly sourceArtifactId: string;
@@ -23,6 +22,10 @@ export interface PlanRepairLink {
 }
 type LinkedWorkItem = WorkItem & { readonly planRepair?: PlanRepairLink; readonly planRepairObservations?: Readonly<Record<string, RepairObservation>> };
 export interface RepairObservation { readonly parentWorkItemId: string; readonly scoutAttemptId: string; readonly code: string; readonly successorWorkItemId: string | null; readonly detail: string; }
+export function planRepairFailureBrief(item: WorkItem): string[] {
+  return Object.values((item as LinkedWorkItem).planRepairObservations ?? {}).filter(row => !row.successorWorkItemId)
+    .map(row => `Prior contract repair ${row.scoutAttemptId} was refused: ${row.code}. ${row.detail} Change the failed evidence, route or mapping; do not resubmit the unchanged proposal.`);
+}
 function requireThat(condition: unknown, code: string): asserts condition { if (!condition) throw new Error(code); }
 /** A robots.txt verdict the vault records (ALLOWED, DISALLOWED, CANNOT_TELL, NOT_APPLICABLE). Evidence, never a refusal. */
 function isRecordedRobotsVerdict(value: unknown): boolean { return (PERMISSION_STATES as readonly unknown[]).includes(value); }
@@ -33,7 +36,7 @@ function shape(value: unknown): RecordExtractionShape {
   requireThat(value && typeof value === "object" && !Array.isArray(value), "REPAIR_EXTRACTION_MISSING");
   const candidate = value as RecordExtractionShape;
   requireThat(candidate.format !== "UNSUPPORTED", "REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED");
-  requireThat(["JSON_RECORDS", "XML_RECORDS", "HTML_TABLE", "DELIMITED_TEXT"].includes(candidate.format), "REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED");
+  requireThat(["JSON_RECORDS", "XML_RECORDS", "HTML_TABLE", "DELIMITED_TEXT", "TEXT_BLOCKS"].includes(candidate.format), "REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED");
   requireThat(candidate.fields && Object.keys(candidate.fields).length > 0 && Object.keys(candidate.fields).length <= 32, "REPAIR_MAPPING_BOUND");
   return candidate;
 }
@@ -120,6 +123,7 @@ export function planRepairBrief(plan: AutonomousWorkPlan): string {
     { format: "XML_RECORDS", rowTag: "record", fields: { [Object.keys(fields)[0]]: { source: "fieldName", type: "STRING" } } },
     { format: "HTML_TABLE", tableIndex: 0, headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" } } },
     { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" } } },
+    { format: "TEXT_BLOCKS", recordStart: "Name:", recordEnd: "End of record", fields: { [Object.keys(fields)[0]]: { source: "Name:", type: "STRING" } } },
   ];
   const authority: VerificationAuthority = { id: "replace-with-register-id", type: "GOVERNMENT_REGISTER", publisher: "replace-with-actual-publisher-quoted-in-evidence",
     sourceId: "replace-with-captured-source-id", canonicalUrls: ["https://replace-with-actual-register.gov/records"], artifactIds: ["replace-with-actual-record-artifact-id"],
@@ -127,7 +131,7 @@ export function planRepairBrief(plan: AutonomousWorkPlan): string {
     independenceExplanation: "Replace with the evidenced reason this distinct government authority independently publishes these records.", extraction: examples[0],
     comparison: { kind: "RECORD_VALUES", keyFields: [...plan.contract.identity.keyFields], fields: Object.keys(fields) } };
   const grammar = ` Exact extraction descriptor examples: ${JSON.stringify(examples)}. Replace every example locator with one inspected in retained bytes. JSON rowsPointer is an RFC6901 pointer to an array (empty string selects a root array); optional countPointer locates a published count. JSON field source is an RFC6901 pointer relative to each row. XML rowTag and field source are element names. HTML tableIndex and numeric field source are zero-based indexes; headerRows counts excluded headers. Delimited text accepts only comma or tab. Every fields entry is {source:string|number,type:STRING|NUMBER|BOOLEAN|SCALAR}; map every required and identity field, at most32. Exact authority descriptor example: ${JSON.stringify(authority)}. At most4 authorities and16 cited artifacts. Examples are grammar only, never evidence or permission to guess values.`;
-  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE or DELIMITED_TEXT mapping; cite every source/authority artifact in evidenceArtifactIds. Missing PDF/OCR adapters remain REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED, not successful parsing. Each proposed authority needs an actual government register, statutory record or official denominator, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, a documented DISTINCT_AUTHORITY or INDEPENDENT_OFFICIAL_RECORD basis, extraction and a RECORD_VALUES comparison covering all required/identity fields. A .org/.edu or other non-government-suffix publisher must already be established by the parent plan with the same source ID, publisher and origin. A separate record from the primary publisher must name that exact publisher and use different captured bytes and a different URL; repeating the source is refused. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
+  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE, DELIMITED_TEXT or TEXT_BLOCKS mapping; cite every source/authority artifact in evidenceArtifactIds. For PDFs, cite the retained PDF_TEXT or PDF_TABLES transcription artifact, never the binary id as text. PDF_TABLES uses JSON_RECORDS over /tables/<index>/rows with numeric member pointers and an explicitly observed headerRows count. TEXT_BLOCKS uses exact literal recordStart/recordEnd boundaries and field source labels from retained text; no guessed offsets or regular expressions. Incomplete pages remain unverified and require another source or extraction repair. Each proposed authority needs an actual government register, statutory record or official denominator, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, a documented DISTINCT_AUTHORITY or INDEPENDENT_OFFICIAL_RECORD basis, extraction and a RECORD_VALUES comparison covering all required/identity fields. A .org/.edu or other non-government-suffix publisher must already be established by the parent plan with the same source ID, publisher and origin. A separate record from the primary publisher must name that exact publisher and use different captured bytes and a different URL; repeating the source is refused. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
   return brief + grammar;
 }
 
@@ -151,7 +155,6 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
     let successorWorkItemId: string | null = null;
     try {
       requireThat(candidates.length === 1, "REPAIR_ONE_PROPOSAL_PER_ATTEMPT");
-      requireThat((parent.planRepair?.depth ?? 0) < MAX_REPAIR_DEPTH, "REPAIR_SUCCESSOR_DEPTH_BOUND");
       const candidate = candidates[0];
       const evidence = await Promise.all(candidate.evidenceArtifactIds.map(async id => {
         const capture = await input.readCapture(id);
@@ -173,6 +176,26 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
         if (observed) observedAtByArtifact.set(row.artifactId, observed);
       }
       const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact });
+      // A fixed number of failed routes is not the end of the obligation.
+      // Continue on new evidence, but never spend on an unchanged ancestor
+      // proposal or follow an invalid/cyclic link into another assignment.
+      const seen = new Set<string>();
+      let ancestor: LinkedWorkItem = parent;
+      while (true) {
+        requireThat(!seen.has(ancestor.id), "REPAIR_LINEAGE_CYCLE");
+        seen.add(ancestor.id);
+        const link = ancestor.planRepair;
+        if (!link) break;
+        requireThat(link.proposalHash !== evaluated.proposalHash, "REPAIR_UNCHANGED_PROPOSAL_NEEDS_NEW_EVIDENCE");
+        const prior = items.find(item => item.id === link.parentWorkItemId);
+        requireThat(prior && link.authority === "WORK_INSTRUCTIONS_ONLY" && prior.project === parent.project &&
+          prior.subject === parent.subject && prior.autonomousPlan?.contract.recordClass === parent.autonomousPlan.contract.recordClass &&
+          prior.autonomousPlan.contract.schemaVersion === 2 && parent.autonomousPlan.contract.schemaVersion === 2 &&
+          canonicalJson(prior.autonomousPlan.contract.identity) === canonicalJson(parent.autonomousPlan.contract.identity) &&
+          Number.isSafeInteger(link.depth) && link.depth === (prior.planRepair?.depth ?? 0) + 1 &&
+          link.rootWorkItemId === (prior.planRepair?.rootWorkItemId ?? prior.id), "REPAIR_LINEAGE_INVALID");
+        ancestor = prior;
+      }
       const previous = items.find(item => item.planRepair?.parentWorkItemId === parent.id);
       if (previous) {
         requireThat(previous.planRepair!.proposalHash === evaluated.proposalHash, "REPAIR_PARENT_HAS_SUCCESSOR_CONTINUE_THERE");
@@ -184,6 +207,7 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
           jurisdiction: parent.autonomousPlan.jurisdiction, recordClass: evaluated.contract.recordClass,
           observedAt: observedAtByArtifact.get(primary.artifactId) ?? primary.retrievedAt, firstObservedAt: primary.retrievedAt, methodVersion: evaluated.contract.methodVersion,
           permission: "ALLOWED" as const, retrieval: "fetch_public" as const, nextRouteIds: ["INDEPENDENT_AUTHORITY_AND_CONTRACT_REPAIR"],
+          ...(primary.sourceDocument ? { representation: primary.sourceDocument.kind } : {}),
           applicableBecause: "Completed Scout retained and locally replayed this exact official source under the unchanged civic question.",
           observation: { artifactId: primary.artifactId, contentHash: primary.contentHash, start: 0, end: Math.min(primary.text.length, 256), quote: primary.text.slice(0, 256), offsetUnit: "UTF16_CODE_UNITS" as const },
           publisherSubjectEvidence: [{ artifactId: primary.artifactId, contentHash: primary.contentHash, start: 0, end: Math.min(primary.text.length, 256), quote: primary.text.slice(0, 256), offsetUnit: "UTF16_CODE_UNITS" as const }] };

@@ -124,7 +124,7 @@ export function workerRosterPublication(input: {
       reason: "Officeholding independently verified. Ballot candidacy verification remains owed; no candidacy or absence is asserted." }));
   const sourceReviews: ManualSourceReview[] = captures.map(capture => ({ requestedUrl: capture.evidence.canonicalUrl,
     finalUrl: capture.evidence.canonicalUrl, publisher: capture.evidence.sourceId, sourceClass: "OFFICIAL_PUBLISHER",
-    retrievedAt: capture.observedAt, httpStatus: capture.httpStatus!, rawHash: capture.evidence.contentHash.slice(7),
+    retrievedAt: capture.observedAt, httpStatus: capture.httpStatus!, rawHash: (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).slice(7),
     reviewedEvidence: `Independent worker chain ${parser.id}, ${validator.id}, ${auditor.id}; exact source and authority replay, canonical body assertion, nonzero counts, reader symmetry and two known-answer controls passed.`, reviewOutcome: "SUPPORTED" }));
   return { contractId: "registry-runtime-bindings", version: `worker-roster:${auditor.id}`, sourceThrough: now,
     sourceReceipt: { contractVersion: 1, reviewedAt: now, reviewedBy: `worker-roster-publication:${auditor.worker.instance}`, sources: sourceReviews },

@@ -29,6 +29,7 @@ export interface WorkerEvidence {
   readonly retrievedAt: string;
   readonly sourceId: string;
   readonly methodRouteId: string;
+  readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: "PDF_TEXT" | "PDF_TABLES" };
 }
 export interface LegacyCivicExtractionContract {
   readonly recordClass: "LEGISTAR_EVENTS" | "CIVICCLERK_EVENTS";
@@ -51,10 +52,11 @@ export interface RecordFieldMapping {
 export type RecordExtractionShape = {
   readonly fields: Readonly<Record<string, RecordFieldMapping>>;
 } & (
-  | { readonly format: "JSON_RECORDS"; readonly rowsPointer: string; readonly countPointer?: string }
+  | { readonly format: "JSON_RECORDS"; readonly rowsPointer: string; readonly countPointer?: string; readonly headerRows?: number }
   | { readonly format: "HTML_TABLE"; readonly tableIndex: number; readonly headerRows: number }
   | { readonly format: "DELIMITED_TEXT"; readonly delimiter: "," | "\t"; readonly headerRows: number }
   | { readonly format: "XML_RECORDS"; readonly rowTag: string }
+  | { readonly format: "TEXT_BLOCKS"; readonly recordStart: string; readonly recordEnd?: string }
   | { readonly format: "UNSUPPORTED"; readonly mediaType: string; readonly reason: string }
 );
 export interface GeneralizedContractMetadata {

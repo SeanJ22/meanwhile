@@ -14,6 +14,10 @@ export interface CommentAccess {
   sourceUrl: string;
   collectedAt: string;
   verifiedAt: string | null;
+  /** Field attribution when complementary verified captures are combined. */
+  fieldSources?: Partial<Record<"commentPeriod" | "commentPeriodDetail" | "signup" | "writtenComment" | "attend" | "timeLimit", {
+    sourceUrl: string; collectedAt: string; verifiedAt: string | null; retainedFromVersion?: string;
+  }>>;
 }
 
 /** Match only within records the server already projected to the client. */

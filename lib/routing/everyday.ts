@@ -34,7 +34,7 @@ export type EverydayVerification = "PAGE_FETCHED" | "PENDING_BROWSER";
 export interface EverydayContact {
   /** A TOPIC_ROUTES id — the routing map's own key. */
   topicId: string;
-  /** The zips this contact serves, of the four covered. */
+  /** The ZIPs whose service applicability is supported by this contact's evidence. */
   zips: readonly string[];
   /** The body, plain words. */
   body: string;
@@ -764,17 +764,23 @@ export function everydayRoutingProjectionFromRecords(
     (record): record is EverydayRoutingContactOwedRecord => record.kind === "CONTACT_OWED",
   );
   const covered = new Set(contacts.map((record) => everydayCellId(record.topicId, record.zip)));
+  const zips = new Set(records.map(record => record.zip));
+  const owedCells = new Set(owed.map(record => everydayCellId(record.topicId, record.zip)));
+  const unacquiredCells = EVERYDAY_TOPIC_IDS.length * zips.size - new Set([...covered, ...owedCells]).size;
   return {
     kind: "everyday-routing",
     formatVersion: 1,
     denominator: {
       topics: EVERYDAY_TOPIC_IDS.length,
-      zips: EVERYDAY_ZIPS.length,
-      cells: EVERYDAY_TOPIC_IDS.length * EVERYDAY_ZIPS.length,
+      zips: zips.size,
+      cells: EVERYDAY_TOPIC_IDS.length * zips.size,
       contactAvailableCells: covered.size,
       unknownContactOwedCells: new Set(owed.map((record) => everydayCellId(record.topicId, record.zip))).size,
       contactRecords: contacts.length,
       contactSources: new Set(contacts.map((record) => record.contact.sourceUrl)).size,
+      // Missing acquisition is not publisher absence and needs no invented
+      // source-reviewed CONTACT_OWED row. Legacy complete receipts stay exact.
+      ...(unacquiredCells > 0 ? { unacquiredCells } : {}),
     },
     records: [...records].sort((left, right) => left.id.localeCompare(right.id)),
   };
@@ -795,7 +801,7 @@ export function everydayRoutingProjectionProblems(value: unknown): string[] {
   const contacts: EverydayRoutingContactRecord[] = [];
   const owed: EverydayRoutingContactOwedRecord[] = [];
   const topicIds = new Set<string>(EVERYDAY_TOPIC_IDS);
-  const zips = new Set<string>(EVERYDAY_ZIPS);
+  const zips = new Set(records.map(record => record?.zip).filter((zip): zip is string => typeof zip === "string" && /^\d{5}$/.test(zip)));
   for (const record of records) {
     if (!record || typeof record !== "object" || Array.isArray(record)) {
       problems.push("An everyday routing record is not an object.");
@@ -804,7 +810,7 @@ export function everydayRoutingProjectionProblems(value: unknown): string[] {
     const row = record as EverydayRoutingRecord;
     if (!row.id || ids.has(row.id)) problems.push("Everyday routing record ids are empty or duplicated.");
     ids.add(row.id);
-    if (!topicIds.has(row.topicId) || !zips.has(row.zip)) {
+    if (!topicIds.has(row.topicId) || !/^\d{5}$/.test(row.zip)) {
       problems.push(`${row.id || "An unnamed record"} is outside the exact topic/zip denominator.`);
     }
     if (row.kind === "CONTACT") {
@@ -833,7 +839,7 @@ export function everydayRoutingProjectionProblems(value: unknown): string[] {
   }
 
   const expectedCells = new Set(
-    EVERYDAY_TOPIC_IDS.flatMap((topicId) => EVERYDAY_ZIPS.map((zip) => everydayCellId(topicId, zip))),
+    EVERYDAY_TOPIC_IDS.flatMap((topicId) => [...zips].map((zip) => everydayCellId(topicId, zip))),
   );
   const contactCells = new Set(contacts.map((record) => everydayCellId(record.topicId, record.zip)));
   const owedCells = owed.map((record) => everydayCellId(record.topicId, record.zip));
@@ -841,8 +847,8 @@ export function everydayRoutingProjectionProblems(value: unknown): string[] {
   for (const cell of expectedCells) {
     const contactAvailable = contactCells.has(cell);
     const contactOwed = owedCellSet.has(cell);
-    if (contactAvailable === contactOwed) {
-      problems.push(`${cell} must have contacts or one CONTACT_OWED record, never both or neither.`);
+    if (contactAvailable && contactOwed) {
+      problems.push(`${cell} cannot have both contacts and a CONTACT_OWED record.`);
     }
   }
   if (owedCellSet.size !== owedCells.length) problems.push("A denominator cell has more than one CONTACT_OWED record.");
@@ -850,15 +856,17 @@ export function everydayRoutingProjectionProblems(value: unknown): string[] {
   const sourceCount = new Set(contacts.map((record) => record.contact.sourceUrl)).size;
   const expectedDenominator: EverydayRoutingDenominator = {
     topics: EVERYDAY_TOPIC_IDS.length,
-    zips: EVERYDAY_ZIPS.length,
+    zips: zips.size,
     cells: expectedCells.size,
     contactAvailableCells: contactCells.size,
     unknownContactOwedCells: owedCellSet.size,
     contactRecords: contacts.length,
     contactSources: sourceCount,
+    unacquiredCells: expectedCells.size - new Set([...contactCells, ...owedCellSet]).size,
   };
   for (const [key, expected] of Object.entries(expectedDenominator)) {
-    if (projection.denominator?.[key as keyof EverydayRoutingDenominator] !== expected) {
+    const observed = projection.denominator?.[key as keyof EverydayRoutingDenominator];
+    if ((key === "unacquiredCells" ? observed ?? 0 : observed) !== expected) {
       problems.push(`The everyday routing denominator reports ${key} incorrectly; expected ${expected}.`);
     }
   }

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 872,
-    "named": 8329,
+    "files": 875,
+    "named": 8347,
     "dynamic": 33
   },
   "files": {
@@ -1824,6 +1824,7 @@
         "exact Send counts survive trimming and count shared work once per instruction without copying the work",
         "failed: a Scout that found nothing and a wall at the source read FAILED; REQUIRES_NEW_ADAPTER reads BLOCKED on engineering",
         "filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero",
+        "repair successor costs and publication remain on the original Send assignment",
         "routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered",
         "routine counts the projector could not state stay unknown — never replaced by a list length or a zero",
         "state assignment counts cover omitted rows and retain shared or unplaced work separately",
@@ -3045,6 +3046,7 @@
         "official actions and meeting outcomes cannot reopen tracked runtime authority",
         "package aliases must preserve the exact installed-dispatcher contract mapping",
         "production executables cannot bypass source-scoped evidence through the generic transition driver",
+        "publication closure follows runtime imports but not erased TypeScript interfaces",
         "registered data commands cannot hide Git or deploy machinery in imported helpers",
         "registered data commands cannot hide any Node filesystem mutation in imported helpers",
         "registered data-command closure follows package aliases and literal local child-script edges",
@@ -3337,6 +3339,7 @@
         "Incumbent and Challenger are the identical chip",
         "a local roster carries neither, and the chip row says the tier instead",
         "a non-federal holder gets no directory slice, and that is a real answer",
+        "directory refresh resolves one current immutable revision and refuses unavailable or malformed revisions",
         "identity chips are facts, never guesses from a seat label",
         "it is a DIRECTORY — no votes, no money, no statements",
         "no standing means no standing chip — absence is not padded",
@@ -4344,11 +4347,13 @@
         "a cycle that may not write plans, counts and writes nothing",
         "a geography in a state with no promoted registry is blocked by name, and nothing is invented for it",
         "a meetings route with a known address is carried by what the partition wiring says, and held when it cannot be read",
+        "a new hunt discovers missing information families without inventing publishers or duplicating a shared custodian",
         "a promoted registry the runtime's reader refuses is named as that, never used and never called missing",
         "candidate enrichment enumerates the tracked states and names one with no ballot authority",
         "created work joins the corpus through its providers next cycle: scheduled, never re-registered, never retired",
         "creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk",
         "local-jurisdictions schedules the tracked states it is handed, keeps every existing id, and names a tracked state with no registry",
+        "owner-created family work reaches autonomous workers and survives registration and an interrupted occurrence",
         "sending the fleet to Pima County creates what the registry defines there and no clock carries, in the shape syncObligations registers",
         "sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement",
         "syncObligations keeps the owner's mark when a provider's signals move",
@@ -4594,6 +4599,7 @@
       "names": [
         "a newly proven contact closes only its exact CONTACT_OWED cell",
         "a store failure cannot reopen the tracked seed in production",
+        "a verified contact in a new scope publishes incrementally while unacquired cells remain explicit and prior records survive",
         "one blocked official source retains only its LKG while an unrelated contact advances",
         "record identities are canonical and cannot create a second authority for one fact",
         "the documentary civic proof enumerates the exact promoted routing authority",
@@ -5663,6 +5669,14 @@
         "atomic CAS reservations retry revision conflicts without relying on HTTP session locks",
         "editing the current hunt preserves its accounting start; an explicit separate hunt gets a new start",
         "opening a selected hunt admits its shared records but not unrelated paid geographic acquisition"
+      ],
+      "dynamic": 0
+    },
+    "tests/hunt-source-tasks.test.ts": {
+      "names": [
+        "a pending publication is not hidden by another body's later success and keeps failure backoff",
+        "an actual resolved Send selects shared producers once, without expanding the standing portfolio",
+        "source admission resumes from durable failure/success clocks rather than rerunning each pass or restart"
       ],
       "dynamic": 0
     },
@@ -8339,13 +8353,16 @@
     "tests/plan-repair.test.ts": {
       "names": [
         "Scout contract-repair context contains executable typed grammar rather than unspecified objects",
+        "a newly dispatched source instruction can acquire an executable successor without inventing prior observations",
         "completed Scout repair retains parent instructions and creates one ordinary successor that really acquires, parses and verifies",
         "completed fresh fetch can reobserve unchanged old bytes without rewriting their immutable acquisition time",
         "old content identity needs a real completed fetch rung for fresh observation; inherited replay cannot refresh it",
+        "repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes",
         "repair refuses fabricated, stale, missing, unsupported and self-verifying evidence without altering required verification",
+        "repair refuses unchanged ancestor proposals and invalid lineage without clearing the obligation",
         "seven already observed proposals cannot starve an older actionable repair",
         "successor creation is atomic and an interrupted older registration is recoverable",
-        "successors preserve parent Detective burdens and refuse depth-unbounded replacements"
+        "successors preserve Detective burdens and continue beyond three repairs only on new evidence"
       ],
       "dynamic": 0
     },
@@ -10173,6 +10190,7 @@
         "freshly fetched stale FEC facts are refused",
         "malformed FEC payload is persisted as PARSE_INVALID and holds LKG",
         "official state roll identity, term, event and stage can promote directly",
+        "opaque worker editions use real source chronology while stale and unexpected versions remain refused",
         "production Reader readback re-observes after promotion and cannot move event chronology backwards",
         "registered promotion durably reads back the exact Reader projection instead of inferring delivery",
         "registered promotion snapshots one durable candidate before any async store step",
@@ -10228,6 +10246,7 @@
         "routine release output labels the seven-zero constant as structural, never observed",
         "runner receipts are exact JSON, exact-count, and seven-zero structural evidence",
         "same-cycle isolation requires exact task/candidate receipts, never aggregate counts",
+        "source progress is persisted before acquisition and an unavailable progress store holds only that command",
         "standing routine data and intake launch together and one failure cannot suppress the other",
         "standing task construction enforces every declarative authority and validation field",
         "the Neon transport deadline aborts underlying I/O instead of abandoning a promise",
@@ -10654,6 +10673,7 @@
         "a PDF is vaulted as bytes BEFORE extraction; the model gets the artifact id, byte length and extracted text",
         "a binary body with no vaultBytes in the runtime is refused by name, and nothing of it is shown",
         "a body carrying a confirmed third-party credential is RESTRICTED_RAW and the model sees nothing of it",
+        "a retained PDF table reaches record extraction with exact source cells and explicit header exclusion",
         "a robots.txt transport failure is CANNOT_TELL, never a verdict",
         "browse vaults the rendered HTML AND the network observation before returning, and lists same-host xhr first",
         "browse with a refusing vault shows nothing of the page or the request list",
@@ -12320,6 +12340,7 @@
         "cross-row repeated quotations, missing mapped fields, source-scope forgery and duplicate identity fail independently",
         "external official comparison is a distinct durable receipt with exact authority and no source text",
         "generalized parser, validator, and auditor execute through the scrubbed disposable realm",
+        "retained document text uses literal record boundaries and still requires independent official agreement",
         "same-publisher authority requires an explicit independent-record basis and never accepts a duplicate capture",
         "unsupported acquired media retains its media type and adapter reason without manufacturing parsed records",
         "v2 office rows in HTML and tabular election records preserve exact markup and quoted CSV source spans",
@@ -12484,6 +12505,18 @@
         "seed: publisher declares twelve rows but only eleven were extracted",
         "seed: wrong date on otherwise-real evidence refuses independently of acquisition timestamp",
         "seed: wrong subject/body identity has a named machine refusal"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-reader-publication.test.ts": {
+      "names": [
+        "independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-roster-publication.test.ts": {
+      "names": [
+        "ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt"
       ],
       "dynamic": 0
     },

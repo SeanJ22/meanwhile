@@ -55,6 +55,8 @@ import {
 } from "../candidates/campaign-site-verifier.ts";
 import { verdictOfRecordedPermission } from "../control-plane/scheduler/robots.ts";
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
+import { extractHtmlText } from "../extract/html-text.ts";
+import type { DerivedCampaignSiteEvidence } from "./derived-campaign-sites.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -119,6 +121,7 @@ export const DERIVED_CAMPAIGN_SITE_HOLDS = [
   "EVIDENCE_NOT_HELD",
   /** The vaulted bytes are held but hash to other bytes, or do not verify again for the approval's own identity. */
   "REVERIFICATION_FAILED",
+  "PUBLICATION_TEXT_UNREADABLE",
 ] as const;
 export type DerivedCampaignSiteHoldCode = (typeof DERIVED_CAMPAIGN_SITE_HOLDS)[number];
 
@@ -131,6 +134,12 @@ export interface HeldVerifyingRead {
   readonly tier: "RAW" | "SANITIZED_DERIVED";
   /** The robots verdict the read ran under, as its sidecar recorded it: evidence carried with the read, never a refusal. */
   readonly permission: string | null;
+}
+
+function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCampaignSiteEvidence {
+  const site = record.campaignSite;
+  return { ...site.evidence, approvalItemId: record.itemId, approvalRecordId: record.recordId,
+    approvedAt: record.at, secondSignal: site.audit.secondSignal };
 }
 
 export interface DerivedCampaignSitesPlan {
@@ -240,10 +249,34 @@ export function planDerivedCampaignSites(input: {
     }
     add({ kind: "VAULTED_EVIDENCE", artifactId: site.evidence.artifactId, contentHash: `sha256-${site.evidence.sha256}`, tier: chosen.held.tier, retrievedAt: site.evidence.readAt });
     for (const key of site.readerKeys) {
+      const publications: NonNullable<DerivedCampaignSiteRecord["publications"]>[number][] = [];
+      // Every independently verified captured revision survives. No new fetch,
+      // inference, model call or separate publication approval is involved.
+      for (const page of [...verified].sort((a, b) => a.record.campaignSite.evidence.readAt.localeCompare(b.record.campaignSite.evidence.readAt))) {
+        const captured = page.record.campaignSite;
+        if (!captured.readerKeys.includes(key)) continue;
+        let content = "";
+        try { content = extractHtmlText(page.held.body); } catch { /* named below; the separately verified link survives */ }
+        if (!content) {
+          held.push({ key: `${key}:${captured.evidence.artifactId}`, code: "PUBLICATION_TEXT_UNREADABLE",
+            detail: "The campaign link is independently verified, but its captured page yielded no complete readable text. Document extraction repair remains owed; this is not publisher absence." });
+          continue;
+        }
+        const contentHash = sha256Hex(content);
+        const id = `${key}@${contentHash}`;
+        if (publications.some(row => row.document.id === id)) continue;
+        add({ kind: "VAULTED_EVIDENCE", artifactId: captured.evidence.artifactId, contentHash: `sha256-${captured.evidence.sha256}`,
+          tier: page.held.tier, retrievedAt: captured.evidence.readAt });
+        publications.push({ document: { id, candidateKey: key, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED",
+          metaDescription: null, documentUrl: captured.evidence.finalUrl, contentHash, sourceContentHash: captured.evidence.sha256,
+          retrievedAt: captured.evidence.readAt, contentType: captured.evidence.contentType, text: content,
+          extraction: "html", extractionNote: null, extractorVersion: 2 }, evidence: publicationEvidence(page.record) });
+      }
       records.push({
         id: key,
         candidacyId,
         candidateName: name,
+        publications,
         campaign: {
           url: site.url,
           verification: chosen.verification,
@@ -298,9 +331,11 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
   const shapeIssue = derivedCampaignSitesProjectionIssue(readModel);
   const cited = new Set(plan.inputs.flatMap((i) => (i.kind === "VAULTED_EVIDENCE" ? [i.artifactId] : i.kind === "PIPELINE_APPROVAL" ? [i.recordId] : [])));
   const uncited = readModel.records.filter((r) => !cited.has(r.campaign.evidence.artifactId) || !cited.has(r.campaign.evidence.approvalRecordId)).map((r) => r.id);
+  const uncitedPublications = readModel.records.flatMap(r => (r.publications ?? []).filter(p => !cited.has(p.evidence.artifactId) || !cited.has(p.evidence.approvalRecordId)).map(p => p.document.id));
   const violations = [
     ...(shapeIssue === null ? [] : [`the version is not a derived campaign-sites version: ${shapeIssue}`]),
     ...(uncited.length === 0 ? [] : [`record(s) ${uncited.join(", ")} rest on an approval or vaulted read the version does not name as an input`]),
+    ...(uncitedPublications.length === 0 ? [] : [`publication(s) ${uncitedPublications.join(", ")} lack their exact approved capture input`]),
   ];
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
   const normalizedPayload = {

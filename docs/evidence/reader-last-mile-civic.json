@@ -1,8 +1,8 @@
 {
-  "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
-  "buildId": "YWpqvNs8garpWZ2Sl32T1",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
   "sourceHashes": {
-    "lib/routing/everyday.ts": "b00840fba176f775797dc300c5121285e03b49826dd589a95bf6385bb92600c5",
+    "lib/routing/everyday.ts": "953572cf5c682372c569f576086f9a9e77ae2acb394d9a5187375c43c1d33b9f",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
     "lib/routing/topics.ts": "7ce63572f885edc41e31df4a265971f6dc589c61588ccff70bbbd853ec28cc56",
     "lib/routing/ask.ts": "726ff0a2966b4431aa1f9ae94dbc9639ec7fe161c1f7b6ab2995aed296388b76",

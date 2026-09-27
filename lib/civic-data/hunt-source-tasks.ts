@@ -3,6 +3,7 @@ import { requiredManualProductionContract, type ManualProductionContractId } fro
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
+import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
 
 /** Only completed audits for an actual current Send reach this existing writer.
  * A retained publication receipt prevents unchanged re-publication. */
@@ -10,7 +11,8 @@ export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items:
   const current = new Set(scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1)
     .map(scope => scope.decision.receiptId));
   const owed = items.flatMap(item => {
-    if (item.autonomousPlan?.publication?.contractId !== "registry-runtime-bindings") return [];
+    const target = item.autonomousPlan?.publication?.contractId;
+    if (!target || (target !== "registry-runtime-bindings" && !isWorkerReaderContract(target))) return [];
     const instructions = (item.autonomousPlan.ownerInstructions ?? []).filter(id => current.has(id));
     if (!instructions.length) return [];
     const latest = results.filter(record => record.workItemId === item.id && record.result.role === "ADVERSARIAL_AUDITOR")
@@ -21,13 +23,16 @@ export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items:
     return [{ item, latest, instructions }];
   });
   if (!owed.length) return [];
-  const contract = requiredManualProductionContract("registry-runtime-bindings");
-  return [{ id: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+  return [...new Set(owed.map(row => row.item.autonomousPlan!.publication!.contractId))].map(id => {
+  const group = owed.filter(row => row.item.autonomousPlan!.publication!.contractId === id);
+  const contract = requiredManualProductionContract(id);
+  return { id: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
     acquisitionFailureDomain: `routine-source:${contract.sourceId}`, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
-    parserVersion: contract.parserNormalizerVersion, command: [...contract.command, `--worker-rosters=${owed.map(row => row.item.id).sort().join(",")}`],
+    parserVersion: contract.parserNormalizerVersion, command: [...contract.command, `--${id === "registry-runtime-bindings" ? "worker-rosters" : "worker-results"}=${group.map(row => row.item.id).sort().join(",")}`],
     cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
-    contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish newly completed independent roster verification for the owner's Send", defaultEveryMs: Number.POSITIVE_INFINITY } },
-    ownerInvocation: { publicationPending: true, requestedAt: owed.map(row => row.latest.endedAt).sort().at(-1)!, instructions: [...new Set(owed.flatMap(row => row.instructions))] } }];
+    contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish newly completed independent verification for the owner's Send", defaultEveryMs: Number.POSITIVE_INFINITY } },
+    ownerInvocation: { publicationPending: true, requestedAt: group.map(row => row.latest.endedAt).sort().at(-1)!, instructions: [...new Set(group.flatMap(row => row.instructions))] } };
+  });
 }
 
 /** Existing deterministic producers, invoked once per resolved Send, never added to the standing portfolio. */

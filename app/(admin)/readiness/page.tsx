@@ -24,9 +24,9 @@ import { readReadinessGrid } from "@/lib/control-plane/readiness/read.ts";
 
 import { AuditFooter, NotAsked } from "../_mw/blocks.tsx";
 import { censusEntryOf } from "../_mw/data/census-universe.ts";
-import { loadContainersWithCodes } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { loadRegistryBodies } from "../_mw/data/registry.ts";
+import { loadReadinessContainersWithCodes, readReadinessDistrictEdge } from "../_mw/data/readiness-counties.ts";
 import { TRACKED_STATE_CODES, statesByStanding } from "../_mw/load-shell.ts";
 import { openPage, type SearchParams } from "../_mw/page-base.ts";
 import { withScope } from "../_mw/scope.ts";
@@ -63,6 +63,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
   const sp = await searchParams;
   const nowIso = new Date().toISOString();
   const states = TRACKED_STATE_CODES;
+  const districtEdge = readReadinessDistrictEdge();
   /*
    * Every read this page draws needs only the instant, so all of them start
    * before the policy row is read rather than after it: the body read (the
@@ -76,7 +77,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     loadRegistryBodies(),
     loadWatchedBodies(nowIso),
     ...states.map(async (code) => {
-      const [readiness, counties] = await Promise.all([readReadinessGrid(code), loadContainersWithCodes(code.toUpperCase(), "county")]);
+      const [readiness, counties] = await Promise.all([readReadinessGrid(code), loadReadinessContainersWithCodes(code.toUpperCase(), "county", districtEdge)]);
       return { code, readiness, counties };
     }),
   ]);

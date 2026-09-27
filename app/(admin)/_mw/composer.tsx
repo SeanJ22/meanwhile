@@ -455,7 +455,7 @@ export function Composer(props: {
             )}
           </div>
           <div className={`${s.label} ${s.labelSpaced}`}>5 · Anthropic token budget</div>
-          <p className={s.note}>The runner keeps working toward completion. Paid Anthropic work stops when this hunt’s token budget is exhausted; you can stop this hunt from its Work detail at any time. Unfinished work and spending history remain visible.</p>
+          <p className={s.note}>The runner keeps working toward completion. The Anthropic token budget stops new paid admissions when exhausted. Pause research stops new paid research; Pause runner stops all cycles. Existing work and spending history remain visible.</p>
           <div className={s.rowCenter} style={{ marginTop: 14 }}>
             <span className={s.dollar}>$</span>
             <input className={s.input} value={budget} inputMode="decimal" aria-label="Anthropic token budget" onChange={(e) => setBudget(e.target.value)} />

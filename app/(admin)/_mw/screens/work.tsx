@@ -58,7 +58,6 @@ import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-r
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
-import { StopHunt } from "../stop-hunt.tsx";
 import { censusEntryOf } from "../data/census-universe.ts";
 import { listContainers } from "../data/geography.ts";
 import { loadWatchedBodies, loadWatchedBody } from "../data/load-bodies.ts";
@@ -514,7 +513,6 @@ function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: 
       </div>
       <h4 className={s.h4}>What it reached</h4>
       <Link href={workHref} className={s.btnLink}>Show this instruction&rsquo;s work</Link>
-      <StopHunt scopeKey={d.key} label={d.geography.label} returnTo={workHref} />
       <div style={{ marginBottom: 24 }}>
         {r === null ? (
           <p className={s.note}>{view.reachWhyNot}</p>

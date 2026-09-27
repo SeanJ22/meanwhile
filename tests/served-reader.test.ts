@@ -4,6 +4,34 @@ import { campaignVisibleInHtml, collectServedReader } from "../lib/control-plane
 import { servedWitness, type ServedReaderWitness } from "../lib/control-plane/served-reader.ts";
 import type { DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { observeCampaignControls } from "../lib/control-plane/campaign-reader-controls.ts";
+import type { Page } from "playwright";
+
+test("absent campaign candidates consume no action or nonexistent cleanup waits", async () => {
+  const page = {
+    locator: () => ({ count: async () => 0, getByRole: () => { throw Error("absent candidate must not be clicked"); } }),
+    getByRole: () => ({ count: async () => 0, getByRole: () => { throw Error("absent dialog must not be closed"); } }),
+  } as unknown as Page;
+  const result = await observeCampaignControls(page, [{ id: "absent", candidateName: "Absent" }]);
+  assert.equal(result.openedLinks?.length, 0);
+  assert.match(result.failures![0].reason, /absent from the current public ballot/);
+});
+
+test("campaign readback identifies the failing action and stops after a panel cannot close", async () => {
+  const clicked: string[] = [];
+  const page = {
+    locator: () => ({ count: async () => 1, getByRole: () => ({ click: async () => { clicked.push("open"); } }) }),
+    getByRole: () => ({ count: async () => 1, isVisible: async () => true, getByRole: (_: string, options: { name: string }) => ({
+      click: async () => { clicked.push(options.name); throw Error("private browser diagnostics"); },
+    }) }),
+  } as unknown as Page;
+  const result = await observeCampaignControls(page, [{ id: "a", candidateName: "A" }, { id: "b", candidateName: "B" }]);
+  assert.deepEqual(clicked, ["open", "Sources", "Close"]);
+  assert.equal(result.openedLinks?.length, 0);
+  assert.match(result.failures![0].reason, /opening Sources/);
+  assert.match(result.failures!.find(f => f.readerKey === "b")!.reason, /not attempted/);
+  assert.doesNotMatch(JSON.stringify(result), /private browser diagnostics/);
+});
 
 test("public readback requires the exact candidate container, not another card or serialized script", () => {
   const html = '<li data-candidate-target="a&amp;b"><div><a href="https://campaign.test/">Campaign</a></div></li><li data-candidate-target="wrong"><a href="https://else.test/">Campaign</a></li><script>"<li data-candidate-target=\"script\"><a href=\"https://campaign.test/\">"</script>';

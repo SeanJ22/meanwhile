@@ -522,14 +522,14 @@
     "regeneratedOn": "2026-09-26"
   },
   "lib/control-plane/expansion/reference/census-dependent-school-territories.json": {
-    "digest": "ccfc3bcf6544fb23693d6a62e12d3625a961593be9aa91d5d4fd76448a7f276b",
-    "files": 3,
+    "digest": "97339136de1130d0bbbe317f64608c941fcc60551dae533a324a37fa95dd7283",
+    "files": 4,
     "entry": "scripts/build-dependent-school-territories.mts",
     "regeneratedOn": "2026-09-26"
   },
   "lib/control-plane/expansion/reference/census-school-intersections.json": {
-    "digest": "7da4c480fc3fe66e2ac2133fd1076c8b1ad3d1cb4e69d0ab318c512e74aa6e73",
-    "files": 3,
+    "digest": "850077db866416e1390e7245268680a121e4f53b48667169099fbf7d57072129",
+    "files": 4,
     "entry": "scripts/build-census-school-scope-observations.mts",
     "regeneratedOn": "2026-09-26"
   },

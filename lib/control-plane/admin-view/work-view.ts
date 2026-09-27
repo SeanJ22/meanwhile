@@ -530,6 +530,9 @@ export function instructionView(input: {
   readonly totalAssignments: number | null;
   readonly paidLaneClosedBecause: string | null;
   readonly runnerPaused: { readonly since: string | null } | null;
+  /** A cycle that started before this Send cannot be called this Send's work. */
+  readonly activeCycleStartedAt?: string | null;
+  readonly nextCycleDueAt?: string | null;
   /** MW-001/MW-021: this instruction as the runner read it from the work (research state `assignments`); null when not recorded. */
   readonly assignment?: AssignmentReading | null;
   readonly assignmentAt?: string | null;
@@ -541,6 +544,15 @@ export function instructionView(input: {
     ? `${money(d.budgetUsd)} Anthropic token budget for this hunt`
     : `${money(d.budgetUsd)} paid-model budget in any rolling 24 hours`;
   const rv = runnerViewFor(d, input.reading);
+  const waitingForActiveCycle = rv.kind === "NOT_YET" && input.activeCycleStartedAt !== null &&
+    input.activeCycleStartedAt !== undefined && input.activeCycleStartedAt < d.decidedAt;
+  const waitingSays = waitingForActiveCycle
+    ? `A cycle started before this Send (${formatEastern(input.activeCycleStartedAt!)}); it must finish before the runner can read this instruction. The runner then starts the next eligible cycle promptly. This is saved work, not running work.`
+    : input.runnerPaused
+      ? "The runner is paused; Resume runner is the next action before it can read this instruction."
+      : input.nextCycleDueAt
+        ? `The runner has not read this Send yet. It checks for new instructions between cycles; its currently recorded scheduled cycle is ${formatEastern(input.nextCycleDueAt)} if an early wake does not happen.`
+        : "The runner has not read this Send yet. It checks for new instructions between cycles.";
   const assignment = input.assignment ?? null;
   const sendBudget = assignment === null ? null : budgetOf(assignment, input.assignmentAt ?? null);
   const creation = input.dispatchWork === undefined ? null : scopeCreationView(d, input.dispatchWork);
@@ -555,7 +567,7 @@ export function instructionView(input: {
     { pill: "SAVED", tone: "slate", text: `Your instruction was written down${d.note ? ", with your words kept verbatim" : ""}, receipt ${d.receiptId}`, at: d.decidedAt },
     rv.kind === "READ"
       ? { pill: "READ BY THE RUNNER", tone: "teal", text: `The runner read it at the start of a cycle and resolved ${read?.resolution.kind === "RESOLVED" ? `${read.resolution.zctaCount} codes` : "nothing (it could not resolve the geography)"}`, at: rv.at }
-      : { pill: "NOT YET READ", tone: "stone", text: rv.says, at: null },
+      : { pill: "NOT YET READ", tone: "stone", text: `${rv.says} ${waitingSays}`, at: null },
     read && read.work
       ? {
           pill: "PLACED FIRST",
@@ -647,7 +659,7 @@ export function instructionView(input: {
       summary:
         rv.kind === "READ"
           ? `Read by the runner at its cycle start. ${read?.work ? `${read.work.registeredObligations} ${read.work.registeredObligations === 1 ? "piece" : "pieces"} of standing work ${read.work.registeredObligations === 1 ? "is" : "are"} about governments here.` : read?.resolution.kind === "UNRESOLVED" ? `It could not be resolved: ${read.resolution.why}` : "What is in it was not recorded."}${assignment ? ` It created ${assignment.members.created} and put ${assignment.members.reordered} first, as recorded on the work.` : ""} This instruction has a ${budgetDescription}.`
-          : `${rv.says} This instruction has a ${budgetDescription}.`,
+          : `${waitingSays} This instruction has a ${budgetDescription}.`,
     },
     decision: d,
     reading: read,

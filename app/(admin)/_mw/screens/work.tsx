@@ -209,6 +209,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       totalAssignments: view?.summary.total ?? null,
       paidLaneClosedBecause: lane.open ? null : lane.closedBecause,
       runnerPaused: pause ? { since: pause.since ?? null } : null,
+      activeCycleStartedAt: research?.cycleFinishedAt === null ? research.cycleStartedAt : null,
+      nextCycleDueAt: heartbeatOut.kind === "HELD" ? heartbeatOut.value.nextCycleDueAt : null,
       assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
       assignmentAt: sends?.at ?? null,
       dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),

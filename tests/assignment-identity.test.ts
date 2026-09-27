@@ -532,6 +532,19 @@ test("saved instruction wording preserves a hunt's token-only total and distingu
   assert.match(legacy.card.summary, /\$5\.00 paid-model budget in any rolling 24 hours/);
 });
 
+test("a Send during an active cycle is shown as saved and waiting, never as running", () => {
+  const view = instructionView({
+    decision: decision(), reading: null, rows: null, totalAssignments: null,
+    paidLaneClosedBecause: null, runnerPaused: null,
+    activeCycleStartedAt: "2026-09-24T23:59:00.000Z",
+    nextCycleDueAt: "2026-09-25T01:00:00.000Z",
+  });
+  assert.equal(view.card.pill, "SAVED · NOT YET READ");
+  assert.match(view.card.summary, /must finish before the runner can read/);
+  assert.match(view.card.summary, /saved work, not running work/);
+  assert.match(view.ack.find((fact) => fact.pill === "NOT YET READ")?.text ?? "", /next eligible cycle promptly/);
+});
+
 test("an instruction lists what it created and reordered from the work itself, and its own budget with the window", () => {
   const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }, row("ob-r", "s", [A.key])]);
   const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs: [charge({ obligationId: "ob-c", usd: 5.4 })], worstCaseUsd: 0.6, intentsReadable: true });

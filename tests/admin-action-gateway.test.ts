@@ -778,6 +778,12 @@ test("ADM-34: the revision moves when the console's own record moves, and not ot
   await submit(ask({ idempotencyKey: "pulse-key-00001" }), deps(repos));
   const after = await readPulse(repos, NOW);
   assert.notEqual(after.revision, before.revision, "an action left the revision unchanged");
+
+  await repos.researchIntents.append(RESEARCH_INTENT_LOG_KEY, "resume-pulse", {
+    formatVersion: 1, kind: "INTENT", intentId: "resume-pulse", action: "RESUME",
+    requestedAt: NOW, actor: "owner", adminSessionRef: "session", note: null,
+  }, NOW);
+  assert.notEqual((await readPulse(repos, NOW)).revision, after.revision, "a research request left the live page unchanged");
 });
 
 test("ADM-34: the pulse makes no list() call — the reads it may not make are refused loudly", async () => {

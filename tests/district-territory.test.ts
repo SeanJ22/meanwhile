@@ -26,6 +26,7 @@ import { readApproximateDistrictExtract, readCensusUnitTerritories, readTerritor
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 import { withSharedScopeDivisions } from "@/lib/control-plane/expansion/scope-divisions.ts";
 import { CENSUS_SCHOOL_INTERSECTIONS } from "@/lib/control-plane/expansion/census-scope-observations.ts";
+import { zipDivisionEntry } from "@/lib/geo/zip-division-index.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const COLLEGE = "az:school:cochise-county-community-college-district";
@@ -59,9 +60,11 @@ const index = () => readTerritoryIndex(ROOT, ["az", "nh", "nj"].map(
   (s) => JSON.parse(readFileSync(join(ROOT, "data", "states", s, "jurisdictions", `${s}.json`), "utf8")) as JurisdictionRegistry,
 ));
 
-test("full Census school intersections reach both Admin scope and actual dispatch, including small slivers", () => {
+test("full Census school intersections reach Admin, dispatch and readers, including small slivers", async () => {
   const idx = index();
   const preview = withSharedScopeDivisions({ ids: [], partial: [], samples: 0 }, "85635");
+  const reader = await zipDivisionEntry("85635");
+  assert.ok(reader);
   const expected = [
     "az:school:sierra-vista-unified-school-district-68",
     "az:school:tombstone-school-district-1",
@@ -77,6 +80,7 @@ test("full Census school intersections reach both Admin scope and actual dispatc
   }
   for (const row of CENSUS_SCHOOL_INTERSECTIONS) {
     assert.ok(preview.ids.includes(row.ocdId) && preview.partial.includes(row.ocdId));
+    assert.ok(reader.ids.includes(row.ocdId) && reader.partial.includes(row.ocdId), `${row.name} must remain visible to ZIP readers as partial coverage`);
     assert.equal(row.zctaVintage, "2020");
     assert.match(row.sourceVintage, /January 1, 2026/);
   }

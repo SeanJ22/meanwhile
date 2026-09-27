@@ -6,7 +6,7 @@
   "baselineReceiptSha256": "3aa9b15510ef18786b67e8b0781151caac6432fd2d963f4fba741195681f6f51",
   "baselineCensusPath": "docs/evidence/reader-last-mile-closure.json",
   "baselineCensusSha256": "d819955bfe4aa9603d697a5cea10b144be0f96e18aa2b6403a5a25335984979c",
-  "currentReaderHead": "e9181066f8abf490fdab7ea91b71a4429b5af5b8",
+  "currentReaderHead": "5f43ff9a26cc54c74890654ac8a1a3e7b8ecc49d",
   "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
   "rule": "The denominator is frozen at LM-F1..LM-F10. A direct eligible row is inherited only when its complete structural projection and every holding byte are unchanged; declared shared-family deltas require current proofs. No unclassified change may close.",
   "acceptances": [
@@ -1044,6 +1044,13 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/civic-data/campaign-link-refresh.ts",
+      "baselineSha256": null,
+      "currentSha256": "078c67d84394c535c41fa5b885c5ab870732bdb9e506d91f2fb78fb5f542f0af",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/civic-data/candidate-builders.ts",
       "baselineSha256": null,
       "currentSha256": "7968ecb74352c0129a314a70b9e5b28f0b3e2d49897a8b62c464eb9fefc2b27e",
@@ -1081,7 +1088,7 @@
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
       "baselineSha256": null,
-      "currentSha256": "e4ccc03678c0e49baa1ca473a2ba06d0e4f57636134c71118ccf701ac47f5956",
+      "currentSha256": "2373139e7acdcfbdad4a525093d5311da4bf9049eba59ce5f17ff2f3d963b708",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -5782,7 +5789,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "3cb7f5b30f48f22f5a372ab6228c1a30eb11c4cd64cf144f60e91be91b2ebaeb",
-      "currentStructuralSha256": "fdc3e816d38425cd621238944a5087eebd3a228e203999721c79b71e641311c1",
+      "currentStructuralSha256": "d3e31445992f780c01787765a85a111e528650cd7daa005cce503be2a0fc15fc",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5797,7 +5804,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "4adedd0a40d240f891fab35a0c6be4fb14f678749ae72e1699985894ed6be375",
-      "currentStructuralSha256": "7849a09603e3ddcb340815813856f47071abda22de50e916a4de72056ac856fd",
+      "currentStructuralSha256": "02f1bbd0587f571ec3a62732fb94fdf70ecd8035db8b22719082d5efebf732a1",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5812,7 +5819,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "28f9c1d33cb899d38b69dcd5ee92e06dfd8162e1b4160b6eecc2e27050cb459d",
-      "currentStructuralSha256": "422b205b123112bd46bf92e19fbf45f11746a65f5c913dae980e59b7484d061d",
+      "currentStructuralSha256": "2a79960e4b45a75324124f9ea9c4f774ae13b516a8f24c1f0dfe3e71dc9284ac",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5827,7 +5834,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "9145fb9b0dce8ca9318d0af83f90260636ae1d14ad34222116e72597dc81b453",
-      "currentStructuralSha256": "4320287ea7a5815ae0d6c62ae771da8a7c370512de071bd4c2d76ba89ce1e65f",
+      "currentStructuralSha256": "01bf5be876b61aa29cd15492cf40ae698794a3d1162f54ae5c32bbb3c2ed331b",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5842,7 +5849,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "9dff1941a09e5f8aeef7a43b3a251c8d7ae9cb32ddfeaa3d6b29f83279074931",
-      "currentStructuralSha256": "fbd71367ed185d0a51f7ea1f7e3fa5092f377676a1a63e06bc73e172ec407eb1",
+      "currentStructuralSha256": "66a1505541e4d949b453bb2d1c28ae350171a46c557d1801c08ee8269a627359",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5857,7 +5864,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "57735506dda3853f93ae5e85bbb6b3999594178a321047c2725a9c543927e0a1",
-      "currentStructuralSha256": "f969ea51da6f3dc210c13927cea3a8f31c5d1f499327e81dcb5ae6c2bbe4ef5e",
+      "currentStructuralSha256": "04c7c70881634c6aa15fc11d52bbcac6fe849251831b02dbdfda59bd0f2fb97f",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5872,7 +5879,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "44a150a73dc506f781395fc2eb956a401465fe88f0326cb486307f5d996849d0",
-      "currentStructuralSha256": "6ad0cad5cea48d5cb28ffa5546340ffde3e1d3a70749f99110f19a681bceb1c5",
+      "currentStructuralSha256": "18fadb611091c497075ee387b7e8497ef58a52017bdf15c1d824c4c2404b33d6",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5887,7 +5894,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "3f479c0ad8d5f8e02b6861c4a39987cf6564701c2d77681562c141540712dcaf",
-      "currentStructuralSha256": "c1dad5e0654e438ef097cc2c1087422ca8c8fd94d1fd99fd7b45bd460e395459",
+      "currentStructuralSha256": "e3e625cecd2bf58948fed3c8a3a4ab1806ade7bbf26a5657bc8439d608f8c103",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5902,7 +5909,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "3c33c466158cbea9c5decb2959bc9e9cc9148c8db76348c00fa32286f563e069",
-      "currentStructuralSha256": "88f1e5adc43205120472b01d04c9f672f63b44ae19c252bda171b85e790039f3",
+      "currentStructuralSha256": "d87167d9c000038c5a42e79c6ade76882962abe774f9faa262454990795ba291",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5917,7 +5924,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "2263f4e31cd5ca0c4c449a425505c8a08ef5227889c197591af5cd53d70f1976",
-      "currentStructuralSha256": "7bc63568266de218421ba576930d67247c06a81bc710d5bcfc84438667e94539",
+      "currentStructuralSha256": "4c109405e757d2131b1085d84325092198b3b54986be14f7837d7ddc17c9e4e5",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5932,7 +5939,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "e850e1156ce607d715e64be46167e3a9bff3d374b37956831bb26429ebcb2cde",
-      "currentStructuralSha256": "0c0f77d29f2d64587fcc288371991e4b86b637fa34392890224d495e644a3b32",
+      "currentStructuralSha256": "9f07e25818033627b1dabbbdf0c9a76cf18c9f2e06b37142686f0713b167cbb9",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5947,7 +5954,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "f6248fdc7eea26ad39ee079bb1c57457925b739f294a650279029a3121ba1517",
-      "currentStructuralSha256": "dc59e4e9db07ecec3a745851732b54feef765da2834f5fb6364e8e05317c4962",
+      "currentStructuralSha256": "acd88c94c0685db7411348d769344b5da844d493d40fa1a594e928bc32be302a",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5962,7 +5969,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "b7db21f3c60971832107f6636ea035053eed4a8d8b0ef386bf7465216fb534a6",
-      "currentStructuralSha256": "9564a94f1b2cf515018f1d2d1b34ed4ebacd0974d38e3c4fb3725dfc925ea55e",
+      "currentStructuralSha256": "ad7ca95e6a72e9f4a5750969e0866ad458e8550589761ba160543a97ef20ac06",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5977,7 +5984,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "c43fd4b110a1e8c8f2b612cff86f99d52342c4e44b0a6006da9364fb150b199d",
-      "currentStructuralSha256": "c08486faa04000547f90d3321673ccf356e15be9cbad7b6a6d79246ab72221f9",
+      "currentStructuralSha256": "3fc683305a1ce53c289398001e6b7dd382d9e6a3ea9b24a699a1d1b613471505",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5992,7 +5999,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "f73f144e81c1d9fba93e7efab8271eab5d91898365e095f12466be8ffa283c33",
-      "currentStructuralSha256": "bf46d3b14ee02efb337d5eb0bb7e4b372530b435194349a45d2026cc7f97e4e9",
+      "currentStructuralSha256": "bb37fa353a26cab124e262a17ed3a033fcef0ea1b8ce6a87eac155e8e6b2cb13",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -6007,7 +6014,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "3c0d709cf39147436a30a4e05f834b3c766e07cc6bf668a630d74ab43f6d5b00",
-      "currentStructuralSha256": "ad751301f89303ab9b345c984560621aafb119bc7fd54f2663e9a0b97a3ebc9b",
+      "currentStructuralSha256": "8924c9239ae6be7f7bbff103f5d024371c53f82441045d97008a33c9762aebb8",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",

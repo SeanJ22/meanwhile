@@ -1,10 +1,10 @@
 {
-  "exactHead": "e9181066f8abf490fdab7ea91b71a4429b5af5b8",
-  "buildId": "EJdewd9SG27oQECn_hfHT",
+  "exactHead": "5f43ff9a26cc54c74890654ac8a1a3e7b8ecc49d",
+  "buildId": "PUigiHOd9ofZ_uHDQU7Ed",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "e9181066f8abf490fdab7ea91b71a4429b5af5b8",
-    "commitShort": "e918106",
+    "commit": "5f43ff9a26cc54c74890654ac8a1a3e7b8ecc49d",
+    "commitShort": "5f43ff9",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "493551a14c3b3b1553489a1f818fd07e8e0b22d417b1599f3c52822acaf45e23",
+  "buildLogSha256": "5267620764e9a420bc3d01b9be8e4e8132a08a55cc862d26fac46e6946051621",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,
@@ -2233,6 +2233,10 @@
       "sha256": "21d8f8d8ac9cb8b7b6c1f2b239c678fd7c5458738791187be638355c9e4ff7ed"
     },
     {
+      "path": "lib/civic-data/campaign-link-refresh.ts",
+      "sha256": "078c67d84394c535c41fa5b885c5ab870732bdb9e506d91f2fb78fb5f542f0af"
+    },
+    {
       "path": "lib/civic-data/candidate-builders.ts",
       "sha256": "7968ecb74352c0129a314a70b9e5b28f0b3e2d49897a8b62c464eb9fefc2b27e"
     },
@@ -2254,7 +2258,7 @@
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
-      "sha256": "e4ccc03678c0e49baa1ca473a2ba06d0e4f57636134c71118ccf701ac47f5956"
+      "sha256": "2373139e7acdcfbdad4a525093d5311da4bf9049eba59ce5f17ff2f3d963b708"
     },
     {
       "path": "lib/civic-data/derived-door.ts",

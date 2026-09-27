@@ -21,12 +21,15 @@ import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { noFiguresCell, registrationWords } from "@/lib/control-plane/admin-view/registration-standing.ts";
 import { readReadinessGrid } from "@/lib/control-plane/readiness/read.ts";
+import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving.ts";
+import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge.ts";
 
 import { AuditFooter, NotAsked } from "../_mw/blocks.tsx";
 import { censusEntryOf } from "../_mw/data/census-universe.ts";
 import { loadContainersWithCodes } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { loadRegistryBodies } from "../_mw/data/registry.ts";
+import { ADMIN_READ_DEADLINE_MS } from "../_mw/data/shared-read.ts";
 import { TRACKED_STATE_CODES, statesByStanding } from "../_mw/load-shell.ts";
 import { openPage, type SearchParams } from "../_mw/page-base.ts";
 import { withScope } from "../_mw/scope.ts";
@@ -59,10 +62,43 @@ function nextThing(name: string, counties: readonly { readonly label: string; re
   return `Find a way in for ${top.gap} ${top.gap === 1 ? "body" : "bodies"} in ${top.label}${top.never > 0 ? ` (${top.never} never walked)` : ""} — its largest county gap.`;
 }
 
+/** County rows use the same verified district serving copy as the Reader. Without
+ * it, per-ZIP database fallbacks would fan out across an entire state and cut
+ * off the Admin render. A missing copy leaves the county gap unread. */
+async function districtEdgeForReadiness(): Promise<ReaderAuthorityEdgeBundle | null> {
+  try {
+    const manifest = await readReaderManifest();
+    if (!manifest?.authorityArtifacts?.["census-districts"]) return null;
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts"]);
+    return edge.censusDistricts ? edge : null;
+  } catch {
+    return null;
+  }
+}
+
+async function countyStandingForReadiness(code: string, districtEdge: Promise<ReaderAuthorityEdgeBundle | null>) {
+  type CountyRead = Awaited<ReturnType<typeof loadContainersWithCodes>>;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<CountyRead>((resolve) => {
+    timer = setTimeout(() => resolve({ kind: "UNREAD", detail: "County coverage did not answer within the Admin read deadline; the state figures remain independent." }), ADMIN_READ_DEADLINE_MS);
+  });
+  try {
+    return await Promise.race([
+      districtEdge.then((edge): Promise<CountyRead> | CountyRead => edge === null
+        ? { kind: "UNREAD", detail: "The verified Census district serving copy could not be read; county gaps are not calculated from incomplete ZIP coverage." }
+        : withReaderAuthorityEdge(edge, () => loadContainersWithCodes(code.toUpperCase(), "county"))),
+      late,
+    ]);
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
+}
+
 export default async function ReadinessAllStatesPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   const nowIso = new Date().toISOString();
   const states = TRACKED_STATE_CODES;
+  const districtEdge = districtEdgeForReadiness();
   /*
    * Every read this page draws needs only the instant, so all of them start
    * before the policy row is read rather than after it: the body read (the
@@ -76,7 +112,7 @@ export default async function ReadinessAllStatesPage({ searchParams }: { searchP
     loadRegistryBodies(),
     loadWatchedBodies(nowIso),
     ...states.map(async (code) => {
-      const [readiness, counties] = await Promise.all([readReadinessGrid(code), loadContainersWithCodes(code.toUpperCase(), "county")]);
+      const [readiness, counties] = await Promise.all([readReadinessGrid(code), countyStandingForReadiness(code, districtEdge)]);
       return { code, readiness, counties };
     }),
   ]);

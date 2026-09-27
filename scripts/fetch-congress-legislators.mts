@@ -62,15 +62,7 @@ import type { DirectoryFile } from "../lib/officials/directory.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-
-/**
- * The pin. Re-read on 2026-09-07 after official House roll calls introduced
- * B001328 and W000832, both absent from the prior directory pin. Bumping this
- * is a deliberate act with a diff, which is the whole point of pinning.
- */
-const SHA = "8a3c7e6987f890b32e56058f7ddbdf380860b4a3";
-
-const RAW = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}`;
+import { currentCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
 
 const UA = "we-the-people/1.0 (civic data; contact seanj22@gmail.com)";
 
@@ -159,8 +151,8 @@ interface RawMembership {
   bioguide?: string;
 }
 
-async function fetchFile(name: string): Promise<{ parsed: unknown; acquisition: FederalDirectoryAcquisition }> {
-  const url = `${RAW}/${name}.yaml`;
+async function fetchFile(name: string, sha: string): Promise<{ parsed: unknown; acquisition: FederalDirectoryAcquisition }> {
+  const url = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${sha}/${name}.yaml`;
   const response = await fetch(url, { headers: { "User-Agent": UA } });
   if (!response.ok) {
     throw new Error(`${name}: HTTP ${response.status} from ${url}`);
@@ -229,6 +221,7 @@ async function main() {
   }
   prepareProductionCivicDataWrite();
   writePrepared = true;
+  const SHA = await currentCongressSourceRevision();
   const collectedAt = stamp();
   const counts: Record<string, number> = {};
   const acquisitions: FederalDirectoryAcquisition[] = [];
@@ -237,7 +230,7 @@ async function main() {
   for (const file of FILES) {
     // Serialized, per the public-records rule: one request at a time, an
     // identified User-Agent with a contact address.
-    const { parsed, acquisition } = await fetchFile(file.name);
+    const { parsed, acquisition } = await fetchFile(file.name, SHA);
     acquisitions.push(acquisition);
     counts[file.name] = guard(file.name, parsed, file.min, file.shape);
     raw[file.name] = parsed;

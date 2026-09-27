@@ -94,6 +94,7 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
     "candidate-publications": [manual("candidate-corpus", readCandidateCorpusProjection),
       { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
     "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
+    "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
     "nh-members": [{ recordClass: nhMembers.recordClass, scope: nhMembers.scope, reader: readNhMembers }],
     "federal-funding": [{ recordClass: "FEC_FUNDING", scope: requiredRoutineContract("fec-funding").scope, reader: readFundingSnapshot }],
     "state-money": (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => ({

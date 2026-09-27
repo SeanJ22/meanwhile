@@ -4,6 +4,7 @@ import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
 import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
+import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 
 /** Initial instructions for an owner-requested family. Registry addresses are
  * leads, never invented observations. An evidence-backed repair must supply
@@ -13,9 +14,13 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   if (source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(jurisdiction, bodyId);
   const spec = source.recordClass === "OFFICEHOLDERS"
     ? { recordClass: "OFFICIAL_ROSTER", fields: ["name", "office"] }
+    : source.recordClass === "PUBLIC_SERVICES"
+      ? { recordClass: "SERVICE_CONTACT", fields: ["bodyName", "topicId", "serviceZip", "service", "serviceAreaEvidence"] }
+    : source.recordClass === "VOTER_ACCESS"
+      ? { recordClass: "VOTER_ACCESS_ROUTE", fields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
-      ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["candidateName", "office"] }
-      : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["committeeName", "filingPeriod", "documentUrl"] };
+      ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["bodyName", "jurisdictionName", "candidateName", "office", "documentUrl"] }
+      : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["bodyName", "jurisdictionName", "committeeName", "filingPeriod", "documentUrl"] };
   const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
     if (!url) return false;
     try { const parsed = new URL(url); return parsed.protocol === "https:" && !parsed.username && !parsed.password; } catch { return false; }
@@ -24,6 +29,9 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
+    ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
+    ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
+    ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
@@ -57,6 +65,27 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
       completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Independently check each provided instruction; this work does not discharge calendars, agendas, minutes or other bodies.` } };
 }
 
+/** A roster cannot establish which other boards exist. Keep directory discovery
+ * as its own obligation, with the Census/registry join supplied by the system. */
+export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: string | null): AutonomousWorkPlan {
+  const routeId = "coverage-discovery:body-directory";
+  const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
+    authorityBasis: "Discover governing and subordinate bodies from official directory and independent legal authority.",
+    scope: "THIS_JURISDICTION", routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED",
+    owed: "Identify every governing and subordinate body, its official name, home page, classification and actual jurisdiction. Independently verify territorial applicability; association with a county is not countywide authority.",
+    citation: `Registered government ${jurisdiction.id}.` }, routeId, bodyId)!;
+  if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
+  const { publication: _old, ...plan } = base;
+  const divisionId = jurisdiction.ocdId ?? bodyId?.split("#")[0] ?? null;
+  return { ...plan, capability: "governments/body-directory",
+    directorySubject: { jurisdiction, divisionId },
+    publication: { contractId: "registry-runtime-bindings", bodyId: bodyId ?? `unresolved:${jurisdiction.id}` },
+    contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
+      requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
+      identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] },
+      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record needs independent evidence for identity, classification and actual territory. When legal coverage is the entirety of specific Census divisions rather than the parent jurisdiction, extract territoryNames as the source's semicolon-separated division names, coverage as "entire listed divisions", and coverageEvidence containing the independently verified legal coverage statement. Every name must join exactly one registered division in this state. A partial division, ambiguous name or unrecorded boundary remains owed; do not infer territory from a mailing address.` } };
+}
+
 /**
  * These legacy worker contracts acquire the same meeting event feeds now
  * owned by permanent SOURCE_WIRING-derived meeting-partition contracts. They
@@ -77,10 +106,11 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
+  readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | "comment-access"; readonly bodyId: string };
+    { readonly contractId: "registry-runtime-bindings" | WorkerReaderContract; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;
@@ -93,6 +123,16 @@ export interface AutonomousWorkPlan {
   readonly detective: readonly DetectiveTaskSpec[];
   readonly engineering: readonly EngineeringTaskSpec[];
   readonly auditScope: "CAPTURED_ARTIFACT" | "SOURCE_UNIVERSE";
+}
+
+/** Attach a newly implemented Reader connection without replacing retained
+ * extraction instructions, acquired evidence, or independent worker results. */
+export function inheritPublicationConnection(existing: AutonomousWorkPlan | undefined, current: AutonomousWorkPlan | undefined): AutonomousWorkPlan | undefined {
+  if (!existing) return current;
+  if (!current?.publication || existing.publication || existing.contract.subjectId !== current.contract.subjectId ||
+    existing.contract.recordClass !== current.contract.recordClass) return existing;
+  return { ...existing, publication: current.publication,
+    ...(current.directorySubject ? { directorySubject: current.directorySubject } : {}) };
 }
 
 /** A content-addressed artifact keeps its first retrieval stamp; a later successful

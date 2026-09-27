@@ -37,6 +37,13 @@ export function inheritedRosterSourceFacts(beforeValue: unknown, afterValue: unk
   const invalid = new Set<string>();
   for (const value of rows(after.members)) {
     const person = row(value), old = persons.get(person.id);
+    const membership = row(person.membershipSource);
+    if (text(membership.sourceUrl)) {
+      const previousSource = old?.membershipSource ?? { sourceUrl: before.sourceUrl, sourceOrg: before.sourceOrg, collectedAt: before.collectedAt };
+      const withoutSource = (entry: Record<string, unknown>) => Object.fromEntries(Object.entries(entry).filter(([key]) => key !== "membershipSource"));
+      if (!old || !equal(membership, previousSource) || !equal(withoutSource(person), withoutSource(old))) invalid.add(membership.sourceUrl);
+      candidates.set(membership.sourceUrl, [...(candidates.get(membership.sourceUrl) ?? []), [person.id, membership, withoutSource(person)]]);
+    }
     for (const fields of [["websiteUrl"], ["partySourceUrl", "partyLabel", "partySourceOrg", "partyCollectedAt"]]) {
       const url = person[fields[0]];
       if (!text(url) || url === after.sourceUrl) continue;
@@ -59,7 +66,7 @@ export function registryMemberCitedUrls(key: string, record: unknown): string[] 
       : kind === "body-roster" ? [
         member.sourceUrl,
         member.partisanshipSourceUrl,
-        ...rows(member.members).flatMap((person) => [row(person).websiteUrl, row(person).partySourceUrl]),
+        ...rows(member.members).flatMap((person) => [row(person).websiteUrl, row(person).partySourceUrl, row(row(person).membershipSource).sourceUrl]),
       ]
       : kind === "statewide-executive" ? [member.sourceUrl, member.partySourceUrl]
       : kind === "official-candidacy" ? [row(member.candidacy).sourceUrl]

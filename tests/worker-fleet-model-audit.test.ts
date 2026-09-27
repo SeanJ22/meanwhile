@@ -49,11 +49,12 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.review.contextHash, contentHash(String(request?.messages[0].content)));
 });
 
-test("Opus 5.5 request: no forced tool choice — auto, a strict record_audit schema strict mode accepts, and the system prompt naming the tool", async () => {
+test("cheaper-first audit uses auto tool choice and a strict schema compatible with the later Opus escalation", async () => {
   let request: ModelRequest | undefined;
   const transport: ModelTransport = async (value) => { request = value; return response({ verdict: "SURVIVED", challenges: [] }); };
   await modelAuditReasoner(createMemoryRepositories(), transport, () => NOW).review(context(), "auditor-attempt");
-  assert.equal(MODEL, "claude-opus-5-5", "the auditor runs on the model that rejects a forced tool choice");
+  assert.equal(MODEL, "claude-haiku-4-5-20251001");
+  assert.equal(request?.output_config, undefined, "Haiku does not accept effort configuration");
   assert.deepEqual(request?.tool_choice, { type: "auto" }, "a forced {type:'tool'} is HTTP 400 on Claude Opus 5.5");
   const tool = request?.tools[0];
   assert.equal(tool?.name, "record_audit");

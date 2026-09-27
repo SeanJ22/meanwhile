@@ -411,6 +411,9 @@ export type ResolvedSplitPathDisposition =
 export interface ResolvedSplitInventoryBinding {
   readonly inventorySourceId: string;
   readonly paths: readonly ResolvedSplitPathDisposition[];
+  /** New publishers in this existing family, distinguished from the immutable
+   * cutover census. They retain the same exact contract/source checks. */
+  readonly addedProductionPaths?: readonly Extract<ResolvedSplitPathDisposition, { disposition: "PRODUCTION_DATA_PLANE" }>[];
 }
 
 /**
@@ -421,6 +424,9 @@ export interface ResolvedSplitInventoryBinding {
 export const PDC7_RESOLVED_SPLIT_BINDINGS: readonly ResolvedSplitInventoryBinding[] = [
   {
     inventorySourceId: "curated-reader-records",
+    addedProductionPaths: [
+      { path: "lib/civic-data/official-filings.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "official-filings", contractSourceId: "curated-reader-primary-sources", reason: "Independently verified filing facts use the existing curated source, candidate/event/promotion and Reader checks. Added after the frozen cutover; neither the historical paths nor the 42-family denominator is rewritten." },
+    ],
     paths: [
       { path: "lib/registry/body-rosters.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "registry-runtime-bindings", contractSourceId: "registry-reviewed-bindings", reason: "Current body membership/contact/term/party rows are members of the canonical registry runtime projection; this module is first-seed/test evidence only." },
       { path: "lib/officials/statewide-executives.ts", disposition: "PRODUCTION_DATA_PLANE", contractId: "registry-runtime-bindings", contractSourceId: "registry-reviewed-bindings", reason: "Current statewide executive/contact/party rows are members of the canonical registry runtime projection; this module is first-seed/test evidence only." },
@@ -562,7 +568,7 @@ export function validatePdc7DispositionRegistry(
     else if (contract.sourceId !== binding.contractSourceId) problems.push(`${binding.inventorySourceId}: manual production authority differs from ${binding.contractSourceId}`);
   }
   const splitProductionContracts = PDC7_RESOLVED_SPLIT_BINDINGS.flatMap((binding) =>
-    binding.paths.flatMap((path) => path.disposition === "PRODUCTION_DATA_PLANE" ? [path.contractId] : []),
+    [...binding.paths, ...(binding.addedProductionPaths ?? [])].flatMap((path) => path.disposition === "PRODUCTION_DATA_PLANE" ? [path.contractId] : []),
   );
   const boundManualContracts = new Set([
     ...MANUAL_PRODUCTION_INVENTORY_BINDINGS.map((binding) => binding.contractId),
@@ -603,8 +609,10 @@ export function validatePdc7DispositionRegistry(
     if (inventory.classification !== "RUNTIME_CIVIC_DATA") problems.push(`${split.inventorySourceId}: resolved split is not the frozen runtime row`);
     const paths = split.paths.map((path) => path.path);
     if (!sameStrings(inventory.tracked_paths, paths)) problems.push(`${split.inventorySourceId}: resolved split paths differ from frozen inventory`);
-    for (const duplicate of duplicates(paths)) problems.push(`${split.inventorySourceId}: split path classified more than once: ${duplicate}`);
-    for (const path of split.paths) {
+    const currentPaths = [...split.paths, ...(split.addedProductionPaths ?? [])];
+    for (const duplicate of duplicates(currentPaths.map(path => path.path))) problems.push(`${split.inventorySourceId}: split path classified more than once: ${duplicate}`);
+    for (const path of currentPaths) {
+      if (!path.path || !path.reason) problems.push(`${split.inventorySourceId}: production path or reason is missing`);
       if (path.disposition === "PRODUCTION_DATA_PLANE") {
         const contract = manualContracts.get(path.contractId);
         if (!contract) problems.push(`${split.inventorySourceId}:${path.path}: production contract ${path.contractId} is absent`);

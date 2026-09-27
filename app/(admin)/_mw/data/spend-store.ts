@@ -294,6 +294,21 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
       from cp_log_scout_results where record->>'escalationReason' is not null
       order by record->>'startedAt' desc limit 6`);
 
+    // Each auditor step is already a separate cost-ledger attempt. Show its
+    // transition here without adding those dollars to Scout or provider totals.
+    const auditEscalations = await client.query(`
+      select (count(*) over ())::int as total,
+        w.record->>'endedAt' as at, w.record->>'workItemId' as id,
+        w.record#>>'{auditContext,subjectId}' as subject,
+        w.record#>>'{modelReview,escalation,from}' as from_model,
+        w.record#>>'{modelReview,model}' as to_model,
+        w.record#>>'{modelReview,escalation,reason}' as reason,
+        w.record#>>'{result,verdict}' as verdict, w.record#>>'{cost,usd}' as usd
+      from cp_log_worker_results w join cp_attempts a on a.id = w.record->>'attemptId'
+      where w.record#>>'{modelReview,escalation,previousResultId}' is not null
+        and a.value->>'outcome' = 'COMPLETED'
+      order by w.record->>'endedAt' desc limit 6`);
+
     await client.query("ROLLBACK");
 
     const l = (ledger.rows[0] ?? {}) as Record<string, unknown>;
@@ -353,9 +368,9 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
       },
       ladder: {
         startedOn: startedOn.rows.map((r: Record<string, unknown>) => ({ modelClass: String(r.cls ?? "BEFORE_LADDER"), attempts: num(r.n) })),
-        escalated: num((escalations.rows[0] as Record<string, unknown> | undefined)?.escalated),
+        escalated: num((escalations.rows[0] as Record<string, unknown> | undefined)?.escalated) + num(auditEscalations.rows[0]?.total),
         escalationsRefused: num((escalations.rows[0] as Record<string, unknown> | undefined)?.refused),
-        latest: latestEscalations.rows.map((r: Record<string, unknown>): EscalationFact => ({
+        latest: [...latestEscalations.rows.map((r: Record<string, unknown>): EscalationFact => ({
           at: str(r.at),
           obligationId: String(r.id ?? ""),
           subjectId: str(r.subject),
@@ -367,7 +382,12 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
           attemptsUsd: Array.isArray(r.attempts) ? (r.attempts as unknown[]).map((u) => (typeof u === "number" && Number.isFinite(u) ? u : null)) : [],
           // An unpriced result is unmeasured, never $0 — `num` would coerce it.
           combinedUsd: r.usd === null || r.usd === undefined ? null : num(r.usd),
-        })),
+        })), ...auditEscalations.rows.map((r: Record<string, unknown>): EscalationFact => ({
+          role: "ADVERSARIAL_AUDITOR", at: str(r.at), obligationId: String(r.id), subjectId: str(r.subject),
+          from: String(r.from_model), to: str(r.to_model), reason: String(r.reason),
+          evidence: `Independent worker outcome: ${String(r.verdict)}. Public delivery requires the linked publication receipt.`,
+          refused: null, attemptsUsd: [r.usd == null ? null : num(r.usd)], combinedUsd: r.usd == null ? null : num(r.usd),
+        }))].sort((a, b) => (b.at ?? "").localeCompare(a.at ?? "")).slice(0, 6),
       },
     };
   } catch (error) {

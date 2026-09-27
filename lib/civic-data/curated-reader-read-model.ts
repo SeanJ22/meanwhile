@@ -12,6 +12,7 @@ import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
+  "official-filings",
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
@@ -113,6 +114,11 @@ export const refreshCommentAccessFromPromoted = (options: PromotedCivicDataReadO
   refreshCuratedReaderProjection("comment-access", options);
 export const refreshBallotNavigationFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("ballot-navigation", options);
+export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<CuratedReaderProjection>> => {
+  const contract = requiredManualProductionContract("official-filings");
+  return readPromotedEdgeFirst(contract.recordClass, contract.scope,
+    options => readCuratedReaderProjection("official-filings", options), "Official filing records");
+};
 /** The ballot navigation links, edge first (2026-09-25): the reader edge's proven copy, else the database. */
 const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
 export const settleBallotNavigationRead = (): Promise<string> =>

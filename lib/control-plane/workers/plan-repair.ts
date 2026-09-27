@@ -12,8 +12,9 @@ import { verifyExternalAuthorities } from "./record-verification.ts";
 import { assertGeneralizedScope } from "./record-evidence.ts";
 import { createHash } from "node:crypto";
 import { PERMISSION_STATES } from "../../workstate/types.ts";
+import { WORKER_READER_CLASSES } from "../../civic-data/worker-reader-contracts.ts";
 
-export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING", "PUBLIC_COMMENT_RULE"] as const;
+export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING", ...Object.values(WORKER_READER_CLASSES)] as const;
 export interface PlanRepairLink {
   readonly parentWorkItemId: string; readonly rootWorkItemId: string; readonly depth: number;
   readonly proposalHash: string; readonly scoutAttemptId: string; readonly sourceArtifactId: string;

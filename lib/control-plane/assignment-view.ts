@@ -911,6 +911,11 @@ function obligationOfWorkItem(workItemId: string, idx: Index, seen = new Set<str
   const occ = idx.occurrenceByWorkItem.get(workItemId);
   if (occ) return occ.obligationId;
   const item = idx.workItems.get(workItemId);
+  const directory = item?.directoryParent;
+  const directoryParent = directory && idx.workItems.get(directory.workItemId);
+  if (directoryParent && directoryParent.project === item?.project && directoryParent.subject === item.subject &&
+    directoryParent.publicationOutcome?.bodyIds?.includes(directory!.bodyId) &&
+    item.autonomousPlan?.publication?.bodyId === directory!.bodyId) return obligationOfWorkItem(directoryParent.id, idx, seen);
   const clause = item?.obligation ?? "";
   const m = /^(.*)#(\d+)$/.exec(clause);
   if (m && idx.obligations.has(m[1])) return m[1];
@@ -1764,7 +1769,7 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
         who: plainCode(result.role),
         verdict: result.verdict,
         at: r.endedAt,
-        says: clip(result.findings[0]?.detail ?? `${plural(result.survivingRecordCount, "record")} survived`, clips.text),
+        says: clip(`${r.modelReview?.escalation ? `Escalated ${r.modelReview.escalation.from} → ${r.modelReview.model} at ${r.modelReview.escalation.at}: ${r.modelReview.escalation.reason}. ` : ""}${r.modelReview?.validationError ?? result.findings[0]?.detail ?? `${plural(result.survivingRecordCount, "record")} survived`}`, clips.text),
         resultId: r.id,
       });
     }
@@ -1787,30 +1792,35 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
 }
 
 function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
-  const items = g.pipeline.length;
-  const approved = g.pipeline.filter((s) => s.stage === "APPROVED_FOR_PROMOTION").length;
+  const workerPublications = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : []);
+  const items = g.pipeline.length + workerPublications.length;
+  const approved = g.pipeline.filter((s) => s.stage === "APPROVED_FOR_PROMOTION").length + workerPublications.filter(p => p.status === "PUBLISHED").length;
   const blockers: string[] = [];
   const approvedHeld: Held<Measured> =
-    src.pipeline === null
+    src.pipeline === null && !workerPublications.length
       ? gap("OURS", "the promotion pipeline could not be read on this publish")
       : items === 0
         ? gap("OURS", "nothing from this assignment has entered the promotion pipeline, so there is nothing to approve yet")
-        : held(measured(approved, items, "items approved for promotion, of items offered", "cp_log_promotion_pipeline"));
+        : held(measured(approved, items, "items with all required publication checks passed, of items offered", "cp_log_promotion_pipeline + WorkItem.publicationOutcome"));
   let promoted: Held<PromotionStatus>;
-  const witnesses = g.pipeline.flatMap(s => {
+  const witnesses = [...g.pipeline.flatMap(s => {
     const a = s.byStage.APPROVED_FOR_PROMOTION;
     const w = a ? servedWitness(src.servedReader, s.itemId, a.recordId, src.nowIso) : null;
     return w ? [w] : [];
-  });
+  }), ...g.workItems.flatMap(item => {
+    const publication = item.publicationOutcome;
+    if (!publication || publication.status === "HELD") return [];
+    const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso);
+    return witness?.versionId === publication.versionId ? [witness] : [];
+  })];
   const witness = witnesses[0];
   const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
     .sort((left, right) => right.at.localeCompare(left.at))[0];
   if (witness) {
     promoted = held({ state: "PROMOTED", says: `${witnesses.length} exact approval(s) observed on the public site.`, versionId: witness.versionId, at: witness.checkedAt });
   } else if (workerPublication) {
-    promoted = held({ state: workerPublication.status === "PUBLISHED" ? "PROMOTED" : "NOT_PROMOTED",
+    promoted = held({ state: workerPublication.status !== "HELD" ? "PROMOTED" : "NOT_PROMOTED",
       says: `${workerPublication.code}: ${workerPublication.detail}`, versionId: workerPublication.versionId, at: workerPublication.at });
-    if (workerPublication.status === "HELD") blockers.push(`${workerPublication.code}: ${workerPublication.detail}`);
   } else if (src.activation === null) {
     promoted = gap("OURS", "the activation gate was not read on this publish, so whether promotion is on is not shown");
   } else if (!src.activation.promotionEnabled) {
@@ -1825,11 +1835,12 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   } else {
     promoted = gap("OURS", "The activation gate is open, but no current public readback proves delivery for this assignment.");
   }
+  for (const publication of workerPublications) if (publication.status !== "PUBLISHED") blockers.push(`${publication.code}: ${publication.detail}`);
   if (!witness) blockers.push("No current public readback confirms this assignment's exact approvals.");
   if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {
     approved: approvedHeld,
-    ...(workerPublication?.status === "PUBLISHED" && workerPublication.records ? { records: workerPublication.records } : {}),
+    ...(workerPublication && workerPublication.status !== "HELD" && workerPublication.records ? { records: workerPublication.records } : {}),
     promoted,
     publiclyAvailable: witness ? held<PublicAvailability>({ state: "CONFIRMED", at: witness.checkedAt, says: `${witnesses.length} item(s) confirmed; this does not complete outstanding assignment scope.`, proof: witness.url }) : gap<PublicAvailability>(
       "OURS",
@@ -2438,7 +2449,7 @@ function buildRow(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips,
   const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(g, idx, what, clips) : deriveWorkItem(g, idx, clips);
   const publication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
     .sort((left, right) => right.at.localeCompare(left.at))[0];
-  const derived: Derived = publication?.status === "HELD" && baseDerived.state !== "WORKING"
+  const derived: Derived = publication && publication.status !== "PUBLISHED" && baseDerived.state !== "WORKING"
     ? { state: "WAITING", stateSays: `${publication.code}: ${publication.detail}`,
       waiting: { ...baseDerived.waiting, waiting: true, since: publication.at, owner: "FLEET",
         blocker: { kind: "NAMED", says: publication.code },

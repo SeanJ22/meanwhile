@@ -182,6 +182,8 @@ import {
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
+import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
@@ -2824,6 +2826,10 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
       exaKey: process.env.EXA_API_KEY,
       budget: searchBudget,
     });
+    const directoryItems = (await repos.workItems.list()).map(row => row.value).filter(item => item.publicationOutcome?.bodyIds?.length);
+    const directoryRegistry = directoryItems.length ? await readRegistryRuntimeProjection({ bypassCache: true }) : null;
+    if (directoryRegistry && directoryRegistry.kind !== "PROMOTED") throw new Error("Published body directory cannot be read for meeting discovery; its source work remains owed.");
+    const meetingHints = directoryRegistry?.kind === "PROMOTED" ? directoryMeetingHints(directoryItems, directoryRegistry.value, ROUTE_HINTS) : ROUTE_HINTS;
     let costSeq = 0;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
@@ -2855,7 +2861,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
         /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
-        routeHints: ROUTE_HINTS,
+        routeHints: meetingHints,
         ...(discoverySearch === null ? {} : { search: discoverySearch }),
         searchScopeFor: (subjectId) => huntSearchScope({ selected: config?.expansionScopes ?? [], plan: expansionPlan, subjectId }),
         recordCost: async (entry) => {

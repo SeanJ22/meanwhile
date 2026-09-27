@@ -17,6 +17,7 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScheduled, scheduleObligation } from "../control-plane/scheduler/obligation.ts";
+import { materializeBodyDirectoryWork, workerBodyDirectoryPackage } from "./worker-body-directory.ts";
 
 export interface WorkerPublicationCapture {
   readonly evidence: WorkerEvidence;
@@ -106,13 +107,25 @@ export function workerRosterPublication(input: {
       requireThat(typeof name === "string" && name.trim() && typeof officeTitle === "string" && officeTitle.trim(), "ROSTER_PERSON_FIELDS_MISSING");
       const matching = previous?.members.filter(member => member.name === name && member.officeTitle === officeTitle) ?? [];
       requireThat(matching.length <= 1, "ROSTER_PRIOR_PERSON_IDENTITY_CONFLICT");
-      return { ...(matching[0] ?? { id: `roster:${body.id}#${digest(record.id).slice(0, 16)}`, termNote: null, email: null, phone: null, websiteUrl: null }),
+      const { membershipSource: _oldMembership, ...identity } = matching[0] ?? { id: `roster:${body.id}#${digest(record.id).slice(0, 16)}`, termNote: null, email: null, phone: null, websiteUrl: null };
+      return { ...identity,
         name: name as string, officeTitle: officeTitle as string };
     }),
   };
   const rendered = projectReaderRoster(proposed);
-  requireThat(rendered.roster.members.length === extraction.records.length && rendered.dispositions.every(d => d.state === "READER_ELIGIBLE"), "ROSTER_READER_IDENTITY_UNRESOLVED");
-  requireThat(rendered.roster.members.every((member, i) => member.name === extraction.records[i].fields.name && member.officeTitle === extraction.records[i].fields.office), "ROSTER_RENDERING_MISMATCH");
+  requireThat(rendered.roster.members.length > 0, "ROSTER_NO_READER_ELIGIBLE_MEMBERS");
+  requireThat(rendered.dispositions.length === extraction.records.length && rendered.roster.members.every(member =>
+    proposed.members.some(source => source.id === member.id && canonicalJson(source) === canonicalJson(member))), "ROSTER_RENDERING_MISMATCH");
+  if (rendered.dispositions.some(row => row.state === "IDENTITY_UNRESOLVED") && previous) {
+    // An incomplete identity update proves no departure. Keep omitted prior
+    // members with their own authority/date while the normal repair resolves it.
+    for (const member of previous.members.filter(old => !rendered.roster.members.some(current => current.id === old.id))) {
+      rendered.roster.members.push({ ...member, membershipSource: member.membershipSource ?? {
+        sourceUrl: previous.sourceUrl, sourceOrg: previous.sourceOrg, collectedAt: previous.collectedAt } });
+      rendered.dispositions.push({ sourceId: member.id, canonicalId: member.id, state: "READER_ELIGIBLE",
+        reason: "Retained from the prior verified roster; the incomplete update does not establish a departure." });
+    }
+  }
   // Officeholding and ballot candidacy are separate assertions. New verified
   // holders reach readers while the already owed election work checks candidacy;
   // an unchecked link is never represented as no candidacy or no funding.
@@ -153,7 +166,8 @@ export async function publishWorkerRosterResults(input: {
     const auditor = own.filter(record => record.result.role === "ADVERSARIAL_AUDITOR")
       .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
     if (!auditor || !plan?.ownerInstructions?.length) throw new Error(`ROSTER_OWNER_WORK_INSTRUCTIONS_MISSING:${id}`);
-    if (item.publicationOutcome?.workerResultId === auditor.id && item.publicationOutcome.recovery !== "PUBLISHER") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
+    if (item.publicationOutcome?.workerResultId === auditor.id && item.publicationOutcome.recovery !== "PUBLISHER" &&
+      item.publicationOutcome.code !== "ROSTER_READER_IDENTITY_UNRESOLVED") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null;
     let versionId: string | null = null;
@@ -165,17 +179,27 @@ export async function publishWorkerRosterResults(input: {
       const captures = await Promise.all(ids.map(artifact => input.readCapture(artifact, records)));
       const prior = await readRegistryRuntimePrior(input.store, input.now);
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
-      const prepared = workerRosterPublication({ plan, parser, validator, auditor, captures, prior, now: input.now });
+      const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY"
+        ? workerBodyDirectoryPackage({ plan, parser, validator, auditor, captures, prior, now: input.now }) : null;
+      const prepared = directory?.prepared ?? workerRosterPublication({ plan, parser, validator, auditor, captures, prior, now: input.now });
       const before = prior.payload.bodyRosters.find(roster => roster.bodyId === plan.publication?.bodyId)?.members ?? [];
       const counts = { added: 0, changed: 0, reused: 0 };
-      for (const member of prepared.payload.bodyRosters[0].members) {
+      const memberFacts = (member: BodyRoster["members"][number]) => canonicalJson(Object.fromEntries(Object.entries(member).filter(([field]) => field !== "membershipSource")));
+      for (const member of prepared.payload.bodyRosters[0]?.members ?? []) {
         const previous = before.find(held => held.id === member.id);
         if (!previous) counts.added++;
-        else if (canonicalJson(previous) === canonicalJson(member)) counts.reused++;
+        else if (memberFacts(previous) === memberFacts(member)) counts.reused++;
         else counts.changed++;
       }
+      if (directory) for (const body of prepared.payload.registry.bodies) {
+        const old = prior.payload.registry.bodies.find(row => row.id === body.id);
+        const facts = (row: typeof body) => canonicalJson({ name: row.name, bodyClass: row.bodyClass, ocdId: row.ocdId, homepageUrl: row.homepageUrl });
+        if (!old) counts.added++; else if (facts(old) === facts(body)) counts.reused++; else counts.changed++;
+      }
       const candidate = registryRuntimeCandidate(prepared, { prior });
-      requireThat(canonicalJson((candidate.readModel as RegistryRuntimeReadModel).bodyRosters.find(roster => roster.bodyId === plan.publication?.bodyId)) ===
+      if (directory) requireThat(prepared.payload.registry.bodies.every(body => canonicalJson(body) ===
+        canonicalJson((candidate.readModel as RegistryRuntimeReadModel).registry.bodies.find(row => row.id === body.id))), "WORKER_PUBLICATION_DIRECTORY_READER_FACTS_HELD");
+      else requireThat(canonicalJson((candidate.readModel as RegistryRuntimeReadModel).bodyRosters.find(roster => roster.bodyId === plan.publication?.bodyId)) ===
         canonicalJson(prepared.payload.bodyRosters[0]), "ROSTER_READER_FACTS_HELD");
       candidateId = candidate.id;
       const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
@@ -184,12 +208,20 @@ export async function publishWorkerRosterResults(input: {
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
-      outcome = { at: input.now, workerResultId: auditor.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
-        detail: `Independent roster checks passed, the existing registry door accepted ${versionId}, and typed reader readback passed. Remaining information families are still owed.`, candidateId, versionId, records: counts };
+      const unresolved = directory?.unresolved ?? prepared.payload.rosterReaderDispositions.filter(row => row.state === "IDENTITY_UNRESOLVED").map(row => row.sourceId);
+      outcome = { at: input.now, workerResultId: auditor.id, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+        code: unresolved.length ? directory ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
+        detail: `Independent ${directory ? "body directory" : "roster"} checks passed for ${directory ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length} reader ${directory ? "bodies" : "members"}, the existing registry door accepted ${versionId}, and typed reader readback passed. ${unresolved.length ? `${unresolved.length} source rows remain identity-unresolved: ${unresolved.join(", ")}. Repair these automatically; do not infer unsupported people or territory.` : "Remaining information families are still owed."}`,
+        ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, records: counts,
+        ...(directory ? { bodyIds: prepared.payload.registry.bodies.map(body => body.id) } : {}) };
+      if (directory) {
+        try { await materializeBodyDirectoryWork({ repos: input.repos, parent: { ...item, publicationOutcome: outcome }, bodies: prepared.payload.registry.bodies, now: input.now }); }
+        catch { throw new Error("DIRECTORY_DOWNSTREAM_WRITE_FAILED:Verified bodies remain published; recover their downstream assignments on the next publisher cycle"); }
+      }
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const code = detail.split(":")[0];
-      const recovery = code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code) ? "WORKER" : "PUBLISHER";
+      const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") ? "WORKER" : "PUBLISHER";
       outcome = { at: input.now, workerResultId: auditor.id, status: "HELD", code: detail.split(":")[0],
         detail: `${detail}. ${recovery === "WORKER" ? "Continue verification or source repair through the existing worker" : "Retry the existing publication operation with the verified evidence retained"}; no owner publication approval is required.`, recovery, candidateId, versionId };
     }

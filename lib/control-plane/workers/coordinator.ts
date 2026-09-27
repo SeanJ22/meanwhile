@@ -16,6 +16,7 @@ import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type
 import { isScheduled } from "../scheduler/obligation.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import { nextAuditEscalation } from "./audit-escalation.ts";
 
 /**
  * Blocker codes an acquisition recorded for robots.txt alone, before the owner decision of 2026-09-25. Historical:
@@ -258,12 +259,19 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const validator=records.find(r=>r.routeTaskId===validatorTask.id && r.result.role==="VALIDATOR");
       if (!validator) { const next=await taskFor({...spec,role:"VALIDATOR",producerResultId:parser.id}); if(next)return next; unresolved=true; continue; }
       if (validator.result.role!=="VALIDATOR" || (validator.result.verdict!=="PASS" && validator.result.extractionVerdict!=="PASS")) { unresolved=true; continue; }
-      const auditTask=await enqueueWorkerTask(repos,{...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope});
-      if (!records.some(r=>r.routeTaskId===auditTask.id)) { const next=await taskFor({...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope}); if(next)return next; unresolved=true; }
-      else {
-        const audit=records.find(r=>r.routeTaskId===auditTask.id);
-        if (!identityUnresolved && validator.result.verdict==="PASS" && audit?.result.role==="ADVERSARIAL_AUDITOR" && audit.result.verdict==="SURVIVED") staged=true;
-        else unresolved=true;
+      let auditSpec: Parameters<typeof enqueueWorkerTask>[1] = {...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope};
+      for (;;) {
+        const auditTask = await enqueueWorkerTask(repos, auditSpec);
+        const audit = records.find(r => r.routeTaskId === auditTask.id);
+        if (!audit) { const next = await taskFor(auditSpec); if (next) return next; unresolved = true; break; }
+        const escalation = nextAuditEscalation(audit);
+        if (escalation && validator.result.verdict === "PASS" && !identityUnresolved) {
+          auditSpec = { ...auditSpec, auditEscalation: escalation };
+          continue; // At most Haiku → Sonnet → Opus; each is one durable attempt.
+        }
+        if (!identityUnresolved && validator.result.verdict === "PASS" && audit.result.role === "ADVERSARIAL_AUDITOR" && audit.result.verdict === "SURVIVED") staged = true;
+        else unresolved = true;
+        break;
       }
     }
   }
@@ -279,7 +287,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const next = await taskFor(refresh);
     if (next) return next;
   }
-  if (staged && !unresolved && (item.publicationOutcome?.status !== "HELD" || item.publicationOutcome.recovery === "PUBLISHER")) return decision("STAGED",
+  if (staged && !unresolved && item.publicationOutcome?.recovery !== "WORKER" &&
+    (item.publicationOutcome?.status !== "HELD" || item.publicationOutcome.recovery === "PUBLISHER")) return decision("STAGED",
     item.publicationOutcome?.status === "PUBLISHED" ? `Verified records published in ${item.publicationOutcome.versionId}; other coverage obligations remain open.`
       : "Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
   const novelty = await scoutOperation(true);

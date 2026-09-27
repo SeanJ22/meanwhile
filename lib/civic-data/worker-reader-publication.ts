@@ -15,8 +15,11 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
-import { WORKER_READER_CLASSES, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
+import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
+import { createHash } from "node:crypto";
+import { officialFilingIssue } from "./official-filings.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
+import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const COMMENT_FIELDS = ["commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"] as const;
@@ -64,12 +67,52 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
   const contractId = target.contractId as WorkerReaderContract;
   const checked = verifiedWorkerRecords(input);
-  requirePublication(checked.contract.recordClass === WORKER_READER_CLASSES[contractId], "READER_CLASS_MISMATCH");
+  requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
   requirePublication(body?.name, "CANONICAL_BODY_MISSING");
   const records = checked.extraction.records.map(record => {
     const f = record.fields;
     requirePublication(words(text(f.bodyName)) === words(body.name!), "CANONICAL_BODY_MISMATCH");
+    if (contractId === "official-filings") {
+      const publisherDivisionId = body.ocdId;
+      requirePublication(publisherDivisionId && input.registry?.payload.registry.divisions.some(row => row.ocdId === publisherDivisionId), "FILING_TERRITORY_UNRESOLVED");
+      const territories = input.registry?.payload.registry.divisions.filter(row => row.state.toUpperCase() === checked.contract.jurisdiction.state.toUpperCase() &&
+        words(row.label) === words(text(f.jurisdictionName))) ?? [];
+      requirePublication(territories.length === 1, "FILING_EXACT_JURISDICTION_UNRESOLVED");
+      const facts = Object.fromEntries(Object.entries(f).filter(([key]) => !["bodyName", "documentUrl", "jurisdictionName"].includes(key)));
+      const id = `official-filing:${createHash("sha256").update(canonicalJson([body.id, territories[0].ocdId, checked.contract.recordClass, f.documentUrl,
+        f.candidateName ?? f.committeeName, f.office ?? f.filingPeriod])).digest("hex")}`;
+      const row = { id, kind: checked.contract.recordClass, bodyId: body.id, ocdId: territories[0].ocdId, bodyName: body.name, jurisdictionName: territories[0].label,
+        sourceUrl: checked.primary.evidence.canonicalUrl, documentUrl: f.documentUrl, collectedAt: checked.primary.observedAt, verifiedAt: input.now, facts };
+      requirePublication(officialFilingIssue(row) === null, `FILING_FIELDS_UNVERIFIED:${officialFilingIssue(row)}`);
+      return row;
+    }
+    if (contractId === "everyday-routing") {
+      const allowed = new Set(["bodyName", "topicId", "serviceZip", "service", "serviceAreaEvidence", "phone", "email", "requestUrl", "note"]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "SERVICE_FIELD_UNSUPPORTED");
+      requirePublication((EVERYDAY_TOPIC_IDS as readonly string[]).includes(text(f.topicId)) && /^\d{5}$/.test(text(f.serviceZip)) &&
+        text(f.service).trim() && text(f.serviceAreaEvidence).trim(), "SERVICE_APPLICABILITY_UNVERIFIED");
+      requirePublication(text(f.phone).trim() || text(f.email).trim() || /^https:\/\//.test(text(f.requestUrl)), "SERVICE_CHANNEL_MISSING");
+      requirePublication(!f.requestUrl || /^https:\/\//.test(text(f.requestUrl)), "SERVICE_CHANNEL_INVALID");
+      return { id: `everyday-contact:${f.topicId}:${f.serviceZip}:${checked.primary.evidence.canonicalUrl}`, kind: "CONTACT",
+        topicId: f.topicId, zip: f.serviceZip, serviceAreaEvidence: f.serviceAreaEvidence,
+        contact: { topicId: f.topicId, zips: [f.serviceZip], body: body.name, service: f.service,
+          phone: f.phone ?? null, email: f.email ?? null, requestUrl: f.requestUrl ?? null, note: f.note ?? null,
+          sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.primary.evidence.sourceId,
+          collectedAt: checked.primary.observedAt, verification: "PAGE_FETCHED" } };
+    }
+    if (contractId === "ballot-navigation") {
+      const allowed = new Set(["bodyName", "state", "kind", "url", "coverage", "coverageEvidence", "note"]);
+      requirePublication(Object.keys(f).every(field => allowed.has(field)), "NAVIGATION_FIELD_UNSUPPORTED");
+      requirePublication(text(f.state) === checked.contract.jurisdiction.state.toUpperCase() && /^[A-Z]{2}$/.test(text(f.state)) &&
+        f.coverage === "STATEWIDE" && text(f.coverageEvidence).trim(), "NAVIGATION_APPLICABILITY_UNVERIFIED");
+      requirePublication(["POLLING_PLACE_LINK", "REGISTRATION_LINK"].includes(text(f.kind)) && /^https:\/\//.test(text(f.url)), "NAVIGATION_ROUTE_INVALID");
+      return { id: `ballot-navigation:${f.kind}:${f.state}`, kind: f.kind, sourceUrl: checked.primary.evidence.canonicalUrl,
+        coverageEvidence: f.coverageEvidence, value: { state: f.state, url: f.url,
+          label: f.kind === "POLLING_PLACE_LINK" ? "Find your polling place" : "Check whether you're registered to vote",
+          note: f.note ?? "", sourceOrg: checked.primary.evidence.sourceId,
+          verification: `Source and independent authority verified at ${input.now}.`, verifiedAt: input.now } };
+    }
       requirePublication(["YES", "NO", "UNKNOWN"].includes(text(f.commentPeriod)) && text(f.commentPeriodDetail).trim(), "COMMENT_RULE_MISSING");
       const allowed = new Set(["bodyName", "commentPeriod", "commentPeriodDetail", "signup", "writtenComment", "attend", "timeLimit"]);
       requirePublication(Object.keys(f).every(field => allowed.has(field)), "COMMENT_FIELD_UNSUPPORTED");
@@ -80,7 +123,8 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
   });
   requirePublication(records.length === checked.extraction.actualRowCount && new Set(records.map(r => r.id)).size === records.length, "READER_IDENTITY_COLLISION");
   return { contractId, version: `worker:${input.auditor.id}`, sourceThrough: input.now,
-    sourceReceipt: checked.sourceReceipt, payload: { kind: contractId, records } };
+    sourceReceipt: checked.sourceReceipt, payload: contractId === "everyday-routing"
+      ? everydayRoutingProjectionFromRecords(records as unknown as EverydayRoutingRecord[]) : { kind: contractId, records } };
 }
 
 export async function publishWorkerReaderResults(input: {
@@ -110,11 +154,12 @@ export async function publishWorkerReaderResults(input: {
       const checked = workerReaderPackage({ plan, parser, validator, auditor, captures, registry, now: input.now });
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
-      const prepared = inheritVerifiedCommentDetails(checked, prior);
+      const prepared = input.contractId === "comment-access" ? inheritVerifiedCommentDetails(checked, prior) : checked;
       const delivered = (prepared.payload as CuratedReaderProjection).records;
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(prepared, input.store, input.now);
       const composed = candidate.readModel as CuratedReaderProjection;
-      requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))), "READER_FACTS_HELD");
+      requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
+        `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);
       candidateId = candidate.id;
       workerChecksComplete = true;
       const published = await processRegisteredManualCandidate(input.store, input.contractId, candidate, input.now, expectedBaseVersionId);

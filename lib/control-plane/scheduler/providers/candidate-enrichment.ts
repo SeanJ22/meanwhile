@@ -107,6 +107,7 @@ import type {
 import { requiredManualProductionContract } from "../../../civic-data/manual-contracts.ts";
 import { requiredRoutineContract } from "../../../civic-data/contracts.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../../civic-data/read-model.ts";
+import { readDerivedCampaignSites, composeCampaignLinks } from "../../../civic-data/derived-campaign-sites.ts";
 import type { NjMorrisReadModel } from "../../../sources/ballot-nj-morris/index.ts";
 import type {
   ObligationProvider,
@@ -433,6 +434,7 @@ export async function preloadCandidateEnrichmentAuthorities(
     readPromotedCivicData<NjMorrisReadModel>(NJ_BALLOT.recordClass, NJ_BALLOT.scope, options),
     readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, options),
     readPromotedCivicData<CandidateCorpus>(PUBLICATIONS.recordClass, PUBLICATIONS.scope, options),
+    readDerivedCampaignSites(options),
   ]);
   const failures: string[] = [];
   const held = <T>(result: PromiseSettledResult<{ readonly kind: string; readonly value: T | null }>, name: string): T | null => {
@@ -454,6 +456,26 @@ export async function preloadCandidateEnrichmentAuthorities(
     corpus: held(results[4]!, "Candidate publication"),
     failures,
   };
+  // The worker must inherit the same automatically delivered links and page
+  // text the Reader sees. Reading only the original profile/corpus pointers
+  // made a later cycle rediscover information its own publisher had delivered.
+  const derived = results[5];
+  if (derived.status === "fulfilled" && derived.value.kind === "PROMOTED") {
+    const records = derived.value.value.records;
+    const profiles = loadedAuthorities.profiles;
+    const corpus = loadedAuthorities.corpus;
+    const documents = new Map(corpus?.documents.map(document => [document.id, document]) ?? []);
+    for (const record of records) for (const { document } of record.publications ?? []) {
+      if (!documents.has(document.id)) documents.set(document.id, document);
+    }
+    loadedAuthorities = { ...loadedAuthorities,
+      profiles: profiles ? { ...profiles, links: { ...profiles.links, links: composeCampaignLinks(profiles.links.links, records).links } } : null,
+      corpus: corpus ? { ...corpus, documents: [...documents.values()], attempted: Math.max(corpus.attempted,
+        new Set([...documents.values()].map(document => document.candidateKey).concat(corpus.failures.map(failure => failure.candidateKey))).size) } : null };
+  } else if (derived.status === "rejected" || derived.value.kind !== "NOT_RECORDED") {
+    // Keep usable prior holdings; failed reconciliation cannot mean no sites.
+    failures.push("Automatically published candidate evidence is unavailable; retained profile/corpus evidence remains usable and reconciliation is still owed.");
+  }
 }
 
 /**

@@ -569,7 +569,7 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
 
 /* --------------------------------------------------------------------- L7 */
 
-test("L7: Opus 5.5 remains the maximum the ladder can reach, a Fable is refused, the auditor stays on the frontier, and an escalation needs a recorded reason below the top", async () => {
+test("L7: Opus 5.5 remains the maximum, a Fable is refused, and cheaper-first audit escalation needs a reason", async () => {
   const up = escalationTargetFor("scout-research-loop", "sonnet");
   assert.equal(up?.model, MODEL_CEILING);
   assert.equal(MODEL_CEILING, OPUS);
@@ -581,10 +581,9 @@ test("L7: Opus 5.5 remains the maximum the ladder can reach, a Fable is refused,
   }
   assert.match(String(modelCeilingViolation("claude-fable-5-1")), /fable/i);
 
-  /* The auditor: frontier, and nothing above it. */
-  assert.equal(assertStepMayInvokeModel("adversarial-audit").model, OPUS);
-  assert.equal(escalationTargetFor("adversarial-audit"), null);
-  assert.throws(() => assertStepMayEscalate("adversarial-audit", "RESULT_REFUSED"), UnrecordedEscalation, "the top of the ladder has nowhere to go");
+  assert.equal(assertStepMayInvokeModel("adversarial-audit").model, HAIKU);
+  assert.equal(escalationTargetFor("adversarial-audit")?.modelClass, "sonnet");
+  assert.equal(assertStepMayEscalate("adversarial-audit", "RESULT_REFUSED").model, SONNET);
   assert.throws(() => assertStepMayEscalate("scout-research-loop", "IT_FELT_HARD" as ModelEscalationReason), UnrecordedEscalation, "an unrecorded reason never escalates");
   assert.throws(() => assertStepMayEscalate("page-to-representation", "RESULT_REFUSED"), DeterministicStepInvokedModel);
   assert.deepEqual([...MODEL_ESCALATION_REASONS], ["BOUND_EXHAUSTED_WITHOUT_RESULT", "RESULT_REFUSED", "NO_TYPED_RESULT", "CAPABILITY_ERROR"]);

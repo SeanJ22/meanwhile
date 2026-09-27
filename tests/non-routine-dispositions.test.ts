@@ -101,7 +101,7 @@ test("six direct routine rows plus the retired LegiScan row resolve every standi
 });
 
 test("every explicit-owner production contract resolves one frozen inventory row without becoming a routine clock", () => {
-  const splitBindings = PDC7_RESOLVED_SPLIT_BINDINGS.flatMap(({ paths }) => paths.flatMap((path) =>
+  const splitBindings = PDC7_RESOLVED_SPLIT_BINDINGS.flatMap(({ paths, addedProductionPaths }) => [...paths, ...(addedProductionPaths ?? [])].flatMap((path) =>
     path.disposition === "PRODUCTION_DATA_PLANE"
       ? [{ contractId: path.contractId, contractSourceId: path.contractSourceId }]
       : [],

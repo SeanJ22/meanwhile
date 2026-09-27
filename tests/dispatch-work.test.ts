@@ -109,9 +109,11 @@ test("a new hunt discovers missing information families without inventing publis
   const unknown = { ...held, sourceIds: [] };
   assert.equal(jurisdictionRequirements(reg, unknown).length, 0, "deploying the change does not expand old standing work");
   const missing = jurisdictionRequirements(reg, unknown, UNREAD_MEETING_PARTITIONS, true);
-  assert.deepEqual(missing.map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS"]);
+  const directory = missing.filter(r => r.route.routeId === "coverage-discovery:body-directory");
+  assert.equal(directory.length, 1, "body discovery has a separate denominator obligation; a roster cannot discharge it");
+  assert.deepEqual(missing.filter(r => !directory.includes(r)).map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS"]);
   assert.ok(missing.every(r => r.route.executorClass === "BOUNDED_MODEL_WORKER" && r.source.state === "DISCOVERY_OWED"));
-  assert.ok(missing.every(r => /not yet been established/.test(r.source.authorityBasis)));
+  assert.ok(missing.filter(r => !directory.includes(r)).every(r => /not yet been established/.test(r.source.authorityBasis)));
   const financeKey = held.sourceIds.find(key => sourcesOf(reg, { ...held, sourceIds: [key] })[0].recordClass === "CAMPAIGN_FINANCE");
   assert.ok(financeKey, "the fixture carries its real shared filing route");
   const shared = jurisdictionRequirements(reg, { ...held, sourceIds: [financeKey] }, UNREAD_MEETING_PARTITIONS, true);
@@ -121,7 +123,7 @@ installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
 
 test("owner-created family work reaches autonomous workers and survives registration and an interrupted occurrence", async () => {
   const reg = REGISTRIES.az;
-  const government = { ...reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [] };
+  const government = { ...reg.jurisdictions.find(j => j.govClass === "SCHOOL_DISTRICT")!, sourceIds: [], bodyId: "fixture:registered-school-board" };
   const requirements = requirementsFor(reg, government, null, UNREAD_MEETING_PARTITIONS, true);
   const repos = createMemoryRepositories();
   for (const requirement of requirements) {
@@ -147,6 +149,19 @@ test("owner-created family work reaches autonomous workers and survives registra
     await repos.workItems.compareAndSet(item.id, item.revision, withoutPlan, T1);
     await resumeOpenOccurrence(repos, retained);
     assert.deepEqual((await repos.workItems.mustRead(item.id)).value.autonomousPlan, { ...plan, ownerInstructions: [] }, "already-open work is repaired without another occurrence or lost evidence");
+    if (plan.publication) {
+      const before = await repos.workItems.mustRead(item.id);
+      const { publication: _missingDoor, ...legacyPlan } = before.value.autonomousPlan!;
+      await repos.workItems.compareAndSet(item.id, before.revision, { ...before.value, autonomousPlan: legacyPlan }, T1);
+      const assigned = { ...retained, assignments: [{ assignmentKey: "isolated-send", ref: "receipt:isolated-send", relation: "REORDERED" as const, at: T1 }] };
+      await resumeOpenOccurrence(repos, assigned);
+      const connected = await repos.workItems.mustRead(item.id);
+      assert.deepEqual(connected.value.autonomousPlan!.publication, plan.publication, "new normal Send reconnects a retained result to its now-implemented publisher");
+      assert.deepEqual(connected.value.autonomousPlan!.contract, legacyPlan.contract, "retained extraction and verification evidence is not rewritten");
+      assert.deepEqual(connected.value.autonomousPlan!.ownerInstructions, ["receipt:isolated-send"]);
+      await resumeOpenOccurrence(repos, assigned);
+      assert.equal((await repos.workItems.mustRead(item.id)).revision, connected.revision, "the normal resume remains idempotent");
+    }
   }
 });
 

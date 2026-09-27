@@ -9,6 +9,9 @@ import type { ServedReaderReadback } from "./served-reader.ts";
 import { observeCampaignControls } from "./campaign-reader-controls.ts";
 import { launchGuarded } from "../../scripts/browser.mts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
+import { PostgresRoutineDataStore } from "../civic-data/store.ts";
+import type { WorkItem } from "./work-item.ts";
+import { collectWorkerRosterReadback, observePublishedRoster, observePublishedFilings } from "./worker-reader-readback.ts";
 
 export async function collectPublishedCampaignReadback(now: string): Promise<ServedReaderReadback> {
   const derived = await readDerivedCampaignSites();
@@ -60,4 +63,36 @@ export async function collectPublishedCampaignReadback(now: string): Promise<Ser
       } });
     return { ...report, syntheticRunId: browser.runId };
   } finally { clearTimeout(deadline); await browser.close(); }
+}
+
+/** Same scheduler/publisher, public controls and isolated browser as campaign
+ * readbacks. No browser starts unless a worker receipt actually needs a visit. */
+export async function collectPublishedWorkerReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
+  let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
+  let deadline: ReturnType<typeof setTimeout> | undefined;
+  const destinations = new Map<string, Awaited<ReturnType<typeof lowestZipByDivision>>>();
+  try {
+    const result = await collectWorkerRosterReadback({ items, now, previous, store: new PostgresRoutineDataStore(),
+      zipForDivision: async division => {
+        const state = /\/state:([a-z]{2})(?:\/|$)/.exec(division)?.[1]?.toUpperCase();
+        if (!state) return null;
+        if (!destinations.has(state)) destinations.set(state, await lowestZipByDivision(state));
+        return destinations.get(state)?.get(division) ?? null;
+      },
+      observe: async input => {
+        if (!browser) {
+          const env = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => value !== undefined &&
+            /^(path|systemroot|windir|temp|tmp|userprofile|localappdata|appdata|home|playwright_browsers_path)$/i.test(key))) as Record<string, string>;
+          browser = await launchGuarded({ label: "worker-publication-readback", headless: true, env });
+          deadline = setTimeout(() => { void browser?.close().catch(() => undefined); }, 75_000);
+        }
+        const context = await browser.context({ viewport: { width: 1280, height: 900 } });
+        try {
+          const page = await context.newPage();
+          page.setDefaultTimeout(3000);
+          return await ("filings" in input ? observePublishedFilings(page, input) : observePublishedRoster(page, input));
+        } finally { await context.close(); }
+      } });
+    return { ...result, ...(browser ? { syntheticRunId: (browser as Awaited<ReturnType<typeof launchGuarded>>).runId } : {}) };
+  } finally { if (deadline) clearTimeout(deadline); if (browser) await (browser as Awaited<ReturnType<typeof launchGuarded>>).close(); }
 }

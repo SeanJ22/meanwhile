@@ -2,7 +2,9 @@ import { performance } from "node:perf_hooks";
 import { contentHash } from "../ids.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { meteredCostFields, priceMeteredUsage, readMeteredUsage, type MeteredUsage } from "../model-cost.ts";
-import { assertStepMayInvokeModel } from "../scheduler/model-routing.ts";
+import { assertStepMayInvokeModel, MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
+import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { nextAuditEscalation } from "./audit-escalation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { anthropicTransport, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import type { FleetRuntime } from "./runtime.ts";
@@ -252,29 +254,29 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     /** MW-021 (2026-09-25): the transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
   } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
-  /*
-   * THE AUDITOR STAYS ON THE FRONTIER (MW-033/MW-035, 2026-09-25). MW-035 lets
-   * an expensive step run only when it is selective, and this one is: it runs
-   * once per record the parser and validator already passed, on its way to
-   * promotion (workers/runtime.ts, ADVERSARIAL_AUDITOR) — never per page or rung.
-   * Its whole job is to break what the cheaper passes produced, so a cheaper
-   * auditor would share the blind spots it exists to catch; the registry gives
-   * it no cheaper class and no escalation (`adversarial-audit` in
-   * model-routing.ts), and the Scout loop's Sonnet-first ladder does not apply.
-   */
-  const route = assertStepMayInvokeModel("adversarial-audit");
+  const initial = assertStepMayInvokeModel("adversarial-audit");
   const timeoutMs = options.timeoutMs ?? AUDIT_REVIEW_TIMEOUT_MS;
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > AUDIT_REVIEW_TIMEOUT_MS) throw new Error("AUDIT_REVIEW_BOUND_INVALID");
   const ceilingUsd = options.ceilingUsd ?? RESEARCH_BOUNDS.dailyCeilingUsd;
   if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
-  return { workerProvider: "anthropic", workerVersion: route.model, review: async (context) => withinBound(async (signal) => {
+  return { workerProvider: "anthropic", workerVersion: initial.model, review: async (context, attemptId, escalation) => withinBound(async (signal) => {
     const started = performance.now();
     const spend = researchSpendInWindow(await repos.costs.readAll(), now());
     signal.throwIfAborted();
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
     const body = auditReasoningContext(context);
-    const request: ModelRequest = { model: route.model, max_tokens: 2_048, output_config: { effort: route.effort },
+    const route = escalation ? { ...initial, model: MODEL_FOR_CLASS[escalation.to], modelClass: escalation.to } : initial;
+    if (escalation) {
+      const previous = (await readCompletedWorkerResult(repos, escalation.previousResultId)).record;
+      const attempt = (await repos.attempts.mustRead(attemptId)).value;
+      if (canonicalJson(nextAuditEscalation(previous)) !== canonicalJson(escalation) ||
+        previous.workItemId !== attempt.workItemId || previous.modelReview?.contextHash !== contentHash(body)) {
+        throw new Error("DENIED_BY_POLICY:AUDIT_ESCALATION_EVIDENCE_MISMATCH");
+      }
+    }
+    const request: ModelRequest = { model: route.model, max_tokens: 2_048,
+      ...(route.modelClass === "haiku" ? {} : { output_config: { effort: route.effort } }),
       system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }], tools: [RECORD_AUDIT],
       tool_choice: { type: "auto" },
       messages: [{ role: "user", content: body }] };
@@ -311,6 +313,7 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       if (error instanceof PartiallyGroundedResponse) challenges = error.grounded;
     }
     return { review: { step: "adversarial-audit", model: response.model, effort: route.effort, contextHash: contentHash(body),
+      ...(escalation ? { escalation: { ...escalation, at: now() } } : {}),
       verdict, challenges, validationError, responseText, elapsedMs: Math.round(performance.now() - started) },
       usage, usd: priceMeteredUsage(response.model, metered, "5m").usd, metering: meteredCostFields(metered) };
   }, timeoutMs) };

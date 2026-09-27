@@ -67,6 +67,7 @@ import {
 import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../lib/ballot/candidate-sites.ts";
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { preloadCandidateEnrichmentAuthorities, candidateEnrichmentHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 
 await installRegistryRuntimeFirstSeeds();
@@ -252,6 +253,13 @@ test("a runner cycle over held results publishes a verified site through the der
   await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: PUBLISH });
   assert.ok(documentsFor(tangKeys[0]).some(doc => doc.documentUrl === LILY && doc.text?.length && doc.sourceContentHash), "normal candidate Reader receives verified page text");
   assert.ok(documentsFor(MAYES_KEY).some(doc => doc.contentHash === oldHash), "prior GOOD publications survive");
+  await preloadCandidateEnrichmentAuthorities({ store, bypassCache: true, now: PUBLISH });
+  const inherited = candidateEnrichmentHoldings()!;
+  assert.equal(inherited.profiles?.links.links[tangKeys[0]].campaign?.url, LILY, "the next normal worker inherits the delivered campaign link");
+  assert.ok(inherited.corpus?.documents.some(document => document.candidateKey === tangKeys[0] && document.documentUrl === LILY && document.sourceContentHash),
+    "the next worker inherits the same verified text and captured-byte identity as the Reader");
+  assert.ok(inherited.corpus?.documents.some(document => document.contentHash === oldHash), "reuse preserves prior publication evidence");
+  assert.equal(new Set(inherited.corpus?.documents.map(document => document.id)).size, inherited.corpus?.documents.length, "no duplicate publication versions");
   const goodProjection = pass.candidate.readModel as import("../lib/civic-data/derived-campaign-sites.ts").DerivedCampaignSitesProjection;
   const broken = structuredClone(goodProjection);
   const doc = broken.records[0].publications![0].document;

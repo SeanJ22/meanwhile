@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 875,
-    "named": 8347,
+    "named": 8356,
     "dynamic": 33
   },
   "files": {
@@ -2066,7 +2066,7 @@
         "a cold /ballot?zip=85701 with the whole ballot edge makes no database read at all, in the page or in any card",
         "one promoted version is one authority key, whether the edge primed it (BOOTSTRAP) or the database read it (PROMOTED)",
         "with no edge published, the same render reads those families from the database: the fallback stays",
-        "with only the map's families on the edge (R30), a cold /ballot?zip=85701 reads exactly the six proven pointers this change moves, none from a card"
+        "with only map families on the edge, a cold ballot reads exactly its missing ballot and filing pointers, none from a card"
       ],
       "dynamic": 0
     },
@@ -3974,7 +3974,7 @@
     },
     "tests/curated-reader-data-plane.test.ts": {
       "names": [
-        "Admin projects the five manual authorities without inventing a clock",
+        "Admin projects every curated authority including official filings without inventing a clock",
         "a bad curated family is held against its own LKG and cannot affect another family",
         "comment-access drops the control-plane transport id at the Reader boundary",
         "curated Reader evidence is source-scoped and never names software certification",
@@ -8360,6 +8360,7 @@
         "repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes",
         "repair refuses fabricated, stale, missing, unsupported and self-verifying evidence without altering required verification",
         "repair refuses unchanged ancestor proposals and invalid lineage without clearing the obligation",
+        "service and voter-access discovery can admit independently replayed repair instructions",
         "seven already observed proposals cannot starve an older actionable repair",
         "successor creation is atomic and an interrupted older registration is recoverable",
         "successors preserve Detective burdens and continue beyond three repairs only on new evidence"
@@ -10610,7 +10611,7 @@
         "L5 FleetSafety.holdModelBudget: the hold counts against the rolling ceiling until drawn or released, and refuses over it",
         "L5 WALL_CLOCK / UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request",
         "L6: the pre-warm warms the model the loop STARTS on — byte-identical to the loop's first request — and is skipped by name when the prefix cannot be shown to cache",
-        "L7: Opus 5.5 remains the maximum the ladder can reach, a Fable is refused, the auditor stays on the frontier, and an escalation needs a recorded reason below the top"
+        "L7: Opus 5.5 remains the maximum, a Fable is refused, and cheaper-first audit escalation needs a reason"
       ],
       "dynamic": 1
     },
@@ -12370,12 +12371,12 @@
     },
     "tests/worker-fleet-model-audit.test.ts": {
       "names": [
-        "Opus 5.5 request: no forced tool choice — auto, a strict record_audit schema strict mode accepts, and the system prompt naming the tool",
         "a valid grounded challenge survives beside a refused ungrounded challenge without certifying the whole response",
         "adaptive budget keeps five complete events and every exploratory route with eight large publisher surfaces",
         "an answer without a record_audit call fails closed by name — even valid JSON saying SURVIVED — and missing usage remains null",
         "an injected transport cannot hang the review and the established bound cannot be enlarged",
         "an oversized primary projection is refused before transport instead of cutting through civic JSON",
+        "cheaper-first audit uses auto tool choice and a strict schema compatible with the later Opus escalation",
         "first-party surface evidence is represented and exact surface quotes ground challenges",
         "instruction-like source content remains evidence while producer context and arbitrary tool actions are refused",
         "large official HTML keeps deterministic relevant exact excerpts with explicit omission and bounded representation",
@@ -12510,12 +12511,20 @@
     },
     "tests/worker-reader-publication.test.ts": {
       "names": [
-        "independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence"
+        "a service record without a usable channel returns to automatic repair instead of a manual approval queue",
+        "a verified shared directory body serves its exact listed Census divisions without countywide coverage or duplicate identities",
+        "independent candidate and committee filings automatically publish source facts through the existing promotion and ballot reader",
+        "independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence",
+        "normal service workers publish verified applicability and channels while leaving missing topics visibly unacquired",
+        "normal voter-access workers publish the independently verified statewide route through the existing navigation reader",
+        "verified directory bodies publish through the normal registry door and create durable scope-bound work without manual admission"
       ],
       "dynamic": 0
     },
     "tests/worker-roster-publication.test.ts": {
       "names": [
+        "a stranded mixed roster publishes verified members while unresolved identities enter automatic repair",
+        "normal audit work escalates unresolved Haiku and Sonnet attempts then publishes after independent checks pass",
         "ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt"
       ],
       "dynamic": 0

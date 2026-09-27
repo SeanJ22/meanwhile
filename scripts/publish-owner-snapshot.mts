@@ -78,7 +78,7 @@ import {
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
 import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
 import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
-import { collectPublishedCampaignReadback } from "../lib/control-plane/served-reader-production.ts";
+import { collectPublishedCampaignReadback, collectPublishedWorkerReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
@@ -750,7 +750,13 @@ async function main(): Promise<void> {
   }
   const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
   const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, readings: providerBilling.readings }) : null;
-  const servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
+  let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
+  if (!DRY_RUN && reads?.assignmentSources.ok) {
+    const workerReadback = await collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+      .catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] }));
+    const joined = new Map([...(servedReader?.witnesses ?? []), ...workerReadback.witnesses].map(w => [`${w.itemId}:${w.approvalId}`, w]));
+    servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors] };
+  }
   const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */

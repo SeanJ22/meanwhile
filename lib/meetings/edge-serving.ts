@@ -342,6 +342,7 @@ export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",
+  "official-filings",
   "nh-members",
   "federal-funding",
   "state-money",

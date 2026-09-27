@@ -159,6 +159,7 @@ export type PromotedAuthorityFamily =
   | "candidate-profiles"
   | "candidate-publications"
   | "ballot-navigation"
+  | "official-filings"
   | "nh-members"
   | "federal-funding"
   | "state-money"
@@ -174,6 +175,7 @@ export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",
+  "official-filings",
   "nh-members",
   "federal-funding",
   "state-money",

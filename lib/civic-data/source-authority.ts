@@ -112,6 +112,7 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "published public-comment rule",
+      "independently verified official candidate-filing and committee-report facts, without an inferred ballot or financial identity join",
       "official voter-registration lookup route",
       "official polling-place lookup route",
       "verified campaign or personal site binding",

@@ -6,6 +6,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { schoolIdentity } from "../lib/ocd/divisions.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const root = arg("evidence-root"), zip = arg("zip"), stamp = arg("stamp");
@@ -50,8 +51,9 @@ for (const layer of summary.layers) {
   }
 }
 assert.equal(records.length, areas.rows.filter((row: { positiveArea: boolean }) => row.positiveArea).length);
+const count = floored("positive school overlaps", "retained complete Census polygon intersection measurements", areas.rows.length, records.length);
 const output = "lib/control-plane/expansion/reference/census-school-intersections.json";
 const prior = JSON.parse(readFileSync(output, "utf8"));
 writeFileSync(output, JSON.stringify({ formatVersion: 1, method: areas.method, sourceEvidence: sources,
   records: [...prior.records.filter((row: { zcta: string }) => row.zcta !== zip), ...records] }, null, 2) + "\n");
-console.log(JSON.stringify({ zip, records: records.length, output, paidCalls: 0 }));
+console.log(JSON.stringify({ zip, count: floorLine(count), output, paidCalls: 0 }));

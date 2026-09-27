@@ -1,5 +1,5 @@
 {
-  "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+  "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
@@ -150,7 +150,7 @@
       "actualRecordCount": 83,
       "traceRecordCount": 83,
       "countAgrees": true,
-      "payloadSha256": "5a0ef083379ee2bd81e4eaf0b3b28f01d2d13f386de3c0aea53d14695e3bee2b",
+      "payloadSha256": "0cea42f7e06d4d524793f8f8fe555d252a4d6e49db64b2e018e28185acf16a2e",
       "status": "PROVEN"
     },
     {
@@ -265,7 +265,7 @@
       "actualRecordCount": 2,
       "traceRecordCount": 2,
       "countAgrees": true,
-      "payloadSha256": "167590d940927bfe5887714dc664a5293e6c1424dee00cae916881f559373c32",
+      "payloadSha256": "24dda21dcc18d73a0eda752d54f1e70ab08a78dc303fcf061dd9980241748099",
       "status": "PROVEN"
     },
     {
@@ -380,7 +380,7 @@
       "actualRecordCount": 2,
       "traceRecordCount": 2,
       "countAgrees": true,
-      "payloadSha256": "040430e73e2275b6891822ded4688650499f9f6b99540985e0eee8c2aa206a55",
+      "payloadSha256": "99fd07e4e213ac09ee8b7d23f5127979111f71c014bcd72d774281cf7468097e",
       "status": "PROVEN"
     },
     {
@@ -525,7 +525,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "090f4968115944547ac82cc9cf8c2928380a9d531836abb430db124918d21384",
+      "payloadSha256": "990f8742ef6791cc36593a49b186b21c2752e16bb066d2b2e9f5f4b2bf818e48",
       "status": "PROVEN"
     },
     {
@@ -677,7 +677,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "58cbe9a862147c72499f564891bdf9ca809f2a453de6d1a3bee89c0878166711",
+      "payloadSha256": "aadd2de56be668a909c7ba459e424e3fc6fc23c25f47fa1e0c790679427e7054",
       "status": "PROVEN"
     },
     {
@@ -840,7 +840,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "f53694bff4a0de51064baf6f096aae0abf8110da8a9ad99c0fcf5a6461d5d991",
+      "payloadSha256": "954d61cf56fa8de6f18d07fcb91207b603d6da3ab8b17f4637c70d3c5bcf7e1d",
       "status": "PROVEN"
     },
     {
@@ -960,7 +960,7 @@
       "actualRecordCount": 85,
       "traceRecordCount": 85,
       "countAgrees": true,
-      "payloadSha256": "cc984ca6178b6001ca9322c3ae83bfe0614e3c0ed5a280aae09077928249513b",
+      "payloadSha256": "0e45321c556f049132fd8198a4535aaf6666eb05d538d69410f9df4ce5785b82",
       "status": "PROVEN"
     },
     {
@@ -1146,7 +1146,7 @@
       "actualRecordCount": 93,
       "traceRecordCount": 93,
       "countAgrees": true,
-      "payloadSha256": "9abbbef5585f2c44af350c0291ed5f5c5a63255b303182614fd3c1e79cb4030d",
+      "payloadSha256": "fced2bd118c93433544e8822967b8d8bd848e48197f106f02df6e221fa8327ab",
       "status": "PROVEN"
     },
     {
@@ -1385,7 +1385,7 @@
       "actualRecordCount": 62,
       "traceRecordCount": 62,
       "countAgrees": true,
-      "payloadSha256": "0e08d63aef90384208fd71008875798584dcd6b25bbd686112b4c52c3a6ba14c",
+      "payloadSha256": "dada918af0d455035f8ea06731adfbb484e0f77105b5ac4d91298303d52882b7",
       "status": "PROVEN"
     },
     {
@@ -1498,7 +1498,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "1709083eed1caf0f6c3f070e9ee5081846fe125975d2f0799f72e8c6e479d876",
+      "payloadSha256": "fe3223d0a814c5ee9170f0aea634b6dcf000d30f99526b0796c039efa4637d33",
       "status": "PROVEN"
     },
     {
@@ -1606,7 +1606,7 @@
       "actualRecordCount": 19,
       "traceRecordCount": 19,
       "countAgrees": true,
-      "payloadSha256": "1eee8dbaac47157feebe4cf5a271b9a286fe69b34d1594596644e0f16ab6add9",
+      "payloadSha256": "ea022a91a05d463ccee89a743da581781526470cc60b634fd20f10ea9f9a3aff",
       "status": "PROVEN"
     },
     {
@@ -1722,7 +1722,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "b75dcbd2dc1fb677ccc27419e78611360a824d45be2f264d9904a0cfee3390d4",
+      "payloadSha256": "daff75512556fec03a63269861a6ed29356b54365254c3a658287b22ca8b87b6",
       "status": "PROVEN"
     },
     {
@@ -1874,7 +1874,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "d090f57243df4d0dcbea78021fd229832992f1f6b329e7e009069b5b8700143e",
+      "payloadSha256": "3870f6dc5d0c299b0dd0166f366095966bc53be5cc410b81d82cac80722e1112",
       "status": "PROVEN"
     },
     {
@@ -2023,7 +2023,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "49fb69f87261c333d436a7a1e7d0dc9706581910014e2c481116331ef8d653cb",
+      "payloadSha256": "906ce75cd0f4e01078908351e2f544932664abb672195236f5ba308eed1dda78",
       "status": "PROVEN"
     },
     {
@@ -2168,7 +2168,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "cd96ee79b7c06be627dd3f7aae07bd2ef22a23bc6c6e5a02e664c2c0aea2648b",
+      "payloadSha256": "02b7535233c81e07adf7205461a1a7cbd09f3850e191b17dd6c9d1e5c499c18b",
       "status": "PROVEN"
     },
     {
@@ -2299,7 +2299,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "9d6cd81811a301743ff671dfe43899552b689c2665c2386de3ae27bdb94f987f",
+      "payloadSha256": "be1e3cbc7761cc4075ae8709adf8762c2e38dd4d0342a39dccd2c76e20bdee6a",
       "status": "PROVEN"
     },
     {
@@ -2412,7 +2412,7 @@
       "actualRecordCount": 15,
       "traceRecordCount": 15,
       "countAgrees": true,
-      "payloadSha256": "aa09108dc8dfd039e8c17b8bf8e841fe2b5d1492e6e4a2f063ed81082fafd328",
+      "payloadSha256": "2c31a23544a6aa2d34d267eb53bfd356ebce63d8793218f6c46e4f1dcf95872a",
       "status": "PROVEN"
     },
     {
@@ -2543,7 +2543,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "7c26cce67e95b13ae239bf2cb60208bd948bc1ab0ac9d9d8c60e21c99d8e2f97",
+      "payloadSha256": "fc66539993c03fef2f52201e7eb4c848bdaa2fc7b1a9a53748767225c766e007",
       "status": "PROVEN"
     },
     {
@@ -2706,7 +2706,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "332ccbe255f3c87c3330095640ec688c23bcdc615eb66122cede5160f5073a87",
+      "payloadSha256": "979d9a9c5da6e1bf3655e8ebd6c4923e582501bdbbc98df4cbb78167d28c4a27",
       "status": "PROVEN"
     },
     {
@@ -2851,7 +2851,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "04f8d380f4bf2879d779fa938e8fcdac2a7872e4f1af398b8ac15587232d5ff0",
+      "payloadSha256": "c68696fcb621e83c2cda4814eb5bfeef308cb010c1d3f1621b9d30a28fbae4a1",
       "status": "PROVEN"
     },
     {
@@ -3014,7 +3014,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "47bf72f09a45c7b4f876af203f4fa9b09725a974ad40d0760394a2c38a55811a",
+      "payloadSha256": "87edcf9464c62c48dc63820383523645ac7ac1c53a5a3a0e099252da94914831",
       "status": "PROVEN"
     },
     {
@@ -3127,7 +3127,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "9eedaecfb7be61b2de3625d75c5bf6b87ad564517dd5d65dc4a0a419bdbfe49b",
+      "payloadSha256": "fdd140396122861dd0b71a5c362ea3b136fe1aa4f706b1286fa8551b56071b7b",
       "status": "PROVEN"
     },
     {
@@ -3258,7 +3258,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "02eb6572cad0ade2f056c9c51013f9bed52ad00fed10934bdf7432752bbcbac2",
+      "payloadSha256": "f1fb5d27f46995209bfb145f49da95b468a76fb4cd9a349ad260698744cc9b75",
       "status": "PROVEN"
     },
     {
@@ -3370,7 +3370,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "27d9503587de2aeb8b329f6a6be716abe0e3c21bb4d8f8deb5aa3082d1f80f7e",
+      "payloadSha256": "f2755b67c44b1ac78d0b9eaeaf9dd5b375c265a1b8c69412ac0680bf604a9611",
       "status": "PROVEN"
     },
     {
@@ -3501,7 +3501,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "47566c3b2b378093b541d1173109d9f86b8ced39dd53b186b60c210a300b27c4",
+      "payloadSha256": "d01d0c50a626bcfe112d78480c8a73c81837398ed1b2de286183580eb443ad36",
       "status": "PROVEN"
     },
     {
@@ -3646,7 +3646,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "4daafc057e4fea5f3e6be626078cc6ebcb6b81955383b31c1c49794d8e949f4e",
+      "payloadSha256": "8c1b7ddb4e3d1861350116e5449e64ae227b2e39ceda604389224b5ccf9c553e",
       "status": "PROVEN"
     },
     {
@@ -3809,7 +3809,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "d4f8a393c100000e44a44abcae09694924141c2450699b7433c3ae6d14d1346c",
+      "payloadSha256": "25d9f4c9563fd61fd7c91214ecc0ff0dfed652574ba0110439ea18435af34d98",
       "status": "PROVEN"
     },
     {
@@ -3922,7 +3922,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "78f0d63465b59a07bbd3061a65da3ee10e708d1f67c48b66ca82fc6ec1df8bba",
+      "payloadSha256": "836c17806710b140764657c609ece139ee17f96f813adf2963dce20d27e7b7ea",
       "status": "PROVEN"
     },
     {
@@ -4035,7 +4035,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "16d21c4368721183046574bd6e71300f950016f9605885d70517f40c93bc0bd6",
+      "payloadSha256": "3abaf9bc45d4be548f1735dab32bab39f6c5d04e50dbd073a20da6467eefda45",
       "status": "PROVEN"
     },
     {
@@ -4155,7 +4155,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "4fa1db1d6449fe40a7cde5dd81f985bde70c838c72a921244552e35fc56773c1",
+      "payloadSha256": "63c9e873d5dc3f955b843148d2b84712578795eccada43cef51bededdcd9367c",
       "status": "PROVEN"
     },
     {
@@ -4307,7 +4307,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "24eb40c9af15d50edf5acf3ba9a55fed7c6418076bdfb1bcc2e19e62ec01d378",
+      "payloadSha256": "bde0b41602abeccf1ece0c0d064410970addf7e4a4f8434c1dccd9c47c0bc069",
       "status": "PROVEN"
     },
     {
@@ -4416,7 +4416,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "4b90b4de881d88fc226f7b035930dc65842fb05a3899d290d4cb7873a35e9d62",
+      "payloadSha256": "d5f12ed614b6402a49907de2851f20f71c30d1b17f80461541587d1cfc822919",
       "status": "PROVEN"
     },
     {
@@ -4524,7 +4524,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "1f2115f24f3d537d7d78148e8fbbce185e14f1347ec9e5d869b770024b4d65d2",
+      "payloadSha256": "642d3d445f0be35a8fdcbabb5834c1d4d1d7624115621c3d3fb0557c5955b29b",
       "status": "PROVEN"
     },
     {
@@ -4633,7 +4633,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "2b8f9aa1b06716c6b8fdfa6ccad6617b579337c41420e1b1086eb98f333d4da6",
+      "payloadSha256": "d8dd1a43d8c9355e6831f298db1b2965b1956dddbfadc64faa0061e6481bafe5",
       "status": "PROVEN"
     },
     {
@@ -4813,7 +4813,7 @@
       "actualRecordCount": 86,
       "traceRecordCount": 86,
       "countAgrees": true,
-      "payloadSha256": "4e0bc8c4938e5e2f934e73625bd6f2821ae395581d3153ab50a0a1647d2d277d",
+      "payloadSha256": "c52076f847a2e1cfd8259d203c361b2d304f14628911bf43dc373191a47e3582",
       "status": "PROVEN"
     },
     {
@@ -5029,7 +5029,7 @@
       "actualRecordCount": 82,
       "traceRecordCount": 82,
       "countAgrees": true,
-      "payloadSha256": "3ce50ca4a3d0918b4b4188dc94db6b9a81ae7105381ed7d1df3413fc51c4a3a5",
+      "payloadSha256": "95d163899931c1761b4a2a562ed25ea9c577119c9fbf1dcc044f283ab1c67b13",
       "status": "PROVEN"
     },
     {
@@ -5142,7 +5142,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "f3a51a60596aa3da62acb7674a52cefb9239d1abc0f6fda3cb7a097d0839ae70",
+      "payloadSha256": "a3fa00e0469f38ac7efdb5b3549c99489013919a5b4f367357ac0a08f6f0a9c6",
       "status": "PROVEN"
     },
     {
@@ -5365,7 +5365,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "3cac4997c5764e68cbf72fffe84b918413a2dd9abe5e9ea25bd9503c7a3360db",
+      "payloadSha256": "4aac83e686f131c5dd5d37ac79e6ca44e37b53eba53950915a04c3d1df5a4043",
       "status": "PROVEN"
     },
     {
@@ -5588,7 +5588,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "8d102e5fab1284eea80e635692eb68df4699eceb8ab4d5c7999e7ef2bfaba1ad",
+      "payloadSha256": "3646ae8d7408d881a5e3405056ed21851af289eb913f624e2215fa198948998f",
       "status": "PROVEN"
     },
     {
@@ -5640,10 +5640,10 @@
           "id": "candidate-contact-field:ballot-nh-merrimack:county-attorney:raiche-jon:email",
           "subjectId": "ballot-nh-merrimack:county-attorney:raiche-jon",
           "canonicalSubjectId": "ballot-nh-merrimack:county-attorney:raiche-jon",
-          "text": "Recorded email: JonRaiche@VoteJonRaiche.com",
-          "sourceUrl": "https://votejonraiche.com/",
-          "sourceOrg": "votejonraiche.com",
-          "retrievedAt": "2026-08-21",
+          "text": "Recorded email: JonRaiche@VoteJonRaiche.com This contact's source URL or read date was not recorded.",
+          "sourceUrl": null,
+          "sourceOrg": "Candidate-card contact record",
+          "retrievedAt": null,
           "candidateProfile": {
             "field": "email",
             "value": "JonRaiche@VoteJonRaiche.com",
@@ -5651,7 +5651,7 @@
             "holdingKey": "ballot-nh-merrimack:county-attorney:raiche-jon",
             "holdingPath": "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/cards/ballot-nh-merrimack:county-attorney:raiche-jon/email",
             "sourceNote": null,
-            "provenanceLimitation": null
+            "provenanceLimitation": "This contact's source URL or read date was not recorded."
           }
         },
         {
@@ -5681,13 +5681,13 @@
           "text": "Campaign site: https://votejonraiche.com/",
           "sourceUrl": "https://votejonraiche.com/",
           "sourceOrg": "Campaign site",
-          "retrievedAt": "2026-08-21",
+          "retrievedAt": "2026-09-26",
           "candidateProfile": {
             "field": "campaign",
             "value": "https://votejonraiche.com/",
             "label": "Campaign site",
-            "verification": "Read 2026-08-21 at rung 2. Title 'Vote Jon Raiche', description 'Vote Jon Raiche for Merrimack County Attorney'. The NH Campaign Finance System independently records this candidate's 2026 County Attorney filing with website VoteJonRaiche.com and email JonRaiche@VoteJonRaiche.com, which is the same domain.",
-            "holdingPath": "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/ballot-nh-merrimack:county-attorney:raiche-jon/campaign",
+            "verification": "Fetched 2026-09-26 (campaign-site-verifier/1): 'Vote Jon Raiche' — names Jon Raiche, the office (\"county attorney\"), and the 2026 election.",
+            "holdingPath": "civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/ballot-nh-merrimack:county-attorney:raiche-jon/campaign",
             "holdingKey": "ballot-nh-merrimack:county-attorney:raiche-jon"
           }
         }
@@ -5715,10 +5715,10 @@
           "id": "candidate-contact-field:ballot-nh-merrimack:county-attorney:raiche-jon:email",
           "subjectId": "ballot-nh-merrimack:county-attorney:raiche-jon",
           "canonicalSubjectId": "ballot-nh-merrimack:county-attorney:raiche-jon",
-          "text": "Recorded email: JonRaiche@VoteJonRaiche.com",
-          "sourceUrl": "https://votejonraiche.com/",
-          "sourceOrg": "votejonraiche.com",
-          "retrievedAt": "2026-08-21",
+          "text": "Recorded email: JonRaiche@VoteJonRaiche.com This contact's source URL or read date was not recorded.",
+          "sourceUrl": null,
+          "sourceOrg": "Candidate-card contact record",
+          "retrievedAt": null,
           "candidateProfile": {
             "field": "email",
             "value": "JonRaiche@VoteJonRaiche.com",
@@ -5726,7 +5726,7 @@
             "holdingKey": "ballot-nh-merrimack:county-attorney:raiche-jon",
             "holdingPath": "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/cards/ballot-nh-merrimack:county-attorney:raiche-jon/email",
             "sourceNote": null,
-            "provenanceLimitation": null
+            "provenanceLimitation": "This contact's source URL or read date was not recorded."
           }
         },
         {
@@ -5756,13 +5756,13 @@
           "text": "Campaign site: https://votejonraiche.com/",
           "sourceUrl": "https://votejonraiche.com/",
           "sourceOrg": "Campaign site",
-          "retrievedAt": "2026-08-21",
+          "retrievedAt": "2026-09-26",
           "candidateProfile": {
             "field": "campaign",
             "value": "https://votejonraiche.com/",
             "label": "Campaign site",
-            "verification": "Read 2026-08-21 at rung 2. Title 'Vote Jon Raiche', description 'Vote Jon Raiche for Merrimack County Attorney'. The NH Campaign Finance System independently records this candidate's 2026 County Attorney filing with website VoteJonRaiche.com and email JonRaiche@VoteJonRaiche.com, which is the same domain.",
-            "holdingPath": "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/ballot-nh-merrimack:county-attorney:raiche-jon/campaign",
+            "verification": "Fetched 2026-09-26 (campaign-site-verifier/1): 'Vote Jon Raiche' — names Jon Raiche, the office (\"county attorney\"), and the 2026 election.",
+            "holdingPath": "civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/ballot-nh-merrimack:county-attorney:raiche-jon/campaign",
             "holdingKey": "ballot-nh-merrimack:county-attorney:raiche-jon"
           }
         }
@@ -5788,7 +5788,7 @@
         "candidateBiosReturned": 1,
         "candidateLinksReturned": 1,
         "candidateContactsReturned": 2,
-        "candidateContactSourceUrlsUnrecorded": 1,
+        "candidateContactSourceUrlsUnrecorded": 2,
         "candidateProfileFieldsWithheld": 0,
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
@@ -5811,7 +5811,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "afdbbdfbda03e83d03c057708295f5f3960f355ce868dc0b0522bf347896e332",
+      "payloadSha256": "f17bad344b76536c9647a796e045e8e7eb9cec75d6a6470862c49b82c1482c69",
       "status": "PROVEN"
     },
     {
@@ -6072,7 +6072,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "4528e84bdd1728f349b238b440be735a870a29abdedd882ff1d7def4acb69289",
+      "payloadSha256": "ab83b8e19fc0047a06333cec9f9b68754cc152530aa156b220f11a1620c7617d",
       "status": "PROVEN"
     },
     {
@@ -6187,7 +6187,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "999f6bdd7396a6016b0be4f50af8fb35ce6ce2578affb270f2dea5a4e7b1a37e",
+      "payloadSha256": "692b0d4801f1dc92f4100fb0d85f8fc7d011a4ff1ff7d25bef969eb2efbb5736",
       "status": "PROVEN"
     },
     {
@@ -6378,7 +6378,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "f2088c9e538957114a19d6821bd0e4f409f093be4570118af5bc147e8948e5ef",
+      "payloadSha256": "2aa6223ab7b690d47843659ccf73af19322bd1e83d8b4fef5c1f4cf18cecfe06",
       "status": "PROVEN"
     },
     {
@@ -6567,7 +6567,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "c94d23eca57d7bb59e65642362cdbf3ef14e77cb1014f66bdd2c0803c775c730",
+      "payloadSha256": "5405ef7b81a39120424a5b71fee787e69ecd9e651b7ac3f9a7cc219edc39f543",
       "status": "PROVEN"
     },
     {
@@ -6682,7 +6682,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "cece616cd68893e30f0ed847ba84fcbe42ae45ec154e181e259f2f4b15b6bf26",
+      "payloadSha256": "daacf460728e1193c73c5e2235d3824f71473269d0ee6b193e75bc9ab936dc5e",
       "status": "PROVEN"
     },
     {
@@ -6775,13 +6775,13 @@
           "text": "Campaign site: https://gohardwithgerhard.com/",
           "sourceUrl": "https://gohardwithgerhard.com/",
           "sourceOrg": "Campaign site",
-          "retrievedAt": "2026-08-21",
+          "retrievedAt": "2026-09-26",
           "candidateProfile": {
             "field": "campaign",
             "value": "https://gohardwithgerhard.com/",
             "label": "Campaign site",
-            "verification": "Read 2026-08-21 at rung 6 (the live browser; the site is JavaScript-rendered and rungs 2 and 4 return the same 161,677-byte shell for every path). The rendered banner reads 'FORMER REP. JASON GERHARD' / 'CANDIDATE FOR SHERIFF 2026!' — the filed name, the office and the cycle, self-identified on the candidate's own domain.",
-            "holdingPath": "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/ballot-nh-merrimack:county-sheriff:gerhard-jason/campaign",
+            "verification": "Fetched 2026-09-26 (campaign-site-verifier/1): 'Jason Gerhard: Understanding Tax on Federal Income' — names Jason Gerhard, the office (\"sheriff\"), and the 2026 election.",
+            "holdingPath": "civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/ballot-nh-merrimack:county-sheriff:gerhard-jason/campaign",
             "holdingKey": "ballot-nh-merrimack:county-sheriff:gerhard-jason"
           }
         }
@@ -6850,13 +6850,13 @@
           "text": "Campaign site: https://gohardwithgerhard.com/",
           "sourceUrl": "https://gohardwithgerhard.com/",
           "sourceOrg": "Campaign site",
-          "retrievedAt": "2026-08-21",
+          "retrievedAt": "2026-09-26",
           "candidateProfile": {
             "field": "campaign",
             "value": "https://gohardwithgerhard.com/",
             "label": "Campaign site",
-            "verification": "Read 2026-08-21 at rung 6 (the live browser; the site is JavaScript-rendered and rungs 2 and 4 return the same 161,677-byte shell for every path). The rendered banner reads 'FORMER REP. JASON GERHARD' / 'CANDIDATE FOR SHERIFF 2026!' — the filed name, the office and the cycle, self-identified on the candidate's own domain.",
-            "holdingPath": "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/ballot-nh-merrimack:county-sheriff:gerhard-jason/campaign",
+            "verification": "Fetched 2026-09-26 (campaign-site-verifier/1): 'Jason Gerhard: Understanding Tax on Federal Income' — names Jason Gerhard, the office (\"sheriff\"), and the 2026 election.",
+            "holdingPath": "civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/ballot-nh-merrimack:county-sheriff:gerhard-jason/campaign",
             "holdingKey": "ballot-nh-merrimack:county-sheriff:gerhard-jason"
           }
         }
@@ -6905,7 +6905,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "827a747d962af74a74f467161185ee7576cd2ffe9985e69b3196a240e84254dd",
+      "payloadSha256": "0ae18dc89a5f58d4b2a0a33021f80389e963e6c6f4cffbcf5dcc64e3c9fb9d40",
       "status": "PROVEN"
     },
     {
@@ -7090,7 +7090,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "05eb875f4bb5cdba76f6f462fae765526d08f761846052610c5a7593d50217a3",
+      "payloadSha256": "033754bf10af26caa097aa58eedae5ff454919247af149d31f496080c2d49445",
       "status": "PROVEN"
     },
     {
@@ -7275,7 +7275,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "1f083d0bb625874856095ba7717f14b2494ccb5bd94117a57e28a6b0a09bf3da",
+      "payloadSha256": "a43ec9bbf582cba43d44a1ce721b491b2a4aff7f010179f6a7a493b14d8c18f1",
       "status": "PROVEN"
     },
     {
@@ -7390,7 +7390,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "17e641868314b53e5e03269b25cda5858a3e76853a89ed8b47a1e6d847ba5237",
+      "payloadSha256": "a33fa6eca01f8e274bf96c22f1417b39bdc807ebc44d9a7f73ff7815b223027e",
       "status": "PROVEN"
     },
     {
@@ -7505,7 +7505,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "d615fae7531f979e124eebb87d5a5e18eb11f662d76ad459339fa0937cd87e6e",
+      "payloadSha256": "83ddddcabcb8c9dd6dcb8fe0f4c8962e62806a5f0e05c8855a32c4f69063cbb4",
       "status": "PROVEN"
     },
     {
@@ -7802,7 +7802,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "f6118fd5dd4ca36c25fc8c9de6945c362b5bb74640ea80abacd99caa6a4d320d",
+      "payloadSha256": "c4f9e5a723e54811ae7fdef6b6e53877e8e805b6a336188d9c66a4411ba40b49",
       "status": "PROVEN"
     },
     {
@@ -8025,7 +8025,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "c395bc37dc9b66cbdfbe94612a7977d78473cfd70419dc68f207fd0109f38df6",
+      "payloadSha256": "b912c9d7b0d7f79289288626141c46384a29b3768be7e5bebbbeed0236c0f208",
       "status": "PROVEN"
     },
     {
@@ -8140,7 +8140,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "a34710b1f78cd38414b294d6f1a4b583714795a1798118a58f2358bf1f9f88fa",
+      "payloadSha256": "fb9e47734e60e2d1200cc3c95a434921f443e6b786954cde7c53bd7c902d75cf",
       "status": "PROVEN"
     },
     {
@@ -8406,7 +8406,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "ecde4dcb8c152d8113974917ad8f6f2634e3bd6793b491bbc653865e3f4dd0da",
+      "payloadSha256": "e2d116cc3e89a2b54555aeadf076961b5364e003af9ce767dd7e1760bd146e49",
       "status": "PROVEN"
     },
     {
@@ -8629,7 +8629,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "39a75d636b94a925b2d84f4b7654db9d7a812953fd016c120f4f98f12f0125d0",
+      "payloadSha256": "59f2b07ffe0e6f8173a71638e75937c6ee2b523ddfd4783a09b83b0b35e516cf",
       "status": "PROVEN"
     },
     {
@@ -8744,7 +8744,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "b7d505f5382d9fd0d42a69a98035be735dac3aa003a5733e05396e183e356b5e",
+      "payloadSha256": "ec8c86bf71714cc35944660c34c04e89765c805a92becdb641cb2e5af732d8a4",
       "status": "PROVEN"
     },
     {
@@ -8967,7 +8967,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "f47c242acaae73a7a7adea2897b49a620f95867e0577438115b152368ec58f5f",
+      "payloadSha256": "f68ef516c3f57051f73d2a826b943b2fae81827bd19d8b63ffb37b5248531e90",
       "status": "PROVEN"
     },
     {
@@ -9082,7 +9082,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "da1cffa4a628818c114429b6003e6100e1bfbf58b27dd31a295b3af516f0135c",
+      "payloadSha256": "f9bd4e32f27748bb90684d5c231a8d05641ff143cb188cb869c08397eafda9a3",
       "status": "PROVEN"
     },
     {
@@ -9309,7 +9309,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "65ff6ceb726f675b6be4ec65972a11997d8f7a40f7a40b09f42136a859e4ef85",
+      "payloadSha256": "82665189c1bf8a8b906e97026f9c693690e0749cade235a9fbd7e2b5de499d63",
       "status": "PROVEN"
     },
     {
@@ -9460,7 +9460,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "5299b9ff78955ceb6ae42342b6700a3d361f1f99bbe6726fd61461ba24795be4",
+      "payloadSha256": "e4f77ce493a15d2b29226016059848b8a67e8e02bd1af0c1e203a7205c04b51d",
       "status": "PROVEN"
     },
     {
@@ -9690,7 +9690,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "ede43a362a8728be6122808a2d46a2fa64b95ad230b4638cde908028bc01deb0",
+      "payloadSha256": "06564d76e1590e9e4cbd8236f8622a9c9eeb3458000d4040fe6898019943cb95",
       "status": "PROVEN"
     },
     {
@@ -9805,7 +9805,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "bde498d7a0b71479b33db0cad2729a3152588ab7764719c18bebefa8a17f20a5",
+      "payloadSha256": "3fd8edd3e73a68f60af5c610c145687f9f3e6e114c3571c8c3f411044bbd19ee",
       "status": "PROVEN"
     },
     {
@@ -10098,7 +10098,7 @@
       "actualRecordCount": 40,
       "traceRecordCount": 40,
       "countAgrees": true,
-      "payloadSha256": "a5262c8f867be12e42ae9c1e9cda5fa83291171130b484e37c8246b9f4c83951",
+      "payloadSha256": "f7f64dbf32dd71811fed8fac75faf1df02dc77a44fa5a9e8cd85871462c9d956",
       "status": "PROVEN"
     },
     {
@@ -10317,7 +10317,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "83a409e8ccf6e2f0757453bd6d9ccad0f36ef7aa93d4877efda2c40222cc5558",
+      "payloadSha256": "d418829d7efd981188320cabe62a112ae0775dc521c2c3f24c47b7e15514edb7",
       "status": "PROVEN"
     },
     {
@@ -10614,7 +10614,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "9a478d1e2a02ecfe0460c2cf4da1c8c1f38080900e9343f5f64366fd1dc1a380",
+      "payloadSha256": "c2941f20077671231f0107493784a32c8c274369f6e54858d1ba79e40fbb317f",
       "status": "PROVEN"
     },
     {
@@ -10907,7 +10907,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "bfeb77d58ead472a4f9f0712986e7fd0995f94c0116834f6b6f6e9ed951df8cf",
+      "payloadSha256": "dc13e2cd60901ef33132f1569a506bd161ad749a590fa5175b378cde8b45aa99",
       "status": "PROVEN"
     },
     {
@@ -11022,7 +11022,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "6194469b21be878290ed53cfa4c2d619d36aa3fc3a39b9f03d380a950ef8ce80",
+      "payloadSha256": "1cead9cb1f932e248f6f4514488baa9ad194e8d726ff6d2dcac0bb746c16cf66",
       "status": "PROVEN"
     },
     {
@@ -11336,7 +11336,7 @@
       "actualRecordCount": 81,
       "traceRecordCount": 81,
       "countAgrees": true,
-      "payloadSha256": "893eae5513c02be23716e8d4e44e5648764251a4482bddc949f1bf7ffff6f765",
+      "payloadSha256": "41bb3f4e367efb78f641511ce96a7d01b129d94f2d3de63c0c880001e59565cc",
       "status": "PROVEN"
     },
     {
@@ -11563,7 +11563,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "5f16287637e61d320e356aa72e0b11a24e14b49c67ec1b543d4afd766850d290",
+      "payloadSha256": "420ece7525aebeebdf22aa33bba408c055065ca3ca721311bfc8b13dc0aaaef7",
       "status": "PROVEN"
     },
     {
@@ -11824,7 +11824,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "7f6871770290149b3d46a9dc19f5a52171f73f4a3bc9426464ef841a8a50e76b",
+      "payloadSha256": "80d063835dd2d6d96b788383859024767851149aaa3f5c5afa5bea73d1ff0001",
       "status": "PROVEN"
     },
     {
@@ -12085,7 +12085,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "c8bde893e022587af817ea607fc8b03ee18e24b74ff7518e1d6eea3393b32a63",
+      "payloadSha256": "f505d34e9dbf1fbb10ff8402cf212d6eed4e0564506e7946bc2bda02a6a1ee35",
       "status": "PROVEN"
     },
     {
@@ -12270,7 +12270,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "ba2525a926da1e22649ce66fd2942ed5e8c4316be484a8546cf9bb8ff3bc6ea9",
+      "payloadSha256": "c577cbe9dbc0653a84d8ca8530d6c1063d71147fb201ad536b75cb23ea62f415",
       "status": "PROVEN"
     },
     {
@@ -12527,7 +12527,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "7417ef85f609bb536d51fc3050129f945a459ab20a57d554a3b3c6f3ae6a4812",
+      "payloadSha256": "7a530df3af01489923144ded25e8f54f16d8ed76b4a083b6241d23d16174222d",
       "status": "PROVEN"
     },
     {
@@ -12788,7 +12788,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "e95805b4629fccad60f8ee1175b131dfce122a675bb4583bf418b0c8782ce30c",
+      "payloadSha256": "4f2e87f0314011326b6ff8dfab37299a397a3631e1b0fe4c9ec92fb194b49c4d",
       "status": "PROVEN"
     },
     {
@@ -12903,7 +12903,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "4e87d98f9ef4ac229ec447e43a753eb307552a37bb10018d4c1be4cd22b862b8",
+      "payloadSha256": "f55510aa3106d5b11b845f2dd2407e1d3f1fc9377de7152178a4d0e7bbe5e169",
       "status": "PROVEN"
     },
     {
@@ -13164,7 +13164,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "b3087561de96d4dcf0493bbdb6e1df8ad383d157ab85aea051c2011c7ac0b247",
+      "payloadSha256": "1e76c3e70aa55a90870ad520ddf3610d0eb17045f314b4fa91dd5e26b027e2a9",
       "status": "PROVEN"
     },
     {
@@ -13353,7 +13353,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "285532b0df5faca461f98ed1b4fba90736265b4ef5508e868e4807622652c63b",
+      "payloadSha256": "a1052f0591fa3e3d64ac5f15391b747be058b6df5fa3f0907a1f78587acbdd95",
       "status": "PROVEN"
     },
     {
@@ -13468,7 +13468,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "8f2e163031169964f0b9e8a96dedd49a1655823dab90c32cfdc7581c9f3a8547",
+      "payloadSha256": "3c635de97d9326104709417a0f24801bcafb8c807826895f4b1f922e60766dce",
       "status": "PROVEN"
     },
     {
@@ -13583,7 +13583,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "6f1a40416e52d88314e9972c50e191005c08bcf0c8016f4151eee8525680c32b",
+      "payloadSha256": "fc0c7d5057c578d2a4a06ab059a193a29fc488ae76d367d13957cfb2ee45a911",
       "status": "PROVEN"
     },
     {
@@ -13845,7 +13845,7 @@
       "actualRecordCount": 96,
       "traceRecordCount": 96,
       "countAgrees": true,
-      "payloadSha256": "2a996651bcf205fccab7033c4c697ae82117ee96524fefb09453c02b3687080d",
+      "payloadSha256": "3bc85743d772ffb1dea3df2bd32077b6ba34036d47d773fd80b4681bc3ce13be",
       "status": "PROVEN"
     },
     {
@@ -14106,7 +14106,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "de7f7f0847745c2787dbdb4da0cce6e3bfaa3ef12b0d8a458204784408d6be68",
+      "payloadSha256": "f4cfc8866b9a486c448131b2761a85ab76c5ec7e669e8c3544015bd4d37ca6b7",
       "status": "PROVEN"
     },
     {
@@ -14221,7 +14221,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "4bce2cc654bcca72ba073d75ebc26d1128559426d6bcedc0cfaa23a9dc8190c5",
+      "payloadSha256": "afef04cc2ad43c9597cd69cc68212ae868cd51cd6bed4d8a5be9b4a2adf9d7e7",
       "status": "PROVEN"
     },
     {
@@ -14482,7 +14482,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "a47cc95549622dbc61aba718e69b7faba199e35781fdbd921b8cb6d494459e95",
+      "payloadSha256": "f9d6000608c88127735e1d1cfc7c68c34ad32c2e810f188b7fbfcee5e2ace24e",
       "status": "PROVEN"
     },
     {
@@ -14705,7 +14705,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "2d00d40131fc511e75e90dae7deb01fbc2be0cb1e2815f619e7703dbb4485888",
+      "payloadSha256": "5a42e0a214cb548f8e337bf40dc2ee6e3ebdee885f5f95599d144bba0af5411f",
       "status": "PROVEN"
     },
     {
@@ -14818,7 +14818,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "8b5a916c88ba8d49197865533be28f7308300f5bdd72545cd64291ad0e6834f3",
+      "payloadSha256": "80db0402a6ae0770e313af46a10dcefc3c467aa4df9287e46ec84cec19c0fbfc",
       "status": "PROVEN"
     },
     {
@@ -14966,7 +14966,7 @@
       "actualRecordCount": 80,
       "traceRecordCount": 80,
       "countAgrees": true,
-      "payloadSha256": "3dd8d0c3e87855df5b8f4ccbe2413f5dd2728ffacdd03873ba984e366d0a38d3",
+      "payloadSha256": "aed2e3e9e384279b9a3e70b700acf901c9f990c4120f82c80aa68be649b0f7c6",
       "status": "PROVEN"
     },
     {
@@ -15078,7 +15078,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "762817e160fea72ded7ba7eea370565e8c8cdf0d95ead044e63cb16f6a45b0c4",
+      "payloadSha256": "19b733b086225bc8a9065ff6fd3b47286d845aa1c9bb43c4860f2010d6cbe5f5",
       "status": "PROVEN"
     },
     {
@@ -15191,7 +15191,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "4bd2481aa5eaaa08b309fe85ca44cb2215f93f5005530662311c07b7acd7099b",
+      "payloadSha256": "f3628b5f4a1d92b7582cadfc390a1293d0994b307fca9ba690aecccd39471f8a",
       "status": "PROVEN"
     },
     {
@@ -15349,7 +15349,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "ad257edeb11047b9524013b278c499a7a74751b8fd8fd9d40d7b111520fcb00f",
+      "payloadSha256": "836715f9f1a4585059664d97a1a7c114bca6ff8411231d666dc049354745f47f",
       "status": "PROVEN"
     },
     {
@@ -15507,7 +15507,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "ce3dc0365820790e98566a408e69090c92ac91208ea4f8a044c99bde1d15e68b",
+      "payloadSha256": "9da1ba29e59f5e9c8a75173b052c05a8d5dadd26eb197367b6b7a2ccadb47cc3",
       "status": "PROVEN"
     },
     {
@@ -15620,7 +15620,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "a2493b660c29b34e35b02d45bcf6a9e099aa45336d0116b1a8fa31061a2e5153",
+      "payloadSha256": "82c1c9c327ad4f0306937894879ac22db4e64e545cf8ed6a5a570dd0a0b6b865",
       "status": "PROVEN"
     },
     {
@@ -15740,7 +15740,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "f716aa1814fe00e4f80e100f694c82687759f7e2340326897b9a4490864b3775",
+      "payloadSha256": "f927412d64a8aa5cab0a2abba0032ad466e9657b88488a1c1d08cec2ec52ba37",
       "status": "PROVEN"
     },
     {
@@ -15936,7 +15936,7 @@
       "actualRecordCount": 15,
       "traceRecordCount": 15,
       "countAgrees": true,
-      "payloadSha256": "6ce92eeff179c9d4bf2089651fd86d7e001ca1e597c5bbb95ed1cd01330419be",
+      "payloadSha256": "c029df4606e524044ebe305976de98a53fb7695d62fa0a1c8d7959b812e9ba16",
       "status": "PROVEN"
     },
     {
@@ -16198,7 +16198,7 @@
       "actualRecordCount": 20,
       "traceRecordCount": 20,
       "countAgrees": true,
-      "payloadSha256": "c877489bc97a33f7da15f71cb456b44762021f242cc4553cdc2befc61e7be0a0",
+      "payloadSha256": "8d1ee721ff49a123d146483834492545cd4b9f29c1bc08f5930ba13d469a886a",
       "status": "PROVEN"
     },
     {
@@ -16311,7 +16311,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "483b1232c219c9f2c93f487f5c2464b0b165497670c73a1b9cc49c11dfd4cbed",
+      "payloadSha256": "f97e0909b7f842239294012c76bc37138c4f6872ea73d24c07e3516d36df7492",
       "status": "PROVEN"
     },
     {
@@ -16467,7 +16467,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "ffdde92058e549e470645072d5e7eb3e4ef046553c9000e240af754f26f3433e",
+      "payloadSha256": "938eac76e3e2be18325046748167728686decc1b1969081bb47e7b8cb756ecea",
       "status": "PROVEN"
     },
     {
@@ -16587,7 +16587,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "eb4bcbecb09b67e113af733ff92989c4cb6e7654241e75f10f40794981eb8008",
+      "payloadSha256": "b45643e7be5406bd34fd958c1f5de719d7baa39f987e1403c606f3cf569cdc15",
       "status": "PROVEN"
     },
     {
@@ -16700,7 +16700,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "04a8ecdff41da40b22ef26e96acc97a6c447da3e8ff3fac5aeb49c5d3607c016",
+      "payloadSha256": "07b041bf0cb81060054c1502529916c823449aa9bd7b97c5aeb8ec8275c19901",
       "status": "PROVEN"
     },
     {
@@ -16849,7 +16849,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "121ead75da4cb336ca9a2688c3080e9d93e366d29b8750cd8c0286ed50a5ec8b",
+      "payloadSha256": "8352e5dd7ded823d97165768ffb877f9a4e7ec559d20920b6e75711651b08e63",
       "status": "PROVEN"
     },
     {
@@ -16962,7 +16962,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "ec68e915c09e2e529812e89fb2ab4078059627913d729cefc70dde08924607b8",
+      "payloadSha256": "379dc618db5c3ba3abe565152a229e08722d0722f5d34105483f71690d6cb103",
       "status": "PROVEN"
     },
     {
@@ -17113,7 +17113,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "8983530c340cf3835ec38af52a9e58504e579b8cab7f3150057b65c3b4113258",
+      "payloadSha256": "79ae0a0cbada02a659cb755ff6cb0002046cec4217d71a834b556b54ca758b5d",
       "status": "PROVEN"
     },
     {
@@ -17271,7 +17271,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "6a7680343bee95e48e848e0d6e98e9f11152a2420c0fec45b4178be0dedade0a",
+      "payloadSha256": "7fbee30de24ce3f86fe9e047bfe05a6cc3dca916d8c8b2d005405da7960db6aa",
       "status": "PROVEN"
     },
     {
@@ -17391,7 +17391,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "6ab9acb55774645209b067f25f1a0d5b578454f659c5639e1f261c5800a1950e",
+      "payloadSha256": "6041a457325ab666c1094a649a11389e147ded0633993e40609819cb12823b0f",
       "status": "PROVEN"
     },
     {
@@ -17511,7 +17511,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "0fc6d2bc2df53cf5fc2ea6c41cfc87d0c7a5be57e6707d2063c68038741daebf",
+      "payloadSha256": "d68c59e8381ac54d59b2e3baf4d5e1148ba4e9937b42772b720aa32978c08cb2",
       "status": "PROVEN"
     },
     {
@@ -17624,7 +17624,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "dc8b4905ac30f94aa8c2cfa34cd02b1fd90b3fdc2f4210c452277584c28d6e32",
+      "payloadSha256": "bf56d67856f73b5f642e8cae219d141f8746985a087d8289f101c130b65cc9a7",
       "status": "PROVEN"
     },
     {
@@ -17737,7 +17737,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "345c80a01ffac03b6d0f381d0cd649a25091a16a7dacd683568868c81a760999",
+      "payloadSha256": "6e024d87168311e1f608a4e9fd3a15c69c86e91eb963d499db709668f9aa0fd3",
       "status": "PROVEN"
     },
     {
@@ -17850,7 +17850,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "069381e5f733f3668a367ccdffe946875c22e73023d7f02d2fb4ba9f57420840",
+      "payloadSha256": "1334f635f02a4a9695b9ae6e62907e5edff15b8c47af7f064695fba403c359c1",
       "status": "PROVEN"
     },
     {
@@ -17999,7 +17999,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "81a4230cfb07eea2fae9e9f1490192d751c108db5c9bc17c4b0b3635261273be",
+      "payloadSha256": "912de39129c360cdefc49e41880b058421f5c502af24096ef8bdd176a181f057",
       "status": "PROVEN"
     },
     {
@@ -18112,7 +18112,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "efbd8ccb72ce1f1fe65c873b3d9fe9053b2c9d307d20c1f47b1fcb65d198c225",
+      "payloadSha256": "f5209582102fb67727260954c307af2a8b26031801cb408a82b7c9ac882c2bab",
       "status": "PROVEN"
     },
     {
@@ -18225,7 +18225,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "c9bd1117dfca370a90b13187b469cf76e9145641cf5ff7994f4e1ee9082b8381",
+      "payloadSha256": "2916d7b8b3effe8ed959b5bca9ae595dcf098e13d8655e4f3ca65d903d1e8a32",
       "status": "PROVEN"
     },
     {
@@ -18338,7 +18338,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "e2b70e942c5ace264d98e64cecfc4178be794a6d7af794719e555e8ea86ea5f0",
+      "payloadSha256": "483b638ff9d1e4900221425f95899189aaf60c880b968f20d7d0be7552f97bbd",
       "status": "PROVEN"
     },
     {
@@ -18451,7 +18451,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "cf533b2717bbc9770bd49f3919d0a0b7cf77ef5c15b4279423d9f8d6f73725e9",
+      "payloadSha256": "b5b2232d37cd145a180c04c4082635263a70ea7f89486fbaf7029006507af57b",
       "status": "PROVEN"
     },
     {
@@ -18564,7 +18564,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "dccc531819ce1eea111181e2306eb6de983384159f5e08a404871a113904f225",
+      "payloadSha256": "45333a9eff495f8c353515ea95a9fcb8646cecc976cf7c92122d5a511f626187",
       "status": "PROVEN"
     },
     {
@@ -18717,7 +18717,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "929762f08196287b73c5e3fb84f7c172e2bc18d732b82a4a7f5e3a5dfbd281f2",
+      "payloadSha256": "fa1e5fdb52e6c58654ada5defaec99f4045fed189a527eb9b88d83ea809f72df",
       "status": "PROVEN"
     },
     {
@@ -18870,7 +18870,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "8389ee9d539705689d6ed1013d31c2b49abeaef129d0227a254df6563e99c860",
+      "payloadSha256": "b692e3e1ac597fd1a2064f497819e3cd57362f8b953628db6ec1ddcac3ee14f9",
       "status": "PROVEN"
     },
     {
@@ -19028,7 +19028,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "ad5871fd9a74800e6ca7d21ee77128a6e4e474120347dd8fc18a511535668339",
+      "payloadSha256": "de3429d8aecba6e97b291d338ac0f8aac1753534fd279fa2450663e1ad8df830",
       "status": "PROVEN"
     },
     {
@@ -19141,7 +19141,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "dadd53c84531855d4c5414e8362b2e30cca837f0e8033637aae8efe287308327",
+      "payloadSha256": "fb0fa5785420f43c653de8d632feeca12cecdaa0c1b7adad28a4f09ec04863c1",
       "status": "PROVEN"
     },
     {
@@ -19254,7 +19254,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "057a309d48f48d598a732e9faa49ffb77024085741a3aa55019a879540e01f14",
+      "payloadSha256": "4dfaefd7640ac23e4e43f516a4deda7783c580ad3e2204bf2f3096f201cfabc8",
       "status": "PROVEN"
     },
     {
@@ -19367,7 +19367,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "7d32c19dd267363258e6242f120b79bda4476706a5900c3e6419317e23786221",
+      "payloadSha256": "56f1e16f51cb336cb58e2ed04c10e0cd4daa61cda79d289e9c38f79f5c4b75f1",
       "status": "PROVEN"
     },
     {
@@ -19480,7 +19480,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "249405598bdac6bccc8f4409073eb210908c228ef39b17db04785dd2456b8b58",
+      "payloadSha256": "729658a39f25708180905a7f92e06da8375f50c951f07d06c943f28339aa2b01",
       "status": "PROVEN"
     },
     {
@@ -19593,7 +19593,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "4399532a9f7a391ab0073ed301543f6b8a8934f18a0b617ad5b06ceeeb02f2b4",
+      "payloadSha256": "160dac47c63fc608bb2dcbf25e3b5fc8621bbf5f829530da0e12178868ad7ea0",
       "status": "PROVEN"
     },
     {
@@ -19744,7 +19744,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "41a725f42a75a1f694883fc588abb1981d255670a8b1019e88e2e4f4c14dd080",
+      "payloadSha256": "0d94665fdd84522e44163671d406eaefa84c5cf260e6bf6778cfc6a70fd3cb23",
       "status": "PROVEN"
     },
     {
@@ -19857,7 +19857,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "9873a32ce8c595e8156fcac40163c1371565beef660324372354217b67e94034",
+      "payloadSha256": "64109183e7e055b56e4dc9ced24187519225cda1af257a186e22cc9907ea8e91",
       "status": "PROVEN"
     },
     {
@@ -19970,7 +19970,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "c58eba903fda6860cb7a509d4f9f227fcf1efcd1f9064e1d7ad868e68c7d22dc",
+      "payloadSha256": "5a490fd2f3aebdeafbf3ee8a0b4a300f1fedc6830bf18dc8ff3e5ee57ec84cca",
       "status": "PROVEN"
     },
     {
@@ -20166,7 +20166,7 @@
       "actualRecordCount": 15,
       "traceRecordCount": 15,
       "countAgrees": true,
-      "payloadSha256": "e2feb7cc9328c61b4908018acfcedfdea286090a5f421e079c6651039cb26f52",
+      "payloadSha256": "67735ccf9e00aa5770d13909aeb788786a8a53fad0084cc6fbac0a53cb318b2d",
       "status": "PROVEN"
     },
     {
@@ -20324,7 +20324,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "37176bca970efd065fa04dd4c976e31b0fdafd37a7407725320dc6859a23237f",
+      "payloadSha256": "00da2501c061c112e7dccc588a04256ff5ac2cdf99d600e79d9b395a32a659d5",
       "status": "PROVEN"
     },
     {
@@ -20477,7 +20477,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "aee3482a6e741471fe4e581e4c78eb9291a62f30e4e2895f95335544b90341b7",
+      "payloadSha256": "23df2096401586927deb0705fd900e2aedc2a89c1dab5fc313a67e39d20cef49",
       "status": "PROVEN"
     },
     {
@@ -20630,7 +20630,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "ffd08b98b427bd32f0f19781500b0345a81ee03cb4bb66b773306408584e4fc7",
+      "payloadSha256": "19f97b826a0891fc16ce8da00ec2d31509d8eca8e6714210a955fbc9e4d1ad36",
       "status": "PROVEN"
     },
     {
@@ -20790,7 +20790,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "41fd76cddfd4818f8c0502cce1902cafada9473286b0522ab7d55b5e7835eb06",
+      "payloadSha256": "22eb0fb7e96b433a1a46f4563f83fd853db873bd07d9568b803ea3e4afd79435",
       "status": "PROVEN"
     },
     {
@@ -20943,7 +20943,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "06a5aafa896216e5815ab0f8d1299d516e6cf7437f972771883bbc25a6e3d5bc",
+      "payloadSha256": "5a280c6bed0b5f24d081e1244b662375ab2d99d04e36de590dae2152ee4fc8b0",
       "status": "PROVEN"
     },
     {
@@ -21096,7 +21096,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "5f562698d7e6e1117e693c97b05169c023a3fad1bc44bdf2ab28a144ec6a7965",
+      "payloadSha256": "3622107fe26503510569d6eae329f928c44f67ab6d7b71896900483a3e12bcca",
       "status": "PROVEN"
     },
     {
@@ -21351,7 +21351,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "14a6a0e97d1610c10c58ffd4116752089c93a7adbb9d817221051e0e747a4651",
+      "payloadSha256": "92c9f8fe9f1d7aaa53abdfffd3ead43331554bf1107b8b0ee1b37b49c3114545",
       "status": "PROVEN"
     },
     {
@@ -21681,7 +21681,7 @@
       "actualRecordCount": 90,
       "traceRecordCount": 90,
       "countAgrees": true,
-      "payloadSha256": "177d1b09fc1c544240bebd112b4459b7ca1ba3b7956e16426f76779789746154",
+      "payloadSha256": "ed96cb5db8004d03860fcd7ebc08025dd00302307239c05488b5436d6ff55cab",
       "status": "PROVEN"
     },
     {
@@ -21943,7 +21943,7 @@
       "actualRecordCount": 107,
       "traceRecordCount": 107,
       "countAgrees": true,
-      "payloadSha256": "216b583218dd149eef961c9e4bcf512349b4deb437e1c547ca592da2df0e46bd",
+      "payloadSha256": "eea7e832fc8cda3de884017a291e2a5c7dff81146e4c539fb7d8605bcb0e917b",
       "status": "PROVEN"
     },
     {
@@ -22162,7 +22162,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "3747bc3aa4faeb0e326cc1b4c6fdc6ff9f38639dfff38445fc582c9a5b37f0a6",
+      "payloadSha256": "35887e66298968fc5be4e54a13f1b7ade562b35e8abed1fcb58239912f01225e",
       "status": "PROVEN"
     },
     {
@@ -22315,7 +22315,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "c5ffb58a6fba775369c76e599d04f770ac7f6b3065e95f81fc2bab259a2b0b0a",
+      "payloadSha256": "9d30dcc7a5a414b4cadffd4306f123a8fdfcf6d9aa6b5da8d9a1c49c41a17f5c",
       "status": "PROVEN"
     },
     {
@@ -22572,7 +22572,7 @@
       "actualRecordCount": 32,
       "traceRecordCount": 32,
       "countAgrees": true,
-      "payloadSha256": "93ff445d6856a55bcb890604f5ff12abfc9b8312d826b25b0baf6ae44f0c0187",
+      "payloadSha256": "de10e654b965aaae689edc5bdaf82a4e7e1cbf06dab05cc75351f54293566108",
       "status": "PROVEN"
     },
     {
@@ -22685,7 +22685,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "0579c8627727bd0f7fbbed0a3b33f73dde854d3ea70d3d27c2278fb407a60eee",
+      "payloadSha256": "3625a6578de8d7f77f3f9da31137de29a5ac1a935fb39d88996908d809bdfb46",
       "status": "PROVEN"
     },
     {
@@ -22843,7 +22843,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "eb22ac9f3d7acd2876d5318618b9efb123acf4cbe8370428ee8f7ebfdf50685c",
+      "payloadSha256": "239ea360bd124275358b38a7f3967c0e041883c8a5990f97ab2b836c25cb6143",
       "status": "PROVEN"
     }
   ],

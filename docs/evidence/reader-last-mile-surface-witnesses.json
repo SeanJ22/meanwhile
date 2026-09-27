@@ -10,14 +10,14 @@
       "areaFactsForState → ShuffledFacts"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/9",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-phone-dark-about-area.png",
-        "sha256": "8f9234686eeb84ac6ce473ae36ebd8a038da22d03f1e525c6793c04e413b6fcb"
+        "sha256": "1034544c481d0e976b60fbad03a103fefa87adbc8acce12ab3a29307ba16bf1e"
       }
     ],
     "status": "PROVEN",
@@ -26,9 +26,9 @@
   {
     "surface": "ballot",
     "component": "components/ballot/candidate-card.tsx",
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-final-ballot.json",
-    "evidenceSha256": "a9578edb066a8a3343f1a23a9f1d0e76617407e6d3c1593d10498e6c8c164dea"
+    "evidenceSha256": "cae27030054374ecb292a1871076c4bf494748b44d057a252cccd14afc0e23c4"
   },
   {
     "surface": "ballot",
@@ -42,9 +42,9 @@
       "candidateContactForCandidacy → CandidateContact"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/2",
     "screenshots": [
       {
@@ -66,9 +66,9 @@
       "pollingPlaceLinkFor → PollingLookupFallback"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/8",
     "screenshots": [
       {
@@ -94,9 +94,9 @@
       "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render-federal-money.json",
-    "evidenceSha256": "91f16bf7cb2401c824b6ada1a819aae3fdd92443686bc8fbc55af2c43760b0da",
+    "evidenceSha256": "7248ecc5c9da88d9a2cfca76f5ead2d2c28b25d00f56bd5cdc2d5fdd95ae8ea0",
     "resultPointer": "/results/2",
     "screenshots": [
       {
@@ -118,9 +118,9 @@
       "stateMoneyForTarget → StateMoneySection"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -159,9 +159,9 @@
       "visible": true
     },
     "gesture": "Open Voting Record; verify all recent rows and the visible held plain-language bill summary, opening its disclosure if necessary.",
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -187,9 +187,9 @@
       "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -217,9 +217,9 @@
       "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -242,9 +242,9 @@
       "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -270,9 +270,9 @@
       "actual GET /api/directory → DirectoryRecordsContent"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -298,9 +298,9 @@
       "officialActionsForTarget → OfficialActionsContent"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -329,9 +329,9 @@
       "canonical person/card portrait → IdentityPortrait"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -345,9 +345,9 @@
   {
     "surface": "ballot",
     "component": "components/officials/positions-section.tsx",
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-positions.json",
-    "evidenceSha256": "9e7c59492f770ef42531adae14a17dfc905feeb003302f45543085f5a1b8bdd2"
+    "evidenceSha256": "8e2c399c8dca7e7237e5c664e20fac1187f807b29f0a84a9a3db243c2054c264"
   },
   {
     "surface": "ballot",
@@ -360,9 +360,9 @@
       "prlProfileForSubject → PublicStatementsProfileContent"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -376,9 +376,9 @@
   {
     "surface": "civic-routing",
     "component": "components/ask/ask-box.tsx",
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-civic.json",
-    "evidenceSha256": "b24c2f7eb427a491439c5e66d2b6cb19599be0cbbd32133c98ea93d264d56a33"
+    "evidenceSha256": "3b2a54e9a368e2e22b86c76b1b56f0b7c06acc26fea74b481344441ee7f82d42"
   },
   {
     "surface": "map",
@@ -391,14 +391,14 @@
       "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render-federal-money.json",
-    "evidenceSha256": "91f16bf7cb2401c824b6ada1a819aae3fdd92443686bc8fbc55af2c43760b0da",
+    "evidenceSha256": "7248ecc5c9da88d9a2cfca76f5ead2d2c28b25d00f56bd5cdc2d5fdd95ae8ea0",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-phone-dark-map-federal-money.png",
-        "sha256": "f457f9d51e3dbc330612ef297e7d2b129e315604045babcd64e24aa6394f0d8b"
+        "sha256": "c4cd25f08feb306dd0a60ea56843599f4e755e73f30f7d354d2182da5abc1ab7"
       }
     ],
     "status": "PROVEN",
@@ -415,14 +415,14 @@
       "stateMoneyForTarget → StateMoneySection"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "372ca6afa03b068606ae45765a75f182cf96c9846a4d29bf08ae0054434d23a8"
+        "sha256": "0a401f2b9ac25cfcf33db8f760de3c46986bb4548525a0b64063797b228bcd43"
       }
     ],
     "status": "PROVEN",
@@ -450,9 +450,9 @@
       }
     },
     "listingResultPointer": "/results/11",
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/8",
     "screenshots": [
       {
@@ -465,7 +465,7 @@
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-overlay.png",
-        "sha256": "7a0797bbf9395c9f4c1307ff7ee8fa8042cf4da95344c8b8e64d19507d25be2f"
+        "sha256": "5096399b1cc698c73db0854b9eb3152d90f79375d446b3670e19b9415ef094b4"
       }
     ],
     "status": "PROVEN",
@@ -483,9 +483,9 @@
       "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "dff59b5e1aac3e84e670238ba5bf12f24e072f4486698a2ee3989fb37ea61db6",
+    "evidenceSha256": "96053b21b55929b9a51fa6dac5a58e0205460a953d537ba3b999a22ff01ce6be",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -516,14 +516,14 @@
       "canonical registry division → seatHoldersForDivision → actual DistrictPopup"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-district-popup.png",
-        "sha256": "d1ab02de1a258dc3b0ca80481f5d0bc70eec6b83c8d1230de167df8a247b14c6"
+        "sha256": "fb5a0f0a14f21838a4c7690cd57e2ba9450ac3854191a23bbeb2fe04b0c71d6f"
       }
     ],
     "status": "PROVEN",
@@ -545,18 +545,18 @@
       "canonical definitionsForBody selected on exact current body → actual DefinitionBlock"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster.png",
-        "sha256": "1422043a1feb32db0305a03489930859eb3a6b0ac7efbd634e3372454ab4a233"
+        "sha256": "1261b7b171f001d094ad1d3ac832144f022fa3d30efba79fdb00698c3afe1389"
       },
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster-last-member.png",
-        "sha256": "34f348b5f0aa43ae78db6dd7f7fb16dc74a957cae7b4f77c22677d21b5b7cce8"
+        "sha256": "1f3144ce6ae0052beb4e279a210908d04b535be0bf3d0792045148df185689aa"
       }
     ],
     "status": "PROVEN",
@@ -574,9 +574,9 @@
       "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/8",
     "screenshots": [
       {
@@ -598,9 +598,9 @@
       "meetingReaderRecords → MeetingRecords"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/8",
     "screenshots": [
       {
@@ -647,18 +647,18 @@
       "visible": true
     },
     "gesture": "Open Voting Record; verify all recent rows and the visible held plain-language bill summary, opening its disclosure if necessary.",
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes.png",
-        "sha256": "0e75c1cef3c6f3dc5e2a0b2db771c4083da90a3086d3aa01432a81782f7e7f81"
+        "sha256": "26b3634b47b59a8c7d489aae1c20da9f254b92dd0c4de698f10289dcfbb99990"
       },
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes-last.png",
-        "sha256": "e5eee9dd985969e32a8cac9dd00973a5750d05f0c141b73472d9696f87e9bfb5"
+        "sha256": "d87e54e6826afa4ca2281570c8a49232e78988845abcde9aaf3156a0debee54b"
       }
     ],
     "status": "PROVEN",
@@ -675,18 +675,18 @@
       "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-voting-sites.png",
-        "sha256": "de6782ded5e527c7ad11987dd1c3241a525912accca00ff86193bfd1b30e65b7"
+        "sha256": "a741e543508229920592fd0f853298019ee71d4cd94890983c6960bb3f14bb37"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-voting-sites-source.png",
-        "sha256": "b617e0be7a1ada7dae44f4367c3f0cec0ce080c95bd2896f07d0b625d1bd8e3c"
+        "sha256": "fc1ef07946b4c58f28b3d319e1c8b6e917229d9db42f89d131712c951aee5683"
       }
     ],
     "status": "PROVEN",
@@ -706,14 +706,14 @@
       "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "372ca6afa03b068606ae45765a75f182cf96c9846a4d29bf08ae0054434d23a8"
+        "sha256": "0a401f2b9ac25cfcf33db8f760de3c46986bb4548525a0b64063797b228bcd43"
       }
     ],
     "status": "PROVEN",
@@ -731,18 +731,18 @@
       "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-key-votes.png",
-        "sha256": "16180d239aae8f7a935bd10711ef6238406fc38c87816ec50470f59f6163e01b"
+        "sha256": "127dd7c68e95ba4e21778cac4a7a01fd6f2fdd8a7512c24c4f2ca9ad824d648f"
       },
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-key-votes-last.png",
-        "sha256": "12d05009298b290eac9016e7352d616dfe0f82a676280fc53ad8a63c2af8236b"
+        "sha256": "4977de18eba8ec42e27634436d187fc5c22433c1cc4605e78f6769f8e68e541d"
       }
     ],
     "status": "PROVEN",
@@ -759,18 +759,18 @@
       "actual GET /api/directory → DirectoryRecordsContent"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-committees.png",
-        "sha256": "9ca420ce0d60a52448eb8bbca873e220bc23850fb025eac510e20a39b92b96ea"
+        "sha256": "f69d3c3e8cc449a7bf7d337dc5a03860c215fa1fc07ed4b0dc8b5883b4d70bca"
       },
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-offices.png",
-        "sha256": "be0feb066e8e49719761cb7c727d88c475b71a7d9ca02adeb6482f1ca197f71d"
+        "sha256": "e7819b107070a882eed710969d5e641926c024005aad67d2150fcea8c4d0c9e0"
       }
     ],
     "status": "PROVEN",
@@ -787,18 +787,18 @@
       "officialActionsForTarget → OfficialActionsContent"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-official-actions.png",
-        "sha256": "c49a0e2bf9bb3e9aef2a88343fea6b012084f78a8017842749953f9f64fb4479"
+        "sha256": "4be10f3e42c9564d7ceca3282dc2341f25878b709ce5d8ce10aa202037a6783e"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-official-actions-last.png",
-        "sha256": "2800cdf4cb97497e13407281bed761b1cd283c2183c2d38fe191952ec60593e6"
+        "sha256": "a02b0ba61cbd94ca97bb472d39960b4c3ba3fa2b323abcdb525d190b80977127"
       }
     ],
     "status": "PROVEN",
@@ -815,9 +815,9 @@
       "rosterHoldersForBody → OfficialTermNote"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/9",
     "screenshots": [
       {
@@ -843,14 +843,14 @@
       "canonical person/card portrait → IdentityPortrait"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "372ca6afa03b068606ae45765a75f182cf96c9846a4d29bf08ae0054434d23a8"
+        "sha256": "0a401f2b9ac25cfcf33db8f760de3c46986bb4548525a0b64063797b228bcd43"
       }
     ],
     "status": "PROVEN",
@@ -867,14 +867,14 @@
       "prlProfileForSubject → PublicStatementsProfileContent"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-profile.png",
-        "sha256": "7fd18a49f16dd2cde619c7cfcc79ce89888a4cd525e2e2ba1c72541ac83b6860"
+        "sha256": "a0e4bf8416b0f1ca7c1c7b89b5ab7f653c2b6b04491fef3d1b9733ea68892c0d"
       }
     ],
     "status": "PROVEN",
@@ -891,18 +891,18 @@
       "rosterGapForBody → RosterCompletenessGaps"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster.png",
-        "sha256": "1422043a1feb32db0305a03489930859eb3a6b0ac7efbd634e3372454ab4a233"
+        "sha256": "1261b7b171f001d094ad1d3ac832144f022fa3d30efba79fdb00698c3afe1389"
       },
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-district-popup.png",
-        "sha256": "d1ab02de1a258dc3b0ca80481f5d0bc70eec6b83c8d1230de167df8a247b14c6"
+        "sha256": "fb5a0f0a14f21838a4c7690cd57e2ba9450ac3854191a23bbeb2fe04b0c71d6f"
       }
     ],
     "status": "PROVEN",
@@ -919,14 +919,14 @@
       "stateMoneyForTarget → StateMoneySection"
     ],
     "importReach": true,
-    "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
+    "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "bddec65e5f3846827eadb4c028a2aa4bd53a1b097ff63f9874096d63282c3715",
+    "evidenceSha256": "8442304d9d10de4b265c6a40913d46b4fa9388db22041b084f34327d6e50a476",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "372ca6afa03b068606ae45765a75f182cf96c9846a4d29bf08ae0054434d23a8"
+        "sha256": "0a401f2b9ac25cfcf33db8f760de3c46986bb4548525a0b64063797b228bcd43"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",

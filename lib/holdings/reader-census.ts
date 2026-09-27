@@ -2977,7 +2977,9 @@ export function candidateProfileCensusHoldingPath(profile: { holdingKey: unknown
   const pointer = `/${unit}/${key}${field === "bio" ? "" : `/${field}`}`;
   const frozen = `data/ballot/candidate-${unit}-2026.json#${pointer}`;
   const promoted = `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#${pointer}`;
-  return profile.holdingPath === frozen || profile.holdingPath === promoted ? frozen : null;
+  const derivedCampaign = field === "campaign"
+    && profile.holdingPath === `civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/${key}/campaign`;
+  return profile.holdingPath === frozen || profile.holdingPath === promoted || derivedCampaign ? frozen : null;
 }
 
 /** A promoted ZIP-scoped contact must demonstrate every ZIP of the frozen

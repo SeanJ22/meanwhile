@@ -27,6 +27,7 @@ import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 import { withSharedScopeDivisions } from "@/lib/control-plane/expansion/scope-divisions.ts";
 import { CENSUS_SCHOOL_INTERSECTIONS } from "@/lib/control-plane/expansion/census-scope-observations.ts";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index.ts";
+import { reviewedGovernmentsPlaced } from "@/lib/control-plane/expansion/send-preview.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const COLLEGE = "az:school:cochise-county-community-college-district";
@@ -91,6 +92,12 @@ test("full Census school intersections reach Admin, dispatch and readers, includ
 
 test("A SEND IN 85635 OR COCHISE COUNTY PLACES THE COLLEGE DISTRICT AND THE TECHNOLOGY DISTRICT; SANTA CRUZ COUNTY DOES NOT GET THE COLLEGE", async () => {
   const idx = index();
+  const registry = JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")) as JurisdictionRegistry;
+  const preview = reviewedGovernmentsPlaced([{ zcta5: "85635", whole: true, fraction: 1, divisions: [], partial: [] }], registry, idx);
+  const ids = preview.governments.map(body => body.id);
+  assert.ok(ids.includes(COLLEGE) && ids.includes(JTED) && ids.includes(FRY), "Admin must preview the same special-district work the runner places");
+  assert.ok(!ids.includes(PALOMINAS), "a county neighbour is not automatically in this ZIP");
+  assert.match(preview.governments.find(body => body.id === FRY)!.basis, /discovery leads/);
   const college = idx.bySubject.get(COLLEGE);
   const jted = idx.bySubject.get(JTED);
   assert.ok(college !== undefined, `the college district is placed: ${idx.unplaced.get(COLLEGE)}`);
@@ -161,7 +168,7 @@ test("NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send pl
   const namers = trackedFilesNaming(["-e", "az-fire-district-territory", "-e", "APPROXIMATE_DISTRICT_EXTRACT_PATH", "-e", "readApproximateDistrictExtract"]);
   assert.deepEqual(namers, ["lib/control-plane/expansion/district-territory.ts", APPROXIMATE_DISTRICT_EXTRACT_PATH.join("/"), "lib/control-plane/expansion/runner-load.ts"]);
   const importers = trackedFilesNaming(["-e", "expansion/runner-load"]);
-  assert.deepEqual(importers, [], "no app page, component or library module loads the runner's placement");
+  assert.deepEqual(importers, ["app/(admin)/_mw/data/send-preview.ts"], "only the authenticated Admin preview loads dispatch placement; no public reader does");
 });
 
 test("THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule", () => {

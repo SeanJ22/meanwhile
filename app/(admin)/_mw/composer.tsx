@@ -91,7 +91,7 @@ interface Preview {
   /** Per state the geography reaches: what a Send creates there, and whether a reviewed registry or registration names its governments. */
   readonly send?: {
     readonly states: readonly (
-      | { readonly kind: "REVIEWED_REGISTRY"; readonly state: string }
+      | { readonly kind: "REVIEWED_REGISTRY"; readonly state: string; readonly governments?: readonly { readonly id: string; readonly name: string; readonly basis: string }[]; readonly unplaced?: readonly { readonly id: string; readonly name: string; readonly why: string }[] }
       | { readonly kind: "REGISTRATION"; readonly state: string; readonly versionId: string; readonly governments: readonly string[]; readonly edge: readonly string[] }
       | { readonly kind: "NOT_READ"; readonly state: string; readonly why: string }
     )[];
@@ -375,6 +375,16 @@ export function Composer(props: {
                     {line}
                   </p>
                 ))}
+                {p.send?.states.map(state => state.kind === "REVIEWED_REGISTRY" && state.governments && <details key={state.state} className={s.dividerTight}>
+                  <summary className={s.name14}>{state.state} governments this Send reaches ({state.governments.length})</summary>
+                  <ul className={s.stack8} style={{ maxHeight: 300, overflowY: "auto" }}>
+                    {state.governments.map(body => <li key={body.id}><span className={s.name14}>{body.name}</span><div className={s.note}>{body.id} · {body.basis}</div></li>)}
+                  </ul>
+                  {!!state.unplaced?.length && <details><summary>Territory still unresolved ({state.unplaced.length})</summary>
+                    <p className={s.note}>These governments are registered in the state; unresolved territory does not establish whether they apply here.</p>
+                    <ul style={{ maxHeight: 300, overflowY: "auto" }}>{state.unplaced.map(body => <li key={body.id}>{body.name}: {body.why}</li>)}</ul>
+                  </details>}
+                </details>)}
               </>
             )}
           </div>

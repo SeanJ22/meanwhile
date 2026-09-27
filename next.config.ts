@@ -70,6 +70,11 @@ const nextConfig: NextConfig = {
   // absent: production resolves the canonical store and fails closed when its
   // pointer has not been recorded.
   outputFileTracingIncludes: {
+    "/api/admin/geography-preview": [
+      "./data/derived/census-unit-zips.json",
+      "./data/derived/zip-governments.json",
+      "./lib/control-plane/expansion/reference/az-fire-district-territory.json",
+    ],
     // `/api/warm` resolves one place per published state on each instance it
     // warms (C21, 2026-09-25), so it reads the same committed geometry the map
     // routes do; untraced, that priming would fail on production and warm

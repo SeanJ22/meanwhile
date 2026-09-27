@@ -516,7 +516,7 @@
     "regeneratedOn": "2026-09-27"
   },
   "docs/status-ledger.md": {
-    "digest": "1932dbca833c484f333f3d0dad86f4b0440e010cf24d7b4fcbb2cfe4626fc864",
+    "digest": "90aed604b1a27ec2fc0c401fa764969a3c1710cccb0ef7136c2c149e2e815c10",
     "files": 328,
     "entry": "scripts/status-ledger.mts",
     "regeneratedOn": "2026-09-27"

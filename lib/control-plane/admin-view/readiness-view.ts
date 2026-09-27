@@ -182,7 +182,7 @@ export function readingCards(input: {
         ? `${g.byState.PARTIAL_OR_STALE} are partial or stale, ${g.byState.NOT_WALKED} have never been walked, ${g.byState.BLOCKED} are blocked, ${g.byState.GATED_ON_OPERATOR} wait on you and ${g.byState.ARGUED_ABSENT} are argued absent — each counted apart, never folded in to improve the figure.`
         : "No readiness grid is published for this state yet.",
       meta: [
-        ["EXCLUDES", "the launch gates, which are pass or fail and reported on their own"],
+        ["EXCLUDES", "the system-wide Ask pilot health proofs, reported separately below"],
         ["STANDARD", input.contract ?? "none published"],
       ],
       dashed: false,
@@ -209,7 +209,7 @@ export function readingCards(input: {
       tone: "teal",
       unit: "published meeting versions the typed Reader read back",
       note:
-        "A readback proves the reader's own read model serves that exact version. It is a check of the site, and never proof that a person viewed it. The paid research lane publishes nothing while promotion is off, so it has no delivery to read back.",
+        "A readback proves the reader's own read model serves that exact version. It is a check of the site, and never proof that a person viewed it. This card counts routine meeting versions; research publication and reader links appear in Work.",
       meta: [
         ["NEVER PROVES", "that a person actually viewed it"],
         ["ITEM", "MW-011 — readback exists for the routine lane"],
@@ -218,12 +218,12 @@ export function readingCards(input: {
     },
     {
       key: "gates",
-      name: "Gates",
+      name: "Ask pilot health",
       fig: input.gates ? `${input.gates.passing} of ${input.gates.total}` : null,
       unknown: "NOT PUBLISHED",
       tone: "gold",
-      unit: "launch and safety gates passing",
-      note: "Pass or fail, never a percentage that can be traded against another reading. These gates are system wide: they are the same in every state, and a failing one blocks its own lane and nothing else.",
+      unit: "system-wide READER, TRUTH and FRESHNESS proofs passing",
+      note: "These three Ask pilot health contracts are the same in every state. Not yet proven means their required evidence is missing; it does not block sending a hunt or control the hunt's paid-work admission or publication. The actual hunt controls and holds appear in Work, Research and Money.",
       meta: input.gates
         ? [...input.gates.failing.map((w) => ["NOT PASSING", w] as const), ["AUTHORITY", "the pilot health contracts on the published owner snapshot"]]
         : [["AUTHORITY", "the owner snapshot was not read"]],

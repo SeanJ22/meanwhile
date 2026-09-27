@@ -68,8 +68,8 @@
  *   DEFERRED   missing, inside the cap, and not written this cycle because the
  *              per-cycle write budget ran out (or the dispatch wall came). The
  *              next cycle writes it: the remainder is counted, never dropped
- *   CAPPED     missing, beyond this target's cap. Named, with the cap. Sending
- *              a smaller geography reaches it
+ *   CAPPED     missing, beyond this cycle's target window. Named and retried
+ *              automatically as earlier missing rows are created
  *   HELD       a machine-openable meetings route whose partition ownership
  *              cannot be read: never a second meetings clock
  * ```
@@ -88,7 +88,8 @@
  *   what the row already records (MW-001).
  * - **Bounded.** At most `DISPATCH_WORK_WRITE_BUDGET` rows are written per cycle
  *   across every target (owner DISPATCH first, then scopes in priority order),
- *   and at most `DISPATCH_WORK_TARGET_CAP` rows for any one target.
+ *   and at most `DISPATCH_WORK_TARGET_CAP` missing rows considered for each
+ *   target in one cycle. Created rows no longer consume later cycles' window.
  * - **One writer.** Only the standing runner calls `applyDispatchWork`, inside
  *   its cycle lease. The gateway actions record the owner's intent and nothing
  *   else; Admin reads the counts this module writes onto the research state.
@@ -618,7 +619,6 @@ export function planDispatchWork(input: {
         continue;
       }
       if (row?.materializedBy === OWNER_DISPATCH) {
-        window += 1;
         planned.push({ instance, state: "CREATED", existsUnmarked: false });
         /* Another Send created it: this one found it on a clock. A creator not on record is never guessed. */
         if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) marks.push({ obligationId: id, target });
@@ -804,7 +804,7 @@ export interface DispatchWorkRequirementCounts {
   readonly createdThisCycle: number;
   /** Missing, inside the cap, not written this cycle. The next cycle writes them. */
   readonly deferred: number;
-  /** Missing, beyond the cap. */
+  /** Missing, beyond this cycle's per-target window; the next cycle retries it. */
   readonly capped: number;
   /** Written this cycle and refused by the store; retried next cycle. */
   readonly failed: number;
@@ -966,7 +966,7 @@ export function dispatchWorkReading(
           (applied?.stoppedBy === "DEADLINE" ? ", and this cycle's wall came first" : "") + "; the next cycle continues.",
       );
     }
-    if (capped > 0) says.push(`${capped} are beyond this geography's cap of ${plan.cap}; send a smaller geography to reach them.`);
+    if (capped > 0) says.push(`${capped} are beyond this cycle's window of ${plan.cap} missing requirements for this geography; later cycles continue automatically.`);
     if (held > 0) {
       const reasons = [...new Set(t.instances.filter(p => p.state === "HELD").map(p => p.instance.heldReason).filter((reason): reason is string => Boolean(reason)))];
       says.push(`${held} machine-openable meetings route(s) are held: ${reasons.length ? reasons.join("; ") : `${DATASET.wiring} could not be read`}; a second meetings clock is never risked.`);
@@ -1053,7 +1053,7 @@ export function dispatchWorkSentence(t: DispatchWorkTargetReading): string {
       : `${t.units.blocked} of ${t.units.placed + t.units.blocked} governments blocked`;
   return (
     `${t.label}: created ${r.created} of ${r.defined} requirement(s) the registry defines here (${r.createdThisCycle} this cycle` +
-    `${r.deferred > 0 ? `, ${r.deferred} deferred to the next cycles` : ""}${r.capped > 0 ? `, ${r.capped} beyond the cap of ${t.cap}` : ""}); ` +
+    `${r.deferred > 0 ? `, ${r.deferred} deferred to the next cycles` : ""}${r.capped > 0 ? `, ${r.capped} beyond this cycle's window of ${t.cap}` : ""}); ` +
     `reordered ${t.reordered.obligations} of ${t.reordered.of} standing obligations; ${blocked} by missing data.`
   );
 }

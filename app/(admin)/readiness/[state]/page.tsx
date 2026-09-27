@@ -327,7 +327,7 @@ export default async function ReadinessStatePage({
     numbers.push({ label: "fresh meeting sources", value: fresh.freshInside, denominator: fresh.published, contract: "published meeting sources confirmed within a day, of every published meeting source in the state" });
     numbers.push({ label: "read back", value: fresh.readBack, denominator: fresh.published, contract: "published meeting versions the typed Reader read back, of every published meeting version in the state" });
   }
-  if (gates) numbers.push({ label: "gates passing", value: gates.passing, denominator: gates.total, contract: "pilot health contracts GREEN, of every published contract (system wide)" });
+  if (gates) numbers.push({ label: "Ask pilot proofs passing", value: gates.passing, denominator: gates.total, contract: "pilot health contracts GREEN, of every published contract (system wide)" });
 
   /* ------------------------------------------------------------ where the gaps are */
   const selectedKeys = new Map(expansionScopesOf(base.adminConfig).scopes.map((d) => [`${d.geography.type}|${d.geography.geoid}`, d]));

@@ -122,7 +122,7 @@ export function deployPreview(input: DeployPreviewInput): DeployPreview {
       ? {
           says:
             `For ${named}, the runner creates the work the promoted registry defines and no clock carries yet — at most ` +
-            `${DISPATCH_WORK_WRITE_BUDGET} a cycle and ${DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} for this instruction. How many is counted by the runner, ` +
+            `${DISPATCH_WORK_WRITE_BUDGET} written a cycle and ${DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} missing rows considered for this instruction each cycle; later cycles continue automatically. How many is counted by the runner, ` +
             "which holds the registries — a state with no reviewed registry is read from its registration (the 2022 Census of Governments); its acknowledgement " +
             "says what it created, reordered and could not reach, and a state whose registration cannot be read is named as blocked.",
           measured: false,

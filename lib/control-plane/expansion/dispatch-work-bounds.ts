@@ -16,5 +16,5 @@
  */
 export const DISPATCH_WORK_WRITE_BUDGET = 200;
 
-/** The most obligations one geography or one instruction may create. A larger one is sent in parts. */
+/** Missing obligations considered per geography in one cycle. The remainder advances automatically in later cycles. */
 export const DISPATCH_WORK_TARGET_CAP = 1_000;

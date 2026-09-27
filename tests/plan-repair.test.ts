@@ -12,9 +12,9 @@ import type { ScoutCandidate, ScoutResult } from "../lib/control-plane/scheduler
 import type { VerificationAuthority } from "../lib/control-plane/workers/types.ts";
 import { heldAuditAttribution } from "../lib/control-plane/workers/standing.ts";
 
-async function fixture() {
+async function fixture(recordClass = "OFFICIAL_ROSTER") {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, contract: { ...plan.contract, schemaVersion: 2,
-    verification: { required: true, authorities: [] } } as never }) });
+    recordClass, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "repair-scout", routeLabel: "Recorded repair proposal fixture", target: FIXTURE_URL, inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
   const claim = await claimRouteTask(h.repos, { routeTaskId: task.id, holder: "repair-scout", now: h.now(), ttlMs: 120000 });
@@ -39,10 +39,10 @@ async function fixture() {
     independenceExplanation: "A separately captured government register supplies independently published roster fields.",
     extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES", keyFields: ["id"], fields: ["id", "name"] } };
   const candidate: ScoutCandidate = { routeId: "repair-roster", title: "Recorded official roster", url: FIXTURE_URL, procedure: "GET actual official roster", relevance: "The existing official roster question",
-    permission: "ALLOWED", permissionReading: "Actual capture allowed", evidenceArtifactIds: captured.map(artifact => artifact.id), observedOn: at.slice(0, 10), recordClass: "OFFICIAL_ROSTER", deterministic: true, unverified: ["Independent workers have not checked the repaired contract"],
+    permission: "ALLOWED", permissionReading: "Actual capture allowed", evidenceArtifactIds: captured.map(artifact => artifact.id), observedOn: at.slice(0, 10), recordClass, deterministic: true, unverified: ["Independent workers have not checked the repaired contract"],
     contractRepair: { schemaVersion: 1, sourceArtifactId: captured[0].id, extraction, authorities: [authority] } };
   const scout: ScoutResult = { formatVersion: 1, attemptId: attempt.id, obligationId: task.id, routeTaskId: task.id, workItemId: h.item.id, subjectId: h.item.subject,
-    routeId: "repair-scout", recordClass: "OFFICIAL_ROSTER", providerId: null, reason: "Fixture repair evidence", outcome: "ROUTE_CANDIDATE", stoppedBy: "MODEL",
+    routeId: "repair-scout", recordClass, providerId: null, reason: "Fixture repair evidence", outcome: "ROUTE_CANDIDATE", stoppedBy: "MODEL",
     rungs: captured.map((artifact, index) => ({ index, rung: "linked-documents-or-bulk-download", tool: "fetch_public", target: artifact.canonicalUrl,
       observed: "HTTP 200 actual fixture bytes", artifactIds: [artifact.id], note: null, at: artifact.retrievedAt, ok: true, permission: "ALLOWED", transport: "REACHABLE", httpStatus: 200 })),
     distinctEvidenceRungs: 1, candidates: [candidate], findings: [], nextRungs: [], unverified: [], narrative: "Fixture-only instruction repair proposal", worker: { provider: "recorded-fixture", model: "none", modelReported: null },
@@ -304,5 +304,19 @@ test("Scout contract-repair context contains executable typed grammar rather tha
     '"delimiter":","', '"id":"replace-with-register-id"', '"type":"GOVERNMENT_REGISTER"', '"publisher"',
     '"comparison":{"kind":"RECORD_VALUES","keyFields":["id"],"fields":["id","name"]}', '"authorityEvidenceArtifactIds"']) {
     assert.ok(context.includes(required), `Missing model-visible grammar: ${required}`);
+  }
+});
+
+test("service and voter-access discovery can admit independently replayed repair instructions", async () => {
+  for (const recordClass of ["SERVICE_CONTACT", "VOTER_ACCESS_ROUTE"]) {
+    const f = await fixture(recordClass);
+    assert.match(planRepairBrief(f.h.item.autonomousPlan!), /CONTRACT REPAIR remains owed/);
+    const admitted = await f.consume();
+    assert.equal(admitted[0].code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(admitted));
+    const child = (await f.h.repos.workItems.mustRead(admitted[0].successorWorkItemId!)).value;
+    assert.equal(child.autonomousPlan?.contract.recordClass, recordClass);
+    assert.equal(child.autonomousPlan?.contract.schemaVersion, 2);
+    assert.notEqual(child.state, "VERIFIED_COMPLETE", "repair admission must still execute independent workers");
+    assert.equal((await nextAutonomousOperation(f.h.runtime, child.id)).task?.workerTask?.role, "ACQUIRER");
   }
 });

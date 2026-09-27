@@ -557,6 +557,7 @@ export const SOURCE_AUTHORITIES = {
     recordClasses: ["CURATED_READER_RECORD"],
     competentFacts: [
       "a 2026 candidate's campaign site, read robots-first by our own deterministic Attempt and verified to name the candidate, the office or district and the 2026 election, on vaulted bytes",
+      "literal candidate-authored text from those same identity-verified captured pages, with distinct source-byte and transcription hashes; no inferred positions",
     ],
     expectedIdentifierKeys: ["record_id", "candidacy_id"],
     expectedTemporalFields: ["read_at", "approved_at"],

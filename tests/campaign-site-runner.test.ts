@@ -46,7 +46,9 @@ import { processRegisteredManualCandidate, processRegisteredRoutineCandidate } f
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedAuthorityFor } from "../lib/civic-data/derived-door.ts";
-import { refreshCandidateProfilesFromPromoted } from "../lib/civic-data/manual-read-models.ts";
+import { refreshCandidateProfilesFromPromoted, refreshCandidateCorpusFromPromoted } from "../lib/civic-data/manual-read-models.ts";
+import { documentsFor } from "../lib/candidates/positions.ts";
+import { derivedCampaignSitesProjectionIssue } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   CAMPAIGN_SITE_VERIFICATION_TEMPLATE,
   composeCampaignLinks,
@@ -235,6 +237,26 @@ test("a runner cycle over held results publishes a verified site through the der
   assert.equal(outcome.candidate.state, "PROMOTED", `${outcome.candidate.failureCode ?? ""} ${outcome.candidate.failureDetail ?? ""} ${JSON.stringify(outcome.candidate.receipt?.checks.filter((c) => c.verdict !== "PASS"))}`);
   assert.equal(outcome.candidate.receipt?.decision, "GOOD");
   assert.equal(outcome.readerReadback?.status, "PASS");
+  // The same ordinary worker approvals now deliver their already captured
+  // words, without a manual content package, new search or model call.
+  const oldText = "Kris Mayes is the Attorney General.";
+  const oldHash = sha256(oldText);
+  const corpus = manualProjectionCandidate({ contractId: "candidate-corpus", version: T0, sourceThrough: T0,
+    sourceReceipt: { contractVersion: 1, reviewedAt: T0, reviewedBy: "fixture-review", sources: [{
+      requestedUrl: "https://www.krismayes.com", finalUrl: "https://www.krismayes.com", publisher: "Kris Mayes campaign",
+      sourceClass: "CANDIDATE_CONTROLLED", retrievedAt: T0, httpStatus: 200, rawHash: oldHash, reviewedEvidence: "Retained prior publication fixture" }] },
+    payload: { formatVersion: 1, fetchedAt: T0, attempted: 1, failures: [], documents: [{ id: `${MAYES_KEY}@${oldHash}`, candidateKey: MAYES_KEY,
+      sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null, documentUrl: "https://www.krismayes.com", contentHash: oldHash,
+      retrievedAt: T0, contentType: "text/html", text: oldText, extraction: "html", extractionNote: null }] } });
+  assert.ok((await processRegisteredManualCandidate(store, "candidate-corpus", corpus, T0, null)).promoted);
+  await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: PUBLISH });
+  assert.ok(documentsFor(tangKeys[0]).some(doc => doc.documentUrl === LILY && doc.text?.length && doc.sourceContentHash), "normal candidate Reader receives verified page text");
+  assert.ok(documentsFor(MAYES_KEY).some(doc => doc.contentHash === oldHash), "prior GOOD publications survive");
+  const goodProjection = pass.candidate.readModel as import("../lib/civic-data/derived-campaign-sites.ts").DerivedCampaignSitesProjection;
+  const broken = structuredClone(goodProjection);
+  const doc = broken.records[0].publications![0].document;
+  doc.text = "A fabricated position was substituted";
+  assert.match(derivedCampaignSitesProjectionIssue(broken) ?? "", /exact text/);
   const derived = pass.candidate.retrieval.derived!.inputs;
   assert.ok(derived.some((i) => i.kind === "PIPELINE_APPROVAL") && derived.some((i) => i.kind === "VAULTED_EVIDENCE") && derived.some((i) => i.kind === "PROMOTED_VERSION"));
 

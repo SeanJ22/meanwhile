@@ -16,6 +16,7 @@ import {
   DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
   DERIVED_CAMPAIGN_SITES_SCOPE,
   refreshDerivedCampaignSites,
+  currentDerivedCandidateDocuments,
 } from "./derived-campaign-sites.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type {
@@ -230,8 +231,13 @@ export const settleAzBallotRead = (): Promise<CivicDataReadResult<AzBallotProjec
   readPromotedEdgeFirst(AZ.recordClass, AZ.scope, readAzBallotProjection, "The Arizona ballot");
 export const settleNhBallotRead = (): Promise<CivicDataReadResult<NhBallotProjection>> =>
   readPromotedEdgeFirst(NH.recordClass, NH.scope, readNhBallotProjection, "The New Hampshire ballot");
-export const settleCandidateCorpusRead = async (): Promise<string | null> =>
-  promotedVersionOrThrow(await readPromotedEdgeFirst(CORPUS.recordClass, CORPUS.scope, readCandidateCorpusProjection, "The candidate publications"));
+export const settleCandidateCorpusRead = async (): Promise<string | null> => {
+  const [corpus] = await Promise.all([
+    readPromotedEdgeFirst(CORPUS.recordClass, CORPUS.scope, readCandidateCorpusProjection, "The candidate publications"),
+    readPromotedEdgeFirst(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, refreshDerivedCampaignSites, "The verified candidate publications").catch(() => undefined),
+  ]);
+  return promotedVersionOrThrow(corpus);
+};
 /** The profile preload, edge first: the profiles and, in their own failure domain, the derived campaign sites. */
 export async function settleCandidateProfilesRead(): Promise<string | null> {
   const [profiles] = await Promise.all([
@@ -244,7 +250,8 @@ export async function settleCandidateProfilesRead(): Promise<string | null> {
 }
 
 export async function refreshCandidateCorpusFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  return promotedVersionOrThrow(await readCandidateCorpusProjection(options));
+  const [corpus] = await Promise.all([readCandidateCorpusProjection(options), refreshDerivedCampaignSites(options)]);
+  return promotedVersionOrThrow(corpus);
 }
 
 export async function refreshAzBallotFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
@@ -264,7 +271,13 @@ function currentOrTestSeed<T>(result: CivicDataReadResult<T>, name: string, seed
 export const currentAzBallotProjection = (): AzBallotProjection => currentOrTestSeed(azState, "Arizona ballot projection", azBootstrap);
 export const currentNhBallotProjection = (): NhBallotProjection => currentOrTestSeed(nhState, "New Hampshire ballot projection", nhBootstrap);
 export const currentCandidateProfilesProjection = (): CandidateProfilesProjection => currentOrTestSeed(profilesState, "Candidate profile projection", profilesBootstrap);
-export const currentCandidateCorpusProjection = (): CandidateCorpus => currentOrTestSeed(corpusState, "Candidate publication projection", corpusBootstrap);
+export const currentCandidateCorpusProjection = (): CandidateCorpus => {
+  const prior = currentOrTestSeed(corpusState, "Candidate publication projection", corpusBootstrap);
+  const documents = new Map(prior.documents.map(row => [row.id, row]));
+  for (const row of currentDerivedCandidateDocuments()) if (!documents.has(row.id)) documents.set(row.id, row);
+  return { ...prior, documents: [...documents.values()], attempted: Math.max(prior.attempted,
+    new Set([...documents.values()].map(row => row.candidateKey).concat(prior.failures.map(row => row.candidateKey))).size) };
+};
 
 export const azBallotReadState = (): CivicDataReadResult<AzBallotProjection> => azState;
 export const nhBallotReadState = (): CivicDataReadResult<NhBallotProjection> => nhState;

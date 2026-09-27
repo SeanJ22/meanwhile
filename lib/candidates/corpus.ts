@@ -86,6 +86,9 @@ export interface CandidateDocument {
   documentUrl: string;
   /** SHA-256 of the raw bytes. The revision detector. */
   contentHash: string;
+  /** New machine transcriptions keep the actual captured-byte hash separately
+   * from the normalized text identity used by the existing corpus. */
+  sourceContentHash?: string;
   retrievedAt: string;
   contentType: string;
   /**

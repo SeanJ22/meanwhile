@@ -8,12 +8,12 @@
  */
 import { createHash } from "node:crypto";
 
-import { readableContent } from "../extract/html-content.ts";
+import { extractHtmlText } from "../extract/html-text.ts";
+export { extractHtmlText } from "../extract/html-text.ts";
 import { agendaItems } from "../routing/agenda-search.ts";
 import type { Meeting, OcdId } from "../sources/types.ts";
 import { PUBLISHER_PAGE_SIGNAL, agendaReadableText, sameAgendaContent } from "./agenda-content.ts";
 import { sourceUserAgent } from "../sources/http.ts";
-import { repairMojibake } from "../text/mojibake.ts";
 
 /**
  * Agenda documents as first-class records — item 1 of the reprioritization.
@@ -215,33 +215,6 @@ export function contentHashOf(bytes: Uint8Array): string {
  * here on the way in rather than at render — a render-time patch would leave
  * every stored row and every later consumer holding the broken text.
  */
-export function extractHtmlText(html: string): string {
-  /*
-   * DATA-1 (2026-08-28): this used to be `<main>` or ELSE THE WHOLE DOCUMENT.
-   *
-   * The fallback is what put 9,007 characters of the CAP website's menu tree
-   * into a reader's "what this meeting is about" — because that page declares
-   * no `<main>`, no `<nav>`, no `<header>` and no ARIA roles at all. The
-   * region choice, the chrome removal and the link-density backstop now live
-   * in `lib/extract/html-content.ts`, which `scripts/fetch-corpus.mts` also
-   * calls: one extractor, so the two can no longer disagree.
-   */
-  const text = readableContent(html)
-    .html.replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&#0?39;/g, "'")
-    .replace(/&quot;/g, '"')
-    // Numeric references generically — &times; reached readers literally.
-    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
-    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
-    .replace(/&times;/gi, "×")
-    .replace(/&amp;/g, "&")
-    .replace(/\s+/g, " ")
-    .trim();
-  return repairMojibake(text);
-}
 
 /** Extract text from a PDF's bytes. Throws when the file cannot be read. */
 export async function extractPdfText(bytes: Uint8Array): Promise<string> {

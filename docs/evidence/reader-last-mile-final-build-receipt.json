@@ -1,10 +1,10 @@
 {
-  "exactHead": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-  "buildId": "PqwyS9a8EIJNkC-_HNM9V",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-    "commitShort": "be9095a",
+    "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+    "commitShort": "238ca84",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "293579b1a3d174f4a4256767522ef713527c7355667b181e13e50e00168e0852",
+  "buildLogSha256": "a82d40440efecaff1eaaf2a5d04888c18d495ff38a94d6550ed9511f8a8bf421",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,
@@ -2258,7 +2258,7 @@
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
-      "sha256": "4155076d8ffd6796b7f506247500f01c19b069dc58722926729eedec21f322ac"
+      "sha256": "b1259212b467b7550d784979501155d53b6e6e35079fbc4934ccfed1aa8081ae"
     },
     {
       "path": "lib/civic-data/derived-door.ts",

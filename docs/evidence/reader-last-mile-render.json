@@ -1,17 +1,17 @@
 {
   "date": "2026-09-27",
   "base": "http://localhost:3210",
-  "buildId": "PqwyS9a8EIJNkC-_HNM9V",
-  "exactHead": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-  "runId": "reader-last-mile-render@2026-09-27T09:22:45.139Z",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "runId": "reader-last-mile-render@2026-09-27T10:42:24.339Z",
   "results": [
     {
       "label": "85701-desktop-dark",
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -322,7 +322,7 @@
           "interpretation": {
             "ran": false,
             "why": "lexical-reading",
-            "ms": 2,
+            "ms": 1,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -400,7 +400,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 459,
+          "totalMs": 475,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -424,15 +424,15 @@
             "registry": 8,
             "executiveActions": 8,
             "azBallot": 8,
-            "commentAccess": 89,
-            "federalVotes": 240,
-            "federalKeyVotes": 242,
-            "funding": 242,
-            "azPimaFinance": 248,
-            "stateMoney": 248,
-            "candidateProfiles": 249,
-            "candidateCorpus": 249,
-            "officeholderStatements": 249
+            "commentAccess": 91,
+            "federalKeyVotes": 264,
+            "federalVotes": 266,
+            "officeholderStatements": 268,
+            "candidateCorpus": 273,
+            "candidateProfiles": 273,
+            "azPimaFinance": 280,
+            "funding": 281,
+            "stateMoney": 282
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -443,11 +443,11 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 249,
+            "sourcePreloads": 283,
             "meetingsProjection": 0,
-            "officeholdersAndBallot": 196,
+            "officeholdersAndBallot": 177,
             "interpretation": 2,
-            "resolutionAndRetrieval": 9,
+            "resolutionAndRetrieval": 10,
             "composition": 3
           }
         },
@@ -587,7 +587,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -6428,7 +6428,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -10770,7 +10770,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -15067,7 +15067,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -18705,8 +18705,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -19150,7 +19150,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 266,
+          "totalMs": 249,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -19169,20 +19169,20 @@
           },
           "preloads": {
             "edgeManifest": 0,
-            "commentAccess": 4,
-            "outcomes": 4,
-            "federalDirectory": 3,
-            "azPimaFinance": 3,
-            "registry": 3,
-            "officeholderStatements": 3,
-            "executiveActions": 3,
-            "funding": 3,
-            "federalVotes": 3,
-            "federalKeyVotes": 3,
-            "stateMoney": 3,
-            "azBallot": 3,
-            "candidateProfiles": 3,
-            "candidateCorpus": 3
+            "commentAccess": 5,
+            "outcomes": 5,
+            "federalDirectory": 5,
+            "azPimaFinance": 5,
+            "registry": 5,
+            "officeholderStatements": 4,
+            "executiveActions": 4,
+            "funding": 5,
+            "federalVotes": 5,
+            "federalKeyVotes": 4,
+            "stateMoney": 5,
+            "azBallot": 5,
+            "candidateProfiles": 5,
+            "candidateCorpus": 5
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -19193,9 +19193,9 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 4,
-            "meetingsProjection": 235,
-            "officeholdersAndBallot": 20,
+            "sourcePreloads": 5,
+            "meetingsProjection": 216,
+            "officeholdersAndBallot": 21,
             "interpretation": 2,
             "resolutionAndRetrieval": 4,
             "composition": 1
@@ -19326,7 +19326,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -19360,7 +19360,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:23:34.972Z",
+              "recheckDueAt": "2026-09-27T10:43:14.281Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -19527,8 +19527,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -19940,7 +19940,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 478,
+          "totalMs": 389,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -19959,20 +19959,20 @@
           },
           "preloads": {
             "edgeManifest": 0,
-            "commentAccess": 3,
             "outcomes": 4,
-            "federalDirectory": 7,
-            "registry": 7,
-            "executiveActions": 7,
-            "azBallot": 7,
-            "federalKeyVotes": 324,
-            "funding": 326,
-            "officeholderStatements": 328,
-            "azPimaFinance": 328,
-            "federalVotes": 329,
-            "stateMoney": 329,
-            "candidateProfiles": 329,
-            "candidateCorpus": 329
+            "federalDirectory": 6,
+            "registry": 6,
+            "azBallot": 6,
+            "commentAccess": 94,
+            "funding": 251,
+            "candidateCorpus": 257,
+            "candidateProfiles": 257,
+            "officeholderStatements": 259,
+            "executiveActions": 260,
+            "stateMoney": 260,
+            "federalVotes": 261,
+            "azPimaFinance": 265,
+            "federalKeyVotes": 267
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -19983,10 +19983,10 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 329,
+            "sourcePreloads": 268,
             "meetingsProjection": 0,
-            "officeholdersAndBallot": 140,
-            "interpretation": 2,
+            "officeholdersAndBallot": 112,
+            "interpretation": 3,
             "resolutionAndRetrieval": 5,
             "composition": 1
           }
@@ -20052,7 +20052,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -20251,8 +20251,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -20703,7 +20703,7 @@
             ]
           },
           "answerMode": "GROUNDED_COMPOSED",
-          "totalMs": 638,
+          "totalMs": 408,
           "preloadSources": {
             "registry": "DATABASE",
             "federalDirectory": "DATABASE",
@@ -20721,21 +20721,21 @@
             "executiveActions": "DATABASE"
           },
           "preloads": {
-            "edgeManifest": 1,
-            "outcomes": 13,
-            "federalDirectory": 15,
-            "azPimaFinance": 15,
-            "registry": 15,
-            "officeholderStatements": 15,
-            "funding": 15,
-            "federalVotes": 15,
-            "federalKeyVotes": 15,
-            "candidateProfiles": 15,
-            "candidateCorpus": 15,
-            "commentAccess": 245,
-            "executiveActions": 249,
-            "azBallot": 249,
-            "stateMoney": 255
+            "edgeManifest": 0,
+            "commentAccess": 3,
+            "outcomes": 4,
+            "federalDirectory": 4,
+            "azPimaFinance": 4,
+            "registry": 4,
+            "officeholderStatements": 4,
+            "executiveActions": 4,
+            "funding": 4,
+            "federalVotes": 4,
+            "federalKeyVotes": 4,
+            "candidateProfiles": 4,
+            "candidateCorpus": 4,
+            "azBallot": 225,
+            "stateMoney": 225
           },
           "sourcesLoaded": "ALL",
           "composition": {
@@ -20746,9 +20746,9 @@
             "passed": true
           },
           "stages": {
-            "sourcePreloads": 256,
-            "meetingsProjection": 157,
-            "officeholdersAndBallot": 218,
+            "sourcePreloads": 225,
+            "meetingsProjection": 0,
+            "officeholdersAndBallot": 175,
             "interpretation": 2,
             "resolutionAndRetrieval": 4,
             "composition": 1
@@ -20801,7 +20801,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -20835,7 +20835,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:24:16.768Z",
+              "recheckDueAt": "2026-09-27T10:43:55.770Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -20970,8 +20970,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -21127,7 +21127,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -26968,7 +26968,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:21:39.237Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -31310,7 +31310,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:24:43.511Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -35607,7 +35607,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:24:43.511Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -39245,8 +39245,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -39391,7 +39391,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:24:43.511Z",
+              "retrievedAt": "2026-09-27T10:41:45.336Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -39425,7 +39425,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:25:14.305Z",
+              "recheckDueAt": "2026-09-27T10:44:51.907Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -39592,8 +39592,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -39761,7 +39761,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:09.063Z",
+              "retrievedAt": "2026-09-27T10:44:47.143Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -39960,8 +39960,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -40079,7 +40079,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:09.063Z",
+              "retrievedAt": "2026-09-27T10:44:47.143Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -40113,7 +40113,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:25:43.858Z",
+              "recheckDueAt": "2026-09-27T10:45:29.143Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -40248,8 +40248,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -40405,7 +40405,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:09.063Z",
+              "retrievedAt": "2026-09-27T10:45:39.133Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -46246,7 +46246,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:09.063Z",
+              "retrievedAt": "2026-09-27T10:45:39.133Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -50588,7 +50588,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:39.382Z",
+              "retrievedAt": "2026-09-27T10:45:39.133Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -54885,7 +54885,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:39.382Z",
+              "retrievedAt": "2026-09-27T10:45:39.133Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -58807,8 +58807,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -58953,7 +58953,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:39.382Z",
+              "retrievedAt": "2026-09-27T10:45:39.133Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -58987,7 +58987,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:26:14.934Z",
+              "recheckDueAt": "2026-09-27T10:46:05.096Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -59154,8 +59154,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -59323,7 +59323,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:25:39.382Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -59896,8 +59896,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -60015,7 +60015,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:33.486Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -60049,7 +60049,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:26:37.396Z",
+              "recheckDueAt": "2026-09-27T10:46:27.422Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],
@@ -60184,8 +60184,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -60341,7 +60341,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:33.486Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -66182,7 +66182,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:33.486Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -70524,7 +70524,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:33.486Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -74821,7 +74821,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:33.486Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -78743,8 +78743,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -78889,7 +78889,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:45.008Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -78923,7 +78923,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:27:11.323Z",
+              "recheckDueAt": "2026-09-27T10:46:55.327Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -79090,8 +79090,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -79259,7 +79259,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:45.008Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -79832,8 +79832,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -79951,7 +79951,7 @@
               "versionId": null,
               "lastKnownGoodVersionId": null,
               "sourceThrough": "2026-09-27T07:12:32.592Z",
-              "retrievedAt": "2026-09-27T09:26:45.008Z",
+              "retrievedAt": "2026-09-27T10:45:53.050Z",
               "promotedAt": "2026-09-27T07:12:34.181Z",
               "stale": "UNKNOWN",
               "staleAt": null
@@ -79985,7 +79985,7 @@
                 "statement": "We have not yet acquired the agenda for that Selectboard meeting."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-27T09:27:38.998Z",
+              "recheckDueAt": "2026-09-27T10:47:16.507Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": null,
               "supersededDocumentUrls": [],

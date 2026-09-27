@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-  "buildId": "PqwyS9a8EIJNkC-_HNM9V",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-27T09:28:43.557Z",
+  "runId": "reader-last-mile-final-render@2026-09-27T10:48:21.070Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -2235,7 +2235,7 @@
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
-      "sha256": "4155076d8ffd6796b7f506247500f01c19b069dc58722926729eedec21f322ac"
+      "sha256": "b1259212b467b7550d784979501155d53b6e6e35079fbc4934ccfed1aa8081ae"
     },
     {
       "path": "lib/civic-data/derived-door.ts",

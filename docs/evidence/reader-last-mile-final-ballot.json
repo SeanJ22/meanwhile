@@ -1,6 +1,6 @@
 {
-  "exactHead": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-  "buildId": "PqwyS9a8EIJNkC-_HNM9V",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -2232,7 +2232,7 @@
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
-      "sha256": "4155076d8ffd6796b7f506247500f01c19b069dc58722926729eedec21f322ac"
+      "sha256": "b1259212b467b7550d784979501155d53b6e6e35079fbc4934ccfed1aa8081ae"
     },
     {
       "path": "lib/civic-data/derived-door.ts",
@@ -15446,8 +15446,9 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
+          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
           "sourceUrls": [
+            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",

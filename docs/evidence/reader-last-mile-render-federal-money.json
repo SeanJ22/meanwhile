@@ -1,17 +1,17 @@
 {
   "date": "2026-09-27",
   "base": "http://localhost:3210",
-  "buildId": "PqwyS9a8EIJNkC-_HNM9V",
-  "exactHead": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-  "runId": "reader-last-mile-render@2026-09-27T09:27:56.142Z",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "runId": "reader-last-mile-render@2026-09-27T10:47:31.826Z",
   "results": [
     {
       "label": "85641-desktop-dark",
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -717,8 +717,8 @@
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -1424,8 +1424,8 @@
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -2131,8 +2131,8 @@
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "be9095a8b2053013053f54e72aa0ad2b071222a0",
-        "commitShort": "be9095a",
+        "commit": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+        "commitShort": "238ca84",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",

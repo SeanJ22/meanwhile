@@ -111,6 +111,32 @@ test("repair refuses fabricated, stale, missing, unsupported and self-verifying 
   assert.match(planRepairBrief(f.h.item.autonomousPlan!), /contractRepair/);
 });
 
+test("repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes", async () => {
+  const f = await fixture();
+  const plan = f.h.item.autonomousPlan!;
+  if (plan.contract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  const repair = f.candidate.contractRepair as Record<string, unknown>;
+  const authority = { ...f.authority, sourceId: "school.example.edu", canonicalUrls: ["https://school.example.edu/register.json"] };
+  const evidence = [f.evidence[0], { ...f.evidence[1], sourceId: authority.sourceId, canonicalUrl: authority.canonicalUrls[0] }];
+  const candidate = { ...f.candidate, contractRepair: { ...repair, authorities: [authority] } };
+  assert.throws(() => evaluatePlanRepair({ plan, candidate, evidence, now: f.h.now() }), /AUTHORITY_NOT_INDEPENDENT/,
+    "A model-proposed .edu host alone is not an established official publisher.");
+  const established = { ...plan, sources: [...plan.sources, { ...plan.sources[0], sourceId: authority.sourceId, publisher: authority.publisher, url: authority.canonicalUrls[0] }] };
+  assert.equal(evaluatePlanRepair({ plan: established, candidate, evidence, now: f.h.now() }).unresolved.length, 0);
+
+  const independentRecord = { ...f.authority, sourceId: f.evidence[0].sourceId, publisher: plan.contract.sourceScope.publisher,
+    canonicalUrls: [new URL("/independent-register.json", f.evidence[0].canonicalUrl).href], independenceBasis: "INDEPENDENT_OFFICIAL_RECORD" as const };
+  const samePublisherEvidence = [f.evidence[0], { ...f.evidence[1], sourceId: independentRecord.sourceId, canonicalUrl: independentRecord.canonicalUrls[0] }];
+  // Its independently acquired record also has to identify the established publisher.
+  const { createHash } = await import("node:crypto");
+  const text = JSON.stringify({ publisher: independentRecord.publisher, records: JSON.parse(FIXTURE_BODY) });
+  samePublisherEvidence[1] = { ...samePublisherEvidence[1], text, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` };
+  const separate = { ...f.candidate, contractRepair: { ...repair, authorities: [independentRecord] } };
+  assert.equal(evaluatePlanRepair({ plan, candidate: separate, evidence: samePublisherEvidence, now: f.h.now() }).unresolved.length, 0);
+  assert.throws(() => evaluatePlanRepair({ plan, candidate: separate,
+    evidence: [samePublisherEvidence[0], { ...samePublisherEvidence[1], text: f.evidence[0].text, contentHash: f.evidence[0].contentHash }], now: f.h.now() }), /AUTHORITY_NOT_INDEPENDENT/);
+});
+
 test("old content identity needs a real completed fetch rung for fresh observation; inherited replay cannot refresh it", async () => {
   const f = await fixture();
   const future = "2026-09-06T18:00:00.000Z";

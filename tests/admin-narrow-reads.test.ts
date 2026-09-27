@@ -239,7 +239,11 @@ test("a state's grid is its snapshot without the ZIP rows, with the same outcome
 test("Readiness and Done read the grids; Readiness starts every read before the policy row and each grid beside its counties", () => {
   const page = readFileSync("app/(admin)/readiness/page.tsx", "utf8");
   assert.doesNotMatch(page, /readReadinessSnapshot/);
-  assert.match(page, /Promise\.all\(\[readReadinessGrid\(code\), loadContainersWithCodes\(code\.toUpperCase\(\), "county"\)\]\)/);
+  assert.match(page, /Promise\.all\(\[readReadinessGrid\(code\), loadReadinessContainersWithCodes\(code\.toUpperCase\(\), "county", districtEdge\)\]\)/);
+  assert.ok(page.indexOf("const districtEdge = readReadinessDistrictEdge()") < page.indexOf('await openPage("/readiness", sp, nowIso)'), "the verified district edge starts before openPage");
+  const counties = readFileSync("app/(admin)/_mw/data/readiness-counties.ts", "utf8");
+  assert.match(counties, /ensureReaderAuthorityEdge\(manifest, undefined, \["census-districts"\]\)/);
+  assert.match(counties, /withReaderAuthorityEdge\(edge, \(\) => loadContainersWithCodes\(state, type\)\)/);
   assert.ok(page.indexOf("const reads = Promise.all([") < page.indexOf('await openPage("/readiness", sp, nowIso)'), "the reads start before openPage");
   assert.match(page, /reads\.catch\(\(\) => undefined\);/, "an early stop leaves no rejection unobserved");
   const done = readFileSync("app/(admin)/_mw/screens/done.tsx", "utf8");

@@ -24,9 +24,8 @@
  *
  * The questions travel as their own typed field on `expansion.scope.set`
  * (MW-002): kept on the scope decision and recorded by the runner on every
- * obligation the Send reaches. The categories and stop rule have no command
- * that carries them; they are written into your words — kept, shown back, and
- * not acted on — and the panel says so before you send.
+ * obligation the Send reaches. Categories remain part of the owner's note.
+ * Do not present stop choices that the runner does not implement.
  */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -108,12 +107,6 @@ const CATEGORIES = [
   ["finance", "Campaign finance"],
   ["votes", "Legislative votes"],
 ] as const;
-const STOPS = [
-  ["budget", "When my budget is reached, then show me", true],
-  ["first", "When the first useful thing is found", false],
-  ["once", "When every body has been looked at once", false],
-  ["never", "Keep going until I say stop", false],
-] as const;
 
 /** The gateway's limit on the note. */
 const NOTE_MAX = 500;
@@ -156,7 +149,6 @@ export function Composer(props: {
   const [preview, setPreview] = useState<{ readonly key: string; readonly p: Preview } | null>(null);
   const [questions, setQuestions] = useState<readonly WorkQuestion[]>([]);
   const [categories, setCategories] = useState<readonly string[]>([]);
-  const [stop, setStop] = useState<string>("budget");
   const [budget, setBudget] = useState<string>("0");
   const [huntBudget, setHuntBudget] = useState(true);
   const [newHunt, setNewHunt] = useState(false);
@@ -198,10 +190,8 @@ export function Composer(props: {
     const parts: string[] = [];
     if (words.trim()) parts.push(words.trim());
     if (categories.length) parts.push(`Categories: ${CATEGORIES.filter(([id]) => categories.includes(id)).map(([, l]) => l).join(", ")}.`);
-    const st = STOPS.find(([id]) => id === stop);
-    if (st && stop !== "budget") parts.push(`Stop: ${st[1]}.`);
     return parts.join(" ");
-  }, [words, categories, stop]);
+  }, [words, categories]);
   const questionsSent = useMemo(() => WORK_QUESTIONS.filter((q) => questions.includes(q)), [questions]);
   const noteTooLong = composedNote.length > NOTE_MAX;
   const canSend = chosen !== null && budgetOk && priorityOk && !noteTooLong && sent.kind !== "SENDING";
@@ -464,15 +454,8 @@ export function Composer(props: {
               <p className={s.note}>{chosen ? "Counted once the geography is read." : "Choose a geography to see what already exists in it."}</p>
             )}
           </div>
-          <div className={`${s.label} ${s.labelSpaced}`}>5 · When to stop, and what it may spend</div>
-          <div className={s.stack6}>
-            {STOPS.map(([id, label, enforced]) => (
-              <button key={id} type="button" className={`${s.rowChoice} ${stop === id ? s.rowChoiceOn : ""}`} aria-pressed={stop === id} onClick={() => setStop(id)}>
-                {label}
-                {enforced ? "" : " — kept in your words only"}
-              </button>
-            ))}
-          </div>
+          <div className={`${s.label} ${s.labelSpaced}`}>5 · Anthropic token budget</div>
+          <p className={s.note}>The runner keeps working toward completion. Paid Anthropic work stops when this hunt’s token budget is exhausted; you can stop this hunt from its Work detail at any time. Unfinished work and spending history remain visible.</p>
           <div className={s.rowCenter} style={{ marginTop: 14 }}>
             <span className={s.dollar}>$</span>
             <input className={s.input} value={budget} inputMode="decimal" aria-label="Anthropic token budget" onChange={(e) => setBudget(e.target.value)} />
@@ -557,11 +540,11 @@ export function Composer(props: {
               </span>
             </div>
           )}
-          {(categories.length > 0 || stop !== "budget") && (
+          {categories.length > 0 && (
             <div className={s.row}>
-              <Pill tone="stone">KEPT IN YOUR WORDS</Pill>
+              <Pill tone="stone">CATEGORIES IN NOTE</Pill>
               <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
-                Your categories and stop rule are written into your words ({composedNote.length} of {NOTE_MAX} characters) and not acted on.
+                Your category choices are included in the note ({composedNote.length} of {NOTE_MAX} characters). They do not limit the work created by Send.
                 {noteTooLong ? " That is too long to send — shorten your words." : ""}
               </span>
             </div>

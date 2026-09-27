@@ -168,7 +168,7 @@
     "regeneratedOn": "2026-09-25"
   },
   "docs/repo-inventory.md": {
-    "digest": "2d2abd44fbff91f0a15f54e8faedea9f196e29ee0d2371ba99a20d419893f670",
+    "digest": "6ef22cc78610703dc7365ef1708e9dc7df82cba5c71546b543c2d457eb1be89a",
     "files": 34,
     "entry": "scripts/repo-map.mts",
     "regeneratedOn": "2026-09-26"

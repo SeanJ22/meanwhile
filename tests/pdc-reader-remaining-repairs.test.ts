@@ -162,6 +162,9 @@ test("candidate profile route proof recognizes only the exact field, key and dem
     const profile = { holdingKey, field, holdingPath: prefix + pointer };
     assert.equal(candidateProfileCensusHoldingPath(profile), expected);
     assert.equal(candidateProfileCensusHoldingPath({ ...profile, holdingPath: expected }), expected);
+    const derived = { ...profile, holdingPath: `civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/candidate~1a~0b/${field}` };
+    assert.equal(candidateProfileCensusHoldingPath(derived), field === "campaign" ? expected : null);
+    for (const wrong of [{ holdingKey: "another" }, { holdingPath: derived.holdingPath.replace("sites-derived", "sites-other") }, { holdingPath: derived.holdingPath + "/extra" }, { holdingPath: derived.holdingPath.replace("candidate~1a~0b", "candidate/a~b") }]) assert.equal(candidateProfileCensusHoldingPath({ ...derived, ...wrong }), null);
     for (const wrong of [{ holdingKey: "another" }, { field: "unrecognized" }, { holdingPath: profile.holdingPath.replace("2026-supported", "2024-supported") }, { holdingPath: profile.holdingPath + "/extra" }, { holdingPath: profile.holdingPath.replace("candidate~1a~0b", "candidate/a~b") }]) assert.equal(candidateProfileCensusHoldingPath({ ...profile, ...wrong }), null);
   }
 });

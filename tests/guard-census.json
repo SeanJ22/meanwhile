@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 875,
-    "named": 8353,
+    "named": 8354,
     "dynamic": 33
   },
   "files": {
@@ -12514,7 +12514,8 @@
         "a service record without a usable channel returns to automatic repair instead of a manual approval queue",
         "independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence",
         "normal service workers publish verified applicability and channels while leaving missing topics visibly unacquired",
-        "normal voter-access workers publish the independently verified statewide route through the existing navigation reader"
+        "normal voter-access workers publish the independently verified statewide route through the existing navigation reader",
+        "verified directory bodies publish through the normal registry door and create durable scope-bound work without manual admission"
       ],
       "dynamic": 0
     },

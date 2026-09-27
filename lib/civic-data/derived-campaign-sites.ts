@@ -187,7 +187,7 @@ export async function readDerivedCampaignSites(
  * failure domain: whatever happens here, the profile read it accompanies is
  * unaffected, and a failure is kept as this store's read state.
  */
-export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+async function refreshDerivedCampaignSitesOnce(options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
   try {
     return await readDerivedCampaignSites(options);
   } catch (error) {
@@ -199,6 +199,19 @@ export async function refreshDerivedCampaignSites(options: PromotedCivicDataRead
     };
     return installed;
   }
+}
+
+// Profiles and publication text now load this same pointer concurrently. Share
+// only an in-flight default read, including NOT_RECORDED; no result is retained
+// here and explicit stores, clocks, cache bypasses and edge versions stay isolated.
+let defaultRefresh: Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> | null = null;
+export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+  if (Object.values(options).some(value => value !== undefined)) return refreshDerivedCampaignSitesOnce(options);
+  if (defaultRefresh) return defaultRefresh;
+  const pending = refreshDerivedCampaignSitesOnce(options);
+  defaultRefresh = pending;
+  try { return await pending; }
+  finally { if (defaultRefresh === pending) defaultRefresh = null; }
 }
 
 export function derivedCampaignSitesReadState(): CivicDataReadResult<DerivedCampaignSitesProjection> {

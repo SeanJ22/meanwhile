@@ -1,6 +1,6 @@
 {
-  "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
-  "buildId": "YWpqvNs8garpWZ2Sl32T1",
+  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
+  "buildId": "SnWuXqF40L-8moEMOozG8",
   "sourceHashes": {
     "app/api/agenda/route.ts": "55c2629bf125d1e08e1367100c55fa74e1598c77520f51c6af4b3638df764cb7",
     "lib/ask/agenda-publication.ts": "84190df8fdee15d8601f02ba37722cfa3c0fd479d5539223435efe6e72b2e973",
@@ -60,14 +60,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.451Z",
+        "recheckDueAt": "2026-09-27T10:29:41.678Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "75384688604daeebc5947537fb116974d1d563120d2909406359ed0257507f21"
+      "payloadSha256": "daf3d13d004cc7e8ae07a0af5423c2f567d9ea3b671773789b2fc649d42a2e30"
     },
     {
       "surface": "agenda",
@@ -115,14 +115,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.488Z",
+        "recheckDueAt": "2026-09-27T10:29:41.702Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c65a74e77a91c4617b99436f373c467b1be62272e914689cdebfc566b838a219"
+      "payloadSha256": "cdb572895db2fd388b72f196463b428b7c77b2ee501eddc7dd56e6cb3931baba"
     },
     {
       "surface": "agenda",
@@ -170,14 +170,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.525Z",
+        "recheckDueAt": "2026-09-27T10:29:41.722Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2f39b207f8b4b60d0e558eefc52da9e397e3b69ba0d95f545cfb48159cf8571e"
+      "payloadSha256": "1ec97a05ae6c0186fc4bf579fafd004fc4a97faca317834ec2f1ce413a511fde"
     },
     {
       "surface": "agenda",
@@ -225,14 +225,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.556Z",
+        "recheckDueAt": "2026-09-27T10:29:41.754Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f6683d2e2e139afd1b9f47ea5ff4876b3504012dc6f16f0aea2cbd532b0ff3a2"
+      "payloadSha256": "b00d856801f5395a7cd03175daa98a081d627df7ffc83592ff87dade13caed8c"
     },
     {
       "surface": "agenda",
@@ -280,14 +280,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.590Z",
+        "recheckDueAt": "2026-09-27T10:29:41.787Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e10a6481315ff090fa61e3b115cc024e89a23b522bc932b17f8668a097285d7f"
+      "payloadSha256": "70ebff0c99c8830d12fe2aa02e9be05d52606d3d61ff9fd2737ec4b2873ce21b"
     },
     {
       "surface": "agenda",
@@ -335,14 +335,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.637Z",
+        "recheckDueAt": "2026-09-27T10:29:41.816Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "68ef93683c303728459a592326fa0c6e23088bfbbe1679234d1928f9b723b9c5"
+      "payloadSha256": "5e8298ab7f2759220484f9c4116af85c06c021a20db6ec105b9f0650f95c1364"
     },
     {
       "surface": "agenda",
@@ -390,14 +390,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.675Z",
+        "recheckDueAt": "2026-09-27T10:29:41.853Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f641fd855c3b47ac923bad120410d86c6a57dab27805436f8d59abe778a78b64"
+      "payloadSha256": "8079003b7d0304f3205d2b5c5182df664e44fcc5b57070c9f7060d91cfa26196"
     },
     {
       "surface": "agenda",
@@ -445,14 +445,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.713Z",
+        "recheckDueAt": "2026-09-27T10:29:41.886Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "3d91c90e9d765be45385424299ad75f305224479e12e9e3e3ed42ac97a6f72ce"
+      "payloadSha256": "cded56e2d628d8292b8e095b19783da13fe9c956ac645e528426b9504d7b19b3"
     },
     {
       "surface": "agenda",
@@ -500,14 +500,14 @@
           "statement": "The link we hold for that meeting is Governing Board Meeting's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:08.747Z",
+        "recheckDueAt": "2026-09-27T10:29:41.926Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "bf8525a51b16d80371dc56564d20d58e5049491443c727d7c6a218e02147f947"
+      "payloadSha256": "9ef5b69c8ca101855ccc4796d38d00b52abc791cb9cd0addd3caccf7ef068324"
     },
     {
       "surface": "agenda",
@@ -724,7 +724,7 @@
           "9. BOARD MEMBER REQUESTS FOR FUTURE AGENDA ITEMS 10. ADJOURNMENT Web Viewer << Back to the Public Page for Amphitheater Public Schools"
         ]
       },
-      "payloadSha256": "24a7613e4a5b95c1ddccfeaed9b8fa37121232f3661cb9fbdd134e5ba03a53c5"
+      "payloadSha256": "a1392b911a05ed998a64a807cb76719ba8133a7afe1360d290cb562d8002e550"
     },
     {
       "surface": "agenda",
@@ -939,7 +939,7 @@
           "9. BOARD MEMBER REQUESTS FOR FUTURE AGENDA ITEMS 10. ADJOURNMENT Web Viewer << Back to the Public Page for Amphitheater Public Schools"
         ]
       },
-      "payloadSha256": "22c217dda0a715c28c30725855889aa88f0244fcd893140d1ad98a3b27631006"
+      "payloadSha256": "85424ff76a4dbbe158d623a2150f0e6ac08f81c657d4c2be57415a32b7aa6c94"
     },
     {
       "surface": "agenda",
@@ -1156,7 +1156,7 @@
           "10. BOARD MEMBER REQUESTS FOR FUTURE AGENDA ITEMS 11. ADJOURNMENT Web Viewer << Back to the Public Page for Amphitheater Public Schools"
         ]
       },
-      "payloadSha256": "f4f75f145631e2962c1265cbfa43c89c421be47db0e3ef537648571465ae8f9f"
+      "payloadSha256": "00905dacb6d2bd8a8cfec5b39aa8ba8ba4cd172eea72c54b54974b159c94c435"
     },
     {
       "surface": "agenda",
@@ -1386,7 +1386,7 @@
           "9. BOARD MEMBER REQUESTS FOR FUTURE AGENDA ITEMS 10. ADJOURNMENT Web Viewer << Back to the Public Page for Amphitheater Public Schools"
         ]
       },
-      "payloadSha256": "d2c43a248da7db74847efb460a172130c44e21c2f8f0417c0c169c3c4bbc620a"
+      "payloadSha256": "a034a566cbfa9ff530d7448e2cf1e9947e1e5411a6aecfe0607f921af587ed9d"
     },
     {
       "surface": "agenda",
@@ -1587,7 +1587,7 @@
           "11. BOARD MEMBER REQUESTS FOR FUTURE AGENDA ITEMS 12. ADJOURNMENT Web Viewer << Back to the Public Page for Amphitheater Public Schools"
         ]
       },
-      "payloadSha256": "c13d2147a51b8bf49a59ed20343a9c6d5a65fbdc9b51b703487e33b4a75ff1fc"
+      "payloadSha256": "668764451d678688fedb2a8e4857f631666bf810589c35d27d9241d748130323"
     },
     {
       "surface": "agenda",
@@ -1834,7 +1834,7 @@
           "10. EXECUTIVE SESSION* 1. Motion to Recess Open Meeting and Hold an Executive Session for A. Pursuant to A.R.S. &sect; 38-431.03(A)(1)- Discussion and Consideration of the Process, Parameters, and Timeline for the Superintendent Search, Term of Employment to Begin July 1, 2027 Attachments: ( 1 ) Motion to Convene an Executive Session 9/17/2026 at 3:27 PM 11. RECONVENE PUBLIC MEETING 12. BOARD MEMB…"
         ]
       },
-      "payloadSha256": "669aa178a5d820db1bffd0a071114fa7e5da3d143702dd081df3b25e9cefca33"
+      "payloadSha256": "d2a41ef6b92752bdb68dbaa1d1f5d2cf43db93b934dca20937c2af8ff4243b7a"
     },
     {
       "surface": "agenda",
@@ -1883,14 +1883,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.060Z",
+        "recheckDueAt": "2026-09-27T10:29:42.330Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/547",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "51d7f6ea89354510da35b49d087e35033be9c5eeaeb31dafea77f02894c2dde6"
+      "payloadSha256": "58f09fb560a520cbd7b79ce82be9761f0e7d337a3df5e1431cd0ac979bd74a7a"
     },
     {
       "surface": "agenda",
@@ -1939,14 +1939,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.094Z",
+        "recheckDueAt": "2026-09-27T10:29:42.364Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/548",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b11062814878b0c7d8691d47ed9442484dee82f737a650d52f7dedbf10912e6c"
+      "payloadSha256": "7e918481a4e3a6943d0ecc2b258b6c6fc294478dd064df61bba3bdc6cf74c032"
     },
     {
       "surface": "agenda",
@@ -1995,14 +1995,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.119Z",
+        "recheckDueAt": "2026-09-27T10:29:42.401Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/549",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e79f60891cad8160b3b3a1f8715355ab7a27e1c329523d0fc7609da85336628c"
+      "payloadSha256": "200c423f428e8538c07a2d6711ed75ea2a0a84733367a3edf2ab1a387772a82b"
     },
     {
       "surface": "agenda",
@@ -2051,14 +2051,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.138Z",
+        "recheckDueAt": "2026-09-27T10:29:42.439Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/550",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "98ea82a15127a4a63baddf341477e315b69f81ca449f8b0573f4f6f83252856b"
+      "payloadSha256": "bc01fe75faee54b7ce49c7288a29943ffcbc9be0e8a7016a9046ab7fc43f7b4a"
     },
     {
       "surface": "agenda",
@@ -2107,14 +2107,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.165Z",
+        "recheckDueAt": "2026-09-27T10:29:42.477Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/552",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "056f22cd31080222f0cf6afbca47fb59f100312863ce7d09db10d53593b343e8"
+      "payloadSha256": "ce869edb7f24c82afc45a91d7ca260d6cab5e0701f6eb82f8ca1d9fc0277b3b9"
     },
     {
       "surface": "agenda",
@@ -2163,14 +2163,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.199Z",
+        "recheckDueAt": "2026-09-27T10:29:42.515Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/553",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "3e3cdc427a7241dc77750b1ce5774ac3dea0d35af56a2386896752144f332320"
+      "payloadSha256": "b97209a9767dda7b8ceddd9d30acf69661f977c0764df14fe0f29de1f74876e7"
     },
     {
       "surface": "agenda",
@@ -2218,14 +2218,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.231Z",
+        "recheckDueAt": "2026-09-27T10:29:42.558Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/555",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "15f90078f2a9555cf188ae5b42c825015bce0739206bc80be736738e8b2b0e4a"
+      "payloadSha256": "72b0ac84c010662585170ea38a7ec09fc24a964e7d4527990907aecabe340a78"
     },
     {
       "surface": "agenda",
@@ -2273,14 +2273,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.253Z",
+        "recheckDueAt": "2026-09-27T10:29:42.607Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/556",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a4f50def22fc2ffe60676a02fc49b62730f9568f2bde52edff934905ef3f7e7f"
+      "payloadSha256": "62de9e4b49f64c1bddaa0b3f3ee570b1134afc3ba7503f908f001ea0fceac423"
     },
     {
       "surface": "agenda",
@@ -2328,14 +2328,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.281Z",
+        "recheckDueAt": "2026-09-27T10:29:42.641Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/558",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6bcfa5cc4ade010d9c172e03e2a15a3ea6fb80e95aebfd3611b34884188457ff"
+      "payloadSha256": "8f8a3299c3c6d0bd9e8b4ce85495d626d88ecae8f322e97da46c9276f0134c1d"
     },
     {
       "surface": "agenda",
@@ -2384,14 +2384,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.313Z",
+        "recheckDueAt": "2026-09-27T10:29:42.675Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/651",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "08c1a37883fb03aa1aef76fbd2cf2b5bfac60f8dfbe08396b8626b89ec22b284"
+      "payloadSha256": "402227e6be1ff5104fedb8b49bcd379af2898e1ab21e3c2187c3c568ec532dd4"
     },
     {
       "surface": "agenda",
@@ -2439,14 +2439,14 @@
           "statement": "The link we hold for that meeting is CAP University's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.340Z",
+        "recheckDueAt": "2026-09-27T10:29:42.706Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.cap-az.com/board/board-committee-meetings/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "4ab6c4a496447e5c8865beee2cf7e181f4b9843f0ad3c23e77393f181b2453de"
+      "payloadSha256": "0e81fb58613b947e1ce299625373be572bc7fd9eded002dd7c616dce6e154102"
     },
     {
       "surface": "agenda",
@@ -2494,14 +2494,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.369Z",
+        "recheckDueAt": "2026-09-27T10:29:42.748Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://capaz.portal.civicclerk.com/event/698",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d6b293bc808d20978d90c306aba18e354af56501cdb4afbe5d5dd716ac5b0453"
+      "payloadSha256": "cc32cb9f7050cf78a9e7a5384813635bffcf08da7c9f903d0b318738cd4eabb1"
     },
     {
       "surface": "agenda",
@@ -2566,7 +2566,7 @@
           "A. Council/Committees B. Mayor C. Township Attorney D. Administration 23. ADJOURN: NEXT REGULAR MEETING JANUARY 20, 2026"
         ]
       },
-      "payloadSha256": "c9363931eca4238f18d977dc45d4a72ccbbe86e8a2f17e7ba4c0f8aa945708af"
+      "payloadSha256": "075972818a5af5d809c323effa4fa41fd209ddf11abcc3946f9f863c3ae0a351"
     },
     {
       "surface": "agenda",
@@ -2623,7 +2623,7 @@
           "11. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING - FEBRUARY 10TH*"
         ]
       },
-      "payloadSha256": "f993a80de612e11c706de94d0cdad0f9fe1ce3789bd35101a2b3f9ede25260cb"
+      "payloadSha256": "b1c28effcab793d4bc3e346468e49b9a7510d61bb381b025b65555a4e974d5f3"
     },
     {
       "surface": "agenda",
@@ -2679,7 +2679,7 @@
           "10. CONSENT AGENDA: R-26-40 A RESOLUTION AUTHORIZING REDEMPTION OF TAX TITLE LIEN C#25-00017 AGAINST BLOCK 11301.10 LOT 3.13 KNOWN AS 313 FISCHER CT. R-26-41 RESOLUTION AUTHORIZING SUBMISSION OF A STRATEGIC PLAN FOR THE ROCKAWAY TOWNSHIP MUNICIPAL ALLIANCE GRANT FOR FISCAL YEAR 2027 AND ACKNOWLEDGING THE TERMS AND CONDITIONS FOR ADMINISTERING THE MUNICIPAL ALLIANCE GRANT R-26-42 A RESOLUTION AUTHO…"
         ]
       },
-      "payloadSha256": "28838c35d8cfa6cd571bd79146547da8880dacbf29de22fed7a9135e66023198"
+      "payloadSha256": "e829585e860f9347a3a221ed28a0f12ce36ac54eb78250a3845b5c9792207d32"
     },
     {
       "surface": "agenda",
@@ -2727,14 +2727,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:09.480Z",
+        "recheckDueAt": "2026-09-27T10:29:42.918Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.rockawaytownship.org/AgendaCenter/ViewFile/Agenda/_02242026-1002",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b282119c655238e0b46c3aca33d2d10db00fcd275b177e3d00348ba99228cfbf"
+      "payloadSha256": "38627525988e9da50afc18003ca409ad98dcd1377b6d3cc7bdc799959af21a12"
     },
     {
       "surface": "agenda",
@@ -2792,7 +2792,7 @@
           "14. ADJOURNMENT: * BUDGET MEETING – MARCH 14 TH 9:00AM* * NEXT TOWNSHIP COUNCIL REGULARY MEETING – MARCH 24TH*"
         ]
       },
-      "payloadSha256": "b875b1baad781a9d67f34c51e9ca1898b07df8b62890f7e52410f30734629fc9"
+      "payloadSha256": "c92ff6fda51b3312057c5cf69fff6de748ef3b5d39ae957cc714bcbb342f14ce"
     },
     {
       "surface": "agenda",
@@ -2846,7 +2846,7 @@
           "6. OPEN TO THE PUBLIC 7. PRESENTATION BY THE TOWNSHIP’S AUDITOR, RAY SARINELLI, JR. FROM NISIVOCCIA 8. DISCUSSION OF THE PROPOSED 2026 BUDGET 9. ADJOURN: *NEXT REGULAR TOWNSHIP COUNCIL MEETING - MARCH 24, 2026. *"
         ]
       },
-      "payloadSha256": "dc78b88381b228fd9dad3332c12aab8054c84e2a1eb45cc4e1b4d821bab3ed8b"
+      "payloadSha256": "62afd98d9808bcc68f8f9c6fec391e41bc72ea98897ec137b891de9ed820b6e8"
     },
     {
       "surface": "agenda",
@@ -2909,7 +2909,7 @@
           "12. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING – APRIL 14TH*"
         ]
       },
-      "payloadSha256": "20348e4406f353d20ce1818d06e24c9351dae292a5744ef8e2e114cd7325470f"
+      "payloadSha256": "d54c70a73cac68a30c98c69161dc5143ff342f74891d7b794531079cc64dcffb"
     },
     {
       "surface": "agenda",
@@ -2970,7 +2970,7 @@
           "D. O-26-12 AN ORDINANCE FIXING THE SALARIES OF VARIOUS OFFICIALS AND CONTRACTUAL EMPLOYEES OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS E. O-26-13 AN ORDINANCE FIXING THE SALARIES OF VARIOUS OFFICIALS AND NON-CONTRACTUAL EMPLOYEES OF THE TOWNSHIP OF ROCKAWAY IN THE COUNTY OF MORRIS 11. CONSENT AGENDA: R-26-74 A RESOLUTION AUTHORIZING THE AWARD OF A COMPETITIVE CONTRACT FOR BANKING SERVICES…"
         ]
       },
-      "payloadSha256": "d9f9181f8feef05a4aff442b54bbba5c2d76d80941defcac85b45d2c6987f923"
+      "payloadSha256": "827ad8b71b3d2cc084c7364fbd017ca07de6bfce1342ff34525eec4c3b360623"
     },
     {
       "surface": "agenda",
@@ -3030,7 +3030,7 @@
           "13. ADJOURNMENT: * NEXT TOWNSHIP COUNCIL REGULARY MEETING – MAY 26TH*"
         ]
       },
-      "payloadSha256": "307ad28ed41e9a62e73e1aec2b35703a910cf844d9e693530219b4b0880a9c5e"
+      "payloadSha256": "26de080dac7a38e1de51cf9216683b0b2d7b47b4bfd3c3789a5302abde67507d"
     },
     {
       "surface": "agenda",
@@ -3089,7 +3089,7 @@
           "13. ADJOURNMENT:"
         ]
       },
-      "payloadSha256": "fc8ca3bf7eebdd1460747e269663a18a7b8b45f442a0dea10901d7c8c72204f3"
+      "payloadSha256": "6fa5744c56edba60d7bae2d2370bf9f851b3ec1189d8de66b6fe37ace5a6e9c1"
     },
     {
       "surface": "agenda",
@@ -3147,7 +3147,7 @@
           "13. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – JULY 14 TH *JUNE 23RD TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*"
         ]
       },
-      "payloadSha256": "ecbc449b2fd7d15dc8032a46e8ba7fe9ac3b75f836d16ac3c00ff70c611f286d"
+      "payloadSha256": "4dd1ce69fb92b444d08161af41bbfe096e9de11b2f5171171b300576a8b93d26"
     },
     {
       "surface": "agenda",
@@ -3206,7 +3206,7 @@
           "14. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – AUGUST 11 TH *JULY 28TH TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*"
         ]
       },
-      "payloadSha256": "7bdcd2a17b23bf81da09a1f3864e1f0976db4ae1002057694254d6461fc2a46d"
+      "payloadSha256": "038056deaab5478814583e5d3a7a0493f9d7456ffdc193cc41099653b3a1fcdd"
     },
     {
       "surface": "agenda",
@@ -3263,7 +3263,7 @@
           "13. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – SEPTEMBER 8TH * AUGUST 25 TH TOWNSHIP COUNCIL REGULAR MEETING – CANCELLED*"
         ]
       },
-      "payloadSha256": "8184ec2414c66cae3144c1a8a93df3bcaea0be5dd57363a061254c497ecc1e7f"
+      "payloadSha256": "087d69c1ac86ab2188479ba4c60fee99896627588523efa1dd3f90499cec9787"
     },
     {
       "surface": "agenda",
@@ -3320,7 +3320,7 @@
           "12. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – SEPTEMBER 22, 2026"
         ]
       },
-      "payloadSha256": "181d427b745d28dc57dc06fd486c1720ec38a1f6a7713cab4bfd04ed1fbe891c"
+      "payloadSha256": "45f2bdba11881ea095b877c6ec407d3353c77d851675a35edc695b1b495f3b4d"
     },
     {
       "surface": "agenda",
@@ -3377,7 +3377,7 @@
           "14. ADJOURNMENT: NEXT TOWNSHIP COUNCIL REGULAR MEETING – OCTOBER 13TH, 2026"
         ]
       },
-      "payloadSha256": "f16e7fcc76439fcffe736d0826651acf04e0c65af4b1dd6f1f5005151e0a0db7"
+      "payloadSha256": "66acbfc79c86c09c3c3168ed49ba852f8e429c2d667d7ce1cb74099eb88132a2"
     },
     {
       "surface": "agenda",
@@ -3433,7 +3433,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA #25-18 Richard 59 Sunnyhill Road Block 10402 Lot 71.05 “C” Variance Impervious Coverage – Inground Pool 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 24-04A Dickerson See attached memo carried forward without notice 2/17/26 Carrell Street Block 10201 Lot 37 & 50 Final Site Plan Approval – Amended “C” & “ D ” Variance 12. New…"
         ]
       },
-      "payloadSha256": "23b1577431ad8914de1ec4a1130f84fb69e20629b95b335fd47f1f3bc483e3fa"
+      "payloadSha256": "4147ff68dc0392088e0bce7c74127f88520b94c1d7409a744451333f0416d20f"
     },
     {
       "surface": "agenda",
@@ -3489,7 +3489,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW Adoption of Year End Report Amended BOA #25-18 Richard 59 Sunnyhill Road Block 10402 Lot 71.05 “C” Variance Impervious Coverage – Inground Pool 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 25-19 Brock 2 Grove Lane Block 40203 Lot 1 “C” Variance BOA # 25-17 Argintar 20 Mountain Avenue Block 21910 Lot 17 “C” Variance – Impervious…"
         ]
       },
-      "payloadSha256": "5c3f5feee8711e7f47fa45e5b22c400001e19c87c92a5dcc9a0da6cd22b9cc6b"
+      "payloadSha256": "0ffaefecd824dbd583665449bf7a79e5e93b769419af6dbf39f4ad0814355da8"
     },
     {
       "surface": "agenda",
@@ -3546,7 +3546,7 @@
           "7. Regular Order of Business 8. Resolutions 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “ D ” Variance 12. New Business 13. Old Business 14. Adjourn"
         ]
       },
-      "payloadSha256": "bb5d873aaacfc51fc703cb25c2c59030d59da69dbdabc9fc8ffa6f71e6284b32"
+      "payloadSha256": "53e2f7fe139fb22d73bae7777987f0c55ee9e8103dba0002ba02d2146c5e9933"
     },
     {
       "surface": "agenda",
@@ -3602,7 +3602,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 25-19 Brock 2 Grove Lane Block 40203 Lot 1 “C” Variance BOA # 25-17 Argintar 20 Mountain Avenue Block 21910 Lot 17 “C” Variance – Impervious Coverage & Steep Slope New Driveway BOA # 25-12 Lakeland Bus Lines 425 E Blackwell Street Block 10202 Lot 38-43 “D” Variance 9. Committee Reports 10. Other Matters"
         ]
       },
-      "payloadSha256": "f96f43b614419f382175b2c09c6590dbcfe411947e9c065f3f14c635cd0d3495"
+      "payloadSha256": "a88fcf73e548f4d1eb01beaad6683df464b6be7440ae9e93d12f7acacb87fe02"
     },
     {
       "surface": "agenda",
@@ -3658,7 +3658,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 26-01 Leifken 750 Green Pond Road/3 Upper Hibernia Block 40802 Lot 1 “C” Variance – Impervious Coverage & Front Yard Setback 9. Committee Reports 10. Other Matters 11. Public Hearing 12. New Business 13. Old Business 14. Adjourn"
         ]
       },
-      "payloadSha256": "d101c20e24b8a62236d6b03a8eaccd429dc616e944ac85cb117244b59fe75334"
+      "payloadSha256": "dcc710c8fbe1471b15411fadfe7d5a33c64c0589e0cbb213b239e2660a45a3a8"
     },
     {
       "surface": "agenda",
@@ -3714,7 +3714,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “D” Variance 12. New Business 13. Old Business 14. Adjourn"
         ]
       },
-      "payloadSha256": "8486f6aa78984ddcc5260ed5eb788a5e42ae768950078210d51469e5b9265a6c"
+      "payloadSha256": "68880ee56f992128db7d39e924fa17a4e6a7622c7f576e80c98bb4b253c74a97"
     },
     {
       "surface": "agenda",
@@ -3771,7 +3771,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 25-01 Gahali 46 Pawnee Ave Block 21501 Lot 18 Minor Subdivision with “C” & “D” Variance New Dwelling - Duplex 12. New Business 13. Old Business 14. Adjourn"
         ]
       },
-      "payloadSha256": "1b5c8f1146ac1d99dc663c5da87edff18c48bc5b11b917dfe5c12191eef2d8a2"
+      "payloadSha256": "3eaf3a9ef48d02f344520b7cf60d27ecc1cbbaeee4b4c00276e1a70c9f53d473"
     },
     {
       "surface": "agenda",
@@ -3826,7 +3826,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 25-01 Gahali 46 Pawnee Ave Block 21501 Lot 18 Minor Subdivision with “C” & “D” Variance New Dwelling – Duplex BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “D” Variance 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 26-03 Savino 6 Lyonsville Road Block 30801 Lot 2 “C” Variance New Single-Family Dwelling – Imperviou…"
         ]
       },
-      "payloadSha256": "d4d123d088a0db3e8b427f70d388a5597806120521ea348e2bd2174cec64c78f"
+      "payloadSha256": "15ecf171353a7bdab81085a274f8f9ae6272bcc8b3872914055a9943366e28dc"
     },
     {
       "surface": "agenda",
@@ -3881,7 +3881,7 @@
           "7. Regular Order of Business 8. Resolutions BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “D” Variance BOA # 26-03 Savino 6 Lyonsville Road Block 30801 Lot 2 “C” Variance New Single -Family Dwelling – Impervious Coverage & Front Yard Set Back 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 26-04 Mesia 238 Mt. Hope Ave Block 10708 Lot 50.01 “C” Variance Deck Rear Yard Setb…"
         ]
       },
-      "payloadSha256": "bf4235f6d9bd0f024b4341686c94bcf0129d23210acb765c0659d1ec79a9f16f"
+      "payloadSha256": "561d58d015f48c774548cd12424985a115644c8ba69ab877f7859d32398ec7ad"
     },
     {
       "surface": "agenda",
@@ -3937,7 +3937,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “D” Variance BOA # 26-03 Savino 6 Lyonsville Road Block 30801 Lot 2 “C” Variance New Single -Family Dwelling – Impervious Coverage & Front Yard Set Back BOA # 26-04 Mesia 238 Mt. Hope Ave Block 10708 Lot 50.01 “C” Variance Deck Rear Yard Setback 9. Committee Reports 10. Other Matters 11. Publ…"
         ]
       },
-      "payloadSha256": "98362fa44249363582eccb8f552a65ab7651207ced8957523d293ba8f19fe786"
+      "payloadSha256": "e6b7dd886eb5ec77c85d4db897b9404e343df7588883dee055acda1460650f1b"
     },
     {
       "surface": "agenda",
@@ -3993,7 +3993,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “D” Variance BOA # 26-06 Seifert 1 Sunnyside Lane Block 40307 Lot 1 “C” Variance – New Dwelling – Setbacks & Impervious Coverage 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 26-02 Amaya 488 Mt. Hope Road Block 11402 Lot 9 Preliminary/Final Site Plan with “C” & “D” Variance…"
         ]
       },
-      "payloadSha256": "62489685c4736d05a780a635790d6286278cdf860e568bd01df5ee2494b64fab"
+      "payloadSha256": "98f50956383203f47e9e4859cf95c81565c905e7bdd7201145f58a8e2eaf61ce"
     },
     {
       "surface": "agenda",
@@ -4049,7 +4049,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 25-16 Brookes 554 Mt. Hope Ave Block 11301 Lot 39 “D” Variance BOA # 26-05 Takier 93 W Lake Shore Drive Block 20702 Lot 15 “C” Variance – New Dwelling – Steep Slopes 9. Committee Reports 10. Other Matters BOA # 24-04A Dickerson Carrell Street Block 10201 Lot 37 & 50 Final Site Plan - Amended “C” & “D” Variance 11. Public Hearing BOA # 26-02…"
         ]
       },
-      "payloadSha256": "49fb010530e8ddb98ba01c101caecd6ae628ff1be8161498151f755a403c9373"
+      "payloadSha256": "8d3adf14a1d2f24425a5248c830a5f91ac7c36c4d70f6f4b4191c70898ae01df"
     },
     {
       "surface": "agenda",
@@ -4105,7 +4105,7 @@
           "7. Regular Order of Business 8. Resolutions ESCROW BOA # 24-04A Dickerson Carrell Street Block 10201 Lot 37 & 50 Final Site Plan - Amended “C” & “D” Variance BOA # 26-02 Amaya 488 Mt Hope Road Block 11402 Lot 9 Preliminary/Final Site Plan with “C” & “D” Variance 9. Committee Reports 10. Other Matters 11. Public Hearing 12. New Business 13. Old Business 14. Adjourn"
         ]
       },
-      "payloadSha256": "a42bd0d66fc6f3b55e3be99c92cdce1057bf172b0bc3e95324ad7949ec35dce8"
+      "payloadSha256": "36b781a7a16001935bab413724bcfcdd83a4c0595408ac0f1d5ffb46e814ac57"
     },
     {
       "surface": "agenda",
@@ -4160,7 +4160,7 @@
           "7. Regular Order of Business 8. Resolutions 9. Committee Reports 10. Other Matters 11. Public Hearing BOA # 26-07 Mandelbaum 1 Elizabeth Lane Block 40802 Lot 5 “C” Variance - Addition 12. New Business 13. Old Business 14. Adjourn"
         ]
       },
-      "payloadSha256": "07502652996408c9203798659347946d5f63c6b46ab5b557867eb69d4b8276ee"
+      "payloadSha256": "f8b1803b52cee9f5f5e8fc8576b68c06bce961c3c54f524341a8d7785861747f"
     },
     {
       "surface": "agenda",
@@ -4223,7 +4223,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, TBD Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "8da544ab9a59c87eb8a451d1eb0ce054764ba04c76b141024a2e92911af756ed"
+      "payloadSha256": "c464cd75f178cba757cb8fc36eb025c70bb937335337676ab8f1d7f3ba315ea5"
     },
     {
       "surface": "agenda",
@@ -4285,7 +4285,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "21599272bd27a4692d93dfd95dc494ac9146b5bce0c9772cb51b1a365b068fa3"
+      "payloadSha256": "92c7839e27afb97dbeb4b5cff9f69a58e2481a1da7dd2e317ac7840a6cc80494"
     },
     {
       "surface": "agenda",
@@ -4348,7 +4348,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "e724a1de7185d42840c639d5c00095abb4718f4275ce0affe585de7a0a706398"
+      "payloadSha256": "4a89052e284219959f3508d000a8bcd4da31c667daa673d3880e86545dcbb74f"
     },
     {
       "surface": "agenda",
@@ -4411,7 +4411,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "7a8cb89c5acea576186ba097f3f0bb877de87949ec086b39178941cd691c5b8a"
+      "payloadSha256": "81f20bde1237b45dfd87aff42b21f9278e909aee1e5982eab2cc1b8a918674eb"
     },
     {
       "surface": "agenda",
@@ -4473,7 +4473,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "d8246e01ae3a81e13c89fc0ace6236790bd8d289784c510a25e0695e15fa7699"
+      "payloadSha256": "91fa21fd49079f1f04ab94059af59698209e1d591939610967b1c020425843c9"
     },
     {
       "surface": "agenda",
@@ -4535,7 +4535,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "1c725c7b5ae900cde0cdbd2eddb4cc18e75d5bf534bf127362ae2a0d6bb26521"
+      "payloadSha256": "ed4f07a2cbaf1b47cf60d201e4c56b0a0fc4ee6354089924575c685028ea8470"
     },
     {
       "surface": "agenda",
@@ -4596,7 +4596,7 @@
           "15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "d16b6b69591e7f4591bb989c130ef65c63281574dfe84c29c52da48679682583"
+      "payloadSha256": "661cec456cc33e314c905c4e23f0c92eb9b52e422a280c23ad2c2380fe9d5d9c"
     },
     {
       "surface": "agenda",
@@ -4655,7 +4655,7 @@
           "14. New Business: DRAFT – Undersized Lot Analysis & Recommendations *Memorandum from David Novak *DRAFT Ordinance No. O-26-XX 15. Adjourn: Subcommittees: Minor Subdivision Tenancy and Minor Site Plan Simpkins, Lutz, Meyers Barilla, Scherr, Schievella"
         ]
       },
-      "payloadSha256": "1fcbd096ea2567060a4a8e227651d9b5ae4c2aa828d66968a539566aa3e1e5c3"
+      "payloadSha256": "1f6b243f4108513b3c225238f39f021c0778a68f6235a98c07af93d5d1361e85"
     },
     {
       "surface": "agenda",
@@ -4703,14 +4703,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.517Z",
+        "recheckDueAt": "2026-09-27T10:29:44.135Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://assets.tucsonaz.gov/share/bcc/42419.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f3a9986a14c2e7201f126cbbad2f76505089b23dc9131d784a168a2141dc3b07"
+      "payloadSha256": "7829da4bf5aab2224d0d319d6d52b0b3b275af605f3126106181395ab4797438"
     },
     {
       "surface": "agenda",
@@ -4765,7 +4765,7 @@
           "5. Old Business a. Possible Action: Appointment of Darin Guthrie for Groundswell Capital Board b. Possible Action: Loan Charge-Off Avenue Boutique c. Possible Action: Loan Charge-Off Cafe Passe 6. Organizational Updates a. Financials b. Rio Nuevo - Small businesses c. Economic Impact 7. Executive Session Discussion or consultation for legal advice with the attorney or attorneys of the public body…"
         ]
       },
-      "payloadSha256": "45479c4161c0688bd063b5b99929a20643e0cab75891b9cea71f69d5d532500a"
+      "payloadSha256": "81b55d309289e5429b0b91e5d721c8a15d2edaac2f769bf182069138da38de62"
     },
     {
       "surface": "agenda",
@@ -4820,7 +4820,7 @@
           "4. Call to Public 5. Adjournment Tucson IDA enables strategic, economic, and community development by providing financing and access to capital for projects and programs that benefit a thriving Tucson. Called to Order: The staff will present old business items for Board discussion and possible action, including the appointment of Darin Guthrie to the Groundswell Capital Board, as a Treasurer. The…"
         ]
       },
-      "payloadSha256": "79740def96fcc85129772da541c7e3573499b64428fbd46152480b74387ab0ef"
+      "payloadSha256": "50f44372dfe7da6959051fe0877a310fe5ac0bd16b5601180721b4a35aaee6f5"
     },
     {
       "surface": "agenda",
@@ -4876,7 +4876,7 @@
           "7. Open Session Downtown Tucson Partnership Contribution contract negotiations 8. Call to Public 9. Adjournment Tucson IDA enables strategic, economic, and community development by providing financing and access to capital for projects and programs that benefit a thriving Tucson. Called to Order: The Board will review and may approve the Draft Minutes of the Board Meeting held on June 18, 2026 and…"
         ]
       },
-      "payloadSha256": "fb2e763418083945af29e10a021a3bc6bd109ca20660957cc29e4f6cd20d6563"
+      "payloadSha256": "db0a9ed76de86de8718b75aecd86a5c88a572c1cb00aab932daba6542e9a4ce0"
     },
     {
       "surface": "agenda",
@@ -4924,14 +4924,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.641Z",
+        "recheckDueAt": "2026-09-27T10:29:44.253Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://assets.tucsonaz.gov/share/bcc/43004.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6595fc9e2a86bec95e7d79ba2762f1a6f61076f5e6de08ccce8742a72dd5d9cc"
+      "payloadSha256": "5c7e6e69162e075691914b2783348f451e342720bb910bf00e46c1b084d41b16"
     },
     {
       "surface": "agenda",
@@ -5137,14 +5137,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.672Z",
+        "recheckDueAt": "2026-09-27T10:29:44.285Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=162",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6879b32ef87a418e10e255e9655c593c62be57c6f07ecbb61cb325e698de540e"
+      "payloadSha256": "500a51403a512878664d3244442d2096753309f73f6ac65ee53fbef11bedb751"
     },
     {
       "surface": "agenda",
@@ -5350,14 +5350,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.705Z",
+        "recheckDueAt": "2026-09-27T10:29:44.318Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=163",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b04014181c3023c176fe41b367e2c65166655839ea024c2b6ccfb8fd22d08609"
+      "payloadSha256": "d619d27e85fe703dc00b0e4061d5eb1a05d6be74634fa5039c307c7c169576ac"
     },
     {
       "surface": "agenda",
@@ -5563,14 +5563,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.736Z",
+        "recheckDueAt": "2026-09-27T10:29:44.358Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=165",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "5f877f331ce7622d9d6ceef3b8ac738918548c8ed3197ca3c1187a451c50318c"
+      "payloadSha256": "c9012779b3b44447d0afd6780a296de6f1a95d986211a1563df045eea9b992d2"
     },
     {
       "surface": "agenda",
@@ -5776,14 +5776,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.767Z",
+        "recheckDueAt": "2026-09-27T10:29:44.388Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=166",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "299c3ad2ae4a3a9857040568d8cd64b7e08da39b2ab1dbc360f0d7cddede1407"
+      "payloadSha256": "5ae70b48208d2a35ba21da6a9e7a8c0f9f4e9cec0df08c7ce49f0543350d8f39"
     },
     {
       "surface": "agenda",
@@ -5998,14 +5998,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.800Z",
+        "recheckDueAt": "2026-09-27T10:29:44.426Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=167",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "9cc4b9a80113d1a5c3bf873a63452e2a2cf0da633bc0b66937dfebe91e987550"
+      "payloadSha256": "84dfdfe786eda990a476fb86b3573e5814650d58019162173f0002ec34dd5fc7"
     },
     {
       "surface": "agenda",
@@ -6053,14 +6053,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.828Z",
+        "recheckDueAt": "2026-09-27T10:29:44.460Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=168",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2fe4639fa95b7d46b41bf76a15670193397974e4e43fd4a9091a536b9a91c428"
+      "payloadSha256": "55ca72cf8b8b8f5b0109ceecbdc5c32aa333e89efe39ed214d720aaf2989fd41"
     },
     {
       "surface": "agenda",
@@ -6289,14 +6289,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.859Z",
+        "recheckDueAt": "2026-09-27T10:29:44.478Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://susd-12.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=174",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2a7bbb195d5edff2a7c176d45faac335e05721ec840c97cc9bca482a1cbf674a"
+      "payloadSha256": "fa35e0959c2737c1f017db9b382c1da39fdf7b6845a87a8e1aced8d6530f0dc4"
     },
     {
       "surface": "agenda",
@@ -6357,7 +6357,7 @@
           "12. ADJOURNMENT 12.1 Adjourn Meeting"
         ]
       },
-      "payloadSha256": "d8bf667e0a83827012953344861cd6b7f97d4719216bf6c3a7948fd984d463a4"
+      "payloadSha256": "3cb9621558b6ae9ad717951ca64700574533f0afbda45ceb272809bdc421e268"
     },
     {
       "surface": "agenda",
@@ -6424,7 +6424,7 @@
           "11. ADJOURNMENT 11.1 Adjourn Meeting 9:48 p.m. Ravi Shah adjourned the meeting."
         ]
       },
-      "payloadSha256": "ff693007af4d093fd1e113ddbec8bbf057068e2831da9cf1e14ffc77287cd161"
+      "payloadSha256": "3c3a7160b9f345d58ba55e03396bd5727f230d7dbed3cb1089ff71c71fdc3c42"
     },
     {
       "surface": "agenda",
@@ -6472,14 +6472,14 @@
           "statement": "The link we hold for that meeting is District Wellness Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.937Z",
+        "recheckDueAt": "2026-09-27T10:29:44.564Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=488",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f47335022a4a8be3b7037e7ebcfe61af69f7103a7ea5216341c8ba1c76108a82"
+      "payloadSha256": "5da2adb03a78a24d243447892e9982993d6f5c0957d6b8a54bcb19a0e0633874"
     },
     {
       "surface": "agenda",
@@ -6527,14 +6527,14 @@
           "statement": "The link we hold for that meeting is Audit Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.968Z",
+        "recheckDueAt": "2026-09-27T10:29:44.591Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "0aef500202b122d4b357afdbe3f344f7c828c0493be57e368d9939a52d195694"
+      "payloadSha256": "1551867291c75d64f09021180cb3b99ce2024f55764e98fffb146977211dab73"
     },
     {
       "surface": "agenda",
@@ -6582,14 +6582,14 @@
           "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:10.998Z",
+        "recheckDueAt": "2026-09-27T10:29:44.613Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "bc52b2b50d6ee42fe42a699de1b694a3049bb48ae11b1537fb16c3b53e2a552d"
+      "payloadSha256": "88490f39a4ca308fdac4561c507cf558fb8ea8157e8024f25fa95314618ff9a6"
     },
     {
       "surface": "agenda",
@@ -6645,7 +6645,7 @@
           "3. ACTION ITEM(S) 3.1 Administrative Appointments, Reassignments, and Transfers - Interim Assistant Principal, Palo Verde High Magnet School 5:04 p.m. Motion to approve the selected candidate to serve as Interim Assistant Principal of Palo Verde High Magnet School. Dr. Trujillo recommended Andrew Cassano to serve as Interim Assistant Principal of Palo Verde High Magnet School. Moved by: Ravi Shah;…"
         ]
       },
-      "payloadSha256": "7f7fda563277621a356786e569335d738913b4303cfabb760a81c6a580df261d"
+      "payloadSha256": "118b2ad571068315d05c4c9da24a72001e0894a6bba88c9aed46926987c3469a"
     },
     {
       "surface": "agenda",
@@ -6704,7 +6704,7 @@
           "10. ADJOURNMENT 10.1 Adjourn Meeting 9:00 p.m. Ravi Shah adjourned the meeting."
         ]
       },
-      "payloadSha256": "8ff653e68f6a4a02d5f0730df8d3fee54b12d6faf9f087b2151679453283164b"
+      "payloadSha256": "77591ec4a0dc76462bc9f4f3390342dbc1738aa425122cf99f2649c9f8fd7d24"
     },
     {
       "surface": "agenda",
@@ -6879,7 +6879,7 @@
           "11. ADJOURNMENT 11.1 Adjourn Meeting 10:13 p.m. Ravi Shah adjourned the meeting."
         ]
       },
-      "payloadSha256": "bda74aa1febfd02c48fba99d5dadbdac973f6a11697d8f10d50199fa66efdb48"
+      "payloadSha256": "7de02242669ae364234e793bebb44023ec67db924e24b1bd60fc2a1849eaf991"
     },
     {
       "surface": "agenda",
@@ -6985,14 +6985,14 @@
           "statement": "The link we hold for that meeting is Alternative Education Advisory Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.121Z",
+        "recheckDueAt": "2026-09-27T10:29:44.751Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "7eb1c94ed6a42384fb154c3edebac36f6f5fc8deec6cdc93e8e560f12e36b7ac"
+      "payloadSha256": "6eb16eea255eafe60fa9107cb367c42935ad87abd76c56906245e2b52a7fd0ce"
     },
     {
       "surface": "agenda",
@@ -7164,14 +7164,14 @@
           "statement": "The link we hold for that meeting is Bond Oversight Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.152Z",
+        "recheckDueAt": "2026-09-27T10:29:44.782Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "ced4cc68ea5e39f6844513ff5c79ad37828b66e1c9029edca5e0b601ebdfa1c4"
+      "payloadSha256": "41f045e4b5b5fe8c093d15bdfea842d55617e7253007ecb7fb242ebb5a682be2"
     },
     {
       "surface": "agenda",
@@ -7395,14 +7395,14 @@
           "statement": "The link we hold for that meeting is Employee Benefit Trust Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.201Z",
+        "recheckDueAt": "2026-09-27T10:29:44.829Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "08537a8b90877bddff6bacaa6afbd60ae3735cb66592c02af683711b337d83bc"
+      "payloadSha256": "bbbd1bff2657a676692468ece241cd9a70c845a44791b80d609acdb80b4b3f3d"
     },
     {
       "surface": "agenda",
@@ -7610,7 +7610,7 @@
           "9. ADJOURNMENT 9.1 Adjourn Meeting 9:22 p.m. Ravi Shah adjourned the meeting."
         ]
       },
-      "payloadSha256": "5f0db56f2e4a220956bc4ccc457dec087178b219662a587893b4e6b1dd2ed575"
+      "payloadSha256": "362894495908e9c8cbc89e738ed2f5fef67418f773ceb24f94f2455be7e64e43"
     },
     {
       "surface": "agenda",
@@ -7768,7 +7768,7 @@
           "11. ADJOURNMENT 11.1 Adjourn Meeting 9:30 p.m. Ravi Shah adjourned the meeting."
         ]
       },
-      "payloadSha256": "c5f8c1b0c619e7203247f27566b6d2088ca990b8311d6946544147f9dec057e2"
+      "payloadSha256": "cef98a8773051c283e6a716e5c4237b0632fb4feee1e8941ba97789cbdc26a9a"
     },
     {
       "surface": "agenda",
@@ -7978,14 +7978,14 @@
           "statement": "The link we hold for that meeting is Budget Advisory Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.297Z",
+        "recheckDueAt": "2026-09-27T10:29:44.914Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6524644233dcc3932a5c6a27d043efcd7fc6cbd650357673fc9fe5afb82a5d24"
+      "payloadSha256": "423022a78642ce7d41e5bf8a37f40b3a8522a4c04add91c411d373d11e32d11b"
     },
     {
       "surface": "agenda",
@@ -8033,14 +8033,14 @@
           "statement": "The link we hold for that meeting is Audit Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.327Z",
+        "recheckDueAt": "2026-09-27T10:29:44.945Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=501",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "8a5bd787b0b13bb86d7559ceec109e7c4c69aba4081bb81b9fc54939091a5af0"
+      "payloadSha256": "3751a402b1207db8d2287a69512828331fd058dccd2766479da291daec6923c2"
     },
     {
       "surface": "agenda",
@@ -8250,14 +8250,14 @@
           "statement": "The link we hold for that meeting is Bond Oversight Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.355Z",
+        "recheckDueAt": "2026-09-27T10:29:44.982Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d8b505fbccd0852873197f10f8e14d26cd02f47ca56b693e4da5ab42380d0d76"
+      "payloadSha256": "006bebc1e5359812f13a35ce6a8c69e10ea679ba97b7eb60ec005ae25342a825"
     },
     {
       "surface": "agenda",
@@ -8305,14 +8305,14 @@
           "statement": "The link we hold for that meeting is Alternative Education Advisory Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.387Z",
+        "recheckDueAt": "2026-09-27T10:29:45.013Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=503",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "8b352ef62e024e62751af3061364fdbcd1f3932c7df9b20b0d2b96f07d04352b"
+      "payloadSha256": "74adf5e32bd0385585ac0f2d87bc50de584b4e8aed2fa372ea658aa21ef55d7e"
     },
     {
       "surface": "agenda",
@@ -8360,14 +8360,14 @@
           "statement": "The link we hold for that meeting is Budget Advisory Committee Meeting Agenda's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.421Z",
+        "recheckDueAt": "2026-09-27T10:29:45.044Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=505",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c63bc6e802397f6258394293d9f92649f60de13288585f45f412b428f39347ad"
+      "payloadSha256": "a682012390919238ec70e836f32990327c12c4578c2be437f403b0ca5796c734"
     },
     {
       "surface": "agenda",
@@ -8415,14 +8415,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.452Z",
+        "recheckDueAt": "2026-09-27T10:29:45.073Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://drive.google.com/file/d/13I77sSpRUDXT7FUbd6SSRG3-7Ra9oCED/view?usp=drivesdk",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "63facc8f62b80627f8099838c7168c272ae24f923d6904a2059df28b009a1a2c"
+      "payloadSha256": "14994e1b6782e41e838efcc734d526cb2093c3251d3e14b8cb91a8954f449c21"
     },
     {
       "surface": "agenda",
@@ -8470,14 +8470,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.480Z",
+        "recheckDueAt": "2026-09-27T10:29:45.109Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://drive.google.com/file/d/1gn_Sz4I4719y7UQLD1mQKymbtYfKNaZo/view?usp=sharing",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "0c8d0ef62d52759b41df7d14e4a6c738188e55e887904b9b6b6aa9f041fa9a37"
+      "payloadSha256": "97a056f6fb78ebed48374dc68eafd762b8909e86b4cdb5e294b91cf31034f597"
     },
     {
       "surface": "agenda",
@@ -8525,14 +8525,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.497Z",
+        "recheckDueAt": "2026-09-27T10:29:45.138Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://drive.google.com/file/d/1GW9hCMsK_ptDWv2kMByF8kxtpju26OH8/view?usp=sharing",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f5db54c73a18f89e5ae48eb86522177e5e8f585257beb7ae8802f99e067db3ef"
+      "payloadSha256": "6d6107a7670092f29769359361846446cc2a1b685c408597ee161891bf79cc97"
     },
     {
       "surface": "agenda",
@@ -8580,14 +8580,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.514Z",
+        "recheckDueAt": "2026-09-27T10:29:45.160Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://drive.google.com/file/d/1Xp3uCfd9creGq6EbXP_U86nTq0MT3dWL/view?usp=sharing",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "bbb979637ff6f1ecceff49a03b87c0e22c7320cc49d5c4db768078d8883253be"
+      "payloadSha256": "73eabccde381b6217de42bf49f128dec98462fba43c25b31c41c2a037a5b8c62"
     },
     {
       "surface": "agenda",
@@ -8635,14 +8635,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.541Z",
+        "recheckDueAt": "2026-09-27T10:29:45.190Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://drive.google.com/file/d/1M_HnC-Qbg9Pm9Jp1ohE99fq5-37-9zFD/view?usp=sharing",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "fe580797a4193c163bd90836641967cfc76d48b0f17b193034cd4eddb0b82b98"
+      "payloadSha256": "37bfa912b9a2feb5c78762c273988854a336ed4b0b9cbb69f5942310d8c5d616"
     },
     {
       "surface": "agenda",
@@ -8707,14 +8707,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.572Z",
+        "recheckDueAt": "2026-09-27T10:29:45.225Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "17fee5998145196165fdf01fe2a5661a68573de759d7d36dc206b7446108115d"
+      "payloadSha256": "8421b184a752a0659cc10f1da7a539a97de7a2ada00ad875c6482b4c9798fd80"
     },
     {
       "surface": "agenda",
@@ -8762,14 +8762,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.589Z",
+        "recheckDueAt": "2026-09-27T10:29:45.274Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "16090e14f0c4ccf6ecd4cd2103b9b23a1eac056bf2850531453b4d152bb9a540"
+      "payloadSha256": "5b7fcc8595c1141627c0404b53a0a819b4ae6fc7b96bc90ccb22df341721e2d6"
     },
     {
       "surface": "agenda",
@@ -8817,14 +8817,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.618Z",
+        "recheckDueAt": "2026-09-27T10:29:45.319Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c543599c21cbef31f864bc16ff9841153fdbebf432600af91a5847fa91e901a4"
+      "payloadSha256": "6b4089646f2c6d36afcaab52e5dabe6605d89db547dc05fd8808bfef07c2fea9"
     },
     {
       "surface": "agenda",
@@ -8872,14 +8872,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.634Z",
+        "recheckDueAt": "2026-09-27T10:29:45.351Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "4b58e77e5cb552400ae35bfdeece0537c30be9fc1d8e0fa3022487ec9baef2e4"
+      "payloadSha256": "091b60d7ee981e1ab3dde75fa78852c80335c18675b7001a1506fab7586a0fd4"
     },
     {
       "surface": "agenda",
@@ -8927,14 +8927,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.667Z",
+        "recheckDueAt": "2026-09-27T10:29:45.382Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "9e9c73d8a666a9fee108c9950d14efe6663673ac40d747d16bc17aa677ff3deb"
+      "payloadSha256": "fa2c97d646c5ad71b3ac92308e6731459b50d18e28acb98b888c747007725a49"
     },
     {
       "surface": "agenda",
@@ -8982,14 +8982,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.697Z",
+        "recheckDueAt": "2026-09-27T10:29:45.419Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e1527434743b398c202bb53b84851fdc2827d4f1645b5d97e5a5e0e7cd470e1a"
+      "payloadSha256": "cdbc7856092fb2fe015fbf0ae8b3327272fe4bcb11704fde88b9d6562ebfd836"
     },
     {
       "surface": "agenda",
@@ -9037,14 +9037,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.714Z",
+        "recheckDueAt": "2026-09-27T10:29:45.449Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "da4e8f9d80888ec34b9b3aad89dfbc9c61d7e9a5d676c8535be77966e5d1d9a8"
+      "payloadSha256": "8ca38e00e84dcd02009af08847a3cea54d1d26f912f7318c5ba62e1755b80e2f"
     },
     {
       "surface": "agenda",
@@ -9092,14 +9092,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.742Z",
+        "recheckDueAt": "2026-09-27T10:29:45.487Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "0f9ddb23388b7ecddfdb7ddca5ef9f76e4308a17a191266c5979d6d431187691"
+      "payloadSha256": "2f372aa809965028ceed2da2592b7fbdc8ffdc7adff2ce42546c3281ab1f612d"
     },
     {
       "surface": "agenda",
@@ -9147,14 +9147,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.774Z",
+        "recheckDueAt": "2026-09-27T10:29:45.523Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b7bc8db4d4aeaefcf4cb15c5198220dcf06e01d5869386edf574e75631c756ea"
+      "payloadSha256": "913f8bd9864360cb4693c4df2e8f294dcc9020c3c81d44ea55ef7d8a7bc2dd2a"
     },
     {
       "surface": "agenda",
@@ -9202,14 +9202,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.807Z",
+        "recheckDueAt": "2026-09-27T10:29:45.556Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2fed9a197f17bbf66ad2bc7bd169906ca794e9a5a57ae6352407e638a9d3035d"
+      "payloadSha256": "a84bb6504e988229c6be5672c98e4c1602ad1f9092cfe0fee9a8929d9fde60e1"
     },
     {
       "surface": "agenda",
@@ -9257,14 +9257,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.838Z",
+        "recheckDueAt": "2026-09-27T10:29:45.585Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "0f99fef3c9230e9c9ceb5cbaa70e83b455d198d85a3dbed1343fb3e809095f3a"
+      "payloadSha256": "862124beb90b5c0eeaaaa7a350a2384b75a5c4c04a2b7ff72f4325922a814c0c"
     },
     {
       "surface": "agenda",
@@ -9312,14 +9312,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.869Z",
+        "recheckDueAt": "2026-09-27T10:29:45.625Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a54d2023c541fc78ab6a53d408ba92512345f7188d06297f127d21be81003b2c"
+      "payloadSha256": "cfa9238be1ce346821ee22c63bd8a848bbf2b01ca9360373957b9c7eebc222ea"
     },
     {
       "surface": "agenda",
@@ -9367,14 +9367,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.886Z",
+        "recheckDueAt": "2026-09-27T10:29:45.674Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f4c1d67dad16adb8f11fd2e3f6ddf6466e2265d1b2ce6b3f101f763f50afcaba"
+      "payloadSha256": "d1b89c4cd2faa8e464f5a0debcd53ed71111fe4503b97a9dbfb4eda5ea680bfc"
     },
     {
       "surface": "agenda",
@@ -9422,14 +9422,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.915Z",
+        "recheckDueAt": "2026-09-27T10:29:45.709Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "bb867072e1fda32952407bd8d2170ab18de1e4775d1ea98a7139cd38f365d457"
+      "payloadSha256": "dc524d88a4a0338fc96447c192368b7b5c5c68aff008aa2ddd4a9b47c33ee08b"
     },
     {
       "surface": "agenda",
@@ -9477,14 +9477,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.947Z",
+        "recheckDueAt": "2026-09-27T10:29:45.747Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e16fbd31d4107ffcf2b298171fe9cb7d3a6c2f47182b863c66af22305ae1b031"
+      "payloadSha256": "cee0e8d090b0858da45675bf7f24478d9e312ad45be2f42d96928fe3a97ab867"
     },
     {
       "surface": "agenda",
@@ -9532,14 +9532,14 @@
           "statement": "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.962Z",
+        "recheckDueAt": "2026-09-27T10:29:45.776Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://bradfordnh.gov/pages/calendar",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f7674e8df3b428a05d74b6b1ae7b68640f350efd67064103447e6f1e80e63e9e"
+      "payloadSha256": "df30b16c63fe8d4cb66ea4629c4127ebde824bde10d2872b9f9300fecfe90814"
     },
     {
       "surface": "agenda",
@@ -9576,14 +9576,14 @@
           "statement": "We have not yet acquired the agenda for that Conservation Commission meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:11.994Z",
+        "recheckDueAt": "2026-09-27T10:29:45.809Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "1dbb12caa7d67767631a63d113d9fcdd8811bc49549761f0e0b1336e7daf3c10"
+      "payloadSha256": "dac9bc50c553f35c82320c9def924b4e1760e20a8225e7d7417373f7882172bf"
     },
     {
       "surface": "agenda",
@@ -9615,14 +9615,14 @@
           "statement": "We have not yet acquired the agenda for that Selectboard meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.026Z",
+        "recheckDueAt": "2026-09-27T10:29:45.833Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "ecd9301245bcd6ca4eb6b474fc3830b40600eca7fd31d8fd73005780f4e5642b"
+      "payloadSha256": "e6aa7492b58d4c4dc0d5a42c4e0f11b7c2b2a3c7a7d9e5f8bef340e06272139a"
     },
     {
       "surface": "agenda",
@@ -9654,14 +9654,14 @@
           "statement": "We have not yet acquired the agenda for that Selectboard meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.064Z",
+        "recheckDueAt": "2026-09-27T10:29:45.862Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a491f80191f8bf0bb9b99d8458e9e5eab377b76a9c83fb915ccc96e1344b3ff6"
+      "payloadSha256": "e933c07f30c1ee7c241c4509df74b0036e436f3ce03467fac1e5326a7ae4a2b7"
     },
     {
       "surface": "agenda",
@@ -9693,14 +9693,14 @@
           "statement": "We have not yet acquired the agenda for that Selectboard meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.087Z",
+        "recheckDueAt": "2026-09-27T10:29:45.900Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b617829ca47f42b124643b8342d4aaac9749be96f59eb163cbed81a013f7cf50"
+      "payloadSha256": "4b262858fcb69d6357c2c69b71a5cb3c4abb12dbef7a60f3dad80c156c2f77ba"
     },
     {
       "surface": "agenda",
@@ -9732,14 +9732,14 @@
           "statement": "We have not yet acquired the agenda for that Selectboard meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.117Z",
+        "recheckDueAt": "2026-09-27T10:29:45.935Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "08dd9caef6f0705f9923e5e4d6f9f0f21f3b41d94fb1a1503241147712f9154e"
+      "payloadSha256": "6bb7f022904c57adcac37531dd3a2995ddeef3eb6611037f2b58b1b512ff5ff0"
     },
     {
       "surface": "agenda",
@@ -9771,14 +9771,14 @@
           "statement": "We have not yet acquired the agenda for that Selectboard meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.148Z",
+        "recheckDueAt": "2026-09-27T10:29:45.979Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "724f275f23c5b9bf4ed8066070b784e162b5ba8476032d04ac7d049f5c110947"
+      "payloadSha256": "2335e1ee39e535a0801368306c5f3d56223d2504e8d2334b809ee1085a86ca74"
     },
     {
       "surface": "agenda",
@@ -9815,14 +9815,14 @@
           "statement": "We have not yet acquired the agenda for that Zoning Board of Adjustment meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.166Z",
+        "recheckDueAt": "2026-09-27T10:29:46.023Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e73850a47a82957800dc365594b3208251c566c16be0790d029cbc2756485533"
+      "payloadSha256": "206b22078af82707147a5832f4934e58a91c9edb5d4efe07802432d86bc07c1c"
     },
     {
       "surface": "agenda",
@@ -9854,14 +9854,14 @@
           "statement": "We have not yet acquired the agenda for that Supervisors of the Checklist meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.194Z",
+        "recheckDueAt": "2026-09-27T10:29:46.049Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2afaa0d853db1fe12f6d475addd114c72beca56e21238c55fe1f890f60f2c9dc"
+      "payloadSha256": "d199b1e8aead77496904cfd2be2f13d604e939cda2b90af10d77c6924d91ea8a"
     },
     {
       "surface": "agenda",
@@ -9909,14 +9909,14 @@
           "statement": "The link we hold for that meeting is Agricultural Commission's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.224Z",
+        "recheckDueAt": "2026-09-27T10:29:46.085Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "91993a63360fdf3c4e3117ee24085ed9334ada49a815901c5f94d5c2cd6db7aa"
+      "payloadSha256": "76d4e758b362cb89562ca471f1af7f1a51cb8644879cbd26d13eba856740daef"
     },
     {
       "surface": "agenda",
@@ -9964,14 +9964,14 @@
           "statement": "The link we hold for that meeting is Budget Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.257Z",
+        "recheckDueAt": "2026-09-27T10:29:46.115Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "5cf1a7f1815456ad856a04798a3c94c906d7f54397a75ecde43cc54a26da81b6"
+      "payloadSha256": "d60db6e6e39ba747a8296d16ad360728d8bf76782a8bbf439626244e71a4dfb5"
     },
     {
       "surface": "agenda",
@@ -10019,14 +10019,14 @@
           "statement": "The link we hold for that meeting is Budget Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.289Z",
+        "recheckDueAt": "2026-09-27T10:29:46.152Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2feb9f845e712c842a93a87898071c2dc57d83b44f761157b270964862aac3e2"
+      "payloadSha256": "6e1d3615542d166e9ea17d925b7bad504bb5833f63f1977aeddec3bc4d824006"
     },
     {
       "surface": "agenda",
@@ -10074,14 +10074,14 @@
           "statement": "The link we hold for that meeting is Budget Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.319Z",
+        "recheckDueAt": "2026-09-27T10:29:46.193Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "539ab6bc1c238c097f0b157a602cf3d8cfd69eb037ddf8ab99005dd76ba6ac58"
+      "payloadSha256": "a850fce87919e46cd7e60bd2da4392197a7d8a5a80bfb130fc031bde283fa893"
     },
     {
       "surface": "agenda",
@@ -10129,14 +10129,14 @@
           "statement": "The link we hold for that meeting is Budget Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.351Z",
+        "recheckDueAt": "2026-09-27T10:29:46.230Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "84c815f6f634102e71a2d6f35b976b444ef4c0e0da1ddf57037b539c2ced50f7"
+      "payloadSha256": "554d6e3cc3015bfa2ad3b62380444e9dd8d351c576dcedc28445fd2b419542c9"
     },
     {
       "surface": "agenda",
@@ -10184,14 +10184,14 @@
           "statement": "The link we hold for that meeting is Budget Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.381Z",
+        "recheckDueAt": "2026-09-27T10:29:46.274Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6a166d513dab1b4a066defee96ee15ee46f12294e82620729429e886ddbd5466"
+      "payloadSha256": "a0a817cc5718ed45d353804744bb9dd973339cf5fc2723a28bba7837171fde4f"
     },
     {
       "surface": "agenda",
@@ -10239,14 +10239,14 @@
           "statement": "The link we hold for that meeting is Conservation Commission's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.413Z",
+        "recheckDueAt": "2026-09-27T10:29:46.304Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "40048ed1757be0668a5ce96f74535e695e71c0139e94c3cfaf99942c4c006e50"
+      "payloadSha256": "9d766648d3a0daa05c6f87f5f60b3bf91024caf0b7277e45b4039a6d687d29c2"
     },
     {
       "surface": "agenda",
@@ -10294,14 +10294,14 @@
           "statement": "The link we hold for that meeting is Energy/Solar Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.450Z",
+        "recheckDueAt": "2026-09-27T10:29:46.333Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "f318df8174e3bf13897d5ae02ea4e486378a7d5f703c17efb85ea30a2bf0734c"
+      "payloadSha256": "942ba9da14ae3dfa4cfb8bb9b509e4cec093a9cae694256d283035e85e4b90d2"
     },
     {
       "surface": "agenda",
@@ -10349,14 +10349,14 @@
           "statement": "The link we hold for that meeting is Housing Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.474Z",
+        "recheckDueAt": "2026-09-27T10:29:46.362Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a73978c09a93110a6d706ba132254e1bbc3c2e41556f37fedc7427e601b0b410"
+      "payloadSha256": "ef9dd24e675a9acc2d62f609d4fd7022ac8ae6039fe16dd90d8d51e582efb400"
     },
     {
       "surface": "agenda",
@@ -10404,14 +10404,14 @@
           "statement": "The link we hold for that meeting is Parks and Recreation Commission's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.509Z",
+        "recheckDueAt": "2026-09-27T10:29:46.401Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "3d887933e49376a669457ab0eac556773b512fd149cf6eb503eb86fc9fd0fba8"
+      "payloadSha256": "77c6c6b0aa2a92936fa37b044749b30d4d31a183a33e39ddb37ccc75074b390e"
     },
     {
       "surface": "agenda",
@@ -10459,14 +10459,14 @@
           "statement": "The link we hold for that meeting is Parks and Recreation Commission's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.536Z",
+        "recheckDueAt": "2026-09-27T10:29:46.425Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "00725a45fa3b7770316c8a9bbd74ebe9ffd1e9c82ce30139eb4f6254a16da598"
+      "payloadSha256": "628de7d6c2b71898f27ccf4f4369012d894d79f26d7477f43ad7bfa05847e0c9"
     },
     {
       "surface": "agenda",
@@ -10514,14 +10514,14 @@
           "statement": "The link we hold for that meeting is Parks and Recreation Commission's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.576Z",
+        "recheckDueAt": "2026-09-27T10:29:46.452Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d111e8d52d1ccc807171f1ea4b07617adf1c46e1c47367c929ebb1a5b573fd85"
+      "payloadSha256": "9a06468bf471c483614511a7a882cd6f2c3d2ee80e50af2cd11acd7b461496e9"
     },
     {
       "surface": "agenda",
@@ -10569,14 +10569,14 @@
           "statement": "The link we hold for that meeting is Planning Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.600Z",
+        "recheckDueAt": "2026-09-27T10:29:46.484Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "7347bdf78eb72c72847c08b97b6e5546976600cada96112a38547e1a84580f23"
+      "payloadSha256": "fc5cf78b136046fcf78fc0a952736a7a195ec221a8dd9097e16feb68e7fbdbf8"
     },
     {
       "surface": "agenda",
@@ -10624,14 +10624,14 @@
           "statement": "The link we hold for that meeting is Select Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.631Z",
+        "recheckDueAt": "2026-09-27T10:29:46.515Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "1c3d6c990910812ffd4816aade9f345cd5e7c2c6d8bfbaa5767ae221319c0fdc"
+      "payloadSha256": "4c7f96f4368230fd969b814538a5b7d82ebe6dcf226945e4c7b357db9f96766c"
     },
     {
       "surface": "agenda",
@@ -10679,14 +10679,14 @@
           "statement": "The link we hold for that meeting is Select Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.662Z",
+        "recheckDueAt": "2026-09-27T10:29:46.555Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b19e29fd78aeba6ed5c707c707b151a92e2ecea9e9b9c76b93db8a4308b3b9f1"
+      "payloadSha256": "add7f07aac4a227cb8f5645100cb684fb03eacb6ed0d8a314a73610ff00ff30f"
     },
     {
       "surface": "agenda",
@@ -10734,14 +10734,14 @@
           "statement": "The link we hold for that meeting is Zoning Board of Adjustment's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.692Z",
+        "recheckDueAt": "2026-09-27T10:29:46.605Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://warnernh.gov/calendar/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "cb66077a5fbbeb7a72b6aee7892a4060a1d94484c1c28f00b04859579142f892"
+      "payloadSha256": "17dbf76bab94a7cb89a1dbba5096b6ebc6dd99394719e7b73038faf2b9e0ac3e"
     },
     {
       "surface": "agenda",
@@ -10789,14 +10789,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.709Z",
+        "recheckDueAt": "2026-09-27T10:29:46.645Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1666&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e90e06f8b6a0108016c538717b7d096c5a78be9bb308e12846b070b3119942a7"
+      "payloadSha256": "ec71fa5e73513be35b68d5e9ae9b85e328cfa7180312961d1de5bb4cbfd5796b"
     },
     {
       "surface": "agenda",
@@ -10851,7 +10851,7 @@
           "3. DJB Event Consultants, Inc. is requesting permission to use a portion of Washington Street (CR 510) between Conklin Avenue and Colonial Road, and Sussex Avenue (CR 617) between Mill Street and Elliot Street, Morristown for the Morristown Corporate Classic 5K Run for JWBS on Thursday, July 23, 2026, from 6:00 p.m. to 9:30 p.m. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Seco…"
         ]
       },
-      "payloadSha256": "899242419528cfb0598fce1aebbb8926797411dd0f6f5166750d31d8be321a31"
+      "payloadSha256": "10174581ee68c5609565ecfa13ebf615c6b9f89b7b140ed1d65b3adbf48ac9fe"
     },
     {
       "surface": "agenda",
@@ -10905,7 +10905,7 @@
           "2. DJB Event Consultants, Inc. is requesting permission to use a portion of Washington Street (CR 510) between Conklin Avenue and Colonial Road, and Sussex Avenue (CR 617) between Mill Street and Elliot Street, Morristown for the Morristown Corporate Classic 5K Run for JWBS on Thursday, July 16, 2026, from 6:00 p.m. to 9:30 p.m. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Seco…"
         ]
       },
-      "payloadSha256": "3410bd19a8bb7291f6b6a62d049708d0b7f37fda8e49aed3169d690607962e24"
+      "payloadSha256": "417c94908a43f82d1059894bdb84687b1d0cae6773aaf081195b9888f30fc11b"
     },
     {
       "surface": "agenda",
@@ -10953,14 +10953,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.790Z",
+        "recheckDueAt": "2026-09-27T10:29:46.763Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1667&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e3188160400111e708259dfd23c93222defee98951f8d88d139ed8e5b13a0211"
+      "payloadSha256": "c9ca749a901dcef3c2f8614cbc6eb300820a79f9f2301a5779ece763bed729ef"
     },
     {
       "surface": "agenda",
@@ -11008,14 +11008,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.815Z",
+        "recheckDueAt": "2026-09-27T10:29:46.785Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1669&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "13b54ca74e4cb010e7e56c63c4d0cfa59444efb2c477932c9ac7537f39e87e7a"
+      "payloadSha256": "7d963750f0329825985531565e91cb80ffc7a53b6bfd7b30930e2ff68d621b08"
     },
     {
       "surface": "agenda",
@@ -11071,7 +11071,7 @@
           "4. The Long Hill Chamber of Commerce is requesting permission to close a portion of Long Hill Road and a portion of Division Avenue in Long Hill Township, from the intersection of Northfield and Long Hill Road down to Oaks Road and Long Hill Road and Division Avenue to Long Hill Road to Meadowview Road at Long Hill Road on October 4, 2026 (rain date October 11, 2026) from 9:00 a.m. to 9:00 p.m. fo…"
         ]
       },
-      "payloadSha256": "8d1cca19535f45bf9aec6a1ab4b668457e38e0f44123bbde56c9c99961ff071c"
+      "payloadSha256": "5c6bfdb1db3e4b834ab274755575ee19d48a5af83e8f9991d5abb42de4a87fc6"
     },
     {
       "surface": "agenda",
@@ -11119,14 +11119,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.880Z",
+        "recheckDueAt": "2026-09-27T10:29:46.860Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1672&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a7a6990ebb8e0a53f9bb91652dd3051ef1ea0be5e4b211605310740315ae7aef"
+      "payloadSha256": "07779b521889a96653f2b1b142b9c3f75a9705268d5363d6973e6a02c2e7c82e"
     },
     {
       "surface": "agenda",
@@ -11198,7 +11198,7 @@
           "4. PH Steakhouse is requesting permission to hang a banner over Main Street/Route 24 (CR 513/510) in Chester Borough from September 15, 2026 to September 29, 2026 to advertise a family friendly event – the reenactment of the Legend of Sleepy Hollow. Action Taken: ORDINANCES: First Reading/Introduction ORDINANCES: Second Reading/Public Hearing OPEN TO THE PUBLIC RESOLUTIONS Action Taken: PAYMENT OF…"
         ]
       },
-      "payloadSha256": "0d556347f18e6493d09885cfa056ad1f80b5df9caa826dc3917b2dcaa55ac6e2"
+      "payloadSha256": "e129f0282f193baffce7dc9e05128a8b9e10aea9a86905d1c3406d9a3a0c8649"
     },
     {
       "surface": "agenda",
@@ -11246,14 +11246,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.950Z",
+        "recheckDueAt": "2026-09-27T10:29:46.916Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1674&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "1f956e86b9638f804676a80e2cadfe550f91c9c8c7f344ba301b324de32a35bd"
+      "payloadSha256": "f9f3385d469a8c5daabf30dcd73a31f4e8951e20ecbbae94e8d080113cd9c0f7"
     },
     {
       "surface": "agenda",
@@ -11301,14 +11301,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.968Z",
+        "recheckDueAt": "2026-09-27T10:29:46.954Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1675&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "7bbc0853fd84cec7e642b82c150fdff15d6f7ea7e13d3365b0dc730061f1f537"
+      "payloadSha256": "243f4ddd42f9f1477f87f20f40a51ed275faaa1baf2dc0ce8c603fa706dde3ce"
     },
     {
       "surface": "agenda",
@@ -11370,7 +11370,7 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:12.994Z",
+        "recheckDueAt": "2026-09-27T10:29:46.981Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1676&Inline=True",
         "supersededDocumentUrls": [
@@ -11379,7 +11379,7 @@
         "revised": true,
         "items": []
       },
-      "payloadSha256": "54c5c64f5b4c08b50c00b27ce813fe25100c97c0f38d173e58f97f981e56415a"
+      "payloadSha256": "1f9c5bfab1c7a6ebd2462098ef222dae9c664b8c7cb6af2b76440d72a93d59f7"
     },
     {
       "surface": "agenda",
@@ -11427,14 +11427,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.021Z",
+        "recheckDueAt": "2026-09-27T10:29:47.012Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://morriscountynj.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1677&Inline=True",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b84472cc1f35f90aa0451b5882e26ea518d3455236dacf33b064618714c90e1b"
+      "payloadSha256": "44a3aa8fb54d57cc23ab2584d065e54cd7491d40de6f3191d46a69aacab39f77"
     },
     {
       "surface": "agenda",
@@ -11496,7 +11496,7 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.054Z",
+        "recheckDueAt": "2026-09-27T10:29:47.045Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336055&GUID=AB5E66D7-A3F6-42F4-A52E-DBFE64BF3BFF",
         "supersededDocumentUrls": [
@@ -11505,7 +11505,7 @@
         "revised": true,
         "items": []
       },
-      "payloadSha256": "eacd535f84a1d2466f6d6cdb547c69e6b2c54468f15728b130ecdf9bc509cccd"
+      "payloadSha256": "070dae6abd305b685714c84b33004256e3c4513da32d78450c41df43b0bffdf9"
     },
     {
       "surface": "agenda",
@@ -11553,14 +11553,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.090Z",
+        "recheckDueAt": "2026-09-27T10:29:47.078Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336056&GUID=4857278C-CC37-46A5-A15A-F34A2E577C70",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "214aa53a8fe455253532764e10d41955979a59cd2550329ffec42027b079cf30"
+      "payloadSha256": "449297178cdd989b7edec1fdd3272d051829e0d78cae49ea161ea6ae552f54da"
     },
     {
       "surface": "agenda",
@@ -11608,14 +11608,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.119Z",
+        "recheckDueAt": "2026-09-27T10:29:47.122Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336057&GUID=65964466-1B4F-4473-B006-90EC32D2EB2D",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e34bf2c4810c28e3c7b03ff94cbffc13e842d583c61c88ffe4be8bc05138b15e"
+      "payloadSha256": "33465e75f6ecc4e74ff0e5706f89b41b63ce2d43f8cd57be50f322438ca051ef"
     },
     {
       "surface": "agenda",
@@ -11663,14 +11663,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.150Z",
+        "recheckDueAt": "2026-09-27T10:29:47.149Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336058&GUID=EF598CC9-F9D1-4B34-9778-AB2FAED63D4A",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2be0128659c4eb2fe814f8a2b936a3be93b327b4d0dd0758e42122352391166d"
+      "payloadSha256": "eb9b93adb4e2043c6042afff64c9f6f51e85356c1fd87a21acb0bd39024531ef"
     },
     {
       "surface": "agenda",
@@ -11718,14 +11718,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.185Z",
+        "recheckDueAt": "2026-09-27T10:29:47.181Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336059&GUID=B0165E88-90A2-4E7C-80FE-0AA9E5A24F1A",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b714089d7248affb52ef4722bcfffd5372af71823218a7ac91cb44ad05aeeb35"
+      "payloadSha256": "c757ff159a8bf858c0c569995888f8df334a41f1338a99f51e30e922e47851d3"
     },
     {
       "surface": "agenda",
@@ -11773,14 +11773,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.211Z",
+        "recheckDueAt": "2026-09-27T10:29:47.212Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336060&GUID=C98D7B23-DD4E-470E-8E7C-8AB2566A3E55",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "202a030474b7a6fb01a5e517b55527756cb8fc11098e3cf0b3d1df80de52c957"
+      "payloadSha256": "583c56a157f0430900e3c8eae7ae9b6e3664c9c9b0d75b67977b828d4c5841ad"
     },
     {
       "surface": "agenda",
@@ -11828,14 +11828,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.245Z",
+        "recheckDueAt": "2026-09-27T10:29:47.235Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1336069&GUID=FAC7F0B4-39E0-4D2D-990E-714F3416712C",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "69df70d2665f1816208479a71908fe3ef0c443810fca4bc4774ef52a83946459"
+      "payloadSha256": "a48d82d687c3fd5b00cbd86a00ddf15bd5fc137f59429671cf9bfa71f763ef66"
     },
     {
       "surface": "agenda",
@@ -11883,14 +11883,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.274Z",
+        "recheckDueAt": "2026-09-27T10:29:47.256Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343129&GUID=0DAFCC4A-DCC2-47BF-B3DC-AA3F714BFC11",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d2d7a4912a4584c8bb57efc741c76b09eab0bfcae60b4324d60c9150e00928e0"
+      "payloadSha256": "c6bdbbb3dc7d346deca6060f6245690f531d4c9f10b26b319706396d58a38325"
     },
     {
       "surface": "agenda",
@@ -11938,14 +11938,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.292Z",
+        "recheckDueAt": "2026-09-27T10:29:47.296Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343130&GUID=7CE187D3-CD10-47EA-80F6-F104BE60A7B2",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6df3f031a69668cc6878d7cce9fb60fa346a498c2dc15a7dd8d546804daa7f45"
+      "payloadSha256": "4542fe25dd3fcc9e49e03539f48d3b752abdff0315b5c82a546291374c3cbfe4"
     },
     {
       "surface": "agenda",
@@ -11993,14 +11993,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.328Z",
+        "recheckDueAt": "2026-09-27T10:29:47.319Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343131&GUID=1023EECA-4B52-4257-AF40-587A12B8FEA0",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "83063515be6b134ab859aec4797b8fc68a06e5a4e93a4befaa3a3b3c72f64c5e"
+      "payloadSha256": "5d6cfe73bb7e69aa433a5110a17a9ffeb5780b9b186eb8d609c933efc2db287b"
     },
     {
       "surface": "agenda",
@@ -12048,14 +12048,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.353Z",
+        "recheckDueAt": "2026-09-27T10:29:47.357Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343132&GUID=CBA63496-487C-4341-B358-27DB075CCFF1",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e5c10f5a4aaed303f57eced38aacc8e8a59ed2696cecc695a174f82018d89994"
+      "payloadSha256": "a4df8e465c3fabdcca7100745356cfed7d3bf1e49aec21d8d3eac8d368b0c2e2"
     },
     {
       "surface": "agenda",
@@ -12103,14 +12103,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.382Z",
+        "recheckDueAt": "2026-09-27T10:29:47.383Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343133&GUID=6CB423D1-83FF-4E21-9775-3F1C8779863E",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "eee635d5f2080826b1b00d470871294d4055e2c96a99bd0c8a2988c0618bc49f"
+      "payloadSha256": "f670e05116ee0237de239964dce95cda790c5628293407e11c005b2767ff1636"
     },
     {
       "surface": "agenda",
@@ -12172,7 +12172,7 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.416Z",
+        "recheckDueAt": "2026-09-27T10:29:47.415Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343134&GUID=9C6E1588-AD0C-452F-8FE4-6AB8CE40E658",
         "supersededDocumentUrls": [
@@ -12181,7 +12181,7 @@
         "revised": true,
         "items": []
       },
-      "payloadSha256": "95b722acae64f5c5981d8e948fefd28e2b6fd4b6ecca8122f52d443caa93f526"
+      "payloadSha256": "449be55ea61ceeac4f1956e7c3025925dc1cc6d048866a64c81c3de908b0af0e"
     },
     {
       "surface": "agenda",
@@ -12229,14 +12229,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.446Z",
+        "recheckDueAt": "2026-09-27T10:29:47.443Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343168&GUID=4E22FA6A-2B9E-403F-BF1B-0E5040A7B69E",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "1ed808ef45d0b6f5f6b1e54dfcfdf44b30fafa205becb5022fea0a091b7869da"
+      "payloadSha256": "fbaa207e660d8c21953aa6217e4a9200a1fb84fda7c0f5ccf8d821bdcb8e3a61"
     },
     {
       "surface": "agenda",
@@ -12284,14 +12284,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.478Z",
+        "recheckDueAt": "2026-09-27T10:29:47.484Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343172&GUID=DABA0407-10BF-4893-B11D-B037EB724A63",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "7400ce55feb96941f5b479d82d44ce1a7c9878013924a915960f9861d3b61204"
+      "payloadSha256": "461e870e2e52bef4157b660662b89d99216955aa384781be21cd47fdce43e4e3"
     },
     {
       "surface": "agenda",
@@ -12339,14 +12339,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.508Z",
+        "recheckDueAt": "2026-09-27T10:29:47.506Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343174&GUID=2602FEC2-D6F0-4223-AE1A-A10223F251E3",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "3106b14fcc88507b2b0fac063aa1c7ffe54e32220e27ea5a40ffaf0bf47915df"
+      "payloadSha256": "8812e4a2f1b67fef536b515e2d3de3a8e6fcb6383b546fb18b228c12e77aa38c"
     },
     {
       "surface": "agenda",
@@ -12394,14 +12394,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.541Z",
+        "recheckDueAt": "2026-09-27T10:29:47.527Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343176&GUID=A9819A53-065D-4D53-8849-D660A7B9074C",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c2fcceb6d6a4aee560ae41561347e1381b2520bcd059ab8d318efcea86f0378c"
+      "payloadSha256": "1412a6ec89d964abf22579ed1d5dedba2f0510c8e7d60a781d67644c6caa2329"
     },
     {
       "surface": "agenda",
@@ -12449,14 +12449,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.559Z",
+        "recheckDueAt": "2026-09-27T10:29:47.554Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343177&GUID=EC50B047-7BFE-4885-A3C9-F9D705D303F5",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "5abae5383f5f61d60ccb13ba690fc31134c3bf21e2df9c95e07e1b6222abd394"
+      "payloadSha256": "312d89c9d692e66822b094ee7b8115c2950391e9b2a7673e7530ee57695e0e75"
     },
     {
       "surface": "agenda",
@@ -12504,14 +12504,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.594Z",
+        "recheckDueAt": "2026-09-27T10:29:47.585Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343178&GUID=48900BF7-AC8E-4EBC-97D0-43A56F197C83",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "4b284febf6fb4276e2d6f0fc8ab5f0654a8502cbebc641907ce0f78875abebd1"
+      "payloadSha256": "c7d420c7c782759ecdf1247f580797690d986dff7fc9eb8422d6c472eab40691"
     },
     {
       "surface": "agenda",
@@ -12559,14 +12559,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.615Z",
+        "recheckDueAt": "2026-09-27T10:29:47.615Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343179&GUID=D28902E0-8571-44A2-8113-C1DC32191B30",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "8f5bd916d4e32d14ecdfc3e7c3d395592750c44b96ba3c6eb94b77b2a810013b"
+      "payloadSha256": "5c98ccdcebb981593058a0bdc768fd0e2ee0928a334290db8b76ee437b4d2b2a"
     },
     {
       "surface": "agenda",
@@ -12614,14 +12614,14 @@
           "statement": "The link we hold for that meeting is City Council Study Session's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.640Z",
+        "recheckDueAt": "2026-09-27T10:29:47.644Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.mesaaz.gov/Government/City-Council-Meetings",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "fb2ab97b3b78ad83534ddfcac728681c14fe37f99c07159d1398db27f97cc33a"
+      "payloadSha256": "37022567a33a0efd0d937950ab238e1aa547829845776d9ad6d1f82eae6987fd"
     },
     {
       "surface": "agenda",
@@ -12669,14 +12669,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.676Z",
+        "recheckDueAt": "2026-09-27T10:29:47.675Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1428059&GUID=C6D3581F-B224-4A1C-A59D-0885C238FD52",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "15206ab82f4f22e673a6c39a93cfc0ceaa4a6a2590848735a8911cc99c5f435c"
+      "payloadSha256": "83c343c0516fde73337d312023dcd136d0030f7e6b2b6d8fb0b697310e48a9c8"
     },
     {
       "surface": "agenda",
@@ -12724,14 +12724,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.707Z",
+        "recheckDueAt": "2026-09-27T10:29:47.707Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1439833&GUID=FFBAAEC4-73E1-4BF7-9435-D95C52A18465",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2f489a64a889bd5a7d742244bc7e67e5a7bb929a5c9ae1f042c95845b565f60a"
+      "payloadSha256": "d408492d74244e13fd53455faf0d4dc728180284c78d4b5cdb36cd9f3e52f689"
     },
     {
       "surface": "agenda",
@@ -12763,14 +12763,14 @@
           "statement": "We have not yet acquired the agenda for that Board of Supervisors meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:13.737Z",
+        "recheckDueAt": "2026-09-27T10:29:47.728Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d80cba398ccee7624422cc66198da1e5e56c50342c654b6e4d40aee2da561cfd"
+      "payloadSha256": "01380f217591b11bce483b6a536b20daaa57fb520c41f2d7246317755515a890"
     },
     {
       "surface": "agenda",
@@ -12846,7 +12846,7 @@
           "3. Pursuant to A.R.S. §38-431.03(A)(1), for discussion or consideration of employment of a public officer, regarding the County Administrator position. PCA_ExecSession-CountyAdministratorPosition Attachments: POSTED: 1st Floor, 130 W. Congress Street, Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/10/26 @ 11:00 a.m. Page 5 Pima County Printed on 7/14/2026"
         ]
       },
-      "payloadSha256": "dc74854afadc22458a3cad4f1dcf38a25c72ab7791983fcc9d3843675ef3e16a"
+      "payloadSha256": "988c58f3f9a7e47fe1e8b6d581eed6bad11fa09c94edaa06e0d2b0fe160b4696"
     },
     {
       "surface": "agenda",
@@ -12948,7 +12948,7 @@
           "34. Special Event Lorene C. Kelley, Girl Scouts of Southern Arizona, Camp Whispering Pines, 12500 E. Organization Ridge Road, Mt. Lemmon, August 20 and 21, 2026. ELECTIONS 35. Precinct Committeemen Pursuant to A.R.S. §16-821B, approval of Precinct Committeemen resignations and appointments: RESIGNATION-PRECINCT-PARTY: Judy Gillies-045-DEM, Tanya Tassi-141-DEM, Robert Latimore-193-DEM, David Shelda…"
         ]
       },
-      "payloadSha256": "a16154e06eef32d489fb9f31a9d783ede93446af61115fad72297d4c9e5325da"
+      "payloadSha256": "d2ac2c7a8872110b64a16d1730fd9b732dd07cc8613059b40b2d5629ad371d94"
     },
     {
       "surface": "agenda",
@@ -13034,7 +13034,7 @@
           "11. Line and Space, L.L.C., Amendment No. 4, to provide for architectural and design services: Richard Elias Mission Library Expansion and Renovation (XREMLB) and extend contract term to 12/31/26, no cost (PO2500007246) Administering Department: Project Design and Construction PO2500007246 Attachments: Regional Wastewater Reclamation 12. Pascua Yaqui Tribe, Amendment No. 1, to provide an intergove…"
         ]
       },
-      "payloadSha256": "17c0c87383791a9b4df8295e8236c9fdb8a3a55cd1202be18b11e1573b279866"
+      "payloadSha256": "9d75c8e95bccd5552f3a26d6a1ac5dcdca6d26eef0fb99f93a08779bea93a695"
     },
     {
       "surface": "agenda",
@@ -13109,7 +13109,7 @@
           "9. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/5/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/5/26 @ 4:30 p.m. DATE/TIME REPOSTED (amended meeting time, 1:30 p.m.): 8/6/26 @ 5:00 p.m. DATE/TIME REPOSTED (additional attachments only): 8/7/26 @ 8:45 a.m. DATE/TIME REPOSTED (additional attachments…"
         ]
       },
-      "payloadSha256": "d3457137f875c64cdec7ac68e0586050bea7844bd940689c5a4921a1a4f1d261"
+      "payloadSha256": "19e6b5586ca9353a4437cdde1193755c900299dfa690498f130bf05eb47598b3"
     },
     {
       "surface": "agenda",
@@ -13180,7 +13180,7 @@
           "16. Acceptance - Sheriff State of Arizona Department of Public Safety, to provide for the Arizona Vehicle Theft Task Force/Enhance law enforcement service concerning vehicle thefts, $119,369.00/$27,467.00 General Fund match (G-SD-113776) G-SD-113776 Attachments: BOARD, COMMISSION AND/OR COMMITTEE 17. Bond Advisory Committee Appointment of Devin Stalder, representing Town of Sahuarita. Term expirat…"
         ]
       },
-      "payloadSha256": "c1b6de412bccd245cbc83807e1bf7fa6b59ec40d33b01163aced547c45b8bc3b"
+      "payloadSha256": "73e35e7660179f2eafa6905bb0ecf5ea9133d247523ae847af4a3b201d9ac731"
     },
     {
       "surface": "agenda",
@@ -13277,7 +13277,7 @@
           "18. Community Action Agency Board Reappointment of Willie Blake. Term expiration: 12/31/28. (District 2) BCC_CommunityActionAgencyBoardReappt Attachments: SPECIAL EVENT LIQUOR LICENSE/TEMPORARY EXTENSION OF PREMISES/ PATIO PERMIT/WINE FAIR/WINE FESTIVAL/JOINT PREMISES PERMIT APPROVED PURSUANT TO RESOLUTION NO. 2019-68 19. Special Event Anthony John Contreras, Corpus Christi Catholic Church, 300 N.…"
         ]
       },
-      "payloadSha256": "8191f79d988090ebe3607f365199b4a7d5ca24b77ee68474cf30c96f70e1e3c6"
+      "payloadSha256": "e7465d7ee291a0643c0ba0a175430980103a15aca3082e0ca558e5f29edcbc97"
     },
     {
       "surface": "agenda",
@@ -13349,7 +13349,7 @@
           "8. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 9/1/26 @ 3:00 p.m. DATE/TIME REPOSTED (additional attachments only): 9/2/26 @ 12:00 p.m. DATE/TIME REPOSTED (additional attachments only): 9/2/26 @ 2:30 p.m. DATE/TIME REPOSTED (additional attachments only): 9/3/26 @ 12:15 p.m. DATE/TIME REPOSTED (additional attachments on…"
         ]
       },
-      "payloadSha256": "1de49957843ee88e3f74ae2345acdb4cc7fe07b68e387258016c937be588d159"
+      "payloadSha256": "5218440d3c6d54d446147ed44b69a7cd46bd9fe20ecad386c50dba4eaec22908"
     },
     {
       "surface": "agenda",
@@ -13446,7 +13446,7 @@
           "17. Wine Fair/Wine Festival · Sarah Wolff, d.b.a. Rainbow Mountain Ranch, L.L.C., Charron Vineyards and Winery, Historic Canoa Ranch, 5375 S. I-19 Frontage Road, Green Valley, November 14, 2026, from 11:00 a.m. to 4:00 p.m. · Robert Dixon, II, d.b.a. 1764 Vineyards, L.L.C., Historic Canoa Ranch, 5375 S. I-19 Frontage Road, Green Valley, November 14, 2026, from 11:00 a.m. to 4:00 p.m. · Dan C. Pier…"
         ]
       },
-      "payloadSha256": "d1074d8c4b6f9e777f3fee7fc373274162b736ee29278a24a435b7b3408b3ad4"
+      "payloadSha256": "075c6e5c423665464191bd2bec5ef5832cb3ab3d8ee955724ca2d87cbe93eefa"
     },
     {
       "surface": "agenda",
@@ -13524,7 +13524,7 @@
           "17. Acceptance - Public Defense Services Arizona Criminal Justice Commission, to provide for the Post-Booking Treatment Alternative-to-Incarceration Program, term date 4/1/26 to 9/30/26, $69,878.77 (G-PDS-113769) G-PDS-113769 Attachments: Page 14 Pima County Printed on 9/23/2026"
         ]
       },
-      "payloadSha256": "d9c108d678ab666ccb3c1a88fc10ec5e4539ea6d14a1aedfe7550f20adba658b"
+      "payloadSha256": "6b634080b7c3b701b07849fc7de27db2fba766a8844ad953cae96ee2c7686b41"
     },
     {
       "surface": "agenda",
@@ -13578,7 +13578,7 @@
           "1. ROLL CALL 2. PLEDGE OF ALLEGIANCE 3. LAND ACKNOWLEDGEMENT STATEMENT ELECTIONS 4. Canvass Pursuant to A.R.S. §16-642(A), canvass of the election results for the July 21, 2026, Primary Election. EL_BOSAIR_PrimaryElectionCanvass EL_PrimaryElectionCanvass_7-30-26 Attachments: Page 1 Pima County Printed on 7/30/2026"
         ]
       },
-      "payloadSha256": "1279e919e8cce97b2c7df4af7f7db3ed801affd9e6459e4aa9bbe7de73bf471f"
+      "payloadSha256": "9176cefd766e0f370da7ab0aa8484b83d193d27dcca6e3c0007ea0af447711ff"
     },
     {
       "surface": "agenda",
@@ -13649,7 +13649,7 @@
           "5. DISCUSSION AND DIRECTION ON THE CITY-COUNTY COLLABORATION AND ACTION ITEMS 6. ADJOURNMENT Page 1 Pima County Printed on 8/10/2026"
         ]
       },
-      "payloadSha256": "763e2ae60bdaefe8f927d0f26e183144759a8f27b9e4303f1a75fdca42d1ec83"
+      "payloadSha256": "807246e719e345ade640ab7c6010e0e88008a5030dc3e86f865eb430acee85ec"
     },
     {
       "surface": "agenda",
@@ -13704,7 +13704,7 @@
           "6. Hearing - Tax Collection Resolution RESOLUTION NO. 2026 - 44 , of the Board of Supervisors, authorizing the delivery of tax statements and the collection of the 2026 taxes. BOS_ResoTaxCollection Attachments: * * * 7. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/11/26 @ 3:00 p.m. Page 2 Pima County Printed on 8/11/2…"
         ]
       },
-      "payloadSha256": "15fd6fe08f7fe5d142893978b3bd95ca9d89401350838ad3fdbe3c53de5c71ed"
+      "payloadSha256": "129908d4eb17e3fd99153d042614a4a16f8a25bf85bf2b8a93f11103c86b3b4e"
     },
     {
       "surface": "agenda",
@@ -13776,7 +13776,7 @@
           "4. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 7/24/26 @ 11:00 a.m. Page 2 Pima County Printed on 7/24/2026"
         ]
       },
-      "payloadSha256": "7e3173bef286985be1f77da26a8cdc51d72e14dbae69b845caf0290fafcd6434"
+      "payloadSha256": "7191c96cc9501edf744297c1b24eb5e5667342dc8d4e1144a7a33f600bab86d1"
     },
     {
       "surface": "agenda",
@@ -13832,7 +13832,7 @@
           "4. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 8/21/26 @ 11:30 a.m. Page 2 Pima County Printed on 8/21/2026"
         ]
       },
-      "payloadSha256": "d4d040bf7b93b7f7c16457d2dc825a4e0a0be41c4408063a7358f467a640d6b9"
+      "payloadSha256": "da1a8c404d4f985afabd102801f3a5c123a1dc38e32b34434953443472d2d727"
     },
     {
       "surface": "agenda",
@@ -13888,7 +13888,7 @@
           "4. ADJOURNMENT POSTED: 130 W. Congress Street, 1st Floor Tucson, AZ 85701 Pima County Homepage: www.pima.gov DATE/TIME POSTED: 9/16/26 @ 3:00 p.m. Page 2 Pima County Printed on 9/16/2026"
         ]
       },
-      "payloadSha256": "4ea1b485bdca20a78d2bd9c7823a3bd7ba03211855a1e8f5d6e9dddb1263f895"
+      "payloadSha256": "64058fcd57ca638203792f9199eb5a5d8fae5aa906f5d80dc645dd62bdd8cb59"
     },
     {
       "surface": "agenda",
@@ -13936,14 +13936,14 @@
           "statement": "The link we hold for that meeting is Tucson Unified School District's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.258Z",
+        "recheckDueAt": "2026-09-27T10:29:48.275Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://govboard.tusd1.org/",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a29271f6aeeb7d8d6c90cad4d33af9735d891e82deb334744a536e3f7d3b5cc9"
+      "payloadSha256": "ad7c4a595a1e80287139bfa5a94dd96eddcdcdb9ef791af9fa49ad1f61456e45"
     },
     {
       "surface": "agenda",
@@ -13991,14 +13991,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.288Z",
+        "recheckDueAt": "2026-09-27T10:29:48.315Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1928_Agenda_7_21_2026_5_30_00_PM.pdf?documentType=1&meetingId=1928",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "ee721cfe0f8416b86bddb572a35b2f1087999a424a71af9160ac66eecedd1aaf"
+      "payloadSha256": "01e82746b6ef6c69c337eccc8b0573b307af82d328170eb652eea9c76f392a1f"
     },
     {
       "surface": "agenda",
@@ -14046,14 +14046,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.319Z",
+        "recheckDueAt": "2026-09-27T10:29:48.359Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1943_Agenda_7_21_2026_1_00_00_PM.pdf?documentType=1&meetingId=1943",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "6cea12eeaad28e0a88ccc5277f92ec0c2c844e00083e00a0c1396d733d8ee3e3"
+      "payloadSha256": "37fc6b0d2a476bd2c5319f9945a2f23ccfbed6753b856b13ecbab691d4731c31"
     },
     {
       "surface": "agenda",
@@ -14101,14 +14101,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.352Z",
+        "recheckDueAt": "2026-09-27T10:29:48.408Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1945_Agenda_8_5_2026_1_30_00_PM.pdf?documentType=1&meetingId=1945",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "2d77596327349fa5c0b6f919dff81eacbf500867f1f529b89a4210ed9063903a"
+      "payloadSha256": "d5e356bb620a3b63838f1476c4c72b19a05195bbb41ed589ecf48d72ed79a8c9"
     },
     {
       "surface": "agenda",
@@ -14156,14 +14156,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.380Z",
+        "recheckDueAt": "2026-09-27T10:29:48.452Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1946_Agenda_8_18_2026_1_30_00_PM.pdf?documentType=1&meetingId=1946",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "eda9af3476213bf8c26e29fc4d01cbeb912aa0be18d60f842be973ba56ae5939"
+      "payloadSha256": "35def73d03b7e765614184edaa2b6929c039abde4eeebf849983fab7b1799066"
     },
     {
       "surface": "agenda",
@@ -14211,14 +14211,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.410Z",
+        "recheckDueAt": "2026-09-27T10:29:48.481Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1947_Agenda_9_9_2026_1_00_00_PM.pdf?documentType=1&meetingId=1947",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "187d291589fbcf47372bcd3a9b48dcb0f722cf5f829992953a318e792ee16f4a"
+      "payloadSha256": "72cbdfcb1e6a9d0203ff508926d926646c11d3697f31ec1cdf5fe51cd33023eb"
     },
     {
       "surface": "agenda",
@@ -14266,14 +14266,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.442Z",
+        "recheckDueAt": "2026-09-27T10:29:48.513Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Study_Session_1948_Agenda_9_22_2026_11_00_00_AM.pdf?documentType=1&meetingId=1948",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "81fbe5a5b3a85fa4a9d32a969b5f5e8d0fe21b2106c5d56fd3aa8a75be9c50bd"
+      "payloadSha256": "21c2428be405f48d01d9010707122f5b6d12083340022f75caa828fcb319834f"
     },
     {
       "surface": "agenda",
@@ -14321,14 +14321,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.474Z",
+        "recheckDueAt": "2026-09-27T10:29:48.539Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1956_Agenda_8_5_2026_5_30_00_PM.pdf?documentType=1&meetingId=1956",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "ad205d3455ce9bca28fd3e8bfc7d8b6963694dc40cb221ee1248608ae92c4316"
+      "payloadSha256": "79f567e3a4b09837e3d8c42da55567a08f0960ea3e9596504ed45de92a139edb"
     },
     {
       "surface": "agenda",
@@ -14376,14 +14376,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.507Z",
+        "recheckDueAt": "2026-09-27T10:29:48.566Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1957_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1957",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "134c8b4fafabfbf12adadadb09a8c20d88394d15ebc757d9aabdc392667c7a9c"
+      "payloadSha256": "1361ac1bd0b2c030bded444590e03beef5aa3a76cee1f2ba9c127f1996dc7247"
     },
     {
       "surface": "agenda",
@@ -14431,14 +14431,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.538Z",
+        "recheckDueAt": "2026-09-27T10:29:48.603Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1958_Agenda_9_9_2026_5_30_00_PM.pdf?documentType=1&meetingId=1958",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "80205f483266008fde536f859ce59e7216b4ddf144e61ec8750525d397709342"
+      "payloadSha256": "14fa5db31c6d017fdbb850d1d079d01a96ee094800757a8a2b558001e3ff298c"
     },
     {
       "surface": "agenda",
@@ -14486,14 +14486,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.570Z",
+        "recheckDueAt": "2026-09-27T10:29:48.636Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Mayor___Council_-_Regular_1959_Agenda_9_22_2026_5_30_00_PM.pdf?documentType=1&meetingId=1959",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "dd2eeb877456e1488a737ef6463befe0bc9a683d80e4fa0ad19e31f3a7f54167"
+      "payloadSha256": "74d7897dcf7cb11c7363f8bb00f59497b143c40562f182879bb9dc0968461a51"
     },
     {
       "surface": "agenda",
@@ -14541,14 +14541,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.599Z",
+        "recheckDueAt": "2026-09-27T10:29:48.656Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://tucsonaz.hylandcloud.com/221agendaonline/Documents/Downloadfile/Public_Housing_Authority_Board_of_Commissioners_1981_Agenda_8_18_2026_5_30_00_PM.pdf?documentType=1&meetingId=1981",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "eaac1c4d5c0914643a4f995b078fcaf51e352be5eb8f6c8c13beefe1789de91b"
+      "payloadSha256": "2a95b1551ef3b063e7c0e04c2ca8795576bbdb5502d4db9cb0659811853300a3"
     },
     {
       "surface": "agenda",
@@ -14603,7 +14603,7 @@
           "3. DISCUSSION 3.1 Program Life Cycle The presentation and dialogue will focus on the process of developing new programs at the college, the program review process, and the options following program review, including program inactivation. Presented by: Dr. Ian Roark, Provost & Executive Vice Chancellor for Academic Affairs and Workforce Development Attachment: Program lifecycle presentation-August…"
         ]
       },
-      "payloadSha256": "2d7139dbc767636669470f8ee189a96a379c846a0684becd0300ff554d8a3c17"
+      "payloadSha256": "b1a75a55a6ffb8b27e7dbc80b23d79717e7b9e82159fde279a233edf9e1352fb"
     },
     {
       "surface": "agenda",
@@ -14651,14 +14651,14 @@
           "statement": "The link we hold for that meeting is Finance and Audit Committee's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.660Z",
+        "recheckDueAt": "2026-09-27T10:29:48.724Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a2d341967477d59161e3c3ca51b4f065a62b7c4ab8dd3ed70b93680ceffafdbe"
+      "payloadSha256": "a4fe0cc544c62895d6fe17ef988f45be516afd931503ff36e7854242dfad943a"
     },
     {
       "surface": "agenda",
@@ -14706,14 +14706,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.691Z",
+        "recheckDueAt": "2026-09-27T10:29:48.754Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "584c37edc396d2845bd57d3ff44d802fa5343c25aba8eaf8a4e81645f3f2b5c0"
+      "payloadSha256": "0265db7cb3b20b84661f1b56da51043b6ee675185352c9e7fae94675b73ed026"
     },
     {
       "surface": "agenda",
@@ -14761,14 +14761,14 @@
           "statement": "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.723Z",
+        "recheckDueAt": "2026-09-27T10:29:48.781Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "43ab06b904b5418625b6ae87fcebfa58e3ce269ea3e547c3d8ae93167b6265dc"
+      "payloadSha256": "fb59af2701b7c00c717fb6d98d2f79bd8ed51665f9943914bed142927538d9ca"
     },
     {
       "surface": "agenda",
@@ -14816,14 +14816,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.756Z",
+        "recheckDueAt": "2026-09-27T10:29:48.799Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%202.9.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "66015a4dc35059d118170657969a1e61dbb2f552c5b754eab6b4a622f614b528"
+      "payloadSha256": "da988673d5901b8991cb880f1376565caa1d7d99f902397031db796eca202fd3"
     },
     {
       "surface": "agenda",
@@ -14871,14 +14871,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.788Z",
+        "recheckDueAt": "2026-09-27T10:29:48.834Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%202.20.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "991ce6ae3d68d0ab700401251fde994ef5543df8907bc79774f96be0fa7bdd21"
+      "payloadSha256": "6f24d51de96dbae7c68e511adaa84ed5137f9fe3cbfa5ebf512bf3611e0baa3b"
     },
     {
       "surface": "agenda",
@@ -14926,14 +14926,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.820Z",
+        "recheckDueAt": "2026-09-27T10:29:48.863Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/March%209%20BOC%20Packet.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c13df7c9f82b4727b60e17ee293841e1cdec39e69501056243b1bed2df586018"
+      "payloadSha256": "530e3e2f26eab21b2f109e9f14046a510eb82eacc3a98065d1ba91a598364e67"
     },
     {
       "surface": "agenda",
@@ -14981,14 +14981,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.850Z",
+        "recheckDueAt": "2026-09-27T10:29:48.896Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/3.23.26%20BOC%20Agenda%20Packet%20(1).pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "50eebfa03dcf18150fe26c109e74d27a2816358e32870f5efdefd0a7ed3ef863"
+      "payloadSha256": "fa5eeb64a48a3150ea86166da281a0f283cb92ac1661b1521b1b8ceafeb6b349"
     },
     {
       "surface": "agenda",
@@ -15036,14 +15036,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.883Z",
+        "recheckDueAt": "2026-09-27T10:29:48.918Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Board%20Packet%204.13.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "62cd6c309129b0c4c632eec4b0bd3b151de616695d148b718577afb1ff8feda9"
+      "payloadSha256": "991543b1dd81b14698ca66bad1f5b0d29e6bfea2f14268ca10949d1f94378cb8"
     },
     {
       "surface": "agenda",
@@ -15091,14 +15091,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.910Z",
+        "recheckDueAt": "2026-09-27T10:29:48.964Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%204.27.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "489f4a6362f0b4e173add969b5cb68ed76d2cce13e419b6739bcbf38853c21cc"
+      "payloadSha256": "cca50827d939d90fe8bd99c03c2c0daf8cbb349d50eaf01cc1161cd28e74d2b5"
     },
     {
       "surface": "agenda",
@@ -15146,14 +15146,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.943Z",
+        "recheckDueAt": "2026-09-27T10:29:48.995Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%205.11.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "a25631dbd5ddfaac6d7c4cd606a90be23f7534c3536d596810a348728f1326f7"
+      "payloadSha256": "5ddc8331bd4e9fd577fd9b0cb575680e65c83b89ba149fb82015b712a82fe10a"
     },
     {
       "surface": "agenda",
@@ -15201,14 +15201,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.958Z",
+        "recheckDueAt": "2026-09-27T10:29:49.028Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20PACKET%205.26.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c0450b13d7ab7db356557fa19c36ac6468ca59eed31f948ea48e5fcdabe2a01f"
+      "payloadSha256": "a934eafd47be2307ad7c39d8f0e244c1620ab74bcc465d4b809e6185fe818dd0"
     },
     {
       "surface": "agenda",
@@ -15256,14 +15256,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:14.974Z",
+        "recheckDueAt": "2026-09-27T10:29:49.048Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%206.1.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "39c16aa0ec4567d730007a915e83245c8310895464f86439ffc5f5e4bbc1ddc4"
+      "payloadSha256": "2518833f4c149f71ba4d832de027a03da830c631ba98a788cb650e00c1907839"
     },
     {
       "surface": "agenda",
@@ -15311,14 +15311,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.004Z",
+        "recheckDueAt": "2026-09-27T10:29:49.084Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/6.22.26%20BOC%20Agenda.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d3f1cda55c064d8d9f2941f52ad88a9fe0d2845420a0e50b0443b2779a26738a"
+      "payloadSha256": "3f0d04cd899cf531a3400f5818c602ae57d8048d6dbb1b56a1d622b7d434e9aa"
     },
     {
       "surface": "agenda",
@@ -15366,14 +15366,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.036Z",
+        "recheckDueAt": "2026-09-27T10:29:49.112Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%207.13.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "347d692d974aaae4690b56d08fee9a7ded3cad0d07143f4ac7857526f11cd7a2"
+      "payloadSha256": "2276338fd99892c07cc319c813e7ddd6e167a29a254beec47d4a0ce4e98e517d"
     },
     {
       "surface": "agenda",
@@ -15421,14 +15421,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.066Z",
+        "recheckDueAt": "2026-09-27T10:29:49.131Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Packet%207.27.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "5fede5a29ee7350c25b5e816d0cc2cd5e8eea55f12c04ef3f4c9134fec55d1f7"
+      "payloadSha256": "a283c9d56d69cf3ac484846ec36ec7e4d58520c9f78204e6a10c96f10aa1fd9d"
     },
     {
       "surface": "agenda",
@@ -15476,14 +15476,14 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.098Z",
+        "recheckDueAt": "2026-09-27T10:29:49.157Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Agenda%20-%20August%2010.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "8fd49cafc4024c74d988cdf53246a541ff04c995a2036942cf406e4f62c1d3a3"
+      "payloadSha256": "410c8436a7919d2c5221ab7118f1013f8f8b0803f5adc5243f63c9709e0107e7"
     },
     {
       "surface": "agenda",
@@ -15531,14 +15531,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.131Z",
+        "recheckDueAt": "2026-09-27T10:29:49.176Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%208.24.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "473d5ff9f725906a4eb93aea8a4c14238b5164aea7dae4141c84c03b4a723a8b"
+      "payloadSha256": "fe70120e9f89422ec3769558f8ffce7a94ee7a1aa8596b697d6df3162ddc4c61"
     },
     {
       "surface": "agenda",
@@ -15586,14 +15586,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.166Z",
+        "recheckDueAt": "2026-09-27T10:29:49.203Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%208.25.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "5cc106e58c5c2701afb3b2234f440cf0572e24dc92e636d5d9efa27f86075c66"
+      "payloadSha256": "1f4794ba2887500e6de6f0dbdf0eae40762e74c697a34e20faafc8d864e95323"
     },
     {
       "surface": "agenda",
@@ -15641,14 +15641,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.189Z",
+        "recheckDueAt": "2026-09-27T10:29:49.233Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/BOC%20Agenda%209.3.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "1c2d2cd411c79f05b43018f0d6bb8d572af1535decf0ec8e6df04687af420507"
+      "payloadSha256": "92ca44a312cfd363b6dac48ae7b1e375e9ef2579aac170b079d1a024a91c06d8"
     },
     {
       "surface": "agenda",
@@ -15696,14 +15696,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.208Z",
+        "recheckDueAt": "2026-09-27T10:29:49.254Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%209.14.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "55c4f772582f118da8e1a31dade036a0f4e579a7f7ae2d80d1e4328ca04711d3"
+      "payloadSha256": "c6d5c4646fed42acb43ddb7eec9ba59f8657df41e2f7cf8ff49a6e4f7f264bb6"
     },
     {
       "surface": "agenda",
@@ -15751,14 +15751,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.238Z",
+        "recheckDueAt": "2026-09-27T10:29:49.282Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.merrimackcounty.net/Board%20of%20Commissioners/Public%20Notices%2C%20Agenda%2C%20Minutes/Public%20Notice%209.28.26.pdf",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "cd47037e59c76360449d7f420a1d534f534c0efe444fa33a01dedc27f0ae8781"
+      "payloadSha256": "713e40f9158a151389b53bd1006aa864d6d35815c3655fa30e2966d5699cea0c"
     },
     {
       "surface": "agenda",
@@ -15806,14 +15806,14 @@
           "statement": "The link we hold for that meeting is City Council's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.269Z",
+        "recheckDueAt": "2026-09-27T10:29:49.316Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=8&get_year=2026&dsp=ag&seq=2396",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "4a2aedec927f84b93532553d321c828aff386e4930b924d961f9664584d21890"
+      "payloadSha256": "f1e27e2369496796bba42f7288d42e3440eab4a47c1b41b28917a3efabe08e43"
     },
     {
       "surface": "agenda",
@@ -15861,14 +15861,14 @@
           "statement": "The link we hold for that meeting is City Council's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.300Z",
+        "recheckDueAt": "2026-09-27T10:29:49.347Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2410",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "eb564a66e32995b6e217577681de4d7456a3e30a471e8d9808f1c84b1aaa288f"
+      "payloadSha256": "1bceadf863685cd3b8025f9c9b6257c13ef9f13786f7b6c65436f2fa53ff6c43"
     },
     {
       "surface": "agenda",
@@ -15916,14 +15916,14 @@
           "statement": "The link we hold for that meeting is City Council's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.330Z",
+        "recheckDueAt": "2026-09-27T10:29:49.367Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2425",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "e3339ee1abd423417d5b9e51e384afbab960f0b7da811d7fa063716a9d7e19b2"
+      "payloadSha256": "10ba993836c14ae774a3e8e6d1d4253107b4a61eb69c9e47af5b8f1be9b4d3ef"
     },
     {
       "surface": "agenda",
@@ -15971,14 +15971,14 @@
           "statement": "The link we hold for that meeting is City Council's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.363Z",
+        "recheckDueAt": "2026-09-27T10:29:49.388Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2409",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "7ee3997fea700604a3cfe24183823f51e9df8bd2329584b0de82197d898e2fab"
+      "payloadSha256": "1abafef97809a800ebf12241fc12446824a7c870385484f30c4e2d6227c60596"
     },
     {
       "surface": "agenda",
@@ -16026,14 +16026,14 @@
           "statement": "The link we hold for that meeting is City Council's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.399Z",
+        "recheckDueAt": "2026-09-27T10:29:49.419Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2373",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "d07d0737a90eb6afa8ad5a57b034808cacf09860830845ca4981f57fb9ad52d8"
+      "payloadSha256": "d552c0b84479f340f8858b89327f24605efc3cdfd2eba98397f2e94830023862"
     },
     {
       "surface": "agenda",
@@ -16081,14 +16081,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.432Z",
+        "recheckDueAt": "2026-09-27T10:29:49.448Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2440",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "9e62004f8f6ab8558f1aea45e20b84a4444b2ccc6968f9237d1e97e0fe8520db"
+      "payloadSha256": "2c319b7f10a3fab9f92e0d86a325fa31ed7276f27fc3ca607c029d8b27c3fb24"
     },
     {
       "surface": "agenda",
@@ -16136,14 +16136,14 @@
           "statement": "The link we hold for that meeting is City Council's agenda portal rather than the agenda itself."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.456Z",
+        "recheckDueAt": "2026-09-27T10:29:49.481Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC&get_month=9&get_year=2026&dsp=ag&seq=2431",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "cafd55a04f36df694f65ab64ba5164de9233c984e6a73d9fe10ac006bbe5f47a"
+      "payloadSha256": "422732dfd2a04f26c6d7c4d73cc5b98c8c42ec8f89bfb390b00ad014537eb540"
     },
     {
       "surface": "agenda",
@@ -16198,7 +16198,7 @@
           "A. Strategic Plan: Interim Superintendent Bessette IX. School Board Subcommittees : Policy 6/25 X. Non-public Session under RSA 91:A3, II The Board reserves the right to enter into “nonpublic” at any given time during the meeting. – Chair Zoom Link: https://us02web.zoom.us/j/84150771300 School Board Workshop: Saturday July 25, 8:30 to noon Next Board Meetings: August 6, 2026 Word of the Year: “Ris…"
         ]
       },
-      "payloadSha256": "189c41971c70bf92e01b7c1620e26ea9d0f12fa33e2cd04a35f4ea6fb90b0a9d"
+      "payloadSha256": "38ffd842ba1df2440f4ba7fd3411af72e8a2bf56168c65eaaab715fb99d1f2f6"
     },
     {
       "surface": "agenda",
@@ -16253,7 +16253,7 @@
           "A. Facilities A Report B. Facilities Discussion C. Strategic Plan: Interim Superintendent Bessette VIII. Non-public Session under RSA 91:A3, II The Board reserves the right to enter into “nonpublic” at any given time during the meeting. Zoom Link: https://us02web.zoom.us/j/84393750562 School Board Workshop: Saturday July 25, 8:30 Next Board Meetings: July 30, 2026 August 6, 2026"
         ]
       },
-      "payloadSha256": "c6933f15d092dff176c3c825f5c6d60ec564d2583db1aa165aa2afa88d4498c9"
+      "payloadSha256": "b4098ea7c097ed69365188ed5059ce3d8e920963616837570708bcf06905304d"
     },
     {
       "surface": "agenda",
@@ -16988,7 +16988,7 @@
           "statement": "We hold an agenda document for that meeting but could not read its text."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.548Z",
+        "recheckDueAt": "2026-09-27T10:29:49.574Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://drive.google.com/file/d/1YyUQpUDfKebohR4-R1LrIjr458pvONRC/view?usp=sharing",
         "supersededDocumentUrls": [
@@ -17045,7 +17045,7 @@
         "revised": true,
         "items": []
       },
-      "payloadSha256": "3c659ad174ebcc3d4030a3948dccb98d012bb6428fae41417532943484422e5e"
+      "payloadSha256": "fca8b653c4def61629185a06b7ddedad26c46bdc7a8296c393030bce028de69a"
     },
     {
       "surface": "agenda",
@@ -17099,7 +17099,7 @@
           "I. Call to Order - Chair Alison Mastin II. Pledge of Allegiance III. Roll Call IV. Approval of Minutes - Chair Alison Mastin V. Reports of Administration A. Chair - Alison Mastin B. Interim Superintendent - Michael Bessette Correspondence/Resignations/Nominations/Retirements/Other C. Business Administrator - Larry LeBoeuf VI. Public Comment In accordance with Policy BEDH, copies of a prepared stat…"
         ]
       },
-      "payloadSha256": "e10673ee4dbdff60ce7d196f602e14848b0035dcb76e6538307b38f57aed3e34"
+      "payloadSha256": "e684c6fde817d928668bad4ba3f4761a2ae2f432c1601f340d4d4e61362646c6"
     },
     {
       "surface": "agenda",
@@ -17154,7 +17154,7 @@
           "I. Call to Order - Chair Alison Mastin II. Pledge of Allegiance III. Roll Call Public Hearing - Appropriation for Unanticipated Funds As required per NH RSA 198:20-b, III, the Kearsarge Regional School Board will conduct a public hearing to accept unanticipated funds from the New Hampshire Lead Remediation in Schools Drinking Water and Groundwater Trust Fund Grant in the amount of $75,000. By acce…"
         ]
       },
-      "payloadSha256": "95ac07ea54681429b3a65e3064a22e4e0e2568ea31ac2b2169ab21bcd514adea"
+      "payloadSha256": "7b76315912501150be1badc79d2afc2fe294c9fbde7ba118f2868601fa122dd5"
     },
     {
       "surface": "agenda",
@@ -17217,7 +17217,7 @@
           "X. Adjournment Ms. Schultz made a motion to approve the slate of district placements, as presented in non-public. Mr. MacKenna seconded. The motion carried 8-0-1 (Ms. Mastin abstained). Mr. MacKenna made a motion to seal the non-public minutes for a period of 30 years. Mr. McGowan seconded. The motion carried 8-0-1 (Ms. Mastin abstained). Mr. MacKenna made a motion to adjourn. Ms. Schultz seconded…"
         ]
       },
-      "payloadSha256": "ae8cfd8167ceb5fc3d26aca3e317d99aa9733b34ea58d13aa6cb106cf406863a"
+      "payloadSha256": "d0fa8083fca642d00c4599e1d906128dcd65213f465ca3d5331abfd86836ed79"
     },
     {
       "surface": "agenda",
@@ -17271,7 +17271,7 @@
           "I. Call to Order - Chair Alison Mastin II. Pledge of Allegiance III. Roll Call IV. Board Appointment - Chair School District Deputy Clerk - Doreen Salera V. Approval of Minutes - Chair VI. Reports of Administration A. Chair - Alison Mastin B. Superintendent - Michael Bessette Correspondence/Resignations/Nominations/Retirements/Other C. Business Administrator - Larry LeBoeuf D. KREA Representative,…"
         ]
       },
-      "payloadSha256": "45cb0e20e96acb63f51c5f62acce0aa67e2689ed9e06663cc1e701c1e5902948"
+      "payloadSha256": "02f9f65f78adfd2d5b710fe1824c0dd34e927b6d23194676eaa43c41dc6ca536"
     },
     {
       "surface": "agenda",
@@ -17325,7 +17325,7 @@
           "I. Call to Order - Chair Alison Mastin II. Pledge of Allegiance III. Roll Call IV. Approval of Minutes - Chair V. Public Comment In accordance with Policy BEDH, copies of a prepared statement must be provided to the Board. Participation in public comment is restricted to residents of the seven towns served by the Kearsarge Regional School District, or to those pre-approved by the Board as having a…"
         ]
       },
-      "payloadSha256": "51efc8283fdf67f375ff271c94d2e0a574e97e0b2b94fef65163132500ca5ab2"
+      "payloadSha256": "f59e072996bcc434ef74ec2fa62954873574ef08302eb3bb69f262fe84607438"
     },
     {
       "surface": "agenda",
@@ -17396,7 +17396,7 @@
           "VIII. OLD BUSINESS A. Budget 2027-2028 P1 P2 P3 P4 P5 P6 B. Facilities Discussion - Planning / Budgeting P1 P2 P3 P4 P5 P6 C. Strategic Plan 2031 - Superintendent Bessette P1 P2 P3 P4 P5 P6 IX. School Board Sub Committees: Facilities Committee - 9/10 Policy committee - 9/24 Communications committee - 9/24 HR committee - 9/24 X. Non-Public Session under RSA 91-A:3, II The Board reserves the right t…"
         ]
       },
-      "payloadSha256": "f16219aececbb161c46fb0b06a473f411c3c060e9458583b5b8253c50d01630a"
+      "payloadSha256": "56edc28af981b40163b9933df50ea24c68c4c7da83c10732734d466fdc0047cd"
     },
     {
       "surface": "agenda",
@@ -17487,7 +17487,7 @@
           "2. Consider authorizing for the fi rst reading the following Policies and Regulations: Number Title New or Revised a. Policy 6112 Reimbursement of Federal and Other Grant Expenditure Revised b. Policy 6115.02 Federal Awards/Funds Internal Controls - Mandatory Disclosures Revised c. Policy 6311 Contracts for Goods or Services Funded by Federal Grants Revised d. Policy 8660 Transportation by Private…"
         ]
       },
-      "payloadSha256": "f672faf30352a4c0ea342e98464b356a56d2174bf73a341dbf781c568c6d32c9"
+      "payloadSha256": "fc7fb68b314299e4da8b7c9b13eb8f34a149e6695fd45b04516c5a3281ed97dc"
     },
     {
       "surface": "agenda",
@@ -17566,7 +17566,7 @@
           "2. Consider authorizing for the second reading the following Policies and Regulations: Number Title New or Revised a. Policy 6112 Reimbursement of Federal and Other Grant Expenditure Revised b. Policy 6115.02 Federal Awards/Funds Internal Controls - Mandatory Disclosures Revised c. Policy 6311 Contracts for Goods or Services Funded by Federal Grants Revised d. Policy 8660 Transportation by Private…"
         ]
       },
-      "payloadSha256": "808bb6c8423a10af9b2ccff1bfd3632add6edba67ceb32d7040e217f30843621"
+      "payloadSha256": "35f1327964d983e054bbc26f4905cde16955e6f333d14bc74ff5ecb31d0c801d"
     },
     {
       "surface": "agenda",
@@ -17598,14 +17598,14 @@
           "statement": "We have not yet acquired the agenda for that Conservation Commission meeting. We hold the link their calendar gave and not the document behind it."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.823Z",
+        "recheckDueAt": "2026-09-27T10:29:49.884Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "b1572dcaa224cb6ae5a1e23f7c1166be28a7f53329e28656045cf12000855b94"
+      "payloadSha256": "6ac0c30afb82200120732f1458d6840ece8eca418cdae544bb83fd33a24dc276"
     },
     {
       "surface": "agenda",
@@ -17637,14 +17637,14 @@
           "statement": "We have not yet acquired the agenda for that Conservation Commission meeting."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.844Z",
+        "recheckDueAt": "2026-09-27T10:29:49.906Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": null,
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "c8c0bfd0bb631d5122d1a1648555f2fb611b3f6da1adb30ee69d043dbf2dcfb8"
+      "payloadSha256": "09bd4115039a40bd8e71fe31edecab4ae4ba5d5536aa08dd414e1ef05d9f998b"
     },
     {
       "surface": "agenda",
@@ -17692,14 +17692,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.875Z",
+        "recheckDueAt": "2026-09-27T10:29:49.928Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.newbury.nh.gov/planning-board/agenda/meeting-agenda-17",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "5711b6337c6aceab8049006b0e1d79a791d96154a6e185dad3b83a871e12b60f"
+      "payloadSha256": "441f5695bed71d01ef112677c4a200f87f4f1066b2f8f9c1e6e72a52fd4485a5"
     },
     {
       "surface": "agenda",
@@ -17763,7 +17763,7 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.891Z",
+        "recheckDueAt": "2026-09-27T10:29:49.964Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.newbury.nh.gov/planning-board/agenda/agenda-15",
         "supersededDocumentUrls": [
@@ -17772,7 +17772,7 @@
         "revised": true,
         "items": []
       },
-      "payloadSha256": "46053a55a1a0e8d39ec70b77bb10737a1c8094c22ec4fb16370569d28660551c"
+      "payloadSha256": "d691dfc678b405c523e9c8d64a4bc5cd156c78edc637fa772dd22618ecfd2829"
     },
     {
       "surface": "agenda",
@@ -17820,14 +17820,14 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.924Z",
+        "recheckDueAt": "2026-09-27T10:29:49.995Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.newbury.nh.gov/planning-board/agenda/meeting-agenda-18",
         "supersededDocumentUrls": [],
         "revised": false,
         "items": []
       },
-      "payloadSha256": "7a5d6ec1a064f4a61eb4158362a667ea7f3f346b42ccf7bcf4760736ab82a317"
+      "payloadSha256": "e2586a9c2543f4a9bcf62076848591739d7677ec0aa526eb4a22e64d2636f38e"
     },
     {
       "surface": "agenda",
@@ -17891,7 +17891,7 @@
           "statement": "We hold the agenda document for that meeting but could not extract its items."
         },
         "obligationOpen": true,
-        "recheckDueAt": "2026-09-27T06:01:15.955Z",
+        "recheckDueAt": "2026-09-27T10:29:50.022Z",
         "alternateSearchOpen": true,
         "currentDocumentUrl": "https://www.newbury.nh.gov/zoning-board-adjustment/agenda/agenda-7",
         "supersededDocumentUrls": [
@@ -17900,7 +17900,7 @@
         "revised": true,
         "items": []
       },
-      "payloadSha256": "cd84749f645583e466ad9a5b705409c7f9cd1be6f4604ff6b21578f2cb357281"
+      "payloadSha256": "602c708a94048a0485c5ffca98a117558f9f627b5d855e45852744f43a6a6838"
     },
     {
       "surface": "agenda",
@@ -17966,7 +17966,7 @@
           "9. ADJOURNMENT The City Council reserves the right to move into executive session for legal advice under authority of A.R.S. 38-431.03(A)(3) on any of the above agenda items. A copy of the agenda background materials already made available to the City Council is available at City Hall, 102 East Third Street, Winslow, Arizona between the hours of 7:30 a.m. and 4:30 p.m., Monday through Friday and a…"
         ]
       },
-      "payloadSha256": "ba15c6692950ecafa0c707b9d534a06560f385f1f2d3af0a685c8472e761408f"
+      "payloadSha256": "4c280a41835a55dad6ad31c4fdbcce796f9cc058aeed6b3493faaecdec23df8f"
     },
     {
       "surface": "agenda",
@@ -18030,7 +18030,7 @@
           "9. ADJOURNMENT The City Council reserves the right to move into executive session for legal advice under authority of A.R.S. 38-431.03(A)(3) on any of the above agenda items. A copy of the agenda background materials already made available to the City Council is available at City Hall, 102 East Third Street, Winslow, Arizona between the hours of 7:30 a.m. and 4:30 p.m., Monday through Friday and a…"
         ]
       },
-      "payloadSha256": "48dbd5960e5612a98758a6c201b293ada4b0ea2b418c7e615d9a8d822c6fada9"
+      "payloadSha256": "34d2a0916c66df68c1831d11a50b4fc66fbc7323cd5f547c8bf10de0eabdb55a"
     },
     {
       "surface": "agenda",
@@ -18097,7 +18097,7 @@
           "10. ADJOURNMENT The City Council reserves the right to move into executive session for legal advice under authority of A.R.S. 38-431.03(A)(3) on any of the above agenda items. A copy of the agenda background materials already made available to the City Council is available at City Hall, 102 East Third Street, Winslow, Arizona between the hours of 7:30 a.m. and 4:30 p.m., Monday through Friday and…"
         ]
       },
-      "payloadSha256": "40ac1fcd6094c26da9b6717a1e9cec2513a3df8ea610881db1e9ad828255177a"
+      "payloadSha256": "e37a4d045b371eef1faba64d6d0123663f6f7d742c97aa0f17c6e63317cd9f7f"
     },
     {
       "surface": "agenda",
@@ -18159,7 +18159,7 @@
           "9. ADJOURNMENT The City Council reserves the right to move into executive session for legal advice under authority of A.R.S. 38-431.03(A)(3) on any of the above agenda items. A copy of the agenda background materials already made available to the City Council is available at City Hall, 102 East Third Street, Winslow, Arizona between the hours of 7:30 a.m. and 4:30 p.m., Monday through Friday and a…"
         ]
       },
-      "payloadSha256": "67a5e77cf8c5e390847031647b01f15cef0806815db839cc8805e94021957f58"
+      "payloadSha256": "6dd1c3440e7bef9753f991e0062b757193271c6bdf75d93ed71bcb449bb8b2ca"
     },
     {
       "surface": "agenda",
@@ -18222,7 +18222,7 @@
           "B. Discussion and/or Action Regarding the October 13, 2026 City Council Meeting (Mayor Cano)"
         ]
       },
-      "payloadSha256": "9e1ae815c3051d04245afb3b56201ef71f98c0090a338f068933687b87520c05"
+      "payloadSha256": "7617ba20b9587adf348dd10a7a6317dad70b69b10cb99d1971e5f3580892c308"
     }
   ]
 }

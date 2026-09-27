@@ -41,7 +41,7 @@ import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead, type SharedRead } from "
 /** One code's place in the index: every division whose territory reaches it, or not indexed. */
 async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[]; readonly partial: readonly string[] }> {
   const held = await zipDivisionEntry(zcta5);
-  const entry = held ? withSharedScopeDivisions(held) : null;
+  const entry = held ? withSharedScopeDivisions(held, zcta5) : null;
   return entry === null ? { indexed: false, divisions: [], partial: [] } : { indexed: true, divisions: entry.ids, partial: entry.partial };
 }
 

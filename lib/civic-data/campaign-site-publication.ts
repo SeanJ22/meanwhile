@@ -38,8 +38,8 @@
  * - The identity join is exact: an approval carries the canonical candidacy's
  *   own Reader keys (its ballot ids, and a lineup key only where a nominee's
  *   name shares an exact name form). Nothing is keyed by a guess.
- * - A key whose prior member already holds a campaign link is left alone: a
- *   verified link is never replaced by this writer. A prior official link is
+ * - A prior campaign link accepts newer verified evidence for the same URL;
+ *   conflicting URLs and unproved observation dates remain held. A prior official link is
  *   carried forward with the prior receipt's exact bytes for it; an official
  *   link with no receipted bytes holds the key, named.
  * - Two different verified hosts for one candidacy hold that candidacy, named:
@@ -54,6 +54,7 @@ import { classFieldOpen } from "../control-plane/promotion/activation-gate.ts";
 import type { CandidateProfilesProjection, ManualProjectionPackage, ManualProjectionPrior } from "./manual-projections.ts";
 import type { ManualSourceReview } from "./types.ts";
 import { sitePathLength } from "../candidates/campaign-site-verifier.ts";
+import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 
 export const CAMPAIGN_SITE_WRITER_ID = "campaign-site-writer/1";
 
@@ -133,16 +134,18 @@ export function planCampaignSitePublication(input: {
       continue;
     }
     const chosen = [...records].sort((a, b) => sitePathLength(a.campaignSite.url) - sitePathLength(b.campaignSite.url) ||
-      a.campaignSite.url.localeCompare(b.campaignSite.url) || a.recordId.localeCompare(b.recordId))[0]!;
+      a.campaignSite.url.localeCompare(b.campaignSite.url) ||
+      b.campaignSite.evidence.readAt.localeCompare(a.campaignSite.evidence.readAt) || a.recordId.localeCompare(b.recordId))[0]!;
     const site = chosen.campaignSite;
     if (site.readerKeys.length === 0) {
       held.push({ key: candidacyId, code: "NO_READER_KEY", detail: `${candidacyId} joins no Reader key; nothing is keyed by a guess` });
       continue;
     }
-    /* One person, one campaign link: a link under ANY of their Reader keys holds every key, so two keys never disagree. */
-    const linked = site.readerKeys.find((key) => prior[key]?.campaign);
+    /* One person, one campaign link: a conflict under ANY key holds the whole candidacy. */
+    const refresh = { url: site.url, attemptedAt: site.evidence.readAt.slice(0, 10) };
+    const linked = site.readerKeys.find((key) => campaignLinkRefreshIssue(prior[key]?.campaign, refresh) !== null);
     if (linked !== undefined) {
-      held.push({ key: linked, code: "PRIOR_CAMPAIGN_LINK_HELD", detail: `${linked} already carries the verified campaign link ${prior[linked]!.campaign!.url} for ${site.candidateName}; this writer never replaces or doubles one` });
+      held.push({ key: linked, code: "PRIOR_CAMPAIGN_LINK_HELD", detail: `${linked}: ${campaignLinkRefreshIssue(prior[linked]?.campaign, refresh)}; the working link for ${site.candidateName} is preserved` });
       continue;
     }
     for (const key of site.readerKeys) {

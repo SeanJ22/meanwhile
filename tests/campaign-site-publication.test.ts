@@ -2,7 +2,7 @@
  * APPROVED campaign sites publish through the ONE civic-data door: the
  * candidate-profiles manual contract's source-scoped successor, its validator
  * and its typed Reader verification. The prior GOOD version is carried forward
- * byte-exactly; a verified link is never replaced; an official link travels
+ * byte-exactly except newer verified evidence for the same URL; an official link travels
  * with its prior receipted bytes; the Reader renders the new link.
  */
 import assert from "node:assert/strict";
@@ -91,9 +91,9 @@ test("approved sites publish a validated successor that carries the prior versio
     ],
     prior, gate: readActivationGate("."), reviewedAt: NOW,
   });
-  assert.deepEqual(plan.published.map((p) => p.key).sort(), [CHIPPERSON_KEY, DUARTE_KEY].sort());
+  assert.deepEqual(plan.published.map((p) => p.key).sort(), [CHIPPERSON_KEY, DUARTE_KEY, MAYES_KEY, "ballot-az-pima:attorney-general|Kris Mayes"].sort());
   assert.equal(plan.published.find((p) => p.key === DUARTE_KEY)?.url, "https://www.duarte4mendham.com/meet-amalia", "the shallowest verified page of one site");
-  assert.deepEqual(plan.held.map((h) => [h.key, h.code]), [[MAYES_KEY, "PRIOR_CAMPAIGN_LINK_HELD"]]);
+  assert.deepEqual(plan.held, []);
 
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(plan.package!, store, NOW);
   const outcome = await processRegisteredManualCandidate(store, "candidate-profiles", candidate, NOW, expectedBaseVersionId);
@@ -103,7 +103,8 @@ test("approved sites publish a validated successor that carries the prior versio
 
   const payload = outcome.promoted!.payload as CandidateProfilesProjection;
   const before = priorPackage().payload as CandidateProfilesProjection;
-  assert.deepEqual(payload.links.links[MAYES_KEY], before.links.links[MAYES_KEY], "a verified link is never replaced");
+  assert.equal(new URL(payload.links.links[MAYES_KEY]!.campaign!.url).href, new URL(before.links.links[MAYES_KEY]!.campaign!.url).href, "the same URL is retained");
+  assert.equal(payload.links.links[MAYES_KEY]!.campaign!.attemptedAt, "2026-09-24", "newer fully verified evidence refreshes automatically");
   assert.deepEqual(payload.cards.cards, before.cards.cards, "every prior card is carried byte-exactly");
   assert.deepEqual(payload.links.links[CHIPPERSON_KEY]?.official, before.links.links[CHIPPERSON_KEY]?.official, "the official link travels with its prior receipted bytes");
   assert.equal(payload.links.links[CHIPPERSON_KEY]?.campaign?.url, "https://www.chippersonforharding.com/");

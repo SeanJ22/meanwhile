@@ -101,7 +101,7 @@ test("ADM-25 · POSITIVE CONTROL — the runner's own stop sentence loses every 
     "WALL_CLOCK_CEILING: insufficient cycle wall time remained; work remains owed.";
   const plain = plainText(asPhotographed);
   assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(plain), `a screaming-snake code survived: ${plain}`);
-  assert.ok(plain.includes("Budget reached".toLowerCase()), plain);
+  assert.ok(plain.includes("Cycle time used".toLowerCase()), plain);
 });
 
 test("ADM-25 · an environment variable never renders its own name", () => {
@@ -285,8 +285,19 @@ test("ADM-24 · the runner card says what a runner IS", () => {
 test("ADM-24 · the stop reason leads with budget, and the time comes out of the prose", () => {
   const codes = stopCodesIn(SAFETY.stoppedBecause);
   assert.deepEqual(codes, ["CYCLE_DEFERRED", "WALL_CLOCK_CEILING"]);
-  assert.equal(plainCode(codes[0]), "Budget reached");
+  assert.equal(plainCode(codes[0]), "Cycle time used");
   assert.equal(stopMomentIn(SAFETY.stoppedBecause), "2026-09-07T04:31:00.000Z");
+});
+
+test("a cycle-time stop never borrows the paid-pause timestamp or claims a dollar limit", () => {
+  const pause = "PAUSED: owner paused paid research at 2026-09-23T17:25:00.000Z";
+  const cycle = "CYCLE_DEFERRED: dispatch time was spent at 2026-09-26T22:30:00.000Z before the item was reached";
+  assert.equal(stopMomentIn([pause, cycle]), "2026-09-26T22:30:00.000Z");
+  assert.equal(stopMomentIn([`${pause}; ${cycle}`]), "2026-09-26T22:30:00.000Z");
+  assert.equal(stopMomentIn([pause, "CYCLE_DEFERRED: dispatch time exhausted"]), null);
+  assert.equal(stopMomentIn([pause]), null);
+  assert.equal(plainCode("CYCLE_DEFERRED"), "Cycle time used");
+  assert.match(plainMeaning("CYCLE_DEFERRED")!, /not a dollar spending limit/);
 });
 
 test("ADM-27 · deferred work is a count and a sentence, never a list of thousands", () => {

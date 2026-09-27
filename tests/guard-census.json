@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 871,
-    "named": 8322,
+    "files": 872,
+    "named": 8329,
     "dynamic": 33
   },
   "files": {
@@ -154,6 +154,7 @@
         "ADM-30 · thirty incident lines become owner groups with actions",
         "ADM-33 · a model id renders as a name",
         "a cause the owner will read has a meaning, not only a label",
+        "a cycle-time stop never borrows the paid-pause timestamp or claims a dollar limit",
         "an unmeasured window says so instead of showing $0.00",
         "counts read as a person reads them",
         "every dictionary entry is sentence case and free of underscores"
@@ -2571,6 +2572,12 @@
       ],
       "dynamic": 0
     },
+    "tests/campaign-link-refresh.test.ts": {
+      "names": [
+        "campaign refresh preserves conflicts and unverifiable or non-newer dates"
+      ],
+      "dynamic": 0
+    },
     "tests/campaign-publication-due.test.ts": {
       "names": [
         "committed approvals wake normal publication despite old acquisition clocks and survive restart",
@@ -2611,6 +2618,7 @@
         "a refused lead publishes nothing and keeps its typed reason where Admin reads it",
         "a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it",
         "a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved",
+        "newer fully verified campaign evidence refreshes the same reader URL automatically",
         "per-cycle bounds hold: at most 12 lead reads, second reads counted apart, a budget-cut read deferred, never refused, and the next cycle reads the rest",
         "the Reader composes: a derived link fills an empty campaign slot beside the reviewed official link; any reviewed campaign link of that person wins on every key",
         "the audit's second read comes before new leads: an item one read from approval is approved even when the backlog spends the pass's whole time budget",
@@ -4105,6 +4113,7 @@
         "Admin retains failed readback reason and time without turning it into verified delivery",
         "MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records",
         "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
+        "a campaign-site approval never presents the Scout biography or platform as verified publication",
         "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
         "empty pipeline: every stage is a named gap, the blockers are named, promotions empty",
         "pending records show the unresolved verification step without reviving historical duplicate-stage failures"
@@ -4396,7 +4405,8 @@
         "A SLIVER IS NOT PLACEMENT: an approximate district holding under 5% of a ZCTA is not placed by it",
         "NO READER PATH READS THE APPROXIMATE BOUNDARIES: only the runner's Send placement names the extract, and nothing the reader closure binds reaches it",
         "THE FIRE DISTRICTS ARE PLACED FOR SENDS BY THEIR APPROXIMATE BOUNDARY: FRY IN 85635, PALOMINAS IN THE COUNTY BUT NOT 85635",
-        "THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule"
+        "THE RULES: each names its evidence; a member union never adds shares and names what it leaves out; an unknown unit has no rule",
+        "full Census school intersections reach both Admin scope and actual dispatch, including small slivers"
       ],
       "dynamic": 0
     },
@@ -10770,6 +10780,8 @@
       "names": [
         "Battlecard evidence belongs only to the candidate whose controls were opened",
         "a witness cannot transfer to a new approval or survive stale time",
+        "absent campaign candidates consume no action or nonexistent cleanup waits",
+        "campaign readback identifies the failing action and stops after a panel cannot close",
         "collector shares one public read, records exact approvals and holds missing destinations",
         "failed public controls retain the exact blocker for only that reader key",
         "public readback requires the exact candidate container, not another card or serialized script"

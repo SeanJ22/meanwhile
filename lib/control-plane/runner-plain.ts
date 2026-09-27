@@ -136,9 +136,17 @@ export function stopCodesIn(sentences: readonly string[]): readonly string[] {
  * reached`. The owner asked for that time and nothing else from the sentence.
  */
 export function stopMomentIn(sentences: readonly string[]): string | null {
+  const lead = stopCodesIn(sentences)[0];
+  if (!lead) return null;
   for (const sentence of sentences) {
-    const m = sentence.match(/\b(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)\b/);
-    if (m) return m[1];
+    // Match the selected reason's own clause. An earlier PAUSED timestamp
+    // must never become the time a later dispatch-time or spending limit hit.
+    const clauses = sentence.split(/;\s*(?=[A-Z][A-Z0-9_]*\s*:)/);
+    for (const clause of clauses) {
+      if (!clause.trimStart().startsWith(`${lead}:`)) continue;
+      const m = clause.match(/\b(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)\b/);
+      if (m) return m[1];
+    }
   }
   return null;
 }

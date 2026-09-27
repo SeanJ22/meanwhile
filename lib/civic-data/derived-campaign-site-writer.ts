@@ -20,8 +20,8 @@
  *   proves today, never the approval's copy;
  * - one person, one campaign link: two verified hosts for one candidacy hold
  *   it; several pages of one host publish the shallowest;
- * - a candidacy that already carries a reviewed campaign link in
- *   `candidate-profiles` is held (the Reader enforces the same rule);
+ * - newer fully verified evidence may refresh the same campaign URL; conflicting
+ *   URLs or unproved dates retain the working link (the Reader enforces this too);
  * - the version names every input it was computed from (each approval read,
  *   each cited vaulted read, the profiles version), and its raw hash and time
  *   are exactly `derivedRetrieval` of them;
@@ -54,6 +54,7 @@ import {
   type CampaignSiteIdentity,
 } from "../candidates/campaign-site-verifier.ts";
 import { verdictOfRecordedPermission } from "../control-plane/scheduler/robots.ts";
+import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -224,15 +225,17 @@ export function planDerivedCampaignSites(input: {
       continue;
     }
     const chosen = [...verified].sort((a, b) => sitePathLength(a.record.campaignSite.url) - sitePathLength(b.record.campaignSite.url) ||
-      a.record.campaignSite.url.localeCompare(b.record.campaignSite.url) || a.record.recordId.localeCompare(b.record.recordId))[0]!;
+      a.record.campaignSite.url.localeCompare(b.record.campaignSite.url) ||
+      b.record.campaignSite.evidence.readAt.localeCompare(a.record.campaignSite.evidence.readAt) || a.record.recordId.localeCompare(b.record.recordId))[0]!;
     const site = chosen.record.campaignSite;
     if (site.readerKeys.length === 0) {
       held.push({ key: candidacyId, code: "NO_READER_KEY", detail: `${candidacyId} joins no Reader key; nothing is keyed by a guess` });
       continue;
     }
-    const linked = site.readerKeys.find((key) => profileLinks[key]?.campaign);
+    const refresh = { url: site.url, attemptedAt: site.evidence.readAt.slice(0, 10) };
+    const linked = site.readerKeys.find((key) => campaignLinkRefreshIssue(profileLinks[key]?.campaign, refresh) !== null);
     if (linked !== undefined) {
-      held.push({ key: linked, code: "PRIOR_CAMPAIGN_LINK_HELD", detail: `${linked} already carries the reviewed campaign link ${profileLinks[linked]!.campaign!.url} for ${name}; a reviewed link always wins` });
+      held.push({ key: linked, code: "PRIOR_CAMPAIGN_LINK_HELD", detail: `${linked}: ${campaignLinkRefreshIssue(profileLinks[linked]?.campaign, refresh)}; the working link for ${name} is preserved` });
       continue;
     }
     add({ kind: "VAULTED_EVIDENCE", artifactId: site.evidence.artifactId, contentHash: `sha256-${site.evidence.sha256}`, tier: chosen.held.tier, retrievedAt: site.evidence.readAt });
@@ -350,7 +353,7 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [{
-      consumer: "the profile Reader's campaign slot (lib/ballot/candidate-sites.ts), a reviewed link always winning",
+      consumer: "the profile Reader's campaign slot (lib/ballot/candidate-sites.ts), preserving working links on conflicts and failed updates",
       passed: violations.length === 0,
       detail: `${readModel.records.length} Reader key(s) over ${new Set(readModel.records.map((r) => r.candidacyId)).size} candidacy(ies); ${plan.held.length} approval(s) held by name.`,
     }],

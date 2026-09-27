@@ -37,6 +37,17 @@ export interface GeneratedArtifact {
  * commit — the same discipline `tests/guard-census.json` applies to guards.
  */
 export const GENERATED: GeneratedArtifact[] = [
+  {
+    path: "lib/control-plane/expansion/reference/census-dependent-school-territories.json",
+    command: "corepack pnpm territory:dependent-schools",
+    pure: true,
+  },
+  {
+    path: "lib/control-plane/expansion/reference/census-school-intersections.json",
+    command: "corepack pnpm territory:school-observations --evidence-root=../meanwhile-evidence/85635-preparation-20260925 --zip=85635 --stamp=20260926",
+    pure: false,
+    impurity: "Reuses retained full Census response and GEOS area receipts outside the repository; the ZIP, observation date and evidence directory must identify the source observation being imported.",
+  },
   ...readdirSync(fileURLToPath(new URL("../../docs/states/", import.meta.url)))
     .filter((name) => /^[a-z]{2}\.md$/.test(name)).sort().map((name) => ({
       path: `docs/states/${name}`,

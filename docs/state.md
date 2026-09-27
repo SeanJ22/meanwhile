@@ -1,4 +1,14 @@
-## Current integrated release checkpoint — September 26, 2026
+## Current release checkpoint — September 26, 2026, 5:59 PM Arizona MST
+
+PR432 remains deployed as e6fea8bf. Its normal runner handoff and subsequent successful routine cycle are verified; all 20 committed campaign approvals were acknowledged. Admin updated automatically. The cycle retained the same published campaign version, so it is not new hunt content.
+
+The next release repairs newer verified campaign-URL refreshes, absent-control readback waits, and Census scope placement. The actual Admin scope and dispatch functions now include all five Census-positive school overlaps in 85635, including the Tombstone/Bisbee slivers and the previously omitted dependent Fort Huachuca system. Census source vintages, exact PID6/LEAID identities and geometry measurements are retained. The existing territory generator now includes dependent school systems through a runner scope reference; no additional geographic acquisition was launched.
+
+The renewed reader proof on 5f43ff9a passed 20,477 component cases with zero closure failures and 29/29 strict Census gates. Evidence is committed in 9847627b. The integrated scope and readback changes intersect none of its 579 bound reader sources. Focused geography and readback checks pass. Required release gates, hosted certification, deployment and production behavior remain due.
+
+Per the owner's latest instruction, cold Ask optimization and optional refinements are outside this hunt launch assignment. The isolated Ask change f4169e90 is not integrated. Remaining material launch work is full applicable collection/verification/publication connections, recovery of stranded verified results, accurate Admin scope and progress, and the owner's walkthrough. Reuse the passed concurrent token-reservation/restart proof. The hunt remains paused; its only new cap is $50 Anthropic tokens for this run, including retries and escalations. Other services remain separately tracked without new caps. No Send or hunt activation is authorized.
+
+## Previous integrated release checkpoint — September 26, 2026
 
 PR431 is deployed as 82301164 at 2:09 PM Arizona MST. All 16 local gates and required CI/build/integrity checks passed. The permanent runner adopted the same clean revision through its normal handoff by 3:21 PM; no forced restart or paid-control change was used. It carries the PDF-to-image OCR repair. The hunt remains paused and NOT READY. Its only new cap is $50 Anthropic token usage for this hunt, including retries, cache, escalations and durable concurrent reservations; other providers are tracked separately.
 

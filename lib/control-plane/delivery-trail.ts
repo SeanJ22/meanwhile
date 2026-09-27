@@ -110,6 +110,12 @@ const CHANGE_SUMMARY_MAX = 240;
  * an item without a SCOUTED record says so.
  */
 export function promotionChangeSummary(state: PipelineItemState): string {
+  const approved = state.byStage.APPROVED_FOR_PROMOTION;
+  if (approved?.recordClass === "candidate-enrichment" && approved.field === "campaignSite") {
+    const site = (approved as typeof approved & { campaignSite?: { url?: unknown } }).campaignSite;
+    const url = typeof site?.url === "string" ? site.url : "URL not recorded";
+    return `Verified campaign-site link: ${url}. This approval does not verify biography, positions or other claims in the discovery lead. Public delivery requires the separate reader readback.`;
+  }
   const scouted = state.byStage.SCOUTED;
   if (scouted === undefined) return "What changed is not recorded: the item holds no SCOUTED record.";
   const src = scouted.source;

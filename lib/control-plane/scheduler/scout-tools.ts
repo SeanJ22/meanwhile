@@ -26,6 +26,7 @@
 
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { runOcr } from "../../extract/ocr.ts";
+import { rowsFromItems, cellsFromRow, tablesFromRows, type ExtractedTable } from "../../extract/tables.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
@@ -330,7 +331,7 @@ function capText(text: string, cap: number = TEXT_CAP_CHARS): { readonly text: s
 }
 
 type PdfExtraction =
-  | { readonly kind: "TEXT"; readonly text: string; readonly pages: number; readonly extractionNote: string }
+  | { readonly kind: "TEXT"; readonly text: string; readonly pages: number; readonly tables: readonly ExtractedTable[]; readonly complete: boolean; readonly extractionNote: string }
   | { readonly kind: "EXTRACTION_UNAVAILABLE"; readonly why: string }
   | { readonly kind: "EXTRACTION_FAILED"; readonly why: string };
 
@@ -346,10 +347,13 @@ export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr)
     const doc = await getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false }).promise;
     try {
       const pages: string[] = [];
+      const tables: ExtractedTable[] = [];
       for (let i = 1; i <= doc.numPages; i += 1) {
         const page = await doc.getPage(i);
         const content = await page.getTextContent();
         pages.push(content.items.map((item) => ("str" in item ? item.str : "")).join(" "));
+        tables.push(...tablesFromRows(rowsFromItems(content.items.flatMap(item => "str" in item && item.str.trim()
+          ? [{ x: item.transform[4], y: item.transform[5], width: item.width, text: item.str }] : [])).map(cellsFromRow), i));
       }
       const empty = pages.flatMap((text, index) => text.trim().length < 2 ? [index] : []);
       let extractionNote = "Text layer extracted; ordinary source and claim verification still required.";
@@ -366,7 +370,8 @@ export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr)
           extractionNote = `PARTIAL EXTRACTION: page(s) ${empty.map(index => index + 1).join(", ")} remain unread. ${why}. Retained text from other pages is not complete-document evidence.`;
         }
       }
-      return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(), pages: doc.numPages, extractionNote };
+      return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(),
+        pages: doc.numPages, tables, complete: pages.every(text => text.trim().length >= 2), extractionNote };
     } finally {
       await doc.cleanup();
     }
@@ -440,7 +445,7 @@ function workArtifact(artifact: Artifact, recordedAt: string): WorkArtifact {
     byteLength: artifact.byteLength,
     contentType: artifact.contentType,
     canonicalUrl: artifact.canonicalUrl,
-    partial: false,
+    partial: artifact.extraction?.complete === false,
     recordedAt,
   };
 }
@@ -979,10 +984,30 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.kind}`), acc, input.permission
       );
     }
-    const body = capText(extracted.text);
+    // Retain the exact transcription shown to Scout so ordinary workers can
+    // replay it by artifact id. Its tier and parent explicitly distinguish it
+    // from the publisher's original PDF; verification remains independent.
+    const transcriptions: string[] = [];
+    for (const kind of ["PDF_TEXT", ...(extracted.tables.length ? ["PDF_TABLES"] : [])] as const) {
+      const parent = report.artifact;
+      const text = kind === "PDF_TEXT"
+        ? `PDF transcription; original ${parent.id} ${parent.contentHash}; complete=${extracted.complete}; pages=${extracted.pages}\n${extracted.text}`
+        : JSON.stringify({ originalArtifactId: parent.id, originalHash: parent.contentHash, complete: extracted.complete, tables: extracted.tables });
+      const captured = recordAcquisition({ canonicalUrl: parent.canonicalUrl, retrievalUrl: parent.retrievalUrl,
+        retrievedAt: parent.retrievedAt, httpStatus: parent.httpStatus, contentType: kind === "PDF_TEXT" ? "text/plain" : "application/json",
+        sourceId: parent.sourceId, methodRouteId: "scout:pdf-transcription/1", workItemId: parent.workItemId, attemptId: parent.attemptId,
+        permission: parent.permission, transport: parent.transport }, text).artifact;
+      if (captured.tier === "RESTRICTED_RAW") return result(false, `${head}\nPDF transcription contains restricted material; no text is shown.`, input.rung("PDF transcription restricted"), acc, input.permission);
+      const artifact: Artifact = { ...captured, id: artifactId("EXTRACTED_DERIVED", captured.contentHash), tier: "EXTRACTED_DERIVED",
+        retentionPolicy: extracted.complete ? "EVIDENCE_PERMANENT" : "DIAGNOSTIC",
+        extraction: { kind: kind as "PDF_TEXT" | "PDF_TABLES", version: "pdf-transcription/1", complete: extracted.complete, pages: extracted.pages, parent } };
+      const saved = await put(artifact, () => ctx.vault(artifact, text), ctx.now(), acc);
+      if (!saved.stored) return result(false, `${head}\nPDF transcription NOT VAULTED: ${saved.why}`, input.rung("PDF transcription storage failed"), acc, input.permission);
+      transcriptions.push(`${kind} artifact ${artifact.id}; ${capText(text).note}\n${capText(text).text}`);
+    }
     return result(
       true,
-      [UNTRUSTED_CONTENT_HEADER, head, extracted.extractionNote, DATA_BEGIN, `PDF TEXT (${extracted.pages} page(s), ${body.note}):`, body.text, DATA_END].join("\n"),
+      [UNTRUSTED_CONTENT_HEADER, head, extracted.extractionNote, DATA_BEGIN, ...transcriptions, DATA_END].join("\n"),
       input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.pages} page(s)`), acc, input.permission
     );
   }

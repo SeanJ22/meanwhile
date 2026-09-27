@@ -34,6 +34,8 @@ export interface ObservedResearchRoute {
   readonly applicableBecause: string;
   readonly nextRouteIds: readonly string[];
   readonly retrieval: "fetch_public" | "browse";
+  /** Machine-selected from a retained transcription, never a model's permission to substitute bytes. */
+  readonly representation?: "PDF_TEXT" | "PDF_TABLES";
 }
 export interface HeldResearchArtifact {
   readonly artifactId: string;

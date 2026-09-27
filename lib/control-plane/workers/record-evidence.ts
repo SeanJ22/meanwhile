@@ -158,13 +158,51 @@ function delimitedRows(text: string, delimiter: string): RawCell[][] {
 export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordExtractionShape): RecordEvidenceInventory {
   if (shape?.format === "UNSUPPORTED") refuse("SOURCE_SHAPE_UNSUPPORTED", `${shape.mediaType}: ${shape.reason}`);
   if (!shape || !shape.fields || Object.keys(shape.fields).length === 0) refuse("EXTRACTION_MAPPING_MISSING", "An explicit nonempty source field mapping is required.");
+  if (shape.format === "TEXT_BLOCKS") {
+    const labels = Object.values(shape.fields).map(mapping => mapping.source);
+    if (!shape.recordStart?.trim() || shape.recordStart.length > 4096 ||
+      (shape.recordEnd !== undefined && (!shape.recordEnd.trim() || shape.recordEnd.length > 4096)) ||
+      labels.some(label => typeof label !== "string" || !label.trim() || label.length > 4096) || new Set(labels).size !== labels.length) {
+      return refuse("TEXT_BLOCK_MAPPING_INVALID", "Record boundaries and distinct field labels must be actual bounded literal source text.");
+    }
+    const starts: number[] = [];
+    for (let at = evidence.text.indexOf(shape.recordStart); at !== -1; at = evidence.text.indexOf(shape.recordStart, at + shape.recordStart.length)) starts.push(at);
+    return { declaredCount: null, rows: starts.map((start, index) => {
+      let end = starts[index + 1] ?? evidence.text.length;
+      if (shape.recordEnd !== undefined) {
+        const found = evidence.text.indexOf(shape.recordEnd, start + shape.recordStart.length);
+        if (found < 0 || found >= end) refuse("TEXT_BLOCK_END_MISSING", `Record ${index} lacks its contracted ending.`);
+        end = found;
+      }
+      const positions = Object.entries(shape.fields).map(([field, mapping]) => {
+        const label = mapping.source as string;
+        const found = evidence.text.indexOf(label, start);
+        const again = found < 0 ? -1 : evidence.text.indexOf(label, found + label.length);
+        if (found < start || found >= end || (again >= 0 && again < end)) refuse("TEXT_FIELD_AMBIGUOUS", `Record ${index} needs exactly one label for ${field}.`);
+        return { field, mapping, found, valueStart: found + label.length };
+      }).sort((a, b) => a.found - b.found);
+      const fields: Record<string, RecordEvidenceCell> = Object.create(null);
+      for (let i = 0; i < positions.length; i++) {
+        const cell = positions[i];
+        let valueStart = cell.valueStart, valueEnd = positions[i + 1]?.found ?? end;
+        while (valueStart < valueEnd && /\s/.test(evidence.text[valueStart])) valueStart++;
+        while (valueEnd > valueStart && /\s/.test(evidence.text[valueEnd - 1])) valueEnd--;
+        if (valueStart >= valueEnd) refuse("EMPTY_SOURCE_CELL", `Record ${index} has no source value for ${cell.field}.`);
+        fields[cell.field] = { value: convert(evidence.text.slice(valueStart, valueEnd), cell.mapping), locator: `/blocks/${index}/${escapePointer(cell.field)}`, start: valueStart, end: valueEnd };
+      }
+      return fields;
+    }) };
+  }
   if (shape.format === "JSON_RECORDS") {
     let root: unknown; try { root = JSON.parse(evidence.text); } catch { return refuse("JSON_MALFORMED", "The captured source is not complete valid JSON."); }
     const tokens = jsonTokens(evidence.text); const rows = valueAt(root, shape.rowsPointer);
     if (!Array.isArray(rows)) return refuse("JSON_ROWS_MISSING", "The contracted source pointer does not identify a record array.");
+    const headerRows = shape.headerRows ?? 0;
+    if (!Number.isSafeInteger(headerRows) || headerRows < 0 || headerRows > rows.length) return refuse("TABLE_SCOPE_INVALID", "JSON table header rows must be explicitly bounded by the retained array.");
     const count = shape.countPointer === undefined ? null : valueAt(root, shape.countPointer);
     if (count !== null && (!Number.isSafeInteger(count) || Number(count) < 0)) refuse("DECLARED_COUNT_INVALID", "The declared source count is not a nonnegative safe integer.");
-    return { declaredCount: count as number | null, rows: rows.map((row, index) => {
+    return { declaredCount: count as number | null, rows: rows.slice(headerRows).map((row, bodyIndex) => {
+      const index = bodyIndex + headerRows;
       const fields: Record<string, RecordEvidenceCell> = Object.create(null);
       for (const [field, mapping] of Object.entries(shape.fields)) {
         if (typeof mapping.source !== "string" || !mapping.source.startsWith("/")) refuse("FIELD_MAPPING_INVALID", "JSON field mappings require a relative member pointer.");

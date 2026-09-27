@@ -18,6 +18,12 @@ import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf } fro
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
+import { MemoryEvidenceStore, objectKey, putArtifact, readForParser } from "../lib/control-plane/evidence/store.ts";
+import { issueParserInput } from "../lib/control-plane/evidence/parser-boundary.ts";
+import { defaultGrant } from "../lib/control-plane/capability.ts";
+import { runAcquirer } from "../lib/control-plane/workers/acquirer.ts";
+import { inventoryRecordEvidence } from "../lib/control-plane/workers/record-evidence.ts";
+import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 
 /**
  * THE SEEDED FAILURE SUITE — the Scout's research tools.
@@ -632,8 +638,8 @@ test("a body carrying a confirmed third-party credential is RESTRICTED_RAW and t
 
 /* ================================================== binary and PDF bodies */
 
-function minimalPdf(text: string): Uint8Array {
-  const stream = `BT /F1 18 Tf 10 50 Td (${text}) Tj ET`;
+function minimalPdf(text: string, contentStream?: string): Uint8Array {
+  const stream = contentStream ?? `BT /F1 18 Tf 10 50 Td (${text}) Tj ET`;
   const pdf =
     "%PDF-1.4\n" +
     "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n" +
@@ -685,15 +691,25 @@ test("a PDF is vaulted as bytes BEFORE extraction; the model gets the artifact i
     [`${HOST}/packet.pdf`]: { status: 200, bytes: pdf, contentType: "application/pdf" },
   });
   const order: string[] = [];
+  const evidenceStore = new MemoryEvidenceStore();
+  const transcriptions: { artifact: Artifact; text: string }[] = [];
+  const metadata = new Map<string, Artifact>();
   const vaultBytes: VaultBytes = async (artifact, bytes) => {
     order.push(`vault:${artifact.id}:${bytes.byteLength}`);
     assert.equal(artifact.tier, "RAW");
     assert.equal(artifact.contentType, "application/pdf");
     assert.equal(bytes.byteLength, pdf.byteLength, "the vault holds the wire bytes, not a decoded string");
+    await putArtifact(evidenceStore, "document-test", artifact, bytes);
+    metadata.set(artifact.id, artifact);
     return { stored: true, where: "mem", why: "written" };
   };
   const { open } = fakeTransport({});
-  const kit = buildScoutToolkit(context({ openOne: open, openBytes, vaultBytes }));
+  const kit = buildScoutToolkit(context({ openOne: open, openBytes, vaultBytes, vault: async (artifact, text) => {
+    await putArtifact(evidenceStore, "document-test", artifact, Buffer.from(text));
+    metadata.set(artifact.id, artifact);
+    if (artifact.tier === "EXTRACTED_DERIVED") transcriptions.push({ artifact, text });
+    return { stored: true, where: "mem", why: "written" };
+  } }));
   const r = await kit.call("fetch_public", { url: `${HOST}/packet.pdf`, ...IN }, null);
   assert.equal(r.ok, true, r.forModel);
   assert.equal(order.length, 1, "vaulted exactly once, before any derivation");
@@ -708,7 +724,61 @@ test("a PDF is vaulted as bytes BEFORE extraction; the model gets the artifact i
   } else {
     assert.match(r.forModel, /AGENDA PACKET 2026/, "pdfjs extracted the page text");
     assert.ok(r.forModel.startsWith(UNTRUSTED_CONTENT_HEADER));
+    const derived = transcriptions.find(row => row.artifact.extraction?.kind === "PDF_TEXT")!;
+    assert.ok(derived, "the displayed text has a durable transcription artifact");
+    const replay = await readForParser(evidenceStore, "document-test", derived.artifact);
+    assert.equal(replay.input.text, derived.text);
+    assert.equal(replay.input.sourceDocument?.artifactId, packet.artifactId);
+    assert.equal(replay.input.sourceDocument?.contentHash, packet.contentHash);
+    assert.ok(r.forModel.includes(derived.artifact.id));
+    await assert.rejects(putArtifact(new MemoryEvidenceStore(), "document-test", derived.artifact, Buffer.from(derived.text)), /DOCUMENT_EXTRACTION_ORIGINAL_MISSING/);
+    assert.throws(() => issueParserInput({ ...derived.artifact, extraction: { ...derived.artifact.extraction!, complete: false } }, derived.text), /DOCUMENT_EXTRACTION_INCOMPLETE/);
+    const span = { artifactId: derived.artifact.id, contentHash: derived.artifact.contentHash,
+      start: 0, end: derived.text.length, quote: derived.text, offsetUnit: "UTF16_CODE_UNITS" as const };
+    const acquired = await runAcquirer({ attemptId: "document-acquirer", worker: { role: "ACQUIRER", provider: "test", version: "1", instance: "document-acquirer" },
+      project: "document-test", workItemId: derived.artifact.workItemId, now: () => NOW, held: [],
+      grant: defaultGrant({ role: "ACQUIRER", project: "document-test", policyVersion: "test", grantedAt: NOW }),
+      route: { id: "document-text", subjectId: "fixture:document", jurisdiction: "US", recordClass: "OFFICIAL_ROSTER",
+        sourceId: derived.artifact.sourceId, publisher: "Fixture clerk", url: derived.artifact.canonicalUrl, observedLocator: derived.artifact.canonicalUrl,
+        observedAt: NOW, firstObservedAt: NOW, methodVersion: 1, permission: "ALLOWED", observation: span, publisherSubjectEvidence: [span],
+        applicableBecause: "Read the retained official document", nextRouteIds: [], retrieval: "fetch_public", representation: "PDF_TEXT" } },
+    { toolkit: kit, readVault: async id => {
+      const artifact = metadata.get(id)!;
+      const stored = await evidenceStore.get(objectKey("document-test", artifact));
+      assert.ok(stored);
+      return { artifact, key: stored.key, bytes: stored.bytes };
+    } });
+    assert.equal(acquired.verdict, "ACQUIRED", JSON.stringify(acquired.blockers));
+    assert.deepEqual(acquired.artifacts.map(row => row.artifactId), [derived.artifact.id], "the normal worker receives the selected transcription, not binary PDF or competing representations");
   }
+});
+
+test("a retained PDF table reaches record extraction with exact source cells and explicit header exclusion", async () => {
+  const grid = [["ID", "Name"], ["1", "Member A"], ["2", "Member B"]];
+  const stream = grid.flatMap((row, index) => row.map((text, column) => `BT /F1 12 Tf ${10 + column * 160} ${80 - index * 20} Td (${text}) Tj ET`)).join("\n");
+  const pdf = minimalPdf("", stream);
+  const { openBytes } = bytesTransport({
+    [`${HOST}/robots.txt`]: { status: 200, bytes: new TextEncoder().encode(ROBOTS_ALLOW_ALL), contentType: "text/plain" },
+    [`${HOST}/roster.pdf`]: { status: 200, bytes: pdf, contentType: "application/pdf" },
+  });
+  const store = new MemoryEvidenceStore();
+  const metadata = new Map<string, Artifact>();
+  const put = async (artifact: Artifact, bytes: Uint8Array) => {
+    const saved = await putArtifact(store, "table-test", artifact, bytes);
+    metadata.set(artifact.id, artifact);
+    return { stored: true, where: saved.key, why: "retained" };
+  };
+  const kit = buildScoutToolkit(context({ openOne: async () => { throw new Error("PDF fixture must use the byte transport"); }, openBytes, vaultBytes: put, vault: (artifact, text) => put(artifact, Buffer.from(text)) }));
+  const fetched = await kit.call("fetch_public", { url: `${HOST}/roster.pdf`, ...IN }, null);
+  assert.equal(fetched.ok, true, fetched.forModel);
+  const table = [...metadata.values()].find(artifact => artifact.extraction?.kind === "PDF_TABLES");
+  assert.ok(table, "the existing coordinate-based table extractor produced a retained table");
+  const held = evidenceProjection((await readForParser(store, "table-test", table)).input);
+  const rows = inventoryRecordEvidence(held, { format: "JSON_RECORDS", rowsPointer: "/tables/0/rows", headerRows: 1,
+    fields: { id: { source: "/0", type: "STRING" }, name: { source: "/1", type: "STRING" } } }).rows;
+  assert.deepEqual(rows.map(row => [row.id.value, row.name.value]), grid.slice(1));
+  for (const row of rows) for (const cell of Object.values(row)) assert.equal(JSON.parse(held.text.slice(cell.start, cell.end)), cell.value);
+  assert.equal(held.sourceDocument?.kind, "PDF_TABLES");
 });
 
 test("a binary body with no vaultBytes in the runtime is refused by name, and nothing of it is shown", async () => {

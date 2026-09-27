@@ -160,7 +160,7 @@ async function doorInputs(p: Plane) {
   const held = new Map<string, HeldVerifyingRead>();
   for (const a of approvals) {
     const artifact = vault.byId.get(a.campaignSite.evidence.artifactId);
-    if (artifact === undefined || artifact.tier === "RESTRICTED_RAW") continue;
+    if (artifact === undefined || (artifact.tier !== "RAW" && artifact.tier !== "SANITIZED_DERIVED")) continue;
     held.set(artifact.id, { body: new TextDecoder().decode(await readHeldBytes(artifact)), sha256: artifact.contentHash.slice(7), tier: artifact.tier, permission: artifact.permission });
   }
   return { approvals, held: (r: PublishableCampaignSiteApproval) => held.get(r.campaignSite.evidence.artifactId) ?? null };

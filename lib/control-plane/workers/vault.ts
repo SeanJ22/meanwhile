@@ -55,6 +55,7 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
           methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
           permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
           retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
+          ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}),
         };
         return (await readForParser(store, project, artifact)).input;
       }

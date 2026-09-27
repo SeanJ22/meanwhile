@@ -156,6 +156,7 @@ export interface ParserInput {
   readonly workItemId: string;
   readonly attemptId: string;
   readonly text: string;
+  readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: "PDF_TEXT" | "PDF_TABLES" };
 }
 
 /** Is this value one the vault actually issued? */
@@ -188,6 +189,10 @@ export function issueParserInput(
 ): ParserInput {
   const role = options.role ?? "PARSER";
 
+  if (artifact.tier === "EXTRACTED_DERIVED" && (!artifact.extraction?.complete || artifact.retentionPolicy === "DIAGNOSTIC")) {
+    throw new Error("DOCUMENT_EXTRACTION_INCOMPLETE");
+  }
+
   if (artifact.tier === "RESTRICTED_RAW") {
     throw new RestrictedArtifactRefused(
       artifact.id,
@@ -213,6 +218,8 @@ export function issueParserInput(
     workItemId: artifact.workItemId,
     attemptId: artifact.attemptId,
     text,
+    ...(artifact.extraction ? { sourceDocument: { artifactId: artifact.extraction.parent.id,
+      contentHash: artifact.extraction.parent.contentHash, kind: artifact.extraction.kind } } : {}),
   };
 }
 

@@ -133,7 +133,8 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     const a = held.artifact;
     assertVaultedResearchEvidence(held, a.id, input.project);
     if (a.canonicalUrl !== route.url || a.sourceId !== route.sourceId || a.workItemId !== input.workItemId ||
-      a.transport !== "REACHABLE" || a.httpStatus < 200 || a.httpStatus >= 300 || a.retentionPolicy === "DIAGNOSTIC" || a.tier === "RESTRICTED_RAW") {
+      a.transport !== "REACHABLE" || a.httpStatus < 200 || a.httpStatus >= 300 || a.retentionPolicy === "DIAGNOSTIC" || a.tier === "RESTRICTED_RAW" ||
+      (route.representation && (a.extraction?.kind !== route.representation || !a.extraction.complete))) {
       throw new Error("ACQUIRER_EVIDENCE_IDENTITY_MISMATCH");
     }
     // A literal [] is an empty captured response, never proof of civic absence.
@@ -195,6 +196,7 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     for (const offered of call.artifacts.filter(a => a.canonicalUrl === route.url)) {
       try {
         const held = await runtime.readVault(offered.artifactId);
+        if (route.representation && held.artifact.extraction?.kind !== route.representation) continue;
         if (held.artifact.transport === "REACHABLE" && held.artifact.retentionPolicy !== "DIAGNOSTIC") artifacts.push(accept(held, false, offered.partial));
       } catch {
         block("EVIDENCE_IDENTITY_MISMATCH", "The toolkit's artifact cannot be reproduced with its exact route, source, bytes and vault identity.", false);

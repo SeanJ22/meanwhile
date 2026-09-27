@@ -110,6 +110,8 @@ export const ARTIFACT_TIERS = [
   "RESTRICTED_RAW",
   /** A derivative produced by the shipped sanitizer from a specific raw artifact. */
   "SANITIZED_DERIVED",
+  /** Machine transcription of retained document bytes; never original publisher bytes. */
+  "EXTRACTED_DERIVED",
 ] as const;
 export type ArtifactTier = (typeof ARTIFACT_TIERS)[number];
 
@@ -222,6 +224,14 @@ export interface Artifact {
   readonly retentionPolicy: RetentionPolicy;
   /** Present exactly on `SANITIZED_DERIVED` artifacts. */
   readonly derivation?: ArtifactDerivation;
+  /** Exact retained input and procedure for an unverified document transcription. */
+  readonly extraction?: {
+    readonly kind: "PDF_TEXT" | "PDF_TABLES";
+    readonly version: string;
+    readonly complete: boolean;
+    readonly pages: number;
+    readonly parent: Artifact;
+  };
 }
 
 /**

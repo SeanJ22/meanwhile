@@ -61,7 +61,7 @@ const index = () => readTerritoryIndex(ROOT, ["az", "nh", "nj"].map(
   (s) => JSON.parse(readFileSync(join(ROOT, "data", "states", s, "jurisdictions", `${s}.json`), "utf8")) as JurisdictionRegistry,
 ));
 
-test("full Census school intersections reach Admin, dispatch and readers, including small slivers", async () => {
+test("full Census school intersections reach both Admin scope and actual dispatch, including small slivers", async () => {
   const idx = index();
   const preview = withSharedScopeDivisions({ ids: [], partial: [], samples: 0 }, "85635");
   const reader = await zipDivisionEntry("85635");

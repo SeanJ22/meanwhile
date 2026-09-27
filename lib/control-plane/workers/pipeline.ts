@@ -34,9 +34,16 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
   }
   const factPath = options !== undefined;
   const states = await readPipelineStates(repos);
+  const registryWork = new Set((await repos.workItems.list()).filter(row =>
+    row.value.autonomousPlan?.publication?.contractId === "registry-runtime-bindings").map(row => row.id));
   for (const result of results) {
     if (result.result.role !== "VALIDATOR" && result.result.role !== "ADVERSARIAL_AUDITOR") continue;
     if (factPath && meetingFactContract(result) !== null) continue;
+    // This class has an existing typed publication door. Its actual source,
+    // identity, negative controls and reader checks are run there; a generic
+    // NOT_IMPLEMENTED offer is neither that door's approval nor its refusal.
+    // Keep historical generic refusals intact.
+    if (registryWork.has(result.workItemId)) continue;
     const state = states.find(s => s.byStage.SCOUTED?.artifactIds.some(id => result.inputArtifactIds.includes(id)));
     if (!state) continue;
     const base = { formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION as typeof PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${result.id}:pipeline:2`, itemId: state.itemId, at: result.endedAt,

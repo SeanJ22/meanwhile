@@ -6,6 +6,7 @@ import { browseWithPlaywright } from "./scout-browse.mts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
+import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -2364,7 +2365,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
         providerId: registry.providerOf(row.obligation.id),
-        reason: decisionFor(row.obligation.id, row.obligation.routeId).why,
+        reason: [decisionFor(row.obligation.id, row.obligation.routeId).why,
+          ...(row.obligation.autonomousPlan ? [planRepairBrief(row.obligation.autonomousPlan)] : [])].join("\n"),
         /* RULING 244: a DETERMINISTIC decision reaching the Scout is refused before any request. */
         decision: decisionFor(row.obligation.id, row.obligation.routeId).kind,
         inherited: inheritedFor(row),
@@ -3012,6 +3014,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
     const fleetGuarded = modelLaneEnabled ? fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
+      ...(scoutSearch ? { search: scoutSearch } : {}),
       spaceOut: spacer,
       browse: browseWithPlaywright,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),

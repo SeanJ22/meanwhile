@@ -55,6 +55,25 @@ async function fixture() {
   return { h, candidate, scout, evidence, authority, extraction, consume };
 }
 
+test("a newly dispatched source instruction can acquire an executable successor without inventing prior observations", async () => {
+  const f = await fixture();
+  const row = await f.h.repos.workItems.mustRead(f.h.item.id);
+  const plan = row.value.autonomousPlan!;
+  if (plan.contract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  const unobserved = { ...plan, sources: [], acquisition: [], contract: { ...plan.contract,
+    sourceScope: { ...plan.contract.sourceScope, sourceId: "unobserved:roster", canonicalUrls: [], observationArtifactIds: [] },
+    extraction: { format: "UNSUPPORTED" as const, mediaType: "unobserved", fields: {}, reason: "Mapping remains to be discovered" } } };
+  await f.h.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value, autonomousPlan: unobserved }, f.h.now());
+  const result = await f.consume();
+  assert.equal(result[0].code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(result));
+  const child = (await f.h.repos.workItems.mustRead(result[0].successorWorkItemId!)).value;
+  assert.equal(child.autonomousPlan!.sources[0].observation.artifactId, f.evidence[0].artifactId);
+  const next = await nextAutonomousOperation(f.h.runtime, child.id);
+  assert.equal(next.task?.workerTask?.role, "ACQUIRER");
+  assert.equal((await dispatchWorkerTask(f.h.runtime, next.task!)).outcome, "WORKED");
+  assert.notEqual(child.state, "VERIFIED_COMPLETE", "executable instructions are not publication or completed coverage");
+});
+
 test("completed Scout repair retains parent instructions and creates one ordinary successor that really acquires, parses and verifies", async () => {
   const f = await fixture(); const original = f.h.item.autonomousPlan;
   const admitted = await f.consume(); assert.equal(admitted[0].code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(admitted));

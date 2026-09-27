@@ -5,7 +5,7 @@
  * through the exact-byte source receipt embedded in the package.
  */
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, join } from "node:path";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -16,10 +16,47 @@ import {
   type RegistryRuntimePackage,
 } from "../lib/registry/runtime-data-plane.ts";
 import { assignment } from "./cli-args.mts";
+import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
+import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 
 async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
     throw new Error("Refusing a non-promoting registry operation. Pass --promote; tracked registry runtime files are first-seed/test evidence only.");
+  }
+  const workerRosters = assignment(process.argv, "worker-rosters");
+  if (workerRosters) {
+    prepareProductionCivicDataWrite();
+    const connection = controlPlaneUrlFromEnv();
+    if (!connection) throw new Error("ROSTER_CONTROL_PLANE_UNAVAILABLE");
+    const now = new Date().toISOString();
+    const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
+    const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
+    const readObject = researchVaultResolver(repos, vault, "freshness");
+    const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
+    const report = await publishWorkerRosterResults({ repos, store: new PostgresRoutineDataStore(),
+      workItemIds: workerRosters.split(",").filter(Boolean), now, readCapture: async (id, records) => {
+        const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);
+        const evidence = evidenceProjection(input);
+        const observations = records.flatMap(record => {
+          const result = record.result;
+          return result.role === "ACQUIRER" && result.verdict === "ACQUIRED"
+            ? result.walk.filter(step => step.rung === result.source.retrieval && step.target === evidence.canonicalUrl &&
+              step.transport === "REACHABLE" && step.outcome === "WALKED_AND_FOUND" && step.artifactIds.includes(id)).map(step => step.at) : [];
+        });
+        return { evidence, observedAt: [evidence.retrievedAt, ...observations].sort().at(-1)!,
+          httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" };
+      } });
+    const published = report.filter(row => row.outcome.status === "PUBLISHED");
+    const held = report.filter(row => row.outcome.status === "HELD");
+    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? null,
+      promotedVersionId: published.at(-1)?.outcome.versionId ?? null, workerPublications: report }, null, 2));
+    if (held.length) throw new Error(`ROSTER_PUBLICATION_REPAIR_OWED:${held.map(row => `${row.workItemId}:${row.outcome.code}`).join(",")}`);
+    return;
   }
   const packagePath = assignment(process.argv, "package");
   if (!packagePath) throw new Error("Pass --package=<reviewed-registry-runtime-package.json>.");

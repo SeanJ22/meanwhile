@@ -3,7 +3,9 @@ import { performance } from "node:perf_hooks";
 import { ZERO_COST, type AttemptCost, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability, type CapabilityGrant } from "../capability.ts";
 import { contentHash, fingerprint } from "../ids.ts";
-import { isParserInput, type ParserInput } from "../evidence/parser-boundary.ts";
+import type { ParserInput } from "../evidence/parser-boundary.ts";
+import { evidenceProjection } from "./evidence-projection.ts";
+export { evidenceProjection } from "./evidence-projection.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { readCompletedWorkerResult, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
@@ -16,7 +18,7 @@ import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
 import { normalizedParserResult } from "./parser.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
-  type FleetRole, type IndependentAuditContext, type WorkerEvidence, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
+  type FleetRole, type IndependentAuditContext, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
@@ -33,12 +35,6 @@ function wholePrompt(usage: WorkerUsage): number | null {
 export function fleetGrant(role: FleetRole, project: string, now: string): CapabilityGrant {
   const base = defaultGrant({ role, project, policyVersion: FLEET_POLICY_VERSION, grantedAt: now });
   return { ...base, capabilities: role === "ADVERSARIAL_AUDITOR" ? ["VAULT_READ_SANITIZED", "NETWORK_PUBLIC_READ"] : ["VAULT_READ_SANITIZED"] };
-}
-
-export function evidenceProjection(input: ParserInput): WorkerEvidence {
-  if (!isParserInput(input) || contentHash(input.text) !== input.contentHash || input.tier === "RESTRICTED_RAW") throw new Error("WORKER_VAULT_INPUT_REFUSED");
-  return { artifactId: input.artifactId, contentHash: input.contentHash, text: input.text, acquiredByAttemptId: input.attemptId,
-    canonicalUrl: input.canonicalUrl, retrievedAt: input.retrievedAt, sourceId: input.sourceId, methodRouteId: input.methodRouteId };
 }
 
 export interface FleetRuntime {

@@ -18,6 +18,39 @@ const row = (value: unknown): Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 const rows = (value: unknown): unknown[] => Array.isArray(value) ? value : [];
 
+/** Source-specific optional facts may retain their exact prior authority while
+ * a new roster verifies membership. Identity is part of every retained fact;
+ * a changed person, party assertion, or URL must obtain its own current proof. */
+export function inheritedRosterSourceFacts(beforeValue: unknown, afterValue: unknown): Map<string, unknown> {
+  const before = row(beforeValue), after = row(afterValue);
+  const inherited = new Map<string, unknown>();
+  if (!before.bodyId || before.bodyId !== after.bodyId) return inherited;
+  const equal = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+  if (text(after.partisanshipSourceUrl) && after.partisanshipSourceUrl !== after.sourceUrl &&
+      before.partisanshipSourceUrl === after.partisanshipSourceUrl && before.partisanship === after.partisanship) {
+    inherited.set(after.partisanshipSourceUrl, [after.bodyId, after.partisanship, after.partisanshipSourceUrl]);
+  }
+  const persons = new Map(rows(before.members).map(value => { const person = row(value); return [person.id, person]; }));
+  // One URL can support several people. Every current assertion citing that URL
+  // must match the prior record; one changed assertion invalidates its reuse.
+  const candidates = new Map<string, unknown[]>();
+  const invalid = new Set<string>();
+  for (const value of rows(after.members)) {
+    const person = row(value), old = persons.get(person.id);
+    for (const fields of [["websiteUrl"], ["partySourceUrl", "partyLabel", "partySourceOrg", "partyCollectedAt"]]) {
+      const url = person[fields[0]];
+      if (!text(url) || url === after.sourceUrl) continue;
+      const names = ["id", "name", "officeTitle", ...fields];
+      const fact = names.map(name => person[name] ?? null);
+      if (!old || !equal(fact, names.map(name => old[name] ?? null))) invalid.add(url);
+      candidates.set(url, [...(candidates.get(url) ?? []), fact]);
+    }
+  }
+  for (const [url, facts] of candidates) if (!invalid.has(url)) inherited.set(url, [...(inherited.has(url) ? [inherited.get(url)] : []), ...facts]);
+  for (const url of invalid) inherited.delete(url);
+  return inherited;
+}
+
 export function registryMemberCitedUrls(key: string, record: unknown): string[] {
   const member = row(record);
   const kind = key.slice(0, key.indexOf(":"));

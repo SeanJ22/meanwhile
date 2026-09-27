@@ -47,6 +47,8 @@ export interface RoutineSourceTask {
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
   /** Only a resolved owner Send can admit one of the existing explicit source commands. */
   readonly ownerInvocation?: {
+    /** The selector holds a completed worker result with no publication receipt. A different body's prior success cannot satisfy it. */
+    readonly publicationPending?: true;
     readonly requestedAt: string;
     readonly instructions: readonly string[];
   };
@@ -648,8 +650,10 @@ export function routineTaskDue(
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
-    if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return false;
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+    if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
+      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) || nowMs - attempted >= task.retryMs;
+    if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return false;
     return !Number.isFinite(attempted) || attempted < requested || nowMs - attempted >= task.retryMs;
   }
   const schedule = task.contract?.schedule;

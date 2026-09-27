@@ -1,6 +1,6 @@
 {
-  "exactHead": "be50996e2012a81157e9cd92a37485907fee2dc5",
-  "buildId": "df96ykxXTbRNTCF06Yput",
+  "exactHead": "ce1d4b7558d046644292e8832326aec88b3e784f",
+  "buildId": "YWpqvNs8garpWZ2Sl32T1",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -2456,7 +2456,7 @@
     },
     {
       "path": "lib/funding/campaign-money.ts",
-      "sha256": "c114efcd4b69edfb3a251d7bed54def28a5872687d58eb1f70b801b8b8309449"
+      "sha256": "5ac3eabc5fc0c89bcacb0847e85349743fde6a6fbba43268eb4813acd9906886"
     },
     {
       "path": "lib/funding/committee-types.ts",
@@ -3020,7 +3020,7 @@
     },
     {
       "path": "lib/registry/cited-urls.ts",
-      "sha256": "efc62d688006c77de20196f4900e578079861fe9c130b2a1c2700ee967940878"
+      "sha256": "a3543fbf8ceb3b3cfff293c4a01de4a28125017a8dc641de54d5416a75059ccf"
     },
     {
       "path": "lib/registry/comment-access-client.ts",
@@ -3080,7 +3080,7 @@
     },
     {
       "path": "lib/registry/runtime-data-plane.ts",
-      "sha256": "4893ff9a22bb3df6e3ce719dd296de219b2c5cfc0ca1f1bc9d5fd0e80a694479"
+      "sha256": "63de1669dbfc87e482f1f9e08882d96962a1bcfe61274bc4790165e1a5ddfa38"
     },
     {
       "path": "lib/registry/runtime-edge.ts",

@@ -1,0 +1,113 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
+import { createHash } from "node:crypto";
+import test from "node:test";
+import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
+import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
+import { putArtifact } from "../lib/control-plane/evidence/store.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetadata, disposeRouteTask } from "../lib/control-plane/repository/coordinator.ts";
+import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
+import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
+import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
+import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
+
+test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const imported = (await readRegistryRuntimePrior(store, "2026-09-08T12:00:01.000Z"))!;
+  // Replay the already deployed placeholder correction before this worker test:
+  // the recorded transfer fixture predates it, unlike the production base.
+  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
+  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: "2026-09-08T12:00:02.000Z",
+    sourceReceipt: { contractVersion: 1, reviewedAt: "2026-09-08T12:00:02.000Z", reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: "2026-09-08T12:00:02.000Z", httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district; retained transfer correction control." })) },
+    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
+  const correction = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, "2026-09-08T12:00:02.000Z", imported.versionId);
+  assert.ok(correction.promoted, correction.candidate.failureDetail ?? "fixture correction held");
+  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
+  const existing = prior.payload.bodyRosters[0]!;
+  const body = prior.payload.registry.bodies.find(body => body.id === existing.bodyId)!;
+  assert.ok(body.name);
+  const rows = existing.members.map(member => ({ id: member.id, name: member.name, office: member.officeTitle }));
+  rows.push({ id: "fixture-new-holder", name: "Morgan Example", office: "Fixture Board Member" });
+  const text = JSON.stringify({ body: body.name, records: rows });
+  const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text } });
+  const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-register", routeLabel: "Recorded independent roster fixture", target: "https://register.example.gov/roster.json", inherited: false, now: h.now() });
+  await registerRouteTask(h.repos, task, h.now());
+  const claim = await claimRouteTask(h.repos, { routeTaskId: task.id, holder: "independent-register", now: h.now(), ttlMs: 120000 });
+  const attempt = await beginAttemptFor(h.repos, { routeTaskId: task.id, workItemId: h.item.id, lease: claim.lease.value, worker: { role: "SCOUT", provider: "fixture", version: "1", instance: "independent-register" }, methodVersion: 56, policyVersion: FLEET_POLICY_VERSION, now: h.now() });
+  const authorityText = JSON.stringify({ publisher: "Independent Register", records: rows });
+  const { artifact } = recordAcquisition({ canonicalUrl: task.target, retrievedAt: h.now(), httpStatus: 200, contentType: "application/json", sourceId: "register.example.gov", methodRouteId: task.routeId, workItemId: h.item.id, attemptId: attempt.id, permission: "ALLOWED", transport: "REACHABLE" }, authorityText);
+  await putArtifact(h.store, h.item.project, artifact, Buffer.from(authorityText));
+  await recordArtifactMetadata(h.repos, { artifactId: artifact.id, workItemId: h.item.id, routeTaskId: task.id, attemptId: attempt.id, tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl: artifact.canonicalUrl, partial: false, recordedAt: artifact.retrievedAt }, h.now());
+  const at = h.now();
+  await disposeRouteTask(h.repos, { routeTaskId: task.id, attemptId: attempt.id, expectedTaskRevision: (await h.repos.routeTasks.mustRead(task.id)).revision, artifactIds: [artifact.id], now: at, disposition: { disposition: "INGESTED", attemptId: attempt.id, at, artifactIds: [artifact.id], observation: null, permission: "ALLOWED", transport: "REACHABLE", note: "Offline recorded authority bytes" } });
+  const extraction = { format: "JSON_RECORDS" as const, rowsPointer: "/records", fields: { id: { source: "/id", type: "STRING" as const }, name: { source: "/name", type: "STRING" as const }, office: { source: "/office", type: "STRING" as const } } };
+  const current = await h.repos.workItems.mustRead(h.item.id);
+  const plan = current.value.autonomousPlan!;
+  assert.equal(plan.contract.schemaVersion, 2);
+  if (plan.contract.schemaVersion !== 2) throw new Error("fixture contract");
+  await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value, autonomousPlan: { ...plan, ownerInstructions: ["offline-owner-send"], publication: { contractId: "registry-runtime-bindings", bodyId: body.id }, auditScope: "SOURCE_UNIVERSE", contract: { ...plan.contract, requiredFields: ["id", "name", "office"], extraction, verification: { required: true, authorities: [{ id: "register", type: "GOVERNMENT_REGISTER", publisher: "Independent Register", sourceId: "register.example.gov", canonicalUrls: [artifact.canonicalUrl], artifactIds: [artifact.id], authorityEvidenceArtifactIds: [artifact.id], independenceBasis: "DISTINCT_AUTHORITY", independenceExplanation: "Separately published official register retained independently.", extraction, comparison: { kind: "RECORD_VALUES", keyFields: ["id"], fields: ["id", "name", "office"] } }] } } } }, h.now());
+  const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
+  const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
+  for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
+    const next = await nextAutonomousOperation(runtime, h.item.id);
+    assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
+    assert.equal((await dispatchWorkerTask(runtime, next.task!)).outcome, "WORKED");
+  }
+  const results = await h.repos.workerResults.read(h.item.id);
+  assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
+  const input = { repos: h.repos, store, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
+    const evidence = evidenceProjection(await runtime.readEvidence(id));
+    return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
+  } };
+  const published = await publishWorkerRosterResults(input);
+  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length });
+  const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
+  assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
+  const read = await readRegistryRuntimeProjection({ store, bypassCache: true, now: h.now() });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("reader projection missing");
+  const delivered = read.value.bodyRosters.find(roster => roster.bodyId === body.id)!;
+  assert.equal(delivered.sourceUrl, FIXTURE_URL);
+  assert.deepEqual(delivered.members.slice(0, existing.members.length), existing.members, "independent existing fields and stable identities survive");
+  const added = delivered.members.find(member => member.name === "Morgan Example")!;
+  assert.ok(added, "a newly verified holder reaches the existing reader projection");
+  assert.equal(read.value.officialCandidacies.rows.find(row => row.holder.id === added.id)?.status, "NOT_CHECKED", "unknown candidacy does not hold verified officeholding or assert absence");
+  assert.deepEqual(read.value.bodyRosters.filter(roster => roster.bodyId !== body.id), prior.payload.bodyRosters.filter(roster => roster.bodyId !== body.id));
+  assert.deepEqual(await publishWorkerRosterResults(input), published, "restart reuses the durable publication receipt");
+  const candidate = (await store.readCandidate(published[0].outcome.versionId!))!;
+  const base = (await store.readCandidate(prior.versionId))!;
+  assert.equal(manualPriorAuthorityIssue(candidate.candidate, base), null);
+  const tampered = structuredClone(candidate.candidate);
+  const payload = tampered.readModel as typeof prior.payload;
+  const roster = payload.bodyRosters.find(row => row.bodyId === body.id)!;
+  assert.ok(roster.partisanshipSourceUrl, "the fixture retains independently sourced seat partisanship");
+  roster.partisanship = roster.partisanship === "NONPARTISAN" ? "PARTISAN" : "NONPARTISAN";
+  assert.ok(manualPriorAuthorityIssue(tampered, base), "changing a prior partisanship fact cannot inherit its old source authority");
+  const item = await h.repos.workItems.mustRead(h.item.id);
+  await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, publicationOutcome: { ...published[0].outcome,
+    status: "HELD", code: "STORE_UNAVAILABLE", detail: "Recorded transient fixture", recovery: "PUBLISHER" } }, h.now());
+  assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "publisher outage does not spend another research call");
+  const held = await h.repos.workItems.mustRead(h.item.id);
+  await h.repos.workItems.compareAndSet(held.id, held.revision, { ...held.value, publicationOutcome: { ...held.value.publicationOutcome!,
+    code: "ROSTER_AUTHORITY_REPLAY_FAILED", recovery: "WORKER" } }, h.now());
+  assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "unfinished verification re-enters automatic repair");
+  const admin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
+  const assignment = admin.find(row => row.id === h.item.id)!;
+  assert.ok(assignment, "the normal Admin assignment read includes the worker");
+  assert.equal(assignment.state, "WAITING");
+  assert.match(assignment.waiting.nextAction, /automatically/);
+  assert.ok(assignment.delivery.blockers.some(reason => reason.includes("ROSTER_AUTHORITY_REPLAY_FAILED")));
+});

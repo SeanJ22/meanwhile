@@ -1,4 +1,5 @@
 import { posix } from "node:path";
+import * as nodeModule from "node:module";
 
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -770,7 +771,16 @@ function executableDependencyClosure(
     for (const problem of packageClosure.problems) problems.add(problem);
     const launchCalls = processLaunchCalls(packageClosure.executable);
     nodes.push({ path, executable: packageClosure.executable, launchCalls });
-    const references = source.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*|\bimport\s*)["'`]([^"'`]+)["'`]/g);
+    // Type-only imports cannot grant runtime capabilities. Let Node's own TS
+    // parser erase them, rather than walking a repository interface into its
+    // unrelated writers. Unparseable syntax retains the conservative closure.
+    let importSource = source;
+    if (/\b(?:import|export)\s+(?:type\b|\{[^}]*\btype\b)/.test(source)) {
+      // Runtime Node exposes this API before this repository's @types/node.
+      const strip = (nodeModule as typeof nodeModule & { stripTypeScriptTypes?: (code: string) => string }).stripTypeScriptTypes;
+      try { if (strip) importSource = strip(source); } catch { /* fail closed */ }
+    }
+    const references = importSource.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*|\bimport\s*)["'`]([^"'`]+)["'`]/g);
     for (const match of references) {
       const dependency = resolveLocalModule(files, path, match[1] ?? "");
       if (

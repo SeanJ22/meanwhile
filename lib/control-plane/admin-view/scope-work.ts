@@ -2,6 +2,16 @@ import type { FreshnessObligation } from "../scheduler/obligation.ts";
 import type { PreviewCode } from "../expansion/send-preview.ts";
 import { stateOfSubject } from "../expansion/subjects.ts";
 
+export type ScopeWorkObligation = Pick<FreshnessObligation, "id" | "subjectId" | "recordClass" | "routeId" | "lastWorkedAt" | "active" | "scopeDivisions">;
+
+/** Only the scope fields, in one read. Worker plans and accumulated attempt
+ * state do not belong in a read-only geography preview. */
+export const SCOPE_WORK_QUERY = `SELECT jsonb_build_object(
+  'id', value->'id', 'subjectId', value->'subjectId', 'recordClass', value->'recordClass',
+  'routeId', value->'routeId', 'lastWorkedAt', value->'lastWorkedAt',
+  'active', value->'active', 'scopeDivisions', coalesce(value->'scopeDivisions', '[]'::jsonb)
+) AS obligation FROM cp_obligations WHERE value->>'active' = 'true' ORDER BY id`;
+
 export interface ScopeWorkRow {
   readonly id: string;
   readonly subjectId: string;
@@ -26,7 +36,7 @@ export function scopeWorkPreview(input: {
   readonly codes: readonly PreviewCode[];
   readonly states: readonly string[];
   readonly bodyIds: readonly string[];
-  readonly obligations: readonly FreshnessObligation[];
+  readonly obligations: readonly ScopeWorkObligation[];
   readonly readAt: string;
 }): ScopeWorkPreview {
   const states = new Set(input.states.map(state => state.toLowerCase()));

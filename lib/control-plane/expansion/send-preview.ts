@@ -164,7 +164,7 @@ export function stateSendPreviewSentence(p: StateSendPreview, cap: number): stri
     `${p.state}: a Send creates work for ${n} ${n === 1 ? "government" : "governments"} here` +
     (e > 0 ? `, and up to ${e} more at the edge (the runner places each only if its share of a shared ZIP code is large enough)` : "") +
     `, from registration (the 2022 Census of Governments, promoted version ${p.versionId}) — no reviewed registry exists for ${p.state}. ` +
-    "Each owes one requirement, its meetings discovery; a government an earlier Send reached is not created twice" +
+    "A new Send discovers meetings, officeholders, elections and finance sources where missing, and follows their downstream gaps. Existing shared work is reused; these initial families are not a claim of complete coverage" +
     (n + e > cap ? `, and at most ${cap.toLocaleString("en-US")} are created for one geography.` : ".")
   );
 }

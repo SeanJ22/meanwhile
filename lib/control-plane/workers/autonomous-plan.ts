@@ -3,6 +3,41 @@ import type { AcquirerTaskSpec, DetectiveTaskSpec, ObservedResearchRoute } from 
 import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
+import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-universe.ts";
+
+/** Initial instructions for an owner-requested family. Registry addresses are
+ * leads, never invented observations. An evidence-backed repair must supply
+ * the extraction mapping and independent authorities before parsing can pass. */
+export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: JurisdictionSource, routeId: string, bodyId: string | null = jurisdiction.bodyId ?? null): AutonomousWorkPlan | null {
+  if (source.recordClass === "MEETINGS") return null; // Existing meeting discovery/publishing owns this path.
+  const spec = source.recordClass === "OFFICEHOLDERS"
+    ? { recordClass: "OFFICIAL_ROSTER", fields: ["name", "office"] }
+    : source.recordClass === "BALLOT_AND_CANDIDATES"
+      ? { recordClass: "CANDIDATE_FILING_DOCUMENT", fields: ["candidateName", "office"] }
+      : { recordClass: "CAMPAIGN_FINANCE_FILING", fields: ["committeeName", "filingPeriod", "documentUrl"] };
+  const seedUrls = [...new Set([source.url, jurisdiction.ownWebAddress].filter((url): url is string => {
+    if (!url) return false;
+    try { const parsed = new URL(url); return parsed.protocol === "https:" && !parsed.username && !parsed.password; } catch { return false; }
+  }))];
+  return {
+    version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
+    sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+    ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
+    contract: {
+      schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
+      requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
+      jurisdiction: { country: "US", state: jurisdiction.id.split(":")[0].toUpperCase(), canonicalId: jurisdiction.id },
+      completenessScope: `${source.recordClass} for ${jurisdiction.name}. ${source.owed ?? source.authorityBasis} This initial source contract does not discharge downstream information families or establish publisher absence.`,
+      // Zero means an unbound instruction template, never an extraction result.
+      // The standing runtime binds its actual inherited method-store version
+      // before consuming any repair or dispatching a worker.
+      expectedSourceDate: null, methodVersion: 0,
+      sourceScope: { sourceId: `unobserved:${routeId}`, publisher: source.authority, routeIds: [routeId], canonicalUrls: [], observationArtifactIds: [] },
+      extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Discover actual source bytes, applicability, an executable mapping and independent verification authorities." },
+      verification: { required: true, authorities: [] },
+    },
+  };
+}
 
 /**
  * These legacy worker contracts acquire the same meeting event feeds now
@@ -24,6 +59,9 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
+  readonly ownerInstructions?: readonly string[];
+  /** Existing reader door selected by the system's exact body join, never by a model. */
+  readonly publication?: { readonly contractId: "registry-runtime-bindings"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

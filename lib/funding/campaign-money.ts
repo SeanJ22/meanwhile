@@ -146,7 +146,7 @@ export function campaignMoneyForTarget(
   };
   if (roster?.state === "EXACT_DUPLICATE") return { ...campaignMoneyForTarget(roster.canonicalId!, contestId), requestedTargetKey: targetKey };
   const official = readIdentity ? bridgeIndex().byHolder.get(targetKey) : undefined;
-  if (official && (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED")) return {
+  if (official && (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED" || official.status === "NOT_CHECKED")) return {
     requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
   };
   const plan = official?.candidacy ? directFundingTargetPlan(official.candidacy.candidacyId) : direct;

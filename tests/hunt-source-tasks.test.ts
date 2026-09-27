@@ -41,3 +41,12 @@ test("source admission resumes from durable failure/success clocks rather than r
   const nextTask = huntSourceTasks([next], "2026-09-28T02:00:00.000Z")[0]!;
   assert.equal(routineTaskDue(nextTask, { lastAttemptedAt: NOW, lastSucceededObservedAt: NOW }, now + 86400_000), true);
 });
+
+test("a pending publication is not hidden by another body's later success and keeps failure backoff", () => {
+  const source = huntSourceTasks([scope("AZ")], NOW)[0]!;
+  const task = { ...source, ownerInvocation: { ...source.ownerInvocation!, publicationPending: true as const } };
+  const later = new Date(Date.parse(NOW) + 60_000).toISOString();
+  assert.equal(routineTaskDue(task, { lastAttemptedAt: later, lastSucceededObservedAt: later }, Date.parse(later)), true);
+  assert.equal(routineTaskDue(task, { lastAttemptedAt: later }, Date.parse(later) + 1), false);
+  assert.equal(routineTaskDue(task, { lastAttemptedAt: later }, Date.parse(later) + task.retryMs), true);
+});

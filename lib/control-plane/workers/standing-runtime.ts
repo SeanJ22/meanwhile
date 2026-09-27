@@ -34,6 +34,8 @@ import { researchVaultResolver } from "./vault-object.ts";
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
+  /** The existing guarded search service, with the same accounting and owner settings as the first Scout. */
+  search?:ScoutToolContext["search"];
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
   /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
@@ -49,6 +51,13 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
+  for (const row of await input.repos.workItems.list()) {
+    const plan = row.value.autonomousPlan;
+    if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
+      plan.contract.extraction.format !== "UNSUPPORTED" || plan.contract.sourceScope.observationArtifactIds.length) continue;
+    await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
+      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
+  }
   const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
   let fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
   let fieldManualRevision = fmRead?.revision ?? 0;
@@ -66,7 +75,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
-      toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id})}),
+      toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id}), ...(input.search ? { search: input.search } : {})}),
       contextFor:()=>{
         const history=(currentHistory??prior).filter(p=>p.workItemId===item.id);
         const plan=item.autonomousPlan!;
@@ -88,6 +97,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
           inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds)])],summary:[
             ...manualLines,
+            ...(item.publicationOutcome?.status === "HELD" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
             `Inherited method version ${knowledge.version}. Walk applicable known methods before novelty; the fourteen retrieval rungs are a floor, never a completion ceiling.`,
             ...floor.routes.map(r=>`${r.routeId}: ${r.obligation}; ${r.proof}; ${r.label}; target ${r.target}; applicability ${r.grade}`),
             ...workers.map(w=>{

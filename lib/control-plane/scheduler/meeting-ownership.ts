@@ -58,6 +58,10 @@ export function createMeetingPartitionOwnership(input: {
       if (staticBodies.has(body) || derivedBodies.has(body)) return "PARTITION";
       return wiringKnown ? "NONE" : "UNKNOWN";
     },
+    bodyIdFor(jurisdictionId) {
+      const ids = bodies.get(jurisdictionId);
+      return ids?.size === 1 ? [...ids][0]! : null;
+    },
     reasonFor(jurisdictionId) {
       const ids = bodies.get(jurisdictionId);
       if (!ids?.size) {

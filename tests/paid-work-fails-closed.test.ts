@@ -133,7 +133,7 @@ function checkCycleFailsClosed(src: string): void {
   assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("const scoutFor ="), "the Scout tool is referenced before it is built");
 
   /* 8. The auditor admits against the ceiling in force. */
-  assert.match(src, /autonomousStandingRuntime\(\{[\s\S]{0,700}?auditCeilingUsd: effectiveCeilingUsd \}\);/, "the auditor is not given the ceiling in force");
+  assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd \}\);/, "the auditor is not given the ceiling in force");
 }
 
 /** Free work runs exactly as before: nothing paid, and nothing unreadable, gates it. */

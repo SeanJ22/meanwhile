@@ -169,6 +169,7 @@ const RUNTIME_OWNED = [
   "assignments",
   /* Which registry the dispatch materialized it from (2026-09-25): kept with the mark. */
   "materializedFrom",
+  "autonomousPlan",
 ] as const;
 
 /**
@@ -270,6 +271,7 @@ export async function syncObligations(
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
+      ...(held.autonomousPlan !== undefined ? { autonomousPlan: held.autonomousPlan } : {}),
       updatedAt: now,
     };
 
@@ -785,6 +787,15 @@ export async function resumeOpenOccurrence(
      RouteTask carries a committed disposition, and re-opening it would attach a
      second Attempt to a settled task. */
   if (held.value.closedAt !== null) return null;
+  // A new Send can connect an already-open occurrence. Retain its captured
+  // evidence and attempts; do not force a second discovery just to attach the
+  // missing worker instructions. Existing/repaired instructions stay immutable.
+  if (obligation.autonomousPlan) {
+    const item = await repos.workItems.mustRead(held.value.workItemId);
+    if (!item.value.autonomousPlan) await repos.workItems.compareAndSet(item.id, item.revision,
+      { ...item.value, autonomousPlan: { ...obligation.autonomousPlan,
+        ownerInstructions: [...new Set((obligation.assignments ?? []).map(assignment => assignment.ref))] } }, obligation.updatedAt);
+  }
   const task = await repos.routeTasks.read(held.value.routeTaskId);
   /* `disposition !== null` is the test `reclaim` and `disposeRoute` apply, and it
      is read rather than `state`: 65 production tasks carry a disposition under a
@@ -1053,7 +1064,7 @@ export async function openOccurrence(
   /* MW-002: the round names its question from the row as it is now — never read,
      an argued absence, discovery, or a recheck — and none when that is not on the row. */
   const question = questionOfObligation(current.value);
-  const workItem = createWorkItem({
+  const workItem: WorkItem = { ...createWorkItem({
     project: FRESHNESS_PROJECT,
     subject: o.subjectId,
     obligation: occurrenceObligationClause(o.id, sequence),
@@ -1062,7 +1073,8 @@ export async function openOccurrence(
       `${input.dueAt}. The obligation recurs; THIS is the piece of work that completes.`,
     ...(question !== null ? { question } : {}),
     now: input.now,
-  });
+  }), ...(current.value.autonomousPlan ? { autonomousPlan: { ...current.value.autonomousPlan,
+    ownerInstructions: [...new Set((current.value.assignments ?? []).map(assignment => assignment.ref))] } } : {}) };
   const routeTask = createRouteTask({
     workItemId: workItem.id,
     routeId: o.routeId,

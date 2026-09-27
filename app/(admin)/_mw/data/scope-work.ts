@@ -1,11 +1,12 @@
 import "server-only";
 
-import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
-import type { FreshnessObligation } from "@/lib/control-plane/scheduler/obligation.ts";
+import { neon } from "@neondatabase/serverless";
+import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
+import { SCOPE_WORK_QUERY, type ScopeWorkObligation } from "@/lib/control-plane/admin-view/scope-work.ts";
 import { sharedRead } from "./shared-read.ts";
 
 type ScopeWorkRead =
-  | { readonly kind: "HELD"; readonly readAt: string; readonly obligations: readonly FreshnessObligation[] }
+  | { readonly kind: "HELD"; readonly readAt: string; readonly obligations: readonly ScopeWorkObligation[] }
   | { readonly kind: "UNREAD"; readonly detail: string };
 
 const shared = sharedRead<ScopeWorkRead>({
@@ -17,11 +18,12 @@ const shared = sharedRead<ScopeWorkRead>({
 /** Cached server-side read only. Work creation remains the normal Send path. */
 export function loadScopeWork(): Promise<ScopeWorkRead> {
   return shared.read(async () => {
-    const opened = await openControlPlane();
-    if (!opened.ok) return { kind: "UNREAD", detail: opened.detail };
+    const url = controlPlaneUrlFromEnv();
+    if (!url) return { kind: "UNREAD", detail: "The control-plane connection is not configured; standing scope is unverified." };
     try {
-      const rows = await opened.repos.obligations.list();
-      return { kind: "HELD", readAt: new Date().toISOString(), obligations: rows.map(row => row.value) };
+      const sql = neon(url);
+      const [rows] = await sql.transaction([sql.query(SCOPE_WORK_QUERY)], { readOnly: true, fetchOptions: { signal: AbortSignal.timeout(1_500) } });
+      return { kind: "HELD", readAt: new Date().toISOString(), obligations: rows.map(row => row.obligation as ScopeWorkObligation) };
     } catch {
       return { kind: "UNREAD", detail: "The standing-work read failed. Applicability and remaining work could not be measured." };
     }

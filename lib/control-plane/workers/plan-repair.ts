@@ -14,7 +14,6 @@ import { createHash } from "node:crypto";
 import { PERMISSION_STATES } from "../../workstate/types.ts";
 
 export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING", "PUBLIC_COMMENT_RULE"] as const;
-const MAX_REPAIR_DEPTH = 3;
 export interface PlanRepairLink {
   readonly parentWorkItemId: string; readonly rootWorkItemId: string; readonly depth: number;
   readonly proposalHash: string; readonly scoutAttemptId: string; readonly sourceArtifactId: string;
@@ -23,6 +22,10 @@ export interface PlanRepairLink {
 }
 type LinkedWorkItem = WorkItem & { readonly planRepair?: PlanRepairLink; readonly planRepairObservations?: Readonly<Record<string, RepairObservation>> };
 export interface RepairObservation { readonly parentWorkItemId: string; readonly scoutAttemptId: string; readonly code: string; readonly successorWorkItemId: string | null; readonly detail: string; }
+export function planRepairFailureBrief(item: WorkItem): string[] {
+  return Object.values((item as LinkedWorkItem).planRepairObservations ?? {}).filter(row => !row.successorWorkItemId)
+    .map(row => `Prior contract repair ${row.scoutAttemptId} was refused: ${row.code}. ${row.detail} Change the failed evidence, route or mapping; do not resubmit the unchanged proposal.`);
+}
 function requireThat(condition: unknown, code: string): asserts condition { if (!condition) throw new Error(code); }
 /** A robots.txt verdict the vault records (ALLOWED, DISALLOWED, CANNOT_TELL, NOT_APPLICABLE). Evidence, never a refusal. */
 function isRecordedRobotsVerdict(value: unknown): boolean { return (PERMISSION_STATES as readonly unknown[]).includes(value); }
@@ -152,7 +155,6 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
     let successorWorkItemId: string | null = null;
     try {
       requireThat(candidates.length === 1, "REPAIR_ONE_PROPOSAL_PER_ATTEMPT");
-      requireThat((parent.planRepair?.depth ?? 0) < MAX_REPAIR_DEPTH, "REPAIR_SUCCESSOR_DEPTH_BOUND");
       const candidate = candidates[0];
       const evidence = await Promise.all(candidate.evidenceArtifactIds.map(async id => {
         const capture = await input.readCapture(id);
@@ -174,6 +176,26 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
         if (observed) observedAtByArtifact.set(row.artifactId, observed);
       }
       const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact });
+      // A fixed number of failed routes is not the end of the obligation.
+      // Continue on new evidence, but never spend on an unchanged ancestor
+      // proposal or follow an invalid/cyclic link into another assignment.
+      const seen = new Set<string>();
+      let ancestor: LinkedWorkItem = parent;
+      while (true) {
+        requireThat(!seen.has(ancestor.id), "REPAIR_LINEAGE_CYCLE");
+        seen.add(ancestor.id);
+        const link = ancestor.planRepair;
+        if (!link) break;
+        requireThat(link.proposalHash !== evaluated.proposalHash, "REPAIR_UNCHANGED_PROPOSAL_NEEDS_NEW_EVIDENCE");
+        const prior = items.find(item => item.id === link.parentWorkItemId);
+        requireThat(prior && link.authority === "WORK_INSTRUCTIONS_ONLY" && prior.project === parent.project &&
+          prior.subject === parent.subject && prior.autonomousPlan?.contract.recordClass === parent.autonomousPlan.contract.recordClass &&
+          prior.autonomousPlan.contract.schemaVersion === 2 && parent.autonomousPlan.contract.schemaVersion === 2 &&
+          canonicalJson(prior.autonomousPlan.contract.identity) === canonicalJson(parent.autonomousPlan.contract.identity) &&
+          Number.isSafeInteger(link.depth) && link.depth === (prior.planRepair?.depth ?? 0) + 1 &&
+          link.rootWorkItemId === (prior.planRepair?.rootWorkItemId ?? prior.id), "REPAIR_LINEAGE_INVALID");
+        ancestor = prior;
+      }
       const previous = items.find(item => item.planRepair?.parentWorkItemId === parent.id);
       if (previous) {
         requireThat(previous.planRepair!.proposalHash === evaluated.proposalHash, "REPAIR_PARENT_HAS_SUCCESSOR_CONTINUE_THERE");

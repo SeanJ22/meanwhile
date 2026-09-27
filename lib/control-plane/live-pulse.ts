@@ -72,6 +72,7 @@ export function pulseRevision(input: {
   readonly researchRevision: number | null;
   readonly receiptCount: number | null;
   readonly researchIntentCount: number | null;
+  readonly sourceProgressId: string | null;
 }): string {
   return [
     input.beatAt ?? "-",
@@ -80,6 +81,7 @@ export function pulseRevision(input: {
     input.researchRevision ?? "-",
     input.receiptCount ?? "-",
     input.researchIntentCount ?? "-",
+    input.sourceProgressId ?? "-",
   ].join("|");
 }
 

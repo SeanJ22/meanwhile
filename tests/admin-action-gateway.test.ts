@@ -33,6 +33,7 @@ import { FLEET_SAFETY_BOUNDS, FLEET_SPEND_CEILING_MAX_USD } from "@/lib/control-
 import { AGENT_JOB_LOG_KEY, liveJobCount, type AgentJobRecord } from "@/lib/control-plane/gateway/agent-job.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import { DECISION_LOG_KEY, RUNNER_ID, SNAPSHOT_ID } from "@/lib/control-plane/admin-data.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY } from "@/lib/control-plane/owner-surface.ts";
 import { RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { ADD_TO_QUEUE_OPTION, fixSubjectId } from "@/lib/control-plane/fix-queue.ts";
 import { POST } from "@/app/api/admin/action/route.ts";
@@ -783,7 +784,13 @@ test("ADM-34: the revision moves when the console's own record moves, and not ot
     formatVersion: 1, kind: "INTENT", intentId: "resume-pulse", action: "RESUME",
     requestedAt: NOW, actor: "owner", adminSessionRef: "session", note: null,
   }, NOW);
-  assert.notEqual((await readPulse(repos, NOW)).revision, after.revision, "a research request left the live page unchanged");
+  const afterResume = await readPulse(repos, NOW);
+  assert.notEqual(afterResume.revision, after.revision, "a research request left the live page unchanged");
+  await repos.ownerDigests.append(HUNT_SOURCE_PROGRESS_LOG_KEY, "source-pulse-1", {
+    formatVersion: 1, digestId: "source-pulse-1", writtenAt: NOW,
+    headline: "Shared source progress", lines: [], cycleOk: null, testedSha: null,
+  }, NOW);
+  assert.notEqual((await readPulse(repos, NOW)).revision, afterResume.revision, "a source worker receipt left the live page unchanged");
 });
 
 test("ADM-34: the pulse makes no list() call — the reads it may not make are refused loudly", async () => {

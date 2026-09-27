@@ -12,6 +12,8 @@ Plan backward from the full requested result. Identify essential dependencies be
 
 Meanwhile must acquire and present information across expanding geographic coverage. Admin must support adding and tracking ZIPs, counties, metros, and states through work creation, discovery, acquisition, verification, and public delivery. Test expansion beyond existing pilot coverage. Necessary connections are part of the assignment, not optional future work.
 
+**Build general capabilities without preparing a specific test ZIP.** Do not perform target-specific scouting, source mapping, manual data filling, or special-case repairs in advance of an expansion test. General fixes must work through the normal system. Preserve and disclose preparation already performed; do not erase accumulated knowledge or describe a prepared scope as an untouched test. Fix material blockers, preserve required verification and release gates, and reuse valid evidence rather than expanding the assignment with minor improvements, broad rechecks, or unchanged repeated attempts. (Sean, September 26, 2026, in the release-usage accounting instruction.)
+
 ## 2. Get the public information to readers
 
 **Find a way to get the information, parse it, verify it, and push it to readers.** Finding a link or knowing information exists is not completion. A failed route does not end the obligation.

@@ -6,6 +6,7 @@ import test from "node:test";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { directPositiveSourceUrls } from "../lib/civic-data/manual-source-isolation.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceReview, ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import {
@@ -122,6 +123,36 @@ test("record identities are canonical and cannot create a second authority for o
     everydayRoutingProjectionProblems(tampered).join(" | "),
     /canonical|canonically keyed/,
   );
+});
+
+test("a verified contact in a new scope publishes incrementally while unacquired cells remain explicit and prior records survive", async () => {
+  const store = new MemoryRoutineDataStore();
+  const prior = buildEverydayRoutingProjection();
+  const first = everydayRoutingImportCandidate({ version: T0, sourceThrough: T0,
+    sourceReceipt: receiptFor(prior, T0), projection: prior });
+  assert.ok((await processRegisteredManualCandidate(store, EVERYDAY_ROUTING_CONTRACT_ID, first, T0)).promoted);
+  const partial = buildEverydayRoutingProjection([{
+    topicId: "roads-local", zips: ["12345"], body: "Fixture borough public works", service: "Local road repair",
+    phone: "555-0100", email: null, requestUrl: null, sourceUrl: "https://fixture.gov/roads",
+    sourceOrg: "Fixture borough", collectedAt: T1, verification: "PAGE_FETCHED", note: "Isolated source fixture, not a real service record.",
+  }], []);
+  assert.deepEqual(everydayRoutingProjectionProblems(partial), []);
+  assert.equal(partial.denominator.cells, EVERYDAY_TOPIC_IDS.length);
+  assert.equal(partial.denominator.unacquiredCells, EVERYDAY_TOPIC_IDS.length - 1);
+  const { unacquiredCells: _omitted, ...hiddenGaps } = partial.denominator;
+  assert.match(everydayRoutingProjectionProblems({ ...partial, denominator: hiddenGaps }).join(" | "), /unacquiredCells/);
+  const next = await prepareManualProjectionSuccessor({ contractId: EVERYDAY_ROUTING_CONTRACT_ID, version: T1, sourceThrough: T1,
+    sourceReceipt: receiptFor(partial, T1), payload: partial }, store, T1);
+  const published = await processRegisteredManualCandidate(store, EVERYDAY_ROUTING_CONTRACT_ID, next.candidate, T1, next.expectedBaseVersionId);
+  assert.ok(published.promoted, JSON.stringify({ state: published.candidate.state,
+    code: published.candidate.failureCode, detail: published.candidate.failureDetail }));
+  const read = await readEverydayRoutingProjection({ store, now: T1, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("fixture publication absent");
+  assert.equal(read.value.records.length, prior.records.length + 1);
+  assert.equal(read.value.denominator.unacquiredCells, EVERYDAY_TOPIC_IDS.length - 1);
+  assert.equal(read.value.records.filter(record => record.zip === "12345" && record.kind === "CONTACT_OWED").length, 0,
+    "unacquired service topics are not invented publisher findings");
 });
 
 test("the manual import candidate promotes and the strict read model returns the canonical projection", async () => {

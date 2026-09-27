@@ -749,7 +749,9 @@ test("THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, re
       assert.equal(h.officialSite.replaces, owed.ownWebAddress, `${h.jurisdictionId}: the hint replaces an address the reference no longer records`);
     }
   }
-  assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /\n\s+routeHints: ROUTE_HINTS,\n/, "the runner passes the committed hints to its walks");
+  const runner = readFileSync("scripts/freshness-shadow.mts", "utf8");
+  assert.match(runner, /directoryMeetingHints\(directoryItems, directoryRegistry\.value, ROUTE_HINTS\) : ROUTE_HINTS/, "verified directory hints extend, and never replace, the committed hints");
+  assert.match(runner, /\n\s+routeHints: meetingHints,\n/, "the runner passes the combined committed and verified hints to its walks");
 });
 
 /* -------------------------------------------- what the vault will not hold */

@@ -52,7 +52,8 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const directory = contractId === "registry-runtime-bindings";
   const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
     (contractId !== "official-filings" || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
-  const division = prior.payload.registry.divisions.find(row => row.ocdId === body.ocdId)!;
+  const publisherDivisionId = body.ocdId;
+  const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
   const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[contractId]);
   const supplied = typeof facts === "function" ? facts(prior, body.id) : facts;
   const rows: Record<string, string | number>[] = (Array.isArray(supplied) ? supplied : [supplied]).map(fact => ({ bodyName: body.name!, ...(contractId === "official-filings" ? { jurisdictionName: division.label } : {}), ...(directory ? {

@@ -74,7 +74,8 @@ export function workerReaderPackage(input: Parameters<typeof verifiedWorkerRecor
     const f = record.fields;
     requirePublication(words(text(f.bodyName)) === words(body.name!), "CANONICAL_BODY_MISMATCH");
     if (contractId === "official-filings") {
-      requirePublication(body.ocdId && input.registry?.payload.registry.divisions.some(row => row.ocdId === body.ocdId), "FILING_TERRITORY_UNRESOLVED");
+      const publisherDivisionId = body.ocdId;
+      requirePublication(publisherDivisionId && input.registry?.payload.registry.divisions.some(row => row.ocdId === publisherDivisionId), "FILING_TERRITORY_UNRESOLVED");
       const territories = input.registry?.payload.registry.divisions.filter(row => row.state.toUpperCase() === checked.contract.jurisdiction.state.toUpperCase() &&
         words(row.label) === words(text(f.jurisdictionName))) ?? [];
       requirePublication(territories.length === 1, "FILING_EXACT_JURISDICTION_UNRESOLVED");

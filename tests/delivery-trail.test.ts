@@ -63,7 +63,8 @@ test("a campaign-site approval never presents the Scout biography or platform as
   const item = state({ itemId: "site", stage: "APPROVED_FOR_PROMOTION", approved: { recordClass: "candidate-enrichment", at: "2026-09-26T10:00:00Z", recordId: "a", chain: { scouted: "s", confirmed: "c", verified: "v", audited: "u" } } });
   const approval = { ...item.byStage.APPROVED_FOR_PROMOTION!, field: "campaignSite", campaignSite: { url: "https://campaign.example/" } };
   const summary = promotionChangeSummary({ ...item, byStage: { ...item.byStage, APPROVED_FOR_PROMOTION: approval } });
-  assert.match(summary, /Verified campaign-site link: https:\/\/campaign.example\//);
+  assert.match(summary, /Verified campaign-site link only/);
+  assert.match(summary, /URL: https:\/\/campaign.example\//);
   assert.match(summary, /does not verify biography, positions/);
   assert.match(summary, /requires the separate reader readback/);
 });

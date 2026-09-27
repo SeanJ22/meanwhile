@@ -114,7 +114,8 @@ export function promotionChangeSummary(state: PipelineItemState): string {
   if (approved?.recordClass === "candidate-enrichment" && approved.field === "campaignSite") {
     const site = (approved as typeof approved & { campaignSite?: { url?: unknown } }).campaignSite;
     const url = typeof site?.url === "string" ? site.url : "URL not recorded";
-    return `Verified campaign-site link: ${url}. This approval does not verify biography, positions or other claims in the discovery lead. Public delivery requires the separate reader readback.`;
+    const text = `Verified campaign-site link only; this does not verify biography, positions or other lead claims. Public delivery requires the separate reader readback. URL: ${url}`;
+    return text.length <= CHANGE_SUMMARY_MAX ? text : `${text.slice(0, CHANGE_SUMMARY_MAX - 1)}…`;
   }
   const scouted = state.byStage.SCOUTED;
   if (scouted === undefined) return "What changed is not recorded: the item holds no SCOUTED record.";

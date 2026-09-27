@@ -116,7 +116,7 @@
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
-import { jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan } from "../workers/autonomous-plan.ts";
+import { bodyDirectoryDiscoveryPlan, jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan } from "../workers/autonomous-plan.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
 import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../scheduler/dispatch-target.ts";
@@ -266,7 +266,8 @@ export function requirementsFor(
   const from = registrySourceOf(reg);
   const bodyId = meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
   for (const r of jurisdictionRequirements(reg, j, meetingPartitions, discoverMissingFamilies)) {
-    const autonomousPlan = discoverMissingFamilies ? r.source.recordClass === "PUBLIC_COMMENT"
+    const autonomousPlan = discoverMissingFamilies ? r.route.routeId === "coverage-discovery:body-directory"
+      ? bodyDirectoryDiscoveryPlan(j, bodyId) : r.source.recordClass === "PUBLIC_COMMENT"
       ? publicCommentDiscoveryPlan(j, bodyId) : jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId) : null;
     out.push({
       obligation: { ...obligationOf(r.obligationId, "local-jurisdiction", j.id, r.route.routeId, from), ...(autonomousPlan ? { autonomousPlan } : {}) },

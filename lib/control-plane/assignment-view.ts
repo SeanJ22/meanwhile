@@ -911,6 +911,11 @@ function obligationOfWorkItem(workItemId: string, idx: Index, seen = new Set<str
   const occ = idx.occurrenceByWorkItem.get(workItemId);
   if (occ) return occ.obligationId;
   const item = idx.workItems.get(workItemId);
+  const directory = item?.directoryParent;
+  const directoryParent = directory && idx.workItems.get(directory.workItemId);
+  if (directoryParent && directoryParent.project === item?.project && directoryParent.subject === item.subject &&
+    directoryParent.publicationOutcome?.bodyIds?.includes(directory!.bodyId) &&
+    item.autonomousPlan?.publication?.bodyId === directory!.bodyId) return obligationOfWorkItem(directoryParent.id, idx, seen);
   const clause = item?.obligation ?? "";
   const m = /^(.*)#(\d+)$/.exec(clause);
   if (m && idx.obligations.has(m[1])) return m[1];

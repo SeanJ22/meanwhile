@@ -258,6 +258,14 @@ export function jurisdictionRequirements(
     });
   }
   if (discoverMissingFamilies) {
+    const directoryRoute = "coverage-discovery:body-directory";
+    const directorySource: JurisdictionSource = { recordClass: "OFFICEHOLDERS", authority: j.name,
+      authorityBasis: "The official directory and independent jurisdiction evidence define the body denominator; a roster cannot establish it.",
+      scope: "THIS_JURISDICTION", routeId: directoryRoute, url: j.ownWebAddress, state: "DISCOVERY_OWED",
+      owed: "Discover governing and subordinate bodies, verify their actual territorial applicability, and create the downstream work for each verified body.",
+      citation: `Registered government ${j.id}.` };
+    out.push({ obligationId: localJurisdictionObligationId(j.id, directoryRoute), sourceKey: directoryRoute,
+      source: directorySource, route: descriptorFor(j, directorySource, directoryRoute), carriage: "HERE" });
     // A registered government with no source entry still owes discovery. These
     // are questions, not invented sources, filing authorities or absence claims.
     // Known shared custodians remain on their existing routes instead of being

@@ -64,6 +64,27 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
       completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Independently check each provided instruction; this work does not discharge calendars, agendas, minutes or other bodies.` } };
 }
 
+/** A roster cannot establish which other boards exist. Keep directory discovery
+ * as its own obligation, with the Census/registry join supplied by the system. */
+export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: string | null): AutonomousWorkPlan {
+  const routeId = "coverage-discovery:body-directory";
+  const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
+    authorityBasis: "Discover governing and subordinate bodies from official directory and independent legal authority.",
+    scope: "THIS_JURISDICTION", routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED",
+    owed: "Identify every governing and subordinate body, its official name, home page, classification and actual jurisdiction. Independently verify territorial applicability; association with a county is not countywide authority.",
+    citation: `Registered government ${jurisdiction.id}.` }, routeId, bodyId)!;
+  if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
+  const { publication: _old, ...plan } = base;
+  const divisionId = jurisdiction.ocdId ?? bodyId?.split("#")[0] ?? null;
+  return { ...plan, capability: "governments/body-directory",
+    directorySubject: { jurisdiction, divisionId },
+    publication: { contractId: "registry-runtime-bindings", bodyId: bodyId ?? `unresolved:${jurisdiction.id}` },
+    contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
+      requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
+      identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] },
+      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record needs independent evidence for identity, classification and actual territory. Unresolved or partial territory remains owed and must not be inferred from a mailing address.` } };
+}
+
 /**
  * These legacy worker contracts acquire the same meeting event feeds now
  * owned by permanent SOURCE_WIRING-derived meeting-partition contracts. They
@@ -84,6 +105,7 @@ export function isRetiredRoutineMeetingAcquisition(
 
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
+  readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:

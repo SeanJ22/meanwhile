@@ -283,12 +283,15 @@ export function createEscalation(input: {
 }
 
 export interface WorkItem {
+  readonly directoryParent?: { readonly workItemId: string; readonly bodyId: string; readonly versionId: string };
   readonly publicationOutcome?: {
     readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
     readonly code: string; readonly detail: string; readonly candidateId: string | null; readonly versionId: string | null;
     readonly recovery?: "WORKER" | "PUBLISHER";
     /** Verified reader records compared with this body's previous published records. */
     readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
+    /** Exact admitted body identities; used to recover downstream work after a restart. */
+    readonly bodyIds?: readonly string[];
   };
   /** Additive instructions for the standing fleet; observations remain in canonical results. */
   readonly autonomousPlan?: import("./workers/autonomous-plan.ts").AutonomousWorkPlan;

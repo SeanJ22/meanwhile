@@ -109,9 +109,11 @@ test("a new hunt discovers missing information families without inventing publis
   const unknown = { ...held, sourceIds: [] };
   assert.equal(jurisdictionRequirements(reg, unknown).length, 0, "deploying the change does not expand old standing work");
   const missing = jurisdictionRequirements(reg, unknown, UNREAD_MEETING_PARTITIONS, true);
-  assert.deepEqual(missing.map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS"]);
+  const directory = missing.filter(r => r.route.routeId === "coverage-discovery:body-directory");
+  assert.equal(directory.length, 1, "body discovery has a separate denominator obligation; a roster cannot discharge it");
+  assert.deepEqual(missing.filter(r => !directory.includes(r)).map(r => r.source.recordClass).sort(), ["BALLOT_AND_CANDIDATES", "CAMPAIGN_FINANCE", "OFFICEHOLDERS", "PUBLIC_SERVICES", "VOTER_ACCESS"]);
   assert.ok(missing.every(r => r.route.executorClass === "BOUNDED_MODEL_WORKER" && r.source.state === "DISCOVERY_OWED"));
-  assert.ok(missing.every(r => /not yet been established/.test(r.source.authorityBasis)));
+  assert.ok(missing.filter(r => !directory.includes(r)).every(r => /not yet been established/.test(r.source.authorityBasis)));
   const financeKey = held.sourceIds.find(key => sourcesOf(reg, { ...held, sourceIds: [key] })[0].recordClass === "CAMPAIGN_FINANCE");
   assert.ok(financeKey, "the fixture carries its real shared filing route");
   const shared = jurisdictionRequirements(reg, { ...held, sourceIds: [financeKey] }, UNREAD_MEETING_PARTITIONS, true);

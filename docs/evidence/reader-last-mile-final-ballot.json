@@ -1,6 +1,6 @@
 {
-  "exactHead": "238ca84fdb80dd6fb468e2672b5c0903e33fbb36",
-  "buildId": "SnWuXqF40L-8moEMOozG8",
+  "exactHead": "0c50c37bcc9e52343db119168b1b15bcfbfe7e56",
+  "buildId": "jiI7R3_bSjtAVOmhBDmtM",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -76,7 +76,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "ad62cdc615ae00143b02441106ba84562a848b3efcd91c08bc8ed6b99eaafc6e"
+      "sha256": "06cd07fa6d32747d7a4b515845da27ac3f3ced1034fbe45968c5e64fb0510f13"
     },
     {
       "path": "app/globals.css",
@@ -173,6 +173,10 @@
     {
       "path": "components/ballot/my-picks.tsx",
       "sha256": "e18cf3ada9ce19043d129035aef55f58e34f01afa7ac80088e61a03a2a981c91"
+    },
+    {
+      "path": "components/ballot/official-filings.tsx",
+      "sha256": "507887cb76322678886100c165dc412525d642a653fb8662488c3223ecff1327"
     },
     {
       "path": "components/ballot/pick-control.tsx",
@@ -2224,7 +2228,7 @@
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
-      "sha256": "ab3f34b3be8424a3146ae63aef326e2f0f725d8f5de929a0f05eb3b7e4a914ec"
+      "sha256": "b413e8064bdbe9a507784256719f1472aa22d06490feab191110dacc04129f9a"
     },
     {
       "path": "lib/civic-data/derived-authority.ts",
@@ -2244,11 +2248,11 @@
     },
     {
       "path": "lib/civic-data/manual-contracts.ts",
-      "sha256": "97fa24d947b76c900ab44fa363660e41a1aace51858c8c35b09c2f361165220b"
+      "sha256": "05051f22616f4cdb2d45c983856f321f145484381c7b5838582f705cb212491a"
     },
     {
       "path": "lib/civic-data/manual-projections.ts",
-      "sha256": "21f12485d3b77cf003135fe300c648b6853d4a0f2bc961350d50960c867895ce"
+      "sha256": "cf295f558abb353c1f17e55595c7a46de95307ccd2dea1cf209026f2bf760c19"
     },
     {
       "path": "lib/civic-data/manual-read-models.ts",
@@ -2269,6 +2273,10 @@
     {
       "path": "lib/civic-data/morris-filing-documents.ts",
       "sha256": "39fe52e9661897b76f2f2cff1c00d2b7096d46cb9c7c35ae4836267a6e7b0d47"
+    },
+    {
+      "path": "lib/civic-data/official-filings.ts",
+      "sha256": "f491e5434e65d47b67e1fe2d6e06e0de9abdffbbf71c8aa51732b22f726b40d3"
     },
     {
       "path": "lib/civic-data/production-write.ts",
@@ -2300,7 +2308,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "c7a24803b68b45a7f6255543f3a86afd6c68ef3e77fc63ece71829db6fdbca82"
+      "sha256": "ce68b6ef9086f570ffd973548a7c40b3af1e7b178c71b381f6783696b008351e"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2684,11 +2692,11 @@
     },
     {
       "path": "lib/meetings/edge-artifacts.ts",
-      "sha256": "d5eea05e8941185a8b194d7bdc1fee45e29b9ff92068344a9ab9209896eab465"
+      "sha256": "e4efe62fb9a3ae53b4bec27ee239be1bffd8ffa1615a13c181bbb5c7df025188"
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "ac8a533a496e84fb838dacb83088f955377312c318f19e3fa90594ae33eb669c"
+      "sha256": "1a66605746a1467e560927501cd917f2fcfc7a7c2c4e2b4cb13eef6f64b3b43e"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -3008,7 +3016,7 @@
     },
     {
       "path": "lib/registry/body-rosters.ts",
-      "sha256": "9c4988d118c82e5dce4d37eb94ebfaf591e967333e478553fa9d46d7451f7c17"
+      "sha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
     },
     {
       "path": "lib/registry/body-territory.ts",
@@ -3024,7 +3032,7 @@
     },
     {
       "path": "lib/registry/cited-urls.ts",
-      "sha256": "a3543fbf8ceb3b3cfff293c4a01de4a28125017a8dc641de54d5416a75059ccf"
+      "sha256": "c504579f34072ce4abc9876a6582d1ec767480835bdb5986a942569fe70e6559"
     },
     {
       "path": "lib/registry/comment-access-client.ts",
@@ -3084,7 +3092,7 @@
     },
     {
       "path": "lib/registry/runtime-data-plane.ts",
-      "sha256": "63de1669dbfc87e482f1f9e08882d96962a1bcfe61274bc4790165e1a5ddfa38"
+      "sha256": "a1952b6d10baa930408349a48b479dd638dfee5fed95135cd35def8604c6d14f"
     },
     {
       "path": "lib/registry/runtime-edge.ts",
@@ -15446,9 +15454,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",
@@ -16408,8 +16415,9 @@
             "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
           ],
           "summaryHeld": false,
-          "textSha256": "6f4293d8b77e147cb7eea98bfb949b20534eebdd94fc9954b6eb76f014b93838",
+          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
           "sourceUrls": [
+            "#jurisdiction-note",
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"

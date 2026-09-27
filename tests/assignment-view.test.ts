@@ -298,6 +298,22 @@ function empty(): AssignmentSources {
   };
 }
 
+test("repair successor costs and publication remain on the original Send assignment", () => {
+  const parent = workItem("parent", { obligation: "hunt-root#1" });
+  const child = { ...workItem("child"), planRepair: { parentWorkItemId: parent.id, authority: "WORK_INSTRUCTIONS_ONLY" },
+    publicationOutcome: { at: NOW, workerResultId: "audit-child", status: "HELD" as const, code: "EXTERNAL_EVIDENCE_MISSING",
+      detail: "Independent verification continues automatically", recovery: "WORKER" as const, candidateId: null, versionId: null } };
+  const src = { ...empty(), obligations: [obligation("hunt-root", { assignments: [{ assignmentKey: "state:oh", relation: "CREATED" as const, ref: "send-oh", at: PAST }] })],
+    workItems: [parent, child] };
+  const rows = buildAssignments(src);
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].id, "hunt-root");
+  assert.deepEqual(buildAssignmentView(src).rows[0].assignmentKeys, ["state:oh"]);
+  assert.ok(rows[0].delivery.blockers.some(reason => reason.includes("EXTERNAL_EVIDENCE_MISSING")));
+  const orphan = { ...child, planRepair: { ...child.planRepair, parentWorkItemId: "missing-parent" } };
+  assert.equal(buildAssignments({ ...src, workItems: [parent, orphan] }).length, 2, "invalid ancestry must remain separately visible");
+});
+
 test("state assignment counts cover omitted rows and retain shared or unplaced work separately", () => {
   const src = { ...empty(), workItems: [
     workItem("az-one", { subject: "ocd-division/country:us/state:az/county:cochise" }),

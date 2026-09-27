@@ -68,6 +68,7 @@ export type JurisdictionRecordClass =
   | "CAMPAIGN_FINANCE"
   | "BALLOT_AND_CANDIDATES"
   | "OFFICEHOLDERS"
+  | "PUBLIC_COMMENT"
   | "MEETINGS";
 
 /**

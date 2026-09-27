@@ -70,14 +70,14 @@ export function commentAccessEvidenceFor(bodyId: string, ocdId: string | null, b
   if (!access) return { records, gaps };
   if (access.commentPeriod === "UNKNOWN") {
     gaps.push({ whose: "OURS", statement: `We have not established ${bodyName}'s standing public-comment rules; its own page is ${access.sourceUrl}.` });
-    return { records, gaps };
   }
   const fields = ["commentPeriodDetail", "timeLimit", "signup", "writtenComment", "attend"] as const;
   const period = access.commentPeriod === "YES" ? "These standing rules provide a public-comment period." : "These standing rules do not provide a public-comment period.";
-  records.push({ kind: "PUBLIC_COMMENT_ACCESS", id: `${bodyId}#comment-access:commentPeriod`, bodyId,
+  const sourceFor = (field: keyof NonNullable<typeof access.fieldSources>) => access.fieldSources?.[field] ?? access;
+  if (access.commentPeriod !== "UNKNOWN") records.push({ kind: "PUBLIC_COMMENT_ACCESS", id: `${bodyId}#comment-access:commentPeriod`, bodyId,
     text: `Standing public-comment rules: ${period} These are the body's published standing rules, not a verified change for a particular meeting.`,
-    sourceUrl: access.sourceUrl, retrievedAt: access.collectedAt, accessRule: { field: "commentPeriod", value: access.commentPeriod, standingRule: true } });
+    sourceUrl: sourceFor("commentPeriod").sourceUrl, retrievedAt: sourceFor("commentPeriod").collectedAt, accessRule: { field: "commentPeriod", value: access.commentPeriod, standingRule: true } });
   for (const field of fields) if (access[field]) records.push({ kind: "PUBLIC_COMMENT_ACCESS", id: `${bodyId}#comment-access:${field}`, bodyId,
-    text: access[field], sourceUrl: access.sourceUrl, retrievedAt: access.collectedAt, accessRule: { field, value: access[field], standingRule: true } });
+    text: access[field], sourceUrl: sourceFor(field).sourceUrl, retrievedAt: sourceFor(field).collectedAt, accessRule: { field, value: access[field], standingRule: true } });
   return { records, gaps };
 }

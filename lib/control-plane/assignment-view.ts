@@ -905,12 +905,21 @@ function indexSources(src: AssignmentSources): Index {
  * ================================================================== */
 
 /** The standing obligation a work item is a round of, or null when it was created on its own. */
-function obligationOfWorkItem(workItemId: string, idx: Index): string | null {
+function obligationOfWorkItem(workItemId: string, idx: Index, seen = new Set<string>()): string | null {
+  if (seen.has(workItemId)) return null;
+  seen.add(workItemId);
   const occ = idx.occurrenceByWorkItem.get(workItemId);
   if (occ) return occ.obligationId;
-  const clause = idx.workItems.get(workItemId)?.obligation ?? "";
+  const item = idx.workItems.get(workItemId);
+  const clause = item?.obligation ?? "";
   const m = /^(.*)#(\d+)$/.exec(clause);
-  return m && idx.obligations.has(m[1]) ? m[1] : null;
+  if (m && idx.obligations.has(m[1])) return m[1];
+  const link = (item as (WorkItem & { planRepair?: { parentWorkItemId: string; authority: string } }) | undefined)?.planRepair;
+  const parent = link && idx.workItems.get(link.parentWorkItemId);
+  // A repair retains the original assignment and its Send attribution. Do not
+  // hide an orphan, changed subject, or cyclic link inside an unrelated row.
+  return parent && link?.authority === "WORK_INSTRUCTIONS_ONLY" && parent.subject === item?.subject
+    ? obligationOfWorkItem(parent.id, idx, seen) : null;
 }
 
 interface Members {

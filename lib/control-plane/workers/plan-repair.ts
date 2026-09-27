@@ -13,7 +13,7 @@ import { assertGeneralizedScope } from "./record-evidence.ts";
 import { createHash } from "node:crypto";
 import { PERMISSION_STATES } from "../../workstate/types.ts";
 
-export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING"] as const;
+export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER", "CAMPAIGN_FINANCE_FILING", "PUBLIC_COMMENT_RULE"] as const;
 const MAX_REPAIR_DEPTH = 3;
 export interface PlanRepairLink {
   readonly parentWorkItemId: string; readonly rootWorkItemId: string; readonly depth: number;

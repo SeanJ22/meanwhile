@@ -10,6 +10,7 @@ import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-u
  * the extraction mapping and independent authorities before parsing can pass. */
 export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: JurisdictionSource, routeId: string, bodyId: string | null = jurisdiction.bodyId ?? null): AutonomousWorkPlan | null {
   if (source.recordClass === "MEETINGS") return null; // Existing meeting discovery/publishing owns this path.
+  if (source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(jurisdiction, bodyId);
   const spec = source.recordClass === "OFFICEHOLDERS"
     ? { recordClass: "OFFICIAL_ROSTER", fields: ["name", "office"] }
     : source.recordClass === "BALLOT_AND_CANDIDATES"
@@ -39,6 +40,23 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
   };
 }
 
+/** Separate owed public-comment work: a roster or calendar cannot discharge
+ * participation rules. The system binds the actual registered body identity. */
+export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: string | null): AutonomousWorkPlan | null {
+  if (!bodyId) return null; // The unresolved registry/body obligation still remains owed.
+  const routeId = "coverage-discovery:public-comment";
+  const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
+    authorityBasis: "Exact registered governing body; its participation rules have not been acquired or verified.", scope: "THIS_JURISDICTION",
+    routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Verify each independently; do not infer permission to speak from an open meeting.",
+    citation: `Registered government ${jurisdiction.id}, body ${bodyId}.` }, routeId, bodyId)!;
+  if (base.contract.schemaVersion !== 2) throw new Error("PUBLIC_COMMENT_TEMPLATE_INVALID");
+  return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId },
+    sourceRegistryReferences: [...base.sourceRegistryReferences, bodyId],
+    contract: { ...base.contract, recordClass: "PUBLIC_COMMENT_RULE", requiredFields: ["bodyName", "commentPeriod", "commentPeriodDetail"],
+      identity: { namespace: `${jurisdiction.id}:public-comment`, keyFields: ["bodyName"] },
+      completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Independently check each provided instruction; this work does not discharge calendars, agendas, minutes or other bodies.` } };
+}
+
 /**
  * These legacy worker contracts acquire the same meeting event feeds now
  * owned by permanent SOURCE_WIRING-derived meeting-partition contracts. They
@@ -61,7 +79,8 @@ export function isRetiredRoutineMeetingAcquisition(
 export interface AutonomousWorkPlan {
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
-  readonly publication?: { readonly contractId: "registry-runtime-bindings"; readonly bodyId: string };
+  readonly publication?:
+    { readonly contractId: "registry-runtime-bindings" | "comment-access"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

@@ -566,7 +566,7 @@ export function instructionView(input: {
   const completion = assignment?.completion ?? null;
 
   const ack: AckFact[] = [
-    { pill: "SAVED", tone: "slate", text: `Your instruction was written down${d.note ? ", with your words kept verbatim" : ""}, receipt ${d.receiptId}`, at: d.decidedAt },
+    { pill: "SAVED", tone: "slate", text: `Instruction saved · receipt ${d.receiptId}`, at: d.decidedAt },
     rv.kind === "READ"
       ? { pill: "READ BY THE RUNNER", tone: "teal", text: `The runner read it at the start of a cycle and resolved ${read?.resolution.kind === "RESOLVED" ? `${read.resolution.zctaCount} codes` : "nothing (it could not resolve the geography)"}`, at: rv.at }
       : { pill: "NOT YET READ", tone: "stone", text: `${rv.says} ${waitingSays}`, at: null },

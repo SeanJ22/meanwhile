@@ -425,7 +425,7 @@ export function Composer(props: {
             ))}
           </div>
           <p className={s.note} style={{ marginTop: 12 }}>
-            Kept in your words too. The runner orders every kind of registered work in the geography, so a category narrows nothing yet.
+            Categories go in the instruction note. They do not limit the work the runner creates.
           </p>
         </div>
 

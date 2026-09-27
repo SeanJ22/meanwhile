@@ -101,6 +101,7 @@ import {
   routineCivicDataSupervisorOutcome,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type HuntSourceProgress } from "../lib/control-plane/owner-surface.ts";
 import type {
   RoutineCivicDataReaderReadbackReference,
   RoutineCivicDataTaskReceiptReference,
@@ -413,6 +414,24 @@ function captureTaskReceipt(
   });
 }
 
+let sourceProgressRepos: ReturnType<typeof createPgRepositories> | null = null;
+async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSourceProgress["stage"], detail: string, candidateId: string | null = null): Promise<void> {
+  if (!task.ownerInvocation) return;
+  const connection = controlPlaneUrlFromEnv();
+  if (!connection) throw new Error("HUNT_PROGRESS_STORE_UNAVAILABLE");
+  sourceProgressRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+  const repos = await sourceProgressRepos;
+  const at = new Date().toISOString();
+  const progress: HuntSourceProgress = { instructionIds: task.ownerInvocation.instructions, taskId: task.id,
+    sourceId: task.sourceId, scope: task.scope, stage, at, detail: safeFailure(detail), candidateId,
+    readerPaths: stage === "PUBLISHED" || stage === "REUSED" ? task.contract.readerProjection?.consumers.filter(path => path.startsWith("/") && !path.startsWith("//")) ?? [] : [] };
+  const digestId = `${SUPERVISOR_CYCLE_ID}:${task.id}:${stage}`;
+  assertAggregateOnly(progress, "hunt source progress");
+  await repos.ownerDigests.append(DIGEST_LOG_KEY, digestId, { formatVersion: OWNER_SURFACE_FORMAT_VERSION,
+    digestId, writtenAt: at, headline: `${task.id}: ${stage}`, lines: [progress.detail], cycleOk: null,
+    testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
+}
+
 // Resolve every due scope at one frozen instant before launching. Canonical
 // clock reads drain through an ordered bounded pool, and the Neon transport
 // deadline makes each failure real cancellation rather than an orphaned
@@ -582,6 +601,7 @@ for (const candidate of dueCandidates) {
 // The pool starts the read owed soonest first (routinePassLaunchOrder).
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
 for (const { task } of routinePassLaunchOrder(admitted)) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
@@ -666,6 +686,7 @@ const sourcePass = runBoundedChildPass(
     concurrency: ROUTINE_CHILD_CONCURRENCY,
     // Two reads of one host in this pass start at least a minute apart (C6).
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
+    onStarting: async (_command, index) => recordHuntSourceProgress(pendingRuns[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used."),
     onSettled: async (run, index) => settlePendingRun(pendingRuns[index]!, run),
     // Classification consumes the exact receipt before this worker advances.
     // Retaining only the small result summary bounds memory across the full portfolio.
@@ -749,6 +770,13 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
+  await recordHuntSourceProgress(pending.task,
+    child.kind === "VERIFIED_SOURCE_SUCCESS" ? child.receipt.confirmedAt ? "REUSED" : "PUBLISHED" : child.kind === "VERIFIED_SOURCE_FAILURE" ? "HELD" : "FAILED",
+    child.kind === "VERIFIED_SOURCE_SUCCESS" ? child.receipt.confirmedAt
+      ? "The verified shared version is unchanged and was confirmed again; no new finding is claimed."
+      : "All required source checks passed and the canonical reader version was published automatically. Reader readback is recorded separately by this source pass. A new version alone is not counted as a new finding."
+      : child.detail,
+    child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");

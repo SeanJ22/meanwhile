@@ -496,6 +496,8 @@ export interface OwnerDigestRecord {
   readonly lines: readonly string[];
   readonly cycleOk: boolean | null;
   readonly testedSha: string | null;
+  /** Source progress for an exact Admin Send, in this existing append-only activity log. */
+  readonly huntSourceProgress?: HuntSourceProgress;
   /**
    * Structured runtime outcome carried beside the exact human digest. Optional
    * only for historical rows written before PDC. Distinct kinds keep a civic
@@ -509,6 +511,18 @@ export interface OwnerDigestRecord {
     | IntakeRuntimeObservationOutcome
     | MapTilerUsageCollectionOutcome
     | MethodCandidateAuthorityAdoptionOutcome;
+}
+
+export interface HuntSourceProgress {
+  readonly instructionIds: readonly string[];
+  readonly taskId: string;
+  readonly sourceId: string;
+  readonly scope: string;
+  readonly stage: "QUEUED" | "COLLECTING_AND_VERIFYING" | "PUBLISHED" | "REUSED" | "HELD" | "FAILED";
+  readonly at: string;
+  readonly detail: string;
+  readonly candidateId: string | null;
+  readonly readerPaths: readonly string[];
 }
 
 /** One append-only receipt from the standing MapTiler observer. */

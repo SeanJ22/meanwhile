@@ -83,6 +83,8 @@ export interface BoundedChildPassOptions {
   readonly timeoutMs?: number;
   readonly maxBufferBytes?: number;
   readonly concurrency?: number;
+  /** Run once when the command wins a worker slot, before source access begins. */
+  readonly onStarting?: (command: BoundedChildCommand, index: number) => Promise<void> | void;
   /** Classify/persist a result as soon as its worker settles. */
   readonly onSettled?: (result: BoundedChildResult, index: number) => Promise<void> | void;
   /** Drop stdout/stderr after onSettled so a large portfolio cannot accumulate it. */
@@ -173,6 +175,7 @@ export async function runBoundedChildPass(
     const command = commands[index]!;
     let result: BoundedChildResult;
     try {
+      if (options.onStarting) await options.onStarting(command, index);
       result = await launch(command, options);
     } catch (error) {
       result = {

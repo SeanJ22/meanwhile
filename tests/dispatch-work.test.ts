@@ -381,14 +381,20 @@ test("the per-cycle write budget defers the rest by count, the next cycle contin
   assert.equal(a2.written.length, 5, "the next cycle writes the next five");
   assert.equal(new Set([...a1.written, ...a2.written]).size, 10, "and never the first five again");
 
-  /* The cap: at most 7 for this one geography, whatever the budget. */
+  /* The cap limits one cycle's window; it does not leave the remainder stranded. */
   const capped = planDispatchWork({ targets: [pima], world: (await cycleWorld(createMemoryRepositories(), T0)).world, cap: 7 });
   const rc = dispatchWorkReading(capped, null, { ...CONTEXT, writes: "PLAN_ONLY", planOnlyWhy: "a test" }).targets[0];
   assert.equal(capped.writes.length, 7);
   assert.equal(rc.requirements.capped, missing - 7);
   assert.equal(rc.cap, 7);
-  assert.match(rc.says.join(" "), /beyond this geography's cap of 7/);
-  assert.match(dispatchWorkSentence(rc), /beyond the cap of 7/);
+  assert.match(rc.says.join(" "), /beyond this cycle's window of 7/);
+  assert.match(dispatchWorkSentence(rc), /beyond this cycle's window of 7/);
+  const capRepos = createMemoryRepositories();
+  const firstWindow = planDispatchWork({ targets: [pima], world: (await cycleWorld(capRepos, T0)).world, cap: 7 });
+  const firstWritten = await applyDispatchWork(capRepos, firstWindow, { now: T0 });
+  const nextWindow = planDispatchWork({ targets: [pima], world: (await cycleWorld(capRepos, T1)).world, cap: 7 });
+  assert.equal(nextWindow.writes.length, 7, "the next cycle admits the next seven missing requirements");
+  assert.equal(new Set([...firstWritten.written, ...nextWindow.writes.map(w => w.instance.obligation.id)]).size, 14);
 
   /* The cycle's wall stops creation too, and says so. */
   const walled = await applyDispatchWork(createMemoryRepositories(), capped, { now: T0, deadlineReached: () => true });
@@ -799,12 +805,12 @@ test("the gateway and the preview say the Send creates what is missing, bounded,
   const set = lookupAction("expansion.scope.set")!.definition;
   const deploy = lookupAction("fleet.deployHere")!.definition;
   assert.match(set.does, /creates the work the registry defines there that no clock carries yet/);
-  assert.match(set.doesNot, /creates at most 200 a cycle, 1,000 for one geography/);
+  assert.match(set.doesNot, /at most 200 written a cycle and 1,000 missing rows considered per instruction each cycle/);
   assert.match(deploy.does, /creates the work\s+that state's registry defines/);
   assert.match(deploy.doesNot, /Without a state in your words it only reorders/);
 
   const withState = deployPreview({ note: "Arizona", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } });
-  assert.match(withState.creates[0].says, /the runner creates the work the promoted registry defines and no clock carries yet — at most 200 a cycle and 1,000 for this instruction/);
+  assert.match(withState.creates[0].says, /the runner creates the work the promoted registry defines and no clock carries yet — at most 200 written a cycle and 1,000 missing rows considered for this instruction each cycle/);
   assert.equal(withState.creates[0].measured, false, "the console holds no registry, so the count is the runner's");
   const noState = deployPreview({ note: "Pima County", obligations: [], obligationsRead: true, ceilings: { rolling24HourModelUsd: 105 } });
   assert.match(noState.creates[0].says, /your words name no state/);

@@ -93,6 +93,10 @@ test("ADM-39: no reading renders a bare dash as though it were a metric", () => 
   // Admin redesign, 2026-09-23: the summary tiles became the five readings; an unfilled reading is the dashed pill with its own words.
   const cards = readingCards({ stateName: "Arizona", coverage: null, coverageGap: null, registryVersion: null, grid: null, contract: null, freshness: null, gates: null, observedAt: "now" });
   assert.equal(cards.length, 5, "five readings, five denominators");
+  const pilot = cards.find((card) => card.key === "gates");
+  assert.equal(pilot?.name, "Ask pilot health");
+  assert.match(pilot?.note ?? "", /does not block sending a hunt/);
+  assert.doesNotMatch(pilot?.unit ?? "", /launch and safety gates/);
   for (const c of cards) {
     assert.equal(c.fig, null, `${c.name}: an unread input must not produce a figure`);
     assert.ok(/^[A-Z][A-Z ]+$/.test(c.unknown), `${c.name}: an unfilled reading must say what it is in words, not "${c.unknown}"`);
@@ -116,7 +120,7 @@ test("ADM-39: no reading renders a bare dash as though it were a metric", () => 
 test("ADM-41: every per-code figure the readiness page draws is inside its own number audit", () => {
   const page = codeOf(PAGE);
   // Admin redesign, 2026-09-23: the per-ZIP population and the "capabilities served to readers" tile were removed; the readings and the drilldown's per-container and per-code rows are what the page draws now.
-  for (const label of ["bodies with a way in", "requirement checks current", "fresh meeting sources", "read back", "gates passing"]) {
+  for (const label of ["bodies with a way in", "requirement checks current", "fresh meeting sources", "read back", "Ask pilot proofs passing"]) {
     assert.match(page, new RegExp(`numbers\\.push\\(\\{ label: "${label}"`), `the ${label} reading is outside the audit`);
   }
   assert.match(page, /numbers\.push\(\{ label: `\$\{r\.c\.geography\.geoid\} way in`/, "each container's way-in share is audited");

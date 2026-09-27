@@ -165,6 +165,6 @@ export function stateSendPreviewSentence(p: StateSendPreview, cap: number): stri
     (e > 0 ? `, and up to ${e} more at the edge (the runner places each only if its share of a shared ZIP code is large enough)` : "") +
     `, from registration (the 2022 Census of Governments, promoted version ${p.versionId}) — no reviewed registry exists for ${p.state}. ` +
     "A new Send discovers meetings, officeholders, elections and finance sources where missing, and follows their downstream gaps. Existing shared work is reused; these initial families are not a claim of complete coverage" +
-    (n + e > cap ? `, and at most ${cap.toLocaleString("en-US")} are created for one geography.` : ".")
+    (n + e > cap ? `; at most ${cap.toLocaleString("en-US")} missing requirements enter one geography's work window per cycle, and later cycles continue automatically.` : ".")
   );
 }

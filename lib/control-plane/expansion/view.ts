@@ -85,7 +85,7 @@ export function scopeCreationNumbers(target: DispatchWorkTargetReading): Rendere
     { label: `${label} requirements reordered`, value: r.carried, denominator: r.defined, contract: "requirements here already on a standing clock, which the Send puts first rather than creates" },
     { label: `${label} standing obligations reordered`, value: target.reordered.obligations, denominator: target.reordered.of, contract: "standing obligations about the governments here, of every standing obligation that cycle" },
     { label: `${label} requirements deferred`, value: r.deferred, denominator: r.defined, contract: "requirements here still owed and not yet written: the per-cycle write budget ran out" },
-    { label: `${label} requirements beyond the cap`, value: r.capped, denominator: r.defined, contract: `requirements here beyond this geography's cap of ${target.cap}` },
+    { label: `${label} requirements waiting for a later cycle`, value: r.capped, denominator: r.defined, contract: `requirements beyond this cycle's window of ${target.cap} missing rows for this geography; later cycles continue automatically` },
   ];
   if (target.units.fromRegistration !== undefined && target.units.fromRegistration > 0) {
     out.push({

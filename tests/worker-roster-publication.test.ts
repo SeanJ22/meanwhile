@@ -20,8 +20,10 @@ import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-da
 import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
+import { workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 
-test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", async () => {
+async function proveRosterPublication(partial = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -40,6 +42,7 @@ test("ordinary independent workers publish a roster through the existing reader 
   assert.ok(body.name);
   const rows = existing.members.map(member => ({ id: member.id, name: member.name, office: member.officeTitle }));
   rows.push({ id: "fixture-new-holder", name: "Morgan Example", office: "Fixture Board Member" });
+  if (partial) rows.push({ id: "fixture-unresolved-holder", name: "Contact us", office: "Contact information" });
   const text = JSON.stringify({ body: body.name, records: rows });
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text } });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-register", routeLabel: "Recorded independent roster fixture", target: "https://register.example.gov/roster.json", inherited: false, now: h.now() });
@@ -63,7 +66,8 @@ test("ordinary independent workers publish a roster through the existing reader 
   for (const role of ["ACQUIRER", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
-    assert.equal((await dispatchWorkerTask(runtime, next.task!)).outcome, "WORKED");
+    const dispatch = await dispatchWorkerTask(runtime, next.task!);
+    assert.equal(dispatch.outcome, "WORKED", JSON.stringify(dispatch));
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
@@ -71,8 +75,18 @@ test("ordinary independent workers publish a roster through the existing reader 
     const evidence = evidenceProjection(await runtime.readEvidence(id));
     return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
   } };
+  if (partial) {
+    const stranded = await h.repos.workItems.mustRead(h.item.id);
+    await h.repos.workItems.compareAndSet(stranded.id, stranded.revision, { ...stranded.value, publicationOutcome: {
+      at: h.now(), workerResultId: results.at(-1)!.id, status: "HELD", code: "ROSTER_READER_IDENTITY_UNRESOLVED",
+      detail: "Recorded pre-fix whole-roster identity hold", recovery: "WORKER", candidateId: null, versionId: null,
+    } }, h.now());
+    const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-owner-send" } } as ResolvedScope;
+    assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
+      "the normal runner retries an old whole-roster hold instead of leaving it stranded");
+  }
   const published = await publishWorkerRosterResults(input);
-  assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
+  assert.equal(published[0].outcome.status, partial ? "PARTIALLY_PUBLISHED" : "PUBLISHED", JSON.stringify(published));
   assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length });
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
@@ -87,6 +101,19 @@ test("ordinary independent workers publish a roster through the existing reader 
   assert.equal(read.value.officialCandidacies.rows.find(row => row.holder.id === added.id)?.status, "NOT_CHECKED", "unknown candidacy does not hold verified officeholding or assert absence");
   assert.deepEqual(read.value.bodyRosters.filter(roster => roster.bodyId !== body.id), prior.payload.bodyRosters.filter(roster => roster.bodyId !== body.id));
   assert.deepEqual(await publishWorkerRosterResults(input), published, "restart reuses the durable publication receipt");
+  if (partial) {
+    assert.ok(!delivered.members.some(member => member.name === "Contact us"), "navigation text never becomes a person");
+    assert.match(published[0].outcome.detail, /1 source rows remain identity-unresolved/);
+    assert.equal(published[0].outcome.recovery, "WORKER");
+    const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-owner-send" } } as ResolvedScope;
+    assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0,
+      "retained partial results wait for changed worker evidence, not unchanged publication retries");
+    const partialAdmin = deliveredAdmin.find(row => row.id === h.item.id)!;
+    assert.equal(partialAdmin.state, "WAITING");
+    assert.ok(partialAdmin.delivery.blockers.some(reason => reason.includes("ROSTER_IDENTITIES_REQUIRE_REPAIR")));
+    assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "partial delivery automatically returns unresolved identities to repair");
+    return;
+  }
   const candidate = (await store.readCandidate(published[0].outcome.versionId!))!;
   const base = (await store.readCandidate(prior.versionId))!;
   assert.equal(manualPriorAuthorityIssue(candidate.candidate, base), null);
@@ -110,4 +137,7 @@ test("ordinary independent workers publish a roster through the existing reader 
   assert.equal(assignment.state, "WAITING");
   assert.match(assignment.waiting.nextAction, /automatically/);
   assert.ok(assignment.delivery.blockers.some(reason => reason.includes("ROSTER_AUTHORITY_REPLAY_FAILED")));
-});
+}
+
+test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
+test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));

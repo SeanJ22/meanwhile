@@ -18,7 +18,7 @@ export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items:
     const latest = results.filter(record => record.workItemId === item.id && record.result.role === "ADVERSARIAL_AUDITOR")
       .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
     if (!latest || latest.result.verdict !== "SURVIVED" || Date.parse(latest.endedAt) > Date.parse(now) ||
-      (item.publicationOutcome?.workerResultId === latest.id &&
+      (item.publicationOutcome?.workerResultId === latest.id && item.publicationOutcome.code !== "ROSTER_READER_IDENTITY_UNRESOLVED" &&
         (item.publicationOutcome.recovery !== "PUBLISHER" || Date.parse(now) - Date.parse(item.publicationOutcome.at) < 15 * 60_000))) return [];
     return [{ item, latest, instructions }];
   });

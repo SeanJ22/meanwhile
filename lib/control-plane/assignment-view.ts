@@ -1808,9 +1808,9 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   if (witness) {
     promoted = held({ state: "PROMOTED", says: `${witnesses.length} exact approval(s) observed on the public site.`, versionId: witness.versionId, at: witness.checkedAt });
   } else if (workerPublication) {
-    promoted = held({ state: workerPublication.status === "PUBLISHED" ? "PROMOTED" : "NOT_PROMOTED",
+    promoted = held({ state: workerPublication.status !== "HELD" ? "PROMOTED" : "NOT_PROMOTED",
       says: `${workerPublication.code}: ${workerPublication.detail}`, versionId: workerPublication.versionId, at: workerPublication.at });
-    if (workerPublication.status === "HELD") blockers.push(`${workerPublication.code}: ${workerPublication.detail}`);
+    if (workerPublication.status !== "PUBLISHED") blockers.push(`${workerPublication.code}: ${workerPublication.detail}`);
   } else if (src.activation === null) {
     promoted = gap("OURS", "the activation gate was not read on this publish, so whether promotion is on is not shown");
   } else if (!src.activation.promotionEnabled) {
@@ -1829,7 +1829,7 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {
     approved: approvedHeld,
-    ...(workerPublication?.status === "PUBLISHED" && workerPublication.records ? { records: workerPublication.records } : {}),
+    ...(workerPublication && workerPublication.status !== "HELD" && workerPublication.records ? { records: workerPublication.records } : {}),
     promoted,
     publiclyAvailable: witness ? held<PublicAvailability>({ state: "CONFIRMED", at: witness.checkedAt, says: `${witnesses.length} item(s) confirmed; this does not complete outstanding assignment scope.`, proof: witness.url }) : gap<PublicAvailability>(
       "OURS",
@@ -2438,7 +2438,7 @@ function buildRow(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips,
   const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(g, idx, what, clips) : deriveWorkItem(g, idx, clips);
   const publication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
     .sort((left, right) => right.at.localeCompare(left.at))[0];
-  const derived: Derived = publication?.status === "HELD" && baseDerived.state !== "WORKING"
+  const derived: Derived = publication && publication.status !== "PUBLISHED" && baseDerived.state !== "WORKING"
     ? { state: "WAITING", stateSays: `${publication.code}: ${publication.detail}`,
       waiting: { ...baseDerived.waiting, waiting: true, since: publication.at, owner: "FLEET",
         blocker: { kind: "NAMED", says: publication.code },

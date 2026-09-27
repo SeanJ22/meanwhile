@@ -279,7 +279,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const next = await taskFor(refresh);
     if (next) return next;
   }
-  if (staged && !unresolved && (item.publicationOutcome?.status !== "HELD" || item.publicationOutcome.recovery === "PUBLISHER")) return decision("STAGED",
+  if (staged && !unresolved && item.publicationOutcome?.recovery !== "WORKER" &&
+    (item.publicationOutcome?.status !== "HELD" || item.publicationOutcome.recovery === "PUBLISHER")) return decision("STAGED",
     item.publicationOutcome?.status === "PUBLISHED" ? `Verified records published in ${item.publicationOutcome.versionId}; other coverage obligations remain open.`
       : "Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
   const novelty = await scoutOperation(true);

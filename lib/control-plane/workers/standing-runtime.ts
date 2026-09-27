@@ -98,7 +98,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds)])],summary:[
             ...manualLines,
             ...planRepairFailureBrief(item),
-            ...(item.publicationOutcome?.status === "HELD" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
+            ...(item.publicationOutcome && item.publicationOutcome.status !== "PUBLISHED" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
             `Inherited method version ${knowledge.version}. Walk applicable known methods before novelty; the fourteen retrieval rungs are a floor, never a completion ceiling.`,
             ...floor.routes.map(r=>`${r.routeId}: ${r.obligation}; ${r.proof}; ${r.label}; target ${r.target}; applicability ${r.grade}`),
             ...workers.map(w=>{

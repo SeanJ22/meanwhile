@@ -111,8 +111,9 @@ export function workerRosterPublication(input: {
     }),
   };
   const rendered = projectReaderRoster(proposed);
-  requireThat(rendered.roster.members.length === extraction.records.length && rendered.dispositions.every(d => d.state === "READER_ELIGIBLE"), "ROSTER_READER_IDENTITY_UNRESOLVED");
-  requireThat(rendered.roster.members.every((member, i) => member.name === extraction.records[i].fields.name && member.officeTitle === extraction.records[i].fields.office), "ROSTER_RENDERING_MISMATCH");
+  requireThat(rendered.roster.members.length > 0, "ROSTER_NO_READER_ELIGIBLE_MEMBERS");
+  requireThat(rendered.dispositions.length === extraction.records.length && rendered.roster.members.every(member =>
+    proposed.members.some(source => source.id === member.id && canonicalJson(source) === canonicalJson(member))), "ROSTER_RENDERING_MISMATCH");
   // Officeholding and ballot candidacy are separate assertions. New verified
   // holders reach readers while the already owed election work checks candidacy;
   // an unchecked link is never represented as no candidacy or no funding.
@@ -153,7 +154,8 @@ export async function publishWorkerRosterResults(input: {
     const auditor = own.filter(record => record.result.role === "ADVERSARIAL_AUDITOR")
       .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id))[0];
     if (!auditor || !plan?.ownerInstructions?.length) throw new Error(`ROSTER_OWNER_WORK_INSTRUCTIONS_MISSING:${id}`);
-    if (item.publicationOutcome?.workerResultId === auditor.id && item.publicationOutcome.recovery !== "PUBLISHER") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
+    if (item.publicationOutcome?.workerResultId === auditor.id && item.publicationOutcome.recovery !== "PUBLISHER" &&
+      item.publicationOutcome.code !== "ROSTER_READER_IDENTITY_UNRESOLVED") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null;
     let versionId: string | null = null;
@@ -184,8 +186,11 @@ export async function publishWorkerRosterResults(input: {
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`ROSTER_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
-      outcome = { at: input.now, workerResultId: auditor.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
-        detail: `Independent roster checks passed, the existing registry door accepted ${versionId}, and typed reader readback passed. Remaining information families are still owed.`, candidateId, versionId, records: counts };
+      const unresolved = prepared.payload.rosterReaderDispositions.filter(row => row.state === "IDENTITY_UNRESOLVED");
+      outcome = { at: input.now, workerResultId: auditor.id, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
+        code: unresolved.length ? "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
+        detail: `Independent roster checks passed for ${prepared.payload.bodyRosters[0].members.length} reader members, the existing registry door accepted ${versionId}, and typed reader readback passed. ${unresolved.length ? `${unresolved.length} source rows remain identity-unresolved: ${unresolved.map(row => row.sourceId).join(", ")}. Repair these automatically; do not republish navigation labels as people.` : "Remaining information families are still owed."}`,
+        ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, records: counts };
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const code = detail.split(":")[0];

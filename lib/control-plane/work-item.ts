@@ -284,7 +284,7 @@ export function createEscalation(input: {
 
 export interface WorkItem {
   readonly publicationOutcome?: {
-    readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "HELD";
+    readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
     readonly code: string; readonly detail: string; readonly candidateId: string | null; readonly versionId: string | null;
     readonly recovery?: "WORKER" | "PUBLISHER";
     /** Verified reader records compared with this body's previous published records. */

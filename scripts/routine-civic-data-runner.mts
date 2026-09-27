@@ -101,7 +101,7 @@ import {
   routineCivicDataSupervisorOutcome,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type HuntSourceProgress } from "../lib/control-plane/owner-surface.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, HUNT_SOURCE_PROGRESS_LOG_KEY, assertAggregateOnly, type HuntSourceProgress } from "../lib/control-plane/owner-surface.ts";
 import type {
   RoutineCivicDataReaderReadbackReference,
   RoutineCivicDataTaskReceiptReference,
@@ -427,7 +427,7 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     readerPaths: stage === "PUBLISHED" || stage === "REUSED" ? task.contract.readerProjection?.consumers.filter(path => path.startsWith("/") && !path.startsWith("//")) ?? [] : [] };
   const digestId = `${SUPERVISOR_CYCLE_ID}:${task.id}:${stage}`;
   assertAggregateOnly(progress, "hunt source progress");
-  await repos.ownerDigests.append(DIGEST_LOG_KEY, digestId, { formatVersion: OWNER_SURFACE_FORMAT_VERSION,
+  await repos.ownerDigests.append(HUNT_SOURCE_PROGRESS_LOG_KEY, digestId, { formatVersion: OWNER_SURFACE_FORMAT_VERSION,
     digestId, writtenAt: at, headline: `${task.id}: ${stage}`, lines: [progress.detail], cycleOk: null,
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }

@@ -513,6 +513,9 @@ export interface OwnerDigestRecord {
     | MethodCandidateAuthorityAdoptionOutcome;
 }
 
+/** Separate key in the existing log so task activity never replaces the runner's latest cycle digest. */
+export const HUNT_SOURCE_PROGRESS_LOG_KEY = "hunt-source-progress";
+
 export interface HuntSourceProgress {
   readonly instructionIds: readonly string[];
   readonly taskId: string;

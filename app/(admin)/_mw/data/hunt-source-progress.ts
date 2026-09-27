@@ -1,7 +1,6 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
-import { DIGEST_LOG_KEY } from "@/lib/control-plane/admin-data.ts";
-import type { HuntSourceProgress } from "@/lib/control-plane/owner-surface.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, type HuntSourceProgress } from "@/lib/control-plane/owner-surface.ts";
 import { sharedRead } from "./shared-read.ts";
 
 export type HuntSourceProgressRead = { ok: true; at: string; rows: readonly HuntSourceProgress[] } | { ok: false; reason: string };
@@ -25,7 +24,7 @@ export function loadHuntSourceProgress(instructionId: string): Promise<Read> {
       const rows = await sql.query(`SELECT DISTINCT ON (record->'huntSourceProgress'->>'taskId')
         record->'huntSourceProgress' AS progress FROM cp_log_owner_digests
         WHERE log_key=$1 AND record->'huntSourceProgress'->'instructionIds' ? $2
-        ORDER BY record->'huntSourceProgress'->>'taskId', position DESC`, [DIGEST_LOG_KEY, instructionId]);
+        ORDER BY record->'huntSourceProgress'->>'taskId', position DESC`, [HUNT_SOURCE_PROGRESS_LOG_KEY, instructionId]);
       const progress = rows.map(row => row.progress as HuntSourceProgress);
       if (progress.some(row => !row || !stages.has(row.stage) || !row.instructionIds?.includes(instructionId) ||
         typeof row.taskId !== "string" || typeof row.detail !== "string" || !Number.isFinite(Date.parse(row.at)) ||

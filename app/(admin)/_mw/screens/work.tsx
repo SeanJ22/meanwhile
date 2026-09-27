@@ -20,6 +20,7 @@ import "server-only";
  */
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 
 import { readFleetSafety, readHeartbeat, readLatestDigest, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
@@ -471,7 +472,7 @@ function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: 
               <p className={s.note}>{row.detail}</p>
               <p className={s.note}>Deterministic source worker · {formatEastern(row.at)} · shared scope {row.scope}</p>
               {row.candidateId && <p className={s.monoId}>{row.stage === "PUBLISHED" || row.stage === "REUSED" ? "Reader version" : "Held candidate"}: {row.candidateId}</p>}
-              {row.readerPaths.map(path => <a key={path} className={s.btnLink} href={`https://meanwhileusa.com${path}`} target="_blank" rel="noreferrer">Open public result {path}</a>)}
+              {row.readerPaths.map(path => <a key={path} className={s.btnLink} href={`${PUBLIC_SITE_ORIGIN}${path}`} target="_blank" rel="noreferrer">Open public result {path}</a>)}
             </div>)}</div>}
       </>}
       <h4 className={s.h4}>The runner&rsquo;s acknowledgement</h4>

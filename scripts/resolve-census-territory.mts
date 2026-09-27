@@ -90,7 +90,12 @@ console.log(`school-district bridge: ${pid6ToLeaid.size} of 9,776 crosswalk rows
 
 /* ---- resolve every Census unit ------------------------------------------- */
 
-const units = readTable("census_govt_units_2022");
+const independent = readTable("census_govt_units_2022");
+const dependent = readTable("census_govt_units_2022_dependent_school_systems");
+// The registry includes dependent school systems. Omitting their Census table
+// leaves those real governments permanently unplaceable despite an exact LEAID.
+const units = { ...independent, rows: [...independent.rows, ...dependent.rows.map(row =>
+  independent.header.map(column => row[dependent.header.indexOf(column)] ?? ""))] };
 const col = (c: string) => units.header.indexOf(c);
 const [PID6, NAME, TYPE, FIPS_ST, FIPS_CTY, FIPS_PL, STATE, ZIPCOL] = [
   "census_id_pid6",
@@ -149,7 +154,7 @@ for (const r of units.rows) {
     method = hit
       ? `${hit.via} GEOID`
       : "neither a cousub nor a place GEOID matched in TIGER";
-  } else if (type === "SCHOOL DISTRICT") {
+  } else if (type === "SCHOOL DISTRICT" || type === "DEPENDENT SCHOOL SYSTEM") {
     const leaid = pid6ToLeaid.get(pid6);
     hit = leaid ? lookup(`unsd:${leaid}`, `elsd:${leaid}`, `scsd:${leaid}`) : null;
     method = !leaid
@@ -172,6 +177,18 @@ for (const r of units.rows) {
     zips: hit?.zips ?? [],
     method,
   });
+}
+
+// The runner's scope reference can be refreshed without rewriting the frozen
+// reader territory artifact. Both outputs use this same Census/LEAID resolver.
+if (process.argv.includes("--dependent-only")) {
+  const path = join(process.cwd(), "lib/control-plane/expansion/reference/census-dependent-school-territories.json");
+  writeFileSync(path, JSON.stringify({
+    source: "census_govt_units_2022_dependent_school_systems + census-nces-crosswalk + zip-governments",
+    units: resolutions.filter(unit => unit.type === "DEPENDENT SCHOOL SYSTEM"),
+  }, null, 2) + "\n");
+  console.log(`WROTE ${path}`);
+  process.exit(0);
 }
 
 /* ---- report -------------------------------------------------------------- */
@@ -202,6 +219,7 @@ for (const type of [
   "MUNICIPAL",
   "TOWNSHIP",
   "SCHOOL DISTRICT",
+  "DEPENDENT SCHOOL SYSTEM",
   "SPECIAL DISTRICT",
 ]) {
   const e = byType.get(type)!;
@@ -270,7 +288,7 @@ writeFileSync(
   join(DERIVED, "census-unit-zips.json"),
   `${JSON.stringify({
     generatedAt: new Date().toISOString(),
-    source: "data/derived/zip-governments.json + data/reference/census_govt_units_2022.csv",
+    source: "data/derived/zip-governments.json + data/reference/census_govt_units_2022.csv + data/reference/census_govt_units_2022_dependent_school_systems.csv",
     totals: {
       units: resolutions.length,
       resolvedToAtLeastOneZip: totalResolved,

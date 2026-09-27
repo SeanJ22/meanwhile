@@ -1,4 +1,14 @@
-## Current release checkpoint — September 26, 2026, 5:59 PM Arizona MST
+## Current general hunt checkpoint — September 27, 2026
+
+Production PR435 is deployed as 14f6471e at 12:30 AM Arizona MST. Required hosted checks, the main build and post-deployment integrity passed. Signed-in Admin scope preview returned its standing-work result. The dedicated runtime checkout adopted that revision at the next ordinary boundary; its subsequent cycle remains to be verified. No paid hunt, Send or spending-control change occurred.
+
+The current isolated release adds source-bound PDF text/table artifacts (773d6530), automatic public-comment publication with retained field provenance and original-Admin-request attribution (9e37a957), continued evidence-backed verification repair beyond three successors with duplicate/lineage protection (1cbdf1b6), and verified campaign-page text delivered through the existing campaign publication and candidate readers (07cc6267). Focused checks and types pass; required reader renewal, release gates, merge and deployment remain due. These are general connections, with no new target-specific preparation.
+
+NOT READY for the full hunt: generic local candidate/measure/result and finance publication, unmapped/subordinate-body work, remaining service/venue/statement connections and the complete live Admin-to-reader path are still required. Existing dedicated readers and validation paths must be reused, not replaced. This checkpoint does not classify unfinished capabilities as optional. Cold Ask optimization, cosmetic work and cleanup remain outside launch. Historic target preparation is preserved and disclosed; the test is not untouched.
+
+The only new cap remains $50 Anthropic token usage for this hunt across retries, escalations and concurrent reservations. Existing reservation/restart and meeting-scheduler proofs remain valid; do not rerun them unchanged. Other services are tracked separately. The owner must test Admin and explicitly authorize starting.
+
+## Prior release checkpoint — September 26, 2026, 5:59 PM Arizona MST
 
 PR432 remains deployed as e6fea8bf. Its normal runner handoff and subsequent successful routine cycle are verified; all 20 committed campaign approvals were acknowledged. Admin updated automatically. The cycle retained the same published campaign version, so it is not new hunt content.
 

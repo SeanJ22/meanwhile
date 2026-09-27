@@ -16,6 +16,7 @@ import { sourceProjectionEvidence, type CandidateVersionRecord, type RoutineCand
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { stateRollAttribution, stateRollPublisher } from "../lib/sources/legiscan/types.ts";
 import { parseReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import {
   READER_READBACK_RETRY_MS,
   recordRoutineReaderProjectionReadback,
@@ -26,6 +27,29 @@ const HASH = "a".repeat(64);
 const NOW = "2026-09-07T12:00:00.000Z";
 const READER_CODE_SHA_A = "c".repeat(40);
 const READER_CODE_SHA_B = "d".repeat(40);
+
+test("opaque worker editions use real source chronology while stale and unexpected versions remain refused", () => {
+  for (const [recordClass, sourceId, prefix] of [
+    ["REGISTRY_RUNTIME_BINDING", "registry-reviewed-bindings", "worker-roster"],
+    ["CURATED_READER_RECORD", "curated-reader-primary-sources", "worker"],
+  ] as const) {
+    const base = candidate("worker-order-before", { recordClass, sourceId });
+    const priorVersion = `${prefix}:wr-${"f".repeat(24)}`;
+    const nextVersion = `${prefix}:wr-${"0".repeat(24)}`;
+    const prior: CandidateVersionRecord = { candidate: { ...base, temporal: { ...base.temporal,
+      version: priorVersion, expectedVersion: priorVersion, sourceThrough: "2026-09-06T00:00:00.000Z" } },
+      state: "PROMOTED", acquisitionSucceeded: true, receipt: null, promotedVersion: base.id,
+      lastKnownGoodVersion: null, failureCode: null, failureDetail: null };
+    const next = { ...base, id: "worker-order-after", temporal: { ...base.temporal,
+      version: nextVersion, expectedVersion: nextVersion, sourceThrough: "2026-09-07T00:00:00.000Z" } };
+    const temporal = (value: RoutineCandidate) => validateRoutineCandidate(value, prior, NOW).receipt.checks.find(check => check.check === "TEMPORAL_VALIDITY")!;
+    assert.equal(temporal(next).verdict, "PASS", "random audit hash order cannot reject a later source");
+    assert.equal(temporal({ ...next, temporal: { ...next.temporal, sourceThrough: "2026-09-05T00:00:00.000Z" } }).code, "SOURCE_THROUGH_REGRESSION");
+    assert.equal(temporal({ ...next, temporal: { ...next.temporal, expectedVersion: "different" } }).code, "WRONG_PERIOD_OR_VINTAGE");
+    assert.equal(temporal({ ...next, temporal: { ...next.temporal, sourceThrough: "unresolved" } }).code, "WORKER_SOURCE_CHRONOLOGY_UNKNOWN");
+    assert.equal(temporal({ ...next, retrieval: { ...next.retrieval, retrievedAt: "2026-09-06T12:00:00.000Z" } }).code, "ACQUISITION_TIME_REGRESSION");
+  }
+});
 
 test("the generic transition driver cannot write a production store outside an exact registered contract door", async () => {
   // Avoid opening a database connection: the authority refusal must happen

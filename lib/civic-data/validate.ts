@@ -111,6 +111,16 @@ function jurisdictionAllowed(candidate: RoutineCandidate, allowed: readonly stri
  */
 const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE"]);
 
+/** Worker publication editions identify audited attempts, not sortable source
+ * vintages. Exact expected-version agreement and both real time-order checks
+ * below still apply; random hash spelling cannot establish chronology. */
+function hasOpaqueWorkerEdition(candidate: RoutineCandidate): boolean {
+  return (candidate.sourceId === "registry-reviewed-bindings" && candidate.recordClass === "REGISTRY_RUNTIME_BINDING" &&
+    /^worker-roster:wr-[a-f0-9]{24}$/.test(candidate.temporal.version)) ||
+    (candidate.sourceId === "curated-reader-primary-sources" && candidate.recordClass === "CURATED_READER_RECORD" &&
+      /^worker:wr-[a-f0-9]{24}$/.test(candidate.temporal.version));
+}
+
 function temporalOrder(value: string): number | null {
   if (/^\d{4}$/.test(value)) return Number(value);
   const date = Date.parse(value);
@@ -632,7 +642,12 @@ export function validateRoutineCandidate(
     ));
   } else if (candidate.temporal.staleAtRetrieval) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "FRESH_FETCH_STALE_FACTS", "The route was freshly read but the source facts belong to an expired term/session/period."));
-  } else if (current && !UNORDERED_VERSION_CLASSES.has(candidate.recordClass) && candidate.temporal.version < current.version) {
+  } else if ((hasOpaqueWorkerEdition(candidate) || (lastKnownGood && hasOpaqueWorkerEdition(lastKnownGood.candidate))) &&
+    (candidateOrder === null || (current && currentOrder === null))) {
+    checks.push(result("TEMPORAL_VALIDITY", "CANNOT_TELL", "WORKER_SOURCE_CHRONOLOGY_UNKNOWN", "An opaque worker edition requires ordered source-through evidence; its hash is not a clock."));
+  } else if (current && !UNORDERED_VERSION_CLASSES.has(candidate.recordClass) &&
+    !hasOpaqueWorkerEdition(candidate) && !(lastKnownGood && hasOpaqueWorkerEdition(lastKnownGood.candidate)) &&
+    candidate.temporal.version < current.version) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "VERSION_REGRESSION", `${candidate.temporal.version} precedes promoted ${current.version}.`));
   } else if (candidateOrder !== null && currentOrder !== null && candidateOrder < currentOrder) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "SOURCE_THROUGH_REGRESSION", `${candidate.temporal.sourceThrough} precedes promoted ${current!.sourceThrough}.`));

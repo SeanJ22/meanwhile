@@ -2906,6 +2906,7 @@ async function makeAutonomousFleet() {
 }
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused, scheduledBlackout, hasLifetimeHunt });
+let earlyExactWorkIds: ReadonlySet<string> | null = null;
 const earlyOriginal = autonomousCycleOpen && hasLifetimeHunt && Date.now() + 150_000 < autonomousDeadlineMs
   ? (async () => {
       const leave = pending.enter("original-hunt-early-workers");
@@ -2915,6 +2916,7 @@ const earlyOriginal = autonomousCycleOpen && hasLifetimeHunt && Date.now() + 150
           const exactWorkIds = exactInstructionAutonomousWorkIds({ obligations: sync.all,
             occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
             assignmentKey: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId });
+          earlyExactWorkIds = exactWorkIds;
           const fleet = await makeAutonomousFleet();
           return runAutonomousCoordinator(fleet, { concurrency: 4, deadlineMs: autonomousDeadlineMs,
             prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
@@ -3263,7 +3265,8 @@ if (autonomousCycleOpen && Date.now() + 150_000 < autonomousDeadlineMs) {
         .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
       deadlineMs: autonomousDeadlineMs,
       ...(Number.isFinite(SCOUT_MAX) ? { maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedOutsideLifetime) } : {}),
-      ...(scheduledBlackout ? { acceptsWorkItem: (item: { readonly subject: string }) => lifetimeHuntSubjects.has(item.subject) } : {}),
+      ...(scheduledBlackout ? { acceptsWorkItem: (item: { readonly id: string; readonly subject: string }) =>
+        lifetimeHuntSubjects.has(item.subject) && earlyExactWorkIds?.has(item.id) === true } : {}),
       admitDispatch: work => fleetSafety.admitDispatch(work) });
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
     /* MW-014: the coordinator's deferrals AND its silent non-dispatches (BLOCKED, STAGED), counted by reason. */

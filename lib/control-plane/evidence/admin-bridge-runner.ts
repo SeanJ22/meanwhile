@@ -1,9 +1,11 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { mirrorOriginalCapture, type AdminEvidenceRemote } from "./admin-bridge.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
+import type { WorkItem } from "../work-item.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
+import { adminEvidenceKey, mirrorOriginalCapture, type AdminEvidenceRemote } from "./admin-bridge.ts";
 import { NetlifyAdminEvidenceRemote } from "./admin-bridge-netlify.ts";
-import { indexVault, readHeldBytes } from "./read-only-vault.ts";
+import { findHeldCapture, readHeldBytes } from "./read-only-vault.ts";
 
 export interface AdminMirrorReport {
   readonly state: "DISABLED" | "NOT_CONFIGURED" | "RAN";
@@ -14,12 +16,83 @@ export interface AdminMirrorReport {
   readonly failures: readonly string[];
 }
 
-/** Ordinary cycle reconciliation, including older complete captures. Cursor is operational only, never evidence. */
+type Lane = "original" | "recent" | "history";
+const LANES: readonly Lane[] = ["original", "recent", "history"];
+const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
+interface MirrorCursor {
+  readonly version: 2;
+  nextByLane: Record<Lane, number>;
+  turn: number;
+  /** A scheduling hint only. Admin downloads verify the remote copy on every read. */
+  verifiedAt: Record<string, number>;
+}
+const freshCursor = (): MirrorCursor => ({
+  version: 2, nextByLane: { original: 0, recent: 0, history: 0 }, turn: 0, verifiedAt: Object.create(null),
+});
+
+function isOriginalHunt(work: WorkItem | undefined): boolean {
+  if (!work || work.project !== "freshness") return false;
+  return work.autonomousPlan?.ownerInstructions?.includes(ORIGINAL_LIFETIME_HUNT.receiptId) === true ||
+    work.manualSourceGap?.instructionReceipt === ORIGINAL_LIFETIME_HUNT.receiptId;
+}
+
+function partition(records: readonly ArtifactRecord[], owners: ReadonlyMap<string, WorkItem>, nowMs: number): Record<Lane, ArtifactRecord[]> {
+  const lanes: Record<Lane, ArtifactRecord[]> = { original: [], recent: [], history: [] };
+  for (const record of records) {
+    if (record.tier !== "RAW" || record.partial) continue;
+    const lane: Lane = isOriginalHunt(owners.get(record.workItemId)) ? "original" :
+      Date.parse(record.recordedAt) >= nowMs - 24 * 60 * 60 * 1000 ? "recent" : "history";
+    lanes[lane].push(record);
+  }
+  lanes.original.sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId));
+  lanes.recent.sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId));
+  lanes.history.sort((a, b) => a.recordedAt.localeCompare(b.recordedAt) || a.artifactId.localeCompare(b.artifactId));
+  return lanes;
+}
+
+async function readCursor(path: string): Promise<MirrorCursor> {
+  try {
+    const raw = JSON.parse(await readFile(path, "utf8")) as Record<string, unknown>;
+    if (raw.version === 2 && raw.nextByLane && typeof raw.nextByLane === "object" &&
+        LANES.every(lane => Number.isSafeInteger((raw.nextByLane as Record<string, unknown>)[lane]) &&
+          Number((raw.nextByLane as Record<string, unknown>)[lane]) >= 0) &&
+        Number.isSafeInteger(raw.turn) && Number(raw.turn) >= 0 &&
+        raw.verifiedAt && typeof raw.verifiedAt === "object" && !Array.isArray(raw.verifiedAt)) {
+      const verifiedAt: Record<string, number> = Object.create(null);
+      for (const [key, value] of Object.entries(raw.verifiedAt)) {
+        if (key.startsWith("freshness/") && typeof value === "number" && Number.isFinite(value) && value >= 0)
+          verifiedAt[key] = value;
+      }
+      return { version: 2, nextByLane: raw.nextByLane as Record<Lane, number>, turn: Number(raw.turn), verifiedAt };
+    }
+    // The previous cursor covered only the oldest-first population.
+    if (Number.isSafeInteger(raw.next) && Number(raw.next) >= 0) {
+      const cursor = freshCursor(); cursor.nextByLane.history = Number(raw.next); return cursor;
+    }
+    throw new Error("ADMIN_EVIDENCE_MIRROR_CURSOR_INVALID");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return freshCursor();
+    throw error;
+  }
+}
+
+async function saveCursor(path: string, cursor: MirrorCursor): Promise<void> {
+  await mkdir(dirname(path), { recursive: true });
+  const temp = `${path}.${process.pid}.tmp`;
+  await writeFile(temp, JSON.stringify(cursor) + "\n", "utf8");
+  await rename(temp, path);
+}
+
+/** Rotating bounded slices prioritize the exact hunt and new captures while
+ * advancing historical backfill. The cursor is operational, never evidence. */
 export async function runAdminEvidenceMirror(input: {
   readonly repos: ControlPlaneRepositories;
   readonly vaultRoot: string;
   readonly cursorPath: string;
   readonly env?: Readonly<{ WTP_ADMIN_EVIDENCE_MIRROR_ENABLED?: string; NETLIFY_SITE_ID?: string; NETLIFY_BLOBS_TOKEN?: string }>;
+  readonly deadlineMs?: number;
+  readonly nowMs?: number;
+  /** Isolated tests only. Production uses the time boundary, not a record count. */
   readonly maxExamined?: number;
   /** Isolated tests only; production uses the configured private Netlify store. */
   readonly remote?: AdminEvidenceRemote;
@@ -30,42 +103,52 @@ export async function runAdminEvidenceMirror(input: {
   if (env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED !== "1") return empty("DISABLED");
   if (!input.remote && (!env.NETLIFY_SITE_ID || !env.NETLIFY_BLOBS_TOKEN)) return empty("NOT_CONFIGURED");
   const remote = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
-  const [records, attempts, workItems, vault] = await Promise.all([
-    input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(), indexVault(input.vaultRoot),
+  const [records, attempts, workItems] = await Promise.all([
+    input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(),
   ]);
-  const eligible = [...records].filter(r => r.tier === "RAW" && !r.partial)
-    .sort((a, b) => a.recordedAt.localeCompare(b.recordedAt) || a.artifactId.localeCompare(b.artifactId));
-  if (!eligible.length) return { ...empty("RAN") };
+  const nowMs = input.nowMs ?? Date.now();
   const byAttempt = new Map(attempts.map(row => [row.id, row.value]));
   const byWorkItem = new Map(workItems.map(row => [row.id, row.value]));
-  let cursor = 0;
-  try {
-    const parsed = JSON.parse(await readFile(input.cursorPath, "utf8")) as { next?: unknown };
-    if (Number.isSafeInteger(parsed.next) && (parsed.next as number) >= 0) cursor = parsed.next as number;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-  }
-  const limit = Math.min(Math.max(input.maxExamined ?? 8, 1), 32, eligible.length);
-  let copied = 0, alreadyVerified = 0, refused = 0;
+  const lanes = partition(records, byWorkItem, nowMs);
+  const total = LANES.reduce((sum, lane) => sum + lanes[lane].length, 0);
+  if (!total) return empty("RAN");
+  const cursor = await readCursor(input.cursorPath);
+  for (const [key, at] of Object.entries(cursor.verifiedAt))
+    if (nowMs - at >= VERIFIED_RECHECK_MS) delete cursor.verifiedAt[key];
+  let copied = 0, alreadyVerified = 0, refused = 0, examined = 0, visited = 0;
   const failures: string[] = [];
-  for (let offset = 0; offset < limit; offset++) {
-    const record = eligible[(cursor + offset) % eligible.length];
+  const perLaneVisited: Record<Lane, number> = { original: 0, recent: 0, history: 0 };
+  const limit = input.maxExamined ?? Number.POSITIVE_INFINITY;
+  while (visited < total && examined < limit && (input.deadlineMs === undefined || Date.now() < input.deadlineMs - 500)) {
+    const lane = LANES[cursor.turn % LANES.length];
+    cursor.turn = (cursor.turn + 1) % LANES.length;
+    const group = lanes[lane];
+    if (!group.length || perLaneVisited[lane] >= group.length) continue;
+    const index = cursor.nextByLane[lane] % group.length;
+    const record = group[index];
+    cursor.nextByLane[lane] = (index + 1) % group.length;
+    perLaneVisited[lane]++; visited++;
+    let key: string;
+    try { key = adminEvidenceKey(record); }
+    catch (error) { refused++; failures.push(`${record.artifactId}:${error instanceof Error ? error.message : "UNKNOWN"}`); continue; }
+    if (cursor.verifiedAt[key] !== undefined) continue;
+    examined++;
     try {
       const attempt = byAttempt.get(record.attemptId);
-      // Artifact ids are tier+hash, so the same bytes can occur in two Attempts.
-      // Never let the index's last byId entry reattribute one capture to another.
-      const held = vault.byWorkItem.get(record.workItemId)?.find(row =>
-        row.id === record.artifactId && row.attemptId === record.attemptId);
       const owner = byWorkItem.get(record.workItemId);
-      if (!attempt || !held || !owner || owner.project !== "freshness") throw new Error("ATTRIBUTION_NOT_HELD");
+      if (!attempt || !owner || owner.project !== "freshness") throw new Error("ATTRIBUTION_NOT_HELD");
+      const held = await findHeldCapture(input.vaultRoot, record);
+      if (!held) throw new Error("ATTRIBUTION_NOT_HELD");
       const outcome = await mirrorOriginalCapture({ record, attempt, held, bytes: await readHeldBytes(held), remote });
       if (outcome === "COPIED") copied++; else alreadyVerified++;
+      cursor.verifiedAt[key] = nowMs;
     } catch (error) {
       refused++;
       failures.push(`${record.artifactId}:${error instanceof Error ? error.message : "UNKNOWN"}`);
     }
+    // Persist each completed remote result before the next operation may block.
+    await saveCursor(input.cursorPath, cursor);
   }
-  await mkdir(dirname(input.cursorPath), { recursive: true });
-  await writeFile(input.cursorPath, JSON.stringify({ next: (cursor + limit) % eligible.length }) + "\n", "utf8");
-  return { state: "RAN", examined: limit, copied, alreadyVerified, refused, failures };
+  await saveCursor(input.cursorPath, cursor);
+  return { state: "RAN", examined, copied, alreadyVerified, refused, failures };
 }

@@ -10,6 +10,8 @@ import type { HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -137,4 +139,44 @@ test("ordinary reconciliation rotates past a failed first capture and copies the
   const next = await runAdminEvidenceMirror(input);
   assert.equal(next.copied, 1, "a first failing capture cannot starve the next capture");
   assert.equal(remote.rows.size, 1);
+});
+
+test("exact-hunt and recent captures advance with historical backfill across durable slices", async (t) => {
+  const root = await mkdtemp(join(tmpdir(), "admin-evidence-priority-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const repos = createMemoryRepositories();
+  const remote = new MemoryPrivateStore();
+  const now = "2026-09-28T14:00:00.000Z";
+  const cases = [
+    { label: "original", at: "2026-09-27T06:00:00.000Z", original: true },
+    { label: "recent", at: "2026-09-28T13:00:00.000Z", original: false },
+    { label: "history", at: "2026-09-20T06:00:00.000Z", original: false },
+  ] as const;
+  const ids: Record<string, string> = {};
+  for (const item of cases) {
+    const base = createWorkItem({ project: "freshness", subject: item.label, obligation: "official-source", why: "test", now: item.at });
+    const work: WorkItem = item.original ? { ...base, autonomousPlan: {
+      ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId],
+    } as unknown as WorkItem["autonomousPlan"] } : base;
+    await repos.workItems.put(work.id, work, item.at);
+    const at = `at-${item.label}`;
+    const body = `<html><body>Official ${item.label} document</body></html>`;
+    const { artifact } = recordAcquisition({ canonicalUrl: `https://city.example.gov/${item.label}`,
+      retrievedAt: item.at, httpStatus: 200, contentType: "text/html", sourceId: "city", methodRouteId: "source",
+      workItemId: work.id, attemptId: at, permission: "ALLOWED", transport: "REACHABLE" }, body);
+    await putArtifact(new DurableEvidenceStore(root), "freshness", artifact, new TextEncoder().encode(body));
+    await repos.attempts.put(at, { ...attempt, id: at, workItemId: work.id, artifactIds: [artifact.id] }, item.at);
+    await repos.artifacts.append(work.id, artifact.id, { ...record, artifactId: artifact.id, workItemId: work.id,
+      attemptId: at, canonicalUrl: artifact.canonicalUrl, contentHash: artifact.contentHash,
+      byteLength: artifact.byteLength, recordedAt: item.at }, item.at);
+    ids[item.label] = artifact.id;
+  }
+  const input = { repos, vaultRoot: root, cursorPath: join(root, "cursor.json"), remote,
+    env: { WTP_ADMIN_EVIDENCE_MIRROR_ENABLED: "1" }, maxExamined: 1, nowMs: Date.parse(now) };
+  for (const label of ["original", "recent", "history"]) {
+    const result = await runAdminEvidenceMirror(input);
+    assert.equal(result.copied, 1, `${label} receives its own bounded slice`);
+    assert.equal([...remote.rows.values()].at(-1)?.copy.artifactId, ids[label]);
+  }
+  assert.equal((await runAdminEvidenceMirror(input)).examined, 0, "verified copies are skipped until scheduled recheck");
 });

@@ -100,7 +100,8 @@ export function WorkersScreen() {
       </Card>
 
       <Card title="Waiting, and why">
-        {!waiting && <SourceNote source={v.data.workers.state === "sample" ? v.data.workers : eventsDep} />}
+        {!waiting && (w ? <p className={s.meta}>A complete waiting list for this place is not available; unknown does not mean none.</p>
+          : <SourceNote source={v.data.workers.state === "sample" ? v.data.workers : eventsDep} />)}
         {waiting && !waiting.length && <Empty>Nothing is waiting in {v.place.name}.</Empty>}
         <div className={s.stack}>
           {waiting?.map((x) => (
@@ -116,7 +117,8 @@ export function WorkersScreen() {
 
       <div className={s.grid2}>
         <Card title="What changed">
-          {!events && <SourceNote source={v.data.workers.state === "sample" ? v.data.workers : eventsDep} />}
+          {!events && (w ? <p className={s.meta}>No complete change feed for this place is available.</p>
+            : <SourceNote source={v.data.workers.state === "sample" ? v.data.workers : eventsDep} />)}
           {events && !events.length && <Empty>No recorded changes in {v.place.name}.</Empty>}
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {events?.map((e, i) => (

@@ -34,6 +34,8 @@ test("the original instruction starts before independent lanes and joins before 
   assert.match(source.slice(early, meetings), /exactInstructionAutonomousWorkIds\([\s\S]*?assignmentKey: ORIGINAL_LIFETIME_HUNT\.key, receiptId: ORIGINAL_LIFETIME_HUNT\.receiptId/);
   assert.match(source.slice(early, meetings), /acceptsWorkItem: item => lifetimeHuntSubjects\.has\(item\.subject\) && exactWorkIds\.has\(item\.id\)/);
   assert.doesNotMatch(source.slice(early, meetings), /maximum:/, "the original hunt has no discretionary dispatch count cap");
+  assert.match(source.slice(source.indexOf("const autonomousCycleOpen ="), meetings), /const autonomousCycleOpen = autonomousCycleAllowed\(\{ dry, canary, only: ONLY, ids: IDS,[\s\S]*?runnerPaused: intents\.runnerPause\.paused/);
+  assert.match(source.slice(join, final), /if \(autonomousCycleOpen && Date\.now\(\) \+ 150_000 < autonomousDeadlineMs\)/);
 
   // Measured old cycles reached the late block at 566 s; its 150 s admission
   // cannot fit before 690 s. Starting after debt commit at 400 s can fit.

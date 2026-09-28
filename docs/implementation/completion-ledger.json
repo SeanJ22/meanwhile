@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "profile": "Sean-full-checklist/2026-09-28@1",
   "baseRevision": "afc590ea2294b7e4defa0f50b4ea2eabea5a0508",
-  "observationState": "BASELINE_RECONCILIATION_IN_PROGRESS",
+  "observationState": "IMPLEMENTED_REPAIRS_AWAITING_FULL_PROOF_AND_ADOPTION",
   "scope": "Existing zcta:2020/85635 hunt; shared applicable records reused; no new geography",
   "originalBudgetStartedAt": "2026-09-27T22:17:50.236Z",
   "anthropicLifetimeLimitUsd": 50,
@@ -117,10 +117,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP: $50 lifetime hunt ledger exists; persisted $105 rolling ceiling/search counts coexist. Cost joins and unknown aggregation differ; atomic race proof remains due.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "The exact original receipt/start receives lifetime-budget and prompt-resumption treatment. Other hunts retain their governed controls. Original charges and concurrent holds remain protected.",
+          "testPaths": [
+            "tests/execution-accountability-budget.test.ts",
+            "tests/execution-accountability-continuation.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Confirm adoption and effective persisted original-hunt settings in the running revision; measure actual concurrent admissions and settlement."
     },
     {
       "id": "GATE-07",
@@ -136,10 +147,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL RECORD: latest cycle schedules minute-scale continuation. Locks, technical slicing and other backoff branches still require repair/proof.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "The exact original receipt/start receives lifetime-budget and prompt-resumption treatment. Other hunts retain their governed controls. Original charges and concurrent holds remain protected.",
+          "testPaths": [
+            "tests/execution-accountability-budget.test.ts",
+            "tests/execution-accountability-continuation.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Confirm adoption and effective persisted original-hunt settings in the running revision; measure actual concurrent admissions and settlement."
     },
     {
       "id": "GATE-08",
@@ -155,10 +177,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Independently verified roster records can publish around record-specific conflicts; existing supported fields retain provenance during incomplete updates. Global source defects still hold publication.",
+          "testPaths": [
+            "tests/delivery-experience-subset-verification.test.ts",
+            "tests/delivery-experience-roster-provenance.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Demonstrate production partial-update preservation and a repaired mixed-row publication from ordinary dispatched evidence."
     },
     {
       "id": "GATE-09",
@@ -174,10 +207,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "New readback collectors compare accepted version and exact reader identity for roster, service, participation, voter-route and filing records. Stored rows alone do not count as visible.",
+          "testPaths": [
+            "tests/worker-reader-publication.test.ts",
+            "tests/delivery-experience-manual-reader.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Full reader proof, production deployment and accepted-version public readbacks are still required. Other family universes remain unverified."
     },
     {
       "id": "GATE-10",
@@ -193,10 +237,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI/CODE: 3,401 owed includes retired/done; found/settled differs from delivery; registry says never searched despite saved discoveries.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Exact ZIP filtering, county identity, missing-data wording and full-definition checklist census are connected. Unknown universe and missing clause-level receipts prevent completion credit.",
+          "testPaths": [
+            "tests/checklist-census.test.ts",
+            "tests/checklist-delivery-score.test.ts",
+            "tests/delivery-experience-admin-scope.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Reconcile full eligible populations and supported effective periods; produce clause-level witnesses rather than equating represented definitions with passed requirements."
     },
     {
       "id": "GATE-11",
@@ -957,10 +1013,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL UI: Gail/Regina official links displayed; new local publication path still incomplete.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Original held Sierra Vista roster replays seven rows with exact supported office phone and official profile links. JavaScript mail buttons do not become invented email addresses.",
+          "testPaths": [
+            "tests/acquisition-repair-roster.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Normal runner publication and current public cards must prove actual delivery; profile details still require independently captured evidence."
     },
     {
       "id": "OFF-09",
@@ -976,10 +1042,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP CODE/RECORD: official council phone/shared email present in held HTML; new roster publication drops new contacts.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Original held Sierra Vista roster replays seven rows with exact supported office phone and official profile links. JavaScript mail buttons do not become invented email addresses.",
+          "testPaths": [
+            "tests/acquisition-repair-roster.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Normal runner publication and current public cards must prove actual delivery; profile details still require independently captured evidence."
     },
     {
       "id": "OFF-10",
@@ -2611,10 +2687,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP/UNPROVED: sampled local/candidate position sections sparse; no topic query sent. Corpus completeness not inferred from empty sections.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Candidate source revisions retain canonical URL, raw artifact hash, extraction version and exact passage offsets. Superseded passages remain historical. Only an active validated source publication-date tag earns a source-stated date; repeated captures do not inflate boilerplate suppression.",
+          "testPaths": [
+            "tests/candidate-corpus.test.ts",
+            "tests/candidate-position-provenance.test.ts",
+            "tests/campaign-site-runner.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify ordinary candidate publication and served ballot/Ask context. Source keyword matches alone cannot establish a personal policy stance."
     },
     {
       "id": "CAN-08",
@@ -2630,10 +2718,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Candidate source revisions retain canonical URL, raw artifact hash, extraction version and exact passage offsets. Superseded passages remain historical. Only an active validated source publication-date tag earns a source-stated date; repeated captures do not inflate boilerplate suppression.",
+          "testPaths": [
+            "tests/candidate-corpus.test.ts",
+            "tests/candidate-position-provenance.test.ts",
+            "tests/campaign-site-runner.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify ordinary candidate publication and served ballot/Ask context. Source keyword matches alone cannot establish a personal policy stance."
     },
     {
       "id": "CAN-09",
@@ -3619,10 +3719,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL RECORD: two earlier manual entries reused by a later roster Scout; method vocabulary/projection still omits relevant branches.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Scout tools expose complete applicable field-manual content and held documents; normal acquirer audit attribution accepts authorized inherited capture without rewriting the original artifact owner.",
+          "testPaths": [
+            "tests/acquisition-repair-held-reuse.test.ts",
+            "tests/acquisition-repair-knowledge.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "A later production worker must demonstrate actual applicable entry/document consumption and resulting publication, including reasons for extra research."
     },
     {
       "id": "ACQ-04",
@@ -3695,10 +3806,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP RECORD/UI: Sierra Vista roster has 25 vaulted documents and no parse offered; source-to-extraction successor missing in observed work.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Original held Sierra Vista roster replays seven rows with exact supported office phone and official profile links. JavaScript mail buttons do not become invented email addresses.",
+          "testPaths": [
+            "tests/acquisition-repair-roster.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Normal runner publication and current public cards must prove actual delivery; profile details still require independently captured evidence."
     },
     {
       "id": "ACQ-08",
@@ -3733,10 +3854,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL CHANGE: PR442 addresses one finance horizon case; new-field and ordinary-source preservation still require tests.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Independently verified roster records can publish around record-specific conflicts; existing supported fields retain provenance during incomplete updates. Global source defects still hold publication.",
+          "testPaths": [
+            "tests/delivery-experience-subset-verification.test.ts",
+            "tests/delivery-experience-roster-provenance.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Demonstrate production partial-update preservation and a repaired mixed-row publication from ordinary dispatched evidence."
     },
     {
       "id": "ACQ-10",
@@ -3790,10 +3922,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED: work/route/attempt/requirement identities and duplicate manual URLs need reconciliation; 3,401 is not distinct facts.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Same-obligation, same-period lineage chooses one effective root and retains duplicate history; complete verified publication advances the standing clock while partial publication leaves the remaining work owed.",
+          "testPaths": [
+            "tests/standing-lineage.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify the deployed runner chooses the saved roster lineage and resumes dependent work without repeated paid rediscovery."
     },
     {
       "id": "ACQ-13",
@@ -3809,10 +3951,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Independently verified roster records can publish around record-specific conflicts; existing supported fields retain provenance during incomplete updates. Global source defects still hold publication.",
+          "testPaths": [
+            "tests/delivery-experience-subset-verification.test.ts",
+            "tests/delivery-experience-roster-provenance.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Demonstrate production partial-update preservation and a repaired mixed-row publication from ordinary dispatched evidence."
     },
     {
       "id": "ACQ-14",
@@ -3923,10 +4076,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "The exact original receipt/start receives lifetime-budget and prompt-resumption treatment. Other hunts retain their governed controls. Original charges and concurrent holds remain protected.",
+          "testPaths": [
+            "tests/execution-accountability-budget.test.ts",
+            "tests/execution-accountability-continuation.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Confirm adoption and effective persisted original-hunt settings in the running revision; measure actual concurrent admissions and settlement."
     },
     {
       "id": "REC-05",
@@ -3942,10 +4106,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP RECORD: repeated unsupported deterministic/adapter outcomes and multiple retry charges visible; capability repair must replace unchanged retry.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Same-obligation, same-period lineage chooses one effective root and retains duplicate history; complete verified publication advances the standing clock while partial publication leaves the remaining work owed.",
+          "testPaths": [
+            "tests/standing-lineage.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify the deployed runner chooses the saved roster lineage and resumes dependent work without repeated paid rediscovery."
     },
     {
       "id": "REC-06",
@@ -4001,10 +4175,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL RECORD: actual supplied manual lines/IDs available for at-fdaa; full relevant knowledge beyond excerpts still inaccessible to worker tools.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Scout tools expose complete applicable field-manual content and held documents; normal acquirer audit attribution accepts authorized inherited capture without rewriting the original artifact owner.",
+          "testPaths": [
+            "tests/acquisition-repair-held-reuse.test.ts",
+            "tests/acquisition-repair-knowledge.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "A later production worker must demonstrate actual applicable entry/document consumption and resulting publication, including reasons for extra research."
     },
     {
       "id": "REC-09",
@@ -4022,10 +4207,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL RECORD: boards URL fetch in later at-fdaa follows inherited entries; deep-content application and free replay not proved.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Scout tools expose complete applicable field-manual content and held documents; normal acquirer audit attribution accepts authorized inherited capture without rewriting the original artifact owner.",
+          "testPaths": [
+            "tests/acquisition-repair-held-reuse.test.ts",
+            "tests/acquisition-repair-knowledge.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "A later production worker must demonstrate actual applicable entry/document consumption and resulting publication, including reasons for extra research."
     },
     {
       "id": "REC-10",
@@ -4138,10 +4334,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Same-obligation, same-period lineage chooses one effective root and retains duplicate history; complete verified publication advances the standing clock while partial publication leaves the remaining work owed.",
+          "testPaths": [
+            "tests/standing-lineage.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify the deployed runner chooses the saved roster lineage and resumes dependent work without repeated paid rediscovery."
     },
     {
       "id": "REC-16",
@@ -4157,10 +4363,24 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL UI: visible live-update timestamps advance; complete delivery-path/corrective-action joins remain incomplete.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Admin controls distinguish saved DONE, pending, refused and unconfirmed outcomes. Search covers retained history; work, public results and costs bind to the exact instruction receipt. Shared Anthropic charges consume each applicable allowance while reporting once in combined totals. Delivery clocks flag identical endpoints when measured execution proves elapsed work.",
+          "testPaths": [
+            "tests/delivery-experience-action-receipt.test.ts",
+            "tests/assignment-history-search.test.ts",
+            "tests/checklist-timings.test.ts",
+            "tests/instruction-membership.test.ts",
+            "tests/execution-accountability-budget.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Complete deployed ADMIN-01–15 keyboard/mobile journeys, saved-state readback and current exact hunt accounting. Unknown legacy attribution remains explicit."
     },
     {
       "id": "PUB-01",
@@ -4195,10 +4415,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI/CODE: legacy county selector uses same-state/null geography; exact ownership required.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "New readback collectors compare accepted version and exact reader identity for roster, service, participation, voter-route and filing records. Stored rows alone do not count as visible.",
+          "testPaths": [
+            "tests/worker-reader-publication.test.ts",
+            "tests/delivery-experience-manual-reader.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Full reader proof, production deployment and accepted-version public readbacks are still required. Other family universes remain unverified."
     },
     {
       "id": "PUB-03",
@@ -4235,10 +4466,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI: local body cards largely Census-only despite held records; references demonstrate existing presentation capability.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "New readback collectors compare accepted version and exact reader identity for roster, service, participation, voter-route and filing records. Stored rows alone do not count as visible.",
+          "testPaths": [
+            "tests/worker-reader-publication.test.ts",
+            "tests/delivery-experience-manual-reader.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Full reader proof, production deployment and accepted-version public readbacks are still required. Other family universes remain unverified."
     },
     {
       "id": "PUB-05",
@@ -4254,10 +4496,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP/PARTIAL UI: widening disclosed correctly; owned county card wrong, ballot exactness statement inconsistent.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Exact ZIP filtering, county identity, missing-data wording and full-definition checklist census are connected. Unknown universe and missing clause-level receipts prevent completion credit.",
+          "testPaths": [
+            "tests/checklist-census.test.ts",
+            "tests/checklist-delivery-score.test.ts",
+            "tests/delivery-experience-admin-scope.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Reconcile full eligible populations and supported effective periods; produce clause-level witnesses rather than equating represented definitions with passed requirements."
     },
     {
       "id": "PUB-06",
@@ -4273,10 +4527,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI/RECORD: nobody-searched statement false for held discoveries; do not collapse unread/unpublished into absence.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Exact ZIP filtering, county identity, missing-data wording and full-definition checklist census are connected. Unknown universe and missing clause-level receipts prevent completion credit.",
+          "testPaths": [
+            "tests/checklist-census.test.ts",
+            "tests/checklist-delivery-score.test.ts",
+            "tests/delivery-experience-admin-scope.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Reconcile full eligible populations and supported effective periods; produce clause-level witnesses rather than equating represented definitions with passed requirements."
     },
     {
       "id": "PUB-07",
@@ -4330,10 +4596,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Independently verified roster records can publish around record-specific conflicts; existing supported fields retain provenance during incomplete updates. Global source defects still hold publication.",
+          "testPaths": [
+            "tests/delivery-experience-subset-verification.test.ts",
+            "tests/delivery-experience-roster-provenance.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Demonstrate production partial-update preservation and a repaired mixed-row publication from ordinary dispatched evidence."
     },
     {
       "id": "PUB-10",
@@ -4349,10 +4626,35 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI: Gail vote link lacks destination section; agenda/pin/card controls sampled otherwise work. Interaction submissions untested.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Admin controls distinguish saved DONE, pending, refused and unconfirmed outcomes. Search covers retained history; work, public results and costs bind to the exact instruction receipt. Shared Anthropic charges consume each applicable allowance while reporting once in combined totals. Delivery clocks flag identical endpoints when measured execution proves elapsed work.",
+          "testPaths": [
+            "tests/delivery-experience-action-receipt.test.ts",
+            "tests/assignment-history-search.test.ts",
+            "tests/checklist-timings.test.ts",
+            "tests/instruction-membership.test.ts",
+            "tests/execution-accountability-budget.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        },
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Accepted publications retain exact per-record NEW, UPDATED or REUSED comparison hashes and prior verified version. Carry-forward neighbours whose new rows remain unresolved earn no accepted-result credit. Manual publication saves exact delivered IDs for public readback.",
+          "testPaths": [
+            "tests/publication-record-changes.test.ts",
+            "tests/worker-roster-publication.test.ts",
+            "tests/worker-reader-publication.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify these receipts and their reader results after normal production publication. Avoided paid calls and dollar savings remain unmeasured."
     },
     {
       "id": "PUB-11",
@@ -4889,10 +5191,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Candidate source revisions retain canonical URL, raw artifact hash, extraction version and exact passage offsets. Superseded passages remain historical. Only an active validated source publication-date tag earns a source-stated date; repeated captures do not inflate boilerplate suppression.",
+          "testPaths": [
+            "tests/candidate-corpus.test.ts",
+            "tests/candidate-position-provenance.test.ts",
+            "tests/campaign-site-runner.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Verify ordinary candidate publication and served ballot/Ask context. Source keyword matches alone cannot establish a personal policy stance."
     },
     {
       "id": "OFF-17",
@@ -6177,10 +6491,21 @@
       "contribution": "SHARED",
       "priorEvidence": "PARTIAL RECORD: inherited manual IDs and lines captured at actual dispatch, not a reconstructed helper output.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Scout tools expose complete applicable field-manual content and held documents; normal acquirer audit attribution accepts authorized inherited capture without rewriting the original artifact owner.",
+          "testPaths": [
+            "tests/acquisition-repair-held-reuse.test.ts",
+            "tests/acquisition-repair-knowledge.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "A later production worker must demonstrate actual applicable entry/document consumption and resulting publication, including reasons for extra research."
     },
     {
       "id": "REC-18",
@@ -6198,10 +6523,21 @@
       "contribution": "SHARED",
       "priorEvidence": "PARTIAL RECORD: real route reuse witnessed; usage counter also credits proposed candidates, so does not measure deterministic replay.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Scout tools expose complete applicable field-manual content and held documents; normal acquirer audit attribution accepts authorized inherited capture without rewriting the original artifact owner.",
+          "testPaths": [
+            "tests/acquisition-repair-held-reuse.test.ts",
+            "tests/acquisition-repair-knowledge.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "A later production worker must demonstrate actual applicable entry/document consumption and resulting publication, including reasons for extra research."
     },
     {
       "id": "REC-19",
@@ -6238,10 +6574,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP CODE/RECORD: NOT_VAULTED blocked for 30 days despite public HTTP 200; split absence, storage and permission recovery.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "The exact original receipt/start receives lifetime-budget and prompt-resumption treatment. Other hunts retain their governed controls. Original charges and concurrent holds remain protected.",
+          "testPaths": [
+            "tests/execution-accountability-budget.test.ts",
+            "tests/execution-accountability-continuation.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Confirm adoption and effective persisted original-hunt settings in the running revision; measure actual concurrent admissions and settlement."
     },
     {
       "id": "PUB-15",
@@ -6276,10 +6623,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI/CODE: 3,401 total includes 591 retired and 1,069 last-round-done; 194 hunt members and 325 definitions are different units.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Exact ZIP filtering, county identity, missing-data wording and full-definition checklist census are connected. Unknown universe and missing clause-level receipts prevent completion credit.",
+          "testPaths": [
+            "tests/checklist-census.test.ts",
+            "tests/checklist-delivery-score.test.ts",
+            "tests/delivery-experience-admin-scope.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Reconcile full eligible populations and supported effective periods; produce clause-level witnesses rather than equating represented definitions with passed requirements."
     },
     {
       "id": "PUB-17",
@@ -6295,10 +6654,22 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP UI/RECORD: registry-projection absence wording ignores real discovery; supported empty/read failure/capability gap need separate states.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "Exact ZIP filtering, county identity, missing-data wording and full-definition checklist census are connected. Unknown universe and missing clause-level receipts prevent completion credit.",
+          "testPaths": [
+            "tests/checklist-census.test.ts",
+            "tests/checklist-delivery-score.test.ts",
+            "tests/delivery-experience-admin-scope.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Reconcile full eligible populations and supported effective periods; produce clause-level witnesses rather than equating represented definitions with passed requirements."
     },
     {
       "id": "PUB-18",
@@ -6316,10 +6687,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "GAP: bounded Admin activity Found23/Parsed0/Verified2/Promoted0/Shown0 is not complete per-family population accounting.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "e87333fbf293238041c185394664c34093d20ba5",
+          "summary": "New readback collectors compare accepted version and exact reader identity for roster, service, participation, voter-route and filing records. Stored rows alone do not count as visible.",
+          "testPaths": [
+            "tests/worker-reader-publication.test.ts",
+            "tests/delivery-experience-manual-reader.test.ts"
+          ],
+          "scope": "Focused development evidence; not full requirement or production acceptance"
+        }
+      ],
+      "nextAction": "Full reader proof, production deployment and accepted-version public readbacks are still required. Other family universes remain unverified."
     }
   ],
   "admin": [
@@ -6413,5 +6795,17 @@
       "acceptance": "UNVERIFIED",
       "evidence": []
     }
-  ]
+  ],
+  "lastReconciledAt": "2026-09-28T11:01:02.251Z",
+  "release": {
+    "revision": "e87333fbf293238041c185394664c34093d20ba5",
+    "state": "READER_REPAIRS_AWAITING_FRESH_EXACT_HEAD_PROOF",
+    "authority": "Prior full proof correctly exposed an uninitialized finance read and missing historical federal vote reader. Failed artifacts are preserved outside the repository. New exact-head authority and all reader stages must pass before release; no new production delivery claimed."
+  },
+  "originalHuntObservation": {
+    "at": "2026-09-28T10:18:29.342Z",
+    "receipt": "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
+    "memberObligations": 194,
+    "evidence": "External hunt-members.json; SELECT-only repeatable-read observation."
+  }
 }

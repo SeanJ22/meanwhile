@@ -55,7 +55,7 @@ for (const snapshot of corpus.snapshots) {
   const payloadText = await response.text();
   const payload = JSON.parse(payloadText) as AskAnswerPayload;
   const records = payload.records ?? [];
-  const matching = records.filter((record) => record.kind === "POSITION" && record.canonicalSubjectId === subjectId);
+  const matching = records.filter((record) => record.kind === "SOURCE_PASSAGE" && record.canonicalSubjectId === subjectId);
   const expectedRecords = expected.passages.filter((passage) => passage.snapshotId === snapshot.id).map((passage) => ({ id: passage.snapshotId, quote: passage.quote, sourceUrl: passage.url, retrievedAt: passage.retrievedAt }));
   const missing = expectedRecords.filter((passage) => !matching.some((record) => record.id === passage.id && record.text.includes(passage.quote) && record.sourceUrl === passage.sourceUrl && record.retrievedAt === passage.retrievedAt));
   const pack: EvidencePack = { question, records, gaps: payload.gaps, denominators: payload.denominators, subject: payload.subject, intent: "PERSON_RECORD", temporal: { kind: "NONE" }, today: request.today };

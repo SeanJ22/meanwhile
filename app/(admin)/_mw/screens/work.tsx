@@ -19,6 +19,7 @@ import "server-only";
  * from the control plane's records for that id alone.
  */
 import Link from "next/link";
+import { EvidenceCaptureControl } from "../evidence-capture-control.tsx";
 import type { ReactNode } from "react";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 
@@ -902,7 +903,7 @@ function DetailSections({ detail, trail, trailPage, trailHref, says, artifacts, 
         <div className={s.stack8}>{artifacts.slice((shownEvidencePage - 1) * 50, shownEvidencePage * 50).map(a => <div key={`${a.workItemId}:${a.attemptId}:${a.artifactId}`} className={s.insetRow}>
           <span className={s.monoSmall}>{a.artifactId} · {a.contentHash} · {a.byteLength.toLocaleString("en-US")} bytes</span>
           {a.tier === "RAW" && !a.partial && a.byteLength <= ADMIN_EVIDENCE_MAX_BYTES && adminMirrorableContentType(a.contentType)
-            ? <a className={s.btnLink} href={`/api/admin/evidence/${encodeURIComponent(a.workItemId)}/${encodeURIComponent(a.attemptId)}/${encodeURIComponent(a.artifactId)}`}>Download verified original</a>
+            ? <EvidenceCaptureControl workItemId={a.workItemId} attemptId={a.attemptId} artifactId={a.artifactId} />
             : <span className={s.note}>{a.partial ? "Partial capture; original download unavailable" : a.tier !== "RAW" ? "Restricted or derived capture; original download unavailable" : a.byteLength > ADMIN_EVIDENCE_MAX_BYTES ? "Held original exceeds the 32 MiB private copy limit; available only in the runner vault" : "This content type has no verified safe private copy yet"}</span>}
         </div>)}</div>
         {evidenceHref && <div className={s.row10}>

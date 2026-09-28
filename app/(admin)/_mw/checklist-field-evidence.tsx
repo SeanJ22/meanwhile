@@ -3,6 +3,7 @@ import { displayNameOf } from "@/lib/control-plane/display-name.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { plainText } from "@/lib/control-plane/plain-words.ts";
 import { Section, mw as s } from "./ui.tsx";
+import { EvidenceCaptureControl } from "./evidence-capture-control.tsx";
 
 const note = `${s.note} ${s.cText}`;
 const fieldNames: Readonly<Record<string, string>> = { name: "Name", office: "Office", title: "Title", phone: "Phone",
@@ -33,15 +34,14 @@ export function ChecklistFieldEvidence(props: {
       : <><p className={note}>{rows.length} of {props.rows.length} captured records with linked evidence match the checklist search; showing {shown.length} on page {page} of {pages}. The complete inventory of officials and governments remains unproved.</p>
         {shown.map(row => {
           const source = sourceLink(row.sourceUrl);
-          const download = `/api/admin/evidence/${encodeURIComponent(row.workItemId)}/${encodeURIComponent(row.acquisitionAttemptId)}/${encodeURIComponent(row.artifactId)}`;
           return <details key={JSON.stringify([row.subjectId, row.recordClass, row.recordId])} className={s.inset}>
             <summary className={s.titleStrong14}>Captured record: {plainText(row.recordLabel || displayNameOf(row.subjectId).short)}</summary>
             <div className={s.stack14}>
               <p className={note}>{displayNameOf(row.subjectId).short} · captured {formatEastern(row.observedAt, { year: true })}. Effective term or period: unresolved. Public visibility of each field: not measured.</p>
               <div className={s.row10}>{source && <a className={s.btnLink} href={source} target="_blank" rel="noreferrer">Open the publisher’s page</a>}
-                <a className={s.btnLink} href={download}>Request the saved capture</a>
                 <a className={s.btnLink} href={props.workHref(row.workItemId)}>Follow this work and its checks</a>
               </div>
+              <EvidenceCaptureControl key={`${row.workItemId}:${row.acquisitionAttemptId}:${row.artifactId}`} workItemId={row.workItemId} attemptId={row.acquisitionAttemptId} artifactId={row.artifactId} />
               <p className={note}>The publisher’s page may have changed. Saved-capture access requires the private copy to have arrived; an unavailable copy stays unavailable.</p>
               <div className={s.stack8}>{row.fields.map(field => <div key={field.name} className={s.inset}>
                 <p className={s.text14}><strong>{fieldNames[field.name] ?? plainText(field.name)}</strong> · {field.spanIds.length} linked source {field.spanIds.length === 1 ? "passage" : "passages"}</p>

@@ -4,7 +4,7 @@ import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { ADMIN_EVIDENCE_MAX_BYTES, adminEvidenceKey } from "@/lib/control-plane/evidence/admin-bridge.ts";
-import { adminEvidencePrivateHeaders, originalEvidenceAttachment } from "@/lib/control-plane/evidence/admin-bridge-http.ts";
+import { ADMIN_EVIDENCE_RESPONSE_BYTES, adminEvidencePrivateHeaders, originalEvidenceAttachment } from "@/lib/control-plane/evidence/admin-bridge-http.ts";
 import { NetlifyAdminEvidenceRemote } from "@/lib/control-plane/evidence/admin-bridge-netlify.ts";
 import { readAdminEvidenceCopyStatus, requeueUnavailableAdminCopy, requestAdminEvidenceCopy } from "@/lib/control-plane/evidence/admin-copy-request.ts";
 
@@ -40,10 +40,18 @@ export async function GET(request: NextRequest, context: { params: Promise<{
     if (record.byteLength > ADMIN_EVIDENCE_MAX_BYTES)
       return NextResponse.json({ error: "The held original exceeds the private Admin copy limit of 32 MiB; it remains in the runner vault." },
         { status: 409, headers: adminEvidencePrivateHeaders });
+    const rawPart = request.nextUrl.searchParams.get("part");
+    const parts = Math.max(1, Math.ceil(record.byteLength / ADMIN_EVIDENCE_RESPONSE_BYTES));
+    if (rawPart === null && parts > 1)
+      return NextResponse.json({ code: "CHUNKED_DOWNLOAD_REQUIRED", byteLength: record.byteLength,
+        contentHash: record.contentHash, chunkBytes: ADMIN_EVIDENCE_RESPONSE_BYTES, parts },
+      { status: 409, headers: adminEvidencePrivateHeaders });
+    if (rawPart !== null && (!/^(0|[1-9][0-9]*)$/.test(rawPart) || Number(rawPart) >= parts))
+      return NextResponse.json({ error: "Invalid evidence part." }, { status: 400, headers: adminEvidencePrivateHeaders });
     const blob = await new NetlifyAdminEvidenceRemote().read(adminEvidenceKey(record));
     if (!blob) return NextResponse.json({ error: "The private copy is unavailable. The control plane records an original runner capture; its current vault bytes were not checked here." },
       { status: 404, headers: adminEvidencePrivateHeaders });
-    return originalEvidenceAttachment(record, blob);
+    return originalEvidenceAttachment(record, blob, rawPart === null ? undefined : Number(rawPart));
   } catch {
     return NextResponse.json({ error: "The private copy could not be verified or read." }, { status: 503, headers: adminEvidencePrivateHeaders });
   }

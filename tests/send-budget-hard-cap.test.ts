@@ -34,7 +34,7 @@ import {
 } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { scoutAttemptWorstCaseUsd, scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { RESEARCH_BOUNDS, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
-import { modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
+import { FleetPreSendRefusal, FleetSafetyController, FleetSafetyRefusal, modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansion/membership.ts";
 import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext } from "../lib/control-plane/workers/types.ts";
@@ -326,6 +326,35 @@ test("autonomous work fails closed: an unreadable area budget or ledger refuses;
   const kept = Object.values((await repos.budget.read()).value.spendHolds ?? {});
   assert.equal(kept.length, 1);
   assert.equal(kept[0].settled, null);
+});
+
+test("a provider response with incomplete usage keeps the durable autonomous area hold, while a typed pre-send refusal releases it", async () => {
+  const scope = areaGate([azScope(50, 0)]);
+  const { repos, spend } = holds();
+  let providerCalls = 0;
+  const incomplete: ModelTransport = async (asked) => {
+    providerCalls += 1;
+    return { id: "msg-unpriced", model: asked.model, role: "assistant", content: [{ type: "text", text: "done" }],
+      stop_reason: "end_turn", usage: { input_tokens: 100 } } as unknown as ModelResponse;
+  };
+  const controller = new FleetSafetyController({ now: NOW, costs: [], clock: () => Date.parse(NOW) });
+  const afterResponse = autonomous(spend, scope, { subjectId: PIMA, state: "AZ" },
+    controller.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
+  await assert.rejects(afterResponse(request()), (error: unknown) =>
+    error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND" && !(error instanceof FleetPreSendRefusal));
+  assert.equal(providerCalls, 1, "the model provider actually returned a response");
+  let held = Object.values((await repos.budget.read()).value.spendHolds ?? {});
+  assert.equal(held.length, 1);
+  assert.equal(held[0].settled, null, "unknown-cost provider processing cannot release its durable area hold");
+
+  const { repos: preRepos, spend: preSpend } = holds();
+  const preController = new FleetSafetyController({ now: NOW, costs: [], modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
+  const beforeRequest = autonomous(preSpend, scope, { subjectId: PIMA, state: "AZ" },
+    preController.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
+  await assert.rejects(beforeRequest(request()), FleetPreSendRefusal);
+  assert.equal(providerCalls, 1, "the typed pre-send refusal never called the provider");
+  held = Object.values((await preRepos.budget.read()).value.spendHolds ?? {});
+  assert.equal(held.length, 0, "a proven local pre-send refusal releases only its unused hold");
 });
 
 test("the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure", async () => {

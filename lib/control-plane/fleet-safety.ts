@@ -287,6 +287,17 @@ export class FleetSafetyRefusal extends Error {
   }
 }
 
+/** This wrapper is created only when the Fleet reservation refused before the
+ * provider transport was invoked. A same-code refusal after a response (notably
+ * incomplete usage) must not release a durable spend hold. */
+export class FleetPreSendRefusal extends FleetSafetyRefusal {
+  constructor(source: FleetSafetyRefusal) {
+    super(source.code, source.message);
+    this.name = "FleetPreSendRefusal";
+    this.message = source.message;
+  }
+}
+
 interface Reservation {
   readonly usd: number;
   readonly provider: string;
@@ -559,7 +570,13 @@ export class FleetSafetyController {
 
   guardedModelTransport(provider: string, work: string, transport: ModelTransport): ModelTransport {
     return async (request) => {
-      const reservation = this.reserveModelRequest(provider, work, request);
+      let reservation: Reservation;
+      try {
+        reservation = this.reserveModelRequest(provider, work, request);
+      } catch (error) {
+        if (error instanceof FleetSafetyRefusal) throw new FleetPreSendRefusal(error);
+        throw error;
+      }
       try {
         const response = await transport(request);
         this.settleModelRequest(reservation, response);

@@ -37,8 +37,8 @@ export function safePublicationDetail(value: unknown): unknown {
 export function publicationHistoryRow(raw: Record<string, unknown>, fullDetail = false): PublishedHistoryRow {
   const record = safePublicationDetail(raw.record);
   const fields = record && typeof record === "object" && !Array.isArray(record) ? record as Record<string, unknown> : {};
-  const text = JSON.stringify(record, null, 2) ?? "null";
-  const label = [fields.name, fields.title, fields.bodyName, fields.candidateName, fields.candidateNameAsFiled, fields.label]
+  const text = raw.record === undefined ? "" : JSON.stringify(record, null, 2) ?? "null";
+  const label = [safePublicationDetail(raw.label), fields.name, fields.title, fields.bodyName, fields.candidateName, fields.candidateNameAsFiled, fields.label]
     .find(value => typeof value === "string" && value.trim());
   const query = typeof raw.query === "string" ? raw.query : "";
   const match = text.toLowerCase().indexOf(query.toLowerCase());

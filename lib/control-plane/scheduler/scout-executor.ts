@@ -1265,6 +1265,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const requestedTtl = SCOUT_CACHE_POLICY.ttl;
       let turns = 0;
       let transportInvocations = 0;
+      const transportInvocationsByModel = new Map<string, number>();
       let unpricedTransport = false;
       /*
        * The loop state below is assigned inside `runModelAttempt` (a closure)
@@ -1434,6 +1435,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             if (order.length > 0) throw new ModelTransportError(`cache_control order refused before sending: ${order.join("; ")}`, null);
             enteredTransport = true;
             transportInvocations += 1;
+            transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 0) + 1);
             response = await deps.transport(request);
           } catch (error) {
             transportFailure = error instanceof Error ? error.message : String(error);
@@ -1942,7 +1944,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           ? modelAttempts.map((a, i) => {
               const first = attemptFirstTurns[i] ?? 1;
               if (a.turns === 0) {
-                return { model: a.model, requestCount: 0, usd: a.usd ?? 0, inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0 };
+                return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd ?? 0, inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0 };
               }
               const own = sumMeteredUsage(meteredTurns.slice(first - 1, first - 1 + a.turns));
               const whole =
@@ -1950,7 +1952,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                   ? null
                   : own.uncachedInputTokens + own.cacheReadInputTokens + own.cacheCreationInputTokens;
               const { batch: _batch, ...fields } = meteredCostFields(own);
-              return { model: a.model, requestCount: a.turns, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
+              return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
             })
           : null;
       /*

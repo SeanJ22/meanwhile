@@ -12,11 +12,14 @@
  * wrong the third time: the hash is easy to compute differently, and a
  * migration applied without its journal row re-runs forever.
  *
- * So the hand pass becomes a command. It uses the HTTP driver the rest of the
- * repo uses and applies each pending migration's statements plus its journal
- * row in one Postgres transaction. `hash` is sha256 of the file's raw bytes;
- * `created_at` is the journal's own `when`. A failed statement rolls the whole
- * migration back, so production cannot be left half-migrated and unjournalled.
+ * So the hand pass becomes a command. Small migrations use the HTTP driver;
+ * the explicitly named large publication-index backfill uses a persistent
+ * direct Neon connection. Each migration's statements plus its journal row
+ * commit in one Postgres transaction. `hash` is sha256 of the file's raw bytes;
+ * `created_at` is the journal's own `when`. If the connection drops during a
+ * direct COMMIT, a second connection waits for the first transaction's
+ * advisory lock and checks the exact journal hash. Unknown outcomes stop;
+ * no mutation is blindly retried.
  * A later `drizzle-kit migrate`, if its driver is ever fixed, reads this table
  * and sees the work as done.
  *
@@ -43,9 +46,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
-import { neon } from "@neondatabase/serverless";
+import { neon, neonConfig, Pool } from "@neondatabase/serverless";
 
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
+import { applyDirectMigration, directNeonConnectionUrl } from "../lib/db/direct-migration.ts";
 
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
@@ -94,6 +98,7 @@ if (PRODUCTION) {
 }
 
 const sql = neon(connection);
+const DIRECT_MIGRATIONS = new Set(["0031_publication_search_backfill"]);
 
 interface JournalEntry {
   idx: number;
@@ -220,22 +225,62 @@ if (!nothingPending && !DRY) {
       process.exit(1);
     }
 
-    try {
-      await sql.transaction((transaction) => [
-        ...statements.map((statement) => transaction.query(statement)),
-        transaction`
-          INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
-          VALUES (${hash}, ${entry.when})
-        `,
-      ]);
-    } catch (error) {
-      console.error(`  FAIL  transaction rolled back before the journal row was written`);
-      console.error(`        ${(error as Error).message}`);
-      console.error(
-        `\n${entry.tag} applied no durable statements in this run. Nothing is being guessed at ` +
-          `or retried — read the error, fix the cause, and run again.`,
-      );
-      process.exit(1);
+    if (DIRECT_MIGRATIONS.has(entry.tag)) {
+      // A large backfill can outlive Neon's HTTP request window. Keep the
+      // sanctioned credential and exact journal contract, but use a persistent
+      // direct connection whose uncertain COMMIT is independently reconciled.
+      neonConfig.webSocketConstructor = WebSocket;
+      const pool = new Pool({ connectionString: directNeonConnectionUrl(connection), max: 1 });
+      try {
+        const outcome = await applyDirectMigration({
+          pool: {
+            connect: async () => {
+              const client = await pool.connect();
+              return {
+                query: async (statement: string, values?: readonly unknown[]) => {
+                  const result = await client.query(statement, values as unknown[] | undefined);
+                  return { rows: result.rows as Record<string, unknown>[] };
+                },
+                release: (destroy?: boolean) => client.release(destroy),
+              };
+            },
+          },
+          tag: entry.tag, when: entry.when, hash, statements,
+        });
+        console.log(`  direct transaction ${outcome === "COMMITTED" ? "committed" : "commit recovered from exact journal hash"}`);
+      } catch (error) {
+        console.error(`  FAIL  ${error instanceof Error ? error.message : String(error)}`);
+        console.error(`  No automatic retry. Confirm this migration's exact journal hash before any new apply.`);
+        process.exitCode = 1;
+        break;
+      } finally {
+        await pool.end();
+      }
+      if (process.exitCode === 1) break;
+    } else {
+      try {
+        await sql.transaction((transaction) => [
+          ...statements.map((statement) => transaction.query(statement)),
+          transaction`
+            INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
+            VALUES (${hash}, ${entry.when})
+          `,
+        ]);
+      } catch (error) {
+        let committed = false;
+        try {
+          const receipt = await sql`SELECT hash FROM drizzle.__drizzle_migrations WHERE created_at=${entry.when}`;
+          committed = receipt.length === 1 && receipt[0]?.hash === hash;
+        } catch { /* A failed read leaves the outcome unknown. */ }
+        if (committed) {
+          console.log(`  HTTP response failed, but the exact journal hash proves commit`);
+        } else {
+          console.error(`  FAIL  transaction outcome unconfirmed: ${error instanceof Error ? error.message : String(error)}`);
+          console.error(`  No automatic retry. Confirm this migration's exact journal hash after the prior transaction resolves.`);
+          process.exitCode = 1;
+          break;
+        }
+      }
     }
     statementsRun += statements.length;
     for (const statement of statements) {
@@ -244,11 +289,13 @@ if (!nothingPending && !DRY) {
     console.log(`  journalled  hash=${hash.slice(0, 16)}…  created_at=${entry.when}`);
   }
 
-  const after = (await sql`SELECT COUNT(*) AS n FROM drizzle.__drizzle_migrations`) as {
-    n: string | number;
-  }[];
-  console.log(
-    `\nApplied ${pending.length} migration(s), ${statementsRun} statement(s). ` +
-      `Journal now holds ${Number(after[0].n)} of ${journal.entries.length} committed.`,
-  );
+  if (process.exitCode !== 1) {
+    const after = (await sql`SELECT COUNT(*) AS n FROM drizzle.__drizzle_migrations`) as {
+      n: string | number;
+    }[];
+    console.log(
+      `\nApplied ${pending.length} migration(s), ${statementsRun} statement(s). ` +
+        `Journal now holds ${Number(after[0].n)} of ${journal.entries.length} committed.`,
+    );
+  }
 }

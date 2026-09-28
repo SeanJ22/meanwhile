@@ -26,7 +26,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { readDecisionCards, readSnapshot, SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
-import { PULSE_RESEARCH_FIELDS, PULSE_SNAPSHOT_FIELDS, readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
+import { PULSE_CONFIG_REVISION_FIELDS, PULSE_RESEARCH_FIELDS, PULSE_SNAPSHOT_FIELDS, readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
 import type { OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "../lib/control-plane/readiness/model.ts";
 import { READINESS_GRID_FIELDS, readReadinessGridFrom, readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
@@ -183,14 +183,17 @@ test("the pulse reads the snapshot and the research state only narrowed, and onl
       return r.readNarrowed(id, projection);
     },
   });
-  const pulse = await readPulse({ ...repos, ownerSnapshots: watch("the snapshot", repos.ownerSnapshots), researchState: watch("the research state", repos.researchState) }, NOW);
+  const pulse = await readPulse({ ...repos, ownerSnapshots: watch("the snapshot", repos.ownerSnapshots),
+    researchState: watch("the research state", repos.researchState), adminConfig: watch("the hunt policy", repos.adminConfig) }, NOW);
   assert.deepEqual(pulse.unread, [], "nothing it reads was refused");
   assert.deepEqual(asked, [
     { which: "the snapshot", projection: PULSE_SNAPSHOT_FIELDS },
     { which: "the research state", projection: PULSE_RESEARCH_FIELDS },
+    { which: "the hunt policy", projection: PULSE_CONFIG_REVISION_FIELDS },
   ]);
   assert.deepEqual(Object.keys(PULSE_SNAPSHOT_FIELDS).sort(), ["decisionCards", "freshnessDebtRows", "incidents", "obligationsByState"]);
   assert.deepEqual(Object.keys(PULSE_RESEARCH_FIELDS), ["queue"]);
+  assert.deepEqual(Object.keys(PULSE_CONFIG_REVISION_FIELDS), [], "the pulse reads no saved hunt policy payload");
 });
 
 /* ------------------------------------------------------------------ Fleet · Now's cards */

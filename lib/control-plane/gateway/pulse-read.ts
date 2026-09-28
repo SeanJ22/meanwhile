@@ -29,7 +29,7 @@
  * instant against one another, and four independently-timed counts assembled
  * into one strip would imply a coherence they do not have.
  *
- * ## Six reads, each alone, and a failure is named rather than zeroed
+ * ## Bounded reads, each alone, and a failure is named rather than zeroed
  *
  * Every read is its own try/catch. One store hiccup must not blank the strip,
  * and — the rule that matters — a read that did not happen must never render as
@@ -99,6 +99,8 @@ export const PULSE_SNAPSHOT_FIELDS = {
   obligationsByState: true,
 } as const satisfies RecordProjection & Partial<Record<keyof OwnerSnapshot, true>>;
 export const PULSE_RESEARCH_FIELDS = { queue: true } as const satisfies RecordProjection;
+/** Money/Hunts need only the saved policy revision on each pulse, no policy payload. */
+export const PULSE_CONFIG_REVISION_FIELDS = {} as const satisfies RecordProjection;
 
 type PulseSnapshot = Pick<OwnerSnapshot, keyof typeof PULSE_SNAPSHOT_FIELDS>;
 
@@ -141,7 +143,7 @@ export async function readPulse(
     reading("your research requests", async () => repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)),
     reading("shared source activity", async () => repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, 1)),
     reading("the saved hunt policy", async () => (await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID,
-      { expansionScopes: true, fleetSpendCeiling: true })) ?? null),
+      PULSE_CONFIG_REVISION_FIELDS)) ?? null),
   ]);
 
   const snapshotValue = (snapshot.value?.value ?? null) as PulseSnapshot | null;

@@ -125,9 +125,9 @@ test("only an open attempt with its own live lease is running; an expired lease 
   const started = events.filter(e => e.kind === "Paid research started");
   assert.equal(started.length, 1, "the live Scout alone is running");
   assert.match(started[0].text, /running now with Cheapest AI \(claude-haiku-4-5-20251001\)\..*No result is saved yet/);
-  const stopped = events.filter(e => e.kind === "Stopped without finishing");
+  const stopped = events.filter(e => e.kind === "No live work claim");
   assert.equal(stopped.length, 1);
-  assert.match(stopped[0].text, /not running now, and it delivered no result/);
+  assert.match(stopped[0].text, /not proven running now.*delivery must be checked separately/);
   assert.equal(stopped[0].tone, "warn");
   const ended = events.filter(e => e.kind === "Paid research ended");
   assert.equal(ended.length, 1);
@@ -142,7 +142,7 @@ test("a released lease, a lease held under another id, and a missing lease never
   const none = { ...LIVE, attemptId: "at-none", obligationId: "ob-none", lease: null };
   const s = ok(await section("us", await world({ scouts: [released, swapped, none] })));
   assert.equal(s.data.events?.filter(e => e.kind === "Paid research started").length, 0);
-  assert.equal(s.data.events?.filter(e => e.kind === "Stopped without finishing").length, 3);
+  assert.equal(s.data.events?.filter(e => e.kind === "No live work claim").length, 3);
 });
 
 test("a heartbeat is not progress: a live check-in with only failures leaves last useful progress unreported", async () => {

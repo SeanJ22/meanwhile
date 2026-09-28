@@ -67,14 +67,16 @@ test("v6 Money and Hunts announcements follow saved policy, snapshot and fleet r
 
 test("v6 Workers announces the bounded read when policy and research are readable", () => {
   const base = { configRevision: 3, snapshotRevision: null, researchRevision: 9,
-    heartbeatRevision: 4, sourceProgressId: "source-7" };
+    heartbeatRevision: 4, sourceProgressId: "source-7", workerAgeBucket: 1 };
   const ready = adminV6ReadCapabilities(base);
   assert.deepEqual(ready.sections.workers, { contract: "admin-v6/workers@1",
-    href: "/api/admin/v6/workers", revision: "workers:3:9:4:source-7" });
+    href: "/api/admin/v6/workers", revision: "workers:3:9:4:source-7:1" });
   assert.equal(ready.sections.hunts, undefined);
   assert.notEqual(adminV6ReadCapabilities({ ...base, sourceProgressId: "source-8" }).sections.workers.revision,
     ready.sections.workers.revision);
   assert.notEqual(adminV6ReadCapabilities({ ...base, heartbeatRevision: 5 }).sections.workers.revision,
+    ready.sections.workers.revision);
+  assert.notEqual(adminV6ReadCapabilities({ ...base, workerAgeBucket: 2 }).sections.workers.revision,
     ready.sections.workers.revision);
   assert.equal(adminV6ReadCapabilities({ ...base, researchRevision: null }).sections.workers, undefined);
 });

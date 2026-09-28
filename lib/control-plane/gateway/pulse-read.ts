@@ -204,7 +204,8 @@ export async function readPulse(
     v6: adminV6ReadCapabilities({ configRevision: config.value?.revision ?? null,
       snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null,
       heartbeatRevision: heartbeat.value?.revision ?? null,
-      sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null }),
+      sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
+      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000) }),
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

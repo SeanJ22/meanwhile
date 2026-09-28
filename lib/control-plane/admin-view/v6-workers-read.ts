@@ -444,8 +444,8 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     const lease = r.evidence.lease.state === "READ" ? r.evidence.lease.value : null;
     if (r.state === "RUNNING") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "Paid research started", tone: "info", applies,
       text: `${what} is running now with ${modelWords(a.worker?.version)}. Its work claim holds until ${mstWords(lease!.expiresAt!)}. No result is saved yet, and its cost is measured when it ends.` });
-    else if (r.state === "EXPIRED") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "Stopped without finishing", tone: "warn", applies,
-      text: `${what} started ${mstWords(r.evidence.scout.startedAt)}, but its work claim ${lease && clock(lease.expiresAt) ? `ran out ${mstWords(lease.expiresAt)}` : "is gone"} and no finish was saved. It is not running now, and it delivered no result.` });
+    else if (r.state === "EXPIRED") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "No live work claim", tone: "warn", applies,
+      text: `${what} started ${mstWords(r.evidence.scout.startedAt)}, but its work claim ${lease && clock(lease.expiresAt) ? `ran out ${mstWords(lease.expiresAt)}` : "is gone"}. It is not proven running now. No finish is saved for this attempt; delivery must be checked separately.` });
     else if (clock(a.endedAt)) events.push({ iso: a.endedAt, at: mstWords(a.endedAt), kind: "Paid research ended", tone: a.outcome === "COMPLETED" ? "info" : "warn", applies,
       text: `${what} ended (${String(a.outcome).toLowerCase().replaceAll("_", " ")}). Ending is not the same as a checked, published result.` });
   }

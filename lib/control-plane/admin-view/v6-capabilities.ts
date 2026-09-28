@@ -19,7 +19,9 @@ export const ADMIN_V6_CAPABILITIES: AdminV6CapabilityManifest = Object.freeze({
  * announcing an empty hunt or a zero-dollar account. */
 export function adminV6ReadCapabilities(input: { readonly configRevision: number | null;
   readonly snapshotRevision: number | null; readonly researchRevision: number | null;
-  readonly heartbeatRevision?: number | null; readonly sourceProgressId?: string | null }): AdminV6CapabilityManifest {
+  readonly heartbeatRevision?: number | null; readonly sourceProgressId?: string | null;
+  /** Existing pulse only: re-read time-derived status every five minutes even if no source changes. */
+  readonly workerAgeBucket?: number | null }): AdminV6CapabilityManifest {
   const sections: Record<string, { contract: string; href: string; revision: string }> = {};
   if (input.configRevision !== null && input.snapshotRevision !== null) {
     const common = `${input.configRevision}:${input.snapshotRevision}`;
@@ -29,7 +31,7 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   }
   if (input.configRevision !== null && input.researchRevision !== null) {
     sections.workers = { contract: "admin-v6/workers@1", href: "/api/admin/v6/workers",
-      revision: `workers:${input.configRevision}:${input.researchRevision}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}` };
+      revision: `workers:${input.configRevision}:${input.researchRevision}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }

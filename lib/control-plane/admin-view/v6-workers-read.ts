@@ -376,7 +376,8 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const memberSends = (sends ?? []).filter(r => r.kind !== "DISPATCH" && text(r.ref) && sendRelation(binding, r.key as string, r.ref as string) === "member");
   const waiting: V6WaitingItem[] = [];
   const next: string[] = [];
-  const nextTime = nextDue ? `The next round, due ${mstWords(nextDue)}` : "Not reported";
+  const nextTime = !nextDue ? "Not reported" : Date.parse(nextDue) > Date.parse(now) ? `The next round, due ${mstWords(nextDue)}`
+    : `The next round (it was due ${mstWords(nextDue)})`;
   if (research?.pausedByOwner === true) next.push("Paid research is paused by you. Plain-code work keeps going.");
   for (const r of memberSends) {
     const d = binding.saved.find(s => s.key === r.key && s.receiptId === r.ref);
@@ -427,13 +428,12 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (!binding.all) missing.push(`Only work sent to a hunt is split by place. Other queued work is counted for the whole system only, in the lane counts.`);
   if (!binding.all && sends === null) missing.push("The runner's per-hunt reading of finished and unfinished tasks could not be read.");
 
-  /* what changed: source receipts (repeats folded together), checked Scout starts and stops, the completed window */
+  /* what changed: each source's newest receipt (a retry loop is one line), checked Scout starts and stops, the completed window */
   const events: (V6WorkerEvent & { iso: string })[] = [];
-  const folded = new Map<string, typeof inScope>();
-  for (const x of inScope) { const k = `${x.row.p.taskId} ${x.row.p.stage}`; folded.set(k, [...(folded.get(k) ?? []), x]); }
-  for (const [, rows] of folded) {
+  for (const [, rows] of byTask) {
     const newest = rows[0], p = newest.row.p, stage = SOURCE_STAGE[p.stage];
-    const times = rows.length > 1 ? ` ${rows.length} times since ${mstWords(rows[rows.length - 1].row.at)}` : "";
+    const same = rows.filter(x => x.row.p.stage === p.stage);
+    const times = same.length > 1 ? ` ${same.length} times since ${mstWords(same[same.length - 1].row.at)}` : "";
     events.push({ iso: newest.row.at, at: mstWords(newest.row.at), kind: stage.kind, tone: stage.tone, applies,
       text: `${sourceName(p.sourceId)} for ${namesOf(binding, newest.sends)} ${stage.says}${times}.${p.stage === "FAILED" ? ` ${failureWords(p.detail)}` : ""}` });
   }
@@ -455,7 +455,8 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   events.sort((a, b) => Date.parse(b.iso) - Date.parse(a.iso) || a.text.localeCompare(b.text));
   // Plain-code jobs record no change this section can read, so no scope can claim "no recorded changes".
 
-  if (nextDue) next.push(`The next round of work is due ${mstWords(nextDue)}.`);
+  if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `The next round of work is due ${mstWords(nextDue)}.`
+    : `The next round was due ${mstWords(nextDue)}. No newer start is saved yet.`);
   missing.push(`${DEP_WORKER_ACTIVE_INDEX}: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.`);
 
   const data: AdminV6WorkersView = {

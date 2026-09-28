@@ -161,6 +161,16 @@ test("a saved publication for the hunt's exact receipt is the last useful progre
   assert.match(s.data.status.lastUsefulProgress?.what ?? "", /voting sites source for the ZIP 85635 \(Census ZCTA\) hunt was checked and published/);
 });
 
+test("the saved retry loop is one feed line, and a past-due round is not presented as upcoming", async () => {
+  const s = ok(await section(Z85635, await world({ scouts: [], sources: votingSitesLoop(25),
+    heartbeat: { nextCycleDueAt: "2026-09-28T21:55:00.000Z" } })));
+  const voting = (s.data.events ?? []).filter(e => /voting sites/.test(e.text));
+  assert.equal(voting.length, 1, "QUEUED → COLLECTING → FAILED repeats are one line about the newest state");
+  assert.match(voting[0].text, /stopped before publishing 9 times since/);
+  assert.ok(s.data.next?.includes("The next round was due Sep 28, 2:55 PM MST. No newer start is saved yet."));
+  assert.ok(!(s.data.next ?? []).some(n => /is due/.test(n)));
+});
+
 /* ------------------------------------------------------- place binding */
 
 test("the 85635 hunt's work is bound by its exact original receipt; other hunts and unsent work stay out", async () => {

@@ -59,6 +59,7 @@ import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
 import { WORK_QUESTION_WORDS } from "@/lib/control-plane/work-question.ts";
 import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-reading.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
+import { plainText } from "@/lib/control-plane/plain-words.ts";
 import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
@@ -356,7 +357,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         : <div className={s.stack10}>{priorities.map(priority => { const row = priority.row; return <div key={row.id} className={s.insetRow}>
           <div className={`${s.stack2} ${s.grow}`}>
             <span className={s.text14}><strong className={s.strong}>{priority.rank}. {row.label}</strong> · {row.state.toLowerCase()} · {priority.category === "NEEDS_OWNER_DECISION" ? "Needs your decision" : priority.category === "NEEDS_CODE_CHANGE" ? "Needs a code repair" : priority.category === "WAITING_ON_PUBLISHER" ? "Waiting on the publisher" : priority.category === "OWNER_UNCLEAR" ? "Next owner unclear" : "Being fixed automatically"}</span>
-            <span className={s.note}>{row.blocker === null ? "This row has no recorded blocker reason." : row.blocker} {row.nextAction}</span>
+             <span className={s.note}>{row.blocker === null ? "This row has no recorded blocker reason." : plainText(row.blocker)} {plainText(row.nextAction)}</span>
+             {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ?? "No reason recorded"} · {row.nextAction}</details>}
             <span className={s.note}>Why this ranks here: {priority.rankingWhy}</span>
             <span className={s.monoSmall}>{row.waitingSince ? `Waiting since ${formatEastern(row.waitingSince)}` : "Waiting start not recorded"}{row.lastActivityAt ? ` · last activity ${formatEastern(row.lastActivityAt)}` : " · last activity not recorded"}{row.lastAttemptAt ? ` · last attempt started ${formatEastern(row.lastAttemptAt)}` : " · last attempt not recorded"}</span>
             <span className={s.note}>Direct dependent work items: {row.directDependentCount === undefined || row.directDependentCount === null ? "graph unread" : row.directDependentCount}. Could become ready if this work settles: {row.readyAfterThisSettlesCount === undefined || row.readyAfterThisSettlesCount === null ? "graph unread" : row.readyAfterThisSettlesCount}.</span>
@@ -411,6 +413,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                     bodyAttempts={exactInstructionMembership(view,i.decision.key,i.decision.receiptId).bodyAttempts}
                     unattributedBodyAttemptCount={view?.bodyAttempts?.filter(attempt => !Array.isArray(attempt.assignmentRefs) || attempt.assignmentRefs.length === 0).length ?? null}
                     huntCost={snapshotOut.kind === "HELD" ? snapshotOut.value.billingAttribution?.hunts?.find(hunt => hunt.key === i.decision.key && hunt.receiptId === i.decision.receiptId && hunt.startedAt === i.decision.budgetStartedAt) ?? null : null}
+                    legacyHuntCost={snapshotOut.kind === "HELD" && i.decision.key === ORIGINAL_LIFETIME_HUNT.key && i.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && i.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt
+                      ? snapshotOut.value.billingAttribution?.hunts?.find(hunt => hunt.key === i.decision.key && hunt.startedAt === i.decision.budgetStartedAt && !hunt.receiptId) ?? null : null}
                     workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
                 ) : null,
               ),
@@ -517,9 +521,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view, openHref, workHref, sharedSources, activity, huntCost, bodyAttempts, unattributedBodyAttemptCount }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null; huntCost: NonNullable<BillingAttribution["hunts"]>[number] | null; bodyAttempts: readonly BodyPublicationAttempt[] | null; unattributedBodyAttemptCount: number | null }) {
+function InstructionDetail({ view, openHref, workHref, sharedSources, activity, huntCost, legacyHuntCost, bodyAttempts, unattributedBodyAttemptCount }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null; huntCost: NonNullable<BillingAttribution["hunts"]>[number] | null; legacyHuntCost: NonNullable<BillingAttribution["hunts"]>[number] | null; bodyAttempts: readonly BodyPublicationAttempt[] | null; unattributedBodyAttemptCount: number | null }) {
   const d = view.decision;
   const r = view.reach;
+  const legacyKnownAnthropic = legacyHuntCost?.anthropicKnownUsd ?? legacyHuntCost?.anthropicUsd ?? null;
+  const legacyKnownOther = legacyHuntCost?.otherKnownUsd ?? legacyHuntCost?.otherUsd ?? null;
   const links = (ids: readonly string[], more: number) => (
     <div className={s.stack2}>
       {ids.map((id) => (
@@ -536,8 +542,8 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity, 
       {d.note ? <p className={s.record}>“{d.note}”</p> : <p className={s.note} style={{ marginBottom: 22 }}>You sent this without words of your own.</p>}
       <h4 className={s.h4}>Cost since this hunt started</h4>
       {huntCost ? <p className={s.note}>
-        Token allowance: {huntCost.budgetConsumedKnownUsd === undefined ? "consumption not measured" : `$${huntCost.budgetConsumedKnownUsd.toFixed(2)} known charges including shared requests`}; {huntCost.reservedUsd === null ? "reservations unread" : `$${huntCost.reservedUsd.toFixed(2)} reserved`}; {huntCost.budgetConsumedKnownUsd === undefined || huntCost.availableUsd === null ? "available allowance cannot be confirmed" : `$${huntCost.availableUsd.toFixed(2)} available`} of ${huntCost.budgetUsd.toFixed(2)}. {huntCost.budgetUnpriced === undefined ? "Unpriced token requests not measured" : `${huntCost.budgetUnpriced} unpriced token request${huntCost.budgetUnpriced === 1 ? "" : "s"}`}. For combined reporting, ${huntCost.anthropicKnownUsd.toFixed(2)} Anthropic and ${huntCost.otherKnownUsd.toFixed(2)} other known costs are allocated here once; ${huntCost.knownCombinedUsd.toFixed(2)} combined known. <Link href="/admin/money" className={s.btnLink}>See cost detail</Link>
-      </p> : <p className={s.note}>No matching started-hunt cost reading is available. This does not mean zero spent.</p>}
+        Token allowance: {huntCost.budgetConsumedKnownUsd === undefined ? "consumption not measured" : `$${huntCost.budgetConsumedKnownUsd.toFixed(2)} known charges including shared requests`}; {huntCost.reservedUsd === null ? "reservations unread" : `$${huntCost.reservedUsd.toFixed(2)} reserved`}; {huntCost.budgetConsumedKnownUsd === undefined || huntCost.availableUsd === null ? "available allowance cannot be confirmed" : `$${huntCost.availableUsd.toFixed(2)} available`} of ${huntCost.budgetUsd.toFixed(2)}. {huntCost.budgetUnpriced === undefined ? "Unpriced token requests not measured" : `${huntCost.budgetUnpriced} unpriced token request${huntCost.budgetUnpriced === 1 ? "" : "s"}`}. For combined reporting, ${huntCost.anthropicKnownUsd.toFixed(2)} Anthropic and ${huntCost.otherKnownUsd.toFixed(2)} other known costs are allocated here once; ${huntCost.knownCombinedUsd.toFixed(2)} combined known. {huntCost.anthropicUsd === null || huntCost.otherUsd === null ? "At least one service total is incomplete; the combined known figure is a subtotal." : ""} {huntCost.unpriced > 0 ? `${huntCost.unpriced} provider requests still need pricing.` : ""} <Link href="/admin/money" className={s.btnLink}>See cost detail</Link>
+      </p> : legacyHuntCost ? <p className={s.note}>An earlier billing snapshot linked by hunt key and start, without this saved receipt, records {legacyKnownAnthropic === null ? "an unknown amount" : `$${legacyKnownAnthropic.toFixed(2)}`} in known Anthropic charges. Other-service total is {legacyHuntCost.otherUsd === null ? "incomplete" : legacyKnownOther === null ? "not measured" : `$${legacyKnownOther.toFixed(2)}`}. These are historical amounts, not exact receipt attribution or confirmed available allowance. {legacyHuntCost.unpriced} requests still need pricing. <Link href="/admin/money" className={s.btnLink}>See cost detail</Link></p> : <p className={s.note}>No matching started-hunt cost reading is available. This does not mean zero spent.</p>}
       <h4 className={s.h4}>Body publication attempts</h4>
       {bodyAttempts === null ? <p className={s.goldNote}>The body attempt projection was not published, so this instruction&apos;s publisher attempts cannot be counted.</p>
         : bodyAttempts.length === 0 ? <p className={s.note}>No publisher attempt is recorded on the work linked to this instruction yet. Earlier source searches may still exist.</p>

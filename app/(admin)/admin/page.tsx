@@ -46,6 +46,8 @@ import {
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { routineAssignmentId } from "@/lib/control-plane/assignment-routine.ts";
+import { plainText } from "@/lib/control-plane/plain-words.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
 
 import { BodyList } from "../_mw/body-list.tsx";
 import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
@@ -126,6 +128,9 @@ function SavedHuntOverview({ decision, scope, now, read }: {
   const blockers = rankedWorkBlockers(members ?? [], now).slice(0, 5);
   const cost = decision.budgetStartedAt ? fields?.billingAttribution?.hunts?.find(row =>
     row.key === decision.key && row.receiptId === decision.receiptId && row.startedAt === decision.budgetStartedAt) ?? null : null;
+  const legacyCost = !cost && decision.key === ORIGINAL_LIFETIME_HUNT.key && decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt
+    ? fields?.billingAttribution?.hunts?.find(row => row.key === decision.key && row.startedAt === decision.budgetStartedAt && !row.receiptId) ?? null : null;
   const census = fields?.checklists?.find(row => row.scopeId === decision.key && row.instructionReceipt === decision.receiptId) ?? null;
   const instantiated = new Set(census?.instances.flatMap(row => row.definitionIds) ?? []);
   const missingDefinitions = census ? CHECKLIST_PROFILE.definitions.length - instantiated.size : null;
@@ -149,7 +154,7 @@ function SavedHuntOverview({ decision, scope, now, read }: {
     {read.gap && <p className={s.goldNote}>{read.gap}</p>}
     <div className={s.gridAuto220} style={{ marginBottom: 20 }}>
       <div className={s.insetTile}><span className={s.titleStrong14}>Work linked to this saved instruction</span><p className={s.fig}>{figure(total)}</p><p className={s.note}>{figure(active)} working · {figure(waiting)} waiting · {figure(blocked)} blocked, failed or unknown. These are receipt-linked tracked assignments, not complete coverage.</p></div>
-      <div className={s.insetTile}><span className={s.titleStrong14}>Money since this hunt started</span><p className={s.fig}>{cost?.budgetConsumedKnownUsd === undefined ? "Not measured" : dollars(cost.budgetConsumedKnownUsd)}</p><p className={s.note}>Known Anthropic charges consuming this {dollars(decision.budgetUsd)} allowance, including shared requests. {cost?.budgetConsumedKnownUsd !== undefined ? `${dollars(cost.reservedUsd)} reserved · ${dollars(cost.budgetUnpriced ? null : cost.availableUsd)} available · ${cost.budgetUnpriced ?? 0} unpriced token request${cost.budgetUnpriced === 1 ? "" : "s"}. ${dollars(cost.anthropicKnownUsd)} Anthropic and ${dollars(cost.otherKnownUsd)} other known costs allocated here once for reporting; ${dollars(cost.knownCombinedUsd)} combined allocated known.` : "No exact allowance-consumption reading is published; zero is not implied."}</p></div>
+      <div className={s.insetTile}><span className={s.titleStrong14}>Money since this hunt started</span><p className={s.fig}>{cost?.budgetConsumedKnownUsd === undefined ? "Not measured" : dollars(cost.budgetConsumedKnownUsd)}</p><p className={s.note}>Known Anthropic charges consuming this {dollars(decision.budgetUsd)} allowance, including shared requests. {cost?.budgetConsumedKnownUsd !== undefined ? `${dollars(cost.reservedUsd)} reserved · ${dollars(cost.budgetUnpriced ? null : cost.availableUsd)} available · ${cost.budgetUnpriced ?? 0} unpriced token request${cost.budgetUnpriced === 1 ? "" : "s"}. ${dollars(cost.anthropicKnownUsd)} Anthropic and ${dollars(cost.otherKnownUsd)} other known costs allocated here once for reporting; ${dollars(cost.knownCombinedUsd)} combined allocated known. ${cost.anthropicUsd === null || cost.otherUsd === null ? "At least one service total is incomplete; known combined cost is a subtotal, not the final total." : ""} ${cost.unpriced > 0 ? `${cost.unpriced} provider request${cost.unpriced === 1 ? "" : "s"} still need pricing.` : ""}` : legacyCost ? `Earlier billing linked by hunt key and start, without the saved instruction receipt, records ${dollars(legacyCost.anthropicKnownUsd ?? legacyCost.anthropicUsd)} known Anthropic charges. Other-service total is ${legacyCost.otherUsd === null ? "incomplete" : dollars(legacyCost.otherKnownUsd ?? legacyCost.otherUsd)}. These are historical amounts, not exact receipt attribution or confirmed remaining allowance. ${legacyCost.unpriced} request${legacyCost.unpriced === 1 ? "" : "s"} still need pricing.` : "No exact allowance-consumption reading is published; zero is not implied."}</p></div>
       <div className={s.insetTile}><span className={s.titleStrong14}>Full checklist</span><p className={s.fig}>{census ? `${census.instances.length} represented items` : "Not measured"}</p><p className={s.note}>{census ? `${missingDefinitions} of ${CHECKLIST_PROFILE.definitions.length} original definitions are not represented in this census; ${census.inventory.unresolvedObjects} source inventories unresolved. Representation earns no passing credit. ${census.gaps.length > 0 ? census.gaps[0] : "No gap summary is recorded; this does not establish completeness."}` : "No census matches this exact instruction and receipt. Missing requirements are unknown, not passed."}</p></div>
     </div>
     <div className={s.row10} style={{ marginBottom: 20 }}><Link className={s.btnLink} href={workHref}>Open all linked work</Link><Link className={s.btnLink} href={moneyHref}>See money</Link><Link className={s.btnLink} href={doneHref}>See checklist and delivery</Link></div>
@@ -159,7 +164,8 @@ function SavedHuntOverview({ decision, scope, now, read }: {
           : <div className={s.stack8}>{blockers.map(({row,ageDays,category,rankingWhy}) => <div key={row.id} className={s.insetRow}>
             <Link className={s.btnLink} href={withScope("/admin/work", scope, { instruction: decision.key, open: row.id })}>{row.label}</Link>
             <span className={s.note}>{categoryWords[category]} · {ageDays === null ? "waiting age unknown" : `${ageDays} days waiting`} · next owner: {row.owner in ownerWords ? ownerWords[row.owner] : "Owner is not recorded"} · last attempt: {row.lastAttemptAt ? formatEastern(row.lastAttemptAt) : "not recorded"}</span>
-            <span className={s.text14}>{row.blocker ?? "Overdue"}. Next: {row.nextAction}</span>
+            <span className={s.text14}>{plainText(row.blocker) || "Overdue"}. Next: {plainText(row.nextAction) || "Next action not recorded."}</span>
+            {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ?? "No reason recorded"} · {row.nextAction}</details>}
             <span className={s.note}>Why it is high on the list: {rankingWhy.replace(" Downstream work unlocked is not measured.", "")}{row.readyAfterThisSettlesCount === null || row.readyAfterThisSettlesCount === undefined ? " · Work this would unlock is not measured." : ` · ${row.readyAfterThisSettlesCount} directly dependent item${row.readyAfterThisSettlesCount === 1 ? "" : "s"} would be ready once this settles.`}</span>
           </div>)}</div>}
     </div>

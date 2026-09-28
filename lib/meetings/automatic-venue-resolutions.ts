@@ -77,6 +77,8 @@ export function placeMeetingsFromVerifiedVenues(meetings: readonly Meeting[], re
 export async function automaticVenuePackage(input: {
   readonly snapshot: MeetingsSnapshot;
   readonly existingIds: ReadonlySet<string>;
+  /** The promoted family wiring's exact source/body routes, never a guessed event link. */
+  readonly memberRoutes: ReadonlyMap<string, string>;
   readonly fetchImpl?: typeof fetch;
   readonly clock?: () => string;
 }): Promise<{ readonly package: ManualProjectionPackage | null; readonly held: readonly string[] }> {
@@ -110,9 +112,10 @@ export async function automaticVenuePackage(input: {
     const published = gap.publishedText!;
     const bodyOcdId = meeting.ocdId!;
     const sourceId = meeting.id.split(":", 1)[0] ?? "";
-    const sourceUrl = meeting.provenance.sourceUrl;
+    const memberRoute = input.memberRoutes.get(`${sourceId}:${meeting.bodyId}`);
+    if (!memberRoute) { held.push(`${id}: no promoted route for this exact source and body`); continue; }
     const acquisition = input.snapshot.sources.find((source) => source.source === sourceId)?.acquisitions?.find((evidence) =>
-      samePublisherRoute(sourceUrl, evidence.finalUrl) && evidence.source === sourceId && /^[a-f0-9]{64}$/.test(evidence.rawHash) &&
+      samePublisherRoute(memberRoute, evidence.finalUrl) && evidence.source === sourceId && /^[a-f0-9]{64}$/.test(evidence.rawHash) &&
       evidence.httpStatus >= 200 && evidence.httpStatus < 300
     );
     if (!acquisition) {

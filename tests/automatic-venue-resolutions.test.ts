@@ -12,6 +12,7 @@ const NOW = "2026-09-28T08:30:00.000Z";
 const FEED = "https://county.example.gov/common/modules/iCalendar/iCalendar.aspx?catID=31&feed=calendar";
 const RAW = "- 1415 W Melody Ln Bldg G Bisbee AZ 85603";
 const BODY = "ocd-division/country:us/state:az/county:cochise";
+const ROUTES = new Map([["ical:county-governing", FEED]]);
 const GEO = { result: { addressMatches: [{
   matchedAddress: "1415 W MELODY LN, BISBEE, AZ, 85603",
   coordinates: { x: -109.92566533383, y: 31.393935355772 },
@@ -23,14 +24,14 @@ const snapshot = {
   meetings: [{
     id: "ical:county:meeting-1", ocdId: BODY, bodyId: "county-governing", location: null,
     venueGap: { kind: "STATED_NOT_PLACED", publishedText: RAW, publisher: "County" },
-    provenance: { sourceUrl: "/common/modules/iCalendar/iCalendar.aspx?feed=calendar&catID=31", sourceOrg: "County", collectedAt: NOW, verifiedAt: null },
+    provenance: { sourceUrl: "/calendar.aspx?EID=2980", sourceOrg: "County", collectedAt: NOW, verifiedAt: null },
   }],
   sources: [{ source: "ical", acquisitions: [{ source: "ical", requestedUrl: FEED, finalUrl: FEED,
     httpStatus: 200, rawHash: "a".repeat(64), byteCount: 3000 }] }],
 } as unknown as MeetingsSnapshot;
 
 test("one exact published address and one exact Census match pass the existing venue promotion gate", async () => {
-  const result = await automaticVenuePackage({ snapshot, existingIds: new Set(), clock: () => NOW,
+  const result = await automaticVenuePackage({ snapshot, existingIds: new Set(), memberRoutes: ROUTES, clock: () => NOW,
     fetchImpl: (async () => new Response(JSON.stringify(GEO), { status: 200 })) as typeof fetch });
   assert.deepEqual(result.held, []);
   assert.ok(result.package);
@@ -55,7 +56,7 @@ test("a different city or an ambiguous response cannot create a pin", () => {
 
 test("a carried address cannot borrow a newer feed's acquisition receipt", async () => {
   const old = { ...snapshot, meetings: [{ ...snapshot.meetings[0]!, carried: { source: "ical", lastFreshAt: NOW } }] } as MeetingsSnapshot;
-  const result = await automaticVenuePackage({ snapshot: old, existingIds: new Set(), clock: () => NOW,
+  const result = await automaticVenuePackage({ snapshot: old, existingIds: new Set(), memberRoutes: ROUTES, clock: () => NOW,
     fetchImpl: (async () => { throw new Error("a carried address must not be geocoded as fresh"); }) as typeof fetch });
   assert.equal(result.package, null);
   assert.match(result.held[0] ?? "", /not freshly read/);

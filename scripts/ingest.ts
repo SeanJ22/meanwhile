@@ -857,7 +857,9 @@ export async function promoteDerivedMeetingFamily(
       throw new Error(`AUTOMATIC_VENUE_BASE_UNAVAILABLE:${venueRead.kind}:${venueRead.detail}`);
     }
     const existingIds = new Set(venueRead.kind === "PROMOTED" ? venueRead.value.records.map((row) => row.id) : []);
-    const proposed = await automaticVenuePackage({ snapshot: build.snapshot, existingIds });
+    const memberRoutes = new Map(members.filter((member) => member.status === "ACTIVE").map((member) =>
+      [`${DERIVED_WIRING_SOURCE_NAMES[member.row.kind]}:${member.row.bodyId}`, member.row.route] as const));
+    const proposed = await automaticVenuePackage({ snapshot: build.snapshot, existingIds, memberRoutes });
     for (const hold of proposed.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
     if (proposed.package) {
       const reviewedAt = proposed.package.sourceReceipt.reviewedAt;

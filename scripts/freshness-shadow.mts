@@ -3518,6 +3518,9 @@ try {
          latest durable receipt while refreshing cycle/liveness fields; a cycle
          crash before the observer runs must not erase the last known reading. */
       intakeRuntime: beat?.value.intakeRuntime ?? null,
+      /* The parent recorded this release adoption at a separate boundary.
+         Carry the original observation unchanged; a cycle is not a recheck. */
+      runtimeRelease: beat?.value.runtimeRelease ?? null,
     };
     await pending.step("heartbeat:write", async () => {
       if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);

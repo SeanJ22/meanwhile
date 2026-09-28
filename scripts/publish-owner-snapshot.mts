@@ -63,6 +63,7 @@ import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage
 import {
   CACHE_OBSERVATION_ID,
   DECISION_LOG_KEY,
+  RUNNER_ID,
   SNAPSHOT_ID,
 } from "../lib/control-plane/admin-data.ts";
 import {
@@ -75,6 +76,7 @@ import {
   type Measured,
   type OwnerDecisionCard,
   type OwnerSnapshot,
+  type RunnerHeartbeat,
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
@@ -413,6 +415,7 @@ const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
  * gap rather than a zero.
  */
 interface ControlPlaneReads {
+  readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof providerBillingAttribution>[0]["scopes"];
   readonly billingHolds: Parameters<typeof providerBillingAttribution>[0]["holds"];
   readonly costs: Awaited<ReturnType<ControlPlaneRepositories["costs"]["readAll"]>>;
@@ -432,6 +435,7 @@ interface ControlPlaneReads {
 }
 
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
+  const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds] = await Promise.all([
     repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
     repos.budget.read().then(r => r.value.spendHolds ?? {}).catch(() => null),
@@ -476,6 +480,7 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   }
   const metrics = research?.value.metrics ?? null;
   return {
+    runnerHeartbeat,
     billingScopes, billingHolds,
     costs,
     attempts: attempts.map((a) => ({ id: a.value.id, worker: a.value.worker })),
@@ -770,7 +775,8 @@ async function main(): Promise<void> {
     scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
     .map(scope => buildChecklistCensus({ scope,
     sources: reads.assignmentSources.ok ? { ...reads.assignmentSources.value, servedReader } : null,
-    observedAt: NOW_ISO, previous: existing?.value.checklists?.find(row => row.scopeId === scope.key) }))
+    observedAt: NOW_ISO, heartbeat: reads.runnerHeartbeat,
+    previous: existing?.value.checklists?.find(row => row.scopeId === scope.key) }))
     ?? existing?.value.checklists?.map(row => ({ ...row, readsComplete: false }));
   const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, checklists };
 

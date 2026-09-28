@@ -906,6 +906,10 @@
   outline: 2px solid var(--mw-ring);
   outline-offset: 2px;
 }
+.root summary:focus-visible {
+  outline: 2px solid var(--mw-ring);
+  outline-offset: 2px;
+}
 
 /* ================================================================ inset rows */
 
@@ -1158,6 +1162,13 @@
 }
 
 @media (max-width: 720px) {
+  .gridAuto320,
+  .gridAuto300,
+  .gridAuto240,
+  .gridAuto220,
+  .gridAuto200 {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .header,
   .strip {
     padding-left: 16px;

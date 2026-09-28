@@ -1,5 +1,5 @@
 import { CHECKLIST_PROFILE, type ChecklistInstance } from "../readiness/checklist-score.ts";
-import type { ChecklistInstanceIndexRead } from "./checklist-instance-index-read.ts";
+import type { ChecklistAllDefinitionsRead, ChecklistInstanceIndexRead } from "./checklist-instance-index-read.ts";
 
 export const ADMIN_V6_CHECKLIST_CONTRACT = "admin-v6/checklist@1" as const;
 
@@ -57,7 +57,7 @@ function partText(clause: string): string {
 function itemOf(instance: ChecklistInstance, definitionId: string, projectionId: string, ordinal: number) {
   const definition = definitionById.get(definitionId)!;
   const unresolved = instance.applicability.state === "UNRESOLVED" || instance.due.state === "UNRESOLVED";
-  return { key: `${projectionId}:${encodeURIComponent(instance.obligationKey)}:${ordinal}`, definitionId,
+  return { key: `${projectionId}:${definitionId}:${encodeURIComponent(instance.obligationKey)}:${ordinal}`, definitionId,
     name: definition.requirement.split(" — ")[0], subject: instance.objectId, period: instance.period,
     status: "unsure" as const,
     missing: unresolved ? "Applicability or effective period is unresolved; full proof has not been read here."
@@ -95,5 +95,29 @@ export function v6ChecklistSection(input: { readonly scope: string; readonly rea
       "Place-group counts and whole-system audit statuses are not connected to this indexed read.",
       "UI place-key to canonical instruction-scope binding is not connected; only exact canonical scope keys are accepted.",
     ], page: { total: available ? read.matchedCapturedCount : null,
+      nextCursor: available ? read.nextCursor : null, prevCursor: null } };
+}
+
+/** All 325 definitions remain present even when this bounded page has no rows. */
+export function v6ChecklistAllDefinitionsSection(input: { readonly scope: string;
+  readonly read: ChecklistAllDefinitionsRead; readonly readAt: string }): AdminV6ChecklistEnvelope {
+  const read = input.read;
+  const available = read.state === "CURRENT_SNAPSHOT_CAPTURED_INSTANCES";
+  return { contract: ADMIN_V6_CHECKLIST_CONTRACT, scope: input.scope,
+    revision: available ? read.projectionId : `${CHECKLIST_PROFILE.version}:index-unavailable`,
+    asOf: available ? read.observedAt : input.readAt,
+    data: { profileVersion: CHECKLIST_PROFILE.version, definitionCount: CHECKLIST_PROFILE.definitionCount,
+      definitions, groupNames: GROUP_NAMES, placeGroups: null, systemGroups,
+      items: available ? read.rows.map(row => itemOf(row.instance, row.definitionId, read.projectionId, row.ordinal)) : null },
+    missingParts: [
+      available ? "This page contains captured definition-instance rows for one exact instruction receipt. Expected civic objects, national totals, distinct-object totals and history remain unknown." : read.says,
+      ...(available && !read.completeness.inventoryComplete
+        ? ["The expected civic object inventory is incomplete; the captured row count is a lower bound."] : []),
+      ...(available && !read.completeness.readsComplete
+        ? ["One or more canonical source populations were not read completely for this census."] : []),
+      "Clause-level verification, publication and public-page witnesses were not joined; item statuses remain unsure.",
+      "Place-group counts and whole-system audit statuses are not connected to this indexed read.",
+    ],
+    page: { total: available ? read.matchedCapturedCount : null,
       nextCursor: available ? read.nextCursor : null, prevCursor: null } };
 }

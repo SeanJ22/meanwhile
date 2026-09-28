@@ -4,7 +4,7 @@ import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hun
 import { manualProducerInvocationMatrix } from "../lib/civic-data/manual-producer-invocation.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { routineTaskDue, ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
+import { routineTaskDue, ROUTINE_SOURCE_TASKS, sourceTaskRuntimeCapability } from "../lib/civic-data/runner.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import { DEFAULT_CONTRACT, type WorkItem } from "../lib/control-plane/work-item.ts";
 
@@ -50,9 +50,18 @@ test("all registered manual contracts have an invocation disposition; only exact
     decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
   const tasks = huntSourceTasks([original], "2026-09-28T08:00:00.000Z");
   assert.deepEqual(tasks.filter(task => ["prl", "jurisdiction-operational-reference", "jurisdiction-operational-reference-az"].includes(task.id)).map(task => task.id), ["jurisdiction-operational-reference-az", "prl"]);
-  assert.equal(tasks.length, 6);
+  assert.equal(tasks.length, 7);
+  const governor = tasks.find(task => task.id === "az-governor-executive-orders");
+  assert.ok(governor, "the exact original Send offers the direct Governor source task");
+  assert.deepEqual(governor.ownerInvocation?.instructions, [ORIGINAL_LIFETIME_HUNT.receiptId]);
+  assert.equal(ROUTINE_SOURCE_TASKS.some(task => task.id === governor.id), false,
+    "this source must not join the global standing clock");
+  assert.equal(sourceTaskRuntimeCapability(governor), "ROUTINE_CONTRACT");
+  assert.equal(sourceTaskRuntimeCapability(tasks.find(task => task.id === "prl")!), "MANUAL_CONTRACT");
   const wrongReceipt = { ...original, decision: { ...original.decision, receiptId: "another-send" } };
   assert.equal(huntSourceTasks([wrongReceipt], "2026-09-28T08:00:00.000Z").length, 4);
+  assert.equal(huntSourceTasks([wrongReceipt], "2026-09-28T08:00:00.000Z")
+    .some(task => task.id === "az-governor-executive-orders"), false);
 });
 
 test("source admission resumes from durable failure/success clocks rather than rerunning each pass or restart", () => {

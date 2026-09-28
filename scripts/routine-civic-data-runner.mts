@@ -37,6 +37,7 @@ import {
   routineTaskDeadlineMs,
   routineTaskDue,
   routineTaskSelection,
+  sourceTaskRuntimeCapability,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -652,17 +653,12 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
-      ...(pending.task.ownerInvocation ? admittedRuntimeChildEnvironment({
+      ...admittedRuntimeChildEnvironment({
         parentEnv: process.env,
-        capability: "MANUAL_CONTRACT",
+        capability: sourceTaskRuntimeCapability(pending.task),
         contract: pending.task.id,
         parentPid: process.pid,
-      }) : admittedRuntimeChildEnvironment({
-        parentEnv: process.env,
-        capability: "ROUTINE_CONTRACT",
-        contract: pending.task.id,
-        parentPid: process.pid,
-      })),
+      }),
       ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
   };

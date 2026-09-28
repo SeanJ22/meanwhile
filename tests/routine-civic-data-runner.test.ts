@@ -208,12 +208,16 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     // The verified campaign sites the campaign-site chain approves (2026-09-25): pipeline approvals and vaulted reads, no route of its own.
     "candidate-campaign-sites-derived",
   ]);
-  assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
+  assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS
+    .filter((contract) => contract.id !== "az-governor-executive-orders")
+    .map((contract) => contract.id),
+  "the owner-invoked Arizona source is registered but never enters the global standing frontier");
   assert.deepEqual(
     ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass === "MEETING").map((task) => task.id),
     MEETING_PARTITION_CONTRACTS.map((contract) => contract.id),
   );
-  assert.deepEqual(ROUTINE_SOURCE_TASKS.map((task) => task.contract), observableRoutineContracts());
+  assert.deepEqual(ROUTINE_SOURCE_TASKS.map((task) => task.contract), observableRoutineContracts()
+    .filter((contract) => contract.id !== "az-governor-executive-orders"));
   assert.ok(
     ROUTINE_SOURCE_TASKS.every((task) => task.acquisitionFailureDomain.length > 0),
     "every routine child declares its real acquisition failure domain",
@@ -1025,7 +1029,7 @@ test("the standing authority envelope is narrowed independently for every runtim
   ]) {
     assert.match(pilot, new RegExp(`standingChildEnvironment\\(\\s*"${capability}"`));
   }
-  assert.match(runner, /capability:\s*"ROUTINE_CONTRACT",[\s\S]*contract:\s*pending\.task\.id/);
+  assert.match(runner, /capability:\s*sourceTaskRuntimeCapability\(pending\.task\),[\s\S]*contract:\s*pending\.task\.id/);
   assert.match(runner, /readerLaunch\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
   assert.match(runner, /parentPid:\s*process\.pid/);
 });

@@ -231,6 +231,24 @@ export const DERIVED_MEETING_FAMILY_POLICY = {
  */
 export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   {
+    id: "az-governor-executive-orders",
+    sourceId: "az-governor-executive-orders",
+    recordClass: "STATE_EXECUTIVE_ACTION",
+    scope: "US-AZ:governor:official-actions",
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-az-governor-executive-orders.mts", "--promote"], requestedUrl: "https://azgovernor.gov/executive-orders" },
+    parserNormalizerVersion: "az-governor-executive-orders/1",
+    cadence: { description: "owner-invoked original Arizona hunt only", defaultEveryMs: Number.POSITIVE_INFINITY },
+    retry: { afterMs: HOUR, description: "one hour after a failed owner-invoked source pass" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "az-governor-executive-orders" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "az-governor-official-actions", consumers: ["/api/official-actions", "Ask", "official cards"] },
+    lkgBehavior: "A failed index, detail, or PDF read cannot replace its prior official action; legislative rows and unwalked orders remain on their exact predecessor version.",
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  },
+  {
     id: "fec-funding",
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",

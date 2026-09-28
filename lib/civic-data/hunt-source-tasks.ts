@@ -1,7 +1,8 @@
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { manualProducerInvocationMatrix } from "./manual-producer-invocation.ts";
-import type { RoutineSourceTask } from "./runner.ts";
+import { routineTaskFromContract, type RoutineSourceTask } from "./runner.ts";
+import { requiredRoutineContract } from "./contracts.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
@@ -51,7 +52,18 @@ export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items:
 }
 
 export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string, items: readonly WorkItem[] = []): RoutineSourceTask[] {
-  return manualProducerInvocationMatrix(scopes, now, items).filter(row => row.commandReady).flatMap(row => {
+  const original = scopes.find((scope) => scope.kind === "RESOLVED" &&
+    scope.decision.sourceWorkVersion === 1 && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
+    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+  const officialActions = original ? (() => {
+    const task = routineTaskFromContract(requiredRoutineContract("az-governor-executive-orders"));
+    return [{ ...task, cadenceMs: Number.POSITIVE_INFINITY,
+      ownerInvocation: { requestedAt: original.decision.decidedAt, instructions: [original.decision.receiptId] },
+    }];
+  })() : [];
+  return [...officialActions, ...manualProducerInvocationMatrix(scopes, now, items).filter(row => row.commandReady).flatMap(row => {
     const applicable = scopes.filter(scope => row.instructionIds.includes(scope.decision.receiptId));
     const contract = requiredManualProductionContract(row.id);
     return [{
@@ -67,5 +79,5 @@ export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string, i
         instructions: [...new Set(applicable.map(scope => scope.decision.receiptId))],
       },
     }];
-  });
+  })];
 }

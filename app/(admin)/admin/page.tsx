@@ -164,8 +164,8 @@ function SavedHuntOverview({ decision, scope, now, read }: {
           : <div className={s.stack8}>{blockers.map(({row,ageDays,category,rankingWhy}) => <div key={row.id} className={s.insetRow}>
             <Link className={s.btnLink} href={withScope("/admin/work", scope, { instruction: decision.key, open: row.id })}>{row.label}</Link>
             <span className={s.note}>{categoryWords[category]} · {ageDays === null ? "waiting age unknown" : `${ageDays} days waiting`} · next owner: {row.owner in ownerWords ? ownerWords[row.owner] : "Owner is not recorded"} · last attempt: {row.lastAttemptAt ? formatEastern(row.lastAttemptAt) : "not recorded"}</span>
-            <span className={s.text14}>{plainText(row.blocker) || "Overdue"}. Next: {plainText(row.nextAction) || "Next action not recorded."}</span>
-            {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ?? "No reason recorded"} · {row.nextAction}</details>}
+            <span className={s.text14}>{plainText(row.blocker) || "Overdue"}. Next: {plainText(row.nextAction) ? plainText(row.nextAction) : "Next action is not recorded on this work item."}</span>
+            {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ? row.blocker : "No blocker reason is recorded on this work item."} · {row.nextAction}</details>}
             <span className={s.note}>Why it is high on the list: {rankingWhy.replace(" Downstream work unlocked is not measured.", "")}{row.readyAfterThisSettlesCount === null || row.readyAfterThisSettlesCount === undefined ? " · Work this would unlock is not measured." : ` · ${row.readyAfterThisSettlesCount} directly dependent item${row.readyAfterThisSettlesCount === 1 ? "" : "s"} would be ready once this settles.`}</span>
           </div>)}</div>}
     </div>

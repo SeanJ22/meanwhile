@@ -1,6 +1,7 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
+import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
 /**
  * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
  *
@@ -940,6 +941,7 @@ export async function createPgRepositories(
     ),
     debts: pgAggregateRepository<FreshnessDebt>(sql, "FreshnessDebt", "cp_debts", bounded),
     leases: pgAggregateRepository<ExecutionLease>(sql, "ExecutionLease", "cp_leases", bounded),
+    activeWorkClaims: pgActiveWorkClaimReader(sql),
     transitions: pgAppendOnlyRepository<RecordedTransition>(sql, "transitions", bounded),
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),

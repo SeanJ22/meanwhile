@@ -42,6 +42,8 @@ import {
   DERIVED_CAMPAIGN_SITES_SCOPE,
   DERIVED_CAMPAIGN_SITES_SOURCE_ID,
   derivedCampaignSitesProjectionIssue,
+  derivedCandidateDocumentId,
+  derivedCandidateRevisionId,
   type CandidateLinksShape,
   type DerivedCampaignSiteRecord,
   type DerivedCampaignSitesProjection,
@@ -61,6 +63,7 @@ import type { DerivedLinkedPublicationEvidence } from "./derived-campaign-sites.
 import { candidatePublicationLinkMatches } from "../control-plane/promotion/campaign-publication-links.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import type { Attempt } from "../control-plane/attempt.ts";
+import type { CandidateDocument, CandidatePublicationDate } from "../candidates/corpus.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -104,6 +107,45 @@ const sameHttpsHost = (left: string | null, right: string): boolean => {
   try { const a = new URL(left ?? ""), b = new URL(right); return a.protocol === "https:" && b.protocol === "https:" && a.hostname === b.hostname; }
   catch { return false; }
 };
+
+/** Only an exact source tag identifying its own article publication time may
+ * supply a publication date. A retrieval time or generic event `<time>` never
+ * substitutes for it. Multiple conflicting source-stated dates stay unknown. */
+function sourcePublicationDate(html: string, artifactId: string, rawContentHash: string): CandidatePublicationDate | undefined {
+  const found: CandidatePublicationDate[] = [];
+  // Keep offsets in the original source. Masking or rewriting HTML before
+  // scanning would make a returned span unverifiable against vaulted bytes.
+  const inert = [...html.matchAll(/<!--[\s\S]*?-->|<(script|style|textarea|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi)]
+    .map(match => ({ start: match.index ?? -1, end: (match.index ?? -1) + match[0].length }));
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const quote = match[0], start = match.index;
+    if (start === undefined || inert.some(range => start >= range.start && start < range.end) ||
+      !/\bproperty\s*=\s*["']article:published_time["']/i.test(quote)) continue;
+    const value = /\bcontent\s*=\s*["']([^"']+)["']/i.exec(quote)?.[1];
+    if (!value || !/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:[^"']+)?$/.test(value)) continue;
+    if (value.includes("T") && !Number.isFinite(Date.parse(value))) continue;
+    const date = value.slice(0, 10), parsed = Date.parse(`${date}T00:00:00.000Z`);
+    if (!Number.isFinite(parsed) || new Date(parsed).toISOString().slice(0, 10) !== date) continue;
+    found.push({ date, basis: "ARTICLE_PUBLISHED_TIME_META", artifactId, rawContentHash,
+      start, end: start + quote.length, quote, offsetUnit: "UTF16_CODE_UNITS" });
+  }
+  return new Set(found.map(row => row.date)).size === 1 ? found[0] : undefined;
+}
+
+function versionedDocument(input: { candidateKey: string; documentUrl: string; content: string; rawContentHash: string;
+  artifactId: string; retrievedAt: string; contentType: string; html: string }): CandidateDocument {
+  const contentHash = sha256Hex(input.content), extractorVersion = 2;
+  const revisionId = derivedCandidateRevisionId({ candidateKey: input.candidateKey, documentUrl: input.documentUrl,
+    rawContentHash: input.rawContentHash, contentHash, extractorVersion });
+  const publicationDate = sourcePublicationDate(input.html, input.artifactId, input.rawContentHash);
+  return { id: derivedCandidateDocumentId(input.candidateKey, contentHash, revisionId), candidateKey: input.candidateKey,
+    sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED", metaDescription: null, documentUrl: input.documentUrl,
+    contentHash, sourceContentHash: input.rawContentHash, retrievedAt: input.retrievedAt,
+    contentType: input.contentType, text: input.content, extraction: "html", extractionNote: null, extractorVersion,
+    sourceRevision: { revisionId, artifactId: input.artifactId, canonicalUrl: input.documentUrl,
+      rawContentHash: input.rawContentHash, capturedAt: input.retrievedAt, extractionVersion: extractorVersion,
+      supersedesRevisionId: null }, ...(publicationDate ? { publicationDate } : {}) };
+}
 
 /** Whether one pipeline log row is an APPROVED campaign-site record this door publishes. A row it cannot read is not one. */
 export function isPublishableCampaignSiteApproval(value: unknown): value is PublishableCampaignSiteApproval {
@@ -288,15 +330,13 @@ export function planDerivedCampaignSites(input: {
             detail: "The campaign link is independently verified, but its captured page yielded no complete readable text. Document extraction repair remains owed; this is not publisher absence." });
           continue;
         }
-        const contentHash = sha256Hex(content);
-        const id = `${key}@${contentHash}`;
-        if (publications.some(row => row.document.id === id)) continue;
+        const document = versionedDocument({ candidateKey: key, documentUrl: captured.evidence.finalUrl, content,
+          rawContentHash: captured.evidence.sha256, artifactId: captured.evidence.artifactId,
+          retrievedAt: captured.evidence.readAt, contentType: captured.evidence.contentType, html: page.held.body });
+        if (publications.some(row => row.document.id === document.id)) continue;
         add({ kind: "VAULTED_EVIDENCE", artifactId: captured.evidence.artifactId, contentHash: `sha256-${captured.evidence.sha256}`,
           tier: page.held.tier, retrievedAt: captured.evidence.readAt });
-        publications.push({ document: { id, candidateKey: key, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED",
-          metaDescription: null, documentUrl: captured.evidence.finalUrl, contentHash, sourceContentHash: captured.evidence.sha256,
-          retrievedAt: captured.evidence.readAt, contentType: captured.evidence.contentType, text: content,
-          extraction: "html", extractionNote: null, extractorVersion: 2 }, evidence: publicationEvidence(page.record) });
+        publications.push({ document, evidence: publicationEvidence(page.record) });
       }
       for (const capture of input.linkedPublications ?? []) {
         const row = capture.record, source = row.publicationLink;
@@ -333,8 +373,10 @@ export function planDerivedCampaignSites(input: {
             detail: "The linked candidate page was captured, but complete readable text was not extracted." });
           continue;
         }
-        const contentHash = sha256Hex(content), id = `${key}@${contentHash}`;
-        if (publications.some(existing => existing.document.id === id)) continue;
+        const document = versionedDocument({ candidateKey: key, documentUrl: capture.vaultRetrievalUrl!, content,
+          rawContentHash: actualHash, artifactId: row.artifactId, retrievedAt: row.recordedAt,
+          contentType: row.contentType, html: capture.body });
+        if (publications.some(existing => existing.document.id === document.id)) continue;
         add({ kind: "VAULTED_EVIDENCE", artifactId: source.sourceArtifactId, contentHash: source.sourceContentHash,
           tier: parent.held.tier, retrievedAt: parent.record.campaignSite.evidence.readAt });
         add({ kind: "VAULTED_EVIDENCE", artifactId: row.artifactId, contentHash: row.contentHash,
@@ -346,10 +388,26 @@ export function planDerivedCampaignSites(input: {
           artifactId: row.artifactId, attemptId: attempt.id, sha256: actualHash,
           requestedUrl: row.canonicalUrl, finalUrl: capture.vaultRetrievalUrl!,
           httpStatus: capture.vaultHttpStatus!, readAt: row.recordedAt };
-        publications.push({ document: { id, candidateKey: key, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED",
-          metaDescription: null, documentUrl: evidence.finalUrl, contentHash, sourceContentHash: actualHash,
-          retrievedAt: row.recordedAt, contentType: row.contentType, text: content,
-          extraction: "html", extractionNote: null, extractorVersion: 2 }, evidence });
+        publications.push({ document, evidence });
+      }
+      // Supersession is only a relation among distinct captured revisions of
+      // this exact URL and extractor. It never compares one campaign page to
+      // another or treats the latest retrieval as a source publication date.
+      const byUrl = new Map<string, typeof publications>();
+      for (const publication of publications) {
+        const doc = publication.document;
+        if (!doc.sourceRevision) continue;
+        const lineage = `${doc.documentUrl}\u0000${doc.sourceRevision.extractionVersion}`;
+        byUrl.set(lineage, [...(byUrl.get(lineage) ?? []), publication]);
+      }
+      for (const lineage of byUrl.values()) {
+        lineage.sort((a, b) => a.document.retrievedAt.localeCompare(b.document.retrievedAt) ||
+          a.document.sourceRevision!.revisionId.localeCompare(b.document.sourceRevision!.revisionId));
+        for (let index = 1; index < lineage.length; index += 1) {
+          const current = lineage[index]!, previous = lineage[index - 1]!;
+          publications[publications.indexOf(current)] = { ...current, document: { ...current.document,
+            sourceRevision: { ...current.document.sourceRevision!, supersedesRevisionId: previous.document.sourceRevision!.revisionId } } };
+        }
       }
       records.push({
         id: key,

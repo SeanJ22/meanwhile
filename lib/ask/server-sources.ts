@@ -195,6 +195,14 @@ function sourcedPositions(targetKey: string) {
             quote: passage.quote,
             documentUrl: passage.documentUrl,
             retrievedAt: passage.retrievedAt,
+            sourceClass: passage.sourceClass,
+            sourceRevisionId: passage.sourceRevisionId,
+            sourceArtifactId: passage.sourceArtifactId,
+            sourceContentHash: passage.sourceContentHash,
+            textStart: passage.textStart,
+            textEnd: passage.textEnd,
+            revisionStatus: passage.revisionStatus,
+            publicationDate: passage.publicationDate,
           }))
         : [],
     );

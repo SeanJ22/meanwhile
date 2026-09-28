@@ -46,6 +46,8 @@ export interface HeldVaultArtifact {
   readonly methodRouteId: string | null;
   /** The robots verdict the retrieval ran under (`ALLOWED`…), as the sidecar recorded it. */
   readonly permission: string | null;
+  /** Retention travels with the sidecar; a private copy cannot extend a limited lifetime. */
+  readonly retentionPolicy?: string | null;
   readonly bodyPath: string;
   readonly bodySha256: string;
 }
@@ -111,6 +113,7 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
         attemptId: meta.custom?.attemptId ?? null,
         methodRouteId: meta.custom?.methodRouteId ?? null,
         permission: meta.custom?.permission ?? null,
+        retentionPolicy: meta.custom?.retentionPolicy ?? null,
         bodyPath: path.slice(0, -SIDECAR_SUFFIX.length),
         bodySha256: sidecar.bodySha256,
       };

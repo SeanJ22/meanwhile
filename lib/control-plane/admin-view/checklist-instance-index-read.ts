@@ -33,8 +33,10 @@ export type ChecklistInstanceIndexRead =
       readonly matchedCapturedCount: null; readonly says: string }
   | { readonly state: "CURRENT_SNAPSHOT_CAPTURED_INSTANCES";
       readonly scopeId: string; readonly instructionReceipt: string; readonly definitionId: string;
-      readonly snapshotPublishedAt: string; readonly scopeRevision: string; readonly observedAt: string;
-      readonly rows: readonly ChecklistInstance[]; readonly matchedCapturedCount: number;
+      readonly projectionId: string; readonly snapshotPublishedAt: string;
+      readonly scopeRevision: string; readonly observedAt: string;
+      readonly rows: readonly ChecklistInstance[]; readonly ordinals: readonly number[];
+      readonly matchedCapturedCount: number;
       readonly pageLimit: number; readonly nextCursor: string | null;
       readonly completeness: { readonly inventoryComplete: boolean; readonly readsComplete: boolean;
         readonly expectedObjects: null; readonly nationalTotal: null; readonly historicalTotal: null } };
@@ -134,9 +136,10 @@ export async function readIndexedChecklistInstances(sql: Sql, query: ChecklistIn
     projectionId: head.projection_id, afterKey: last.obligation_key, afterOrdinal: Number(last.ordinal) }), "utf8").toString("base64url") : null;
   return { state: "CURRENT_SNAPSHOT_CAPTURED_INSTANCES", scopeId: query.scopeId,
     instructionReceipt: query.instructionReceipt, definitionId: query.definitionId,
-    snapshotPublishedAt: isoDate(head.snapshot_published_at)!, scopeRevision: head.scope_revision,
+    projectionId: head.projection_id, snapshotPublishedAt: isoDate(head.snapshot_published_at)!, scopeRevision: head.scope_revision,
     observedAt: isoDate(head.observed_at)!,
-    rows: shown.map(row => row.instance as ChecklistInstance), matchedCapturedCount: Number(count),
+    rows: shown.map(row => row.instance as ChecklistInstance), ordinals: shown.map(row => Number(row.ordinal)),
+    matchedCapturedCount: Number(count),
     pageLimit: query.limit, nextCursor, completeness: { inventoryComplete: head.inventory_complete,
       readsComplete: head.reads_complete, expectedObjects: null, nationalTotal: null, historicalTotal: null } };
 }

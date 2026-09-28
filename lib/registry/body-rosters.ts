@@ -25,6 +25,11 @@ import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 export interface RosterMember {
   /** An unresolved update must retain an older member on its actual source/date. */
   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
+  /** Optional facts kept from an earlier verified read when this update omits them. */
+  retainedFieldSources?: Partial<Record<"termNote" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
+  /** A shared public office line is not a person's private contact route. */
+  contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
+  contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
   /** Stable within the roster: `roster:<bodyId>#<n>`. */
   id: string;
   name: string;
@@ -2569,6 +2574,9 @@ export interface RosterHolder {
   provenance: Provenance;
   email: string | null;
   phone: string | null;
+  contactKind?: "PUBLIC_OFFICE" | "PERSONAL";
+  contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
+  retainedFieldSources?: RosterMember["retainedFieldSources"];
   contactFormUrl: null;
   photoUrl: string | null;
   campaignUrl: null;
@@ -2633,6 +2641,9 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     },
     email: member.email,
     phone: member.phone,
+    contactKind: member.contactKind,
+    contactScope: member.contactScope,
+    retainedFieldSources: member.retainedFieldSources,
     contactFormUrl: null,
     photoUrl: photos[member.id] ?? null,
     campaignUrl: null,

@@ -19,7 +19,7 @@ import { recordAcquisition } from "../evidence/artifact.ts";
 import { putArtifact } from "../evidence/store.ts";
 import { readHeldBytes, type VaultIndex } from "../evidence/read-only-vault.ts";
 import { fingerprint } from "../ids.ts";
-import { beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
+import { abandonAttempt, beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { createRouteTask } from "../route-task.ts";
 import { createWorkItem } from "../work-item.ts";
@@ -33,12 +33,17 @@ import {
   type CampaignSiteLead,
   type CampaignSitePageRead,
 } from "../../candidates/campaign-site-verifier.ts";
+import type { CandidatePublicationLink } from "./campaign-publication-links.ts";
 
 export const CAMPAIGN_SITE_READ_PROJECT = "freshness";
 export const CAMPAIGN_SITE_READ_ROUTE = "campaign-site-verifier";
+export const CANDIDATE_PUBLICATION_READ_ROUTE = "candidate-publication-linked";
 
 export interface CampaignSiteReadRecorder {
   readonly recordRead: (subjectId: string, lead: CampaignSiteLead, read: CampaignSitePageRead) => Promise<ArtifactRecord>;
+  readonly recordPublicationRead: (subjectId: string, link: CandidatePublicationLink, read: CampaignSitePageRead) => Promise<ArtifactRecord>;
+  readonly recordPublicationBlock: (subjectId: string, link: CandidatePublicationLink, status: number, note: string) => Promise<void>;
+  readonly recordPublicationAbort: (subjectId: string, link: CandidatePublicationLink, kind: "ABORTED" | "TIMED_OUT", reason: string) => Promise<void>;
   readonly heldPage: (artifact: ArtifactRecord) => Promise<CampaignSitePageRead | null>;
 }
 
@@ -111,6 +116,91 @@ export function campaignSiteReadRecorder(input: {
     return record;
   };
 
+  const recordPublicationRead: CampaignSiteReadRecorder["recordPublicationRead"] = async (subjectId, link, read) => {
+    if (link.source.candidacyId !== subjectId || read.requestedUrl !== link.url ||
+      new URL(read.finalUrl).hostname !== new URL(link.source.sourceUrl).hostname ||
+      read.httpStatus < 200 || read.httpStatus >= 300 || !/html/i.test(read.contentType)) {
+      throw new Error("CANDIDATE_PUBLICATION_CAPTURE_SCOPE_MISMATCH");
+    }
+    const at = input.now();
+    const item = createWorkItem({ project: CAMPAIGN_SITE_READ_PROJECT, subject: `candidate-publication:${subjectId}`,
+      obligation: `Read linked candidate publication ${link.url}`,
+      why: "An exact link on an approved campaign page led to this separate public document.",
+      contract: { requiresValidation: true, requiresAudit: true }, now: at });
+    if ((await input.repos.workItems.read(item.id)) === null) await registerWorkItem(input.repos, item, at);
+    const routeId = `${CANDIDATE_PUBLICATION_READ_ROUTE}:${fingerprint([link.url, read.retrievedAt])}`;
+    const task = createRouteTask({ workItemId: item.id, routeId, routeLabel: "Linked candidate publication read (robots-first)",
+      target: link.url, inherited: false, now: at });
+    await registerRouteTask(input.repos, task, at);
+    const holder = `candidate-publication-reader:${fingerprint([subjectId, link.url, read.retrievedAt])}`;
+    const claim = await claimRouteTask(input.repos, { routeTaskId: task.id, holder, now: at, ttlMs: 60_000 });
+    const attempt = await beginAttemptFor(input.repos, { routeTaskId: task.id, workItemId: item.id,
+      worker: { role: "ACQUIRER", provider: "candidate-publication-reader", version: "candidate-publication-reader/1", instance: holder },
+      lease: claim.lease.value, now: at, methodVersion: input.methodVersion, policyVersion: FLEET_POLICY_VERSION });
+    const { artifact } = recordAcquisition({ canonicalUrl: link.url, retrievalUrl: read.finalUrl,
+      retrievedAt: read.retrievedAt, httpStatus: read.httpStatus, contentType: read.contentType,
+      sourceId: siteHost(read.finalUrl) ?? "candidate-publication", methodRouteId: CANDIDATE_PUBLICATION_READ_ROUTE,
+      workItemId: item.id, attemptId: attempt.id, permission: permissionStateOf(read), transport: "REACHABLE" }, read.body);
+    await putArtifact(store, CAMPAIGN_SITE_READ_PROJECT, artifact, Buffer.from(read.body, "utf8"));
+    const record: ArtifactRecord = { artifactId: artifact.id, workItemId: item.id, routeTaskId: task.id, attemptId: attempt.id,
+      tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType,
+      canonicalUrl: link.url, partial: false, recordedAt: read.retrievedAt, publicationLink: link.source };
+    await recordArtifactMetadata(input.repos, record, at);
+    await disposeRouteTask(input.repos, { routeTaskId: task.id, attemptId: attempt.id,
+      expectedTaskRevision: (await input.repos.routeTasks.mustRead(task.id)).revision, artifactIds: [artifact.id], now: at,
+      disposition: { disposition: "INGESTED", attemptId: attempt.id, at, artifactIds: [artifact.id], observation: null,
+        permission: artifact.permission, transport: "REACHABLE",
+        note: `Linked publication ${link.url} from approved capture ${link.source.sourceArtifactId} at exact UTF-16 span ${link.source.start}-${link.source.end}; vaulted ${artifact.contentHash}.` } });
+    return record;
+  };
+
+  const recordPublicationBlock: CampaignSiteReadRecorder["recordPublicationBlock"] = async (subjectId, link, status, note) => {
+    if (link.source.candidacyId !== subjectId || !Number.isInteger(status) || status < 200) {
+      throw new Error("CANDIDATE_PUBLICATION_BLOCK_SCOPE_MISMATCH");
+    }
+    const at = input.now();
+    const item = createWorkItem({ project: CAMPAIGN_SITE_READ_PROJECT, subject: `candidate-publication:${subjectId}`,
+      obligation: `Read linked candidate publication ${link.url}`,
+      why: "An exact link on an approved campaign page led to this separate public document.",
+      contract: { requiresValidation: true, requiresAudit: true }, now: at });
+    if ((await input.repos.workItems.read(item.id)) === null) await registerWorkItem(input.repos, item, at);
+    const routeId = `${CANDIDATE_PUBLICATION_READ_ROUTE}:${fingerprint([link.url, status, at])}`;
+    const task = createRouteTask({ workItemId: item.id, routeId, routeLabel: "Linked candidate publication read (robots-first)",
+      target: link.url, inherited: false, now: at });
+    await registerRouteTask(input.repos, task, at);
+    const holder = `candidate-publication-reader:${fingerprint([subjectId, link.url, status, at])}`;
+    const claim = await claimRouteTask(input.repos, { routeTaskId: task.id, holder, now: at, ttlMs: 60_000 });
+    const attempt = await beginAttemptFor(input.repos, { routeTaskId: task.id, workItemId: item.id,
+      worker: { role: "ACQUIRER", provider: "candidate-publication-reader", version: "candidate-publication-reader/1", instance: holder },
+      lease: claim.lease.value, now: at, methodVersion: input.methodVersion, policyVersion: FLEET_POLICY_VERSION });
+    await disposeRouteTask(input.repos, { routeTaskId: task.id, attemptId: attempt.id,
+      expectedTaskRevision: (await input.repos.routeTasks.mustRead(task.id)).revision, artifactIds: [], now: at,
+      disposition: { disposition: "BLOCKED_CURRENTLY", attemptId: attempt.id, at, artifactIds: [], observation: null,
+        permission: "CANNOT_TELL", transport: status === 401 || status === 403 || status === 429 ? "CHALLENGED" : "FAILED_AT_RUNG",
+        note: `Linked publication ${link.url} answered HTTP ${status}; ${note}. The document remains owed.` } });
+  };
+
+  const recordPublicationAbort: CampaignSiteReadRecorder["recordPublicationAbort"] = async (subjectId, link, kind, reason) => {
+    if (link.source.candidacyId !== subjectId || !reason.trim()) throw new Error("CANDIDATE_PUBLICATION_ABORT_SCOPE_MISMATCH");
+    const at = input.now();
+    const item = createWorkItem({ project: CAMPAIGN_SITE_READ_PROJECT, subject: `candidate-publication:${subjectId}`,
+      obligation: `Read linked candidate publication ${link.url}`,
+      why: "An exact link on an approved campaign page led to this separate public document.",
+      contract: { requiresValidation: true, requiresAudit: true }, now: at });
+    if ((await input.repos.workItems.read(item.id)) === null) await registerWorkItem(input.repos, item, at);
+    const routeId = `${CANDIDATE_PUBLICATION_READ_ROUTE}:${fingerprint([link.url, kind, at])}`;
+    const task = createRouteTask({ workItemId: item.id, routeId, routeLabel: "Linked candidate publication read (robots-first)",
+      target: link.url, inherited: false, now: at });
+    await registerRouteTask(input.repos, task, at);
+    const holder = `candidate-publication-reader:${fingerprint([subjectId, link.url, kind, at])}`;
+    const claim = await claimRouteTask(input.repos, { routeTaskId: task.id, holder, now: at, ttlMs: 60_000 });
+    const attempt = await beginAttemptFor(input.repos, { routeTaskId: task.id, workItemId: item.id,
+      worker: { role: "ACQUIRER", provider: "candidate-publication-reader", version: "candidate-publication-reader/1", instance: holder },
+      lease: claim.lease.value, now: at, methodVersion: input.methodVersion, policyVersion: FLEET_POLICY_VERSION });
+    await abandonAttempt(input.repos, { routeTaskId: task.id, attemptId: attempt.id, outcome: kind,
+      reason: `Linked publication ${link.url}: ${reason}; no civic disposition or absence was inferred.`, now: at });
+  };
+
   const heldPage: CampaignSiteReadRecorder["heldPage"] = async (artifact) => {
     const own = made.get(artifact.artifactId);
     if (own !== undefined) return own;
@@ -119,6 +209,7 @@ export function campaignSiteReadRecorder(input: {
     const bytes = await readHeldBytes(held);
     const page = heldPageRead({
       requestedUrl: artifact.canonicalUrl,
+      finalUrl: held.retrievalUrl ?? artifact.canonicalUrl,
       httpStatus: held.httpStatus ?? 0,
       contentType: held.contentType,
       body: new TextDecoder().decode(bytes),
@@ -137,7 +228,7 @@ export function campaignSiteReadRecorder(input: {
       : { ...page, permissions: [{ origin, verdict, detail: `${held.permission} recorded on the vaulted sidecar of ${held.id}` }] };
   };
 
-  return { recordRead, heldPage };
+  return { recordRead, recordPublicationRead, recordPublicationBlock, recordPublicationAbort, heldPage };
 }
 
 /**
@@ -160,4 +251,3 @@ function permissionStateOf(read: Pick<CampaignSitePageRead, "finalUrl" | "permis
       return "CANNOT_TELL";
   }
 }
-

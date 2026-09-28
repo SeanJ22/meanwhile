@@ -99,6 +99,10 @@ export type MemberRollCall = RollCallVote & {
   /** Canonical server projection; the client never imports tracked civic data. */
   billSummary: BillSummary | null;
   billSummaryPending: boolean;
+  /** Present only for a separately verified predecessor vote window. */
+  historicalVersionId?: string;
+  historicalSourceThrough?: string | null;
+  historicalRetrievedAt?: string | null;
 };
 
 /**
@@ -186,6 +190,11 @@ function RecentVotesInner({
   const [attribution, setAttribution] = useState<VoteAttribution | null>(null);
   const [chamber, setChamber] = useState<"house" | "senate" | null>(null);
   const [keyVotes, setKeyVotes] = useState<KeyVoteRow[]>([]);
+  const [historicalVotes, setHistoricalVotes] = useState<MemberRollCall[]>([]);
+  const [historyStatus, setHistoryStatus] = useState<"LOADING" | "COMPLETE" | "MORE" | "UNAVAILABLE">("LOADING");
+  const [historyCursor, setHistoryCursor] = useState<string | null>(null);
+  const [historyAnchor, setHistoryAnchor] = useState<string | null>(null);
+  const [historyLoadingMore, setHistoryLoadingMore] = useState(false);
   const [failed, setFailed] = useState(false);
   // An official state record that is not live yet renders no section at all
   // (set in the fetch's catch), distinct from `failed`, which is the transient
@@ -227,6 +236,52 @@ function RecentVotesInner({
     return () => controller.abort();
   }, [holder.id]);
 
+  const recentLoaded = votes !== null;
+  useEffect(() => {
+    if (!/^congress:[A-Z]\d{6}$/.test(holder.id) || !recentLoaded) return;
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch(`/api/votes?member=${encodeURIComponent(holder.id)}&history=1`,
+          { signal: controller.signal });
+        if (!response.ok) throw new Error(String(response.status));
+        const page = await response.json() as { historicalVotes: MemberRollCall[];
+          historyStatus: "COMPLETE" | "MORE" | "UNAVAILABLE";
+          nextHistoricalVersionId: string | null; currentVersionId?: string };
+        setHistoricalVotes(page.historicalVotes);
+        setHistoryStatus(page.historyStatus);
+        setHistoryCursor(page.nextHistoricalVersionId);
+        setHistoryAnchor(page.currentVersionId ?? null);
+      } catch {
+        if (!controller.signal.aborted) setHistoryStatus("UNAVAILABLE");
+      }
+    })();
+    return () => controller.abort();
+  }, [holder.id, recentLoaded]);
+
+  const loadMoreHistory = async () => {
+    if (!historyCursor || !historyAnchor || historyLoadingMore) return;
+    setHistoryLoadingMore(true);
+    try {
+      const response = await fetch(`/api/votes?member=${encodeURIComponent(holder.id)}&history=1&cursor=${encodeURIComponent(historyCursor)}&anchor=${encodeURIComponent(historyAnchor)}`);
+      if (!response.ok) throw new Error(String(response.status));
+      const page = await response.json() as { historicalVotes: MemberRollCall[];
+        historyStatus: "COMPLETE" | "MORE" | "UNAVAILABLE";
+        nextHistoricalVersionId: string | null; currentVersionId?: string };
+      if (page.currentVersionId !== historyAnchor) throw new Error("Vote history anchor moved");
+      setHistoricalVotes(previous => {
+        const seen = new Set(previous.map(vote => vote.id));
+        return [...previous, ...page.historicalVotes.filter(vote => !seen.has(vote.id))];
+      });
+      setHistoryStatus(page.historyStatus);
+      setHistoryCursor(page.nextHistoricalVersionId);
+    } catch {
+      setHistoryStatus("UNAVAILABLE");
+    } finally {
+      setHistoryLoadingMore(false);
+    }
+  };
+
   // A holder with no vote store renders nothing here — never an empty
   // "Recent votes" heading, which reads as "this person does not vote". An
   // official state record that isn't live yet (absent, from the fetch's catch)
@@ -234,6 +289,24 @@ function RecentVotesInner({
   if (!hasVoteRecord(holder.id) || absent) return null;
 
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
+  const history = /^congress:[A-Z]\d{6}$/.test(holder.id) && votes !== null ? <>
+    <p className="mb-1.5 text-[0.6875rem] leading-relaxed text-voice">
+      Earlier recorded votes from verified prior source windows. These are separate from the current Recent list; each row links to its official roll call.
+    </p>
+    {historicalVotes.length > 0 ? <RecentVoteRecords votes={historicalVotes} attribution={null} failed={false} reactionContext={null} /> :
+      <p className="text-[0.6875rem] text-muted">
+        {historyStatus === "LOADING" ? "Checking earlier source windows…" :
+          historyStatus === "COMPLETE" ? "No earlier recorded votes were found in the verified source history." :
+          historyStatus === "MORE" ? "No earlier votes in the checked versions yet; more source versions remain." :
+          "Earlier vote history could not be checked just now."}
+      </p>}
+    {historyStatus === "UNAVAILABLE" && historicalVotes.length > 0 &&
+      <p className="mt-2 text-[0.6875rem] text-muted">More earlier records could not be checked just now.</p>}
+    {historyStatus === "MORE" && historyCursor && <button type="button" onClick={() => void loadMoreHistory()}
+      disabled={historyLoadingMore} className="mt-2 text-[0.75rem] text-link underline decoration-dotted underline-offset-2">
+      {historyLoadingMore ? "Checking more earlier records…" : "Load more earlier records"}
+    </button>}
+  </> : null;
   const recent = <>
     <RecentVoteRecords votes={visibleVotes} attribution={attribution} failed={failed} reactionContext={reactionContext} />
     {(columns || contentOnly) && votes && votes.length > 0 && <>
@@ -258,6 +331,7 @@ function RecentVotesInner({
       <>
         <PopupSectionLabel>Recent votes</PopupSectionLabel>
         {recent}
+        {history && <details className="mt-2"><summary className="cursor-pointer text-[0.75rem] text-link">Earlier recorded votes</summary>{history}</details>}
       </>
     );
   }
@@ -304,6 +378,8 @@ function RecentVotesInner({
         keyVotesMeta={
           keyVotes.length > 0 ? String(votedCount(keyVotes)) : null
         }
+        history={history}
+        historyMeta={historicalVotes.length > 0 ? String(historicalVotes.length) : null}
       />
   );
   return contentOnly ? fullRecord : <CardSection title="Voting Record">{fullRecord}</CardSection>;
@@ -374,6 +450,9 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
               >
                 {/* Plain words first — the official title, never ours. */}
                 <p className="text-[0.75rem] leading-snug">{vote.title}</p>
+                {vote.historicalVersionId && <p className="mt-0.5 text-[0.625rem] text-muted">
+                  Earlier source window{vote.historicalSourceThrough ? ` · source through ${vote.historicalSourceThrough}` : ""}.
+                </p>}
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem]">
                   {/* Item 5: the position as a filled pill, in both views. */}
                   <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
@@ -489,13 +568,17 @@ function VotingRecordViews({
   recentMeta,
   keyVotes,
   keyVotesMeta,
+  history,
+  historyMeta,
 }: {
   recent: React.ReactNode;
   recentMeta: string | null;
   keyVotes: React.ReactNode;
   keyVotesMeta: string | null;
+  history: React.ReactNode;
+  historyMeta: string | null;
 }) {
-  const [view, setView] = useState<"recent" | "key">("recent");
+  const [view, setView] = useState<"recent" | "key" | "history">("recent");
 
   return (
     <div>
@@ -522,6 +605,11 @@ function VotingRecordViews({
             {keyVotesMeta && <span className="vote-view-meta">{keyVotesMeta}</span>}
           </button>
         )}
+        {history && <button type="button" className="vote-view-btn"
+          data-selected={view === "history" || undefined} aria-pressed={view === "history"}
+          onClick={() => setView("history")}>
+          Earlier records{historyMeta && <span className="vote-view-meta">{historyMeta}</span>}
+        </button>}
       </div>
 
       {view === "recent" ? (
@@ -532,8 +620,10 @@ function VotingRecordViews({
           </p>
           {recent}
         </div>
-      ) : (
+      ) : view === "key" ? (
         <div className="vote-view-body">{keyVotes}</div>
+      ) : (
+        <div className="vote-view-body">{history}</div>
       )}
     </div>
   );
@@ -768,7 +858,7 @@ export function OfficialPopup({
       tier={tier}
       title={holder.name}
       onExpand={onExpand}
-      expandLabel={`More about ${holder.name} — votes and record`}
+      expandLabel={hasVoteRecord(holder.id) ? `More about ${holder.name} — voting record` : `More about ${holder.name} — office and contact`}
       onClose={onClose}
       /* Item 2 (2026-08-16): the card's own title is the identity block's
          name now. Rendering it twice, once as the popup heading and once as

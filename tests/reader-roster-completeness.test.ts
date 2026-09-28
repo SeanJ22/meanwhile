@@ -33,7 +33,8 @@ test("every partial verified roster keeps its members and exact sourced complete
     const response = await GET(new Request(`https://wtp.test/api/representation/${ocdId}`), { params: Promise.resolve({ division: ocdId.split("/") }) });
     assert.equal(response.status, 200);
     const payload = await response.json();
-    assert.deepEqual(payload.holders, holders);
+    assert.deepEqual(payload.holders, JSON.parse(JSON.stringify(holders)),
+      "the HTTP response preserves each holder; JSON omits optional undefined fields");
     assert.deepEqual(payload.rosterGaps, [gap]);
     const markup = renderRepresentation(payload);
     assert.equal((markup.match(/data-roster-holder=/g) ?? []).length, holders.length);

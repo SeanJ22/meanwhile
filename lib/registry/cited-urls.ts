@@ -44,12 +44,22 @@ export function inheritedRosterSourceFacts(beforeValue: unknown, afterValue: unk
       if (!old || !equal(membership, previousSource) || !equal(withoutSource(person), withoutSource(old))) invalid.add(membership.sourceUrl);
       candidates.set(membership.sourceUrl, [...(candidates.get(membership.sourceUrl) ?? []), [person.id, membership, withoutSource(person)]]);
     }
-    for (const fields of [["websiteUrl"], ["partySourceUrl", "partyLabel", "partySourceOrg", "partyCollectedAt"]]) {
+    for (const fields of [["partySourceUrl", "partyLabel", "partySourceOrg", "partyCollectedAt"]]) {
       const url = person[fields[0]];
       if (!text(url) || url === after.sourceUrl) continue;
       const names = ["id", "name", "officeTitle", ...fields];
       const fact = names.map(name => person[name] ?? null);
       if (!old || !equal(fact, names.map(name => old[name] ?? null))) invalid.add(url);
+      candidates.set(url, [...(candidates.get(url) ?? []), fact]);
+    }
+    for (const field of ["termNote", "email", "phone", "websiteUrl"] as const) {
+      const retained = row(row(person.retainedFieldSources)[field]);
+      const url = retained.sourceUrl;
+      if (!text(url) || url === after.sourceUrl) continue;
+      const oldSource = row(row(old?.retainedFieldSources)[field]);
+      const previousSource = text(oldSource.sourceUrl) ? oldSource : old?.membershipSource ?? { sourceUrl: before.sourceUrl, sourceOrg: before.sourceOrg, collectedAt: before.collectedAt };
+      const fact = [person.id, person.name, person.officeTitle, field, person[field] ?? null, retained];
+      if (!old || !equal(person[field] ?? null, old[field] ?? null) || !equal(retained, previousSource) || person.name !== old.name || person.officeTitle !== old.officeTitle) invalid.add(url);
       candidates.set(url, [...(candidates.get(url) ?? []), fact]);
     }
   }
@@ -66,7 +76,8 @@ export function registryMemberCitedUrls(key: string, record: unknown): string[] 
       : kind === "body-roster" ? [
         member.sourceUrl,
         member.partisanshipSourceUrl,
-        ...rows(member.members).flatMap((person) => [row(person).websiteUrl, row(person).partySourceUrl, row(row(person).membershipSource).sourceUrl]),
+        ...rows(member.members).flatMap((person) => [row(person).partySourceUrl, row(row(person).membershipSource).sourceUrl,
+          ...Object.values(row(row(person).retainedFieldSources)).map(source => row(source).sourceUrl)]),
       ]
       : kind === "statewide-executive" ? [member.sourceUrl, member.partySourceUrl]
       : kind === "official-candidacy" ? [row(member.candidacy).sourceUrl]

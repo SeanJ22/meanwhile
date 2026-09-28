@@ -20,6 +20,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { DurableSpendHolds, JobSpend, SendBudgetRefusal, budgetGuardedTransport } from "../lib/control-plane/expansion/spend-holds.ts";
+import { FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
 import {
   attemptsForRouteTask,
   registerRouteTask,
@@ -35,6 +37,7 @@ import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
   scoutExecutor,
+  ModelTransportError,
   dispositionForScout,
   type ModelRequest,
   type ModelResponse,
@@ -252,11 +255,13 @@ function executorWith(
     inherited?: InheritedEvidence;
     decision?: "DETERMINISTIC" | "BOUNDED_MODEL_WORKER";
     minRungs?: number;
+    refusedBeforeSending?: (error: unknown) => boolean;
   } = {},
 ) {
   const results: ScoutResult[] = [];
   const exec = scoutExecutor({
     transport,
+    refusedBeforeSending: opts.refusedBeforeSending,
     ...(opts.minRungs !== undefined ? { minRungs: opts.minRungs } : {}),
     toolkitFor: (_ctx: ScoutToolContext) => toolkit,
     contextFor: () => ({
@@ -278,6 +283,53 @@ function executorWith(
 }
 
 /* ---------------------------------------------------------------------- 1 */
+
+test("context assembly failure records a durable zero before any toolkit or provider request", async () => {
+  const { repos, task } = await registered();
+  let toolkitCalls = 0, providerCalls = 0, startCalls = 0;
+  const exec = scoutExecutor({
+    now: () => NOW,
+    contextFor: () => { throw new TypeError("r.nextRungs.join is not a function"); },
+    toolkitFor: () => { toolkitCalls++; return fakeToolkit(); },
+    transport: async () => { providerCalls++; throw new Error("must not request"); },
+    onStart: async () => { startCalls++; },
+  });
+  const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS),
+    routeTaskId: task.id, holder: "context-failure", now: NOW, leaseTtlMs: 60_000,
+    maturity: () => "UNGRADUATED", executor: exec });
+  assert.equal(result.outcome, "FAILED");
+  assert.equal(result.dispositionCommitted, false);
+  assert.equal(result.cost?.usd, 0);
+  assert.equal(result.cost?.requestCount, 0);
+  assert.equal(toolkitCalls + providerCalls + startCalls, 0);
+  const attempt = (await attemptsForRouteTask(repos, task.id)).at(-1)!.value;
+  assert.equal(attempt.outcome, "ABORTED");
+  assert.equal(attempt.cost.usd, 0);
+  assert.equal(attempt.cost.requestCount, 0);
+  assert.match(result.detail, /SCOUT_CONTEXT_FAILED_BEFORE_REQUEST/);
+  const costs = (await repos.costs.readAll()).filter(row => row.attemptId === attempt.id);
+  assert.equal(costs.length, 1);
+  assert.equal(costs[0].cost.usd, 0);
+  assert.equal(costs[0].cost.requestCount, 0);
+});
+
+test("a later toolkit construction failure remains unpriced and cannot release an unknown hold", async () => {
+  const { repos, task } = await registered();
+  const exec = scoutExecutor({ now: () => NOW,
+    contextFor: () => ({ route: null, providerId: "test", reason: "test", inherited: { artifactIds: [], summary: "" },
+      tools: { vault: async () => ({ stored: true, where: "x", why: "test" }), spaceOut: async () => undefined } }),
+    toolkitFor: () => { throw new Error("unknown toolkit construction failure"); },
+    transport: async () => { throw new Error("must not request"); },
+  });
+  const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS),
+    routeTaskId: task.id, holder: "toolkit-failure", now: NOW, leaseTtlMs: 60_000,
+    maturity: () => "UNGRADUATED", executor: exec });
+  assert.equal(result.outcome, "FAILED");
+  assert.equal(result.cost, null);
+  const attempt = (await attemptsForRouteTask(repos, task.id)).at(-1)!.value;
+  assert.equal(attempt.cost.usd, null);
+  assert.equal((await repos.costs.readAll()).filter(row => row.attemptId === attempt.id).length, 0);
+});
 
 test("a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication", async () => {
   const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
@@ -777,7 +829,7 @@ test("9. SEEDED (measured live): an artifact the log refuses does not leave the 
 
 /* --------------------------------------------------------------------- 10 */
 
-test("10. SEEDED (measured live): a provider refusal before any completion aborts with a MEASURED zero cost", async () => {
+test("10. a lost or server-error response keeps unknown spending reserved, including after metered turns", async () => {
   const { repos, task } = await registered();
   const overloaded: ModelTransport = async () => {
     throw new Error('HTTP 529: {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"}}');
@@ -798,12 +850,13 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   assert.equal(results[0].refusal?.[0].code, "SCOUT_TRANSPORT_FAILED");
   const attempt = (await attemptsForRouteTask(repos, task.id)).at(-1)!.value;
   assert.equal(attempt.outcome, "ABORTED");
-  assert.equal(attempt.cost.usd, 0, "the provider served nothing and billed nothing: a measured zero");
-  assert.equal(attempt.cost.inputTokens, 0);
+  assert.equal(attempt.cost.usd, null, "a server failure does not prove zero provider spending");
+  assert.equal(attempt.cost.inputTokens, null);
+  assert.equal(attempt.cost.requestCount, null, "no completed response cannot establish zero sent requests");
   const ledger = (await repos.costs.readAll()).filter((c) => c.attemptId === attempt.id);
   assert.equal(ledger.length, 1);
-  assert.equal(ledger[0].cost.usd, 0);
-  /* And a failure AFTER usage was reported keeps the reported usage. */
+  assert.equal(ledger[0].cost.usd, null);
+  /* Prior metered steps survive, but do not price the unknown later request. */
   let n = 0;
   const failsSecond: ModelTransport = async () => {
     n += 1;
@@ -814,7 +867,79 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   const { exec: exec2, results: results2 } = executorWith(failsSecond, fakeToolkit());
   await dispatchOne(second.repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: second.task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec2 });
   assert.equal(results2[0].usage.turns, 1);
-  assert.ok((results2[0].usd ?? 0) > 0, "the one served turn is the charge");
+  assert.equal(results2[0].usd, null);
+  assert.ok(results2[0].steps?.some(step => step.kind === "MODEL" && (step.usd ?? 0) > 0));
+  assert.equal(results2[0].modelAttempts?.[0].usd, null);
+});
+
+test("only recognized request rejections establish zero, not timeout or arbitrary HTTP statuses", async () => {
+  for (const status of [400, 401, 429, 408, 499, 500, 504, 529]) {
+    const { repos, task } = await registered();
+    const { exec } = executorWith(async () => { throw new ModelTransportError(`HTTP ${status}`, status); }, fakeToolkit());
+    const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS),
+      routeTaskId: task.id, holder: `status-${status}`, now: NOW, leaseTtlMs: 60_000,
+      maturity: () => "UNGRADUATED", executor: exec });
+    const rejected = [400, 401, 429].includes(status);
+    assert.equal(result.cost?.usd, rejected ? 0 : null, `status ${status}`);
+    assert.equal(result.cost?.requestCount, rejected ? 1 : null, `request count for status ${status}`);
+  }
+});
+
+test("proven pre-send Scout refusals settle unused holds without erasing earlier measured turns", async () => {
+  for (const mode of ["fleet-before-first", "budget-before-first", "fleet-after-metered", "unpriced-after-response"] as const) {
+    const { repos, task } = await registered();
+    const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+    const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original", budgetUsd: 50, historicalUsd: 0, historyReadAt: new Date(NOW_MS - 1_000).toISOString() };
+    const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
+    assert.equal((await job.admit(2, "Scout")).admit, true);
+    const heldFleet = new FleetSafetyController({ now: NOW, costs: [], modelHold: "lane closed", clock: () => NOW_MS });
+    const openFleet = new FleetSafetyController({ now: NOW, costs: [], clock: () => NOW_MS });
+    let sent = 0;
+    const provider: ModelTransport = async request => {
+      sent++;
+      return { model: request.model, stop_reason: "tool_use", content: [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "w" })],
+        usage: mode === "unpriced-after-response" ? { input_tokens: 100 } : { input_tokens: 100, output_tokens: 10 } } as ModelResponse;
+    };
+    const guarded: ModelTransport = request => (mode === "fleet-before-first" || mode === "fleet-after-metered" && sent > 0 ? heldFleet : openFleet)
+      .guardedModelTransport("anthropic", OBLIGATION.id, provider)(request);
+    const transport = budgetGuardedTransport({ job: () => job,
+      worstCaseOf: () => mode === "budget-before-first" ? 51 : 1, priceOf: () => null, transport: guarded });
+    const { exec } = executorWith(transport, fakeToolkit(), {
+      refusedBeforeSending: error => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal,
+    });
+    const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id,
+      holder: mode, now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+    const expectedSent = mode === "fleet-after-metered" || mode === "unpriced-after-response" ? 1 : 0;
+    assert.equal(sent, expectedSent, mode);
+    assert.equal(result.cost?.requestCount, mode === "unpriced-after-response" ? null : expectedSent, mode);
+    if (mode === "unpriced-after-response") assert.equal(result.cost?.usd, null);
+    else if (mode === "fleet-after-metered") assert.ok((result.cost?.usd ?? 0) > 0);
+    else assert.equal(result.cost?.usd, 0);
+    await holds.settle(job.jobId, result.cost?.usd ?? null, NOW);
+    const left = (await holds.left([line]))?.[0].leftUsd;
+    assert.equal(left, 50 - (result.cost?.usd ?? 2), mode);
+  }
+});
+
+test("an unknown sent Scout request cannot settle away its original lifetime reservation", async () => {
+  const { repos, task } = await registered();
+  const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+  const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original lifetime hunt", budgetUsd: 50, historicalUsd: 0, historyReadAt: NOW };
+  const job = new JobSpend(holds, "unknown-response-job", OBLIGATION.id, { sends: [], areas: [line] });
+  assert.equal((await job.admit(2, "Scout attempt")).admit, true);
+  let sent = 0;
+  const transport = budgetGuardedTransport({ job: () => job, worstCaseOf: () => 1, priceOf: () => null,
+    transport: async () => { sent++; throw new Error("connection lost after request was sent"); } });
+  const { exec } = executorWith(transport, fakeToolkit());
+  const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS),
+    routeTaskId: task.id, holder: "unknown-response", now: NOW, leaseTtlMs: 60_000,
+    maturity: () => "UNGRADUATED", executor: exec });
+  assert.equal(sent, 1);
+  assert.equal(result.cost?.usd, null);
+  await holds.settle(job.jobId, result.cost?.usd ?? null, NOW);
+  assert.equal((await holds.left([line]))?.[0].leftUsd, 48);
+  const contender = new JobSpend(holds, "retry", OBLIGATION.id, { sends: [], areas: [line] });
+  assert.equal((await contender.admit(49, "retry cannot consume unknown exposure")).admit, false);
 });
 
 /* ================================================================== *

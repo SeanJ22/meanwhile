@@ -109,6 +109,38 @@ test("D05: every answer that searched carries its own scope", () => {
   }
 });
 
+test("source revisions preserve a removed passage as historical and never duplicate unchanged current text", () => {
+  const old = doc({ id: "k@old", text: "We will build more homes.", retrievedAt: "2026-09-20T00:00:00.000Z",
+    sourceRevision: { revisionId: "old", artifactId: "ar-old", canonicalUrl: "https://example.org/",
+      rawContentHash: "raw-old", capturedAt: "2026-09-20T00:00:00.000Z", extractionVersion: 2, supersedesRevisionId: null },
+    extractorVersion: 2 });
+  const current = doc({ id: "k@new", text: "We will improve transit.", retrievedAt: "2026-09-21T00:00:00.000Z",
+    sourceRevision: { revisionId: "new", artifactId: "ar-new", canonicalUrl: "https://example.org/",
+      rawContentHash: "raw-new", capturedAt: "2026-09-21T00:00:00.000Z", extractionVersion: 2, supersedesRevisionId: "old" },
+    extractorVersion: 2 });
+  const historical = answerFor([old, current], ["homes"]);
+  assert.equal(historical.kind, "MATCHED");
+  if (historical.kind === "MATCHED") {
+    assert.equal(historical.passages[0]?.revisionStatus, "HISTORICAL");
+    assert.equal(old.text?.slice(historical.passages[0]!.textStart, historical.passages[0]!.textEnd), historical.passages[0]?.textQuote);
+  }
+  const repeated = answerFor([old, { ...current, text: old.text }], ["homes"]);
+  assert.equal(repeated.kind, "MATCHED");
+  if (repeated.kind === "MATCHED") {
+    assert.equal(repeated.passages.length, 1);
+    assert.equal(repeated.passages[0]?.revisionStatus, "CURRENT");
+  }
+});
+
+test("three captured revisions of one unchanged page cannot become three chrome pages", () => {
+  const same = "We will build more homes and cut the cost of housing across the state.";
+  const copies = [1, 2, 3].map(number => doc({ id: `k@capture-${number}`, text: same,
+    retrievedAt: `2026-09-${String(20 + number).padStart(2, "0")}T00:00:00.000Z` }));
+  const answer = answerFor(copies, ["cost of housing"]);
+  assert.equal(answer.kind, "MATCHED", "same-URL captures cannot suppress their own text as repeated site chrome");
+  if (answer.kind === "MATCHED") assert.equal(answer.passages.length, 1);
+});
+
 test("D05: a passage is a short quote with its link and date, never the page", () => {
   const long = "x ".repeat(4000) + "affordable housing " + "y ".repeat(4000);
   const answer = answerFor([doc({ text: long })], ["affordable housing"], null);
@@ -346,22 +378,35 @@ test("B14: the denominator is measured from the ballot, not quoted", async () =>
   assert.ok(coverage.bare > 0, "nothing bare — the measurement stopped measuring");
 });
 
-test("B14: the blurb rung reaches every candidate whose page we hold, equally", async () => {
-  const { derivedBlurbFor } = await import("../lib/candidates/blurbs.ts");
+test("B14: the blurb rung reaches every candidate with a usable captured description, equally", async () => {
+  const { derivedBlurbFor, candidateDescriptionQualityIssue } = await import("../lib/candidates/blurbs.ts");
   const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
 
   // Equal effort: the rung is run for EVERY candidate, and the ones it
-  // reaches are exactly the ones whose page carries a self-description.
+  // reaches are exactly the ones whose page carries a usable self-description.
   // There is no path that skips a candidate for being obscure.
   const withMeta = new Set(
     getCandidateCorpus()
-      .documents.filter((d) => d.metaDescription)
+      .documents.filter((d) => d.metaDescription && !candidateDescriptionQualityIssue(d))
       .map((d) => d.candidateKey),
   );
   for (const key of withMeta) {
     assert.ok(derivedBlurbFor(key), `${key} has a description we did not use`);
   }
-  assert.ok(withMeta.size >= 30, `the rung reached only ${withMeta.size} candidates`);
+  assert.ok(withMeta.size >= 25, `the rung reached only ${withMeta.size} candidates`);
+});
+
+test("B14: captured navigation, old-cycle appeals and truncated fragments do not masquerade as biographies", async () => {
+  const { derivedBlurbFor, candidateDescriptionQualityIssue } = await import("../lib/candidates/blurbs.ts");
+  const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
+  const unusable = getCandidateCorpus().documents.filter(doc => doc.metaDescription && candidateDescriptionQualityIssue(doc));
+  assert.equal(unusable.length, 7, "each suppressed description is an exact reviewed capture, not a general candidate filter");
+  assert.equal(derivedBlurbFor("ballot-az-pima:state-senate-19|Bob Karp"), null);
+  assert.equal(derivedBlurbFor("ballot-az-pima:attorney-general|Warren Petersen"), null);
+  assert.equal(derivedBlurbFor("ballot-az-pima:state-house-19|Aiden Nicholette Swallow"), null);
+  assert.equal(derivedBlurbFor("ballot-nh-merrimack:executive-council-2:liot-hill-karen"), null);
+  assert.match(derivedBlurbFor("ballot-nh-merrimack:us-house-2:goodlander-maggie")?.text ?? "", /commitment to justice/i,
+    "a separate usable captured description remains available for the same candidate");
 });
 
 test("B14: a derived blurb carries its source class, exactly as a curated one does", async () => {

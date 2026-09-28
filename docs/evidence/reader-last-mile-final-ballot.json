@@ -1,6 +1,6 @@
 {
-  "exactHead": "0c50c37bcc9e52343db119168b1b15bcfbfe7e56",
-  "buildId": "jiI7R3_bSjtAVOmhBDmtM",
+  "exactHead": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
+  "buildId": "Xxv_W19PzrRUTWKf7Misd",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -20,7 +20,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "203e1f594b74e78d53883ce7938778f8923c413163ec3d89ad8cc9f7c409a3fc"
+      "sha256": "c1622c4a2c4d464fde7e0c250a2da24d1e0842fa5ba3a275c434efd727c3e0f9"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -68,7 +68,7 @@
     },
     {
       "path": "app/api/votes/route.ts",
-      "sha256": "1c5914997ba1f492ae7ee3da0b498cdd3fa2d08bfa09c3435a7abc0a72019444"
+      "sha256": "be1f5019c7f80b7eab2720bf0a2b7e2c28f0c7b99b169ca17b74e890bbc80bf7"
     },
     {
       "path": "app/api/voting-sites/route.ts",
@@ -76,7 +76,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "06cd07fa6d32747d7a4b515845da27ac3f3ced1034fbe45968c5e64fb0510f13"
+      "sha256": "b2d3d22d370197f72ea66cf98904070333d02ebc30669c06c5bd630a93f3956a"
     },
     {
       "path": "app/globals.css",
@@ -116,7 +116,7 @@
     },
     {
       "path": "components/ask/ask-box.tsx",
-      "sha256": "72e2b5f7d67880ba848973c95f962ab2feada15a4a59d3e6330b2086c2dc667d"
+      "sha256": "06fb81818b2dac946f71b81e201699300cd89f4c91d184efef1be951975c2753"
     },
     {
       "path": "components/ask/ballot-ask.tsx",
@@ -148,7 +148,7 @@
     },
     {
       "path": "components/ballot/candidate-positions.tsx",
-      "sha256": "ea9393c5e837d5d6660aa35bfb9dd77ba1b476fdb837f6456296fa020cafb8f0"
+      "sha256": "a49fb7f2d91f453c8294eca747fa5c3b6e6ec51bfd0bf6098b355e87d303793d"
     },
     {
       "path": "components/ballot/filing-changes.tsx",
@@ -212,7 +212,7 @@
     },
     {
       "path": "components/funding/funding-block.tsx",
-      "sha256": "6f8d42da58bc5185aed84eee458649b2a31fb9b8a992cb00d60af0f16f2d15c7"
+      "sha256": "fdcdb9db0c9581c3e01feb3ac01b44a990c9652f8d16660512eb2705f1fd99c5"
     },
     {
       "path": "components/funding/funding-section.tsx",
@@ -236,7 +236,7 @@
     },
     {
       "path": "components/map/coverage-notice.tsx",
-      "sha256": "26f38cb39487b4cb4a6378578dd0f5d899e3b431699ad099f889f243f8543b6d"
+      "sha256": "68e446dc7dd68df14d6a7da9e1718470eb02931880551f1c3159d00ee1e6fe66"
     },
     {
       "path": "components/map/data-freshness.tsx",
@@ -272,7 +272,7 @@
     },
     {
       "path": "components/map/map-entry.tsx",
-      "sha256": "0b126bafeedde028cbc7028b00245fe6057dc1fc8677ea3fc259ec98f4e29808"
+      "sha256": "863373cf05b16b5e0d0f50cfd6df5d6b3522ca9d6ee628d7ab5442f4a2ede66e"
     },
     {
       "path": "components/map/map-flight.module.css",
@@ -312,7 +312,7 @@
     },
     {
       "path": "components/map/popup/meeting-popup.tsx",
-      "sha256": "80ddcbe30459ef0b93eac2af50c52d884f1012603a333d89a02a0e80e8fff52c"
+      "sha256": "7d9725564f7a2a9b65aee44f61d4033ea129e0e923d805ac95aec979081140e8"
     },
     {
       "path": "components/map/popup/meeting-records.tsx",
@@ -324,7 +324,7 @@
     },
     {
       "path": "components/map/popup/official-popup.tsx",
-      "sha256": "3266ab30e45e43851339592a2f8878956f0a21a292aa7e9710a7ba9f57a8725d"
+      "sha256": "e52f6d5f73a26a363c94ed69ce99ab6e781cbfe9b9dde99c0fd8ffc1bf8d9ff4"
     },
     {
       "path": "components/map/popup/popup-card.tsx",
@@ -380,7 +380,7 @@
     },
     {
       "path": "components/officials/contact-pills.tsx",
-      "sha256": "6d8aaabae8a756f3624b85bc525bd6c714ad995604a7f2ae02719f2c3145b88a"
+      "sha256": "0a75f969261f9afb8677ecf7d9eccc8e4e2814d5d8d42f99df6007406dee43df"
     },
     {
       "path": "components/officials/key-votes-section.tsx",
@@ -1796,7 +1796,7 @@
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
-      "sha256": "d9f13410dc089047d04fabfd090dad2dd2dc1368390429a60f30150a90e615f7"
+      "sha256": "921c41240fb85efa4a81c042f4ad45ac3aa1b2868f4a5f04b4eae28cc438a4af"
     },
     {
       "path": "lib/ask/body-confirmation.ts",
@@ -1828,7 +1828,7 @@
     },
     {
       "path": "lib/ask/evidence.ts",
-      "sha256": "7aa61cde6a978a22172a0171e7d93dafff95b2f234da160802a57b55a55e5420"
+      "sha256": "10ed952034c1d6e791db38ecb79a34b640cba268da0897752d66a9015a433576"
     },
     {
       "path": "lib/ask/gap-codes.ts",
@@ -1868,7 +1868,7 @@
     },
     {
       "path": "lib/ask/key-votes.ts",
-      "sha256": "bcc7a998932f1e7af287e8991f1f03ebb4acd5ea8beb8fdbcfaf947db0d2d904"
+      "sha256": "8d6ba541a3c2f80a453180fc79dedeaf63480e2618abd217d64d161b87380060"
     },
     {
       "path": "lib/ask/length-contract.ts",
@@ -1960,7 +1960,7 @@
     },
     {
       "path": "lib/ask/server-sources.ts",
-      "sha256": "822002a4700505ffbd611d52bca24135299988e33fac42147adfbd5885ef0052"
+      "sha256": "96bdffb4281bd137ccc6a9680f9913362ed3250c8dc0590205f19c1376ff2b20"
     },
     {
       "path": "lib/ask/sitting-answer.ts",
@@ -1971,8 +1971,12 @@
       "sha256": "9015932384940452a93dc4039cfed57a064673e28096ff7fb5671cddfa970749"
     },
     {
+      "path": "lib/ask/stance-answerability.ts",
+      "sha256": "403e411b325d3194cf29f25199d896ffb85d327ba4f9c2da3f0646fcc9b3f387"
+    },
+    {
       "path": "lib/ask/statements.ts",
-      "sha256": "40a5b4fcd68bd0fbf7050fba4ee92ce5e677e482544c88e4a667c90f6803e94e"
+      "sha256": "b0cc4be0c94f3b0e3be131524c6439587b90603f455e8df952a21822243fd7db"
     },
     {
       "path": "lib/ask/subject.ts",
@@ -1980,7 +1984,7 @@
     },
     {
       "path": "lib/ask/synthesize.ts",
-      "sha256": "a2e8313f650745713730342e328a72ff36c62072f429e23f67c7525bf3a926c3"
+      "sha256": "b19a54c898967e3a0c57a62a9227d1c8c3669b55726037cf7c6181329b932811"
     },
     {
       "path": "lib/ask/topic-timeline.ts",
@@ -1996,7 +2000,7 @@
     },
     {
       "path": "lib/ask/votes.ts",
-      "sha256": "9c900c24a5ddf5d9342d41e8bb7931ba2c56eb914b36eb86dc2bbb58d1dafeeb"
+      "sha256": "7b04e07b60ce5962b2381e07b50446e31b2b63b9373ed0a8dbd28b33aced4827"
     },
     {
       "path": "lib/ask/writer-selection.ts",
@@ -2156,7 +2160,7 @@
     },
     {
       "path": "lib/ballot/voting-sites-data-plane.ts",
-      "sha256": "3414d2ad99d65faa7344757f94a179573888824c001ec1c35cb5af47d8d9028a"
+      "sha256": "3cf663b03d1d96cf651296b97c104a0977458b439b7df3e58b0e5719bd1481b9"
     },
     {
       "path": "lib/ballot/voting-sites-server.ts",
@@ -2164,7 +2168,7 @@
     },
     {
       "path": "lib/ballot/voting-sites.ts",
-      "sha256": "a7e653c2ad1dbcbab39044ae7e5a9183bdefdd28a83ef9ee61738fb5ff941a73"
+      "sha256": "fcc710ef233a0a31a429a1ee8d042fa512aefd4f8fcbc87141cbdf0108b0349d"
     },
     {
       "path": "lib/ballot/zip-divisions.ts",
@@ -2180,11 +2184,11 @@
     },
     {
       "path": "lib/candidates/blurbs.ts",
-      "sha256": "dc10885fefa86da84bb0369e7ebf39b55d272d3f388a75c72aedda1e98d7b091"
+      "sha256": "8b15c287f8ff8e3cbeb94dcdbcf46e772e777940ec894aa5f391ee446ab79322"
     },
     {
       "path": "lib/candidates/corpus.ts",
-      "sha256": "c13ce5f619a455ab4466f1136cc5f4493e6b8c5f7760b760a6e9d5e700ff42fa"
+      "sha256": "5aad8ef48f6abae97a57ab65bfb1880afe3517cc795bdc9b6b8d174110d531fc"
     },
     {
       "path": "lib/candidates/issues.ts",
@@ -2236,7 +2240,7 @@
     },
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
-      "sha256": "b1259212b467b7550d784979501155d53b6e6e35079fbc4934ccfed1aa8081ae"
+      "sha256": "434be5e2ccfec8af2fda21d9e09ddb69db51e8f16d6f2541d9cdef053d467dad"
     },
     {
       "path": "lib/civic-data/derived-door.ts",
@@ -2248,7 +2252,7 @@
     },
     {
       "path": "lib/civic-data/manual-contracts.ts",
-      "sha256": "05051f22616f4cdb2d45c983856f321f145484381c7b5838582f705cb212491a"
+      "sha256": "b48a2d0847e5c875ecd71d16a8fffe2ad4ef23f4ce2b60102010e75af2151934"
     },
     {
       "path": "lib/civic-data/manual-projections.ts",
@@ -2288,7 +2292,7 @@
     },
     {
       "path": "lib/civic-data/read-model.ts",
-      "sha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89"
+      "sha256": "dbb257c08d48a3b872ab00391214160e4165edcfe369880a57f3ce89295f0c6f"
     },
     {
       "path": "lib/civic-data/reader-readback.ts",
@@ -2308,7 +2312,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "ce68b6ef9086f570ffd973548a7c40b3af1e7b178c71b381f6783696b008351e"
+      "sha256": "e73c5995871d9e55d2b5702e8586d877ec038471338b5d481268072af13efa0c"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2363,8 +2367,28 @@
       "sha256": "e550b2f8c429121db0ba348d7e90934576e77f4d1d2c3f0791c616a0e2200bb3"
     },
     {
+      "path": "lib/control-plane/repository/connect-retry.ts",
+      "sha256": "9bd1ea9abbc2411f3e27e5ad2a9b7334a74674d86c2bafd6b6fc2d04c761a1d5"
+    },
+    {
+      "path": "lib/control-plane/repository/pg-schema.ts",
+      "sha256": "d79d013c6528b01ded4eacac49c843c959166f23c4f55e8772559f4dc18ddaea"
+    },
+    {
+      "path": "lib/control-plane/repository/pg-store.ts",
+      "sha256": "f7ace7e2ac4788cac4ef07403f952ff8a3d487cd2509cc59c3eff19c5496e642"
+    },
+    {
       "path": "lib/control-plane/repository/request-bounds.ts",
       "sha256": "1cfe5826b6ee5d63b4710db0f650ea5471056d6f4f7ac9db756dfcc5f5ea09d9"
+    },
+    {
+      "path": "lib/control-plane/repository/shared.ts",
+      "sha256": "a3c047427cd4299285cba2826461a208b6e3401201bdf4fcd1082c759a48775a"
+    },
+    {
+      "path": "lib/control-plane/repository/types.ts",
+      "sha256": "69767ecb594100a70620bb1381c73c1603c5458cc72fdf90c55bb373bfd2ff2d"
     },
     {
       "path": "lib/control-plane/scheduler/robots.ts",
@@ -2840,7 +2864,7 @@
     },
     {
       "path": "lib/officials/card-sources.ts",
-      "sha256": "190498668e95838b110cf09506c3c68c5647919445b2350de9502450a6659a63"
+      "sha256": "90f080edb29b6a68b52aba990cf2fe9a2e0d1ed5fca9048985bf58babd0025fd"
     },
     {
       "path": "lib/officials/committee-tree.ts",
@@ -2880,7 +2904,7 @@
     },
     {
       "path": "lib/officials/lookup.ts",
-      "sha256": "cf65514f36be7e09e5ff1538a6a36be099d92fae34a4994a2ef12d2a70ac5de1"
+      "sha256": "5158200b2bfa7b864db00db9bcf1bdd44c8445c0f8accf92cd31996931a486ad"
     },
     {
       "path": "lib/officials/member-directory-scope.ts",
@@ -3003,6 +3027,14 @@
       "sha256": "452ad7a459fd06c4ef6ac186388c460d74df47b0ae8cfae4e5a25e5f4eb45fe8"
     },
     {
+      "path": "lib/registry/audit.ts",
+      "sha256": "cbb892bf3052955d66e5ffd1d440ce81eded90242fc068a52eedaae160c77988"
+    },
+    {
+      "path": "lib/registry/body-attempt-read.ts",
+      "sha256": "09886171bf114857870c7bebc7b978d030ed1eb24b42d606e43a56f1433a8cdb"
+    },
+    {
       "path": "lib/registry/body-class-labels.ts",
       "sha256": "0134db936b678e5474a265ce172ca02ba31b947143bdd8da86554010597c883a"
     },
@@ -3016,7 +3048,7 @@
     },
     {
       "path": "lib/registry/body-rosters.ts",
-      "sha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+      "sha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
     },
     {
       "path": "lib/registry/body-territory.ts",
@@ -3032,7 +3064,7 @@
     },
     {
       "path": "lib/registry/cited-urls.ts",
-      "sha256": "c504579f34072ce4abc9876a6582d1ec767480835bdb5986a942569fe70e6559"
+      "sha256": "d0ea45ded8881f705770123fb900d6e887ebef52e0c12ec28f104b78f5d4312f"
     },
     {
       "path": "lib/registry/comment-access-client.ts",
@@ -3043,12 +3075,16 @@
       "sha256": "97709a5fde91003e7adf2f70b93b1a5b2d2ed9fb90150371adc84c9a4f267094"
     },
     {
+      "path": "lib/registry/coverage-audit.ts",
+      "sha256": "bd71fd1c6b240c89dac1991b7b7d3216ea8e128957f653d18efc937e4e3a8158"
+    },
+    {
       "path": "lib/registry/coverage-client.ts",
       "sha256": "f8a11858c1a9a0340f3ed96432e8cb97795c382e07f939fc29e93819b0266762"
     },
     {
       "path": "lib/registry/coverage.ts",
-      "sha256": "9e0fbb23f1674818b7d6d1004354fd46eb49889f0dd5fd6d42f6e93ff9f253b4"
+      "sha256": "db0d8bfddde9b796481c5ce5811e19fcf9f86da3a8480d72fbc38b24bc4aed4c"
     },
     {
       "path": "lib/registry/curated-bodies.ts",
@@ -3092,7 +3128,7 @@
     },
     {
       "path": "lib/registry/runtime-data-plane.ts",
-      "sha256": "a1952b6d10baa930408349a48b479dd638dfee5fed95135cd35def8604c6d14f"
+      "sha256": "7afba24b5e7258e4c0ed82b353b3e4880e8e87796844fbb92b37f51669cba17e"
     },
     {
       "path": "lib/registry/runtime-edge.ts",
@@ -3104,7 +3140,7 @@
     },
     {
       "path": "lib/registry/server.ts",
-      "sha256": "7ea2e9b62e5f68a03632327db2ce4b9eb2937f964ab38a000a99f73c62c3d091"
+      "sha256": "a7724d34cef60e852144cd6c5384c1966f537d7fa924680a865cafe971217e56"
     },
     {
       "path": "lib/registry/source-wiring.ts",
@@ -3541,6 +3577,10 @@
     {
       "path": "lib/votes/data-plane.ts",
       "sha256": "495c34b6220475fa46005c03134ccc666725f93b965b5de15a4a3c7f537b5aee"
+    },
+    {
+      "path": "lib/votes/history.ts",
+      "sha256": "39d89db73466ad567fb2295cd70386e50e6d31ac3ea2ff9e30aed9c0763a86a6"
     },
     {
       "path": "lib/votes/key-vote-positions.ts",
@@ -9246,12 +9286,11 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "4a455b5c40aa955057ed1b8ea3f3ddd69fab1d7d2b8ecd466bfd36c0d485ed3f",
+          "textSha256": "3b4faaa9af9560ddd007dd6b4ea17eb7c761848acefd429e8097a4b7ed5b49c6",
           "sourceUrls": [
             "#source-note-0",
             "https://www.krismayes.com",
             "https://www.azag.gov",
-            "https://www.petersenforag.com",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393"
           ]
         },
@@ -9357,12 +9396,11 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "abe79d876797b8c013df21938b0e51b078da7435a292c8e1b05c78cf0af06221",
+          "textSha256": "bad3e53b7b7c4f477ca94c3b4870843623a1717006fc4d95bc6d7dac9159c7e2",
           "sourceUrls": [
             "#jurisdiction-note",
             "#source-note-0",
-            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309",
-            "https://www.rwkarp.com"
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309"
           ]
         },
         {
@@ -9383,14 +9421,13 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "56ae3465bb302abad27f852dba5555e8bb6ddd03600df81d20cccb3143d56b8a",
+          "textSha256": "0cd577ea2bd5c60999816397e28a487c4db6df1c3ae5c2ec1bc83dc40eaa67cd",
           "sourceUrls": [
             "#jurisdiction-note",
             "#source-note-0",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2382",
             "https://lupediazaz.com",
-            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304",
-            "https://aswallowforaz.com"
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304"
           ]
         },
         {
@@ -9849,12 +9886,11 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "4a455b5c40aa955057ed1b8ea3f3ddd69fab1d7d2b8ecd466bfd36c0d485ed3f",
+          "textSha256": "3b4faaa9af9560ddd007dd6b4ea17eb7c761848acefd429e8097a4b7ed5b49c6",
           "sourceUrls": [
             "#source-note-0",
             "https://www.krismayes.com",
             "https://www.azag.gov",
-            "https://www.petersenforag.com",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393"
           ]
         },
@@ -15935,12 +15971,11 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "4a455b5c40aa955057ed1b8ea3f3ddd69fab1d7d2b8ecd466bfd36c0d485ed3f",
+          "textSha256": "3b4faaa9af9560ddd007dd6b4ea17eb7c761848acefd429e8097a4b7ed5b49c6",
           "sourceUrls": [
             "#source-note-0",
             "https://www.krismayes.com",
             "https://www.azag.gov",
-            "https://www.petersenforag.com",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393"
           ]
         },
@@ -16415,9 +16450,8 @@
             "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana"
           ],
           "summaryHeld": false,
-          "textSha256": "d4011393007b778e90baf71df2c53eda597c5e36aad0ce710191e3e3cc38b455",
+          "textSha256": "6f4293d8b77e147cb7eea98bfb949b20534eebdd94fc9954b6eb76f014b93838",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
@@ -16587,12 +16621,11 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "4a455b5c40aa955057ed1b8ea3f3ddd69fab1d7d2b8ecd466bfd36c0d485ed3f",
+          "textSha256": "3b4faaa9af9560ddd007dd6b4ea17eb7c761848acefd429e8097a4b7ed5b49c6",
           "sourceUrls": [
             "#source-note-0",
             "https://www.krismayes.com",
             "https://www.azag.gov",
-            "https://www.petersenforag.com",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393"
           ]
         },
@@ -16698,12 +16731,11 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "abe79d876797b8c013df21938b0e51b078da7435a292c8e1b05c78cf0af06221",
+          "textSha256": "bad3e53b7b7c4f477ca94c3b4870843623a1717006fc4d95bc6d7dac9159c7e2",
           "sourceUrls": [
             "#jurisdiction-note",
             "#source-note-0",
-            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309",
-            "https://www.rwkarp.com"
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309"
           ]
         },
         {
@@ -16724,14 +16756,13 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "56ae3465bb302abad27f852dba5555e8bb6ddd03600df81d20cccb3143d56b8a",
+          "textSha256": "0cd577ea2bd5c60999816397e28a487c4db6df1c3ae5c2ec1bc83dc40eaa67cd",
           "sourceUrls": [
             "#jurisdiction-note",
             "#source-note-0",
             "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2382",
             "https://lupediazaz.com",
-            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304",
-            "https://aswallowforaz.com"
+            "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304"
           ]
         },
         {

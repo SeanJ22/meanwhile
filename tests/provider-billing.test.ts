@@ -107,8 +107,8 @@ test("collector reloads the exact absolute file after rotation; siblings receive
 
 test("hunt attribution does not add account reports or count shared reservation keys twice", async () => {
   const report = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
-  const scope = { key:"zcta:2020/85635", budgetStartedAt:"2026-09-25T00:00:00.000Z", budgetUsd:50, geography:{label:"85635"} };
-  const row = (id:string, source:string, usd:number, assigned=true) => ({attemptId:id,source,recordedAt:now,assignmentKeys:assigned?[scope.key]:[],cost:{usd}});
+  const scope = { key:"zcta:2020/85635", receiptId:"scope-receipt", budgetStartedAt:"2026-09-25T00:00:00.000Z", budgetUsd:50, geography:{label:"85635"} };
+  const row = (id:string, source:string, usd:number, assigned=true) => ({attemptId:id,source,recordedAt:now,assignmentKeys:assigned?[scope.key]:[],assignmentRefs:assigned?[{key:scope.key,ref:scope.receiptId}]:[],cost:{usd}});
   const reading = providerBillingAttribution({ now, readings:report.readings, scopes:[scope] as never,
     attempts:[{id:"anth",worker:{provider:"anthropic",version:"claude-haiku-4-5-20251001"}},{id:"outside",worker:{provider:"anthropic",version:"claude-opus-5"}}],
     costs:[row("anth","source.gov",2),row("outside","source.gov",3,false),row("exa","api.exa.ai",0.5)] as never,

@@ -51,7 +51,8 @@ export interface EvidenceRecord {
     | "CANDIDATE_BIO"
     | "CANDIDATE_LINK"
     | "CANDIDATE_CONTACT"
-    | "POSITION"
+    /** A search hit in a linked page. The page's speaker and the person's stance are unverified. */
+    | "SOURCE_PASSAGE"
     | "MEASURE_QUESTION"
     | "MEASURE_STATEMENT"
     | "MEASURE_ANALYSIS"

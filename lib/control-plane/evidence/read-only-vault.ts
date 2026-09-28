@@ -36,6 +36,7 @@ export interface HeldVaultArtifact {
   readonly contentHash: string;
   readonly contentType: string;
   readonly canonicalUrl: string | null;
+  readonly retrievalUrl: string | null;
   readonly retrievedAt: string | null;
   readonly httpStatus: number | null;
   readonly sourceId: string | null;
@@ -102,6 +103,7 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
         contentHash: hash,
         contentType: meta.contentType ?? "",
         canonicalUrl: meta.custom?.canonicalUrl ?? null,
+        retrievalUrl: meta.custom?.retrievalUrl ?? null,
         retrievedAt: meta.custom?.retrievedAt ?? null,
         httpStatus: Number.isInteger(status) ? status : null,
         sourceId: meta.custom?.sourceId ?? null,

@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "exactReaderHead": "0c50c37bcc9e52343db119168b1b15bcfbfe7e56",
+  "exactReaderHead": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
   "inheritedRows": 0,
   "invalidatedRows": 352,
   "recomputedRows": 688,
@@ -8,7 +8,7 @@
   "routeProofs": 194,
   "componentProofs": 237,
   "componentCases": 20477,
-  "componentUncoveredDiagnostics": 69956,
+  "componentUncoveredDiagnostics": 69924,
   "closureFailures": 0,
   "denominatorFloor": {
     "outcome": "MEASURED",

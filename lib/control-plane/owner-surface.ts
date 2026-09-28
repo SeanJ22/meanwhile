@@ -406,6 +406,9 @@ export interface RunnerHeartbeat {
    * could not read git.
    */
   readonly codeIdentity?: CodeIdentity | null;
+  /** Exact successful software handoff observed by this running process;
+   * later cycle beats preserve it, but its own clock never advances by copy. */
+  readonly runtimeRelease?: RuntimeReleaseAdoption | null;
   /**
    * Aggregate production-intake observation taken by this same standing
    * runner. Optional only for records written before the permanent cutover.
@@ -421,6 +424,24 @@ export interface RunnerHeartbeat {
    * it. Absent on every beat written before the field existed.
    */
   readonly discoverySearch?: DiscoverySearchApplied | null;
+}
+
+export interface RuntimeReleaseAdoption {
+  readonly formatVersion: 1;
+  readonly phase: "acquisition-to-reader-repair/phase1";
+  readonly requiredBaseSha: string;
+  readonly baseContained: boolean;
+  readonly observedAt: string;
+  /** Host, PID and process-start nonce; a restarted runner must observe adoption anew. */
+  readonly processIdentity: string;
+  readonly runningSha: string;
+  readonly servedSha: string;
+  readonly servedHow: string;
+  readonly inspectionCode: "RUNTIME_RELEASE_CURRENT";
+  readonly integrityReceiptId: string;
+  readonly integritySha: string;
+  readonly integrityObservedAt: string;
+  readonly evidenceHash: string;
 }
 
 /** The runner's acknowledgement of the paid discovery search switch, written into its heartbeat each cycle. */
@@ -1474,6 +1495,8 @@ export interface OwnerCostRow {
  * and it carries that instant.
  */
 export interface OwnerSnapshot {
+  /** Derived exact-instruction inventories. Unknown object universes remain open. */
+  readonly checklists?: readonly import("./readiness/checklist-census.ts").ChecklistCensus[];
   readonly formatVersion: number;
   readonly publishedAt: string;
   readonly publishedFromSha: string | null;

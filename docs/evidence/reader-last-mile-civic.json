@@ -1,13 +1,13 @@
 {
-  "exactHead": "0c50c37bcc9e52343db119168b1b15bcfbfe7e56",
-  "buildId": "jiI7R3_bSjtAVOmhBDmtM",
+  "exactHead": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
+  "buildId": "Xxv_W19PzrRUTWKf7Misd",
   "sourceHashes": {
     "lib/routing/everyday.ts": "953572cf5c682372c569f576086f9a9e77ae2acb394d9a5187375c43c1d33b9f",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
     "lib/routing/topics.ts": "7ce63572f885edc41e31df4a265971f6dc589c61588ccff70bbbd853ec28cc56",
     "lib/routing/ask.ts": "726ff0a2966b4431aa1f9ae94dbc9639ec7fe161c1f7b6ab2995aed296388b76",
     "lib/officials/phone-numbers.ts": "ad62063e7ab2fc702a370dc2d3abee5ce2af81cfa8d931c8ae019d81d0523f1a",
-    "components/ask/ask-box.tsx": "72e2b5f7d67880ba848973c95f962ab2feada15a4a59d3e6330b2086c2dc667d",
+    "components/ask/ask-box.tsx": "06fb81818b2dac946f71b81e201699300cd89f4c91d184efef1be951975c2753",
     "components/shell/pill-cluster.tsx": "18d4a6c311695b56a8f4d4f8a5922a37f2f8ab342d4608d17a64a9a656d1b3e0",
     "app/globals.css": "cf97e13d50e33b5d42757009da5fc138c8d166d6d363402fa56b9310e1f67177"
   },
@@ -187,7 +187,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "221042a1d4badbd21908b46a4f6db69fe2a33364e1b1e23dd3dc42faeacd3633",
+      "canonicalAnswerSha256": "fff31ff3076cd7a8f813724b960b63b9be02f55421ea6843a1cfa0d5ad1342b4",
       "renderedTextSha256": "9c0fabfbac5455453cb94d888dd45ec73e19bd9d3c4c90226a835f923fedd50b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -235,7 +235,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "70beb507ebbff0f575d98c348559d0896aab4089306073712d6874bd2bc40e1a",
+      "canonicalAnswerSha256": "74b8e92ae1a0e05c9ab8832705de834c462c11740a6b84fc2679360be2322e88",
       "renderedTextSha256": "6387e74e9d8d6777f5e547e77a6740b6d1269bff618508e8e563ed77d6800fb9",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },

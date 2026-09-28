@@ -6,6 +6,8 @@ import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-
 import { heldOfficialStateLegislators } from "../../lib/state-rollcalls/legislators.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../../lib/state-rollcalls/authority.ts";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "../../lib/votes/snapshot.ts";
+import { readAllProvenFederalVoteHistoryForProof } from "../../lib/votes/history.ts";
+import { summaryForBill } from "../../lib/votes/bill-summaries.ts";
 import {
   readAvailableOfficialStateVotes,
   type AvailableOfficialStateVotes,
@@ -21,7 +23,7 @@ import type { EvidenceRecord, EvidencePack } from "../../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
-const SOURCE_PATHS = ["app/api/ask/grounded/route.ts", "lib/ask/votes.ts", "lib/ask/contacts.ts", "lib/ask/local-finance.ts", "lib/ask/official-identity.ts", "lib/registry/server.ts", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", "lib/votes/snapshot.ts", "lib/votes/data-plane.ts", "lib/sources/legiscan/snapshot.ts", "lib/state-rollcalls/authority.ts", "lib/officials/executive-actions.ts", "lib/civic-data/read-model.ts", "data/states/az/campaign-finance/az-pima-2026-held.json", "data/states/az/campaign-finance/az-pima-2026-transactions.json"];
+const SOURCE_PATHS = ["app/api/ask/grounded/route.ts", "lib/ask/votes.ts", "lib/ask/key-votes.ts", "lib/ask/contacts.ts", "lib/ask/local-finance.ts", "lib/ask/official-identity.ts", "lib/registry/server.ts", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", "lib/votes/snapshot.ts", "lib/votes/history.ts", "lib/votes/data-plane.ts", "lib/sources/legiscan/snapshot.ts", "lib/state-rollcalls/authority.ts", "lib/officials/executive-actions.ts", "lib/civic-data/read-model.ts", "data/states/az/campaign-finance/az-pima-2026-held.json", "data/states/az/campaign-finance/az-pima-2026-transactions.json"];
 
 interface ExpectedRecord { id: string; sourceUrl?: string | null; retrievedAt?: string | null; text?: string }
 interface DeliveryProof {
@@ -137,13 +139,25 @@ export async function exhaustiveAskProof(
     for (const seat of roster?.seats ?? []) holders.set(seat.id, seat);
   }
   const federalById = new Map(federal.votes.map((vote) => [vote.id, vote]));
+  const federalPositions = new Map<string, (typeof federal.positions)[number]>(federal.positions.map((position) =>
+    [`${position.officeholderId}#${position.voteId}`, position] as const));
+  const historicalVersions = federalProjection.kind === "PROMOTED"
+    ? await readAllProvenFederalVoteHistoryForProof(federalProjection) : [];
+  for (const version of historicalVersions) {
+    for (const vote of version.value.snapshot.votes) if (!federalById.has(vote.id)) federalById.set(vote.id, vote);
+    for (const position of version.value.snapshot.positions) {
+      const key = `${position.officeholderId}#${position.voteId}`;
+      if (!federalPositions.has(key)) federalPositions.set(key, position);
+    }
+  }
   const stateById = new Map(state.rollCalls.map((vote) => [vote.id, vote]));
-  const votingIds = [...new Set([...federal.positions, ...state.positions].map((position) => position.officeholderId))].sort();
+  const votingIds = [...new Set([...federalPositions.values(), ...state.positions]
+    .map((position) => position.officeholderId))].sort();
   for (const [index, id] of votingIds.entries()) {
     const holder = holders.get(id);
     if (!holder) throw new Error(`Held vote subject missing canonical official: ${id}`);
     const expected: ExpectedRecord[] = [
-      ...federal.positions.filter((position) => position.officeholderId === id).map((position) => {
+      ...[...federalPositions.values()].filter((position) => position.officeholderId === id).map((position) => {
         const vote = federalById.get(position.voteId)!;
         return { id: `${id}#${position.voteId}`, sourceUrl: vote.rollCallUrl, retrievedAt: vote.retrievedAt };
       }),
@@ -152,7 +166,14 @@ export async function exhaustiveAskProof(
         return { id: `${id}#${position.rollCallId}`, sourceUrl: vote.rollCallUrl, retrievedAt: vote.retrievedAt };
       }),
     ];
-    await prove("recorded-votes", id, holder.name, "PERSON", [`ocd-division/country:us/state:${holder.state?.toLowerCase() ?? "az"}`], "How has this person voted?", ["ROLL_CALL_VOTE"], expected);
+    const summaryUrls = new Set<string>();
+    for (const position of federalPositions.values()) if (position.officeholderId === id) {
+      const billUrl = federalById.get(position.voteId)?.billUrl;
+      if (billUrl && summaryForBill(billUrl)) summaryUrls.add(billUrl);
+    }
+    for (const billUrl of summaryUrls) expected.push({ id: `bill-summary:${billUrl}`,
+      sourceUrl: billUrl, retrievedAt: summaryForBill(billUrl)!.curatedAt });
+    await prove("recorded-votes", id, holder.name, "PERSON", [`ocd-division/country:us/state:${holder.state?.toLowerCase() ?? "az"}`], "How has this person voted?", ["ROLL_CALL_VOTE", "BILL_SUMMARY"], expected);
     if ((index + 1) % 100 === 0) progress(`Executed ${index + 1}/${votingIds.length} voting officials`);
   }
   for (const body of bodyIdentityIndex().values()) {

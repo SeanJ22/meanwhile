@@ -11,7 +11,7 @@ import { launchGuarded } from "../../scripts/browser.mts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { PostgresRoutineDataStore } from "../civic-data/store.ts";
 import type { WorkItem } from "./work-item.ts";
-import { collectWorkerRosterReadback, observePublishedRoster, observePublishedFilings } from "./worker-reader-readback.ts";
+import { collectWorkerRosterReadback, collectWorkerManualReadback, observePublishedRoster, observePublishedFilings, observePublishedManual } from "./worker-reader-readback.ts";
 
 export async function collectPublishedCampaignReadback(now: string): Promise<ServedReaderReadback> {
   const derived = await readDerivedCampaignSites();
@@ -91,6 +91,42 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
           const page = await context.newPage();
           page.setDefaultTimeout(3000);
           return await ("filings" in input ? observePublishedFilings(page, input) : observePublishedRoster(page, input));
+        } finally { await context.close(); }
+      } });
+    return { ...result, ...(browser ? { syntheticRunId: (browser as Awaited<ReturnType<typeof launchGuarded>>).runId } : {}) };
+  } finally { if (deadline) clearTimeout(deadline); if (browser) await (browser as Awaited<ReturnType<typeof launchGuarded>>).close(); }
+}
+
+/** Same receipt identity as the worker publisher, with only exact accepted
+ * manual records visited. The isolated browser blocks Ask server requests. */
+export async function collectPublishedManualReaderReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
+  let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
+  let deadline: ReturnType<typeof setTimeout> | undefined;
+  const destinations = new Map<string, Awaited<ReturnType<typeof lowestZipByDivision>>>();
+  try {
+    const result = await collectWorkerManualReadback({ items, now, previous, store: new PostgresRoutineDataStore(),
+      zipForDivision: async division => {
+        const state = /\/state:([a-z]{2})(?:\/|$)/.exec(division)?.[1]?.toUpperCase();
+        if (!state) return null;
+        if (!destinations.has(state)) destinations.set(state, await lowestZipByDivision(state));
+        const held = destinations.get(state);
+        const exact = held?.get(division);
+        if (exact) return exact;
+        const stateDivision = `ocd-division/country:us/state:${state.toLowerCase()}`;
+        return division === stateDivision ? [...(held ?? [])].filter(([id]) => id.startsWith(`${stateDivision}/`)).map(([, zip]) => zip).sort()[0] ?? null : null;
+      },
+      observe: async visit => {
+        if (!browser) {
+          const env = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => value !== undefined &&
+            /^(path|systemroot|windir|temp|tmp|userprofile|localappdata|appdata|home|playwright_browsers_path)$/i.test(key))) as Record<string, string>;
+          browser = await launchGuarded({ label: "manual-publication-readback", headless: true, env });
+          deadline = setTimeout(() => { void browser?.close().catch(() => undefined); }, 75_000);
+        }
+        const context = await browser.context({ viewport: { width: 1280, height: 900 } });
+        try {
+          const page = await context.newPage();
+          page.setDefaultTimeout(3000);
+          return await observePublishedManual(page, visit);
         } finally { await context.close(); }
       } });
     return { ...result, ...(browser ? { syntheticRunId: (browser as Awaited<ReturnType<typeof launchGuarded>>).runId } : {}) };

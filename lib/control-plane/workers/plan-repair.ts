@@ -7,9 +7,10 @@ import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
 import { assertAutonomousPlanIdentity, registerAutonomousPlan } from "./coordinator.ts";
 import type { GeneralizedCivicExtractionContract, RecordExtractionShape, VerificationAuthority, WorkerEvidence } from "./types.ts";
+import type { ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import { parseGeneralizedRecords } from "./generalized-parser.ts";
 import { verifyExternalAuthorities } from "./record-verification.ts";
-import { assertGeneralizedScope } from "./record-evidence.ts";
+import { assertGeneralizedScope, rosterTableFieldOmissions } from "./record-evidence.ts";
 import { createHash } from "node:crypto";
 import { PERMISSION_STATES } from "../../workstate/types.ts";
 import { WORKER_READER_CLASSES } from "../../civic-data/worker-reader-contracts.ts";
@@ -44,7 +45,7 @@ function shape(value: unknown): RecordExtractionShape {
 
 /** No side effects and no civic receipt: replay only decides whether instructions are executable. */
 export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate: ScoutCandidate; evidence: readonly WorkerEvidence[]; now: string;
-  observedAtByArtifact?: ReadonlyMap<string, string> }) {
+  observedAtByArtifact?: ReadonlyMap<string, string>; registeredPublisherAddress?: string | null }) {
   const { plan, candidate, evidence, now } = input;
   requireThat(plan.contract.schemaVersion === 2 && (PLAN_REPAIR_CLASSES as readonly string[]).includes(plan.contract.recordClass), "REPAIR_CLASS_NOT_ADMITTED");
   // The robots.txt verdict is a record, never a gate (owner decision 2026-09-25): any recorded verdict is admitted.
@@ -52,7 +53,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   requireThat(candidate.contractRepair && Buffer.byteLength(canonicalJson(candidate.contractRepair)) <= 32_768, "REPAIR_PROPOSAL_BOUND");
   const proposal = candidate.contractRepair as { schemaVersion?: unknown; sourceArtifactId?: unknown; extraction?: unknown; authorities?: unknown };
   requireThat(Object.keys(proposal).every(key => ["schemaVersion", "sourceArtifactId", "extraction", "authorities"].includes(key)) && proposal.schemaVersion === 1 && typeof proposal.sourceArtifactId === "string", "REPAIR_PROPOSAL_INVALID");
-  requireThat(Array.isArray(proposal.authorities) && proposal.authorities.length <= 4, "REPAIR_AUTHORITY_BOUND");
+  requireThat(Array.isArray(proposal.authorities) && proposal.authorities.length <= 16, "REPAIR_AUTHORITY_BOUND");
   const cited = new Set(candidate.evidenceArtifactIds);
   requireThat(cited.size > 0 && cited.size <= 16 && evidence.length === cited.size && evidence.every(row => cited.has(row.artifactId)), "REPAIR_EVIDENCE_BOUND");
   for (const row of evidence) {
@@ -66,10 +67,33 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   const primary = evidence.find(row => row.artifactId === proposal.sourceArtifactId);
   requireThat(primary && primary.canonicalUrl === candidate.url, "REPAIR_SOURCE_CAPTURE_MISSING");
   const trustedOrigins = [...plan.seedUrls, ...plan.sources.map(source => source.url), ...plan.contract.sourceScope.canonicalUrls].map(origin);
-  requireThat(trustedOrigins.includes(origin(primary.canonicalUrl)), "REPAIR_PUBLISHER_SCOPE_MISMATCH");
+  // The original registry can carry an HTTP homepage while a completed Scout
+  // captured its exact host over HTTPS. That registered address is an identity
+  // lead, not model-proposed authority: the caller resolves it by subject from
+  // the installed jurisdiction registry, and the captured bytes still need all
+  // normal provenance, extraction and verification checks below.
+  const primaryOrigin = origin(primary.canonicalUrl);
+  let registeredOrigin: string | null = null;
+  if (!trustedOrigins.includes(primaryOrigin) && input.registeredPublisherAddress) {
+    try {
+      const registered = new URL(input.registeredPublisherAddress);
+      const captured = new URL(primary.canonicalUrl);
+      requireThat(["http:", "https:"].includes(registered.protocol) && !registered.username && !registered.password &&
+        !registered.port && registered.hostname === captured.hostname, "REPAIR_REGISTERED_PUBLISHER_HOST_MISMATCH");
+      registeredOrigin = captured.origin;
+    } catch (error) {
+      if (error instanceof Error && error.message === "REPAIR_REGISTERED_PUBLISHER_HOST_MISMATCH") throw error;
+      throw new Error("REPAIR_REGISTERED_PUBLISHER_ADDRESS_INVALID");
+    }
+  }
+  requireThat(trustedOrigins.includes(primaryOrigin) || registeredOrigin === primaryOrigin, "REPAIR_PUBLISHER_SCOPE_MISMATCH");
   // Neither subject, jurisdiction, class, identity, required fields nor any
   // identity/denominator Detective can be weakened by a model proposal.
   const extraction = shape(proposal.extraction);
+  if (plan.contract.recordClass === "OFFICIAL_ROSTER") {
+    const omissions = rosterTableFieldOmissions(primary, extraction);
+    requireThat(omissions.length === 0, `REPAIR_SUPPORTED_FIELDS_OMITTED:${omissions.join(",")}`);
+  }
   const authorities = proposal.authorities as VerificationAuthority[];
   requireThat(plan.contract.verification.required && authorities.length >= plan.contract.verification.authorities.length, "REPAIR_VERIFICATION_CANNOT_WEAKEN");
   requireThat(plan.contract.verification.authorities.every(prior => authorities.some(next => canonicalJson(next) === canonicalJson(prior))), "REPAIR_AUTHORITY_CANNOT_REMOVE");
@@ -80,7 +104,8 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
       "REPAIR_OFFICIAL_AUTHORITY_REQUIRED");
     requireThat(Array.isArray(authority.artifactIds) && authority.artifactIds.length > 0 && Array.isArray(authority.authorityEvidenceArtifactIds) && authority.authorityEvidenceArtifactIds.length > 0 &&
       [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds].every(id => cited.has(id)), "REPAIR_AUTHORITY_EVIDENCE_MISSING");
-    requireThat((authority.sourceId !== primary.sourceId || authority.independenceBasis === "INDEPENDENT_OFFICIAL_RECORD") && authority.comparison?.kind === "RECORD_VALUES" && authority.comparison.fields.length > 0 &&
+    requireThat((authority.sourceId !== primary.sourceId || authority.independenceBasis === "INDEPENDENT_OFFICIAL_RECORD") &&
+      ["RECORD_VALUES", "RECORD_VALUES_SUBSET"].includes(authority.comparison?.kind) && authority.comparison.fields.length > 0 &&
       [...plan.contract.requiredFields, ...plan.contract.identity.keyFields].every(field => authority.comparison.fields.includes(field)), "REPAIR_AUTHORITY_BURDEN_MISMATCH");
     shape(authority.extraction);
     for (const id of [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds]) {
@@ -111,8 +136,41 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   const checks = verifyExternalAuthorities({ attemptId: "contract-instruction-comparison", producerAttemptId: replay.attemptId, candidate: replay,
     evidence: primary, authorityEvidence: evidence, verifiedAt: now }, contract);
   requireThat(checks.every(check => check.verdict === "PASS"), `REPAIR_AUTHORITY_COMPARISON_REFUSED:${checks.flatMap(check => check.discrepancies.map(issue => issue.code)).join(",")}`);
-  const unresolved = [...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []), ...(plan.detective.length ? ["PARENT_DETECTIVE_BURDENS_RETAINED"] : [])];
-  return { contract, primary, unresolved, proposalHash: fingerprint([canonicalJson(contract), primary.contentHash]) };
+  const verifiedIds = new Set(checks.flatMap(check => check.verdict === "PASS" ? check.verifiedRecordIds ?? [] : []));
+  const rosterUnverified = contract.recordClass === "OFFICIAL_ROSTER" ? replay.records.filter(record => !verifiedIds.has(record.id)).length : 0;
+  const unresolved = [...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []),
+    ...(rosterUnverified ? [`UNVERIFIED_ROSTER_MEMBERS:${rosterUnverified}`] : []),
+    ...(plan.detective.length ? ["PARENT_DETECTIVE_BURDENS_RETAINED"] : [])];
+  // A verified source row can itself point to independent official profile
+  // pages. The route is grounded in the exact href span; it is an acquisition
+  // instruction, never authority evidence or a pre-approved comparison.
+  const profileRoutes: ObservedResearchRoute[] = [];
+  if (contract.recordClass === "OFFICIAL_ROSTER") {
+    const seen = new Set<string>();
+    const spans = new Map(replay.spans.map(span => [span.id, span] as const));
+    for (const record of replay.records) {
+      const url = record.fields.websiteUrl;
+      const link = record.evidenceSpanIds.map(id => spans.get(id)).find(span => span?.field === "websiteUrl" && span.jsonPointer.endsWith("/@href"));
+      const identity = record.evidenceSpanIds.map(id => spans.get(id)).filter((span): span is NonNullable<typeof span> => span?.field === "name" || span?.field === "office");
+      if (typeof url !== "string" || !link || !identity.length || seen.has(url)) continue;
+      const hrefs = [...link.quote.matchAll(/<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1/gi)];
+      if (hrefs.length !== 1) continue;
+      const locator = hrefs[0]![2]!.replace(/&amp;/gi, "&");
+      try { if (new URL(locator, primary.canonicalUrl).href !== url || origin(url) !== origin(primary.canonicalUrl) || url === primary.canonicalUrl) continue; }
+      catch { continue; }
+      seen.add(url);
+      const sourceSpan = (span: typeof link): ResearchSpan => ({ artifactId: span.artifactId, contentHash: span.contentHash,
+        start: span.start, end: span.end, quote: span.quote, offsetUnit: "UTF16_CODE_UNITS" });
+      profileRoutes.push({ id: `profile:${fingerprint([record.id, url])}`, subjectId: contract.subjectId,
+        jurisdiction: plan.jurisdiction, recordClass: contract.recordClass, sourceId: primary.sourceId,
+        publisher: contract.sourceScope.publisher, url, observedLocator: locator,
+        observedAt: input.observedAtByArtifact?.get(primary.artifactId) ?? primary.retrievedAt, firstObservedAt: primary.retrievedAt,
+        methodVersion: contract.methodVersion, permission: candidate.permission, observation: sourceSpan(link),
+        publisherSubjectEvidence: identity.map(sourceSpan), applicableBecause: `Official roster links this named member to a separate profile record; acquire it for independent name and office comparison.`,
+        nextRouteIds: ["INDEPENDENT_MEMBER_OFFICE_CORROBORATION"], retrieval: "fetch_public" });
+    }
+  }
+  return { contract, primary, unresolved, profileRoutes, proposalHash: fingerprint([canonicalJson(contract), primary.contentHash]) };
 }
 
 export function planRepairBrief(plan: AutonomousWorkPlan): string {
@@ -122,7 +180,7 @@ export function planRepairBrief(plan: AutonomousWorkPlan): string {
   const examples: RecordExtractionShape[] = [
     { format: "JSON_RECORDS", rowsPointer: "/records", fields },
     { format: "XML_RECORDS", rowTag: "record", fields: { [Object.keys(fields)[0]]: { source: "fieldName", type: "STRING" } } },
-    { format: "HTML_TABLE", tableIndex: 0, headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" } } },
+    { format: "HTML_TABLE", tableIndex: 0, headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" }, websiteUrl: { source: 0, type: "STRING", attribute: "href" } } },
     { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" } } },
     { format: "TEXT_BLOCKS", recordStart: "Name:", recordEnd: "End of record", fields: { [Object.keys(fields)[0]]: { source: "Name:", type: "STRING" } } },
   ];
@@ -131,13 +189,34 @@ export function planRepairBrief(plan: AutonomousWorkPlan): string {
     authorityEvidenceArtifactIds: ["replace-with-actual-publisher-evidence-artifact-id"], independenceBasis: "DISTINCT_AUTHORITY",
     independenceExplanation: "Replace with the evidenced reason this distinct government authority independently publishes these records.", extraction: examples[0],
     comparison: { kind: "RECORD_VALUES", keyFields: [...plan.contract.identity.keyFields], fields: Object.keys(fields) } };
-  const grammar = ` Exact extraction descriptor examples: ${JSON.stringify(examples)}. Replace every example locator with one inspected in retained bytes. JSON rowsPointer is an RFC6901 pointer to an array (empty string selects a root array); optional countPointer locates a published count. JSON field source is an RFC6901 pointer relative to each row. XML rowTag and field source are element names. HTML tableIndex and numeric field source are zero-based indexes; headerRows counts excluded headers. Delimited text accepts only comma or tab. Every fields entry is {source:string|number,type:STRING|NUMBER|BOOLEAN|SCALAR}; map every required and identity field, at most32. Exact authority descriptor example: ${JSON.stringify(authority)}. At most4 authorities and16 cited artifacts. Examples are grammar only, never evidence or permission to guess values.`;
-  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE, DELIMITED_TEXT or TEXT_BLOCKS mapping; cite every source/authority artifact in evidenceArtifactIds. For PDFs, cite the retained PDF_TEXT or PDF_TABLES transcription artifact, never the binary id as text. PDF_TABLES uses JSON_RECORDS over /tables/<index>/rows with numeric member pointers and an explicitly observed headerRows count. TEXT_BLOCKS uses exact literal recordStart/recordEnd boundaries and field source labels from retained text; no guessed offsets or regular expressions. Incomplete pages remain unverified and require another source or extraction repair. Each proposed authority needs an actual government register, statutory record or official denominator, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, a documented DISTINCT_AUTHORITY or INDEPENDENT_OFFICIAL_RECORD basis, extraction and a RECORD_VALUES comparison covering all required/identity fields. A .org/.edu or other non-government-suffix publisher must already be established by the parent plan with the same source ID, publisher and origin. A separate record from the primary publisher must name that exact publisher and use different captured bytes and a different URL; repeating the source is refused. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
+  const grammar = ` Exact extraction descriptor examples: ${JSON.stringify(examples)}. Replace every example locator with one inspected in retained bytes. JSON rowsPointer is an RFC6901 pointer to an array (empty string selects a root array); optional countPointer locates a published count. JSON field source is an RFC6901 pointer relative to each row. XML rowTag and field source are element names. HTML tableIndex and numeric field source are zero-based indexes; headerRows counts excluded headers. An HTML_TABLE field may use attribute:"href" only when the source cell contains one explicit anchor; its URL resolves against the captured page and remains bound to that exact cell span. Delimited text accepts only comma or tab. Every fields entry is {source:string|number,type:STRING|NUMBER|BOOLEAN|SCALAR}; map every required and identity field plus all independently supported contact and profile-link fields, at most32. Do not infer emails from an Email button or assign a shared office phone to a person. Exact authority descriptor example: ${JSON.stringify(authority)}. For independently captured official profile records, RECORD_VALUES_SUBSET with keyFields:["name"] and fields:["name","office"] may corroborate only explicitly matched members; all other members remain unverified. Up to16 separately mapped authorities and16 cited artifacts permit a seven-profile council without a four-source ceiling; continue through linked repair successors when a technical slice is incomplete. Examples are grammar only, never evidence or permission to guess values.`;
+  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE, DELIMITED_TEXT or TEXT_BLOCKS mapping; cite every source/authority artifact in evidenceArtifactIds. For PDFs, cite the retained PDF_TEXT or PDF_TABLES transcription artifact, never the binary id as text. PDF_TABLES uses JSON_RECORDS over /tables/<index>/rows with numeric member pointers and an explicitly observed headerRows count. TEXT_BLOCKS uses exact literal recordStart/recordEnd boundaries and field source labels from retained text; no guessed offsets or regular expressions. Incomplete pages remain unverified and require another source or extraction repair. Each proposed authority needs an actual government register, statutory record or official denominator, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, a documented DISTINCT_AUTHORITY or INDEPENDENT_OFFICIAL_RECORD basis, extraction and a RECORD_VALUES comparison covering all required/identity fields. For a roster only, separate official profile captures may use RECORD_VALUES_SUBSET over name and office; this verifies matched members individually and never proves all source rows or the government's full roster. A .org/.edu or other non-government-suffix publisher must already be established by the parent plan with the same source ID, publisher and origin. A separate record from the primary publisher must name that exact publisher and use different captured bytes and a different URL; repeating the source is refused. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
   return brief + grammar;
+}
+
+/** A successor may cite the exact retained bytes that its repair chain handed
+ * forward, while unrelated work or unhanded ancestor captures remain barred. */
+function inheritedRepairCaptures(item: LinkedWorkItem, items: readonly LinkedWorkItem[]): { workItemIds: ReadonlySet<string>; artifactIds: ReadonlySet<string> } {
+  const workItemIds = new Set([item.id]);
+  const artifactIds = new Set<string>();
+  let cursor = item;
+  while (cursor.planRepair) {
+    const link = cursor.planRepair;
+    const prior = items.find(row => row.id === link.parentWorkItemId);
+    requireThat(prior && !workItemIds.has(prior.id) && prior.project === item.project && prior.subject === item.subject &&
+      link.authority === "WORK_INSTRUCTIONS_ONLY", "REPAIR_LINEAGE_INVALID");
+    workItemIds.add(prior.id);
+    for (const id of [...link.retainedEvidenceIds, link.sourceArtifactId]) artifactIds.add(id);
+    cursor = prior;
+  }
+  return { workItemIds, artifactIds };
 }
 
 /** Consume only completed accepted Scout records; bounded, deduplicated, no acquisition here. */
 export async function consumePlanRepairs(input: { repos: ControlPlaneRepositories; scouts: readonly ScoutResult[]; now: string;
+  registeredPublisherAddressFor?: (subjectId: string) => string | null;
+  /** Exact same-occurrence captures selected and checked by the runtime broker; never model-declared lineage. */
+  authorizedSiblingArtifactIdsFor?: (parent: WorkItem) => readonly string[];
   readCapture: (id: string) => Promise<{ evidence: WorkerEvidence; permission: string; transport: string; httpStatus: number | null; partial: boolean }> }): Promise<readonly RepairObservation[]> {
   const observations: RepairObservation[] = [];
   const items = (await input.repos.workItems.list()).map(row => row.value as LinkedWorkItem);
@@ -157,13 +236,18 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
     try {
       requireThat(candidates.length === 1, "REPAIR_ONE_PROPOSAL_PER_ATTEMPT");
       const candidate = candidates[0];
+      const inheritedCaptures = inheritedRepairCaptures(parent, items);
+      const authorizedSiblings = new Set(input.authorizedSiblingArtifactIdsFor?.(parent) ?? []);
       const evidence = await Promise.all(candidate.evidenceArtifactIds.map(async id => {
         const capture = await input.readCapture(id);
         // Any recorded robots.txt verdict is admissible; a walled, partial or non-2xx capture never is.
         requireThat(isRecordedRobotsVerdict(capture.permission) && capture.transport === "REACHABLE" && !capture.partial &&
           capture.httpStatus !== null && capture.httpStatus >= 200 && capture.httpStatus < 300, "REPAIR_CAPTURE_NOT_ADMISSIBLE");
         const row = capture.evidence; const acquisition = attempts.get(row.acquiredByAttemptId);
-        requireThat(acquisition?.outcome === "COMPLETED" && acquisition.workItemId === parent.id, "REPAIR_CAPTURE_COMPLETION_MISSING"); return row;
+        requireThat(acquisition?.outcome === "COMPLETED" &&
+          ((inheritedCaptures.workItemIds.has(acquisition.workItemId) &&
+            (acquisition.workItemId === parent.id || inheritedCaptures.artifactIds.has(id))) || authorizedSiblings.has(id)),
+          "REPAIR_CAPTURE_COMPLETION_MISSING"); return row;
       }));
       const observedAtByArtifact = new Map<string, string>();
       for (const row of evidence) {
@@ -176,7 +260,8 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
           .map(rung => rung.at).sort().at(-1);
         if (observed) observedAtByArtifact.set(row.artifactId, observed);
       }
-      const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact });
+      const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact,
+        registeredPublisherAddress: input.registeredPublisherAddressFor?.(parent.subject) });
       // A fixed number of failed routes is not the end of the obligation.
       // Continue on new evidence, but never spend on an unchanged ancestor
       // proposal or follow an invalid/cyclic link into another assignment.
@@ -207,7 +292,7 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
           sourceId: primary.sourceId, publisher: evaluated.contract.sourceScope.publisher, subjectId: parent.subject,
           jurisdiction: parent.autonomousPlan.jurisdiction, recordClass: evaluated.contract.recordClass,
           observedAt: observedAtByArtifact.get(primary.artifactId) ?? primary.retrievedAt, firstObservedAt: primary.retrievedAt, methodVersion: evaluated.contract.methodVersion,
-          permission: "ALLOWED" as const, retrieval: "fetch_public" as const, nextRouteIds: ["INDEPENDENT_AUTHORITY_AND_CONTRACT_REPAIR"],
+          permission: candidate.permission, retrieval: "fetch_public" as const, nextRouteIds: ["INDEPENDENT_AUTHORITY_AND_CONTRACT_REPAIR"],
           ...(primary.sourceDocument ? { representation: primary.sourceDocument.kind } : {}),
           applicableBecause: "Completed Scout retained and locally replayed this exact official source under the unchanged civic question.",
           observation: { artifactId: primary.artifactId, contentHash: primary.contentHash, start: 0, end: Math.min(primary.text.length, 256), quote: primary.text.slice(0, 256), offsetUnit: "UTF16_CODE_UNITS" as const },
@@ -218,8 +303,17 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
         const child: LinkedWorkItem = { ...createWorkItem({ project: parent.project, subject: parent.subject,
           obligation: `${parent.obligation} — source contract successor ${evaluated.proposalHash}`,
           why: `Continue ${parent.id} with evidence-backed executable instructions. The original obligation and all unresolved burdens remain open.`, contract: parent.contract, dependencies: parent.dependencies, now: input.now }), planRepair: link };
-        const plan: AutonomousWorkPlan = { ...parent.autonomousPlan, contract: evaluated.contract, sources: [route], acquisition: [{ route, held: [] }],
-          seedUrls: [...new Set([...parent.autonomousPlan.seedUrls, primary.canonicalUrl])] };
+        const heldFor = (observed: ObservedResearchRoute) => evidence.filter(row =>
+          row.canonicalUrl === observed.url && row.sourceId === observed.sourceId)
+          .sort((left, right) => right.retrievedAt.localeCompare(left.retrievedAt)).map(row => ({
+          artifactId: row.artifactId, sourceObservationArtifactId: observed.observation.artifactId,
+          sourceRouteId: observed.id, immutable: true, partial: false,
+          currentUntil: new Date(Date.parse(row.retrievedAt) + 24 * 3_600_000).toISOString(),
+          inheritedFromWorkItemId: attempts.get(row.acquiredByAttemptId)!.workItemId,
+        }));
+        const plan: AutonomousWorkPlan = { ...parent.autonomousPlan, contract: evaluated.contract,
+          sources: [route, ...evaluated.profileRoutes], acquisition: [{ route, held: heldFor(route) }, ...evaluated.profileRoutes.map(profile => ({ route: profile, held: heldFor(profile) }))],
+          seedUrls: [...new Set([...parent.autonomousPlan.seedUrls, primary.canonicalUrl, ...evaluated.profileRoutes.map(profile => profile.url)])] };
         assertAutonomousPlanIdentity(child, plan);
         if (previous) {
           // Recover a row written by an interrupted older two-step producer.

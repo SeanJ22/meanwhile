@@ -413,6 +413,7 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/scheduler/scout-tools.ts": "tests/scout-tools.test.ts",
   "lib/control-plane/scheduler/model-routing.ts": "catalogue text only; no fetch",
   "lib/control-plane/discovery/meetings-discovery-executor.ts": "this file, tests/meetings-discovery-executor.test.ts",
+  "lib/control-plane/promotion/campaign-publication-cycle.ts": "tests/campaign-site-runner.test.ts: a disallowed linked publication is captured with its robots verdict",
   "lib/candidates/campaign-site-verifier.ts": "tests/campaign-site-verifier.test.ts",
   "lib/candidates/research-findings-replay.ts": "tests/replay-research-findings.test.ts",
   "lib/civic-data/website-correction-acquisition.ts": "tests/website-corrections.test.ts",

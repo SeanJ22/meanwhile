@@ -12,9 +12,8 @@
  * ```
  *   all        everywhere the product has registered coverage
  *   state      one state or territory (lower-case USPS code, e.g. "az")
- *   geography  one Census container the owner has selected as a scope —
- *              a county, a congressional district, a metro or micro area, or
- *              a state legislative district — carried as its lookup address
+ *   geography  one selected Census geography, including a five-digit ZCTA,
+ *              carried as its exact lookup address
  * ```
  *
  * PURE: no I/O, no clock. The pages decide what each panel can narrow to and
@@ -28,9 +27,10 @@ export type MwReadinessTab = "readiness" | "work" | "cost" | "done" | "fix";
 export type MwTab = MwFleetTab | MwReadinessTab;
 
 /** A Census container type the scope filter can carry. */
-export type MwGeoType = "county" | "congressional_district" | "cbsa" | "state_leg_upper" | "state_leg_lower";
+export type MwGeoType = "zcta" | "county" | "congressional_district" | "cbsa" | "state_leg_upper" | "state_leg_lower";
 
 const GEO_SHORT: Readonly<Record<MwGeoType, string>> = {
+  zcta: "zcta",
   county: "county",
   congressional_district: "cd",
   cbsa: "cbsa",
@@ -72,7 +72,7 @@ export function parseScope(raw: string | string[] | undefined | null): MwScope {
   const m = /^([a-z]{2})\.([a-z]+)\.([0-9a-z]{1,16})$/.exec(value);
   if (m) {
     const type = GEO_FROM_SHORT[m[2]];
-    if (type) return { kind: "geo", type, geoid: m[3], state: m[1] };
+    if (type && (type !== "zcta" || /^\d{5}$/.test(m[3]))) return { kind: "geo", type, geoid: m[3], state: m[1] };
   }
   return SCOPE_ALL;
 }
@@ -129,6 +129,7 @@ export function areaHome(area: MwArea, scope: MwScope): string {
 }
 
 export const GEO_TYPE_WORDS: Readonly<Record<MwGeoType, string>> = {
+  zcta: "ZIP (Census ZCTA)",
   county: "County",
   congressional_district: "Congressional district",
   cbsa: "Metropolitan area",

@@ -93,7 +93,7 @@ import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/o
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { headSha } from "../lib/ops/git-facts.ts";
+import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
@@ -106,8 +106,9 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { continuingDirectedHunt } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat, type RuntimeReleaseAdoption } from "../lib/control-plane/owner-surface.ts";
+import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, retainedRuntimeReleaseAdoption, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -251,6 +252,7 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 
 /** Loaded-code identity, captured before a handoff can move the checkout. */
 const RUNNING_CODE_SHA = headSha(ROOT);
+const PROCESS_IDENTITY = `${hostname()}:${process.pid}:${new Date().toISOString()}`;
 const ROUTINE_READER_DOMAINS = routineReaderRepairDomains();
 // Meeting lanes take up to two reads a pass (C6), so the limit is sized for that pass.
 const ROUTINE_PASS_BOUND = routineFrontierPassBound();
@@ -1166,7 +1168,14 @@ function releaseInspectionRefusal(code: string, detail: string, targetSha: strin
   };
 }
 
-async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
+type RuntimeReleaseObserved = RuntimeReleaseInspection & {
+  readonly servedHow?: string;
+  readonly integrityReceiptId?: string;
+  readonly integritySha?: string;
+  readonly integrityObservedAt?: string;
+};
+
+async function inspectRuntimeRelease(): Promise<RuntimeReleaseObserved> {
   const served = await fetchServedCommit(PRODUCTION_BASE_URL, {
     runId: `pilot-runtime-release:${process.pid}`,
     timeoutMs: 15_000,
@@ -1204,12 +1213,43 @@ async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
         token: runtimeGithubCredential({ root: ROOT, env: process.env }),
       })
     : null;
-  return inspectRuntimeReleaseEvidence({
+  const inspected = inspectRuntimeReleaseEvidence({
     runningSha: RUNNING_CODE_SHA,
     served,
     integrity,
     checkRuns,
   });
+  return integrity.kind === "HELD" ? {...inspected,servedHow:served.how,
+    integrityReceiptId:integrity.receipt.id,integritySha:integrity.record.deployedSha??undefined,
+    integrityObservedAt:integrity.record.observedAt??undefined} : inspected;
+}
+
+/** A CURRENT inspection is not itself a GATE-02 PASS. Save its exact process,
+ * deployed and canonical integrity identities; the later completed heartbeat
+ * and phase-base ancestry are checked again by the scoring producer. */
+async function persistCurrentRuntimeRelease(result:RuntimeReleaseObserved):Promise<void> {
+  if(result.state!=="CURRENT"||!RUNNING_CODE_SHA||!result.targetSha||!result.servedHow||
+    !result.integrityReceiptId||!result.integritySha||!result.integrityObservedAt) return;
+  const repos=await ownerRepositories();
+  if(repos===null) return;
+  // Process/deployment inspection time, not a publisher freshness timestamp.
+  const inspectedAt=new Date().toISOString();
+  const fields:Omit<RuntimeReleaseAdoption,"evidenceHash">={
+    formatVersion:1,phase:GATE02_REPAIR_PHASE,requiredBaseSha:GATE02_REQUIRED_BASE_SHA,
+    baseContained:containsCommit(GATE02_REQUIRED_BASE_SHA,RUNNING_CODE_SHA,ROOT),
+    observedAt:inspectedAt,processIdentity:PROCESS_IDENTITY,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
+    inspectionCode:"RUNTIME_RELEASE_CURRENT",integrityReceiptId:result.integrityReceiptId,
+    integritySha:result.integritySha,integrityObservedAt:result.integrityObservedAt,
+  };
+  const runtimeRelease:RuntimeReleaseAdoption={...fields,evidenceHash:runtimeReleaseAdoptionHash(fields)};
+  const current=await repos.runnerHeartbeat.read(RUNNER_ID);
+  const base:RunnerHeartbeat=current?.value??{
+    formatVersion:OWNER_SURFACE_FORMAT_VERSION,beatAt:inspectedAt,lastCycleStartedAt:null,lastCycleFinishedAt:null,
+    nextCycleDueAt:null,lastCycleOk:null,testedSha:RUNNING_CODE_SHA,host:hostname(),
+  };
+  const next={...base,runtimeRelease:retainedRuntimeReleaseAdoption(current?.value.runtimeRelease,runtimeRelease,inspectedAt)};
+  if(current===null) await repos.runnerHeartbeat.put(RUNNER_ID,next,inspectedAt);
+  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,next,inspectedAt);
 }
 
 async function persistRuntimeBoundaryFailure(
@@ -1277,7 +1317,11 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   if (!AUTO_RELEASE_HANDOFF) return null;
   const startedAt = new Date().toISOString();
   const first = await inspectRuntimeRelease();
-  if (first.state === "CURRENT") return null;
+  if (first.state === "CURRENT") {
+    try { await persistCurrentRuntimeRelease(first); }
+    catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
+    return null;
+  }
 
   // At process startup no clock has passed the method-authority gate yet. A
   // transient target that moves back to this SHA while we drain must not turn
@@ -1301,6 +1345,8 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     // Production moved back to the code this process actually loaded. Nothing
     // was switched; admissions may safely resume.
     runtimeAdmissionsHeld = false;
+    try { await persistCurrentRuntimeRelease(final); }
+    catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
     if (reopenStandingClock) startStandingRuntimeClock();
     return null;
   }
@@ -1708,12 +1754,12 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   }
 }
 
-/** A directed hunt gets another bounded cycle promptly when its last cycle
- * dispatched its own work and still left due members. No progress, unread
- * accounting, a pause or a blackout falls back to the ordinary clock. */
+let lifetimeHuntStalledCycles = 0;
+/** Exact authorized lifetime work resumes in bounded cycles. The child still
+ * enforces provider restrictions and atomically reserves every paid call. */
 async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
   const ordinary = INTERVAL_MIN * 60_000;
-  if (!cycleOk || provider !== "postgres" || canary || scheduledBlackoutAt(new Date().toISOString())) return ordinary;
+  if (provider !== "postgres" || canary) return ordinary;
   try {
     const repos = await ownerRepositories();
     if (repos === null) return ordinary;
@@ -1722,29 +1768,40 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
       repos.researchState.readNarrowed(RESEARCH_STATE_ID, { expansion: true, assignments: true }),
       repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY),
     ]);
-    if (readIntents(intents).runnerPause.paused) return ordinary;
+    const intent = readIntents(intents);
+    if (intent.runnerPause.paused || intent.paused) return ordinary;
     const scopes = expansionScopesOf(policy !== null && isAdminConfig(policy.value) ? policy.value : null);
     if (scopes.malformed > 0) return ordinary;
     const value = state?.value as { expansion?: unknown; assignments?: unknown } | undefined;
     const expansion = isExpansionCycleReading(value?.expansion) ? value.expansion : null;
     const assignments = isAssignmentCycleReading(value?.assignments) ? value.assignments : null;
-    const hunt = continuingDirectedHunt(scopes.scopes, expansion, assignments);
+    const lifetime = originalLifetimeHuntContinuation(scopes.scopes, expansion, assignments, cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
+    if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
+    else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
+    const otherScopes = scopes.scopes.filter(scope => scope.key !== ORIGINAL_LIFETIME_HUNT.key || scope.budgetStartedAt !== ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
+    const hunt = lifetime ?? (!cycleOk || scheduledBlackoutAt(new Date().toISOString()) ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
     if (hunt === null) return ordinary;
-    const nextAt = new Date(Date.now() + POLL_MS).toISOString();
+    const waitMs = lifetime?.delayMs ?? POLL_MS;
+    const reason = lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH"
+      ? `Directed hunt ${hunt.label}: eligible work remains without a dispatch; bounded retry in ${waitMs / 60_000} minutes.`
+      : hunt.due > hunt.dispatched
+        ? `Directed hunt ${hunt.label}: ${hunt.due - hunt.dispatched} due member obligations remain after this cycle.`
+        : `Directed hunt ${hunt.label}: downstream verification or publication remains after dispatch; next bounded cycle in ${waitMs / 1000} seconds.`;
+    const nextAt = new Date(Date.now() + waitMs).toISOString();
     try {
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
       if (current !== null && current.value.testedSha === RUNNING_CODE_SHA) {
         await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, {
           ...current.value,
           nextCycleDueAt: nextAt,
-          nextCycleReason: `Directed hunt ${hunt.label}: ${hunt.due - hunt.dispatched} due member obligations remain after this cycle.`,
+          nextCycleReason: reason,
         }, new Date().toISOString());
       }
     } catch (error) {
       console.error(`  directed-hunt next-cycle heartbeat could not be updated: ${error instanceof Error ? error.message : String(error)}`);
     }
-    console.log(`  directed hunt ${hunt.label}: ${hunt.dispatched} of ${hunt.due} due member obligations dispatched; next bounded cycle in ${POLL_MS / 1000}s`);
-    return POLL_MS;
+    console.log(`  directed hunt ${hunt.label}: ${hunt.dispatched} of ${hunt.due} due member obligations dispatched; next bounded cycle in ${waitMs / 1000}s`);
+    return waitMs;
   } catch (error) {
     console.error(`  directed-hunt continuation could not be read; ordinary interval stands: ${error instanceof Error ? error.message : String(error)}`);
     return ordinary;
@@ -1831,6 +1888,14 @@ await publishConsole();
 while (cycle < CYCLES) {
   /* ADM-5: PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
   const owner = await holdWhilePaused();
+  // A deployment can finish while the runner is asleep (including a
+  // RUN_CYCLE_NOW wake). Reconcile before admitting another research child;
+  // the previous end-of-cycle check cannot observe a later deployment.
+  const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
+  if (wakeReleaseExit !== null) {
+    handoffExitCode = wakeReleaseExit;
+    break;
+  }
   cycle += 1;
   const startedAt = new Date().toISOString();
   console.log(

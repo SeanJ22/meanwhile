@@ -218,6 +218,25 @@ test("a malformed stored scope is counted, never dropped as if no restriction st
   assert.deepEqual(orderScopes([decision(CD6, 3, 0), good]).map((s) => s.priority), [1, 3]);
 });
 
+test("lifetime hunt edits retain instruction identity and accounting start while recording the new decision receipt", () => {
+  const change = { geography: PIMA, priority: 1, budgetUsd: 50, huntBudget: true, note: null,
+    decidedAt: NOW, decidedBy: "adm_test", receiptId: "original-instruction" };
+  const first = withScopeSet([], change).scopes;
+  const edited = withScopeSet(first, { ...change, priority: 2, receiptId: "priority-edit",
+    decidedAt: "2026-09-24T04:00:00.000Z" }).scopes[0];
+  assert.equal(edited.receiptId, "original-instruction");
+  assert.equal(edited.latestDecisionReceiptId, "priority-edit");
+  assert.equal(edited.budgetStartedAt, NOW);
+  assert.equal(edited.priority, 2);
+  const subsequent = withScopeSet([edited], { ...change, receiptId: "note-edit", note: "Continue" }).scopes[0];
+  assert.equal(subsequent.receiptId, "original-instruction");
+  assert.equal(subsequent.latestDecisionReceiptId, "note-edit");
+  const separate = withScopeSet([subsequent], { ...change, newHunt: true, receiptId: "explicit-new-hunt",
+    decidedAt: "2026-09-25T04:00:00.000Z" }).scopes[0];
+  assert.equal(separate.receiptId, "explicit-new-hunt");
+  assert.equal(separate.budgetStartedAt, "2026-09-25T04:00:00.000Z");
+});
+
 test("a piece of work's subject and state are read from its own id, never guessed", () => {
   assert.equal(subjectOfObligationId("freshness:jurisdiction:az:county:county-of-pima#az-sos-local"), "az:county:county-of-pima");
   assert.equal(subjectOfObligationId("freshness:campaign-finance:ballot-az-pima:prop-423#route"), "ballot-az-pima:prop-423");

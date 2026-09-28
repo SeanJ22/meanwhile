@@ -514,6 +514,7 @@ export function artifactMeta(artifact: Artifact): ObjectMeta {
       permission: artifact.permission,
       transport: artifact.transport,
       canonicalUrl: artifact.canonicalUrl,
+      retrievalUrl: artifact.retrievalUrl,
       retrievedAt: artifact.retrievedAt,
       httpStatus: String(artifact.httpStatus),
       ...(artifact.extraction ? { extraction: JSON.stringify(artifact.extraction) } : {}),

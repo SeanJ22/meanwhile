@@ -1824,7 +1824,7 @@ export default async function BallotPage({
           the ballot. */}
       {set && matched && (
         <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
-          Everyone below is on this ballot.
+          The contests below are recorded for areas that may overlap this ZIP. Check your address with your election office for the exact ballot.
           {measureContests.length > 0 &&
             " Propositions are voted on at the same time."}
         </p>

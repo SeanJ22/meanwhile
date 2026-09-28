@@ -107,6 +107,7 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
+import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
@@ -154,6 +155,7 @@ import {
   REWALK_REFUSAL_DAYS,
   SCOUT_LADDER,
   SCOUT_OUTCOMES,
+  SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
   classifyPriorRung,
   distinctEvidenceRungs,
   validateScoutFinishWithCandidates,
@@ -385,11 +387,11 @@ const FINISH_SPEC: ScoutToolSpec = {
             permissionReading: { type: "string" },
             evidenceArtifactIds: { type: "array", items: { type: "string" } },
             observedOn: { type: "string", description: "CLAIM: the retrieval date (YYYY-MM-DD, UTC) from the cited artifact's `retrieved` stamp." },
-            recordClass: { type: "string", description: "CLAIM: the obligation's record class, as briefed." },
+            recordClass: { type: "string", description: "CLAIM: the source contract's record class, as briefed." },
             deterministic: { type: "boolean" },
             unverified: { type: "array", items: { type: "string" } },
-            contractRepair: { type: "object", description: "Optional bounded source-contract proposal. Never a verification result. Use schemaVersion:1, sourceArtifactId, extraction (existing JSON_RECORDS/XML_RECORDS/HTML_TABLE/DELIMITED_TEXT mapping), and authorities (existing typed independent authority descriptors). All cited source/authority artifacts must be real vaulted evidence cited in evidenceArtifactIds. Do not change subject/class, invent authorities, or disable required verification.",
-              properties: { schemaVersion: { type: "integer", enum: [1] }, sourceArtifactId: { type: "string" }, extraction: { type: "object" }, authorities: { type: "array", maxItems: 4, items: { type: "object" } } },
+            contractRepair: { type: "object", description: "Optional bounded source-contract proposal. Never a verification result. Use schemaVersion:1, sourceArtifactId, extraction (existing JSON_RECORDS/XML_RECORDS/HTML_TABLE/DELIMITED_TEXT/TEXT_BLOCKS mapping), and authorities (existing typed independent authority descriptors). All cited source/authority artifacts must be real vaulted evidence cited in evidenceArtifactIds. Do not change subject/class, invent authorities, or disable required verification.",
+              properties: { schemaVersion: { type: "integer", enum: [1] }, sourceArtifactId: { type: "string" }, extraction: { type: "object" }, authorities: { type: "array", maxItems: 16, items: { type: "object" } } },
               required: ["schemaVersion", "sourceArtifactId", "extraction", "authorities"], additionalProperties: false },
           },
           required: [
@@ -451,7 +453,7 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     "5. A candidate route is GROUNDED: it cites artifact ids that tool results returned in THIS investigation (or inherited artifact ids you were given). A URL from memory is not a candidate. You may propose method knowledge; you may never promote it.",
     "6. Never generate a claim about a government, a candidate's position, or a record's contents beyond what a vaulted artifact shows. A Scout that only writes prose has failed.",
     "7. Label EVERY tool call with `rung` (a ladder name above, or other:<name>) and `why`. Use record_rung to note what a rung returned. Call finish exactly once, covering every rung index you walked.",
-    "8. Never re-read. A URL already vaulted in this investigation is in this conversation; a second fetch_public or browse of it is refused and hands back the artifact id. Reason over what you were shown, or open a materially different representation (the page's own API, a linked document, another host).",
+    "8. Reuse saved knowledge before another source call. find_manual searches the full applicable catalog beyond the short brief; read_manual opens a handed full method or document; read_held opens a handed sanitized artifact by offset or searches its saved bytes for a literal query such as a table heading, then returns a bounded passage and exact offset. These are free local reads. A URL already vaulted in this investigation is in this conversation; a second fetch_public or browse of it is refused and hands back the artifact id. Open a materially different representation only when needed.",
     "9. Never re-walk. The brief lists the rungs prior investigations already walked on this obligation and what each returned; a rung recorded as durably failed (an access control, a not-found) is refused if you try it again. A rung an older investigation refused for robots.txt alone is not a failure and may be walked. Start from the NEXT RUNGS the prior investigation named.",
     "10. Provenance is the machine's. In finish, a candidate's observedOn is the `retrieved` date on the cited artifact's envelope, its permission is the `permission` verdict on that envelope, and its recordClass is the obligation's. State them as shown; the executor derives the values from the vault record and refuses a finish whose claims disagree with it.",
     "",
@@ -546,20 +548,26 @@ export function scoutBrief(
 
 export interface ScoutExecutorDeps {
   readonly transport: ModelTransport;
+  /** Trusted transport wrapper provenance only; message text never proves that
+   * a provider request was refused before sending. Unknown errors stay held. */
+  readonly refusedBeforeSending?: (error: unknown) => boolean;
   readonly model?: string;
   readonly bound?: ScoutBound;
   readonly minRungs?: number;
   readonly now?: () => string;
   readonly toolkitFor: (ctx: ScoutToolContext) => ScoutToolkit;
-  /** Everything per obligation the runner knows: the descriptor, the provider, inherited context, the vault seams. */
+  /** Pure synchronous context assembly: no provider calls or acquisitions. Supplies
+   * the descriptor, provider, inherited context and lazy vault seams. */
   readonly contextFor: (row: ScheduledObligation) => {
     readonly route: RouteDescriptor | null;
     readonly providerId: string | null;
     readonly reason: string;
+    /** Exact active autonomous extraction class; the standing obligation may be a generic provider family. */
+    readonly sourceRecordClass?: string;
     readonly inherited: InheritedEvidence;
     /** Current recorded Send questions, including marks saved during this cycle. */
     readonly ownerQuestions?: readonly WorkQuestion[];
-    readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs">;
+    readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs" | "readHeldArtifact" | "readManualDocument">;
     /**
      * The canonical executor decision for this row (`decideExecutor`). A
      * DETERMINISTIC decision reaching this executor is refused before any
@@ -1183,7 +1191,25 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
     run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
-      const ctx = deps.contextFor(row);
+      let ctx: ReturnType<ScoutExecutorDeps["contextFor"]>;
+      try {
+        ctx = deps.contextFor(row);
+      } catch (error) {
+        // This boundary precedes toolkit construction, onStart and every model
+        // transport. Dispatch durably records this measured zero on the Attempt
+        // before its ordinary hold settlement runs. Later/unknown failures retain
+        // their existing accounting; this is never a historical hold reconciler.
+        return {
+          kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: clock(), artifacts: [],
+          cost: { inputTokens: 0, outputTokens: 0, usd: 0,
+            durationMs: Math.max(0, Date.now() - startedMs), bytesFetched: 0, requestCount: 0,
+            cacheReadInputTokens: 0, cacheCreationInputTokens: 0,
+            cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0,
+            uncachedInputTokens: 0, batch: false },
+          detail: `SCOUT_CONTEXT_FAILED_BEFORE_REQUEST: no toolkit or model request was opened; the obligation remains owed. ${sanitizedErrorDiagnostic(error)}`,
+        };
+      }
+      const sourceRecordClass = ctx.sourceRecordClass ?? row.obligation.recordClass;
       const toolkit = deps.toolkitFor({
         obligation: row,
         route: ctx.route,
@@ -1207,6 +1233,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs });
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
+      const knowledgeReads: NonNullable<ScoutResult["knowledgeReads"]>[number][] = [];
       const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited, ctx.ownerQuestions);
       /*
        * APPEND-ONLY (2026-09-25). Nothing already sent in this array is ever
@@ -1240,6 +1267,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       /** The API's cache TTL for the writes this lane asks for; the aggregate fallback prices at it. */
       const requestedTtl = SCOUT_CACHE_POLICY.ttl;
       let turns = 0;
+      let transportInvocations = 0;
+      const transportInvocationsByModel = new Map<string, number>();
+      let unpricedTransport = false;
       /*
        * The loop state below is assigned inside `runModelAttempt` (a closure)
        * and read after it returns, so each is initialised through `as` with its
@@ -1382,6 +1412,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           /* RULING 244: the step registry is consulted before EVERY model call. A deterministic step here throws. */
           const step = current.consult();
           let response: ModelResponse;
+          let enteredTransport = false;
           try {
             const request: ModelRequest = {
               model: current.model,
@@ -1405,10 +1436,23 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             };
             const order = cacheTtlOrderProblems(request);
             if (order.length > 0) throw new ModelTransportError(`cache_control order refused before sending: ${order.join("; ")}`, null);
+            enteredTransport = true;
+            transportInvocations += 1;
+            transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 0) + 1);
             response = await deps.transport(request);
           } catch (error) {
             transportFailure = error instanceof Error ? error.message : String(error);
             transportStatus = error instanceof ModelTransportError ? error.status : null;
+            // Only documented pre-processing rejections establish zero. A
+            // timeout, unrecognized status or lost response may follow billing.
+            const rejectedRequest = error instanceof ModelTransportError && error.status !== null
+              && [400, 401, 402, 403, 404, 413, 429].includes(error.status);
+            const refusedBeforeSending = enteredTransport && deps.refusedBeforeSending?.(error) === true;
+            if (refusedBeforeSending) {
+              transportInvocations -= 1;
+              transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 1) - 1);
+            }
+            if (enteredTransport && !rejectedRequest && !refusedBeforeSending) unpricedTransport = true;
             break;
           }
           turns += 1;
@@ -1483,7 +1527,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 vaulted: toolkit.vaultedArtifactIds,
                 inherited,
                 minRungs,
-                machine: { provenance, recordClass: row.obligation.recordClass },
+                machine: { provenance, recordClass: sourceRecordClass },
               });
               const issues = validated.issues;
               /*
@@ -1551,6 +1595,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               const rungLabel = typeof input.rung === "string" ? input.rung : null;
               const call = await toolkit.call(use.name, input, rungLabel);
               artifacts.push(...call.artifacts);
+              if (call.ok && call.knowledgeRead) knowledgeReads.push(call.knowledgeRead);
               for (const p of call.provenance ?? []) provenance.set(p.artifactId, p);
               if ((use.name === "fetch_public" || use.name === "browse") && rawUrl !== "") {
                 vaultedByCall.set(`${use.name}|${normalizedUrl(rawUrl)}`, call.artifacts.map((a) => a.artifactId));
@@ -1652,7 +1697,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           modelClass: ran.modelClass,
           model: ran.model,
           turns: own.length,
-          usd: own.length === 0 ? (usage.reported ? null : 0) : own.some((s) => s.usd === null) ? null : own.reduce((n, s) => n + (s.usd ?? 0), 0),
+          usd: unpricedTransport ? null : own.length === 0 ? 0 : own.some((s) => s.usd === null) ? null : own.reduce((n, s) => n + (s.usd ?? 0), 0),
           accepted: finish !== null,
         });
         attemptFirstTurns.push(firstTurn);
@@ -1851,25 +1896,21 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         });
       }
       /*
-       * A PROVIDER ERROR BEFORE ANY COMPLETION IS A MEASURED ZERO, NOT AN
-       * UNMEASURED COST. (Measured live 2026-09-02: HTTP 529 overloaded on the
-       * first turn.) The provider's error response is itself the reading that
-       * nothing was served and nothing billed; recording null there would make
-       * the rolling ceiling read UNMEASURED after every provider hiccup and
-       * defer real work against a cap nobody could read. A failure AFTER usage
-       * was reported keeps the reported usage, which is the charge. A route
-       * refused before any request (SCOUT_GRADUATED_ROUTE) is the same zero.
+       * Only a local pre-send refusal or recognized request rejection establishes zero.
+       * A lost response or server failure leaves the request's charge unknown,
+       * even after earlier metered turns. Their steps remain available, while
+       * the aggregate is null so ordinary settlement retains the whole hold.
        */
-      const refusedBeforeAnyUsage = (transportFailure !== null || turns === 0) && !usage.reported;
-      const inputTokens = usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
-      const outputTokens = usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
+      const refusedBeforeAnyUsage = !unpricedTransport && (transportFailure !== null || turns === 0) && !usage.reported;
+      const inputTokens = unpricedTransport ? null : usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
+      const outputTokens = unpricedTransport ? null : usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
       /*
        * The cost is the sum of the steps, each priced at the rate of the model
        * it was sent to. With an escalation that is two models, and this sum is
        * the COMBINED cost of both attempts (MW-031); `modelAttempts` splits it.
        */
       const modelSteps = steps.filter((s) => s.kind === "MODEL");
-      const usd = usage.reported
+      const usd = unpricedTransport ? null : usage.reported
         ? modelSteps.some((s) => s.usd === null)
           ? null
           : modelSteps.reduce((n, s) => n + (s.usd ?? 0), 0)
@@ -1878,12 +1919,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           : null;
       /*
        * The five billed quantities on the ledger row (2026-09-06): the turns'
-       * metered usage summed. A refusal before any completion is a measured
-       * zero on every one of them, for the same reason `usd` is; a failure
-       * after usage was reported keeps the reported usage.
+       * metered usage summed. Unknown transport exposure makes aggregate
+       * quantities unknown; the individual completed steps retain their usage.
        */
       const summed = sumMeteredUsage(meteredTurns);
-      const metering = usage.reported
+      const metering = usage.reported && !unpricedTransport
         ? meteredCostFields(summed)
         : refusedBeforeAnyUsage
           ? { cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0, batch: false }
@@ -1894,7 +1934,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         usd,
         durationMs: elapsedMs,
         bytesFetched: toolkit.bytesFetched,
-        requestCount: turns + toolkit.requestCount,
+        requestCount: unpricedTransport ? null : transportInvocations + toolkit.requestCount,
         ...metering,
       };
       /*
@@ -1904,16 +1944,15 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
        * When more than one model ran, each attempt's part is carried to the
        * ledger (`WorkOutcome.costByModel` → `CostEntry.byModel`): its dollars
        * are the attempt's own (`modelAttempts`), its tokens the attempt's own
-       * turns, and the parts sum to `cost`. An attempt that made no completed
-       * request billed nothing: a measured zero, as a provider error before any
-       * completion is above.
+       * turns, and the parts sum to `cost`. Emit this complete split only when
+       * no request has unknown transport exposure.
        */
       const costByModel: CostModelShare[] | null =
-        modelAttempts.length > 1 && usage.reported
+        modelAttempts.length > 1 && usage.reported && !unpricedTransport
           ? modelAttempts.map((a, i) => {
               const first = attemptFirstTurns[i] ?? 1;
               if (a.turns === 0) {
-                return { model: a.model, requestCount: 0, usd: a.usd ?? 0, inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0 };
+                return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd ?? 0, inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0 };
               }
               const own = sumMeteredUsage(meteredTurns.slice(first - 1, first - 1 + a.turns));
               const whole =
@@ -1921,7 +1960,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                   ? null
                   : own.uncachedInputTokens + own.cacheReadInputTokens + own.cacheCreationInputTokens;
               const { batch: _batch, ...fields } = meteredCostFields(own);
-              return { model: a.model, requestCount: a.turns, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
+              return { model: a.model, requestCount: transportInvocationsByModel.get(a.model) ?? 0, usd: a.usd, inputTokens: whole, outputTokens: own.outputTokens, ...fields };
             })
           : null;
       /*
@@ -1997,7 +2036,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         workItemId,
         subjectId: row.obligation.subjectId,
         routeId: row.obligation.routeId,
-        recordClass: row.obligation.recordClass,
+        recordClass: sourceRecordClass,
         providerId: ctx.providerId,
         reason: ctx.reason,
         outcome: (accepted?.outcome as ScoutOutcome | undefined) ?? "NO_PROGRESS",
@@ -2024,6 +2063,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         usd,
         elapsedMs,
         artifactIds: artifacts.map((a) => a.artifactId),
+        ...(toolkit.heldEvidenceProtocolAvailable ? { recoveryCapabilityVersion: SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } : {}),
+        ...(knowledgeReads.length ? { knowledgeReads } : {}),
         methodCandidateIds: [],
         refusal,
         startedAt,

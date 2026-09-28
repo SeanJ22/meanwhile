@@ -13,8 +13,11 @@ import {
 } from "../lib/civic-data/jurisdiction-reference-acquisition.ts";
 import { DOTGOV_REGISTRY_URL, WEBSITE_CORRECTIONS, websiteCorrectionNote } from "../lib/civic-data/website-corrections.ts";
 import {
+  azJurisdictionOperationalReferenceCandidate,
   clearOperationalReferenceBundle,
+  installAzOperationalReferenceBundle,
   installOperationalReferenceBundle,
+  installedOperationalReferenceRegistries,
   jurisdictionOperationalReferenceCandidate,
   jurisdictionOperationalReferenceFailureCandidate,
   operationalReferenceBundle,
@@ -242,6 +245,32 @@ test("first seed promotes with source-scoped evidence and a later HTTPS failure 
   assert.equal(refused.candidate.state, "SOURCE_BLOCKED");
   assert.equal(refused.candidate.receipt?.decision, "FAIL");
   assert.equal((await store.readPromotion(first.recordClass, first.scope))?.versionId, first.id);
+});
+
+test("scoped Arizona source promotes only Arizona and its installed registry wins over legacy without inventing another state", async () => {
+  const store = new MemoryRoutineDataStore();
+  const acquired = (await acquire()).result;
+  assert.equal(acquired.kind, "ACQUIRED");
+  if (acquired.kind !== "ACQUIRED") return;
+  const az = registries().az;
+  const scoped = azJurisdictionOperationalReferenceCandidate({
+    registries: { az }, sourceReceipts: acquired.receipts, workbook: acquired.workbook, retrievedAt: NOW,
+  });
+  assert.equal(scoped.sourceId, "jurisdiction-operational-reference-az");
+  assert.equal(scoped.scope, "US-AZ:covered-jurisdiction-routing:v1");
+  assert.deepEqual(Object.keys((scoped.readModel as { registries: object }).registries), ["az"]);
+  assert.equal(manualCandidateContractIssue("jurisdiction-operational-reference-az", scoped), null);
+  const promoted = await processRegisteredManualCandidate(store, "jurisdiction-operational-reference-az", scoped, NOW);
+  assert.equal(promoted.candidate.state, "PROMOTED");
+  assert.equal(promoted.readerReadback?.status, "PASS");
+  clearOperationalReferenceBundle();
+  installAzOperationalReferenceBundle(scoped.readModel as { formatVersion: 1; sourceVersion: "census-2022+reviewed-routing-v1"; registries: { az: JurisdictionRegistry } });
+  assert.deepEqual(Object.keys(installedOperationalReferenceRegistries()), ["az"]);
+  assert.equal(requiredOperationalJurisdictionRegistry("az").stateCode, "AZ");
+  assert.throws(() => requiredOperationalJurisdictionRegistry("nh"), /STATE_NOT_PROMOTED/);
+  installOperationalReferenceBundle(operationalReferenceBundle(registries()));
+  assert.deepEqual(Object.keys(installedOperationalReferenceRegistries()).sort(), ["az", "nh", "nj"]);
+  clearOperationalReferenceBundle();
 });
 
 test("a semantically bad successor is refused without replacing the promoted reference", async () => {

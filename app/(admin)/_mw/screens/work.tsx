@@ -25,13 +25,14 @@ import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import { readFleetSafety, readHeartbeat, readLatestDigest, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
-import { askGapCountWords, askGapRenderedNumbers, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
+import { askGapCountWords, askGapRenderedNumbers, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView, type BodyPublicationAttempt } from "@/lib/control-plane/assignment-view.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import {
   instructionKey,
   instructionView,
   routineCard,
   routineDetail,
+  rankedWorkBlockers,
   standingCard,
   standingDetail,
   STATE_PILL,
@@ -42,6 +43,7 @@ import {
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { currentScoutsForHunt, huntActivity } from "@/lib/control-plane/admin-view/hunt-activity.ts";
+import { exactInstructionMembership } from "@/lib/control-plane/admin-view/instruction-membership.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
 import { isAssignmentCycleReading } from "@/lib/control-plane/expansion/assignment-budget.ts";
 import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
@@ -56,6 +58,10 @@ import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
 import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
 import { WORK_QUESTION_WORDS } from "@/lib/control-plane/work-question.ts";
 import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-reading.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
+import { plainText } from "@/lib/control-plane/plain-words.ts";
+import { assignmentEvidenceTrail, type AssignmentEvidenceTrail } from "@/lib/control-plane/admin-view/assignment-evidence-trail.ts";
+import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
@@ -72,7 +78,7 @@ import { readActivationGate } from "@/lib/control-plane/promotion/activation-gat
 import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
-import { withScope, type MwArea } from "../scope.ts";
+import { scopeParam, withScope, type MwArea } from "../scope.ts";
 import { MwShell } from "../shell.tsx";
 import { Cells, DeadEnd, KV, Pill, Refusal, Section, mw as s } from "../ui.tsx";
 
@@ -92,7 +98,7 @@ const FIRST_PER_GROUP = 4;
 type Opened =
   | { readonly kind: "NONE" }
   | { readonly kind: "INSTRUCTION"; readonly view: InstructionView }
-  | { readonly kind: "DETAIL"; readonly id: string; readonly detail: AssignmentDetailView; readonly says: string }
+  | { readonly kind: "DETAIL"; readonly id: string; readonly detail: AssignmentDetailView; readonly trail: AssignmentEvidenceTrail | null; readonly says: string }
   | { readonly kind: "MISSING"; readonly id: string; readonly says: string };
 
 export async function WorkScreen(props: { readonly area: MwArea; readonly searchParams: Promise<SearchParams> }) {
@@ -135,6 +141,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const openId = param(sp, "open");
   const show = param(sp, "show");
   const instructionFilter = param(sp, "instruction");
+  const workQuery = (param(sp, "q") ?? "").trim().slice(0, 100);
+  const requestedIndexPage = Number(param(sp, "page") ?? "1");
+  const requestedTrailPage = Number(param(sp, "trailPage") ?? "1");
   /*
    * An opened assignment is read beside the page's other reads, not after
    * them: it needs nothing they return. A piece of standing work is read by its
@@ -184,11 +193,21 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const view: AssignmentView | null = published && published.kind === "BUILT" ? published.view : null;
   const scopeState = base.scope.kind === "all" ? null : base.scope.state;
   const allRows: readonly AssignmentListRow[] = view?.rows ?? [];
+  const filteredDecision = instructionFilter === null ? null : base.selected.find(decision => decision.key === instructionFilter) ?? null;
+  const filteredExact = filteredDecision === null ? null : exactInstructionMembership(view,filteredDecision.key,filteredDecision.receiptId);
   // An instruction may reach shared country/state work. Its exact marks take
   // precedence over the sidebar's state; no inferred county/ZIP/name join.
-  const rows = instructionFilter !== null ? allRows.filter(row => row.assignmentKeys?.includes(instructionFilter)) : scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
-  const geographicCounts = instructionFilter !== null ? view?.instructionCounts?.[instructionFilter] : scopeState === null ? null : view?.geographicCounts?.[scopeState];
-  const countsUnavailable = instructionFilter !== null ? view?.instructionCounts === undefined : view?.geographicCounts === undefined;
+  const rows = instructionFilter !== null ? filteredExact?.rows ?? [] : scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
+  const fullIndex = view?.allRowsIndex ?? null;
+  const scopedIndex = instructionFilter !== null ? filteredExact?.index ?? null : fullIndex?.filter(row => scopeState === null || row.stateCode === scopeState) ?? null;
+  const searchedIndex = scopedIndex?.filter(row => !workQuery || `${row.id} ${row.label} ${row.subjectName ?? ""} ${row.state} ${row.blocker ?? ""} ${row.nextAction} ${(row.historyTerms ?? []).join(" ")}`.toLowerCase().includes(workQuery.toLowerCase())) ?? null;
+  const indexPageSize = 50;
+  const indexPages = Math.max(1, Math.ceil((searchedIndex?.length ?? 0) / indexPageSize));
+  const indexPage = Number.isSafeInteger(requestedIndexPage) ? Math.max(1, Math.min(requestedIndexPage, indexPages)) : 1;
+  const shownIndex = searchedIndex?.slice((indexPage - 1) * indexPageSize, indexPage * indexPageSize) ?? [];
+  const priorities = rankedWorkBlockers(scopedIndex ?? [], base.nowIso).slice(0, 5);
+  const geographicCounts = instructionFilter !== null ? filteredExact?.counts ?? null : scopeState === null ? null : view?.geographicCounts?.[scopeState] ?? null;
+  const countsUnavailable = instructionFilter !== null ? filteredExact?.counts === null || filteredExact === null : view?.geographicCounts === undefined;
   const scopedTotal = instructionFilter === null && scopeState === null ? view?.summary.total ?? null : countsUnavailable ? null : Object.values(geographicCounts ?? {}).reduce((n, count) => n + count, 0);
   const publishedTrail = snapshotOut.kind === "HELD" ? snapshotOut.value.deliveryTrail ?? null : null;
   const deliveryTrail = livePipeline.ok && publishedTrail ? buildDeliveryTrail(livePipeline.states, {
@@ -202,22 +221,25 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const inScopeBodies = scopeState === null ? bodies : bodies.filter((b) => b.stateCode === scopeState);
 
   /* ------------------------------------------------------------ your instructions */
-  const instructions = base.selected.map((decision) =>
-    instructionView({
+  const instructions = base.selected.map((decision) => {
+    const exact=exactInstructionMembership(view,decision.key,decision.receiptId);
+    const sharedPriorReceipt=view?.allRowsIndex?.some(row=>row.assignmentRefs?.some(mark=>mark.key===decision.key&&mark.ref!==decision.receiptId))??false;
+    return instructionView({
       decision,
       reading,
-      rows: view ? allRows : null,
-      totalAssignments: view?.summary.total ?? null,
+      rows: exact.index===null || exact.counts===null ? null : exact.rows,
+      totalAssignments: exact.counts===null ? null : Object.values(exact.counts).reduce((count,n)=>count+n,0),
       paidLaneClosedBecause: lane.open ? null : lane.closedBecause,
       runnerPaused: pause ? { since: pause.since ?? null } : null,
       activeCycleStartedAt: research?.cycleFinishedAt === null ? research.cycleStartedAt : null,
       nextCycleDueAt: heartbeatOut.kind === "HELD" ? heartbeatOut.value.nextCycleDueAt : null,
-      currentScouts: research === null ? null : currentScoutsForHunt(research.running, decision.key),
-      assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
+      currentScouts: research === null || exact.index===null || exact.counts===null || sharedPriorReceipt
+        ? null : currentScoutsForHunt(research.running, decision.key),
+      assignment: sends?.assignments.find((a) => a.key === decision.key && a.ref === decision.receiptId) ?? null,
       assignmentAt: sends?.at ?? null,
       dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),
-    }),
-  );
+    });
+  });
 
   /* ------------------------------------------------------------ the opened assignment */
   let opened: Opened = { kind: "NONE" };
@@ -229,7 +251,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     else if (contractId !== null && routineRead !== null) {
       opened =
         routineRead.kind === "HELD"
-          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
+          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), trail: null, says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
           : { kind: "MISSING", id: openId, says: routineRead.detail };
     } else if (standingRead !== null) {
       const read = standingRead;
@@ -239,7 +261,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         const sources = { ...read.value, activation: view?.activation ?? null, servedReader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null };
         const row = buildAssignments(sources, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
-          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
+          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }),
+              trail: assignmentEvidenceTrail(sources,openId,row.waiting.nextAction),
+              says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
           : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
       } else opened = { kind: "MISSING", id: openId, says: read.detail };
     }
@@ -251,6 +275,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     const total = scopeState === null && instructionFilter === null ? view?.summary.byState.find((x) => x.state === state)?.count.value ?? listed.length : geographicCounts?.[state] ?? listed.length;
     return { state, listed, total };
   }).filter((g) => g.total > 0 || g.listed.length > 0);
+  const unfinishedWork = groups.filter(group => !["SUCCEEDED", "RETIRED"].includes(group.state))
+    .reduce((count, group) => count + group.total, 0);
   const routineGroups = (["STUCK", "NEEDS ATTENTION", "WORKING", "NOT READ YET"] as const).map((st) => ({ st, bodies: inScopeBodies.filter((b) => b.status === st) })).filter((g) => g.bodies.length > 0);
   /* Every card the lists below draw, so an opened row they do not draw is still drawn once. */
   const drawnIds = new Set<string>([
@@ -268,13 +294,16 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const na = auditRenderedNumbers(numbers);
   const ca = checkStatedEqualsRendered(claims);
 
-  const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, instruction: instructionFilter, ...extra });
+  const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, instruction: instructionFilter, q: workQuery || null, page: String(indexPage), ...extra });
   /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — tracked ones first, then registered ones, each named for where it stands. */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
   const composerStates = statesByStanding(base.registration).map((st) => ({ code: st.code, name: standingLabel(st.name, st.standing) }));
-  const selected: Record<string, { priority: number; budgetUsd: number }> = {};
-  for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
+  const selected: Record<string, { priority: number; budgetUsd: number; budgetStartedAt: string | null; originalLifetime: boolean }> = {};
+  for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd,
+    budgetStartedAt: d.budgetStartedAt ?? null,
+    originalLifetime: d.key === ORIGINAL_LIFETIME_HUNT.key && d.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+      d.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && d.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd };
 
   const card = (c: CardView, detail: ReactNode | null) => {
     const isOpen = detail !== null;
@@ -326,6 +355,41 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         title="Assignments"
         lede="One queue and one set of references across both areas. This list can order and bound work; it never creates a second copy of it. Open one to follow it from why it exists to whether a reader can see what it produced."
       />
+      <Section title="Where attention helps" lede="Ranked from the selected work by urgency, reader impact, linked instructions and waiting age. Direct dependencies and items that could become ready after this work settles are shown where the graph was readable; they do not predict completed publication." />
+      {scopedIndex === null ? <p className={s.goldNote}>The full receipt-linked work index has not been published for this instruction. This short list cannot be treated as all remaining work.</p> : priorities.length === 0
+        ? <p className={s.note}>No blocked, failed, waiting or uncertain work with a recorded blocker or overdue state appears in this scope.</p>
+        : <div className={s.stack10}>{priorities.map(priority => { const row = priority.row; return <div key={row.id} className={s.insetRow}>
+          <div className={`${s.stack2} ${s.grow}`}>
+            <span className={s.text14}><strong className={s.strong}>{priority.rank}. {row.label}</strong> · {row.state.toLowerCase()} · {priority.category === "NEEDS_OWNER_DECISION" ? "Needs your decision" : priority.category === "NEEDS_CODE_CHANGE" ? "Needs a code repair" : priority.category === "WAITING_ON_PUBLISHER" ? "Waiting on the publisher" : priority.category === "OWNER_UNCLEAR" ? "Next owner unclear" : "Being fixed automatically"}</span>
+             <span className={s.note}>{row.blocker === null ? "This row has no recorded blocker reason." : plainText(row.blocker)} {plainText(row.nextAction)}</span>
+             {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ? row.blocker : "No blocker reason is recorded on this work item."} · {row.nextAction}</details>}
+            <span className={s.note}>Why this ranks here: {priority.rankingWhy}</span>
+            <span className={s.monoSmall}>{row.waitingSince ? `Waiting since ${formatEastern(row.waitingSince)}` : "Waiting start not recorded"}{row.lastActivityAt ? ` · last activity ${formatEastern(row.lastActivityAt)}` : " · last activity not recorded"}{row.lastAttemptAt ? ` · last attempt started ${formatEastern(row.lastAttemptAt)}` : " · last attempt not recorded"}</span>
+            <span className={s.note}>Direct dependent work items: {row.directDependentCount === undefined || row.directDependentCount === null ? "graph unread" : row.directDependentCount}. Could become ready if this work settles: {row.readyAfterThisSettlesCount === undefined || row.readyAfterThisSettlesCount === null ? "graph unread" : row.readyAfterThisSettlesCount}.</span>
+          </div>
+          <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open details</Link>
+        </div>; })}</div>}
+      <Section title="Find any work item" lede="This index covers tracked work in the selected scope, including items omitted from the short cards below. Search retained names, meetings, failures and next steps attached to that work, then open its full record." />
+      {scopedIndex === null ? <p className={s.goldNote}>An exact receipt-linked searchable index is not on this snapshot yet. Older work remains available after clearing the instruction filter; this hunt&apos;s count is unknown.</p> : <div className={`${s.card} ${s.cardList} ${s.gap20}`}>
+        <form action={path} method="get" role="search" className={s.row10}>
+          {scopeParam(base.scope) && <input type="hidden" name="scope" value={scopeParam(base.scope)!} />}
+          {instructionFilter && <input type="hidden" name="instruction" value={instructionFilter} />}
+          <label htmlFor="work-search" className={s.titleStrong14}>Search all work</label>
+          <input id="work-search" type="search" name="q" defaultValue={workQuery} maxLength={100} className={s.input} placeholder="Name, meeting, failure or next step" />
+          <button type="submit" className={s.btnLink}>Search</button>
+        </form>
+        <p className={s.note}>{searchedIndex!.length.toLocaleString("en-US")} of {scopedIndex!.length.toLocaleString("en-US")} indexed work items match; showing {shownIndex.length} on page {indexPage} of {indexPages}. Each item is one job, not a missing fact.</p>
+        <div className={s.stack8}>{shownIndex.map(row => <div key={row.id} className={s.insetRow}>
+          <Pill tone={row.state === "SUCCEEDED" ? "teal" : row.state === "FAILED" || row.state === "BLOCKED" ? "stone" : "slate"}>{row.state}</Pill>
+          <span className={`${s.text14} ${s.grow}`}>{row.label}{row.subjectName && row.subjectName !== row.label ? ` · ${row.subjectName}` : ""}{row.lastAttemptAt ? ` · last attempt ${formatEastern(row.lastAttemptAt)}` : ""}</span>
+          <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open</Link>
+        </div>)}</div>
+        {shownIndex.length === 0 && <p className={s.note}>No work matches this search in the selected scope.</p>}
+        <div className={s.row10}>
+          {indexPage > 1 && <Link href={here({ page: String(indexPage - 1), open: null })} className={s.btnLink}>Previous 50</Link>}
+          {indexPage < indexPages && <Link href={here({ page: String(indexPage + 1), open: null })} className={s.btnLink}>Next 50</Link>}
+        </div>
+      </div>}
       {!na.ok || !ca.ok ? (
         <Refusal title="This list refused to draw its own numbers.">{!na.ok ? na.detail : ca.detail}</Refusal>
       ) : (
@@ -346,16 +410,25 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               card(
                 i.card,
                 opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? (
-                  <InstructionDetail view={i} sharedSources={sharedSources} activity={view ? huntActivity(allRows, i.decision.key) : null} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
+                  <InstructionDetail view={i} sharedSources={sharedSources}
+                    activity={view && exactInstructionMembership(view,i.decision.key,i.decision.receiptId).index!==null &&
+                      !view.allRowsIndex?.some(row=>row.assignmentRefs?.some(mark=>mark.key===i.decision.key&&mark.ref!==i.decision.receiptId))
+                      ? huntActivity(exactInstructionMembership(view,i.decision.key,i.decision.receiptId).rows,i.decision.key) : null}
+                    bodyAttempts={exactInstructionMembership(view,i.decision.key,i.decision.receiptId).bodyAttempts}
+                    unattributedBodyAttemptCount={view?.bodyAttempts?.filter(attempt => !Array.isArray(attempt.assignmentRefs) || attempt.assignmentRefs.length === 0).length ?? null}
+                    huntCost={snapshotOut.kind === "HELD" ? snapshotOut.value.billingAttribution?.hunts?.find(hunt => hunt.key === i.decision.key && hunt.receiptId === i.decision.receiptId && hunt.startedAt === i.decision.budgetStartedAt) ?? null : null}
+                    legacyHuntCost={snapshotOut.kind === "HELD" && i.decision.key === ORIGINAL_LIFETIME_HUNT.key && i.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && i.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt
+                      ? snapshotOut.value.billingAttribution?.hunts?.find(hunt => hunt.key === i.decision.key && hunt.startedAt === i.decision.budgetStartedAt && !hunt.receiptId) ?? null : null}
+                    workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
                 ) : null,
               ),
             )
           )}
           {/* A piece of work opened from an instruction (or from Money) that the list below does not draw is drawn here, whole. */}
-          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} says={opened.says} />)}
+          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
-            Standing work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " the system owes" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${scopedTotal.toLocaleString("en-US")}` : ""}
+            Work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " across all places" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${unfinishedWork.toLocaleString("en-US")} waiting or stuck` : ""}
           </h3>
           {published === null ? (
             <p className={s.note}>The assignment list is not on the published snapshot, so no standing work is listed — not an empty list.</p>
@@ -363,7 +436,10 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             <p className={s.note}>The publisher could not build the assignment list at {formatEastern(published.at)}: {published.says}</p>
           ) : (
             <>
-              {instructionFilter !== null ? <p className={s.note}>{countsUnavailable ? "The published snapshot has no instruction attribution yet; no count is inferred from geography." : "These are exact Send references recorded on the work, including shared work. Totals include rows omitted from this bounded list. They describe work reached, not proof of complete geographic coverage."} <Link className={s.btnLink} href={here({ instruction: null, show: null })}>Show all standing work in this scope</Link></p> : scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " Select an instruction to see its exact work; these are state totals, not inferred totals for the selected county or district." : ""}</p>}
+              <p className={s.note}>
+                {scopedTotal === null ? "The full work total is unavailable for this scope." : `${scopedTotal.toLocaleString("en-US")} tracked work rows in this scope, including completed and retired rows. ${unfinishedWork.toLocaleString("en-US")} are waiting, working, failed or blocked.`} These are work rows, not distinct missing reader facts.
+              </p>
+              {instructionFilter !== null ? <p className={s.note}>{countsUnavailable ? "The published snapshot has no receipt-specific instruction attribution yet; no count is inferred from geography or an older Send." : "These are exact receipt references recorded on the work, including shared work. Totals include rows omitted from this bounded list. They describe work reached, not proof of complete geographic coverage."} <Link className={s.btnLink} href={here({ instruction: null, show: null })}>Show all standing work and history in this scope</Link></p> : scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " Select an instruction to see its exact work; these are state totals, not inferred totals for this selected geography." : ""}</p>}
               <p className={s.note}>
                 {view!.selection.rule} {scopedTotal !== null && scopedTotal > rows.length ? `${(scopedTotal - rows.length).toLocaleString("en-US")} rows in this scope are not carried on the published list; each group says how many it holds.` : ""}
               </p>
@@ -390,7 +466,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                           </Link>
                         )}
                       </p>
-                      {cards.map((r) => card(standingCard(r), opened.kind === "DETAIL" && opened.id === r.id ? <DetailSections detail={opened.detail} says={opened.says} /> : null))}
+                      {cards.map((r) => card(standingCard(r), opened.kind === "DETAIL" && opened.id === r.id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} /> : null))}
                     </div>
                   );
                 })}
@@ -408,7 +484,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                 {g.bodies.slice(0, show === `routine-${g.st}` ? g.bodies.length : FIRST_PER_GROUP).flatMap((b) =>
                   b.contractIds.map((cid) => {
                     const id = `routine:${cid}`;
-                    return card(routineCard(b, cid), opened.kind === "DETAIL" && opened.id === id ? <DetailSections detail={opened.detail} says={opened.says} /> : null);
+                    return card(routineCard(b, cid), opened.kind === "DETAIL" && opened.id === id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} /> : null);
                   }),
                 )}
                 {g.bodies.length > FIRST_PER_GROUP && show !== `routine-${g.st}` && (
@@ -449,9 +525,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view, openHref, workHref, sharedSources, activity }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null }) {
+function InstructionDetail({ view, openHref, workHref, sharedSources, activity, huntCost, legacyHuntCost, bodyAttempts, unattributedBodyAttemptCount }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null; huntCost: NonNullable<BillingAttribution["hunts"]>[number] | null; legacyHuntCost: NonNullable<BillingAttribution["hunts"]>[number] | null; bodyAttempts: readonly BodyPublicationAttempt[] | null; unattributedBodyAttemptCount: number | null }) {
   const d = view.decision;
   const r = view.reach;
+  const legacyKnownAnthropic = legacyHuntCost?.anthropicKnownUsd ?? legacyHuntCost?.anthropicUsd ?? null;
+  const legacyKnownOther = legacyHuntCost?.otherKnownUsd ?? legacyHuntCost?.otherUsd ?? null;
   const links = (ids: readonly string[], more: number) => (
     <div className={s.stack2}>
       {ids.map((id) => (
@@ -466,6 +544,19 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity }
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
       {d.note ? <p className={s.record}>“{d.note}”</p> : <p className={s.note} style={{ marginBottom: 22 }}>You sent this without words of your own.</p>}
+      <h4 className={s.h4}>Cost since this hunt started</h4>
+      {huntCost ? <p className={s.note}>
+        Token allowance: {huntCost.budgetConsumedKnownUsd === undefined ? "consumption not measured" : `$${huntCost.budgetConsumedKnownUsd.toFixed(2)} known charges including shared requests`}; {huntCost.reservedUsd === null ? "reservations unread" : `$${huntCost.reservedUsd.toFixed(2)} reserved`}; {huntCost.budgetConsumedKnownUsd === undefined || huntCost.availableUsd === null ? "available allowance cannot be confirmed" : `$${huntCost.availableUsd.toFixed(2)} available`} of ${huntCost.budgetUsd.toFixed(2)}. {huntCost.budgetUnpriced === undefined ? "Unpriced token requests not measured" : `${huntCost.budgetUnpriced} unpriced token request${huntCost.budgetUnpriced === 1 ? "" : "s"}`}. For combined reporting, ${huntCost.anthropicKnownUsd.toFixed(2)} Anthropic and ${huntCost.otherKnownUsd.toFixed(2)} other known costs are allocated here once; ${huntCost.knownCombinedUsd.toFixed(2)} combined known. {huntCost.anthropicUsd === null || huntCost.otherUsd === null ? "At least one service total is incomplete; the combined known figure is a subtotal." : ""} {huntCost.unpriced > 0 ? `${huntCost.unpriced} provider requests still need pricing.` : ""} <Link href="/admin/money" className={s.btnLink}>See cost detail</Link>
+      </p> : legacyHuntCost ? <p className={s.note}>An earlier billing snapshot linked by hunt key and start, without this saved receipt, records {legacyKnownAnthropic === null ? "an unknown amount" : `$${legacyKnownAnthropic.toFixed(2)}`} in known Anthropic charges. Other-service total is {legacyHuntCost.otherUsd === null ? "incomplete" : legacyKnownOther === null ? "not measured" : `$${legacyKnownOther.toFixed(2)}`}. These are historical amounts, not exact receipt attribution or confirmed available allowance. {legacyHuntCost.unpriced} requests still need pricing. <Link href="/admin/money" className={s.btnLink}>See cost detail</Link></p> : <p className={s.note}>No matching started-hunt cost reading is available. This does not mean zero spent.</p>}
+      <h4 className={s.h4}>Body publication attempts</h4>
+      {bodyAttempts === null ? <p className={s.goldNote}>The body attempt projection was not published, so this instruction&apos;s publisher attempts cannot be counted.</p>
+        : bodyAttempts.length === 0 ? <p className={s.note}>No publisher attempt is recorded on the work linked to this instruction yet. Earlier source searches may still exist.</p>
+          : <div className={s.stack8} style={{ marginBottom: 24 }}>{bodyAttempts.map(attempt => <div key={`${attempt.workItemId}:${attempt.workerResultId}`} className={s.insetRow}>
+            <Link href={openHref(attempt.workItemId)} className={s.btnLink}>{attempt.bodyId}</Link>
+            <Pill tone={attempt.status === "PUBLISHED" ? "teal" : attempt.status === "PARTIALLY_PUBLISHED" ? "cyan" : "stone"}>{attempt.status.replaceAll("_", " ")}</Pill>
+            <span className={s.note}>{attempt.code} · {formatEastern(attempt.at)} · {attempt.acceptedCount === null ? "accepted member count not recorded" : `${attempt.acceptedCount} accepted member${attempt.acceptedCount === 1 ? "" : "s"}`}{attempt.versionId ? ` · reader version ${attempt.versionId}` : ""}</span>
+          </div>)}</div>}
+      {unattributedBodyAttemptCount !== null && unattributedBodyAttemptCount > 0 && <p className={s.note}>{unattributedBodyAttemptCount} publisher attempt{unattributedBodyAttemptCount === 1 ? "" : "s"} across all work lack an exact instruction reference and are not included in this instruction&apos;s count.</p>}
       {sharedSources !== null && <>
         <h4 className={s.h4}>Shared source work for this instruction</h4>
         {sharedSources.ok && <p className={s.note}>Activity read {formatEastern(sharedSources.at)}{sharedSources.stale ? " · stale; retaining the last readable activity" : ""}.</p>}
@@ -504,7 +595,7 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity }
         <p className={s.note}>This percentage measures recorded work, not proof that every applicable source or public result has been found. Full hunt completion still requires coverage and reader-delivery evidence.</p>
       </div>
       <h4 className={s.h4}>Collection to readers</h4>
-      {activity === null ? <p className={s.goldNote}>The published work list could not be read; stage activity is unknown.</p> : <>
+      {activity === null ? <p className={s.goldNote}>Receipt-linked stage activity cannot be established from this snapshot; earlier work remains available in the full history.</p> : <>
         <p className={s.note}>Recorded activity on {activity.listed} listed work items linked to this Send. A work item can reach more than one stage. The published list may be bounded; the completion count above covers the full linked work.</p>
         <div className={`${s.gridAuto220} ${s.gap20}`} style={{ marginBottom: 18 }}>
           {([ ["Found", activity.stages.found], ["Parsed", activity.stages.parsed], ["Verified", activity.stages.verified], ["Promoted", activity.stages.promoted], ["Shown on live site", activity.stages.live] ] as const).map(([label, count]) =>
@@ -626,7 +717,11 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity }
   );
 }
 
-function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: string }) {
+function DetailSections({ detail, trail, trailPage, trailHref, says }: { detail: AssignmentDetailView; trail: AssignmentEvidenceTrail | null; trailPage: number; trailHref: (page:number)=>string; says: string }) {
+  const pageSize=20;
+  const pages=Math.max(1,Math.ceil((trail?.events.length??0)/pageSize));
+  const page=Number.isSafeInteger(trailPage)?Math.max(1,Math.min(trailPage,pages)):1;
+  const shown=trail?.events.slice((page-1)*pageSize,page*pageSize)??[];
   return (
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
@@ -646,6 +741,23 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
       <p className={s.note} style={{ marginBottom: 24 }}>
         {detail.addressesNote}
       </p>
+      {trail && <section className={s.stack10} aria-label="Source to public result trail" style={{ marginBottom:24 }}>
+        <h4 className={s.h4}>From source to public result</h4>
+        <p className={s.note}>{trail.events.length} recorded steps on this linked work, newest first; showing {shown.length} on page {page} of {pages}. A saved document is not an accepted fact, and a publication is not a confirmed public result.</p>
+        {trail.gaps.map(gap=><p key={gap} className={s.goldNote}>{gap}</p>)}
+        {shown.length===0 && <p className={s.note}>No linked execution step was returned by this read. This is not evidence that the source is complete.</p>}
+        {shown.map(event=><div key={event.id} className={s.insetRow}>
+          <div className={`${s.stack2} ${s.grow}`}>
+            <span className={s.name14}>{event.title}</span>
+            <span className={s.note}>{event.stage.toLowerCase()} · {event.at?formatEastern(event.at):"time not recorded"}</span>
+            <span className={s.text14}>{event.says}</span>
+            {event.nextAction && <span className={s.note}>Current work plan: {plainText(event.nextAction)}</span>}
+            <div className={s.row10}>{event.sourceUrl && <a className={s.btnLink} href={event.sourceUrl} target="_blank" rel="noreferrer">Open source page</a>}{event.publicUrl && <a className={s.btnLink} href={event.publicUrl} target="_blank" rel="noreferrer">Open published result</a>}</div>
+            {event.references.length>0 && <details className={s.note}><summary>Exact records and receipts</summary><div className={s.stack2}>{event.references.map(([name,value],index)=><span key={`${name}:${value}:${index}`}>{name}: {value}</span>)}</div></details>}
+          </div>
+        </div>)}
+        <div className={s.row10}>{page>1 && <Link className={s.btnLink} href={trailHref(page-1)}>Newer 20</Link>}{page<pages && <Link className={s.btnLink} href={trailHref(page+1)}>Older 20</Link>}</div>
+      </section>}
       <h4 className={s.h4}>Work lanes, running at once</h4>
       <div className={s.gridAuto240} style={{ gap: 12, marginBottom: 24 }}>
         {detail.lanes.map((l) => (

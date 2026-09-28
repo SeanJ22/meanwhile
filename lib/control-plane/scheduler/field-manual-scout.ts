@@ -50,14 +50,43 @@ export function scoutFieldManualProjection(
   opts: { readonly subjectId?: string | null; readonly obligationId?: string | null; readonly recordClass?: string | null; readonly limit?: number },
 ): FieldManualProjection {
   const states = scoutStateHint(opts.subjectId, opts.obligationId);
-  // One state is the common case; if a subject spans two we project the first,
-  // and portable ([]-state) entries always match regardless.
-  return projectFieldManual(store, {
+  // Registry classes and historic method fields use different vocabularies.
+  // Rank applicable field hints first, but retain cross-family methods in the
+  // remaining slots: a hard exact-class filter hid the existing AZ roster doors.
+  const related: Readonly<Record<string, readonly string[]>> = {
+    OFFICIAL_ROSTER: ["officeholder", "roster", "contact", "verifiedpage", "photo", "body", "officials"],
+    OFFICIAL_BOARD_DIRECTORY: ["body", "jurisdiction", "roster", "verifiedpage"],
+    PUBLIC_COMMENT_RULE: ["meeting", "agenda", "minutes", "body", "verifiedpage"],
+    CANDIDATE_FILING_DOCUMENT: ["candidate", "contest", "filing", "document"],
+    CAMPAIGN_FINANCE_FILING: ["filing", "document", "contribution", "expenditure"],
+  };
+  const hints = new Set([opts.recordClass?.toLowerCase() ?? "", ...(related[opts.recordClass ?? ""] ?? [])]);
+  // One state is the common case; portable entries remain available.
+  const full = projectFieldManual(store, {
     role: "SCOUT",
     ...(states[0] ? { state: states[0] } : {}),
-    ...(opts.recordClass ? { recordClass: opts.recordClass } : {}),
-    limit: opts.limit ?? 30,
+    limit: store.entries.length,
   });
+  const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
+  const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, entry: byId.get(id)! }));
+  indexed.sort((a, b) => {
+    const affinity = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : entry.recordClasses.length === 0 ? 1 : 2;
+    return affinity(a.entry) - affinity(b.entry);
+  });
+  const chosen = indexed.slice(0, opts.limit ?? 30);
+  return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), matched: full.matched, total: full.total };
+}
+
+/** All state/role-applicable entries available to on-demand local search.
+ * Only the capped projection goes into the model prompt; this catalog stays
+ * outside that prefix until find_manual/read_manual is called. */
+export function scoutFieldManualCatalog(
+  store: FieldManualStore,
+  opts: { readonly subjectId?: string | null; readonly obligationId?: string | null },
+): readonly FieldManualEntry[] {
+  const state = scoutStateHint(opts.subjectId, opts.obligationId)[0];
+  return store.entries.filter(entry => (entry.role === "SCOUT" || entry.role === "SHARED") &&
+    (!state || entry.states.length === 0 || entry.states.some(value => value.toLowerCase() === state)));
 }
 
 /** A projected door recorded as dead (BLOCKED or FAILED), from its rendered line (`<role>/<kind> <outcome> (...)`). */
@@ -171,21 +200,29 @@ function doorKey(value: string): string {
  *
  * The inherited half of the pair counts the doors HANDED to the walk. This is
  * the half that says which of them the walk actually went through: an entry
- * counts as used when its url or its `payload.routeId` matches a rung the walk
- * walked (the rung's target) or a candidate it proposed (the candidate's
- * routeId). Only entries that were handed are considered, in the order they
- * were handed; an id the store no longer holds cannot be matched and is not
- * counted as used.
+ * counts as route reuse only when a successful, machine-recorded research rung
+ * actually walked its URL or route id. A proposed candidate is not use, and
+ * several inherited entries describing the same door earn one credit. This
+ * receipt does not claim saved-byte reuse or avoided paid calls.
  */
 export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly string[], store: FieldManualStore): string[] {
   if (handedIds.length === 0) return [];
-  const walked = new Set<string>([...result.rungs.map((g) => doorKey(g.target)), ...result.candidates.map((c) => doorKey(c.routeId))]);
+  const walked = new Set<string>(result.rungs.filter(rung => rung.ok === true &&
+    ["fetch_public", "browse"].includes(rung.tool)).flatMap(rung => [doorKey(rung.target), doorKey(rung.rung)]));
   const byId = new Map(store.entries.map((e) => [e.id, e] as const));
+  const creditedDoors = new Set<string>();
   return handedIds.filter((id) => {
     const entry = byId.get(id);
     if (entry === undefined) return false;
     const routeId = (entry.payload as { routeId?: unknown } | null | undefined)?.routeId;
-    return (typeof entry.url === "string" && entry.url !== "" && walked.has(doorKey(entry.url))) || (typeof routeId === "string" && routeId !== "" && walked.has(doorKey(routeId)));
+    const urlKey = typeof entry.url === "string" && entry.url !== "" ? doorKey(entry.url) : null;
+    const routeKey = typeof routeId === "string" && routeId !== "" ? doorKey(routeId) : null;
+    const matched = [urlKey, routeKey].find((key): key is string => key !== null && walked.has(key));
+    if (!matched) return false;
+    const door = urlKey ?? routeKey ?? matched;
+    if (creditedDoors.has(door)) return false;
+    creditedDoors.add(door);
+    return true;
   });
 }
 

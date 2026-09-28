@@ -96,13 +96,14 @@ import type { RouteDisposition, RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "./scheduler/durable.ts";
 import { DISCHARGING_DISPOSITIONS } from "./scheduler/dispatch.ts";
-import { isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
+import { instructionReceiptKey, isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
-import type { WorkItem, WorkItemState } from "./work-item.ts";
+import { isTerminalState, type WorkItem, type WorkItemState } from "./work-item.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
+import { assignmentHistoryTerms } from "./admin-view/assignment-history.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
 const STATE_CODE_BY_NAME = new Map(US_STATES.map(state => [state.name, state.code.toLowerCase()]));
@@ -369,6 +370,7 @@ export interface PublicAvailability {
 export interface AssignmentDelivery {
   /** Exact latest publication comparison, never downloads presented as new findings. */
   readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
+  readonly recordChanges?: NonNullable<WorkItem["publicationOutcome"]>["recordChanges"];
   /** Research items approved for promotion; null where promotion does not run through the research pipeline. */
   readonly approved: Held<Measured> | null;
   readonly promoted: Held<PromotionStatus>;
@@ -628,6 +630,9 @@ export interface AssignmentSources {
   /** Disposition commits, when read; the RouteTask's applied disposition is used either way. */
   readonly dispositions: readonly DispositionCommit[] | null;
   readonly artifacts: readonly ArtifactRecord[];
+  /** Targeted by-ID origin records for declared inherited captures. Null means
+   * the bounded origin read was unavailable; absent on whole-population reads. */
+  readonly inheritedOrigins?: readonly { readonly artifact: ArtifactRecord; readonly attempt: Attempt; readonly originWorkItemId: string }[] | null;
   readonly costs: readonly CostEntry[];
   readonly scoutResults: readonly ScoutResult[];
   readonly workerResults: readonly WorkerResultRecord[];
@@ -1840,7 +1845,8 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {
     approved: approvedHeld,
-    ...(workerPublication && workerPublication.status !== "HELD" && workerPublication.records ? { records: workerPublication.records } : {}),
+    ...(workerPublication && workerPublication.status !== "HELD" && workerPublication.records ? { records: workerPublication.records,
+      recordChanges: workerPublication.recordChanges } : {}),
     promoted,
     publiclyAvailable: witness ? held<PublicAvailability>({ state: "CONFIRMED", at: witness.checkedAt, says: `${witnesses.length} item(s) confirmed; this does not complete outstanding assignment scope.`, proof: witness.url }) : gap<PublicAvailability>(
       "OURS",
@@ -2562,10 +2568,19 @@ export interface AssignmentView {
   readonly summary: AssignmentSummary;
   /** The bounded, ordered list; each row's full chain opens live by its id. */
   readonly rows: readonly AssignmentListRow[];
+  /** Every assignment's compact identity and triage facts. The detailed rows
+   * remain bounded; any indexed id opens through the existing by-id read. */
+  readonly allRowsIndex?: readonly AssignmentIndexRow[];
+  /** Public-safe publication attempts, including partial and held outcomes.
+   * A missing row means no publisher attempt is recorded, not no search. */
+  readonly bodyAttempts?: readonly BodyPublicationAttempt[];
   /** Counts over the entire holding, before bounded row selection. Empty key = shared or unplaced. */
   readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   /** Complete counts before row trimming, keyed by the durable Send identity. */
   readonly instructionCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
+  /** Current work status by immutable key+receipt. A new same-key hunt never
+   * inherits an old completed row as its own completed work. */
+  readonly instructionCountsByReceipt?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   readonly selection: {
     readonly rule: string;
     readonly perGroup: number;
@@ -2576,6 +2591,101 @@ export interface AssignmentView {
   };
   readonly reads: readonly { readonly what: string; readonly held: boolean; readonly says: string }[];
   readonly activation: ActivationGateReading | null;
+}
+
+export interface AssignmentIndexRow {
+  readonly id: string;
+  readonly kind: AssignmentKind;
+  readonly lane: AssignmentLane;
+  readonly state: AssignmentState;
+  readonly label: string;
+  readonly subjectName: string | null;
+  readonly stateCode: string | null;
+  readonly assignmentKeys: readonly string[];
+  /** Every durable mark on this assignment, including retired hunt receipts. */
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string; readonly at: string }[];
+  /** Receipt-specific state; an unproven carried row is UNKNOWN. */
+  readonly instructionStates?: Readonly<Record<string, AssignmentState>>;
+  /** Full retained execution search terms from the canonical assignment membership. */
+  readonly historyTerms?: readonly string[];
+  readonly lastActivityAt: string | null;
+  readonly lastAttemptAt?: string | null;
+  /** Recorded WorkItems whose dependency graph names this assignment's work. */
+  readonly directDependentCount?: number | null;
+  /** Dependents for which this assignment is the sole unsatisfied upstream. */
+  readonly readyAfterThisSettlesCount?: number | null;
+  readonly band: 1 | 2 | 3 | null;
+  readonly overdue: boolean | null;
+  readonly waitingSince: string | null;
+  readonly eligibleAt: string | null;
+  readonly blocker: string | null;
+  readonly owner: AssignmentListRow["waiting"]["owner"];
+  readonly nextAction: string;
+}
+
+export interface BodyPublicationAttempt {
+  readonly bodyId: string;
+  readonly workItemId: string;
+  /** Only marks from this WorkItem's owning standing obligation. */
+  readonly assignmentKeys: readonly string[];
+  /** The exact receipt in force when this result was published. */
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
+  readonly at: string;
+  readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
+  readonly code: string;
+  readonly sourceUrl: string | null;
+  readonly workerResultId: string;
+  readonly acceptedCount: number | null;
+  readonly versionId: string | null;
+  readonly recordChanges?: NonNullable<WorkItem["publicationOutcome"]>["recordChanges"];
+}
+
+export function bodyPublicationAttempts(workItems: readonly WorkItem[],
+  occurrences: readonly FreshnessOccurrence[] = [], obligations: readonly StandingObligation[] = []): BodyPublicationAttempt[] {
+  const obligationById = new Map(obligations.map(row => [row.id, row] as const));
+  const workById = new Map(workItems.map(item => [item.id,item] as const));
+  const assignmentMarksByWorkItem = new Map<string, readonly ObligationAssignment[]>();
+  for (const round of occurrences) {
+    const owner = obligationById.get(round.obligationId);
+    if (!owner) continue;
+    assignmentMarksByWorkItem.set(round.workItemId, owner.assignments ?? []);
+  }
+  const marksFor = (item: WorkItem): readonly ObligationAssignment[] => {
+    let current = item;
+    const seen = new Set<string>();
+    while (!assignmentMarksByWorkItem.has(current.id) && !seen.has(current.id)) {
+      const link=(current as WorkItem & {readonly planRepair?:{readonly parentWorkItemId:string;readonly authority:string}}).planRepair;
+      if (!link) break;
+      seen.add(current.id);
+      const parent = workById.get(link.parentWorkItemId);
+      if (!parent || link.authority !== "WORK_INSTRUCTIONS_ONLY" ||
+        parent.project !== item.project || parent.subject !== item.subject) return [];
+      current = parent;
+    }
+    return assignmentMarksByWorkItem.get(current.id) ?? [];
+  };
+  return workItems.flatMap(item => {
+    const outcome = item.publicationOutcome;
+    const bodyId = item.autonomousPlan?.publication?.bodyId;
+    if (!outcome || !bodyId) return [];
+    const marks=marksFor(item);
+    const effective = new Map<string,ObligationAssignment>();
+    for (const mark of marks) {
+      const acknowledged=item.autonomousPlan?.ownerInstructions?.includes(mark.ref) === true ||
+        (item.autonomousPlan?.ownerInstructions === undefined && !marks.some(other=>other.assignmentKey===mark.assignmentKey&&other.ref!==mark.ref));
+      if (!Number.isFinite(Date.parse(mark.at)) || Date.parse(mark.at) > Date.parse(outcome.at) ||
+        !acknowledged) continue;
+      const old = effective.get(mark.assignmentKey);
+      if (!old || mark.at > old.at || (mark.at === old.at && mark.ref > old.ref)) effective.set(mark.assignmentKey,mark);
+    }
+    const assignmentRefs=[...effective.values()].map(mark=>({key:mark.assignmentKey,ref:mark.ref}));
+    return [{ bodyId, workItemId: item.id, assignmentKeys: assignmentRefs.map(mark=>mark.key), assignmentRefs,
+      at: outcome.at, status: outcome.status,
+      code: outcome.code, sourceUrl: item.autonomousPlan?.contract.schemaVersion === 2
+        ? item.autonomousPlan.contract.sourceScope.canonicalUrls[0] ?? null : null,
+      workerResultId: outcome.workerResultId, acceptedCount: outcome.acceptedMembers?.length ?? outcome.acceptedRecordIds?.length ?? outcome.bodyIds?.length ?? null,
+      versionId: outcome.versionId, ...(outcome.status !== "HELD" && outcome.recordChanges ? { recordChanges: outcome.recordChanges } : {}) }];
+  }).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId));
 }
 
 /** What the snapshot carries: the view, or the named reason it could not be built. */
@@ -2800,17 +2910,73 @@ export function buildAssignmentView(
   const byteBudget = options.byteBudget ?? ASSIGNMENT_VIEW_BYTE_BUDGET;
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP });
   const rows = built.rows;
+  const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
+    ? [[item.id, item.manualSourceGap] as const] : []));
+  const historyTerms = assignmentHistoryTerms(src,built.memberships);
+  const dependentsByUpstream = new Map<string,Set<string>>();
+  const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
+  for (const item of src.workItems) for (const dependency of item.dependencies) {
+    const dependents = dependentsByUpstream.get(dependency.upstreamId) ?? new Set<string>();
+    dependents.add(item.id); dependentsByUpstream.set(dependency.upstreamId,dependents);
+  }
+  const allRowsIndex: AssignmentIndexRow[] = rows.map(row => {
+    const listed = listRowOf(row, 160);
+    const manualGap = manualGapByItem.get(row.id);
+    const membership = built.memberships.get(row.id);
+    const workIds = membership?.workItemIds ?? new Set<string>();
+    const graphReadable = membership !== undefined && [...workIds].every(id=>workById.has(id));
+    const relatedAttempts = [...workIds].flatMap(id=>built.idx.attemptsByWorkItem.get(id)??[]);
+    const directDependents = graphReadable ? new Set([...workIds].flatMap(id=>[...(dependentsByUpstream.get(id)??[])])) : null;
+    for (const id of workIds) directDependents?.delete(id);
+    const dependentGraphReadable = directDependents !== null && [...directDependents].every(id=>{
+      const dependent=workById.get(id);
+      return dependent !== undefined && dependent.dependencies.every(edge=>workById.has(edge.upstreamId));
+    });
+    const readyAfterThisSettlesCount = !dependentGraphReadable || directDependents === null ? null : [...directDependents].reduce((count,id)=>{
+      const dependent = workById.get(id);
+      if (!dependent || isTerminalState(dependent.state)) return count;
+      const outstanding = dependent.dependencies.filter(edge=>workById.get(edge.upstreamId)?.state !== "VERIFIED_COMPLETE");
+      return outstanding.length === 1 && workIds.has(outstanding[0]!.upstreamId) ? count+1 : count;
+    },0);
+    const assignmentRefs = [...(row.what.assignments??[]).map(mark=>({key:mark.assignmentKey,ref:mark.ref,at:mark.at})),
+      ...(manualGap?.assignmentKey ? [{key:manualGap.assignmentKey,ref:manualGap.instructionReceipt,at:src.workItems.find(item=>item.id===row.id)?.createdAt??src.nowIso}] : [])];
+    const instructionStates: Record<string,AssignmentState> = {};
+    for (const mark of assignmentRefs) {
+      const sameKey=assignmentRefs.filter(other=>other.key===mark.key);
+      // An aggregate standing state covers every round. It cannot certify a
+      // separate same-key hunt without its own accepted result/reuse receipt.
+      instructionStates[instructionReceiptKey(mark.key,mark.ref)] = sameKey.some(other=>other.ref!==mark.ref)
+        ? "UNKNOWN" : listed.state;
+    }
+    return { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
+      label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
+      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualGap?.assignmentKey ? [manualGap.assignmentKey] : [])])],
+      assignmentRefs,instructionStates,
+      historyTerms:historyTerms.get(row.id)??[],lastActivityAt: listed.lastActivityAt,
+      lastAttemptAt:relatedAttempts.map(attempt=>attempt.startedAt).sort().at(-1)??null,
+      directDependentCount:directDependents?.size??null,readyAfterThisSettlesCount,
+      band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,
+      eligibleAt: listed.waiting.eligibleAt, blocker: listed.waiting.blocker,
+      owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };
+  });
+  const indexedKeys = new Map(allRowsIndex.map(row => [row.id, row.assignmentKeys] as const));
+  const bodyAttempts = bodyPublicationAttempts(src.workItems, src.occurrences, src.obligations);
 
   const geographicCounts: Record<string, Record<AssignmentState, number>> = {};
   const instructionCounts: Record<string, Record<AssignmentState, number>> = {};
+  const instructionCountsByReceipt: Record<string, Record<AssignmentState, number>> = {};
   for (const row of rows) {
     const state = assignmentStateCode(row) ?? "";
     const counts = geographicCounts[state] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
     counts[row.state] += 1;
-    for (const key of new Set((row.what.assignments ?? []).map(mark => mark.assignmentKey))) {
+    for (const key of indexedKeys.get(row.id) ?? []) {
       const attributed = instructionCounts[key] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
       attributed[row.state] += 1;
     }
+  }
+  for (const row of allRowsIndex) for (const [identity,state] of Object.entries(row.instructionStates ?? {})) {
+    const attributed = instructionCountsByReceipt[identity] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s=>[s,0])) as Record<AssignmentState,number>;
+    attributed[state] += 1;
   }
 
   const groups: AssignmentListRow[][] = [];
@@ -2853,8 +3019,11 @@ export function buildAssignmentView(
     builtAt: src.nowIso,
     summary: summarize(built, src, published),
     rows: kept,
+    allRowsIndex,
+    bodyAttempts,
     geographicCounts,
     instructionCounts,
+    instructionCountsByReceipt,
     selection: {
       rule: ASSIGNMENT_SELECTION_RULE,
       perGroup,

@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { FIX_STATUS_TONE, orderByMarks, type FixItem, type FixMark } from "@/lib/control-plane/admin-view/fix-list.ts";
 
 import s from "./mw.module.css";
+import { actionReplyWords, postAdminAction, type AdminActionReply } from "./action-receipt.ts";
 
 const MARKS_KEY = "mw-fix-marks-v1";
 const MARK_WORDS: Readonly<Record<FixMark, string>> = { MUST: "Must have", LATER: "Later", NOT_NOW: "Not now" };
@@ -85,21 +86,9 @@ function subscribeMarks(onChange: () => void): () => void {
   };
 }
 
-async function postAction(body: Record<string, unknown>): Promise<{ ok: boolean; says: string }> {
-  try {
-    const res = await fetch("/api/admin/action", {
-      method: "POST",
-      headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify(body),
-    });
-    const out = (await res.json().catch(() => null)) as { ok?: boolean; receipt?: { says?: string; outcome?: string } } | null;
-    if (!res.ok || out?.ok === false || out?.receipt?.outcome === "REFUSED") {
-      return { ok: false, says: out?.receipt?.says ?? `Nothing was recorded. The server answered ${res.status}.` };
-    }
-    return { ok: true, says: out?.receipt?.says ?? "Recorded." };
-  } catch (e) {
-    return { ok: false, says: e instanceof Error ? `Nothing was recorded: ${e.message}` : "Nothing was recorded." };
-  }
+async function postAction(body: Record<string, unknown>): Promise<{ ok: boolean; kind: AdminActionReply["kind"]; says: string }> {
+  const reply = await postAdminAction(body);
+  return { ok: reply.kind === "DONE", kind: reply.kind, says: actionReplyWords(reply) };
 }
 
 export function FixList(props: {
@@ -112,7 +101,7 @@ export function FixList(props: {
   const raw = useSyncExternalStore(subscribeMarks, rawMarks, () => "");
   const marks = useMemo(() => parseMarks(raw), [raw]);
   const [pending, startTransition] = useTransition();
-  const [said, setSaid] = useState<Record<string, { ok: boolean; says: string }>>({});
+  const [said, setSaid] = useState<Record<string, { ok: boolean; kind?: AdminActionReply["kind"]; says: string }>>({});
 
   const effective = useMemo(() => Object.fromEntries(props.items.map((i) => [i.id, marks[i.id] ?? i.defaultMark])) as Record<string, FixMark>, [marks, props.items]);
   const ordered = useMemo(() => orderByMarks(props.items, effective), [props.items, effective]);

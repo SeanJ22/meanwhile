@@ -14,6 +14,7 @@ import { officialStateVoteScopeForOfficeholderId } from "@/lib/state-rollcalls/a
 import type { StateVotesSnapshot } from "@/lib/sources/legiscan/types";
 import { stateRollAttribution } from "@/lib/sources/legiscan/types";
 import { summaryForBill, summaryPendingForBill } from "@/lib/votes/bill-summaries";
+import { readHistoricalFederalVotesForMember } from "@/lib/votes/history";
 import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
 
 /**
@@ -224,7 +225,9 @@ function stateVotes(member: string, holding: HeldStateVoteScope, unavailableScop
 }
 
 export async function GET(request: Request) {
-  const member = new URL(request.url).searchParams.get("member");
+  const query = new URL(request.url).searchParams;
+  const member = query.get("member");
+  const historical = query.get("history") === "1";
   const officialStateScope = member ? officialStateVoteScopeForOfficeholderId(member) : null;
   const researchStateScope = member ? researchFixtureScopeForMember(member) : null;
   const stateScope = officialStateScope ?? researchStateScope;
@@ -236,6 +239,9 @@ export async function GET(request: Request) {
   }
 
   if (stateScope !== null) {
+    if (historical) return Response.json({ member, historyStatus: "UNAVAILABLE",
+      historicalVotes: [], historicalCount: 0, nextHistoricalVersionId: null,
+      historyIssue: "Earlier state vote history is not available through this federal history reader." });
     const holding = await settleStateVoteMemberHolding(member, stateScope);
     if (holding.kind === "HOLDING_UNAVAILABLE") {
       return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
@@ -255,12 +261,31 @@ export async function GET(request: Request) {
   }
 
   let snap: VotesSnapshot;
+  let federalRead: Awaited<ReturnType<typeof readFederalRollCallsProjection>>;
   try {
-    const read = await readFederalRollCallsProjection();
-    if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(read.detail);
+    federalRead = await readFederalRollCallsProjection();
+    if (federalRead.kind !== "PROMOTED" && federalRead.kind !== "BOOTSTRAP") throw new Error(federalRead.detail);
     snap = getVotesSnapshot();
   } catch {
     return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
+  }
+
+  if (historical) {
+    if (federalRead.kind !== "PROMOTED") return Response.json({ member, historyStatus: "UNAVAILABLE",
+      historicalVotes: [], historicalCount: 0, nextHistoricalVersionId: null,
+      historyIssue: "No durable promoted history is available for this current vote window." });
+    const anchor = query.get("anchor");
+    if (anchor && anchor !== federalRead.projection.versionId) return Response.json({
+      member, historyStatus: "UNAVAILABLE", historicalVotes: [], historicalCount: 0,
+      nextHistoricalVersionId: null, historyIssue: "The current vote window changed; reload earlier records.",
+      currentVersionId: federalRead.projection.versionId,
+    }, { status: 409 });
+    const page = await readHistoricalFederalVotesForMember(member, federalRead,
+      { cursor: query.get("cursor"), pageSize: 4 });
+    return Response.json({ member, historyStatus: page.status,
+      historicalVotes: page.votes, historicalCount: page.votes.length,
+      historicalVersionIds: page.versionIds, nextHistoricalVersionId: page.nextVersionId,
+      historyIssue: page.issue, currentVersionId: federalRead.projection.versionId });
   }
 
   const positions = new Map(

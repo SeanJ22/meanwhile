@@ -46,6 +46,7 @@
  */
 
 import type { AssignmentCompletion } from "../assignment-completion.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import type { CostEntry } from "../cost.ts";
 import { aggregateModelSpend } from "../fleet-safety.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
@@ -53,6 +54,7 @@ import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import type { BudgetLine } from "./spend-holds.ts";
+import { instructionReceiptKey } from "../scheduler/obligation.ts";
 
 export const ASSIGNMENT_BUDGET_CODE = "ASSIGNMENT_BUDGET";
 export const ASSIGNMENT_BUDGET_FORMAT_VERSION = 1;
@@ -151,8 +153,10 @@ export interface AssignmentMembers {
 
 export interface AssignmentMembership {
   readonly byKey: ReadonlyMap<string, AssignmentMembers>;
+  readonly byInstruction: ReadonlyMap<string, AssignmentMembers>;
   /** The assignments each obligation belongs to. */
   readonly keysOf: ReadonlyMap<string, readonly string[]>;
+  readonly refsOf: ReadonlyMap<string, readonly { readonly key:string; readonly ref:string }[]>;
 }
 
 /**
@@ -174,10 +178,23 @@ export function assignmentMembership(
   for (const r of recorded) add(r.obligationId, r.subjectId, r.entry);
 
   const byKey = new Map<string, { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }>();
+  const byInstruction = new Map<string, { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }>();
   const keysOf = new Map<string, string[]>();
+  const refsOf = new Map<string, {key:string;ref:string}[]>();
   for (const [obligationId, { subjectId, list }] of entries) {
     const keys = [...new Set(list.map((e) => e.assignmentKey))];
     keysOf.set(obligationId, keys);
+    const refs=[...new Map(list.map(mark=>[instructionReceiptKey(mark.assignmentKey,mark.ref),{key:mark.assignmentKey,ref:mark.ref}])).values()];
+    refsOf.set(obligationId,refs);
+    for (const {key,ref} of refs) {
+      const mine=list.filter(mark=>mark.assignmentKey===key && mark.ref===ref);
+      const member:AssignmentMember={obligationId,subjectId,joinedAt:mine.map(mark=>mark.at).sort()[0]??""};
+      const identity=instructionReceiptKey(key,ref);
+      const slot=byInstruction.get(identity)??{created:new Map(),reordered:new Map()};
+      if (mine.some(mark=>mark.relation==="CREATED")) slot.created.set(obligationId,member);
+      else slot.reordered.set(obligationId,member);
+      byInstruction.set(identity,slot);
+    }
     for (const key of keys) {
       const mine = list.filter((e) => e.assignmentKey === key);
       const joinedAt = mine.map((e) => e.at).sort()[0] ?? "";
@@ -188,7 +205,7 @@ export function assignmentMembership(
       byKey.set(key, slot);
     }
   }
-  return { byKey, keysOf };
+  return { byKey, byInstruction, keysOf, refsOf };
 }
 
 /* ------------------------------------------------------------ spend */
@@ -261,6 +278,7 @@ export interface AssignmentBudgetState {
 export class AssignmentBudgetGate {
   private readonly specs: ReadonlyMap<string, AssignmentBudgetSpec>;
   private readonly keysOf: ReadonlyMap<string, readonly string[]>;
+  private readonly refsOf: ReadonlyMap<string, readonly {readonly key:string;readonly ref:string}[]>;
   private readonly historical: ReadonlyMap<string, AssignmentSpend>;
   private readonly worstCaseUsd: number;
   private readonly costsReadable: boolean;
@@ -298,6 +316,7 @@ export class AssignmentBudgetGate {
   }) {
     this.specs = new Map(input.specs.map((s) => [s.key, s]));
     this.keysOf = input.membership.keysOf;
+    this.refsOf = input.membership.refsOf;
     this.historical = input.historical;
     this.worstCaseUsd = input.worstCaseUsd;
     this.costsReadable = input.costsReadable;
@@ -315,9 +334,14 @@ export class AssignmentBudgetGate {
    */
   private failClosed(obligationId: string, keys: readonly string[]): AssignmentRefusal | null {
     const reached = this.reachedThisCycle.get(obligationId) ?? [];
+    for (const key of keys) {
+      const spec=this.specs.get(key);
+      if (spec && !this.refsOf.get(obligationId)?.some(mark=>mark.key===key&&mark.ref===spec.ref))
+        return this.refused([key], `assignment ${this.name(spec)} has a new instruction receipt, but this work only records an earlier one; paid work waits for the new durable membership mark`);
+    }
     for (const key of reached) {
-      if (keys.includes(key)) continue;
       const spec = this.specs.get(key);
+      if (keys.includes(key) && (!spec || this.refsOf.get(obligationId)?.some(mark=>mark.key===key&&mark.ref===spec.ref))) continue;
       if (spec !== undefined || this.malformed.has(key) || !this.intentsReadable) {
         const named = spec !== undefined ? `${this.name(spec)}'s ${usd(spec.budgetUsd)} budget` : `the budget of assignment ${key}`;
         return this.refused([key], `this cycle's reading reached this work under assignment ${key}, but the record that it belongs to that Send was not written, so ${named} cannot be applied; the work waits until the record is written`);
@@ -347,7 +371,7 @@ export class AssignmentBudgetGate {
     const keys = this.keysOf.get(obligationId) ?? [];
     const closed = this.failClosed(obligationId, keys);
     if (closed !== null) return { refusal: closed };
-    const budgeted = this.budgetedFor(obligationId);
+    const budgeted = this.effectiveBudgetsFor(obligationId);
     if (budgeted.length === 0) return { lines: [] };
     if (!this.costsReadable) {
       const b = budgeted[0];
@@ -373,8 +397,17 @@ export class AssignmentBudgetGate {
   budgetedFor(obligationId: string): AssignmentBudgetSpec[] {
     return (this.keysOf.get(obligationId) ?? [])
       .map((k) => this.specs.get(k))
-      .filter((s): s is AssignmentBudgetSpec => s !== undefined)
+      .filter((s): s is AssignmentBudgetSpec => s !== undefined &&
+        this.refsOf.get(obligationId)?.some(mark=>mark.key===s.key&&mark.ref===s.ref)===true)
       .sort((a, b) => (a.sentAt < b.sentAt ? 1 : a.sentAt > b.sentAt ? -1 : a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  }
+
+  /** Only the owner's exact original $50 Send supersedes older rolling limits. */
+  private effectiveBudgetsFor(obligationId: string): AssignmentBudgetSpec[] {
+    const all = this.budgetedFor(obligationId);
+    const original = all.find(spec => spec.key === ORIGINAL_LIFETIME_HUNT.key && spec.ref === ORIGINAL_LIFETIME_HUNT.receiptId &&
+      spec.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && spec.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+    return original ? [original] : all;
   }
 
   state(key: string): AssignmentBudgetState | null {
@@ -399,7 +432,7 @@ export class AssignmentBudgetGate {
     const closed = this.failClosed(obligationId, keys);
     if (closed !== null) return closed;
     if (keys.length === 0) return { admit: true, runsUnder: null, keys };
-    const budgeted = this.budgetedFor(obligationId);
+    const budgeted = this.effectiveBudgetsFor(obligationId);
     if (budgeted.length === 0) return { admit: true, runsUnder: null, keys };
     if (!this.costsReadable) {
       const b = budgeted[0];
@@ -434,7 +467,7 @@ export class AssignmentBudgetGate {
   admit(obligationId: string): AssignmentAdmission {
     const verdict = this.check(obligationId);
     if (!verdict.admit || verdict.runsUnder === null) return verdict;
-    const held = this.budgetedFor(obligationId).map((s) => s.key);
+    const held = this.effectiveBudgetsFor(obligationId).map((s) => s.key);
     for (const key of held) this.reserved.set(key, (this.reserved.get(key) ?? 0) + this.worstCaseUsd);
     this.admittedBy.set(verdict.runsUnder, (this.admittedBy.get(verdict.runsUnder) ?? 0) + 1);
     this.reservations.set(obligationId, held);
@@ -468,6 +501,14 @@ export class AssignmentBudgetGate {
  * Arm the gate at cycle start: each budget's rolling-window spend from the
  * canonical ledger. `costs` null means the ledger could not be read.
  */
+function costsForInstruction(costs:readonly CostEntry[], spec:AssignmentBudgetSpec):readonly CostEntry[] {
+  // An exact different receipt is known not to belong here. Older ledger rows
+  // without receipt attribution remain conservatively counted by membership
+  // and time, so a migration cannot mint new allowance from unknown history.
+  return costs.filter(cost=>cost.assignmentRefs===undefined ||
+    cost.assignmentRefs.some(mark=>mark.key===spec.key&&mark.ref===spec.ref));
+}
+
 export function armAssignmentBudget(input: {
   readonly now: string;
   readonly specs: readonly AssignmentBudgetSpec[];
@@ -482,7 +523,7 @@ export function armAssignmentBudget(input: {
   const historical = new Map<string, AssignmentSpend>();
   if (input.costs !== null) {
     const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(input.costs, input.membership.byKey.get(spec.key) ?? empty, spec.budgetStartedAt ?? since, input.now));
+    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(costsForInstruction(input.costs,spec), input.membership.byInstruction.get(instructionReceiptKey(spec.key,spec.ref)) ?? empty, spec.budgetStartedAt ?? since, input.now));
   }
   return new AssignmentBudgetGate({
     specs: input.specs,
@@ -571,9 +612,9 @@ export function assignmentCycleReading(input: {
   const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
   const assignments = keys.map((key): AssignmentReading => {
     const spec = specs.get(key) ?? null;
-    const m = input.membership.byKey.get(key) ?? empty;
+    const m = spec ? input.membership.byInstruction.get(instructionReceiptKey(key,spec.ref)) ?? empty : input.membership.byKey.get(key) ?? empty;
     const state = input.gate.state(key);
-    const spend = spec !== null && input.costs !== null ? assignmentSpend(input.costs, m, spec.budgetStartedAt ?? since, input.now) : null;
+    const spend = spec !== null && input.costs !== null ? assignmentSpend(costsForInstruction(input.costs,spec), m, spec.budgetStartedAt ?? since, input.now) : null;
     const kind = key.startsWith("dispatch:") ? "DISPATCH" : "SCOPE";
     return {
       key,

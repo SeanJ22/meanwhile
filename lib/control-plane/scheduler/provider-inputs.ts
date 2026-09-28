@@ -53,8 +53,8 @@
 
 import {
   installedRegistrationJurisdictionRegistries,
+  installedOperationalReferenceRegistries,
   requiredOperationalJurisdictionRegistry,
-  requiredOperationalReferenceBundle,
 } from "../../civic-data/operational-references.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 
@@ -88,9 +88,9 @@ export function trackedStatesFromOperationalReference(): TrackedStatesSource {
   return {
     read() {
       try {
-        const states = normalized(Object.keys(requiredOperationalReferenceBundle().registries));
+        const states = normalized(Object.keys(installedOperationalReferenceRegistries()));
         if (states.length === 0) {
-          return { unreadable: "the promoted operational-reference bundle carries no registry at all — a failed read, never a country with no tracked state", source };
+          return { unreadable: "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted operational-reference registry was preloaded", source };
         }
         return { states, source };
       } catch (error) {
@@ -114,7 +114,8 @@ export function promotedRegistries():
   | { readonly unreadable: string } {
   let states: string[];
   try {
-    states = normalized(Object.keys(requiredOperationalReferenceBundle().registries));
+    states = normalized(Object.keys(installedOperationalReferenceRegistries()));
+    if (states.length === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
   }

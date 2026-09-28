@@ -61,7 +61,7 @@ import { maptilerHistoryNumbers, maptilerSectionNumbers, projectMapTilerAttemptH
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
-import { divisionsOf, loadContainer } from "../data/geography.ts";
+import { divisionsOf, loadContainer, loadZcta } from "../data/geography.ts";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { loadSpendFacts } from "../data/spend-store.ts";
 import { ladderHeadline } from "@/lib/control-plane/admin-view/model-ladder-view.ts";
@@ -117,7 +117,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
     observedAt: base.nowIso,
     standard: base.standard,
   };
-  if (!base.shell.tracked) {
+  if (!base.shell.tracked && base.shell.decision === null) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
@@ -257,7 +257,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
             <h2 className={s.h2CardTight}>{base.shell.label} — overall spending belongs to the whole operation.</h2>
             <p className={s.lede}>
               The ceilings, the bills and the subscriptions below are for everywhere; none of them is split by place. Only the model money by place narrows,
-              and {base.scope.kind === "state" ? "it is shown for this state" : "it names a state, not a county or a district"}. Cost of work narrows further.
+              and {base.scope.kind === "state" ? "it is shown for this state" : "it names a state, not this selected geography"}. Cost of work narrows further.
             </p>
           </div>
         )}
@@ -385,7 +385,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
     );
   } else {
     /* ------------------------------------------------------------ cost of work */
-    const container = base.scope.kind === "geo" ? loadContainer(base.scope.type, base.scope.geoid) : null;
+    const container = base.scope.kind === "geo" ? base.scope.type === "zcta" ? loadZcta(base.scope.geoid) : loadContainer(base.scope.type, base.scope.geoid) : null;
     const [spend, bodiesRead, containerRead] = await Promise.all([loadSpendFacts(base.nowIso), loadWatchedBodies(base.nowIso), container]);
     const scopeState = base.scope.kind === "all" ? null : base.scope.state;
     let bodies: readonly BodyView[] = [];
@@ -468,7 +468,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
               "Plain-code work is counted from the routine store and carries no model cost.",
           }
         : {
-            title: `${scopeName} — paid work is shown for ${stateName(scopeState)} as a whole${base.scope.kind === "geo" ? ", because no charge records a county or a district" : ""}.`,
+            title: `${scopeName} — paid work is shown for ${stateName(scopeState)} as a whole${base.scope.kind === "geo" ? ", because no charge records this exact geography" : ""}.`,
             text:
               `A paid attempt names the state of its subject, so ${stateName(scopeState)}'s share and what it produced are exact: ${usd(totalPaid)} on ${attemptsPaid.toLocaleString("en-US")} attempts. Attempts whose subject names no state are counted only in Everywhere.` +
               (base.scope.kind === "geo" ? " The plain-code figures below are this geography's own bodies." : ""),

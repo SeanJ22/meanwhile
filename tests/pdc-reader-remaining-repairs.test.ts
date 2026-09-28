@@ -62,16 +62,17 @@ function nodes(path: string) {
 
 test("contactless grounded bodies retain the routed topic and correctly attributed reachable contact", () => {
   const all = nodes("components/ask/ask-box.tsx");
+  const cited = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "citedContactUrl")!;
   const cards = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "RoutedContactCards")!;
   const predicate = all.find((node) => ts.isVariableDeclaration(node) && node.name.getText() === "preservedRoutedContact")!;
   const block = all.find((node) => ts.isJsxElement(node) && node.openingElement.attributes.properties.some((prop) => ts.isJsxAttribute(prop) && prop.name.getText() === "data-ask-preserved-contact"))!;
-  assert.ok(cards && predicate && block, "exercise the production card and its actual placement predicate");
-  const render = new Function("telHref", "React", "asked", "grounded", compile(`${cards.getText()} const ${predicate.getText()}; return preservedRoutedContact ? (${block.getText()}) : null;`)).bind(null, telHref);
+  assert.ok(cited && cards && predicate && block, "exercise the production card, URL guard and actual placement predicate");
+  const render = new Function("telHref", "React", "asked", "grounded", compile(`${cited.getText()} ${cards.getText()} const ${predicate.getText()}; return preservedRoutedContact ? (${block.getText()}) : null;`)).bind(null, telHref);
   const contact = { body: "Borough of Rockaway — Tax Collector", service: "Property tax payments", phone: "973-627-2000 ext 228", email: "taxcollector@rockawayborough.org", sourceOrg: "Borough of Rockaway", sourceUrl: "https://www.rockawayborough.org/departments/tax-collector/" };
   const asked = { answer: { kind: "ROUTED", topic: { label: "Property taxes" } }, contacts: [contact] };
   const grounded = { subject: { name: "Board of Assessment Commissioners" }, contacts: [] };
   const markup = renderToStaticMarkup(render(React, asked, grounded));
-  for (const fragment of ["Property taxes", contact.body, contact.service, contact.phone, `mailto:${contact.email}`, 'href="tel:9736272000;ext=228"', `This was sourced from ${contact.sourceOrg}.`]) assert.ok(markup.includes(fragment), fragment);
+  for (const fragment of ["Property taxes", contact.body, contact.service, contact.phone, `mailto:${contact.email}`, 'href="tel:9736272000;ext=228"', "This was sourced from ", `href="${contact.sourceUrl}"`, `>${contact.sourceOrg}</a>.`]) assert.ok(markup.includes(fragment), fragment);
   assert.ok(!markup.includes('href="tel:9736272000228"'), "extension must not become part of the subscriber number");
   assert.ok(!markup.includes(grounded.subject.name), "the collector must not be attributed to the grounded assessment board");
   assert.equal((markup.match(/mailto:/g) ?? []).length, 1);

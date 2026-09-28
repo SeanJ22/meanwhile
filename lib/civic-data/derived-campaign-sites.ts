@@ -81,6 +81,28 @@ export interface DerivedCampaignSiteEvidence {
   readonly secondSignal: string;
 }
 
+/** A deeper page inherits publisher identity from a separately approved site
+ * and an exact saved href; its own completed capture remains a distinct fact. */
+export interface DerivedLinkedPublicationEvidence {
+  readonly kind: "LINKED_PAGE";
+  readonly approvalItemId: string;
+  readonly approvalRecordId: string;
+  readonly sourceArtifactId: string;
+  readonly sourceContentHash: string;
+  readonly sourceUrl: string;
+  readonly hrefStart: number;
+  readonly hrefEnd: number;
+  readonly hrefQuote: string;
+  readonly offsetUnit: "UTF16_CODE_UNITS";
+  readonly artifactId: string;
+  readonly attemptId: string;
+  readonly sha256: string;
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly readAt: string;
+}
+
 /** A campaign link as this store publishes it: the Reader's own link shape, and its evidence. */
 export type DerivedCampaignLink = VerifiedLinkShape & { readonly evidence: DerivedCampaignSiteEvidence };
 
@@ -94,7 +116,7 @@ export interface DerivedCampaignSiteRecord {
   readonly campaign: DerivedCampaignLink;
   /** Already verified page versions, deterministically transcribed from the
    * same vault. Older GOOD versions without this field remain readable. */
-  readonly publications?: readonly { readonly document: CandidateDocument; readonly evidence: DerivedCampaignSiteEvidence }[];
+  readonly publications?: readonly { readonly document: CandidateDocument; readonly evidence: DerivedCampaignSiteEvidence | DerivedLinkedPublicationEvidence }[];
 }
 
 export interface DerivedCampaignSitesProjection {
@@ -108,8 +130,24 @@ export const CAMPAIGN_SITE_VERIFICATION_TEMPLATE = /^Fetched \d{4}-\d{2}-\d{2} \
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
+const calendarDay = (value: string): boolean => {
+  if (!DAY.test(value)) return false;
+  const parsed = Date.parse(`${value}T00:00:00.000Z`);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === value;
+};
 const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
 const instant = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
+
+/** URL, raw bytes, extracted text and extractor together identify a source revision. */
+export function derivedCandidateRevisionId(input: { readonly candidateKey: string; readonly documentUrl: string;
+  readonly rawContentHash: string; readonly contentHash: string; readonly extractorVersion: number }): string {
+  return createHash("sha256").update(JSON.stringify([input.candidateKey, input.documentUrl, input.rawContentHash,
+    input.contentHash, input.extractorVersion])).digest("hex");
+}
+
+export function derivedCandidateDocumentId(candidateKey: string, contentHash: string, revisionId: string): string {
+  return `${candidateKey}@${contentHash}~${revisionId}`;
+}
 const https = (value: unknown): boolean => {
   try {
     const url = new URL(String(value));
@@ -148,17 +186,54 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
     if (prior !== undefined && prior !== link.url) return `${record.candidacyId} carries two campaign links (${prior}, ${link.url})`;
     urlByCandidacy.set(record.candidacyId, link.url);
     const documentIds = new Set<string>();
+    const revisions = new Map<string, CandidateDocument>();
     for (const publication of record.publications ?? []) {
       const { document: d, evidence: e } = publication;
-      if (!d || !e || d.candidateKey !== record.id || documentIds.has(d.id) || d.id !== `${d.candidateKey}@${d.contentHash}` ||
+      const revision = d?.sourceRevision;
+      const expectedId = revision
+        ? derivedCandidateDocumentId(d.candidateKey, d.contentHash, derivedCandidateRevisionId({ candidateKey: d.candidateKey,
+          documentUrl: d.documentUrl, rawContentHash: revision.rawContentHash, contentHash: d.contentHash,
+          extractorVersion: revision.extractionVersion }))
+        : `${d?.candidateKey}@${d?.contentHash}`;
+      const date = d?.publicationDate;
+      if (!d || !e || d.candidateKey !== record.id || documentIds.has(d.id) || d.id !== expectedId ||
           d.sourceClass !== "CAMPAIGN_SITE" || d.basis !== "HUNTED_AND_VERIFIED" || d.extraction !== "html" || !text(d.text) ||
           createHash("sha256").update(d.text).digest("hex") !== d.contentHash ||
           !SHA256.test(e.sha256) || d.sourceContentHash !== e.sha256 || d.documentUrl !== e.finalUrl ||
+          (revision !== undefined && (!SHA256.test(revision.revisionId) || revision.revisionId !== expectedId.split("~").at(-1) ||
+            revision.artifactId !== e.artifactId || revision.canonicalUrl !== e.finalUrl ||
+            revision.rawContentHash !== e.sha256 || revision.capturedAt !== e.readAt ||
+            revision.extractionVersion !== (d.extractorVersion ?? 1) ||
+            (revision.supersedesRevisionId !== null && !SHA256.test(revision.supersedesRevisionId)))) ||
+          (date !== undefined && (!revision || !calendarDay(date.date) || date.basis !== "ARTICLE_PUBLISHED_TIME_META" ||
+            date.artifactId !== e.artifactId || date.rawContentHash !== e.sha256 ||
+            !Number.isSafeInteger(date.start) || !Number.isSafeInteger(date.end) || date.start < 0 || date.end <= date.start ||
+            date.end - date.start !== date.quote.length ||
+            date.offsetUnit !== "UTF16_CODE_UNITS" || !text(date.quote) ||
+            !/<meta\b/i.test(date.quote) || !/\bproperty\s*=\s*["']article:published_time["']/i.test(date.quote) ||
+            !new RegExp(`\\bcontent\\s*=\\s*["']${date.date}(?:T[^"']*)?["']`, "i").test(date.quote))) ||
           !https(d.documentUrl) || new URL(d.documentUrl).hostname !== new URL(link.url).hostname ||
           d.retrievedAt !== e.readAt || !instant(e.readAt) || !text(e.artifactId) || !text(e.approvalRecordId) ||
-          !text(e.approvalItemId) || !text(e.attemptId) || !text(e.secondSignal) || !instant(e.approvedAt) ||
+          !text(e.approvalItemId) || !text(e.attemptId) ||
+          ("kind" in e && e.kind === "LINKED_PAGE"
+            ? !text(e.sourceArtifactId) || !/^sha256-[a-f0-9]{64}$/.test(e.sourceContentHash) ||
+              !https(e.sourceUrl) || !Number.isSafeInteger(e.hrefStart) || !Number.isSafeInteger(e.hrefEnd) ||
+              e.hrefStart < 0 || e.hrefEnd <= e.hrefStart || !text(e.hrefQuote) || e.offsetUnit !== "UTF16_CODE_UNITS" ||
+              !https(e.requestedUrl) || new URL(e.sourceUrl).hostname !== new URL(d.documentUrl).hostname
+            : !text(e.secondSignal) || !instant(e.approvedAt)) ||
           e.httpStatus < 200 || e.httpStatus >= 300) return `${record.id}: candidate publication lacks exact text, identity or captured-byte evidence`;
       documentIds.add(d.id);
+      if (revision) revisions.set(revision.revisionId, d);
+    }
+    for (const { document } of record.publications ?? []) {
+      const current = document.sourceRevision;
+      if (!current?.supersedesRevisionId) continue;
+      const previous = revisions.get(current.supersedesRevisionId)?.sourceRevision;
+      if (!previous || previous.canonicalUrl !== current.canonicalUrl ||
+        previous.extractionVersion !== current.extractionVersion || previous.capturedAt > current.capturedAt ||
+        previous.revisionId === current.revisionId) {
+        return `${record.id}: a candidate publication supersession crosses an unproven source lineage`;
+      }
     }
   }
   return null;

@@ -78,6 +78,10 @@ export interface SeatHolder {
   /** Published official contact (3a). Absences are absences. */
   email: string | null;
   phone: string | null;
+  /** Distinguishes a shared public office channel from a direct office line. */
+  contactScope?: "SHARED_OFFICE" | "INDIVIDUAL_OFFICE";
+  /** Earlier verified sources for optional facts retained after an incomplete update. */
+  retainedFieldSources?: Partial<Record<"termNote" | "email" | "phone" | "websiteUrl", { sourceUrl: string; sourceOrg: string; collectedAt: string }>>;
   contactFormUrl: string | null;
   /** Portrait on our origin (3b), from the licensed-photos manifest. */
   photoUrl: string | null;

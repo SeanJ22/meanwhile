@@ -34,7 +34,7 @@ import {
 } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { scoutAttemptWorstCaseUsd, scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { RESEARCH_BOUNDS, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
-import { modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
+import { FleetPreSendRefusal, FleetSafetyController, FleetSafetyRefusal, modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansion/membership.ts";
 import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext } from "../lib/control-plane/workers/types.ts";
@@ -186,9 +186,9 @@ test("a missing Send record or an unreadable budget refuses; with no Send budget
     { formatVersion: 1, kind: "INTENT", intentId: "ri-free", action: "DISPATCH", requestedAt: NOW, actor: "owner", adminSessionRef: "s", note: "Yuma County" },
   ];
   const membership = assignmentMembership([
-    { id: "ob-marked", subjectId: "az-pima", assignments: [{ assignmentKey: "dispatch:ri-budgeted", relation: "REORDERED", at: NOW }] as never },
-    { id: "ob-bad", subjectId: "az-maricopa", assignments: [{ assignmentKey: "dispatch:ri-bad", relation: "REORDERED", at: NOW }] as never },
-    { id: "ob-free", subjectId: "az-yuma", assignments: [{ assignmentKey: "dispatch:ri-free", relation: "REORDERED", at: NOW }] as never },
+    { id: "ob-marked", subjectId: "az-pima", assignments: [{ assignmentKey: "dispatch:ri-budgeted", ref: "ri-budgeted", relation: "REORDERED", at: NOW }] as never },
+    { id: "ob-bad", subjectId: "az-maricopa", assignments: [{ assignmentKey: "dispatch:ri-bad", ref: "ri-bad", relation: "REORDERED", at: NOW }] as never },
+    { id: "ob-free", subjectId: "az-yuma", assignments: [{ assignmentKey: "dispatch:ri-free", ref: "ri-free", relation: "REORDERED", at: NOW }] as never },
     { id: "ob-unmarked", subjectId: "az-pima" },
     { id: "ob-plain", subjectId: "nj-morris" },
   ]);
@@ -328,6 +328,35 @@ test("autonomous work fails closed: an unreadable area budget or ledger refuses;
   assert.equal(kept[0].settled, null);
 });
 
+test("a provider response with incomplete usage keeps the durable autonomous area hold, while a typed pre-send refusal releases it", async () => {
+  const scope = areaGate([azScope(50, 0)]);
+  const { repos, spend } = holds();
+  let providerCalls = 0;
+  const incomplete: ModelTransport = async (asked) => {
+    providerCalls += 1;
+    return { id: "msg-unpriced", model: asked.model, role: "assistant", content: [{ type: "text", text: "done" }],
+      stop_reason: "end_turn", usage: { input_tokens: 100 } } as unknown as ModelResponse;
+  };
+  const controller = new FleetSafetyController({ now: NOW, costs: [], clock: () => Date.parse(NOW) });
+  const afterResponse = autonomous(spend, scope, { subjectId: PIMA, state: "AZ" },
+    controller.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
+  await assert.rejects(afterResponse(request()), (error: unknown) =>
+    error instanceof FleetSafetyRefusal && error.code === "UNMEASURED_MODEL_SPEND" && !(error instanceof FleetPreSendRefusal));
+  assert.equal(providerCalls, 1, "the model provider actually returned a response");
+  let held = Object.values((await repos.budget.read()).value.spendHolds ?? {});
+  assert.equal(held.length, 1);
+  assert.equal(held[0].settled, null, "unknown-cost provider processing cannot release its durable area hold");
+
+  const { repos: preRepos, spend: preSpend } = holds();
+  const preController = new FleetSafetyController({ now: NOW, costs: [], modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
+  const beforeRequest = autonomous(preSpend, scope, { subjectId: PIMA, state: "AZ" },
+    preController.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
+  await assert.rejects(beforeRequest(request()), FleetPreSendRefusal);
+  assert.equal(providerCalls, 1, "the typed pre-send refusal never called the provider");
+  held = Object.values((await preRepos.budget.read()).value.spendHolds ?? {});
+  assert.equal(held.length, 0, "a proven local pre-send refusal releases only its unused hold");
+});
+
 test("the auditor's review goes through the jurisdiction's transport, and a budget refusal is a policy denial, not a provider failure", async () => {
   const asked: { subjectId: string; state: string | null }[] = [];
   const reasoner = modelAuditReasoner(createMemoryRepositories(), async () => { throw new Error("the shared transport must not be used"); }, () => NOW, {
@@ -352,7 +381,7 @@ test("the runner wires autonomous work to its jurisdiction's area only, never to
   assert.ok(start > 0 && end > start);
   assert.match(block, /expansionBudget\.gate\.linesFor\(j\.subjectId, j\.state\)/);
   assert.doesNotMatch(block, /assignmentBudget|sends:/, "no Send budget is consulted for autonomous work");
-  assert.match(runner, /transportFor: autonomousTransportFor\(fleetGuarded\)/);
-  assert.match(runner, /const fleetGuarded = modelLaneEnabled \? fleetSafety\.guardedModelTransport\(/, "the autonomous transport exists only while the paid lane is open");
+  assert.match(runner, /transportFor: autonomousTransportFor\(fleetTransport\)/);
+  assert.match(runner, /const fleetTransport = modelLaneEnabled \? boundedAuditTransport\(workerKey\) : null/, "the autonomous transport exists only while the paid lane is open");
   assert.doesNotMatch(runner, /unattributedBudgetGuard|allLines\(/);
 });

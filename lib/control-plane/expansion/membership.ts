@@ -73,6 +73,7 @@ import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { areaBudgetKey, type BudgetLine } from "./spend-holds.ts";
 import { stateOfSubject } from "./subjects.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 
 /* ------------------------------------------------------------ territory */
 
@@ -421,6 +422,7 @@ export const SCOPE_BUDGET_CODE = "SCOPE_BUDGET";
 export interface BudgetScope {
   readonly lifetime?: boolean;
   readonly budgetStartedAt?: string;
+  readonly receiptId?: string;
   readonly key: string;
   readonly label: string;
   readonly budgetUsd: number;
@@ -494,6 +496,15 @@ export class ScopeBudgetGate {
     );
   }
 
+  /** Only the exact original Send supersedes overlapping rolling scopes. */
+  private effectiveScopes(binding: readonly BudgetScope[]): readonly BudgetScope[] {
+    const original = binding.find(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
+      scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+      scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+      scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+    return original ? [original] : binding;
+  }
+
   /** A selected hunt authorizes its own work, including explicitly shared
    * members. Opening the model lane for that hunt must not start unrelated
    * geographic acquisition. Legacy rolling-only selections keep their rules. */
@@ -524,7 +535,7 @@ export class ScopeBudgetGate {
     const outside = this.outsideSelectedHunts(binding);
     if (outside !== null) return { refusal: outside };
     const lines: BudgetLine[] = [];
-    for (const scope of binding) {
+    for (const scope of this.effectiveScopes(binding)) {
       if (!scope.resolved) {
         return { refusal: this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`) as Extract<BudgetAdmission, { admit: false }> };
       }
@@ -547,7 +558,8 @@ export class ScopeBudgetGate {
     const binding = this.bindingScopes(subjectId);
     const outside = this.outsideSelectedHunts(binding);
     if (outside !== null) return outside;
-    for (const scope of binding) {
+    const effective = this.effectiveScopes(binding);
+    for (const scope of effective) {
       if (!scope.resolved) {
         return this.refuse(scope, `${scope.label} could not be resolved against the published Census geography, so its $${scope.budgetUsd.toFixed(2)} budget cannot be checked; paid work it might contain is held`);
       }
@@ -563,11 +575,11 @@ export class ScopeBudgetGate {
         );
       }
     }
-    for (const scope of binding) {
+    for (const scope of effective) {
       this.reserved.set(scope.key, (this.reserved.get(scope.key) ?? 0) + this.worstCaseUsd);
       this.admittedBy.set(scope.key, (this.admittedBy.get(scope.key) ?? 0) + 1);
     }
-    this.reservations.set(obligationId, binding.map((s) => s.key));
+    this.reservations.set(obligationId, effective.map((s) => s.key));
     return { admit: true };
   }
 
@@ -794,7 +806,7 @@ export function armExpansionBudget(
     const d = scope.decision;
     if (scope.kind !== "RESOLVED") {
       budgetScopes.push({ key: d.key, label: d.geography.label, budgetUsd: d.budgetUsd, resolved: false, members: scope.members, states: scope.states, historicalUsd: null,
-        lifetime: Boolean(d.budgetStartedAt), budgetStartedAt: d.budgetStartedAt });
+        lifetime: Boolean(d.budgetStartedAt), budgetStartedAt: d.budgetStartedAt, receiptId: d.receiptId });
       return reading;
     }
     const spend24 = input.costs === null ? null : scopeModelSpend(input.costs, scope.members, since24, input.now);
@@ -811,6 +823,7 @@ export function armExpansionBudget(
       historicalUsd: budgetSpend === null ? null : budgetSpend.usd,
       lifetime: Boolean(d.budgetStartedAt),
       budgetStartedAt: d.budgetStartedAt,
+      receiptId: d.receiptId,
     });
     return {
       ...reading,

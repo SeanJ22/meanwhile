@@ -181,7 +181,8 @@ function bodyRosterUrls(roster: BodyRoster): string[] {
   return httpsUrls([
     roster.sourceUrl,
     roster.partisanshipSourceUrl,
-    ...roster.members.flatMap((member) => [member.websiteUrl, member.partySourceUrl, member.membershipSource?.sourceUrl]),
+    ...roster.members.flatMap((member) => [member.partySourceUrl, member.membershipSource?.sourceUrl,
+      ...Object.values(member.retainedFieldSources ?? {}).map(source => source?.sourceUrl)]),
   ]);
 }
 
@@ -341,7 +342,9 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
     return !roster.bodyId || !roster.bodyName || !roster.sourceOrg || !roster.collectedAt ||
         registryIsolationUrls(member).length === 0 || duplicate(roster.members.map((row) => row.id)) ||
         roster.members.some((row) => !row.name || !row.officeTitle || (row.membershipSource &&
-          (!/^https:\/\//.test(row.membershipSource.sourceUrl) || !row.membershipSource.sourceOrg || !Number.isFinite(Date.parse(row.membershipSource.collectedAt)))))
+          (!/^https:\/\//.test(row.membershipSource.sourceUrl) || !row.membershipSource.sourceOrg || !Number.isFinite(Date.parse(row.membershipSource.collectedAt)))) ||
+          Object.entries(row.retainedFieldSources ?? {}).some(([field, source]) => !source || !["termNote", "email", "phone", "websiteUrl"].includes(field) ||
+            !row[field as "termNote" | "email" | "phone" | "websiteUrl"] || !/^https:\/\//.test(source.sourceUrl) || !source.sourceOrg || !Number.isFinite(Date.parse(source.collectedAt))))
       ? `${member.key} lacks exact roster identity, provenance, or unique person rows.`
       : null;
   }

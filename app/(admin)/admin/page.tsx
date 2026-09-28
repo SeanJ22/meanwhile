@@ -22,6 +22,14 @@
  * drawn. A failed audit replaces the numbers with the reason.
  */
 import { readDecisionCards, readDecisions } from "@/lib/control-plane/admin-data.ts";
+import Link from "next/link";
+import type { OwnerSnapshot } from "@/lib/control-plane/owner-surface.ts";
+import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
+import { rankedWorkBlockers } from "@/lib/control-plane/admin-view/work-view.ts";
+import { exactInstructionMembership } from "@/lib/control-plane/admin-view/instruction-membership.ts";
+import { CHECKLIST_PROFILE } from "@/lib/control-plane/readiness/checklist-score.ts";
+import { servedWitness } from "@/lib/control-plane/served-reader.ts";
+import type { ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
 import { nowFigures, type BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
 import { SYNC_CADENCE, receiptHeadline, splitDecided } from "@/lib/control-plane/decision-receipt.ts";
@@ -38,16 +46,18 @@ import {
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { routineAssignmentId } from "@/lib/control-plane/assignment-routine.ts";
+import { plainText } from "@/lib/control-plane/plain-words.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
 
 import { BodyList } from "../_mw/body-list.tsx";
 import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
 import { censusEntryOf } from "../_mw/data/census-universe.ts";
-import { divisionsOf, loadContainer } from "../_mw/data/geography.ts";
+import { divisionsOf, loadContainer, loadZcta } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { isTrackedState, stateName } from "../_mw/load-shell.ts";
 import { NextSteps, type StepCard } from "../_mw/next-steps.tsx";
 import { openPage, type SearchParams } from "../_mw/page-base.ts";
-import { parseScope, withScope } from "../_mw/scope.ts";
+import { parseScope, withScope, type MwScope } from "../_mw/scope.ts";
 import { MwShell } from "../_mw/shell.tsx";
 import { Dash, FigList, Pill, Refusal, Section, mw as s, type FigLine } from "../_mw/ui.tsx";
 
@@ -59,6 +69,20 @@ const ACTION_ROUTE = "/api/admin/action";
 const LIVE_ROUTE = "/api/admin/live";
 const PRIORITY_ORDER: Readonly<Record<string, number>> = { P0: 0, P1: 1, P2: 2, P3: 3 };
 const FIRST_BODIES_SHOWN = 12;
+
+type HuntOverviewFields = Pick<OwnerSnapshot, "publishedAt" | "assignments" | "billingAttribution" | "checklists" | "servedReaderReadback">;
+
+/** Only the existing publisher's saved facts; no body/state inference or full snapshot read. */
+async function readHuntOverview(repos: ControlPlaneRepositories): Promise<{ value: HuntOverviewFields | null; gap: string | null }> {
+  try {
+    const row = await repos.ownerSnapshots.readNarrowed("current", {
+      publishedAt: true, assignments: true, billingAttribution: true, checklists: true, servedReaderReadback: true,
+    });
+    return row ? { value: row.value as HuntOverviewFields, gap: null } : { value: null, gap: "No hunt overview has been published yet." };
+  } catch {
+    return { value: null, gap: "The saved hunt overview could not be read. Its counts and costs are unknown." };
+  }
+}
 
 function stepsFrom(waiting: readonly OwnerDecisionCard[]): StepCard[] {
   const kindOrder = { DECISION: 0, ACKNOWLEDGE: 1, BLOCKED_WHILE: 2 } as const;
@@ -88,6 +112,76 @@ function stepsFrom(waiting: readonly OwnerDecisionCard[]): StepCard[] {
     });
 }
 
+function SavedHuntOverview({ decision, scope, now, read }: {
+  decision: ExpansionScopeDecision; scope: MwScope; now: string;
+  read: { value: HuntOverviewFields | null; gap: string | null };
+}) {
+  const fields = read.value;
+  const view = fields?.assignments?.kind === "BUILT" ? fields.assignments.view : null;
+  const exact = exactInstructionMembership(view,decision.key,decision.receiptId);
+  const members = exact.index;
+  const counts = exact.counts;
+  const stateCount = (state: string) => counts?.[state as keyof typeof counts] ?? null;
+  const total = counts ? Object.values(counts).reduce((n, value) => n + value, 0) : null;
+  const active = stateCount("WORKING"), waiting = stateCount("WAITING");
+  const blocked = counts ? (counts.BLOCKED ?? 0) + (counts.FAILED ?? 0) + (counts.UNKNOWN ?? 0) : null;
+  const blockers = rankedWorkBlockers(members ?? [], now).slice(0, 5);
+  const cost = decision.budgetStartedAt ? fields?.billingAttribution?.hunts?.find(row =>
+    row.key === decision.key && row.receiptId === decision.receiptId && row.startedAt === decision.budgetStartedAt) ?? null : null;
+  const legacyCost = !cost && decision.key === ORIGINAL_LIFETIME_HUNT.key && decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt
+    ? fields?.billingAttribution?.hunts?.find(row => row.key === decision.key && row.startedAt === decision.budgetStartedAt && !row.receiptId) ?? null : null;
+  const census = fields?.checklists?.find(row => row.scopeId === decision.key && row.instructionReceipt === decision.receiptId) ?? null;
+  const instantiated = new Set(census?.instances.flatMap(row => row.definitionIds) ?? []);
+  const missingDefinitions = census ? CHECKLIST_PROFILE.definitions.length - instantiated.size : null;
+  const attempts = exact.bodyAttempts;
+  const visible = attempts?.flatMap(attempt => {
+    if (attempt.status === "HELD" || !attempt.versionId) return [];
+    const witness = servedWitness(fields?.servedReaderReadback ?? null, attempt.workItemId, attempt.workerResultId, now);
+    return witness?.versionId === attempt.versionId && witness.readerKey === attempt.bodyId ? [{ attempt, witness }] : [];
+  }).sort((a, b) => b.attempt.at.localeCompare(a.attempt.at)).slice(0, 3) ?? null;
+  const workHref = withScope("/admin/work", scope, { instruction: decision.key });
+  const moneyHref = withScope("/admin/money", scope);
+  const doneHref = withScope("/readiness/done", scope);
+  const figure = (n: number | null) => n === null ? "Not measured" : n.toLocaleString("en-US");
+  const dollars = (n: number | null) => n === null ? "not measured" : `$${n.toFixed(2)}`;
+  const categoryWords: Record<string,string> = {NEEDS_OWNER_DECISION:"Needs your decision",AUTOMATIC_REPAIR:"Automatic repair",WAITING_ON_PUBLISHER:"Waiting on the publisher",NEEDS_CODE_CHANGE:"Needs a code change",OWNER_UNCLEAR:"Next owner unclear"};
+  const ownerWords: Record<string,string> = {OWNER:"you",SOURCE:"publisher",ENGINEERING:"engineering",AUTOMATION:"the system",NOBODY:"not assigned"};
+  return <>
+    <Section title={`Your saved hunt · ${decision.geography.label}`}
+      lede={`Started ${formatEastern(decision.budgetStartedAt ?? decision.decidedAt, { year: true })}. Last overview ${fields ? formatEastern(fields.publishedAt, { year: true }) : "not read"}. This is tracked progress toward your saved instruction; the checklist and public results require separate proof.`} />
+    <details className={s.note} style={{ marginBottom: 16 }}><summary>How this overview is connected</summary><p>Instruction key {decision.key}; receipt {decision.receiptId}. Work and public attempts use this exact saved receipt; cost uses its budget start and the checklist uses its receipt. Earlier snapshots without receipt attribution remain unmeasured here.</p></details>
+    {read.gap && <p className={s.goldNote}>{read.gap}</p>}
+    <div className={s.gridAuto220} style={{ marginBottom: 20 }}>
+      <div className={s.insetTile}><span className={s.titleStrong14}>Work linked to this saved instruction</span><p className={s.fig}>{figure(total)}</p><p className={s.note}>{figure(active)} working · {figure(waiting)} waiting · {figure(blocked)} blocked, failed or unknown. These are receipt-linked tracked assignments, not complete coverage.</p></div>
+      <div className={s.insetTile}><span className={s.titleStrong14}>Money since this hunt started</span><p className={s.fig}>{cost?.budgetConsumedKnownUsd === undefined ? "Not measured" : dollars(cost.budgetConsumedKnownUsd)}</p><p className={s.note}>Known Anthropic charges consuming this {dollars(decision.budgetUsd)} allowance, including shared requests. {cost?.budgetConsumedKnownUsd !== undefined ? `${dollars(cost.reservedUsd)} reserved · ${dollars(cost.budgetUnpriced ? null : cost.availableUsd)} available · ${cost.budgetUnpriced ?? 0} unpriced token request${cost.budgetUnpriced === 1 ? "" : "s"}. ${dollars(cost.anthropicKnownUsd)} Anthropic and ${dollars(cost.otherKnownUsd)} other known costs allocated here once for reporting; ${dollars(cost.knownCombinedUsd)} combined allocated known. ${cost.anthropicUsd === null || cost.otherUsd === null ? "At least one service total is incomplete; known combined cost is a subtotal, not the final total." : ""} ${cost.unpriced > 0 ? `${cost.unpriced} provider request${cost.unpriced === 1 ? "" : "s"} still need pricing.` : ""}` : legacyCost ? `Earlier billing linked by hunt key and start, without the saved instruction receipt, records ${dollars(legacyCost.anthropicKnownUsd ?? legacyCost.anthropicUsd)} known Anthropic charges. Other-service total is ${legacyCost.otherUsd === null ? "incomplete" : dollars(legacyCost.otherKnownUsd ?? legacyCost.otherUsd)}. These are historical amounts, not exact receipt attribution or confirmed remaining allowance. ${legacyCost.unpriced} request${legacyCost.unpriced === 1 ? "" : "s"} still need pricing.` : "No exact allowance-consumption reading is published; zero is not implied."}</p></div>
+      <div className={s.insetTile}><span className={s.titleStrong14}>Full checklist</span><p className={s.fig}>{census ? `${census.instances.length} represented items` : "Not measured"}</p><p className={s.note}>{census ? `${missingDefinitions} of ${CHECKLIST_PROFILE.definitions.length} original definitions are not represented in this census; ${census.inventory.unresolvedObjects} source inventories unresolved. Representation earns no passing credit. ${census.gaps.length > 0 ? census.gaps[0] : "No gap summary is recorded; this does not establish completeness."}` : "No census matches this exact instruction and receipt. Missing requirements are unknown, not passed."}</p></div>
+    </div>
+    <div className={s.row10} style={{ marginBottom: 20 }}><Link className={s.btnLink} href={workHref}>Open all linked work</Link><Link className={s.btnLink} href={moneyHref}>See money</Link><Link className={s.btnLink} href={doneHref}>See checklist and delivery</Link></div>
+    <div className={s.card} style={{ marginBottom: 24 }}><h3 className={s.h3}>Next blockers on this instruction</h3>
+      {members === null ? <p className={s.note}>The full assignment index is not published; ranked blockers cannot be measured.</p>
+        : blockers.length === 0 ? <p className={s.note}>No blocker is classified among the linked tracked assignments. This does not establish complete source coverage.</p>
+          : <div className={s.stack8}>{blockers.map(({row,ageDays,category,rankingWhy}) => <div key={row.id} className={s.insetRow}>
+            <Link className={s.btnLink} href={withScope("/admin/work", scope, { instruction: decision.key, open: row.id })}>{row.label}</Link>
+            <span className={s.note}>{categoryWords[category]} · {ageDays === null ? "waiting age unknown" : `${ageDays} days waiting`} · next owner: {row.owner in ownerWords ? ownerWords[row.owner] : "Owner is not recorded"} · last attempt: {row.lastAttemptAt ? formatEastern(row.lastAttemptAt) : "not recorded"}</span>
+            <span className={s.text14}>{plainText(row.blocker) || "Overdue"}. Next: {plainText(row.nextAction) ? plainText(row.nextAction) : "Next action is not recorded on this work item."}</span>
+            {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ? row.blocker : "No blocker reason is recorded on this work item."} · {row.nextAction}</details>}
+            <span className={s.note}>Why it is high on the list: {rankingWhy.replace(" Downstream work unlocked is not measured.", "")}{row.readyAfterThisSettlesCount === null || row.readyAfterThisSettlesCount === undefined ? " · Work this would unlock is not measured." : ` · ${row.readyAfterThisSettlesCount} directly dependent item${row.readyAfterThisSettlesCount === 1 ? "" : "s"} would be ready once this settles.`}</span>
+          </div>)}</div>}
+    </div>
+    <div className={s.card} style={{ marginBottom: 30 }}><h3 className={s.h3}>Latest confirmed public results</h3>
+      {visible === null ? <p className={s.note}>The publisher-attempt projection is unavailable; public results cannot be attributed here.</p>
+        : visible.length === 0 ? <p className={s.note}>No linked publisher attempt has a current matching public readback. This does not mean no source work happened.</p>
+          : <div className={s.stack8}>{visible.map(({attempt,witness}) => <div key={`${attempt.workItemId}:${attempt.workerResultId}`} className={s.insetRow}>
+            <a className={s.btnLink} href={witness.url}>Open published result</a><span className={s.note}>{attempt.status === "PARTIALLY_PUBLISHED" ? "Partial publication · " : ""}{attempt.acceptedCount === null ? "accepted count unrecorded" : `${attempt.acceptedCount} accepted`} · reader confirmed {formatEastern(witness.checkedAt)}</span><details className={s.note}><summary>Result reference and recorded changes</summary>{attempt.bodyId} · version {witness.versionId}
+              {attempt.recordChanges?.length ? <ul>{attempt.recordChanges.map(row => <li key={row.recordId}>{row.change === "NEW" ? "New" : row.change === "UPDATED" ? "Updated" : "Reused unchanged"} · {row.readerId}{row.previousVersionId ? ` · compared with ${row.previousVersionId}` : " · no prior published record"}</li>)}</ul> : <p>Record changes were not recorded for this publication.</p>}
+            </details>
+          </div>)}</div>}
+      <p className={s.note}>New, updated and reused labels come from accepted records compared with the prior verified version. Reuse does not establish an avoided paid call or dollar saving; those amounts are not measured here.</p>
+    </div>
+  </>;
+}
+
 export default async function FleetNowPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   // The body read is the longest one a first open waits for (all of it database work), so it starts before the policy row is read.
@@ -106,7 +200,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     standard: base.standard,
   };
 
-  if (!base.shell.tracked) {
+  if (!base.shell.tracked && base.shell.decision === null) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
@@ -128,14 +222,16 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
   }
 
   const repos = base.repos;
-  const container = base.scope.kind === "geo" ? loadContainer(base.scope.type, base.scope.geoid) : null;
-  const [snapshotOut, decisionsOut, pulse, bodiesRead, containerRead] = await Promise.all([
+  const selectedHunt = base.scope.kind === "geo" ? base.shell.decision : null;
+  const container = base.scope.kind === "geo" ? base.scope.type === "zcta" ? loadZcta(base.scope.geoid) : loadContainer(base.scope.type, base.scope.geoid) : null;
+  const [snapshotOut, decisionsOut, pulse, bodiesRead, containerRead, huntOverview] = await Promise.all([
     // The one field of the snapshot this page draws, narrowed by the store: 88 KB of the 449 KB row (2026-09-25).
     readDecisionCards(repos),
     readDecisions(repos),
     readPulse(repos, base.nowIso),
     bodiesEarly ?? loadWatchedBodies(base.nowIso),
     container,
+    selectedHunt ? readHuntOverview(repos) : Promise.resolve({ value: null, gap: null }),
   ]);
 
   /* ------------------------------------------------------------ the scope's bodies */
@@ -295,6 +391,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
 
   return (
     <MwShell {...shellProps} extraStrip={[{ label: "BODIES READ", value: bodiesRead.kind === "HELD" ? formatEastern(bodiesRead.asOf) : "not read", warn: bodiesRead.kind !== "HELD" }]}>
+      {selectedHunt && <SavedHuntOverview decision={selectedHunt} scope={base.scope} now={base.nowIso} read={huntOverview} />}
       {bodiesRead.kind === "UNREAD" ? (
         <Refusal title="The bodies could not be read just now.">{bodiesRead.detail}</Refusal>
       ) : (

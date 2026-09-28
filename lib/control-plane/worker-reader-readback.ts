@@ -10,6 +10,12 @@ import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { readerOfficeTitle } from "../officials/reader-office-title.ts";
 import { officialFilingIssue, type OfficialFiling } from "../civic-data/official-filings.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
+import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
+import { readPromotedCivicData } from "../civic-data/read-model.ts";
+import type { CommentAccess } from "../registry/comment-access-client.ts";
+import type { BallotNavigationProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
+import type { EverydayRoutingContactRecord } from "../routing/everyday.ts";
+import { TOPIC_ROUTES } from "../routing/topics.ts";
 
 export interface PublishedRosterRead {
   readonly roster: BodyRoster;
@@ -17,6 +23,95 @@ export interface PublishedRosterRead {
 }
 export interface PublishedFilingsRead { readonly filings: readonly OfficialFiling[]; readonly zip: string }
 export type PublishedWorkerRead = PublishedRosterRead | PublishedFilingsRead;
+export type PublishedManualRead =
+  | { readonly kind: "comment-access"; readonly record: CommentAccess; readonly zip: string }
+  | { readonly kind: "ballot-navigation"; readonly record: BallotNavigationProjectionRecord; readonly zip: string }
+  | { readonly kind: "everyday-routing"; readonly record: EverydayRoutingContactRecord; readonly zip: string };
+
+/** A real page interaction. Ask's server requests are intercepted before they
+ * leave this isolated browser; only the deterministic, public contact card is
+ * assessed. A client data preload or serialized props cannot pass the check. */
+export async function observePublishedManual(page: Page, input: PublishedManualRead): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
+  try {
+    if (input.kind === "ballot-navigation") {
+      const response = await page.goto(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${input.zip}`, { waitUntil: "domcontentloaded", timeout: 15_000 });
+      if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
+      const value = input.record.value;
+      const label = typeof value.label === "string" ? value.label : null;
+      const url = typeof value.url === "string" ? value.url : null;
+      if (!label || !url || value.state !== input.record.id.split(":").at(-1)) throw Error("ROUTE_IDENTITY_INVALID");
+      const links = page.getByRole("link", { name: label, exact: true });
+      const matches = await links.count();
+      let visible = false;
+      for (let i = 0; i < matches; i++) if (await links.nth(i).isVisible() && await links.nth(i).getAttribute("href") === url) visible = true;
+      if (!visible) throw Error("OFFICIAL_ROUTE_NOT_VISIBLE");
+      return { confirmed: true, reason: `Public ballot for ZIP ${input.zip}: exact ${input.record.id} label and official destination visible.`, responseSha256: createHash("sha256").update(`${label}\n${url}`).digest("hex") };
+    }
+    const tour = page.getByRole("button", { name: "Skip the tour", exact: true });
+    await page.addLocatorHandler(tour, async () => { await tour.click(); });
+    const response = await page.goto(PUBLIC_SITE_ORIGIN, { waitUntil: "domcontentloaded", timeout: 15_000 });
+    if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
+    const coverageResponse = page.waitForResponse(response => {
+      const url = new URL(response.url());
+      return url.pathname === "/api/meetings" && url.searchParams.get("zip") === input.zip && response.status() === 200;
+    });
+    void coverageResponse.catch(() => undefined);
+    const zip = page.locator(".welcome-overlay input").first();
+    await zip.fill(input.zip);
+    await zip.press("Enter");
+    await page.locator(".welcome-overlay.hidden").waitFor({ state: "attached" });
+    const coverage = await (await coverageResponse).json() as { meetings?: { id: string; bodyId?: string; bodyName: string; title: string; status: string; startsAt: string; timeZone: string }[] };
+    if (await tour.isVisible()) await tour.click();
+    if (input.kind === "everyday-routing") {
+      // The normal Ask server path can be paid. Block every Ask request in the
+      // browser before entering a question; only the local cited route counts.
+      await page.route("**/api/ask/**", route => route.abort());
+      const example = TOPIC_ROUTES.find(topic => topic.id === input.record.topicId)?.examples[0];
+      if (!example || input.record.zip !== input.zip) throw Error("TOPIC_IDENTITY_INVALID");
+      const ask = page.locator("[data-ask-box]").first();
+      await ask.fill(example);
+      await ask.press("Enter");
+      const card = page.locator("[data-ask-panel]").locator("div.rounded-md").filter({ hasText: input.record.contact.body }).first();
+      await card.waitFor({ state: "visible", timeout: 10_000 });
+      const contact = input.record.contact;
+      if (!(await card.innerText()).includes(contact.service) || !(await card.innerText()).includes(contact.sourceOrg)) throw Error("CONTACT_FACT_NOT_VISIBLE");
+      if (contact.phone && !(await card.innerText()).includes(contact.phone)) throw Error("CONTACT_PHONE_NOT_VISIBLE");
+      if (contact.email && await card.locator(`a[href=${JSON.stringify(`mailto:${contact.email}`)}]`).count() !== 1) throw Error("CONTACT_EMAIL_NOT_VISIBLE");
+      if (contact.requestUrl && await card.locator(`a[href=${JSON.stringify(contact.requestUrl)}]`).count() !== 1) throw Error("CONTACT_ROUTE_NOT_VISIBLE");
+      if (await card.locator(`a[href=${JSON.stringify(contact.sourceUrl)}]`).count() !== 1) throw Error("CONTACT_SOURCE_NOT_VISIBLE");
+      return { confirmed: true, reason: `Public ZIP ${input.zip} Ask local route: ${input.record.topicId} contact and source visible with Ask server requests blocked.`, responseSha256: createHash("sha256").update(await card.innerHTML()).digest("hex") };
+    }
+    // A comment policy is exposed in a meeting's own public card. Choose one
+    // exact unconcluded meeting from the visitor's data solely to operate the
+    // search control; the visible card below remains the publication proof.
+    const meetings = (coverage.meetings ?? []).filter(meeting => meeting.bodyId === input.record.bodyId && meeting.status !== "CONCLUDED");
+    if (meetings.length === 0) throw Error("MEETING_DESTINATION_UNAVAILABLE");
+    const { formatMeetingDate } = await import("../map/format.ts");
+    const meeting = meetings.find(candidate => (coverage.meetings ?? []).filter(other =>
+      other.bodyName === candidate.bodyName && other.title === candidate.title &&
+      formatMeetingDate(other) === formatMeetingDate(candidate)).length === 1);
+    if (!meeting) throw Error("MEETING_DESTINATION_AMBIGUOUS");
+    const search = page.locator("[data-ask-box]").first();
+    await search.fill(`${meeting.bodyName} — ${meeting.title}`);
+    const meetingRows = page.getByRole("option").filter({ hasText: `${meeting.bodyName} — ${meeting.title}` })
+      .filter({ hasText: formatMeetingDate(meeting) });
+    if (await meetingRows.count() !== 1) throw Error("MEETING_SEARCH_AMBIGUOUS");
+    await meetingRows.click();
+    const row = page.locator(`[data-meeting-id=${JSON.stringify(meeting.id)}]`);
+    await row.waitFor({ state: "visible", timeout: 3_000 }).catch(() => undefined);
+    const heard = (await row.count()) === 1 ? row.locator(".how-to-be-heard") : page.getByRole("dialog").locator(".how-to-be-heard");
+    await heard.waitFor({ state: "visible", timeout: 5_000 });
+    await heard.locator("summary").click();
+    const text = await heard.innerText();
+    for (const field of [input.record.commentPeriodDetail, input.record.signup, input.record.writtenComment, input.record.attend, input.record.timeLimit]) {
+      if (field && !text.includes(field)) throw Error("COMMENT_RULE_NOT_VISIBLE");
+    }
+    if (await heard.locator(`a[href=${JSON.stringify(input.record.sourceUrl)}]`).count() !== 1) throw Error("COMMENT_SOURCE_NOT_VISIBLE");
+    return { confirmed: true, reason: `Public ZIP ${input.zip} meeting card: exact ${input.record.bodyId} participation rules and source visible.`, responseSha256: createHash("sha256").update(await heard.innerHTML()).digest("hex") };
+  } catch {
+    return { confirmed: false, reason: `Public ${input.kind} controls did not confirm every exact published fact, identity and source for ZIP ${input.zip}.`, responseSha256: null };
+  }
+}
 
 export async function observePublishedFilings(page: Page, input: PublishedFilingsRead): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
   try {
@@ -153,4 +248,71 @@ export async function collectWorkerRosterReadback(input: {
     observations.set(item.id, witness);
   }
   return { checkedAt: input.now, witnesses: [...observations.values()], errors: due.length > 6 ? [`${due.length - 6} published roster receipt(s) await the next normal readback cycle.`] : [] };
+}
+
+/** Worker publication receipts for the three curated public-help families.
+ * Exact accepted record IDs and the current promoted version are required;
+ * old or merely staged records never acquire a served-reader witness. */
+export async function collectWorkerManualReadback(input: {
+  items: readonly WorkItem[]; store: Pick<RoutineDataStore, "readCandidate">; now: string;
+  previous: ServedReaderReadback | null;
+  zipForDivision: (division: string) => Promise<string | null>;
+  observe: (input: PublishedManualRead) => Promise<Awaited<ReturnType<typeof observePublishedManual>>>;
+  currentVersion?: (contractId: "comment-access" | "everyday-routing" | "ballot-navigation") => Promise<string | null>;
+}): Promise<ServedReaderReadback> {
+  const contracts = new Set(["comment-access", "everyday-routing", "ballot-navigation"]);
+  const items = input.items.filter(item => item.autonomousPlan?.publication && contracts.has(item.autonomousPlan.publication.contractId) &&
+    item.publicationOutcome?.status !== "HELD" && item.publicationOutcome?.versionId && item.publicationOutcome?.acceptedRecordIds?.length);
+  const prior = new Map((input.previous?.witnesses ?? []).filter(w => items.some(item => item.id === w.itemId &&
+    item.publicationOutcome?.workerResultId === w.approvalId && item.publicationOutcome.versionId === w.versionId)).map(w => [w.itemId, w]));
+  const due = items.filter(item => {
+    const old = prior.get(item.id);
+    const age = Date.parse(input.now) - Date.parse(old?.checkedAt ?? "");
+    return !old || !Number.isFinite(age) || age < 0 || age >= (old.state === "CONFIRMED" ? SERVED_READER_MAX_AGE_MS : 15 * 60_000);
+  }).sort((a, b) => (prior.get(a.id)?.checkedAt ?? "").localeCompare(prior.get(b.id)?.checkedAt ?? ""));
+  for (const item of due.slice(0, 6)) {
+    const outcome = item.publicationOutcome!;
+    const contractId = item.autonomousPlan!.publication!.contractId as "comment-access" | "everyday-routing" | "ballot-navigation";
+    const base = { itemId: item.id, approvalId: outcome.workerResultId, versionId: outcome.versionId!, readerKey: item.autonomousPlan!.publication!.bodyId,
+      url: PUBLIC_SITE_ORIGIN, checkedAt: input.now, responseSha256: null };
+    let witness: ServedReaderWitness = { ...base, state: "NOT_OBSERVED", reason: "Exact accepted records have no current public control readback." };
+    try {
+      const currentVersion = input.currentVersion ? await input.currentVersion(contractId) : await (async () => {
+        const contract = requiredManualProductionContract(contractId);
+        const current = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope);
+        return current.kind === "PROMOTED" ? current.metadata.versionId : null;
+      })();
+      const candidate = await input.store.readCandidate(outcome.versionId!);
+      const payload = candidate?.candidate.readModel as CuratedReaderProjection | undefined;
+      const ids = outcome.acceptedRecordIds ?? [];
+      const rows = payload?.kind === contractId ? payload.records.filter(row => ids.includes(row.id)) : [];
+      if (currentVersion !== outcome.versionId ||
+        !payload || rows.length !== ids.length || new Set(ids).size !== ids.length) throw Error("MANUAL_VERSION_OR_ROWS_UNRESOLVED");
+      const seen: { confirmed: boolean; reason: string; responseSha256: string | null }[] = [];
+      for (const row of rows) {
+        let visit: PublishedManualRead | null = null;
+        if (contractId === "comment-access") {
+          const rule = row as unknown as CommentAccess;
+          const zip = rule.ocdId ? await input.zipForDivision(rule.ocdId) : null;
+          if (rule.bodyId === base.readerKey && zip) visit = { kind: "comment-access", record: rule, zip };
+        } else if (contractId === "everyday-routing") {
+          const contact = row as unknown as EverydayRoutingContactRecord;
+          if (contact.kind === "CONTACT" && contact.contact?.verification === "PAGE_FETCHED" && /^\d{5}$/.test(contact.zip))
+            visit = { kind: "everyday-routing", record: contact, zip: contact.zip };
+        } else {
+          const route = row as unknown as BallotNavigationProjectionRecord;
+          const state = route.value?.state;
+          const zip = typeof state === "string" ? await input.zipForDivision(`ocd-division/country:us/state:${state.toLowerCase()}`) : null;
+          if ((route.kind === "POLLING_PLACE_LINK" || route.kind === "REGISTRATION_LINK") && zip) visit = { kind: "ballot-navigation", record: route, zip };
+        }
+        if (!visit) throw Error("PUBLIC_DESTINATION_UNRESOLVED");
+        seen.push(await input.observe(visit));
+      }
+      const confirmed = seen.length === ids.length && seen.every(row => row.confirmed);
+      witness = { ...base, state: confirmed ? "CONFIRMED" : "NOT_OBSERVED", reason: seen.map(row => row.reason).join(" "),
+        responseSha256: confirmed ? createHash("sha256").update(JSON.stringify(seen.map(row => row.responseSha256))).digest("hex") : null };
+    } catch { witness = { ...witness, reason: `Current ${contractId} version, accepted record identity or exact public destination could not be established.` }; }
+    prior.set(item.id, witness);
+  }
+  return { checkedAt: input.now, witnesses: [...prior.values()], errors: due.length > 6 ? [`${due.length - 6} curated publication receipt(s) await the next normal reader cycle.`] : [] };
 }

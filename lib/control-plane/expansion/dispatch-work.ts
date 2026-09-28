@@ -139,10 +139,56 @@ import {
 } from "./membership.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "./dispatch-work-bounds.ts";
+import { manualProducerInvocationMatrix } from "../../civic-data/manual-producer-invocation.ts";
+import { createWorkItem } from "../work-item.ts";
+import { registerWorkItem } from "../repository/coordinator.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
+import type { ResolvedScope } from "./membership.ts";
 
 /* ------------------------------------------------------------------ bounds */
 
 export const DISPATCH_WORK_FORMAT_VERSION = 1;
+
+/** Persist an owed source capability without inventing an executable route. */
+export async function applyManualSourceGaps(
+  repos: ControlPlaneRepositories,
+  scopes: readonly ResolvedScope[],
+  input: { readonly now: string; readonly deadlineReached?: () => boolean },
+): Promise<{ readonly created: number; readonly carried: number; readonly deferred: number }> {
+  const applicable = scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1);
+  const exactOriginal = applicable.find(scope => scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
+    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+  let created = 0, carried = 0, deferred = 0;
+  for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
+    if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
+    const receipts = [...row.instructionIds];
+    // These two gaps are owed by the original AZ Send, but the existing
+    // commands have no scoped source path. County-only adapters are not linked
+    // from state membership because that would imply unproved applicability.
+    if (row.mode === "SCOPED_ADAPTER_OWED" && exactOriginal?.kind === "RESOLVED" &&
+      exactOriginal.states.includes("AZ") &&
+      (row.id === "jurisdiction-operational-reference" || row.id === "voting-sites")) {
+      receipts.push(exactOriginal.decision.receiptId);
+    }
+    for (const receipt of new Set(receipts)) {
+      if (input.deadlineReached?.()) { deferred += 1; continue; }
+      const scope = applicable.find(candidate => candidate.decision.receiptId === receipt);
+      if (!scope) continue;
+      const work = createWorkItem({ project: "freshness", subject: `manual-source:${scope.decision.key}`,
+        obligation: `source capability ${row.id} for instruction ${receipt}`,
+        why: row.reason, priority: "P1", now: input.now });
+      if (await repos.workItems.read(work.id)) { carried += 1; continue; }
+      await registerWorkItem(repos, { ...work, manualSourceGap: {
+        contractId: row.id, mode: row.mode, reason: row.reason, instructionReceipt: receipt,
+        assignmentKey: scope.decision.key,
+      } }, input.now);
+      created += 1;
+    }
+  }
+  return { created, carried, deferred };
+}
 
 /* The two bounds live in a pure module the gateway, the preview and the Send screen also quote. */
 export { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET };
@@ -602,7 +648,7 @@ export function planDispatchWork(input: {
         target.kind === "SCOPE" && target.sourceWorkVersion === 1));
     }
     /* MW-001: does the row already record this Send, in any relation? */
-    const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key);
+    const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
     let window = 0;
     const planned: PlannedInstance[] = [];

@@ -479,10 +479,13 @@ test("H1: the system prompt is one string with every rule, and its size is pinne
    * two characters, so the block stays well above the floor. The same day the
    * length rule gained its target ("Aim for 3 sentences or fewer and about 450
    * characters.", `ANSWER_LENGTH_CONTRACT.target*`) — 2,327 → 2,382.
+   * The verified historical-vote grounding instruction now makes this 2,543
+   * characters. The prior measured 731-token block cleared the 512-token floor
+   * by 219; no second cache marker is added without a fresh token measurement.
    */
   assert.doesNotMatch(prompt, /Today is/, "the date is no longer in the system prompt");
   assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
-  assert.equal(prompt.length, 2382, "the system prompt changed size — re-measure the cache floor");
+  assert.equal(prompt.length, 2543, "the system prompt changed size — re-measure the cache floor");
 });
 
 test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system block and the civic context — and the date and the question sit after both", async () => {

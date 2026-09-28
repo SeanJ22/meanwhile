@@ -103,7 +103,7 @@ test("generalized standing independently retains two subject publisher hosts and
   await registerWorkItem(h.repos, foreign, h.now());
   const foreignArtifact = await h.hold("<p>Foreign record</p>", PRIMARY, foreign);
   const unrelated = await h.hold("<p>Park reservation</p>", "https://www.coronafire.org/parks");
-  const context = await h.runtime.independentContext({ artifactId: primary.artifactId, contract: value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version });
+  const context = await h.runtime.independentContext({ workItemId: h.item.id, artifactId: primary.artifactId, contract: value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version });
   assert.deepEqual(context.evidence.map(e => e.artifactId), [primary.artifactId]);
   assert.ok(context.surfaceEvidence?.some(e => e.artifactId === alternate.artifactId));
   assert.deepEqual(context.authorityEvidence?.map(e => e.artifactId), [external.artifactId]);
@@ -123,14 +123,14 @@ test("generalized scope refuses a plan mismatch, a missing publisher link, and a
   const foreignHost = await h.hold('<urlset><url><loc>https://records.example.gov/2026-09-01-board</loc></url></urlset>', OTHER_HOST);
   const value: GeneralizedCivicExtractionContract = { ...contract([observation.artifactId]), sourceScope: { ...contract([]).sourceScope, observationArtifactIds: [observation.artifactId], sourceId: "records.example.gov", canonicalUrls: [OTHER_HOST] } };
   await h.setPlan(h.item, value);
-  await assert.rejects(h.runtime.independentContext({ artifactId: foreignHost.artifactId, contract: value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }), /AUDIT_FIRST_PARTY_PUBLISHER_BINDING_MISSING/);
-  await assert.rejects(h.runtime.independentContext({ artifactId: foreignHost.artifactId, contract: { ...value, completenessScope: "Invented expanded scope" }, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }), /AUDIT_CANONICAL_SCOPE_MISMATCH/);
+  await assert.rejects(h.runtime.independentContext({ workItemId: h.item.id, artifactId: foreignHost.artifactId, contract: value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }), /AUDIT_FIRST_PARTY_PUBLISHER_BINDING_MISSING/);
+  await assert.rejects(h.runtime.independentContext({ workItemId: h.item.id, artifactId: foreignHost.artifactId, contract: { ...value, completenessScope: "Invented expanded scope" }, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }), /AUDIT_CANONICAL_SCOPE_MISMATCH/);
   const foreign = createWorkItem({ project: "freshness", subject: "az:city:city-of-glendale", obligation: "Foreign observation", why: "Cross-subject control", now: h.now() });
   await registerWorkItem(h.repos, foreign, h.now());
   const foreignObservation = await h.hold(`<a href="${OTHER_HOST}">Linked record</a>`, "https://www.coronafire.org/", foreign);
   const changed = { ...value, sourceScope: { ...value.sourceScope, observationArtifactIds: [foreignObservation.artifactId] } };
   await h.setPlan(h.item, changed);
-  await assert.rejects(h.runtime.independentContext({ artifactId: foreignHost.artifactId, contract: changed, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }), /AUDIT_ARTIFACT_SUBJECT_MISMATCH/);
+  await assert.rejects(h.runtime.independentContext({ workItemId: h.item.id, artifactId: foreignHost.artifactId, contract: changed, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }), /AUDIT_ARTIFACT_SUBJECT_MISMATCH/);
 });
 
 test("standing advancement needs a successful Hunter result, not merely same-host held bytes", async t => {

@@ -52,6 +52,8 @@ export interface FleetRuntime {
   readonly independentContext: (input: Pick<WorkerTaskSpec, "artifactId" | "contract" | "auditScope"> & { methodVersion: number; workItemId?: string }) => Promise<IndependentAuditContext>;
   readonly methodVersion: number;
   readonly requireModelAudit?: boolean;
+  /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
+  readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   readonly now?: () => string;
   readonly auditReasoner?: {
     readonly workerProvider: string;
@@ -155,7 +157,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     }
     let result = await runIsolatedWorker(role, input, grant, Math.min(bound.maxWallMs, 30_000));
     if (result.role === "ADVERSARIAL_AUDITOR" && model && model.review.verdict !== "SURVIVED" && result.verdict !== "BROKE") {
-      result = { ...result, verdict: "INCONCLUSIVE", survivingRecordCount: 0, findings: [...result.findings,
+      result = { ...result, verdict: "INCONCLUSIVE", survivingRecordIds: [], survivingRecordCount: 0, findings: [...result.findings,
         { code: "AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE", detail: "The independent model review left an unresolved challenge; its assertions do not certify civic facts.", severity: "BLOCKING" }] } satisfies AuditorResult;
     }
     assertFleetResult(result, role, attemptId);
@@ -208,7 +210,8 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
   }
   // Scout and model-assisted audit share the same durable spend ledger. Hold
   // admission through completion so concurrent calls cannot spend one allowance.
-  if (task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner) {
+  if (task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner &&
+      !runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) {
     return runtime.repos.locks.withLock("autonomous-model-admission", () => dispatchAdmittedWorkerTask(runtime, task));
   }
   return dispatchAdmittedWorkerTask(runtime, task);
@@ -228,6 +231,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
   /* MW-024: a proof run's worker tasks charge under its own project, marked non-production. */
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
+    clock: runtime.now ?? (()=>new Date().toISOString()),
     bound: { maxAttempts: 3, maxWallMs: WORKER_MAX_WALL_MS, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
     executor, methodVersion: runtime.methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proof });
 }
@@ -242,7 +246,8 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   if (denial.reason.includes("AUDIT_MODEL_TRANSPORT_UNAVAILABLE") && runtime.auditReasoner) reason = "The configured model transport is now available; the current capability and rolling-cost policy will be evaluated again.";
   if (denial.reason.includes("AUDIT_ROLLING_COST_CEILING")) {
     const spend = researchSpendInWindow(await runtime.repos.costs.readAll(), now);
-    if (ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
+    if (runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) reason = "The selected lifetime hunt uses its durable reservation ledger; current policy will be checked again.";
+    else if (ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
   }
   if (!reason) return null;
   const { policyDenial: _denial, ...rest } = task;

@@ -300,11 +300,12 @@ export interface ManualProductionInventoryBinding {
   readonly inventorySourceId: string;
   readonly contractId: string;
   readonly contractSourceId: string;
+  readonly additionalContracts?: readonly { readonly contractId: string; readonly contractSourceId: string }[];
   readonly reason: string;
 }
 
 /** Runtime civic data with an explicit owner clock and canonical promotion plane. */
-export const MANUAL_PRODUCTION_INVENTORY_BINDINGS = [
+export const MANUAL_PRODUCTION_INVENTORY_BINDINGS: readonly ManualProductionInventoryBinding[] = [
   {
     inventorySourceId: "meeting-body-crosswalk", contractId: "meeting-body-crosswalk", contractSourceId: "curated-reader-primary-sources",
     reason: "Reviewed records connecting a government's calendar to its exact body, each on the government's own saved pages cited by sha256 and promoted through the verified manual door by the owner or a reviewing agent session (owner decision C16); the derived meeting-source wiring reads only the promoted version.",
@@ -347,6 +348,7 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS = [
   },
   {
     inventorySourceId: "operational-reference-inventories", contractId: "jurisdiction-operational-reference", contractSourceId: "jurisdiction-operational-reference",
+    additionalContracts: [{ contractId: "jurisdiction-operational-reference-az", contractSourceId: "jurisdiction-operational-reference-az" }],
     reason: "Covered-jurisdiction operational routing is promoted and read from the canonical data plane. Obsolete mutable FEC/state-CF writers are deleted; remaining tracked inventories are historical, versioned, research, or test evidence and are non-authoritative.",
   },
   {
@@ -377,7 +379,7 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS = [
     inventorySourceId: "prl", contractId: "prl", contractSourceId: "prl",
     reason: "Owner-invoked acquisition of the attributed PRL national archive promotes exact Bioguide-keyed profiles under its restricted source tier and licence; the tracked snapshot is bootstrap/test evidence with no production fallback or writer.",
   },
-] as const satisfies readonly ManualProductionInventoryBinding[];
+];
 
 export type Pdc7MigrationKind =
   | "PRODUCTION_DATA_PLANE"
@@ -562,16 +564,23 @@ export function validatePdc7DispositionRegistry(
   for (const contract of routineContracts.values()) {
     if (!boundRoutineContracts.has(contract.id)) problems.push(`routine production contract has no frozen inventory binding: ${contract.id}`);
   }
-  for (const binding of MANUAL_PRODUCTION_INVENTORY_BINDINGS) {
+  const manualProductionBindings = MANUAL_PRODUCTION_INVENTORY_BINDINGS.flatMap(binding => [
+    { inventorySourceId: binding.inventorySourceId, contractId: binding.contractId, contractSourceId: binding.contractSourceId },
+    ...(binding.additionalContracts ?? []).map(contract => ({ inventorySourceId: binding.inventorySourceId, ...contract })),
+  ]);
+  const seenManualContracts = new Set<string>();
+  for (const binding of manualProductionBindings) {
     const contract = manualContracts.get(binding.contractId);
     if (!contract) problems.push(`${binding.inventorySourceId}: manual production contract ${binding.contractId} is absent`);
     else if (contract.sourceId !== binding.contractSourceId) problems.push(`${binding.inventorySourceId}: manual production authority differs from ${binding.contractSourceId}`);
+    if (seenManualContracts.has(binding.contractId)) problems.push(`manual production contract has multiple frozen inventory bindings: ${binding.contractId}`);
+    seenManualContracts.add(binding.contractId);
   }
   const splitProductionContracts = PDC7_RESOLVED_SPLIT_BINDINGS.flatMap((binding) =>
     [...binding.paths, ...(binding.addedProductionPaths ?? [])].flatMap((path) => path.disposition === "PRODUCTION_DATA_PLANE" ? [path.contractId] : []),
   );
   const boundManualContracts = new Set([
-    ...MANUAL_PRODUCTION_INVENTORY_BINDINGS.map((binding) => binding.contractId),
+    ...manualProductionBindings.map((binding) => binding.contractId),
     ...splitProductionContracts,
   ]);
   for (const contract of MANUAL_PRODUCTION_SOURCE_CONTRACTS) {

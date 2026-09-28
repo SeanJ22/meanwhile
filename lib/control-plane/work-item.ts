@@ -283,6 +283,14 @@ export function createEscalation(input: {
 }
 
 export interface WorkItem {
+  /** An explicit capability debt, never an executable route or a source refusal. */
+  readonly manualSourceGap?: {
+    readonly contractId: import("../civic-data/manual-contracts.ts").ManualProductionContractId;
+    readonly mode: "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
+    readonly reason: string;
+    readonly instructionReceipt: string;
+    readonly assignmentKey?: string;
+  };
   readonly directoryParent?: { readonly workItemId: string; readonly bodyId: string; readonly versionId: string };
   readonly publicationOutcome?: {
     readonly at: string; readonly workerResultId: string; readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
@@ -290,6 +298,10 @@ export interface WorkItem {
     readonly recovery?: "WORKER" | "PUBLISHER";
     /** Verified reader records compared with this body's previous published records. */
     readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
+    readonly recordChanges?: readonly import("../civic-data/publication-record-changes.ts").PublicationRecordChange[];
+    /** Exact source-record to public-member bindings admitted by this publication. */
+    readonly acceptedMembers?: readonly { readonly recordId: string; readonly memberId: string }[];
+    readonly acceptedRecordIds?: readonly string[];
     /** Exact admitted body identities; used to recover downstream work after a restart. */
     readonly bodyIds?: readonly string[];
   };

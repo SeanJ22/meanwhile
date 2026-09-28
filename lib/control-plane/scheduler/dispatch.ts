@@ -66,7 +66,7 @@ import { PolicyRefusal } from "../capability.ts";
 import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
 
-import type { FreshnessObligation, ScheduledObligation } from "./obligation.ts";
+import { currentAssignmentRefs, type FreshnessObligation, type ScheduledObligation } from "./obligation.ts";
 
 type CostResultWithoutDisposition = (typeof COST_RESULT_WITHOUT_DISPOSITION)[number];
 
@@ -78,12 +78,13 @@ type CostResultWithoutDisposition = (typeof COST_RESULT_WITHOUT_DISPOSITION)[num
  * one that carries its occurrence count — exactly as `openOccurrence` derived
  * it for the round's work item; a caller's hand-built obligation gets none.
  */
-export function chargePurposeOf(o: FreshnessObligation): Pick<CostEntry, "obligationId" | "assignmentKeys" | "recordClass" | "question"> {
+export function chargePurposeOf(o: FreshnessObligation): Pick<CostEntry, "obligationId" | "assignmentKeys" | "assignmentRefs" | "recordClass" | "question"> {
   const standingRow = typeof (o as { readonly occurrenceCount?: unknown }).occurrenceCount === "number";
   const question = standingRow ? questionOfObligation(o) : null;
   return {
     obligationId: o.id,
     assignmentKeys: [...new Set((o.assignments ?? []).map((a) => a.assignmentKey))],
+    assignmentRefs: currentAssignmentRefs(o.assignments),
     recordClass: o.recordClass,
     ...(question !== null ? { question } : {}),
   };
@@ -560,6 +561,10 @@ export async function dispatchOne(
     readonly routeTaskId: string | null;
     readonly holder: string;
     readonly now: string;
+    /** Actual wall time for claim, Attempt start and terminal writes. `now`
+     * remains the cycle's scheduling observation. Omission keeps deterministic
+     * legacy callers on their supplied timestamp. */
+    readonly clock?: () => string;
     readonly leaseTtlMs: number;
     readonly bound?: WorkerBound;
     readonly maturity: MethodMaturity;
@@ -580,6 +585,12 @@ export async function dispatchOne(
     readonly nonProduction?: boolean;
   },
 ): Promise<DispatchResult> {
+  const timed = (value:string, floor:string, stage:string):string => {
+    const at=Date.parse(value), minimum=Date.parse(floor);
+    if (!Number.isFinite(at) || !Number.isFinite(minimum)) throw new Error(`DISPATCH_CLOCK_INVALID:${stage}`);
+    if (at<minimum) throw new Error(`DISPATCH_CLOCK_BACKWARDS:${stage}`);
+    return value;
+  };
   const obligationId = input.obligation.obligation.id;
   const nothingRan = {
     executorChosen: null,
@@ -608,12 +619,13 @@ export async function dispatchOne(
     };
   }
 
+  const claimAt=timed(input.clock?.()??input.now,input.now,"CLAIM");
   let claimOutcome: ClaimOutcome;
   try {
     claimOutcome = await claimRouteTask(repos, {
       routeTaskId: input.routeTaskId,
       holder: input.holder,
-      now: input.now,
+      now: claimAt,
       ttlMs: input.leaseTtlMs,
     });
   } catch (error) {
@@ -656,12 +668,13 @@ export async function dispatchOne(
    * attribute its own evidence to for the duration of the fetch — which is
    * precisely the window in which it might die.
    */
+  const startedAt=timed(input.clock?.()??claimAt,claimAt,"ATTEMPT_START");
   const attempt = await beginAttemptFor(repos, {
     routeTaskId: input.routeTaskId,
     workItemId,
     worker,
     lease: claimOutcome.lease.value,
-    now: input.now,
+    now: startedAt,
     methodVersion: input.methodVersion ?? 0,
     policyVersion: input.policyVersion ?? "unversioned",
   });
@@ -695,7 +708,7 @@ export async function dispatchOne(
   const purpose = chargePurposeOf(input.obligation.obligation);
   const project = input.costProject ?? "freshness";
   const proof = input.nonProduction === true ? { nonProduction: true as const } : {};
-  const ledgerCost = async (cost: AttemptCost, resultKind: CostResultWithoutDisposition, byModel?: readonly CostModelShare[]): Promise<void> => {
+  const ledgerCost = async (cost: AttemptCost, resultKind: CostResultWithoutDisposition, at:string, byModel?: readonly CostModelShare[]): Promise<void> => {
     let source: string | null = null;
     try {
       source = (await repos.routeTasks.read(claimedRouteTaskId))?.value.target ?? null;
@@ -714,13 +727,13 @@ export async function dispatchOne(
         project,
         role: worker.role,
         cost,
-        recordedAt: input.now,
+        recordedAt: at,
         ...purpose,
         resultKind,
         ...proof,
         ...(byModel !== undefined && byModel.length > 0 ? { byModel } : {}),
       },
-      input.now,
+      at,
     ).catch(() => undefined);
   };
 
@@ -755,12 +768,13 @@ export async function dispatchOne(
      * to let carry a conclusion — so nothing about the publisher is recorded.
      */
     const why = error instanceof Error ? error.message : String(error);
+    const terminalAt=timed(input.clock?.()??input.now,startedAt,"THROWN_END");
     await abandonAttempt(repos, {
       routeTaskId: input.routeTaskId,
       attemptId,
       outcome: error instanceof PolicyRefusal || (error instanceof Error && error.message.startsWith("DENIED_BY_POLICY")) ? "DENIED_BY_POLICY" : "ABORTED",
       reason: `the worker threw before reaching a boundary: ${why}`,
-      now: input.now,
+      now: terminalAt,
     });
     return {
       ...base,
@@ -775,6 +789,26 @@ export async function dispatchOne(
       cost: null,
       detail: `${executor.why}; the worker threw and the Attempt was abandoned: ${why}`,
     };
+  }
+
+  // The executor's measured end is authoritative when it supplies one. A
+  // missing end uses the injected wall clock. An invalid/backward reported end
+  // is named and replaced only by a separately valid wall-clock observation.
+  const observedEnd=input.clock?.()??input.now;
+  // A worker-result record's own endedAt is the time completeWorkerTask will
+  // persist; a separate outcome end must never mask a malformed record clock.
+  const reportedEnd=outcome.kind==="RESULT_RECORDED"?outcome.workerResult?.endedAt:outcome.endedAt;
+  let clockIssue="";
+  let terminalAt:string;
+  try {
+    terminalAt=timed(reportedEnd??observedEnd,startedAt,"EXECUTOR_END");
+    if (reportedEnd!==undefined && input.clock!==undefined && Number.isFinite(Date.parse(observedEnd)) &&
+      Date.parse(reportedEnd)>Date.parse(observedEnd)) throw new Error("DISPATCH_CLOCK_FUTURE:EXECUTOR_END");
+  }
+  catch (error) {
+    if (reportedEnd===undefined) throw error;
+    terminalAt=timed(observedEnd,startedAt,"OBSERVED_END");
+    clockIssue=`; ${error instanceof Error?error.message:"DISPATCH_CLOCK_INVALID:EXECUTOR_END"}; observed terminal clock used`;
   }
 
   /*
@@ -796,11 +830,11 @@ export async function dispatchOne(
       routeTaskId: input.routeTaskId,
       attemptId,
       outcome: "DENIED_BY_POLICY",
-      reason: why,
-      now: input.now,
+      reason: why+clockIssue,
+      now: terminalAt,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
-    if (outcome.cost) await ledgerCost(outcome.cost, "LANE_MISMATCH", outcome.costByModel);
+    if (outcome.cost) await ledgerCost(outcome.cost, "LANE_MISMATCH", terminalAt, outcome.costByModel);
     return {
       ...base,
       ...ran(),
@@ -809,14 +843,21 @@ export async function dispatchOne(
       disposition: null,
       artifactIds: [],
       cost: outcome.cost ?? null,
-      detail: why,
+      detail: why+clockIssue,
     };
   }
 
   if (outcome.kind === "RESULT_RECORDED") {
     const record = outcome.workerResult;
+    if (record && clockIssue) {
+      await abandonAttempt(repos,{routeTaskId:input.routeTaskId,attemptId,outcome:"DENIED_BY_POLICY",
+        reason:`WORKER_RESULT_CLOCK_REFUSED${clockIssue}`,now:terminalAt,cost:record.cost});
+      await ledgerCost(record.cost,"NO_DISPOSITION",terminalAt,outcome.costByModel);
+      return {...base,...ran(),outcome:"FAILED",dispositionCommitted:false,disposition:null,
+        artifactIds:[],cost:record.cost,detail:`WORKER_RESULT_CLOCK_REFUSED${clockIssue}`};
+    }
     if (!record || record.attemptId !== attemptId || record.routeTaskId !== input.routeTaskId || record.workItemId !== workItemId) {
-      await abandonAttempt(repos, { routeTaskId: input.routeTaskId, attemptId, outcome: "DENIED_BY_POLICY", reason: "WORKER_RESULT_DISPATCH_BINDING_REFUSED", now: input.now });
+      await abandonAttempt(repos, { routeTaskId: input.routeTaskId, attemptId, outcome: "DENIED_BY_POLICY", reason: "WORKER_RESULT_DISPATCH_BINDING_REFUSED"+clockIssue, now: terminalAt });
       return { ...base, ...ran(), outcome: "FAILED", dispositionCommitted: false, disposition: null, artifactIds: [], cost: null, detail: "WORKER_RESULT_DISPATCH_BINDING_REFUSED" };
     }
     // A computational result is not an acquisition and may not acquire a civic disposition.
@@ -855,7 +896,7 @@ export async function dispatchOne(
       attemptId,
     };
     try {
-      await recordArtifactMetadata(repos, record, input.now);
+      await recordArtifactMetadata(repos, record, terminalAt);
       artifactIds.push(record.artifactId);
     } catch (error) {
       artifactRefusals.push(
@@ -890,12 +931,12 @@ export async function dispatchOne(
          is what distinguishes them, and it is the field a later reader gets. */
       outcome: outcome.failureOutcome ?? "ABORTED",
       reason: simulated
-        ? `SHADOW_DECISION: the executor deliberately performed no retrieval. ${outcome.detail}`
-        : outcome.failureOutcome ? outcome.detail : `the worker reached no boundary. ${outcome.detail}`,
-      now: outcome.endedAt ?? input.now,
+        ? `SHADOW_DECISION: the executor deliberately performed no retrieval. ${outcome.detail}${clockIssue}`
+        : outcome.failureOutcome ? outcome.detail+clockIssue : `the worker reached no boundary. ${outcome.detail}${clockIssue}`,
+      now: terminalAt,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     });
-    if (outcome.cost) await ledgerCost(outcome.cost, simulated ? "SIMULATED" : "NO_DISPOSITION", outcome.costByModel);
+    if (outcome.cost) await ledgerCost(outcome.cost, simulated ? "SIMULATED" : "NO_DISPOSITION", terminalAt, outcome.costByModel);
     return {
       ...base,
       ...ran(),
@@ -908,7 +949,7 @@ export async function dispatchOne(
         simulated
           ? "no retrieval was performed, so nothing is discharged and the debt stands"
           : "no terminal disposition was reached"
-      }: ${outcome.detail}${attributionNote}`,
+      }: ${outcome.detail}${attributionNote}${clockIssue}`,
     };
   }
 
@@ -921,8 +962,9 @@ export async function dispatchOne(
   const taskRow = await repos.routeTasks.mustRead(input.routeTaskId);
   const disposition: RouteDisposition = {
     ...outcome.disposition,
+    note:outcome.disposition.note+clockIssue,
     attemptId,
-    at: input.now,
+    at: terminalAt,
     artifactIds,
   };
 
@@ -932,7 +974,7 @@ export async function dispatchOne(
       attemptId,
       expectedTaskRevision: taskRow.revision,
       disposition,
-      now: input.now,
+      now: terminalAt,
       artifactIds,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     });
@@ -949,10 +991,10 @@ export async function dispatchOne(
       attemptId,
       outcome: "ABORTED",
       reason: `the control plane refused the proposed disposition: ${why}`,
-      now: input.now,
+      now: terminalAt,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
-    if (outcome.cost) await ledgerCost(outcome.cost, "DISPOSITION_REFUSED", outcome.costByModel);
+    if (outcome.cost) await ledgerCost(outcome.cost, "DISPOSITION_REFUSED", terminalAt, outcome.costByModel);
     return {
       ...base,
       ...ran(),
@@ -961,7 +1003,7 @@ export async function dispatchOne(
       disposition: null,
       artifactIds,
       cost: outcome.cost ?? null,
-      detail: `${executor.why}; the disposition was refused and the route remains owed: ${why}${attributionNote}`,
+      detail: `${executor.why}; the disposition was refused and the route remains owed: ${why}${attributionNote}${clockIssue}`,
     };
   }
 
@@ -978,14 +1020,14 @@ export async function dispatchOne(
         project,
         role: worker.role,
         cost: outcome.cost,
-        recordedAt: input.now,
+        recordedAt: terminalAt,
         ...purpose,
         resultKind: disposition.disposition,
         ...proof,
         /* MW-031: an escalated Scout's one charge, split by the model each part was for. */
         ...(outcome.costByModel !== undefined && outcome.costByModel.length > 0 ? { byModel: outcome.costByModel } : {}),
       },
-      input.now,
+      terminalAt,
     );
   }
 
@@ -1000,7 +1042,7 @@ export async function dispatchOne(
     detail:
       `${executor.why}; lease ${claimOutcome.lease.value.id}; Attempt ${attemptId} closed ` +
       `COMPLETED with disposition ${disposition.disposition} over ${artifactIds.length} ` +
-      `artifact(s): ${outcome.detail}${attributionNote}`,
+      `artifact(s): ${outcome.detail}${attributionNote}${clockIssue}`,
   };
 }
 

@@ -91,6 +91,12 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   add("CAMPAIGN_FINANCE_COVERAGE", "Scalar record extraction does not establish contribution, committee, or expenditure chain completeness.", [], false);
   const ordered = ATTACK_MODES.map(mode => attacks.get(mode)!); const findings = ordered.flatMap(attack => attack.findings);
   const verdict = ordered.some(attack => attack.verdict === "BROKE") ? "BROKE" : ordered.some(attack => attack.verdict === "INCONCLUSIVE") ? "INCONCLUSIVE" : "SURVIVED";
+  const localExternal = new Set(external.flatMap(result => result.discrepancies.filter(f => f.recordId && f.severity !== "INFO" && f.code !== "VERIFICATION_TIMESTAMP_MISSING")));
+  const coverageAttack = attacks.get("COVERAGE")!;
+  const globalChallenge = !complete || ordered.some(attack => attack.mode !== "COVERAGE" && attack.verdict !== "SURVIVED" && attack.verdict !== "NOT_APPLICABLE") ||
+    coverageAttack.findings.some(f => f.severity !== "INFO" && !localExternal.has(f));
+  const unsafeIds = new Set([...localExternal].map(f => f.recordId));
+  const survivingRecordIds = globalChallenge ? [] : extraction.records.map(record => record.id).filter(id => !unsafeIds.has(id));
   return { role: "ADVERSARIAL_AUDITOR", attemptId: input.attemptId, producerAttemptId: candidate.producerAttemptId, validatorAttemptId: candidate.validatorAttemptId,
-    verdict, startedFrom: context.startedFrom, attacks: ordered, findings, artifactIds: [...new Set(allArtifacts.map(e => e.artifactId))], survivingRecordCount: verdict === "SURVIVED" ? extraction.records.length : 0, reopenRequired: verdict === "BROKE" };
+    verdict, startedFrom: context.startedFrom, attacks: ordered, findings, artifactIds: [...new Set(allArtifacts.map(e => e.artifactId))], survivingRecordIds, survivingRecordCount: survivingRecordIds.length, reopenRequired: verdict === "BROKE" };
 }

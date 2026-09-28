@@ -117,7 +117,10 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   }
   const published = await publishWorkerRosterResults(input);
   assert.equal(published[0].outcome.status, partial ? "PARTIALLY_PUBLISHED" : "PUBLISHED", JSON.stringify(published));
-  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length });
+  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length - (partial ? 1 : 0) },
+    "a retained neighbour whose new row is unresolved earns no accepted-result reuse credit");
+  assert.deepEqual(published[0].outcome.recordChanges?.map(row => row.recordId).sort(),
+    [...published[0].outcome.acceptedRecordIds ?? []].sort());
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
   if (auditLadder) assert.ok(deliveredAdmin.find(row => row.id === h.item.id)?.verification.checks.some(check => check.says.includes("Escalated")), "Admin shows the reason and exact model transition");
@@ -149,8 +152,15 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
   for (const previous of existing.members) {
     const retained = delivered.members.find(member => member.id === previous.id)!;
-    const { membershipSource: _source, ...facts } = retained;
+    const { membershipSource: _source, retainedFieldSources: _fieldSources, ...facts } = retained;
     assert.deepEqual(facts, previous, "independent existing fields and stable identities survive");
+    const earlierSource = { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt };
+    if (retained.membershipSource) {
+      assert.deepEqual(retained.membershipSource, earlierSource, "a wholly omitted member retains the earlier roster authority");
+    } else for (const field of ["termNote", "email", "phone", "websiteUrl"] as const) if (previous[field]) {
+      assert.deepEqual(retained.retainedFieldSources?.[field], earlierSource,
+        `the retained ${field} remains attributed to its original read`);
+    }
   }
   const added = delivered.members.find(member => member.name === "Morgan Example")!;
   assert.ok(added, "a newly verified holder reaches the existing reader projection");

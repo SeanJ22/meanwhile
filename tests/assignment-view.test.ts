@@ -29,6 +29,7 @@ import {
   ASSIGNMENT_STATES,
   OBLIGATION_PROVIDER_PREFIXES,
   buildAssignmentView,
+  bodyPublicationAttempts,
   buildAssignments,
   assignmentCountClaims,
   assignmentRenderedNumbers,
@@ -298,6 +299,70 @@ function empty(): AssignmentSources {
   };
 }
 
+test("body publication attempts expose only recorded public-safe outcomes and retain partial status", () => {
+  const work = workItem("wi-body", { autonomousPlan: { publication: { contractId: "registry-runtime-bindings", bodyId: "body-1" },
+    contract: { schemaVersion: 2, sourceScope: { canonicalUrls: ["https://example.gov/roster"] } } } as never,
+    publicationOutcome: { at: NOW, workerResultId: "wr-1", status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
+      detail: "private detail", candidateId: "candidate-1", versionId: "version-1",
+      acceptedMembers: [{ recordId: "record-1", memberId: "member-1" }] } });
+  assert.deepEqual(bodyPublicationAttempts([work, workItem("wi-no-attempt")]), [{
+    bodyId: "body-1", workItemId: "wi-body", assignmentKeys: [], assignmentRefs: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
+    sourceUrl: "https://example.gov/roster", workerResultId: "wr-1", acceptedCount: 1, versionId: "version-1",
+  }]);
+  const owned = bodyPublicationAttempts([work], [occurrence("ob-body", 1, "wi-body", "rt-body")],
+    [obligation("ob-body", { assignments: [{ assignmentKey: "exact-send", ref: "receipt", relation: "CREATED", at: PAST }] })]);
+  assert.deepEqual(owned[0]?.assignmentKeys, ["exact-send"]);
+});
+
+test("a later same-key Send does not claim an earlier body publication", () => {
+  const key="zcta:2020/85635", oldRef="old-receipt", nextRef="new-receipt";
+  const contract={schemaVersion:2,sourceScope:{canonicalUrls:["https://example.gov/roster"]}};
+  const publication={contractId:"registry-runtime-bindings",bodyId:"body-1"};
+  const prior=workItem("wi-prior",{autonomousPlan:{publication,contract,ownerInstructions:[oldRef]} as never,
+    publicationOutcome:{at:"2026-09-18T00:00:00Z",workerResultId:"wr-old",status:"PUBLISHED",code:"ACCEPTED",
+      candidateId:"candidate-old",versionId:"version-old"} as never});
+  const later=workItem("wi-later",{autonomousPlan:{publication,contract,ownerInstructions:[nextRef]} as never,
+    publicationOutcome:{at:NOW,workerResultId:"wr-new",status:"PUBLISHED",code:"ACCEPTED",
+      candidateId:"candidate-new",versionId:"version-new"} as never});
+  const owner=obligation("ob-body",{assignments:[
+    {assignmentKey:key,ref:oldRef,relation:"CREATED",at:PAST},
+    {assignmentKey:key,ref:nextRef,relation:"REORDERED",at:"2026-09-20T00:00:00Z"},
+  ]});
+  const rows=bodyPublicationAttempts([prior,later],[occurrence("ob-body",1,prior.id,"rt-prior"),
+    occurrence("ob-body",2,later.id,"rt-later")],[owner]);
+  assert.deepEqual(rows.find(row=>row.workItemId===prior.id)?.assignmentRefs,[{key,ref:oldRef}]);
+  assert.deepEqual(rows.find(row=>row.workItemId===later.id)?.assignmentRefs,[{key,ref:nextRef}]);
+});
+
+test("an exact manual source gap is indexed under its Send while legacy unkeyed gaps remain unlinked", () => {
+  const exact = workItem("wi-manual-exact", { manualSourceGap: { contractId: "az-sos-ballot", mode: "REVIEWED_INPUT",
+    reason: "Reviewed ballot input owed", instructionReceipt: "receipt-1", assignmentKey: "zcta:2020/85635" } });
+  const legacy = workItem("wi-manual-legacy", { manualSourceGap: { contractId: "az-sos-ballot", mode: "REVIEWED_INPUT",
+    reason: "Earlier gap", instructionReceipt: "receipt-old" } });
+  const view = buildAssignmentView({ ...empty(), workItems: [exact, legacy] });
+  assert.deepEqual(view.allRowsIndex?.find(row => row.id === exact.id)?.assignmentKeys, ["zcta:2020/85635"]);
+  assert.deepEqual(view.allRowsIndex?.find(row => row.id === legacy.id)?.assignmentKeys, []);
+  assert.equal(Object.values(view.instructionCounts?.["zcta:2020/85635"] ?? {}).reduce((a, b) => a + b, 0), 1);
+});
+
+test("full index separates latest Attempt from activity and counts only measured dependency unlocks", () => {
+  const depends = (upstreamId:string) => ({upstreamId,kind:"PRODUCES_CONSUMES" as const,reason:"Source prerequisite",evidence:["recorded dependency"]});
+  const src = { ...empty(), workItems: [
+    workItem("upstream"),workItem("verified",{state:"VERIFIED_COMPLETE"}),workItem("other-open"),
+    workItem("ready-dependent",{dependencies:[depends("upstream"),depends("verified")]}),
+    workItem("still-blocked",{dependencies:[depends("upstream"),depends("other-open")]}),
+  ],attempts:[attempt("at-old","route-old","upstream",{startedAt:"2026-09-20T10:00:00.000Z"}),
+    attempt("at-new","route-new","upstream",{startedAt:"2026-09-21T10:00:00.000Z",abortReason:"SOURCE_UNAVAILABLE"})] };
+  const indexed=buildAssignmentView(src).allRowsIndex?.find(row=>row.id==="upstream");
+  assert.equal(indexed?.lastAttemptAt,"2026-09-21T10:00:00.000Z");
+  assert.equal(indexed?.directDependentCount,2);
+  assert.equal(indexed?.readyAfterThisSettlesCount,1);
+  assert.ok(indexed?.historyTerms?.includes("at-new"));
+  const unknown={...src,workItems:src.workItems.filter(item=>item.id!=="other-open")};
+  assert.equal(buildAssignmentView(unknown).allRowsIndex?.find(row=>row.id==="upstream")?.readyAfterThisSettlesCount,null,
+    "an unread upstream cannot be counted as satisfied");
+});
+
 test("repair successor costs and publication remain on the original Send assignment", () => {
   const parent = workItem("parent", { obligation: "hunt-root#1" });
   const child = { ...workItem("child"), planRepair: { parentWorkItemId: parent.id, authority: "WORK_INSTRUCTIONS_ONLY" },
@@ -327,6 +392,9 @@ test("state assignment counts cover omitted rows and retain shared or unplaced w
   assert.equal(Object.values(view.geographicCounts?.[""] ?? {}).reduce((a, b) => a + b, 0), 1);
   assert.equal(Object.values(view.geographicCounts ?? {}).flatMap(Object.values).reduce((a, b) => a + b, 0), view.summary.total);
   assert.ok(view.selection.omitted > 0);
+  assert.equal(view.allRowsIndex?.length, view.summary.total);
+  assert.deepEqual(new Set(view.allRowsIndex?.map(row => row.id)), new Set(["az-one", "az-two", "nh-one", "shared"]));
+  assert.ok(view.allRowsIndex?.some(row => !view.rows.some(listed => listed.id === row.id)), "an omitted detail retains its exact drilldown id");
   for (const row of buildAssignmentView(src).rows) assert.equal(row.stateCode, row.id.startsWith("az") ? "az" : row.id.startsWith("nh") ? "nh" : null);
 });
 
@@ -342,6 +410,7 @@ test("exact Send counts survive trimming and count shared work once per instruct
   assert.deepEqual([total("zip:85635"), total("zip:85650"), total("zip:85001")], [2, 1, 1]);
   assert.equal(bounded.summary.total, 3, "overlapping instructions do not manufacture another work item");
   assert.ok(bounded.selection.omitted > 0);
+  assert.deepEqual(bounded.allRowsIndex?.filter(row => row.assignmentKeys.includes("zip:85635")).map(row => row.id).sort(), ["hunt-local", "hunt-shared"]);
   const complete = buildAssignmentView(src);
   assert.deepEqual(complete.rows.find(row => row.id === "hunt-shared")?.assignmentKeys, ["zip:85635", "zip:85650"]);
   assert.deepEqual(complete.rows.find(row => row.id === "hunt-local")?.assignmentKeys, ["zip:85635"]);

@@ -21,7 +21,7 @@
  */
 
 import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
-import { createLedger } from "../budget.ts";
+import { createLedger, tryAcquire } from "../budget.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { acquireHostBudget, releaseHostBudget } from "../repository/coordinator.ts";
 import type { SearchHit } from "../scheduler/scout-contract.ts";
@@ -86,8 +86,10 @@ export function durableSearchBudget(input: {
   readonly perDay: number;
   /** FleetSafety admission on the search key; returns a refusal reason, or null. */
   readonly admit: () => string | null;
+  /** Admission for an already-bound member of the original lifetime hunt. */
+  readonly admitLifetimeHunt?: () => string | null;
   readonly now: () => string;
-}): SearchBudget & { readonly used: () => number } {
+}): SearchBudget & { readonly used: () => number; readonly lifetimeHunt: SearchBudget } {
   let used = 0;
   let registered = false;
   async function register(): Promise<void> {
@@ -100,6 +102,9 @@ export function durableSearchBudget(input: {
     await input.repos.budget.mutate((ledger) => ({ ledger: withSearchBudgets(ledger, input.perDay), result: null }), input.now());
     registered = true;
   }
+  const done = async (host: string) => {
+    await releaseHostBudget(input.repos as ControlPlaneRepositories, { host, now: input.now() });
+  };
   return {
     used: () => used,
     async take(host) {
@@ -112,8 +117,30 @@ export function durableSearchBudget(input: {
       used += 1;
       return null;
     },
-    async done(host) {
-      await releaseHostBudget(input.repos as ControlPlaneRepositories, { host, now: input.now() });
+    done,
+    lifetimeHunt: {
+      async take(host) {
+        if (!input.admitLifetimeHunt) return "lifetime-hunt search admission is unavailable";
+        const refused = input.admitLifetimeHunt();
+        if (refused !== null) return refused;
+        await register();
+        // Ignore only the discretionary combined request count. The shared
+        // transaction still applies host spacing, concurrency, backoff and
+        // vendor concurrency/backoff to this exact hunt's request.
+        const outcome = await input.repos.budget.mutate((ledger) => {
+          const vendor = ledger.vendors[DISCOVERY_SEARCH_VENDOR];
+          if (!vendor) return { ledger, result: "search vendor budget is missing" };
+          const transient: BudgetLedger = { ...ledger, vendors: { ...ledger.vendors,
+            [DISCOVERY_SEARCH_VENDOR]: { ...vendor, dailyRequestCap: null } } };
+          const acquired = tryAcquire(transient, host, input.now());
+          return { ledger: { ...acquired.ledger, vendors: ledger.vendors },
+            result: acquired.granted ? null : acquired.reason };
+        }, input.now());
+        if (outcome.result !== null) return outcome.result;
+        used += 1;
+        return null;
+      },
+      done,
     },
   };
 }

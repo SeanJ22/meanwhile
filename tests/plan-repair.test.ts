@@ -10,7 +10,7 @@ import { evidenceProjection, FLEET_POLICY_VERSION, dispatchWorkerTask } from "..
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import type { ScoutCandidate, ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { VerificationAuthority } from "../lib/control-plane/workers/types.ts";
-import { heldAuditAttribution } from "../lib/control-plane/workers/standing.ts";
+import { resolvedHeldAuditAttribution } from "../lib/control-plane/workers/standing.ts";
 
 async function fixture(recordClass = "OFFICIAL_ROSTER") {
   const h = await autonomousHarness({ plan: plan => ({ ...plan, contract: { ...plan.contract, schemaVersion: 2,
@@ -50,7 +50,8 @@ async function fixture(recordClass = "OFFICIAL_ROSTER") {
     artifactIds: captured.map(artifact => artifact.id), methodCandidateIds: [], refusal: null, startedAt: attempt.value.startedAt, recordedAt: at };
   await h.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, at);
   const evidence = await Promise.all(captured.map(async artifact => evidenceProjection(await h.runtime.readEvidence(artifact.id))));
-  const consume = (scouts = [scout], now = h.now()) => consumePlanRepairs({ repos: h.repos, scouts, now, readCapture: async id => ({
+  const consume = (scouts = [scout], now = h.now(), registeredPublisherAddressFor?: (subjectId: string) => string | null) => consumePlanRepairs({ repos: h.repos, scouts, now,
+    ...(registeredPublisherAddressFor ? { registeredPublisherAddressFor } : {}), readCapture: async id => ({
     evidence: evidenceProjection(await h.runtime.readEvidence(id)), permission: "ALLOWED", transport: "REACHABLE", httpStatus: 200, partial: false }) });
   return { h, candidate, scout, evidence, authority, extraction, consume };
 }
@@ -72,6 +73,34 @@ test("a newly dispatched source instruction can acquire an executable successor 
   assert.equal(next.task?.workerTask?.role, "ACQUIRER");
   assert.equal((await dispatchWorkerTask(f.h.runtime, next.task!)).outcome, "WORKED");
   assert.notEqual(child.state, "VERIFIED_COMPLETE", "executable instructions are not publication or completed coverage");
+});
+
+test("saved local-jurisdiction roster shape with no initial URL uses only an exact registered host and completed Scout bytes", async () => {
+  const f = await fixture();
+  const row = await f.h.repos.workItems.mustRead(f.h.item.id);
+  const plan = row.value.autonomousPlan!;
+  if (plan.contract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  const unobserved = { ...plan, seedUrls: [], sources: [], acquisition: [], contract: { ...plan.contract,
+    sourceScope: { ...plan.contract.sourceScope, sourceId: "unobserved:coverage-discovery:officeholders",
+      canonicalUrls: [], observationArtifactIds: [] },
+    extraction: { format: "UNSUPPORTED" as const, mediaType: "unobserved", fields: {}, reason: "Discover real source bytes" } } };
+  await f.h.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value, autonomousPlan: unobserved }, f.h.now());
+  const registered = await f.consume([f.scout], f.h.now(), () => "http://fixture-clerk.example.gov");
+  assert.equal(registered[0]?.code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(registered));
+  const child = (await f.h.repos.workItems.mustRead(registered[0]!.successorWorkItemId!)).value;
+  assert.equal(child.autonomousPlan?.sources[0]?.url, FIXTURE_URL);
+  assert.equal(child.autonomousPlan?.acquisition[0]?.held[0]?.inheritedFromWorkItemId, f.h.item.id);
+  assert.equal(child.autonomousPlan?.contract.schemaVersion, 2);
+});
+
+test("registered publisher fallback refuses a different host even if the captured proposal cites it", async () => {
+  const f = await fixture();
+  const original = f.h.item.autonomousPlan!;
+  if (original.contract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  const plan = { ...original, seedUrls: [], sources: [], acquisition: [], contract: { ...original.contract,
+    sourceScope: { ...original.contract.sourceScope, canonicalUrls: [] } } };
+  assert.throws(() => evaluatePlanRepair({ plan, candidate: f.candidate, evidence: f.evidence, now: f.h.now(),
+    registeredPublisherAddress: "http://unrelated.example.gov" }), /REPAIR_REGISTERED_PUBLISHER_HOST_MISMATCH/);
 });
 
 test("completed Scout repair retains parent instructions and creates one ordinary successor that really acquires, parses and verifies", async () => {
@@ -100,10 +129,12 @@ test("completed Scout repair retains parent instructions and creates one ordinar
   assert.equal(childContract.schemaVersion, 2);
   if (childContract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
   const artifacts = await f.h.repos.artifacts.readAll(); const items = (await f.h.repos.workItems.list()).map(row => row.value);
-  const attribution = { artifacts, items, artifactId: f.evidence[0].artifactId, contract: childContract, workItemId: childId };
-  assert.equal(heldAuditAttribution(attribution).owner.id, childId, "Shared bytes use the currently dispatched successor's actual attribution.");
-  assert.throws(() => heldAuditAttribution({ ...attribution, workItemId: f.h.item.id }), /SCOPE_MISMATCH/);
-  assert.throws(() => heldAuditAttribution({ ...attribution, items: items.map(item => item.id === childId ? { ...item, subject: "wrong-subject" } : item) }), /SUBJECT_MISMATCH/);
+  const attribution = { repos: f.h.repos, artifacts, items, artifactId: f.evidence[0].artifactId, contract: childContract, workItemId: childId };
+  const resolved = await resolvedHeldAuditAttribution(attribution);
+  assert.equal(resolved.owner.id, childId, "The successor's completed Acquirer result supplies its audit attribution.");
+  assert.equal(resolved.primary.workItemId, f.h.item.id, "The immutable capture keeps its original WorkItem attribution.");
+  await assert.rejects(resolvedHeldAuditAttribution({ ...attribution, workItemId: f.h.item.id }), /SCOPE_MISMATCH/);
+  await assert.rejects(resolvedHeldAuditAttribution({ ...attribution, items: items.map(item => item.id === childId ? { ...item, subject: "wrong-subject" } : item) }), /SUBJECT_MISMATCH/);
   const runtime = { ...f.h.runtime, independentContext: async (scope: Parameters<typeof f.h.runtime.independentContext>[0]) => ({
     ...await f.h.runtime.independentContext(scope), authorityEvidence: [f.evidence[1]],
   }) };
@@ -126,8 +157,26 @@ test("repair refuses fabricated, stale, missing, unsupported and self-verifying 
   assert.throws(() => evaluate({ ...f.candidate, contractRepair: { ...repair, extraction: { ...f.extraction, rowsPointer: "/nonexistent" } } }), /EXTRACTION_REFUSED/);
   assert.throws(() => evaluate({ ...f.candidate, contractRepair: { ...repair, authorities: [{ ...f.authority, sourceId: f.evidence[0].sourceId, artifactIds: [f.evidence[0].artifactId] }] } }), /AUTHORITY_BURDEN_MISMATCH/);
   const partial = evaluate({ ...f.candidate, contractRepair: { ...repair, authorities: [] } });
-  assert.equal(partial.contract.verification.required, true); assert.deepEqual(partial.unresolved, ["EXTERNAL_VERIFICATION_MISSING"]);
+  assert.equal(partial.contract.verification.required, true); assert.deepEqual(partial.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
   assert.match(planRepairBrief(f.h.item.autonomousPlan!), /contractRepair/);
+});
+
+test("a roster repair schedules only profile URLs grounded in exact official href spans", async () => {
+  const f = await fixture();
+  const { createHash } = await import("node:crypto");
+  const text = `<table><tr><th>ID</th><th>Name</th><th>Profile</th></tr><tr><td>1</td><td>Ada One</td><td><a href="/council/ada">Profile</a></td></tr><tr><td>2</td><td>Bea Two</td><td><a href="/council/bea">Profile</a></td></tr></table>`;
+  const primary = { ...f.evidence[0], text, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` };
+  const extraction = { format: "HTML_TABLE" as const, tableIndex: 0, headerRows: 1, fields: {
+    id: { source: 0, type: "STRING" as const }, name: { source: 1, type: "STRING" as const },
+    websiteUrl: { source: 2, type: "STRING" as const, attribute: "href" as const },
+  } };
+  const candidate = { ...f.candidate, evidenceArtifactIds: [primary.artifactId],
+    contractRepair: { schemaVersion: 1 as const, sourceArtifactId: primary.artifactId, extraction, authorities: [] } };
+  const repaired = evaluatePlanRepair({ plan: f.h.item.autonomousPlan!, candidate, evidence: [primary], now: f.h.now() });
+  assert.equal(repaired.profileRoutes.length, 2);
+  assert.deepEqual(repaired.profileRoutes.map(route => route.url), [new URL("/council/ada", primary.canonicalUrl).href, new URL("/council/bea", primary.canonicalUrl).href]);
+  assert.ok(repaired.profileRoutes.every(route => route.observation.artifactId === primary.artifactId && route.observation.quote.includes(route.observedLocator)));
+  assert.deepEqual(repaired.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
 });
 
 test("repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes", async () => {

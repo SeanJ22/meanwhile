@@ -3,17 +3,21 @@ import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST } from "../attempt.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from "../repository/types.ts";
+import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { autonomousScoutHistory, scoutTransientDenial } from "./scout-scheduling.ts";
+import { autonomousScoutHistory, eligibleHeldProtocolRecovery, scoutTransientDenial } from "./scout-scheduling.ts";
+import { selectStandingLineages } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { isScheduled } from "../scheduler/obligation.ts";
+import type { FreshnessObligation } from "../scheduler/obligation.ts";
+import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
@@ -33,6 +37,67 @@ export interface AutonomousDecision {
   readonly action: "SCOUT" | "WORKER" | "BLOCKED" | "STAGED";
   readonly task: RouteTask | null;
   readonly reason: string;
+}
+
+/** A filtered or paused cycle cannot start either autonomous entry point. */
+export function autonomousCycleAllowed(input: { readonly dry: boolean; readonly canary: boolean;
+  readonly only: string | null; readonly ids: ReadonlySet<string> | null; readonly runnerPaused: boolean;
+  readonly scheduledBlackout: boolean; readonly hasLifetimeHunt: boolean }): boolean {
+  return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused &&
+    (!input.scheduledBlackout || input.hasLifetimeHunt);
+}
+
+/** Exact immutable instruction lineage for an early technical slice. An old
+ * occurrence can predate ownerInstructions on its WorkItem, but a later Send
+ * on the same obligation cannot retroactively assign it to that instruction. */
+export function exactInstructionAutonomousWorkIds(input: {
+  obligations: readonly FreshnessObligation[]; occurrences: readonly FreshnessOccurrence[];
+  workItems: readonly WorkItem[]; assignmentKey: string; receiptId: string;
+}): ReadonlySet<string> {
+  const owners = new Map(input.obligations.map(row => [row.id, row] as const));
+  const roots = new Set<string>();
+  const conflicted = new Set<string>();
+  const occurrenceCounts = new Map<string, number>();
+  for (const occurrence of input.occurrences) {
+    const count = (occurrenceCounts.get(occurrence.workItemId) ?? 0) + 1;
+    occurrenceCounts.set(occurrence.workItemId, count);
+    // Normal IDs include the occurrence sequence; duplicate ownership of one
+    // WorkItem is inconsistent retained data, never a reason to pick a receipt.
+    if (count > 1) { conflicted.add(occurrence.workItemId); continue; }
+    const openedAt = Date.parse(occurrence.openedAt);
+    if (!Number.isFinite(openedAt)) { conflicted.add(occurrence.workItemId); continue; }
+    const marks = (owners.get(occurrence.obligationId)?.assignments ?? [])
+      .filter(mark => mark.assignmentKey === input.assignmentKey);
+    if (marks.some(mark => !Number.isFinite(Date.parse(mark.at)))) { conflicted.add(occurrence.workItemId); continue; }
+    const effective = marks.filter(mark => Date.parse(mark.at) <= openedAt);
+    if (!effective.length) continue;
+    const latestAt = Math.max(...effective.map(mark => Date.parse(mark.at)));
+    const latestRefs = new Set(effective.filter(mark => Date.parse(mark.at) === latestAt).map(mark => mark.ref));
+    if (latestRefs.size !== 1) { conflicted.add(occurrence.workItemId); continue; }
+    if (latestRefs.has(input.receiptId)) roots.add(occurrence.workItemId);
+  }
+  const byId = new Map(input.workItems.map(item => [item.id, item] as const));
+  const admitted = new Set<string>();
+  for (const item of input.workItems) {
+    const explicit = item.autonomousPlan?.ownerInstructions?.includes(input.receiptId) === true;
+    let current: WorkItem | undefined = item;
+    const seen = new Set<string>();
+    let inherited = false;
+    let ambiguous = false;
+    while (current && !seen.has(current.id)) {
+      if (conflicted.has(current.id)) { ambiguous = true; break; }
+      if (roots.has(current.id)) inherited = true;
+      seen.add(current.id);
+      const link: { readonly parentWorkItemId: string; readonly authority: string } | undefined =
+        (current as WorkItem & { readonly planRepair?: {
+        readonly parentWorkItemId: string; readonly authority: string;
+      } }).planRepair;
+      const parent: WorkItem | undefined = link?.authority === "WORK_INSTRUCTIONS_ONLY" ? byId.get(link.parentWorkItemId) : undefined;
+      current = parent?.project === item.project && parent.subject === item.subject ? parent : undefined;
+    }
+    if (!ambiguous && (explicit || inherited)) admitted.add(item.id);
+  }
+  return admitted;
 }
 
 export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {
@@ -145,6 +210,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
     const {history,debt}=autonomousScoutHistory(task,(await repos.routeTasks.list()).map(row=>row.value),attempts);
     const scoutHistory=(await repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
+    const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
+    const handedHeldIds = [...new Set([...scoutHistory.flatMap(result => result.artifactIds),
+      ...(retained?.retainedEvidenceIds ?? []), ...(retained?.sourceArtifactId ? [retained.sourceArtifactId] : [])])];
+    let recoveryTaskId: string | null = null;
     let latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
       const lastScout=scoutHistory.find(result=>result.attemptId===latest!.id);
@@ -152,20 +221,23 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
         routeLabel:`${scope} Continue after ${latest.id}; next: ${Array.isArray(lastScout?.nextRungs) ? lastScout.nextRungs.filter((value): value is string => typeof value === "string").join("; ") || "reassess the remaining authoritative source methods" : "reassess the remaining authoritative source methods"}`,
         target:created.target,inherited:false,now});
       const existing=await repos.routeTasks.read(continuation.id);
-      if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now)) return decision("BLOCKED",`Scout completed without settling the obligation; its next rungs remain owed after ${debt.retryAt}.`,task);
+      const recovery = eligibleHeldProtocolRecovery({ latest: lastScout ?? null, heldArtifactIds: handedHeldIds,
+        continuationAttempted: history.some(attempt => attempt.routeTaskId === continuation.id) });
+      if (recovery) recoveryTaskId = continuation.id;
+      if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now) && !recovery) return decision("BLOCKED",`Scout completed without settling the obligation; its next rungs remain owed after ${debt.retryAt}.`,task);
       task=existing?.value??(await registerRouteTask(repos,continuation,now)).value;
       latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     }
     if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && debt && Date.parse(debt.retryAt)<=Date.parse(now)) {
       const deniedCondition=scoutTransientDenial(latest.abortReason);
       const spend=researchSpendInWindow(await repos.costs.readAll(),now);
-      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits;
+      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&(Boolean(runtime.lifetimeHuntSubject?.(item.subject))||ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits);
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
         task=(await repos.routeTasks.compareAndSet(task.id,row.revision,{...rest,state:"RECLAIMABLE",policyReauthorizations:[...(task.policyReauthorizations??[]),{at:now,denial:policyDenial!,reason:"The named Scout transport or rolling-cost condition changed; current policy will be checked again."}]},now)).value;
       }
     }
-    if (["PENDING","RECLAIMABLE"].includes(task.state) && (!debt||Date.parse(debt.retryAt)<=Date.parse(now))) return decision("SCOUT",scope,task);
+    if (["PENDING","RECLAIMABLE"].includes(task.state) && (!debt||Date.parse(debt.retryAt)<=Date.parse(now)||task.id===recoveryTaskId)) return decision("SCOUT",scope,task);
     return decision("BLOCKED","Scout has no accepted grounded route; preserve its next rungs and retry state.",task);
   };
   if (!acquisitions.length) return scoutOperation(false);
@@ -298,16 +370,45 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
 /** Independent obligations run concurrently; leases provide process-independent ownership. */
 export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{
   maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
+  acceptsWorkItem?:(item:WorkItem)=>boolean;
   prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
-  const items=(await runtime.repos.workItems.list()).filter(i=>i.value.autonomousPlan);
+  const allItems=(await runtime.repos.workItems.list()).map(row=>row.value);
+  const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
+  const attempts=(await runtime.repos.attempts.list()).map(row=>row.value);
+  const lineages=selectStandingLineages({occurrences:(await runtime.repos.occurrences.list()).map(row=>row.value),
+    workItems:allItems,artifacts:await runtime.repos.artifacts.readAll(),attempts,
+    workerResults:await runtime.repos.workerResults.readAll()});
+  const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
+  const byItem=new Map(allItems.map(item=>[item.id,item] as const));
+  const lineageRoot=(item:WorkItem):string|null=>{
+    let current=item; const seen=new Set<string>();
+    while(!selectedRoot.has(current.id)) {
+      if(seen.has(current.id)) return null;
+      seen.add(current.id);
+      const parentId=(current as WorkItem & {readonly planRepair?:{readonly parentWorkItemId:string}}).planRepair?.parentWorkItemId;
+      const parent=parentId?byItem.get(parentId):null;
+      if(!parent || parent.project!==item.project || parent.subject!==item.subject) return null;
+      current=parent;
+    }
+    return current.id;
+  };
+  const duplicateLineageDeferred:{workItemId:string;reason:string;detail:string}[]=[];
+  const items=candidates.filter(item=>{
+    const root=lineageRoot(item);
+    if(!root || selectedRoot.get(root)===root) return true;
+    duplicateLineageDeferred.push({workItemId:item.id,reason:"DUPLICATE_PERIOD_LINEAGE",
+      detail:`This recorded work remains open; source acquisition continues on canonical period root ${selectedRoot.get(root)}.`});
+    return false;
+  }).map(value=>({id:value.id,value}));
+  const itemSubjectById=new Map(items.map(row=>[row.id,row.value.subject] as const));
   // Repository id order is stable, not fair. Reconstruct service order from
   // canonical Attempts each cycle; no cursor or parallel task ledger is needed.
   const lastServed=new Map<string,string>();
-  for (const {value:attempt} of await runtime.repos.attempts.list()) {
+  for (const attempt of attempts) {
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
   const priorityByReceipt=new Map(options.prioritizedInstructions?.map(row=>[row.receiptId,row.priority] as const)??[]);
@@ -320,8 +421,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       a.value.createdAt.localeCompare(b.value.createdAt) || a.id.localeCompare(b.id);
   }).map(i=>i.id);
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
-  const deferred:{workItemId:string;reason:string;detail:string}[]=[];
-  const maximum=Math.min(options.maximum??3,20); const concurrency=Math.min(options.concurrency??2,2);
+  const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
+  const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??4,Math.max(1,ids.length));
   // No standing per-cycle Scout cap: the coordinator's own `maximum` (and the
   // wall) bound autonomous Scouts. A caller may still pass a finite diagnostic
   // sub-cap; an unbounded value clamps to `maximum`.
@@ -329,17 +430,34 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
   const minimumDispatchWallMs=Math.min(WORKER_MAX_WALL_MS,RESEARCH_BOUNDS.perDispatch.maxWallMs);
   const hasDispatchTime=()=>Date.now()+minimumDispatchWallMs<=(options.deadlineMs??Infinity);
-  let cursor=0; let admitted=0; let scoutsAdmitted=0;
-  await Promise.all(Array.from({length:concurrency},async()=>{
+  let cursor=0; let admitted=0; let scoutsAdmitted=0; let scoutsLimitedAdmitted=0;
+  // Join every admitted lane even when another lane's selection fails. An
+  // early Promise.all rejection would let an already dispatched paid worker
+  // continue after the cycle began its final records.
+  const lanes=await Promise.allSettled(Array.from({length:concurrency},async()=>{
     while(cursor<ids.length && admitted<maximum && hasDispatchTime()) {
       const id=ids[cursor++];
       try {
-      const d=await nextAutonomousOperation(runtime,id,items.map(row=>row.value)); decisions.push(d);
+      let d: AutonomousDecision;
+      try {
+        d=await nextAutonomousOperation(runtime,id,items.map(row=>row.value));
+      } catch (error) {
+        // Only a bounded, pre-dispatch selection can be deferred as unpaid
+        // work. A timeout after dispatch may carry unknown provider exposure
+        // and must reach the ordinary durable attempt/hold failure path.
+        if (isControlPlaneRequestTimeout(error) && error.kind === "DEADLINE") {
+          deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"the bounded cycle ended during repository selection; this work remains owed"});
+          break;
+        }
+        throw error;
+      }
+      decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
       const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:WORKER_MAX_WALL_MS;
       if(Date.now()+wall>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); continue; }
-      if(d.action==="SCOUT"&&scoutsAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); continue; }
+      const lifetimeScout = runtime.lifetimeHuntSubject?.(itemSubjectById.get(id) ?? "") === true;
+      if(d.action==="SCOUT"&&!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); continue; }
       if (d.action==="WORKER") {
         const aggregate=options.admitDispatch?.(d.task.id)??{admit:true as const};
         if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); continue; }
@@ -348,34 +466,49 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
         continue;
       }
       // Serialize model admission and completion so another fleet Scout cannot spend the same uncommitted allowance.
-      await runtime.repos.locks.withLock("autonomous-model-admission",async()=>{
+      const dispatchScout = async()=>{
         if(admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); return; }
-        if(scoutsAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); return; }
+        if(!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); return; }
         if(Date.now()+RESEARCH_BOUNDS.perDispatch.maxWallMs>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); return; }
         const aggregate=options.admitDispatch?.(d.task!.id)??{admit:true as const};
         if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); return; }
         const spend=researchSpendInWindow(await runtime.repos.costs.readAll(),now());
         admitted++;
         scoutsAdmitted++;
+        if (!lifetimeScout) scoutsLimitedAdmitted++;
         const item=(await runtime.repos.workItems.mustRead(id)).value; const plan=item.autonomousPlan!;
-        const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits?"SCOUT_COST_CEILING":null;
+        const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!runtime.lifetimeHuntSubject?.(item.subject)&&!ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits?"SCOUT_COST_CEILING":null;
         const history=(await runtime.repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
         const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:runtime.scoutFor!(item,d.task!,history);
+        // Charge the exact standing obligation that opened this WorkItem. A
+        // synthetic Scout obligation without its Send marks would reserve the
+        // hunt's dollars yet leave the append-only charge unattributed.
+        const owningOccurrences = await runtime.repos.occurrences.listWhere(["workItemId"], item.id);
+        const occurrence = owningOccurrences.find(row => row.value.routeTaskId === d.task!.id)
+          ?? (owningOccurrences.length === 1 ? owningOccurrences[0] : null);
+        const owner = occurrence === null ? null : await runtime.repos.obligations.read(occurrence.value.obligationId);
+        const assignments = owner?.value.assignments ?? [];
         dispatches.push(await dispatchOne(runtime.repos,{obligation:{obligation:{id:d.task!.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
-          routeId:d.task!.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null},nextDueAt:d.task!.createdAt,cadenceHours:24,
+          routeId:d.task!.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:d.task!.createdAt,cadenceHours:24,
           cadenceSource:"DEFAULT_NO_SIGNAL",basis:"Canonical obligation needs source discovery"},routeTaskId:d.task!.id,holder:`autonomous:SCOUT:${randomUUID()}`,
-          now:now(),leaseTtlMs:RESEARCH_BOUNDS.perDispatch.maxWallMs+120_000,bound:{maxAttempts:3,maxWallMs:RESEARCH_BOUNDS.perDispatch.maxWallMs,maxCostUnits:RESEARCH_BOUNDS.perDispatch.maxTokens},
+          now:now(),clock:now,leaseTtlMs:RESEARCH_BOUNDS.perDispatch.maxWallMs+120_000,bound:{maxAttempts:3,maxWallMs:RESEARCH_BOUNDS.perDispatch.maxWallMs,maxCostUnits:RESEARCH_BOUNDS.perDispatch.maxTokens},
           maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)}));
-      });
+      };
+      // The lifetime hunt's durable reservation ledger arbitrates concurrent model calls.
+      // Other work retains the legacy serialization until it has the same guarantee.
+      if(runtime.lifetimeHuntSubject?.(itemSubjectById.get(id) ?? "")) await dispatchScout();
+      else await runtime.repos.locks.withLock("autonomous-model-admission",dispatchScout);
       } catch(error) {
         if(!(error instanceof RepositoryLockHeld)) throw error;
         deferred.push({workItemId:id,reason:"REPOSITORY_LOCK_HELD",detail:error.message});
       }
     }
   }));
+  const failed=lanes.find((lane): lane is PromiseRejectedResult => lane.status==="rejected");
+  if(failed) throw failed.reason;
   for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
   // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run (MW-014).
-  return {recovery,decisions,dispatches,scoutsAdmitted,deferred,considered:ids.length};
+  return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:candidates.length};
 }

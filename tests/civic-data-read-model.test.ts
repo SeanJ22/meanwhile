@@ -6,6 +6,7 @@ import { beforeEach, test } from "node:test";
 import {
   clearPromotedReadModelCache,
   readPromotedCivicData,
+  readPromotedCivicDataPredecessors,
   readPromotedOrBootstrap,
   type CivicDataReadStore,
 } from "../lib/civic-data/read-model.ts";
@@ -110,6 +111,78 @@ function promotedStore<T>(payload: T): CivicDataReadStore {
     readCandidate: async () => candidate,
   };
 }
+
+async function historicalFixture() {
+  const base = promotedStore({ answer: 42 });
+  const currentRow = await base.readCandidate("candidate-1");
+  assert.ok(currentRow);
+  const older = (id: string): CandidateVersionRecord => ({
+    ...currentRow,
+    candidate: { ...currentRow.candidate, id },
+    receipt: { ...currentRow.receipt!, candidateId: id },
+    promotedVersion: id,
+    lastKnownGoodVersion: id,
+  });
+  const rows = new Map([["candidate-1", currentRow], ["candidate-2", older("candidate-2")],
+    ["candidate-3", older("candidate-3")]]);
+  const key = "FEC_FUNDING:federal-supported";
+  const previous = new Map([["candidate-1", "candidate-2"], ["candidate-2", "candidate-3"],
+    ["candidate-3", "bootstrap/no-version"]]);
+  const moves = (id: string) => previous.has(id) ? [{ candidateId: id, sequence: 2, state: "PROMOTED" as const,
+    at: "2026-09-02T00:00:00.000Z", detail: `Atomic pointer ${key} moved from ${previous.get(id)} to ${id}.` }] : [];
+  const store = {
+    ...base,
+    readCandidate: async (id: string) => rows.get(id) ?? null,
+    readCandidateProofs: async (ids: readonly string[]) => ids.flatMap(id => rows.has(id) ? [{ candidateId: id, record: rows.get(id)! }] : []),
+    events: async (id: string) => moves(id),
+    pointerMoveEvents: async (id: string) => moves(id),
+  };
+  const current = await readPromotedCivicData<{ answer: number }>("FEC_FUNDING", "federal-supported",
+    { store, bypassCache: true });
+  assert.equal(current.kind, "PROMOTED");
+  if (current.kind !== "PROMOTED") throw new Error("fixture promotion failed");
+  return { current, store, rows, previous };
+}
+
+test("historical promotions page through an exact anchored chain and prove every former version", async () => {
+  const { current, store } = await historicalFixture();
+  const first = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, pageSize: 1 });
+  assert.deepEqual(first.versions.map(row => row.projection.versionId), ["candidate-2"]);
+  assert.equal(first.complete, false);
+  assert.equal(first.nextVersionId, "candidate-3");
+  const second = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, pageSize: 1, cursor: first.nextVersionId });
+  assert.deepEqual(second.versions.map(row => row.projection.versionId), ["candidate-3"]);
+  assert.equal(second.complete, true);
+  assert.equal(second.nextVersionId, null);
+  const unrelated = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, cursor: "unrelated-version" });
+  assert.match(unrelated.issue ?? "", /not in the current pointer/);
+});
+
+test("historical promotions refuse tampered rows, source switches, missing moves and cycles", async () => {
+  const { current, store, rows, previous } = await historicalFixture();
+  const original = rows.get("candidate-2")!;
+  rows.set("candidate-2", { ...original, candidate: { ...original.candidate, readModel: { answer: 99 } } });
+  const tampered = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, pageSize: 2 });
+  assert.equal(tampered.versions.length, 0);
+  assert.match(tampered.issue ?? "", /failed promotion proof/);
+  rows.set("candidate-2", { ...original, candidate: { ...original.candidate, sourceId: "other-publisher" } });
+  const sourceSwitch = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, pageSize: 2 });
+  assert.match(sourceSwitch.issue ?? "", /changed the source authority/);
+  rows.set("candidate-2", original);
+  previous.delete("candidate-2");
+  const missing = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, pageSize: 2 });
+  assert.match(missing.issue ?? "", /missing or ambiguous/);
+  previous.set("candidate-2", "candidate-1");
+  const cycle = await readPromotedCivicDataPredecessors("FEC_FUNDING", "federal-supported", current,
+    { store, pageSize: 2 });
+  assert.match(cycle.issue ?? "", /cycle/);
+});
 
 test("canonical read refuses a planted pointer/candidate proof mismatch", async () => {
   const valid = promotedStore({ answer: 42 });

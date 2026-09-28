@@ -29,7 +29,7 @@ import { join } from "node:path";
 
 import type { CensusGeographyLookup, GeographyType } from "../../census-geography/contract.ts";
 import { loadPublishedLookupState, type PublishedLookupSource } from "../../census-geography/reader.ts";
-import { requiredOperationalReferenceBundle } from "../../civic-data/operational-references.ts";
+import { installedOperationalReferenceRegistries } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { APPROXIMATE_DISTRICT_EXTRACT_PATH, type ApproximateDistrictExtract } from "./district-territory.ts";
@@ -325,7 +325,11 @@ export async function loadExpansionPlan(input: {
   }
   if (decisions.length > 0) {
     try {
-      territory = (input.loadTerritory ?? (() => readTerritoryIndex(input.root, Object.values(requiredOperationalReferenceBundle().registries))))();
+      territory = (input.loadTerritory ?? (() => {
+        const registries = Object.values(installedOperationalReferenceRegistries());
+        if (registries.length === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
+        return readTerritoryIndex(input.root, registries);
+      }))();
     } catch (error) {
       territoryDetail = error instanceof Error ? error.message : String(error);
       conditions.push(`the expansion territory index could not be built (${territoryDetail}); no work is placed in a scope this cycle`);

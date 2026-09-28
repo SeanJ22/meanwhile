@@ -56,11 +56,14 @@ import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts
 import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { buildChecklistCensus, exactScopeMembers } from "../lib/control-plane/readiness/checklist-census.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
   CACHE_OBSERVATION_ID,
   DECISION_LOG_KEY,
+  RUNNER_ID,
   SNAPSHOT_ID,
 } from "../lib/control-plane/admin-data.ts";
 import {
@@ -73,12 +76,13 @@ import {
   type Measured,
   type OwnerDecisionCard,
   type OwnerSnapshot,
+  type RunnerHeartbeat,
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
 import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
 import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
-import { collectPublishedCampaignReadback, collectPublishedWorkerReadback } from "../lib/control-plane/served-reader-production.ts";
+import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, collectPublishedManualReaderReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
@@ -411,6 +415,7 @@ const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
  * gap rather than a zero.
  */
 interface ControlPlaneReads {
+  readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof providerBillingAttribution>[0]["scopes"];
   readonly billingHolds: Parameters<typeof providerBillingAttribution>[0]["holds"];
   readonly costs: Awaited<ReturnType<ControlPlaneRepositories["costs"]["readAll"]>>;
@@ -430,6 +435,7 @@ interface ControlPlaneReads {
 }
 
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
+  const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds] = await Promise.all([
     repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
     repos.budget.read().then(r => r.value.spendHolds ?? {}).catch(() => null),
@@ -474,6 +480,7 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   }
   const metrics = research?.value.metrics ?? null;
   return {
+    runnerHeartbeat,
     billingScopes, billingHolds,
     costs,
     attempts: attempts.map((a) => ({ id: a.value.id, worker: a.value.worker })),
@@ -749,15 +756,29 @@ async function main(): Promise<void> {
     });
   }
   const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
-  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, readings: providerBilling.readings }) : null;
+  const scopeMembers = reads?.assignmentSources.ok && reads.billingScopes ? exactScopeMembers(reads.billingScopes, reads.assignmentSources.value) : undefined;
+  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
   let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
   if (!DRY_RUN && reads?.assignmentSources.ok) {
-    const workerReadback = await collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
-      .catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] }));
-    const joined = new Map([...(servedReader?.witnesses ?? []), ...workerReadback.witnesses].map(w => [`${w.itemId}:${w.approvalId}`, w]));
-    servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors] };
+    const [workerReadback, manualReadback] = await Promise.all([
+      collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+        .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),
+      collectPublishedManualReaderReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+        .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Public help readback collection failed; prior observations retain their original time and expiry."] })),
+    ]);
+    const joined = new Map([...(existing?.value.servedReaderReadback?.witnesses ?? []), ...(servedReader?.witnesses ?? []), ...workerReadback.witnesses, ...manualReadback.witnesses]
+      .map(w => [`${w.itemId}:${w.approvalId}`, w]));
+    servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
   }
-  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution };
+  const checklists = reads?.billingScopes?.filter(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
+    scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
+    .map(scope => buildChecklistCensus({ scope,
+    sources: reads.assignmentSources.ok ? { ...reads.assignmentSources.value, servedReader } : null,
+    observedAt: NOW_ISO, heartbeat: reads.runnerHeartbeat,
+    previous: existing?.value.checklists?.find(row => row.scopeId === scope.key) }))
+    ?? existing?.value.checklists?.map(row => ({ ...row, readsComplete: false }));
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, checklists };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");

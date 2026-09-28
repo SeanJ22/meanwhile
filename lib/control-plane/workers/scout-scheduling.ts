@@ -1,6 +1,21 @@
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
+import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, type ScoutResult } from "../scheduler/scout-result.ts";
+
+/** A newly handed saved representation may receive one immediate Scout turn
+ * after an older Scout lacked this read protocol. No attempt, history, debt,
+ * provider-specific retry rule, or spend admission is erased. */
+export function eligibleHeldProtocolRecovery(input: {
+  readonly latest: ScoutResult | null;
+  readonly heldArtifactIds: readonly string[];
+  readonly continuationAttempted: boolean;
+}): boolean {
+  const latest = input.latest;
+  if (!latest || latest.recoveryCapabilityVersion === SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION ||
+    input.heldArtifactIds.length === 0 || input.continuationAttempted) return false;
+  return true;
+}
 
 /** The existing autonomous coordinator's attempt family and capped retry calculation. */
 export function autonomousScoutHistory(root: RouteTask, tasks: readonly RouteTask[], attempts: readonly Attempt[]) {

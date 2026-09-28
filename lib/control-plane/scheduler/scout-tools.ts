@@ -130,6 +130,27 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
       required: ["rung", "why"],
     },
   },
+  {
+    name: "find_manual",
+    description: "Search the complete role/jurisdiction-applicable field-manual catalog handed to this walk. Returns bounded matching entry IDs, titles and method summaries; use read_manual to inspect full content. No network or paid source call.",
+    input_schema: { type: "object", properties: {
+      query: { type: "string" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
+    }, required: ["query", "rung", "why"] },
+  },
+  {
+    name: "read_manual",
+    description: "Open a bounded passage of one relevant field-manual entry handed to this walk. Its full stored method or referenced document is returned with a content hash and offset; no network or paid call.",
+    input_schema: { type: "object", properties: {
+      entryId: { type: "string" }, offset: { type: "integer" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
+    }, required: ["entryId", "offset", "rung", "why"] },
+  },
+  {
+    name: "read_held",
+    description: "Open a bounded passage of an inherited sanitized artifact by exact id and offset, or locate a literal phrase anywhere in those saved bytes with query. This reuses saved bytes with no network or paid source call; only handed ids are allowed.",
+    input_schema: { type: "object", properties: {
+      artifactId: { type: "string" }, offset: { type: "integer" }, query: { type: "string" }, rung: RUNG_SCHEMA, why: WHY_SCHEMA,
+    }, required: ["artifactId", "rung", "why"] },
+  },
 ];
 
 /**
@@ -1159,6 +1180,83 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return { ok: true, forModel: text, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
   }
 
+  const READ_PASSAGE_CHARS = 6_000;
+  function readOffset(input: unknown): number | null {
+    const offset = (input !== null && typeof input === "object" ? (input as Record<string, unknown>).offset : null);
+    return typeof offset === "number" && Number.isSafeInteger(offset) && offset >= 0 ? offset : null;
+  }
+  function knowledgePassage(kind: "MANUAL_ENTRY" | "HELD_ARTIFACT", id: string, text: string, hash: string, offset: number): ScoutToolCallResult {
+    if (offset > text.length) return refusal(`READ_OFFSET_OUT_OF_RANGE: ${offset} exceeds ${text.length} UTF-16 characters.`);
+    const end = Math.min(text.length, offset + READ_PASSAGE_CHARS);
+    return { ok: true, forModel: `${kind} ${id}; ${hash}; UTF-16 passage ${offset}..${end} of ${text.length}; ${end < text.length ? `continue at offset ${end}` : "end of document"}\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${text.slice(offset, end)}\n${DATA_END}`,
+      artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0,
+      knowledgeRead: { kind, id, contentHash: hash, offset, length: end - offset } };
+  }
+  function findManual(input: unknown): ScoutToolCallResult {
+    const raw = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
+    const query = typeof raw.query === "string" ? raw.query.trim().toLowerCase() : "";
+    if (!query || query.length > 160) return refusal("FIND_MANUAL_QUERY_INVALID: provide a 1–160 character method, publisher, place or field phrase.");
+    const words = query.split(/\s+/).filter(Boolean);
+    const entries = ctx.inherited.manualEntries ?? [];
+    const matches = entries.filter(entry => {
+      const haystack = [entry.title, entry.summary, entry.kind, entry.source, entry.url ?? "", ...entry.recordClasses, ...entry.platforms, ...entry.states]
+        .join(" ").toLowerCase();
+      return words.every(word => haystack.includes(word));
+    }).slice(0, 25);
+    return { ok: true, forModel: `FIELD_MANUAL_CATALOG ${matches.length} matching entries of ${entries.length} applicable entries; at most 25 shown. Open a listed ID with read_manual.\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${matches.map(entry => `${entry.id} | ${entry.outcome} | ${entry.title} | ${entry.summary} | ${entry.url ?? "no URL"}`).join("\n")}\n${DATA_END}`,
+      artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
+  }
+  async function readManual(input: unknown): Promise<ScoutToolCallResult> {
+    const raw = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
+    const offset = readOffset(input);
+    if (typeof raw.entryId !== "string" || offset === null) return refusal("READ_MANUAL_INPUT_INVALID: entryId and nonnegative integer offset are required.");
+    const entry = ctx.inherited.manualEntries?.find(row => row.id === raw.entryId);
+    if (!entry) return refusal("READ_MANUAL_NOT_HANDED: only entries projected into this walk may be opened.");
+    const payload = entry.payload as { path?: unknown; body?: unknown } | null;
+    let full: string;
+    try {
+      if (typeof payload?.body === "string") full = payload.body;
+      else if (typeof payload?.path === "string") {
+        if (!ctx.readManualDocument) return refusal("READ_MANUAL_DOCUMENT_UNAVAILABLE: no scoped document reader is configured.");
+        full = await ctx.readManualDocument(payload.path);
+      } else full = JSON.stringify(entry.payload) ?? "null";
+    } catch (error) { return refusal(`READ_MANUAL_FAILED: ${error instanceof Error ? error.message : String(error)}`); }
+    return knowledgePassage("MANUAL_ENTRY", entry.id, full, contentHash(full), offset);
+  }
+  async function readHeld(input: unknown): Promise<ScoutToolCallResult> {
+    const raw = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
+    const query = typeof raw.query === "string" ? raw.query.trim() : null;
+    const suppliedOffset = readOffset(input);
+    if (typeof raw.artifactId !== "string" || (suppliedOffset === null && query === null) ||
+      (query !== null && (query.length < 2 || query.length > 160 || /[\r\n]/.test(query)))) {
+      return refusal("READ_HELD_INPUT_INVALID: artifactId and either nonnegative integer offset or bounded literal query are required.");
+    }
+    if (!ctx.inherited.artifactIds.includes(raw.artifactId)) return refusal("READ_HELD_NOT_HANDED: this artifact is outside the inherited evidence for this walk.");
+    if (!ctx.readHeldArtifact) return refusal("READ_HELD_UNAVAILABLE: no sanitized vault reader is configured.");
+    try {
+      const evidence = await ctx.readHeldArtifact(raw.artifactId);
+      if (evidence.artifactId !== raw.artifactId || contentHash(evidence.text) !== evidence.contentHash) return refusal("READ_HELD_HASH_MISMATCH: the vault read did not verify.");
+      const provenance = evidence.provenance;
+      if (provenance && (provenance.artifactId !== evidence.artifactId || provenance.canonicalUrl !== evidence.canonicalUrl ||
+        provenance.retrievedAt !== evidence.retrievedAt || provenance.methodRouteId !== evidence.methodRouteId)) {
+        return refusal("READ_HELD_PROVENANCE_MISMATCH: the vault envelope disagrees with the saved bytes.");
+      }
+      const withProvenance = (passage: ScoutToolCallResult): ScoutToolCallResult => provenance
+        ? { ...passage, provenance: [provenance], forModel: `HELD_VAULT_ENVELOPE ${provenance.artifactId}; retrieved ${provenance.retrievedAt}; permission ${provenance.permission}; HTTP ${provenance.httpStatus ?? "none"}; URL ${provenance.canonicalUrl}.\n${passage.forModel}` }
+        : passage;
+      if (query !== null) {
+        const lower = evidence.text.toLowerCase(), needle = query.toLowerCase();
+        const positions: number[] = [];
+        for (let at = lower.indexOf(needle); at !== -1 && positions.length < 20; at = lower.indexOf(needle, at + needle.length)) positions.push(at);
+        if (!positions.length) return refusal(`READ_HELD_QUERY_NOT_FOUND: ${JSON.stringify(query)} has no literal match in this handed artifact.`);
+        const offset = Math.max(0, positions[0]! - 500);
+        const passage = knowledgePassage("HELD_ARTIFACT", evidence.artifactId, evidence.text, evidence.contentHash, offset);
+        return withProvenance({ ...passage, forModel: `HELD_LITERAL_MATCH ${JSON.stringify(query)} at UTF-16 offsets ${positions.join(", ")}${positions.length === 20 ? " (first 20)" : ""}.\n${passage.forModel}` });
+      }
+      return withProvenance(knowledgePassage("HELD_ARTIFACT", evidence.artifactId, evidence.text, evidence.contentHash, suppliedOffset!));
+    } catch (error) { return refusal(`READ_HELD_FAILED: ${error instanceof Error ? error.message : String(error)}`); }
+  }
+
   async function search(
     input: ParsedInput,
     query: string,
@@ -1228,6 +1326,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return await browse(parsed.value);
       case "read_inherited":
         return readInherited();
+      case "find_manual":
+        return findManual(input);
+      case "read_manual":
+        return await readManual(input);
+      case "read_held":
+        return await readHeld(input);
       case "search": {
         const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
         const query = typeof o.query === "string" ? o.query.trim() : "";
@@ -1238,10 +1342,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return await search(parsed.value, query, includeDomains);
       }
     }
+    return refusal(`RESEARCH_TOOL_UNHANDLED: ${name}`);
   }
 
   return {
     specs: scoutToolSpecsFor(Boolean(ctx.search)),
+    heldEvidenceProtocolAvailable: Boolean(ctx.readHeldArtifact),
     call,
     get vaultedArtifactIds(): ReadonlySet<string> {
       return vaulted;

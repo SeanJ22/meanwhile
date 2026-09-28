@@ -338,6 +338,12 @@ export interface ScoutResult {
   readonly usd: number | null;
   readonly elapsedMs: number;
   readonly artifactIds: readonly string[];
+  /** Tool protocol actually available to this Attempt. A later repair may
+   * re-evaluate one older failed walk when saved-byte access has advanced. */
+  readonly recoveryCapabilityVersion?: string;
+  /** Sanitized passages actually opened by this worker, with immutable version and offsets. */
+  readonly knowledgeReads?: readonly { readonly kind: "MANUAL_ENTRY" | "HELD_ARTIFACT"; readonly id: string;
+    readonly contentHash: string; readonly offset: number; readonly length: number }[];
   /** Method candidate ids proposed into the candidate store, if any. */
   readonly methodCandidateIds: readonly string[];
   /**
@@ -372,12 +378,14 @@ export interface ScoutResult {
    * on results recorded before this capture (2026-09-19).
    */
   readonly inheritedFieldManualEntryIds?: readonly string[];
+  /** Complete role/state-applicable local catalog IDs available through find_manual/read_manual at dispatch. */
+  readonly availableFieldManualEntryIds?: readonly string[];
   /** The exact rendered field-manual brief lines that led this walk's inherited context, captured at dispatch alongside `inheritedFieldManualEntryIds`. Absent on older results. */
   readonly inheritedFieldManualLines?: readonly string[];
   /**
-   * MW-025: the handed entry ids this walk actually USED — the entry's url or
-   * `payload.routeId` matched a rung target it walked or a candidate routeId it
-   * proposed (`usedFieldManualEntryIds` in field-manual-scout.ts). Absent on
+   * MW-025: the handed entry ids whose route a successful research rung
+   * actually walked, deduplicated by door. This is route reuse only, with no
+   * saved-byte or paid-call savings claim. Absent on
    * results recorded before it (2026-09-25): read as not recorded, never as
    * none used.
    */
@@ -413,6 +421,8 @@ export interface ScoutResult {
    */
   readonly contextRestarts?: number;
 }
+
+export const SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION = "held-query-provenance/1" as const;
 
 /** One `input_transformations` entry, with the turn and model it came back on. */
 export interface ScoutInputTransformation {
@@ -806,7 +816,7 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
 
 /**
  * Whether a prior rung's failure is DURABLE (an access control — a 401/403/429
- * wall or a bot challenge — a not-found, an unvaulted read) or TRANSIENT (their
+ * wall or a bot challenge — a not-found) or TRANSIENT (their
  * side broke, the transport timed out). A rung recorded as durably failed is not
  * re-walked for `REWALK_REFUSAL_DAYS`; absences expire, and a transport failure
  * is a fact about a moment, so a transient one is not refused at all.
@@ -836,8 +846,12 @@ export function classifyPriorRung(rung: {
   if (rung.ok === true) return "NOT_A_FAILURE";
   if (rung.tool === "read_permission") return "NOT_A_FAILURE";
   if (ROBOTS_ONLY_REFUSAL.test(o)) return "ROBOTS_ONLY";
+  // A successful HTTP retrieval followed by failed vault storage is our own
+  // recoverable fault. It is never evidence that the publisher denied access.
+  if (/HTTP 2\d\d\b[^\n]*NOT VAULTED/i.test(o)) return "TRANSIENT";
+  if (/HTTP 2\d\d\b[^\n]*0 bytes/i.test(o)) return "TRANSIENT";
   if (/transport failure|browser failure|timed out|timeout|aborted|HTTP 5\d\d|empty render/i.test(o)) return "TRANSIENT";
-  if (/\(wall\)|HTTP 4\d\d|\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)|NOT VAULTED|0 bytes/i.test(o)) return "DURABLE";
+  if (/\(wall\)|HTTP 4\d\d|\((AUTHENTICATION|PAYMENT|FORBIDDEN|RATE_LIMIT|LEGAL|CHALLENGE)\)/i.test(o)) return "DURABLE";
   if (rung.ok === false) return "TRANSIENT";
   return "NOT_A_FAILURE";
 }

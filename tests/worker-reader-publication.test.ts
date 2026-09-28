@@ -215,6 +215,8 @@ test("independent normal workers automatically publish public-comment rules thro
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
   assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: 0 });
+  assert.equal(published[0].outcome.recordChanges?.length, 1);
+  assert.deepEqual(published[0].outcome.acceptedRecordIds, published[0].outcome.recordChanges?.map(row => row.readerId), "public readback uses the exact delivered reader IDs");
   const read = await readCuratedReaderProjection("comment-access", { store, now: h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
@@ -283,4 +285,3 @@ test("normal voter-access workers publish the independently verified statewide r
   assert.equal((read.value.records[0].value as { url: string }).url, FIXTURE_URL);
   assert.deepEqual(await publishWorkerReaderResults(input), result);
 });
-

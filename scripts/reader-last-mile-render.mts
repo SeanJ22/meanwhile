@@ -129,16 +129,63 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
     assert.ok((await row.innerText()).includes(vote.title));
     assert.ok(await row.locator(`a[href="${vote.rollCallUrl}"]`).count());
   }
-  const summaryVote = votes.votes.find((vote: { billUrl: string | null }) => summaryForBill(vote.billUrl));
-  assert.ok(summaryVote, `${member}: current held recent votes contain a plain-language summary control`);
+  let summaryVote = votes.votes.find((vote: { billUrl: string | null }) => summaryForBill(vote.billUrl)) as
+    { id: string; billUrl: string | null; historicalVersionId?: string } | undefined;
+  let summaryWindow: "CURRENT_RECENT" | "VERIFIED_EARLIER" = "CURRENT_RECENT";
+  let voteSourceVersionId = federalProjection.metadata.versionId;
+  await capture(page, `${label}-recent-votes-last`, recentRows.last());
+  if (!summaryVote) {
+    // A rolling recent window may move every reviewed bill out of Recent.
+    // Follow the actual Earlier records gesture and its anchored continuation;
+    // the source-backed summary still has to appear on its exact bill row.
+    const earlier = record.getByRole("button", { name: /^Earlier records/ });
+    await earlier.click();
+    let cursor: string | null = null;
+    let anchor: string | null = null;
+    const visited = new Set<string>();
+    for (;;) {
+      const address = new URL(`${BASE}/api/votes`);
+      address.searchParams.set("member", member);
+      address.searchParams.set("history", "1");
+      if (cursor) address.searchParams.set("cursor", cursor);
+      if (anchor) address.searchParams.set("anchor", anchor);
+      const response = await page.request.get(address.toString(), readTransport);
+      assert.equal(response.status(), 200, `${member}: verified earlier vote page answered`);
+      const history = await response.json() as { historicalVotes: { id: string; billUrl: string | null;
+        historicalVersionId: string; billSummary: unknown }[]; historyStatus: "COMPLETE" | "MORE" | "UNAVAILABLE";
+        nextHistoricalVersionId: string | null; currentVersionId: string };
+      assert.notEqual(history.historyStatus, "UNAVAILABLE", `${member}: earlier source history must be proven`);
+      anchor ??= history.currentVersionId;
+      assert.equal(history.currentVersionId, anchor, `${member}: earlier vote history changed anchor`);
+      summaryVote = history.historicalVotes.find((vote) => summaryForBill(vote.billUrl));
+      if (summaryVote) {
+        assert.deepEqual(history.historicalVotes.find((vote) => vote.id === summaryVote!.id)?.billSummary,
+          summaryForBill(summaryVote.billUrl), `${member}: earlier summary is the reviewed exact-bill content`);
+        await record.locator(`[data-recent-vote-id="${summaryVote.id}"]`).waitFor({ state: "visible" });
+        summaryWindow = "VERIFIED_EARLIER";
+        assert.ok(summaryVote.historicalVersionId, `${member}: earlier summary needs an exact proven version`);
+        voteSourceVersionId = summaryVote.historicalVersionId;
+        break;
+      }
+      assert.equal(history.historyStatus, "MORE", `${member}: no reviewed bill summary in current or complete earlier source history`);
+      const nextCursor = history.nextHistoricalVersionId;
+      assert.ok(nextCursor && !visited.has(nextCursor),
+        `${member}: earlier vote continuation must advance`);
+      cursor = nextCursor;
+      visited.add(nextCursor);
+      await record.getByRole("button", { name: "Load more earlier records" }).click();
+    }
+  }
+  assert.ok(summaryVote && voteSourceVersionId && federalProjection.metadata.versionId,
+    `${member}: a proven vote window retains a reviewed bill summary`);
   const heldSummary = summaryForBill(summaryVote.billUrl)!;
   const summaryRow = record.locator(`[data-recent-vote-id="${summaryVote.id}"]`);
   const summaryDisclosure = summaryRow.locator("details").filter({ has: page.getByText("What this bill does — plain language", { exact: true }) });
   if ((await summaryDisclosure.getAttribute("open")) === null) await summaryDisclosure.locator("summary").click();
   await summaryDisclosure.getByText(heldSummary.summary, { exact: true }).waitFor({ state: "visible" });
   assert.ok(await summaryRow.locator(`a[href="${summaryVote.billUrl}"]`).count(), "Summary belongs to the held bill URL on this actual vote row");
-  await capture(page, `${label}-recent-votes`, summaryRow);
-  await capture(page, `${label}-recent-votes-last`, recentRows.last());
+  await capture(page, `${label}-${summaryWindow === "VERIFIED_EARLIER" ? "earlier-votes-summary" : "recent-votes"}`, summaryRow);
+  if (summaryWindow === "VERIFIED_EARLIER") await record.getByRole("button", { name: /^Recent/ }).click();
   const keyToggle = record.getByRole("button", { name: /^When it mattered/ });
   await keyToggle.waitFor({ state: "visible" });
   await keyToggle.click();
@@ -160,7 +207,7 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
   }
   await capture(page, `${label}-key-votes`, laws.locator("[data-key-vote]").first());
   await capture(page, `${label}-key-votes-last`, laws.locator("[data-key-vote]").last());
-  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, recentVoteRows: votes.votes.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt, billSummary: { billUrl: summaryVote.billUrl, voteId: summaryVote.id, ...heldSummary, actualLeaf: "BillPlainSummary", visible: true } };
+  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, recentVoteRows: votes.votes.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt, billSummary: { billUrl: summaryVote.billUrl, voteId: summaryVote.id, sourceWindow: summaryWindow, voteSourceVersionId, summarySourceVersionId: federalProjection.metadata.versionId, ...heldSummary, actualLeaf: "BillPlainSummary", visible: true } };
 }
 async function dismissNarrowing(page: Page) {
   const optional = page.getByRole("button", { name: /No thanks|show me everything|Skip for now/i }).first();

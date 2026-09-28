@@ -14,6 +14,7 @@ import {
 import { mayReadRetiredPluralRoster, officeholderIdentityMayEnterReader, officeholderRosterFiles } from "../officials/roster-authority.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
+import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-read.ts";
 import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
 import { membersOfBody } from "./body-membership.ts";
@@ -31,7 +32,7 @@ import {
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
+import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted, refreshCommentAccessFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
@@ -932,6 +933,10 @@ export async function coverageAt(
    */
   resolvedDivisions?: Division[],
 ): Promise<CoverageSummary> {
+  // Optional metadata starts beside the existing coverage read. Edge-only
+  // requests never open a new database path just to annotate a body card.
+  const attemptRead = currentReaderAuthorityEdge()?.edgeOnly
+    ? Promise.resolve({ kind: "UNREAD" as const }) : readPublicBodyAttempts();
   const { features, divisionsById, registry, officials, territory } = await loaded();
   const exactDivisions = resolvedDivisions ?? resolveDivisionsAt([lng, lat], features, divisionsById);
   // The governments registered on these divisions' states, beside the reviewed bodies (2026-09-23).
@@ -954,12 +959,19 @@ export async function coverageAt(
     territory,
     stateLegislators.authorities,
   );
+  const publicAttempts = await attemptRead;
+  const latestAttempt = new Map<string, PublicBodyAttempt>();
+  if (publicAttempts.kind === "HELD") for (const attempt of publicAttempts.rows) {
+    const previous = latestAttempt.get(attempt.bodyId);
+    if (!previous || attempt.at > previous.at) latestAttempt.set(attempt.bodyId, attempt);
+  }
   return {
     ...coverage,
     bodies: coverage.bodies.map((body) => {
       const gap = rosterGapForBody(body.bodyId);
       return {
         ...body,
+        ...(publicAttempts.kind === "HELD" ? { publicationAttempt: latestAttempt.get(body.bodyId) ?? null } : {}),
         readerRoster: {
           members: membersOfBody(body.bodyId).members,
           gaps: gap === null ? [] : [gap],

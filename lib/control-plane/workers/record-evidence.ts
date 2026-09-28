@@ -79,7 +79,7 @@ function htmlText(raw: string): string {
     return refuse("HTML_ENTITY_UNSUPPORTED", `Unsupported entity ${match} requires a different extraction method.`);
   }).replace(/\s+/g, " ").trim();
 }
-type RawCell = { value: string; start: number; end: number };
+type RawCell = { value: string; start: number; end: number; raw?: string };
 function htmlRows(text: string, tableIndex: number): RawCell[][] {
   if ([...text.matchAll(/<(script|style|template)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)].some(match => /<table\b/i.test(match[2]))) refuse("HTML_TABLE_UNSUPPORTED", "Table-like text inside scripts or templates needs a DOM-aware extraction method.");
   const tables = [...text.matchAll(/<table\b[^>]*>([\s\S]*?)<\/table\s*>/gi)];
@@ -97,11 +97,36 @@ function htmlRows(text: string, tableIndex: number): RawCell[][] {
       const start = table.index! + row.index! + cell.index! + cell[0].indexOf(">") + 1;
       const end = start + cell[3].length;
       if (end === start) refuse("EMPTY_SOURCE_CELL", "An empty table cell cannot supply a nonempty evidence span.");
-      cells.push({ value: htmlText(cell[3]), start, end });
+      cells.push({ value: htmlText(cell[3]), start, end, raw: cell[3] });
     }
     if (cells.length) rows.push(cells);
   }
   return rows;
+}
+
+/** Fields visibly available on every row of a selected ordinary roster table.
+ * This is a repair obligation, not extracted civic data: the mapped parser
+ * still has to prove each value against its own source span. */
+export function rosterTableFieldOmissions(evidence: WorkerEvidence, shape: RecordExtractionShape): readonly string[] {
+  if (shape.format !== "HTML_TABLE" || shape.headerRows < 1) return [];
+  const rows = htmlRows(evidence.text, shape.tableIndex);
+  const headers = rows[shape.headerRows - 1];
+  const members = rows.slice(shape.headerRows);
+  if (!headers || !members.length) return [];
+  const omissions: string[] = [];
+  const phoneColumn = headers.findIndex(cell => /^(?:phone|office phone|contact phone|telephone)$/i.test(cell.value));
+  if (phoneColumn >= 0 && members.every(row => Boolean(row[phoneColumn]?.value.trim())) &&
+    !Object.entries(shape.fields).some(([name, field]) => field.source === phoneColumn && field.attribute === undefined && /^(?:phone|officePhone|telephone)$/i.test(name))) {
+    omissions.push("phone");
+  }
+  const nameColumn = Object.entries(shape.fields).find(([name, field]) => name === "name" && typeof field.source === "number")?.[1].source;
+  if (typeof nameColumn === "number" && members.every(row => {
+    const anchors = [...(row[nameColumn]?.raw ?? "").matchAll(/<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1/gi)];
+    return anchors.length === 1 && Boolean(anchors[0]?.[2]);
+  }) && !Object.entries(shape.fields).some(([name, field]) => name === "websiteUrl" && field.source === nameColumn && field.attribute === "href")) {
+    omissions.push("websiteUrl");
+  }
+  return omissions;
 }
 interface XmlElement { name: string; parent: XmlElement | null; start: number; contentStart: number; contentEnd: number }
 /** Balanced XML structure only; no entity, document-type, network or script execution. */
@@ -158,6 +183,9 @@ function delimitedRows(text: string, delimiter: string): RawCell[][] {
 export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordExtractionShape): RecordEvidenceInventory {
   if (shape?.format === "UNSUPPORTED") refuse("SOURCE_SHAPE_UNSUPPORTED", `${shape.mediaType}: ${shape.reason}`);
   if (!shape || !shape.fields || Object.keys(shape.fields).length === 0) refuse("EXTRACTION_MAPPING_MISSING", "An explicit nonempty source field mapping is required.");
+  if (Object.values(shape.fields).some(mapping => mapping.attribute !== undefined &&
+    (shape.format !== "HTML_TABLE" || mapping.attribute !== "href" || typeof mapping.source !== "number")))
+    refuse("FIELD_MAPPING_INVALID", "A link attribute is supported only on an HTML table column.");
   if (shape.format === "TEXT_BLOCKS") {
     const labels = Object.values(shape.fields).map(mapping => mapping.source);
     if (!shape.recordStart?.trim() || shape.recordStart.length > 4096 ||
@@ -240,7 +268,22 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
       if (typeof mapping.source !== "number" || !Number.isSafeInteger(mapping.source) || mapping.source < 0) refuse("FIELD_MAPPING_INVALID", "Tabular mappings require a zero-based column index.");
       const cell = row[Number(mapping.source)];
       if (!cell || cell.end <= cell.start) refuse("SOURCE_FIELD_MISSING", `Row ${index} lacks mapped field ${field}.`);
-      fields[field] = { ...cell, value: convert(cell.value, mapping), locator: `/${shape.format === "HTML_TABLE" ? `tables/${shape.tableIndex}/` : ""}rows/${index + shape.headerRows}/cells/${mapping.source}` };
+      let value = cell.value;
+      if (mapping.attribute !== undefined) {
+        if (shape.format !== "HTML_TABLE" || mapping.attribute !== "href" || !cell.raw) refuse("FIELD_MAPPING_INVALID", "Link attributes require an HTML table cell.");
+        const links = [...cell.raw!.matchAll(/<a\b([^>]*)>/gi)];
+        if (links.length !== 1) refuse("HTML_LINK_AMBIGUOUS", `Row ${index} needs exactly one source link for ${field}.`);
+        const href = /\bhref\s*=\s*(["'])(.*?)\1/i.exec(links[0][1]);
+        const hrefValue = href?.[2];
+        if (!hrefValue) refuse("HTML_LINK_MISSING", `Row ${index} lacks a source link for ${field}.`);
+        const decoded = htmlText(hrefValue!);
+        let url: URL;
+        try { url = new URL(decoded, evidence.canonicalUrl); } catch { return refuse("HTML_LINK_INVALID", `Row ${index} has an invalid source link for ${field}.`); }
+        if (url.protocol !== "https:" || url.username || url.password) refuse("HTML_LINK_INVALID", `Row ${index} has a non-public source link for ${field}.`);
+        value = url.href;
+      }
+      fields[field] = { value: convert(value, mapping), start: cell.start, end: cell.end,
+        locator: `/${shape.format === "HTML_TABLE" ? `tables/${shape.tableIndex}/` : ""}rows/${index + shape.headerRows}/cells/${mapping.source}${mapping.attribute ? `/@${mapping.attribute}` : ""}` };
     }
     return fields;
   }) };

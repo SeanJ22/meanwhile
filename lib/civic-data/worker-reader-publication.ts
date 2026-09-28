@@ -18,6 +18,7 @@ import { verifiedWorkerRecords, requirePublication } from "./worker-publication-
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
+import { publicationRecordChanges } from "./publication-record-changes.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
@@ -171,15 +172,11 @@ export async function publishWorkerReaderResults(input: {
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
         requiredManualProductionContract(input.contractId), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`WORKER_PUBLICATION_READER_READBACK_FAILED:${readback?.detail ?? "missing receipt"}`);
-      const counts = { added: 0, changed: 0, reused: 0 };
-      for (const row of delivered) {
-        const old = before.find(old => old.id === row.id);
-        // Verification dates alone are refreshed evidence, not a new finding.
-        const facts = (row: CuratedReaderProjection["records"][number]) => canonicalJson(Object.fromEntries(Object.entries(row).filter(([key]) => !["collectedAt", "verifiedAt", "fieldSources"].includes(key))));
-        if (!old) counts.added++; else if (facts(old) === facts(row)) counts.reused++; else counts.changed++;
-      }
+      const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
+        accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
       outcome = { at: input.now, workerResultId: auditor.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
-        detail: `Independent ${input.contractId} verification passed, automatic promotion completed and the existing typed Reader readback passed.`, candidateId, versionId, records: counts };
+        detail: `Independent ${input.contractId} verification passed, automatic promotion completed and the existing typed Reader readback passed.`, candidateId, versionId,
+        ...changes, acceptedRecordIds: delivered.map(row => row.id) };
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const recovery = workerChecksComplete || !detail.startsWith("WORKER_PUBLICATION_") ? "PUBLISHER" : "WORKER";

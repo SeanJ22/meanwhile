@@ -107,7 +107,8 @@ test("every explicit-owner production contract resolves one frozen inventory row
       : [],
   ));
   const bindings = [...new Map([
-    ...MANUAL_PRODUCTION_INVENTORY_BINDINGS.map(({ contractId, contractSourceId }) => [contractId, { contractId, contractSourceId }] as const),
+    ...MANUAL_PRODUCTION_INVENTORY_BINDINGS.flatMap(({ contractId, contractSourceId, additionalContracts }) =>
+      [{ contractId, contractSourceId }, ...(additionalContracts ?? [])].map(contract => [contract.contractId, contract] as const)),
     ...splitBindings.map(({ contractId, contractSourceId }) => [contractId, { contractId, contractSourceId }] as const),
   ]).values()]
     .sort((left, right) => left.contractId.localeCompare(right.contractId));

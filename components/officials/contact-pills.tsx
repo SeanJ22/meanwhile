@@ -199,7 +199,7 @@ export function ContactPills({
     // Named only in contrast to a district office, and only where the record
     // supports it: a federal member's term record IS the Washington office's
     // line. Every other tier publishes one number and no office structure.
-    ownLabel: isFederalMember(holder.id) ? "Washington office" : "Office",
+    ownLabel: isFederalMember(holder.id) ? "Washington office" : holder.contactScope === "SHARED_OFFICE" ? "Shared office" : "Office",
   });
 
   if (phoneChoices.length > 1) {
@@ -223,7 +223,7 @@ export function ContactPills({
         //
         // No office label: the label is there to answer "which of these", and
         // with one number there is no question to answer.
-        label={phoneChoices[0].phone}
+        label={holder.contactScope === "SHARED_OFFICE" ? `Shared office: ${phoneChoices[0].phone}` : phoneChoices[0].phone}
         mark={<PhoneMark />}
         external={false}
       />,

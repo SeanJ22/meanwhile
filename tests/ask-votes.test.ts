@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
+  federalVoteDenominatorsWithHistory,
   identityKey,
   isoDateOf,
   resolveVoteIdentity,
@@ -46,6 +47,15 @@ const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 const CD6 = "ocd-division/country:us/state:az/cd:6";
 const READER = [AZ, PIMA, CD6];
+
+test("historical Ask totals retain the recent chamber denominator under an explicit name", () => {
+  const totals = federalVoteDenominatorsWithHistory({ officeholderSeatsMatched: 1,
+    rollCallsHeldForTheirChamber: 20, rollCallVotesRecorded: 20, rollCallVotesShown: 20 }, 19);
+  assert.deepEqual(totals, { officeholderSeatsMatched: 1,
+    recentRollCallsHeldForTheirChamber: 20, recentRollCallVotesRecorded: 20,
+    rollCallVotesRecorded: 39, rollCallVotesShown: 39, earlierRollCallVotesShown: 19 });
+  assert.equal("rollCallsHeldForTheirChamber" in totals, false);
+});
 
 /* ══════════════════════════════════════════════════════════════════════
    (a) AN INCUMBENT WITH VOTES

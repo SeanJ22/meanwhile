@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PULSE_ACTIVE_INTERVAL_MS, PULSE_INTERVAL_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
+import { PULSE_ACTIVE_INTERVAL_MS, PULSE_INTERVAL_MS, PULSE_STALE_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
 import s from "./mw.module.css";
 
 /** One visible-tab subscription shared by every page in the Admin shell. */
@@ -10,11 +10,14 @@ export function LiveRefresh() {
   const router = useRouter();
   const [failed, setFailed] = useState(false);
   const [unread, setUnread] = useState<readonly string[]>([]);
+  const [lastSuccessfulAt, setLastSuccessfulAt] = useState<string | null>(null);
+  const [clock, setClock] = useState(() => Date.now());
   useEffect(() => {
     let stopped = false;
     let pending = false;
     let revision: string | null = null;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    const clockTimer = setInterval(() => setClock(Date.now()), PULSE_INTERVAL_MS);
     const tick = async () => {
       if (stopped || pending || document.visibilityState !== "visible") return;
       pending = true;
@@ -22,9 +25,10 @@ export function LiveRefresh() {
       try {
         const response = await fetch("/api/admin/live", { cache: "no-store", headers: { accept: "application/json" } });
         const pulse = await response.json() as LivePulse;
-        if (!response.ok || !pulse.revision || pulse.revision === "unread") throw new Error("pulse unread");
+        if (!response.ok || !pulse.revision || pulse.revision === "unread" || !Number.isFinite(Date.parse(pulse.at))) throw new Error("pulse unread");
         if (stopped) return;
         setFailed(false);
+        setLastSuccessfulAt(pulse.at);
         setUnread(pulse.unread);
         window.dispatchEvent(new CustomEvent("meanwhile:admin-pulse", { detail: pulse }));
         // The first successful pulse also reconciles work done since the server render.
@@ -40,11 +44,17 @@ export function LiveRefresh() {
     const visibility = () => { clearTimeout(timer); if (document.visibilityState === "visible") void tick(); };
     document.addEventListener("visibilitychange", visibility);
     void tick();
-    return () => { stopped = true; clearTimeout(timer); document.removeEventListener("visibilitychange", visibility); };
+    return () => { stopped = true; clearTimeout(timer); clearInterval(clockTimer); document.removeEventListener("visibilitychange", visibility); };
   }, [router]);
-  return <p className={s.note} role="status">{failed
-    ? "Live updates could not be read. The last successful readings remain visible."
+  const age = lastSuccessfulAt === null ? null : clock - Date.parse(lastSuccessfulAt);
+  const stale = failed || age !== null && age > PULSE_STALE_MS;
+  const checked = lastSuccessfulAt === null ? "No live check has succeeded yet" :
+    `Last live check ${new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(lastSuccessfulAt))} MST`;
+  return <p className={s.note} role="status">{lastSuccessfulAt === null && !failed
+    ? "Connecting to live updates. No live check has succeeded yet."
+    : stale
+    ? `Live updates are disconnected or stale. ${checked}; the page may be out of date.`
     : unread.length
-      ? `Live updates on. Unavailable: ${unread.join("; ")}. Other readings continue to update.`
-      : "Live updates on while this page is visible."}</p>;
+      ? `Live updates on. ${checked}. Unavailable: ${unread.join("; ")}. Other readings continue to update.`
+      : `Live updates on while this page is visible. ${checked}.`}</p>;
 }

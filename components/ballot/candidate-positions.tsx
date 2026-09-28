@@ -1,12 +1,13 @@
 import type { IssuePosition } from "@/lib/candidates/positions";
 
 /**
- * **What this candidate has said, in their own words** — P02's reader
- * surface, and D05's corpus reaching a reader.
+ * **What held campaign and official pages say** — P02's reader surface,
+ * and D05's corpus reaching a reader. A phrase match alone does not prove a
+ * personal candidate stance or the speaker of an endorsement.
  *
  * ## Quote and link. No sentence of ours sits on top.
  *
- * Every passage below is the candidate's own text, verbatim and short, with
+ * Every passage below is source text, verbatim and short, with
  * the page it came from and the date we read it. There is no summary line, no
  * characterisation, and no "they support X" anywhere — that is an editorial
  * act attributed to a real person, and it stays forbidden even where it would
@@ -64,7 +65,7 @@ export function CandidatePositions({
   return (
     <div className="mt-3" data-candidate-positions>
       <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
-        In their own words
+        From campaign and official pages
       </p>
       {/* Provenance, not arithmetic: where these passages came from. */}
       <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
@@ -80,10 +81,10 @@ export function CandidatePositions({
             {position.answer.kind === "MATCHED" &&
               position.answer.passages.map((passage) => (
                 <div
-                  key={`${passage.documentUrl}-${passage.quote.slice(0, 40)}`}
+                  key={`${passage.documentUrl}-${passage.sourceRevisionId ?? "legacy"}-${passage.quote.slice(0, 40)}`}
                   className="mt-1 border-l-2 border-[var(--panel-border)] pl-3"
                 >
-                  {/* Their words. Never rewritten, never trimmed of
+                  {/* Source words. Never rewritten, never trimmed of
                       meaning — only of length, and then it says so with
                       the ellipses the corpus put there. */}
                   <p className="t-record text-[0.75rem] leading-relaxed text-paper-dim">
@@ -91,8 +92,8 @@ export function CandidatePositions({
                   </p>
                   <p className="mt-0.5 text-[0.6875rem] text-muted">
                     {passage.sourceClass === "CAMPAIGN_SITE"
-                      ? "their campaign site"
-                      : "their official site"}
+                      ? "campaign site"
+                      : "official site"}
                     {" · "}
                     <a
                       href={passage.documentUrl}
@@ -100,8 +101,11 @@ export function CandidatePositions({
                       rel="noreferrer noopener"
                       className="underline decoration-dotted underline-offset-2 hover:text-link"
                     >
-                      {new URL(passage.documentUrl).hostname}
+                    {new URL(passage.documentUrl).hostname}
                     </a>
+                    {passage.revisionStatus === "HISTORICAL" ? " · earlier captured version" :
+                      passage.revisionStatus === "CURRENT" ? " · latest captured version" : ""}
+                    {passage.publicationDate && ` · source-stated publication date ${passage.publicationDate.date}`}
                     {" · read "}
                     {passage.retrievedAt.slice(0, 10)}
                   </p>

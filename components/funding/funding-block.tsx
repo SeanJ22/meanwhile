@@ -22,8 +22,8 @@ import { StateMoneySection } from "./state-money-section";
  * on; the section simply isn't there, the same as before it existed.
  */
 
-const STATE_OFFICIAL_NOTE =
-  "Campaign money for state offices is filed with state campaign-finance systems, not the FEC. This is not a statement that no money was raised.";
+const NONFEDERAL_OFFICIAL_NOTE =
+  "We have not connected campaign-finance records for this office yet. State or local filing offices may hold them; this is not a statement that no money was raised.";
 
 export function FundingBlock(props: {
   holder: SeatHolder;
@@ -85,7 +85,7 @@ function FundingBlockInner({
   </>;
   else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} />;
   else if (answer.kind === "identity-unresolved") content = <StateFundingNote note={answer.statement} />;
-  else if (answer.kind === "none") content = isFederal ? null : <StateFundingNote note={STATE_OFFICIAL_NOTE} />;
+  else if (answer.kind === "none") content = isFederal ? null : <StateFundingNote note={NONFEDERAL_OFFICIAL_NOTE} />;
   else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;
   else content = <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />;
   if (!freshness && content === null) return null;

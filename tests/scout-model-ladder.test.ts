@@ -412,7 +412,7 @@ for (const c of REASON_CASES) {
     assert.ok(close(result.usd, (attempts[0].usd ?? Number.NaN) + (attempts[1].usd ?? Number.NaN)), "usd is the combined cost of both attempts");
     /* MW-031: the one charge goes to the ledger with each attempt's part, so cost-by-model attributes each to its own model. */
     const split = outcome.costByModel ?? [];
-    assert.deepEqual(split.map((s) => [s.model, s.requestCount]), [[SONNET, sonnetTurns], [OPUS, opusTurns]]);
+    assert.deepEqual(split.map((s) => [s.model, s.requestCount]), [[SONNET, transport.requests.filter(r => r.model === SONNET).length], [OPUS, opusTurns]], "rejected requests count as sent even when they produced no billable completion");
     assert.ok(close(split[0].usd, attempts[0].usd ?? 0) && close(split[1].usd, opusUsd), "each part at its own model's rate");
     assert.ok(close(split.reduce((n, s) => n + (s.usd ?? Number.NaN), 0), outcome.cost?.usd ?? Number.NaN), "the parts sum to the combined charge: nothing counted twice");
     assert.equal(split[1].cacheReadInputTokens, (opusTurns - 1) * (FRONTIER_LATER.cache_read_input_tokens ?? 0), "the frontier's part carries its own turns' tokens");

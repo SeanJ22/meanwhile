@@ -3043,19 +3043,14 @@ function districtSubject(
    */
   resolved: DivisionRepresentation | null = null,
 ): ModalSubject {
-  // 6c (2026-08-17): the county popup fills in. A county's large surface
-  // lists every local meeting in view (local coverage is clipped to exactly
-  // the clip counties, so the state prefix IS the county membership test
-  // for local-tier meetings — Vail's AND Tucson's together), and the
-  // county's own commissioners from the curated roster. Other district
-  // types list their own division's meetings.
+  // A county card accepts its exact published ID and child jurisdictions
+  // whose OCD path names this county. A same-state match or a missing ID
+  // cannot establish county ownership.
   const isCounty = /\/county:[^/]+$/.test(district.ocdId);
-  const statePrefix = `state:${district.state.toLowerCase()}`;
   const meetings = allMeetings
     .filter((m) =>
       isCounty
-        ? tierForMeeting(m) === "local" &&
-          (m.ocdId === null || m.ocdId.includes(statePrefix))
+        ? tierForMeeting(m) === "local" && (m.ocdId === district.ocdId || m.ocdId?.startsWith(`${district.ocdId}/`))
         : m.ocdId === district.ocdId,
     )
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));

@@ -253,6 +253,8 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     readonly ceilingUsd?: number;
     /** MW-021 (2026-09-25): the transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
+    /** A durable lifetime hunt hold, rather than the discretionary rolling ceiling, governs this exact subject. */
+    readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
   const initial = assertStepMayInvokeModel("adversarial-audit");
   const timeoutMs = options.timeoutMs ?? AUDIT_REVIEW_TIMEOUT_MS;
@@ -263,8 +265,10 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     const started = performance.now();
     const spend = researchSpendInWindow(await repos.costs.readAll(), now());
     signal.throwIfAborted();
-    const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
-    if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
+    if (!options.lifetimeHuntSubject?.(context.subjectId)) {
+      const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
+      if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
+    }
     const body = auditReasoningContext(context);
     const route = escalation ? { ...initial, model: MODEL_FOR_CLASS[escalation.to], modelClass: escalation.to } : initial;
     if (escalation) {

@@ -109,7 +109,7 @@ test("db:apply --dry preserves applied/pending planning without issuing DDL", ()
   assert.match(result.output, new RegExp(`pending: ${committed[2].tag}(?:\\r?\\n|$)`));
 });
 
-test("non-dry db:apply keeps setup and migration journalling fail-closed", () => {
+test("non-dry db:apply keeps setup and uncertain migration outcomes fail-closed", () => {
   const result = run([], { APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL: "1" });
 
   assert.equal(result.status, 1, result.output);
@@ -122,8 +122,11 @@ test("non-dry db:apply keeps setup and migration journalling fail-closed", () =>
     `non-dry setup did not create the Drizzle journal: ${JSON.stringify(result.statements)}`,
   );
   assert.ok(result.events.length > 0, "the planted failure never reached a migration transaction");
-  assert.match(result.output, /FAIL\s+transaction rolled back before the journal row was written/);
-  assert.match(result.output, /applied no durable statements in this run/);
+  assert.ok(result.statements.some((statement) => /^SELECT\s+hash\s+FROM\s+drizzle\.__drizzle_migrations\b/i.test(statement)),
+    "an uncertain transaction was not reconciled against its exact journal row");
+  assert.match(result.output, /FAIL\s+transaction outcome unconfirmed/);
+  assert.match(result.output, /No automatic retry/);
+  assert.doesNotMatch(result.output, /transaction rolled back|applied no durable statements/i);
   assert.match(result.output, /planted transaction failure/);
   assert.doesNotMatch(result.output, /journalled\s+hash=/);
   assert.doesNotMatch(result.output, /Applied \d+ migration/);

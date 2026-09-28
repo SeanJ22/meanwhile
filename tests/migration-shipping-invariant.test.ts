@@ -526,10 +526,15 @@ test("ONE DETECTOR — the gate reuses the comparator, it does not reimplement i
       "app/api/schema/route.ts",
       // The ONE reader `db:check` and the shipping gate share.
       "lib/db/applied-migrations.ts",
+      // Direct long-migration applier reconciles an uncertain COMMIT against
+      // this exact journal row after taking its advisory lock.
+      "lib/db/direct-migration.ts",
       // The applier, the only thing allowed to WRITE this table.
       "scripts/apply-migrations.mts",
       // Proves a local write reached the local branch; reads the journal count.
       "scripts/verify-local-write.mts",
+      // Tests the direct applier's exact journal SQL and hash reconciliation.
+      "tests/direct-migration.test.ts",
     ].sort(),
     `these files query drizzle.__drizzle_migrations: ${queriers.join(", ")}.\n` +
       "`db:check` and the shipping gate must NOT be among them — they share\n" +

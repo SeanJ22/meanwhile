@@ -1,6 +1,13 @@
 const SQL_PREFIX = "APPLY_MIGRATIONS_FAKE_SQL ";
 const EVENT_PREFIX = "APPLY_MIGRATIONS_FAKE_EVENT ";
 
+// The applier imports the persistent driver for the named long migration.
+// These fixtures fail on the first short HTTP migration, before Pool is used.
+export const neonConfig = {};
+export class Pool {
+  constructor() { throw new Error("fake persistent Pool was unexpectedly opened"); }
+}
+
 function textOf(strings) {
   return strings
     .join("?")

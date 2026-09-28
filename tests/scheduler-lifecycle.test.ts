@@ -55,6 +55,7 @@ import {
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { httpExecutor, type FetchOutcome } from "../lib/control-plane/scheduler/http-executor.ts";
+import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 
 const NOW = "2026-08-31T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
@@ -112,6 +113,53 @@ const READING: RunWork = async () => ({
     note: "reached, and it had nothing",
   },
   detail: "walked",
+});
+
+test("a dispatched run records measured start, executor end, disposition and charge time",async()=>{
+  const {repos,task}=await fixture();
+  const at=(ms:number)=>new Date(NOW_MS+ms).toISOString();
+  const ticks=[at(1000),at(2000),at(45000)];
+  const result=await dispatchOne(repos,{obligation:scheduled(),routeTaskId:task.id,holder:"timed",now:NOW,
+    clock:()=>ticks.shift()!,leaseTtlMs:60000,maturity:()=>"GRADUATED",
+    executor:{lane:"DETERMINISTIC",run:async input=>({...await READING(input),endedAt:at(43000),
+      cost:{...ZERO_COST,durationMs:41000,requestCount:1,usd:0}})}});
+  assert.equal(result.outcome,"WORKED");
+  const attempts=await attemptsForRouteTask(repos,task.id);
+  assert.equal(attempts[0]?.value.startedAt,at(2000));
+  assert.equal(attempts[0]?.value.endedAt,at(43000));
+  assert.equal((await repos.routeTasks.mustRead(task.id)).value.disposition?.at,at(43000));
+  assert.equal((await repos.costs.readAll())[0]?.recordedAt,at(43000));
+});
+
+test("a backward executor end is named and uses an independently valid observed terminal clock",async()=>{
+  const {repos,task}=await fixture();
+  const at=(ms:number)=>new Date(NOW_MS+ms).toISOString();
+  const ticks=[at(1000),at(2000),at(45000)];
+  const result=await dispatchOne(repos,{obligation:scheduled(),routeTaskId:task.id,holder:"backward",now:NOW,
+    clock:()=>ticks.shift()!,leaseTtlMs:60000,maturity:()=>"GRADUATED",
+    executor:{lane:"DETERMINISTIC",run:async()=>({kind:"ABORTED",ranAs:"DETERMINISTIC",endedAt:at(1000),
+      cost:{...ZERO_COST,durationMs:43000,requestCount:1,usd:0},detail:"worker stopped"})}});
+  assert.equal(result.outcome,"FAILED");
+  assert.match(result.detail,/DISPATCH_CLOCK_BACKWARDS:EXECUTOR_END/);
+  const attempt=(await attemptsForRouteTask(repos,task.id))[0]?.value;
+  assert.equal(attempt?.endedAt,at(45000));
+  assert.match(attempt?.abortReason??"",/DISPATCH_CLOCK_BACKWARDS:EXECUTOR_END/,"the clock issue is durable, not just a returned message");
+  assert.equal((await repos.costs.readAll())[0]?.recordedAt,at(45000));
+});
+
+test("a future executor end cannot put a completed disposition or charge ahead of observation",async()=>{
+  const {repos,task}=await fixture();
+  const at=(ms:number)=>new Date(NOW_MS+ms).toISOString();
+  const ticks=[at(1000),at(2000),at(45000)];
+  const result=await dispatchOne(repos,{obligation:scheduled(),routeTaskId:task.id,holder:"future",now:NOW,
+    clock:()=>ticks.shift()!,leaseTtlMs:60000,maturity:()=>"GRADUATED",
+    executor:{lane:"DETERMINISTIC",run:async input=>({...await READING(input),endedAt:at(60000),
+      cost:{...ZERO_COST,durationMs:43000,requestCount:1,usd:0}})}});
+  assert.equal(result.outcome,"WORKED");
+  assert.match(result.detail,/DISPATCH_CLOCK_FUTURE:EXECUTOR_END/);
+  assert.equal((await attemptsForRouteTask(repos,task.id))[0]?.value.endedAt,at(45000));
+  assert.match((await repos.routeTasks.mustRead(task.id)).value.disposition?.note??"",/DISPATCH_CLOCK_FUTURE:EXECUTOR_END/);
+  assert.equal((await repos.costs.readAll())[0]?.recordedAt,at(45000));
 });
 
 /* ==================================================== the no-op executor === */

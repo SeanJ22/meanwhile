@@ -2659,6 +2659,7 @@ const cycle = await runCycle({
   executor: executorFor,
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
+  clock: nowIso,
   leaseTtlMs: 120_000,
   reader: {
     contract: "READER",

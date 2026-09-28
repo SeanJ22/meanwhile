@@ -231,6 +231,7 @@ async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask
   /* MW-024: a proof run's worker tasks charge under its own project, marked non-production. */
   const proof = proofChargeOf((await runtime.repos.workItems.read(task.workItemId).catch(() => null))?.value.project);
   return dispatchOne(runtime.repos, { obligation, routeTaskId: task.id, holder, now, leaseTtlMs: 300_000,
+    clock: runtime.now ?? (()=>new Date().toISOString()),
     bound: { maxAttempts: 3, maxWallMs: WORKER_MAX_WALL_MS, maxCostUnits: 20_000 }, maturity: () => executor.lane === "DETERMINISTIC" ? "GRADUATED" : "UNGRADUATED",
     executor, methodVersion: runtime.methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proof });
 }

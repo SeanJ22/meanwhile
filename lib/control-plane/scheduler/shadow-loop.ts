@@ -142,6 +142,9 @@ export interface CycleInput {
   readonly policyVersion?: string;
   readonly holder: string;
   readonly now: string;
+  /** Actual timestamps for each dispatch lifecycle, separate from the frozen
+   * cycle scheduling observation. */
+  readonly clock?: () => string;
   readonly leaseTtlMs: number;
   readonly bound?: WorkerBound;
   /**
@@ -631,6 +634,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         routeTaskId: input.routeTaskFor(row.obligation.id),
         holder: input.holder,
         now: input.now,
+        clock: input.clock,
         leaseTtlMs: opts.leaseTtlMs,
         bound: input.bound,
         maturity: input.maturity,

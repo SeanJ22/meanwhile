@@ -363,8 +363,8 @@ function stateMoneyOfficeLabel(value: string | null): string {
  * Compare a frozen state-money observation with the exact promoted authority.
  * A later source read may supersede an old observation, but only across the
  * same typed jurisdiction/target/committee identity and never by weakening a
- * filing state. The one legitimate absence-to-committee transition is allowed
- * only for the same complete target-key set.
+ * filing state. A prior unbound candidacy gap can be resolved by a later
+ * independently verified filing, without identifying the former committee.
  */
 export function stateMoneyAuthorityRelation(
   frozen: StateMoneyRecord,

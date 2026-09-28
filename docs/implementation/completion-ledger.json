@@ -41,10 +41,20 @@
       "contribution": "DIRECT",
       "priorEvidence": "PARTIAL RECORD: 06:51:21 UTC heartbeat completed b12e5b5 with CONSISTENT identity. Served-web revision/process/launcher proof still separate.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "d9948cc26925ae24de3e29cb46bfb6198f345728",
+          "summary": "Phase-one runtime adoption is recorded by the existing permanent runner and requires deployed/running/integrity identity, required repair ancestry, a completed normal cycle, and fresh process evidence. Canonical hashing survives PostgreSQL JSONB ordering. This is not proof of full program completion.",
+          "testPaths": [
+            "tests/checklist-running-release-witness.test.ts"
+          ],
+          "scope": "Focused development evidence; not production acceptance or full requirement satisfaction"
+        }
+      ],
+      "nextAction": "Deploy the certified release, observe automatic permanent-runner adoption and a completed normal cycle, and inspect its saved witness. Current production has not adopted this repair."
     },
     {
       "id": "GATE-03",
@@ -2356,10 +2366,21 @@
       "contribution": "SUMMARY_WITH_RESIDUAL",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "d9948cc26925ae24de3e29cb46bfb6198f345728",
+          "summary": "The competent Cochise authority adapter parses all 18 official 2026 countywide vote centers, retains exact PDF/page evidence, and publishes through the existing voting-site pointer while preserving other authorities. Its exact original-hunt source admission ignores the discretionary blackout. Published addresses can render without unverified map coordinates.",
+          "testPaths": [
+            "tests/cochise-voting-sites.test.ts",
+            "tests/hunt-source-tasks.test.ts"
+          ],
+          "scope": "Focused development evidence; not production acceptance or full requirement satisfaction"
+        }
+      ],
+      "nextAction": "Verify normal source invocation and promotion under the original receipt, then confirm all 18 reader addresses and countywide eligibility. Verified map coordinates and other voting modes remain separate owed facts."
     },
     {
       "id": "ELE-10",
@@ -5726,10 +5747,21 @@
       "contribution": "DIRECT",
       "priorEvidence": "UNPROVED at item-instance level; apply family path and full requirement text.",
       "applicability": "UNRESOLVED",
-      "implementation": "UNDER_RECONCILIATION",
+      "implementation": "PARTIALLY_IMPLEMENTED",
       "readerCoverage": "NOT_MEASURED",
-      "evidence": [],
-      "nextAction": "Join current requirement instances and receipts; repair assigned path and verify through normal workflow."
+      "evidence": [
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "d9948cc26925ae24de3e29cb46bfb6198f345728",
+          "summary": "The competent Cochise authority adapter parses all 18 official 2026 countywide vote centers, retains exact PDF/page evidence, and publishes through the existing voting-site pointer while preserving other authorities. Its exact original-hunt source admission ignores the discretionary blackout. Published addresses can render without unverified map coordinates.",
+          "testPaths": [
+            "tests/cochise-voting-sites.test.ts",
+            "tests/hunt-source-tasks.test.ts"
+          ],
+          "scope": "Focused development evidence; not production acceptance or full requirement satisfaction"
+        }
+      ],
+      "nextAction": "Verify normal source invocation and promotion under the original receipt, then confirm all 18 reader addresses and countywide eligibility. Verified map coordinates and other voting modes remain separate owed facts."
     },
     {
       "id": "ELE-22",
@@ -6796,16 +6828,21 @@
       "evidence": []
     }
   ],
-  "lastReconciledAt": "2026-09-28T11:01:02.251Z",
+  "lastReconciledAt": "2026-09-28T11:36:09.005Z",
   "release": {
-    "revision": "e87333fbf293238041c185394664c34093d20ba5",
-    "state": "READER_REPAIRS_AWAITING_FRESH_EXACT_HEAD_PROOF",
-    "authority": "Prior full proof correctly exposed an uninitialized finance read and missing historical federal vote reader. Failed artifacts are preserved outside the repository. New exact-head authority and all reader stages must pass before release; no new production delivery claimed."
+    "revision": "d9948cc26925ae24de3e29cb46bfb6198f345728",
+    "state": "AWAITING_FRESH_EXACT_HEAD_READER_PROOF",
+    "authority": "Prior failed full proofs and generated outputs remain preserved externally. Finance historical gaps now resolve to exact verified filings, and historical vote records remain source-proven. New source/runtime changes require the fresh full proof, required local gates, CI and actual adoption before delivery claims."
   },
   "originalHuntObservation": {
-    "at": "2026-09-28T10:18:29.342Z",
+    "at": "2026-09-28T11:21:33.877Z",
     "receipt": "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
+    "budgetStartedAt": "2026-09-27T22:17:50.236Z",
     "memberObligations": 194,
-    "evidence": "External hunt-members.json; SELECT-only repeatable-read observation."
+    "spentAnthropicUsd": 35.27127565,
+    "heldAnthropicUsd": 0,
+    "remainingAnthropicUsd": 14.72872435,
+    "otherServiceTotal": "UNKNOWN",
+    "evidence": "External1125-checkpoint/baseline.json; repeatable-read SELECT-only snapshot. Separate older billing checkpoint has unknown other-service totals."
   }
 }

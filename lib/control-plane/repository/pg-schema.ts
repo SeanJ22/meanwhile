@@ -109,8 +109,11 @@
  * repository. Until then Ask's write fails by name after the answer, and the
  * reader is not told.
  */
-/** Version 14 adds durable, CAS-leased Admin requests for already-held original bytes. */
-export const BOOTSTRAP_VERSION = 14;
+/** Version 14 adds durable, CAS-leased Admin requests for already-held original bytes.
+ * Version 15 reserves an indexed, immutable checklist instance projection and
+ * scope head. No writer is enabled by this schema move: a missing head remains
+ * UNAVAILABLE, never a zero-instance claim. */
+export const BOOTSTRAP_VERSION = 15;
 
 /**
  * The tables, and the shape each one carries.
@@ -361,6 +364,8 @@ export const APPEND_ONLY_LOGS = [
 export const DECLARED_TABLES: readonly string[] = [
   "cp_schema_version",
   "cp_log_heads",
+  "cp_checklist_scope_heads",
+  "cp_checklist_instance_projections",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
@@ -474,6 +479,28 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      log_key       text NOT NULL,
      next_position bigint NOT NULL,
      PRIMARY KEY (log_table, log_key)
+   );`,
+  `CREATE TABLE IF NOT EXISTS cp_checklist_scope_heads (
+     scope_id                 text NOT NULL,
+     instruction_receipt      text NOT NULL,
+     projection_id            text NOT NULL,
+     source_snapshot_revision bigint NOT NULL,
+     snapshot_published_at    timestamptz NOT NULL,
+     scope_revision           text NOT NULL,
+     observed_at              timestamptz NOT NULL,
+     profile                  text NOT NULL,
+     inventory_complete       boolean NOT NULL,
+     reads_complete           boolean NOT NULL,
+     captured_counts          jsonb NOT NULL,
+     PRIMARY KEY (scope_id, instruction_receipt)
+   );`,
+  `CREATE TABLE IF NOT EXISTS cp_checklist_instance_projections (
+     projection_id  text NOT NULL,
+     definition_id  text NOT NULL,
+     obligation_key text NOT NULL,
+     ordinal        bigint NOT NULL,
+     instance       jsonb NOT NULL,
+     PRIMARY KEY (projection_id, definition_id, obligation_key, ordinal)
    );`,
   ...AGGREGATE_KINDS.flatMap(aggregateTable),
   ...APPEND_ONLY_LOGS.flatMap(appendOnlyTable),

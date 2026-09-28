@@ -8,7 +8,7 @@
  */
 import { Donut } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { count, usd } from "./model.ts";
+import { count, huntLeftUsd, usd } from "./model.ts";
 import { huntAt, huntsWithin, relation } from "./places.ts";
 import { HuntMeter } from "./screen-now.tsx";
 import { Card, cx, Empty, SourceNote } from "./ui.tsx";
@@ -42,7 +42,7 @@ export function MoneyScreen() {
               <div className={s.gridTiles}>
                 <div className={s.row}><span className={s.eyebrow}>Spent so far</span><span className={s.big}>{usd(h.spentUsd)}</span><span className={s.meta}>AI charges we know the price of</span></div>
                 <div className={s.row}><span className={s.eyebrow}>Set aside for work in progress</span><span className={s.big}>{usd(h.heldUsd)}</span><span className={s.meta}>Not spent yet. It can stay set aside after a worker stops, until the final charge is known.</span></div>
-                <div className={s.row}><span className={s.eyebrow}>Left to spend</span><span className={cx(s.big, s.textGood)}>{usd(h.limitUsd - h.spentUsd - h.heldUsd)}</span><span className={s.meta}>The limit, minus what’s spent and set aside</span></div>
+                <div className={s.row}><span className={s.eyebrow}>Left to spend</span>{huntLeftUsd(h) === null ? <><span className={cx(s.big, s.textWarn)}>Unknown</span><span className={s.meta}>Some charges have no price yet, so what’s left can’t be worked out</span></> : <><span className={cx(s.big, s.textGood)}>{usd(huntLeftUsd(h)!)}</span><span className={s.meta}>The limit, minus what’s spent and set aside</span></>}</div>
                 <div className={s.row}><span className={s.eyebrow}>Charges with no price</span><span className={cx(s.big, h.unpricedEntries ? s.textWarn : undefined)}>{count(h.unpricedEntries)}</span><span className={s.meta}>Unknown, not $0. Some may be free steps or refused calls, so they aren’t all paid calls.</span></div>
               </div>
               <dl className={s.facts}>
@@ -100,7 +100,8 @@ export function MoneyScreen() {
 
       <Card title="AI costs, one piece of work at a time" aside={<span className={s.meta}>Models: Cheapest AI (Haiku 4.5) → Mid-level AI (Sonnet 5.5) → Strongest AI (Opus 5.5). Older records keep the model actually used.</span>}>
         <SourceNote source={v.data.money} what="Per-work costs" />
-        {m && !drill.length && <Empty>No per-work AI costs recorded for {v.place.name}.</Empty>}
+        {m && m.drill === null && <Empty>Per-work AI costs aren’t connected yet. This doesn’t mean there were none.</Empty>}
+        {m && m.drill !== null && !drill.length && <Empty>No per-work AI costs recorded for {v.place.name}.</Empty>}
         {!!drill.length && (
           <div className={s.tableWrap}>
             <table className={s.table}>

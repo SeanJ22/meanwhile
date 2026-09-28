@@ -43,6 +43,12 @@ test("failed read retains prior census and marks the current observation incompl
   assert.equal(failed.scopeRevision,previous.scopeRevision);
 });
 
+test("a legacy read without occurrence lineage leaves delivery timing unmeasured",()=>{
+  const base=source();
+  const census=buildChecklistCensus({scope,sources:{...base,occurrences:undefined} as unknown as AssignmentSources,observedAt:now});
+  assert.equal(census.deliveryTimings,undefined);
+});
+
 test("a later same-key hunt keeps old parsed people in history until its own result is recorded",()=>{
   const later={...scope,receiptId:"later-send",budgetStartedAt:"2026-09-28T08:00:00Z"} as ExpansionScopeDecision;
   const base=source();

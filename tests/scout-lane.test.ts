@@ -36,6 +36,7 @@ import {
   cacheTtlOrderProblems,
   withCacheBreakpoints,
   scoutExecutor,
+  ModelTransportError,
   dispositionForScout,
   type ModelRequest,
   type ModelResponse,
@@ -866,6 +867,19 @@ test("10. a lost or server-error response keeps unknown spending reserved, inclu
   assert.equal(results2[0].usd, null);
   assert.ok(results2[0].steps?.some(step => step.kind === "MODEL" && (step.usd ?? 0) > 0));
   assert.equal(results2[0].modelAttempts?.[0].usd, null);
+});
+
+test("only recognized request rejections establish zero, not timeout or arbitrary HTTP statuses", async () => {
+  for (const status of [400, 401, 429, 408, 499, 500, 504, 529]) {
+    const { repos, task } = await registered();
+    const { exec } = executorWith(async () => { throw new ModelTransportError(`HTTP ${status}`, status); }, fakeToolkit());
+    const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS),
+      routeTaskId: task.id, holder: `status-${status}`, now: NOW, leaseTtlMs: 60_000,
+      maturity: () => "UNGRADUATED", executor: exec });
+    const rejected = [400, 401, 429].includes(status);
+    assert.equal(result.cost?.usd, rejected ? 0 : null, `status ${status}`);
+    assert.equal(result.cost?.requestCount, rejected ? 1 : null, `request count for status ${status}`);
+  }
 });
 
 test("an unknown sent Scout request cannot settle away its original lifetime reservation", async () => {

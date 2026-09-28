@@ -1438,10 +1438,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           } catch (error) {
             transportFailure = error instanceof Error ? error.message : String(error);
             transportStatus = error instanceof ModelTransportError ? error.status : null;
-            // A typed 4xx is a rejected request. A network/5xx failure can
-            // follow paid processing; no response is not a zero-dollar receipt.
-            if (enteredTransport && !(error instanceof ModelTransportError && error.status !== null
-              && error.status >= 400 && error.status < 500)) unpricedTransport = true;
+            // Only documented pre-processing rejections establish zero. A
+            // timeout, unrecognized status or lost response may follow billing.
+            const rejectedRequest = error instanceof ModelTransportError && error.status !== null
+              && [400, 401, 402, 403, 404, 413, 429].includes(error.status);
+            if (enteredTransport && !rejectedRequest) unpricedTransport = true;
             break;
           }
           turns += 1;
@@ -1885,7 +1886,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         });
       }
       /*
-       * Only a local pre-send refusal or typed rejected 4xx can establish zero.
+       * Only a local pre-send refusal or recognized request rejection establishes zero.
        * A lost response or server failure leaves the request's charge unknown,
        * even after earlier metered turns. Their steps remain available, while
        * the aggregate is null so ordinary settlement retains the whole hold.

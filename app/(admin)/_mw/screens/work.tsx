@@ -510,7 +510,7 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity }
           {([ ["Found", activity.stages.found], ["Parsed", activity.stages.parsed], ["Verified", activity.stages.verified], ["Promoted", activity.stages.promoted], ["Shown on live site", activity.stages.live] ] as const).map(([label, count]) =>
             <div key={label} className={`${s.insetTile} ${s.stack6}`}><span className={s.titleStrong14}>{label}</span><span className={s.fig}>{count}</span></div>)}
         </div>
-        <p className={s.note}>Promoted means the publication record says it reached the canonical version. Shown on live site requires a separate public reader readback. These are recorded work items, not a claim that all 85635 information is complete.</p>
+        <p className={s.note}>Found includes recorded leads and routes, not verified claims. Verified requires an accepted pipeline verification or a verified publication outcome. Promoted means the publication record says it reached the canonical version. Shown on live site requires a separate public reader readback. These are recorded work items, not a claim that all information is complete.</p>
         {activity.roles.length > 0 && <p className={s.text14}><span className={s.strong}>Workers recorded on this work: </span>{activity.roles.map(([role, count]) => `${role} (${count} listed item${count === 1 ? "" : "s"})`).join(" · ")}. These are historical workers; current Scouts are reported above.</p>}
         {activity.recent.length > 0 && <div className={s.stack8} style={{ marginBottom: 24 }}>
           <span className={s.label}>Recent recorded work</span>

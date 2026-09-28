@@ -29,9 +29,10 @@ test("Admin stage counts use exact Send marks and separate publication from read
     row("found", { discovered: { routes: 1, records: 0, pointers: 0, sourceRows: null }, workers: [{ role: "SCOUT", model: { kind: "MODEL", id: "haiku" }, attempts: 1 }] }),
     row("approved", { parsed: { succeeded: 1, failed: 0, usable: null }, verification: { unit: "pipeline item", items: 1, passed: 1, needsMoreEvidence: 0, rejected: 0, refusedFinishes: 0 }, promoted: "PROMOTED" }),
     row("served", { promoted: "PROMOTED", publiclyAvailable: "CONFIRMED" }),
+    row("partial-check", { verification: { unit: "validation check", items: 3, passed: 1, needsMoreEvidence: 2, rejected: 0, refusedFinishes: 0 } }),
     row("other", { assignmentKeys: ["another-send"], publiclyAvailable: "CONFIRMED" }),
   ], scope.key);
-  assert.equal(activity.listed, 3);
-  assert.deepEqual(activity.stages, { found: 1, parsed: 1, verified: 1, promoted: 2, live: 1 });
+  assert.equal(activity.listed, 4);
+  assert.deepEqual(activity.stages, { found: 1, parsed: 1, verified: 2, promoted: 2, live: 1 });
   assert.deepEqual(activity.roles, [["SCOUT · haiku", 1]]);
 });

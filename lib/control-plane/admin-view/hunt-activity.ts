@@ -9,7 +9,7 @@ export function huntActivity(rows: readonly AssignmentListRow[], assignmentKey: 
     found: linked.filter(row => row.discovered !== null &&
       row.discovered.routes + row.discovered.records + row.discovered.pointers > 0).length,
     parsed: linked.filter(row => (row.parsed?.succeeded ?? 0) > 0).length,
-    verified: linked.filter(row => (row.verification?.passed ?? 0) > 0).length,
+    verified: linked.filter(row => (row.verification?.unit === "pipeline item" && row.verification.passed > 0) || row.promoted === "PROMOTED").length,
     promoted: linked.filter(row => row.promoted === "PROMOTED").length,
     live: linked.filter(row => row.publiclyAvailable === "CONFIRMED").length,
   };

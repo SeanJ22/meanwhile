@@ -16,6 +16,8 @@ import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { isScheduled } from "../scheduler/obligation.ts";
+import type { FreshnessObligation } from "../scheduler/obligation.ts";
+import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
@@ -35,6 +37,41 @@ export interface AutonomousDecision {
   readonly action: "SCOUT" | "WORKER" | "BLOCKED" | "STAGED";
   readonly task: RouteTask | null;
   readonly reason: string;
+}
+
+/** Exact immutable instruction lineage for an early technical slice. An old
+ * occurrence can predate ownerInstructions on its WorkItem, but a later Send
+ * on the same obligation cannot retroactively assign it to that instruction. */
+export function exactInstructionAutonomousWorkIds(input: {
+  obligations: readonly FreshnessObligation[]; occurrences: readonly FreshnessOccurrence[];
+  workItems: readonly WorkItem[]; assignmentKey: string; receiptId: string;
+}): ReadonlySet<string> {
+  const owners = new Map(input.obligations.map(row => [row.id, row] as const));
+  const roots = new Set(input.occurrences.flatMap(occurrence => {
+    const marks = (owners.get(occurrence.obligationId)?.assignments ?? [])
+      .filter(mark => mark.assignmentKey === input.assignmentKey && Number.isFinite(Date.parse(mark.at)) &&
+        Date.parse(mark.at) <= Date.parse(occurrence.openedAt))
+      .sort((a, b) => a.at.localeCompare(b.at) || a.ref.localeCompare(b.ref));
+    return marks.at(-1)?.ref === input.receiptId ? [occurrence.workItemId] : [];
+  }));
+  const byId = new Map(input.workItems.map(item => [item.id, item] as const));
+  const admitted = new Set<string>();
+  for (const item of input.workItems) {
+    if (item.autonomousPlan?.ownerInstructions?.includes(input.receiptId)) { admitted.add(item.id); continue; }
+    let current: WorkItem | undefined = item;
+    const seen = new Set<string>();
+    while (current && !seen.has(current.id)) {
+      if (roots.has(current.id)) { admitted.add(item.id); break; }
+      seen.add(current.id);
+      const link: { readonly parentWorkItemId: string; readonly authority: string } | undefined =
+        (current as WorkItem & { readonly planRepair?: {
+        readonly parentWorkItemId: string; readonly authority: string;
+      } }).planRepair;
+      const parent: WorkItem | undefined = link?.authority === "WORK_INSTRUCTIONS_ONLY" ? byId.get(link.parentWorkItemId) : undefined;
+      current = parent?.project === item.project && parent.subject === item.subject ? parent : undefined;
+    }
+  }
+  return admitted;
 }
 
 export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {

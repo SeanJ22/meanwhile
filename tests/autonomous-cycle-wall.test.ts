@@ -4,7 +4,7 @@ import test from "node:test";
 
 import { appendFreshnessCycleDigest, readLatestFreshnessCycleOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import type { FreshnessCycleOutcome } from "../lib/control-plane/owner-surface.ts";
-import { ControlPlaneRequestTimeout, withStoreBudget } from "../lib/control-plane/repository/request-bounds.ts";
+import { ControlPlaneRequestTimeout, currentStoreBudget, withStoreBudget } from "../lib/control-plane/repository/request-bounds.ts";
 import { WORKER_MAX_WALL_MS } from "../lib/control-plane/workers/runtime.ts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
@@ -20,6 +20,58 @@ test("the normal cycle wires its autonomous store and dispatch deadlines ahead o
   assert.ok(store >= 0 && store < dispatch && dispatch < bounded && bounded < coordinator && coordinator < final);
   assert.match(source.slice(bounded, final), /runHeldWorkerFleetCycle\(ROOT, fleet, true, \{[\s\S]*?deadlineMs: autonomousDeadlineMs/);
   assert.match(source.slice(bounded, final), /onDeferred: reason => runtimeConditions\.push/);
+});
+
+test("the original instruction starts before independent lanes and joins before finalization", async () => {
+  const source = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  const early = source.indexOf("const earlyOriginal =");
+  const meetings = source.indexOf('finishPhase("meetings-discovery");', early);
+  const campaign = source.indexOf('finishPhase("campaign-sites");', meetings);
+  const candidate = source.indexOf('finishPhase("candidate-publications");', campaign);
+  const join = source.indexOf("earlyAutonomous = earlyOriginal === null ? null : await earlyOriginal;", candidate);
+  const final = source.indexOf('finalStep("research-state:final"', join);
+  assert.ok(early >= 0 && early < meetings && meetings < campaign && campaign < candidate && candidate < join && join < final);
+  assert.match(source.slice(early, meetings), /exactInstructionAutonomousWorkIds\([\s\S]*?assignmentKey: ORIGINAL_LIFETIME_HUNT\.key, receiptId: ORIGINAL_LIFETIME_HUNT\.receiptId/);
+  assert.match(source.slice(early, meetings), /acceptsWorkItem: item => lifetimeHuntSubjects\.has\(item\.subject\) && exactWorkIds\.has\(item\.id\)/);
+  assert.doesNotMatch(source.slice(early, meetings), /maximum:/, "the original hunt has no discretionary dispatch count cap");
+
+  // Measured old cycles reached the late block at 566 s; its 150 s admission
+  // cannot fit before 690 s. Starting after debt commit at 400 s can fit.
+  const cycleStart = Date.now() - 400_000;
+  const deadline = cycleStart + 690_000;
+  assert.ok(Date.now() + 150_000 < deadline);
+  assert.ok(cycleStart + 566_000 + 150_000 >= deadline);
+  const h = await autonomousHarness({ plan: plan => ({ ...plan, ownerInstructions: ["original-receipt"] }) });
+  const list = h.repos.workItems.list.bind(h.repos.workItems);
+  let releaseSelection!: () => void;
+  const heldSelection = new Promise<void>(resolve => { releaseSelection = resolve; });
+  h.repos.workItems.list = async () => { await heldSelection; return list(); };
+  const earlyPass = runAutonomousCoordinator(h.runtime, { concurrency: 1, deadlineMs: deadline,
+    acceptsWorkItem: item => item.autonomousPlan?.ownerInstructions?.includes("original-receipt") === true });
+  let ordinaryLaneRan = false;
+  await Promise.resolve().then(() => { ordinaryLaneRan = true; });
+  releaseSelection();
+  const pass = await earlyPass;
+  assert.equal(ordinaryLaneRan, true, "independent lanes can run while the original slice selects work");
+  assert.equal(pass.dispatches.length, 1);
+  assert.equal(pass.dispatches[0].outcome, "WORKED");
+  await appendFreshnessCycleDigest(h.repos, { outcome: completedCycle(0), lines: ["normal original slice settled before finalization"] });
+  assert.equal((await readLatestFreshnessCycleOutcome(h.repos))?.outcome.state, "SUCCEEDED");
+});
+
+test("the early slice's store deadline does not leak into independent cycle lanes", async () => {
+  let release!: () => void;
+  const hold = new Promise<void>(resolve => { release = resolve; });
+  const original = withStoreBudget("original-hunt-early-workers", 10, async () => {
+    assert.equal(currentStoreBudget()?.label, "original-hunt-early-workers");
+    await hold;
+    assert.equal(currentStoreBudget()?.label, "original-hunt-early-workers");
+  });
+  const independent = await withStoreBudget("independent-publication", 1_000, async () => currentStoreBudget());
+  assert.equal(independent?.label, "independent-publication");
+  release();
+  await original;
+  assert.equal(currentStoreBudget(), undefined);
 });
 
 function completedCycle(deferred: number): FreshnessCycleOutcome {

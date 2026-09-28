@@ -70,6 +70,42 @@ test("unknown source routes to existing Scout and restart deduplicates the durab
   assert.equal(h.calls.length,0);
 });
 
+test("cycle selection uses its already joined item and history instead of reopening every full store", async () => {
+  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
+  // A normal prior selection has already registered the canonical Scout task.
+  const first=await nextAutonomousOperation(h.runtime,h.item.id);
+  assert.equal(first.action,"SCOUT");
+  const routeTasks=(await h.repos.routeTasks.list()).map(row=>row.value);
+  const fail=async()=>{throw new Error("REDUNDANT_CYCLE_HISTORY_READ");};
+  const runtime:AutonomousCoordinatorRuntime={...h.runtime,repos:{...h.repos,
+    workItems:{...h.repos.workItems,mustRead:fail},
+    attempts:{...h.repos.attempts,list:fail},
+    scoutResults:{...h.repos.scoutResults,readAll:fail},
+    routeTasks:{...h.repos.routeTasks,list:fail},
+  }};
+  const selected=await nextAutonomousOperation(runtime,h.item.id,[h.item],{attempts:[],scouts:[],routeTasks});
+  assert.equal(selected.action,"SCOUT");
+  assert.equal(selected.task?.workItemId,h.item.id);
+  assert.deepEqual(h.calls,[],"selecting an owed Scout does not fetch source bytes or call a provider");
+});
+
+test("coordinator joins Scout and route history once before bounded selection", async () => {
+  const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
+  await nextAutonomousOperation(h.runtime,h.item.id);
+  let scoutReads=0,routeLists=0,pointReads=0;
+  const runtime:AutonomousCoordinatorRuntime={...h.runtime,repos:{...h.repos,
+    workItems:{...h.repos.workItems,mustRead:async (...args)=>{pointReads++;return h.repos.workItems.mustRead(...args);}},
+    scoutResults:{...h.repos.scoutResults,readAll:async()=>{scoutReads++;return h.repos.scoutResults.readAll();}},
+    routeTasks:{...h.repos.routeTasks,list:async()=>{routeLists++;return h.repos.routeTasks.list();}},
+  }};
+  const cycle=await runAutonomousCoordinator(runtime,{maximum:1,maxScoutDispatches:0,concurrency:1});
+  assert.equal(cycle.decisions[0]?.action,"SCOUT");
+  assert.equal(cycle.dispatches.length,0);
+  assert.equal(scoutReads,1,"all Scout results are joined once, not scanned per WorkItem");
+  assert.equal(routeLists,1,"route tasks are joined once, not scanned per WorkItem");
+  assert.equal(pointReads,0,"selection uses the already loaded WorkItem snapshot");
+});
+
 test("a newly observed Scout route flows to Hunter without rewriting its extraction contract",async()=>{
   const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[],contract:plan.contract.schemaVersion===2?{...plan.contract,sourceScope:{...plan.contract.sourceScope,canonicalUrls:["https://fixture-clerk.example.gov/unknown-extraction-shape"]}}:plan.contract})});
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");

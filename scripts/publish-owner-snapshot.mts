@@ -80,7 +80,7 @@ import {
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
 import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
 import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
-import { collectPublishedCampaignReadback, collectPublishedWorkerReadback } from "../lib/control-plane/served-reader-production.ts";
+import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, collectPublishedManualReaderReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
@@ -755,16 +755,21 @@ async function main(): Promise<void> {
   const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
   let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
   if (!DRY_RUN && reads?.assignmentSources.ok) {
-    const workerReadback = await collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
-      .catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] }));
-    const joined = new Map([...(servedReader?.witnesses ?? []), ...workerReadback.witnesses].map(w => [`${w.itemId}:${w.approvalId}`, w]));
-    servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors] };
+    const [workerReadback, manualReadback] = await Promise.all([
+      collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+        .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),
+      collectPublishedManualReaderReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+        .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Public help readback collection failed; prior observations retain their original time and expiry."] })),
+    ]);
+    const joined = new Map([...(existing?.value.servedReaderReadback?.witnesses ?? []), ...(servedReader?.witnesses ?? []), ...workerReadback.witnesses, ...manualReadback.witnesses]
+      .map(w => [`${w.itemId}:${w.approvalId}`, w]));
+    servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
   }
   const checklists = reads?.billingScopes?.filter(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
     scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
     scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
     .map(scope => buildChecklistCensus({ scope,
-    sources: reads.assignmentSources.ok ? reads.assignmentSources.value : null,
+    sources: reads.assignmentSources.ok ? { ...reads.assignmentSources.value, servedReader } : null,
     observedAt: NOW_ISO, previous: existing?.value.checklists?.find(row => row.scopeId === scope.key) }))
     ?? existing?.value.checklists?.map(row => ({ ...row, readsComplete: false }));
   const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, checklists };

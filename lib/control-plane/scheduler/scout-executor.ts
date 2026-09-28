@@ -386,11 +386,11 @@ const FINISH_SPEC: ScoutToolSpec = {
             permissionReading: { type: "string" },
             evidenceArtifactIds: { type: "array", items: { type: "string" } },
             observedOn: { type: "string", description: "CLAIM: the retrieval date (YYYY-MM-DD, UTC) from the cited artifact's `retrieved` stamp." },
-            recordClass: { type: "string", description: "CLAIM: the obligation's record class, as briefed." },
+            recordClass: { type: "string", description: "CLAIM: the source contract's record class, as briefed." },
             deterministic: { type: "boolean" },
             unverified: { type: "array", items: { type: "string" } },
-            contractRepair: { type: "object", description: "Optional bounded source-contract proposal. Never a verification result. Use schemaVersion:1, sourceArtifactId, extraction (existing JSON_RECORDS/XML_RECORDS/HTML_TABLE/DELIMITED_TEXT mapping), and authorities (existing typed independent authority descriptors). All cited source/authority artifacts must be real vaulted evidence cited in evidenceArtifactIds. Do not change subject/class, invent authorities, or disable required verification.",
-              properties: { schemaVersion: { type: "integer", enum: [1] }, sourceArtifactId: { type: "string" }, extraction: { type: "object" }, authorities: { type: "array", maxItems: 4, items: { type: "object" } } },
+            contractRepair: { type: "object", description: "Optional bounded source-contract proposal. Never a verification result. Use schemaVersion:1, sourceArtifactId, extraction (existing JSON_RECORDS/XML_RECORDS/HTML_TABLE/DELIMITED_TEXT/TEXT_BLOCKS mapping), and authorities (existing typed independent authority descriptors). All cited source/authority artifacts must be real vaulted evidence cited in evidenceArtifactIds. Do not change subject/class, invent authorities, or disable required verification.",
+              properties: { schemaVersion: { type: "integer", enum: [1] }, sourceArtifactId: { type: "string" }, extraction: { type: "object" }, authorities: { type: "array", maxItems: 16, items: { type: "object" } } },
               required: ["schemaVersion", "sourceArtifactId", "extraction", "authorities"], additionalProperties: false },
           },
           required: [
@@ -557,6 +557,8 @@ export interface ScoutExecutorDeps {
     readonly route: RouteDescriptor | null;
     readonly providerId: string | null;
     readonly reason: string;
+    /** Exact active autonomous extraction class; the standing obligation may be a generic provider family. */
+    readonly sourceRecordClass?: string;
     readonly inherited: InheritedEvidence;
     /** Current recorded Send questions, including marks saved during this cycle. */
     readonly ownerQuestions?: readonly WorkQuestion[];
@@ -1185,6 +1187,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const startedMs = Date.now();
       const startedAt = clock();
       const ctx = deps.contextFor(row);
+      const sourceRecordClass = ctx.sourceRecordClass ?? row.obligation.recordClass;
       const toolkit = deps.toolkitFor({
         obligation: row,
         route: ctx.route,
@@ -1485,7 +1488,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 vaulted: toolkit.vaultedArtifactIds,
                 inherited,
                 minRungs,
-                machine: { provenance, recordClass: row.obligation.recordClass },
+                machine: { provenance, recordClass: sourceRecordClass },
               });
               const issues = validated.issues;
               /*
@@ -2000,7 +2003,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         workItemId,
         subjectId: row.obligation.subjectId,
         routeId: row.obligation.routeId,
-        recordClass: row.obligation.recordClass,
+        recordClass: sourceRecordClass,
         providerId: ctx.providerId,
         reason: ctx.reason,
         outcome: (accepted?.outcome as ScoutOutcome | undefined) ?? "NO_PROGRESS",
@@ -2027,7 +2030,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         usd,
         elapsedMs,
         artifactIds: artifacts.map((a) => a.artifactId),
-        ...(ctx.tools.readHeldArtifact ? { recoveryCapabilityVersion: SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } : {}),
+        ...(toolkit.heldEvidenceProtocolAvailable ? { recoveryCapabilityVersion: SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } : {}),
         ...(knowledgeReads.length ? { knowledgeReads } : {}),
         methodCandidateIds: [],
         refusal,

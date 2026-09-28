@@ -10,7 +10,7 @@ const source=()=>({obligations:[
   {subjectId:"az:correct",assignments:[{assignmentKey:scope.key,ref:scope.receiptId}]},
   {subjectId:"az:wrong-send",assignments:[{assignmentKey:scope.key,ref:"different-send"}]},
   {subjectId:"az:wrong-scope",assignments:[{assignmentKey:"zcta:2020/85634",ref:scope.receiptId}]},
-],workItems:[{id:"work",subject:"az:correct"},{id:"wrong",subject:"az:wrong-send"}],pipeline:[],workerResults:[
+],attempts:[],artifacts:[],workItems:[{id:"work",subject:"az:correct"},{id:"wrong",subject:"az:wrong-send"}],pipeline:[],workerResults:[
   {id:"parser:1",workItemId:"work",result:{role:"PARSER",verdict:"EXTRACTED",recordClass:"OFFICIAL_ROSTER",subjectId:"az:correct",artifactId:"artifact",records:[{id:"person:1"}]}},
   {id:"parser:wrong",workItemId:"wrong",result:{role:"PARSER",verdict:"EXTRACTED",recordClass:"OFFICIAL_ROSTER",subjectId:"az:wrong-send",artifactId:"wrong-artifact",records:[{id:"wrong:person"}]}},
 ]} as unknown as AssignmentSources);

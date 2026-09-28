@@ -31,6 +31,10 @@ test("a later worker opens full handed method and saved sanitized bytes with mea
       retrievedAt: "2026-09-27T00:00:00Z", sourceId: "example.gov", methodRouteId: "scout:fetch_public" }; },
   };
   const toolkit = buildScoutToolkit(ctx);
+  assert.equal(toolkit.heldEvidenceProtocolAvailable, true, "A real handed vault reader earns the recovery capability stamp.");
+  const { readHeldArtifact: _heldReader, ...withoutHeldReader } = ctx;
+  assert.equal(buildScoutToolkit(withoutHeldReader).heldEvidenceProtocolAvailable, false,
+    "Advertising read_held without a brokered reader cannot stamp the new protocol.");
   const input = { rung: "other:knowledge-replay", why: "recover held source method before another network call" };
   const catalog = await toolkit.call("find_manual", { ...input, query: "AZ source methods" }, null);
   assert.equal(catalog.ok, true);

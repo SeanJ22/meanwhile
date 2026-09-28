@@ -1,4 +1,3 @@
-import "server-only";
 import { neon } from "@neondatabase/serverless";
 import { controlPlaneUrlFromEnv } from "../control-plane/repository/pg-store.ts";
 
@@ -15,6 +14,7 @@ let pending:Promise<PublicBodyAttemptRead>|null=null;
 /** Public operational facts only. The SQL selects no instructions, reader
  * activity, spending or worker prose. Never downloads the owner snapshot. */
 export function readPublicBodyAttempts():Promise<PublicBodyAttemptRead> {
+  if (typeof window !== "undefined") throw new Error("PUBLIC_BODY_ATTEMPTS_SERVER_ONLY");
   if (cached && Date.now()-cached.at<60_000) return Promise.resolve(cached.value);
   if (pending) return pending;
   pending=(async()=>{

@@ -99,10 +99,11 @@ import { DISCHARGING_DISPOSITIONS } from "./scheduler/dispatch.ts";
 import { isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
-import type { WorkItem, WorkItemState } from "./work-item.ts";
+import { isTerminalState, type WorkItem, type WorkItemState } from "./work-item.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
+import { assignmentHistoryTerms } from "./admin-view/assignment-history.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
 const STATE_CODE_BY_NAME = new Map(US_STATES.map(state => [state.name, state.code.toLowerCase()]));
@@ -2593,7 +2594,14 @@ export interface AssignmentIndexRow {
   readonly subjectName: string | null;
   readonly stateCode: string | null;
   readonly assignmentKeys: readonly string[];
+  /** Full retained execution search terms from the canonical assignment membership. */
+  readonly historyTerms?: readonly string[];
   readonly lastActivityAt: string | null;
+  readonly lastAttemptAt?: string | null;
+  /** Recorded WorkItems whose dependency graph names this assignment's work. */
+  readonly directDependentCount?: number | null;
+  /** Dependents for which this assignment is the sole unsatisfied upstream. */
+  readonly readyAfterThisSettlesCount?: number | null;
   readonly band: 1 | 2 | 3 | null;
   readonly overdue: boolean | null;
   readonly waitingSince: string | null;
@@ -2863,12 +2871,38 @@ export function buildAssignmentView(
   const rows = built.rows;
   const manualKeyByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
     ? [[item.id, item.manualSourceGap.assignmentKey] as const] : []));
+  const historyTerms = assignmentHistoryTerms(src,built.memberships);
+  const dependentsByUpstream = new Map<string,Set<string>>();
+  const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
+  for (const item of src.workItems) for (const dependency of item.dependencies) {
+    const dependents = dependentsByUpstream.get(dependency.upstreamId) ?? new Set<string>();
+    dependents.add(item.id); dependentsByUpstream.set(dependency.upstreamId,dependents);
+  }
   const allRowsIndex: AssignmentIndexRow[] = rows.map(row => {
     const listed = listRowOf(row, 160);
     const manualKey = manualKeyByItem.get(row.id);
+    const membership = built.memberships.get(row.id);
+    const workIds = membership?.workItemIds ?? new Set<string>();
+    const graphReadable = membership !== undefined && [...workIds].every(id=>workById.has(id));
+    const relatedAttempts = [...workIds].flatMap(id=>built.idx.attemptsByWorkItem.get(id)??[]);
+    const directDependents = graphReadable ? new Set([...workIds].flatMap(id=>[...(dependentsByUpstream.get(id)??[])])) : null;
+    for (const id of workIds) directDependents?.delete(id);
+    const dependentGraphReadable = directDependents !== null && [...directDependents].every(id=>{
+      const dependent=workById.get(id);
+      return dependent !== undefined && dependent.dependencies.every(edge=>workById.has(edge.upstreamId));
+    });
+    const readyAfterThisSettlesCount = !dependentGraphReadable || directDependents === null ? null : [...directDependents].reduce((count,id)=>{
+      const dependent = workById.get(id);
+      if (!dependent || isTerminalState(dependent.state)) return count;
+      const outstanding = dependent.dependencies.filter(edge=>workById.get(edge.upstreamId)?.state !== "VERIFIED_COMPLETE");
+      return outstanding.length === 1 && workIds.has(outstanding[0]!.upstreamId) ? count+1 : count;
+    },0);
     return { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
       label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
-      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualKey ? [manualKey] : [])])], lastActivityAt: listed.lastActivityAt,
+      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualKey ? [manualKey] : [])])],
+      historyTerms:historyTerms.get(row.id)??[],lastActivityAt: listed.lastActivityAt,
+      lastAttemptAt:relatedAttempts.map(attempt=>attempt.startedAt).sort().at(-1)??null,
+      directDependentCount:directDependents?.size??null,readyAfterThisSettlesCount,
       band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,
       eligibleAt: listed.waiting.eligibleAt, blocker: listed.waiting.blocker,
       owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };

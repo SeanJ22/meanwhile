@@ -39,6 +39,20 @@ const checklistCensusRead = sharedRead<Awaited<ReturnType<typeof readChecklistCe
   late: ms => ({ kind: "UNREAD", detail: lateWords("The exact checklist census", ms) }),
 });
 
+function durationWords(ms: number | null): string {
+  if (ms === null || !Number.isFinite(ms) || ms < 0) return "not measured";
+  if (ms < 60_000) return "under 1 minute";
+  const minutes = Math.floor(ms / 60_000);
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 48) return `${hours} h ${minutes % 60} min`;
+  return `${Math.floor(hours / 24)} d ${hours % 24} h`;
+}
+
+function timingDate(value: string | null): string {
+  return value && Number.isFinite(Date.parse(value)) ? formatEastern(value, { year: true }) : "not recorded";
+}
+
 export async function DoneScreen(props: { readonly searchParams: Promise<SearchParams> }) {
   const sp = await props.searchParams;
   const base = await openPage("/readiness/done", sp);
@@ -113,6 +127,11 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
   const assessment = connections.assessment;
   const matchingInstances = assessment?.results.filter(row => !query || `${row.obligationKey} ${row.definitionIds.join(" ")} ${row.disposition} ${row.reasons.join(" ")} ${row.nextAction}`.toLowerCase().includes(query.toLowerCase())) ?? [];
   const instancePage = Math.max(1, Number.isSafeInteger(Number(param(sp, "itemPage") ?? "1")) ? Number(param(sp, "itemPage") ?? "1") : 1);
+  const timingRows = scopedCensus?.deliveryTimings ?? null;
+  const unfinishedTimingRows = timingRows?.filter(row => row.waitingFor !== "NONE") ?? [];
+  const timingPage = Math.max(1, Number.isSafeInteger(Number(param(sp, "timingPage") ?? "1")) ? Number(param(sp, "timingPage") ?? "1") : 1);
+  const timingPageSize = 25;
+  const shownTimingRows = timingRows?.slice((timingPage - 1) * timingPageSize, timingPage * timingPageSize) ?? [];
   const shownInstances = matchingInstances.slice((instancePage - 1) * 50, instancePage * 50);
   const inForceVersion = standardVersion(READINESS_DERIVATION_CONTRACT);
 
@@ -200,7 +219,7 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
       </section>
 
       <Section title="Sean's full checklist" lede={`${CHECKLIST_PROFILE.version} · ${allDefinitions.length} original definitions. This is the adopted target, not a claim that those items are delivered. The older state grid below measures a different capability standard.`} />
-      <p className={s.goldNote}>{censusGap ?? connections.assessmentGap ?? "The exact instruction census is recorded below."} The related family and contract readings are global supporting paths, not a claim that every record belongs to this selected state or ZIP.</p>
+      <p className={s.goldNote}>{censusGap ? censusGap : connections.assessmentGap ? connections.assessmentGap : assessment ? "The exact scoped instruction census is shown below." : "No exact scoped instruction census was available for this read."} The related family and contract readings are global supporting paths, not a claim that every record belongs to this selected state or ZIP.</p>
       <div className={`${s.card} ${s.cardList} ${s.gap32}`}>
         <form action="/readiness/done" method="get" className={s.row10} role="search">
           {scopeParam(base.scope) && <input type="hidden" name="scope" value={scopeParam(base.scope)!} />}
@@ -246,13 +265,35 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
         </div>
       </>}
 
+      {scopedCensus && <>
+        <Section title="Time from work registration to public check" lede="These are process clocks for this exact saved instruction and receipt. They explain delays; they do not award checklist credit or prove when a source first published a fact." />
+        <div className={`${s.card} ${s.cardList} ${s.gap20}`}>
+          <p className={s.note}>{timingRows === null ? "The runner has not published per-work timing records for this census." : `${timingRows.length} tracked work item${timingRows.length === 1 ? "" : "s"}; ${unfinishedTimingRows.length} unfinished. Oldest unfinished work appears first. Showing ${shownTimingRows.length} on page ${timingPage} of ${Math.max(1, Math.ceil(timingRows.length / timingPageSize))}.`} Ready-to-start time and source publication time are not recorded.</p>
+          {shownTimingRows.map(row => <details key={row.workItemId} className={s.insetRow}>
+            <summary className={s.text14}>{row.subjectId} · {row.recordClass.replaceAll("_", " ").toLowerCase()} · {row.waitingFor === "NONE" ? "public readback observed" : `waiting for ${row.waitingFor.replaceAll("_", " ").toLowerCase()}`}{row.unfinishedAgeMs !== null ? ` · stage age ${durationWords(row.unfinishedAgeMs)}` : ""}</summary>
+            <div className={s.stack8}>
+              <p className={s.monoSmall}>Work {row.workItemId}</p>
+              <p className={s.note}>Registered {timingDate(row.registeredAt)}; first attempt started {timingDate(row.firstStartedAt)}; first evidence saved {timingDate(row.firstSavedAt)}.</p>
+              <p className={s.note}>Parsed {timingDate(row.parsedAt)}; verified {timingDate(row.verifiedAt)}; accepted {timingDate(row.acceptedAt)}; public readback observed {timingDate(row.visibleAt)}.</p>
+              <p className={s.note}>Registration to first start: {durationWords(row.registeredToStartMs)}. This begins at work registration, not when the work became ready. Verification to observed public readback: {durationWords(row.verifiedToReadbackMs)}. That interval ends at the check and is not a claim about first visibility.</p>
+              <p className={s.note}>Current stage began {timingDate(row.waitingSince)}; unfinished stage age {durationWords(row.unfinishedAgeMs)}; total unfinished work age {durationWords(row.workAgeMs)}. Ready time: unknown. Source publication time: unknown.{row.timingIssue ? " One or more timing values were invalid or out of order; affected intervals are not measured." : ""}</p>
+            </div>
+          </details>)}
+          {timingRows?.length === 0 && <p className={s.note}>No process timing row is recorded for this exact instruction. That is not evidence that no work exists.</p>}
+          <div className={s.row10}>
+            {timingPage > 1 && <a className={s.btnLink} href={withScope("/readiness/done", base.scope, { q: query || null, timingPage: String(timingPage - 1) })}>Previous 25</a>}
+            {timingRows && timingPage * timingPageSize < timingRows.length && <a className={s.btnLink} href={withScope("/readiness/done", base.scope, { q: query || null, timingPage: String(timingPage + 1) })}>Next 25</a>}
+          </div>
+        </div>
+      </>}
+
       <Section title="Where each family connects" lede={`${connections.families.length} declared data families and ${connections.manualContracts.length} production contracts. These links explain where evidence could reach a reader; they do not score a checklist item.`} />
       {connections.readFailure && <p className={s.goldNote}>Publication receipts could not be read: {connections.readFailure}</p>}
       {connections.asOf && <p className={s.note}>Publication status checked {formatEastern(connections.asOf, { year: true })}. The check reads current pointers, latest attempts and exact-version reader receipts; it does not re-read every saved document.</p>}
       <div className={s.stack10}>{connections.families.map(family => <details key={family.id} className={`${s.card} ${s.cardList}`} id={`checklist-family-${family.id}`}>
         <summary className={s.titleStrong14}>{family.id} · {family.classification === null ? "lifecycle not classified" : (typeof family.classification === "string" ? family.classification : family.classification.join(", ")).replaceAll("_", " ")} · {family.observation.replaceAll("_", " ").toLowerCase()}</summary>
         <p className={s.note}>{family.relationship}</p>
-        <p className={s.note}>Reader surfaces: {family.surfaces.length ? family.surfaces.join(", ") : "none declared"}. Related checklist groups: {family.groups.join(", ") || "none declared"}.</p>
+        <p className={s.note}>Reader surfaces: {family.surfaces.length ? family.surfaces.join(", ") : "no reader surface declared for this family"}. Related checklist groups: {family.groups.length ? family.groups.join(", ") : "no checklist group relationship declared"}.</p>
         {family.contracts.length === 0 ? <p className={s.goldNote}>No matching runtime publication contract was read for this family. This does not prove no records exist.</p> : <div className={s.stack8}>{family.contracts.map(contract => <div key={contract.contractId} className={s.insetRow}>
           <span className={s.monoId}>{contract.contractId}</span>
           <span className={`${s.text14} ${s.grow}`}>{contract.says} {contract.latestAttempt?.failureCode ? `Latest attempt ${formatEastern(contract.latestAttempt.attemptedAt)} failed: ${contract.latestAttempt.failureCode}.` : ""}</span>

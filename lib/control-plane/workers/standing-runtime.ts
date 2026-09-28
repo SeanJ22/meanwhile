@@ -32,6 +32,8 @@ import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { consumePlanRepairs, planRepairBrief, planRepairFailureBrief, type PlanRepairLink } from "./plan-repair.ts";
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
+import { promotedRegistries } from "../scheduler/provider-inputs.ts";
+import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-lineage.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
@@ -50,7 +52,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
+  let siblingHeldRootFor: NonNullable<ResearchRuntimeTools["siblingHeldRootFor"]> = () => null;
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
+    siblingHeldRootFor: held=>siblingHeldRootFor(held),
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{}),
     ...(input.openBytesFor?{openBytesFor:input.openBytesFor}:{})};
   const [prior, priorWorkers] = await Promise.all([
@@ -70,9 +74,44 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
   const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
-  const heldRuntime = standingFleetRuntime(input);
+  const heldRuntime = standingFleetRuntime({...input,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
-  await consumePlanRepairs({ repos: input.repos, scouts: prior, now: now(),
+  const installed = promotedRegistries();
+  const registeredPublisherAddressFor = (subjectId:string):string|null => {
+    if ("unreadable" in installed) return null;
+    const found = [...installed.registries.values()].flatMap(registry=>registry.jurisdictions.filter(row=>row.id===subjectId));
+    if (found.length !== 1) return null;
+    const address = found[0]!.ownWebAddress;
+    try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
+    catch { return null; }
+  };
+  const [allWorkRows,allOccurrenceRows,allArtifactRows,allAttemptRows] = await Promise.all([
+    input.repos.workItems.list(),input.repos.occurrences.list(),input.repos.artifacts.readAll(),input.repos.attempts.list(),
+  ]);
+  const allWork=allWorkRows.map(row=>row.value);
+  const lineages=selectStandingLineages({occurrences:allOccurrenceRows.map(row=>row.value),workItems:allWork,
+    artifacts:allArtifactRows,attempts:allAttemptRows.map(row=>row.value),workerResults:priorWorkers});
+  const sharedHeldByRoot=new Map<string,string[]>();
+  const sharedOriginByRoot=new Map<string,Set<string>>();
+  for (const lineage of lineages.filter(row=>row.siblingRootIds.length>1)) {
+    const address=registeredPublisherAddressFor(allWork.find(item=>item.id===lineage.rootWorkItemId)?.subject??"");
+    if (!address) continue;
+    const registeredHost=new URL(address).hostname.toLowerCase();
+    const brokered=brokeredSiblingCaptures({lineage,artifacts:allArtifactRows,
+      attempts:allAttemptRows.map(row=>row.value),scouts:prior,registeredHost});
+    sharedHeldByRoot.set(lineage.rootWorkItemId,[...new Set(brokered.map(row=>row.artifactId))]);
+    sharedOriginByRoot.set(lineage.rootWorkItemId,new Set(brokered.map(row=>`${row.originWorkItemId}\u0000${row.artifactId}`)));
+  }
+  siblingHeldRootFor=held=>{
+    const lineage=lineages.find(row=>row.siblingRootIds.includes(held.originWorkItemId) &&
+      row.rootWorkItemId!==held.originWorkItemId &&
+      sharedOriginByRoot.get(row.rootWorkItemId)?.has(`${held.originWorkItemId}\u0000${held.artifactId}`));
+    return lineage?.rootWorkItemId??null;
+  };
+  const deferredSiblingRoots=new Set(lineages.flatMap(lineage=>lineage.siblingRootIds.filter(id=>id!==lineage.rootWorkItemId)));
+  await consumePlanRepairs({ repos: input.repos, scouts: prior.filter(result=>!deferredSiblingRoots.has(result.workItemId)),
+    now: now(),registeredPublisherAddressFor,
+    authorizedSiblingArtifactIdsFor: parent=>sharedHeldByRoot.get(parent.id)??[],
     readCapture: async id => {
       const { artifact } = await readRepairCapture(id);
       return { evidence: evidenceProjection(await heldRuntime.readEvidence(id)), permission: artifact.permission, transport: artifact.transport,
@@ -118,9 +157,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         inheritedManualStores.set(item.id,fieldManual);
         const manualLines=fieldManualBriefLines(manualProjection);
         inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,availableIds:manualEntries.map(entry=>entry.id),lines:manualLines});
-        return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
+        return {route:null,providerId:null,sourceRecordClass:plan.contract.recordClass,
+          reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
           inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds),
-            ...(repair?.retainedEvidenceIds??[]),...(repair?.sourceArtifactId?[repair.sourceArtifactId]:[])])],manualEntries,summary:[
+            ...(repair?.retainedEvidenceIds??[]),...(repair?.sourceArtifactId?[repair.sourceArtifactId]:[]),
+            ...(sharedHeldByRoot.get(item.id)??[])])],manualEntries,summary:[
             ...manualLines,
             ...planRepairFailureBrief(item),
             ...(item.publicationOutcome && item.publicationOutcome.status !== "PUBLISHED" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),

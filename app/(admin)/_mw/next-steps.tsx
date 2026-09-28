@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 import { fnv } from "./fnv.ts";
+import { actionReplyWords, decodeAdminActionResponse } from "./action-receipt.ts";
 import s from "./mw.module.css";
 import { Pill } from "./ui.tsx";
 
@@ -60,6 +61,7 @@ type Phase =
   | { readonly kind: "CONFIRM"; readonly option: string; readonly consequence: string }
   | { readonly kind: "SAVING"; readonly what: string }
   | { readonly kind: "SAVED"; readonly what: string; readonly quoted: string | null; readonly ref: string; readonly says: string }
+  | { readonly kind: "PENDING" | "REFUSED" | "UNCONFIRMED"; readonly what: string; readonly says: string }
   | { readonly kind: "FAILED"; readonly what: string; readonly says: string };
 
 /** Card-relevant parts of the pulse revision: the published snapshot and the decision log. */
@@ -120,22 +122,21 @@ export function NextSteps(props: {
           returnTo: props.returnTo,
         }),
       });
-      const body = (await res.json().catch(() => null)) as { receipt?: { says?: string; outcome?: string; receiptId?: string } } | null;
-      const receipt = body?.receipt;
-      if (!res.ok || !receipt || receipt.outcome === "REFUSED") {
-        set(card.rowId, { kind: "FAILED", what, says: receipt?.says ?? `The server answered ${res.status}. Nothing was recorded, so this still waits on you.` });
+      const reply = decodeAdminActionResponse(res.status, await res.json().catch(() => null));
+      if (reply.kind !== "DONE") {
+        set(card.rowId, { kind: reply.kind, what, says: actionReplyWords(reply) });
         return;
       }
       set(card.rowId, {
         kind: "SAVED",
         what,
         quoted: ownerAnswer,
-        ref: receipt.receiptId ?? idempotencyKey,
-        says: receipt.says ?? "Recorded.",
+        ref: reply.receiptId,
+        says: actionReplyWords(reply),
       });
       router.refresh();
-    } catch (e) {
-      set(card.rowId, { kind: "FAILED", what, says: e instanceof Error ? `Nothing was recorded: ${e.message}.` : "Nothing was recorded." });
+    } catch {
+      set(card.rowId, { kind: "UNCONFIRMED", what, says: "The response was lost. The answer may have been recorded; check the action ledger before retrying." });
     }
   }
 
@@ -262,6 +263,11 @@ export function NextSteps(props: {
             {p.kind === "FAILED" && (
               <p className={`${s.goldNote}`} role="alert">
                 Not recorded. {p.says}
+              </p>
+            )}
+            {(p.kind === "PENDING" || p.kind === "REFUSED" || p.kind === "UNCONFIRMED") && (
+              <p className={s.goldNote} role="status">
+                {p.kind === "PENDING" ? "Still pending. " : p.kind === "REFUSED" ? "Refused. " : "Outcome unconfirmed. "}{p.says}
               </p>
             )}
             {p.kind === "SAVED" && (

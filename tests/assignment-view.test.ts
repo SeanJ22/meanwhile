@@ -325,6 +325,24 @@ test("an exact manual source gap is indexed under its Send while legacy unkeyed 
   assert.equal(Object.values(view.instructionCounts?.["zcta:2020/85635"] ?? {}).reduce((a, b) => a + b, 0), 1);
 });
 
+test("full index separates latest Attempt from activity and counts only measured dependency unlocks", () => {
+  const depends = (upstreamId:string) => ({upstreamId,kind:"PRODUCES_CONSUMES" as const,reason:"Source prerequisite",evidence:["recorded dependency"]});
+  const src = { ...empty(), workItems: [
+    workItem("upstream"),workItem("verified",{state:"VERIFIED_COMPLETE"}),workItem("other-open"),
+    workItem("ready-dependent",{dependencies:[depends("upstream"),depends("verified")]}),
+    workItem("still-blocked",{dependencies:[depends("upstream"),depends("other-open")]}),
+  ],attempts:[attempt("at-old","route-old","upstream",{startedAt:"2026-09-20T10:00:00.000Z"}),
+    attempt("at-new","route-new","upstream",{startedAt:"2026-09-21T10:00:00.000Z",abortReason:"SOURCE_UNAVAILABLE"})] };
+  const indexed=buildAssignmentView(src).allRowsIndex?.find(row=>row.id==="upstream");
+  assert.equal(indexed?.lastAttemptAt,"2026-09-21T10:00:00.000Z");
+  assert.equal(indexed?.directDependentCount,2);
+  assert.equal(indexed?.readyAfterThisSettlesCount,1);
+  assert.ok(indexed?.historyTerms?.includes("at-new"));
+  const unknown={...src,workItems:src.workItems.filter(item=>item.id!=="other-open")};
+  assert.equal(buildAssignmentView(unknown).allRowsIndex?.find(row=>row.id==="upstream")?.readyAfterThisSettlesCount,null,
+    "an unread upstream cannot be counted as satisfied");
+});
+
 test("repair successor costs and publication remain on the original Send assignment", () => {
   const parent = workItem("parent", { obligation: "hunt-root#1" });
   const child = { ...workItem("child"), planRepair: { parentWorkItemId: parent.id, authority: "WORK_INSTRUCTIONS_ONLY" },

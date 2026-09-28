@@ -30,13 +30,16 @@ export const RESEARCH_WORKER_VERSION = "autonomous-research-workers/1.0.0";
 export async function authorizeInheritedHeldArtifact(repos: ControlPlaneRepositories, input: {
   readonly artifactId: string; readonly originWorkItemId: string;
   readonly childWorkItemId: string; readonly project: string;
-}): Promise<boolean> {
+}, siblingRootFor?: (input:{readonly artifactId:string;readonly originWorkItemId:string;
+  readonly childWorkItemId:string;readonly project:string})=>string|null): Promise<boolean> {
   if (input.originWorkItemId === input.childWorkItemId) return false;
+  const linkedRoot = siblingRootFor?.(input) ?? null;
+  const linkedAncestorId = linkedRoot ?? input.originWorkItemId;
   const child = (await repos.workItems.read(input.childWorkItemId))?.value;
   if (!child || child.project !== input.project) return false;
   const seen = new Set<string>();
   let cursor = child;
-  while (cursor.id !== input.originWorkItemId) {
+  while (cursor.id !== linkedAncestorId) {
     if (seen.has(cursor.id)) return false;
     seen.add(cursor.id);
     const link = (cursor as typeof cursor & { readonly planRepair?: PlanRepairLink }).planRepair;
@@ -49,6 +52,8 @@ export async function authorizeInheritedHeldArtifact(repos: ControlPlaneReposito
       link.rootWorkItemId !== (parentLink?.rootWorkItemId ?? parent.id)) return false;
     cursor = parent;
   }
+  const origin = (await repos.workItems.read(input.originWorkItemId))?.value;
+  if (!origin || origin.project !== child.project || origin.subject !== child.subject) return false;
   const records = (await repos.artifacts.readAll()).filter(record => record.artifactId === input.artifactId &&
     record.workItemId === input.originWorkItemId && !record.partial);
   for (const record of records) {
@@ -64,6 +69,9 @@ export interface ResearchRuntimeTools {
   readonly browse?: ScoutToolContext["browse"];
   readonly openBytes?: ScoutToolContext["openBytes"];
   readonly openBytesFor?: (subjectId: string) => ScoutToolContext["openBytes"];
+  /** Selected same-period sibling captures, brokered from canonical source and completed-rung records. */
+  readonly siblingHeldRootFor?: (input:{readonly artifactId:string;readonly originWorkItemId:string;
+    readonly childWorkItemId:string;readonly project:string})=>string|null;
   readonly now: () => string;
 }
 
@@ -123,7 +131,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
         measuredToolkit = toolkit;
         result = await runAcquirer({...spec.acquisition,attemptId,worker,project:item.project,workItemId,grant,now:tools.now},
           {toolkit,readVault:researchVaultResolver(tools.repos,tools.store,item.project),
-            authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited)});
+            authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited,tools.siblingHeldRootFor)});
         requestCount = toolkit.requestCount; bytesFetched = toolkit.bytesFetched;
       } else if (spec.role === "DETECTIVE") {
         if (!spec.detective || spec.detective.question.subjectId !== item.subject) throw new Error("DETECTIVE_TASK_BINDING_REFUSED");

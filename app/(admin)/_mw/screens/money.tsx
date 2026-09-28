@@ -117,7 +117,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
     observedAt: base.nowIso,
     standard: base.standard,
   };
-  if (!base.shell.tracked) {
+  if (!base.shell.tracked && base.shell.decision === null) {
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>

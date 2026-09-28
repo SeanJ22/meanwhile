@@ -31,6 +31,22 @@ test("held bytes cross only a linked same-subject repair ancestry with a complet
   await registerWorkItem(h.repos, unrelated, h.now());
   assert.equal(await authorizeInheritedHeldArtifact(h.repos, { ...request, childWorkItemId: unrelated.id }), false);
 
+  const selectedRoot = createWorkItem({ project: origin.project, subject: origin.subject,
+    obligation: "Selected same-period source root", why: "Broker-selected lineage", now: h.now() });
+  await registerWorkItem(h.repos, selectedRoot, h.now());
+  const successor = { ...createWorkItem({ project: origin.project, subject: origin.subject,
+    obligation: "Selected root repair", why: "Linked successor", now: h.now() }),
+    planRepair: { ...link, parentWorkItemId: selectedRoot.id, rootWorkItemId: selectedRoot.id } };
+  await registerWorkItem(h.repos, successor, h.now());
+  const siblingRequest = { ...request, childWorkItemId: successor.id };
+  assert.equal(await authorizeInheritedHeldArtifact(h.repos, siblingRequest), false,
+    "same-subject siblings do not grant byte reuse by themselves");
+  assert.equal(await authorizeInheritedHeldArtifact(h.repos, siblingRequest,
+    held => held.artifactId === capture.artifactId && held.originWorkItemId === origin.id ? selectedRoot.id : null), true,
+    "a brokered exact sibling capture may be reused by the selected root's linked successor");
+  assert.equal(await authorizeInheritedHeldArtifact(h.repos, { ...siblingRequest, artifactId:"other" },
+    () => selectedRoot.id), false,"brokered lineage cannot fabricate absent capture metadata");
+
   const wrongSubject = { ...createWorkItem({ project: origin.project, subject: "other-subject",
     obligation: "Different subject repair", why: "Wrong subject", now: h.now() }), planRepair: link };
   await registerWorkItem(h.repos, wrongSubject, h.now());

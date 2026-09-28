@@ -10,6 +10,7 @@ import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { autonomousScoutHistory, eligibleHeldProtocolRecovery, scoutTransientDenial } from "./scout-scheduling.ts";
+import { selectStandingLineages } from "./standing-lineage.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
@@ -311,12 +312,39 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
-  const items=(await runtime.repos.workItems.list()).filter(i=>i.value.autonomousPlan && (options.acceptsWorkItem?.(i.value) ?? true));
+  const allItems=(await runtime.repos.workItems.list()).map(row=>row.value);
+  const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
+  const attempts=(await runtime.repos.attempts.list()).map(row=>row.value);
+  const lineages=selectStandingLineages({occurrences:(await runtime.repos.occurrences.list()).map(row=>row.value),
+    workItems:allItems,artifacts:await runtime.repos.artifacts.readAll(),attempts,
+    workerResults:await runtime.repos.workerResults.readAll()});
+  const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
+  const byItem=new Map(allItems.map(item=>[item.id,item] as const));
+  const lineageRoot=(item:WorkItem):string|null=>{
+    let current=item; const seen=new Set<string>();
+    while(!selectedRoot.has(current.id)) {
+      if(seen.has(current.id)) return null;
+      seen.add(current.id);
+      const parentId=(current as WorkItem & {readonly planRepair?:{readonly parentWorkItemId:string}}).planRepair?.parentWorkItemId;
+      const parent=parentId?byItem.get(parentId):null;
+      if(!parent || parent.project!==item.project || parent.subject!==item.subject) return null;
+      current=parent;
+    }
+    return current.id;
+  };
+  const duplicateLineageDeferred:{workItemId:string;reason:string;detail:string}[]=[];
+  const items=candidates.filter(item=>{
+    const root=lineageRoot(item);
+    if(!root || selectedRoot.get(root)===root) return true;
+    duplicateLineageDeferred.push({workItemId:item.id,reason:"DUPLICATE_PERIOD_LINEAGE",
+      detail:`This recorded work remains open; source acquisition continues on canonical period root ${selectedRoot.get(root)}.`});
+    return false;
+  }).map(value=>({id:value.id,value}));
   const itemSubjectById=new Map(items.map(row=>[row.id,row.value.subject] as const));
   // Repository id order is stable, not fair. Reconstruct service order from
   // canonical Attempts each cycle; no cursor or parallel task ledger is needed.
   const lastServed=new Map<string,string>();
-  for (const {value:attempt} of await runtime.repos.attempts.list()) {
+  for (const attempt of attempts) {
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
   const priorityByReceipt=new Map(options.prioritizedInstructions?.map(row=>[row.receiptId,row.priority] as const)??[]);
@@ -329,7 +357,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       a.value.createdAt.localeCompare(b.value.createdAt) || a.id.localeCompare(b.id);
   }).map(i=>i.id);
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
-  const deferred:{workItemId:string;reason:string;detail:string}[]=[];
+  const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
   const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??4,Math.max(1,ids.length));
   // No standing per-cycle Scout cap: the coordinator's own `maximum` (and the
   // wall) bound autonomous Scouts. A caller may still pass a finite diagnostic
@@ -400,5 +428,5 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
   // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run (MW-014).
-  return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:ids.length};
+  return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:candidates.length};
 }

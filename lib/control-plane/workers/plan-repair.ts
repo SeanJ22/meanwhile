@@ -45,7 +45,7 @@ function shape(value: unknown): RecordExtractionShape {
 
 /** No side effects and no civic receipt: replay only decides whether instructions are executable. */
 export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate: ScoutCandidate; evidence: readonly WorkerEvidence[]; now: string;
-  observedAtByArtifact?: ReadonlyMap<string, string> }) {
+  observedAtByArtifact?: ReadonlyMap<string, string>; registeredPublisherAddress?: string | null }) {
   const { plan, candidate, evidence, now } = input;
   requireThat(plan.contract.schemaVersion === 2 && (PLAN_REPAIR_CLASSES as readonly string[]).includes(plan.contract.recordClass), "REPAIR_CLASS_NOT_ADMITTED");
   // The robots.txt verdict is a record, never a gate (owner decision 2026-09-25): any recorded verdict is admitted.
@@ -67,7 +67,26 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
   const primary = evidence.find(row => row.artifactId === proposal.sourceArtifactId);
   requireThat(primary && primary.canonicalUrl === candidate.url, "REPAIR_SOURCE_CAPTURE_MISSING");
   const trustedOrigins = [...plan.seedUrls, ...plan.sources.map(source => source.url), ...plan.contract.sourceScope.canonicalUrls].map(origin);
-  requireThat(trustedOrigins.includes(origin(primary.canonicalUrl)), "REPAIR_PUBLISHER_SCOPE_MISMATCH");
+  // The original registry can carry an HTTP homepage while a completed Scout
+  // captured its exact host over HTTPS. That registered address is an identity
+  // lead, not model-proposed authority: the caller resolves it by subject from
+  // the installed jurisdiction registry, and the captured bytes still need all
+  // normal provenance, extraction and verification checks below.
+  const primaryOrigin = origin(primary.canonicalUrl);
+  let registeredOrigin: string | null = null;
+  if (!trustedOrigins.includes(primaryOrigin) && input.registeredPublisherAddress) {
+    try {
+      const registered = new URL(input.registeredPublisherAddress);
+      const captured = new URL(primary.canonicalUrl);
+      requireThat(["http:", "https:"].includes(registered.protocol) && !registered.username && !registered.password &&
+        !registered.port && registered.hostname === captured.hostname, "REPAIR_REGISTERED_PUBLISHER_HOST_MISMATCH");
+      registeredOrigin = captured.origin;
+    } catch (error) {
+      if (error instanceof Error && error.message === "REPAIR_REGISTERED_PUBLISHER_HOST_MISMATCH") throw error;
+      throw new Error("REPAIR_REGISTERED_PUBLISHER_ADDRESS_INVALID");
+    }
+  }
+  requireThat(trustedOrigins.includes(primaryOrigin) || registeredOrigin === primaryOrigin, "REPAIR_PUBLISHER_SCOPE_MISMATCH");
   // Neither subject, jurisdiction, class, identity, required fields nor any
   // identity/denominator Detective can be weakened by a model proposal.
   const extraction = shape(proposal.extraction);
@@ -146,7 +165,7 @@ export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate:
         jurisdiction: plan.jurisdiction, recordClass: contract.recordClass, sourceId: primary.sourceId,
         publisher: contract.sourceScope.publisher, url, observedLocator: locator,
         observedAt: input.observedAtByArtifact?.get(primary.artifactId) ?? primary.retrievedAt, firstObservedAt: primary.retrievedAt,
-        methodVersion: contract.methodVersion, permission: "ALLOWED", observation: sourceSpan(link),
+        methodVersion: contract.methodVersion, permission: candidate.permission, observation: sourceSpan(link),
         publisherSubjectEvidence: identity.map(sourceSpan), applicableBecause: `Official roster links this named member to a separate profile record; acquire it for independent name and office comparison.`,
         nextRouteIds: ["INDEPENDENT_MEMBER_OFFICE_CORROBORATION"], retrieval: "fetch_public" });
     }
@@ -195,6 +214,9 @@ function inheritedRepairCaptures(item: LinkedWorkItem, items: readonly LinkedWor
 
 /** Consume only completed accepted Scout records; bounded, deduplicated, no acquisition here. */
 export async function consumePlanRepairs(input: { repos: ControlPlaneRepositories; scouts: readonly ScoutResult[]; now: string;
+  registeredPublisherAddressFor?: (subjectId: string) => string | null;
+  /** Exact same-occurrence captures selected and checked by the runtime broker; never model-declared lineage. */
+  authorizedSiblingArtifactIdsFor?: (parent: WorkItem) => readonly string[];
   readCapture: (id: string) => Promise<{ evidence: WorkerEvidence; permission: string; transport: string; httpStatus: number | null; partial: boolean }> }): Promise<readonly RepairObservation[]> {
   const observations: RepairObservation[] = [];
   const items = (await input.repos.workItems.list()).map(row => row.value as LinkedWorkItem);
@@ -215,14 +237,17 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
       requireThat(candidates.length === 1, "REPAIR_ONE_PROPOSAL_PER_ATTEMPT");
       const candidate = candidates[0];
       const inheritedCaptures = inheritedRepairCaptures(parent, items);
+      const authorizedSiblings = new Set(input.authorizedSiblingArtifactIdsFor?.(parent) ?? []);
       const evidence = await Promise.all(candidate.evidenceArtifactIds.map(async id => {
         const capture = await input.readCapture(id);
         // Any recorded robots.txt verdict is admissible; a walled, partial or non-2xx capture never is.
         requireThat(isRecordedRobotsVerdict(capture.permission) && capture.transport === "REACHABLE" && !capture.partial &&
           capture.httpStatus !== null && capture.httpStatus >= 200 && capture.httpStatus < 300, "REPAIR_CAPTURE_NOT_ADMISSIBLE");
         const row = capture.evidence; const acquisition = attempts.get(row.acquiredByAttemptId);
-        requireThat(acquisition?.outcome === "COMPLETED" && inheritedCaptures.workItemIds.has(acquisition.workItemId) &&
-          (acquisition.workItemId === parent.id || inheritedCaptures.artifactIds.has(id)), "REPAIR_CAPTURE_COMPLETION_MISSING"); return row;
+        requireThat(acquisition?.outcome === "COMPLETED" &&
+          ((inheritedCaptures.workItemIds.has(acquisition.workItemId) &&
+            (acquisition.workItemId === parent.id || inheritedCaptures.artifactIds.has(id))) || authorizedSiblings.has(id)),
+          "REPAIR_CAPTURE_COMPLETION_MISSING"); return row;
       }));
       const observedAtByArtifact = new Map<string, string>();
       for (const row of evidence) {
@@ -235,7 +260,8 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
           .map(rung => rung.at).sort().at(-1);
         if (observed) observedAtByArtifact.set(row.artifactId, observed);
       }
-      const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact });
+      const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact,
+        registeredPublisherAddress: input.registeredPublisherAddressFor?.(parent.subject) });
       // A fixed number of failed routes is not the end of the obligation.
       // Continue on new evidence, but never spend on an unchanged ancestor
       // proposal or follow an invalid/cyclic link into another assignment.
@@ -266,7 +292,7 @@ export async function consumePlanRepairs(input: { repos: ControlPlaneRepositorie
           sourceId: primary.sourceId, publisher: evaluated.contract.sourceScope.publisher, subjectId: parent.subject,
           jurisdiction: parent.autonomousPlan.jurisdiction, recordClass: evaluated.contract.recordClass,
           observedAt: observedAtByArtifact.get(primary.artifactId) ?? primary.retrievedAt, firstObservedAt: primary.retrievedAt, methodVersion: evaluated.contract.methodVersion,
-          permission: "ALLOWED" as const, retrieval: "fetch_public" as const, nextRouteIds: ["INDEPENDENT_AUTHORITY_AND_CONTRACT_REPAIR"],
+          permission: candidate.permission, retrieval: "fetch_public" as const, nextRouteIds: ["INDEPENDENT_AUTHORITY_AND_CONTRACT_REPAIR"],
           ...(primary.sourceDocument ? { representation: primary.sourceDocument.kind } : {}),
           applicableBecause: "Completed Scout retained and locally replayed this exact official source under the unchanged civic question.",
           observation: { artifactId: primary.artifactId, contentHash: primary.contentHash, start: 0, end: Math.min(primary.text.length, 256), quote: primary.text.slice(0, 256), offsetUnit: "UTF16_CODE_UNITS" as const },

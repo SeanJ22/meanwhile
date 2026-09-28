@@ -36,24 +36,13 @@ import {
 } from "@/lib/control-plane/billing-facts.ts";
 
 import s from "./mw.module.css";
+import { actionReplyWords, postAdminAction, type AdminActionReply } from "./action-receipt.ts";
 
-const ACTION_ROUTE = "/api/admin/action";
+type Sent = { readonly ok: boolean; readonly kind?: AdminActionReply["kind"]; readonly says: string } | null;
 
-type Sent = { readonly ok: boolean; readonly says: string } | null;
-
-async function post(type: string, subject: string, input: Record<string, unknown>, key: string, returnTo: string): Promise<{ ok: boolean; says: string }> {
-  try {
-    const res = await fetch(ACTION_ROUTE, {
-      method: "POST",
-      headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify({ type, subject, input, idempotencyKey: key, returnTo }),
-    });
-    const body = (await res.json().catch(() => null)) as { ok?: boolean; receipt?: { says?: string } } | null;
-    if (!res.ok || body?.ok === false) return { ok: false, says: body?.receipt?.says ?? `Nothing was recorded. The server answered ${res.status}.` };
-    return { ok: true, says: body?.receipt?.says ?? "Recorded." };
-  } catch (e) {
-    return { ok: false, says: e instanceof Error ? `Nothing was recorded: ${e.message}` : "The console could not reach the server; nothing was recorded." };
-  }
+async function post(type: string, subject: string, input: Record<string, unknown>, key: string, returnTo: string): Promise<NonNullable<Sent>> {
+  const reply = await postAdminAction({ type, subject, input, idempotencyKey: key, returnTo });
+  return { ok: reply.kind === "DONE", kind: reply.kind, says: actionReplyWords(reply) };
 }
 
 /* ==================================================================== *

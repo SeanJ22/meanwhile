@@ -2,6 +2,7 @@ import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.
 import { createHash } from "node:crypto";
 import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
@@ -206,6 +207,7 @@ import {
   syncObligations,
   type AbandonedOccurrence,
   type SettledOccurrence,
+  FRESHNESS_PROJECT,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
@@ -825,7 +827,7 @@ console.log(
     `${fecModelRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
 
-const sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
+let sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
 finishPhase("references-and-registration");
 console.log(
   `  ${floorLine(
@@ -1037,7 +1039,7 @@ let openedModel = 0;
 let resumedCount = 0;
 /** Obligations whose open/resume threw and were isolated. Never silent. */
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
-const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
+const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
 
 /* A retired obligation owes no freshness: its debt stays out of the cycle, and `persistDebts` tombstones it as retired (2026-09-23). */
 const debtsIn = (canary
@@ -1056,6 +1058,22 @@ console.log(
     (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
 );
 
+// A completed, reader-verified publication is the source's next freshness
+// observation even when it was made by a linked repair child. Persist that
+// clock before deciding which standing source periods are due this cycle.
+const standingLineages = sync.all.some(o => o.autonomousPlan) ? await (async () => {
+  const [occurrences, workItems, artifacts, attempts, workerResults] = await Promise.all([
+    repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAll(), repos.attempts.list(), repos.workerResults.readAll(),
+  ]);
+  return selectStandingLineages({ occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
+    artifacts, attempts: attempts.map(row => row.value), workerResults });
+})() : [];
+const publicationAnchors = await persistVerifiedPublicationAnchors(repos, { obligations: sync.all, lineages: standingLineages, now: NOW });
+if (publicationAnchors.anchored.length) {
+  sync = { ...sync, all: sync.all.map(o => publicationAnchors.updated.get(o.id) ?? o) };
+  console.log(`  verified standing publications advanced ${publicationAnchors.anchored.length} source clock(s)`);
+}
+
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
@@ -1067,8 +1085,28 @@ for (const o of sync.all) {
   if (backedOff.has(o.id)) continue;
   const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
   if (!isDue) continue;
-  dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt });
+  dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt, cadenceHours: row.cadenceHours });
 }
+
+// A discovery-only standing disposition does not settle downstream parsing,
+// verification or publication. Continue the same recorded source period instead
+// of opening another paid root every cycle while its actual work remains owed.
+const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
+if (dueThisCycle.some(row => row.obligation.autonomousPlan && row.obligation.openOccurrenceId === null)) {
+  for (let i = dueThisCycle.length - 1; i >= 0; i--) {
+    const row = dueThisCycle[i]!;
+    const o = row.obligation;
+    if (!o.autonomousPlan || o.openOccurrenceId !== null) continue;
+    const key = standingLineageKeyFor({ obligationId: o.id, dueAt: row.nextDueAt, project: FRESHNESS_PROJECT,
+      subject: o.subjectId, plan: o.autonomousPlan, instructionReceipts: (o.assignments ?? []).map(mark => mark.ref) });
+    if (!key) continue;
+    const held = standingLineageCoversDue({lineages:standingLineages,key,now:NOW,cadenceHours:row.cadenceHours});
+    if (!held) continue;
+    continuedStandingLineages.push({obligationId:o.id,rootWorkItemId:held.rootWorkItemId});
+    dueThisCycle.splice(i, 1);
+  }
+}
+if (continuedStandingLineages.length) console.log(`  standing source periods continued: ${continuedStandingLineages.length}; no duplicate Scout root opened; canonical roots ${continuedStandingLineages.slice(0, 3).map(row=>row.rootWorkItemId).join(", ")}${continuedStandingLineages.length>3?" …":""}`);
 
 /* ------------------------------------------------- the owner's intents --- */
 

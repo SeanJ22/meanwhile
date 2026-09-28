@@ -17,6 +17,8 @@ import type { WorkerEvidence } from "./types.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
 import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
 import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
+import { authorizeInheritedHeldArtifact, type ResearchRuntimeTools } from "./research-runtime.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 
 const SUBJECT = "az:city:city-of-avondale";
 const API_HOST = "avondaleaz.api.civicclerk.com";
@@ -173,16 +175,58 @@ export function heldAuditAttribution(input: { artifacts: readonly ArtifactRecord
   return eligible[0];
 }
 
+/** A repair child can audit its completed Acquirer reuse without rewriting the
+ * immutable capture's original WorkItem attribution. */
+export async function resolvedHeldAuditAttribution(input: {
+  repos: ControlPlaneRepositories; artifacts: readonly ArtifactRecord[]; items: readonly WorkItem[];
+  artifactId: string; contract: GeneralizedCivicExtractionContract; workItemId: string;
+  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
+}) {
+  const owner = input.items.find(item => item.id === input.workItemId);
+  if (!owner || owner.subject !== input.contract.subjectId) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
+  if (canonicalJson(owner.autonomousPlan?.contract ?? null) !== canonicalJson(input.contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
+  const local = input.artifacts.find(artifact => artifact.artifactId === input.artifactId &&
+    artifact.workItemId === owner.id && !artifact.partial);
+  if (local) return heldAuditAttribution(input);
+  const captures = input.artifacts.filter(artifact => artifact.artifactId === input.artifactId && !artifact.partial);
+  const results = await readCompletedWorkerResults(input.repos, owner.id);
+  for (const primary of captures) {
+    if (primary.workItemId === owner.id) continue;
+    const declared = owner.autonomousPlan?.acquisition.find(acquisition =>
+      acquisition.route.url === primary.canonicalUrl && acquisition.held.some(held =>
+        held.artifactId === primary.artifactId && held.inheritedFromWorkItemId === primary.workItemId &&
+        held.sourceRouteId === acquisition.route.id &&
+        held.sourceObservationArtifactId === acquisition.route.observation.artifactId && held.immutable && !held.partial));
+    if (!declared) continue;
+    const acquired = results.some(record => record.result.role === "ACQUIRER" && record.result.verdict === "ACQUIRED" &&
+      record.result.source.id === declared.route.id && record.result.source.subjectId === owner.subject &&
+      record.result.artifacts.some(artifact => artifact.artifactId === primary.artifactId && artifact.reused &&
+        artifact.completeness === "COMPLETE" && artifact.acquisitionAttemptId === primary.attemptId &&
+        artifact.canonicalUrl === primary.canonicalUrl && artifact.contentHash === primary.contentHash &&
+        artifact.byteCount === primary.byteLength && artifact.sourceRouteId === declared.route.id &&
+        artifact.sourceObservationArtifactId === declared.route.observation.artifactId));
+    if (!acquired || !await authorizeInheritedHeldArtifact(input.repos, { artifactId: primary.artifactId,
+      originWorkItemId: primary.workItemId, childWorkItemId: owner.id, project: owner.project }, input.siblingHeldRootFor)) continue;
+    return { primary, owner };
+  }
+  throw new Error("AUDIT_ARTIFACT_WORK_ITEM_ATTRIBUTION_MISSING");
+}
+
 async function generalizedIndependentContext(input: {
   root: string; repos: ControlPlaneRepositories; method: MethodKnowledge; readEvidence: FleetRuntime["readEvidence"];
   artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number; workItemId?: string;
+  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
   if (contract.methodVersion !== input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
   const artifacts = await input.repos.artifacts.readAll();
   const items = (await input.repos.workItems.list()).map(row => row.value);
-  const { primary, owner } = heldAuditAttribution({ artifacts, items, artifactId: input.artifactId, contract, workItemId: input.workItemId });
-  const canonical = heldGeneralizedContract(input.root, primary, owner);
+  if (!input.workItemId) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
+  const { primary, owner } = await resolvedHeldAuditAttribution({ repos: input.repos, artifacts, items,
+    artifactId: input.artifactId, contract, workItemId: input.workItemId, siblingHeldRootFor: input.siblingHeldRootFor });
+  const canonical = primary.workItemId === owner.id ? heldGeneralizedContract(input.root, primary, owner)
+    : owner.autonomousPlan?.contract.schemaVersion === 2 && !primary.partial && owner.subject === contract.subjectId &&
+      contract.sourceScope.canonicalUrls.includes(primary.canonicalUrl) ? owner.autonomousPlan.contract : null;
   if (!canonical || canonicalJson(canonical) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
   const { subject, knownUrls } = registryScope(input.root, contract);
   const subjectItems = items.filter(item => item.subject === subject.id);
@@ -255,6 +299,7 @@ async function generalizedIndependentContext(input: {
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
 export function standingFleetRuntime(input: { root: string; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
+  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
   /** MW-021 (2026-09-25): the auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
   const now = input.now ?? (() => new Date().toISOString());

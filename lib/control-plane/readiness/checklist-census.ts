@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { AssignmentSources } from "../assignment-view.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import { CHECKLIST_PROFILE, checklistObligationKey, checklistRequiredClauses, type ChecklistInstance, type ChecklistSnapshot } from "./checklist-score.ts";
+import { checklistDeliveryTimings, type WorkDeliveryTiming } from "./checklist-timings.ts";
 
 /** A census projection, not a dispatcher. A receipt proves membership; matching
  * a state, a URL or a successful attempt never establishes object applicability. */
@@ -10,6 +11,7 @@ export interface ChecklistCensus extends ChecklistSnapshot {
   readonly instructionReceipt: string;
   readonly population: { readonly knownSubjects: number; readonly knownRecords: number; readonly expectedObjects: null };
   readonly gaps: readonly string[];
+  readonly deliveryTimings?: readonly WorkDeliveryTiming[];
 }
 
 export function exactScopeMembers(scopes: readonly ExpansionScopeDecision[], sources: Pick<AssignmentSources,"obligations">): ReadonlyMap<string,ReadonlySet<string>> {
@@ -95,5 +97,6 @@ export function buildChecklistCensus(input: {
     inventory:{complete:false,evidenceIds:[scope.receiptId,...members],unresolvedObjects:objects.filter(o=>o.kind==="UNRESOLVED").length},
     readsComplete:sources!==null&&sources.pipeline!==null,instances,witnesses:[],
     population:{knownSubjects:members.size,knownRecords:recordObjects.size,expectedObjects:null},
+    deliveryTimings:sources?checklistDeliveryTimings(sources,members,observedAt):[],
     gaps:["The competent expected-object universe is not yet reconciled; known records are a lower bound.","Clause-level field, period and per-surface verification remain owed; worker completion alone earns no checklist credit."]};
 }

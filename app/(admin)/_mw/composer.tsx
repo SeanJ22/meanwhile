@@ -230,7 +230,7 @@ export function Composer(props: {
       const body = (await res.json().catch(() => null)) as { ok?: boolean; replayed?: boolean; says?: string; receipt?: { outcome?: string; says?: string; receiptId?: string; completedAt?: string; readBackAt?: string | null } } | null;
       const r = body?.receipt;
       if (res.ok && r?.outcome === "REFUSED") {
-        setSent({ kind: "REFUSED", receiptId: r.receiptId ?? idempotencyKey, says: r.says ?? "The action was refused.", replayed: body?.replayed === true });
+        setSent({ kind: "REFUSED", receiptId: r.receiptId ?? idempotencyKey, says: typeof r.says === "string" ? r.says : "The refusal receipt contains no reason.", replayed: body?.replayed === true });
         if (actionSettled(r.outcome)) nonceRef.current = null;
         return;
       }

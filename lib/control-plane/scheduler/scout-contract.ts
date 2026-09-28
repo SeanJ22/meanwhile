@@ -273,6 +273,8 @@ export type ScoutSearch = (
 
 export interface ScoutToolkit {
   readonly specs: readonly ScoutToolSpec[];
+  /** Runtime evidence that this Attempt actually had brokered held-byte reading. */
+  readonly heldEvidenceProtocolAvailable?: boolean;
   /**
    * Run one tool. `rungLabel` is the model's ladder label for this call, from
    * the tool input, passed separately so the toolkit never parses it twice.

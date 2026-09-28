@@ -198,6 +198,13 @@ const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
  * on both paths and the render/civic proofs see the same markup. One
  * implementation, so the two placements cannot drift.
  */
+function citedContactUrl(value: string): string | null {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname && !url.username && !url.password ? value : null;
+  } catch { return null; }
+}
+
 function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
   return (
     <div className="mt-2 space-y-2">
@@ -248,7 +255,9 @@ function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
           {/* SRC-3: one source line, at the bottom, in the level register —
               the publisher named in full, never a competing click target. */}
           <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-            This was sourced from {contact.sourceOrg}.
+            This was sourced from {citedContactUrl(contact.sourceUrl)
+              ? <a href={contact.sourceUrl} target="_blank" rel="noreferrer noopener" className="underline decoration-dotted underline-offset-2 hover:text-link">{contact.sourceOrg}</a>
+              : contact.sourceOrg}.
           </p>
         </div>
       ))}

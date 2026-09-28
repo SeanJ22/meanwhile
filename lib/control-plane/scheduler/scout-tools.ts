@@ -1347,6 +1347,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
   return {
     specs: scoutToolSpecsFor(Boolean(ctx.search)),
+    heldEvidenceProtocolAvailable: Boolean(ctx.readHeldArtifact),
     call,
     get vaultedArtifactIds(): ReadonlySet<string> {
       return vaulted;

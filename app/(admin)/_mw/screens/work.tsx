@@ -194,7 +194,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const rows = instructionFilter !== null ? allRows.filter(row => row.assignmentKeys?.includes(instructionFilter)) : scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
   const fullIndex = view?.allRowsIndex ?? null;
   const scopedIndex = fullIndex?.filter(row => instructionFilter !== null ? row.assignmentKeys.includes(instructionFilter) : scopeState === null || row.stateCode === scopeState) ?? null;
-  const searchedIndex = scopedIndex?.filter(row => !workQuery || `${row.id} ${row.label} ${row.subjectName ?? ""} ${row.state} ${row.blocker ?? ""} ${row.nextAction}`.toLowerCase().includes(workQuery.toLowerCase())) ?? null;
+  const searchedIndex = scopedIndex?.filter(row => !workQuery || `${row.id} ${row.label} ${row.subjectName ?? ""} ${row.state} ${row.blocker ?? ""} ${row.nextAction} ${(row.historyTerms ?? []).join(" ")}`.toLowerCase().includes(workQuery.toLowerCase())) ?? null;
   const indexPageSize = 50;
   const indexPages = Math.max(1, Math.ceil((searchedIndex?.length ?? 0) / indexPageSize));
   const indexPage = Number.isSafeInteger(requestedIndexPage) ? Math.max(1, Math.min(requestedIndexPage, indexPages)) : 1;
@@ -344,31 +344,32 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         title="Assignments"
         lede="One queue and one set of references across both areas. This list can order and bound work; it never creates a second copy of it. Open one to follow it from why it exists to whether a reader can see what it produced."
       />
-      <Section title="Where attention helps" lede="Ranked from the selected work by urgency, reader impact, linked instructions and waiting age. Open an item for its attempts, cause and next step. The amount of downstream work an action unlocks is not yet measured." />
+      <Section title="Where attention helps" lede="Ranked from the selected work by urgency, reader impact, linked instructions and waiting age. Direct dependencies and items that could become ready after this work settles are shown where the graph was readable; they do not predict completed publication." />
       {fullIndex === null ? <p className={s.goldNote}>The full work index has not been published yet. This short list cannot be treated as all remaining work.</p> : priorities.length === 0
         ? <p className={s.note}>No blocked, failed, waiting or uncertain work with a recorded blocker or overdue state appears in this scope.</p>
         : <div className={s.stack10}>{priorities.map(priority => { const row = priority.row; return <div key={row.id} className={s.insetRow}>
           <div className={`${s.stack2} ${s.grow}`}>
             <span className={s.text14}><strong className={s.strong}>{priority.rank}. {row.label}</strong> · {row.state.toLowerCase()} · {priority.category === "NEEDS_OWNER_DECISION" ? "Needs your decision" : priority.category === "NEEDS_CODE_CHANGE" ? "Needs a code repair" : priority.category === "WAITING_ON_PUBLISHER" ? "Waiting on the publisher" : priority.category === "OWNER_UNCLEAR" ? "Next owner unclear" : "Being fixed automatically"}</span>
-            <span className={s.note}>{row.blocker ?? "No specific blocker was recorded."} {row.nextAction}</span>
+            <span className={s.note}>{row.blocker === null ? "This row has no recorded blocker reason." : row.blocker} {row.nextAction}</span>
             <span className={s.note}>Why this ranks here: {priority.rankingWhy}</span>
-            <span className={s.monoSmall}>{row.waitingSince ? `Waiting since ${formatEastern(row.waitingSince)}` : "Waiting start not recorded"}{row.lastActivityAt ? ` · last activity ${formatEastern(row.lastActivityAt)}` : " · last activity not recorded"}</span>
+            <span className={s.monoSmall}>{row.waitingSince ? `Waiting since ${formatEastern(row.waitingSince)}` : "Waiting start not recorded"}{row.lastActivityAt ? ` · last activity ${formatEastern(row.lastActivityAt)}` : " · last activity not recorded"}{row.lastAttemptAt ? ` · last attempt started ${formatEastern(row.lastAttemptAt)}` : " · last attempt not recorded"}</span>
+            <span className={s.note}>Direct dependent work items: {row.directDependentCount === undefined || row.directDependentCount === null ? "graph unread" : row.directDependentCount}. Could become ready if this work settles: {row.readyAfterThisSettlesCount === undefined || row.readyAfterThisSettlesCount === null ? "graph unread" : row.readyAfterThisSettlesCount}.</span>
           </div>
           <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open details</Link>
         </div>; })}</div>}
-      <Section title="Find any work item" lede="This index covers every published work item in the selected scope, including items omitted from the short cards below. Search names, subjects, causes or next steps, then open the full record." />
+      <Section title="Find any work item" lede="This index covers tracked work in the selected scope, including items omitted from the short cards below. Search retained names, meetings, failures and next steps attached to that work, then open its full record." />
       {fullIndex === null ? <p className={s.goldNote}>A complete searchable work index is not on this snapshot yet. The publisher must add it before these counts can be called complete.</p> : <div className={`${s.card} ${s.cardList} ${s.gap20}`}>
         <form action={path} method="get" role="search" className={s.row10}>
           {scopeParam(base.scope) && <input type="hidden" name="scope" value={scopeParam(base.scope)!} />}
           {instructionFilter && <input type="hidden" name="instruction" value={instructionFilter} />}
           <label htmlFor="work-search" className={s.titleStrong14}>Search all work</label>
-          <input id="work-search" type="search" name="q" defaultValue={workQuery} maxLength={100} className={s.input} placeholder="Name, place, cause or next step" />
+          <input id="work-search" type="search" name="q" defaultValue={workQuery} maxLength={100} className={s.input} placeholder="Name, meeting, failure or next step" />
           <button type="submit" className={s.btnLink}>Search</button>
         </form>
         <p className={s.note}>{searchedIndex!.length.toLocaleString("en-US")} of {scopedIndex!.length.toLocaleString("en-US")} indexed work items match; showing {shownIndex.length} on page {indexPage} of {indexPages}. Each item is one job, not a missing fact.</p>
         <div className={s.stack8}>{shownIndex.map(row => <div key={row.id} className={s.insetRow}>
           <Pill tone={row.state === "SUCCEEDED" ? "teal" : row.state === "FAILED" || row.state === "BLOCKED" ? "stone" : "slate"}>{row.state}</Pill>
-          <span className={`${s.text14} ${s.grow}`}>{row.label}{row.subjectName && row.subjectName !== row.label ? ` · ${row.subjectName}` : ""}</span>
+          <span className={`${s.text14} ${s.grow}`}>{row.label}{row.subjectName && row.subjectName !== row.label ? ` · ${row.subjectName}` : ""}{row.lastAttemptAt ? ` · last attempt ${formatEastern(row.lastAttemptAt)}` : ""}</span>
           <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open</Link>
         </div>)}</div>
         {shownIndex.length === 0 && <p className={s.note}>No work matches this search in the selected scope.</p>}

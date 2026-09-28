@@ -90,8 +90,19 @@ export interface Hunt {
   readonly heldUsd: number;
   /** Charges saved without a price. Unknown, never zero dollars. */
   readonly unpricedEntries: number;
-  readonly status: "running" | "paused" | "stopped";
-  readonly researchWorkers: number;
+  /** `unreported`: the hunt is saved and not stopped, but whether paid work is running now is not published. */
+  readonly status: "running" | "paused" | "stopped" | "unreported";
+  /** Null when not reported. */
+  readonly researchWorkers: number | null;
+  /** The backend states the period: a hunt's figures are always its whole lifetime. */
+  readonly basis?: "lifetime";
+  /** Left to spend as the backend computed it; null when an unpriced charge makes it unknown. Absent: limit − spent − set aside. */
+  readonly availableUsd?: number | null;
+}
+
+/** Left to spend, or null when unknown (never guessed from a lower-bound spend). */
+export function huntLeftUsd(h: Hunt): number | null {
+  return h.availableUsd !== undefined ? h.availableUsd : h.limitUsd - h.spentUsd - h.heldUsd;
 }
 
 /* ------------------------------------------------------------- national */
@@ -387,7 +398,8 @@ export interface MoneyView {
   readonly accountMonth: string;
   readonly monthlyPlans: readonly { readonly name: string; readonly note: string }[];
   readonly limits: readonly SpendLimit[];
-  readonly drill: readonly CostDrill[];
+  /** Null when per-work costs are not connected (never "no costs"). */
+  readonly drill: readonly CostDrill[] | null;
   readonly otherServices: string;
 }
 

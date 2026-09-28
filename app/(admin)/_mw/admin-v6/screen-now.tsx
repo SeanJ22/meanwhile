@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
-import { count, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
+import { count, huntLeftUsd, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
@@ -268,17 +268,20 @@ function SixAnswers() {
   const inside = huntsWithin(v.index, v.hunts, v.scopeKey);
   const multi = !hunt && inside.length > 1;
   const hf: Hunt | null = hunt ?? (inside.length === 1 ? inside[0] : null);
-  const left = (h: Hunt) => h.limitUsd - h.spentUsd - h.heldUsd;
+  const left = (h: Hunt) => { const n = huntLeftUsd(h); return n === null ? "Unknown" : usd(n); };
+  /** Research workers on a hunt, or null when its run state isn't reported. */
+  const workers = (h: Hunt) => (h.status === "running" ? h.researchWorkers : h.status === "unreported" ? null : 0);
+  const insideWorkers = inside.map(workers);
   const resultsKnown = v.data.results.state !== "not-connected";
   const stuckKnown = v.data.stuck.state !== "not-connected";
   const huntsKnown = v.data.hunts.state !== "not-connected";
   const answers: { q: string; big: string; small: string; href: string; warn?: boolean }[] = [
     { q: "Readers received", big: resultsKnown ? `${ver} checked on the page` : "Not reported", small: resultsKnown ? `${pub} published, not checked on the page · ${shared.length} shared results also cover it` : "Needs reader proof from the backend", href: "#v6-readers" },
     { q: "Still missing", big: N !== null && totals ? count(N - totals[0]) : "—", small: N !== null ? `of ${count(N)} checklist items not yet checked on the public page` : "No checklist items reported for this place yet", href: "#v6-missing" },
-    { q: "Happening now", big: multi ? String(inside.reduce((a, h) => a + (h.status === "running" ? h.researchWorkers : 0), 0)) : hf ? String(hf.status === "running" ? hf.researchWorkers : 0) : "—", small: multi ? `research workers across ${inside.length} hunts, at the same time` : hf ? (hf.status === "running" ? `research workers on the ${hf.name}` : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here · shared work isn’t split by place" : "Hunts not reported yet", href: "#v6-happening" },
+    { q: "Happening now", big: multi ? (insideWorkers.includes(null) ? "—" : String(insideWorkers.reduce<number>((a, n) => a + (n ?? 0), 0))) : hf ? (workers(hf) === null ? "—" : String(workers(hf))) : "—", small: multi ? (insideWorkers.includes(null) ? `${inside.length} hunts · whether paid work is running isn’t reported yet` : `research workers across ${inside.length} hunts, at the same time`) : hf ? (hf.status === "unreported" ? `${hf.name} · whether paid work is running isn’t reported yet` : hf.status === "running" ? (hf.researchWorkers === null ? `${hf.name} is running · worker count not reported` : `research workers on the ${hf.name}`) : `${hf.name} is ${hf.status}`) : huntsKnown ? "No hunt here · shared work isn’t split by place" : "Hunts not reported yet", href: "#v6-happening" },
     { q: "Stuck", big: stuckKnown ? String(stuck.length) : "Not reported", small: stuckKnown ? `${harm} affecting readers · ${stuck.filter((x) => x.rel === "shared").length} through shared work` : "Needs stuck items from the backend", href: "#v6-stuck", warn: harm > 0 },
     { q: "Your decisions", big: stuckKnown ? String(dec) : "—", small: dec ? "See Suggested next steps" : stuckKnown ? "Nothing needs you here" : "Not reported yet", href: "#v6-steps", warn: dec > 0 },
-    { q: "Hunt money", big: multi ? `${inside.length} hunts` : hf ? usd(left(hf)) : "—", small: multi ? `Each has its own limit. There’s no national budget. ${inside.map((h) => `${h.name}: ${usd(left(h))} left of ${usd(h.limitUsd)}`).join(" · ")}` : hf ? `${hf.name}${hf.placeKey !== v.scopeKey ? " (inside)" : ""} · left of ${usd(hf.limitUsd)} · ${usd(hf.spentUsd)} spent · ${usd(hf.heldUsd)} set aside` : huntsKnown ? "No hunt here · account totals under Money" : "Hunts not reported yet", href: "#v6-cost" },
+    { q: "Hunt money", big: multi ? `${inside.length} hunts` : hf ? left(hf) : "—", small: multi ? `Each has its own limit. There’s no national budget. ${inside.map((h) => `${h.name}: ${left(h)} left of ${usd(h.limitUsd)}`).join(" · ")}` : hf ? `${hf.name}${hf.placeKey !== v.scopeKey ? " (inside)" : ""} · left of ${usd(hf.limitUsd)} · ${usd(hf.spentUsd)} spent · ${usd(hf.heldUsd)} set aside` : huntsKnown ? "No hunt here · account totals under Money" : "Hunts not reported yet", href: "#v6-cost" },
   ];
   return (
     <section aria-label="Six answers" className={s.answers}>
@@ -451,7 +454,7 @@ function Cost() {
 
 export function HuntMeter(props: { readonly hunt: Hunt; readonly inside?: boolean }) {
   const h = props.hunt;
-  const left = h.limitUsd - h.spentUsd - h.heldUsd;
+  const left = huntLeftUsd(h);
   return (
     <div className={s.row}>
       <strong className={s.small}>{h.name} · Anthropic · lifetime{props.inside ? " (inside this place)" : ""}</strong>
@@ -459,7 +462,7 @@ export function HuntMeter(props: { readonly hunt: Hunt; readonly inside?: boolea
         <span className={s.meterFill} style={{ width: `${Math.min(100, (h.spentUsd / h.limitUsd) * 100)}%`, background: "var(--pill-cyan-text)" }} />
         <span className={s.meterHeld} style={{ width: `${Math.min(100, (h.heldUsd / h.limitUsd) * 100)}%` }} />
       </div>
-      <span className={s.small}>{usd(h.spentUsd)} spent · {usd(h.heldUsd)} set aside for work in progress · <span className={s.textGood}>{usd(left)} left</span> of {usd(h.limitUsd)}</span>
+      <span className={s.small}>{usd(h.spentUsd)} spent · {usd(h.heldUsd)} set aside for work in progress · {left === null ? <span className={s.textWarn}>amount left unknown</span> : <span className={s.textGood}>{usd(left)} left</span>} of {usd(h.limitUsd)}</span>
       {h.unpricedEntries > 0 && <span className={cx(s.small, s.textWarn)}>{count(h.unpricedEntries)} charges were saved without a price. The real cost may be higher than shown.</span>}
     </div>
   );
@@ -479,7 +482,7 @@ function DirectWork() {
       <div className={s.stack} style={{ marginTop: 12 }}>
         {cards.map((h) => (
           <div key={h.id} className={s.row}>
-            <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped" })[h.status]}{h.status === "running" ? ` · ${h.researchWorkers} research workers` : ""}</span></div>
+            <div className={s.spread}><strong>{h.name}</strong><span className={cx(s.small, h.status === "running" ? s.textGood : s.textWarn)}>{({ running: "Running", paused: "Paid work paused", stopped: "Stopped", unreported: "Run state not reported" })[h.status]}{h.status === "running" ? (h.researchWorkers === null ? " · worker count not reported" : ` · ${h.researchWorkers} research workers`) : ""}</span></div>
             <span className={s.meta}>Started {h.startedAt.includes("T") ? new Date(h.startedAt).toLocaleString("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " MST" : h.startedAt} · {usd(h.limitUsd)} lifetime · {usd(h.spentUsd + h.heldUsd)} spent or set aside</span>
             <Actions actions={[{ kind: h.status === "paused" ? "hunt-resume" : "hunt-pause", target: h.placeKey }, { kind: "hunt-limit", target: h.placeKey }, { kind: "hunt-stop", target: h.placeKey }]} />
           </div>

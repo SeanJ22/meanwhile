@@ -5,16 +5,26 @@ import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts
 import { registerAutonomousPlan, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 
-async function addUnknownSource(h: Awaited<ReturnType<typeof autonomousHarness>>, index: number) {
+async function addUnknownSource(h: Awaited<ReturnType<typeof autonomousHarness>>, index: number, ownerInstructions: readonly string[] = []) {
   const item = createWorkItem({ project: h.item.project, subject: `fixture:waiting:${index}`,
     obligation: "Find the authoritative fixture roster", why: "Offline scheduling control",
     contract: { requiresValidation: true, requiresAudit: true }, now: h.now() });
   await registerWorkItem(h.repos, item, h.now());
   const plan = h.item.autonomousPlan!;
   await registerAutonomousPlan(h.repos, item.id, { ...plan,
-    contract: { ...plan.contract, subjectId: item.subject }, sources: [], acquisition: [] }, h.now());
+    contract: { ...plan.contract, subjectId: item.subject }, sources: [], acquisition: [], ownerInstructions }, h.now());
   return item;
 }
+
+test("a directed Send takes the normal worker slot ahead of unrelated older work", async () => {
+  const h = await autonomousHarness();
+  await addUnknownSource(h, 1);
+  const directed = await addUnknownSource(h, 2, ["owner-send-1"]);
+  const cycle = await runAutonomousCoordinator(h.runtime, { maximum: 1, concurrency: 1,
+    prioritizedInstructions: [{ receiptId: "owner-send-1", priority: 1 }] });
+  assert.equal(cycle.decisions[0].workItemId, directed.id);
+  assert.equal(cycle.dispatches.length, 1);
+});
 
 test("unserved obligations receive a turn before an earlier item consumes another stage", async () => {
   const h = await autonomousHarness();

@@ -47,6 +47,21 @@ export interface AssignmentReadBase {
 
 /** At most this many targeted reads are in flight at once, so one drilldown never floods the store. */
 const READ_CONCURRENCY = 16;
+const MAX_INHERITED_ORIGIN_REFERENCES = 32;
+
+/** Metadata alone is not authority to reuse bytes; this only confirms the
+ * declared capture's original owner, complete Attempt, project and subject. */
+export function verifiedInheritedOrigin(input: {
+  child: WorkItem; origin: WorkItem | null; artifact: ArtifactRecord | null; attempt: Attempt | null;
+  declaredArtifactId: string; declaredOriginWorkItemId: string;
+}): { readonly artifact: ArtifactRecord; readonly attempt: Attempt; readonly originWorkItemId: string } | null {
+  const {child,origin,artifact,attempt}=input;
+  if(!origin||!artifact||!attempt||origin.id===child.id||origin.id!==input.declaredOriginWorkItemId||
+    origin.project!==child.project||origin.subject!==child.subject||artifact.artifactId!==input.declaredArtifactId||
+    artifact.workItemId!==origin.id||artifact.partial||artifact.tier==="RESTRICTED_RAW"||artifact.attemptId!==attempt.id||
+    attempt.workItemId!==origin.id||attempt.outcome!=="COMPLETED"||!attempt.artifactIds.includes(artifact.artifactId)) return null;
+  return {artifact,attempt,originWorkItemId:origin.id};
+}
 
 async function inBatches<T, R>(items: readonly T[], read: (item: T) => Promise<R>): Promise<R[]> {
   const out: R[] = [];
@@ -284,6 +299,26 @@ export async function readAssignmentSourcesById(
     const artifacts: ArtifactRecord[] = artifactLists.flat();
     const costs: CostEntry[] = costLists.flat();
     const workerResults: WorkerResultRecord[] = workerLists.flat();
+    const inheritedReferences = workItems.flatMap(child => (child.autonomousPlan?.acquisition ?? []).flatMap(acquisition =>
+      (acquisition.held??[]).filter(held => held.inheritedFromWorkItemId && held.inheritedFromWorkItemId !== child.id)
+        .map(held => ({child,artifactId:held.artifactId,originId:held.inheritedFromWorkItemId!}))));
+    const uniqueReferences = [...new Map(inheritedReferences.map(ref => [`${ref.child.id}:${ref.originId}:${ref.artifactId}`,ref])).values()];
+    let inheritedOrigins: AssignmentSources["inheritedOrigins"] = null;
+    if(uniqueReferences.length<=MAX_INHERITED_ORIGIN_REFERENCES) {
+      const originIds=unique(uniqueReferences.map(ref=>ref.originId));
+      const originReads=await inBatches(originIds,async originId=>Promise.all([
+        repos.workItems.read(originId),repos.artifacts.read(originId)] as const));
+      const byOrigin=new Map(originIds.map((originId,index)=>[originId,originReads[index]] as const));
+      const selected=uniqueReferences.map(ref=>({ref,origin:byOrigin.get(ref.originId),artifact:
+        byOrigin.get(ref.originId)?.[1].find(row=>row.artifactId===ref.artifactId)??null}));
+      const attemptIds=unique(selected.map(row=>row.artifact?.attemptId));
+      const attemptReads=await inBatches(attemptIds,id=>repos.attempts.read(id));
+      const byOriginAttempt=new Map(attemptIds.map((attemptId,index)=>[attemptId,attemptReads[index]?.value??null] as const));
+      const origins=selected.map(({ref,origin,artifact})=>verifiedInheritedOrigin({child:ref.child,
+        origin:origin?.[0]?.value??null,artifact,attempt:artifact?byOriginAttempt.get(artifact.attemptId)??null:null,
+        declaredArtifactId:ref.artifactId,declaredOriginWorkItemId:ref.originId}));
+      inheritedOrigins=origins.filter((row):row is NonNullable<typeof row>=>row!==null);
+    }
     const dispositions: DispositionCommit[] = allTaskIds.flatMap((rt) => commitsByTask.get(rt) ?? []);
     const { scoutResults, pipeline } = extra;
 
@@ -300,6 +335,7 @@ export async function readAssignmentSourcesById(
         leases: await leasesFor(repos, attempts),
         dispositions,
         artifacts,
+        inheritedOrigins,
         costs,
         scoutResults,
         workerResults,

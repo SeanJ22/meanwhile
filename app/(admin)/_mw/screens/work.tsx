@@ -63,6 +63,8 @@ import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-conti
 import { plainText } from "@/lib/control-plane/plain-words.ts";
 import { assignmentEvidenceTrail, type AssignmentEvidenceTrail } from "@/lib/control-plane/admin-view/assignment-evidence-trail.ts";
 import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
+import type { ArtifactRecord } from "@/lib/control-plane/repository/types.ts";
+import { adminMirrorableContentType } from "@/lib/control-plane/evidence/admin-bridge.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
@@ -100,8 +102,19 @@ const FIRST_PER_GROUP = 4;
 type Opened =
   | { readonly kind: "NONE" }
   | { readonly kind: "INSTRUCTION"; readonly view: InstructionView }
-  | { readonly kind: "DETAIL"; readonly id: string; readonly detail: AssignmentDetailView; readonly trail: AssignmentEvidenceTrail | null; readonly says: string }
+  | { readonly kind: "DETAIL"; readonly id: string; readonly detail: AssignmentDetailView;
+      readonly trail: AssignmentEvidenceTrail | null; readonly artifacts: readonly ArtifactRecord[]; readonly says: string }
   | { readonly kind: "MISSING"; readonly id: string; readonly says: string };
+
+/** Download controls may show only captures already joined to this opened
+ * assignment's exact completed Attempt in its source-to-result trail. */
+function assignmentSavedArtifacts(trail: AssignmentEvidenceTrail, records: readonly ArtifactRecord[]): readonly ArtifactRecord[] {
+  const keys = new Set(trail.events.filter(event => event.id.startsWith("saved:")).map(event => {
+    const refs = new Map(event.references);
+    return `${refs.get("Work item")}:${refs.get("Original attempt")}:${refs.get("Saved document")}`;
+  }));
+  return records.filter(record => keys.has(`${record.workItemId}:${record.attemptId}:${record.artifactId}`));
+}
 
 export async function WorkScreen(props: { readonly area: MwArea; readonly searchParams: Promise<SearchParams> }) {
   const sp = await props.searchParams;
@@ -146,6 +159,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const workQuery = (param(sp, "q") ?? "").trim().slice(0, 100);
   const requestedIndexPage = Number(param(sp, "page") ?? "1");
   const requestedTrailPage = Number(param(sp, "trailPage") ?? "1");
+  const requestedEvidencePage = Number(param(sp, "evidencePage") ?? "1");
+  const evidencePage = Number.isSafeInteger(requestedEvidencePage) && requestedEvidencePage > 0 ? requestedEvidencePage : 1;
   /*
    * An opened assignment is read beside the page's other reads, not after
    * them: it needs nothing they return. A piece of standing work is read by its
@@ -262,11 +277,12 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         const attributed = view && view.summary.costs.attributed.held ? view.summary.costs.attributed.value.value : null;
         const sources = { ...read.value, activation: view?.activation ?? null, servedReader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null };
         const row = buildAssignments(sources, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
-        opened = row
-          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }),
-              trail: assignmentEvidenceTrail(sources,openId,row.waiting.nextAction),
-              says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
-          : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
+          if (row) {
+            const trail = assignmentEvidenceTrail(sources, openId, row.waiting.nextAction);
+            opened = { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }),
+              trail, artifacts: assignmentSavedArtifacts(trail, read.value.artifacts),
+              says: `read live from the control plane at ${formatEastern(base.nowIso)}` };
+          } else opened = { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
       } else opened = { kind: "MISSING", id: openId, says: read.detail };
     }
   }
@@ -456,7 +472,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             )
           )}
           {/* A piece of work opened from an instruction (or from Money) that the list below does not draw is drawn here, whole. */}
-          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} />)}
+          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page),evidencePage:String(evidencePage)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} artifacts={opened.artifacts} evidencePage={evidencePage} evidenceHref={page=>`${here({open:opened.id,trailPage:String(requestedTrailPage),evidencePage:String(page)})}#a-${encodeURIComponent(opened.id)}`} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
             Work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " across all places" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${unfinishedWork.toLocaleString("en-US")} waiting or stuck` : ""}
@@ -497,7 +513,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                           </Link>
                         )}
                       </p>
-                      {cards.map((r) => card(standingCard(r), opened.kind === "DETAIL" && opened.id === r.id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} /> : null))}
+                      {cards.map((r) => card(standingCard(r), opened.kind === "DETAIL" && opened.id === r.id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page),evidencePage:String(evidencePage)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} artifacts={opened.artifacts} evidencePage={evidencePage} evidenceHref={page=>`${here({open:opened.id,trailPage:String(requestedTrailPage),evidencePage:String(page)})}#a-${encodeURIComponent(opened.id)}`} /> : null))}
                     </div>
                   );
                 })}
@@ -515,7 +531,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                 {g.bodies.slice(0, show === `routine-${g.st}` ? g.bodies.length : FIRST_PER_GROUP).flatMap((b) =>
                   b.contractIds.map((cid) => {
                     const id = `routine:${cid}`;
-                    return card(routineCard(b, cid), opened.kind === "DETAIL" && opened.id === id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} /> : null);
+                    return card(routineCard(b, cid), opened.kind === "DETAIL" && opened.id === id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page),evidencePage:String(evidencePage)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} artifacts={opened.artifacts} evidencePage={evidencePage} evidenceHref={page=>`${here({open:opened.id,trailPage:String(requestedTrailPage),evidencePage:String(page)})}#a-${encodeURIComponent(opened.id)}`} /> : null);
                   }),
                 )}
                 {g.bodies.length > FIRST_PER_GROUP && show !== `routine-${g.st}` && (
@@ -748,11 +764,17 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity, 
   );
 }
 
-function DetailSections({ detail, trail, trailPage, trailHref, says }: { detail: AssignmentDetailView; trail: AssignmentEvidenceTrail | null; trailPage: number; trailHref: (page:number)=>string; says: string }) {
+function DetailSections({ detail, trail, trailPage, trailHref, says, artifacts, evidencePage, evidenceHref }: {
+  detail: AssignmentDetailView; trail: AssignmentEvidenceTrail | null; trailPage: number;
+  trailHref: (page:number)=>string; says: string; artifacts: readonly ArtifactRecord[];
+  evidencePage: number; evidenceHref: (page:number)=>string;
+}) {
   const pageSize=20;
   const pages=Math.max(1,Math.ceil((trail?.events.length??0)/pageSize));
   const page=Number.isSafeInteger(trailPage)?Math.max(1,Math.min(trailPage,pages)):1;
   const shown=trail?.events.slice((page-1)*pageSize,page*pageSize)??[];
+  const evidencePages = Math.max(1, Math.ceil(artifacts.length / 50));
+  const shownEvidencePage = Math.min(evidencePage, evidencePages);
   return (
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
@@ -873,6 +895,21 @@ function DetailSections({ detail, trail, trailPage, trailHref, says }: { detail:
       <p className={`${s.note} ${s.noteTop}`}>
         <strong className={s.strong}>Cost:</strong> {detail.costLine}
       </p>
+      {artifacts.length > 0 && <section>
+        <h4 className={s.h4}>Saved source documents</h4>
+        <p className={s.note}>These are recorded captures. A download opens only after the runner has made and verified a private copy; an unavailable copy remains unavailable.</p>
+        <p className={s.note}>Showing page {shownEvidencePage} of {evidencePages}; {artifacts.length.toLocaleString("en-US")} recorded captures.</p>
+        <div className={s.stack8}>{artifacts.slice((shownEvidencePage - 1) * 50, shownEvidencePage * 50).map(a => <div key={`${a.workItemId}:${a.attemptId}:${a.artifactId}`} className={s.insetRow}>
+          <span className={s.monoSmall}>{a.artifactId} · {a.contentHash} · {a.byteLength.toLocaleString("en-US")} bytes</span>
+          {a.tier === "RAW" && !a.partial && adminMirrorableContentType(a.contentType)
+            ? <a className={s.btnLink} href={`/api/admin/evidence/${encodeURIComponent(a.workItemId)}/${encodeURIComponent(a.attemptId)}/${encodeURIComponent(a.artifactId)}`}>Download verified original</a>
+            : <span className={s.note}>{a.partial ? "Partial capture; original download unavailable" : a.tier !== "RAW" ? "Restricted or derived capture; original download unavailable" : "This binary capture has no verified safe private copy yet"}</span>}
+        </div>)}</div>
+        {evidenceHref && <div className={s.row10}>
+          {shownEvidencePage > 1 && <Link href={evidenceHref(shownEvidencePage - 1)} className={s.btnLink}>Previous 50 captures</Link>}
+          {shownEvidencePage < evidencePages && <Link href={evidenceHref(shownEvidencePage + 1)} className={s.btnLink}>Next 50 captures</Link>}
+        </div>}
+      </section>}
       <p className={s.monoSmall} style={{ marginTop: 10 }}>
         {says}
       </p>

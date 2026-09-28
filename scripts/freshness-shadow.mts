@@ -11,6 +11,7 @@ import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
@@ -3973,6 +3974,23 @@ try {
   failedStep("window-lease:release", error);
 }
 await stallDiagnostic?.stop();
+// Optional private Admin copy of verified originals. This follows the canonical
+// cycle outcome: an unavailable mirror can never rewrite acquisition/publication
+// truth, and the next ordinary cycle resumes the rotating reconciliation cursor.
+if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
+  try {
+    const mirror = await runBoundedStep({ label: "private-admin-evidence-mirror",
+      budgetMs: Math.max(0, Math.min(15_000, CLOCK.recordsDeadlineMs - Date.now())),
+      fn: () => runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
+        cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json") }) });
+    console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
+    if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
+  } catch (error) {
+    // A timeout leaves remote-copy status UNKNOWN, never success. A later cycle
+    // reads the immutable key first and verifies it before retrying the CAS copy.
+    console.error(`  private Admin evidence mirror unavailable or unverified; original vault unchanged: ${error instanceof Error ? error.message : "unknown failure"}`);
+  }
+}
 /* Nothing is left to await. A drained loop exits now; anything still holding it open is named, then the cycle exits with its own code instead of waiting for the wall (cycle-exit.ts). */
 exitAfterDrainGrace({
   graceMs: CYCLE_DRAIN_GRACE_MS,

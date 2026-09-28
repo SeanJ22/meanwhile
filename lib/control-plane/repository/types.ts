@@ -1,4 +1,5 @@
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
+import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 /**
@@ -686,6 +687,8 @@ export interface ControlPlaneRepositories {
   readonly debts: AggregateRepository<FreshnessDebt>;
   /** Keyed by ROUTE TASK id: one lease slot per task, so the slot is the race. */
   readonly leases: AggregateRepository<ExecutionLease>;
+  /** Indexed, bounded read of all non-internal active lease claims; unsupported providers say unavailable. */
+  readonly activeWorkClaims: ActiveWorkClaimReader;
   readonly transitions: AppendOnlyRepository<RecordedTransition>;
   readonly escalations: AppendOnlyRepository<Escalation>;
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;

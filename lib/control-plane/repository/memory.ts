@@ -2,6 +2,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
+import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
  * THE IN-PROCESS DOUBLE.
  *
@@ -288,6 +289,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     occurrences: memoryAggregateRepository<FreshnessOccurrence>("FreshnessOccurrence"),
     debts: memoryAggregateRepository<FreshnessDebt>("FreshnessDebt"),
     leases: memoryAggregateRepository<ExecutionLease>("ExecutionLease"),
+    activeWorkClaims: unavailableActiveWorkClaims(),
     transitions: memoryAppendOnlyRepository<RecordedTransition>("transitions"),
     escalations: memoryAppendOnlyRepository<Escalation>("escalations"),
     dispositions: memoryAppendOnlyRepository<DispositionCommit>("dispositions"),

@@ -2,6 +2,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
+import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 /**
  * THE DURABLE FILESYSTEM STORE — where "the worker may die" stops being a
  * design intention.
@@ -743,6 +744,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ),
     debts: fileAggregateRepository<FreshnessDebt>(resolved, "FreshnessDebt", "debts"),
     leases: fileAggregateRepository<ExecutionLease>(resolved, "ExecutionLease", "leases"),
+    activeWorkClaims: unavailableActiveWorkClaims(),
     transitions: fileAppendOnlyRepository<RecordedTransition>(resolved, "transitions"),
     escalations: fileAppendOnlyRepository<Escalation>(resolved, "escalations"),
     dispositions: fileAppendOnlyRepository<DispositionCommit>(resolved, "dispositions"),

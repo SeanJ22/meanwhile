@@ -25,6 +25,7 @@ import { readChecklistCensuses } from "@/lib/control-plane/readiness/checklist-r
 import { readRoutinePublicationStatus } from "@/lib/civic-data/observability-server.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
+import { ChecklistFieldEvidence } from "../checklist-field-evidence.tsx";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { lateWords, sharedRead } from "../data/shared-read.ts";
 import { TRACKED_STATE_CODES, stateName } from "../load-shell.ts";
@@ -286,6 +287,12 @@ export async function DoneScreen(props: { readonly searchParams: Promise<SearchP
           </div>
         </div>
       </>}
+
+      {selectedInstruction && <ChecklistFieldEvidence rows={scopedCensus?.fieldEvidence ?? null}
+        query={query} requestedPage={Number(param(sp, "fieldPage") ?? "1")}
+        pageHref={page => `${withScope("/readiness/done", base.scope, { q: query || null, fieldPage: String(page) })}#official-field-evidence`}
+        predicateHref={id => `${withScope("/readiness/done", base.scope, { q: id })}#checklist-${encodeURIComponent(id)}`}
+        workHref={id => `${withScope("/admin/work", base.scope, { instruction: selectedInstruction.key, open: id })}#a-${encodeURIComponent(id)}`} />}
 
       <Section title="Where each family connects" lede={`${connections.families.length} declared data families and ${connections.manualContracts.length} production contracts. These links explain where evidence could reach a reader; they do not score a checklist item.`} />
       {connections.readFailure && <p className={s.goldNote}>Publication receipts could not be read: {connections.readFailure}</p>}

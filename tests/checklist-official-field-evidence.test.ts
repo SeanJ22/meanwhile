@@ -58,6 +58,7 @@ test("normal roster lineage exposes exact verified fields and accepted reader bi
     ["name", true, true], ["office", true, true], ["phone", true, false],
   ]);
   assert.equal(rows[0].fields.find(field => field.name === "phone")?.officialContactEligible, true);
+  assert.equal(rows[0].fields.find(field => field.name === "phone")?.capturedValue, "555-0100");
   assert.equal(rows[0].fields.every(field => field.readerFieldVisible === "UNMEASURED"), true);
   assert.equal(rows[0].reader.state, "EXACT_READER_BINDING_ACCEPTED");
   assert.equal(rows[0].reader.objectId, "member-1");
@@ -71,6 +72,23 @@ test("normal roster lineage exposes exact verified fields and accepted reader bi
     ...parser, id: "result-parser-retry", endedAt: "2026-09-28T08:00:00.000Z",
   }] } as unknown as AssignmentSources);
   assert.equal(repeated.length, 1, "a parser retry does not inflate known field evidence");
+});
+
+test("census values retain exact public fields without copying unclassified personal contacts or silently shortening long values", () => {
+  for (const contactKind of ["PERSONAL", undefined]) {
+    const changed = structuredClone(parser);
+    Object.assign(changed.result.records[0].fields, { contactKind });
+    const fields = read({ ...source(), workerResults: [changed, validator, auditor] } as unknown as AssignmentSources)[0].fields;
+    assert.equal(fields.find(field => field.name === "phone")?.capturedValue, undefined);
+    assert.equal(fields.find(field => field.name === "phone")?.capturedValueState, "WITHHELD_NOT_PUBLIC_OFFICE");
+    assert.equal(fields.find(field => field.name === "name")?.capturedValue, "Alex Example");
+  }
+  const changed = structuredClone(parser);
+  changed.result.records[0].fields.office = "x".repeat(4097);
+  const field = read({ ...source(), workerResults: [changed, validator, auditor] } as unknown as AssignmentSources)[0].fields.find(row => row.name === "office");
+  assert.equal(field?.capturedValue, undefined);
+  assert.equal(field?.capturedValueState, "AVAILABLE_IN_CAPTURE");
+  assert.deepEqual(field?.spanIds, ["span-office"]);
 });
 
 test("wrong instruction, earlier shared-subject result, and missing source span never earn field evidence", () => {

@@ -20,7 +20,8 @@ export interface ChecklistOfficialFieldEvidence {
   readonly parserResultId: string;
   readonly validatorResultId: string | null;
   readonly auditorResultId: string | null;
-  readonly fields: readonly { readonly name: string; readonly spanIds: readonly string[];
+  readonly fields: readonly { readonly name: string; readonly capturedValue?: string | number | boolean; readonly spanIds: readonly string[];
+    readonly capturedValueState?: "PRESENT" | "WITHHELD_NOT_PUBLIC_OFFICE" | "AVAILABLE_IN_CAPTURE";
     readonly recordSurvivedChecks: boolean; readonly independentlyMatched: boolean;
     readonly officialContactEligible: boolean; readonly readerFieldVisible: "UNMEASURED" }[];
   readonly reader: {
@@ -116,7 +117,11 @@ export function checklistOfficialFieldEvidence(input: {
           check.verdict === "PASS" && check.verifiedRecordIds?.includes(record.id) &&
           ["RECORD_VALUES", "RECORD_VALUES_SUBSET"].includes(check.comparison.kind) &&
           "fields" in check.comparison && check.comparison.fields.includes(name)) === true;
-        return spans.length ? [{ name, spanIds: spans.map(span => span.id), recordSurvivedChecks: verified,
+        const privateContact = ["phone", "email"].includes(name) && record.fields.contactKind !== "PUBLIC_OFFICE";
+        const longValue = typeof value === "string" && value.length > 4096;
+        return spans.length ? [{ name, ...(!privateContact && !longValue ? { capturedValue: value as string | number | boolean } : {}),
+          capturedValueState: privateContact ? "WITHHELD_NOT_PUBLIC_OFFICE" as const : longValue ? "AVAILABLE_IN_CAPTURE" as const : "PRESENT" as const,
+          spanIds: spans.map(span => span.id), recordSurvivedChecks: verified,
           independentlyMatched: verified && independent,
           officialContactEligible: ["phone", "email"].includes(name) && record.fields.contactKind === "PUBLIC_OFFICE",
           readerFieldVisible: "UNMEASURED" as const }] : [];

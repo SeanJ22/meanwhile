@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { continuingDirectedHunt } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { huntActivity } from "../lib/control-plane/admin-view/hunt-activity.ts";
+import { pulseRevision } from "../lib/control-plane/live-pulse.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import type { AssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
@@ -35,4 +36,10 @@ test("Admin stage counts use exact Send marks and separate publication from read
   assert.equal(activity.listed, 4);
   assert.deepEqual(activity.stages, { found: 1, parsed: 1, verified: 2, promoted: 2, live: 1 });
   assert.deepEqual(activity.roles, [["SCOUT · haiku", 1]]);
+});
+
+test("a next-cycle heartbeat update refreshes Admin even when beatAt is unchanged", () => {
+  const prior = { beatAt: "2026-09-27T01:00:00Z", heartbeatRevision: 4, snapshotRevision: 1,
+    decisionCount: 0, researchRevision: 1, receiptCount: 0, researchIntentCount: 0, sourceProgressId: null };
+  assert.notEqual(pulseRevision(prior), pulseRevision({ ...prior, heartbeatRevision: 5 }));
 });

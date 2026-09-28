@@ -67,6 +67,7 @@ export interface LivePulse {
  */
 export function pulseRevision(input: {
   readonly beatAt: string | null;
+  readonly heartbeatRevision?: number | null;
   readonly snapshotRevision: number | null;
   readonly decisionCount: number | null;
   readonly researchRevision: number | null;
@@ -76,6 +77,7 @@ export function pulseRevision(input: {
 }): string {
   return [
     input.beatAt ?? "-",
+    input.heartbeatRevision ?? "-",
     input.snapshotRevision ?? "-",
     input.decisionCount ?? "-",
     input.researchRevision ?? "-",

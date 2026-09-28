@@ -176,6 +176,19 @@ test("PROMOTE only when every check holds, from a reviewed crosswalk row, never 
   assert.deepEqual(deriveWiringDecisions(inputs(attempt, {}, [])), [], "a find with no reviewed crosswalk row is never a row");
 });
 
+test("a reviewed-registry body used to fill a registration gap remains in each wiring row's provenance", async () => {
+  const attempt = await walk(SITE, "example.gov");
+  const reviewedInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRY_RUNTIME_BINDING",
+    scope: "US:registry-runtime", versionId: "reviewed-1", readModelSha256: "f".repeat(64), promotedAt: NOW };
+  const [decision] = deriveWiringDecisions(inputs(attempt, {
+    registration: () => ({ input: registrationInput, identityInput: reviewedInput }),
+  }));
+  assert.equal(decision?.disposition, "PROMOTE");
+  if (decision?.disposition !== "PROMOTE") return;
+  assert.ok(decision.inputs.includes(registrationInput));
+  assert.ok(decision.inputs.includes(reviewedInput));
+});
+
 test("HOLD BY NAME at the first check that fails: registration, walk, attestation, a hand-wired body, the vault, the reader adapter", async () => {
   const attempt = await walk(SITE, "example.gov");
   const reason = (over: Partial<DerivedWiringInputs>, target = attempt) => reasonOf(deriveWiringDecisions(inputs(target, over))[0]);

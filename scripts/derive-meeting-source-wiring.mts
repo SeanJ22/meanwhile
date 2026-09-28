@@ -53,6 +53,7 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { deriveWiringDecisions, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
+import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
@@ -62,6 +63,9 @@ import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
+import { loadRegistrationReference, type LoadedReference } from "../lib/registration/reference.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 
 const CONTRACT_ID = "meeting-source-wiring";
@@ -161,14 +165,36 @@ async function main(): Promise<void> {
     : { input: automaticInput, versionId: automaticRead.metadata.versionId ?? "", rowIds: composed.automaticIds };
   const rows = composed.rows.filter((row) => crosswalkRowIssue(row) === null);
 
-  /* Registration: which division each crosswalked government is, per covered state. */
-  const registrations = new Map<string, { readonly input: DerivedInputRef; readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[] } | { readonly unread: string }>();
+  /* Registration supplies the Census division. The reviewed registry may own its exact governing body. */
+  const reviewed = await readRegistryRuntimeProjection({ store, bypassCache: true, now });
+  const reviewedInput = reviewed.kind === "PROMOTED"
+    ? promotedInputRef("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
+    : null;
+  const registrations = new Map<string, {
+    readonly input: DerivedInputRef;
+    readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
+    readonly reference: LoadedReference;
+    readonly reviewedRegistryVersionId: string;
+  } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
-    const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
-    const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
-    registrations.set(state, read.kind === "PROMOTED" && input !== null
-      ? { input, bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) }
-      : { unread: `${state} registration is ${read.kind}` });
+    try {
+      const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
+      const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
+      if (read.kind !== "PROMOTED" || input === null) {
+        registrations.set(state, { unread: `${state} registration is ${read.kind}` });
+        continue;
+      }
+      const reference = loadRegistrationReference(process.cwd(), state);
+      if (reference.sha256 !== read.value.vintage.referenceSha256) {
+        registrations.set(state, { unread: `${state} registration does not name the committed Census government pairing` });
+        continue;
+      }
+      registrations.set(state, { input,
+        bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })),
+        reference, reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
+    } catch (error) {
+      registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
+    }
   }
 
   /* The newest walk of each crosswalked government, read only. */
@@ -233,10 +259,22 @@ async function main(): Promise<void> {
       const reg = state === null ? undefined : registrations.get(state);
       if (reg === undefined || "unread" in reg) return { notRegistered: reg !== undefined && "unread" in reg ? reg.unread : `no covered state in ${row.ocdId}` };
       const body = reg.bodies.find((b) => b.jurisdictionId === row.jurisdictionId);
-      if (body === undefined) return { notRegistered: `registration pairs ${row.jurisdictionId} with no body` };
-      if (body.ocdId !== row.ocdId) return { notRegistered: `registration pairs ${row.jurisdictionId} with ${body.ocdId}, not ${row.ocdId}` };
-      if (row.bodyRole !== "SUB_BODY" && body.id !== row.bodyId) return { notRegistered: `registration's body is ${body.id}, not ${row.bodyId}` };
-      return { input: reg.input };
+      if (body !== undefined) {
+        if (body.ocdId !== row.ocdId) return { notRegistered: `registration pairs ${row.jurisdictionId} with ${body.ocdId}, not ${row.ocdId}` };
+        if (row.bodyRole !== "SUB_BODY" && body.id !== row.bodyId) return { notRegistered: `registration's body is ${body.id}, not ${row.bodyId}` };
+        return { input: reg.input };
+      }
+      if (reviewed.kind !== "PROMOTED" || reviewedInput === null) {
+        return { notRegistered: `registration pairs ${row.jurisdictionId} with no body and the reviewed registry is ${reviewed.kind}` };
+      }
+      if (reg.reviewedRegistryVersionId !== reviewed.metadata.versionId) {
+        return { notRegistered: `registration and reviewed registry name different identity versions for ${row.jurisdictionId}` };
+      }
+      const resolved = reviewedBodyForGovernment(reg.reference, row.jurisdictionId, reviewed.value.registry.bodies);
+      if (resolved === null || resolved.ocdId !== row.ocdId || (row.bodyRole !== "SUB_BODY" && resolved.bodyId !== row.bodyId)) {
+        return { notRegistered: `registration and reviewed registry do not pair ${row.jurisdictionId} with ${row.bodyId}` };
+      }
+      return { input: reg.input, identityInput: reviewedInput };
     },
     attempts,
     handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),

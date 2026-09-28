@@ -331,6 +331,6 @@ test("the research cycle bounds its late work by the late-work deadline: the met
   assert.match(source, /retained records remain owed, existing reader data is preserved/);
   const retained = source.indexOf('await projectRetainedFacts("retained-results:fact-projection")');
   assert.ok(retained > 0 && retained < source.indexOf("const cycle = await runCycle("), "retained verification cannot be starved behind new acquisition");
-  assert.match(source, /if \(!dry && !canary && !scheduledBlackout\) await projectRetainedFacts/, "normal operating controls still govern the pass");
+  assert.match(source, /if \(!dry && !canary && \(!scheduledBlackout \|\| hasLifetimeHunt\)\) await projectRetainedFacts/, "normal operating controls and the exact original-hunt exception govern the pass");
   assert.match(source, /if \(fleetDispatches\.some\(row => row\.outcome === "WORKED"\)\) await projectRetainedFacts\("new-worker-results:fact-projection"\)/, "only new worker output justifies the second pass");
 });

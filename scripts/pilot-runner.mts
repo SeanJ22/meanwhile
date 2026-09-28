@@ -199,6 +199,8 @@ import {
 import { BILLING_SECRET_NAMES, withoutBillingSecrets } from "../lib/control-plane/provider-billing.ts";
 import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.ts";
 import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/promotion/window.ts";
+import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
+import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 
 /* Before anything connects: a per-address connect window that fits this host,
    for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
@@ -1094,10 +1096,13 @@ const PAUSE_BEAT_MS = 30 * 60_000;
  */
 const INTAKE_RUNTIME_TICK_MS = Math.max(POLL_MS, INTERVAL_MIN * 60_000);
 let intentRepos: ControlPlaneRepositories | null = null;
+let intentReposOpening: Promise<ControlPlaneRepositories> | null = null;
 let intentReadFailed = false;
 let pauseBeatFailed = false;
 let runtimeAdmissionsHeld = false;
 let standingRuntimeTimer: ReturnType<typeof setInterval> | null = null;
+let adminCopyTimer: ReturnType<typeof setInterval> | null = null;
+let adminCopyWork: Promise<void> | null = null;
 /** The PAUSE_RUNNER intent whose reason was printed; null while not paused. */
 let announcedPause: string | null = null;
 let lastPauseBeatMs = 0;
@@ -1119,9 +1124,43 @@ async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   if (intentRepos === null) {
     const url = controlPlaneUrlFromEnv();
     if (url === null) return null;
-    intentRepos = await createPgRepositories(url, new Date().toISOString());
+    intentReposOpening ??= createPgRepositories(url, new Date().toISOString());
+    try { intentRepos = await intentReposOpening; }
+    finally { intentReposOpening = null; }
   }
   return intentRepos;
+}
+
+/** Same permanent process, separate from the research-cycle wall and source clock. */
+function runAdminCopyTick(): void {
+  if (runtimeAdmissionsHeld || adminCopyWork || provider !== "postgres" ||
+      process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
+      !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) return;
+  adminCopyWork = (async () => {
+    const repos = await ownerRepositories();
+    if (!repos) return;
+    const result = await runAuthorizedAdminCopyTick({ repos, vaultRoot: join(ROOT, ...VAULT_DIR), env: {
+      WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED: process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED,
+      NETLIFY_SITE_ID: process.env.NETLIFY_SITE_ID,
+      NETLIFY_BLOBS_TOKEN: process.env.NETLIFY_BLOBS_TOKEN,
+    } });
+    if (result.examined) console.log(`  private Admin exact-copy request: copied ${result.copied}, refused ${result.refused}, pending ${result.pending}`);
+  })().catch(error => {
+    console.error(`  private Admin exact-copy request remains owed (${error instanceof Error ? error.name : "unknown failure"}); no availability was claimed`);
+  }).finally(() => { adminCopyWork = null; });
+}
+
+function startAdminCopyClock(): void {
+  if (runtimeAdmissionsHeld || adminCopyTimer !== null || provider !== "postgres" ||
+      process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
+      !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) return;
+  runAdminCopyTick();
+  adminCopyTimer = setInterval(runAdminCopyTick, ADMIN_COPY_POLL_MS);
+}
+
+async function stopAdminCopyClock(): Promise<void> {
+  if (adminCopyTimer !== null) { clearInterval(adminCopyTimer); adminCopyTimer = null; }
+  if (adminCopyWork) await adminCopyWork;
 }
 
 /*
@@ -1150,6 +1189,7 @@ function startStandingRuntimeClock(): void {
 
 async function holdStandingRuntimeAtQuiescence(): Promise<void> {
   runtimeAdmissionsHeld = true;
+  await stopAdminCopyClock();
   if (standingRuntimeTimer !== null) {
     clearInterval(standingRuntimeTimer);
     standingRuntimeTimer = null;
@@ -1328,6 +1368,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   // reconciliation into a pre-gate clock opener. During a later boundary the
   // timer is already live, so that exact prior state may be restored.
   const reopenStandingClock = standingRuntimeTimer !== null;
+  const reopenAdminCopyClock = adminCopyTimer !== null;
   await holdStandingRuntimeAtQuiescence();
   if (first.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(first, startedAt);
@@ -1348,6 +1389,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     try { await persistCurrentRuntimeRelease(final); }
     catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
     if (reopenStandingClock) startStandingRuntimeClock();
+    if (reopenAdminCopyClock) startAdminCopyClock();
     return null;
   }
   if (final.targetSha !== first.targetSha || final.targetSha === null) {
@@ -1883,6 +1925,7 @@ console.log("\npilot-runner · publishing the console before the first cycle (th
 // children below are asynchronous, so the timer can keep admitting a due lane
 // while research is still pending; the lane scheduler prevents same-lane overlap.
 startStandingRuntimeClock();
+startAdminCopyClock();
 await publishConsole();
 
 while (cycle < CYCLES) {
@@ -2032,6 +2075,7 @@ while (cycle < CYCLES) {
 }
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
+await stopAdminCopyClock();
 if (hangWatchdog !== null) await hangWatchdog.stop();
 await standingRuntimeScheduler.waitForIdle();
 await PILOT_PROCESS_LEASE.release();

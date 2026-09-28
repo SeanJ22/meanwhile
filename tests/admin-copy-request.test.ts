@@ -14,6 +14,8 @@ import { adminEvidenceKey, type AdminEvidenceBlob, type AdminEvidenceRemote } fr
 import { originalEvidenceAttachment } from "../lib/control-plane/evidence/admin-bridge-http.ts";
 import { pollAdminEvidenceCopyRequests, readAdminEvidenceCopyStatus, requestAdminEvidenceCopy,
   requeueUnavailableAdminCopy, adminCopyRequestId } from "../lib/control-plane/evidence/admin-copy-request.ts";
+import { runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
+import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 
 class Remote implements AdminEvidenceRemote {
@@ -51,7 +53,8 @@ async function fixture(t: { after: (fn: () => Promise<void>) => void }, held = t
   await repos.attempts.put(attempt.id, attempt, now);
   await repos.artifacts.append(owner.id, record.artifactId, record, now);
   if (held) await putArtifact(new DurableEvidenceStore(vaultRoot), "freshness", artifact, bytes);
-  return { repos, owner, attempt, record, vaultRoot, remote: new Remote(), now, artifact, bytes };
+  return { repos, owner, attempt, record, vaultRoot, remote: new Remote(), now, artifact, bytes,
+    adminSessionRef: "authenticated-admin-fixture" };
 }
 
 test("exact request is idempotent, CAS-leased copier verifies bytes, then attachment is original", async t => {
@@ -165,4 +168,45 @@ test("only an explicit second request requeues a formerly verified copy that wen
   const resumed = await pollAdminEvidenceCopyRequests({ repos: f.repos, vaultRoot: f.vaultRoot,
     remote: f.remote, now: () => at + 61_000, deadlineMs: at + 66_000 });
   assert.equal(resumed.copied, 1);
+});
+
+test("runner adapter stays disabled by default and copies only the exact authenticated request", async t => {
+  const f = await fixture(t);
+  const requestOnlyEnv = { WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED: "1", WTP_ADMIN_EVIDENCE_MIRROR_ENABLED: undefined };
+  const bulk = await runAdminEvidenceMirror({ repos: f.repos, vaultRoot: f.vaultRoot,
+    cursorPath: join(f.vaultRoot, "bulk-cursor.json"), remote: f.remote,
+    env: requestOnlyEnv });
+  assert.equal(bulk.state, "DISABLED", "request activation does not activate the legacy all-capture mirror");
+  assert.equal(f.remote.writes, 0);
+  await requestAdminEvidenceCopy(f);
+  const disabled = await runAuthorizedAdminCopyTick({ repos: f.repos, vaultRoot: f.vaultRoot,
+    remote: f.remote, env: {}, now: () => Date.parse(f.now) });
+  assert.equal(disabled.state, "DISABLED");
+  assert.equal(f.remote.writes, 0);
+  const start = performance.now();
+  const active = await runAuthorizedAdminCopyTick({ repos: f.repos, vaultRoot: f.vaultRoot,
+    remote: f.remote, env: { WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED: "1" },
+    now: () => Date.parse(f.now) });
+  const fixtureElapsedMs = performance.now() - start;
+  assert.equal(active.copied, 1);
+  assert.equal(active.examined, 1);
+  assert.equal(f.remote.writes, 1);
+  assert.equal((await readAdminEvidenceCopyStatus(f)).state, "AVAILABLE");
+  assert.ok(Number.isFinite(fixtureElapsedMs), "local request-to-copy time is measurable, not a production SLA");
+});
+
+test("forged request lacking the authenticated Admin receipt cannot trigger a copy", async t => {
+  const f = await fixture(t);
+  assert.equal((await requestAdminEvidenceCopy({ ...f, adminSessionRef: "" })).code, "ADMIN_SESSION_REF_INVALID");
+  await requestAdminEvidenceCopy(f);
+  const id = adminCopyRequestId(f.record.workItemId, f.record.attemptId, f.record.artifactId);
+  const saved = (await f.repos.adminEvidenceCopyRequests.read(id))!;
+  await f.repos.adminEvidenceCopyRequests.compareAndSet(id, saved.revision,
+    { ...saved.value, requesterRef: "" }, f.now);
+  const at = Date.parse(f.now);
+  const result = await pollAdminEvidenceCopyRequests({ repos: f.repos, vaultRoot: f.vaultRoot,
+    remote: f.remote, now: () => at, deadlineMs: at + 5_000 });
+  assert.equal(result.refused, 1);
+  assert.equal(f.remote.writes, 0);
+  assert.equal((await f.repos.adminEvidenceCopyRequests.read(id))?.value.code, "REQUEST_AUTHORIZATION_MISSING");
 });

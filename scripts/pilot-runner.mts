@@ -93,7 +93,7 @@ import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/o
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { headSha } from "../lib/ops/git-facts.ts";
+import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
@@ -107,7 +107,8 @@ import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignm
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat, type RuntimeReleaseAdoption } from "../lib/control-plane/owner-surface.ts";
+import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -1166,7 +1167,14 @@ function releaseInspectionRefusal(code: string, detail: string, targetSha: strin
   };
 }
 
-async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
+type RuntimeReleaseObserved = RuntimeReleaseInspection & {
+  readonly servedHow?: string;
+  readonly integrityReceiptId?: string;
+  readonly integritySha?: string;
+  readonly integrityObservedAt?: string;
+};
+
+async function inspectRuntimeRelease(): Promise<RuntimeReleaseObserved> {
   const served = await fetchServedCommit(PRODUCTION_BASE_URL, {
     runId: `pilot-runtime-release:${process.pid}`,
     timeoutMs: 15_000,
@@ -1204,12 +1212,42 @@ async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
         token: runtimeGithubCredential({ root: ROOT, env: process.env }),
       })
     : null;
-  return inspectRuntimeReleaseEvidence({
+  const inspected = inspectRuntimeReleaseEvidence({
     runningSha: RUNNING_CODE_SHA,
     served,
     integrity,
     checkRuns,
   });
+  return integrity.kind === "HELD" ? {...inspected,servedHow:served.how,
+    integrityReceiptId:integrity.receipt.id,integritySha:integrity.record.deployedSha??undefined,
+    integrityObservedAt:integrity.record.observedAt??undefined} : inspected;
+}
+
+/** A CURRENT inspection is not itself a GATE-02 PASS. Save its exact process,
+ * deployed and canonical integrity identities; the later completed heartbeat
+ * and phase-base ancestry are checked again by the scoring producer. */
+async function persistCurrentRuntimeRelease(result:RuntimeReleaseObserved):Promise<void> {
+  if(result.state!=="CURRENT"||!RUNNING_CODE_SHA||!result.targetSha||!result.servedHow||
+    !result.integrityReceiptId||!result.integritySha||!result.integrityObservedAt) return;
+  const repos=await ownerRepositories();
+  if(repos===null) return;
+  const observedAt=new Date().toISOString();
+  const fields:Omit<RuntimeReleaseAdoption,"evidenceHash">={
+    formatVersion:1,phase:GATE02_REPAIR_PHASE,requiredBaseSha:GATE02_REQUIRED_BASE_SHA,
+    baseContained:containsCommit(GATE02_REQUIRED_BASE_SHA,RUNNING_CODE_SHA,ROOT),
+    observedAt,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
+    inspectionCode:"RUNTIME_RELEASE_CURRENT",integrityReceiptId:result.integrityReceiptId,
+    integritySha:result.integritySha,integrityObservedAt:result.integrityObservedAt,
+  };
+  const runtimeRelease:RuntimeReleaseAdoption={...fields,evidenceHash:runtimeReleaseAdoptionHash(fields)};
+  const current=await repos.runnerHeartbeat.read(RUNNER_ID);
+  const base:RunnerHeartbeat=current?.value??{
+    formatVersion:OWNER_SURFACE_FORMAT_VERSION,beatAt:observedAt,lastCycleStartedAt:null,lastCycleFinishedAt:null,
+    nextCycleDueAt:null,lastCycleOk:null,testedSha:RUNNING_CODE_SHA,host:hostname(),
+  };
+  const next={...base,runtimeRelease};
+  if(current===null) await repos.runnerHeartbeat.put(RUNNER_ID,next,observedAt);
+  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,next,observedAt);
 }
 
 async function persistRuntimeBoundaryFailure(
@@ -1277,7 +1315,11 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   if (!AUTO_RELEASE_HANDOFF) return null;
   const startedAt = new Date().toISOString();
   const first = await inspectRuntimeRelease();
-  if (first.state === "CURRENT") return null;
+  if (first.state === "CURRENT") {
+    try { await persistCurrentRuntimeRelease(first); }
+    catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
+    return null;
+  }
 
   // At process startup no clock has passed the method-authority gate yet. A
   // transient target that moves back to this SHA while we drain must not turn
@@ -1301,6 +1343,8 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     // Production moved back to the code this process actually loaded. Nothing
     // was switched; admissions may safely resume.
     runtimeAdmissionsHeld = false;
+    try { await persistCurrentRuntimeRelease(final); }
+    catch (error) { console.error(`  runtime adoption observation not saved (${error instanceof Error ? error.name : "error"}); GATE-02 remains unproved`); }
     if (reopenStandingClock) startStandingRuntimeClock();
     return null;
   }

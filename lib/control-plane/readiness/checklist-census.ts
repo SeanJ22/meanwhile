@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
 import type { AssignmentSources } from "../assignment-view.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
+import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { CHECKLIST_PROFILE, checklistObligationKey, checklistRequiredClauses, type ChecklistInstance, type ChecklistSnapshot } from "./checklist-score.ts";
 import { checklistDeliveryTimings, type WorkDeliveryTiming } from "./checklist-timings.ts";
 import { checklistDispatchWitness } from "./checklist-dispatch-witness.ts";
+import { checklistRunningReleaseWitness } from "./checklist-running-release-witness.ts";
 
 /** A census projection, not a dispatcher. A receipt proves membership; matching
  * a state, a URL or a successful attempt never establishes object applicability. */
@@ -38,6 +40,7 @@ export function buildChecklistCensus(input: {
   sources: AssignmentSources | null;
   observedAt:string;
   previous?: ChecklistCensus | null;
+  heartbeat?: RunnerHeartbeat | null;
 }): ChecklistCensus {
   const {scope,sources,observedAt}=input;
   if (!sources && input.previous?.instructionReceipt===scope.receiptId) return {
@@ -107,7 +110,7 @@ export function buildChecklistCensus(input: {
           reason:required?"The saved instruction requires this operating contract. Its full predicate still needs execution evidence.":"The object is known or its inventory is owed; exact applicability, effective period and conditional triggers still need source evidence."},
         due:{state:required?"DUE_NOW":"UNRESOLVED",evidenceIds:object.evidenceIds,at:null},
         predicate:{kind:object.kind==="SCOPE"?"CAPABILITY":"POSSESSION",requiredClauses:checklistRequiredClauses(predicateKey),contractVersion:"checklist-field-contract/1"},
-        workIds:object.workIds,requiredSurfaces:[],requiresFreshness:object.kind==="RECORD",
+        workIds:object.workIds,requiredSurfaces:[],requiresFreshness:object.kind==="RECORD"||predicateKey==="GATE-02",
         owner:definitions[0]?.owner??"Lead",blocker:object.kind==="UNRESOLVED"?"Object inventory is not connected.":"Complete clause-level verification and period evidence are not yet connected.",
         nextAction:object.kind==="UNRESOLVED"?`Connect the ${definitions[0]?.group} source inventory and applicability decisions through the normal producer.`:"Resolve exact applicability and period, then evaluate every original clause against saved source and public receipts.",
         failureKind:object.kind==="UNRESOLVED"?"MISSING_CAPABILITY":"DISCONNECTED_CAPABILITY"});
@@ -116,7 +119,8 @@ export function buildChecklistCensus(input: {
   return {profile:CHECKLIST_PROFILE.version,scopeId:scope.key,scopeRevision,observedAt,censusVersion:"checklist-census/1",instructionReceipt:scope.receiptId,
     inventory:{complete:false,evidenceIds:[scope.receiptId,...members],unresolvedObjects:objects.filter(o=>o.kind==="UNRESOLVED").length},
     readsComplete:sources!==null&&sources.pipeline!==null,instances,
-    witnesses:sources ? checklistDispatchWitness({scope,sources,instances,observedAt}) : [],
+    witnesses:[...(sources ? checklistDispatchWitness({scope,sources,instances,observedAt}) : []),
+      ...checklistRunningReleaseWitness({scope,instances,heartbeat:input.heartbeat??null,observedAt})],
     population:{knownSubjects:members.size,knownRecords:recordObjects.size,expectedObjects:null},
     // Older snapshots without the occurrence population cannot establish an
     // exact receipt timing count. Leave it unmeasured instead of showing zero.

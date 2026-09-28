@@ -81,8 +81,7 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedLookupState } from "../lib/census-geography/reader.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
-import { scheduledBlackoutAt } from "../lib/control-plane/fleet-safety.ts";
-import { huntSourceTasks, workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { admittedHuntSourceScopes, huntSourceTasks, workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
@@ -284,7 +283,7 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
 
 /** Resolve the actual Admin Send. No scope, paused runner or unreadable control admits no hunt work. */
 async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
-  if (FORCE || ONLY || scheduledBlackoutAt(RUN_STARTED_AT)) return [];
+  if (FORCE || ONLY) return [];
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
@@ -302,9 +301,11 @@ async function readHuntSourceTasks(): Promise<readonly RoutineSourceTask[]> {
   for (const scope of resolved.scopes) {
     if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
   }
+  const admitted = admittedHuntSourceScopes(resolved.scopes, RUN_STARTED_AT);
+  if (admitted.length === 0) return [];
   const items = (await repos.workItems.list()).map(row => row.value);
   const workers = items.some(item => item.autonomousPlan?.publication) ? await readCompletedWorkerResults(repos) : [];
-  return [...huntSourceTasks(resolved.scopes, RUN_STARTED_AT), ...workerRosterSourceTasks(resolved.scopes, items, workers, RUN_STARTED_AT)];
+  return [...huntSourceTasks(admitted, RUN_STARTED_AT, items), ...workerRosterSourceTasks(admitted, items, workers, RUN_STARTED_AT)];
 }
 
 function newestConsideredAt(

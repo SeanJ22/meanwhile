@@ -47,8 +47,12 @@ import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts"
 import {
   VOTING_SITES_CONTRACT,
   votingSitesCandidate,
+  votingSitesStandardSuccessor,
+  votingSitesScopedSuccessor,
   type VotingSiteAcquisitionFailure,
 } from "../lib/ballot/voting-sites-data-plane.ts";
+import { COCHISE_ELECTIONS_URL, COCHISE_VOTER_URL, COCHISE_VOTE_CENTERS_URL,
+  cochiseVotingJurisdiction } from "../lib/sources/cochise-vote-centers.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import {
@@ -74,6 +78,7 @@ import type {
  * a named gap; it is never promoted into this one.
  */
 const CURRENT_ELECTION = "2026 General";
+const COCHISE_ONLY = process.argv.slice(2).includes("--cochise-only");
 
 // One home for the contact address; see lib/geo/outbound-agent.ts.
 const UA = OUTBOUND_USER_AGENT;
@@ -122,6 +127,47 @@ async function getJson<T>(url: string): Promise<T> {
   } catch {
     throw new Error(`${url} returned invalid JSON`);
   }
+}
+
+async function getPdf(url: string): Promise<Uint8Array> {
+  await sleep(SPACING_MS);
+  const res = await fetch(url, { headers: { "user-agent": UA, accept: "application/pdf" }, redirect: "follow",
+    signal: AbortSignal.timeout(30_000) });
+  if (!res.ok) throw new Error(`Cochise County vote-center PDF answered HTTP ${res.status}`);
+  if (!res.url.startsWith("https://cochise.az.gov/") && !res.url.startsWith("https://www.cochise.az.gov/")) {
+    throw new Error("Cochise County vote-center PDF left its official host");
+  }
+  const maxBytes = 4 * 1024 * 1024;
+  if (Number(res.headers.get("content-length")) > maxBytes) throw new Error("COCHISE_PDF_CAPTURE_BOUND_EXCEEDED");
+  const parts: Uint8Array[] = [];
+  let total = 0;
+  if (!res.body) throw new Error("COCHISE_PDF_BODY_MISSING");
+  const reader = res.body.getReader();
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      total += value.length;
+      if (total > maxBytes) throw new Error("COCHISE_PDF_CAPTURE_BOUND_EXCEEDED");
+      parts.push(value);
+    }
+  } finally { reader.releaseLock(); }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) { bytes.set(part, offset); offset += part.length; }
+  const rawHash = (await import("node:crypto")).createHash("sha256").update(bytes).digest("hex");
+  officialRawBodies.push(`${url}\n${res.url}\nHTTP ${res.status}\nContent-Type: application/pdf\nContent-Transfer-Encoding: base64\nbytes ${bytes.length}\nsha256 ${rawHash}\n\n${Buffer.from(bytes).toString("base64")}`);
+  successfulAuthorityReads += 1;
+  return bytes;
+}
+
+async function retrieveCochise(): Promise<VotingJurisdiction> {
+  const [elections, voter] = await Promise.all([getText(COCHISE_ELECTIONS_URL), getText(COCHISE_VOTER_URL)]);
+  if (elections.status !== 200 || voter.status !== 200) {
+    throw new Error(`Cochise County 2026 General source pages answered HTTP ${elections.status}/${voter.status}`);
+  }
+  return cochiseVotingJurisdiction({ pdfBytes: await getPdf(COCHISE_VOTE_CENTERS_URL),
+    electionsHtml: elections.body, voterHtml: voter.body, collectedAt: TODAY });
 }
 
 /* ------------------------------------------------------------------ *
@@ -800,6 +846,21 @@ async function main(): Promise<void> {
   if (priorRead.kind === "STORE_UNREACHABLE") throw new Error(priorRead.detail);
   const prior = priorRead.kind === "PROMOTED" ? priorRead.value : null;
 
+  if (COCHISE_ONLY) {
+    const cochise = await retrieveCochise();
+    const file = votingSitesScopedSuccessor(prior, cochise, TODAY);
+    const retrievedAt = new Date().toISOString();
+    const candidate = votingSitesCandidate({ current: file, prior, failures: [], rawBodies: officialRawBodies,
+      successfulAuthorityReads, requestedUrl: COCHISE_VOTE_CENTERS_URL,
+      finalUrl: COCHISE_VOTE_CENTERS_URL, retrievedAt, retainRawBodies: true,
+      carriedFromVersionId: priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null });
+    candidateSubmitted = true;
+    const outcome = await processRegisteredManualCandidate(store, VOTING_SITES_CONTRACT.id, candidate, retrievedAt);
+    if (!outcome.promoted) throw new Error(`Cochise voting-site promotion refused: ${outcome.candidate.failureCode}`);
+    console.log(`promoted Cochise's 18 official vote centers with other exact jurisdictions retained from ${priorRead.kind} base`);
+    return;
+  }
+
   const jurisdictions: VotingJurisdiction[] = [];
   const failures: VotingSiteAcquisitionFailure[] = [];
 
@@ -817,7 +878,7 @@ async function main(): Promise<void> {
       sourceUrl: PIMA_SOURCE_PAGE,
       detail,
     }));
-    failures.push({ state: "AZ", code: "PIMA_VOTING_SITES_UNAVAILABLE", detail });
+    failures.push({ jurisdictionId: "ocd-division/country:us/state:az/county:pima", code: "PIMA_VOTING_SITES_UNAVAILABLE", detail });
   }
 
   try {
@@ -860,7 +921,7 @@ async function main(): Promise<void> {
     failures.push({ state: "NH", code: "NH_VOTING_SITES_UNAVAILABLE", detail });
   }
 
-  const file: VotingSitesFile = { generatedAt: TODAY, jurisdictions };
+  const file: VotingSitesFile = votingSitesStandardSuccessor({ generatedAt: TODAY, jurisdictions }, prior);
   const sites = jurisdictions.reduce((n, j) => n + j.sites.length, 0);
   const withSites = jurisdictions.filter((j) => j.sites.length > 0).length;
   console.log(
@@ -876,6 +937,7 @@ async function main(): Promise<void> {
     failures,
     rawBodies: officialRawBodies,
     successfulAuthorityReads,
+    carriedFromVersionId: priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null,
     requestedUrl: PIMA_SOURCE_PAGE,
     finalUrl: PIMA_SOURCE_PAGE,
     retrievedAt,
@@ -904,7 +966,7 @@ try {
       sourceId: VOTING_SITES_CONTRACT.sourceId,
       recordClass: VOTING_SITES_CONTRACT.recordClass,
       scope: VOTING_SITES_CONTRACT.scope,
-      requestedUrl: PIMA_SOURCE_PAGE,
+      requestedUrl: COCHISE_ONLY ? COCHISE_VOTE_CENTERS_URL : PIMA_SOURCE_PAGE,
       attemptedAt,
       failureDetail: error instanceof Error ? error.message : String(error),
       parserVersion: VOTING_SITES_CONTRACT.parserVersion,

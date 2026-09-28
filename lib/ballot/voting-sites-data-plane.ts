@@ -21,6 +21,8 @@ export interface VotingSiteAcquisitionFailure {
 
 const OFFICIAL_SOURCE_PREFIXES = [
   "https://www.pima.gov/",
+  "https://cochise.az.gov/",
+  "https://www.cochise.az.gov/",
   "https://services2.arcgis.com/UTBp78iglGpbqp1B/",
   "https://www.morriscountynj.gov/",
   "https://app.sos.nh.gov/",
@@ -64,6 +66,37 @@ export function retainFailedVotingSiteScopes(
     jurisdictions: [...healthy, ...retained, ...fallbackWithoutLkg]
       .sort((left, right) => left.ocdId.localeCompare(right.ocdId)),
   };
+}
+
+/** A bounded county refresh must carry every other exact promoted jurisdiction
+ * forward. It cannot bootstrap a three-state pointer from one county's PDF. */
+export function votingSitesScopedSuccessor(
+  prior: VotingSitesFile | null,
+  current: VotingJurisdiction,
+  generatedAt: string,
+): VotingSitesFile {
+  if (!prior || prior.jurisdictions.length === 0) throw new Error("VOTING_SITES_SCOPED_BASE_UNAVAILABLE");
+  if (current.ocdId !== "ocd-division/country:us/state:az/county:cochise" ||
+      current.state !== "AZ" || current.model !== "VOTE_CENTER" || current.refusal !== null || current.sites.length !== 18) {
+    throw new Error("VOTING_SITES_COCHISE_SCOPE_INVALID");
+  }
+  return { generatedAt, jurisdictions: [...prior.jurisdictions.filter(row => row.ocdId !== current.ocdId), current]
+    .sort((left, right) => left.ocdId.localeCompare(right.ocdId)) };
+}
+
+/** The standard producer refreshes Pima, Morris, and New Hampshire. Keep a
+ * separately sourced county only when it was outside those exact authorities. */
+export function votingSitesStandardSuccessor(current: VotingSitesFile, prior: VotingSitesFile | null): VotingSitesFile {
+  if (!prior) return current;
+  const refreshed = (row: VotingJurisdiction) => row.ocdId === "ocd-division/country:us/state:az/county:pima" ||
+    (row.state === "NJ" && row.sourceUrl.startsWith("https://www.morriscountynj.gov/")) || row.state === "NH";
+  const outside = prior.jurisdictions.filter(row => !refreshed(row));
+  if (current.jurisdictions.some(row => !refreshed(row)) || outside.some(row =>
+    current.jurisdictions.some(next => next.ocdId === row.ocdId))) {
+    throw new Error("VOTING_SITES_STANDARD_SOURCE_SCOPE_MIXED");
+  }
+  return { generatedAt: current.generatedAt, jurisdictions: [...current.jurisdictions, ...outside]
+    .sort((left, right) => left.ocdId.localeCompare(right.ocdId)) };
 }
 
 function identities(file: VotingSitesFile): readonly IdentityEvidence[] {
@@ -131,11 +164,22 @@ export function votingSitesCandidate(input: {
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
+  /** Exact prior candidate whose independently sourced jurisdictions are carried. */
+  readonly carriedFromVersionId?: string | null;
+  /** Retain the bounded original response frames in the candidate, never Reader. */
+  readonly retainRawBodies?: boolean;
 }): RoutineCandidate {
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);
   const civicRecords = votingSiteMembers(readModel);
   const semanticViolations = violations(readModel);
   const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
+  const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row =>
+    readModel.jurisdictions.some(next => next.ocdId === row.ocdId && normalizedHash(next) === normalizedHash(row)))
+    .map(row => row.ocdId).sort() ?? [];
+  const normalizedPayload = input.retainRawBodies || input.carriedFromVersionId
+    ? { projection: readModel, acquisition: input.retainRawBodies ? input.rawBodies : [],
+        carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds }
+    : readModel;
   return {
     id: `cv-${sha256(`${VOTING_SITES_CONTRACT.sourceId}\u001f${VOTING_SITES_CONTRACT.scope}\u001f${rawHash}\u001f${input.retrievedAt}`).slice(0, 32)}`,
     sourceId: VOTING_SITES_CONTRACT.sourceId,
@@ -156,7 +200,7 @@ export function votingSitesCandidate(input: {
       parserVersion: VOTING_SITES_CONTRACT.parserVersion,
       schemaVersion: "voting-sites/1",
       normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(readModel),
+      normalizedPayloadHash: normalizedHash(normalizedPayload),
       inputRecords: civicRecords.length,
       outputRecords: civicRecords.length,
       droppedRecords: 0,
@@ -179,7 +223,7 @@ export function votingSitesCandidate(input: {
       { consumer: "/api/voting-sites", passed: semanticViolations.length === 0, detail: `${readModel.jurisdictions.length} exact jurisdiction outcomes and ${readModel.jurisdictions.reduce((sum, row) => sum + row.sites.length, 0)} official sites.` },
       { consumer: "map and ballot voting-sites panels", passed: readModel.jurisdictions.every((row) => row.sites.length > 0 || row.refusal !== null), detail: "Every empty jurisdiction renders a named refusal rather than an absence." },
     ],
-    normalizedPayload: readModel,
+    normalizedPayload,
     readModel,
     civicRecords,
     excludedFacts: input.failures.map((failure) => ({

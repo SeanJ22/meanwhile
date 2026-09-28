@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { manualProducerInvocationMatrix } from "../lib/civic-data/manual-producer-invocation.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { routineTaskDue, ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
+import { DEFAULT_CONTRACT, type WorkItem } from "../lib/control-plane/work-item.ts";
 
 const NOW = "2026-09-27T02:00:00.000Z";
 function scope(state: string, id = "owner-send-1"): ResolvedScope {
@@ -66,6 +67,52 @@ test("source admission resumes from durable failure/success clocks rather than r
   const next = { ...base, decision: { ...base.decision, decidedAt: "2026-09-28T02:00:00.000Z" } };
   const nextTask = huntSourceTasks([next], "2026-09-28T02:00:00.000Z")[0]!;
   assert.equal(routineTaskDue(nextTask, { lastAttemptedAt: NOW, lastSucceededObservedAt: NOW }, now + 86400_000), true);
+});
+
+test("only the exact original Cochise work binding admits the source-scoped voting-site task", () => {
+  const base = scope("AZ");
+  const original = { ...base, decision: { ...base.decision,
+    key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
+    budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, budgetUsd: ORIGINAL_LIFETIME_HUNT.budgetUsd,
+    decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
+  const work: WorkItem = { id: "wi-cochise", project: "original-85635", subject: "az:county:county-of-cochise",
+    obligation: "Acquire Cochise County 2026 voting sites", why: "Exact original Send county source remains owed",
+    priority: "P1", state: "OPEN", contract: DEFAULT_CONTRACT, dependencies: [], routeTaskIds: [],
+    escalations: [], createdAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, transitions: [],
+    autonomousPlan: { version: 1, ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId], capability: "VOTER_ACCESS",
+      jurisdiction: "AZ", sourceRegistryReferences: ["az:county:county-of-cochise"], seedUrls: [],
+      sources: [], acquisition: [], detective: [], engineering: [], auditScope: "SOURCE_UNIVERSE",
+      contract: { schemaVersion: 2, recordClass: "VOTER_ACCESS_ROUTE", subjectId: "az:county:county-of-cochise",
+        requiredFields: ["bodyName", "state", "kind", "url", "coverage", "coverageEvidence"],
+        identity: { namespace: "az:county:county-of-cochise:VOTER_ACCESS", keyFields: ["url"] },
+        jurisdiction: { country: "US", state: "AZ", canonicalId: "az:county:county-of-cochise" },
+        completenessScope: "Official Cochise County voter-access routes remain owed.", expectedSourceDate: null,
+        methodVersion: 0, sourceScope: { sourceId: "unobserved:cochise", publisher: "Cochise County",
+          routeIds: [], canonicalUrls: [], observationArtifactIds: [] },
+        extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Await official capture" },
+        verification: { required: true, authorities: [] } } } };
+  const now = "2026-09-28T12:00:00.000Z";
+  const tasks = huntSourceTasks([original], now, [work]);
+  const vote = tasks.find(task => task.id === "voting-sites:cochise-2026");
+  assert.ok(vote);
+  assert.deepEqual(vote.command.slice(-2), ["--promote", "--cochise-only"]);
+  assert.deepEqual(vote.ownerInvocation?.instructions, [ORIGINAL_LIFETIME_HUNT.receiptId]);
+  assert.equal(huntSourceTasks([original], now, [{ ...work, subject: "az:county:county-of-pima" }]).some(task => task.id === vote.id), false);
+  assert.equal(huntSourceTasks([original], now, [{ ...work, state: "VERIFIED_COMPLETE" }]).some(task => task.id === vote.id), false);
+  assert.equal(huntSourceTasks([{ ...original, decision: { ...original.decision, receiptId: "different" } }], now, [work]).some(task => task.id === vote.id), false);
+});
+
+test("scheduled blackout admits only the already-started exact original source Send", () => {
+  const base = scope("AZ");
+  const original = { ...base, decision: { ...base.decision,
+    key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
+    budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, budgetUsd: ORIGINAL_LIFETIME_HUNT.budgetUsd,
+    decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
+  const other = { ...base, decision: { ...base.decision, receiptId: "another-send" } };
+  const blackout = "2026-10-04T02:00:00.000Z";
+  assert.deepEqual(admittedHuntSourceScopes([original, other], blackout), [original]);
+  assert.deepEqual(admittedHuntSourceScopes([{ ...original, decision: { ...original.decision, budgetUsd: 51 } }], blackout), []);
+  assert.deepEqual(admittedHuntSourceScopes([original, other], "2026-10-05T12:00:00.000Z"), [original, other]);
 });
 
 test("a pending publication is not hidden by another body's later success and keeps failure backoff", () => {

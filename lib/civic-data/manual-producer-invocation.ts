@@ -1,5 +1,6 @@
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../control-plane/scheduler/hunt-continuation.ts";
+import { isTerminalState, type WorkItem } from "../control-plane/work-item.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } from "./manual-contracts.ts";
 
 /** A command's presence in the production registry does not establish that a
@@ -45,7 +46,8 @@ export interface ManualProducerInvocation {
   readonly reason: string;
 }
 
-export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[], now: string): readonly ManualProducerInvocation[] {
+export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[], now: string,
+  items: readonly WorkItem[] = []): readonly ManualProducerInvocation[] {
   const nowMs = Date.parse(now);
   const sends = scopes.filter(scope => scope.kind === "RESOLVED" && scope.zctas.size > 0 &&
     scope.decision.sourceWorkVersion === 1 && scope.decision.receiptId.trim() &&
@@ -60,8 +62,18 @@ export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[],
     // State membership is not proof that a county-only or selected-town
     // adapter covers the Send. Those contracts have no executable receipt
     // until a specific source/body geography is bound by normal work.
-    const bound = rule.mode === "SCOPED_ADAPTER_OWED" ? [] : applicable;
-    return { id: contract.id, mode: rule.mode, instructionIds: [...new Set(bound.map(scope => scope.decision.receiptId))],
-      commandReady: rule.mode === "DIRECT_SOURCE" && applicable.length > 0, reason: rule.reason };
+    const cochiseSourceBound = contract.id === "voting-sites" && applicable.some(scope =>
+      scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
+      scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+      scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+      scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd &&
+      items.some(item => item.subject === "az:county:county-of-cochise" && !isTerminalState(item.state) &&
+        item.autonomousPlan?.ownerInstructions?.includes(scope.decision.receiptId)));
+    const bound = rule.mode === "SCOPED_ADAPTER_OWED" ? cochiseSourceBound ? applicable.filter(scope =>
+      scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId) : [] : applicable;
+    return { id: contract.id, mode: cochiseSourceBound ? "DIRECT_SOURCE" : rule.mode,
+      instructionIds: [...new Set(bound.map(scope => scope.decision.receiptId))],
+      commandReady: (rule.mode === "DIRECT_SOURCE" && applicable.length > 0) || cochiseSourceBound,
+      reason: cochiseSourceBound ? "The exact original Cochise county obligation binds its official 2026 countywide vote-center source; refresh this source only and retain all other proven jurisdictions." : rule.reason };
   });
 }

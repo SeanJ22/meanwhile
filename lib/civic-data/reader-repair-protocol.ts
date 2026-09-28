@@ -186,7 +186,7 @@ export function parseRoutineReaderRepairRecords(
       });
       continue;
     }
-    const allowed = ["NO_PROMOTION", "CURRENT", "BACKOFF", "FAILED_BACKOFF", "RECORDED", "REPAIR_FAILED"];
+    const allowed = ["NO_PROMOTION", "NOT_CURRENT_SOURCE", "CURRENT", "BACKOFF", "FAILED_BACKOFF", "RECORDED", "REPAIR_FAILED"];
     const receiptRequired = row.disposition === "CURRENT" || row.disposition === "FAILED_BACKOFF" || row.disposition === "RECORDED";
     const receipt = receiptRequired ? validReceipt(row.receipt, contract) : null;
     const valid = row.kind === "ROUTINE_READER_REPAIR" &&

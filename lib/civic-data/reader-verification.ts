@@ -1,6 +1,6 @@
 import { readLatestReaderReadbacks, type RoutineDataStore } from "./store.ts";
-import type { RoutineSourceContract } from "./contracts.ts";
-import type { ManualProductionSourceContract } from "./manual-contracts.ts";
+import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "./contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
@@ -94,7 +94,8 @@ function verifierIdFor(contract: ReaderContract): string {
     case "az-pima-local-finance": return "lib/control-plane/campaign-finance/held-records.ts#refreshAzPimaFinanceFromPromoted";
     case "voting-sites": return "lib/ballot/voting-sites-server.ts#readVotingSitesProjection";
     case "prl": return "lib/sources/prl/snapshot.ts#readPrlProjection";
-    case "az-official-actions": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
+    case "az-official-actions":
+    case "az-governor-executive-orders": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
     case "pima-legistar-outcomes": return "lib/outcomes/store.ts#readOutcomeProjection";
     case "mesa-legistar-minutes-outcomes": return "lib/outcomes/store.ts#readMesaOutcomeProjection";
     case "official-filings":
@@ -279,7 +280,8 @@ export async function verifyRoutineReaderProjection(
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
         return verifyExactVersion(verifierId, await readPrlProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL");
       }
-      case "az-official-actions": {
+      case "az-official-actions":
+      case "az-governor-executive-orders": {
         const { readExecutiveActionsProjection } = await import("../officials/executive-actions.ts");
         return verifyExactVersion(verifierId, await readExecutiveActionsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Arizona official-actions");
       }
@@ -463,7 +465,7 @@ async function appendReaderProjectionReadback(
 }
 
 export type ReaderReadbackRepairOutcome =
-  | { readonly kind: "NOT_APPLICABLE" | "NO_PROMOTION" | "BACKOFF"; readonly receipt: null }
+  | { readonly kind: "NOT_APPLICABLE" | "NO_PROMOTION" | "NOT_CURRENT_SOURCE" | "BACKOFF"; readonly receipt: null }
   | {
       readonly kind: "CURRENT";
       /** The exact durable PASS that made this readback current. */
@@ -625,6 +627,27 @@ async function inspectReaderReadback(
   // to learn which version its durable receipt must name.
   const promotion = await store.readPromotionIdentity(contract.recordClass, contract.scope);
   if (promotion === null) return { outcome: { kind: "NO_PROMOTION", receipt: null }, promotion: null };
+  if (promotion.sourceId !== contract.sourceId) {
+    const alternate = [...ROUTINE_SOURCE_CONTRACTS, ...MANUAL_PRODUCTION_SOURCE_CONTRACTS].filter((other) =>
+      other.id !== contract.id && other.sourceId === promotion.sourceId &&
+      other.recordClass === contract.recordClass && other.scope === contract.scope &&
+      other.readerProjection?.id === contract.readerProjection?.id);
+    if (alternate.length === 1 && promotion.key === `${contract.recordClass}:${contract.scope}` &&
+        typeof promotion.versionId === "string" && promotion.versionId.trim() !== "" &&
+        promotion.recordClass === contract.recordClass && promotion.scope === contract.scope &&
+        promotion.lastKnownGoodVersionId === promotion.versionId) {
+      const active = await store.readCandidate(promotion.versionId);
+      if (active?.state === "PROMOTED" && active.candidate.id === promotion.versionId &&
+          active.candidate.sourceId === promotion.sourceId &&
+          active.candidate.recordClass === promotion.recordClass && active.candidate.scope === promotion.scope &&
+          active.candidate.normalization.parserVersion === alternate[0]!.parserNormalizerVersion &&
+          active.receipt?.decision === "GOOD" && active.receipt.candidateId === promotion.versionId &&
+          active.receipt.sourceId === promotion.sourceId &&
+          active.receipt.recordClass === promotion.recordClass && active.receipt.scope === promotion.scope) {
+        return { outcome: { kind: "NOT_CURRENT_SOURCE", receipt: null }, promotion: null };
+      }
+    }
+  }
   const identityIssue = promotionIdentityIssue(contract, promotion);
   if (identityIssue !== null) throw new Error(identityIssue);
   // The newest readback alone: a long-pointed version's readbacks and

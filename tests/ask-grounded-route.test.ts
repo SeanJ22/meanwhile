@@ -295,7 +295,7 @@ test("RED CONTROL: the corpus now HOLDS gubernatorial action records, windowed a
    *
    * It used to be a single shape:
    *
-   *     /^Executive Order \d{4}-\d+, ".+", signed \d{4}-\d{2}-\d{2}\.$/
+   *     /^Executive Order \d{4}-\d+, ".+", issued \d{4}-\d{2}-\d{2}\.$/
    *
    * which was correct while executive orders were the only rows that existed,
    * and which would have FAILED on the first veto — not because the veto was
@@ -309,7 +309,7 @@ test("RED CONTROL: the corpus now HOLDS gubernatorial action records, windowed a
    * record that is not a signing may contain the word "signed".
    */
   const SHAPES: RegExp[] = [
-    /^Executive Order \d{4}-\d+, ".+", signed \d{4}-\d{2}-\d{2}\.$/,
+    /^Executive Order \d{4}-\d+, ".+", issued \d{4}-\d{2}-\d{2}\.$/,
     /^[HS][BCMJR]\d{3,4}, ".+", signed by the Governor on \d{4}-\d{2}-\d{2} and chaptered as Chapter \d+ of the \S+ session\.$/,
     /^[HS][BCMJR]\d{3,4}(, ".+",)? signed by the Governor on \d{4}-\d{2}-\d{2}, per her transmittal letter\.$/,
     /^[HS][BCMJR]\d{3,4}(, ".+",)? vetoed by the Governor on \d{4}-\d{2}-\d{2}, per her veto letter\.$/,

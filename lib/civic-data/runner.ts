@@ -42,6 +42,8 @@ export interface RoutineSourceTask {
   readonly authorityMode: RoutineSourceContract["acquisitionAdapter"]["authorityMode"];
   readonly parserVersion: string;
   readonly command: readonly string[];
+  /** Owner-invoked direct sources still use their registered routine door. */
+  readonly promotionDoor?: "ROUTINE_CONTRACT" | "MANUAL_CONTRACT";
   readonly cadenceMs: number;
   readonly retryMs: number;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
@@ -52,6 +54,12 @@ export interface RoutineSourceTask {
     readonly requestedAt: string;
     readonly instructions: readonly string[];
   };
+}
+
+export function sourceTaskRuntimeCapability(task: Pick<RoutineSourceTask, "ownerInvocation" | "promotionDoor">):
+  "MANUAL_CONTRACT" | "ROUTINE_CONTRACT" {
+  return task.ownerInvocation && task.promotionDoor !== "ROUTINE_CONTRACT"
+    ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
 }
 
 /**
@@ -108,6 +116,7 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
     authorityMode: contract.acquisitionAdapter.authorityMode,
     parserVersion: contract.parserNormalizerVersion,
     command: contract.acquisitionAdapter.command,
+    promotionDoor: "ROUTINE_CONTRACT",
     cadenceMs: contract.cadence.defaultEveryMs,
     retryMs: contract.retry.afterMs,
     contract,
@@ -115,7 +124,7 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
 }
 
 export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
-  ...ROUTINE_SOURCE_CONTRACTS,
+  ...ROUTINE_SOURCE_CONTRACTS.filter((contract) => contract.id !== "az-governor-executive-orders"),
   ...MEETING_PARTITION_CONTRACTS,
 ].map(routineTaskFromContract);
 

@@ -682,6 +682,7 @@ export interface RoutineCivicDataTaskReceiptReference {
 export type RoutineCivicDataReaderReadbackDisposition =
   | "NOT_APPLICABLE"
   | "NO_PROMOTION"
+  | "NOT_CURRENT_SOURCE"
   | "CURRENT"
   | "BACKOFF"
   | "FAILED_BACKOFF"
@@ -814,6 +815,7 @@ export function routineReaderReadbackEvidenceIssue(
   const allowedDispositions: readonly RoutineCivicDataReaderReadbackDisposition[] = [
     "NOT_APPLICABLE",
     "NO_PROMOTION",
+    "NOT_CURRENT_SOURCE",
     "CURRENT",
     "BACKOFF",
     "FAILED_BACKOFF",

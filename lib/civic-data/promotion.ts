@@ -373,6 +373,9 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   if (candidate.normalization.parserVersion !== contract.parserNormalizerVersion) {
     return `parser ${candidate.normalization.parserVersion} does not equal ${contract.parserNormalizerVersion}`;
   }
+  if (contractId === "az-official-actions" && !candidate.bootstrapImport && !candidate.retrieval.manualSourceReceipt) {
+    return "the owner-reviewed Arizona actions door requires its exact manual source-set receipt";
+  }
   if (candidate.bootstrapImport) {
     if (candidate.bootstrapImport.contractId !== contract.id) {
       return `trusted-LKG contract ${candidate.bootstrapImport.contractId} does not equal ${contract.id}`;

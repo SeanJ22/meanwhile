@@ -473,12 +473,11 @@ export function actionText(action: ExecutiveAction): string {
 
   switch (action.kind) {
     case "EXECUTIVE_ORDER":
-      /* Wording unchanged from before this branch existed. Executive orders
-         were already rendered correctly and there is no reason to churn a
-         sentence that was never wrong. */
+      /* The official detail's issue-date field proves issuance. A linked PDF
+         can be a scan, so its signature date is not inferred from that field. */
       return action.occurredAt
-        ? `${action.designation},${title} signed ${action.occurredAt}.`
-        : `${action.designation},${title} signed — the office publishes no date for it.`;
+        ? `${action.designation},${title} issued ${action.occurredAt}.`
+        : `${action.designation},${title} issued — the office publishes no date for it.`;
 
     case "BILL_ENACTED": {
       const chapter = action.chapter ? ` as Chapter ${action.chapter}` : "";

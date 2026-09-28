@@ -10,6 +10,8 @@ import { manualSourceReceiptStructureIssue } from "../civic-data/source-authorit
 import { sourceProjectionEvidence, type CivicRecordMember, type ManualSourceSetReceipt, type RoutineCandidate } from "../civic-data/types.ts";
 import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
 import type { ExecutiveActionStore } from "../officials/executive-actions.ts";
+import type { ExecutiveAction } from "../officials/executive-actions.ts";
+import { parseGovernorOrderIndex, verifiedGovernorOrder, type GovernorOrderCapture } from "../sources/az-governor-executive-orders.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "./types.ts";
 
 export const AZ_OFFICIAL_ACTIONS_CONTRACT = {
@@ -18,6 +20,14 @@ export const AZ_OFFICIAL_ACTIONS_CONTRACT = {
   recordClass: "STATE_EXECUTIVE_ACTION",
   scope: "US-AZ:governor:official-actions",
   parserVersion: "az-official-actions/2",
+} as const;
+
+export const AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT = {
+  contractId: "az-governor-executive-orders",
+  sourceId: "az-governor-executive-orders",
+  recordClass: "STATE_EXECUTIVE_ACTION",
+  scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+  parserVersion: "az-governor-executive-orders/1",
 } as const;
 
 export const PIMA_LEGISTAR_OUTCOMES_CONTRACT = {
@@ -62,7 +72,8 @@ function sourceReceiptHash(receipt: ManualSourceSetReceipt): string {
 export interface AzOfficialActionsPrior {
   readonly versionId: string;
   readonly store: ExecutiveActionStore;
-  readonly sourceReceipt: ManualSourceSetReceipt;
+  /** Null only for an automatically verified Governor source predecessor. */
+  readonly sourceReceipt: ManualSourceSetReceipt | null;
 }
 
 type AzActionIsolationRecord =
@@ -169,11 +180,37 @@ export async function readAzOfficialActionsPrior(
   }
   const candidate = await store.readCandidate(read.projection.versionId);
   const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
+  if (candidate?.state === "PROMOTED" && candidate.candidate.sourceId === AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.sourceId &&
+      sourceReceipt === undefined) {
+    const payload = candidate.candidate.normalizedPayload;
+    if (!payload || typeof payload !== "object" || !Array.isArray((payload as { sourceDocuments?: unknown }).sourceDocuments) ||
+        (payload as { sourceDocuments: unknown[] }).sourceDocuments.length < 3) {
+      throw new Error("AZ_OFFICIAL_ACTIONS_BASE_PROOF_INVALID:DIRECT_CAPTURE_SET_MISSING");
+    }
+    return { versionId: read.projection.versionId, store: read.value, sourceReceipt: null };
+  }
   const issue = manualSourceReceiptStructureIssue(sourceReceipt);
   if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`AZ_OFFICIAL_ACTIONS_BASE_PROOF_INVALID:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
   }
   return { versionId: read.projection.versionId, store: read.value, sourceReceipt };
+}
+
+/** A direct Governor pass may inherit only a durable promoted predecessor. */
+export async function readAzGovernorOrdersPrior(store: CivicDataReadStore, now: string): Promise<{
+  readonly versionId: string;
+  readonly store: ExecutiveActionStore;
+} | null> {
+  const read = await readPromotedCivicData<ExecutiveActionStore>(
+    AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.recordClass,
+    AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.scope,
+    { store, now, bypassCache: true },
+  );
+  if (read.kind === "NOT_RECORDED") return null;
+  if (read.kind !== "PROMOTED") throw new Error(`AZ_GOVERNOR_ACTIONS_BASE_UNAVAILABLE:${read.kind}`);
+  const candidate = await store.readCandidate(read.projection.versionId);
+  if (!candidate || candidate.state !== "PROMOTED") throw new Error("AZ_GOVERNOR_ACTIONS_BASE_PROOF_INVALID");
+  return { versionId: read.projection.versionId, store: read.value };
 }
 
 function actionMembers(store: ExecutiveActionStore): readonly CivicRecordMember[] {
@@ -184,6 +221,92 @@ function actionMembers(store: ExecutiveActionStore): readonly CivicRecordMember[
     { key: "projection:denominator:legislative", record: store.legislative },
     ...store.actions.map((record) => ({ key: `action:${record.id}`, record })),
   ].sort((left, right) => left.key.localeCompare(right.key));
+}
+
+/** Automated Governor-only source path. The owner-reviewed manual source set is
+ * deliberately not minted here; exact captured bytes live in normalizedPayload. */
+export async function azGovernorExecutiveOrdersCandidate(input: {
+  readonly index: GovernorOrderCapture;
+  readonly captures: readonly GovernorOrderCapture[];
+  readonly verified: readonly { readonly detail: GovernorOrderCapture; readonly pdf: GovernorOrderCapture }[];
+  readonly held: readonly { readonly key: string; readonly code: string; readonly detail: string }[];
+  readonly prior: { readonly versionId: string; readonly store: ExecutiveActionStore } | null;
+  readonly retrievedAt: string;
+}): Promise<RoutineCandidate> {
+  const page = parseGovernorOrderIndex(input.index);
+  const byDetailUrl = new Map(page.orders.map((order) => [order.detailUrl, order]));
+  const captured = new Set(input.captures.map((capture) => `${capture.requestedUrl}\n${capture.rawHash}`));
+  const orders: ExecutiveAction[] = [];
+  for (const pair of input.verified) {
+    const indexOrder = byDetailUrl.get(pair.detail.requestedUrl);
+    if (!indexOrder) throw new Error(`AZ_GOVERNOR_UNINDEXED_ORDER:${pair.detail.requestedUrl}`);
+    if (!captured.has(`${pair.detail.requestedUrl}\n${pair.detail.rawHash}`) ||
+        !captured.has(`${pair.pdf.requestedUrl}\n${pair.pdf.rawHash}`)) {
+      throw new Error(`AZ_GOVERNOR_UNRETAINED_SOURCE_BYTES:${indexOrder.number}`);
+    }
+    orders.push(await verifiedGovernorOrder({ index: indexOrder, ...pair }));
+  }
+  const settled = new Set([...orders.map((order) => `action:${order.id}`), ...input.held.map((failure) => failure.key)]);
+  if (page.orders.some((order) => !settled.has(`action:az-eo-${order.number}`))) {
+    throw new Error("AZ_GOVERNOR_INDEX_ORDER_UNSETTLED");
+  }
+  const current = new Map<string, ExecutiveAction>();
+  const violations: string[] = [];
+  for (const order of orders) {
+    if (order.kind !== "EXECUTIVE_ORDER" || order.officeholderId !== "statewide:az/governor" ||
+        !/^az-eo-\d{4}-\d+$/.test(order.id) || current.has(order.id)) {
+      violations.push(`An executive-order identity is invalid or duplicated: ${order.id}.`);
+    }
+    current.set(order.id, order);
+  }
+  if (orders.length < 1) violations.push("No current executive order survived index, detail, and PDF verification.");
+  const actions = new Map((input.prior?.store.actions ?? []).map((action) => [action.id, action]));
+  for (const [id, order] of current) actions.set(id, order);
+  const store: ExecutiveActionStore = {
+    note: "Governor executive-order index page and independently checked detail/PDF captures; an unwalked page or failed order is not absence. Prior legislative and other action rows retain their predecessor proof.",
+    source: { index: input.index.finalUrl, publisher: "Office of the Arizona Governor", permission: "Public official publication", collectedAt: input.index.retrievedAt },
+    denominator: { indexedAcrossPagesWalked: page.orders.length, indexPagesWalked: 1,
+      detailPagesRead: orders.length, reachedEndOfIndex: !page.hasNextPage },
+    legislative: input.prior?.store.legislative ?? null,
+    actions: [...actions.values()].sort((a, b) => a.id.localeCompare(b.id)),
+  };
+  const members = actionMembers(store);
+  const sourceDocuments = [input.index, ...input.captures];
+  const rawHash = sha256(canonicalCivicDataJson(sourceDocuments.map(({ bodyBase64: _body, ...capture }) => capture)));
+  const normalizedHash = sha256(canonicalCivicDataJson(store));
+  const normalizedPayload = { store, sourceDocuments, predecessorVersionId: input.prior?.versionId ?? null };
+  return {
+    id: `cv-${sha256(`${AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.sourceId}\u001f${rawHash}\u001f${normalizedHash}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    sourceId: AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.sourceId,
+    recordClass: AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.recordClass,
+    scope: AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.sourceId,
+      AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.recordClass, AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.scope),
+    retrieval: { succeeded: true, requestedUrl: input.index.requestedUrl, finalUrl: input.index.finalUrl,
+      httpStatus: input.index.httpStatus, retrievedAt: input.retrievedAt, rawHash },
+    normalization: { succeeded: true, parserVersion: AZ_GOVERNOR_EXECUTIVE_ORDERS_CONTRACT.parserVersion,
+      schemaVersion: "az-governor-executive-orders/1", normalizedHash,
+      normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
+      inputRecords: members.length + input.held.length, outputRecords: members.length,
+      droppedRecords: input.held.length, missingRequiredFields: [] },
+    identities: store.actions.map((action) => ({ subjectId: action.id, jurisdiction: "US-AZ",
+      identifiers: { action_id: action.id, officeholder_id: action.officeholderId }, matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false, office: action.officeTitle, session: action.sessionId ?? undefined })),
+    temporal: { version: input.retrievedAt, expectedVersion: input.retrievedAt, sourceThrough: input.retrievedAt,
+      staleAtRetrieval: false },
+    semantics: { factKind: "official Arizona Governor executive orders", violations },
+    horizon: { kind: "OPEN_FACT_SET", query: "The exact first Governor executive-order index page and successfully checked detail/PDF documents",
+      returnedRecords: members.length, declaredTotal: null, paginationComplete: !page.hasNextPage, claimsComplete: false },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [
+      { consumer: "Governor executive-order Reader", passed: store.actions.every((action) => action.officeholderId === "statewide:az/governor"),
+        detail: "All inherited and current rows remain bound to the exact Arizona governor seat." },
+      { consumer: "predecessor action retention", passed: (input.prior?.store.actions ?? []).every((action) => actions.has(action.id)),
+        detail: "A partial Governor index cannot remove a prior executive order, chapter, or letter." },
+    ],
+    normalizedPayload, readModel: store, civicRecords: members,
+    excludedFacts: input.held.map((failure) => ({ ...failure, record: null })),
+  };
 }
 
 /**
@@ -203,7 +326,7 @@ export function azOfficialActionsCandidate(input: {
   const reconciled = reconcileSourceScopedMembers({
     current: actionIsolationMembers(attemptedStore),
     currentReceipt: sourceReceipt,
-    prior: input.prior ? {
+    prior: input.prior?.sourceReceipt ? {
       members: actionIsolationMembers(input.prior.store),
       sourceReceipt: input.prior.sourceReceipt,
     } : null,
@@ -217,6 +340,23 @@ export function azOfficialActionsCandidate(input: {
   const hasExecutiveAuthority = reconciled.members.some((member) => member.record.kind === "EXECUTIVE_AUTHORITY");
   const ids = store.actions.map((action) => action.id);
   const receiptedUrls = new Set(promotionReceipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
+  if (input.prior && input.prior.sourceReceipt === null) {
+    // A human manual successor may follow a machine-verified direct version,
+    // but only after the submitted review explicitly covers its entire prior
+    // fact set. There is no conversion of machine captures to reviewedBy.
+    const carried = new Set(store.actions.map((action) => action.id));
+    for (const priorAction of input.prior.store.actions) {
+      if (!carried.has(priorAction.id)) violations.push(`${priorAction.id} from the direct predecessor is absent from the reviewed successor.`);
+    }
+    if (input.prior.store.legislative && !store.legislative) {
+      violations.push("The reviewed successor omitted the direct predecessor's legislative authority.");
+    }
+    for (const member of actionIsolationMembers(input.prior.store)) {
+      for (const url of actionIsolationUrls(member)) {
+        if (!receiptedUrls.has(url)) violations.push(`${member.key} from the direct predecessor lacks an owner-reviewed source for ${url}.`);
+      }
+    }
+  }
   if (store.actions.length === 0) violations.push("The reviewed official-action projection has no action records.");
   if (!hasExecutiveAuthority) {
     violations.push("The official-action projection has no supported current or prior executive index/denominator authority.");

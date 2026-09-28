@@ -61,7 +61,7 @@ test("Hourihan's exact card corpus answers while the unresolved party/candidacy 
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test" }, body: JSON.stringify({ question: "What does Teri Ann Hourihan say about Arizona?", surface: "BALLOT", ocdIds: ["ocd-division/country:us/state:az"], activeSubjects: [{ id: cardKey, name: "Teri Ann Hourihan", kind: "PERSON", focused: true }] }) }));
   const payload = await response.json() as AskAnswerPayload;
   assert.equal(payload.subject?.id, cardKey);
-  assert.ok(payload.records.some((record) => record.kind === "POSITION" && record.canonicalSubjectId === cardKey));
+  assert.ok(payload.records.some((record) => record.kind === "SOURCE_PASSAGE" && record.canonicalSubjectId === cardKey));
   assert.ok(payload.records.every((record) => record.canonicalSubjectId !== "ballot-az-pima:governor:hourihan-teri-ann"));
   assert.equal(payload.answer, null);
 });

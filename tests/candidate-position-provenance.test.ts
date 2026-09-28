@@ -16,7 +16,7 @@ test("Ask keeps source version, exact passage locator and source-stated date wit
       textStart: 10, textEnd: 20, revisionStatus: "HISTORICAL",
       publicationDate: { date: "2026-09-20", basis: "ARTICLE_PUBLISHED_TIME_META", artifactId: "ar-1",
         rawContentHash: "hash", start: 2, end: 8, quote: "<meta>", offsetUnit: "UTF16_CODE_UNITS" } }] });
-  const passage = result.records.find(row => row.kind === "POSITION");
+  const passage = result.records.find(row => row.kind === "SOURCE_PASSAGE");
   assert.ok(passage);
   assert.match(passage.text, /Searching a campaign page linked to Casey Example/);
   assert.match(passage.text, /Earlier captured version/);

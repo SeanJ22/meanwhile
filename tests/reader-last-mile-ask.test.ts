@@ -160,8 +160,11 @@ test("Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ,
     const expected = positionsFor(control.key, control.topic, unifiedCorpus());
     assert.equal(expected.kind, "MATCHED", `${control.name}'s independent Positions surface knows the answer`);
     const body = await ask(`What does ${control.name} say about ${control.topic}?`, control.state);
-    const quoted = body.records.filter((r) => r.kind === "POSITION" && r.canonicalSubjectId === control.key);
+    const quoted = body.records.filter((r) => r.kind === "SOURCE_PASSAGE" && r.canonicalSubjectId === control.key);
     assert.ok(quoted.length, control.name);
+    assert.equal(body.answer, null, "a linked-page match alone cannot become a personal statement answer");
+    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /have not verified a statement by/.test(gap.statement)));
+    assert.match(body.trace.synthesis?.why ?? "", /unverified-stance/);
     for (const passage of expected.passages) {
       assert.ok(quoted.some((r) => r.text.includes(passage.quote) && r.sourceUrl === passage.url), passage.snapshotId);
     }
@@ -216,7 +219,7 @@ test("multiple verified roles share an Ask subject only through the committed pe
     () => ({ snapshots: [canonicalKaren] }),
   );
   assert.ok(statement.records.some((record) =>
-    record.kind === "POSITION" && record.canonicalSubjectId === KAREN_CANDIDACY_ID
+    record.kind === "SOURCE_PASSAGE" && record.canonicalSubjectId === KAREN_CANDIDACY_ID
   ));
   const body = await ask("What does Karen Ebel say about Hampshire?", "AZ", {
     surface: "MAP",

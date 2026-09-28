@@ -3,6 +3,7 @@ import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 
 export interface HuntSearchScope {
   readonly assignmentKeys: readonly string[];
+  readonly assignmentRefs: readonly { readonly key: string; readonly ref: string }[];
   readonly hold: string | null;
 }
 
@@ -19,9 +20,10 @@ export function huntSearchScope(input: {
     scope.members.has(input.subjectId) && input.selected.some(selected => selected.key === scope.decision.key &&
       selected.budgetStartedAt === scope.decision.budgetStartedAt && selected.receiptId === scope.decision.receiptId));
   const assignmentKeys = [...new Set(matching.map(scope => scope.decision.key))];
-  if (input.plan?.malformedScopes) return { assignmentKeys: [], hold: "Paid search waits because the selected scope controls could not be read completely." };
+  const assignmentRefs = matching.map(scope => ({ key: scope.decision.key, ref: scope.decision.receiptId }));
+  if (input.plan?.malformedScopes) return { assignmentKeys: [], assignmentRefs: [], hold: "Paid search waits because the selected scope controls could not be read completely." };
   if (hunts.length && !matching.some(scope => scope.decision.budgetStartedAt)) {
-    return { assignmentKeys: [], hold: "Paid search waits: this government has no resolved membership in a selected hunt. Free discovery continues." };
+    return { assignmentKeys: [], assignmentRefs: [], hold: "Paid search waits: this government has no resolved membership in a selected hunt. Free discovery continues." };
   }
-  return { assignmentKeys, hold: null };
+  return { assignmentKeys, assignmentRefs, hold: null };
 }

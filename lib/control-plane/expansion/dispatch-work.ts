@@ -648,7 +648,7 @@ export function planDispatchWork(input: {
         target.kind === "SCOPE" && target.sourceWorkVersion === 1));
     }
     /* MW-001: does the row already record this Send, in any relation? */
-    const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key);
+    const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
     let window = 0;
     const planned: PlannedInstance[] = [];

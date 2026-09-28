@@ -66,7 +66,7 @@ import { PolicyRefusal } from "../capability.ts";
 import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
 
-import type { FreshnessObligation, ScheduledObligation } from "./obligation.ts";
+import { currentAssignmentRefs, type FreshnessObligation, type ScheduledObligation } from "./obligation.ts";
 
 type CostResultWithoutDisposition = (typeof COST_RESULT_WITHOUT_DISPOSITION)[number];
 
@@ -78,12 +78,13 @@ type CostResultWithoutDisposition = (typeof COST_RESULT_WITHOUT_DISPOSITION)[num
  * one that carries its occurrence count — exactly as `openOccurrence` derived
  * it for the round's work item; a caller's hand-built obligation gets none.
  */
-export function chargePurposeOf(o: FreshnessObligation): Pick<CostEntry, "obligationId" | "assignmentKeys" | "recordClass" | "question"> {
+export function chargePurposeOf(o: FreshnessObligation): Pick<CostEntry, "obligationId" | "assignmentKeys" | "assignmentRefs" | "recordClass" | "question"> {
   const standingRow = typeof (o as { readonly occurrenceCount?: unknown }).occurrenceCount === "number";
   const question = standingRow ? questionOfObligation(o) : null;
   return {
     obligationId: o.id,
     assignmentKeys: [...new Set((o.assignments ?? []).map((a) => a.assignmentKey))],
+    assignmentRefs: currentAssignmentRefs(o.assignments),
     recordClass: o.recordClass,
     ...(question !== null ? { question } : {}),
   };

@@ -306,12 +306,32 @@ test("body publication attempts expose only recorded public-safe outcomes and re
       detail: "private detail", candidateId: "candidate-1", versionId: "version-1",
       acceptedMembers: [{ recordId: "record-1", memberId: "member-1" }] } });
   assert.deepEqual(bodyPublicationAttempts([work, workItem("wi-no-attempt")]), [{
-    bodyId: "body-1", workItemId: "wi-body", assignmentKeys: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
+    bodyId: "body-1", workItemId: "wi-body", assignmentKeys: [], assignmentRefs: [], at: NOW, status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
     sourceUrl: "https://example.gov/roster", workerResultId: "wr-1", acceptedCount: 1, versionId: "version-1",
   }]);
   const owned = bodyPublicationAttempts([work], [occurrence("ob-body", 1, "wi-body", "rt-body")],
     [obligation("ob-body", { assignments: [{ assignmentKey: "exact-send", ref: "receipt", relation: "CREATED", at: PAST }] })]);
   assert.deepEqual(owned[0]?.assignmentKeys, ["exact-send"]);
+});
+
+test("a later same-key Send does not claim an earlier body publication", () => {
+  const key="zcta:2020/85635", oldRef="old-receipt", nextRef="new-receipt";
+  const contract={schemaVersion:2,sourceScope:{canonicalUrls:["https://example.gov/roster"]}};
+  const publication={contractId:"registry-runtime-bindings",bodyId:"body-1"};
+  const prior=workItem("wi-prior",{autonomousPlan:{publication,contract,ownerInstructions:[oldRef]} as never,
+    publicationOutcome:{at:"2026-09-18T00:00:00Z",workerResultId:"wr-old",status:"PUBLISHED",code:"ACCEPTED",
+      candidateId:"candidate-old",versionId:"version-old"} as never});
+  const later=workItem("wi-later",{autonomousPlan:{publication,contract,ownerInstructions:[nextRef]} as never,
+    publicationOutcome:{at:NOW,workerResultId:"wr-new",status:"PUBLISHED",code:"ACCEPTED",
+      candidateId:"candidate-new",versionId:"version-new"} as never});
+  const owner=obligation("ob-body",{assignments:[
+    {assignmentKey:key,ref:oldRef,relation:"CREATED",at:PAST},
+    {assignmentKey:key,ref:nextRef,relation:"REORDERED",at:"2026-09-20T00:00:00Z"},
+  ]});
+  const rows=bodyPublicationAttempts([prior,later],[occurrence("ob-body",1,prior.id,"rt-prior"),
+    occurrence("ob-body",2,later.id,"rt-later")],[owner]);
+  assert.deepEqual(rows.find(row=>row.workItemId===prior.id)?.assignmentRefs,[{key,ref:oldRef}]);
+  assert.deepEqual(rows.find(row=>row.workItemId===later.id)?.assignmentRefs,[{key,ref:nextRef}]);
 });
 
 test("an exact manual source gap is indexed under its Send while legacy unkeyed gaps remain unlinked", () => {

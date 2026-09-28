@@ -42,3 +42,22 @@ test("failed read retains prior census and marks the current observation incompl
   assert.deepEqual(failed.instances,previous.instances);
   assert.equal(failed.scopeRevision,previous.scopeRevision);
 });
+
+test("a later same-key hunt keeps old parsed people in history until its own result is recorded",()=>{
+  const later={...scope,receiptId:"later-send",budgetStartedAt:"2026-09-28T08:00:00Z"} as ExpansionScopeDecision;
+  const base=source();
+  const obligations=[{...base.obligations[0],assignments:[
+    {assignmentKey:scope.key,ref:scope.receiptId,at:"2026-09-27T22:17:50.236Z"},
+    {assignmentKey:scope.key,ref:later.receiptId,at:"2026-09-28T08:00:00Z"},
+  ]},...base.obligations.slice(1)];
+  const sources={...base,obligations,attempts:[{id:"attempt-old",startedAt:"2026-09-28T07:00:00Z"}],
+    workerResults:[{...base.workerResults[0],attemptId:"attempt-old"}]};
+  const old=buildChecklistCensus({scope:later,sources:sources as unknown as AssignmentSources,observedAt:now});
+  assert.equal(old.population.knownRecords,0);
+  assert.match(old.gaps.join(" "),/earlier parsed record/);
+  const newer={...sources,workItems:[{id:"work",subject:"az:correct",autonomousPlan:{ownerInstructions:[later.receiptId],contract:{recordClass:"OFFICIAL_ROSTER"}}}],
+    attempts:[...sources.attempts,{id:"attempt-new",startedAt:"2026-09-28T08:30:00Z"}],
+    workerResults:[{...base.workerResults[0],attemptId:"attempt-new"}]};
+  const after=buildChecklistCensus({scope:later,sources:newer as unknown as AssignmentSources,observedAt:now});
+  assert.equal(after.population.knownRecords,1);
+});

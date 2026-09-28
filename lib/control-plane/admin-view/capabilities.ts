@@ -46,12 +46,12 @@ const FEATURES: AdminCapabilityManifest["features"] = Object.freeze({
   rawCapture: { state: "UNAVAILABLE", contractVersion: null },
   resourceAssignments: { state: "UNAVAILABLE", contractVersion: null },
   runnerProgress: { state: "SUPPORTED", contractVersion: 1 },
-  workerEvents: { state: "UNAVAILABLE", contractVersion: null },
+  workerEvents: { state: "SUPPORTED", contractVersion: 1 },
 });
 
 /** Static and tiny; the Admin route still checks host and session first. */
 export const ADMIN_CAPABILITIES: AdminCapabilityManifest = Object.freeze({
   schemaVersion: 1,
-  revision: "admin-capabilities/1:checklistDefinitions/1:publicReaderObservation/1:runnerProgress/1",
+  revision: "admin-capabilities/1:checklistDefinitions/1:publicReaderObservation/1:runnerProgress/1:workerEvents/1",
   features: FEATURES,
 });

@@ -13,9 +13,11 @@ test("the Admin pulse advertises only implemented compatible reads", () => {
     { state: "SUPPORTED", contractVersion: 1 });
   assert.deepEqual(ADMIN_CAPABILITIES.features.publicReaderObservation,
     { state: "SUPPORTED", contractVersion: 1 });
+  assert.deepEqual(ADMIN_CAPABILITIES.features.workerEvents,
+    { state: "SUPPORTED", contractVersion: 1 });
   for (const name of ADMIN_CAPABILITY_NAMES.filter(name =>
     name !== "checklistDefinitions" && name !== "runnerProgress" &&
-    name !== "publicReaderObservation")) {
+    name !== "publicReaderObservation" && name !== "workerEvents")) {
     assert.deepEqual(ADMIN_CAPABILITIES.features[name],
       { state: "UNAVAILABLE", contractVersion: null });
   }

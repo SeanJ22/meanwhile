@@ -90,13 +90,18 @@ import {
   parseAttestedPromotions,
 } from "../lib/civic-data/attested-promotion.ts";
 import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
-import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readCuratedReaderProjection, refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import { automaticVenuePackage, placeMeetingsFromVerifiedVenues } from "../lib/meetings/automatic-venue-resolutions.ts";
+import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { currentVenueCache, resolveVenue, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
+import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import {
   bodySourceWiringFor,
   DERIVED_WIRING_SOURCE_NAMES,
@@ -846,6 +851,45 @@ export async function promoteDerivedMeetingFamily(
   // An unchanged family pass is receipted on the pointed version (R23).
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt, undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
+  if (outcome.promoted) {
+    const venueRead = await readCuratedReaderProjection("venue-resolutions", { store, now: new Date().toISOString(), bypassCache: true });
+    if (venueRead.kind !== "PROMOTED" && venueRead.kind !== "NOT_RECORDED") {
+      throw new Error(`AUTOMATIC_VENUE_BASE_UNAVAILABLE:${venueRead.kind}:${venueRead.detail}`);
+    }
+    const existingIds = new Set(venueRead.kind === "PROMOTED" ? venueRead.value.records.map((row) => row.id) : []);
+    const proposed = await automaticVenuePackage({ snapshot: build.snapshot, existingIds });
+    for (const hold of proposed.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
+    if (proposed.package) {
+      const reviewedAt = proposed.package.sourceReceipt.reviewedAt;
+      const prepared = await prepareManualProjectionSuccessor(proposed.package, store, reviewedAt);
+      const venueCandidate = {
+        ...prepared.candidate,
+        semantics: { ...prepared.candidate.semantics, factKind: "automatically verified exact-source venue resolutions" },
+      };
+      const { expectedBaseVersionId } = prepared;
+      const venueOutcome = await processRegisteredManualCandidate(store, "venue-resolutions", venueCandidate, reviewedAt, expectedBaseVersionId);
+      console.log(`AUTOMATIC_VENUE_RECEIPT=${JSON.stringify({ candidateId: venueCandidate.id, decision: venueOutcome.candidate.receipt?.decision ?? null, promotedVersion: venueOutcome.promoted?.versionId ?? null, held: proposed.held.length })}`);
+      if (!venueOutcome.promoted) throw new Error(`AUTOMATIC_VENUE_PROMOTION_HELD:${venueOutcome.candidate.failureDetail ?? "verification incomplete"}`);
+      const placedRead = await readCuratedReaderProjection("venue-resolutions", { store, now: new Date().toISOString(), bypassCache: true });
+      if (placedRead.kind !== "PROMOTED" || placedRead.metadata.versionId !== venueOutcome.promoted.versionId) {
+        throw new Error("AUTOMATIC_VENUE_READER_READBACK_MISMATCH");
+      }
+      const venueContract = requiredManualProductionContract("venue-resolutions");
+      const venueInput = promotedInputRef(venueContract.recordClass, venueContract.scope,
+        placedRead.metadata.versionId, placedRead.value, placedRead.metadata.promotedAt);
+      if (!venueInput) throw new Error("AUTOMATIC_VENUE_PROMOTED_INPUT_MISSING");
+      const reviewed = placedRead.value.records as unknown as VenueEntry[];
+      const { meetings, placedCount } = placeMeetingsFromVerifiedVenues(build.snapshot.meetings, reviewed);
+      if (placedCount > 0) {
+        const placedBuild = { ...build, snapshot: { ...build.snapshot, meetings: [...meetings] }, inputs: [...build.inputs, venueInput] };
+        const placedCandidate = derivedFamilyCandidate(partition, placedBuild);
+        const placedOutcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, placedCandidate,
+          new Date().toISOString(), outcome.promoted.versionId);
+        console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: placedCandidate.id, placedCount, decision: placedOutcome.candidate.receipt?.decision ?? null, promotedVersion: placedOutcome.promoted?.versionId ?? null })}`);
+        if (!placedOutcome.promoted) throw new Error(`AUTOMATIC_VENUE_MEETING_PROMOTION_HELD:${placedOutcome.candidate.failureDetail ?? "verification incomplete"}`);
+      }
+    }
+  }
 }
 
 async function main() {

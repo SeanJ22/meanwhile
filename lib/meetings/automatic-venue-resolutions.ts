@@ -1,0 +1,162 @@
+import { createHash } from "node:crypto";
+
+import type { ManualProjectionPackage } from "../civic-data/manual-projections.ts";
+import type { ManualSourceReview } from "../civic-data/types.ts";
+import type { MeetingsSnapshot } from "./snapshot.ts";
+import type { Meeting } from "../sources/types.ts";
+import { resolveVenue, venueResolutionRecordId, type VenueEntry } from "./venue-cache.ts";
+
+const CENSUS_URL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress";
+const MAX_ADDRESSES_PER_PASS = 20;
+const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
+const words = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const hasWords = (whole: string, part: string): boolean => ` ${whole} `.includes(` ${part} `);
+function samePublisherRoute(citation: string | null, acquired: string): boolean {
+  if (!citation) return false;
+  try {
+    const cited = new URL(citation, acquired);
+    const actual = new URL(acquired);
+    const params = (url: URL): string => [...url.searchParams].sort(([ak, av], [bk, bv]) =>
+      ak.localeCompare(bk) || av.localeCompare(bv)).map(([key, value]) => `${key}=${value}`).join("&");
+    return cited.protocol === "https:" && cited.origin === actual.origin && cited.pathname === actual.pathname && params(cited) === params(actual);
+  } catch { return false; }
+}
+
+interface CensusMatch {
+  readonly matchedAddress?: string;
+  readonly coordinates?: { readonly x?: number; readonly y?: number };
+  readonly addressComponents?: {
+    readonly city?: string; readonly state?: string; readonly zip?: string;
+    readonly streetName?: string; readonly preDirection?: string; readonly suffixType?: string;
+  };
+}
+
+/** A Census street point is accepted only for one exact house/street/city/state/ZIP match. */
+export function verifiedCensusVenuePoint(published: string, response: unknown): { lat: number; lng: number; address: string } | null {
+  const matches = (response as { result?: { addressMatches?: CensusMatch[] } })?.result?.addressMatches;
+  if (!Array.isArray(matches) || matches.length !== 1) return null;
+  const match = matches[0];
+  const components = match.addressComponents;
+  const address = match.matchedAddress ?? "";
+  const house = /^\s*(\d+)\b/.exec(address)?.[1];
+  if (!house || !components?.streetName || !components.city || !components.state || !/^\d{5}$/.test(components.zip ?? "")) return null;
+  const publishedWords = words(published);
+  const street = words([house, components.preDirection, components.streetName, components.suffixType].filter(Boolean).join(" "));
+  if (!hasWords(publishedWords, street) || !hasWords(publishedWords, words(components.city)) ||
+      !hasWords(publishedWords, words(components.state)) || !hasWords(publishedWords, components.zip!)) return null;
+  const lat = match.coordinates?.y;
+  const lng = match.coordinates?.x;
+  if (typeof lat !== "number" || typeof lng !== "number" || !Number.isFinite(lat) || !Number.isFinite(lng) ||
+      lat < 18 || lat > 72 || lng < -180 || lng > -65) return null;
+  return { lat, lng, address };
+}
+
+/** Reapply only exact promoted source/body/location resolutions to this same acquired family. */
+export function placeMeetingsFromVerifiedVenues(meetings: readonly Meeting[], reviewed: readonly VenueEntry[]): {
+  readonly meetings: readonly Meeting[]; readonly placedCount: number;
+} {
+  let placedCount = 0;
+  const placed = meetings.map((meeting): Meeting => {
+    const gap = meeting.venueGap;
+    if (meeting.location || !meeting.ocdId || gap?.kind !== "STATED_NOT_PLACED" || !gap.publishedText) return meeting;
+    const sourceName = meeting.id.split(":", 1)[0] ?? "";
+    const venue = resolveVenue(sourceName, meeting.ocdId, gap.publishedText, null, reviewed);
+    if (!venue) return meeting;
+    placedCount++;
+    const { venueGap: _gap, ...rest } = meeting;
+    return { ...rest, location: { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } };
+  });
+  return { meetings: placed, placedCount };
+}
+
+/**
+ * Build an exact-source venue successor from already verified meeting acquisitions.
+ * A failed or ambiguous geocode leaves the meeting's published address visible without a pin.
+ * The caller sends the package through the existing venue-resolutions promotion gate.
+ */
+export async function automaticVenuePackage(input: {
+  readonly snapshot: MeetingsSnapshot;
+  readonly existingIds: ReadonlySet<string>;
+  readonly fetchImpl?: typeof fetch;
+  readonly clock?: () => string;
+}): Promise<{ readonly package: ManualProjectionPackage | null; readonly held: readonly string[] }> {
+  const fetchImpl = input.fetchImpl ?? fetch;
+  const clock = input.clock ?? (() => new Date().toISOString());
+  const rows: Array<Readonly<Record<string, unknown>> & { readonly id: string }> = [];
+  const sources = new Map<string, ManualSourceReview>();
+  const held: string[] = [];
+  const pending = new Map<string, Meeting>();
+  for (const meeting of input.snapshot.meetings) {
+    const gap = meeting.venueGap;
+    if (meeting.location || meeting.online || gap?.kind !== "STATED_NOT_PLACED" || !gap.publishedText?.trim() || !meeting.ocdId) continue;
+    const sourceId = meeting.id.split(":", 1)[0] ?? "";
+    const id = venueResolutionRecordId({ sourceId, bodyOcdId: meeting.ocdId, match: gap.publishedText });
+    if (input.existingIds.has(id)) continue;
+    const generation = Date.parse(input.snapshot.generatedAt);
+    const collected = Date.parse(meeting.provenance.collectedAt);
+    if (meeting.carried || !Number.isFinite(generation) || !Number.isFinite(collected) || Math.abs(generation - collected) > 3_600_000) {
+      held.push(`${id}: the address was not freshly read in this family pass`);
+      continue;
+    }
+    if (!pending.has(id)) pending.set(id, meeting);
+  }
+  const keys = [...pending.keys()].sort();
+  const hour = Math.floor(Date.parse(input.snapshot.generatedAt) / 3_600_000);
+  const offset = keys.length === 0 || !Number.isFinite(hour) ? 0 : (hour * MAX_ADDRESSES_PER_PASS) % keys.length;
+  const selected = [...keys.slice(offset), ...keys.slice(0, offset)].slice(0, MAX_ADDRESSES_PER_PASS);
+  for (const id of selected) {
+    const meeting = pending.get(id)!;
+    const gap = meeting.venueGap!;
+    const published = gap.publishedText!;
+    const bodyOcdId = meeting.ocdId!;
+    const sourceId = meeting.id.split(":", 1)[0] ?? "";
+    const sourceUrl = meeting.provenance.sourceUrl;
+    const acquisition = input.snapshot.sources.find((source) => source.source === sourceId)?.acquisitions?.find((evidence) =>
+      samePublisherRoute(sourceUrl, evidence.finalUrl) && evidence.source === sourceId && /^[a-f0-9]{64}$/.test(evidence.rawHash) &&
+      evidence.httpStatus >= 200 && evidence.httpStatus < 300
+    );
+    if (!acquisition) {
+      held.push(`${id}: no exact verified publisher acquisition for the stated address`);
+      continue;
+    }
+    const url = new URL(CENSUS_URL);
+    url.searchParams.set("address", published);
+    url.searchParams.set("benchmark", "Public_AR_Current");
+    url.searchParams.set("format", "json");
+    try {
+      const response = await fetchImpl(url, { signal: AbortSignal.timeout(12_000), headers: { "user-agent": "MeanwhileUSA/1.0 (public civic meeting venue verification)" } });
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if (!response.ok) { held.push(`${id}: Census geocoder HTTP ${response.status}`); continue; }
+      const point = verifiedCensusVenuePoint(published, JSON.parse(new TextDecoder().decode(bytes)));
+      if (!point) { held.push(`${id}: Census returned no single exact house/street/city/state/ZIP match`); continue; }
+      const finalUrl = response.url || url.toString();
+      if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov") { held.push(`${id}: geocoder redirected off the Census host`); continue; }
+      const retrievedAt = clock();
+      rows.push({ sourceId, bodyOcdId, match: published, id,
+        name: published.trim(), address: published.trim(), lat: point.lat, lng: point.lng,
+        addressSourceUrl: acquisition.finalUrl, coordinateSourceUrl: finalUrl, verifiedAt: retrievedAt });
+      sources.set(acquisition.finalUrl, {
+        requestedUrl: acquisition.requestedUrl, finalUrl: acquisition.finalUrl, publisher: gap.publisher,
+        sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: meeting.provenance.collectedAt,
+        httpStatus: acquisition.httpStatus, rawHash: acquisition.rawHash,
+        reviewedEvidence: `Previously promoted meeting ${meeting.id} states the exact venue; its acquired publisher bytes remain the address authority.`,
+      });
+      sources.set(finalUrl, {
+        requestedUrl: url.toString(), finalUrl, publisher: "United States Census Bureau",
+        sourceClass: "REFERENCE_PUBLISHER", retrievedAt, httpStatus: response.status, rawHash: hash(bytes),
+        reviewedEvidence: `One Census match agrees with the publisher's house number, street, city, state and ZIP; the coordinate is a street-address point.`,
+      });
+    } catch (error) {
+      held.push(`${id}: geocoder read failed (${error instanceof Error ? error.message : String(error)})`);
+    }
+  }
+  if (rows.length === 0) return { package: null, held };
+  const reviewedAt = clock();
+  return {
+    package: {
+      contractId: "venue-resolutions", version: reviewedAt, sourceThrough: reviewedAt,
+      sourceReceipt: { contractVersion: 1, reviewedAt, reviewedBy: "automatic-census-venue-reviewer/1", sources: [...sources.values()] },
+      payload: { kind: "venue-resolutions", records: rows },
+    }, held,
+  };
+}

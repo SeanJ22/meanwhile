@@ -62,4 +62,9 @@ test("effective receipt uses instants, and conflicting same-instant marks fail c
   assert.equal(select([original, { ...olderNew, at: "2026-09-28T16:00:00Z" }]).has(item.id), false,
     "two receipts at the same instant cannot choose an owner by string order");
   assert.equal(select([original, { ...olderNew, at: "invalid" }]).has(item.id), false);
+  const duplicate = exactInstructionAutonomousWorkIds({
+    obligations: [{ id: "standing", assignments: [original, olderNew] }] as unknown as FreshnessObligation[],
+    occurrences: [occurrence, { ...occurrence, id: "unexpected-second-occurrence", sequence: 2 }],
+    workItems: [item], assignmentKey: key, receiptId: "original-receipt" });
+  assert.equal(duplicate.has(item.id), false, "one WorkItem cannot claim two occurrence identities");
 });

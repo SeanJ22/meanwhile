@@ -63,7 +63,7 @@ import { digestValueClosure } from "../lib/ops/generator-digest.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
-import { loadRegistrationReference, type LoadedReference } from "../lib/registration/reference.ts";
+import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
@@ -173,7 +173,7 @@ async function main(): Promise<void> {
   const registrations = new Map<string, {
     readonly input: DerivedInputRef;
     readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
-    readonly reference: LoadedReference;
+    readonly referenceSha256: string;
     readonly reviewedRegistryVersionId: string;
   } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
@@ -184,14 +184,10 @@ async function main(): Promise<void> {
         registrations.set(state, { unread: `${state} registration is ${read.kind}` });
         continue;
       }
-      const reference = loadRegistrationReference(process.cwd(), state);
-      if (reference.sha256 !== read.value.vintage.referenceSha256) {
-        registrations.set(state, { unread: `${state} registration does not name the committed Census government pairing` });
-        continue;
-      }
       registrations.set(state, { input,
         bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })),
-        reference, reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
+        referenceSha256: read.value.vintage.referenceSha256,
+        reviewedRegistryVersionId: read.value.reviewedRegistryVersionId });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
@@ -270,7 +266,16 @@ async function main(): Promise<void> {
       if (reg.reviewedRegistryVersionId !== reviewed.metadata.versionId) {
         return { notRegistered: `registration and reviewed registry name different identity versions for ${row.jurisdictionId}` };
       }
-      const resolved = reviewedBodyForGovernment(reg.reference, row.jurisdictionId, reviewed.value.registry.bodies);
+      let resolved: ReturnType<typeof reviewedBodyForGovernment>;
+      try {
+        const reference = loadRegistrationReference(process.cwd(), state!);
+        if (reference.sha256 !== reg.referenceSha256) {
+          return { notRegistered: `${state} registration does not name the committed Census government pairing` };
+        }
+        resolved = reviewedBodyForGovernment(reference, row.jurisdictionId, reviewed.value.registry.bodies);
+      } catch (error) {
+        return { notRegistered: `${state} Census government pairing could not be read: ${error instanceof Error ? error.message : String(error)}` };
+      }
       if (resolved === null || resolved.ocdId !== row.ocdId || (row.bodyRole !== "SUB_BODY" && resolved.bodyId !== row.bodyId)) {
         return { notRegistered: `registration and reviewed registry do not pair ${row.jurisdictionId} with ${row.bodyId}` };
       }

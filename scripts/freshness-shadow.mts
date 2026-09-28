@@ -342,7 +342,7 @@ import {
   type BudgetLine,
   type BudgetLines,
 } from "../lib/control-plane/expansion/spend-holds.ts";
-import { evaluateAssignmentFromRecords } from "../lib/control-plane/assignment-completion.ts";
+import { evaluateAssignmentFromRecords, memberRecordsForSend } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import {
@@ -1855,7 +1855,7 @@ const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
 const assignmentCompletion = (key: string) =>
   evaluateAssignmentFromRecords({
     assignmentKey: key,
-    obligations: assignmentObligations,
+    obligations: memberRecordsForSend(key, assignmentMembers, assignmentObligations),
     debtFor: (id) => debtByObligation.get(id) ?? null,
     now: NOW,
   });

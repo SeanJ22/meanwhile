@@ -458,6 +458,14 @@ export interface InstructionBudget {
   readonly says: string;
 }
 
+export interface InstructionProgress {
+  readonly complete: number | null;
+  readonly known: number;
+  readonly percent: number | null;
+  readonly notCreated: number | null;
+  readonly says: string;
+}
+
 export interface InstructionView {
   readonly card: CardView;
   readonly decision: ExpansionScopeDecision;
@@ -467,6 +475,8 @@ export interface InstructionView {
   readonly reach: InstructionReach | null;
   readonly reachWhyNot: string | null;
   readonly budget: InstructionBudget | null;
+  /** Progress through recorded obligations, not a claim that all geographic coverage is known. */
+  readonly progress: InstructionProgress;
   /**
    * The earlier join by place — standing work about governments in the
    * geography. Kept only as a labeled fallback: it covers work recorded before
@@ -517,6 +527,22 @@ function budgetOf(a: AssignmentReading, readAt: string | null): InstructionBudge
   };
 }
 
+function progressOf(assignment: AssignmentReading | null, creation: ReturnType<typeof scopeCreationView> | null): InstructionProgress {
+  if (assignment === null) return { complete: null, known: 0, percent: null, notCreated: null, says: "Waiting for the runner to link work to this instruction." };
+  const completion = assignment.completion ?? null;
+  const linked = assignment.members.created + assignment.members.reordered;
+  const members = completion !== null && completion.kind !== "NO_MEMBERS" ? Math.max(linked, completion.members) : linked;
+  const target = creation?.kind === "READ" ? creation.target : null;
+  const notCreated = target === null ? null : Math.max(0, target.requirements.defined - target.requirements.carried - target.requirements.created);
+  const known = members + (notCreated ?? 0);
+  const complete = completion === null || completion.kind === "NO_MEMBERS" ? null : completion.kind === "COMPLETE" ? completion.members : completion.settled;
+  const percent = complete === null || known === 0 ? null : Math.min(100, Math.floor((complete / known) * 100));
+  const says = complete === null
+    ? "Completion is awaiting a valid runner reading; linked work is not counted as verified merely because it exists."
+    : `${complete.toLocaleString("en-US")} of ${known.toLocaleString("en-US")} currently known work items passed the runner’s completion check.`;
+  return { complete, known, percent, notCreated, says };
+}
+
 const REACH_NOT_READ = "Not read yet: the runner has not recorded, on the work itself, what this instruction reached.";
 
 export function instructionKey(d: ExpansionScopeDecision): string {
@@ -530,6 +556,11 @@ export function instructionView(input: {
   readonly totalAssignments: number | null;
   readonly paidLaneClosedBecause: string | null;
   readonly runnerPaused: { readonly since: string | null } | null;
+  /** A cycle that started before this Send cannot be called this Send's work. */
+  readonly activeCycleStartedAt?: string | null;
+  readonly nextCycleDueAt?: string | null;
+  /** Current research-state Scouts across the fleet; null when unread. */
+  readonly currentScouts?: number | null;
   /** MW-001/MW-021: this instruction as the runner read it from the work (research state `assignments`); null when not recorded. */
   readonly assignment?: AssignmentReading | null;
   readonly assignmentAt?: string | null;
@@ -541,6 +572,15 @@ export function instructionView(input: {
     ? `${money(d.budgetUsd)} Anthropic token budget for this hunt`
     : `${money(d.budgetUsd)} paid-model budget in any rolling 24 hours`;
   const rv = runnerViewFor(d, input.reading);
+  const waitingForActiveCycle = rv.kind === "NOT_YET" && input.activeCycleStartedAt !== null &&
+    input.activeCycleStartedAt !== undefined && input.activeCycleStartedAt < d.decidedAt;
+  const waitingSays = waitingForActiveCycle
+    ? `The last reported cycle started before this Send (${formatEastern(input.activeCycleStartedAt!)}) and has not reported finishing. The runner reads this instruction in the next eligible cycle after it finishes or recovers. This is saved work, not running work.`
+    : input.runnerPaused
+      ? "The runner is paused; Resume runner is the next action before it can read this instruction."
+      : input.nextCycleDueAt
+        ? `The runner has not read this Send yet. It checks for new instructions between cycles; its currently recorded scheduled cycle is ${formatEastern(input.nextCycleDueAt)} if an early wake does not happen.`
+        : "The runner has not read this Send yet. It checks for new instructions between cycles.";
   const assignment = input.assignment ?? null;
   const sendBudget = assignment === null ? null : budgetOf(assignment, input.assignmentAt ?? null);
   const creation = input.dispatchWork === undefined ? null : scopeCreationView(d, input.dispatchWork);
@@ -549,13 +589,13 @@ export function instructionView(input: {
     read && read.work && input.rows ? assignmentsInScope(input.rows, new Set(read.work.subjectIds), input.totalAssignments, !read.work.subjectIdsComplete) : null;
   const blocked = inScope?.byState.find((s) => s.state === "BLOCKED")?.count ?? 0;
   const failed = inScope?.byState.find((s) => s.state === "FAILED")?.count ?? 0;
-  const working = inScope?.byState.find((s) => s.state === "WORKING")?.count ?? 0;
+  const completion = assignment?.completion ?? null;
 
   const ack: AckFact[] = [
-    { pill: "SAVED", tone: "slate", text: `Your instruction was written down${d.note ? ", with your words kept verbatim" : ""}, receipt ${d.receiptId}`, at: d.decidedAt },
+    { pill: "SAVED", tone: "slate", text: `Instruction saved · receipt ${d.receiptId}`, at: d.decidedAt },
     rv.kind === "READ"
       ? { pill: "READ BY THE RUNNER", tone: "teal", text: `The runner read it at the start of a cycle and resolved ${read?.resolution.kind === "RESOLVED" ? `${read.resolution.zctaCount} codes` : "nothing (it could not resolve the geography)"}`, at: rv.at }
-      : { pill: "NOT YET READ", tone: "stone", text: rv.says, at: null },
+      : { pill: "NOT YET READ", tone: "stone", text: `${rv.says} ${waitingSays}`, at: null },
     read && read.work
       ? {
           pill: "PLACED FIRST",
@@ -571,29 +611,29 @@ export function instructionView(input: {
             ? { pill: creation.planOnly === null ? "CREATED" : "PLANNED ONLY", tone: "slate" as Tone, text: `${scopeCreationSentence(creation.target)}${creation.planOnly === null ? "" : ` Nothing was written: ${creation.planOnly}.`}`, at: creation.at }
             : { pill: "NOT YET CREATED", tone: "stone" as Tone, text: creation.says, at: null },
         ]),
-    working > 0
-      ? { pill: "RUNNING", tone: "teal", text: `${working} of the listed assignments here hold a worker now`, at: null }
-      : { pill: "NOT RUNNING NOW", tone: "stone", text: "No listed assignment in this geography holds a worker at the moment. Queued is not running.", at: null },
+    { pill: "CURRENT SCOUTS", tone: "slate", text: input.currentScouts === null || input.currentScouts === undefined
+      ? "Current Scout activity was not read. The admission count below describes the last cycle, not workers running now."
+      : input.currentScouts === 0
+        ? "The current research state reports no Scout running across the fleet. Last-cycle admissions below are not current workers."
+        : `${input.currentScouts} Scout${input.currentScouts === 1 ? " is" : "s are"} running across the fleet in the current research state. This bounded assignment view cannot attribute every active job to this Send; last-cycle admissions below are not current workers.`, at: null },
   ];
-  if (input.paidLaneClosedBecause !== null || blocked + failed > 0) {
+  if (input.paidLaneClosedBecause !== null) {
     ack.push({
       pill: "PARTLY BLOCKED",
       tone: "amber",
-      text: [
-        input.paidLaneClosedBecause ? `Paid research is ${input.paidLaneClosedBecause.replace(/^closed: /, "closed: ")}` : null,
-        blocked + failed > 0 ? `${blocked} blocked and ${failed} failed assignments sit in this geography.` : null,
-      ]
-        .filter(Boolean)
-        .join(" "),
+      text: `Paid research is ${input.paidLaneClosedBecause}`,
       at: input.reading?.at ?? null,
     });
   }
+  if (blocked + failed > 0) ack.push({ pill: "GEOGRAPHY HISTORY", tone: "amber", text: `${blocked} blocked and ${failed} failed assignments appear on the published geography list. That list includes older work and is not a count of this hunt's failures.`, at: input.reading?.at ?? null });
+  if (completion?.kind === "NOT_COMPLETE" && (completion.refusedCount ?? 0) > 0) ack.push({ pill: "HUNT WORK FAILURES", tone: "amber", text: `${completion.refusedCount} member obligations this Send reached have recorded failed attempts in the runner's assignment snapshot. The completion line below names examples.`, at: input.assignmentAt ?? null });
   if (input.runnerPaused) ack.push({ pill: "PAUSED", tone: "stone", text: "The runner is paused by you; nothing here moves until you resume it.", at: input.runnerPaused.since });
   /* MW-015: visited is not finished. The runner evaluates each Send from its members' own records;
      until it has, the instruction is never shown as finished. */
-  const completion = assignment?.completion ?? null;
   if (completion === null) {
     ack.push({ pill: "NOT COMPLETE", tone: "gold", text: "Not evaluated yet: the runner has not recorded whether the work this instruction reached is finished, so it is never shown as finished.", at: null });
+  } else if (completion.kind === "NO_MEMBERS" && assignment && assignment.members.created + assignment.members.reordered > 0) {
+    ack.push({ pill: "COMPLETION RECHECK", tone: "gold", text: `The older completion reading conflicts with ${assignment.members.created + assignment.members.reordered} linked ${assignment.members.created + assignment.members.reordered === 1 ? "obligation" : "obligations"} on this Send. None is certified complete from that reading. The runner recomputes completion from these same linked members in its next cycle.`, at: input.assignmentAt ?? null });
   } else if (completion.kind === "COMPLETE") {
     ack.push({ pill: "TRACKED WORK COMPLETE", tone: "teal", text: `${assignmentCompletionWords(completion)} This covers the registered work this instruction reached. It does not establish that every applicable body and information family has been discovered and delivered.`, at: input.assignmentAt ?? null });
   } else {
@@ -607,15 +647,15 @@ export function instructionView(input: {
     ? [
         {
           name: "Discovery (paid research)",
-          pill: input.paidLaneClosedBecause ? "CLOSED" : read.work?.scoutAdmitted ? "RUNNING" : "WAITING",
-          tone: input.paidLaneClosedBecause ? "amber" : "teal",
+          pill: input.paidLaneClosedBecause ? "CLOSED" : read.work?.scoutAdmitted ? "ADMITTED LAST CYCLE" : "NONE ADMITTED LAST CYCLE",
+          tone: input.paidLaneClosedBecause ? "amber" : "slate",
           rows: [
-            ["Admitted", read.work?.scoutAdmitted === null || read.work === null ? "not counted yet" : String(read.work.scoutAdmitted)],
+            ["Admitted last cycle", read.work?.scoutAdmitted === null || read.work === null ? "not counted yet" : String(read.work.scoutAdmitted)],
             ["Held by the geography's budget", read.heldThisCycle === null ? "not counted yet" : String(read.heldThisCycle)],
             ["Held by this instruction's budget", assignment?.budget ? String(assignment.budget.refused) : "not counted yet"],
             ["Placed first", read.work ? String(read.work.scoutRowsPlacedFirst) : "—"],
           ],
-          note: `${read.budgetSays} Both counts are for the runner's last cycle.`,
+          note: "These admissions and placements belong to the last cycle. Current Scout activity is reported above; the latest hunt spend and remaining budget are in the budget panel below.",
         },
         {
           name: "Acquisition and validation (plain code)",
@@ -631,10 +671,11 @@ export function instructionView(input: {
       ]
     : [];
 
-  const spend =
-    read?.spend
-      ? `Geographic activity: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there. These activity windows do not reset the ${budgetDescription}; its accounting and reservations are shown separately.`
-      : `In the geography: nothing measured yet. The instruction has a ${budgetDescription}.`;
+  const spend = d.budgetStartedAt && assignment?.budget
+    ? `Latest recorded Anthropic token spend for this hunt: ${assignment.budget.spentUsd === null ? "unknown (an unmeasured charge holds paid work)" : money(assignment.budget.spentUsd)} as of ${formatEastern(input.assignmentAt ?? d.decidedAt)}. The budget panel shows reservations and what remains. Earlier geographic activity snapshots are not this hunt's ledger.`
+    : read?.spend
+      ? `Geographic activity measured at cycle start (${formatEastern(input.reading?.at ?? d.decidedAt)}), before that cycle's Scouts: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there. These windows do not reset the ${budgetDescription}; its accounting and reservations are shown separately.${d.budgetStartedAt ? "" : ` ${read.budgetSays}`}`
+      : read && !d.budgetStartedAt ? read.budgetSays : `In the geography: nothing measured yet. The instruction has a ${budgetDescription}.`;
 
   const pill = rv.kind === "READ" ? (input.paidLaneClosedBecause ? { p: "READ · PARTLY BLOCKED", t: "gold" as Tone } : { p: "READ BY RUNNER", t: "teal" as Tone }) : { p: "SAVED · NOT YET READ", t: "cyan" as Tone };
   return {
@@ -647,7 +688,7 @@ export function instructionView(input: {
       summary:
         rv.kind === "READ"
           ? `Read by the runner at its cycle start. ${read?.work ? `${read.work.registeredObligations} ${read.work.registeredObligations === 1 ? "piece" : "pieces"} of standing work ${read.work.registeredObligations === 1 ? "is" : "are"} about governments here.` : read?.resolution.kind === "UNRESOLVED" ? `It could not be resolved: ${read.resolution.why}` : "What is in it was not recorded."}${assignment ? ` It created ${assignment.members.created} and put ${assignment.members.reordered} first, as recorded on the work.` : ""} This instruction has a ${budgetDescription}.`
-          : `${rv.says} This instruction has a ${budgetDescription}.`,
+          : `${waitingSays} This instruction has a ${budgetDescription}.`,
     },
     decision: d,
     reading: read,
@@ -655,6 +696,7 @@ export function instructionView(input: {
     reach: assignment === null ? null : reachOf(assignment),
     reachWhyNot: assignment === null ? REACH_NOT_READ : null,
     budget: sendBudget,
+    progress: progressOf(assignment, creation),
     inScope,
     inScopeWhyNot:
       inScope !== null

@@ -532,6 +532,52 @@ test("saved instruction wording preserves a hunt's token-only total and distingu
   assert.match(legacy.card.summary, /\$5\.00 paid-model budget in any rolling 24 hours/);
 });
 
+test("a Send during an active cycle is shown as saved and waiting, never as running", () => {
+  const view = instructionView({
+    decision: decision(), reading: null, rows: null, totalAssignments: null,
+    paidLaneClosedBecause: null, runnerPaused: null,
+    activeCycleStartedAt: "2026-09-24T23:59:00.000Z",
+    nextCycleDueAt: "2026-09-25T01:00:00.000Z",
+  });
+  assert.equal(view.card.pill, "SAVED · NOT YET READ");
+  assert.match(view.card.summary, /has not reported finishing/);
+  assert.match(view.card.summary, /saved work, not running work/);
+  assert.match(view.ack.find((fact) => fact.pill === "NOT YET READ")?.text ?? "", /next eligible cycle after it finishes or recovers/);
+});
+
+test("a Send's completion uses the same created and reordered members as its linked work list", async () => {
+  const { evaluateAssignmentFromRecords, memberRecordsForSend } = await import("../lib/control-plane/assignment-completion.ts");
+  const membership = assignmentMembership([], [
+    { obligationId: "created", subjectId: "s1", entry: { assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED } },
+    { obligationId: "reordered", subjectId: "s2", entry: { assignmentKey: A.key, ref: "r-a", relation: "REORDERED", at: JOINED } },
+  ]);
+  const members = memberRecordsForSend(A.key, membership, [{ id: "reordered", lastWorkedAt: JOINED }]);
+  const completion = evaluateAssignmentFromRecords({ assignmentKey: A.key, obligations: members, debtFor: () => null, now: T0 });
+  assert.equal(completion.kind, "NOT_COMPLETE");
+  if (completion.kind !== "NOT_COMPLETE") return;
+  assert.equal(completion.members, 2);
+  assert.equal(completion.settled, 1);
+  assert.deepEqual(completion.exceptions.map((e) => e.obligationId), ["created"]);
+});
+
+test("the hunt card uses its current ledger, labels last-cycle admissions, and separates current Scouts", () => {
+  const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }]);
+  const costs = [charge({ obligationId: "ob-c", usd: 1.09 })];
+  const gate = armAssignmentBudget({ now: T0, specs: [{ ...A, budgetUsd: 50, budgetStartedAt: JOINED }], membership, costs, worstCaseUsd: 0.6, intentsReadable: true });
+  const assignment = assignmentCycleReading({ at: T0, now: T0, gate, specs: [{ ...A, budgetUsd: 50, budgetStartedAt: JOINED }], membership, costs, intentsReadable: true }).assignments[0];
+  const scope = { key: decision().key, work: { scoutAdmitted: 11, subjectIds: [], subjectIdsComplete: true, registeredObligations: 132, dueThisCycle: 132, scoutRowsPlacedFirst: 29 }, budgetSays: "$0 spent for this hunt", spend: { rolling24hUsd: 0, sevenDayUsd: 0 }, heldThisCycle: 0, resolution: { kind: "RESOLVED", zctaCount: 1 }, coverage: null };
+  const expansion = { at: T0, scopes: [scope] } as unknown as import("../lib/control-plane/expansion/reading.ts").ExpansionCycleReading;
+  const view = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment, assignmentAt: T0 });
+  assert.match(view.spend, /\$1\.09/);
+  assert.doesNotMatch(view.spend, /\$0\.00/);
+  assert.equal(view.lanes[0]?.pill, "ADMITTED LAST CYCLE");
+  assert.doesNotMatch(view.lanes[0]?.note ?? "", /\$0 spent/);
+  assert.match(view.ack.find((fact) => fact.pill === "CURRENT SCOUTS")?.text ?? "", /no Scout running across the fleet/);
+  const prior = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment: { ...assignment, completion: { kind: "NO_MEMBERS", assignmentKey: A.key, says: "No obligation names this assignment" } }, assignmentAt: T0 });
+  assert.match(prior.ack.find((fact) => fact.pill === "COMPLETION RECHECK")?.text ?? "", /1 linked obligation on this Send/);
+  assert.doesNotMatch(prior.ack.map((fact) => fact.text).join(" "), /No obligation names this assignment/);
+});
+
 test("an instruction lists what it created and reordered from the work itself, and its own budget with the window", () => {
   const membership = assignmentMembership([{ id: "ob-c", subjectId: "s", assignments: [{ assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED }] }, row("ob-r", "s", [A.key])]);
   const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs: [charge({ obligationId: "ob-c", usd: 5.4 })], worstCaseUsd: 0.6, intentsReadable: true });
@@ -721,11 +767,16 @@ test("MW-015: a Send is complete only when every member is settled, and the inst
   const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => open });
   const view = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: reading.assignments[0], assignmentAt: T0 });
   const pill = view.ack.find((f) => f.pill === "NOT COMPLETE");
+  assert.equal(view.progress.percent, 20);
+  assert.equal(view.progress.known, 5);
+  assert.equal(view.progress.complete, 1);
   assert.match(pill?.text ?? "", /^Not complete: 1 of 5 member obligations passed the completion check; 1 refused and 3 not yet settled remain\. For example — ob-absent: recorded as absent until/);
   const done = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, costs: [], intentsReadable: true, completionFor: () => evaluate([member("ob-a")]) });
   const finished = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, assignment: done.assignments[0], assignmentAt: T0 });
+  assert.equal(finished.progress.percent, 100, "tracked work progress can reach 100% without claiming full hunt coverage");
   assert.equal(finished.ack.find((f) => f.pill === "COMPLETE"), undefined, "a closed subset cannot certify the entire scope");
   assert.match(finished.ack.find((f) => f.pill === "TRACKED WORK COMPLETE")?.text ?? "", /^Complete: all 1 member obligations passed the completion check\.[\s\S]*does not establish that every applicable body and information family/);
   const unevaluated = instructionView({ decision: decision(), reading: null, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null });
+  assert.equal(unevaluated.progress.percent, null);
   assert.match(unevaluated.ack.find((f) => f.pill === "NOT COMPLETE")?.text ?? "", /^Not evaluated yet/);
 });

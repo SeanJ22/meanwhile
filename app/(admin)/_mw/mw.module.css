@@ -740,6 +740,13 @@
   font: 500 14px var(--mw-sans);
   cursor: pointer;
 }
+.huntProgress {
+  display: block;
+  width: 100%;
+  height: 12px;
+  margin: 12px 0;
+  accent-color: var(--mw-accent);
+}
 .root a.btnSecondary {
   color: var(--mw-text);
 }

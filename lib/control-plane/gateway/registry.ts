@@ -818,7 +818,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       label: "Select this geography for expansion",
       does:
         "Records a geography you chose from the Census lookup, with its priority and its rolling 24-hour budget for paid work there, durably. " +
-        "At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet, and puts all work there first.",
+        "When research is enabled, the standing runner wakes promptly for this Send. At the start of its next cycle it creates the work the registry defines there that no clock carries yet, and puts all work there first.",
       doesNot:
         `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_BOUNDS}. ` +
         "Its budget can only hold paid work back.",
@@ -897,7 +897,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         subject: scopeKeyOf(geography),
         says:
           `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} ${lifetime ? "Anthropic token budget for this hunt" : "rolling 24-hour budget"} for paid work there (${was}), and that survives a restart. ` +
-          "Recording it starts nothing itself. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
+          "Recording it makes no model call itself. If research is enabled, the standing runner wakes promptly for this Send; if a cycle is already active, it finishes first. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
           `(${CREATION_BOUNDS}) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
           "Work that needs a model waits: the paid lane stays exactly as it is, " +
           `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.` +

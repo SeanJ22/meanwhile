@@ -101,6 +101,10 @@ import {
   type ControlPlaneRepositories,
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
+import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
+import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -110,6 +114,7 @@ import {
 import {
   RESEARCH_FORMAT_VERSION,
   RESEARCH_INTENT_LOG_KEY,
+  RESEARCH_STATE_ID,
   readIntents,
   type ResearchIntent,
   type ResearchIntentRequest,
@@ -1525,6 +1530,33 @@ async function ownerSays(): Promise<OwnerSays> {
         `starting the next cycle early at ${new Date().toISOString()}`,
     );
     return "START_NOW";
+  }
+  // A saved Send does not open the paid lane. Once the owner has resumed it,
+  // wake for a receipt the last completed cycle did not actually consume.
+  // This also handles a Send made while a cycle was active without overlapping
+  // that cycle or needlessly repeating one that already read the new receipt.
+  if (!reading.paused) {
+    const resumeId = unacknowledgedResearchResume(log);
+    if (resumeId !== null) {
+      console.log(`  research resumed by owner (${resumeId}) — starting the next cycle now`);
+      return "START_NOW";
+    }
+    try {
+      const config = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+      const held = expansionScopesOf(config !== null && isAdminConfig(config.value) ? config.value : null);
+      if (held.scopes.length > 0) {
+        const state = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { assignments: true });
+        const raw: unknown = (state?.value as { assignments?: unknown } | undefined)?.assignments;
+        const last = isAssignmentCycleReading(raw) ? raw : null;
+        const pending = unacknowledgedScope(held.scopes, last);
+        if (pending !== null) {
+          console.log(`  Send ${pending.receiptId} has not been read by a completed cycle — starting the next cycle now`);
+          return "START_NOW";
+        }
+      }
+    } catch (error) {
+      console.error(`  Send wake check could not be read; ordinary cycle interval stands: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
   return "NOTHING";
 }

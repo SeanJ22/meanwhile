@@ -209,6 +209,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       totalAssignments: view?.summary.total ?? null,
       paidLaneClosedBecause: lane.open ? null : lane.closedBecause,
       runnerPaused: pause ? { since: pause.since ?? null } : null,
+      activeCycleStartedAt: research?.cycleFinishedAt === null ? research.cycleStartedAt : null,
+      nextCycleDueAt: heartbeatOut.kind === "HELD" ? heartbeatOut.value.nextCycleDueAt : null,
+      currentScouts: research?.running.length ?? null,
       assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
       assignmentAt: sends?.at ?? null,
       dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),
@@ -484,6 +487,20 @@ function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: 
             <span className={s.monoSmall}>{f.at ? formatEastern(f.at) : "—"}</span>
           </div>
         ))}
+      </div>
+      <h4 className={s.h4}>Hunt progress</h4>
+      <div className={s.inset} style={{ marginBottom: 24 }}>
+        <div className={s.row10}>
+          <span className={s.name14}>Known work completed</span>
+          <Pill tone={view.progress.percent === 100 ? "teal" : "cyan"}>{view.progress.percent === null ? "NOT MEASURED" : `${view.progress.percent}%`}</Pill>
+        </div>
+        <progress className={s.huntProgress} value={view.progress.complete ?? undefined} max={Math.max(1, view.progress.known)} aria-label="Known hunt work completed" />
+        <p className={s.note}>{view.progress.says}</p>
+        {view.progress.notCreated !== null && view.progress.notCreated > 0 && <p className={s.goldNote}>{view.progress.notCreated} required work items have not yet been created. They remain in this progress denominator.</p>}
+        {sharedSources !== null && sharedSources.ok && <p className={s.note}>
+          Recorded shared sources: {sharedSources.rows.filter(row => row.stage === "PUBLISHED").length} published, {sharedSources.rows.filter(row => row.stage === "REUSED").length} reused, {sharedSources.rows.filter(row => row.stage === "QUEUED" || row.stage === "COLLECTING_AND_VERIFYING").length} active or queued, {sharedSources.rows.filter(row => row.stage === "HELD" || row.stage === "FAILED").length} held or failed.
+        </p>}
+        <p className={s.note}>This percentage measures recorded work, not proof that every applicable source or public result has been found. Full hunt completion still requires coverage and reader-delivery evidence.</p>
       </div>
       <h4 className={s.h4}>What it addresses</h4>
       <div className={s.stack8} style={{ marginBottom: 24 }}>

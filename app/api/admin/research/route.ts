@@ -104,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         ok: true,
         recorded: { intentId: intent.intentId, action: intent.action, requestedAt: intent.requestedAt },
-        says: `Recorded: ${INTENT_WORDS[action]}. The runner reads it at its next cycle and records that it did; until then it is a request.`,
+        says: `Recorded: ${INTENT_WORDS[action]}. The runner checks for this request between cycles and records when it applies it; until then it is a request.`,
       },
       { status: 200 },
     );

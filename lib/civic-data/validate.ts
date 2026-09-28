@@ -137,6 +137,45 @@ function object(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
+/** A gap becoming an official filing is a reclassification of the same
+ * candidacy, although the legacy finance member key changes from its target
+ * key to the newly known committee ID. Prove that pair; an unmatched loss
+ * remains an incomplete-horizon removal and must still be held. */
+function stateFinanceGapResolution(candidate: RoutineCandidate): ValidationCheck | null {
+  if (candidate.recordClass !== "STATE_CAMPAIGN_FINANCE" || (candidate.removalEvidence?.length ?? 0) > 0) return null;
+  const removed = candidate.changeSet?.removed ?? [];
+  const added = candidate.changeSet?.added ?? [];
+  if (removed.length === 0) return null;
+  const used = new Set<number>();
+  for (const delta of removed) {
+    const before = object(delta.before);
+    const targets = before?.targetKeys;
+    if (before?.filingState !== "OURS_GAP" || !Array.isArray(targets) || targets.length === 0 ||
+      !targets.every(value => typeof value === "string" && value.length > 0)) return null;
+    const exactTargets = [...targets].sort();
+    const matches = added.flatMap((addition, index) => {
+      const after = object(addition.after);
+      const nextTargets = after?.targetKeys;
+      const provenance = object(after?.provenance);
+      return after?.filingState === "FILED" &&
+        after.jurisdiction === before.jurisdiction && after.electionYear === before.electionYear &&
+        typeof after.committeeId === "string" && after.committeeId.length > 0 &&
+        (before.committeeId === null || before.committeeId === undefined || before.committeeId === after.committeeId) &&
+        Array.isArray(nextTargets) && nextTargets.every(value => typeof value === "string") &&
+        JSON.stringify([...nextTargets].sort()) === JSON.stringify(exactTargets) &&
+        provenance?.sourceUrl === candidate.retrieval.finalUrl &&
+        typeof provenance.sourceOrg === "string" && provenance.sourceOrg.length > 0
+        ? [index] : [];
+    });
+    if (matches.length !== 1 || used.has(matches[0])) return null;
+    used.add(matches[0]);
+  }
+  return result(
+    "COMPLETENESS_HORIZON_VALIDITY", "PASS", "STATE_FINANCE_GAPS_RESOLVED_BY_OFFICIAL_FILINGS",
+    `${removed.length} prior gap record(s) have exact candidacy-matched official filings in this read; no candidacy disappeared.`,
+  );
+}
+
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
@@ -165,6 +204,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
           "A complete, reconciled bounded universe authorizes its own removals; supplemental removal evidence is not accepted.",
         );
   }
+
+  const financeResolution = stateFinanceGapResolution(candidate);
+  if (financeResolution !== null) return financeResolution;
 
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(

@@ -149,7 +149,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
       const lastScout=scoutHistory.find(result=>result.attemptId===latest!.id);
       const continuation=createRouteTask({workItemId:item.id,routeId:`${baseRouteId}:continue:${latest.id}`,
-        routeLabel:`${scope} Continue after ${latest.id}; next: ${lastScout?.nextRungs.join("; ") || "reassess the remaining authoritative source methods"}`,
+        routeLabel:`${scope} Continue after ${latest.id}; next: ${Array.isArray(lastScout?.nextRungs) ? lastScout.nextRungs.filter((value): value is string => typeof value === "string").join("; ") || "reassess the remaining authoritative source methods" : "reassess the remaining authoritative source methods"}`,
         target:created.target,inherited:false,now});
       const existing=await repos.routeTasks.read(continuation.id);
       if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now)) return decision("BLOCKED",`Scout completed without settling the obligation; its next rungs remain owed after ${debt.retryAt}.`,task);
@@ -298,6 +298,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
 /** Independent obligations run concurrently; leases provide process-independent ownership. */
 export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{
   maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
+  prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
@@ -309,8 +310,15 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   for (const {value:attempt} of await runtime.repos.attempts.list()) {
     if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
   }
-  const ids=items.sort((a,b)=>(lastServed.get(a.id)??"").localeCompare(lastServed.get(b.id)??"") ||
-    a.value.createdAt.localeCompare(b.value.createdAt) || a.id.localeCompare(b.id)).map(i=>i.id);
+  const priorityByReceipt=new Map(options.prioritizedInstructions?.map(row=>[row.receiptId,row.priority] as const)??[]);
+  const ownerPriority=(item:WorkItem)=>Math.min(...(item.autonomousPlan?.ownerInstructions??[])
+    .map(ref=>priorityByReceipt.get(ref)??Number.POSITIVE_INFINITY));
+  const ids=items.sort((a,b)=>{
+    const ap=ownerPriority(a.value), bp=ownerPriority(b.value);
+    return (ap===bp?0:ap<bp?-1:1) ||
+      (lastServed.get(a.id)??"").localeCompare(lastServed.get(b.id)??"") ||
+      a.value.createdAt.localeCompare(b.value.createdAt) || a.id.localeCompare(b.id);
+  }).map(i=>i.id);
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[];
   const maximum=Math.min(options.maximum??3,20); const concurrency=Math.min(options.concurrency??2,2);

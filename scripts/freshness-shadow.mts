@@ -1951,10 +1951,15 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const debt = debtsIn.find((d) => d.obligationId === id);
   const lines: string[] = [];
   for (const r of prior) {
+    // A retained legacy result can carry a non-array nextRungs value. Keep
+    // the evidence and resume from recorded rungs instead of aborting a Scout.
+    const nextRungs = Array.isArray(r.nextRungs)
+      ? r.nextRungs.filter((value): value is string => typeof value === "string")
+      : [];
     lines.push(
       `PRIOR SCOUT ${r.recordedAt}: ${r.refusal ? `REFUSED (${r.refusal.map((i) => i.code).join(", ")})` : r.outcome} (${r.stoppedBy}); ` +
         `rungs: ${r.rungs.map((g) => `${g.rung} -> ${g.target} [${g.observed}]`).join("; ") || "none"}; ` +
-        `next rungs it named: ${r.nextRungs.join("; ") || "none"}; ` +
+        `next rungs it named: ${nextRungs.join("; ") || "none"}${Array.isArray(r.nextRungs) ? "" : " (stored list unreadable; re-evaluate from retained rungs)"}; ` +
         `candidates: ${r.candidates.map((c) => `${c.routeId} <${c.url}>`).join(", ") || "none"}`,
     );
   }
@@ -2021,7 +2026,9 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     summary: [...manualLines, ...lines].join("\n"),
     provenance,
     priorRungs,
-    nextRungs: all.at(-1)?.nextRungs ?? [],
+    nextRungs: Array.isArray(all.at(-1)?.nextRungs)
+      ? all.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string")
+      : [],
   };
 }
 
@@ -3042,7 +3049,9 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
       maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
     });
     const heldUsed = fleetSafety.snapshot().cycle.dispatches - downstreamStartedAt;
-    const autonomous = await runAutonomousCoordinator(fleet, { maximum: Math.max(0, 3 - heldUsed), concurrency: 2,
+    const autonomous = await runAutonomousCoordinator(fleet, { maximum: Math.max(0, 10 - heldUsed), concurrency: 2,
+      prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
+        .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
       deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
       admitDispatch: work => fleetSafety.admitDispatch(work) });
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);

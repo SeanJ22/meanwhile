@@ -4,7 +4,7 @@ import { CHECKLIST_PROFILE } from "../readiness/checklist-score.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { canonicalJson } from "../repository/types.ts";
-import { CHECKLIST_SCOPE_HEAD_SQL } from "./checklist-instance-index-read.ts";
+import { CHECKLIST_SCOPE_HEAD_SQL, nonnegativeSafeInteger } from "./checklist-instance-index-read.ts";
 
 const BATCH_SIZE = 250;
 const allDefinitionIds = CHECKLIST_PROFILE.definitions.map(definition => definition.id);
@@ -57,10 +57,6 @@ export interface ChecklistIndexSourceSnapshot {
 type ProjectionRow = { readonly definition_id: string; readonly obligation_key: string;
   readonly ordinal: number; readonly instance: ChecklistCensus["instances"][number] };
 
-function count(value: unknown): number | null {
-  const n = typeof value === "number" || typeof value === "string" ? Number(value) : NaN;
-  return Number.isSafeInteger(n) && n >= 0 ? n : null;
-}
 function validDate(value: string): boolean { return typeof value === "string" && Number.isFinite(Date.parse(value)); }
 
 export class ChecklistIndexWriteError extends Error {
@@ -117,12 +113,12 @@ export async function publishChecklistIndexForSnapshot(sql: Sql, snapshot: Check
       const verified = await boundedQuery(sql, { operation: "cp_checklist_instance_projections.verify", callClass: "PAGE" },
         VERIFY_CHECKLIST_INSTANCE_ROWS_SQL, [plan.projectionId, payload]) as readonly Record<string, unknown>[];
       const result = verified[0];
-      if (!result || count(result.expected_count) !== batch.length || count(result.found_count) !== batch.length ||
-        count(result.equal_count) !== batch.length) throw new ChecklistIndexWriteError("IMMUTABLE_ROW_CONFLICT");
+      if (!result || nonnegativeSafeInteger(result.expected_count) !== batch.length || nonnegativeSafeInteger(result.found_count) !== batch.length ||
+        nonnegativeSafeInteger(result.equal_count) !== batch.length) throw new ChecklistIndexWriteError("IMMUTABLE_ROW_CONFLICT");
     }
     const total = await boundedQuery(sql, { operation: "cp_checklist_instance_projections.count", callClass: "POINT" },
       COUNT_CHECKLIST_INSTANCE_ROWS_SQL, [plan.projectionId]) as readonly Record<string, unknown>[];
-    if (count(total[0]?.row_count) !== plan.rows.length ||
+    if (nonnegativeSafeInteger(total[0]?.row_count) !== plan.rows.length ||
       Object.values(plan.counts).reduce((sum, n) => sum + n, 0) !== plan.rows.length ||
       Object.keys(plan.counts).length !== CHECKLIST_PROFILE.definitionCount)
       throw new ChecklistIndexWriteError("INCOMPLETE_PROJECTION");
@@ -134,9 +130,9 @@ export async function publishChecklistIndexForSnapshot(sql: Sql, snapshot: Check
     const heads = await boundedQuery(sql, { operation: "cp_checklist_scope_heads.verify", callClass: "POINT" },
       CHECKLIST_SCOPE_HEAD_SQL, [census.scopeId, census.instructionReceipt]) as readonly Record<string, unknown>[];
     const head = heads[0];
-    if (!head || count(head.source_snapshot_revision) !== snapshot.revision ||
-      count(head.current_snapshot_revision) !== snapshot.revision) {
-      if (head && (count(head.source_snapshot_revision) ?? -1) > snapshot.revision)
+    if (!head || nonnegativeSafeInteger(head.source_snapshot_revision) !== snapshot.revision ||
+      nonnegativeSafeInteger(head.current_snapshot_revision) !== snapshot.revision) {
+      if (head && (nonnegativeSafeInteger(head.source_snapshot_revision) ?? -1) > snapshot.revision)
         throw new ChecklistIndexWriteError("SNAPSHOT_SUPERSEDED");
       throw new ChecklistIndexWriteError("SNAPSHOT_SUPERSEDED");
     }

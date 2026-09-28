@@ -89,10 +89,11 @@ type HeadRow = { readonly projection_id?: unknown; readonly source_snapshot_revi
   readonly captured_counts?: unknown };
 type InstanceRow = { readonly obligation_key?: unknown; readonly ordinal?: unknown; readonly instance?: unknown };
 type DefinitionInstanceRow = InstanceRow & { readonly definition_id?: unknown };
-const revision = (value: unknown): number | null => {
+/** One numeric parser for the projection's revisions, ordinals and captured counts. */
+export function nonnegativeSafeInteger(value: unknown): number | null {
   const n = typeof value === "number" || typeof value === "string" ? Number(value) : NaN;
   return Number.isSafeInteger(n) && n >= 0 ? n : null;
-};
+}
 const isoDate = (value: unknown): string | null => {
   const date = value instanceof Date ? value : typeof value === "string" ? new Date(value) : null;
   return date && Number.isFinite(date.getTime()) ? date.toISOString() : null;
@@ -108,8 +109,8 @@ export async function readIndexedChecklistInstances(sql: Sql, query: ChecklistIn
   const head = heads[0];
   if (!head) return { state: "INDEX_NOT_POPULATED", rows: null, matchedCapturedCount: null,
     says: "No complete indexed projection has been promoted for this exact instruction scope." };
-  if (revision(head.source_snapshot_revision) === null || revision(head.current_snapshot_revision) === null ||
-    revision(head.source_snapshot_revision) !== revision(head.current_snapshot_revision))
+  if (nonnegativeSafeInteger(head.source_snapshot_revision) === null || nonnegativeSafeInteger(head.current_snapshot_revision) === null ||
+    nonnegativeSafeInteger(head.source_snapshot_revision) !== nonnegativeSafeInteger(head.current_snapshot_revision))
     return { state: "INDEX_STALE", rows: null, matchedCapturedCount: null,
       says: "The indexed projection does not match the current owner snapshot; its instances were not served." };
   if (head.profile !== CHECKLIST_PROFILE.version || typeof head.projection_id !== "string" ||
@@ -133,7 +134,7 @@ export async function readIndexedChecklistInstances(sql: Sql, query: ChecklistIn
     if (!instance || typeof instance !== "object" || !Array.isArray(instance.definitionIds) ||
       !instance.definitionIds.includes(query.definitionId) || instance.scopeRevision !== head.scope_revision ||
       instance.obligationKey !== row.obligation_key || typeof row.obligation_key !== "string" ||
-      revision(row.ordinal) === null || Number(row.ordinal) < 1)
+      nonnegativeSafeInteger(row.ordinal) === null || Number(row.ordinal) < 1)
       throw new ChecklistInstanceIndexError("CORRUPT_INDEX");
   }
   const shown = rows.slice(0, query.limit);
@@ -205,8 +206,8 @@ export async function readIndexedChecklistAllDefinitions(sql: Sql, query: Checkl
   const head = heads[0];
   if (!head) return { state: "INDEX_NOT_POPULATED", rows: null, matchedCapturedCount: null,
     says: "No complete indexed projection has been promoted for this exact instruction scope." };
-  if (revision(head.source_snapshot_revision) === null || revision(head.current_snapshot_revision) === null ||
-    revision(head.source_snapshot_revision) !== revision(head.current_snapshot_revision))
+  if (nonnegativeSafeInteger(head.source_snapshot_revision) === null || nonnegativeSafeInteger(head.current_snapshot_revision) === null ||
+    nonnegativeSafeInteger(head.source_snapshot_revision) !== nonnegativeSafeInteger(head.current_snapshot_revision))
     return { state: "INDEX_STALE", rows: null, matchedCapturedCount: null,
       says: "The indexed projection does not match the current owner snapshot; its instances were not served." };
   if (head.profile !== CHECKLIST_PROFILE.version || typeof head.projection_id !== "string" ||
@@ -232,7 +233,7 @@ export async function readIndexedChecklistAllDefinitions(sql: Sql, query: Checkl
     const instance = row.instance as Partial<ChecklistInstance> | null;
     if (typeof row.definition_id !== "string" || !definitions.has(row.definition_id) ||
       typeof row.obligation_key !== "string" || !row.obligation_key ||
-      revision(row.ordinal) === null || Number(row.ordinal) < 1 ||
+      nonnegativeSafeInteger(row.ordinal) === null || Number(row.ordinal) < 1 ||
       !instance || typeof instance !== "object" || !Array.isArray(instance.definitionIds) ||
       !instance.definitionIds.includes(row.definition_id) || instance.scopeRevision !== head.scope_revision ||
       instance.obligationKey !== row.obligation_key ||

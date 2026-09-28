@@ -57,7 +57,13 @@ export function exactInstructionAutonomousWorkIds(input: {
   const owners = new Map(input.obligations.map(row => [row.id, row] as const));
   const roots = new Set<string>();
   const conflicted = new Set<string>();
+  const occurrenceCounts = new Map<string, number>();
   for (const occurrence of input.occurrences) {
+    const count = (occurrenceCounts.get(occurrence.workItemId) ?? 0) + 1;
+    occurrenceCounts.set(occurrence.workItemId, count);
+    // Normal IDs include the occurrence sequence; duplicate ownership of one
+    // WorkItem is inconsistent retained data, never a reason to pick a receipt.
+    if (count > 1) { conflicted.add(occurrence.workItemId); continue; }
     const openedAt = Date.parse(occurrence.openedAt);
     if (!Number.isFinite(openedAt)) { conflicted.add(occurrence.workItemId); continue; }
     const marks = (owners.get(occurrence.obligationId)?.assignments ?? [])

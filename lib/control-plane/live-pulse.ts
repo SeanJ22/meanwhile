@@ -29,6 +29,7 @@
 
 import type { LaneGauge } from "./scheduler/lane-reading.ts";
 import type { AdminCapabilityManifest } from "./admin-view/capabilities.ts";
+import type { AdminV6CapabilityManifest } from "./admin-view/v6-capabilities.ts";
 
 /** The small body the live endpoint returns. */
 export interface LivePulse {
@@ -38,6 +39,8 @@ export interface LivePulse {
   readonly at: string;
   /** Optional for compatibility with an older deployed /api/admin/live. */
   readonly capabilities?: AdminCapabilityManifest;
+  /** Optional v6 section/action announcement; missing means recoverably unavailable. */
+  readonly v6?: AdminV6CapabilityManifest;
   /** Runner heartbeat, for the one-line strip. */
   readonly runner: {
     readonly beatAt: string | null;

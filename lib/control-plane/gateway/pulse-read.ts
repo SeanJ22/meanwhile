@@ -51,6 +51,7 @@ import { splitDecided } from "../decision-receipt.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type OwnerSnapshot } from "../owner-surface.ts";
 import { pulseRevision, type LivePulse } from "../live-pulse.ts";
 import { ADMIN_CAPABILITIES } from "../admin-view/capabilities.ts";
+import { ADMIN_V6_CAPABILITIES, ADMIN_V6_CAPABILITY_REVISION } from "../admin-view/v6-capabilities.ts";
 import { ADMIN_RECEIPT_LOG_KEY } from "./contract.ts";
 import { AGENT_JOB_LOG_KEY, liveJobCount } from "./agent-job.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
@@ -190,10 +191,11 @@ export async function readPulse(
       receiptCount: receipts.value?.length ?? null,
       researchIntentCount: intents.value?.length ?? null,
       sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
-      capabilityRevision: ADMIN_CAPABILITIES.revision,
+      capabilityRevision: `${ADMIN_CAPABILITIES.revision}|${ADMIN_V6_CAPABILITY_REVISION}`,
     }),
     at: nowIso,
     capabilities: ADMIN_CAPABILITIES,
+    v6: ADMIN_V6_CAPABILITIES,
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

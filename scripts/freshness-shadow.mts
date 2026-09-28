@@ -3027,7 +3027,11 @@ if (!dry && !canary) {
 
 // Registered autonomous plans use the same dispatcher, vault, host spacing and
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
+// Leave a minute after the last worker for staging and the Admin state/heartbeat.
+// A prior cycle's late worker ended at the dispatch deadline, then its final
+// research state and heartbeat could not start before the hard wall.
+const autonomousDeadlineMs = DISPATCH_DEADLINE_MS - 60_000;
+if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < autonomousDeadlineMs) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
     /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
@@ -3045,14 +3049,19 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     // Both queues consume the same aggregate counter; unused shares are lent
     // back within the existing ten-dispatch and wall limits.
     const downstreamStartedAt = fleetSafety.snapshot().cycle.dispatches;
-    const heldFirst = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-      maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
-    });
+    // A held worker first scans retained evidence before its 120 s execution
+    // bound. Do not open that scan when only enough time for execution remains.
+    const heldWorkerAdmissionMs = 240_000;
+    const heldFirst = Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs
+      ? await runHeldWorkerFleetCycle(ROOT, fleet, true, {
+          maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
+        })
+      : [];
     const heldUsed = fleetSafety.snapshot().cycle.dispatches - downstreamStartedAt;
     const autonomous = await runAutonomousCoordinator(fleet, { maximum: Math.max(0, 10 - heldUsed), concurrency: 2,
       prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
         .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
-      deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
+      deadlineMs: autonomousDeadlineMs, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
       admitDispatch: work => fleetSafety.admitDispatch(work) });
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
     /* MW-014: the coordinator's deferrals AND its silent non-dispatches (BLOCKED, STAGED), counted by reason. */
@@ -3062,7 +3071,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     // No per-cycle dispatch cap: the held-worker loop runs until the wall
     // (checked in the loop condition) or until no held work remains.
     const remaining = Number.POSITIVE_INFINITY;
-    for (let slot = 0; slot < remaining && Date.now() + 150_000 < DISPATCH_DEADLINE_MS; slot += 1) {
+    for (let slot = 0; slot < remaining && Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs; slot += 1) {
       const next = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
         maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
       });

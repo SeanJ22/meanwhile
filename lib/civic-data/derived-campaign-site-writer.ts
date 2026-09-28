@@ -57,6 +57,10 @@ import { verdictOfRecordedPermission } from "../control-plane/scheduler/robots.t
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
 import { extractHtmlText } from "../extract/html-text.ts";
 import type { DerivedCampaignSiteEvidence } from "./derived-campaign-sites.ts";
+import type { DerivedLinkedPublicationEvidence } from "./derived-campaign-sites.ts";
+import { candidatePublicationLinkMatches } from "../control-plane/promotion/campaign-publication-links.ts";
+import type { ArtifactRecord } from "../control-plane/repository/types.ts";
+import type { Attempt } from "../control-plane/attempt.ts";
 
 /** The door an approval names when this writer may publish it (the chain's `CAMPAIGN_SITE_PUBLICATION_DOOR`). */
 export const DERIVED_CAMPAIGN_SITE_DOOR = "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT" as const;
@@ -96,6 +100,10 @@ export interface PublishableCampaignSiteApproval {
 }
 
 const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
+const sameHttpsHost = (left: string | null, right: string): boolean => {
+  try { const a = new URL(left ?? ""), b = new URL(right); return a.protocol === "https:" && b.protocol === "https:" && a.hostname === b.hostname; }
+  catch { return false; }
+};
 
 /** Whether one pipeline log row is an APPROVED campaign-site record this door publishes. A row it cannot read is not one. */
 export function isPublishableCampaignSiteApproval(value: unknown): value is PublishableCampaignSiteApproval {
@@ -122,6 +130,7 @@ export const DERIVED_CAMPAIGN_SITE_HOLDS = [
   /** The vaulted bytes are held but hash to other bytes, or do not verify again for the approval's own identity. */
   "REVERIFICATION_FAILED",
   "PUBLICATION_TEXT_UNREADABLE",
+  "LINKED_PUBLICATION_UNVERIFIED",
 ] as const;
 export type DerivedCampaignSiteHoldCode = (typeof DERIVED_CAMPAIGN_SITE_HOLDS)[number];
 
@@ -134,6 +143,22 @@ export interface HeldVerifyingRead {
   readonly tier: "RAW" | "SANITIZED_DERIVED";
   /** The robots verdict the read ran under, as its sidecar recorded it: evidence carried with the read, never a refusal. */
   readonly permission: string | null;
+}
+
+export interface HeldLinkedPublicationRead {
+  readonly record: ArtifactRecord;
+  readonly attempt: Attempt;
+  readonly workItemSubject: string;
+  readonly body: string;
+  readonly vaultSha256: string;
+  readonly vaultCanonicalUrl: string | null;
+  readonly vaultRetrievalUrl: string | null;
+  readonly vaultWorkItemId: string | null;
+  readonly vaultAttemptId: string | null;
+  readonly vaultHttpStatus: number | null;
+  readonly vaultContentType: string;
+  readonly vaultMethodRouteId: string | null;
+  readonly vaultPermission: string | null;
 }
 
 function publicationEvidence(record: PublishableCampaignSiteApproval): DerivedCampaignSiteEvidence {
@@ -196,6 +221,7 @@ export function planDerivedCampaignSites(input: {
   readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
   /** The promoted candidate-profiles version this version is composed against, with its links; null when none is promoted. */
   readonly profiles: { readonly input: DerivedInputRef & { readonly kind: "PROMOTED_VERSION" }; readonly links: Readonly<Record<string, CandidateLinksShape>> } | null;
+  readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
 }): DerivedCampaignSitesPlan {
   const inputs = new Map<string, DerivedInputRef>();
   const add = (i: DerivedInputRef) => inputs.set(inputKey(i), i);
@@ -272,6 +298,59 @@ export function planDerivedCampaignSites(input: {
           retrievedAt: captured.evidence.readAt, contentType: captured.evidence.contentType, text: content,
           extraction: "html", extractionNote: null, extractorVersion: 2 }, evidence: publicationEvidence(page.record) });
       }
+      for (const capture of input.linkedPublications ?? []) {
+        const row = capture.record, source = row.publicationLink;
+        if (!source || source.candidacyId !== candidacyId || !site.readerKeys.includes(key)) continue;
+        const parent = verified.find(page => page.record.recordId === source.approvalRecordId &&
+          page.record.campaignSite.evidence.artifactId === source.sourceArtifactId &&
+          `sha256-${page.record.campaignSite.evidence.sha256}` === source.sourceContentHash);
+        if (!parent) continue;
+        const link = { url: row.canonicalUrl, source };
+        const attempt = capture.attempt;
+        const actualHash = sha256Hex(capture.body);
+        const valid = candidatePublicationLinkMatches(link, parent.held.body, source.sourceContentHash) &&
+          row.workItemId === capture.vaultWorkItemId && row.workItemId === attempt.workItemId &&
+          capture.workItemSubject === `candidate-publication:${candidacyId}` &&
+          row.attemptId === attempt.id && capture.vaultAttemptId === attempt.id &&
+          attempt.worker.role === "ACQUIRER" && attempt.worker.provider === "candidate-publication-reader" &&
+          attempt.outcome === "COMPLETED" && attempt.artifactIds.includes(row.artifactId) &&
+          row.contentHash === `sha256-${actualHash}` && capture.vaultSha256 === actualHash &&
+          row.canonicalUrl === capture.vaultCanonicalUrl && row.canonicalUrl === link.url &&
+          capture.vaultMethodRouteId === "candidate-publication-linked" && !row.partial &&
+          capture.vaultHttpStatus !== null && capture.vaultHttpStatus >= 200 && capture.vaultHttpStatus < 300 &&
+          /html/i.test(row.contentType) && row.contentType === capture.vaultContentType &&
+          sameHttpsHost(capture.vaultRetrievalUrl, site.url) &&
+          (row.tier === "RAW" || row.tier === "SANITIZED_DERIVED");
+        if (!valid) {
+          held.push({ key: `${key}:${row.artifactId}`, code: "LINKED_PUBLICATION_UNVERIFIED",
+            detail: "The linked page lacks a completed same-candidacy capture or an exact href/vault identity match." });
+          continue;
+        }
+        let content = "";
+        try { content = extractHtmlText(capture.body); } catch { /* a failed extraction stays a named hold */ }
+        if (!content) {
+          held.push({ key: `${key}:${row.artifactId}`, code: "PUBLICATION_TEXT_UNREADABLE",
+            detail: "The linked candidate page was captured, but complete readable text was not extracted." });
+          continue;
+        }
+        const contentHash = sha256Hex(content), id = `${key}@${contentHash}`;
+        if (publications.some(existing => existing.document.id === id)) continue;
+        add({ kind: "VAULTED_EVIDENCE", artifactId: source.sourceArtifactId, contentHash: source.sourceContentHash,
+          tier: parent.held.tier, retrievedAt: parent.record.campaignSite.evidence.readAt });
+        add({ kind: "VAULTED_EVIDENCE", artifactId: row.artifactId, contentHash: row.contentHash,
+          tier: row.tier, retrievedAt: row.recordedAt });
+        const evidence: DerivedLinkedPublicationEvidence = { kind: "LINKED_PAGE", approvalItemId: parent.record.itemId,
+          approvalRecordId: parent.record.recordId, sourceArtifactId: source.sourceArtifactId,
+          sourceContentHash: source.sourceContentHash, sourceUrl: source.sourceUrl,
+          hrefStart: source.start, hrefEnd: source.end, hrefQuote: source.quote, offsetUnit: source.offsetUnit,
+          artifactId: row.artifactId, attemptId: attempt.id, sha256: actualHash,
+          requestedUrl: row.canonicalUrl, finalUrl: capture.vaultRetrievalUrl!,
+          httpStatus: capture.vaultHttpStatus!, readAt: row.recordedAt };
+        publications.push({ document: { id, candidateKey: key, sourceClass: "CAMPAIGN_SITE", basis: "HUNTED_AND_VERIFIED",
+          metaDescription: null, documentUrl: evidence.finalUrl, contentHash, sourceContentHash: actualHash,
+          retrievedAt: row.recordedAt, contentType: row.contentType, text: content,
+          extraction: "html", extractionNote: null, extractorVersion: 2 }, evidence });
+      }
       records.push({
         id: key,
         candidacyId,
@@ -331,7 +410,8 @@ export function derivedCampaignSitesCandidate(plan: DerivedCampaignSitesPlan, at
   const shapeIssue = derivedCampaignSitesProjectionIssue(readModel);
   const cited = new Set(plan.inputs.flatMap((i) => (i.kind === "VAULTED_EVIDENCE" ? [i.artifactId] : i.kind === "PIPELINE_APPROVAL" ? [i.recordId] : [])));
   const uncited = readModel.records.filter((r) => !cited.has(r.campaign.evidence.artifactId) || !cited.has(r.campaign.evidence.approvalRecordId)).map((r) => r.id);
-  const uncitedPublications = readModel.records.flatMap(r => (r.publications ?? []).filter(p => !cited.has(p.evidence.artifactId) || !cited.has(p.evidence.approvalRecordId)).map(p => p.document.id));
+  const uncitedPublications = readModel.records.flatMap(r => (r.publications ?? []).filter(p => !cited.has(p.evidence.artifactId) ||
+    !cited.has(p.evidence.approvalRecordId) || ("kind" in p.evidence && p.evidence.kind === "LINKED_PAGE" && !cited.has(p.evidence.sourceArtifactId))).map(p => p.document.id));
   const violations = [
     ...(shapeIssue === null ? [] : [`the version is not a derived campaign-sites version: ${shapeIssue}`]),
     ...(uncited.length === 0 ? [] : [`record(s) ${uncited.join(", ")} rest on an approval or vaulted read the version does not name as an input`]),
@@ -435,6 +515,7 @@ export function derivedCampaignSitesFailedCandidate(attemptedAt: string, failure
 export function derivedCampaignSitesPass(input: {
   readonly approvals: readonly PublishableCampaignSiteApproval[] | { readonly unreadable: string };
   readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
+  readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
   readonly profiles: Parameters<typeof planDerivedCampaignSites>[0]["profiles"] | { readonly unreadable: string };
   /** Whether the activation gate opens candidate-enrichment for campaignSite (`classFieldOpen`). */
   readonly gateOpen: boolean;
@@ -449,7 +530,8 @@ export function derivedCampaignSitesPass(input: {
   if (input.profiles !== null && "unreadable" in input.profiles) {
     return { candidate: derivedCampaignSitesFailedCandidate(input.now, `The promoted candidate-profiles version could not be read: ${input.profiles.unreadable}`), plan: null };
   }
-  const plan = planDerivedCampaignSites({ approvals: input.approvals, held: input.held, profiles: input.profiles });
+  const plan = planDerivedCampaignSites({ approvals: input.approvals, held: input.held, profiles: input.profiles,
+    linkedPublications: input.linkedPublications });
   if (plan.records.length === 0) {
     const why = input.approvals.length === 0
       ? "NO_APPROVED_SITE_YET: the campaign-site chain has approved no site"

@@ -587,6 +587,20 @@ export interface ArtifactRecord {
    */
   readonly partial: boolean;
   readonly recordedAt: string;
+  /** A separately acquired candidate publication must retain the exact link
+   * on an approved campaign page that authorized walking this URL. Offsets
+   * address the captured UTF-16 HTML string, never a later reconstruction. */
+  readonly publicationLink?: {
+    readonly candidacyId: string;
+    readonly approvalRecordId: string;
+    readonly sourceArtifactId: string;
+    readonly sourceUrl: string;
+    readonly sourceContentHash: string;
+    readonly start: number;
+    readonly end: number;
+    readonly quote: string;
+    readonly offsetUnit: "UTF16_CODE_UNITS";
+  };
 }
 
 /** ------------------------------------------------- committed dispositions */

@@ -133,6 +133,8 @@ import {
   type CampaignSiteCycleReport,
   withinWallTime,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
+import { CANDIDATE_PUBLICATION_BUDGET_MS, runCandidatePublicationCycle,
+  type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
 import { indexVault } from "../lib/control-plane/evidence/read-only-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
@@ -3095,6 +3097,49 @@ if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
 console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
 finishPhase("campaign-sites");
 
+/* Linked publication pages are a separate bounded deterministic pass. Its
+ * candidates are exact members of the original authorized 85635 receipt; a
+ * broadly tracked candidate universe does not itself authorize a new walk. */
+let candidatePublications: CandidatePublicationCycleReport | null = null;
+let candidatePublicationsState = "not run: no original-scope candidacy admission";
+if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused) {
+  candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
+} else if (!hasLifetimeHunt) {
+  candidatePublicationsState = "not run: exact original 85635 receipt is unavailable";
+} else if (Date.now() + CANDIDATE_PUBLICATION_BUDGET_MS + 5_000 > DISPATCH_DEADLINE_MS) {
+  candidatePublicationsState = "not run: insufficient dispatch time for bounded publication acquisition";
+} else {
+  const leavePublications = pending.enter("candidate-publications");
+  try {
+    const vaultRead = await withinWallTime(indexVault(join(ROOT, ...VAULT_DIR)), CANDIDATE_PUBLICATION_BUDGET_MS);
+    if (!vaultRead.done) throw new Error("CANDIDATE_PUBLICATION_VAULT_INDEX_TIMEOUT");
+    // Once an ACQUIRER begins committing a captured page or a typed blocked
+    // disposition, let that repository operation settle. Racing a writer with
+    // a wall timer would leave an apparently stopped pass writing in the back.
+    const pass = await runCandidatePublicationCycle({
+      repos, eligibleCandidacyIds: lifetimeHuntSubjects,
+      heldVault: vaultRead.value, vaultRoot: join(ROOT, ...VAULT_DIR),
+      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version,
+      clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
+      openFor: candidacyId => {
+        const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
+        return async ({ url, headers, timeoutMs }) => {
+          const got = await opened({ url, headers, timeoutMs });
+          return { status: got.status, body: got.bytes, contentType: got.contentType,
+            location: got.location ?? null, transportError: got.transportError };
+        };
+      },
+    });
+    candidatePublications = pass;
+    candidatePublicationsState = `ran: ${pass.acquired} acquired, ${pass.deferred} deferred, ${pass.failed} failed of ${pass.due} due linked pages`;
+  } catch (error) {
+    candidatePublicationsState = `failed: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(`candidate publication acquisition ${candidatePublicationsState}`);
+  } finally { leavePublications(); }
+}
+console.log(`  candidate documents ${candidatePublicationsState}`);
+finishPhase("candidate-publications");
+
 /*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
  * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
@@ -3721,6 +3766,7 @@ const runRecord = {
               read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
             },
       },
+      candidatePublications: { state: candidatePublicationsState, report: candidatePublications },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:
         movedPlan === null || supersededPlan === null || gapLedger === null

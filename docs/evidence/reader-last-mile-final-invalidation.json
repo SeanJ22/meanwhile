@@ -6,7 +6,7 @@
   "baselineReceiptSha256": "3aa9b15510ef18786b67e8b0781151caac6432fd2d963f4fba741195681f6f51",
   "baselineCensusPath": "docs/evidence/reader-last-mile-closure.json",
   "baselineCensusSha256": "d819955bfe4aa9603d697a5cea10b144be0f96e18aa2b6403a5a25335984979c",
-  "currentReaderHead": "0c50c37bcc9e52343db119168b1b15bcfbfe7e56",
+  "currentReaderHead": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
   "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
   "rule": "The denominator is frozen at LM-F1..LM-F10. A direct eligible row is inherited only when its complete structural projection and every holding byte are unchanged; declared shared-family deltas require current proofs. No unclassified change may close.",
   "acceptances": [
@@ -143,7 +143,7 @@
     {
       "path": "app/api/ask/grounded/route.ts",
       "baselineSha256": "b9f82781575ec71c4084ec4a7c90953d5badab8ad3e285e49cf24a5d763676f2",
-      "currentSha256": "203e1f594b74e78d53883ce7938778f8923c413163ec3d89ad8cc9f7c409a3fc",
+      "currentSha256": "c1622c4a2c4d464fde7e0c250a2da24d1e0842fa5ba3a275c434efd727c3e0f9",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -213,7 +213,7 @@
     {
       "path": "app/api/votes/route.ts",
       "baselineSha256": "83d165928dab61937328928154ad8d855e661fab66e8c78af055369277a70bf5",
-      "currentSha256": "1c5914997ba1f492ae7ee3da0b498cdd3fa2d08bfa09c3435a7abc0a72019444",
+      "currentSha256": "be1f5019c7f80b7eab2720bf0a2b7e2c28f0c7b99b169ca17b74e890bbc80bf7",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -227,7 +227,7 @@
     {
       "path": "app/ballot/page.tsx",
       "baselineSha256": "7e9e7dc6d1bfd7ebf2cba7b8a83b6566fd976cc3f36c4e984b1c5225d720f268",
-      "currentSha256": "06cd07fa6d32747d7a4b515845da27ac3f3ced1034fbe45968c5e64fb0510f13",
+      "currentSha256": "b2d3d22d370197f72ea66cf98904070333d02ebc30669c06c5bd630a93f3956a",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -255,7 +255,7 @@
     {
       "path": "components/ask/ask-box.tsx",
       "baselineSha256": "e821f54869ec61a7e2f98642660dd779c1d73fa16a52ec2820669fdf569d0896",
-      "currentSha256": "72e2b5f7d67880ba848973c95f962ab2feada15a4a59d3e6330b2086c2dc667d",
+      "currentSha256": "06fb81818b2dac946f71b81e201699300cd89f4c91d184efef1be951975c2753",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -281,6 +281,13 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "components/ballot/candidate-positions.tsx",
+      "baselineSha256": "ea9393c5e837d5d6660aa35bfb9dd77ba1b476fdb837f6456296fa020cafb8f0",
+      "currentSha256": "a49fb7f2d91f453c8294eca747fa5c3b6e6ec51bfd0bf6098b355e87d303793d",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "components/ballot/official-filings.tsx",
       "baselineSha256": null,
       "currentSha256": "507887cb76322678886100c165dc412525d642a653fb8662488c3223ecff1327",
@@ -297,7 +304,7 @@
     {
       "path": "components/funding/funding-block.tsx",
       "baselineSha256": "ba73e60f36d6344fa3ec874e0969c1ba4565e5e384be740543a665c15e026a99",
-      "currentSha256": "6f8d42da58bc5185aed84eee458649b2a31fb9b8a992cb00d60af0f16f2d15c7",
+      "currentSha256": "fdcdb9db0c9581c3e01feb3ac01b44a990c9652f8d16660512eb2705f1fd99c5",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -332,7 +339,7 @@
     {
       "path": "components/map/coverage-notice.tsx",
       "baselineSha256": "93454c3629fd466e57184c76313150b7d7e566a405433403826be6e15943b5ef",
-      "currentSha256": "26f38cb39487b4cb4a6378578dd0f5d899e3b431699ad099f889f243f8543b6d",
+      "currentSha256": "68e446dc7dd68df14d6a7da9e1718470eb02931880551f1c3159d00ee1e6fe66",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
     },
@@ -381,7 +388,7 @@
     {
       "path": "components/map/map-entry.tsx",
       "baselineSha256": "26e6c5c8be8c7aff8cd46058b738aa081a2de74e928464b77392daec28460a93",
-      "currentSha256": "0b126bafeedde028cbc7028b00245fe6057dc1fc8677ea3fc259ec98f4e29808",
+      "currentSha256": "863373cf05b16b5e0d0f50cfd6df5d6b3522ca9d6ee628d7ab5442f4a2ede66e",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
     },
@@ -437,7 +444,7 @@
     {
       "path": "components/map/popup/meeting-popup.tsx",
       "baselineSha256": "fb1074644b65d928edcc8e5d076f68d71e9ce13f91480a8f664a54460911b0cc",
-      "currentSha256": "80ddcbe30459ef0b93eac2af50c52d884f1012603a333d89a02a0e80e8fff52c",
+      "currentSha256": "7d9725564f7a2a9b65aee44f61d4033ea129e0e923d805ac95aec979081140e8",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
     },
@@ -458,7 +465,7 @@
     {
       "path": "components/map/popup/official-popup.tsx",
       "baselineSha256": "d280b76ae0a9675c6c4c3d48c58941f55e25ca23a638ff44fcee920a0378a052",
-      "currentSha256": "3266ab30e45e43851339592a2f8878956f0a21a292aa7e9710a7ba9f57a8725d",
+      "currentSha256": "e52f6d5f73a26a363c94ed69ce99ab6e781cbfe9b9dde99c0fd8ffc1bf8d9ff4",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
     },
@@ -489,6 +496,13 @@
       "currentSha256": "b2aa1011c29a65391944ac8ee1ba971df5208090e8532d3617cfa3ec1fad1961",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
+    },
+    {
+      "path": "components/officials/contact-pills.tsx",
+      "baselineSha256": "6d8aaabae8a756f3624b85bc525bd6c714ad995604a7f2ae02719f2c3145b88a",
+      "currentSha256": "0a75f969261f9afb8677ecf7d9eccc8e4e2814d5d8d42f99df6007406dee43df",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
       "path": "components/officials/positions-section.tsx",
@@ -598,7 +612,7 @@
     {
       "path": "lib/ask/ballot-inventory.ts",
       "baselineSha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125",
-      "currentSha256": "d9f13410dc089047d04fabfd090dad2dd2dc1368390429a60f30150a90e615f7",
+      "currentSha256": "921c41240fb85efa4a81c042f4ad45ac3aa1b2868f4a5f04b4eae28cc438a4af",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -647,7 +661,7 @@
     {
       "path": "lib/ask/evidence.ts",
       "baselineSha256": "68150feaf1e0c06187bdfad1ccd9ae075cfb63680e26bebb36a3433d36070091",
-      "currentSha256": "7aa61cde6a978a22172a0171e7d93dafff95b2f234da160802a57b55a55e5420",
+      "currentSha256": "10ed952034c1d6e791db38ecb79a34b640cba268da0897752d66a9015a433576",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
     },
@@ -690,6 +704,13 @@
       "path": "lib/ask/interpret.ts",
       "baselineSha256": "cafa45315084efc7990e49378a40cdda7961016d7888912f64d184e0fc0d6bf6",
       "currentSha256": "9b262a9db9bc1317b936442dd116444d6e7cfd0a9846f539f5301b8cf02e7efb",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/ask/key-votes.ts",
+      "baselineSha256": "bcc7a998932f1e7af287e8991f1f03ebb4acd5ea8beb8fdbcfaf947db0d2d904",
+      "currentSha256": "8d6ba541a3c2f80a453180fc79dedeaf63480e2618abd217d64d161b87380060",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -794,7 +815,7 @@
     {
       "path": "lib/ask/server-sources.ts",
       "baselineSha256": "1996f2126fc985302f9a4b8ecd0a02112c81cc4eddd6c0cccc783707676acec7",
-      "currentSha256": "822002a4700505ffbd611d52bca24135299988e33fac42147adfbd5885ef0052",
+      "currentSha256": "96bdffb4281bd137ccc6a9680f9913362ed3250c8dc0590205f19c1376ff2b20",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -813,9 +834,23 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/ask/stance-answerability.ts",
+      "baselineSha256": null,
+      "currentSha256": "403e411b325d3194cf29f25199d896ffb85d327ba4f9c2da3f0646fcc9b3f387",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/ask/statements.ts",
+      "baselineSha256": "40a5b4fcd68bd0fbf7050fba4ee92ce5e677e482544c88e4a667c90f6803e94e",
+      "currentSha256": "b0cc4be0c94f3b0e3be131524c6439587b90603f455e8df952a21822243fd7db",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/ask/synthesize.ts",
       "baselineSha256": "1ce32ad08d54a05da8b7347e748016cac3d90b925dd83e1f6bdf356d7731952a",
-      "currentSha256": "a2e8313f650745713730342e328a72ff36c62072f429e23f67c7525bf3a926c3",
+      "currentSha256": "b19a54c898967e3a0c57a62a9227d1c8c3669b55726037cf7c6181329b932811",
       "acceptance": "LM-F8",
       "reason": "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta."
     },
@@ -843,7 +878,7 @@
     {
       "path": "lib/ask/votes.ts",
       "baselineSha256": "b8799a0938d5d69f6024c500cac049c3ec0c760b906574cb5f9a93dfe487a386",
-      "currentSha256": "9c900c24a5ddf5d9342d41e8bb7931ba2c56eb914b36eb86dc2bbb58d1dafeeb",
+      "currentSha256": "7b04e07b60ce5962b2381e07b50446e31b2b63b9373ed0a8dbd28b33aced4827",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -983,7 +1018,7 @@
     {
       "path": "lib/ballot/voting-sites-data-plane.ts",
       "baselineSha256": null,
-      "currentSha256": "3414d2ad99d65faa7344757f94a179573888824c001ec1c35cb5af47d8d9028a",
+      "currentSha256": "3cf663b03d1d96cf651296b97c104a0977458b439b7df3e58b0e5719bd1481b9",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -997,7 +1032,7 @@
     {
       "path": "lib/ballot/voting-sites.ts",
       "baselineSha256": "3339f754e1cde5082fd41b0731eee7bde53e4bcb51915e77ce7c17ef232a4704",
-      "currentSha256": "a7e653c2ad1dbcbab39044ae7e5a9183bdefdd28a83ef9ee61738fb5ff941a73",
+      "currentSha256": "fcc710ef233a0a31a429a1ee8d042fa512aefd4f8fcbc87141cbdf0108b0349d",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1016,9 +1051,16 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/candidates/blurbs.ts",
+      "baselineSha256": "dc10885fefa86da84bb0369e7ebf39b55d272d3f388a75c72aedda1e98d7b091",
+      "currentSha256": "8b15c287f8ff8e3cbeb94dcdbcf46e772e777940ec894aa5f391ee446ab79322",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/candidates/corpus.ts",
       "baselineSha256": "4c1a762a3e569bad942b173cb3c61326682281d4bd6b2ce90af2e9d13cd34d9d",
-      "currentSha256": "c13ce5f619a455ab4466f1136cc5f4493e6b8c5f7760b760a6e9d5e700ff42fa",
+      "currentSha256": "5aad8ef48f6abae97a57ab65bfb1880afe3517cc795bdc9b6b8d174110d531fc",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1102,7 +1144,7 @@
     {
       "path": "lib/civic-data/derived-campaign-sites.ts",
       "baselineSha256": null,
-      "currentSha256": "b1259212b467b7550d784979501155d53b6e6e35079fbc4934ccfed1aa8081ae",
+      "currentSha256": "434be5e2ccfec8af2fda21d9e09ddb69db51e8f16d6f2541d9cdef053d467dad",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1123,7 +1165,7 @@
     {
       "path": "lib/civic-data/manual-contracts.ts",
       "baselineSha256": null,
-      "currentSha256": "05051f22616f4cdb2d45c983856f321f145484381c7b5838582f705cb212491a",
+      "currentSha256": "b48a2d0847e5c875ecd71d16a8fffe2ad4ef23f4ce2b60102010e75af2151934",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1193,7 +1235,7 @@
     {
       "path": "lib/civic-data/read-model.ts",
       "baselineSha256": null,
-      "currentSha256": "dcc6132c12dc4d070cdb86aae31c014aa33745af1d4c81f53b4a38f2b0df5a89",
+      "currentSha256": "dbb257c08d48a3b872ab00391214160e4165edcfe369880a57f3ce89295f0c6f",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -1228,7 +1270,7 @@
     {
       "path": "lib/civic-data/source-authority.ts",
       "baselineSha256": null,
-      "currentSha256": "ce68b6ef9086f570ffd973548a7c40b3af1e7b178c71b381f6783696b008351e",
+      "currentSha256": "e73c5995871d9e55d2b5702e8586d877ec038471338b5d481268072af13efa0c",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1324,9 +1366,44 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/control-plane/repository/connect-retry.ts",
+      "baselineSha256": null,
+      "currentSha256": "9bd1ea9abbc2411f3e27e5ad2a9b7334a74674d86c2bafd6b6fc2d04c761a1d5",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/control-plane/repository/pg-schema.ts",
+      "baselineSha256": null,
+      "currentSha256": "d79d013c6528b01ded4eacac49c843c959166f23c4f55e8772559f4dc18ddaea",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/control-plane/repository/pg-store.ts",
+      "baselineSha256": null,
+      "currentSha256": "f7ace7e2ac4788cac4ef07403f952ff8a3d487cd2509cc59c3eff19c5496e642",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/control-plane/repository/request-bounds.ts",
       "baselineSha256": null,
       "currentSha256": "1cfe5826b6ee5d63b4710db0f650ea5471056d6f4f7ac9db756dfcc5f5ea09d9",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/control-plane/repository/shared.ts",
+      "baselineSha256": null,
+      "currentSha256": "a3c047427cd4299285cba2826461a208b6e3401201bdf4fcd1082c759a48775a",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/control-plane/repository/types.ts",
+      "baselineSha256": null,
+      "currentSha256": "69767ecb594100a70620bb1381c73c1603c5458cc72fdf90c55bb373bfd2ff2d",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1730,6 +1807,13 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/officials/card-sources.ts",
+      "baselineSha256": "190498668e95838b110cf09506c3c68c5647919445b2350de9502450a6659a63",
+      "currentSha256": "90f080edb29b6a68b52aba990cf2fe9a2e0d1ed5fca9048985bf58babd0025fd",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/officials/directory-source.ts",
       "baselineSha256": "abec0070729baf9f77ed32aba7b672bc241d44bc832bf25217331eb26ccfa9dd",
       "currentSha256": null,
@@ -1767,7 +1851,7 @@
     {
       "path": "lib/officials/lookup.ts",
       "baselineSha256": "ec46d30dfd9fab45a540f9ec620290f394b4d941b4ec20fe64c40ed0f7df8285",
-      "currentSha256": "cf65514f36be7e09e5ff1538a6a36be099d92fae34a4994a2ef12d2a70ac5de1",
+      "currentSha256": "5158200b2bfa7b864db00db9bcf1bdd44c8445c0f8accf92cd31996931a486ad",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1856,6 +1940,20 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/registry/audit.ts",
+      "baselineSha256": null,
+      "currentSha256": "cbb892bf3052955d66e5ffd1d440ce81eded90242fc068a52eedaae160c77988",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/registry/body-attempt-read.ts",
+      "baselineSha256": null,
+      "currentSha256": "09886171bf114857870c7bebc7b978d030ed1eb24b42d606e43a56f1433a8cdb",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/registry/body-membership.ts",
       "baselineSha256": "1cdf6a8c961c668fefbd67fae79399cc14f7a171277e7c97d04a9c11ce0ceba8",
       "currentSha256": "fd8b2c0096feb576b919a525ccd064b71510d93b8ce3c180093f7e15263ce8d4",
@@ -1872,7 +1970,7 @@
     {
       "path": "lib/registry/body-rosters.ts",
       "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-      "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75",
+      "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1886,7 +1984,7 @@
     {
       "path": "lib/registry/cited-urls.ts",
       "baselineSha256": null,
-      "currentSha256": "c504579f34072ce4abc9876a6582d1ec767480835bdb5986a942569fe70e6559",
+      "currentSha256": "d0ea45ded8881f705770123fb900d6e887ebef52e0c12ec28f104b78f5d4312f",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1905,6 +2003,13 @@
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
     {
+      "path": "lib/registry/coverage-audit.ts",
+      "baselineSha256": null,
+      "currentSha256": "bd71fd1c6b240c89dac1991b7b7d3216ea8e128957f653d18efc937e4e3a8158",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
       "path": "lib/registry/coverage-client.ts",
       "baselineSha256": null,
       "currentSha256": "f8a11858c1a9a0340f3ed96432e8cb97795c382e07f939fc29e93819b0266762",
@@ -1914,7 +2019,7 @@
     {
       "path": "lib/registry/coverage.ts",
       "baselineSha256": "ccaade3ebbc9559d99baa9620e06cb5697d30e5f0ced7efbc88b57a24c903ba4",
-      "currentSha256": "9e0fbb23f1674818b7d6d1004354fd46eb49889f0dd5fd6d42f6e93ff9f253b4",
+      "currentSha256": "db0d8bfddde9b796481c5ce5811e19fcf9f86da3a8480d72fbc38b24bc4aed4c",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -1942,7 +2047,7 @@
     {
       "path": "lib/registry/runtime-data-plane.ts",
       "baselineSha256": null,
-      "currentSha256": "a1952b6d10baa930408349a48b479dd638dfee5fed95135cd35def8604c6d14f",
+      "currentSha256": "7afba24b5e7258e4c0ed82b353b3e4880e8e87796844fbb92b37f51669cba17e",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -1963,7 +2068,7 @@
     {
       "path": "lib/registry/server.ts",
       "baselineSha256": "650d764e8abd2553f22e13d74facf0ea2fc63645873a1b1f1114f295c571d6ec",
-      "currentSha256": "7ea2e9b62e5f68a03632327db2ce4b9eb2937f964ab38a000a99f73c62c3d091",
+      "currentSha256": "a7724d34cef60e852144cd6c5384c1966f537d7fa924680a865cafe971217e56",
       "acceptance": "LM-F10",
       "reason": "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers."
     },
@@ -2489,6 +2594,13 @@
       "path": "lib/votes/data-plane.ts",
       "baselineSha256": null,
       "currentSha256": "495c34b6220475fa46005c03134ccc666725f93b965b5de15a4a3c7f537b5aee",
+      "acceptance": "VF-FULL",
+      "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
+    },
+    {
+      "path": "lib/votes/history.ts",
+      "baselineSha256": null,
+      "currentSha256": "39d89db73466ad567fb2295cd70386e50e6d31ac3ea2ff9e30aed9c0763a86a6",
       "acceptance": "VF-FULL",
       "reason": "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)."
     },
@@ -3422,7 +3534,7 @@
       "path": "lib/registry/body-rosters.ts",
       "family": "body-rosters",
       "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-      "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75",
+      "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5",
       "acceptance": "VF-FULL"
     },
     {
@@ -3471,7 +3583,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3491,7 +3603,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3511,7 +3623,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3526,7 +3638,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3541,7 +3653,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3556,7 +3668,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3571,7 +3683,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3586,7 +3698,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -3601,7 +3713,7 @@
         {
           "path": "lib/registry/body-rosters.ts",
           "baselineSha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0",
-          "currentSha256": "d0acb5942f845d0b399345efd402b517bdb2028ffe6424fda3d89d766db44e75"
+          "currentSha256": "58f088d72f2380f38c7d07bb9a8e81391741da03787027b325cb91e57764a3c5"
         }
       ]
     },
@@ -4857,7 +4969,7 @@
       "acceptance": "LM-F4/LM-F5",
       "reason": "The official/candidacy bridge metadata changed; every controlled state-money target and shared visual/Ask/funding projection is re-proved.",
       "baselineStructuralSha256": "3928bdecb854f8349432c01f35504bae3f30dfa3ea52a588dcd1015340a636da",
-      "currentStructuralSha256": "a98cc535a857c41556e62bce2e5a05c6b90651b27f4b75d251a581c9f32b2252",
+      "currentStructuralSha256": "528f19c277b745fd93c9f8c4aa717e1d4b01f06acd370ae2e85df24b8f8d5559",
       "holdings": [
         {
           "path": "data/states/az/funding/state-money-az-2026.json",
@@ -4872,7 +4984,7 @@
       "acceptance": "LM-F4/LM-F5",
       "reason": "The official/candidacy bridge metadata changed; every controlled state-money target and shared visual/Ask/funding projection is re-proved.",
       "baselineStructuralSha256": "15c284fc72ba8fd61e496128fbddbdf1f196c096394003e9b250197679773f64",
-      "currentStructuralSha256": "fbfe122fe42b3ee5bec04eb4b70b2389f5163a255ea725bcc6e3a253ebbcb373",
+      "currentStructuralSha256": "f11decc109646c65607a04232399b399d487132bed640c819fca421c7185f107",
       "holdings": [
         {
           "path": "data/states/az/funding/state-money-az-2026.json",
@@ -4887,7 +4999,7 @@
       "acceptance": "LM-F4/LM-F5",
       "reason": "The official/candidacy bridge metadata changed; every controlled state-money target and shared visual/Ask/funding projection is re-proved.",
       "baselineStructuralSha256": "dfbf7152c8b7616c7f92865921c42a7343cc0aa9955a862cc0a2c3352873728b",
-      "currentStructuralSha256": "b2b3718dd357ab9badf550ad33eeddb0a2edb594866ca44a68d6cd5d36ea3d40",
+      "currentStructuralSha256": "6fd97c57605840dff2a0a283814a0d740c354487c6324a2857ac4eb181d7a036",
       "holdings": [
         {
           "path": "data/states/az/funding/state-money-az-2026.json",
@@ -4902,7 +5014,7 @@
       "acceptance": "LM-F4/LM-F5",
       "reason": "The official/candidacy bridge metadata changed; every controlled state-money target and shared visual/Ask/funding projection is re-proved.",
       "baselineStructuralSha256": "c4eaeff455e898eaba442a977290db346a40517969bd7da0aa2797147ffd48ea",
-      "currentStructuralSha256": "ab7ca1724e429e81f207774c8ad19a973f6f2ca1cef5f48b14646512530f3072",
+      "currentStructuralSha256": "dad859042eb82cad6ec1537acae8c65ab7a357f82a7722851efdfc532d08e1fc",
       "holdings": [
         {
           "path": "data/states/az/funding/state-money-az-2026.json",
@@ -4917,7 +5029,7 @@
       "acceptance": "LM-F4/LM-F5",
       "reason": "The official/candidacy bridge metadata changed; every controlled state-money target and shared visual/Ask/funding projection is re-proved.",
       "baselineStructuralSha256": "99fa369a48453094976bd5435ec9f979cc9246387091ca1c49bd9fe2ee434da2",
-      "currentStructuralSha256": "4dc156c8003d1008e51e3d9956897059fbb72f898aa4f9cbdf91b77fc722d7d8",
+      "currentStructuralSha256": "bd003e2394bc1496373765357eb2d0579c3752e1ebf60d642ecf97bc2d25a9b2",
       "holdings": [
         {
           "path": "data/states/az/funding/state-money-az-2026.json",
@@ -5831,7 +5943,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "3cb7f5b30f48f22f5a372ab6228c1a30eb11c4cd64cf144f60e91be91b2ebaeb",
-      "currentStructuralSha256": "4091a60920854a06b9d845067714c00f79ae6a520cecb5502d6c3e906044a2de",
+      "currentStructuralSha256": "64ce80fed44fd916065aa1035edbbd58638a4dbcc23c8d7507cb01ba329f912a",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5846,7 +5958,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "4adedd0a40d240f891fab35a0c6be4fb14f678749ae72e1699985894ed6be375",
-      "currentStructuralSha256": "148b640eb6ec65a8afa0ebc48afa963dbb9056b5e8eefecef6e2fd56b97d44c0",
+      "currentStructuralSha256": "51b74b0ff6b24c9ddce44a8e33984274572487d50055a8dd3ce272fa4be80cf2",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5861,7 +5973,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "28f9c1d33cb899d38b69dcd5ee92e06dfd8162e1b4160b6eecc2e27050cb459d",
-      "currentStructuralSha256": "98d47f9f797a883ac6ce43df30ca59bb31fb570ee4772c400580fb94494a85b7",
+      "currentStructuralSha256": "a7ef0849390d6ba75211c4546e04da550687cfce7702a10d75b6b33ea684c1ea",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5876,7 +5988,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "9145fb9b0dce8ca9318d0af83f90260636ae1d14ad34222116e72597dc81b453",
-      "currentStructuralSha256": "71db0df084dcad645f6657cd046fe7c7fdf2d75fdcab6adca1c0e721c5f38ae0",
+      "currentStructuralSha256": "88ea20e3a2a40f1f601e2d718ebaee0bb71171c8ca30bf493f5c005273df32d4",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5891,7 +6003,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "9dff1941a09e5f8aeef7a43b3a251c8d7ae9cb32ddfeaa3d6b29f83279074931",
-      "currentStructuralSha256": "7fe623ee5bfd435d2a3f030fdcc1f092e6e2ae386f4911929b3a51e5f0213143",
+      "currentStructuralSha256": "469ca0b5d917a99edcd2d7aa3ffc2898966d2e94f3fedf435834834e538360ce",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5906,7 +6018,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "57735506dda3853f93ae5e85bbb6b3999594178a321047c2725a9c543927e0a1",
-      "currentStructuralSha256": "31567cb4075c9048db3f657e721bce0462cc52ecfc4481a8fae6412ad19c5f9b",
+      "currentStructuralSha256": "8fea3bd2782d9fcfdf5f64863f789777ea1867dc137691bfe9c7170c7db9fe25",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5921,7 +6033,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "44a150a73dc506f781395fc2eb956a401465fe88f0326cb486307f5d996849d0",
-      "currentStructuralSha256": "6bc8bf74837dacd33ef8010dfd669680e6368b8a2453eccf7e352439e1a5ed56",
+      "currentStructuralSha256": "9a577caa5183ed0a3f336dc9ce5070e97db4f6178a7e6bde66ef12cd2cea6c93",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5936,7 +6048,7 @@
       "acceptance": "LM-F8",
       "reason": "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.",
       "baselineStructuralSha256": "3f479c0ad8d5f8e02b6861c4a39987cf6564701c2d77681562c141540712dcaf",
-      "currentStructuralSha256": "1049951636a2b06a6fde833dd6d42b0830a63dfbf2eea5c44310a18ae4117a79",
+      "currentStructuralSha256": "603e86797e5488ecbb017ec4144a96d2d977243e6c871859d11254a64ed4ad04",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5951,7 +6063,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "3c33c466158cbea9c5decb2959bc9e9cc9148c8db76348c00fa32286f563e069",
-      "currentStructuralSha256": "bece088f67c2e32582e6e910d229773e4fe75a1aa0c5b5ababbf722a13bf24f7",
+      "currentStructuralSha256": "74b2358e2253a94541559e6b6a0e811abe187f2266b38709d16e943f8910bbf8",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5966,7 +6078,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "2263f4e31cd5ca0c4c449a425505c8a08ef5227889c197591af5cd53d70f1976",
-      "currentStructuralSha256": "0c3f8621409c189a2b50734084c8e79639f176adfbd008b2f90a6458f4d125b7",
+      "currentStructuralSha256": "1012dbe194487c974190fe1cc37e330873eedf5eefaebb88286e329aae4c2572",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5981,7 +6093,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "e850e1156ce607d715e64be46167e3a9bff3d374b37956831bb26429ebcb2cde",
-      "currentStructuralSha256": "98af5f4aee6bcb6fa148dd591db66bc2fa7a8fb46e72818a75175b8d17def024",
+      "currentStructuralSha256": "6fbb090e3f85d49209f266b06af2e9225d0bd2dafa6cd47284b9123298a99428",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -5996,7 +6108,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "f6248fdc7eea26ad39ee079bb1c57457925b739f294a650279029a3121ba1517",
-      "currentStructuralSha256": "75f55495b57d757d0225f9ad3214fb70c66f6ed42a1d0aae102177ad5725bbe1",
+      "currentStructuralSha256": "785c3e4a6a8129f3366af4337cc667506240833d1970dce4dbcc76d42270108d",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -6011,7 +6123,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "b7db21f3c60971832107f6636ea035053eed4a8d8b0ef386bf7465216fb534a6",
-      "currentStructuralSha256": "c377b40facbe5e1cd8e2aabbad49b71d36c0e4e595cc233b7ea7e3465c2cb82e",
+      "currentStructuralSha256": "5f61fb8f17b0744eb4da1a9f6035cc31f6457c97fc26c53b175c8d32929d774f",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -6026,7 +6138,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "c43fd4b110a1e8c8f2b612cff86f99d52342c4e44b0a6006da9364fb150b199d",
-      "currentStructuralSha256": "9407c4588059e9b1e91ecc0b8a993deb42b2a9ed845439f3a049799163bc2410",
+      "currentStructuralSha256": "d1dd94c2cbd592db458144be1dff232c5181c58ba397555ba5f8498e7feb4f5d",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -6041,7 +6153,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "f73f144e81c1d9fba93e7efab8271eab5d91898365e095f12466be8ffa283c33",
-      "currentStructuralSha256": "afdc00242514c5b25b26aa9d94fcf6c6bbc184437cea53c41d9eb6f36c73381c",
+      "currentStructuralSha256": "6a962b9229c44a7eab6667ac04bf5227b4d7b2a5f717e28245b3f2109b3ba59a",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -6056,7 +6168,7 @@
       "acceptance": "LM-F8",
       "reason": "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed.",
       "baselineStructuralSha256": "3c0d709cf39147436a30a4e05f834b3c766e07cc6bf668a630d74ab43f6d5b00",
-      "currentStructuralSha256": "604150cbba40d887fbf82014982e09337231bffde5f0854c284f8d12cdd06ab9",
+      "currentStructuralSha256": "2d7c496649ec1743f49c1ca35e52da9e0764223475579d5b55fb1b834f6adbd4",
       "holdings": [
         {
           "path": "data/meetings-snapshot.json",
@@ -14839,7 +14951,7 @@
       "acceptance": "LM-F10",
       "reason": "The official federal vote window, key-vote semantics and promoted state-vote read boundary changed; vote and grounded Ask routes are re-proved.",
       "baselineStructuralSha256": "19d25df909ea78ef4cf7efed5c574618c7602eeeddfdb08926964951903d78f1",
-      "currentStructuralSha256": "43b1ac148c1806746c79584dbbf818a054b47336d486b3c318506ecb1f8c5852",
+      "currentStructuralSha256": "796c1c5e909f32ed118901225ecf44c472ea0072461de48647337fad1b3d20d8",
       "holdings": [
         {
           "path": "data/votes/bill-summaries.json",

@@ -531,6 +531,7 @@
       ],
       "recordObligations": 10676,
       "selectorClasses": [
+        "actual GET /api/votes history page → earlier-records RecentVoteRecords",
         "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
       ],
       "importReach": false
@@ -541,10 +542,11 @@
       "families": [
         "votes"
       ],
-      "recordObligations": 169,
+      "recordObligations": 137,
       "selectorClasses": [
         "summaryForBill → BillPlainSummary",
-        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)",
+        "actual GET /api/votes history page → earlier-records RecentVoteRecords"
       ],
       "importReach": true
     },
@@ -570,6 +572,7 @@
       "recordObligations": 10685,
       "selectorClasses": [
         "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes history page → earlier-records RecentVoteRecords",
         "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
       ],
       "importReach": false
@@ -596,6 +599,7 @@
       "recordObligations": 10685,
       "selectorClasses": [
         "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes history page → earlier-records RecentVoteRecords",
         "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
       ],
       "importReach": true

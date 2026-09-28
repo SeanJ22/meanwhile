@@ -108,7 +108,7 @@ import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat, type RuntimeReleaseAdoption } from "../lib/control-plane/owner-surface.ts";
-import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
+import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, retainedRuntimeReleaseAdoption, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -252,6 +252,7 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 
 /** Loaded-code identity, captured before a handoff can move the checkout. */
 const RUNNING_CODE_SHA = headSha(ROOT);
+const PROCESS_IDENTITY = `${hostname()}:${process.pid}:${new Date().toISOString()}`;
 const ROUTINE_READER_DOMAINS = routineReaderRepairDomains();
 // Meeting lanes take up to two reads a pass (C6), so the limit is sized for that pass.
 const ROUTINE_PASS_BOUND = routineFrontierPassBound();
@@ -1235,7 +1236,7 @@ async function persistCurrentRuntimeRelease(result:RuntimeReleaseObserved):Promi
   const fields:Omit<RuntimeReleaseAdoption,"evidenceHash">={
     formatVersion:1,phase:GATE02_REPAIR_PHASE,requiredBaseSha:GATE02_REQUIRED_BASE_SHA,
     baseContained:containsCommit(GATE02_REQUIRED_BASE_SHA,RUNNING_CODE_SHA,ROOT),
-    observedAt,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
+    observedAt,processIdentity:PROCESS_IDENTITY,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
     inspectionCode:"RUNTIME_RELEASE_CURRENT",integrityReceiptId:result.integrityReceiptId,
     integritySha:result.integritySha,integrityObservedAt:result.integrityObservedAt,
   };
@@ -1245,7 +1246,7 @@ async function persistCurrentRuntimeRelease(result:RuntimeReleaseObserved):Promi
     formatVersion:OWNER_SURFACE_FORMAT_VERSION,beatAt:observedAt,lastCycleStartedAt:null,lastCycleFinishedAt:null,
     nextCycleDueAt:null,lastCycleOk:null,testedSha:RUNNING_CODE_SHA,host:hostname(),
   };
-  const next={...base,runtimeRelease};
+  const next={...base,runtimeRelease:retainedRuntimeReleaseAdoption(current?.value.runtimeRelease,runtimeRelease,observedAt)};
   if(current===null) await repos.runnerHeartbeat.put(RUNNER_ID,next,observedAt);
   else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,next,observedAt);
 }

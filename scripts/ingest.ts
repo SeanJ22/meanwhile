@@ -861,6 +861,7 @@ export async function promoteDerivedMeetingFamily(
       [`${DERIVED_WIRING_SOURCE_NAMES[member.row.kind]}:${member.row.bodyId}`, member.row.route] as const));
     const proposed = await automaticVenuePackage({ snapshot: build.snapshot, existingIds, memberRoutes });
     for (const hold of proposed.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
+    let currentVenueRead = venueRead;
     if (proposed.package) {
       const reviewedAt = proposed.package.sourceReceipt.reviewedAt;
       const prepared = await prepareManualProjectionSuccessor(proposed.package, store, reviewedAt);
@@ -876,11 +877,17 @@ export async function promoteDerivedMeetingFamily(
       if (placedRead.kind !== "PROMOTED" || placedRead.metadata.versionId !== venueOutcome.promoted.versionId) {
         throw new Error("AUTOMATIC_VENUE_READER_READBACK_MISMATCH");
       }
+      currentVenueRead = placedRead;
+    }
+    // The venue gate and meeting-family gate are separate writes. If the first
+    // succeeded and the second failed, the next normal pass must finish placement
+    // from the already promoted venue rather than geocoding or approving it again.
+    if (currentVenueRead.kind === "PROMOTED") {
       const venueContract = requiredManualProductionContract("venue-resolutions");
       const venueInput = promotedInputRef(venueContract.recordClass, venueContract.scope,
-        placedRead.metadata.versionId, placedRead.value, placedRead.metadata.promotedAt);
+        currentVenueRead.metadata.versionId, currentVenueRead.value, currentVenueRead.metadata.promotedAt);
       if (!venueInput) throw new Error("AUTOMATIC_VENUE_PROMOTED_INPUT_MISSING");
-      const reviewed = placedRead.value.records as unknown as VenueEntry[];
+      const reviewed = currentVenueRead.value.records as unknown as VenueEntry[];
       const { meetings, placedCount } = placeMeetingsFromVerifiedVenues(build.snapshot.meetings, reviewed);
       if (placedCount > 0) {
         const placedBuild = { ...build, snapshot: { ...build.snapshot, meetings: [...meetings] }, inputs: [...build.inputs, venueInput] };

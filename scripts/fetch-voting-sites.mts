@@ -54,6 +54,8 @@ import {
 import { COCHISE_ELECTIONS_URL, COCHISE_VOTER_URL, COCHISE_VOTE_CENTERS_URL,
   cochiseVotingJurisdiction } from "../lib/sources/cochise-vote-centers.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { votingSitesReceiptSource } from "../lib/civic-data/voting-sites-source-task.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import {
   CENSUS_BENCHMARK,
@@ -79,6 +81,7 @@ import type {
  */
 const CURRENT_ELECTION = "2026 General";
 const COCHISE_ONLY = process.argv.slice(2).includes("--cochise-only");
+const RECEIPT_SOURCE = votingSitesReceiptSource(COCHISE_ONLY);
 
 // One home for the contact address; see lib/geo/outbound-agent.ts.
 const UA = OUTBOUND_USER_AGENT;
@@ -856,6 +859,7 @@ async function main(): Promise<void> {
       carriedFromVersionId: priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null });
     candidateSubmitted = true;
     const outcome = await processRegisteredManualCandidate(store, VOTING_SITES_CONTRACT.id, candidate, retrievedAt);
+    printSourceRunnerReceipt(RECEIPT_SOURCE, candidate, outcome);
     if (!outcome.promoted) throw new Error(`Cochise voting-site promotion refused: ${outcome.candidate.failureCode}`);
     console.log(`promoted Cochise's 18 official vote centers with other exact jurisdictions retained from ${priorRead.kind} base`);
     return;
@@ -949,6 +953,7 @@ async function main(): Promise<void> {
     candidate,
     retrievedAt,
   );
+  printSourceRunnerReceipt(RECEIPT_SOURCE, candidate, outcome);
   if (!outcome.promoted) {
     throw new Error(`Voting-sites promotion refused: ${outcome.candidate.failureCode}`);
   }
@@ -971,12 +976,13 @@ try {
       failureDetail: error instanceof Error ? error.message : String(error),
       parserVersion: VOTING_SITES_CONTRACT.parserVersion,
     });
-    await processRegisteredManualCandidate(
+    const outcome = await processRegisteredManualCandidate(
       new PostgresRoutineDataStore(),
       VOTING_SITES_CONTRACT.id,
       failed,
       attemptedAt,
     );
+    printSourceRunnerReceipt(RECEIPT_SOURCE, failed, outcome);
   }
   throw error;
 }

@@ -218,6 +218,20 @@
       "when": 1790597493972,
       "tag": "0030_publication_search_index",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1790597493973,
+      "tag": "0031_publication_search_backfill",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1790597493974,
+      "tag": "0032_publication_search_activation",
+      "breakpoints": true
     }
   ]
 }

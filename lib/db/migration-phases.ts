@@ -407,10 +407,23 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0030_publication_search_index": {
     phase: "expand",
     why:
-      "Creates a search-only table, trigger, functions and indexes. Existing promotion writes " +
-      "continue unchanged; the deferred trigger copies only their final GOOD/PROMOTED immutable " +
-      "records, and existing verified versions are backfilled without modifying authority. " +
-      "Apply before the Admin query first names this table.",
+      "Creates empty Admin-only search tables, candidate foreign key, deriving functions and " +
+      "small btree indexes in a short transaction. No publication trigger or source rows are " +
+      "activated yet, so the later large backfill cannot hold a candidate-table DDL lock.",
+  },
+  "0031_publication_search_backfill": {
+    phase: "expand",
+    why:
+      "Copies all existing GOOD/PROMOTED candidate records and full legacy documents into " +
+      "bounded search chunks and builds their trigram index. This long transaction takes no " +
+      "candidate-event trigger lock; source authority and Reader rows remain unchanged.",
+  },
+  "0032_publication_search_activation": {
+    phase: "expand",
+    why:
+      "Installs the deferred promotion trigger, catches versions published during backfill, " +
+      "and locks search rows against direct edits in a short final transaction. Admin queries " +
+      "must not serve this index until all three migrations have committed.",
   },
 };
 

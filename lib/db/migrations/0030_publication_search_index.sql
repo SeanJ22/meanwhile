@@ -7,9 +7,28 @@ CREATE TABLE "civic_data_publication_search" (
 	"promoted_at" timestamp with time zone NOT NULL,
 	"legacy_document" boolean NOT NULL,
 	"record" jsonb NOT NULL,
-	"search_text" text NOT NULL,
+	"label" text,
+	"source_url" text,
 	CONSTRAINT "civic_data_publication_search_version_id_record_key_pk" PRIMARY KEY("version_id","record_key"),
 	CONSTRAINT "civic_data_publication_search_version_id_civic_data_candidates_id_fk" FOREIGN KEY ("version_id") REFERENCES "public"."civic_data_candidates"("id") ON DELETE restrict ON UPDATE restrict
+);
+--> statement-breakpoint
+CREATE TABLE "civic_data_publication_search_chunks" (
+	"version_id" text NOT NULL,
+	"record_key" text NOT NULL,
+	"chunk_ordinal" integer NOT NULL,
+	"search_chunk" text NOT NULL,
+	CONSTRAINT "civic_data_publication_search_chunks_version_id_record_key_chunk_ordinal_pk" PRIMARY KEY("version_id","record_key","chunk_ordinal"),
+	CONSTRAINT "civic_data_publication_search_chunks_version_id_record_key_civic_data_publication_search_version_id_record_key_fk" FOREIGN KEY ("version_id","record_key") REFERENCES "public"."civic_data_publication_search"("version_id","record_key") ON DELETE no action ON UPDATE no action
+);
+--> statement-breakpoint
+CREATE TABLE "civic_data_publication_search_readiness" (
+	"id" text PRIMARY KEY NOT NULL,
+	"schema_version" integer NOT NULL,
+	"status" text NOT NULL,
+	"verified_at" timestamp with time zone NOT NULL,
+	"parent_count" bigint NOT NULL,
+	"chunk_count" bigint NOT NULL
 );
 --> statement-breakpoint
 -- A row may be inserted only inside the canonical PROMOTED-event trigger.
@@ -22,6 +41,73 @@ BEGIN
   RAISE EXCEPTION 'publication search rows are derived only from the promotion event and are immutable' USING ERRCODE = '55000';
 END
 $publication_search_verify$;--> statement-breakpoint
+CREATE OR REPLACE FUNCTION publication_search_label(p_record jsonb)
+RETURNS text LANGUAGE plpgsql IMMUTABLE AS $publication_label$
+DECLARE
+  candidate text;
+BEGIN
+  candidate := coalesce(
+    CASE WHEN jsonb_typeof(p_record->'name') = 'string' THEN p_record->>'name' END,
+    CASE WHEN jsonb_typeof(p_record->'title') = 'string' THEN p_record->>'title' END,
+    CASE WHEN jsonb_typeof(p_record->'bodyName') = 'string' THEN p_record->>'bodyName' END,
+    CASE WHEN jsonb_typeof(p_record->'candidateName') = 'string' THEN p_record->>'candidateName' END,
+    CASE WHEN jsonb_typeof(p_record->'candidateNameAsFiled') = 'string' THEN p_record->>'candidateNameAsFiled' END,
+    CASE WHEN jsonb_typeof(p_record->'label') = 'string' THEN p_record->>'label' END
+  );
+  RETURN left(nullif(btrim(candidate), ''), 300);
+END
+$publication_label$;--> statement-breakpoint
+CREATE OR REPLACE FUNCTION publication_search_source_url(p_record jsonb)
+RETURNS text LANGUAGE plpgsql IMMUTABLE AS $publication_source_url$
+DECLARE
+  candidate text;
+BEGIN
+  candidate := coalesce(
+    CASE WHEN jsonb_typeof(p_record->'sourceUrl') = 'string' THEN p_record->>'sourceUrl' END,
+    CASE WHEN jsonb_typeof(p_record->'provenance'->'sourceUrl') = 'string' THEN p_record->'provenance'->>'sourceUrl' END
+  );
+  IF candidate IS NULL OR char_length(candidate) > 2048 THEN RETURN NULL; END IF;
+  RETURN candidate;
+END
+$publication_source_url$;--> statement-breakpoint
+CREATE OR REPLACE FUNCTION publication_search_full_text(p_version_id text, p_record_key text, p_record jsonb)
+RETURNS text LANGUAGE sql IMMUTABLE AS $publication_search_full_text$
+  SELECT p_version_id || ' ' || p_record_key || ' ' || p_record::text
+$publication_search_full_text$;--> statement-breakpoint
+-- Byte offsets avoid PostgreSQL's UTF-8 text substring path, which scans
+-- from character zero for every increasing start position. Each 16 KiB unit
+-- overlaps the next by at least 512 bytes. A searched literal of at most 100
+-- Unicode codepoints occupies at most 400 UTF-8 bytes, so one unit contains
+-- every possible match. Expand split edges outward to UTF-8 boundaries before
+-- decoding; neither the first nor the final byte can be dropped.
+CREATE OR REPLACE FUNCTION publication_search_chunks_from_text(p_text text)
+RETURNS TABLE(chunk_ordinal integer, search_chunk text)
+LANGUAGE plpgsql IMMUTABLE AS $publication_search_chunks$
+DECLARE
+  bytes bytea := convert_to(p_text, 'UTF8');
+  byte_length integer := octet_length(bytes);
+  raw_start integer := 0;
+  raw_end integer;
+  safe_start integer;
+  safe_end integer;
+BEGIN
+  WHILE raw_start < byte_length LOOP
+    safe_start := raw_start;
+    WHILE safe_start > 0 AND get_byte(bytes, safe_start) BETWEEN 128 AND 191 LOOP
+      safe_start := safe_start - 1;
+    END LOOP;
+    raw_end := least(byte_length, raw_start + 16384);
+    safe_end := raw_end;
+    WHILE safe_end < byte_length AND get_byte(bytes, safe_end) BETWEEN 128 AND 191 LOOP
+      safe_end := safe_end + 1;
+    END LOOP;
+    chunk_ordinal := raw_start / 15872;
+    search_chunk := convert_from(substring(bytes FROM safe_start + 1 FOR safe_end - safe_start), 'UTF8');
+    RETURN NEXT;
+    raw_start := raw_start + 15872;
+  END LOOP;
+END
+$publication_search_chunks$;--> statement-breakpoint
 CREATE OR REPLACE FUNCTION index_civic_publication_candidate(p_version_id text)
 RETURNS void LANGUAGE plpgsql AS $publication_search_index$
 DECLARE
@@ -40,20 +126,28 @@ BEGIN
   END IF;
   IF jsonb_typeof(source_row."candidate"->'civicRecords') = 'array' THEN
     INSERT INTO "civic_data_publication_search" ("version_id","record_key","record_class","scope",
-      "captured_at","promoted_at","legacy_document","record","search_text")
+      "captured_at","promoted_at","legacy_document","record","label","source_url")
     SELECT source_row."id", member.value->>'key', source_row."record_class", source_row."scope",
       source_row."retrieved_at", first_promoted_at, false, member.value->'record',
-      source_row."id" || ' ' || (member.value->>'key') || ' ' || (member.value->'record')::text
+      publication_search_label(member.value->'record'), publication_search_source_url(member.value->'record')
     FROM jsonb_array_elements(source_row."candidate"->'civicRecords') AS member(value)
     ON CONFLICT ("version_id","record_key") DO NOTHING;
   ELSE
     INSERT INTO "civic_data_publication_search" ("version_id","record_key","record_class","scope",
-      "captured_at","promoted_at","legacy_document","record","search_text")
+      "captured_at","promoted_at","legacy_document","record","label","source_url")
     VALUES (source_row."id", 'legacy-document', source_row."record_class", source_row."scope",
       source_row."retrieved_at", first_promoted_at, true, source_row."candidate"->'readModel',
-      source_row."id" || ' legacy-document ' || (source_row."candidate"->'readModel')::text)
+      publication_search_label(source_row."candidate"->'readModel'), publication_search_source_url(source_row."candidate"->'readModel'))
     ON CONFLICT ("version_id","record_key") DO NOTHING;
   END IF;
+  WITH full_texts AS MATERIALIZED (
+    SELECT "version_id","record_key",publication_search_full_text("version_id","record_key","record") AS full_text
+    FROM "civic_data_publication_search" WHERE "version_id" = p_version_id
+  )
+  INSERT INTO "civic_data_publication_search_chunks" ("version_id","record_key","chunk_ordinal","search_chunk")
+  SELECT full_texts."version_id",full_texts."record_key",chunks.chunk_ordinal,chunks.search_chunk
+  FROM full_texts CROSS JOIN LATERAL publication_search_chunks_from_text(full_texts.full_text) AS chunks
+  ON CONFLICT ("version_id","record_key","chunk_ordinal") DO NOTHING;
 END
 $publication_search_index$;--> statement-breakpoint
 CREATE OR REPLACE FUNCTION index_civic_publication_from_event()
@@ -70,33 +164,5 @@ BEGIN
   RETURN NULL;
 END
 $publication_search_event$;--> statement-breakpoint
-CREATE CONSTRAINT TRIGGER civic_data_publication_search_from_promoted_event
-AFTER INSERT ON "civic_data_candidate_events" DEFERRABLE INITIALLY DEFERRED
-FOR EACH ROW WHEN (NEW."state" = 'PROMOTED') EXECUTE FUNCTION index_civic_publication_from_event();--> statement-breakpoint
--- One source pass and one set insert, rather than re-reading a large candidate
--- once per member. First PROMOTED sequence supplies its immutable event time.
-WITH source AS MATERIALIZED (
-  SELECT c."id",c."record_class",c."scope",c."retrieved_at",event."at" AS promoted_at,
-    jsonb_typeof(c."candidate"->'civicRecords') IS DISTINCT FROM 'array' AS legacy_document,
-    CASE WHEN jsonb_typeof(c."candidate"->'civicRecords') = 'array'
-      THEN c."candidate"->'civicRecords'
-      ELSE jsonb_build_array(jsonb_build_object('key','legacy-document','record',c."candidate"->'readModel')) END AS members
-  FROM "civic_data_candidates" c
-  JOIN (SELECT DISTINCT ON ("candidate_id") "candidate_id","at"
-    FROM "civic_data_candidate_events" WHERE "state" = 'PROMOTED'
-    ORDER BY "candidate_id","sequence") event ON event."candidate_id" = c."id"
-  WHERE c."state" = 'PROMOTED' AND c."validation_receipt"->>'decision' = 'GOOD'
-)
-INSERT INTO "civic_data_publication_search" ("version_id","record_key","record_class","scope",
-  "captured_at","promoted_at","legacy_document","record","search_text")
-SELECT source."id", member.value->>'key', source."record_class", source."scope", source."retrieved_at",
-  source.promoted_at, source.legacy_document,
-  member.value->'record', source."id" || ' ' || (member.value->>'key') || ' ' || (member.value->'record')::text
-FROM source CROSS JOIN LATERAL jsonb_array_elements(source.members) member(value)
-ON CONFLICT ("version_id","record_key") DO NOTHING;--> statement-breakpoint
-CREATE TRIGGER civic_data_publication_search_immutable BEFORE INSERT OR UPDATE OR DELETE ON "civic_data_publication_search"
-FOR EACH ROW EXECUTE FUNCTION verify_civic_publication_search_row();--> statement-breakpoint
-CREATE EXTENSION IF NOT EXISTS pg_trgm;--> statement-breakpoint
-CREATE INDEX "civic_data_publication_search_text_trgm_idx" ON "civic_data_publication_search" USING gin ("search_text" gin_trgm_ops);--> statement-breakpoint
 CREATE INDEX "civic_data_publication_search_time_idx" ON "civic_data_publication_search" USING btree ("promoted_at" DESC NULLS LAST,"version_id","record_key");--> statement-breakpoint
-CREATE INDEX "civic_data_publication_search_scope_idx" ON "civic_data_publication_search" USING btree ("record_class","scope");
+CREATE INDEX "civic_data_publication_search_scope_idx" ON "civic_data_publication_search" USING btree ("record_class","scope");--> statement-breakpoint

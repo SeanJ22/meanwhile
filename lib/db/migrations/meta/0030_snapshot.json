@@ -1,5 +1,5 @@
 {
-  "id": "beda33b3-1c2e-4614-8972-7c407667e33d",
+  "id": "44831456-fad9-4b6e-b853-fca0ac5da96b",
   "prevId": "9abe6c80-248d-4a54-95a6-8742af13809c",
   "version": "7",
   "dialect": "postgresql",
@@ -860,144 +860,6 @@
           "value": "\n        jsonb_typeof(\"civic_data_promotions\".\"validation_receipt\") IS NOT DISTINCT FROM 'object'\n        AND (\"civic_data_promotions\".\"validation_receipt\"->>'decision') IS NOT DISTINCT FROM 'GOOD'\n        AND (\"civic_data_promotions\".\"validation_receipt\"->>'candidateId') IS NOT DISTINCT FROM \"civic_data_promotions\".\"current_version_id\"\n        AND (\"civic_data_promotions\".\"validation_receipt\"->>'sourceId') IS NOT DISTINCT FROM \"civic_data_promotions\".\"source_id\"\n        AND (\"civic_data_promotions\".\"validation_receipt\"->>'recordClass') IS NOT DISTINCT FROM \"civic_data_promotions\".\"record_class\"\n        AND (\"civic_data_promotions\".\"validation_receipt\"->>'scope') IS NOT DISTINCT FROM \"civic_data_promotions\".\"scope\"\n        AND (\"civic_data_promotions\".\"validation_receipt\"->'contractVersion') IS NOT DISTINCT FROM '2'::jsonb\n        AND ((((\"civic_data_promotions\".\"validation_receipt\"->>'validatedAt')::timestamptz <= \"civic_data_promotions\".\"promoted_at\")) IS TRUE)\n      "
         }
       },
-      "isRLSEnabled": false
-    },
-    "public.civic_data_publication_search": {
-      "name": "civic_data_publication_search",
-      "schema": "",
-      "columns": {
-        "version_id": {
-          "name": "version_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "record_key": {
-          "name": "record_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "record_class": {
-          "name": "record_class",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "scope": {
-          "name": "scope",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "captured_at": {
-          "name": "captured_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "promoted_at": {
-          "name": "promoted_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "legacy_document": {
-          "name": "legacy_document",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "record": {
-          "name": "record",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "search_text": {
-          "name": "search_text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "civic_data_publication_search_time_idx": {
-          "name": "civic_data_publication_search_time_idx",
-          "columns": [
-            {
-              "expression": "promoted_at",
-              "isExpression": false,
-              "asc": false,
-              "nulls": "last"
-            },
-            {
-              "expression": "version_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "record_key",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "civic_data_publication_search_scope_idx": {
-          "name": "civic_data_publication_search_scope_idx",
-          "columns": [
-            {
-              "expression": "record_class",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "scope",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "civic_data_publication_search_version_id_civic_data_candidates_id_fk": {
-          "name": "civic_data_publication_search_version_id_civic_data_candidates_id_fk",
-          "tableFrom": "civic_data_publication_search",
-          "tableTo": "civic_data_candidates",
-          "columnsFrom": [
-            "version_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "restrict"
-        }
-      },
-      "compositePrimaryKeys": {
-        "civic_data_publication_search_version_id_record_key_pk": {
-          "name": "civic_data_publication_search_version_id_record_key_pk",
-          "columns": [
-            "version_id",
-            "record_key"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.civic_data_reader_projections": {
@@ -2360,6 +2222,261 @@
           "value": "\"write_alarm\".\"store\" IN ('search_log', 'reactions')"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.civic_data_publication_search": {
+      "name": "civic_data_publication_search",
+      "schema": "",
+      "columns": {
+        "version_id": {
+          "name": "version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "record_key": {
+          "name": "record_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "record_class": {
+          "name": "record_class",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "captured_at": {
+          "name": "captured_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "promoted_at": {
+          "name": "promoted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "legacy_document": {
+          "name": "legacy_document",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "record": {
+          "name": "record",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_url": {
+          "name": "source_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "civic_data_publication_search_time_idx": {
+          "name": "civic_data_publication_search_time_idx",
+          "columns": [
+            {
+              "expression": "promoted_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "version_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "record_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "civic_data_publication_search_scope_idx": {
+          "name": "civic_data_publication_search_scope_idx",
+          "columns": [
+            {
+              "expression": "record_class",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "scope",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "civic_data_publication_search_version_id_civic_data_candidates_id_fk": {
+          "name": "civic_data_publication_search_version_id_civic_data_candidates_id_fk",
+          "tableFrom": "civic_data_publication_search",
+          "tableTo": "civic_data_candidates",
+          "columnsFrom": [
+            "version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "civic_data_publication_search_version_id_record_key_pk": {
+          "name": "civic_data_publication_search_version_id_record_key_pk",
+          "columns": [
+            "version_id",
+            "record_key"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.civic_data_publication_search_chunks": {
+      "name": "civic_data_publication_search_chunks",
+      "schema": "",
+      "columns": {
+        "version_id": {
+          "name": "version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "record_key": {
+          "name": "record_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chunk_ordinal": {
+          "name": "chunk_ordinal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "search_chunk": {
+          "name": "search_chunk",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "civic_data_publication_search_chunks_version_id_record_key_civic_data_publication_search_version_id_record_key_fk": {
+          "name": "civic_data_publication_search_chunks_version_id_record_key_civic_data_publication_search_version_id_record_key_fk",
+          "tableFrom": "civic_data_publication_search_chunks",
+          "tableTo": "civic_data_publication_search",
+          "columnsFrom": [
+            "version_id",
+            "record_key"
+          ],
+          "columnsTo": [
+            "version_id",
+            "record_key"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "civic_data_publication_search_chunks_version_id_record_key_chunk_ordinal_pk": {
+          "name": "civic_data_publication_search_chunks_version_id_record_key_chunk_ordinal_pk",
+          "columns": [
+            "version_id",
+            "record_key",
+            "chunk_ordinal"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.civic_data_publication_search_readiness": {
+      "name": "civic_data_publication_search_readiness",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "schema_version": {
+          "name": "schema_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_count": {
+          "name": "parent_count",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chunk_count": {
+          "name": "chunk_count",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     }
   },

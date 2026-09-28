@@ -107,6 +107,7 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
+import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
 import { describeCacheDefects, detectCacheDefects, type CacheDefectReading } from "../cache-defects.ts";
@@ -552,7 +553,8 @@ export interface ScoutExecutorDeps {
   readonly minRungs?: number;
   readonly now?: () => string;
   readonly toolkitFor: (ctx: ScoutToolContext) => ScoutToolkit;
-  /** Everything per obligation the runner knows: the descriptor, the provider, inherited context, the vault seams. */
+  /** Pure synchronous context assembly: no provider calls or acquisitions. Supplies
+   * the descriptor, provider, inherited context and lazy vault seams. */
   readonly contextFor: (row: ScheduledObligation) => {
     readonly route: RouteDescriptor | null;
     readonly providerId: string | null;
@@ -1186,7 +1188,24 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
     run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
-      const ctx = deps.contextFor(row);
+      let ctx: ReturnType<ScoutExecutorDeps["contextFor"]>;
+      try {
+        ctx = deps.contextFor(row);
+      } catch (error) {
+        // This boundary precedes toolkit construction, onStart and every model
+        // transport. Dispatch durably records this measured zero on the Attempt
+        // before its ordinary hold settlement runs. Later/unknown failures retain
+        // their existing accounting; this is never a historical hold reconciler.
+        return {
+          kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: clock(), artifacts: [],
+          cost: { inputTokens: 0, outputTokens: 0, usd: 0,
+            durationMs: Math.max(0, Date.now() - startedMs), bytesFetched: 0, requestCount: 0,
+            cacheReadInputTokens: 0, cacheCreationInputTokens: 0,
+            cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0,
+            uncachedInputTokens: 0, batch: false },
+          detail: `SCOUT_CONTEXT_FAILED_BEFORE_REQUEST: no toolkit or model request was opened; the obligation remains owed. ${sanitizedErrorDiagnostic(error)}`,
+        };
+      }
       const sourceRecordClass = ctx.sourceRecordClass ?? row.obligation.recordClass;
       const toolkit = deps.toolkitFor({
         obligation: row,
@@ -1245,6 +1264,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       /** The API's cache TTL for the writes this lane asks for; the aggregate fallback prices at it. */
       const requestedTtl = SCOUT_CACHE_POLICY.ttl;
       let turns = 0;
+      let transportInvocations = 0;
+      let unpricedTransport = false;
       /*
        * The loop state below is assigned inside `runModelAttempt` (a closure)
        * and read after it returns, so each is initialised through `as` with its
@@ -1387,6 +1408,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           /* RULING 244: the step registry is consulted before EVERY model call. A deterministic step here throws. */
           const step = current.consult();
           let response: ModelResponse;
+          let enteredTransport = false;
           try {
             const request: ModelRequest = {
               model: current.model,
@@ -1410,10 +1432,16 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             };
             const order = cacheTtlOrderProblems(request);
             if (order.length > 0) throw new ModelTransportError(`cache_control order refused before sending: ${order.join("; ")}`, null);
+            enteredTransport = true;
+            transportInvocations += 1;
             response = await deps.transport(request);
           } catch (error) {
             transportFailure = error instanceof Error ? error.message : String(error);
             transportStatus = error instanceof ModelTransportError ? error.status : null;
+            // A typed 4xx is a rejected request. A network/5xx failure can
+            // follow paid processing; no response is not a zero-dollar receipt.
+            if (enteredTransport && !(error instanceof ModelTransportError && error.status !== null
+              && error.status >= 400 && error.status < 500)) unpricedTransport = true;
             break;
           }
           turns += 1;
@@ -1658,7 +1686,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           modelClass: ran.modelClass,
           model: ran.model,
           turns: own.length,
-          usd: own.length === 0 ? (usage.reported ? null : 0) : own.some((s) => s.usd === null) ? null : own.reduce((n, s) => n + (s.usd ?? 0), 0),
+          usd: unpricedTransport ? null : own.length === 0 ? 0 : own.some((s) => s.usd === null) ? null : own.reduce((n, s) => n + (s.usd ?? 0), 0),
           accepted: finish !== null,
         });
         attemptFirstTurns.push(firstTurn);
@@ -1857,25 +1885,21 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         });
       }
       /*
-       * A PROVIDER ERROR BEFORE ANY COMPLETION IS A MEASURED ZERO, NOT AN
-       * UNMEASURED COST. (Measured live 2026-09-02: HTTP 529 overloaded on the
-       * first turn.) The provider's error response is itself the reading that
-       * nothing was served and nothing billed; recording null there would make
-       * the rolling ceiling read UNMEASURED after every provider hiccup and
-       * defer real work against a cap nobody could read. A failure AFTER usage
-       * was reported keeps the reported usage, which is the charge. A route
-       * refused before any request (SCOUT_GRADUATED_ROUTE) is the same zero.
+       * Only a local pre-send refusal or typed rejected 4xx can establish zero.
+       * A lost response or server failure leaves the request's charge unknown,
+       * even after earlier metered turns. Their steps remain available, while
+       * the aggregate is null so ordinary settlement retains the whole hold.
        */
-      const refusedBeforeAnyUsage = (transportFailure !== null || turns === 0) && !usage.reported;
-      const inputTokens = usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
-      const outputTokens = usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
+      const refusedBeforeAnyUsage = !unpricedTransport && (transportFailure !== null || turns === 0) && !usage.reported;
+      const inputTokens = unpricedTransport ? null : usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
+      const outputTokens = unpricedTransport ? null : usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
       /*
        * The cost is the sum of the steps, each priced at the rate of the model
        * it was sent to. With an escalation that is two models, and this sum is
        * the COMBINED cost of both attempts (MW-031); `modelAttempts` splits it.
        */
       const modelSteps = steps.filter((s) => s.kind === "MODEL");
-      const usd = usage.reported
+      const usd = unpricedTransport ? null : usage.reported
         ? modelSteps.some((s) => s.usd === null)
           ? null
           : modelSteps.reduce((n, s) => n + (s.usd ?? 0), 0)
@@ -1884,12 +1908,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           : null;
       /*
        * The five billed quantities on the ledger row (2026-09-06): the turns'
-       * metered usage summed. A refusal before any completion is a measured
-       * zero on every one of them, for the same reason `usd` is; a failure
-       * after usage was reported keeps the reported usage.
+       * metered usage summed. Unknown transport exposure makes aggregate
+       * quantities unknown; the individual completed steps retain their usage.
        */
       const summed = sumMeteredUsage(meteredTurns);
-      const metering = usage.reported
+      const metering = usage.reported && !unpricedTransport
         ? meteredCostFields(summed)
         : refusedBeforeAnyUsage
           ? { cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0, batch: false }
@@ -1900,7 +1923,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         usd,
         durationMs: elapsedMs,
         bytesFetched: toolkit.bytesFetched,
-        requestCount: turns + toolkit.requestCount,
+        requestCount: unpricedTransport ? null : transportInvocations + toolkit.requestCount,
         ...metering,
       };
       /*
@@ -1910,12 +1933,11 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
        * When more than one model ran, each attempt's part is carried to the
        * ledger (`WorkOutcome.costByModel` → `CostEntry.byModel`): its dollars
        * are the attempt's own (`modelAttempts`), its tokens the attempt's own
-       * turns, and the parts sum to `cost`. An attempt that made no completed
-       * request billed nothing: a measured zero, as a provider error before any
-       * completion is above.
+       * turns, and the parts sum to `cost`. Emit this complete split only when
+       * no request has unknown transport exposure.
        */
       const costByModel: CostModelShare[] | null =
-        modelAttempts.length > 1 && usage.reported
+        modelAttempts.length > 1 && usage.reported && !unpricedTransport
           ? modelAttempts.map((a, i) => {
               const first = attemptFirstTurns[i] ?? 1;
               if (a.turns === 0) {

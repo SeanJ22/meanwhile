@@ -1,7 +1,7 @@
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { NetlifyAdminEvidenceRemote } from "./admin-bridge-netlify.ts";
 import type { AdminEvidenceRemote } from "./admin-bridge.ts";
-import { pollAdminEvidenceCopyRequests } from "./admin-copy-request.ts";
+import { pollAdminEvidenceCopyRequests } from "./admin-copy-poller.ts";
 
 export const ADMIN_COPY_POLL_MS = 2_000;
 export const ADMIN_COPY_OPERATION_TIMEOUT_MS = 8_000;

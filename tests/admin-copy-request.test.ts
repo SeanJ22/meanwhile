@@ -12,8 +12,9 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { adminEvidenceKey, type AdminEvidenceBlob, type AdminEvidenceRemote } from "../lib/control-plane/evidence/admin-bridge.ts";
 import { originalEvidenceAttachment } from "../lib/control-plane/evidence/admin-bridge-http.ts";
-import { pollAdminEvidenceCopyRequests, readAdminEvidenceCopyStatus, requestAdminEvidenceCopy,
+import { readAdminEvidenceCopyStatus, requestAdminEvidenceCopy,
   requeueUnavailableAdminCopy, adminCopyRequestId } from "../lib/control-plane/evidence/admin-copy-request.ts";
+import { pollAdminEvidenceCopyRequests } from "../lib/control-plane/evidence/admin-copy-poller.ts";
 import { runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";

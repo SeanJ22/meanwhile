@@ -640,6 +640,54 @@ test("state-money supersession requires one later non-weakening authority for th
   );
 });
 
+test("later verified AZ filings resolve three candidacy gaps without equating old mismatched committees", () => {
+  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/az/funding/state-money-az-2026.json"), "utf8")) as { records: StateMoneyRecord[] };
+  const cases = [
+    { index: 16, committeeId: "102016", registeredName: "Presmyk for Mine Inspector (Clean Elections)" },
+    { index: 31, committeeId: "102071", registeredName: "Diaz for State Representative" },
+    { index: 32, committeeId: "102077", registeredName: "Gonzales for State Representative" },
+  ] as const;
+  const pairs = cases.map(({ index, committeeId, registeredName }) => {
+    const frozen = structuredClone(snapshot.records[index]!);
+    assert.equal(frozen.filingState, "OURS_GAP");
+    const filed: StateMoneyRecord = {
+      ...structuredClone(frozen), committeeId, registeredName, filingState: "FILED", ourGap: undefined,
+      officeSought: index === 16 ? frozen.officeSought : "State Representative - District 20",
+      match: { ...frozen.match, registeredName, officeAsFiled: frozen.officeSought,
+        officeOnBallot: frozen.officeSought, electionYearAsFiled: frozen.electionYear,
+        electionYearOnBallot: frozen.electionYear, allThreeAgree: true,
+        note: "name, exact seat and cycle verified against the official filing" },
+      checkedAt: "2026-09-27",
+      provenance: { ...frozen.provenance, collectedAt: "2026-09-27", verifiedAt: "2026-09-27" },
+    };
+    assert.equal(stateMoneyAuthorityRelation(frozen, [filed], "2026-09-27").kind,
+      "RESOLVED_CANDIDACY_GAP", `${frozen.candidateNameAsFiled}: later verified candidacy filing`);
+    assert.equal(frozen.committeeId, null, "historical mismatched committee remains unbound");
+    assert.ok(frozen.ourGap?.whatIsMissing, "historical gap reason is retained");
+    return { frozen, filed };
+  });
+  const { frozen, filed } = pairs[0]!;
+  const rejects: StateMoneyRecord[] = [
+    { ...filed, targetKeys: ["ballot-az-pima:other-person"] },
+    { ...filed, candidateNameAsFiled: "Another person" },
+    { ...filed, officeSought: "Governor" },
+    { ...filed, electionYear: 2028 },
+    { ...filed, agency: "Different filing authority" },
+    { ...filed, provenance: { ...filed.provenance, sourceUrl: "https://other.example/" } },
+    { ...filed, match: { ...filed.match, allThreeAgree: false } },
+    { ...filed, match: { ...filed.match, officeAsFiled: "Governor" } },
+    { ...filed, match: { ...filed.match, electionYearAsFiled: 2028 } },
+    { ...filed, committeeId: null },
+    { ...filed, checkedAt: frozen.checkedAt },
+    { ...filed, provenance: { ...filed.provenance, verifiedAt: "2026-08-31" } },
+  ];
+  for (const rejected of rejects) assert.equal(stateMoneyAuthorityRelation(frozen, [rejected], "2026-09-27").kind,
+    "MISSING", `rejected ${JSON.stringify(rejected)}`);
+  assert.equal(stateMoneyAuthorityRelation(frozen, [filed], "2026-09-26").kind, "MISSING", "authority cannot postdate sourceThrough");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [filed, { ...filed, committeeId: "another-plausible-committee" }], "2026-09-27").kind,
+    "MISSING", "two plausible later committees cannot be chosen by guesswork");
+});
+
 test("ballot absence supersession permits only a unique later verification of the exact same fact", () => {
   const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/nj/ballot/nj-morris-2026.json"), "utf8")) as { absences: Record<string, unknown>[] };
   const frozen = structuredClone(snapshot.absences[0]!);

@@ -305,6 +305,8 @@ function parsedAuthorityTime(value: unknown): number | null {
 export type ReaderAuthorityRelation<T> =
   | { readonly kind: "EXACT"; readonly record: T }
   | { readonly kind: "MONOTONIC_SUCCESSOR"; readonly record: T }
+  /** A later verified filing resolves a prior candidacy-level gap; it does not identify the old, mismatched committee. */
+  | { readonly kind: "RESOLVED_CANDIDACY_GAP"; readonly record: T }
   /** The same fact from a newer official edition the runner promoted and validated (R25). */
   | { readonly kind: "PROMOTED_EDITION_SUCCESSOR"; readonly record: T; readonly versionId: string }
   | { readonly kind: "MISSING"; readonly record: null };
@@ -351,6 +353,11 @@ const STATE_MONEY_PRECEDENCE: Readonly<Record<StateMoneyRecord["filingState"], n
   REGISTERED_NO_ACTIVITY_REPORTED: 3,
   FILED: 4,
 };
+
+/** Agency punctuation may differ from its certified-ballot office comparison. */
+function stateMoneyOfficeLabel(value: string | null): string {
+  return (value ?? "").toLowerCase().replace(/[,-]/g, " ").replace(/\s+/g, " ").trim();
+}
 
 /**
  * Compare a frozen state-money observation with the exact promoted authority.
@@ -399,6 +406,7 @@ export function stateMoneyAuthorityRelation(
         STATE_MONEY_PRECEDENCE[record.filingState] > STATE_MONEY_PRECEDENCE[frozen.filingState]
       );
     return isRenderable(record) &&
+      (frozen.filingState !== "OURS_GAP" || record.filingState === "OURS_GAP") &&
       record.dataClass === frozen.dataClass &&
       record.jurisdiction === frozen.jurisdiction &&
       record.agency === frozen.agency &&
@@ -411,8 +419,43 @@ export function stateMoneyAuthorityRelation(
       verifiedAt !== null && verifiedAt >= frozenVerifiedAt &&
       (checkedAt > frozenCheckedAt || collectedAt > frozenCollectedAt || verifiedAt > frozenVerifiedAt);
   });
-  return successors.length === 1
-    ? { kind: "MONOTONIC_SUCCESSOR", record: successors[0]! }
+  if (successors.length === 1) return { kind: "MONOTONIC_SUCCESSOR", record: successors[0]! };
+  if (successors.length > 1) return { kind: "MISSING", record: null };
+
+  // The earlier OURS_GAP did not bind a committee to this candidacy. A later
+  // official filing may answer the candidacy question, but it cannot prove
+  // that its newly identified committee was the old mismatched committee.
+  const resolved = frozen.filingState === "OURS_GAP" && frozen.committeeId === null &&
+    Boolean(frozen.ourGap?.whatIsMissing) && frozenCheckedAt !== null &&
+    frozenCollectedAt !== null && frozenVerifiedAt !== null && authorityThrough !== null
+    ? current.filter((record) => {
+      const checkedAt = parsedAuthorityTime(record.checkedAt);
+      const collectedAt = parsedAuthorityTime(record.provenance?.collectedAt);
+      const verifiedAt = parsedAuthorityTime(record.provenance?.verifiedAt);
+      const targets = unique(frozen.targetKeys);
+      return record.filingState === "FILED" && isRenderable(record) &&
+        Boolean(record.committeeId?.trim()) && Boolean(record.registeredName.trim()) &&
+        record.match.allThreeAgree === true &&
+        record.match.registeredName === record.registeredName &&
+        record.match.officeAsFiled === frozen.officeSought &&
+        record.match.officeOnBallot === frozen.officeSought &&
+        record.match.electionYearAsFiled === frozen.electionYear &&
+        record.match.electionYearOnBallot === frozen.electionYear &&
+        record.candidateNameAsFiled === frozen.candidateNameAsFiled &&
+        Boolean(stateMoneyOfficeLabel(record.officeSought)) &&
+        stateMoneyOfficeLabel(record.officeSought) === stateMoneyOfficeLabel(frozen.officeSought) &&
+        record.electionYear === frozen.electionYear &&
+        record.dataClass === frozen.dataClass && record.jurisdiction === frozen.jurisdiction &&
+        record.agency === frozen.agency && record.filingsUrl === frozen.filingsUrl &&
+        record.provenance?.sourceUrl === frozen.provenance?.sourceUrl &&
+        record.provenance?.sourceOrg === frozen.provenance?.sourceOrg &&
+        targets.length > 0 && canonicalReaderAuthorityJson(targets) === canonicalReaderAuthorityJson(unique(record.targetKeys)) &&
+        checkedAt !== null && checkedAt > frozenCheckedAt && checkedAt <= authorityThrough &&
+        collectedAt !== null && collectedAt >= frozenCollectedAt && collectedAt <= authorityThrough &&
+        verifiedAt !== null && verifiedAt >= frozenVerifiedAt && verifiedAt <= authorityThrough;
+    }) : [];
+  return resolved.length === 1
+    ? { kind: "RESOLVED_CANDIDACY_GAP", record: resolved[0]! }
     : { kind: "MISSING", record: null };
 }
 
@@ -2601,6 +2644,11 @@ export async function projectCanonicalReaderRecords(
           selector = "stateMoneyForTarget → strict same-identity monotonic successor";
           returned = [authority.record];
           reason = `The exact promoted ${authority.record.jurisdiction} authority re-observed this same typed target${authority.record.committeeId ? ` and committee ${authority.record.committeeId}` : ""} at ${authority.record.checkedAt}, no earlier than the frozen ${string(raw.checkedAt)} observation, without weakening filing precedence. The frozen observation remains held lineage evidence; the Reader receives the newer source-authority answer.`;
+        } else if (authority.kind === "RESOLVED_CANDIDACY_GAP" && displayedAuthority.length === 1) {
+          status = "PROJECTED";
+          selector = "stateMoneyForTarget → later verified filing resolves candidacy gap";
+          returned = [authority.record];
+          reason = `The promoted ${authority.record.jurisdiction} source now verifies filing ${authority.record.committeeId} for the same candidate, office, election year and target at ${authority.record.checkedAt}. The frozen ${string(raw.checkedAt)} OURS_GAP and its mismatched-committee reason remain historical evidence; this does not claim the newly verified committee was that earlier committee.`;
         } else if (authority.kind !== "MISSING" && !displayedAuthority.length && selected.every((answer) => answer.records.length)) {
           status = "INTENTIONALLY_OUT_OF_SCOPE";
           selector = "stateMoneyForTarget → stateMoneyRecordsForDisplay canonical precedence";

@@ -478,6 +478,21 @@ export interface VoteEvidence {
   denominators: Record<string, number>;
 }
 
+/** Keep the recent-window denominator explicit once earlier votes join the answer. */
+export function federalVoteDenominatorsWithHistory(
+  recent: Record<string, number>, earlierCount: number,
+): Record<string, number> {
+  const { rollCallsHeldForTheirChamber, ...rest } = recent;
+  const recentRecorded = recent.rollCallVotesRecorded ?? 0;
+  return { ...rest,
+    ...(rollCallsHeldForTheirChamber === undefined ? {} :
+      { recentRollCallsHeldForTheirChamber: rollCallsHeldForTheirChamber }),
+    recentRollCallVotesRecorded: recentRecorded,
+    rollCallVotesRecorded: recentRecorded + earlierCount,
+    rollCallVotesShown: (recent.rollCallVotesShown ?? 0) + earlierCount,
+    earlierRollCallVotesShown: earlierCount };
+}
+
 /**
  * Everything the pack should carry about how this person voted.
  *
@@ -705,11 +720,7 @@ export async function voteEvidenceForIncludingHistory(
   const accurateGaps = earlierCount > 0
     ? gaps.filter((gap) => !gap.statement.includes("so we have no voting record to show yet.")) : gaps;
   return { identity: current.identity, records, gaps: accurateGaps,
-    denominators: { ...current.denominators,
-      recentRollCallVotesRecorded: current.denominators.rollCallVotesRecorded ?? 0,
-      rollCallVotesRecorded: (current.denominators.rollCallVotesRecorded ?? 0) + earlierCount,
-      rollCallVotesShown: records.filter((record) => record.kind === "ROLL_CALL_VOTE").length,
-      earlierRollCallVotesShown: earlierCount } };
+    denominators: federalVoteDenominatorsWithHistory(current.denominators, earlierCount) };
 }
 
 /** The states a reader's divisions are in — the honest roster scope. */

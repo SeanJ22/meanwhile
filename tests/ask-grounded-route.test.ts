@@ -612,7 +612,7 @@ test("RECORDS: no ISO date reaches a reader, because these render verbatim", asy
   assert.match(contest.text, /November 3rd, 2026/, "spelled out, the way every other date is");
 });
 
-test("RECORDS: a position record states the SEARCH, never a stance", async () => {
+test("RECORDS: a source passage states the SEARCH, never a stance", async () => {
   /*
    * The same capture read "On water, Katie Hobbs published: …" over a passage
    * that was a run of site headings. The quote was honest; the frame asserted
@@ -622,7 +622,7 @@ test("RECORDS: a position record states the SEARCH, never a stance", async () =>
    * for an issue's phrases. Saying that is both true and more useful.
    */
   const body = await ask("What has Katie Hobbs done?", { surface: "BALLOT" });
-  for (const record of (body.records ?? []).filter((r) => r.kind === "POSITION")) {
+  for (const record of (body.records ?? []).filter((r) => r.kind === "SOURCE_PASSAGE")) {
     assert.match(record.text, /^Searching a (campaign|official|held public) page linked to .+ for /);
     assert.ok(
       !/^On .+ published:/.test(record.text),

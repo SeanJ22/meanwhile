@@ -38,6 +38,7 @@ import {
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { statementEvidenceFor } from "@/lib/ask/statements";
+import { stanceAnswerability } from "@/lib/ask/stance-answerability";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -1130,7 +1131,8 @@ export async function POST(request: Request) {
     const guess = { codeIntent: reading.interpretation.intent, codeTemporal: reading.interpretation.temporal };
     try {
       const path = await answerPath(structuredClone(reading.interpretation), emptyTrace());
-      if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack)) return { started: false, why: "code-reading-needs-no-writer", ...guess };
+      if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
+        stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
       const cached = synthesisCache.get(outcome.writerInput);
       const controller = new AbortController();
@@ -2460,6 +2462,14 @@ export async function POST(request: Request) {
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
 
+    if (stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
+      const pageMatches = packRecords.filter((record) => record.kind === "SOURCE_PASSAGE").length;
+      denominators.personalStanceVerified = 0;
+      denominators.linkedSourcePassages = pageMatches;
+      gaps.push({ whose: "OURS", statement: `We have not verified a statement by ${subject!.name} that establishes their personal stance.` +
+        (pageMatches > 0 ? " The linked page passages below show only what the pages say." : "") });
+    }
+
     /* One named gap is said once: two same-day sittings used to put the identical
        "not yet acquired" sentence in front of the reader twice. */
     const packGaps = gaps.filter((gap, index) =>
@@ -2649,7 +2659,8 @@ export async function POST(request: Request) {
    * `synthesizeWithLadder` in lib/ask/synthesize.ts.
    */
   const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
-  const cachedSynthesis = synthesisKey ? synthesisCache.get(synthesisKey) : null;
+  const cachedSynthesis = synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"
+    ? synthesisCache.get(synthesisKey) : null;
   const keepSpeculative = settleSpeculation(outcome?.kind !== "READ" ? "MODEL_READING_UNAVAILABLE"
     : composed ? "MODEL_READING_NEEDS_NO_WRITER" : readingOutcome(path));
   const written = composed ? null : cachedSynthesis ?? (keepSpeculative && speculation?.started ? await speculation.writing : await synthesizeWithLadder(pack, {

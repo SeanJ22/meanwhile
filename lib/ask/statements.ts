@@ -51,7 +51,7 @@ export function statementEvidenceFor(
     const version = latest === null || latest === undefined ? "Source version status unknown." :
       latest === passage.snapshotId ? "Latest captured version." : "Earlier captured version, not the latest captured page.";
       records.push({
-        kind: "POSITION", id: passage.snapshotId, subjectId: subject.id,
+        kind: "SOURCE_PASSAGE", id: passage.snapshotId, subjectId: subject.id,
         canonicalSubjectId: passage.canonicalSubjectId,
         text: `Searching a held ${source} linked to ${subject.name} for ${topic} found this passage: "${passage.quote}". ` +
           `${version} Read ${passage.retrievedAt}. A phrase match does not establish a personal stance or the passage's speaker.`,

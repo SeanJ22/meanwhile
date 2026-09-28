@@ -342,7 +342,7 @@ export interface BallotRetrievalDeps {
   set: BallotSet;
   contests: readonly Contest[];
   absences: readonly BallotAbsence[];
-  /** Sourced positions for a candidate target key. Empty is a real answer. */
+  /** Sourced page passages for a candidate target key. Empty is a real answer. */
   positions?: (targetKey: string) => readonly {
     issueLabel: string;
     quote: string;
@@ -535,7 +535,7 @@ export function ballotRecordsFor(
       : "";
     records.push({
       /*
-       * **A POSITION IS A QUOTE, NEVER A CHARACTERISATION — and the sentence
+       * **A SOURCE PASSAGE IS A QUOTE, NEVER A CHARACTERISATION — and the sentence
        * around it states the MECHANISM rather than a stance.**
        *
        * This read *"On water, Katie Hobbs published: …"*, which asserts that she
@@ -550,7 +550,7 @@ export function ballotRecordsFor(
        * never do; asserting a topic the passage does not discuss is the same
        * thing one step quieter.
        */
-      kind: "POSITION",
+      kind: "SOURCE_PASSAGE",
       id: `${record.id}#position-${position.sourceRevisionId ?? index}`,
       text:
         `Searching a ${source} linked to ${record.name} for ${position.issueLabel} ` +

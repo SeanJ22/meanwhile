@@ -1,5 +1,6 @@
 import { lengthRuleForPrompt } from "./length-contract.ts";
 import { writerSelection } from "./writer-selection.ts";
+import { stanceAnswerability } from "./stance-answerability.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelEnv } from "./model.ts";
 import { askRequestFields, servedModelOf } from "./model-registry.ts";
@@ -110,7 +111,7 @@ export type SynthesisOutcome =
     }
   | {
       kind: "UNAVAILABLE";
-      why: "no-key" | "ceiling" | "no-evidence" | "error";
+      why: "no-key" | "ceiling" | "no-evidence" | "unverified-stance" | "error";
       ms: number;
       /**
        * **WHY IT FAILED, CARRIED RATHER THAN COLLAPSED.** (H1, 2026-09-01.)
@@ -174,6 +175,7 @@ export function synthesisPrompt(pack: EvidencePack): string {
     "- A gap marked OURS is about us — say we have not recorded it. A gap marked THEIRS is about the government — say what they have not published. Never swap these.",
     "- Never tell the reader how to vote, never rank or score candidates, and never say who to support.",
     "- Never state a candidate's or official's position, stance or vote unless a supplied record states it.",
+    "- SOURCE_PASSAGE is a matched quotation from a linked page. It does not establish who spoke or adopted the words. Attribute it to the page, never to the person.",
     "- Do not announce your own failure or apologise. State what is known, name what is missing, stop.",
     "- Plain language a twelve-year-old would understand. No identifiers, no codes, no internal state names.",
     /*
@@ -653,6 +655,9 @@ async function synthesizeOnRung(
    */
   if (!packHasEvidence(pack)) {
     return { kind: "UNAVAILABLE", why: "no-evidence", ms: elapsed() };
+  }
+  if (stanceAnswerability(pack) === "UNVERIFIED_PERSONAL_STANCE") {
+    return { kind: "UNAVAILABLE", why: "unverified-stance", ms: elapsed() };
   }
 
   const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;

@@ -186,7 +186,7 @@ export interface DerivedWiringInputs {
     readonly automatic?: { readonly input: DerivedInputRef; readonly versionId: string; readonly rowIds: ReadonlySet<string> };
   };
   /** The registration input a row's division rests on, or why the division is not registered. */
-  readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef } | { readonly notRegistered: string };
+  readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef; readonly identityInput?: DerivedInputRef } | { readonly notRegistered: string };
   /** The latest walk of each government, with its log record id and time. */
   readonly attempts: readonly { readonly attempt: MeetingsDiscoveryAttempt; readonly recordId: string; readonly recordedAt: string }[];
   /** A hand-wired SOURCE_WIRING route already serves the body: shadow-compared, never a second writer. */
@@ -289,6 +289,7 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
       continue;
     }
     base.push(registration.input);
+    if (registration.identityInput !== undefined) base.push(registration.identityInput);
     const walked = byJurisdiction.get(reviewed.jurisdictionId);
     if (walked === undefined) {
       decide(hold(key, "WALK_ABSENT", `no walk of ${reviewed.jurisdictionId} is recorded`, base));

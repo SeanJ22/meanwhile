@@ -630,6 +630,9 @@ export interface AssignmentSources {
   /** Disposition commits, when read; the RouteTask's applied disposition is used either way. */
   readonly dispositions: readonly DispositionCommit[] | null;
   readonly artifacts: readonly ArtifactRecord[];
+  /** Targeted by-ID origin records for declared inherited captures. Null means
+   * the bounded origin read was unavailable; absent on whole-population reads. */
+  readonly inheritedOrigins?: readonly { readonly artifact: ArtifactRecord; readonly attempt: Attempt; readonly originWorkItemId: string }[] | null;
   readonly costs: readonly CostEntry[];
   readonly scoutResults: readonly ScoutResult[];
   readonly workerResults: readonly WorkerResultRecord[];

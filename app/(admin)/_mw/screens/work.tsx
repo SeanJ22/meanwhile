@@ -60,6 +60,7 @@ import { WORK_QUESTION_WORDS } from "@/lib/control-plane/work-question.ts";
 import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-reading.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
 import { plainText } from "@/lib/control-plane/plain-words.ts";
+import { assignmentEvidenceTrail, type AssignmentEvidenceTrail } from "@/lib/control-plane/admin-view/assignment-evidence-trail.ts";
 import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
@@ -97,7 +98,7 @@ const FIRST_PER_GROUP = 4;
 type Opened =
   | { readonly kind: "NONE" }
   | { readonly kind: "INSTRUCTION"; readonly view: InstructionView }
-  | { readonly kind: "DETAIL"; readonly id: string; readonly detail: AssignmentDetailView; readonly says: string }
+  | { readonly kind: "DETAIL"; readonly id: string; readonly detail: AssignmentDetailView; readonly trail: AssignmentEvidenceTrail | null; readonly says: string }
   | { readonly kind: "MISSING"; readonly id: string; readonly says: string };
 
 export async function WorkScreen(props: { readonly area: MwArea; readonly searchParams: Promise<SearchParams> }) {
@@ -142,6 +143,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const instructionFilter = param(sp, "instruction");
   const workQuery = (param(sp, "q") ?? "").trim().slice(0, 100);
   const requestedIndexPage = Number(param(sp, "page") ?? "1");
+  const requestedTrailPage = Number(param(sp, "trailPage") ?? "1");
   /*
    * An opened assignment is read beside the page's other reads, not after
    * them: it needs nothing they return. A piece of standing work is read by its
@@ -249,7 +251,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     else if (contractId !== null && routineRead !== null) {
       opened =
         routineRead.kind === "HELD"
-          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
+          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), trail: null, says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
           : { kind: "MISSING", id: openId, says: routineRead.detail };
     } else if (standingRead !== null) {
       const read = standingRead;
@@ -259,7 +261,9 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         const sources = { ...read.value, activation: view?.activation ?? null, servedReader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null };
         const row = buildAssignments(sources, { costDenominatorUsd: attributed }).find((r) => r.id === openId) ?? null;
         opened = row
-          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }), says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
+          ? { kind: "DETAIL", id: openId, detail: standingDetail(row, { scouts: read.value.scoutResults }),
+              trail: assignmentEvidenceTrail(sources,openId,row.waiting.nextAction),
+              says: `read live from the control plane at ${formatEastern(base.nowIso)}` }
           : { kind: "MISSING", id: openId, says: `The records for ${openId} were read and no assignment with that id is among them.` };
       } else opened = { kind: "MISSING", id: openId, says: read.detail };
     }
@@ -421,7 +425,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             )
           )}
           {/* A piece of work opened from an instruction (or from Money) that the list below does not draw is drawn here, whole. */}
-          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} says={opened.says} />)}
+          {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
             Work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " across all places" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${unfinishedWork.toLocaleString("en-US")} waiting or stuck` : ""}
@@ -462,7 +466,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                           </Link>
                         )}
                       </p>
-                      {cards.map((r) => card(standingCard(r), opened.kind === "DETAIL" && opened.id === r.id ? <DetailSections detail={opened.detail} says={opened.says} /> : null))}
+                      {cards.map((r) => card(standingCard(r), opened.kind === "DETAIL" && opened.id === r.id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} /> : null))}
                     </div>
                   );
                 })}
@@ -480,7 +484,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
                 {g.bodies.slice(0, show === `routine-${g.st}` ? g.bodies.length : FIRST_PER_GROUP).flatMap((b) =>
                   b.contractIds.map((cid) => {
                     const id = `routine:${cid}`;
-                    return card(routineCard(b, cid), opened.kind === "DETAIL" && opened.id === id ? <DetailSections detail={opened.detail} says={opened.says} /> : null);
+                    return card(routineCard(b, cid), opened.kind === "DETAIL" && opened.id === id ? <DetailSections detail={opened.detail} trail={opened.trail} trailPage={requestedTrailPage} trailHref={page=>`${here({open:opened.id,trailPage:String(page)})}#a-${encodeURIComponent(opened.id)}`} says={opened.says} /> : null);
                   }),
                 )}
                 {g.bodies.length > FIRST_PER_GROUP && show !== `routine-${g.st}` && (
@@ -713,7 +717,11 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity, 
   );
 }
 
-function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: string }) {
+function DetailSections({ detail, trail, trailPage, trailHref, says }: { detail: AssignmentDetailView; trail: AssignmentEvidenceTrail | null; trailPage: number; trailHref: (page:number)=>string; says: string }) {
+  const pageSize=20;
+  const pages=Math.max(1,Math.ceil((trail?.events.length??0)/pageSize));
+  const page=Number.isSafeInteger(trailPage)?Math.max(1,Math.min(trailPage,pages)):1;
+  const shown=trail?.events.slice((page-1)*pageSize,page*pageSize)??[];
   return (
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
@@ -733,6 +741,23 @@ function DetailSections({ detail, says }: { detail: AssignmentDetailView; says: 
       <p className={s.note} style={{ marginBottom: 24 }}>
         {detail.addressesNote}
       </p>
+      {trail && <section className={s.stack10} aria-label="Source to public result trail" style={{ marginBottom:24 }}>
+        <h4 className={s.h4}>From source to public result</h4>
+        <p className={s.note}>{trail.events.length} recorded steps on this linked work, newest first; showing {shown.length} on page {page} of {pages}. A saved document is not an accepted fact, and a publication is not a confirmed public result.</p>
+        {trail.gaps.map(gap=><p key={gap} className={s.goldNote}>{gap}</p>)}
+        {shown.length===0 && <p className={s.note}>No linked execution step was returned by this read. This is not evidence that the source is complete.</p>}
+        {shown.map(event=><div key={event.id} className={s.insetRow}>
+          <div className={`${s.stack2} ${s.grow}`}>
+            <span className={s.name14}>{event.title}</span>
+            <span className={s.note}>{event.stage.toLowerCase()} · {event.at?formatEastern(event.at):"time not recorded"}</span>
+            <span className={s.text14}>{event.says}</span>
+            {event.nextAction && <span className={s.note}>Current work plan: {plainText(event.nextAction)}</span>}
+            <div className={s.row10}>{event.sourceUrl && <a className={s.btnLink} href={event.sourceUrl} target="_blank" rel="noreferrer">Open source page</a>}{event.publicUrl && <a className={s.btnLink} href={event.publicUrl} target="_blank" rel="noreferrer">Open published result</a>}</div>
+            {event.references.length>0 && <details className={s.note}><summary>Exact records and receipts</summary><div className={s.stack2}>{event.references.map(([name,value],index)=><span key={`${name}:${value}:${index}`}>{name}: {value}</span>)}</div></details>}
+          </div>
+        </div>)}
+        <div className={s.row10}>{page>1 && <Link className={s.btnLink} href={trailHref(page-1)}>Newer 20</Link>}{page<pages && <Link className={s.btnLink} href={trailHref(page+1)}>Older 20</Link>}</div>
+      </section>}
       <h4 className={s.h4}>Work lanes, running at once</h4>
       <div className={s.gridAuto240} style={{ gap: 12, marginBottom: 24 }}>
         {detail.lanes.map((l) => (

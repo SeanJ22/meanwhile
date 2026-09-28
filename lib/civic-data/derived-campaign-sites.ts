@@ -81,6 +81,28 @@ export interface DerivedCampaignSiteEvidence {
   readonly secondSignal: string;
 }
 
+/** A deeper page inherits publisher identity from a separately approved site
+ * and an exact saved href; its own completed capture remains a distinct fact. */
+export interface DerivedLinkedPublicationEvidence {
+  readonly kind: "LINKED_PAGE";
+  readonly approvalItemId: string;
+  readonly approvalRecordId: string;
+  readonly sourceArtifactId: string;
+  readonly sourceContentHash: string;
+  readonly sourceUrl: string;
+  readonly hrefStart: number;
+  readonly hrefEnd: number;
+  readonly hrefQuote: string;
+  readonly offsetUnit: "UTF16_CODE_UNITS";
+  readonly artifactId: string;
+  readonly attemptId: string;
+  readonly sha256: string;
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly readAt: string;
+}
+
 /** A campaign link as this store publishes it: the Reader's own link shape, and its evidence. */
 export type DerivedCampaignLink = VerifiedLinkShape & { readonly evidence: DerivedCampaignSiteEvidence };
 
@@ -94,7 +116,7 @@ export interface DerivedCampaignSiteRecord {
   readonly campaign: DerivedCampaignLink;
   /** Already verified page versions, deterministically transcribed from the
    * same vault. Older GOOD versions without this field remain readable. */
-  readonly publications?: readonly { readonly document: CandidateDocument; readonly evidence: DerivedCampaignSiteEvidence }[];
+  readonly publications?: readonly { readonly document: CandidateDocument; readonly evidence: DerivedCampaignSiteEvidence | DerivedLinkedPublicationEvidence }[];
 }
 
 export interface DerivedCampaignSitesProjection {
@@ -156,7 +178,13 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
           !SHA256.test(e.sha256) || d.sourceContentHash !== e.sha256 || d.documentUrl !== e.finalUrl ||
           !https(d.documentUrl) || new URL(d.documentUrl).hostname !== new URL(link.url).hostname ||
           d.retrievedAt !== e.readAt || !instant(e.readAt) || !text(e.artifactId) || !text(e.approvalRecordId) ||
-          !text(e.approvalItemId) || !text(e.attemptId) || !text(e.secondSignal) || !instant(e.approvedAt) ||
+          !text(e.approvalItemId) || !text(e.attemptId) ||
+          ("kind" in e && e.kind === "LINKED_PAGE"
+            ? !text(e.sourceArtifactId) || !/^sha256-[a-f0-9]{64}$/.test(e.sourceContentHash) ||
+              !https(e.sourceUrl) || !Number.isSafeInteger(e.hrefStart) || !Number.isSafeInteger(e.hrefEnd) ||
+              e.hrefStart < 0 || e.hrefEnd <= e.hrefStart || !text(e.hrefQuote) || e.offsetUnit !== "UTF16_CODE_UNITS" ||
+              !https(e.requestedUrl) || new URL(e.sourceUrl).hostname !== new URL(d.documentUrl).hostname
+            : !text(e.secondSignal) || !instant(e.approvedAt)) ||
           e.httpStatus < 200 || e.httpStatus >= 300) return `${record.id}: candidate publication lacks exact text, identity or captured-byte evidence`;
       documentIds.add(d.id);
     }

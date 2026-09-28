@@ -36,6 +36,7 @@ import {
   derivedCampaignSitesPass,
   isPublishableCampaignSiteApproval,
   type HeldVerifyingRead,
+  type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
@@ -104,6 +105,42 @@ async function heldReads(vault: VaultIndex, approvals: readonly PublishableCampa
   return held;
 }
 
+/** Distinct completed publication acquisitions. The child never infers
+ * article authority from a URL in prose or from uncommitted vault bytes. */
+async function linkedPublicationReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[]): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
+  const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+  if (!controlPlane) return { unreadable: "the control plane's publication attempts are not configured" };
+  const candidacies = [...new Set(approvals.map(row => row.campaignSite.candidacyId))];
+  if (!candidacies.length) return [];
+  try {
+    const rows = await neon(controlPlane).query(
+      `SELECT a.record, t.value AS attempt, w.value AS work_item FROM cp_log_artifacts a
+       JOIN cp_attempts t ON t.id = a.record->>'attemptId'
+       JOIN cp_work_items w ON w.id = a.record->>'workItemId'
+       WHERE a.record ? 'publicationLink' AND a.record->'publicationLink'->>'candidacyId' = ANY($1::text[])
+       ORDER BY a.log_key, a.position`, [candidacies],
+    ) as { record: unknown; attempt: unknown; work_item: unknown }[];
+    const out: HeldLinkedPublicationRead[] = [];
+    for (const row of rows) {
+      const record = (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as HeldLinkedPublicationRead["record"];
+      const attempt = (typeof row.attempt === "string" ? JSON.parse(row.attempt) : row.attempt) as HeldLinkedPublicationRead["attempt"];
+      const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
+      const artifact = vault.byId.get(record.artifactId);
+      if (!artifact || artifact.tier === "RESTRICTED_RAW") return { unreadable: `Publication capture ${record.artifactId} is missing or restricted in the vault` };
+      let body: string;
+      try { body = new TextDecoder("utf-8", { fatal: true }).decode(await readHeldBytes(artifact)); }
+      catch { return { unreadable: `Publication capture ${record.artifactId} failed exact vault read` }; }
+      out.push({ record, attempt, workItemSubject: typeof workItem.subject === "string" ? workItem.subject : "",
+        body, vaultSha256: artifact.contentHash.replace(/^sha256-/, ""),
+        vaultCanonicalUrl: artifact.canonicalUrl, vaultRetrievalUrl: artifact.retrievalUrl,
+        vaultWorkItemId: artifact.workItemId, vaultAttemptId: artifact.attemptId,
+        vaultHttpStatus: artifact.httpStatus, vaultContentType: artifact.contentType,
+        vaultMethodRouteId: artifact.methodRouteId, vaultPermission: artifact.permission });
+    }
+    return out;
+  } catch (error) { return { unreadable: error instanceof Error ? error.message : String(error) }; }
+}
+
 async function main(): Promise<void> {
   const approvals = await readApprovals();
   const profilesRead = await readPromotedCivicData<{ readonly links?: { readonly links?: Readonly<Record<string, CandidateLinksShape>> } }>(
@@ -118,9 +155,17 @@ async function main(): Promise<void> {
       ? null
       : { unreadable: `${profilesRead.kind}${"detail" in profilesRead ? `: ${profilesRead.detail}` : ": the promoted version names no version or promotion time"}` };
   let held = new Map<string, HeldVerifyingRead>();
+  let linkedPublications: readonly HeldLinkedPublicationRead[] = [];
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
-      held = await heldReads(await indexVault(join(process.cwd(), "data", "control-plane", "vault")), approvals);
+      const vault = await indexVault(join(process.cwd(), "data", "control-plane", "vault"));
+      held = await heldReads(vault, approvals);
+      const linked = await linkedPublicationReads(vault, approvals);
+      if ("unreadable" in linked) {
+        await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
+        return;
+      }
+      linkedPublications = linked;
     } catch (error) {
       await finish(derivedCampaignSitesFailedCandidate(now, `The evidence vault could not be read: ${error instanceof Error ? error.message : String(error)}`));
       return;
@@ -129,6 +174,7 @@ async function main(): Promise<void> {
   const pass = derivedCampaignSitesPass({
     approvals,
     held: (record) => held.get(record.campaignSite.evidence.artifactId) ?? null,
+    linkedPublications,
     profiles,
     gateOpen: classFieldOpen(ACTIVATION_GATE, "candidate-enrichment", "campaignSite"),
     now,

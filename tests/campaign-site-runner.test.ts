@@ -31,6 +31,8 @@ import {
   type CampaignSiteCycleInput,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { runCandidatePublicationCycle } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
+import { candidatePublicationLinks } from "../lib/control-plane/promotion/campaign-publication-links.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
@@ -62,6 +64,7 @@ import {
   isPublishableCampaignSiteApproval,
   planDerivedCampaignSites,
   type HeldVerifyingRead,
+  type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../lib/ballot/candidate-sites.ts";
@@ -296,6 +299,86 @@ test("a runner cycle over held results publishes a verified site through the der
   assert.equal(record.sourceUrl, LILY);
   assert.equal(record.retrievedAt, "2026-09-24");
   assert.equal(record.candidateProfile?.holdingPath, derivedCampaignSiteHoldingPath(key));
+});
+
+test("a bounded linked publication capture reaches the existing derived corpus with distinct approval, href and child Attempt", async (t) => {
+  const p = await plane(t);
+  await cycle(p, T1);
+  await cycle(p, T2);
+  const articleUrl = "https://www.lilytangwilliams.com/congress/issues/";
+  const article = "<html><main><h1>Priorities</h1><p>Our campaign supports accessible health care.</p></main></html>";
+  const pages = { ...served(),
+    "https://www.lilytangwilliams.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /congress/issues/\n" },
+    [articleUrl]: { status: 200, body: article } };
+  const clock = { ms: Date.parse(PUBLISH) };
+  const web = servedRuntime(pages, PUBLISH);
+  const scoped = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+    heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
+    clock: () => (clock.ms += 5), sleep: async ms => { clock.ms += ms; },
+    openFor: () => web.get, maxReads: 100, budgetMs: 300_000 });
+  assert.equal(scoped.outcomes.some(row => row.url === articleUrl && row.code === "ACQUIRED"), true, JSON.stringify(scoped.outcomes));
+  assert.equal(scoped.outcomes.some(row => row.candidacyId !== TANG_WILLIAMS), false,
+    "Only candidacies in the supplied owner receipt may acquire linked pages.");
+  const capture = (await p.repos.artifacts.readAll()).find(row => row.canonicalUrl === articleUrl && row.publicationLink);
+  assert.ok(capture?.publicationLink);
+  const vault = await indexVault(p.vaultRoot), held = vault.byId.get(capture.artifactId);
+  assert.ok(held);
+  assert.equal(held.retrievalUrl, articleUrl, "the child's final URL survives the vault sidecar round trip");
+  assert.equal(held.permission, "DISALLOWED", "a robots-only reading is recorded, not treated as an access-control refusal");
+  const linked: HeldLinkedPublicationRead = { record: capture, attempt: (await p.repos.attempts.mustRead(capture.attemptId)).value,
+    workItemSubject: (await p.repos.workItems.mustRead(capture.workItemId)).value.subject,
+    body: new TextDecoder().decode(await readHeldBytes(held)), vaultSha256: held.contentHash.slice(7),
+    vaultCanonicalUrl: held.canonicalUrl, vaultRetrievalUrl: held.retrievalUrl,
+    vaultWorkItemId: held.workItemId, vaultAttemptId: held.attemptId, vaultHttpStatus: held.httpStatus,
+    vaultContentType: held.contentType, vaultMethodRouteId: held.methodRouteId, vaultPermission: held.permission };
+  const inputs = await doorInputs(p), { store, profiles } = await profilesStore();
+  const pass = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held,
+    linkedPublications: [linked], profiles, gateOpen: true, now: new Date(clock.ms + 1000).toISOString() });
+  const key = subject(TANG_WILLIAMS).readerKeys[0]!;
+  const published = pass.plan?.records.find(row => row.id === key)?.publications?.find(row => row.document.documentUrl === articleUrl);
+  assert.equal(published?.evidence && "kind" in published.evidence ? published.evidence.kind : null, "LINKED_PAGE");
+  assert.equal(published?.document.text?.includes("accessible health care"), true);
+  assert.equal(published?.evidence && "kind" in published.evidence && published.evidence.kind === "LINKED_PAGE" &&
+    published.evidence.sourceArtifactId === capture.publicationLink.sourceArtifactId, true);
+  const promoted = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", pass.candidate,
+    new Date(clock.ms + 1000).toISOString());
+  assert.equal(promoted.candidate.state, "PROMOTED", JSON.stringify(promoted.candidate.receipt?.checks.filter(row => row.verdict !== "PASS")));
+  await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: new Date(clock.ms + 2000).toISOString() });
+  assert.ok(documentsFor(key).some(row => row.documentUrl === articleUrl && row.text?.includes("accessible health care")));
+
+  const corrupted = { ...linked, body: linked.body.replace("health care", "fabricated claim") };
+  const refused = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held,
+    linkedPublications: [corrupted], profiles, gateOpen: true, now: new Date(clock.ms + 3000).toISOString() });
+  assert.equal(refused.plan?.held.some(row => row.code === "LINKED_PUBLICATION_UNVERIFIED"), true);
+  assert.equal(refused.plan?.records.flatMap(row => row.publications ?? []).some(row => row.document.documentUrl === articleUrl), false);
+  assert.ok(documentsFor(key).some(row => row.documentUrl === articleUrl), "An invalid later read does not replace the previously promoted document.");
+});
+
+test("a blocked first linked page records a route Attempt and yields the next page on the next bounded pass", async (t) => {
+  const p = await plane(t);
+  await cycle(p, T1);
+  await cycle(p, T2);
+  const links = candidatePublicationLinks({ html: fixture("lilytangwilliams-endorsements.live.html"), sourceUrl: LILY,
+    sourceArtifactId: "test-inventory", sourceContentHash: "test-inventory", approvalRecordId: "test-inventory",
+    candidacyId: TANG_WILLIAMS });
+  assert.ok(links.length >= 2, "the approved page offers a backlog wider than one bounded read");
+  const pages = { ...served(), ...Object.fromEntries(links.map(link => [link.url, { status: 404, body: "<html>not found</html>" }])) };
+  const web = servedRuntime(pages, PUBLISH);
+  let ms = Date.parse(PUBLISH);
+  const run = async () => runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+    heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
+    clock: () => (ms += 5), sleep: async wait => { ms += wait; }, openFor: () => web.get,
+    maxReads: 1, budgetMs: 300_000 });
+  const first = await run();
+  assert.equal(first.outcomes[0]?.code, "UNUSABLE_RESPONSE");
+  assert.equal(first.deferred, first.due - 1);
+  const blocked = (await p.repos.routeTasks.list()).find(row => row.value.target === first.outcomes[0]?.url &&
+    row.value.disposition?.disposition === "BLOCKED_CURRENTLY");
+  assert.ok(blocked, "the failed route stays owed with its own completed Attempt");
+  const second = await run();
+  const attempted = second.outcomes.find(row => row.code !== "NOT_READ_BOUNDED");
+  assert.ok(attempted);
+  assert.notEqual(attempted.url, first.outcomes[0]?.url, "an earlier failing URL cannot starve the next due link");
 });
 
 test("a refused lead publishes nothing and keeps its typed reason where Admin reads it", async (t) => {

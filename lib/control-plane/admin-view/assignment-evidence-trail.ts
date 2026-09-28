@@ -158,6 +158,7 @@ export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:s
     }
   }
   if(sources.servedReader===null) gaps.push("The public reader check was not readable with this work item; publication cannot be called visible here.");
+  if(events.some(event=>event.stage==="SAVED")) gaps.push("This view shows when and where documents were saved. Opening the captured copy in Admin is not yet available; the source-page link may show a later version.");
   events.sort((a,b)=>(Date.parse(b.at??"")||0)-(Date.parse(a.at??"")||0)||a.id.localeCompare(b.id));
   return {events,gaps};
 }

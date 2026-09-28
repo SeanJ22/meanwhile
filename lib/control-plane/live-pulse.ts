@@ -28,6 +28,7 @@
  */
 
 import type { LaneGauge } from "./scheduler/lane-reading.ts";
+import type { AdminCapabilityManifest } from "./admin-view/capabilities.ts";
 
 /** The small body the live endpoint returns. */
 export interface LivePulse {
@@ -35,6 +36,8 @@ export interface LivePulse {
   readonly revision: string;
   /** When the pulse was taken, ISO. */
   readonly at: string;
+  /** Optional for compatibility with an older deployed /api/admin/live. */
+  readonly capabilities?: AdminCapabilityManifest;
   /** Runner heartbeat, for the one-line strip. */
   readonly runner: {
     readonly beatAt: string | null;
@@ -74,6 +77,7 @@ export function pulseRevision(input: {
   readonly receiptCount: number | null;
   readonly researchIntentCount: number | null;
   readonly sourceProgressId: string | null;
+  readonly capabilityRevision?: string | null;
 }): string {
   return [
     input.beatAt ?? "-",
@@ -84,6 +88,7 @@ export function pulseRevision(input: {
     input.receiptCount ?? "-",
     input.researchIntentCount ?? "-",
     input.sourceProgressId ?? "-",
+    input.capabilityRevision ?? "-",
   ].join("|");
 }
 

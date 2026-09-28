@@ -458,6 +458,14 @@ export interface InstructionBudget {
   readonly says: string;
 }
 
+export interface InstructionProgress {
+  readonly complete: number | null;
+  readonly known: number;
+  readonly percent: number | null;
+  readonly notCreated: number | null;
+  readonly says: string;
+}
+
 export interface InstructionView {
   readonly card: CardView;
   readonly decision: ExpansionScopeDecision;
@@ -467,6 +475,8 @@ export interface InstructionView {
   readonly reach: InstructionReach | null;
   readonly reachWhyNot: string | null;
   readonly budget: InstructionBudget | null;
+  /** Progress through recorded obligations, not a claim that all geographic coverage is known. */
+  readonly progress: InstructionProgress;
   /**
    * The earlier join by place — standing work about governments in the
    * geography. Kept only as a labeled fallback: it covers work recorded before
@@ -515,6 +525,22 @@ function budgetOf(a: AssignmentReading, readAt: string | null): InstructionBudge
       `As the runner held it${readAt ? ` at ${formatEastern(readAt)}` : ""}: every charge on work this instruction reached, from when it reached it${b.bySubjectRows > 0 ? `; ${b.bySubjectRows} of those charges named no piece of work and are counted by their government, which can only hold more back` : ""}. ` +
       "A charge on work several instructions share counts in full toward each.",
   };
+}
+
+function progressOf(assignment: AssignmentReading | null, creation: ReturnType<typeof scopeCreationView> | null): InstructionProgress {
+  if (assignment === null) return { complete: null, known: 0, percent: null, notCreated: null, says: "Waiting for the runner to link work to this instruction." };
+  const completion = assignment.completion ?? null;
+  const linked = assignment.members.created + assignment.members.reordered;
+  const members = completion !== null && completion.kind !== "NO_MEMBERS" ? Math.max(linked, completion.members) : linked;
+  const target = creation?.kind === "READ" ? creation.target : null;
+  const notCreated = target === null ? null : Math.max(0, target.requirements.defined - target.requirements.carried - target.requirements.created);
+  const known = members + (notCreated ?? 0);
+  const complete = completion === null || completion.kind === "NO_MEMBERS" ? null : completion.kind === "COMPLETE" ? completion.members : completion.settled;
+  const percent = complete === null || known === 0 ? null : Math.min(100, Math.floor((complete / known) * 100));
+  const says = complete === null
+    ? "Completion is awaiting a valid runner reading; linked work is not counted as verified merely because it exists."
+    : `${complete.toLocaleString("en-US")} of ${known.toLocaleString("en-US")} currently known work items passed the runner’s completion check.`;
+  return { complete, known, percent, notCreated, says };
 }
 
 const REACH_NOT_READ = "Not read yet: the runner has not recorded, on the work itself, what this instruction reached.";
@@ -670,6 +696,7 @@ export function instructionView(input: {
     reach: assignment === null ? null : reachOf(assignment),
     reachWhyNot: assignment === null ? REACH_NOT_READ : null,
     budget: sendBudget,
+    progress: progressOf(assignment, creation),
     inScope,
     inScopeWhyNot:
       inScope !== null

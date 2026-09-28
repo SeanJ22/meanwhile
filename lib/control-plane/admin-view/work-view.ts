@@ -674,8 +674,8 @@ export function instructionView(input: {
   const spend = d.budgetStartedAt && assignment?.budget
     ? `Latest recorded Anthropic token spend for this hunt: ${assignment.budget.spentUsd === null ? "unknown (an unmeasured charge holds paid work)" : money(assignment.budget.spentUsd)} as of ${formatEastern(input.assignmentAt ?? d.decidedAt)}. The budget panel shows reservations and what remains. Earlier geographic activity snapshots are not this hunt's ledger.`
     : read?.spend
-      ? `Geographic activity measured at cycle start (${formatEastern(input.reading?.at ?? d.decidedAt)}), before that cycle's Scouts: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there. These windows do not reset the ${budgetDescription}; its accounting and reservations are shown separately.`
-      : `In the geography: nothing measured yet. The instruction has a ${budgetDescription}.`;
+      ? `Geographic activity measured at cycle start (${formatEastern(input.reading?.at ?? d.decidedAt)}), before that cycle's Scouts: ${read.spend.rolling24hUsd === null ? "unknown (a charge reported no cost)" : money(read.spend.rolling24hUsd)} in the rolling 24 hours and ${read.spend.sevenDayUsd === null ? "unknown" : money(read.spend.sevenDayUsd)} in 7 days on work about governments there. These windows do not reset the ${budgetDescription}; its accounting and reservations are shown separately.${d.budgetStartedAt ? "" : ` ${read.budgetSays}`}`
+      : read && !d.budgetStartedAt ? read.budgetSays : `In the geography: nothing measured yet. The instruction has a ${budgetDescription}.`;
 
   const pill = rv.kind === "READ" ? (input.paidLaneClosedBecause ? { p: "READ · PARTLY BLOCKED", t: "gold" as Tone } : { p: "READ BY RUNNER", t: "teal" as Tone }) : { p: "SAVED · NOT YET READ", t: "cyan" as Tone };
   return {

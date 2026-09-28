@@ -191,13 +191,25 @@ test("robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTM
 
 /* ======================================================== the specs */
 
-test("the toolkit exposes exactly the research tools, each requiring rung and why", () => {
+test("the toolkit exposes exactly the research tools with their required locator and rationale", () => {
   assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
+  const locatorByTool: Readonly<Record<string, string | null>> = {
+    read_permission: "url",
+    fetch_public: "url",
+    browse: "url",
+    read_inherited: null,
+    find_manual: "query",
+    read_manual: "entryId",
+    read_held: "artifactId",
+    search: "query",
+  };
   for (const spec of [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC]) {
     const required = (spec.input_schema as { required: string[] }).required;
     assert.ok(required.includes("rung") && required.includes("why"), `${spec.name} must require rung and why`);
-    if (spec.name === "search") assert.ok(required.includes("query"), "search must require query, not url");
-    else if (spec.name !== "read_inherited") assert.ok(required.includes("url"), `${spec.name} must require url`);
+    assert.ok(Object.hasOwn(locatorByTool, spec.name), `${spec.name} must have an explicit locator contract`);
+    const locator = locatorByTool[spec.name];
+    if (locator !== null) assert.ok(required.includes(locator), `${spec.name} must require ${locator}`);
+    assert.equal(required.includes("url"), locator === "url", `${spec.name} must not require the wrong URL locator`);
   }
 });
 

@@ -23,6 +23,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { ARTIFACT_TIERS, artifactId, type ArtifactTier } from "./artifact.ts";
+import type { ArtifactRecord } from "../repository/types.ts";
 
 /** The project every standing-runner artifact is filed under (`FRESHNESS_PROJECT`). */
 export const READ_ONLY_VAULT_PROJECT = "freshness";
@@ -142,4 +143,49 @@ export async function readHeldBytes(artifact: HeldVaultArtifact): Promise<Uint8A
     throw new Error(`VAULT_BODY_CORRUPTED:${artifact.id}: the sidecar committed ${artifact.bodySha256}, the body hashes to ${actual}`);
   }
   return new Uint8Array(bytes);
+}
+
+/** Locate one attributed capture without rescanning every sidecar in the vault.
+ * The record supplies date/work/hash; source directories are trusted names read
+ * from the vault root, never a caller-supplied path. A missing sidecar is a miss,
+ * while unreadable or malformed matching metadata is a failed read. */
+export async function findHeldCapture(root: string, record: ArtifactRecord): Promise<HeldVaultArtifact | null> {
+  if (!/^sha256-[0-9a-f]{64}$/.test(record.contentHash) || !/^[a-z][a-z0-9-]{1,120}$/.test(record.workItemId) ||
+      !Number.isFinite(Date.parse(record.recordedAt))) throw new Error("VAULT_CAPTURE_LOOKUP_IDENTITY_INVALID");
+  const sourceRoot = join(root, "project", READ_ONLY_VAULT_PROJECT, "source");
+  let sources: string[];
+  try { sources = (await readdir(sourceRoot, { withFileTypes: true })).filter(row => row.isDirectory()).map(row => row.name); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return null; throw error; }
+  let host: string | null = null;
+  try { host = new URL(record.canonicalUrl).hostname; } catch { /* Other registered source IDs are still searched. */ }
+  if (host && sources.includes(host)) sources = [host, ...sources.filter(source => source !== host)];
+  const day = new Date(record.recordedAt).toISOString().slice(0, 10).replaceAll("-", "/");
+  for (const source of sources) {
+    const directory = join(sourceRoot, source, day, record.workItemId);
+    let entries: string[];
+    try { entries = await readdir(directory); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") continue; throw error; }
+    for (const name of entries.filter(name => name.startsWith(`${record.contentHash}.`) && name.endsWith(SIDECAR_SUFFIX))) {
+      const sidecarPath = join(directory, name);
+      const sidecar = JSON.parse(await readFile(sidecarPath, "utf8")) as Sidecar;
+      const meta = sidecar.meta;
+      // The same bytes can be captured by two Attempts. A sibling sidecar is
+      // not this record's provenance, even when the hash and WorkItem match.
+      if (meta?.custom?.attemptId !== record.attemptId) continue;
+      if (!meta || meta.contentHash !== record.contentHash || meta.custom?.tier !== record.tier ||
+          meta.custom?.workItemId !== record.workItemId ||
+          meta.custom?.canonicalUrl !== record.canonicalUrl || meta.custom?.retrievedAt !== record.recordedAt ||
+          typeof sidecar.bodySha256 !== "string") throw new Error(`VAULT_CAPTURE_SIDECAR_MISMATCH:${record.artifactId}`);
+      const status = Number(meta.custom?.httpStatus);
+      return { id: artifactId(record.tier, record.contentHash), tier: record.tier, contentHash: record.contentHash,
+        contentType: meta.contentType ?? "", canonicalUrl: meta.custom.canonicalUrl,
+        retrievalUrl: meta.custom.retrievalUrl ?? null, retrievedAt: meta.custom.retrievedAt,
+        httpStatus: Number.isInteger(status) ? status : null, sourceId: meta.custom.sourceId ?? null,
+        workItemId: meta.custom.workItemId, attemptId: meta.custom.attemptId,
+        methodRouteId: meta.custom.methodRouteId ?? null, permission: meta.custom.permission ?? null,
+        retentionPolicy: meta.custom.retentionPolicy ?? null,
+        bodyPath: sidecarPath.slice(0, -SIDECAR_SUFFIX.length), bodySha256: sidecar.bodySha256 };
+    }
+  }
+  return null;
 }

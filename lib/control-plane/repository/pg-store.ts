@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
@@ -944,6 +945,7 @@ export async function createPgRepositories(
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
+    adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
     /* The owner control centre's data plane (ITEM H, schema v3). */
     ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(

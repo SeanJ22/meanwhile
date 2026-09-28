@@ -1,5 +1,6 @@
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 /**
  * THE CONTROL-PLANE REPOSITORIES — provider-neutral persistence for the state
  * that must outlive the worker holding it.
@@ -689,6 +690,8 @@ export interface ControlPlaneRepositories {
   readonly escalations: AppendOnlyRepository<Escalation>;
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
+  /** Exact Admin original-byte copy requests, CAS-leased by the permanent runner. */
+  readonly adminEvidenceCopyRequests: AggregateRepository<AdminEvidenceCopyRequest>;
   readonly costs: AppendOnlyRepository<CostEntry>;
   /**
    * THE OWNER CONTROL CENTRE'S DATA PLANE. (Session C final, ITEM H.)

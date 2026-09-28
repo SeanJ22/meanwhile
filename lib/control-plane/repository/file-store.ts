@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
@@ -746,6 +747,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     escalations: fileAppendOnlyRepository<Escalation>(resolved, "escalations"),
     dispositions: fileAppendOnlyRepository<DispositionCommit>(resolved, "dispositions"),
     artifacts: fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts"),
+    adminEvidenceCopyRequests: fileAggregateRepository<AdminEvidenceCopyRequest>(resolved, "AdminEvidenceCopyRequest", "admin-evidence-copy-requests"),
     costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
     /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: fileAggregateRepository<OwnerSnapshot>(

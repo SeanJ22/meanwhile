@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
@@ -291,6 +292,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     escalations: memoryAppendOnlyRepository<Escalation>("escalations"),
     dispositions: memoryAppendOnlyRepository<DispositionCommit>("dispositions"),
     artifacts: memoryAppendOnlyRepository<ArtifactRecord>("artifacts"),
+    adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),

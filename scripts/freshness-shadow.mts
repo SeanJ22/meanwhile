@@ -2710,8 +2710,14 @@ const cycle = await runCycle({
 finishPhase("dispatch");
 if (expansionReading !== null && expansionBudget !== null) {
   /* The scopes' dispatch outcome: what each budget admitted and held this cycle. */
+  const dispatchedIds = new Set(cycle.dispatched.map(row => row.obligationId));
   expansionReading = withCycleCounts(expansionReading, {
     dueByScope: new Map(expansionReading.scopes.map((s) => [s.key, s.work?.dueThisCycle ?? 0])),
+    dispatchedByScope: new Map(expansionReading.scopes.map((s) => {
+      const members = assignmentMembers.byKey.get(s.key);
+      const ids = members === undefined ? [] : [...members.created.keys(), ...members.reordered.keys()];
+      return [s.key, ids.filter(id => dispatchedIds.has(id)).length] as const;
+    })),
     scoutPlacedFirstByScope: new Map(expansionReading.scopes.map((s) => [s.key, s.work?.scoutRowsPlacedFirst ?? 0])),
     gate: expansionBudget.gate,
   });

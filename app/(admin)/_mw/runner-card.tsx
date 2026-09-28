@@ -65,6 +65,7 @@ export function RunnerCard(props: {
             "No cycle has been recorded yet."
           )}
         </p>
+        {heartbeat?.nextCycleReason && <p className={s.note}>{heartbeat.nextCycleReason}</p>}
         <p className={s.text14}>{easternize(face.did)}</p>
         {face.stopped && (
           <p className={s.text14}>

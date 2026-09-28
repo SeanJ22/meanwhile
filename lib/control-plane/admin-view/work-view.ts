@@ -614,7 +614,7 @@ export function instructionView(input: {
     { pill: "CURRENT SCOUTS", tone: "slate", text: input.currentScouts === null || input.currentScouts === undefined
       ? "Current Scout activity was not read. The admission count below describes the last cycle, not workers running now."
       : input.currentScouts === 0
-        ? "The current research state reports no Scout running across the fleet. Last-cycle admissions below are not current workers."
+        ? `No Scout is running across the fleet now. Last-cycle admissions below are historical.${input.nextCycleDueAt ? ` The runner's next recorded cycle is ${formatEastern(input.nextCycleDueAt)}.` : " The next cycle time was not recorded."}`
         : `${input.currentScouts} Scout${input.currentScouts === 1 ? " is" : "s are"} running across the fleet in the current research state. This bounded assignment view cannot attribute every active job to this Send; last-cycle admissions below are not current workers.`, at: null },
   ];
   if (input.paidLaneClosedBecause !== null) {

@@ -104,7 +104,9 @@ import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
+import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
+import { continuingDirectedHunt } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -1447,6 +1449,8 @@ async function beatWhilePaused(repos: ControlPlaneRepositories, intent: Research
   const next: RunnerHeartbeat = {
     ...base,
     beatAt: now,
+    nextCycleDueAt: null,
+    nextCycleReason: null,
     pause: { intentId: intent.intentId, since: intent.requestedAt, note: intent.note },
   };
   if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, now);
@@ -1704,6 +1708,49 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   }
 }
 
+/** A directed hunt gets another bounded cycle promptly when its last cycle
+ * dispatched its own work and still left due members. No progress, unread
+ * accounting, a pause or a blackout falls back to the ordinary clock. */
+async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
+  const ordinary = INTERVAL_MIN * 60_000;
+  if (!cycleOk || provider !== "postgres" || canary || scheduledBlackoutAt(new Date().toISOString())) return ordinary;
+  try {
+    const repos = await ownerRepositories();
+    if (repos === null) return ordinary;
+    const [policy, state, intents] = await Promise.all([
+      repos.adminConfig.read(ADMIN_CONFIG_ID),
+      repos.researchState.readNarrowed(RESEARCH_STATE_ID, { expansion: true, assignments: true }),
+      repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY),
+    ]);
+    if (readIntents(intents).runnerPause.paused) return ordinary;
+    const scopes = expansionScopesOf(policy !== null && isAdminConfig(policy.value) ? policy.value : null);
+    if (scopes.malformed > 0) return ordinary;
+    const value = state?.value as { expansion?: unknown; assignments?: unknown } | undefined;
+    const expansion = isExpansionCycleReading(value?.expansion) ? value.expansion : null;
+    const assignments = isAssignmentCycleReading(value?.assignments) ? value.assignments : null;
+    const hunt = continuingDirectedHunt(scopes.scopes, expansion, assignments);
+    if (hunt === null) return ordinary;
+    const nextAt = new Date(Date.now() + POLL_MS).toISOString();
+    try {
+      const current = await repos.runnerHeartbeat.read(RUNNER_ID);
+      if (current !== null && current.value.testedSha === RUNNING_CODE_SHA) {
+        await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, {
+          ...current.value,
+          nextCycleDueAt: nextAt,
+          nextCycleReason: `Directed hunt ${hunt.label}: ${hunt.due - hunt.dispatched} due member obligations remain after this cycle.`,
+        }, new Date().toISOString());
+      }
+    } catch (error) {
+      console.error(`  directed-hunt next-cycle heartbeat could not be updated: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    console.log(`  directed hunt ${hunt.label}: ${hunt.dispatched} of ${hunt.due} due member obligations dispatched; next bounded cycle in ${POLL_MS / 1000}s`);
+    return POLL_MS;
+  } catch (error) {
+    console.error(`  directed-hunt continuation could not be read; ordinary interval stands: ${error instanceof Error ? error.message : String(error)}`);
+    return ordinary;
+  }
+}
+
 /**
  * Before a cycle starts: while the owner's PAUSE_RUNNER stands, idle here —
  * polling once a minute, beating every thirty — and return the moment it is
@@ -1915,7 +1962,7 @@ while (cycle < CYCLES) {
   }
 
   if (cycle >= CYCLES) break;
-  await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
+  await sleepUnlessRunNow(await nextCycleWaitMs(result.ok));
 }
 }
 

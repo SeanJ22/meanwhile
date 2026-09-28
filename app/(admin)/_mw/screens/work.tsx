@@ -41,7 +41,7 @@ import {
 } from "@/lib/control-plane/admin-view/work-view.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
-import { huntActivity } from "@/lib/control-plane/admin-view/hunt-activity.ts";
+import { currentScoutsForHunt, huntActivity } from "@/lib/control-plane/admin-view/hunt-activity.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
 import { isAssignmentCycleReading } from "@/lib/control-plane/expansion/assignment-budget.ts";
 import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
@@ -212,7 +212,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       runnerPaused: pause ? { since: pause.since ?? null } : null,
       activeCycleStartedAt: research?.cycleFinishedAt === null ? research.cycleStartedAt : null,
       nextCycleDueAt: heartbeatOut.kind === "HELD" ? heartbeatOut.value.nextCycleDueAt : null,
-      currentScouts: research?.running.length ?? null,
+      currentScouts: research === null ? null : currentScoutsForHunt(research.running, decision.key),
       assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
       assignmentAt: sends?.at ?? null,
       dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),

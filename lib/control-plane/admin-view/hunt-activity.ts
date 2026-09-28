@@ -1,4 +1,13 @@
 import type { AssignmentListRow } from "../assignment-view.ts";
+import type { RunningScout } from "../scheduler/research-policy.ts";
+
+/** Null means the running snapshot predates exact Send marks; never present a
+ * fleet-wide Scout count as if it were this hunt's current workers. */
+export function currentScoutsForHunt(running: readonly RunningScout[], assignmentKey: string): number | null {
+  return running.some(scout => scout.assignmentKeys === undefined)
+    ? null
+    : running.filter(scout => scout.assignmentKeys?.includes(assignmentKey)).length;
+}
 
 /** A bounded, exact-Send view of the published assignment rows. Counts are
  * rows with evidence at each stage, not a count of unique findings or all

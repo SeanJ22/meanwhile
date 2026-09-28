@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { continuingDirectedHunt } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { huntActivity } from "../lib/control-plane/admin-view/hunt-activity.ts";
+import { currentScoutsForHunt, huntActivity } from "../lib/control-plane/admin-view/hunt-activity.ts";
 import { pulseRevision } from "../lib/control-plane/live-pulse.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
@@ -42,4 +42,14 @@ test("a next-cycle heartbeat update refreshes Admin even when beatAt is unchange
   const prior = { beatAt: "2026-09-27T01:00:00Z", heartbeatRevision: 4, snapshotRevision: 1,
     decisionCount: 0, researchRevision: 1, receiptCount: 0, researchIntentCount: 0, sourceProgressId: null };
   assert.notEqual(pulseRevision(prior), pulseRevision({ ...prior, heartbeatRevision: 5 }));
+});
+
+test("current Scout activity is attributed to the exact Send rather than the fleet", () => {
+  const running = [
+    { attemptId: "one", obligationId: "a", startedAt: "2026-09-27T01:00:00Z", assignmentKeys: [scope.key] },
+    { attemptId: "two", obligationId: "b", startedAt: "2026-09-27T01:00:00Z", assignmentKeys: ["other"] },
+  ];
+  assert.equal(currentScoutsForHunt(running, scope.key), 1);
+  assert.equal(currentScoutsForHunt(running, "unknown"), 0);
+  assert.equal(currentScoutsForHunt([{ attemptId: "older", obligationId: "a", startedAt: "2026-09-27T01:00:00Z" }], scope.key), null);
 });

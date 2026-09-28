@@ -2383,7 +2383,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         },
       }),
       onStart: async ({ attemptId, obligationId, startedAt }) => {
-        running.push({ attemptId, obligationId, startedAt });
+        running.push({ attemptId, obligationId, startedAt, assignmentKeys: assignmentMembers.keysOf.get(obligationId) ?? [] });
         await writeResearchState(null);
       },
       onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {

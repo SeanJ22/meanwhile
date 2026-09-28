@@ -72,6 +72,15 @@ test("only exact current publication version and body readback becomes a public 
     url:`${PUBLIC_SITE_ORIGIN}/body-one`,checkedAt:at,state:"CONFIRMED",reason:"matched",responseSha256:"hash-one"}],errors:[]} as AssignmentSources["servedReader"];
   const confirmed=assignmentEvidenceTrail(sources({workItems:[published],servedReader:reader}),child.id,null);
   assert.equal(confirmed.events.find(row=>row.stage==="READER")?.publicUrl,`${PUBLIC_SITE_ORIGIN}/body-one`);
+  const ballot={...reader!,witnesses:[{...reader!.witnesses[0]!,url:`${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`}]};
+  assert.equal(assignmentEvidenceTrail(sources({workItems:[published],servedReader:ballot}),child.id,null)
+    .events.find(row=>row.stage==="READER")?.publicUrl,`${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`);
+  const laterSuccess={...ballot,witnesses:[...ballot.witnesses,{...ballot.witnesses[0]!,checkedAt:"2026-09-28T10:01:00Z"}]};
+  assert.equal(assignmentEvidenceTrail(sources({workItems:[published],servedReader:laterSuccess}),child.id,null)
+    .events.find(row=>row.stage==="READER")?.publicUrl,`${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`,"the newest passing check is usable when the read includes an older passing check");
+  const privateQuery={...ballot,witnesses:[{...ballot.witnesses[0]!,url:`${PUBLIC_SITE_ORIGIN}/ballot?zip=85635&token=private`}]};
+  assert.equal(assignmentEvidenceTrail(sources({workItems:[published],servedReader:privateQuery}),child.id,null)
+    .events.find(row=>row.stage==="READER")?.publicUrl,null);
   const changed=assignmentEvidenceTrail(sources({workItems:[{...published,publicationOutcome:{...published.publicationOutcome!,versionId:"version-two"}}],
     servedReader:reader}),child.id,null);
   assert.equal(changed.events.find(row=>row.stage==="READER")?.publicUrl,null);

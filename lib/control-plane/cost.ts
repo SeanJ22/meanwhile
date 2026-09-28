@@ -145,6 +145,9 @@ export interface CostEntry {
   readonly obligationId?: string;
   /** The owner's Sends that obligation belonged to when the charge was written; empty when none reached it. */
   readonly assignmentKeys?: readonly string[];
+  /** Exact active instruction receipts at dispatch; absent on historical rows.
+   * A key or matching geography alone cannot assign a charge to a new hunt. */
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
   /** The record class the work kept fresh. */
   readonly recordClass?: string;
   /** The question the work asked (MW-002), when the round recorded one. */

@@ -96,7 +96,7 @@ import type { RouteDisposition, RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "./scheduler/durable.ts";
 import { DISCHARGING_DISPOSITIONS } from "./scheduler/dispatch.ts";
-import { isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
+import { instructionReceiptKey, isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import { isTerminalState, type WorkItem, type WorkItemState } from "./work-item.ts";
@@ -2573,6 +2573,9 @@ export interface AssignmentView {
   readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   /** Complete counts before row trimming, keyed by the durable Send identity. */
   readonly instructionCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
+  /** Current work status by immutable key+receipt. A new same-key hunt never
+   * inherits an old completed row as its own completed work. */
+  readonly instructionCountsByReceipt?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   readonly selection: {
     readonly rule: string;
     readonly perGroup: number;
@@ -2594,6 +2597,10 @@ export interface AssignmentIndexRow {
   readonly subjectName: string | null;
   readonly stateCode: string | null;
   readonly assignmentKeys: readonly string[];
+  /** Every durable mark on this assignment, including retired hunt receipts. */
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string; readonly at: string }[];
+  /** Receipt-specific state; an unproven carried row is UNKNOWN. */
+  readonly instructionStates?: Readonly<Record<string, AssignmentState>>;
   /** Full retained execution search terms from the canonical assignment membership. */
   readonly historyTerms?: readonly string[];
   readonly lastActivityAt: string | null;
@@ -2616,6 +2623,8 @@ export interface BodyPublicationAttempt {
   readonly workItemId: string;
   /** Only marks from this WorkItem's owning standing obligation. */
   readonly assignmentKeys: readonly string[];
+  /** The exact receipt in force when this result was published. */
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
   readonly at: string;
   readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
   readonly code: string;
@@ -2628,17 +2637,43 @@ export interface BodyPublicationAttempt {
 export function bodyPublicationAttempts(workItems: readonly WorkItem[],
   occurrences: readonly FreshnessOccurrence[] = [], obligations: readonly StandingObligation[] = []): BodyPublicationAttempt[] {
   const obligationById = new Map(obligations.map(row => [row.id, row] as const));
-  const assignmentKeysByWorkItem = new Map<string, readonly string[]>();
+  const workById = new Map(workItems.map(item => [item.id,item] as const));
+  const assignmentMarksByWorkItem = new Map<string, readonly ObligationAssignment[]>();
   for (const round of occurrences) {
     const owner = obligationById.get(round.obligationId);
     if (!owner) continue;
-    assignmentKeysByWorkItem.set(round.workItemId, [...new Set((owner.assignments ?? []).map(mark => mark.assignmentKey))]);
+    assignmentMarksByWorkItem.set(round.workItemId, owner.assignments ?? []);
   }
+  const marksFor = (item: WorkItem): readonly ObligationAssignment[] => {
+    let current = item;
+    const seen = new Set<string>();
+    while (!assignmentMarksByWorkItem.has(current.id) && !seen.has(current.id)) {
+      const link=(current as WorkItem & {readonly planRepair?:{readonly parentWorkItemId:string;readonly authority:string}}).planRepair;
+      if (!link) break;
+      seen.add(current.id);
+      const parent = workById.get(link.parentWorkItemId);
+      if (!parent || link.authority !== "WORK_INSTRUCTIONS_ONLY" ||
+        parent.project !== item.project || parent.subject !== item.subject) return [];
+      current = parent;
+    }
+    return assignmentMarksByWorkItem.get(current.id) ?? [];
+  };
   return workItems.flatMap(item => {
     const outcome = item.publicationOutcome;
     const bodyId = item.autonomousPlan?.publication?.bodyId;
     if (!outcome || !bodyId) return [];
-    return [{ bodyId, workItemId: item.id, assignmentKeys: assignmentKeysByWorkItem.get(item.id) ?? [],
+    const marks=marksFor(item);
+    const effective = new Map<string,ObligationAssignment>();
+    for (const mark of marks) {
+      const acknowledged=item.autonomousPlan?.ownerInstructions?.includes(mark.ref) === true ||
+        (item.autonomousPlan?.ownerInstructions === undefined && !marks.some(other=>other.assignmentKey===mark.assignmentKey&&other.ref!==mark.ref));
+      if (!Number.isFinite(Date.parse(mark.at)) || Date.parse(mark.at) > Date.parse(outcome.at) ||
+        !acknowledged) continue;
+      const old = effective.get(mark.assignmentKey);
+      if (!old || mark.at > old.at || (mark.at === old.at && mark.ref > old.ref)) effective.set(mark.assignmentKey,mark);
+    }
+    const assignmentRefs=[...effective.values()].map(mark=>({key:mark.assignmentKey,ref:mark.ref}));
+    return [{ bodyId, workItemId: item.id, assignmentKeys: assignmentRefs.map(mark=>mark.key), assignmentRefs,
       at: outcome.at, status: outcome.status,
       code: outcome.code, sourceUrl: item.autonomousPlan?.contract.schemaVersion === 2
         ? item.autonomousPlan.contract.sourceScope.canonicalUrls[0] ?? null : null,
@@ -2869,8 +2904,8 @@ export function buildAssignmentView(
   const byteBudget = options.byteBudget ?? ASSIGNMENT_VIEW_BYTE_BUDGET;
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP });
   const rows = built.rows;
-  const manualKeyByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
-    ? [[item.id, item.manualSourceGap.assignmentKey] as const] : []));
+  const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
+    ? [[item.id, item.manualSourceGap] as const] : []));
   const historyTerms = assignmentHistoryTerms(src,built.memberships);
   const dependentsByUpstream = new Map<string,Set<string>>();
   const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
@@ -2880,7 +2915,7 @@ export function buildAssignmentView(
   }
   const allRowsIndex: AssignmentIndexRow[] = rows.map(row => {
     const listed = listRowOf(row, 160);
-    const manualKey = manualKeyByItem.get(row.id);
+    const manualGap = manualGapByItem.get(row.id);
     const membership = built.memberships.get(row.id);
     const workIds = membership?.workItemIds ?? new Set<string>();
     const graphReadable = membership !== undefined && [...workIds].every(id=>workById.has(id));
@@ -2897,9 +2932,20 @@ export function buildAssignmentView(
       const outstanding = dependent.dependencies.filter(edge=>workById.get(edge.upstreamId)?.state !== "VERIFIED_COMPLETE");
       return outstanding.length === 1 && workIds.has(outstanding[0]!.upstreamId) ? count+1 : count;
     },0);
+    const assignmentRefs = [...(row.what.assignments??[]).map(mark=>({key:mark.assignmentKey,ref:mark.ref,at:mark.at})),
+      ...(manualGap?.assignmentKey ? [{key:manualGap.assignmentKey,ref:manualGap.instructionReceipt,at:src.workItems.find(item=>item.id===row.id)?.createdAt??src.nowIso}] : [])];
+    const instructionStates: Record<string,AssignmentState> = {};
+    for (const mark of assignmentRefs) {
+      const sameKey=assignmentRefs.filter(other=>other.key===mark.key);
+      // An aggregate standing state covers every round. It cannot certify a
+      // separate same-key hunt without its own accepted result/reuse receipt.
+      instructionStates[instructionReceiptKey(mark.key,mark.ref)] = sameKey.some(other=>other.ref!==mark.ref)
+        ? "UNKNOWN" : listed.state;
+    }
     return { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
       label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
-      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualKey ? [manualKey] : [])])],
+      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualGap?.assignmentKey ? [manualGap.assignmentKey] : [])])],
+      assignmentRefs,instructionStates,
       historyTerms:historyTerms.get(row.id)??[],lastActivityAt: listed.lastActivityAt,
       lastAttemptAt:relatedAttempts.map(attempt=>attempt.startedAt).sort().at(-1)??null,
       directDependentCount:directDependents?.size??null,readyAfterThisSettlesCount,
@@ -2912,6 +2958,7 @@ export function buildAssignmentView(
 
   const geographicCounts: Record<string, Record<AssignmentState, number>> = {};
   const instructionCounts: Record<string, Record<AssignmentState, number>> = {};
+  const instructionCountsByReceipt: Record<string, Record<AssignmentState, number>> = {};
   for (const row of rows) {
     const state = assignmentStateCode(row) ?? "";
     const counts = geographicCounts[state] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
@@ -2920,6 +2967,10 @@ export function buildAssignmentView(
       const attributed = instructionCounts[key] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
       attributed[row.state] += 1;
     }
+  }
+  for (const row of allRowsIndex) for (const [identity,state] of Object.entries(row.instructionStates ?? {})) {
+    const attributed = instructionCountsByReceipt[identity] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s=>[s,0])) as Record<AssignmentState,number>;
+    attributed[state] += 1;
   }
 
   const groups: AssignmentListRow[][] = [];
@@ -2966,6 +3017,7 @@ export function buildAssignmentView(
     bodyAttempts,
     geographicCounts,
     instructionCounts,
+    instructionCountsByReceipt,
     selection: {
       rule: ASSIGNMENT_SELECTION_RULE,
       perGroup,

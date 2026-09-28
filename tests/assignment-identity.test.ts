@@ -151,6 +151,18 @@ test("a Send records itself on what it created and on what it found already on a
   assert.equal(a3.written.length + (a3.marked?.length ?? 0), 0);
 });
 
+test("a new Send to the same key appends a new receipt and does not erase the old hunt", () => {
+  const key = "zcta:2020/85635";
+  const original = { assignmentKey:key, ref:"original-receipt", relation:"CREATED" as const, at:T0 };
+  const next = { assignmentKey:key, ref:"new-receipt", relation:"REORDERED" as const, at:T1 };
+  const marks = withAssignment([original], next);
+  assert.deepEqual(marks, [original,next]);
+  assert.equal(withAssignment(marks,next),marks,"the same receipt remains idempotent");
+  const members=assignmentMembership([{id:"ob-1",subjectId:"az:sierra-vista",assignments:marks}]);
+  assert.equal(members.byInstruction.get(JSON.stringify([key,"original-receipt"]))?.created.size,1);
+  assert.equal(members.byInstruction.get(JSON.stringify([key,"new-receipt"]))?.reordered.size,1);
+});
+
 test("REORDERED records share the per-cycle write budget after the creations, and the remainder is carried, not dropped", async () => {
   const repos = createMemoryRepositories();
   const target = dispatchWorkTarget({ intentId: "i-9", note: "Pima Arizona", requestedAt: T0 });
@@ -373,7 +385,7 @@ const B: AssignmentBudgetSpec = { key: "dispatch:i-b", kind: "DISPATCH", label: 
 const JOINED = "2026-09-25T00:00:00.000Z";
 
 function row(id: string, subjectId: string, keys: readonly string[], at = JOINED) {
-  return { id, subjectId, assignments: keys.map((k): ObligationAssignment => ({ assignmentKey: k, ref: "r", relation: "REORDERED", at })) };
+  return { id, subjectId, assignments: keys.map((k): ObligationAssignment => ({ assignmentKey: k, ref: k === A.key ? A.ref : k === B.key ? B.ref : "r", relation: "REORDERED", at })) };
 }
 function charge(over: Partial<CostEntry> & { readonly usd: number | null; readonly at?: string }): CostEntry {
   return {
@@ -494,7 +506,7 @@ test("an assignment budget that cannot be checked holds the work, by name", () =
 
 test("the runner's reading names what each Send reached and its budget — spent, held, left — with the window", () => {
   const rows = [row("ob-c", "s1", []), row("ob-r", "s2", [A.key])];
-  rows[0] = { id: "ob-c", subjectId: "s1", assignments: [{ assignmentKey: A.key, ref: "r", relation: "CREATED", at: JOINED }] };
+  rows[0] = { id: "ob-c", subjectId: "s1", assignments: [{ assignmentKey: A.key, ref: A.ref, relation: "CREATED", at: JOINED }] };
   const membership = assignmentMembership(rows, [{ obligationId: "ob-new", subjectId: "s3", entry: { assignmentKey: "dispatch:i-q", ref: "i-q", relation: "CREATED", at: T0 } }]);
   const costs = [charge({ obligationId: "ob-c", usd: 1.25 })];
   const g = armAssignmentBudget({ now: T0, specs: [A], membership, costs, worstCaseUsd: 0.6, intentsReadable: true });

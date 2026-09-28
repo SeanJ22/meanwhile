@@ -26,6 +26,7 @@ import Link from "next/link";
 import type { OwnerSnapshot } from "@/lib/control-plane/owner-surface.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 import { rankedWorkBlockers } from "@/lib/control-plane/admin-view/work-view.ts";
+import { exactInstructionMembership } from "@/lib/control-plane/admin-view/instruction-membership.ts";
 import { CHECKLIST_PROFILE } from "@/lib/control-plane/readiness/checklist-score.ts";
 import { servedWitness } from "@/lib/control-plane/served-reader.ts";
 import type { ExpansionScopeDecision } from "@/lib/control-plane/expansion/scopes.ts";
@@ -115,21 +116,20 @@ function SavedHuntOverview({ decision, scope, now, read }: {
 }) {
   const fields = read.value;
   const view = fields?.assignments?.kind === "BUILT" ? fields.assignments.view : null;
-  const index = view?.allRowsIndex ?? null;
-  const members = index?.filter(row => row.assignmentKeys.includes(decision.key)) ?? null;
-  const counts = view?.instructionCounts?.[decision.key] ?? null;
-  const stateCount = (state: string) => counts?.[state as keyof typeof counts] ?? members?.filter(row => row.state === state).length ?? null;
-  const total = counts ? Object.values(counts).reduce((n, value) => n + value, 0) : members?.length ?? null;
+  const exact = exactInstructionMembership(view,decision.key,decision.receiptId);
+  const members = exact.index;
+  const counts = exact.counts;
+  const stateCount = (state: string) => counts?.[state as keyof typeof counts] ?? null;
+  const total = counts ? Object.values(counts).reduce((n, value) => n + value, 0) : null;
   const active = stateCount("WORKING"), waiting = stateCount("WAITING");
-  const blocked = counts ? (counts.BLOCKED ?? 0) + (counts.FAILED ?? 0) + (counts.UNKNOWN ?? 0)
-    : members?.filter(row => ["BLOCKED", "FAILED", "UNKNOWN"].includes(row.state)).length ?? null;
+  const blocked = counts ? (counts.BLOCKED ?? 0) + (counts.FAILED ?? 0) + (counts.UNKNOWN ?? 0) : null;
   const blockers = rankedWorkBlockers(members ?? [], now).slice(0, 5);
   const cost = decision.budgetStartedAt ? fields?.billingAttribution?.hunts?.find(row =>
-    row.key === decision.key && row.startedAt === decision.budgetStartedAt) ?? null : null;
+    row.key === decision.key && row.receiptId === decision.receiptId && row.startedAt === decision.budgetStartedAt) ?? null : null;
   const census = fields?.checklists?.find(row => row.scopeId === decision.key && row.instructionReceipt === decision.receiptId) ?? null;
   const instantiated = new Set(census?.instances.flatMap(row => row.definitionIds) ?? []);
   const missingDefinitions = census ? CHECKLIST_PROFILE.definitions.length - instantiated.size : null;
-  const attempts = view?.bodyAttempts?.filter(row => row.assignmentKeys.includes(decision.key)) ?? null;
+  const attempts = exact.bodyAttempts;
   const visible = attempts?.flatMap(attempt => {
     if (attempt.status === "HELD" || !attempt.versionId) return [];
     const witness = servedWitness(fields?.servedReaderReadback ?? null, attempt.workItemId, attempt.workerResultId, now);
@@ -145,11 +145,11 @@ function SavedHuntOverview({ decision, scope, now, read }: {
   return <>
     <Section title={`Your saved hunt · ${decision.geography.label}`}
       lede={`Started ${formatEastern(decision.budgetStartedAt ?? decision.decidedAt, { year: true })}. Last overview ${fields ? formatEastern(fields.publishedAt, { year: true }) : "not read"}. This is tracked progress toward your saved instruction; the checklist and public results require separate proof.`} />
-    <details className={s.note} style={{ marginBottom: 16 }}><summary>How this overview is connected</summary><p>Instruction key {decision.key}; original receipt {decision.receiptId}. Cost uses the saved budget start; checklist uses the exact receipt. Work and public attempts use the recorded assignment key because the compact index does not separately carry a receipt for a future new hunt at the same key.</p></details>
+    <details className={s.note} style={{ marginBottom: 16 }}><summary>How this overview is connected</summary><p>Instruction key {decision.key}; receipt {decision.receiptId}. Work and public attempts use this exact saved receipt; cost uses its budget start and the checklist uses its receipt. Earlier snapshots without receipt attribution remain unmeasured here.</p></details>
     {read.gap && <p className={s.goldNote}>{read.gap}</p>}
     <div className={s.gridAuto220} style={{ marginBottom: 20 }}>
-      <div className={s.insetTile}><span className={s.titleStrong14}>Work linked to this instruction key</span><p className={s.fig}>{figure(total)}</p><p className={s.note}>{figure(active)} working · {figure(waiting)} waiting · {figure(blocked)} blocked, failed or unknown. These are tracked assignments, not complete coverage or proof of a unique receipt.</p></div>
-      <div className={s.insetTile}><span className={s.titleStrong14}>Money since this hunt started</span><p className={s.fig}>{cost ? dollars(cost.anthropicKnownUsd) : "Not measured"}</p><p className={s.note}>Known Anthropic spend of the {dollars(decision.budgetUsd)} saved allowance. {cost ? `${dollars(cost.reservedUsd)} reserved · ${dollars(cost.availableUsd)} available · ${dollars(cost.otherKnownUsd)} other known · ${dollars(cost.knownCombinedUsd)} combined known · ${cost.unpriced} unpriced request${cost.unpriced === 1 ? "" : "s"}.` : "No exact started-hunt billing attribution is published; zero is not implied."}</p></div>
+      <div className={s.insetTile}><span className={s.titleStrong14}>Work linked to this saved instruction</span><p className={s.fig}>{figure(total)}</p><p className={s.note}>{figure(active)} working · {figure(waiting)} waiting · {figure(blocked)} blocked, failed or unknown. These are receipt-linked tracked assignments, not complete coverage.</p></div>
+      <div className={s.insetTile}><span className={s.titleStrong14}>Money since this hunt started</span><p className={s.fig}>{cost?.budgetConsumedKnownUsd === undefined ? "Not measured" : dollars(cost.budgetConsumedKnownUsd)}</p><p className={s.note}>Known Anthropic charges consuming this {dollars(decision.budgetUsd)} allowance, including shared requests. {cost?.budgetConsumedKnownUsd !== undefined ? `${dollars(cost.reservedUsd)} reserved · ${dollars(cost.budgetUnpriced ? null : cost.availableUsd)} available · ${cost.budgetUnpriced ?? 0} unpriced token request${cost.budgetUnpriced === 1 ? "" : "s"}. ${dollars(cost.anthropicKnownUsd)} Anthropic and ${dollars(cost.otherKnownUsd)} other known costs allocated here once for reporting; ${dollars(cost.knownCombinedUsd)} combined allocated known.` : "No exact allowance-consumption reading is published; zero is not implied."}</p></div>
       <div className={s.insetTile}><span className={s.titleStrong14}>Full checklist</span><p className={s.fig}>{census ? `${census.instances.length} represented items` : "Not measured"}</p><p className={s.note}>{census ? `${missingDefinitions} of ${CHECKLIST_PROFILE.definitions.length} original definitions are not represented in this census; ${census.inventory.unresolvedObjects} source inventories unresolved. Representation earns no passing credit. ${census.gaps.length > 0 ? census.gaps[0] : "No gap summary is recorded; this does not establish completeness."}` : "No census matches this exact instruction and receipt. Missing requirements are unknown, not passed."}</p></div>
     </div>
     <div className={s.row10} style={{ marginBottom: 20 }}><Link className={s.btnLink} href={workHref}>Open all linked work</Link><Link className={s.btnLink} href={moneyHref}>See money</Link><Link className={s.btnLink} href={doneHref}>See checklist and delivery</Link></div>

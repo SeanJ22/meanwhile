@@ -3,6 +3,7 @@ import type { AssignmentSources } from "../assignment-view.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import { CHECKLIST_PROFILE, checklistObligationKey, checklistRequiredClauses, type ChecklistInstance, type ChecklistSnapshot } from "./checklist-score.ts";
 import { checklistDeliveryTimings, type WorkDeliveryTiming } from "./checklist-timings.ts";
+import { checklistDispatchWitness } from "./checklist-dispatch-witness.ts";
 
 /** A census projection, not a dispatcher. A receipt proves membership; matching
  * a state, a URL or a successful attempt never establishes object applicability. */
@@ -44,13 +45,32 @@ export function buildChecklistCensus(input: {
     gaps:[...new Set([...input.previous.gaps,"The current canonical population read failed; prior inventory is retained, not reduced."])],
   };
   const members= sources ? exactScopeMembers([scope],sources).get(scope.key)! : new Set<string>();
+  const marksBySubject=new Map<string,{ref:string;at:string}[]>();
+  for (const obligation of sources?.obligations??[]) for (const mark of obligation.assignments??[]) if (mark.assignmentKey===scope.key) {
+    const list=marksBySubject.get(obligation.subjectId)??[];
+    list.push({ref:mark.ref,at:mark.at});marksBySubject.set(obligation.subjectId,list);
+  }
+  const attemptById=new Map((sources?.attempts??[]).map(attempt=>[attempt.id,attempt] as const));
   const objects: CensusObject[]=[{id:scope.key,jurisdiction:scope.key,groups:[...SCOPE_GROUPS],workIds:[],evidenceIds:[scope.receiptId],kind:"SCOPE"}];
   const work=new Map(sources?.workItems.filter(item=>members.has(item.subject)).map(item=>[item.id,item])??[]);
   const recordObjects=new Map<string,CensusObject>();
+  let priorResultsWithheld=0;
   for (const row of sources?.workerResults??[]) {
     if (!work.has(row.workItemId) || row.result.role!=="PARSER" || row.result.verdict!=="EXTRACTED") continue;
     const parser=row.result;
     if (!members.has(parser.subjectId)) continue;
+    const marks=marksBySubject.get(parser.subjectId)??[];
+    if (marks.some(mark=>mark.ref!==scope.receiptId)) {
+      const attempt=attemptById.get(row.attemptId);
+      const started=attempt?.startedAt??"";
+      const joined=marks.filter(mark=>mark.ref===scope.receiptId).map(mark=>mark.at).sort()[0];
+      const next=marks.filter(mark=>mark.ref!==scope.receiptId&&mark.at>=(joined??"")).map(mark=>mark.at).sort()[0];
+      if (!joined || !started || started<joined || (next!==undefined && started>=next) ||
+        !work.get(row.workItemId)?.autonomousPlan?.ownerInstructions?.includes(scope.receiptId)) {
+        priorResultsWithheld += parser.records.length;
+        continue;
+      }
+    }
     const groups=RECORD_GROUPS[parser.recordClass];
     if (!groups) continue;
     for (const record of parser.records) {
@@ -95,8 +115,10 @@ export function buildChecklistCensus(input: {
   }
   return {profile:CHECKLIST_PROFILE.version,scopeId:scope.key,scopeRevision,observedAt,censusVersion:"checklist-census/1",instructionReceipt:scope.receiptId,
     inventory:{complete:false,evidenceIds:[scope.receiptId,...members],unresolvedObjects:objects.filter(o=>o.kind==="UNRESOLVED").length},
-    readsComplete:sources!==null&&sources.pipeline!==null,instances,witnesses:[],
+    readsComplete:sources!==null&&sources.pipeline!==null,instances,
+    witnesses:sources ? checklistDispatchWitness({scope,sources,instances,observedAt}) : [],
     population:{knownSubjects:members.size,knownRecords:recordObjects.size,expectedObjects:null},
     deliveryTimings:sources?checklistDeliveryTimings(sources,members,observedAt):[],
-    gaps:["The competent expected-object universe is not yet reconciled; known records are a lower bound.","Clause-level field, period and per-surface verification remain owed; worker completion alone earns no checklist credit."]};
+    gaps:["The competent expected-object universe is not yet reconciled; known records are a lower bound.","Clause-level field, period and per-surface verification remain owed; worker completion alone earns no checklist credit.",
+      ...(priorResultsWithheld? [`${priorResultsWithheld} earlier parsed record${priorResultsWithheld===1?"":"s"} on shared subjects lack this exact instruction's result or reuse receipt; they remain available as history, not this hunt's inventory.`]:[])]};
 }

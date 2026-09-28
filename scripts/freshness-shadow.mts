@@ -1948,7 +1948,7 @@ const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
 const assignmentCompletion = (key: string) =>
   evaluateAssignmentFromRecords({
     assignmentKey: key,
-    obligations: memberRecordsForSend(key, assignmentMembers, assignmentObligations),
+    obligations: memberRecordsForSend(key, assignmentMembers, assignmentObligations, assignmentSpecs.find(spec=>spec.key===key)?.ref),
     debtFor: (id) => debtByObligation.get(id) ?? null,
     now: NOW,
   });

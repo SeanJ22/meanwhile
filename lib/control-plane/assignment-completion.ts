@@ -21,6 +21,7 @@
 import { evaluateCompletion, type CompletionSnapshot, type RefusalCode } from "./completion.ts";
 import type { AssignmentMembership as SendMembership } from "./expansion/assignment-budget.ts";
 import type { WorkItemState } from "./work-item.ts";
+import { instructionReceiptKey } from "./scheduler/obligation.ts";
 
 /** One membership record, as the obligation carries it. */
 export interface AssignmentMembership {
@@ -155,6 +156,8 @@ export interface MemberRecord {
   readonly lastWorkedAt?: string | null;
   readonly openOccurrenceId?: string | null;
   readonly absentUntil?: string | null;
+  /** Current receipt's own durable join; older work is not its completion. */
+  readonly instructionJoinedAt?: string;
 }
 
 /** Use the same recorded membership that the Send's created/reordered counts use.
@@ -165,8 +168,9 @@ export function memberRecordsForSend(
   key: string,
   membership: SendMembership,
   records: readonly MemberRecord[],
+  ref?: string,
 ): MemberRecord[] {
-  const slot = membership.byKey.get(key);
+  const slot = ref === undefined ? membership.byKey.get(key) : membership.byInstruction.get(instructionReceiptKey(key,ref));
   if (!slot) return [];
   const byId = new Map(records.map((record) => [record.id, record]));
   return [...slot.created.values(), ...slot.reordered.values()].map((member) => {
@@ -175,6 +179,7 @@ export function memberRecordsForSend(
     return {
       ...held,
       id: member.obligationId,
+      ...(ref === undefined ? {} : { instructionJoinedAt: member.joinedAt }),
       assignments: [...(held?.assignments ?? []), { assignmentKey: key, relation, at: member.joinedAt }],
     };
   });
@@ -218,6 +223,8 @@ export function evaluateAssignmentFromRecords(input: {
       exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: `recorded as absent until ${member.absentUntil}; an argued absence is not a record held` });
     } else if (!member.lastWorkedAt) {
       exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "not worked yet" });
+    } else if (member.instructionJoinedAt && Date.parse(member.lastWorkedAt) < Date.parse(member.instructionJoinedAt)) {
+      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "the last completed source round predates this instruction; no new completion or explicit reuse receipt is recorded" });
     } else if (member.openOccurrenceId) {
       exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "a round of work is open on it now" });
     } else {

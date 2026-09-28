@@ -165,7 +165,7 @@ export interface ObligationAssignment {
 
 /**
  * Append a Send to an obligation's list, never overwriting: a Send already
- * recorded with the same relation is left as it is. Returns the same list when
+ * recorded with the same receipt and relation is left as it is. Returns the same list when
  * nothing is added, so a caller can skip the write.
  */
 export function withAssignment(
@@ -173,9 +173,25 @@ export function withAssignment(
   entry: ObligationAssignment,
 ): readonly ObligationAssignment[] {
   const held = current ?? [];
-  if (held.some((a) => a.assignmentKey === entry.assignmentKey && a.relation === entry.relation)) return held;
+  if (held.some((a) => a.assignmentKey === entry.assignmentKey && a.ref === entry.ref && a.relation === entry.relation)) return held;
   return [...held, entry];
 }
+
+/** The instruction in force for each key at a charge or result boundary.
+ * Older marks stay on the obligation for history, but cannot claim a later
+ * hunt's work merely because the geography key is unchanged. */
+export function currentAssignmentRefs(assignments: readonly ObligationAssignment[] | undefined): readonly { readonly key: string; readonly ref: string }[] {
+  const latest = new Map<string, ObligationAssignment>();
+  for (const mark of assignments ?? []) {
+    const prior = latest.get(mark.assignmentKey);
+    if (!prior || mark.at > prior.at || (mark.at === prior.at && mark.ref > prior.ref)) latest.set(mark.assignmentKey, mark);
+  }
+  return [...latest.values()].map(mark => ({ key: mark.assignmentKey, ref: mark.ref })).sort((a,b)=>a.key.localeCompare(b.key));
+}
+
+/** Collision-free index key for one immutable instruction, including edits
+ * that keep its receipt and a separate hunt at the same geography. */
+export const instructionReceiptKey = (key: string, ref: string): string => JSON.stringify([key, ref]);
 
 /** The one value `FreshnessObligation.materializedBy` carries. */
 export const OWNER_DISPATCH = "OWNER_DISPATCH" as const;

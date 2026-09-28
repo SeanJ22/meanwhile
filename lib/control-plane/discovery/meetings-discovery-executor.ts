@@ -133,7 +133,7 @@ export interface DiscoveryRuntime {
    */
   readonly search?: DiscoverySearch;
   /** Exact scope membership from the runner; no dollar admission or token reservation. */
-  readonly searchScopeFor?: (jurisdictionId: string) => { readonly assignmentKeys: readonly string[]; readonly hold: string | null };
+  readonly searchScopeFor?: (jurisdictionId: string) => { readonly assignmentKeys: readonly string[]; readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[]; readonly hold: string | null };
   /** Writes one CostEntry per provider request actually sent (role DISCOVERY_SEARCH). */
   readonly recordCost?: (entry: CostEntry) => Promise<void>;
   readonly maxQueriesPerWalk?: number;
@@ -172,6 +172,7 @@ export function searchCostEntry(input: {
   readonly bytes: number;
   readonly recordedAt: string;
   readonly assignmentKeys?: readonly string[];
+  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
 }): CostEntry {
   return {
     attemptId: input.attemptId,
@@ -183,6 +184,7 @@ export function searchCostEntry(input: {
     project: FRESHNESS_PROJECT,
     role: DISCOVERY_SEARCH_ROLE,
     ...(input.assignmentKeys?.length ? { assignmentKeys: [...input.assignmentKeys] } : {}),
+    ...(input.assignmentRefs?.length ? { assignmentRefs: [...input.assignmentRefs] } : {}),
     cost: {
       inputTokens: null,
       outputTokens: null,
@@ -802,6 +804,7 @@ export async function walkMeetingsDiscoveryNeed(
           await runtime.recordCost?.(searchCostEntry({
             attemptId, jurisdictionId: need.jurisdictionId, routeId: q.recipeId ?? `discovery-search:${q.templateId}`,
             host: r.host, usd: r.usd, bytes: r.bytes, recordedAt: runtime.now(), assignmentKeys: searchScope?.assignmentKeys,
+            assignmentRefs: searchScope?.assignmentRefs,
           }));
         }
         /* Recorded before its results are followed, so a query the time cuts off still reports what it cost. */

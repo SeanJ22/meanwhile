@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { AssignmentBudgetGate, assignmentMembership, type AssignmentBudgetSpec } from "../lib/control-plane/expansion/assignment-budget.ts";
+import { AssignmentBudgetGate, armAssignmentBudget, assignmentMembership, type AssignmentBudgetSpec } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansion/membership.ts";
 import { createLedger } from "../lib/control-plane/budget.ts";
 import { decideHold } from "../lib/control-plane/expansion/spend-holds.ts";
@@ -12,8 +12,8 @@ const now = "2026-09-28T12:00:00.000Z";
 const started = "2026-09-27T12:00:00.000Z";
 const huntKey = ORIGINAL_LIFETIME_HUNT.key;
 const member = { id: "obligation", subjectId: "az:sierra-vista", assignments: [
-  { assignmentKey: "rolling", relation: "REORDERED", at: started },
-  { assignmentKey: huntKey, relation: "CREATED", at: started },
+  { assignmentKey: "rolling", ref: "old", relation: "REORDERED", at: started },
+  { assignmentKey: huntKey, ref: ORIGINAL_LIFETIME_HUNT.receiptId, relation: "CREATED", at: started },
 ] };
 const membership = assignmentMembership([member] as never);
 const specs: AssignmentBudgetSpec[] = [
@@ -65,8 +65,8 @@ test("the original lifetime allowance still refuses concurrent holds and counts 
 test("a different lifetime scope cannot discard an overlapping rolling budget", () => {
   const anotherKey = "zcta:2020/99999";
   const anotherMember = { ...member, assignments: [
-    { assignmentKey: "rolling", relation: "REORDERED", at: started },
-    { assignmentKey: anotherKey, relation: "CREATED", at: started },
+    { assignmentKey: "rolling", ref: "old", relation: "REORDERED", at: started },
+    { assignmentKey: anotherKey, ref: "another-receipt", relation: "CREATED", at: started },
   ] };
   const gate = new AssignmentBudgetGate({ specs: [specs[0], { key: anotherKey, kind: "SCOPE", label: "another",
     ref: "another-receipt", budgetUsd: 50, budgetStartedAt: started, sentAt: now }],
@@ -91,12 +91,12 @@ test("a different lifetime scope cannot discard an overlapping rolling budget", 
 
 test("unpriced usage preserves known hunt and service amounts", () => {
   const costs = [
-    { attemptId: "one", source: "api.anthropic.com", recordedAt: now, assignmentKeys: ["hunt"], cost: { usd: 2 } },
-    { attemptId: "two", source: "api.anthropic.com", recordedAt: now, assignmentKeys: ["hunt"], cost: { usd: null } },
-    { attemptId: "three", source: "api.exa.ai", recordedAt: now, assignmentKeys: ["hunt"], cost: { usd: 0.25 } },
+    { attemptId: "one", source: "api.anthropic.com", recordedAt: now, assignmentKeys: ["hunt"], assignmentRefs: [{ key: "hunt", ref: "hunt-receipt" }], cost: { usd: 2 } },
+    { attemptId: "two", source: "api.anthropic.com", recordedAt: now, assignmentKeys: ["hunt"], assignmentRefs: [{ key: "hunt", ref: "hunt-receipt" }], cost: { usd: null } },
+    { attemptId: "three", source: "api.exa.ai", recordedAt: now, assignmentKeys: ["hunt"], assignmentRefs: [{ key: "hunt", ref: "hunt-receipt" }], cost: { usd: 0.25 } },
   ];
   const attribution = providerBillingAttribution({ now, costs: costs as never, attempts: [],
-    scopes: [{ key: "hunt", geography: { label: "85635" }, budgetStartedAt: started, budgetUsd: 50 }] as never,
+    scopes: [{ key: "hunt", receiptId: "hunt-receipt", geography: { label: "85635" }, budgetStartedAt: started, budgetUsd: 50 }] as never,
     holds: {}, readings: [] });
   const hunt = attribution.hunts![0];
   assert.equal(hunt.anthropicUsd, null);
@@ -110,12 +110,54 @@ test("unpriced usage preserves known hunt and service amounts", () => {
 test("historical autonomous cost joins a hunt only through exact recorded subject membership", () => {
   const base = { attemptId: "legacy", source: "api.anthropic.com", recordedAt: now,
     cost: { usd: 1.5 }, assignmentKeys: [], jurisdiction: "az:original-member" };
-  const scopes = [{ key: "hunt", geography: { label: "85635" }, budgetStartedAt: started, budgetUsd: 50 }] as never;
+  const scopes = [{ key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
+    geography: { label: "85635" }, budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, budgetUsd: 50 }] as never;
   const reading = providerBillingAttribution({ now, costs: [base] as never, attempts: [], scopes, holds: {}, readings: [],
-    scopeMembers: new Map([["hunt", new Set(["az:original-member"])]]) });
+    scopeMembers: new Map([[ORIGINAL_LIFETIME_HUNT.key, new Set(["az:original-member"])]]) });
   assert.equal(reading.hunts?.[0]?.anthropicKnownUsd, 1.5);
   const unlinked = providerBillingAttribution({ now, costs: [base] as never, attempts: [], scopes, holds: {}, readings: [] });
   assert.equal(unlinked.hunts?.[0]?.anthropicKnownUsd, 0);
+});
+
+test("a new same-key hunt cannot inherit the old receipt's charges or an unmarked budget admission", () => {
+  const key=ORIGINAL_LIFETIME_HUNT.key;
+  const nextReceipt="new-hunt-receipt";
+  const cost={attemptId:"old",source:"api.anthropic.com",recordedAt:now,assignmentKeys:[key],
+    assignmentRefs:[{key,ref:ORIGINAL_LIFETIME_HUNT.receiptId}],cost:{usd:2}};
+  const nextScope={key,receiptId:nextReceipt,geography:{label:"85635"},budgetStartedAt:started,budgetUsd:50};
+  const reading=providerBillingAttribution({now,costs:[cost] as never,attempts:[],scopes:[nextScope] as never,holds:{},readings:[]});
+  assert.equal(reading.hunts?.[0]?.anthropicKnownUsd,0);
+  const oldOnly=assignmentMembership([member] as never);
+  const gate=new AssignmentBudgetGate({specs:[{key,kind:"SCOPE",label:"new hunt",ref:nextReceipt,budgetUsd:50,
+    budgetStartedAt:started,sentAt:now}],membership:oldOnly,historical:new Map(),worstCaseUsd:1,
+    costsReadable:true,intentsReadable:true,historyReadAt:now});
+  assert.equal(gate.admit(member.id).admit,false);
+  const newlyMarked={...member,assignments:[...member.assignments,
+    {assignmentKey:key,ref:nextReceipt,relation:"REORDERED",at:started}]};
+  const scoped=armAssignmentBudget({now,specs:[{key,kind:"SCOPE",label:"new hunt",ref:nextReceipt,
+    budgetUsd:50,budgetStartedAt:started,sentAt:now}],membership:assignmentMembership([newlyMarked] as never),
+    costs:[{...cost,obligationId:member.id}] as never,worstCaseUsd:1,intentsReadable:true});
+  assert.equal(scoped.state(key)?.spentUsd,0,"an exact old-receipt charge does not spend the new hunt");
+  assert.equal(scoped.admit(member.id).admit,true);
+});
+
+test("shared token charges are reported once but consume every exact beneficiary allowance",()=>{
+  const scopes=[
+    {key:"county:2020/04019",receiptId:"county-send",geography:{label:"Pima"},budgetStartedAt:started,budgetUsd:10},
+    {key:"zcta:2020/85635",receiptId:"zip-send",geography:{label:"85635"},budgetStartedAt:started,budgetUsd:10},
+  ];
+  const assignmentRefs=scopes.map(scope=>({key:scope.key,ref:scope.receiptId}));
+  const priced={attemptId:"shared",source:"api.anthropic.com",recordedAt:now,assignmentRefs,cost:{usd:5}};
+  const holds={zip:{settled:null,usd:2,keys:[`send:${scopes[1]!.key}@${started}`]}};
+  const read=(costs:unknown[])=>providerBillingAttribution({now,costs:costs as never,attempts:[],scopes:scopes as never,holds:holds as never,readings:[]});
+  const first=read([priced]);
+  assert.equal(first.hunts?.reduce((sum,hunt)=>sum+hunt.knownCombinedUsd,0),5,"combined report counts the request once");
+  assert.deepEqual(first.hunts?.map(hunt=>hunt.budgetConsumedKnownUsd),[5,5]);
+  assert.deepEqual(first.hunts?.map(hunt=>hunt.availableUsd),[5,3]);
+  const unknown=read([priced,{...priced,attemptId:"shared-unpriced",cost:{usd:null}}]);
+  assert.deepEqual(unknown.hunts?.map(hunt=>hunt.budgetUnpriced),[1,1]);
+  assert.deepEqual(unknown.hunts?.map(hunt=>hunt.availableUsd),[null,null]);
+  assert.equal(unknown.hunts?.reduce((sum,hunt)=>sum+hunt.knownCombinedUsd,0),5);
 });
 
 test("a lifetime-hunt job bypasses secondary time and rolling limits while unrelated work remains held", () => {

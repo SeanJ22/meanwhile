@@ -110,13 +110,15 @@ export interface RankedWorkBlocker {
   readonly priorityScore: number;
   readonly category: "NEEDS_OWNER_DECISION" | "AUTOMATIC_REPAIR" | "WAITING_ON_PUBLISHER" | "NEEDS_CODE_CHANGE" | "OWNER_UNCLEAR";
   readonly ageDays: number | null;
-  /** Exact linked Send count; downstream work unlocked is not measured here. */
+  /** Exact linked instruction-key count; separate from measured downstream work. */
   readonly linkedInstructions: number;
   readonly rankingWhy: string;
 }
 
-/** Rank the full indexed population by urgency, reader-impact band, shared
- * instructions and age. Unknown age or band contributes no invented points. */
+/** Rank the full indexed population by urgency, reader-impact band, measured
+ * ready dependents, shared instructions and age. Unknown values add no invented
+ * points. The bounded unlock contribution cannot swamp a full urgency tier;
+ * this is presentation ordering, never a dispatch limit. */
 export function rankedWorkBlockers(rows: readonly AssignmentIndexRow[], now: string): RankedWorkBlocker[] {
   const nowMs = Date.parse(now);
   const candidates = rows.filter(row => ["BLOCKED", "FAILED", "WAITING", "UNKNOWN"].includes(row.state) &&
@@ -127,11 +129,13 @@ export function rankedWorkBlockers(rows: readonly AssignmentIndexRow[], now: str
     const urgency = row.overdue === true ? 3 : row.state === "BLOCKED" || row.state === "FAILED" ? 2 : 1;
     const harm = row.band === null ? 0 : 4 - row.band;
     const linkedInstructions = new Set(row.assignmentKeys).size;
-    const score = urgency * 100 + harm * 30 + Math.min(linkedInstructions, 10) * 3 + Math.min(ageDays ?? 0, 30);
+    const unlocked = Number.isSafeInteger(row.readyAfterThisSettlesCount) && (row.readyAfterThisSettlesCount ?? -1) >= 0
+      ? row.readyAfterThisSettlesCount! : null;
+    const score = urgency * 100 + harm * 30 + Math.min(unlocked ?? 0, 10) * 2 + Math.min(linkedInstructions, 10) * 3 + Math.min(ageDays ?? 0, 30);
     const category = row.owner === "OWNER" ? "NEEDS_OWNER_DECISION" as const : row.owner === "SOURCE" ? "WAITING_ON_PUBLISHER" as const :
       row.owner === "ENGINEERING" ? "NEEDS_CODE_CHANGE" as const : row.owner === "NOBODY" ? "OWNER_UNCLEAR" as const : "AUTOMATIC_REPAIR" as const;
     return { row, priorityScore: score, category, ageDays, linkedInstructions,
-      rankingWhy: `${row.overdue === true ? "Overdue" : row.state.toLowerCase()}; ${row.band === null ? "reader impact not graded" : `reader-impact band ${row.band}`}; ${linkedInstructions} linked instruction${linkedInstructions === 1 ? "" : "s"}; ${ageDays === null ? "waiting age unknown" : `waiting ${ageDays} day${ageDays === 1 ? "" : "s"}`}. Downstream work unlocked is not measured.` };
+      rankingWhy: `${row.overdue === true ? "Overdue" : row.state.toLowerCase()}; ${row.band === null ? "reader impact not graded" : `reader-impact band ${row.band}`}; ${linkedInstructions} linked instruction${linkedInstructions === 1 ? "" : "s"}; ${ageDays === null ? "waiting age unknown" : `waiting ${ageDays} day${ageDays === 1 ? "" : "s"}`}. ${unlocked === null ? "Downstream work unlocked is not measured." : `${unlocked} directly dependent item${unlocked === 1 ? "" : "s"} would be ready after this settles.`}` };
   }).sort((a,b) => b.priorityScore-a.priorityScore || a.row.id.localeCompare(b.row.id))
     .map((entry,index) => ({...entry,rank:index+1}));
 }

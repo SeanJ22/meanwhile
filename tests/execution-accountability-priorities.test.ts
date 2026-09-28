@@ -23,3 +23,14 @@ test("full-population blocker ranking names the actual next owner and does not i
   assert.match(ranked[0].rankingWhy, /Downstream work unlocked is not measured/);
   assert.equal(ranked[1].category, "WAITING_ON_PUBLISHER");
 });
+test("measured ready dependents improve intervention priority without claiming all dependencies are ready",()=>{
+  const ranked=rankedWorkBlockers([
+    row("many-blocked-elsewhere",{directDependentCount:50,readyAfterThisSettlesCount:0}),
+    row("unlocks-three",{directDependentCount:3,readyAfterThisSettlesCount:3}),
+    row("unknown",{directDependentCount:100,readyAfterThisSettlesCount:null}),
+  ],"2026-09-28T00:00:00Z");
+  assert.equal(ranked[0].row.id,"unlocks-three");
+  assert.match(ranked[0].rankingWhy,/3 directly dependent items would be ready/);
+  assert.match(ranked.find(row=>row.row.id==="unknown")!.rankingWhy,/not measured/);
+  assert.match(ranked.find(row=>row.row.id==="many-blocked-elsewhere")!.rankingWhy,/0 directly dependent items/);
+});

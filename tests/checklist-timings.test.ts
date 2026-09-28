@@ -61,3 +61,17 @@ test("backwards clocks stay unknown and are flagged; unrelated scope is excluded
   assert.equal(timing.timingIssue,true);
   assert.equal(checklistDeliveryTimings(source,new Set(["elsewhere"]),at(10)).length,0);
 });
+test("a measured execution with identical endpoint stamps keeps its start unknown without hiding acquired work",()=>{
+  const source=sources();
+  const measured={...source,
+    workItems:source.workItems.map(work=>({...work,publicationOutcome:undefined})),workerResults:[],servedReader:null,
+    attempts:source.attempts.map(row=>({...row,startedAt:at(1),endedAt:at(1),outcome:"COMPLETED" as const,cost:{...row.cost,durationMs:43131}}))};
+  const timing=run(measured);
+  assert.equal(timing.firstStartedAt,null);
+  assert.equal(timing.registeredToStartMs,null);
+  assert.equal(timing.timingIssue,true);
+  assert.equal(timing.waitingFor,"EXTRACTION");
+  assert.equal(timing.firstSavedAt,at(2));
+  assert.equal(timing.workAgeMs,600000);
+  assert.equal(measured.attempts[0].startedAt,at(1));
+});

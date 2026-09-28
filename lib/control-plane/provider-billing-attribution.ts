@@ -2,10 +2,11 @@ import type { CostEntry } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
 import type { ProviderReading, ReportingProvider } from "./provider-billing.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "./scheduler/hunt-continuation.ts";
 
 export interface BillingAttribution {
   readonly readAt: string;
-  readonly hunts: readonly { key: string; label: string; startedAt: string; budgetUsd: number; anthropicUsd: number | null; otherUsd: number | null; anthropicKnownUsd: number; otherKnownUsd: number; knownCombinedUsd: number; reservedUsd: number | null; availableUsd: number | null; unpriced: number }[] | null;
+  readonly hunts: readonly { key: string; receiptId?: string; label: string; startedAt: string; budgetUsd: number; anthropicUsd: number | null; otherUsd: number | null; anthropicKnownUsd: number; otherKnownUsd: number; knownCombinedUsd: number; budgetConsumedKnownUsd?: number; budgetUnpriced?: number; reservedUsd: number | null; availableUsd: number | null; unpriced: number }[] | null;
   readonly providers: readonly { provider: ReportingProvider; huntUsd: number | null; otherRecordedUsd: number | null; huntKnownUsd: number; otherKnownUsd: number; providerUsd: number | null; differenceUsd: number | null; unpriced: number }[];
 }
 
@@ -20,26 +21,49 @@ export function providerBillingAttribution(input: {
   const modelIds = new Set(input.attempts.filter(a => a.worker.provider === "anthropic" || a.worker.version.startsWith("claude-")).map(a => a.id));
   const providerOf = (c: CostEntry): ReportingProvider | null => c.source === "api.exa.ai" ? "exa" : c.source === "api.search.brave.com" ? "brave" : modelIds.has(c.attemptId) || c.byModel?.some(m => m.model.startsWith("claude-")) || c.source === "api.anthropic.com" ? "anthropic-api" : null;
   const scopes = input.scopes?.filter(s => s.budgetStartedAt) ?? [];
-  const belongs = (c: CostEntry, s: ExpansionScopeDecision) =>
-    Date.parse(c.recordedAt) >= Date.parse(s.budgetStartedAt!) &&
-    (c.assignmentKeys?.includes(s.key) === true ||
-      (c.jurisdiction !== null && input.scopeMembers?.get(s.key)?.has(c.jurisdiction) === true));
+  const exactOriginal = (s:ExpansionScopeDecision) => s.key===ORIGINAL_LIFETIME_HUNT.key &&
+    s.receiptId===ORIGINAL_LIFETIME_HUNT.receiptId && s.budgetStartedAt===ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    s.budgetUsd===ORIGINAL_LIFETIME_HUNT.budgetUsd;
+  // One actual charge appears in at most one hunt subtotal. Its complete list
+  // of beneficiary receipts remains on the ledger; this stable owner is only
+  // a reporting allocation, never a waiver of another overlapping cap.
+  const beneficiaryHunts = (c:CostEntry):readonly ExpansionScopeDecision[] => {
+    const eligible=scopes.filter(s=>Date.parse(c.recordedAt)>=Date.parse(s.budgetStartedAt!));
+    const exact=eligible.filter(s=>c.assignmentRefs?.some(mark=>mark.key===s.key&&mark.ref===s.receiptId));
+    if (c.assignmentRefs !== undefined) return exact;
+    // Rows written before exact refs existed still consume the original $50
+    // lifetime hunt. Its immutable receipt and saved member subjects anchor
+    // the legacy join; a later new hunt gets no such inferred allowance.
+    const legacy=eligible.filter(s=>exactOriginal(s) && (c.assignmentKeys?.includes(s.key)===true ||
+      (c.jurisdiction!==null && input.scopeMembers?.get(s.key)?.has(c.jurisdiction)===true)));
+    return legacy.length===1?legacy:[];
+  };
+  const beneficiaryByCost=new Map(input.costs.map(c=>[c,beneficiaryHunts(c)] as const));
+  const attributedHunt = (c:CostEntry):ExpansionScopeDecision|null =>
+    [...(beneficiaryByCost.get(c)??[])].sort((a,b)=>a.key.localeCompare(b.key)||a.receiptId.localeCompare(b.receiptId))[0]??null;
+  const ownerByCost=new Map(input.costs.map(c=>[c,attributedHunt(c)] as const));
+  const belongs = (c:CostEntry,s:ExpansionScopeDecision) => ownerByCost.get(c)?.key===s.key &&
+    ownerByCost.get(c)?.receiptId===s.receiptId;
   const sum = (rows: readonly CostEntry[]) => rows.some(c => c.cost.usd === null) ? null : rows.reduce((n,c) => n + (c.cost.usd ?? 0),0);
   const known = (rows: readonly CostEntry[]) => rows.reduce((n,c) => n + (typeof c.cost.usd === "number" && Number.isFinite(c.cost.usd) ? c.cost.usd : 0),0);
   const hunts = input.scopes === null ? null : scopes.map(s => {
     const rows = input.costs.filter(c => belongs(c,s));
     const anthropicRows = rows.filter(c => providerOf(c) === "anthropic-api");
     const otherRows = rows.filter(c => providerOf(c) !== "anthropic-api");
+    const budgetRows=input.costs.filter(c=>providerOf(c)==="anthropic-api" &&
+      beneficiaryByCost.get(c)?.some(beneficiary=>beneficiary.key===s.key&&beneficiary.receiptId===s.receiptId));
     const keys = [`send:${s.key}@${s.budgetStartedAt}`, `area:${s.key}@${s.budgetStartedAt}`];
     const holds = input.holds === null ? null : Object.values(input.holds).filter(h => h.settled === null && h.keys.some(k => keys.includes(k)));
     const reservedUsd = holds === null ? null : holds.reduce((n,h) => n+h.usd,0);
     const anthropicKnownUsd = known(anthropicRows);
     const otherKnownUsd = known(otherRows);
+    const budgetConsumedKnownUsd=known(budgetRows);
+    const budgetUnpriced=budgetRows.filter(c=>c.cost.usd===null).length;
     const unpriced = rows.filter(c => c.cost.usd === null).length;
-    return { key: s.key, label: s.geography.label, startedAt: s.budgetStartedAt!, budgetUsd: s.budgetUsd,
+    return { key: s.key, receiptId:s.receiptId, label: s.geography.label, startedAt: s.budgetStartedAt!, budgetUsd: s.budgetUsd,
       anthropicUsd: sum(anthropicRows), otherUsd: sum(otherRows), anthropicKnownUsd, otherKnownUsd,
-      knownCombinedUsd: anthropicKnownUsd + otherKnownUsd, reservedUsd,
-      availableUsd: reservedUsd === null || anthropicRows.some(c => c.cost.usd === null) ? null : Math.max(0,s.budgetUsd-anthropicKnownUsd-reservedUsd),
+      knownCombinedUsd: anthropicKnownUsd + otherKnownUsd, budgetConsumedKnownUsd, budgetUnpriced, reservedUsd,
+      availableUsd: reservedUsd === null || budgetUnpriced>0 ? null : Math.max(0,s.budgetUsd-budgetConsumedKnownUsd-reservedUsd),
       unpriced };
   });
   const providers = input.readings.map(r => {

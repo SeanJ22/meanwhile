@@ -202,7 +202,9 @@ export async function readPulse(
     at: nowIso,
     capabilities: ADMIN_CAPABILITIES,
     v6: adminV6ReadCapabilities({ configRevision: config.value?.revision ?? null,
-      snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null }),
+      snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null,
+      heartbeatRevision: heartbeat.value?.revision ?? null,
+      sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null }),
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

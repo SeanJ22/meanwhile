@@ -26,6 +26,7 @@ export function WorkersScreen() {
   const events = w?.events?.filter((e) => inScope(e.applies)) ?? null;
   const connWords = { live: "Live", stale: "Out of date", reconnecting: "Reconnecting", offline: "Disconnected", connecting: "Connecting" }[v.connection];
   const eventsDep = { state: "not-connected" as const, load: "ready" as const, data: null, asOf: null, dependency: { id: "DEP-WORKER-EVENTS", owner: "Codex (runner progress read)", need: "Per-worker jobs, waiting reasons and a plain event feed. The live pulse only says the workers checked in, not what they did." } };
+  const jobsDep = { state: "not-connected" as const, load: "ready" as const, data: null, asOf: null, dependency: { id: "DEP-WORKER-ACTIVE-INDEX", owner: "Codex (worker repository)", need: "A bounded read of every unexpired work claim, including collection jobs outside the research worker list. Until it exists, the number working in this place is unknown." } };
   const huntsOrAreas = jobs ? new Set(jobs.map((j) => j.hunt)).size : 0;
   return (
     <>
@@ -61,12 +62,12 @@ export function WorkersScreen() {
         <div className={s.row}><span className={s.eyebrow}>Workers last checked in</span><strong>{mst(st?.lastCheckIn ?? null)}</strong><span className={s.meta}>This only means they’re switched on{st?.runnerState ? ` (${runnerStateWords(st.runnerState)})` : ""}</span></div>
         <div className={s.row}><span className={s.eyebrow}>Last useful progress</span><strong>{st?.lastUsefulProgress ? mst(st.lastUsefulProgress.at) : "Not reported"}</strong><span className={s.meta}>{st?.lastUsefulProgress ? st.lastUsefulProgress.what : "A check-in isn’t progress, so nothing is inferred from it."}</span></div>
         <div className={s.row}><span className={s.eyebrow}>Current round of work</span><strong>{st?.roundStartedAt ? `Started ${mst(st.roundStartedAt, false)}` : st?.lastRoundFinishedAt ? `Last finished ${mst(st.lastRoundFinishedAt, false)}` : "Not reported"}</strong><span className={s.meta}>{st?.nextRoundDueAt ? `Next due ${mst(st.nextRoundDueAt, false)}` : "When the next round starts isn’t reported, so no finish time is shown"}</span></div>
-        <div className={s.row}><span className={s.eyebrow}>Work in {v.place.name}</span><strong>{jobs ? `${jobs.length} working now · ${waiting?.length ?? 0} waiting` : st?.lanes ? `${st.lanes.reduce((a, l) => a + (l.active ?? 0), 0)} running · ${st.lanes.reduce((a, l) => a + l.waiting, 0)} waiting` : "Not reported"}</strong><span className={s.meta}>{jobs ? (live ? "The lists below add up to these counts" : "Last known, may be out of date") : st?.lanes ? "Whole system only; not split by place yet" : ""}</span></div>
+        <div className={s.row}><span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : "Whole-system work"}</span><strong>{jobs ? `${jobs.length} working now · ${waiting?.length ?? 0} waiting` : st?.lanes ? `${st.lanes.reduce((a, l) => a + (l.active ?? 0), 0)} running · ${st.lanes.reduce((a, l) => a + l.waiting, 0)} waiting` : "Not reported"}</strong><span className={s.meta}>{jobs ? (live ? "The lists below add up to these counts" : "Last known, may be out of date") : st?.lanes ? "Whole-system lane counts; the number working in this place is unknown" : ""}</span></div>
       </section>
       {!!st?.unread.length && <p className={cx(s.p, s.meta)}>Not read this time: {st.unread.join("; ")}. Other readings continue to update.</p>}
 
       <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : undefined}>
-        {!jobs && <SourceNote source={v.data.workers.state === "sample" ? v.data.workers : eventsDep} />}
+        {!jobs && <SourceNote source={v.data.workers.state === "sample" ? v.data.workers : w ? jobsDep : eventsDep} />}
         {st?.lanes && !jobs && (
           <div className={s.gridTiles}>
             {st.lanes.map((l) => <div key={l.name} className={s.row}><strong className={s.small}>{l.name}</strong><span className={s.small}>{l.active ?? "—"} running · {l.waiting} waiting</span>{l.blockedBy && <span className={s.meta}>{l.blockedBy}</span>}</div>)}

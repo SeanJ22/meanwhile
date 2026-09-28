@@ -18,14 +18,20 @@ export const ADMIN_V6_CAPABILITIES: AdminV6CapabilityManifest = Object.freeze({
  * A failed/missing policy or snapshot withdraws these sections rather than
  * announcing an empty hunt or a zero-dollar account. */
 export function adminV6ReadCapabilities(input: { readonly configRevision: number | null;
-  readonly snapshotRevision: number | null; readonly researchRevision: number | null }): AdminV6CapabilityManifest {
-  if (input.configRevision === null || input.snapshotRevision === null) return ADMIN_V6_CAPABILITIES;
-  const common = `${input.configRevision}:${input.snapshotRevision}`;
-  return { ...ADMIN_V6_CAPABILITIES, sections: {
-    hunts: { contract: "admin-v6/hunts@1", href: "/api/admin/v6/hunts", revision: `hunts:${common}` },
-    money: { contract: "admin-v6/money@1", href: "/api/admin/v6/money",
-      revision: `money:${common}:${input.researchRevision ?? "unread"}` },
-  } };
+  readonly snapshotRevision: number | null; readonly researchRevision: number | null;
+  readonly heartbeatRevision?: number | null; readonly sourceProgressId?: string | null }): AdminV6CapabilityManifest {
+  const sections: Record<string, { contract: string; href: string; revision: string }> = {};
+  if (input.configRevision !== null && input.snapshotRevision !== null) {
+    const common = `${input.configRevision}:${input.snapshotRevision}`;
+    sections.hunts = { contract: "admin-v6/hunts@1", href: "/api/admin/v6/hunts", revision: `hunts:${common}` };
+    sections.money = { contract: "admin-v6/money@1", href: "/api/admin/v6/money",
+      revision: `money:${common}:${input.researchRevision ?? "unread"}` };
+  }
+  if (input.configRevision !== null && input.researchRevision !== null) {
+    sections.workers = { contract: "admin-v6/workers@1", href: "/api/admin/v6/workers",
+      revision: `workers:${input.configRevision}:${input.researchRevision}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}` };
+  }
+  return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:hunts/1:money/1:workers/1";

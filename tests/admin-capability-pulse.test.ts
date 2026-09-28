@@ -64,3 +64,17 @@ test("v6 Money and Hunts announcements follow saved policy, snapshot and fleet r
   assert.equal(fleetMoved.sections.hunts.revision, ready.sections.hunts.revision);
   assert.notEqual(fleetMoved.sections.money.revision, ready.sections.money.revision);
 });
+
+test("v6 Workers announces the bounded read when policy and research are readable", () => {
+  const base = { configRevision: 3, snapshotRevision: null, researchRevision: 9,
+    heartbeatRevision: 4, sourceProgressId: "source-7" };
+  const ready = adminV6ReadCapabilities(base);
+  assert.deepEqual(ready.sections.workers, { contract: "admin-v6/workers@1",
+    href: "/api/admin/v6/workers", revision: "workers:3:9:4:source-7" });
+  assert.equal(ready.sections.hunts, undefined);
+  assert.notEqual(adminV6ReadCapabilities({ ...base, sourceProgressId: "source-8" }).sections.workers.revision,
+    ready.sections.workers.revision);
+  assert.notEqual(adminV6ReadCapabilities({ ...base, heartbeatRevision: 5 }).sections.workers.revision,
+    ready.sections.workers.revision);
+  assert.equal(adminV6ReadCapabilities({ ...base, researchRevision: null }).sections.workers, undefined);
+});

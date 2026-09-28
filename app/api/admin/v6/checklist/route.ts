@@ -2,8 +2,9 @@ import { neon } from "@neondatabase/serverless";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { CHECKLIST_INSTANCE_PAGE_SIZE, ChecklistInstanceIndexError,
-  readIndexedChecklistInstances, validateChecklistInstanceIndexQuery } from "@/lib/control-plane/admin-view/checklist-instance-index-read.ts";
-import { v6ChecklistSection } from "@/lib/control-plane/admin-view/v6-checklist-section.ts";
+  readIndexedChecklistAllDefinitions, readIndexedChecklistInstances, validateChecklistAllDefinitionsQuery,
+  validateChecklistInstanceIndexQuery } from "@/lib/control-plane/admin-view/checklist-instance-index-read.ts";
+import { v6ChecklistAllDefinitionsSection, v6ChecklistSection } from "@/lib/control-plane/admin-view/v6-checklist-section.ts";
 import { parseChecklistPlaceKey, readChecklistPlaceBinding } from "@/lib/control-plane/admin-view/checklist-place-binding.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
@@ -22,18 +23,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })
     : NextResponse.json({ says: guard.says }, { status: guard.status, headers: NO_STORE });
   const params = request.nextUrl.searchParams;
-  const placeMode=params.has("placeKey");
+  const scopeValue=params.get("scope")??"";
+  const placeMode=params.has("placeKey") || parseChecklistPlaceKey(scopeValue)!==null;
+  const uiPlaceMode=!params.has("placeKey") && placeMode;
+  const hasDefinition=params.has("definitionId");
   if ([...params.keys()].some(key => !["scope", "instructionReceipt", "placeKey", "definitionId", "limit", "cursor"].includes(key)) ||
-    params.getAll("definitionId").length !== 1 ||
-    (placeMode ? params.getAll("placeKey").length !== 1 || params.has("scope") || params.has("instructionReceipt")
-      : ["scope", "instructionReceipt"].some(key => params.getAll(key).length !== 1)) ||
+    params.getAll("definitionId").length > 1 ||
+    (placeMode ? uiPlaceMode ? params.getAll("scope").length !== 1 || params.has("placeKey") || params.has("instructionReceipt")
+      : params.getAll("placeKey").length !== 1 || params.has("scope") || params.has("instructionReceipt")
+      : ["scope", "instructionReceipt"].some(key => params.getAll(key).length !== 1) || !hasDefinition) ||
     ["limit", "cursor"].some(key => params.getAll(key).length > 1))
     return NextResponse.json({ code: "INVALID_QUERY" }, { status: 400, headers: NO_STORE });
   const limitText = params.get("limit");
-  const limit = limitText === null ? CHECKLIST_INSTANCE_PAGE_SIZE : /^\d{1,2}$/.test(limitText) ? Number(limitText) : NaN;
+  const limit = limitText === null ? hasDefinition ? CHECKLIST_INSTANCE_PAGE_SIZE : 50 : /^\d{1,2}$/.test(limitText) ? Number(limitText) : NaN;
   const query = { scopeId: params.get("scope") ?? "", instructionReceipt: params.get("instructionReceipt") ?? "",
     definitionId: params.get("definitionId") ?? "", limit, cursor: params.get("cursor") };
-  const placeKey=params.get("placeKey")??"";
+  const placeKey=params.get("placeKey")??(uiPlaceMode?scopeValue:"");
   if(placeMode && !parseChecklistPlaceKey(placeKey))
     return NextResponse.json({code:"INVALID_PLACE_KEY"},{status:400,headers:NO_STORE});
   if (!placeMode && !/^(?:zcta|county|cd|cbsa|sldu|sldl):[0-9]{2,4}\/[0-9A-Za-z]{2,12}$/.test(query.scopeId))
@@ -44,6 +49,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   // and immutable instruction receipt can be validated against the index.
   if (!Number.isSafeInteger(limit) || limit<1 || limit>50)
     return NextResponse.json({code:"INVALID_QUERY"},{status:400,headers:NO_STORE});
+  if (params.has("cursor") && !/^[A-Za-z0-9_-]{1,2000}$/.test(params.get("cursor")??""))
+    return NextResponse.json({code:"INVALID_CURSOR"},{status:400,headers:NO_STORE});
   if (!placeMode) try { validateChecklistInstanceIndexQuery(query); }
   catch (error) { return NextResponse.json({ code: error instanceof ChecklistInstanceIndexError ? error.code : "INVALID_QUERY" },
     { status: 400, headers: NO_STORE }); }
@@ -58,10 +65,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         {status:409,headers:NO_STORE});
     const resolved=binding?.state==="BOUND"
       ? {...query,scopeId:binding.scopeId,instructionReceipt:binding.instructionReceipt}:query;
-    validateChecklistInstanceIndexQuery(resolved);
-    const read = await readIndexedChecklistInstances(sql, resolved);
-    return NextResponse.json(v6ChecklistSection({ scope: resolved.scopeId, read, readAt: new Date().toISOString() }),
-      { headers: NO_STORE });
+    if (hasDefinition) {
+      validateChecklistInstanceIndexQuery(resolved);
+      const read = await readIndexedChecklistInstances(sql, resolved);
+      return NextResponse.json(v6ChecklistSection({ scope: resolved.scopeId, read, readAt: new Date().toISOString() }),
+        { headers: NO_STORE });
+    }
+    const allQuery={scopeId:resolved.scopeId,instructionReceipt:resolved.instructionReceipt,
+      limit:resolved.limit,cursor:resolved.cursor};
+    validateChecklistAllDefinitionsQuery(allQuery);
+    const read=await readIndexedChecklistAllDefinitions(sql,allQuery);
+    return NextResponse.json(v6ChecklistAllDefinitionsSection({scope:resolved.scopeId,read,readAt:new Date().toISOString()}),
+      {headers:NO_STORE});
   } catch (error) {
     if (error instanceof ChecklistInstanceIndexError) {
       if (error.code === "STALE_CURSOR")

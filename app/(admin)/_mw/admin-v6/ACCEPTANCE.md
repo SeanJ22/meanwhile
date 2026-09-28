@@ -167,9 +167,9 @@ Each shows on screen as a recoverable waiting state and needs no frontend edit o
 |---|---|
 | `tsc --noEmit -p .` | No errors in `admin-v6` or `tests/admin-v6-ui` |
 | `eslint` on changed paths | Clean |
-| `tests/admin-v6-ui` | 32 pass, 0 fail |
-| Full suite `node --test tests/**/*.test.ts(x)` | See handoff note (recorded at commit time) |
-| Browser: 7 screens desktop + 390 px, journeys 3–9, states, keyboard, auto-pickup | Pass (local dev) |
+| `tests/admin-v6-ui` | 32 pass, 0 fail (also inside the 89 rerun below) |
+| Full suite `node --test tests/**/*.test.ts(x)` | 8,679 tests: 8,668 pass, 9 fail, 2 skipped on the first run. Six failures were v6 guard findings (sentence-shaped defaults, raw ISO stamps, token fallbacks, a hand-kept state list and a hardcoded host in the sample, function-shaped object literals) — **all fixed**; those guards plus `tests/admin-v6-ui` rerun: 89 pass, 0 fail. The other three are not v6: the rulings-regeneration test timed out on the shared working-tree lock during the parallel run (passes alone); the production-bundle trace test read a stale `.next` build left in this worktree from Sep 23 (skips once removed, as on any checkout without a build); the credential sweep runs only when `.env.local` is present and flags an existing `NETLIFY_SITE_ID` in `docs/log.md` line 1388 and `docs/tracker-resolved.csv` line 418 (not v6 files; for Codex to judge) |
+| Browser: 7 screens desktop + 390 px, journeys 3–9, states, keyboard, auto-pickup | Pass (local dev); screens and journeys rewalked after the guard fixes |
 
 ## 9. Optional improvements (do not block acceptance)
 

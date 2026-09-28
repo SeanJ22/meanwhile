@@ -1,4 +1,5 @@
 "use client";
+// @server-boundary-exempt CommandCenter takes a live Executor object and callbacks; only client entry points (LiveCommandCenter, the dev preview harness) render it, never a Server Component.
 
 /**
  * **MEANWHILE ADMIN COMMAND CENTER (v6).** The seven screens in one shell.
@@ -220,7 +221,7 @@ export function CommandCenter(props: CommandCenterProps) {
   const pickerHits = pickerMatches(places, hunts, pickerQ);
   const connWarn = props.connection !== "live";
   const lastGood = props.lastGoodAt ? mst(props.lastGoodAt, false) : null;
-  const connLabel = props.connection === "live" ? `Live · updated ${lastGood ?? "just now"}` : `${CONN_WORDS[props.connection]}${lastGood ? ` · last update ${lastGood}` : ""}`;
+  const connLabel = props.connection === "live" ? (lastGood ? `Live · updated ${lastGood}` : "Live") : `${CONN_WORDS[props.connection]}${lastGood ? ` · last update ${lastGood}` : ""}`;
   const dialogDef = dialog ? actionDef(dialog.ref.kind) : null;
   const dialogTarget = dialog ? (dialog.ref.kind === "scope-stop" && !dialog.ref.target ? scopeKey : dialog.ref.target) : "";
 

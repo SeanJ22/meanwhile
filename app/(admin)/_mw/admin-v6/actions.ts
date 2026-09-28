@@ -524,7 +524,7 @@ const defs: ActionDef[] = [
       level: "local",
       rows: [
         ["Affects", `The source list for ${ctx.targetName}`],
-        ["What changes", `Adds ${ctx.url ?? "the address"} as a permitted official source. The workers look there on their next round. Saved evidence is kept.`],
+        ["What changes", `Adds ${ctx.url ? ctx.url : "the address you gave"} as a permitted official source. The workers look there on their next round. Saved evidence is kept.`],
         ["Won’t", "Won’t publish anything until its records pass the checks."],
         ["Cost", "Free to add. Reading it tries plain code first."],
       ],
@@ -646,7 +646,7 @@ const defs: ActionDef[] = [
         title: `Put more resources on: ${ctx.fix?.title ?? ctx.targetName}`,
         level: "local",
         rows: [
-          ["Resources now", ctx.fix?.resourcesNow ?? "Not reported"],
+          ["Resources now", ctx.fix ? ctx.fix.resourcesNow : "Not reported by the backend yet"],
           ["Won’t", `Won’t raise any budget, start duplicate jobs, let two people change the same code, reset a limit, or skip a step in the AI model order (${MODEL_ORDER}).`],
           ["Who decides", "The scheduler or engineering intake checks availability, ownership and budget, then accepts, partly accepts or refuses with a reason. This page never assumes it happened."],
         ],

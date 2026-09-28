@@ -127,7 +127,8 @@ export function WeeklyColumns(props: { readonly trend: Trend }) {
 export function Donut(props: { readonly parts: readonly { readonly name: string; readonly amount: number | null; readonly cls: string }[]; readonly center: string }) {
   const known = props.parts.filter((p) => (p.amount ?? 0) > 0);
   const total = known.reduce((a, p) => a + (p.amount ?? 0), 0);
-  const varOf: Readonly<Record<string, string>> = { "c-blue": "var(--v6-blue)", "c-teal": "var(--v6-teal)", "c-amber": "var(--v6-amber)", "c-violet": "var(--v6-violet)", "c-coral": "var(--v6-coral)", "c-gray": "var(--v6-gray)" };
+  // The palette is declared on .root in v6.module.css; each reference also carries the same value as a fallback.
+  const varOf: Readonly<Record<string, string>> = { "c-blue": "var(--v6-blue, oklch(0.64 0.14 255))", "c-teal": "var(--v6-teal, oklch(0.8 0.11 175))", "c-amber": "var(--v6-amber, oklch(0.84 0.14 85))", "c-violet": "var(--v6-violet, oklch(0.68 0.13 305))", "c-coral": "var(--v6-coral, oklch(0.7 0.16 35))", "c-gray": "var(--v6-gray, oklch(0.72 0 0))" };
   let at = 0;
   const stops = known.map((p) => {
     const start = at;

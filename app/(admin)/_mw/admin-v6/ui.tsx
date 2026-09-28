@@ -76,7 +76,7 @@ export function SourceNote(props: { readonly source: Sourced<unknown>; readonly 
   return (
     <details className={cx(s.notice, s.noticeMissing)} role="status">
       <summary style={{ cursor: "pointer" }}><strong>{head}</strong>{src.problem === "waiting" || src.problem === undefined ? " You don’t need to reload." : ""}</summary>
-      <span>{dep?.need ?? "This reading isn’t available."}</span>
+      <span>{dep ? dep.need : "This reading isn’t available."}</span>
       {dep && <span className={s.meta}>Supplied by {dep.owner} · {dep.id}</span>}
     </details>
   );
@@ -148,7 +148,7 @@ export function Technical(props: { readonly lines: readonly string[]; readonly l
   if (!props.lines.length) return null;
   return (
     <details className={s.details}>
-      <summary>{props.label ?? "Technical details"}</summary>
+      <summary>{props.label === undefined ? "Technical details" : props.label}</summary>
       <ul className={s.tech}>{props.lines.map((l) => <li key={l}>{l}</li>)}</ul>
     </details>
   );

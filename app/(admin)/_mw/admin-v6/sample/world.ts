@@ -11,6 +11,10 @@
  * effect (a job appears after a resource request, a hidden association can be
  * undone). The checklist uses the REAL 325 definitions passed in by the page.
  */
+import { COVERED_STATES } from "@/lib/coverage/states.ts";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+
 import { SECTION_DEP } from "../dependencies.ts";
 import { GROUP_NAMES, PLACE_GROUP_NAMES } from "../groups.ts";
 import {
@@ -78,16 +82,8 @@ export const SAMPLE_AS_OF = "2026-09-28T06:53:00.000Z";
 
 /* ----------------------------------------------------------------- places */
 
-const STATE_NAMES: Readonly<Record<string, string>> = {
-  AK: "Alaska", AL: "Alabama", AR: "Arkansas", AZ: "Arizona", CA: "California", CO: "Colorado", CT: "Connecticut", DC: "District of Columbia",
-  DE: "Delaware", FL: "Florida", GA: "Georgia", HI: "Hawaii", IA: "Iowa", ID: "Idaho", IL: "Illinois", IN: "Indiana", KS: "Kansas", KY: "Kentucky",
-  LA: "Louisiana", MA: "Massachusetts", MD: "Maryland", ME: "Maine", MI: "Michigan", MN: "Minnesota", MO: "Missouri", MS: "Mississippi",
-  MT: "Montana", NC: "North Carolina", ND: "North Dakota", NE: "Nebraska", NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NV: "Nevada",
-  NY: "New York", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota",
-  TN: "Tennessee", TX: "Texas", UT: "Utah", VA: "Virginia", VT: "Vermont", WA: "Washington", WI: "Wisconsin", WV: "West Virginia", WY: "Wyoming",
-  PR: "Puerto Rico", GU: "Guam", VI: "U.S. Virgin Islands", AS: "American Samoa", MP: "Northern Mariana Islands",
-};
-const TRACKED = new Set(["AZ", "NH", "NJ"]);
+const STATE_NAMES: Readonly<Record<string, string>> = Object.fromEntries(US_STATES.map((st) => [st.code.toUpperCase(), st.name]));
+const TRACKED: ReadonlySet<string> = new Set(COVERED_STATES.map((st) => st.usps));
 
 export const K = {
   us: "us",
@@ -172,7 +168,7 @@ function sampleResults(w: SampleWorld): readonly ReaderResult[] {
         st("Facts pulled out", "not-yet", "not started", "Nobody has read the meetings out of these files yet.", { missing: "The software that pulls out facts can’t reach saved files.", next: "Collection engineering is letting it read saved files. Then the normal line runs it, with no new search.", facts: [{ field: "Date", value: "—", note: "not pulled out" }, { field: "Time and time zone", value: "—", note: "not pulled out" }, { field: "Location", value: "—", note: "not pulled out" }, { field: "Remote access", value: "—", note: "not captured by our software" }], technical: ["fix MW-060", "definition MTG-09"] }),
         st("Facts checked against sources", "waiting", "—", "Each meeting will be checked against the source for date, time, place and that it belongs to Cochise County."),
         st("Published", "waiting", "card v14 · Sep 20", "The current card has no Cochise meetings. It shows 280 from Pima County bodies because of a wrong link between records.", { facts: [{ field: "v14 · current", value: "280 meetings through the wrong link", note: c ? "hidden (can be undone)" : "wrong link" }, { field: "v13 · earlier", value: "No meetings", note: "missing" }] }),
-        st("Checked on the public page", c ? "not-yet" : "wrong", "seen Sep 28, 12:10 AM", c ? "The wrong meetings are hidden. The exact card now says local meetings aren’t available yet." : "The exact card shows 280 meetings from Tucson and Pima County bodies. Its Sources tab lists Tucson Unified and the City of Tucson Clerk.", { missing: "Cochise County’s own meetings", next: "Engineers fix how county cards choose bodies. Then this card is checked again.", publicLink: { url: "https://meanwhileusa.com/?zip=85635&card=county-az-cochise&tab=meetings", label: "Open the exact card (sample link)", seenAt: "Sep 28, 12:10 AM" }, technical: ["reader view 85635 · Cochise · Meetings tab", "association assoc-cochise-card-pima-bodies", "fix MW-061"] }),
+        st("Checked on the public page", c ? "not-yet" : "wrong", "seen Sep 28, 12:10 AM", c ? "The wrong meetings are hidden. The exact card now says local meetings aren’t available yet." : "The exact card shows 280 meetings from Tucson and Pima County bodies. Its Sources tab lists Tucson Unified and the City of Tucson Clerk.", { missing: "Cochise County’s own meetings", next: "Engineers fix how county cards choose bodies. Then this card is checked again.", publicLink: { url: `${PUBLIC_SITE_ORIGIN}/?zip=85635&card=county-az-cochise&tab=meetings`, label: "Open the exact card (sample link)", seenAt: "2026-09-28T07:10:00.000Z" }, technical: ["reader view 85635 · Cochise · Meetings tab", "association assoc-cochise-card-pima-bodies", "fix MW-061"] }),
       ],
     },
     {
@@ -208,7 +204,7 @@ function sampleResults(w: SampleWorld): readonly ReaderResult[] {
         st("Facts pulled out", "done", "Sep 27", "Read by plain code. No AI cost."),
         st("Facts checked against sources", "done", "Sep 27, 3:20 PM", "All required source checks passed."),
         st("Published", "done", "Sep 27, 3:20 PM", "Published to the data the site uses. Reused by every hunt, not new for any of them.", { technical: ["reader version cv-93c510e4769d65ade82653ecd376f91c"] }),
-        st("Checked on the public page", "reported", "not linked", "The source pass recorded a readback, but it isn’t linked to this record. A data response isn’t proof a reader saw it.", { publicLink: { url: "https://meanwhileusa.com/api/directory", label: "Data response (not reader proof)", seenAt: null } }),
+        st("Checked on the public page", "reported", "not linked", "The source pass recorded a readback, but it isn’t linked to this record. A data response isn’t proof a reader saw it.", { publicLink: { url: `${PUBLIC_SITE_ORIGIN}/api/directory`, label: "Data response (not reader proof)", seenAt: null } }),
       ],
     },
     {
@@ -220,7 +216,7 @@ function sampleResults(w: SampleWorld): readonly ReaderResult[] {
         st("Facts pulled out", "done", "Sep 26, 4:24 PM", "Plain code, then the cheapest AI (Haiku 4.5) for the location line.", { facts: [{ field: "Date", value: "Wed, Oct 7, 2026", note: "new" }, { field: "Time", value: "10:00 AM ET", note: "new" }, { field: "Location", value: "State House, Room 207", note: "new" }, { field: "Agenda link", value: "official PDF", note: "new" }, { field: "Remote access", value: "Not published by the source", note: "source doesn’t publish it · evidence saved" }] }),
         st("Facts checked against sources", "done", "Sep 26, 4:31 PM", "All 6 checks passed."),
         st("Published", "done", "v2 · Sep 26, 4:32 PM", "Published automatically.", { facts: [{ field: "v2 · current", value: "adds agenda link", note: "updated" }, { field: "v1 · earlier", value: "no agenda link", note: "replaced" }] }),
-        st("Checked on the public page", "done", "seen Sep 27, 9:12 PM", "The exact card matches v2.", { publicLink: { url: "https://meanwhileusa.com/?state=NH&body=nh-executive-council&tab=meetings&meeting=2026-10-07", label: "Open the exact card (sample link)", seenAt: "Sep 27, 9:12 PM" } }),
+        st("Checked on the public page", "done", "seen Sep 27, 9:12 PM", "The exact card matches v2.", { publicLink: { url: `${PUBLIC_SITE_ORIGIN}/?state=NH&body=nh-executive-council&tab=meetings&meeting=2026-10-07`, label: "Open the exact card (sample link)", seenAt: "2026-09-28T04:12:00.000Z" } }),
       ],
     },
     {
@@ -310,14 +306,14 @@ function sampleRows(): readonly WorkRow[] {
 
 function sampleJobs(w: SampleWorld): readonly WorkerJob[] {
   const J: WorkerJob[] = [
-    { id: "j1", stage: "finding", title: "Hereford NRCD: find a meeting route", placeKey: K.z85635, hunt: "ZIP 85635 hunt", requirement: "Meetings: publisher route", startedAt: "11:44 PM", elapsed: "9 min so far", method: "A route that worked before, from our saved routes, so no new search is paid for", model: "Cheapest AI (Haiku 4.5)", modelWhy: "Starts with the cheapest AI", cost: "$0.12 set aside", latest: "Tried 2 of 5 saved routes", next: "Try the county notice board" },
-    { id: "j2", stage: "finding", title: "Palominas ESD: find a meeting route", placeKey: K.z85635, hunt: "ZIP 85635 hunt", requirement: "Meetings: publisher route", startedAt: "11:47 PM", elapsed: "6 min so far", method: "Search, then the district site", model: "Cheapest AI (Haiku 4.5)", modelWhy: "Starts with the cheapest AI", cost: "$0.12 set aside", latest: "Found the board’s page", next: "Save it as evidence" },
-    { id: "j3", stage: "collecting", title: "Merrimack County register: campaign filings", placeKey: K.merrimack, hunt: "Merrimack County hunt", requirement: "Campaign finance filings", startedAt: "11:40 PM", elapsed: "13 min so far", method: "Official register site · plain code", model: "No AI (plain code)", modelWhy: "No AI needed", cost: "$0.00", latest: "Downloaded 3 of 7 filings", next: "Download the other 4" },
-    { id: "j4", stage: "extracting", title: "Merrimack candidates: profiles", placeKey: K.merrimack, hunt: "Merrimack County hunt", requirement: "Candidate profile fields", startedAt: "11:42 PM", elapsed: "11 min so far", method: "Saved candidate pages (reused evidence)", model: "Mid-level AI (Sonnet 5.5)", modelWhy: "Moved up one step because the cheapest AI got the office name wrong in its check", cost: "$0.40 set aside · $0.22 spent", latest: "4 of 9 profiles pulled out", next: "Check them against the source" },
-    { id: "j6", stage: "publishing", title: "Congress roll calls: refresh", placeKey: K.us, hunt: "Shared national", requirement: "Roll-call votes", startedAt: "11:50 PM", elapsed: "3 min so far", method: "Congress bulk data · plain code", model: "No AI (plain code)", modelWhy: "No AI needed", cost: "$0.00", latest: "New version ready", next: "Publish, then check the exact card" },
+    { id: "j1", stage: "finding", title: "Hereford NRCD: find a meeting route", placeKey: K.z85635, hunt: "ZIP 85635 hunt", requirement: "Meetings: publisher route", startedAt: "2026-09-28T06:44:00.000Z", elapsed: "9 min so far", method: "A route that worked before, from our saved routes, so no new search is paid for", model: "Cheapest AI (Haiku 4.5)", modelWhy: "Starts with the cheapest AI", cost: "$0.12 set aside", latest: "Tried 2 of 5 saved routes", next: "Try the county notice board" },
+    { id: "j2", stage: "finding", title: "Palominas ESD: find a meeting route", placeKey: K.z85635, hunt: "ZIP 85635 hunt", requirement: "Meetings: publisher route", startedAt: "2026-09-28T06:47:00.000Z", elapsed: "6 min so far", method: "Search, then the district site", model: "Cheapest AI (Haiku 4.5)", modelWhy: "Starts with the cheapest AI", cost: "$0.12 set aside", latest: "Found the board’s page", next: "Save it as evidence" },
+    { id: "j3", stage: "collecting", title: "Merrimack County register: campaign filings", placeKey: K.merrimack, hunt: "Merrimack County hunt", requirement: "Campaign finance filings", startedAt: "2026-09-28T06:40:00.000Z", elapsed: "13 min so far", method: "Official register site · plain code", model: "No AI (plain code)", modelWhy: "No AI needed", cost: "$0.00", latest: "Downloaded 3 of 7 filings", next: "Download the other 4" },
+    { id: "j4", stage: "extracting", title: "Merrimack candidates: profiles", placeKey: K.merrimack, hunt: "Merrimack County hunt", requirement: "Candidate profile fields", startedAt: "2026-09-28T06:42:00.000Z", elapsed: "11 min so far", method: "Saved candidate pages (reused evidence)", model: "Mid-level AI (Sonnet 5.5)", modelWhy: "Moved up one step because the cheapest AI got the office name wrong in its check", cost: "$0.40 set aside · $0.22 spent", latest: "4 of 9 profiles pulled out", next: "Check them against the source" },
+    { id: "j6", stage: "publishing", title: "Congress roll calls: refresh", placeKey: K.us, hunt: "Shared national", requirement: "Roll-call votes", startedAt: "2026-09-28T06:50:00.000Z", elapsed: "3 min so far", method: "Congress bulk data · plain code", model: "No AI (plain code)", modelWhy: "No AI needed", cost: "$0.00", latest: "New version ready", next: "Publish, then check the exact card" },
   ];
   if (w.focus["A-1"] === "research") {
-    J.push({ id: "j7", stage: "collecting", title: "Marana schools calendar: try the county’s posted notices", placeKey: K.az, hunt: "Shared statewide", requirement: "Meetings: official meeting source", startedAt: "just now", elapsed: "just started", method: "The county’s posted notices, plain code", model: "No AI (plain code)", modelWhy: "Extra worker slots you asked for", cost: "$0.00", latest: "Starting", next: "Save what it finds" });
+    J.push({ id: "j7", stage: "collecting", title: "Marana schools calendar: try the county’s posted notices", placeKey: K.az, hunt: "Shared statewide", requirement: "Meetings: official meeting source", startedAt: "2026-09-28T06:55:00.000Z", elapsed: "just started", method: "The county’s posted notices, plain code", model: "No AI (plain code)", modelWhy: "Extra worker slots you asked for", cost: "$0.00", latest: "Starting", next: "Save what it finds" });
   }
   return J.filter((j) => !w.jobsStopped.includes(j.id));
 }
@@ -466,24 +462,24 @@ function sampleFixes(w: SampleWorld) {
     ["MW-064", "update", "Operations engineering", "The removal you approved is released, but the workers haven’t restarted with it.", "Paid work runs all day within each hunt’s limit", [], "engineering"],
   ];
   const open: OpenFix[] = O.map(([id, tab, owner, problem, helps, linked, origin]) => ({
-    id, title: FIX_TITLES[id], tab, owner, problem, helps, placeInLine: rank(id), resourcesNow: res[id] ?? "Not assigned yet",
+    id, title: FIX_TITLES[id], tab, owner, problem, helps, placeInLine: rank(id), resourcesNow: id in res ? res[id] : "Not assigned yet",
     taskStage: tasks[id]?.[1] ?? null, taskId: tasks[id]?.[0] ?? null, linkedStuck: linked, origin,
     technical: `${id}${tasks[id] ? ` · task ${tasks[id][0]}` : ""}${origin === "automatic" ? " · automatic repair, no code change" : ""}`,
   }));
   const D: [string, string, string, string, ClosedFix["origin"], ClosedFix["learning"], string, string, string, string, string, string, string?][] = [
-    ["Tucson Unified meetings showed the wrong time zone", "Meeting times are now read with Arizona’s time zone, which has no daylight saving.", "Pima County · Tucson readers", "Sep 22", "Engineering fix", "Prevention tested", "A test now fails any meeting check that drops the time zone. The released version is in use by the workers.", "Exact Tucson Unified card rechecked Sep 22, 3:10 PM: times match the source.", "412 comparable meeting checks over the 6 days since: 0 wrong time zones.", "A time-zone check added to every meeting check", "All meeting checks in every state", "fix MW-052 · release r-0921 · test mtg-tz-regression"],
-    ["Marana schools’ calendar moved to a new address", "The automatic repair found the new address and saved it as a route.", "Arizona · Marana readers", "Sep 24", "Automatic repair", "Reused successfully on another job", "No code change. The route was saved to our route library.", "Exact Marana card rechecked Sep 24: meetings match.", "Sep 26: Amphitheater schools used the same kind of route and found its calendar on the first try, with no paid search.", "Route pattern: a school district moved its calendar to a vendor site", "Every search attempt for school boards", "route rt-5d7a4e0e · attempt da-77f1"],
-    ["NH Executive Council agenda link was missing", "The agenda link was read from the page again and added.", "New Hampshire · statewide", "Sep 26", "Automatic repair", "Fixed once", "Nothing was saved to prevent it happening again.", "Exact card checked Sep 27, 9:12 PM: the link works.", "No later attempts to compare yet.", "Nothing saved", "—", "reader version v2"],
-    ["Pima County board PDFs wouldn’t open", "A reader for this kind of PDF was added.", "Pima County", "Sep 20", "Engineering fix", "Prevention saved", "Released and in use by the workers.", "Exact Pima card rechecked Sep 20: agendas open.", "Not yet tried on another county’s PDFs, so reuse isn’t proven.", "PDF reading rule for this file type", "Any body whose agendas use this PDF type", "fix MW-048 · release r-0919"],
-    ["Congress vote records appeared twice", "A duplicate check now runs before publishing.", "United States · every reader", "Sep 18", "Engineering fix", "Prevention tested", "Released, in use, and covered by a test.", "Votes page rechecked Sep 18: no duplicates.", "5 refreshes since, with the same source: 0 duplicates.", "Duplicate check before publishing votes", "Every votes refresh", "fix MW-045 · test leg-dup-regression"],
-    ["Morris County roster was read from the wrong table", "The automatic repair picked the table with the commissioners’ names.", "Morris County, NJ", "Sep 23", "Automatic repair", "Not checked yet", "Nothing was saved yet.", "Exact card not rechecked yet.", "No later attempts to compare yet.", "Nothing saved", "—", "attempt da-5b20"],
-    ["Candidate filing PDFs were missing their office name", "The office name is now read from the filing’s header block.", "New Hampshire · candidates", "Sep 17", "Engineering fix", "Prevention saved", "Released and in use by the workers.", "Exact candidate card rechecked Sep 17: office names show.", "No other state’s filings tried yet.", "Header-block reading rule", "Candidate filing reads", "fix MW-043"],
+    ["Tucson Unified meetings showed the wrong time zone", "Meeting times are now read with Arizona’s time zone, which has no daylight saving.", "Pima County · Tucson readers", "2026-09-22T19:00:00.000Z", "Engineering fix", "Prevention tested", "A test now fails any meeting check that drops the time zone. The released version is in use by the workers.", "Exact Tucson Unified card rechecked Sep 22, 3:10 PM: times match the source.", "412 comparable meeting checks over the 6 days since: 0 wrong time zones.", "A time-zone check added to every meeting check", "All meeting checks in every state", "fix MW-052 · release r-0921 · test mtg-tz-regression"],
+    ["Marana schools’ calendar moved to a new address", "The automatic repair found the new address and saved it as a route.", "Arizona · Marana readers", "2026-09-24T19:00:00.000Z", "Automatic repair", "Reused successfully on another job", "No code change. The route was saved to our route library.", "Exact Marana card rechecked Sep 24: meetings match.", "Sep 26: Amphitheater schools used the same kind of route and found its calendar on the first try, with no paid search.", "Route pattern: a school district moved its calendar to a vendor site", "Every search attempt for school boards", "route rt-5d7a4e0e · attempt da-77f1"],
+    ["NH Executive Council agenda link was missing", "The agenda link was read from the page again and added.", "New Hampshire · statewide", "2026-09-26T19:00:00.000Z", "Automatic repair", "Fixed once", "Nothing was saved to prevent it happening again.", "Exact card checked Sep 27, 9:12 PM: the link works.", "No later attempts to compare yet.", "Nothing saved", "—", "reader version v2"],
+    ["Pima County board PDFs wouldn’t open", "A reader for this kind of PDF was added.", "Pima County", "2026-09-20T19:00:00.000Z", "Engineering fix", "Prevention saved", "Released and in use by the workers.", "Exact Pima card rechecked Sep 20: agendas open.", "Not yet tried on another county’s PDFs, so reuse isn’t proven.", "PDF reading rule for this file type", "Any body whose agendas use this PDF type", "fix MW-048 · release r-0919"],
+    ["Congress vote records appeared twice", "A duplicate check now runs before publishing.", "United States · every reader", "2026-09-18T19:00:00.000Z", "Engineering fix", "Prevention tested", "Released, in use, and covered by a test.", "Votes page rechecked Sep 18: no duplicates.", "5 refreshes since, with the same source: 0 duplicates.", "Duplicate check before publishing votes", "Every votes refresh", "fix MW-045 · test leg-dup-regression"],
+    ["Morris County roster was read from the wrong table", "The automatic repair picked the table with the commissioners’ names.", "Morris County, NJ", "2026-09-23T19:00:00.000Z", "Automatic repair", "Not checked yet", "Nothing was saved yet.", "Exact card not rechecked yet.", "No later attempts to compare yet.", "Nothing saved", "—", "attempt da-5b20"],
+    ["Candidate filing PDFs were missing their office name", "The office name is now read from the filing’s header block.", "New Hampshire · candidates", "2026-09-17T19:00:00.000Z", "Engineering fix", "Prevention saved", "Released and in use by the workers.", "Exact candidate card rechecked Sep 17: office names show.", "No other state’s filings tried yet.", "Header-block reading rule", "Candidate filing reads", "fix MW-043"],
   ];
   const mk = (x: (typeof D)[number], i: number): ClosedFix => ({
     id: `fx-${i}`, title: x[0], changed: x[1], places: x[2], fixedAt: x[3], origin: x[4], learning: x[5], whatChanged: x[6], readerRecheck: x[7], since: x[8], saved: x[9], usedBy: x[10], technical: x[11], returnedDetail: x[12],
   });
   const closed = D.map(mk);
-  const returned: ClosedFix[] = [mk(["Sierra Vista meeting list kept timing out", "Retries were spaced further apart.", "ZIP 85635 · Sierra Vista readers", "Sep 21", "Automatic repair", "Problem returned", "No code change.", "Rechecked Sep 21: it worked then.", "Returned Sep 26: 2 of 5 later attempts timed out.", "Longer wait between retries", "This site only", "attempt da-3514d937", "The same timeout came back on Sep 26 and Sep 27. The page was saved on Sep 26 before it failed, so the saved copy is still usable once the saved-file fix is in use."], 99)];
+  const returned: ClosedFix[] = [mk(["Sierra Vista meeting list kept timing out", "Retries were spaced further apart.", "ZIP 85635 · Sierra Vista readers", "2026-09-21T19:00:00.000Z", "Automatic repair", "Problem returned", "No code change.", "Rechecked Sep 21: it worked then.", "Returned Sep 26: 2 of 5 later attempts timed out.", "Longer wait between retries", "This site only", "attempt da-3514d937", "The same timeout came back on Sep 26 and Sep 27. The page was saved on Sep 26 before it failed, so the saved copy is still usable once the saved-file fix is in use."], 99)];
   return { open, closed, returned };
 }
 
@@ -505,7 +501,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
     group: g,
     name: GROUP_NAMES[g] ?? g,
     counts: SYS_COUNTS[g] ?? null,
-    audit: Object.fromEntries(defs.filter((d) => d.group === g).map((d) => [d.id, SAMPLE_AUDIT[d.id] ?? "No audit note in the sample."])),
+    audit: Object.fromEntries(defs.filter((d) => d.group === g).map((d) => [d.id, d.id in SAMPLE_AUDIT ? SAMPLE_AUDIT[d.id] : "No audit note in the sample."])),
   }));
   const f = sampleFixes(w);
   return {
@@ -527,7 +523,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
       jobs: sampleJobs(w),
       waiting: sampleWaiting(),
       events: sampleEvents(),
-      update: { title: "The research workers need an update", checkedAt: "11:53 PM", what: "The website has the latest update, but the workers that collect, check and publish information are still using an older version. So your approved removal of the daily spending restriction isn’t active for them yet.", impact: "Paid research could still pause for the day after $105, even when a hunt has money left. $17.33 has been used in the last 24 hours, so nothing is paused right now.", owner: "Operations engineering", next: "The update is released. It starts working when the workers restart, and no restart is scheduled in the records we can see.", youNeedToAct: "No. If you want it sooner, focus more engineering time on it.", fixId: "MW-064", technical: ["Website version b12e5b5 · workers version a41c9e0 · 2 changes behind", "Current round #1 482, started 11:39 PM", "Engineering task ET-14 · fix MW-064", "No “apply update” button: no authorized operation for restarting workers exists yet"] },
+      update: { title: "The research workers need an update", checkedAt: "2026-09-28T06:53:00.000Z", what: "The website has the latest update, but the workers that collect, check and publish information are still using an older version. So your approved removal of the daily spending restriction isn’t active for them yet.", impact: "Paid research could still pause for the day after $105, even when a hunt has money left. $17.33 has been used in the last 24 hours, so nothing is paused right now.", owner: "Operations engineering", next: "The update is released. It starts working when the workers restart, and no restart is scheduled in the records we can see.", youNeedToAct: "No. If you want it sooner, focus more engineering time on it.", fixId: "MW-064", technical: ["Website version b12e5b5 · workers version a41c9e0 · 2 changes behind", "Current round #1 482, started 11:39 PM", "Engineering task ET-14 · fix MW-064", "No “apply update” button: no authorized operation for restarting workers exists yet"] },
       next: ["The 2 source-finding jobs save what they found, then pulling out facts starts.", "At 6:00 AM: the Arizona finance and Marana rechecks.", "When the next round starts isn’t reported yet, so no finish time is shown."],
     }, SECTION_DEP.workers, SAMPLE_AS_OF),
     checklist: sample({ profileVersion, definitionCount: defs.length, definitions: defs, groupNames: GROUP_NAMES, placeGroups: sampleGroupCounts(scope), items: sampleItems(scope, defs), systemGroups }, SECTION_DEP.checklistItems, SAMPLE_AS_OF),

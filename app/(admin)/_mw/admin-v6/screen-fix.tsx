@@ -11,7 +11,7 @@ import { useState } from "react";
 
 import { Swatch } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
-import { LEARNING_STATUSES, TASK_STAGES, type ClosedFix, type FixTab, type LearningStatus, type OpenFix } from "./model.ts";
+import { LEARNING_STATUSES, mstDay, TASK_STAGES, type ClosedFix, type FixTab, type LearningStatus, type OpenFix } from "./model.ts";
 import { Actions, cx, Empty, Facts, Pill, SourceNote, Tabs, Technical, useListView } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -126,7 +126,7 @@ function History(props: { readonly list: readonly ClosedFix[]; readonly returned
                 <strong style={{ fontSize: 13 }}>{x.title}</strong>
                 <span className={s.legendItem}><Swatch cls={LEARNING_CLASS[x.learning]} /><span className={s.small}>{x.learning}</span></span>
               </span>
-              <span className={s.meta}>{x.places} · fixed {x.fixedAt} · {x.origin}</span>
+              <span className={s.meta}>{x.places} · fixed {mstDay(x.fixedAt)} · {x.origin}</span>
             </summary>
             <div className={s.stack} style={{ marginTop: 8 }}>
               <p className={cx(s.p, s.small)}>{x.changed}</p>

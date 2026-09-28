@@ -1,4 +1,5 @@
-import { join } from "node:path";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { readFile } from "node:fs/promises";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { scoutExecutor, type ModelTransport, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
@@ -14,6 +15,7 @@ import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { emptyFieldManual, type FieldManualStore } from "../field-manual.ts";
 import {
   compoundingPair,
+  scoutFieldManualCatalog,
   fieldManualBriefLines,
   knownRouteIds,
   scoutDiscoveryEntries,
@@ -27,17 +29,20 @@ import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
-import { consumePlanRepairs, planRepairBrief, planRepairFailureBrief } from "./plan-repair.ts";
+import { consumePlanRepairs, planRepairBrief, planRepairFailureBrief, type PlanRepairLink } from "./plan-repair.ts";
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"];
+  openBytesFor?:(subjectId:string)=>ScoutToolContext["openBytes"];
   /** The existing guarded search service, with the same accounting and owner settings as the first Scout. */
   search?:ScoutToolContext["search"];
+  searchFor?:(subjectId:string)=>ScoutToolContext["search"];
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
+  lifetimeHuntSubject?:(subjectId:string)=>boolean;
   /** MW-033: the rolling-ceiling hold a Scout escalation must win before its frontier attempt; absent, every escalation is refused NOT_RESERVED. */
   reserveScoutEscalation?:ScoutExecutorDeps["reserveEscalation"];
   /** MW-021 (2026-09-25): the transport for the work on one jurisdiction, so its requests are held on the area budget covering it; absent, `transport` serves all. */
@@ -46,7 +51,8 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
-    spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{})};
+    spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{}),
+    ...(input.openBytesFor?{openBytesFor:input.openBytesFor}:{})};
   const [prior, priorWorkers] = await Promise.all([
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
@@ -63,7 +69,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   let fieldManualRevision = fmRead?.revision ?? 0;
   const inheritedFieldManualCounts = new Map<string, number>();
   const inheritedManualStores = new Map<string, FieldManualStore>();
-  const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
+  const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly availableIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime(input);
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   await consumePlanRepairs({ repos: input.repos, scouts: prior, now: now(),
@@ -75,7 +81,23 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,
       ...(input.reserveScoutEscalation?{reserveEscalation:input.reserveScoutEscalation}:{}),
-      toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id}), ...(input.search ? { search: input.search } : {})}),
+      toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id,subjectId:item.subject}),
+        readHeldArtifact: async id => {
+          const [{ artifact }, evidence] = await Promise.all([readRepairCapture(id), heldRuntime.readEvidence(id)]);
+          return { ...evidenceProjection(evidence), provenance: {
+            artifactId: id, canonicalUrl: artifact.canonicalUrl, retrievedAt: artifact.retrievedAt,
+            permission: artifact.permission, methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
+          } };
+        },
+        readManualDocument: async path => {
+          const allowed = ctx.inherited.manualEntries?.some(entry => entry.payload !== null && typeof entry.payload === "object" &&
+            "path" in entry.payload && entry.payload.path === path) ?? false;
+          if (!allowed) throw new Error("MANUAL_DOCUMENT_NOT_HANDED_TO_WORKER");
+          const root = resolve(input.root), absolute = resolve(root, path), within = relative(root, absolute);
+          if (!within || within === ".." || within.startsWith(`..${sep}`) || isAbsolute(within)) throw new Error("MANUAL_DOCUMENT_OUTSIDE_CHECKOUT");
+          return readFile(absolute, "utf8");
+        },
+        ...((input.searchFor?.(item.subject) ?? input.search) ? { search: input.searchFor?.(item.subject) ?? input.search } : {})}),
       contextFor:()=>{
         const history=(currentHistory??prior).filter(p=>p.workItemId===item.id);
         const plan=item.autonomousPlan!;
@@ -89,13 +111,16 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           fields:plan.contract.schemaVersion===2?methodFields(plan.capability,plan.contract):["meeting","agenda"],
           adapterRoutes:plan.sources.map(source=>({routeId:source.id,label:source.applicableBecause,target:source.url}))});
         // RULING 63: inherit the one growing field manual too, projected to this jurisdiction.
-        const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
-        inheritedFieldManualCounts.set(item.id,manualProjection.entryIds.length);
+        const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id,recordClass:plan.contract.recordClass});
+        const manualEntries=scoutFieldManualCatalog(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
+        const repair=(item as typeof item & {readonly planRepair?:PlanRepairLink}).planRepair;
+        inheritedFieldManualCounts.set(item.id,manualEntries.length);
         inheritedManualStores.set(item.id,fieldManual);
         const manualLines=fieldManualBriefLines(manualProjection);
-        inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,lines:manualLines});
+        inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,availableIds:manualEntries.map(entry=>entry.id),lines:manualLines});
         return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
-          inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds)])],summary:[
+          inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds),
+            ...(repair?.retainedEvidenceIds??[]),...(repair?.sourceArtifactId?[repair.sourceArtifactId]:[])])],manualEntries,summary:[
             ...manualLines,
             ...planRepairFailureBrief(item),
             ...(item.publicationOutcome && item.publicationOutcome.status !== "PUBLISHED" ? [`Publication repair remains owed: ${item.publicationOutcome.code}. ${item.publicationOutcome.detail}`] : []),
@@ -133,9 +158,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,knownRouteIds(handedManual));
         const doors=inheritedFieldManualDoors.get(result.workItemId);
         recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting,
-          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines,
+          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,availableFieldManualEntryIds:doors.availableIds,inheritedFieldManualLines:doors.lines,
             // MW-025: which handed doors this walk actually went through.
-            usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.entryIds,handedManual)}:{})};
+            usedFieldManualEntryIds:usedFieldManualEntryIds(result,doors.availableIds,handedManual)}:{})};
         if(result.refusal===null&&result.candidates.length>0){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};

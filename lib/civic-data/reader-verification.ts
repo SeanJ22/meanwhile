@@ -87,6 +87,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "candidate-corpus": return "lib/civic-data/manual-read-models.ts#readCandidateCorpusProjection";
     case "officeholder-statements": return "lib/corpus/data-plane.ts#readOfficeholderStatementsProjection";
     case "jurisdiction-operational-reference": return "lib/civic-data/operational-references.ts#preloadOperationalReferenceBundle";
+    case "jurisdiction-operational-reference-az": return "lib/civic-data/operational-references.ts#preloadAzOperationalReferenceBundle";
     case "az-sos-campaign-finance":
     case "nh-sos-campaign-finance":
     case "nj-elec-campaign-finance": return "lib/funding/state-snapshot.ts#readStateMoneyProjection";
@@ -248,6 +249,10 @@ export async function verifyRoutineReaderProjection(
       case "jurisdiction-operational-reference": {
         const { preloadOperationalReferenceBundle } = await import("./operational-references.ts");
         return verifyExactVersion(verifierId, await preloadOperationalReferenceBundle({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "operational-reference");
+      }
+      case "jurisdiction-operational-reference-az": {
+        const { preloadAzOperationalReferenceBundle } = await import("./operational-references.ts");
+        return verifyExactVersion(verifierId, await preloadAzOperationalReferenceBundle({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "az-operational-reference");
       }
       case "az-sos-campaign-finance":
       case "nh-sos-campaign-finance":

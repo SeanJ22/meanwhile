@@ -26,6 +26,8 @@ import {
 export const OPERATIONAL_REFERENCE_RECORD_CLASS = "OPERATIONAL_REFERENCE" as const;
 export const JURISDICTION_REFERENCE_SOURCE_ID = "jurisdiction-operational-reference" as const;
 export const JURISDICTION_REFERENCE_SCOPE = "US:covered-jurisdiction-routing:v1" as const;
+export const AZ_JURISDICTION_REFERENCE_SOURCE_ID = "jurisdiction-operational-reference-az" as const;
+export const AZ_JURISDICTION_REFERENCE_SCOPE = "US-AZ:covered-jurisdiction-routing:v1" as const;
 export const JURISDICTION_REFERENCE_PARSER_VERSION = "jurisdiction-operational-reference/3" as const;
 export const JURISDICTION_REFERENCE_VERSION = "census-2022+reviewed-routing-v1" as const;
 /* The reviewed states live in their own small module, so Admin's Send preview can read them alone. */
@@ -36,14 +38,20 @@ export interface OperationalReferenceBundle {
   readonly sourceVersion: typeof JURISDICTION_REFERENCE_VERSION;
   readonly registries: Readonly<Record<JurisdictionReferenceState, JurisdictionRegistry>>;
 }
+export interface AzOperationalReferenceBundle {
+  readonly formatVersion: 1;
+  readonly sourceVersion: typeof JURISDICTION_REFERENCE_VERSION;
+  readonly registries: Readonly<{ az: JurisdictionRegistry }>;
+}
 
 let installedBundle: OperationalReferenceBundle | null = null;
+let installedAzBundle: AzOperationalReferenceBundle | null = null;
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-function sourceThrough(registries: OperationalReferenceBundle["registries"]): string {
+function sourceThrough(registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>): string {
   const latest = Object.values(registries)
     .map((registry) => registry.generatedOn)
     .filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value))
@@ -52,9 +60,9 @@ function sourceThrough(registries: OperationalReferenceBundle["registries"]): st
   return latest ? `${latest}T00:00:00.000Z` : "";
 }
 
-function registryIssues(registries: OperationalReferenceBundle["registries"]): string[] {
+function registryIssues(registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>, states: readonly JurisdictionReferenceState[] = JURISDICTION_REFERENCE_STATES): string[] {
   const issues: string[] = [];
-  for (const state of JURISDICTION_REFERENCE_STATES) {
+  for (const state of states) {
     const registry = registries[state];
     if (!registry || registry.formatVersion !== 1) {
       issues.push(`${state}:MISSING_OR_WRONG_FORMAT`);
@@ -124,13 +132,14 @@ function sourceReceiptIssues(receipts: readonly JurisdictionReferenceSourceRecei
  * must have the receipts of the pages it read.
  */
 function websiteCorrectionIssues(
-  registries: OperationalReferenceBundle["registries"],
+  registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>,
   receipts: readonly JurisdictionReferenceSourceReceipt[],
+  states: readonly JurisdictionReferenceState[] = JURISDICTION_REFERENCE_STATES,
 ): string[] {
   const issues: string[] = [];
   const read = new Set(receipts.map((receipt) => receipt.sourceId));
   const reviewed = applicableWebsiteCorrections(WEBSITE_CORRECTIONS);
-  for (const state of JURISDICTION_REFERENCE_STATES) {
+  for (const state of states) {
     for (const row of registries[state]?.jurisdictions ?? []) {
       const issue = websiteCorrectionRowIssue(row);
       if (issue !== null) issues.push(`WEBSITE_CORRECTION_ROW:${issue}`);
@@ -168,6 +177,22 @@ export function installOperationalReferenceBundle(bundle: OperationalReferenceBu
 
 export function clearOperationalReferenceBundle(): void {
   installedBundle = null;
+  installedAzBundle = null;
+}
+
+export function installAzOperationalReferenceBundle(bundle: AzOperationalReferenceBundle): void {
+  const issues = registryIssues(bundle.registries, ["az"]);
+  if (bundle.formatVersion !== 1 || bundle.sourceVersion !== JURISDICTION_REFERENCE_VERSION ||
+    Object.keys(bundle.registries).join(",") !== "az" || issues.length > 0) {
+    throw new Error(`AZ_OPERATIONAL_REFERENCE_BUNDLE_INVALID:${issues.join(",") || "format/version/state"}`);
+  }
+  installedAzBundle = structuredClone(bundle);
+}
+
+/** Exact installed state set, with a promoted AZ-only pointer preferred over
+ * the older multi-state version. Missing states stay missing. */
+export function installedOperationalReferenceRegistries(): Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>> {
+  return structuredClone({ ...installedBundle?.registries, ...installedAzBundle?.registries });
 }
 
 export function requiredOperationalReferenceBundle(): OperationalReferenceBundle {
@@ -184,7 +209,9 @@ export function requiredOperationalJurisdictionRegistry(state: string): Jurisdic
   if (!JURISDICTION_REFERENCE_STATES.includes(key)) {
     throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:${state}`);
   }
-  return requiredOperationalReferenceBundle().registries[key];
+  const registry = installedOperationalReferenceRegistries()[key];
+  if (!registry) throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:${state}`);
+  return registry;
 }
 
 /*
@@ -282,6 +309,22 @@ export async function preloadOperationalReferenceBundle(
   return result;
 }
 
+/** Read the independently promoted AZ-only version. The caller can keep the
+ * legacy three-state pointer installed where its own scope is authorized. */
+export async function preloadAzOperationalReferenceBundle(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<Extract<CivicDataReadResult<AzOperationalReferenceBundle>, { kind: "PROMOTED" }>> {
+  const result = await readPromotedCivicData<AzOperationalReferenceBundle>(
+    OPERATIONAL_REFERENCE_RECORD_CLASS, AZ_JURISDICTION_REFERENCE_SCOPE, options,
+  );
+  if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
+  if (result.kind !== "PROMOTED") {
+    throw new Error(`AZ_OPERATIONAL_REFERENCE_NOT_PROMOTED:${result.kind}: ${result.detail}`);
+  }
+  installAzOperationalReferenceBundle(result.value);
+  return result;
+}
+
 /** Build the one durable manual candidate from reviewed source-version inputs. */
 export function jurisdictionOperationalReferenceCandidate(input: {
   readonly registries: Readonly<Record<JurisdictionReferenceState, JurisdictionRegistry>>;
@@ -293,11 +336,31 @@ export function jurisdictionOperationalReferenceCandidate(input: {
   };
   readonly retrievedAt: string;
 }): RoutineCandidate {
-  const bundle = operationalReferenceBundle(input.registries);
+  return buildOperationalReferenceCandidate(input, JURISDICTION_REFERENCE_STATES, JURISDICTION_REFERENCE_SOURCE_ID, JURISDICTION_REFERENCE_SCOPE);
+}
+
+/** The original Arizona Send owns an AZ-only candidate; the legacy three-state
+ * reviewed version remains a separate, unchanged contract and pointer. */
+export function azJurisdictionOperationalReferenceCandidate(input: {
+  readonly registries: Readonly<{ az: JurisdictionRegistry }>;
+  readonly sourceReceipts: readonly JurisdictionReferenceSourceReceipt[];
+  readonly workbook: { readonly member: "Govt_Units_2022_Final.xlsx"; readonly rawHash: string; readonly byteCount: number };
+  readonly retrievedAt: string;
+}): RoutineCandidate {
+  return buildOperationalReferenceCandidate(input, ["az"], AZ_JURISDICTION_REFERENCE_SOURCE_ID, AZ_JURISDICTION_REFERENCE_SCOPE);
+}
+
+function buildOperationalReferenceCandidate(input: {
+  readonly registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>;
+  readonly sourceReceipts: readonly JurisdictionReferenceSourceReceipt[];
+  readonly workbook: { readonly member: "Govt_Units_2022_Final.xlsx"; readonly rawHash: string; readonly byteCount: number };
+  readonly retrievedAt: string;
+}, states: readonly JurisdictionReferenceState[], sourceId: string, scope: string): RoutineCandidate {
+  const bundle = { formatVersion: 1 as const, sourceVersion: JURISDICTION_REFERENCE_VERSION, registries: input.registries };
   const receiptIssues = sourceReceiptIssues(input.sourceReceipts);
-  const issues = [...registryIssues(input.registries), ...receiptIssues, ...websiteCorrectionIssues(input.registries, input.sourceReceipts)].sort();
-  const records: CivicRecordMember[] = JURISDICTION_REFERENCE_STATES.flatMap((state) =>
-    input.registries[state].jurisdictions.map((jurisdiction) => ({
+  const issues = [...registryIssues(input.registries, states), ...receiptIssues, ...websiteCorrectionIssues(input.registries, input.sourceReceipts, states)].sort();
+  const records: CivicRecordMember[] = states.flatMap((state) =>
+    (input.registries[state]?.jurisdictions ?? []).map((jurisdiction) => ({
       key: `jurisdiction:${jurisdiction.id}`,
       record: jurisdiction,
     })),
@@ -315,14 +378,14 @@ export function jurisdictionOperationalReferenceCandidate(input: {
   const primary = input.sourceReceipts.find(({ sourceId }) => sourceId === "census-government-units-2022");
   const through = sourceThrough(input.registries);
   return {
-    id: `cv-${sha256(`${JURISDICTION_REFERENCE_SOURCE_ID}\u001f${JURISDICTION_REFERENCE_SCOPE}\u001f${rawHash ?? "none"}\u001f${input.retrievedAt}`).slice(0, 32)}`,
-    sourceId: JURISDICTION_REFERENCE_SOURCE_ID,
+    id: `cv-${sha256(`${sourceId}\u001f${scope}\u001f${rawHash ?? "none"}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    sourceId,
     recordClass: OPERATIONAL_REFERENCE_RECORD_CLASS,
-    scope: JURISDICTION_REFERENCE_SCOPE,
+    scope,
     sourceProjectionEvidence: sourceProjectionEvidence(
-      JURISDICTION_REFERENCE_SOURCE_ID,
+      sourceId,
       OPERATIONAL_REFERENCE_RECORD_CLASS,
-      JURISDICTION_REFERENCE_SCOPE,
+      scope,
     ),
     retrieval: {
       succeeded: rawHash !== null && receiptIssues.length === 0,
@@ -370,7 +433,7 @@ export function jurisdictionOperationalReferenceCandidate(input: {
     },
     horizon: {
       kind: "BOUNDED",
-      query: "every jurisdiction row in the AZ, NH, and NJ reviewed operational-reference version",
+      query: `every jurisdiction row in the ${states.map(state => state.toUpperCase()).join(", ")} reviewed operational-reference version`,
       returnedRecords: records.length,
       declaredTotal: records.length,
       paginationComplete: true,
@@ -380,8 +443,8 @@ export function jurisdictionOperationalReferenceCandidate(input: {
     dependentChecks: [
       {
         consumer: "local-jurisdictions standing obligation provider",
-        passed: JURISDICTION_REFERENCE_STATES.every((state) => input.registries[state].jurisdictions.length > 0),
-        detail: `${records.length} exact jurisdiction rows across ${JURISDICTION_REFERENCE_STATES.length} registered state projections.`,
+        passed: states.every((state) => (input.registries[state]?.jurisdictions.length ?? 0) > 0),
+        detail: `${records.length} exact jurisdiction rows across ${states.length} registered state projections.`,
       },
       {
         consumer: "readiness/Admin jurisdiction denominator",
@@ -401,20 +464,23 @@ export function jurisdictionOperationalReferenceCandidate(input: {
  */
 export function jurisdictionOperationalReferenceFailureCandidate(
   failure: JurisdictionReferenceAcquisitionFailure,
+  azOnly = false,
 ): RoutineCandidate {
+  const sourceId = azOnly ? AZ_JURISDICTION_REFERENCE_SOURCE_ID : JURISDICTION_REFERENCE_SOURCE_ID;
+  const scope = azOnly ? AZ_JURISDICTION_REFERENCE_SCOPE : JURISDICTION_REFERENCE_SCOPE;
   const responseSucceeded = failure.stage === "ARCHIVE" || failure.stage === "WORKBOOK" || failure.stage === "SOURCE_SHAPE";
   const rawHash = failure.rawHash ?? (failure.receipts.length > 0
     ? sha256(canonicalCivicDataJson(failure.receipts))
     : null);
   return {
-    id: `cv-${sha256(`${JURISDICTION_REFERENCE_SOURCE_ID}\u001f${JURISDICTION_REFERENCE_SCOPE}\u001ffailed\u001f${failure.stage}\u001f${failure.retrievedAt}\u001f${rawHash ?? "none"}`).slice(0, 32)}`,
-    sourceId: JURISDICTION_REFERENCE_SOURCE_ID,
+    id: `cv-${sha256(`${sourceId}\u001f${scope}\u001ffailed\u001f${failure.stage}\u001f${failure.retrievedAt}\u001f${rawHash ?? "none"}`).slice(0, 32)}`,
+    sourceId,
     recordClass: OPERATIONAL_REFERENCE_RECORD_CLASS,
-    scope: JURISDICTION_REFERENCE_SCOPE,
+    scope,
     sourceProjectionEvidence: sourceProjectionEvidence(
-      JURISDICTION_REFERENCE_SOURCE_ID,
+      sourceId,
       OPERATIONAL_REFERENCE_RECORD_CLASS,
-      JURISDICTION_REFERENCE_SCOPE,
+      scope,
     ),
     retrieval: {
       succeeded: responseSucceeded,
@@ -446,7 +512,7 @@ export function jurisdictionOperationalReferenceFailureCandidate(
     semantics: { factKind: "failed operational-jurisdiction reference acquisition", violations: [] },
     horizon: {
       kind: "BOUNDED",
-      query: "every jurisdiction row in the AZ, NH, and NJ reviewed operational-reference version",
+      query: azOnly ? "every jurisdiction row in the AZ reviewed operational-reference version" : "every jurisdiction row in the AZ, NH, and NJ reviewed operational-reference version",
       returnedRecords: 0,
       declaredTotal: null,
       paginationComplete: false,

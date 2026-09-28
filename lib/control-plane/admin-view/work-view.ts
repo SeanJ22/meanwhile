@@ -26,6 +26,7 @@ import {
   OWNER_WORDS,
   STATE_WORDS,
   type AssignmentListRow,
+  type AssignmentIndexRow,
   type AssignmentRow,
   type AssignmentState,
   type WorkerModel,
@@ -101,6 +102,38 @@ export function standingCard(row: AssignmentListRow): CardView {
     title: row.subjectName ? `${row.title} — ${row.subjectName}` : row.title,
     summary: `${row.stateSays}${cost}`,
   };
+}
+
+export interface RankedWorkBlocker {
+  readonly row: AssignmentIndexRow;
+  readonly rank: number;
+  readonly priorityScore: number;
+  readonly category: "NEEDS_OWNER_DECISION" | "AUTOMATIC_REPAIR" | "WAITING_ON_PUBLISHER" | "NEEDS_CODE_CHANGE" | "OWNER_UNCLEAR";
+  readonly ageDays: number | null;
+  /** Exact linked Send count; downstream work unlocked is not measured here. */
+  readonly linkedInstructions: number;
+  readonly rankingWhy: string;
+}
+
+/** Rank the full indexed population by urgency, reader-impact band, shared
+ * instructions and age. Unknown age or band contributes no invented points. */
+export function rankedWorkBlockers(rows: readonly AssignmentIndexRow[], now: string): RankedWorkBlocker[] {
+  const nowMs = Date.parse(now);
+  const candidates = rows.filter(row => ["BLOCKED", "FAILED", "WAITING", "UNKNOWN"].includes(row.state) &&
+    (row.blocker !== null || row.overdue === true));
+  return candidates.map(row => {
+    const sinceMs = row.waitingSince === null ? NaN : Date.parse(row.waitingSince);
+    const ageDays = Number.isFinite(nowMs) && Number.isFinite(sinceMs) && sinceMs <= nowMs ? Math.floor((nowMs - sinceMs) / 86_400_000) : null;
+    const urgency = row.overdue === true ? 3 : row.state === "BLOCKED" || row.state === "FAILED" ? 2 : 1;
+    const harm = row.band === null ? 0 : 4 - row.band;
+    const linkedInstructions = new Set(row.assignmentKeys).size;
+    const score = urgency * 100 + harm * 30 + Math.min(linkedInstructions, 10) * 3 + Math.min(ageDays ?? 0, 30);
+    const category = row.owner === "OWNER" ? "NEEDS_OWNER_DECISION" as const : row.owner === "SOURCE" ? "WAITING_ON_PUBLISHER" as const :
+      row.owner === "ENGINEERING" ? "NEEDS_CODE_CHANGE" as const : row.owner === "NOBODY" ? "OWNER_UNCLEAR" as const : "AUTOMATIC_REPAIR" as const;
+    return { row, priorityScore: score, category, ageDays, linkedInstructions,
+      rankingWhy: `${row.overdue === true ? "Overdue" : row.state.toLowerCase()}; ${row.band === null ? "reader impact not graded" : `reader-impact band ${row.band}`}; ${linkedInstructions} linked instruction${linkedInstructions === 1 ? "" : "s"}; ${ageDays === null ? "waiting age unknown" : `waiting ${ageDays} day${ageDays === 1 ? "" : "s"}`}. Downstream work unlocked is not measured.` };
+  }).sort((a,b) => b.priorityScore-a.priorityScore || a.row.id.localeCompare(b.row.id))
+    .map((entry,index) => ({...entry,rank:index+1}));
 }
 
 export interface LaneCard {
@@ -626,7 +659,8 @@ export function instructionView(input: {
     });
   }
   if (blocked + failed > 0) ack.push({ pill: "GEOGRAPHY HISTORY", tone: "amber", text: `${blocked} blocked and ${failed} failed assignments appear on the published geography list. That list includes older work and is not a count of this hunt's failures.`, at: input.reading?.at ?? null });
-  if (completion?.kind === "NOT_COMPLETE" && (completion.refusedCount ?? 0) > 0) ack.push({ pill: "HUNT WORK FAILURES", tone: "amber", text: `${completion.refusedCount} member obligations this Send reached have recorded failed attempts in the runner's assignment snapshot. The completion line below names examples.`, at: input.assignmentAt ?? null });
+  const refusedMembers = completion?.kind === "NOT_COMPLETE" ? completion.refusedCount ?? completion.exceptions.filter(e => e.kind === "REFUSED").length : 0;
+  if (refusedMembers > 0) ack.push({ pill: "HUNT WORK FAILURES", tone: "amber", text: `${refusedMembers} member obligations this Send reached have recorded failed attempts in the runner's assignment snapshot. The completion line below names examples.`, at: input.assignmentAt ?? null });
   if (input.runnerPaused) ack.push({ pill: "PAUSED", tone: "stone", text: "The runner is paused by you; nothing here moves until you resume it.", at: input.runnerPaused.since });
   /* MW-015: visited is not finished. The runner evaluates each Send from its members' own records;
      until it has, the instruction is never shown as finished. */

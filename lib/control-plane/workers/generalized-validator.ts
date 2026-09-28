@@ -14,7 +14,15 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
   if (contract.verification.required && !externalVerifications.length) findings.push(issue("EXTERNAL_VERIFICATION_MISSING", "This domain requires an external authority; extraction validation alone is insufficient.", "WARNING"));
   for (const verification of externalVerifications) findings.push(...verification.discrepancies);
   const verdict = findingsVerdict(findings);
+  // A disagreement in one independently captured person may isolate that
+  // person, but a source replay, authority identity, or chain failure taints
+  // the whole capture. Keep the overall FAIL receipt even when other rows are
+  // independently safe to carry forward.
+  const localExternal = new Set(externalVerifications.flatMap(result => result.discrepancies.filter(f => f.recordId && f.severity !== "INFO")));
+  const globallyUnsafe = extractionVerdict !== "PASS" || findings.some(f => f.severity !== "INFO" && !localExternal.has(f));
+  const unsafeIds = new Set([...localExternal].map(f => f.recordId));
+  const validatedRecordIds = globallyUnsafe ? [] : input.candidate.records.map(record => record.id).filter(id => !unsafeIds.has(id));
   return { role: "VALIDATOR", attemptId: input.attemptId, producerAttemptId: input.producerAttemptId, extractionVerdict, externalVerifications, verdict,
     checked: ["PRODUCER_INDEPENDENCE", "CONTRACT_SCOPE", "EXACT_SOURCE_OCCURRENCES", "SOURCE_RECORD_IDENTITIES", "EXTERNAL_AUTHORITY_COMPARISON"], findings,
-    artifactIds: [...new Set([input.evidence.artifactId, ...externalVerifications.flatMap(v => v.evidence.map(e => e.artifactId))])], validatedRecordCount: verdict === "PASS" ? input.candidate.records.length : 0 };
+    artifactIds: [...new Set([input.evidence.artifactId, ...externalVerifications.flatMap(v => v.evidence.map(e => e.artifactId))])], validatedRecordIds, validatedRecordCount: validatedRecordIds.length };
 }

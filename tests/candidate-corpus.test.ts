@@ -346,22 +346,35 @@ test("B14: the denominator is measured from the ballot, not quoted", async () =>
   assert.ok(coverage.bare > 0, "nothing bare — the measurement stopped measuring");
 });
 
-test("B14: the blurb rung reaches every candidate whose page we hold, equally", async () => {
-  const { derivedBlurbFor } = await import("../lib/candidates/blurbs.ts");
+test("B14: the blurb rung reaches every candidate with a usable captured description, equally", async () => {
+  const { derivedBlurbFor, candidateDescriptionQualityIssue } = await import("../lib/candidates/blurbs.ts");
   const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
 
   // Equal effort: the rung is run for EVERY candidate, and the ones it
-  // reaches are exactly the ones whose page carries a self-description.
+  // reaches are exactly the ones whose page carries a usable self-description.
   // There is no path that skips a candidate for being obscure.
   const withMeta = new Set(
     getCandidateCorpus()
-      .documents.filter((d) => d.metaDescription)
+      .documents.filter((d) => d.metaDescription && !candidateDescriptionQualityIssue(d))
       .map((d) => d.candidateKey),
   );
   for (const key of withMeta) {
     assert.ok(derivedBlurbFor(key), `${key} has a description we did not use`);
   }
-  assert.ok(withMeta.size >= 30, `the rung reached only ${withMeta.size} candidates`);
+  assert.ok(withMeta.size >= 25, `the rung reached only ${withMeta.size} candidates`);
+});
+
+test("B14: captured navigation, old-cycle appeals and truncated fragments do not masquerade as biographies", async () => {
+  const { derivedBlurbFor, candidateDescriptionQualityIssue } = await import("../lib/candidates/blurbs.ts");
+  const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
+  const unusable = getCandidateCorpus().documents.filter(doc => doc.metaDescription && candidateDescriptionQualityIssue(doc));
+  assert.equal(unusable.length, 7, "each suppressed description is an exact reviewed capture, not a general candidate filter");
+  assert.equal(derivedBlurbFor("ballot-az-pima:state-senate-19|Bob Karp"), null);
+  assert.equal(derivedBlurbFor("ballot-az-pima:attorney-general|Warren Petersen"), null);
+  assert.equal(derivedBlurbFor("ballot-az-pima:state-house-19|Aiden Nicholette Swallow"), null);
+  assert.equal(derivedBlurbFor("ballot-nh-merrimack:executive-council-2:liot-hill-karen"), null);
+  assert.match(derivedBlurbFor("ballot-nh-merrimack:us-house-2:goodlander-maggie")?.text ?? "", /commitment to justice/i,
+    "a separate usable captured description remains available for the same candidate");
 });
 
 test("B14: a derived blurb carries its source class, exactly as a curated one does", async () => {

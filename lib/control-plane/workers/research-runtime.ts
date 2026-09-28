@@ -21,15 +21,49 @@ import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts"
 import { researchVaultResolver } from "./vault-object.ts";
 import { assertFleetResult, type FleetResult, type WorkerUsage } from "./types.ts";
 import { evidenceProjection, FLEET_POLICY_VERSION, type FleetRuntime } from "./runtime.ts";
+import type { PlanRepairLink } from "./plan-repair.ts";
 
 const NULL_USAGE: WorkerUsage = {inputTokens:null,outputTokens:null,cacheReadInputTokens:null,cacheCreationInputTokens:null,uncachedInputTokens:null};
 export const RESEARCH_WORKER_VERSION = "autonomous-research-workers/1.0.0";
+/** A child may reuse bytes only from an actual linked ancestor that acquired
+ * them in a completed Attempt. Declared origin IDs are never authority. */
+export async function authorizeInheritedHeldArtifact(repos: ControlPlaneRepositories, input: {
+  readonly artifactId: string; readonly originWorkItemId: string;
+  readonly childWorkItemId: string; readonly project: string;
+}): Promise<boolean> {
+  if (input.originWorkItemId === input.childWorkItemId) return false;
+  const child = (await repos.workItems.read(input.childWorkItemId))?.value;
+  if (!child || child.project !== input.project) return false;
+  const seen = new Set<string>();
+  let cursor = child;
+  while (cursor.id !== input.originWorkItemId) {
+    if (seen.has(cursor.id)) return false;
+    seen.add(cursor.id);
+    const link = (cursor as typeof cursor & { readonly planRepair?: PlanRepairLink }).planRepair;
+    if (!link || link.authority !== "WORK_INSTRUCTIONS_ONLY" || !link.parentWorkItemId ||
+      !Number.isSafeInteger(link.depth) || link.depth < 1) return false;
+    const parent = (await repos.workItems.read(link.parentWorkItemId))?.value;
+    if (!parent || parent.project !== child.project || parent.subject !== child.subject) return false;
+    const parentLink = (parent as typeof parent & { readonly planRepair?: PlanRepairLink }).planRepair;
+    if (link.depth !== (parentLink?.depth ?? 0) + 1 ||
+      link.rootWorkItemId !== (parentLink?.rootWorkItemId ?? parent.id)) return false;
+    cursor = parent;
+  }
+  const records = (await repos.artifacts.readAll()).filter(record => record.artifactId === input.artifactId &&
+    record.workItemId === input.originWorkItemId && !record.partial);
+  for (const record of records) {
+    const attempt = (await repos.attempts.read(record.attemptId))?.value;
+    if (attempt?.workItemId === input.originWorkItemId && attempt.outcome === "COMPLETED") return true;
+  }
+  return false;
+}
 export interface ResearchRuntimeTools {
   readonly repos: ControlPlaneRepositories;
   readonly store: EvidenceStore;
   readonly spaceOut: ScoutToolContext["spaceOut"];
   readonly browse?: ScoutToolContext["browse"];
   readonly openBytes?: ScoutToolContext["openBytes"];
+  readonly openBytesFor?: (subjectId: string) => ScoutToolContext["openBytes"];
   readonly now: () => string;
 }
 
@@ -43,7 +77,7 @@ export function scheduledWorkerObligation(task: RouteTask): ScheduledObligation 
 
 /** Vault AND append attribution on each tool write, before the disposable process can disappear. */
 export function durableResearchTools(input: ResearchRuntimeTools, binding: {
-  project: string; attemptId: string; workItemId: string; routeTaskId: string;
+  project: string; attemptId: string; workItemId: string; routeTaskId: string; subjectId?: string;
 }) {
   const putBytes = async (artifact: Artifact, bytes: Uint8Array) => {
     if (artifact.attemptId !== binding.attemptId || artifact.workItemId !== binding.workItemId) throw new Error("RESEARCH_VAULT_ATTEMPT_BINDING_REFUSED");
@@ -54,7 +88,8 @@ export function durableResearchTools(input: ResearchRuntimeTools, binding: {
     return {stored:true,where:key,why:written?"Vaulted and durably attributed before interpretation":"Identical evidence retained; first observation attribution preserved"};
   };
   return {vault:async (artifact:Artifact,body:string) => putBytes(artifact,Buffer.from(body,"utf8")),vaultBytes:putBytes,
-    spaceOut:input.spaceOut,...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{})};
+    spaceOut:input.spaceOut,...(input.browse?{browse:input.browse}:{}),
+    ...(binding.subjectId && input.openBytesFor ? {openBytes:input.openBytesFor(binding.subjectId)} : input.openBytes ? {openBytes:input.openBytes} : {})};
 }
 
 export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRuntimeTools, task: RouteTask, holder: string): DeclaredExecutor {
@@ -83,11 +118,12 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
           openBytes: async request => {
             const remaining = deadline-Date.now();
             if (remaining <= 0) return {status:null,bytes:new Uint8Array(),contentType:"",finalUrl:null,durationMs:0,transportError:"ACQUIRER_WALL_BOUND_EXCEEDED"};
-            return (tools.openBytes??realOpenBytes)({...request,timeoutMs:Math.min(request.timeoutMs,remaining)});
+            return (tools.openBytesFor?.(item.subject)??tools.openBytes??realOpenBytes)({...request,timeoutMs:Math.min(request.timeoutMs,remaining)});
           }});
         measuredToolkit = toolkit;
         result = await runAcquirer({...spec.acquisition,attemptId,worker,project:item.project,workItemId,grant,now:tools.now},
-          {toolkit,readVault:researchVaultResolver(tools.repos,tools.store,item.project)});
+          {toolkit,readVault:researchVaultResolver(tools.repos,tools.store,item.project),
+            authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited)});
         requestCount = toolkit.requestCount; bytesFetched = toolkit.bytesFetched;
       } else if (spec.role === "DETECTIVE") {
         if (!spec.detective || spec.detective.question.subjectId !== item.subject) throw new Error("DETECTIVE_TASK_BINDING_REFUSED");
@@ -114,7 +150,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
       } catch { /* field-manual write-back is best-effort; the worker result is authoritative */ }
       const cost = {...ZERO_COST,durationMs:Math.round(performance.now()-started),requestCount,bytesFetched};
       const ids = result.artifactIds;
-      return {kind:"RESULT_RECORDED",ranAs:"DETERMINISTIC",cost,detail:`${spec.role} ${result.verdict}; research result only; promotion OFF`,
+      return {kind:"RESULT_RECORDED",ranAs:"DETERMINISTIC",cost,detail:`${spec.role} ${result.verdict}; research result recorded; publication requires independent promotion and reader verification`,
         workerResult:{id:`wr-${fingerprint([attemptId])}`,schemaVersion:1,workItemId,routeTaskId,attemptId,worker,grant,methodVersion:attempt.value.methodVersion,
           policyVersion:attempt.value.policyVersion,startedAt:attempt.value.startedAt,endedAt:tools.now(),executionMode:"DETERMINISTIC",cost,usage:NULL_USAGE,
           inputArtifactIds:ids,inputResultIds:spec.engineering?[spec.engineering.validation.resultId]:[],semanticHash:contentHash(canonicalJson(result)),result}};

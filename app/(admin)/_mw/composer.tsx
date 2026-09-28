@@ -38,7 +38,7 @@ import type { ScopeWorkPreview } from "@/lib/control-plane/admin-view/scope-work
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { scopeRouteDescription } from "@/lib/control-plane/admin-view/scope-preview-words.ts";
 
-import { fnv } from "./fnv.ts";
+import { actionSettled, scopeSendKey } from "./scope-send-key.ts";
 import s from "./mw.module.css";
 import { FigList, Pill } from "./ui.tsx";
 
@@ -121,7 +121,8 @@ function overlapWords(whole: boolean, fraction: number | null): string {
 type Sent =
   | { readonly kind: "IDLE" }
   | { readonly kind: "SENDING" }
-  | { readonly kind: "SAVED"; readonly receiptId: string; readonly at: string; readonly says: string; readonly key: string; readonly label: string }
+  | { readonly kind: "SAVED" | "PENDING"; readonly receiptId: string; readonly at: string; readonly says: string; readonly key: string; readonly label: string; readonly readBackAt: string | null; readonly replayed: boolean }
+  | { readonly kind: "REFUSED"; readonly receiptId: string; readonly says: string; readonly replayed: boolean }
   | { readonly kind: "FAILED"; readonly says: string };
 
 export function Composer(props: {
@@ -132,7 +133,7 @@ export function Composer(props: {
   readonly initial: { readonly type: string; readonly geoid: string } | null;
   readonly ceilingUsd: number;
   readonly paidLaneClosedBecause: string | null;
-  readonly selected: Readonly<Record<string, { readonly priority: number; readonly budgetUsd: number }>>;
+  readonly selected: Readonly<Record<string, { readonly priority: number; readonly budgetUsd: number; readonly budgetStartedAt: string | null; readonly originalLifetime: boolean }>>;
   readonly actionRoute: string;
   readonly previewRoute: string;
   /** Where a state change goes (a server round trip: each state's choices are read for it). */
@@ -149,10 +150,11 @@ export function Composer(props: {
   const [preview, setPreview] = useState<{ readonly key: string; readonly p: Preview } | null>(null);
   const [questions, setQuestions] = useState<readonly WorkQuestion[]>([]);
   const [categories, setCategories] = useState<readonly string[]>([]);
-  const [budget, setBudget] = useState<string>("0");
-  const [huntBudget, setHuntBudget] = useState(true);
+  const initiallySelected = props.initial ? props.selected[`${props.initial.type}|${props.initial.geoid}`] : null;
+  const [budget, setBudget] = useState<string>(String(initiallySelected?.budgetUsd ?? 0));
+  const [huntBudget, setHuntBudget] = useState(initiallySelected ? initiallySelected.budgetStartedAt !== null : true);
   const [newHunt, setNewHunt] = useState(false);
-  const [priority, setPriority] = useState<string>("1");
+  const [priority, setPriority] = useState<string>(String(initiallySelected?.priority ?? 1));
   const [words, setWords] = useState<string>("");
   const [sent, setSent] = useState<Sent>({ kind: "IDLE" });
 
@@ -181,7 +183,9 @@ export function Composer(props: {
   const p = preview && preview.key === key ? preview.p : null;
   const t = p?.totals ?? null;
   const already = chosen ? props.selected[`${chosen.type}|${chosen.geoid}`] ?? null : null;
+  const effectiveHuntBudget = already?.budgetStartedAt ? true : huntBudget;
   const budgetNum = Number(budget);
+  const exactOriginalPolicy = already?.originalLifetime === true && effectiveHuntBudget && !newHunt && budgetNum === already.budgetUsd;
   const priorityNum = Number(priority);
   const budgetOk = budget.trim() !== "" && Number.isFinite(budgetNum) && budgetNum >= 0 && budgetNum <= 10_000;
   const priorityOk = Number.isInteger(priorityNum) && priorityNum >= 1 && priorityNum <= 999;
@@ -200,7 +204,10 @@ export function Composer(props: {
     if (!chosen || !canSend) return;
     setSent({ kind: "SENDING" });
     try {
-      const idempotencyKey = `scope:${chosen.geoid}:${fnv(`${priorityNum}|${budgetNum}|${composedNote}|${questionsSent.join(",")}`)}:${nonce()}`;
+      const idempotencyKey = scopeSendKey({ geoid: chosen.geoid,
+        type: chosen.type, version: chosen.version, priority: priorityNum, budgetUsd: budgetNum,
+        huntBudget: effectiveHuntBudget, newHunt, note: composedNote, questions: questionsSent,
+      }, nonce());
       const res = await fetch(props.actionRoute, {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
@@ -211,7 +218,7 @@ export function Composer(props: {
             geography: { type: chosen.type, geoid: chosen.geoid, version: chosen.version, label: chosen.label, stateAbbr: chosen.stateAbbr },
             priority: priorityNum,
             budgetUsd: budgetNum,
-            huntBudget,
+            huntBudget: effectiveHuntBudget,
             newHunt,
             note: composedNote === "" ? null : composedNote,
             questions: questionsSent,
@@ -220,16 +227,28 @@ export function Composer(props: {
           returnTo: props.workHref,
         }),
       });
-      const body = (await res.json().catch(() => null)) as { receipt?: { outcome?: string; says?: string; receiptId?: string; completedAt?: string } } | null;
+      const body = (await res.json().catch(() => null)) as { ok?: boolean; replayed?: boolean; says?: string; receipt?: { outcome?: string; says?: string; receiptId?: string; completedAt?: string; readBackAt?: string | null } } | null;
       const r = body?.receipt;
-      if (!res.ok || !r || r.outcome === "REFUSED") {
-        setSent({ kind: "FAILED", says: r?.says ?? `The server answered ${res.status}. Nothing was saved.` });
+      if (res.ok && r?.outcome === "REFUSED") {
+        setSent({ kind: "REFUSED", receiptId: r.receiptId ?? idempotencyKey, says: r.says ?? "The action was refused.", replayed: body?.replayed === true });
+        if (actionSettled(r.outcome)) nonceRef.current = null;
         return;
       }
-      setSent({ kind: "SAVED", receiptId: r.receiptId ?? idempotencyKey, at: r.completedAt ?? new Date().toISOString(), says: r.says ?? "Saved.", key: `scope:${chosen.version}/${chosen.geoid}`, label: chosen.label });
+      if (!res.ok || body?.ok === false || !r) {
+        setSent({ kind: "FAILED", says: r?.says ?? body?.says ?? `The server answered ${res.status}. The action outcome could not be confirmed.` });
+        return;
+      }
+      if (r.outcome !== "DONE" && r.outcome !== "QUEUED" && r.outcome !== "IN_PROGRESS") {
+        setSent({ kind: "FAILED", says: "The server returned an unrecognized action outcome. Check the action ledger before retrying." });
+        return;
+      }
+      const saved = r.outcome === "DONE";
+      setSent({ kind: saved ? "SAVED" : "PENDING", receiptId: r.receiptId ?? idempotencyKey, at: r.completedAt ?? new Date().toISOString(), says: r.says ?? (saved ? "Saved." : "Accepted; awaiting the saved outcome."), key: `scope:${chosen.version}/${chosen.geoid}`, label: chosen.label,
+        readBackAt: r.readBackAt ?? null, replayed: body.replayed === true });
+      if (actionSettled(r.outcome)) nonceRef.current = null;
       router.refresh();
     } catch (e) {
-      setSent({ kind: "FAILED", says: e instanceof Error ? `Nothing was saved: ${e.message}.` : "Nothing was saved." });
+      setSent({ kind: "FAILED", says: e instanceof Error ? `The response could not be read: ${e.message}. Check the action ledger before retrying.` : "The response could not be read. Check the action ledger before retrying." });
     }
   }
 
@@ -275,6 +294,9 @@ export function Composer(props: {
               onChange={(e) => {
                 setKind(e.target.value);
                 setGeoid("");
+                setBudget("0");
+                setPriority("1");
+                setHuntBudget(true);
                 setNewHunt(false);
                 setPreview(null);
                 setSent({ kind: "IDLE" });
@@ -287,13 +309,18 @@ export function Composer(props: {
                 </option>
               ))}
             </select>
-            {kind === "zcta" ? <label>ZIP <input className={s.input} aria-label="ZIP for this hunt" inputMode="numeric" maxLength={5} value={geoid} onChange={e => { setGeoid(e.target.value.replace(/\D/g, "")); setSent({ kind: "IDLE" }); setNewHunt(false); }} /></label> : <select
+            {kind === "zcta" ? <label>ZIP <input className={s.input} aria-label="ZIP for this hunt" inputMode="numeric" maxLength={5} value={geoid} onChange={e => { const next = e.target.value.replace(/\D/g, ""); const saved = props.selected[`zcta|${next}`]; setGeoid(next); setBudget(String(saved?.budgetUsd ?? 0)); setPriority(String(saved?.priority ?? 1)); setHuntBudget(saved ? saved.budgetStartedAt !== null : true); setSent({ kind: "IDLE" }); setNewHunt(false); }} /></label> : <select
               className={`${s.select} ${s.selectWide}`}
               aria-label="Geography"
               value={geoid}
               disabled={kind === ""}
               onChange={(e) => {
-                setGeoid(e.target.value);
+                const next = e.target.value;
+                const saved = props.selected[`${kind}|${next}`];
+                setGeoid(next);
+                setBudget(String(saved?.budgetUsd ?? 0));
+                setPriority(String(saved?.priority ?? 1));
+                setHuntBudget(saved ? saved.budgetStartedAt !== null : true);
                 setNewHunt(false);
                 setSent({ kind: "IDLE" });
               }}
@@ -459,7 +486,7 @@ export function Composer(props: {
           <div className={s.rowCenter} style={{ marginTop: 14 }}>
             <span className={s.dollar}>$</span>
             <input className={s.input} value={budget} inputMode="decimal" aria-label="Anthropic token budget" onChange={(e) => setBudget(e.target.value)} />
-            <select className={s.select} aria-label="Budget period" value={huntBudget ? "lifetime" : "rolling"} onChange={e => setHuntBudget(e.target.value === "lifetime")}>
+            <select className={s.select} aria-label="Budget period" value={effectiveHuntBudget ? "lifetime" : "rolling"} disabled={already?.budgetStartedAt !== null && already !== null} onChange={e => setHuntBudget(e.target.value === "lifetime")}>
               <option value="lifetime">Total for this hunt</option><option value="rolling">Rolling 24 hours</option>
             </select>
           </div>
@@ -468,11 +495,12 @@ export function Composer(props: {
             <span className={s.note}>priority — 1 runs first among your geographies</span>
           </div>
           <p className={s.goldNote}>
-            This limits Anthropic token usage across all workers, retries and escalations {huntBudget ? "for this hunt" : "in any rolling 24 hours"}. Editing this hunt does not reset its spending. Search and other service costs are tracked separately. The existing ${props.ceilingUsd.toFixed(2)} Fleet ceiling still binds; no new search cap is created.
+            This limits Anthropic token usage across all workers, retries and escalations {effectiveHuntBudget ? "for this hunt" : "in any rolling 24 hours"}. {newHunt ? "A separate hunt starts a new accounting period." : "Editing this hunt does not reset its spending."} Search and other service costs are tracked separately. {exactOriginalPolicy ? `The original $${already!.budgetUsd.toFixed(2)} lifetime hunt keeps its own allowance and instruction receipt when continued, so the $${props.ceilingUsd.toFixed(2)} Fleet rolling ceiling does not bind that exact work. This Send records a separate action receipt.` : `The existing $${props.ceilingUsd.toFixed(2)} Fleet rolling ceiling also binds.`} No new search cap is created.
+            {already?.budgetStartedAt ? " This saved geography already uses lifetime accounting; this control cannot turn it into a rolling budget." : ""}
             {!budgetOk ? " Enter an amount from $0 to $10,000." : ""}
             {!priorityOk ? " Priority is a whole number from 1 to 999." : ""}
           </p>
-          {already && huntBudget && <label><input type="checkbox" checked={newHunt} onChange={e => setNewHunt(e.target.checked)} /> Start a separate hunt with a new accounting period. Leave unchecked to continue this hunt.</label>}
+          {already && effectiveHuntBudget && <label><input type="checkbox" checked={newHunt} onChange={e => setNewHunt(e.target.checked)} /> Start a separate hunt with a new accounting period. Leave unchecked to keep this hunt&apos;s accounting start and instruction receipt; this action still gets its own receipt.</label>}
         </div>
       </div>
 
@@ -518,7 +546,7 @@ export function Composer(props: {
               {budgetOk
                 ? budgetNum === 0
                   ? "A $0 Anthropic budget holds token calls for this hunt. Plain-code work can continue; search and other service costs use their separate existing controls."
-                  : `Your $${budgetNum.toFixed(2)} Anthropic budget is enforced ${huntBudget ? "for this hunt" : "in any rolling 24 hours"}. The existing $${props.ceilingUsd.toFixed(2)} Fleet ceiling also applies.`
+                  : `Your $${budgetNum.toFixed(2)} Anthropic budget is enforced ${effectiveHuntBudget ? "for this hunt" : "in any rolling 24 hours"}. ${exactOriginalPolicy ? `The original hunt keeps its $${already!.budgetUsd.toFixed(2)} lifetime allowance and instruction receipt; the $${props.ceilingUsd.toFixed(2)} Fleet rolling ceiling does not bind its exact work.` : `The existing $${props.ceilingUsd.toFixed(2)} Fleet rolling ceiling also applies.`}`
                 : "Enter a budget to see what it enforces."}
             </span>
           </div>
@@ -562,22 +590,26 @@ export function Composer(props: {
         </div>
         {sent.kind === "FAILED" && (
           <p className={s.goldNote} role="alert">
-            Not saved. {sent.says}
+            Outcome not confirmed. {sent.says}
           </p>
         )}
-        {sent.kind === "SAVED" && (
+        {sent.kind === "REFUSED" && <div className={s.goldNote} role="alert">
+          Action refused. {sent.says} Receipt {sent.receiptId}{sent.replayed ? " (same receipt returned for this repeat submission)" : ""}. Nothing was changed by this action.
+        </div>}
+        {(sent.kind === "SAVED" || sent.kind === "PENDING") && (
           <div className={s.accentBox} role="status">
             <div className={s.row} style={{ marginBottom: 6 }}>
-              <Pill tone="slate">SAVED</Pill>
-              <strong className={s.titleStrong16}>Saved — the runner has not read it yet</strong>
+              <Pill tone="slate">{sent.kind === "SAVED" ? "SAVED" : "IN PROGRESS"}</Pill>
+              <strong className={s.titleStrong16}>{sent.kind === "SAVED" ? "Saved — check the runner's acknowledgement below" : "Accepted — saving is not complete yet"}</strong>
               <span className={`${s.mono} ${s.pushRight}`}>{sent.receiptId}</span>
             </div>
             <p className={s.note} style={{ fontSize: 14, marginBottom: 18, maxWidth: "76ch" }}>
-              The confirmation is the proof, not the button press. Each fact below gets its own time when it happens — an instruction saved is not an instruction running.
+              {sent.replayed ? "This is the same saved action receipt returned for a repeat submission. " : ""}The receipt states what happened to this action; the runner and public result are checked separately.
+              {sent.readBackAt ? ` Saved state read back at ${new Date(sent.readBackAt).toLocaleString("en-US", { timeZone: "America/Phoenix" })} Arizona time.` : " The receipt has no saved-state readback time yet."}
             </p>
             <div className={s.stack2}>
               {[
-                { pill: "SAVED", tone: "slate" as const, text: sent.says, at: sent.at },
+                { pill: sent.kind === "SAVED" ? "SAVED" : "PENDING", tone: "slate" as const, text: sent.says, at: sent.at },
                 { pill: "NOT YET READ", tone: "stone" as const, text: "The runner reads your list at the start of its next cycle. This page shows the time it did.", at: null },
                 { pill: "NOT YET PLACED", tone: "stone" as const, text: "Placed first once the runner has resolved the geography; the count of work it moved appears then.", at: null },
                 { pill: "NOT RUNNING", tone: "stone" as const, text: "Queued is not running, and neither is a claim about results.", at: null },
@@ -590,11 +622,11 @@ export function Composer(props: {
                 </div>
               ))}
             </div>
-            <div className={s.actions}>
+            {sent.kind === "SAVED" && <div className={s.actions}>
               <Link href={`${props.workHref}${props.workHref.includes("?") ? "&" : "?"}open=${encodeURIComponent(sent.key)}#assignments`} className={s.btnPrimary}>
                 Follow this assignment
               </Link>
-            </div>
+            </div>}
           </div>
         )}
       </div>

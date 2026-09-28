@@ -126,8 +126,26 @@ test("repair refuses fabricated, stale, missing, unsupported and self-verifying 
   assert.throws(() => evaluate({ ...f.candidate, contractRepair: { ...repair, extraction: { ...f.extraction, rowsPointer: "/nonexistent" } } }), /EXTRACTION_REFUSED/);
   assert.throws(() => evaluate({ ...f.candidate, contractRepair: { ...repair, authorities: [{ ...f.authority, sourceId: f.evidence[0].sourceId, artifactIds: [f.evidence[0].artifactId] }] } }), /AUTHORITY_BURDEN_MISMATCH/);
   const partial = evaluate({ ...f.candidate, contractRepair: { ...repair, authorities: [] } });
-  assert.equal(partial.contract.verification.required, true); assert.deepEqual(partial.unresolved, ["EXTERNAL_VERIFICATION_MISSING"]);
+  assert.equal(partial.contract.verification.required, true); assert.deepEqual(partial.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
   assert.match(planRepairBrief(f.h.item.autonomousPlan!), /contractRepair/);
+});
+
+test("a roster repair schedules only profile URLs grounded in exact official href spans", async () => {
+  const f = await fixture();
+  const { createHash } = await import("node:crypto");
+  const text = `<table><tr><th>ID</th><th>Name</th><th>Profile</th></tr><tr><td>1</td><td>Ada One</td><td><a href="/council/ada">Profile</a></td></tr><tr><td>2</td><td>Bea Two</td><td><a href="/council/bea">Profile</a></td></tr></table>`;
+  const primary = { ...f.evidence[0], text, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` };
+  const extraction = { format: "HTML_TABLE" as const, tableIndex: 0, headerRows: 1, fields: {
+    id: { source: 0, type: "STRING" as const }, name: { source: 1, type: "STRING" as const },
+    websiteUrl: { source: 2, type: "STRING" as const, attribute: "href" as const },
+  } };
+  const candidate = { ...f.candidate, evidenceArtifactIds: [primary.artifactId],
+    contractRepair: { schemaVersion: 1 as const, sourceArtifactId: primary.artifactId, extraction, authorities: [] } };
+  const repaired = evaluatePlanRepair({ plan: f.h.item.autonomousPlan!, candidate, evidence: [primary], now: f.h.now() });
+  assert.equal(repaired.profileRoutes.length, 2);
+  assert.deepEqual(repaired.profileRoutes.map(route => route.url), [new URL("/council/ada", primary.canonicalUrl).href, new URL("/council/bea", primary.canonicalUrl).href]);
+  assert.ok(repaired.profileRoutes.every(route => route.observation.artifactId === primary.artifactId && route.observation.quote.includes(route.observedLocator)));
+  assert.deepEqual(repaired.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
 });
 
 test("repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes", async () => {

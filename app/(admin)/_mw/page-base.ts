@@ -14,7 +14,7 @@ import type { AdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 import { standardInForce } from "@/lib/control-plane/readiness/standard.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 
-import { loadContainer } from "./data/geography.ts";
+import { loadContainer, loadZcta } from "./data/geography.ts";
 import { loadRegistrationPointers } from "./data/registration.ts";
 import { shellScope, type ShellScope } from "./load-shell.ts";
 import { geographyShortLabel, parseScope, withScope, type MwScope } from "./scope.ts";
@@ -76,7 +76,7 @@ export async function openPage(path: string, sp: SearchParams, nowIso: string = 
   // A geography reached by link that is not on the selected list is named from the Census lookup, never shown as a bare code.
   let lookedUpLabel: string | null = null;
   if (scope.kind === "geo" && !scopes.some((d) => d.geography.type === scope.type && d.geography.geoid === scope.geoid)) {
-    const found = await loadContainer(scope.type, scope.geoid);
+    const found = scope.type === "zcta" ? await loadZcta(scope.geoid) : await loadContainer(scope.type, scope.geoid);
     if (found.kind === "HELD") lookedUpLabel = geographyShortLabel(found.value.geography.label);
   }
   const query = new URLSearchParams();

@@ -35,6 +35,16 @@ import type { ScoutBound } from "./research-policy.ts";
 import type { OpenOne, VaultPut } from "./route-executor.ts";
 import type { ScoutRung } from "./scout-result.ts";
 import type { Artifact } from "../evidence/artifact.ts";
+import type { FieldManualEntry } from "../field-manual.ts";
+import type { WorkerEvidence } from "../workers/types.ts";
+
+export interface ScoutKnowledgeRead {
+  readonly kind: "MANUAL_ENTRY" | "HELD_ARTIFACT";
+  readonly id: string;
+  readonly contentHash: string;
+  readonly offset: number;
+  readonly length: number;
+}
 
 /** The Anthropic tool definition shape, as sent on the request. */
 export interface ScoutToolSpec {
@@ -93,6 +103,8 @@ export interface ScoutToolCallResult {
   readonly rung: Omit<ScoutRung, "index" | "note" | "at"> | null;
   readonly requestCount: number;
   readonly bytesFetched: number;
+  /** Actual sanitized content opened by the worker, not merely handed as a hint. */
+  readonly knowledgeRead?: ScoutKnowledgeRead;
 }
 
 /**
@@ -124,6 +136,8 @@ export interface InheritedEvidence {
   readonly priorRungs?: readonly PriorRung[];
   /** What the newest prior Attempt said it would try next. */
   readonly nextRungs?: readonly string[];
+  /** Full selected envelopes stay outside the model prefix until requested. */
+  readonly manualEntries?: readonly FieldManualEntry[];
 }
 
 /** What a real browser observed. Bytes are vaulted by the toolkit, not here. */
@@ -199,6 +213,10 @@ export interface ScoutToolContext {
   readonly bound: ScoutBound;
   readonly now: () => string;
   readonly inherited: InheritedEvidence;
+  /** Broker-controlled sanitized vault read. The tool checks inherited id membership. */
+  readonly readHeldArtifact?: (artifactId: string) => Promise<WorkerEvidence & { readonly provenance?: ArtifactProvenance }>;
+  /** Broker-controlled read of a document named by a handed manual entry. */
+  readonly readManualDocument?: (path: string) => Promise<string>;
   /** A real browser, when the runtime has one. Absent: `browse` reports BROWSER_UNAVAILABLE. */
   readonly browse?: BrowseFn;
   /** The HTTP seam. Tests inject; the runtime uses the real one. */
@@ -269,7 +287,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited", "search"] as const;
+export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited", "find_manual", "read_manual", "read_held", "search"] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

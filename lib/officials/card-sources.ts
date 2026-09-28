@@ -113,6 +113,15 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
   return null;
 }
 
+function retainedHolderSources(holder: SeatHolder): CardSource[] {
+  return Object.entries(holder.retainedFieldSources ?? {}).flatMap(([field, source]) => {
+    if (!source) return [];
+    const label = { termNote: "term wording", email: "office email", phone: "office phone", websiteUrl: "official page link" }[field] ?? field;
+    return [{ what: `${holder.name}'s previously verified ${label}, retained after an incomplete update`,
+      provenance: { ...source, verifiedAt: null } }];
+  });
+}
+
 /**
  * Every record behind a DISTRICT or DIVISION battlecard.
  *
@@ -131,6 +140,7 @@ export function districtCardSources(
   for (const holder of representation) {
     const source = holderSource(holder, `Who represents it — ${holder.name}`);
     if (source) entries.push(source);
+    entries.push(...retainedHolderSources(holder));
   }
 
   for (const meeting of meetings) {
@@ -152,6 +162,7 @@ export function meetingCardSources(
   for (const holder of representation) {
     const source = holderSource(holder, `Who sits on this body — ${holder.name}`);
     if (source) entries.push(source);
+    entries.push(...retainedHolderSources(holder));
   }
 
   return mergeSources(entries);
@@ -177,9 +188,13 @@ export function personCardSources(
 
   const spine = holderSource(
     holder,
-    `Who they are, their office and how to reach them`,
+    holder.retainedFieldSources && Object.keys(holder.retainedFieldSources).length
+      ? `Who they are and their current office; newly verified contact details`
+      : `Who they are, their office and how to reach them`,
   );
   if (spine) entries.push(spine);
+
+  entries.push(...retainedHolderSources(holder));
 
   entries.push(...extra);
 

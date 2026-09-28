@@ -768,7 +768,7 @@ export function OfficialPopup({
       tier={tier}
       title={holder.name}
       onExpand={onExpand}
-      expandLabel={`More about ${holder.name} — votes and record`}
+      expandLabel={hasVoteRecord(holder.id) ? `More about ${holder.name} — voting record` : `More about ${holder.name} — office and contact`}
       onClose={onClose}
       /* Item 2 (2026-08-16): the card's own title is the identity block's
          name now. Rendering it twice, once as the popup heading and once as

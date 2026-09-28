@@ -18,6 +18,10 @@ export interface AcquirerRuntime {
   /** Build through buildScoutToolkit: permission, public URL, rate limits, browser and vault stay shared. */
   readonly toolkit: ScoutToolkit;
   readonly readVault: (artifactId: string) => Promise<VaultedResearchEvidence>;
+  /** A broker check of the immutable linked repair chain, required only when
+   * cached bytes belong to an ancestor WorkItem rather than this one. */
+  readonly authorizeInheritedHeld?: (input: { readonly artifactId: string; readonly originWorkItemId: string;
+    readonly childWorkItemId: string; readonly project: string }) => Promise<boolean>;
 }
 export interface AcquirerWorkerInput extends AcquirerTaskSpec {
   readonly attemptId: string;
@@ -129,10 +133,10 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     addStep("source-observation", "Source observation failed exact evidence binding; no network request was sent.", "NOT_WALKED", [...artifactIds], "NOT_ATTEMPTED");
     return result("BLOCKED");
   }
-  const accept = (held: VaultedResearchEvidence, reused: boolean, partial: boolean): AcquiredResearchArtifact => {
+  const accept = (held: VaultedResearchEvidence, reused: boolean, partial: boolean, fromWorkItemId = input.workItemId): AcquiredResearchArtifact => {
     const a = held.artifact;
     assertVaultedResearchEvidence(held, a.id, input.project);
-    if (a.canonicalUrl !== route.url || a.sourceId !== route.sourceId || a.workItemId !== input.workItemId ||
+    if (a.canonicalUrl !== route.url || a.sourceId !== route.sourceId || a.workItemId !== fromWorkItemId ||
       a.transport !== "REACHABLE" || a.httpStatus < 200 || a.httpStatus >= 300 || a.retentionPolicy === "DIAGNOSTIC" || a.tier === "RESTRICTED_RAW" ||
       (route.representation && (a.extraction?.kind !== route.representation || !a.extraction.complete))) {
       throw new Error("ACQUIRER_EVIDENCE_IDENTITY_MISMATCH");
@@ -149,7 +153,12 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
     if (!cached.immutable || cached.partial || cached.sourceRouteId !== route.id || cached.sourceObservationArtifactId !== route.observation.artifactId ||
       Date.parse(cached.currentUntil) <= Date.parse(stamp()) || !Number.isFinite(Date.parse(cached.currentUntil))) continue;
     try {
-      const acquired = accept(await runtime.readVault(cached.artifactId), true, false);
+      if (cached.inheritedFromWorkItemId && cached.inheritedFromWorkItemId !== input.workItemId &&
+        (!runtime.authorizeInheritedHeld || !await runtime.authorizeInheritedHeld({ artifactId: cached.artifactId,
+          originWorkItemId: cached.inheritedFromWorkItemId, childWorkItemId: input.workItemId, project: input.project }))) {
+        throw new Error("ACQUIRER_HELD_LINEAGE_NOT_AUTHORIZED");
+      }
+      const acquired = accept(await runtime.readVault(cached.artifactId), true, false, cached.inheritedFromWorkItemId ?? input.workItemId);
       if (acquired.completeness !== "COMPLETE") continue;
       artifacts.push(acquired); artifactIds.add(acquired.artifactId);
       // One invalid cache candidate does not disqualify a separately verified

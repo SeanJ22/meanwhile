@@ -14,6 +14,56 @@ export interface ContinuingHunt {
   readonly dispatched: number;
 }
 
+/** The existing owner's original, immutable $50 Anthropic hunt. */
+export const ORIGINAL_LIFETIME_HUNT = {
+  key: "zcta:2020/85635",
+  receiptId: "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
+  budgetStartedAt: "2026-09-27T22:17:50.236Z",
+  budgetUsd: 50,
+} as const;
+
+export interface LifetimeHuntContinuation extends ContinuingHunt {
+  readonly delayMs: number;
+  readonly reason: "DUE_AFTER_PROGRESS" | "ELIGIBLE_ZERO_DISPATCH";
+}
+
+/** A bounded next cycle for this exact hunt. A zero-dispatch cycle backs off
+ * to fifteen minutes while it remains eligible; only a measured budget or
+ * actual external refusal may hold it. No estimated dollars authorize work. */
+export function originalLifetimeHuntContinuation(
+  scopes: readonly ExpansionScopeDecision[],
+  expansion: ExpansionCycleReading | null,
+  assignments: AssignmentCycleReading | null,
+  stalledCycles: number,
+): LifetimeHuntContinuation | null {
+  if (expansion === null || assignments === null || !Number.isSafeInteger(stalledCycles) || stalledCycles < 0) return null;
+  const scope = scopes.find(row => row.key === ORIGINAL_LIFETIME_HUNT.key && row.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    row.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && row.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+  if (!scope) return null;
+  const read = expansion.scopes.find(row => row.key === scope.key);
+  const assignment = assignments.assignments.find(row => row.key === scope.key && row.ref === scope.receiptId);
+  if (!read || !assignment || assignment.completion?.kind !== "NOT_COMPLETE") return null;
+  const budget = assignment.budget;
+  if (!assignments.costsReadable || !budget?.lifetime || budget.since !== scope.budgetStartedAt ||
+    budget.spentUsd === null || budget.leftUsd === null || budget.leftUsd <= 0) return null;
+  const due = read.work?.dueThisCycle ?? 0;
+  const dispatched = read.work?.dispatchedThisCycle ?? 0;
+  if (!Number.isSafeInteger(due) || !Number.isSafeInteger(dispatched) || due < 0 || dispatched < 0) return null;
+  // A standing slice can dispatch every due obligation while its opened
+  // WorkItems still owe parser, validation, audit or publication. The exact
+  // assignment's completion exceptions, not today's standing due count, are
+  // the remaining-work authority. Its downstream workers retain their own
+  // provider and retry admission on the next bounded cycle.
+  const incomplete = assignment.completion;
+  const remaining = (incomplete.unsettledCount ?? 0) + (incomplete.refusedCount ?? 0) || incomplete.exceptions.length;
+  if (due <= dispatched && remaining <= 0) return null;
+  if (dispatched > 0) return { key: scope.key, label: scope.geography.label, due, dispatched,
+    delayMs: 60_000, reason: "DUE_AFTER_PROGRESS" };
+  if (budget.refused > 0 && budget.admitted === 0) return null;
+  return { key: scope.key, label: scope.geography.label, due, dispatched,
+    delayMs: stalledCycles === 0 ? 5 * 60_000 : 15 * 60_000, reason: "ELIGIBLE_ZERO_DISPATCH" };
+}
+
 export function continuingDirectedHunt(
   scopes: readonly ExpansionScopeDecision[],
   expansion: ExpansionCycleReading | null,

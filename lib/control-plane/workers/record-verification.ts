@@ -66,6 +66,7 @@ export function verifyExternalAuthorities(input: Pick<ValidatorWorkerInput, "att
     const evidence = held.filter(item => requiredIds.includes(item.artifactId));
     const artifacts = held.filter(item => authority.artifactIds.includes(item.artifactId));
     const rows: Record<string, FieldValue>[] = []; let observedAuthority = false;
+    const verifiedRecordIds: string[] = [];
     const inconclusive = (code: string, detail: string) => discrepancies.push(issue(code, detail, "WARNING"));
     if (!authority.id || !authority.publisher || !authority.sourceId || !authority.independenceExplanation.trim() || !authority.artifactIds.length || !authority.authorityEvidenceArtifactIds.length || !["GOVERNMENT_REGISTER", "STATUTORY_RECORD", "OFFICIAL_DENOMINATOR"].includes(authority.type)) inconclusive("VERIFICATION_AUTHORITY_UNESTABLISHED", "An identified external official authority and its publisher evidence are required.");
     if (requiredIds.some(id => !evidence.some(item => item.artifactId === id))) inconclusive("VERIFICATION_EVIDENCE_MISSING", "One or more authority records or authority identity artifacts have not been issued from the vault.");
@@ -84,21 +85,38 @@ export function verifyExternalAuthorities(input: Pick<ValidatorWorkerInput, "att
       } catch (error) { if (!(error instanceof RecordEvidenceRefusal)) throw error; inconclusive(error.code, error.message); }
     }
     const comparison = authority.comparison;
-    if (!["RECORD_VALUES", "IDENTITY_SET", "COUNT"].includes(comparison.kind) || (comparison.kind !== "COUNT" && !comparison.keyFields.length) || (comparison.kind === "RECORD_VALUES" && !comparison.fields.length)) inconclusive("VERIFICATION_COMPARISON_UNSPECIFIED", "The authority comparison needs an explicit count, identity-set, or field-value burden.");
+    if (!["RECORD_VALUES", "RECORD_VALUES_SUBSET", "IDENTITY_SET", "COUNT"].includes(comparison.kind) || (comparison.kind !== "COUNT" && !comparison.keyFields.length) || (["RECORD_VALUES", "RECORD_VALUES_SUBSET"].includes(comparison.kind) && !comparison.fields.length)) inconclusive("VERIFICATION_COMPARISON_UNSPECIFIED", "The authority comparison needs an explicit count, identity-set, or field-value burden.");
     if (!discrepancies.length) {
-      if (rows.length !== input.candidate.records.length) discrepancies.push(issue("EXTERNAL_COUNT_MISMATCH", `Authority records=${rows.length}; candidate records=${input.candidate.records.length}.`));
+      if (comparison.kind !== "RECORD_VALUES_SUBSET" && rows.length !== input.candidate.records.length) discrepancies.push(issue("EXTERNAL_COUNT_MISMATCH", `Authority records=${rows.length}; candidate records=${input.candidate.records.length}.`));
       if (comparison.kind !== "COUNT") {
         const identity = { namespace: authority.id, keyFields: comparison.keyFields };
         try {
           const expected = new Map<string, Record<string, FieldValue>>();
           for (const row of rows) { const key = recordIdentity(row, identity); if (expected.has(key)) discrepancies.push(issue("EXTERNAL_IDENTITY_AMBIGUOUS", "The authority contains duplicate comparison identities.")); expected.set(key, row); }
           const observed = new Set<string>();
+          const candidateByKey = new Map<string, typeof input.candidate.records[number]>();
           for (const record of input.candidate.records) {
-            const key = recordIdentity(record.fields, identity); observed.add(key); const other = expected.get(key);
+            const key = recordIdentity(record.fields, identity);
+            if (candidateByKey.has(key)) discrepancies.push(issue("EXTERNAL_IDENTITY_AMBIGUOUS", "Candidate records share an authority comparison identity.", "BLOCKING", record.id));
+            candidateByKey.set(key, record);
+            if (comparison.kind === "RECORD_VALUES_SUBSET") continue;
+            observed.add(key); const other = expected.get(key);
             if (!other) discrepancies.push(issue("EXTERNAL_IDENTITY_MISMATCH", "Candidate identity is absent from the independent authority.", "BLOCKING", record.id));
-            else if (comparison.kind === "RECORD_VALUES") for (const field of comparison.fields) if (!Object.hasOwn(other, field) || other[field] !== record.fields[field]) discrepancies.push(issue("EXTERNAL_FIELD_MISMATCH", "The candidate field differs from the independent official record.", "BLOCKING", record.id, field));
+            else if (comparison.kind === "RECORD_VALUES") {
+              const before = discrepancies.length;
+              for (const field of comparison.fields) if (!Object.hasOwn(other, field) || other[field] !== record.fields[field]) discrepancies.push(issue("EXTERNAL_FIELD_MISMATCH", "The candidate field differs from the independent official record.", "BLOCKING", record.id, field));
+              if (before === discrepancies.length) verifiedRecordIds.push(record.id);
+            }
           }
-          if (observed.size !== input.candidate.records.length || [...expected.keys()].some(key => !observed.has(key))) discrepancies.push(issue("EXTERNAL_IDENTITY_SET_MISMATCH", "The independently observed authority identity set is not reproduced by candidate records."));
+          if (comparison.kind === "RECORD_VALUES_SUBSET") {
+            for (const [key, row] of expected) {
+              const record = candidateByKey.get(key);
+              if (!record) { discrepancies.push(issue("EXTERNAL_IDENTITY_MISMATCH", "An independent authority person is absent from the candidate source.")); continue; }
+              const before = discrepancies.length;
+              for (const field of comparison.fields) if (!Object.hasOwn(row, field) || row[field] !== record.fields[field]) discrepancies.push(issue("EXTERNAL_FIELD_MISMATCH", "The candidate field differs from the independent official record.", "BLOCKING", record.id, field));
+              if (before === discrepancies.length) verifiedRecordIds.push(record.id);
+            }
+          } else if (observed.size !== input.candidate.records.length || [...expected.keys()].some(key => !observed.has(key))) discrepancies.push(issue("EXTERNAL_IDENTITY_SET_MISMATCH", "The independently observed authority identity set is not reproduced by candidate records."));
         } catch (error) { if (!(error instanceof RecordEvidenceRefusal)) throw error; inconclusive(error.code, error.message); }
       }
     }
@@ -107,6 +125,7 @@ export function verifyExternalAuthorities(input: Pick<ValidatorWorkerInput, "att
     return { candidateAttemptId: input.producerAttemptId, validatorAttemptId: input.attemptId, authority,
       evidence: evidence.map(({ text: _text, ...metadata }) => metadata), comparison,
       candidateCount: input.candidate.records.length, authorityCount: observedAuthority ? rows.length : null,
+      ...(["RECORD_VALUES", "RECORD_VALUES_SUBSET"].includes(comparison.kind) ? { verifiedRecordIds: [...new Set(verifiedRecordIds)] } : {}),
       verdict: verifiedAt ? findingsVerdict(discrepancies) : "INCONCLUSIVE", discrepancies, verifiedAt };
   });
 }

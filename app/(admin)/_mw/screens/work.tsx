@@ -25,13 +25,14 @@ import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import { readFleetSafety, readHeartbeat, readLatestDigest, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
-import { askGapCountWords, askGapRenderedNumbers, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
+import { askGapCountWords, askGapRenderedNumbers, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView, type BodyPublicationAttempt } from "@/lib/control-plane/assignment-view.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import {
   instructionKey,
   instructionView,
   routineCard,
   routineDetail,
+  rankedWorkBlockers,
   standingCard,
   standingDetail,
   STATE_PILL,
@@ -56,6 +57,8 @@ import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
 import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
 import { WORK_QUESTION_WORDS } from "@/lib/control-plane/work-question.ts";
 import { pulseLanesOf, queueLanesOf } from "@/lib/control-plane/scheduler/lane-reading.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "@/lib/control-plane/scheduler/hunt-continuation.ts";
+import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
@@ -72,7 +75,7 @@ import { readActivationGate } from "@/lib/control-plane/promotion/activation-gat
 import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
-import { withScope, type MwArea } from "../scope.ts";
+import { scopeParam, withScope, type MwArea } from "../scope.ts";
 import { MwShell } from "../shell.tsx";
 import { Cells, DeadEnd, KV, Pill, Refusal, Section, mw as s } from "../ui.tsx";
 
@@ -135,6 +138,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const openId = param(sp, "open");
   const show = param(sp, "show");
   const instructionFilter = param(sp, "instruction");
+  const workQuery = (param(sp, "q") ?? "").trim().slice(0, 100);
+  const requestedIndexPage = Number(param(sp, "page") ?? "1");
   /*
    * An opened assignment is read beside the page's other reads, not after
    * them: it needs nothing they return. A piece of standing work is read by its
@@ -187,6 +192,14 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   // An instruction may reach shared country/state work. Its exact marks take
   // precedence over the sidebar's state; no inferred county/ZIP/name join.
   const rows = instructionFilter !== null ? allRows.filter(row => row.assignmentKeys?.includes(instructionFilter)) : scopeState === null ? allRows : allRows.filter(row => row.stateCode === scopeState);
+  const fullIndex = view?.allRowsIndex ?? null;
+  const scopedIndex = fullIndex?.filter(row => instructionFilter !== null ? row.assignmentKeys.includes(instructionFilter) : scopeState === null || row.stateCode === scopeState) ?? null;
+  const searchedIndex = scopedIndex?.filter(row => !workQuery || `${row.id} ${row.label} ${row.subjectName ?? ""} ${row.state} ${row.blocker ?? ""} ${row.nextAction}`.toLowerCase().includes(workQuery.toLowerCase())) ?? null;
+  const indexPageSize = 50;
+  const indexPages = Math.max(1, Math.ceil((searchedIndex?.length ?? 0) / indexPageSize));
+  const indexPage = Number.isSafeInteger(requestedIndexPage) ? Math.max(1, Math.min(requestedIndexPage, indexPages)) : 1;
+  const shownIndex = searchedIndex?.slice((indexPage - 1) * indexPageSize, indexPage * indexPageSize) ?? [];
+  const priorities = rankedWorkBlockers(scopedIndex ?? [], base.nowIso).slice(0, 5);
   const geographicCounts = instructionFilter !== null ? view?.instructionCounts?.[instructionFilter] : scopeState === null ? null : view?.geographicCounts?.[scopeState];
   const countsUnavailable = instructionFilter !== null ? view?.instructionCounts === undefined : view?.geographicCounts === undefined;
   const scopedTotal = instructionFilter === null && scopeState === null ? view?.summary.total ?? null : countsUnavailable ? null : Object.values(geographicCounts ?? {}).reduce((n, count) => n + count, 0);
@@ -251,6 +264,8 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     const total = scopeState === null && instructionFilter === null ? view?.summary.byState.find((x) => x.state === state)?.count.value ?? listed.length : geographicCounts?.[state] ?? listed.length;
     return { state, listed, total };
   }).filter((g) => g.total > 0 || g.listed.length > 0);
+  const unfinishedWork = groups.filter(group => !["SUCCEEDED", "RETIRED"].includes(group.state))
+    .reduce((count, group) => count + group.total, 0);
   const routineGroups = (["STUCK", "NEEDS ATTENTION", "WORKING", "NOT READ YET"] as const).map((st) => ({ st, bodies: inScopeBodies.filter((b) => b.status === st) })).filter((g) => g.bodies.length > 0);
   /* Every card the lists below draw, so an opened row they do not draw is still drawn once. */
   const drawnIds = new Set<string>([
@@ -268,13 +283,16 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const na = auditRenderedNumbers(numbers);
   const ca = checkStatedEqualsRendered(claims);
 
-  const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, instruction: instructionFilter, ...extra });
+  const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, instruction: instructionFilter, q: workQuery || null, page: String(indexPage), ...extra });
   /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — tracked ones first, then registered ones, each named for where it stands. */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
   const composerStates = statesByStanding(base.registration).map((st) => ({ code: st.code, name: standingLabel(st.name, st.standing) }));
-  const selected: Record<string, { priority: number; budgetUsd: number }> = {};
-  for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
+  const selected: Record<string, { priority: number; budgetUsd: number; budgetStartedAt: string | null; originalLifetime: boolean }> = {};
+  for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd,
+    budgetStartedAt: d.budgetStartedAt ?? null,
+    originalLifetime: d.key === ORIGINAL_LIFETIME_HUNT.key && d.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+      d.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && d.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd };
 
   const card = (c: CardView, detail: ReactNode | null) => {
     const isOpen = detail !== null;
@@ -326,6 +344,39 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         title="Assignments"
         lede="One queue and one set of references across both areas. This list can order and bound work; it never creates a second copy of it. Open one to follow it from why it exists to whether a reader can see what it produced."
       />
+      <Section title="Where attention helps" lede="Ranked from the selected work by urgency, reader impact, linked instructions and waiting age. Open an item for its attempts, cause and next step. The amount of downstream work an action unlocks is not yet measured." />
+      {fullIndex === null ? <p className={s.goldNote}>The full work index has not been published yet. This short list cannot be treated as all remaining work.</p> : priorities.length === 0
+        ? <p className={s.note}>No blocked, failed, waiting or uncertain work with a recorded blocker or overdue state appears in this scope.</p>
+        : <div className={s.stack10}>{priorities.map(priority => { const row = priority.row; return <div key={row.id} className={s.insetRow}>
+          <div className={`${s.stack2} ${s.grow}`}>
+            <span className={s.text14}><strong className={s.strong}>{priority.rank}. {row.label}</strong> · {row.state.toLowerCase()} · {priority.category === "NEEDS_OWNER_DECISION" ? "Needs your decision" : priority.category === "NEEDS_CODE_CHANGE" ? "Needs a code repair" : priority.category === "WAITING_ON_PUBLISHER" ? "Waiting on the publisher" : priority.category === "OWNER_UNCLEAR" ? "Next owner unclear" : "Being fixed automatically"}</span>
+            <span className={s.note}>{row.blocker ?? "No specific blocker was recorded."} {row.nextAction}</span>
+            <span className={s.note}>Why this ranks here: {priority.rankingWhy}</span>
+            <span className={s.monoSmall}>{row.waitingSince ? `Waiting since ${formatEastern(row.waitingSince)}` : "Waiting start not recorded"}{row.lastActivityAt ? ` · last activity ${formatEastern(row.lastActivityAt)}` : " · last activity not recorded"}</span>
+          </div>
+          <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open details</Link>
+        </div>; })}</div>}
+      <Section title="Find any work item" lede="This index covers every published work item in the selected scope, including items omitted from the short cards below. Search names, subjects, causes or next steps, then open the full record." />
+      {fullIndex === null ? <p className={s.goldNote}>A complete searchable work index is not on this snapshot yet. The publisher must add it before these counts can be called complete.</p> : <div className={`${s.card} ${s.cardList} ${s.gap20}`}>
+        <form action={path} method="get" role="search" className={s.row10}>
+          {scopeParam(base.scope) && <input type="hidden" name="scope" value={scopeParam(base.scope)!} />}
+          {instructionFilter && <input type="hidden" name="instruction" value={instructionFilter} />}
+          <label htmlFor="work-search" className={s.titleStrong14}>Search all work</label>
+          <input id="work-search" type="search" name="q" defaultValue={workQuery} maxLength={100} className={s.input} placeholder="Name, place, cause or next step" />
+          <button type="submit" className={s.btnLink}>Search</button>
+        </form>
+        <p className={s.note}>{searchedIndex!.length.toLocaleString("en-US")} of {scopedIndex!.length.toLocaleString("en-US")} indexed work items match; showing {shownIndex.length} on page {indexPage} of {indexPages}. Each item is one job, not a missing fact.</p>
+        <div className={s.stack8}>{shownIndex.map(row => <div key={row.id} className={s.insetRow}>
+          <Pill tone={row.state === "SUCCEEDED" ? "teal" : row.state === "FAILED" || row.state === "BLOCKED" ? "stone" : "slate"}>{row.state}</Pill>
+          <span className={`${s.text14} ${s.grow}`}>{row.label}{row.subjectName && row.subjectName !== row.label ? ` · ${row.subjectName}` : ""}</span>
+          <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open</Link>
+        </div>)}</div>
+        {shownIndex.length === 0 && <p className={s.note}>No work matches this search in the selected scope.</p>}
+        <div className={s.row10}>
+          {indexPage > 1 && <Link href={here({ page: String(indexPage - 1), open: null })} className={s.btnLink}>Previous 50</Link>}
+          {indexPage < indexPages && <Link href={here({ page: String(indexPage + 1), open: null })} className={s.btnLink}>Next 50</Link>}
+        </div>
+      </div>}
       {!na.ok || !ca.ok ? (
         <Refusal title="This list refused to draw its own numbers.">{!na.ok ? na.detail : ca.detail}</Refusal>
       ) : (
@@ -346,7 +397,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               card(
                 i.card,
                 opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? (
-                  <InstructionDetail view={i} sharedSources={sharedSources} activity={view ? huntActivity(allRows, i.decision.key) : null} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
+                  <InstructionDetail view={i} sharedSources={sharedSources} activity={view ? huntActivity(allRows, i.decision.key) : null}
+                    bodyAttempts={view?.bodyAttempts?.filter(attempt => Array.isArray(attempt.assignmentKeys) && attempt.assignmentKeys.includes(i.decision.key)) ?? null}
+                    unattributedBodyAttemptCount={view?.bodyAttempts?.filter(attempt => !Array.isArray(attempt.assignmentKeys) || attempt.assignmentKeys.length === 0).length ?? null}
+                    huntCost={snapshotOut.kind === "HELD" ? snapshotOut.value.billingAttribution?.hunts?.find(hunt => hunt.key === i.decision.key && hunt.startedAt === i.decision.budgetStartedAt) ?? null : null}
+                    workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
                 ) : null,
               ),
             )
@@ -355,7 +410,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           {opened.kind === "DETAIL" && !drawnIds.has(opened.id) && card({ id: opened.id, kind: "STANDING", pill: "OPENED", tone: "slate", title: opened.id, summary: "Opened by its id; it is not among the rows drawn below." }, <DetailSections detail={opened.detail} says={opened.says} />)}
 
           <h3 className={s.titleStrong16} style={{ margin: "18px 0 0" }}>
-            Standing work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " the system owes" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${scopedTotal.toLocaleString("en-US")}` : ""}
+            Work{instructionFilter !== null ? " reached by this instruction" : scopeState === null ? " across all places" : ` attributed to ${stateName(scopeState)}`}{scopedTotal !== null ? ` — ${unfinishedWork.toLocaleString("en-US")} waiting or stuck` : ""}
           </h3>
           {published === null ? (
             <p className={s.note}>The assignment list is not on the published snapshot, so no standing work is listed — not an empty list.</p>
@@ -363,7 +418,10 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             <p className={s.note}>The publisher could not build the assignment list at {formatEastern(published.at)}: {published.says}</p>
           ) : (
             <>
-              {instructionFilter !== null ? <p className={s.note}>{countsUnavailable ? "The published snapshot has no instruction attribution yet; no count is inferred from geography." : "These are exact Send references recorded on the work, including shared work. Totals include rows omitted from this bounded list. They describe work reached, not proof of complete geographic coverage."} <Link className={s.btnLink} href={here({ instruction: null, show: null })}>Show all standing work in this scope</Link></p> : scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " Select an instruction to see its exact work; these are state totals, not inferred totals for the selected county or district." : ""}</p>}
+              <p className={s.note}>
+                {scopedTotal === null ? "The full work total is unavailable for this scope." : `${scopedTotal.toLocaleString("en-US")} tracked work rows in this scope, including completed and retired rows. ${unfinishedWork.toLocaleString("en-US")} are waiting, working, failed or blocked.`} These are work rows, not distinct missing reader facts.
+              </p>
+              {instructionFilter !== null ? <p className={s.note}>{countsUnavailable ? "The published snapshot has no instruction attribution yet; no count is inferred from geography." : "These are exact Send references recorded on the work, including shared work. Totals include rows omitted from this bounded list. They describe work reached, not proof of complete geographic coverage."} <Link className={s.btnLink} href={here({ instruction: null, show: null })}>Show all standing work in this scope</Link></p> : scopeState !== null && <p className={s.note}>{view?.geographicCounts === undefined ? "The published snapshot has no state attribution yet; its global total is not presented as this state's work." : "This list uses each assignment's recorded state. Shared or unplaced work remains visible under All scopes."}{base.scope.kind === "geo" ? " Select an instruction to see its exact work; these are state totals, not inferred totals for this selected geography." : ""}</p>}
               <p className={s.note}>
                 {view!.selection.rule} {scopedTotal !== null && scopedTotal > rows.length ? `${(scopedTotal - rows.length).toLocaleString("en-US")} rows in this scope are not carried on the published list; each group says how many it holds.` : ""}
               </p>
@@ -449,7 +507,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view, openHref, workHref, sharedSources, activity }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null }) {
+function InstructionDetail({ view, openHref, workHref, sharedSources, activity, huntCost, bodyAttempts, unattributedBodyAttemptCount }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null; huntCost: NonNullable<BillingAttribution["hunts"]>[number] | null; bodyAttempts: readonly BodyPublicationAttempt[] | null; unattributedBodyAttemptCount: number | null }) {
   const d = view.decision;
   const r = view.reach;
   const links = (ids: readonly string[], more: number) => (
@@ -466,6 +524,19 @@ function InstructionDetail({ view, openHref, workHref, sharedSources, activity }
     <div className={s.divider}>
       <h4 className={s.h4}>Your words</h4>
       {d.note ? <p className={s.record}>“{d.note}”</p> : <p className={s.note} style={{ marginBottom: 22 }}>You sent this without words of your own.</p>}
+      <h4 className={s.h4}>Cost since this hunt started</h4>
+      {huntCost ? <p className={s.note}>
+        Anthropic: ${huntCost.anthropicKnownUsd.toFixed(2)} known spent; ${huntCost.reservedUsd === null ? "reservations unread" : huntCost.reservedUsd.toFixed(2) + " reserved"}; ${huntCost.availableUsd === null ? "available allowance cannot be confirmed" : huntCost.availableUsd.toFixed(2) + " available"} of the ${huntCost.budgetUsd.toFixed(2)} token allowance. Other services: ${huntCost.otherKnownUsd.toFixed(2)} known. Combined known cost: ${huntCost.knownCombinedUsd.toFixed(2)}. {huntCost.unpriced} unpriced request{huntCost.unpriced === 1 ? "" : "s"}. <Link href="/admin/money" className={s.btnLink}>See cost detail</Link>
+      </p> : <p className={s.note}>No matching started-hunt cost reading is available. This does not mean zero spent.</p>}
+      <h4 className={s.h4}>Body publication attempts</h4>
+      {bodyAttempts === null ? <p className={s.goldNote}>The body attempt projection was not published, so this instruction&apos;s publisher attempts cannot be counted.</p>
+        : bodyAttempts.length === 0 ? <p className={s.note}>No publisher attempt is recorded on the work linked to this instruction yet. Earlier source searches may still exist.</p>
+          : <div className={s.stack8} style={{ marginBottom: 24 }}>{bodyAttempts.map(attempt => <div key={`${attempt.workItemId}:${attempt.workerResultId}`} className={s.insetRow}>
+            <Link href={openHref(attempt.workItemId)} className={s.btnLink}>{attempt.bodyId}</Link>
+            <Pill tone={attempt.status === "PUBLISHED" ? "teal" : attempt.status === "PARTIALLY_PUBLISHED" ? "cyan" : "stone"}>{attempt.status.replaceAll("_", " ")}</Pill>
+            <span className={s.note}>{attempt.code} · {formatEastern(attempt.at)} · {attempt.acceptedCount === null ? "accepted member count not recorded" : `${attempt.acceptedCount} accepted member${attempt.acceptedCount === 1 ? "" : "s"}`}{attempt.versionId ? ` · reader version ${attempt.versionId}` : ""}</span>
+          </div>)}</div>}
+      {unattributedBodyAttemptCount !== null && unattributedBodyAttemptCount > 0 && <p className={s.note}>{unattributedBodyAttemptCount} publisher attempt{unattributedBodyAttemptCount === 1 ? "" : "s"} across all work lack an exact instruction reference and are not included in this instruction&apos;s count.</p>}
       {sharedSources !== null && <>
         <h4 className={s.h4}>Shared source work for this instruction</h4>
         {sharedSources.ok && <p className={s.note}>Activity read {formatEastern(sharedSources.at)}{sharedSources.stale ? " · stale; retaining the last readable activity" : ""}.</p>}

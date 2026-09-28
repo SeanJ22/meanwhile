@@ -1591,27 +1591,7 @@ function CoverageBody({
             <>
               We know these bodies exist because the district boundaries do. We
               haven&apos;t sourced their names or meeting schedules yet.{" "}
-              {/*
-                4.6.1. Without this sentence the one above implies we searched
-                and came up empty, which is true for almost none of them — 258
-                of 265 bodies have never been looked at. Claiming a diligence
-                nobody spent is the same family of overclaim as a fabricated
-                source URL, just harder to catch because there is nothing to
-                click.
-              */}
-              {/*
-                Says only that a search happened, never what it turned up —
-                a searched body can still be blocked by vendor terms or publish
-                nothing at all. Where a search did find the body's page, the
-                link on its name above is the evidence, and it needs no caption.
-              */}
-              {counts.lookedAt === 0
-                ? "Nobody has searched for their agendas yet."
-                : counts.lookedAt < counts.total
-                  ? `We've searched for the agendas of ${counts.lookedAt} of the ${counts.total}.`
-                  : counts.total === 1
-                    ? "We have searched for its agendas."
-                    : "We have searched for all of their agendas."}
+              The published coverage list does not establish which agenda searches have already been tried.
             </>
           )}
           {counts.withoutSource > 0 && seatCounts.named < seatCounts.total && " "}
@@ -1850,9 +1830,8 @@ export function CoverageNotice({
           // The registry could not be read. Fall back to what the cascade alone
           // knows rather than inventing a coverage claim.
           <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-            No meetings on file near {zip} yet. We&apos;re still adding
-            jurisdictions, starting with the ones that publish machine-readable
-            agendas.
+            No meetings on file near {zip} yet. We&apos;re still checking
+            local calendars. A meeting may be listed before its agenda is posted.
           </p>
         )
       )}

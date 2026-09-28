@@ -51,6 +51,7 @@ import { adaptedSplit, completenessCaveat } from "../lib/hunt/jurisdiction-unive
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import {
   JURISDICTION_REFERENCE_STATES,
+  azJurisdictionOperationalReferenceCandidate,
   jurisdictionOperationalReferenceCandidate,
   jurisdictionOperationalReferenceFailureCandidate,
   type JurisdictionReferenceState,
@@ -761,6 +762,13 @@ function build(plan: StatePlan): JurisdictionRegistry {
 
 const CHECK = process.argv.includes("--check");
 const PROMOTE = process.argv.includes("--promote");
+const stateArguments = process.argv.filter(argument => argument.startsWith("--state="));
+if (stateArguments.length > 1 || (stateArguments.length === 1 && stateArguments[0] !== "--state=AZ")) {
+  throw new Error("JURISDICTION_REFERENCE_STATE_UNSUPPORTED: only exact --state=AZ is registered");
+}
+const AZ_ONLY = stateArguments.length === 1;
+const selectedStates: readonly JurisdictionReferenceState[] = AZ_ONLY ? ["az"] : JURISDICTION_REFERENCE_STATES;
+const contractId = AZ_ONLY ? "jurisdiction-operational-reference-az" : "jurisdiction-operational-reference";
 if (CHECK === PROMOTE) {
   throw new Error("JURISDICTION_REFERENCE_MODE_REQUIRED: choose exactly one of --check or --promote");
 }
@@ -769,10 +777,10 @@ if (PROMOTE) prepareProductionCivicDataWrite();
 const store = CHECK ? new MemoryRoutineDataStore() : new PostgresRoutineDataStore();
 
 async function recordFailedAttempt(failure: JurisdictionReferenceAcquisitionFailure): Promise<never> {
-  const candidate = jurisdictionOperationalReferenceFailureCandidate(failure);
+  const candidate = jurisdictionOperationalReferenceFailureCandidate(failure, AZ_ONLY);
   const outcome = await processRegisteredManualCandidate(
     store,
-    "jurisdiction-operational-reference",
+    contractId,
     candidate,
     candidate.retrieval.retrievedAt,
   );
@@ -790,7 +798,8 @@ if (acquisition.kind === "FAILED") {
 acquiredCensusUnits = acquisition.censusUnits;
 acquiredDependentSchoolSystems = acquisition.dependentSchoolSystems;
 /* Each reviewed website correction is read again, robots.txt first, before it may replace a Census address (C15). */
-const corrections = await acquireWebsiteCorrections([...applicableWebsiteCorrections(WEBSITE_CORRECTIONS).values()], {
+const corrections = await acquireWebsiteCorrections([...applicableWebsiteCorrections(WEBSITE_CORRECTIONS).values()]
+  .filter(correction => !AZ_ONLY || correction.jurisdictionId.startsWith("az:")), {
   get: nodeResearchGet,
   memory: memoryInProcess(),
   now: () => Date.now(),
@@ -807,7 +816,7 @@ asOf = retrievedAt.slice(0, 10);
 console.log(`jurisdictions:enumerate · acquired authoritative inputs as of ${asOf}\n`);
 const built = new Map<JurisdictionReferenceState, JurisdictionRegistry>();
 try {
-  for (const plan of PLANS) {
+  for (const plan of PLANS.filter(plan => selectedStates.includes(plan.code.toLowerCase() as JurisdictionReferenceState))) {
     const registry = build(plan);
     const state = plan.code.toLowerCase() as JurisdictionReferenceState;
     if (!JURISDICTION_REFERENCE_STATES.includes(state)) {
@@ -866,7 +875,7 @@ try {
   });
 }
 
-if (JURISDICTION_REFERENCE_STATES.some((state) => !built.has(state))) {
+if (selectedStates.some((state) => !built.has(state))) {
   const censusReceipt = acquisition.receipts.find(({ sourceId }) => sourceId === "census-government-units-2022")!;
   await recordFailedAttempt({
     kind: "FAILED",
@@ -881,10 +890,10 @@ if (JURISDICTION_REFERENCE_STATES.some((state) => !built.has(state))) {
     receipts: acquisition.receipts,
   });
 }
-const registries = Object.fromEntries(
-  JURISDICTION_REFERENCE_STATES.map((state) => [state, built.get(state)!]),
-) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
-const candidate = jurisdictionOperationalReferenceCandidate({
+const registries = Object.fromEntries(selectedStates.map((state) => [state, built.get(state)!])) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
+const candidate = AZ_ONLY ? azJurisdictionOperationalReferenceCandidate({
+  registries: { az: registries.az }, sourceReceipts, workbook: acquisition.workbook, retrievedAt,
+}) : jurisdictionOperationalReferenceCandidate({
   registries,
   sourceReceipts,
   workbook: acquisition.workbook,
@@ -892,7 +901,7 @@ const candidate = jurisdictionOperationalReferenceCandidate({
 });
 const outcome = await processRegisteredManualCandidate(
   store,
-  "jurisdiction-operational-reference",
+  contractId,
   candidate,
   candidate.retrieval.retrievedAt,
 );

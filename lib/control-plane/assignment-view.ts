@@ -2562,6 +2562,12 @@ export interface AssignmentView {
   readonly summary: AssignmentSummary;
   /** The bounded, ordered list; each row's full chain opens live by its id. */
   readonly rows: readonly AssignmentListRow[];
+  /** Every assignment's compact identity and triage facts. The detailed rows
+   * remain bounded; any indexed id opens through the existing by-id read. */
+  readonly allRowsIndex?: readonly AssignmentIndexRow[];
+  /** Public-safe publication attempts, including partial and held outcomes.
+   * A missing row means no publisher attempt is recorded, not no search. */
+  readonly bodyAttempts?: readonly BodyPublicationAttempt[];
   /** Counts over the entire holding, before bounded row selection. Empty key = shared or unplaced. */
   readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   /** Complete counts before row trimming, keyed by the durable Send identity. */
@@ -2576,6 +2582,61 @@ export interface AssignmentView {
   };
   readonly reads: readonly { readonly what: string; readonly held: boolean; readonly says: string }[];
   readonly activation: ActivationGateReading | null;
+}
+
+export interface AssignmentIndexRow {
+  readonly id: string;
+  readonly kind: AssignmentKind;
+  readonly lane: AssignmentLane;
+  readonly state: AssignmentState;
+  readonly label: string;
+  readonly subjectName: string | null;
+  readonly stateCode: string | null;
+  readonly assignmentKeys: readonly string[];
+  readonly lastActivityAt: string | null;
+  readonly band: 1 | 2 | 3 | null;
+  readonly overdue: boolean | null;
+  readonly waitingSince: string | null;
+  readonly eligibleAt: string | null;
+  readonly blocker: string | null;
+  readonly owner: AssignmentListRow["waiting"]["owner"];
+  readonly nextAction: string;
+}
+
+export interface BodyPublicationAttempt {
+  readonly bodyId: string;
+  readonly workItemId: string;
+  /** Only marks from this WorkItem's owning standing obligation. */
+  readonly assignmentKeys: readonly string[];
+  readonly at: string;
+  readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
+  readonly code: string;
+  readonly sourceUrl: string | null;
+  readonly workerResultId: string;
+  readonly acceptedCount: number | null;
+  readonly versionId: string | null;
+}
+
+export function bodyPublicationAttempts(workItems: readonly WorkItem[],
+  occurrences: readonly FreshnessOccurrence[] = [], obligations: readonly StandingObligation[] = []): BodyPublicationAttempt[] {
+  const obligationById = new Map(obligations.map(row => [row.id, row] as const));
+  const assignmentKeysByWorkItem = new Map<string, readonly string[]>();
+  for (const round of occurrences) {
+    const owner = obligationById.get(round.obligationId);
+    if (!owner) continue;
+    assignmentKeysByWorkItem.set(round.workItemId, [...new Set((owner.assignments ?? []).map(mark => mark.assignmentKey))]);
+  }
+  return workItems.flatMap(item => {
+    const outcome = item.publicationOutcome;
+    const bodyId = item.autonomousPlan?.publication?.bodyId;
+    if (!outcome || !bodyId) return [];
+    return [{ bodyId, workItemId: item.id, assignmentKeys: assignmentKeysByWorkItem.get(item.id) ?? [],
+      at: outcome.at, status: outcome.status,
+      code: outcome.code, sourceUrl: item.autonomousPlan?.contract.schemaVersion === 2
+        ? item.autonomousPlan.contract.sourceScope.canonicalUrls[0] ?? null : null,
+      workerResultId: outcome.workerResultId, acceptedCount: outcome.acceptedMembers?.length ?? null,
+      versionId: outcome.versionId }];
+  }).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId));
 }
 
 /** What the snapshot carries: the view, or the named reason it could not be built. */
@@ -2800,6 +2861,20 @@ export function buildAssignmentView(
   const byteBudget = options.byteBudget ?? ASSIGNMENT_VIEW_BYTE_BUDGET;
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP });
   const rows = built.rows;
+  const manualKeyByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
+    ? [[item.id, item.manualSourceGap.assignmentKey] as const] : []));
+  const allRowsIndex: AssignmentIndexRow[] = rows.map(row => {
+    const listed = listRowOf(row, 160);
+    const manualKey = manualKeyByItem.get(row.id);
+    return { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
+      label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
+      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualKey ? [manualKey] : [])])], lastActivityAt: listed.lastActivityAt,
+      band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,
+      eligibleAt: listed.waiting.eligibleAt, blocker: listed.waiting.blocker,
+      owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };
+  });
+  const indexedKeys = new Map(allRowsIndex.map(row => [row.id, row.assignmentKeys] as const));
+  const bodyAttempts = bodyPublicationAttempts(src.workItems, src.occurrences, src.obligations);
 
   const geographicCounts: Record<string, Record<AssignmentState, number>> = {};
   const instructionCounts: Record<string, Record<AssignmentState, number>> = {};
@@ -2807,7 +2882,7 @@ export function buildAssignmentView(
     const state = assignmentStateCode(row) ?? "";
     const counts = geographicCounts[state] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
     counts[row.state] += 1;
-    for (const key of new Set((row.what.assignments ?? []).map(mark => mark.assignmentKey))) {
+    for (const key of indexedKeys.get(row.id) ?? []) {
       const attributed = instructionCounts[key] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
       attributed[row.state] += 1;
     }
@@ -2853,6 +2928,8 @@ export function buildAssignmentView(
     builtAt: src.nowIso,
     summary: summarize(built, src, published),
     rows: kept,
+    allRowsIndex,
+    bodyAttempts,
     geographicCounts,
     instructionCounts,
     selection: {

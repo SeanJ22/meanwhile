@@ -46,6 +46,7 @@
  */
 
 import type { AssignmentCompletion } from "../assignment-completion.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import type { CostEntry } from "../cost.ts";
 import { aggregateModelSpend } from "../fleet-safety.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
@@ -347,7 +348,7 @@ export class AssignmentBudgetGate {
     const keys = this.keysOf.get(obligationId) ?? [];
     const closed = this.failClosed(obligationId, keys);
     if (closed !== null) return { refusal: closed };
-    const budgeted = this.budgetedFor(obligationId);
+    const budgeted = this.effectiveBudgetsFor(obligationId);
     if (budgeted.length === 0) return { lines: [] };
     if (!this.costsReadable) {
       const b = budgeted[0];
@@ -377,6 +378,14 @@ export class AssignmentBudgetGate {
       .sort((a, b) => (a.sentAt < b.sentAt ? 1 : a.sentAt > b.sentAt ? -1 : a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
   }
 
+  /** Only the owner's exact original $50 Send supersedes older rolling limits. */
+  private effectiveBudgetsFor(obligationId: string): AssignmentBudgetSpec[] {
+    const all = this.budgetedFor(obligationId);
+    const original = all.find(spec => spec.key === ORIGINAL_LIFETIME_HUNT.key && spec.ref === ORIGINAL_LIFETIME_HUNT.receiptId &&
+      spec.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && spec.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+    return original ? [original] : all;
+  }
+
   state(key: string): AssignmentBudgetState | null {
     const spec = this.specs.get(key);
     if (spec === undefined) return null;
@@ -399,7 +408,7 @@ export class AssignmentBudgetGate {
     const closed = this.failClosed(obligationId, keys);
     if (closed !== null) return closed;
     if (keys.length === 0) return { admit: true, runsUnder: null, keys };
-    const budgeted = this.budgetedFor(obligationId);
+    const budgeted = this.effectiveBudgetsFor(obligationId);
     if (budgeted.length === 0) return { admit: true, runsUnder: null, keys };
     if (!this.costsReadable) {
       const b = budgeted[0];
@@ -434,7 +443,7 @@ export class AssignmentBudgetGate {
   admit(obligationId: string): AssignmentAdmission {
     const verdict = this.check(obligationId);
     if (!verdict.admit || verdict.runsUnder === null) return verdict;
-    const held = this.budgetedFor(obligationId).map((s) => s.key);
+    const held = this.effectiveBudgetsFor(obligationId).map((s) => s.key);
     for (const key of held) this.reserved.set(key, (this.reserved.get(key) ?? 0) + this.worstCaseUsd);
     this.admittedBy.set(verdict.runsUnder, (this.admittedBy.get(verdict.runsUnder) ?? 0) + 1);
     this.reservations.set(obligationId, held);

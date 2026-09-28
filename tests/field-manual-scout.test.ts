@@ -9,6 +9,7 @@ import {
   knownRouteIds,
   scoutDiscoveryEntries,
   scoutFieldManualProjection,
+  scoutFieldManualCatalog,
   scoutStateHint,
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
@@ -117,6 +118,18 @@ test("a projection never exceeds its limit — a worker inherits a page, not the
   const projection = projectFieldManual(store, { role: "SCOUT", state: "nj", recordClass: "meetings", limit: 30 });
   assert.equal(projection.lines.length, 30);
   assert.equal(projection.total, 200);
+});
+
+test("OFFICIAL_ROSTER inherits historic contact and roster methods before unrelated doors", () => {
+  const make = (id: string, field: string) => ({
+    id, role: "SCOUT" as const, kind: "ROUTE", title: id, summary: id, states: ["az"], recordClasses: [field], platforms: [],
+    outcome: "YIELDED" as const, url: `https://example.gov/${id}`, source: "method", observedAt: null, tier: null, payload: {},
+  });
+  const store = { formatVersion: 1 as const, updatedOn: null, entries: [make("meeting", "meeting"), make("contact", "contact"), make("roster", "roster")] };
+  const projection = scoutFieldManualProjection(store, { subjectId: "az:city:sierra-vista", recordClass: "OFFICIAL_ROSTER", limit: 2 });
+  assert.deepEqual(projection.entryIds, ["contact", "roster"]);
+  assert.deepEqual(scoutFieldManualCatalog(store, { subjectId: "az:city:sierra-vista" }).map(entry => entry.id), ["meeting", "contact", "roster"],
+    "the local searchable catalog keeps every applicable method, including those outside the brief cap");
 });
 
 test("a dead door recorded for robots.txt alone is not a wall: the brief says so and marks it walkable; an access-control dead door stays a wall (owner decision 2026-09-25)", () => {

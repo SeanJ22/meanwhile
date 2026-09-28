@@ -120,8 +120,10 @@ export interface ExpansionScopeDecision {
   readonly decidedAt: string;
   /** The admin session reference that decided it. Never a person's name. */
   readonly decidedBy: string;
-  /** The gateway receipt that carries the decision. */
+  /** Instruction receipt; immutable for a continued lifetime hunt. */
   readonly receiptId: string;
+  /** Latest policy edit receipt, distinct from the continuing hunt's instruction. */
+  readonly latestDecisionReceiptId?: string;
   /** What stood for this key the instant before, or null for a new selection. */
   readonly previous: { readonly priority: number; readonly budgetUsd: number } | null;
 }
@@ -218,6 +220,7 @@ export function isExpansionScopeDecision(value: unknown): value is ExpansionScop
     typeof v.decidedAt === "string" &&
     typeof v.decidedBy === "string" &&
     typeof v.receiptId === "string" &&
+    (v.latestDecisionReceiptId === undefined || typeof v.latestDecisionReceiptId === "string") &&
     /* A question list that is not six-question vocabulary is a malformed decision, never "no questions". */
     (v.questions === undefined || (Array.isArray(v.questions) && v.questions.every(isWorkQuestion)))
   );
@@ -298,7 +301,8 @@ export function withScopeSet(
     decidedAt: change.decidedAt,
     decidedBy: change.decidedBy,
     sourceWorkVersion: 1,
-    receiptId: change.receiptId,
+    receiptId: previous?.budgetStartedAt && !change.newHunt ? previous.receiptId : change.receiptId,
+    latestDecisionReceiptId: change.receiptId,
     previous: previous === null ? null : { priority: previous.priority, budgetUsd: previous.budgetUsd },
   };
   return { scopes: orderScopes([...current.filter((s) => s.key !== key), next]), previous };

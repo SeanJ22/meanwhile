@@ -42,7 +42,7 @@ import { routineAssignmentId } from "@/lib/control-plane/assignment-routine.ts";
 import { BodyList } from "../_mw/body-list.tsx";
 import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
 import { censusEntryOf } from "../_mw/data/census-universe.ts";
-import { divisionsOf, loadContainer } from "../_mw/data/geography.ts";
+import { divisionsOf, loadContainer, loadZcta } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { isTrackedState, stateName } from "../_mw/load-shell.ts";
 import { NextSteps, type StepCard } from "../_mw/next-steps.tsx";
@@ -128,7 +128,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
   }
 
   const repos = base.repos;
-  const container = base.scope.kind === "geo" ? loadContainer(base.scope.type, base.scope.geoid) : null;
+  const container = base.scope.kind === "geo" ? base.scope.type === "zcta" ? loadZcta(base.scope.geoid) : loadContainer(base.scope.type, base.scope.geoid) : null;
   const [snapshotOut, decisionsOut, pulse, bodiesRead, containerRead] = await Promise.all([
     // The one field of the snapshot this page draws, narrowed by the store: 88 KB of the 449 KB row (2026-09-25).
     readDecisionCards(repos),

@@ -1,0 +1,67 @@
+import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../control-plane/scheduler/hunt-continuation.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } from "./manual-contracts.ts";
+
+/** A command's presence in the production registry does not establish that a
+ * normal Send has its source inputs, geographic applicability or reviewer
+ * evidence. This is the explicit 24-contract bridge for the current Send. */
+export type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "REVIEWED_INPUT" | "SCOPED_ADAPTER_OWED";
+interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly originalOnly?: boolean; readonly reason: string }
+const RULES = {
+  "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
+  "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs only after a completed independent audit." },
+  "congress-rollcalls": { mode: "DIRECT_SOURCE", reason: "National recent roll calls acquired from their registered public source." },
+  "federal-key-votes": { mode: "DIRECT_SOURCE", reason: "Reviewed national key-vote selection has an executable official acquisition." },
+  "az-sos-ballot": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Projection command requires a separately acquired and reviewed Arizona ballot input." },
+  "nh-curated-ballot": { mode: "REVIEWED_INPUT", state: "NH", reason: "Projection command requires a separately acquired and reviewed New Hampshire ballot input." },
+  "candidate-profiles": { mode: "REVIEWED_INPUT", reason: "Candidate profiles require current candidate identity and attributable source records." },
+  "candidate-corpus": { mode: "REVIEWED_INPUT", reason: "Candidate publication corpus requires verified primary publications and asset bindings." },
+  "officeholder-statements": { mode: "REVIEWED_INPUT", reason: "Statements require attributed primary publications, not a source-free projection command." },
+  "jurisdiction-operational-reference": { mode: "SCOPED_ADAPTER_OWED", reason: "The legacy reviewed AZ/NH/NJ reference remains a separate multi-state version and is not implied by the original Arizona Send." },
+  "jurisdiction-operational-reference-az": { mode: "DIRECT_SOURCE", state: "AZ", originalOnly: true, reason: "An AZ-only reviewed jurisdiction reference uses the exact original 85635 owner Send and keeps the older three-state version separate." },
+  "az-sos-campaign-finance": { mode: "DIRECT_SOURCE", state: "AZ", reason: "Arizona statewide campaign-finance acquisition is executable for a selected Arizona Send." },
+  "nh-sos-campaign-finance": { mode: "SCOPED_ADAPTER_OWED", state: "NH", reason: "The current projection requires promoted New Hampshire ballot identity and narrows to Merrimack; bind the selected area before invocation." },
+  "nj-elec-campaign-finance": { mode: "SCOPED_ADAPTER_OWED", state: "NJ", reason: "The current projection requires promoted New Jersey ballot identity and narrows to Morris; bind the selected area before invocation." },
+  "az-pima-local-finance": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "The adapter covers Pima County only; Arizona state membership alone does not establish Pima applicability." },
+  "voting-sites": { mode: "SCOPED_ADAPTER_OWED", reason: "The implemented sources cover Pima, Morris and selected New Hampshire towns, not every selected ZIP." },
+  "prl": { mode: "DIRECT_SOURCE", originalOnly: true, reason: "The licensed national PRL archive is acquired and attributed for the original authorized Send." },
+  "az-official-actions": { mode: "REVIEWED_INPUT", state: "AZ", reason: "Promotion requires a reviewed action projection, exact source-set receipt and source-through argument." },
+  "official-filings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
+  "comment-access": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
+  "ballot-navigation": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
+  "campaign-sites": { mode: "EXISTING_DERIVED", reason: "The separate derived campaign-site routine verifies current publications and promotes its reader projection." },
+  "venue-resolutions": { mode: "REVIEWED_INPUT", reason: "Venue projection requires meeting-specific location evidence and an exact body/venue join." },
+  "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
+  "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output must pass independent verification and audit before publication." },
+} as const satisfies Record<ManualProductionContractId, Rule>;
+
+export interface ManualProducerInvocation {
+  readonly id: ManualProductionContractId;
+  readonly mode: ManualProducerMode;
+  /** Current resolved Send receipts whose geography reaches this contract's state. */
+  readonly instructionIds: readonly string[];
+  /** Only this mode has a normal source task with the current command. */
+  readonly commandReady: boolean;
+  readonly reason: string;
+}
+
+export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[], now: string): readonly ManualProducerInvocation[] {
+  const nowMs = Date.parse(now);
+  const sends = scopes.filter(scope => scope.kind === "RESOLVED" && scope.zctas.size > 0 &&
+    scope.decision.sourceWorkVersion === 1 && scope.decision.receiptId.trim() &&
+    Number.isFinite(Date.parse(scope.decision.decidedAt)) && Date.parse(scope.decision.decidedAt) <= nowMs);
+  return MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => {
+    const rule = RULES[contract.id];
+    const applicable = sends.filter(scope => (!('state' in rule) || scope.states.includes(rule.state)) &&
+      (!('originalOnly' in rule) || (scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
+        scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+        scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+        scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)));
+    // State membership is not proof that a county-only or selected-town
+    // adapter covers the Send. Those contracts have no executable receipt
+    // until a specific source/body geography is bound by normal work.
+    const bound = rule.mode === "SCOPED_ADAPTER_OWED" ? [] : applicable;
+    return { id: contract.id, mode: rule.mode, instructionIds: [...new Set(bound.map(scope => scope.decision.receiptId))],
+      commandReady: rule.mode === "DIRECT_SOURCE" && applicable.length > 0, reason: rule.reason };
+  });
+}

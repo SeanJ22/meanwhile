@@ -23,6 +23,14 @@ import type {
   DivisionType,
 } from "./types.ts";
 import { WIRED_STATUSES } from "./coverage-client.ts";
+import { indexAudits } from "./audit.ts";
+import { COVERAGE_AUDIT_FILE } from "./coverage-audit.ts";
+import type { PublicBodyAttempt } from "./body-attempt-read.ts";
+
+/** A dated cited source hunt is evidence; a registry status alone is not.
+ * New control-plane attempts are not present in this historic audit yet, so
+ * the count below is a documented lower bound, never a never-searched claim. */
+const DOCUMENTED_SEARCHES = indexAudits(COVERAGE_AUDIT_FILE);
 
 /**
  * What we can honestly say about who governs a point, and how much of it we
@@ -164,15 +172,12 @@ export interface CoveredBody {
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
   /**
-   * Whether anybody has actually gone looking for this body's calendar.
-   *
-   * Carried separately from `coverageStatus` because it is the question the
-   * reader's trust turns on and the status alone cannot answer it convincingly:
-   * "we don't have their calendar" reads the same whether we searched and came
-   * up empty or never tried. 258 of 265 bodies are the second, and saying so is
-   * more honest than letting a blank imply diligence.
+   * Whether a dated, cited hunt for this exact body is in the historical audit.
+   * False means no such receipt is held here, not that nobody has searched.
    */
   lookedAt: boolean;
+  /** Latest exact-body publisher attempt, when the bounded public projection answered. This does not prove an exhaustive source search. */
+  publicationAttempt?: PublicBodyAttempt | null;
   tier: Tier;
   /**
    * **RULING 71.** This body's territory covers only PART of the zip the reader
@@ -297,9 +302,9 @@ export interface CoverageSummary {
    */
   statewideExecutives: SeatHolder[];
   /**
-   * `lookedAt` is the count of bodies a source hunt has actually been run for.
-   * It is what lets the copy separate "we searched and found nothing" from
-   * "we haven't got to these yet" instead of letting one sentence cover both.
+   * `lookedAt` counts exact-body, cited historical audit rows. New attempts
+   * outside that audit remain unknown until a bounded public-safe projection
+   * joins them; this is a documented lower bound, not a complete attempt total.
    */
   counts: {
     total: number;
@@ -416,10 +421,7 @@ export function summarizeCoverage(
       coverageStatus: body.coverageStatus,
       homepageUrl: body.homepageUrl,
       agendaSourceRef: body.agendaSourceRef,
-      // Read off the status rather than the audit file, so the read layer keeps
-      // needing only the registry. NOT_ATTEMPTED is precisely the value the
-      // derivation writes when no audit row overlaid it.
-      lookedAt: body.coverageStatus !== "NOT_ATTEMPTED",
+      lookedAt: DOCUMENTED_SEARCHES.has(body.id),
       tier: division?.tier ?? "local",
     };
   });

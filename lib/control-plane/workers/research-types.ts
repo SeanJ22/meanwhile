@@ -39,6 +39,8 @@ export interface ObservedResearchRoute {
 }
 export interface HeldResearchArtifact {
   readonly artifactId: string;
+  /** Declared ancestor owner; execution must independently authorize the lineage. */
+  readonly inheritedFromWorkItemId?: string;
   readonly sourceObservationArtifactId: string;
   readonly sourceRouteId: string;
   readonly immutable: boolean;

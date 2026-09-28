@@ -48,6 +48,8 @@ export interface RecordFieldMapping {
   /** JSON pointer relative to a row, or zero-based column index for tabular evidence. */
   readonly source: string | number;
   readonly type: "STRING" | "NUMBER" | "BOOLEAN" | "SCALAR";
+  /** For an HTML table cell, read its source link instead of its display text. */
+  readonly attribute?: "href";
 }
 export type RecordExtractionShape = {
   readonly fields: Readonly<Record<string, RecordFieldMapping>>;
@@ -85,7 +87,8 @@ export interface VerificationAuthority {
   readonly independenceExplanation: string;
   readonly extraction: RecordExtractionShape;
   readonly comparison: {
-    readonly kind: "RECORD_VALUES" | "IDENTITY_SET" | "COUNT";
+    /** SUBSET corroborates only the explicitly matched records; never a complete roster. */
+    readonly kind: "RECORD_VALUES" | "RECORD_VALUES_SUBSET" | "IDENTITY_SET" | "COUNT";
     readonly keyFields: readonly string[];
     readonly fields: readonly string[];
   };
@@ -169,6 +172,8 @@ export interface ValidatorWorkerInput {
   readonly candidate: ParserResult;
 }
 export interface ValidatorResult {
+  /** Exact records that passed replay and all record-specific checks; absent on legacy results. */
+  readonly validatedRecordIds?: readonly string[];
   readonly extractionVerdict?: "PASS" | "FAIL" | "INCONCLUSIVE";
   readonly externalVerifications?: readonly ExternalVerificationResult[];
   readonly role: "VALIDATOR";
@@ -181,6 +186,8 @@ export interface ValidatorResult {
   readonly validatedRecordCount: number;
 }
 export interface ExternalVerificationResult {
+  /** Exact candidate records independently matched for the declared fields. Omitted on legacy results. */
+  readonly verifiedRecordIds?: readonly string[];
   readonly candidateAttemptId: string;
   readonly validatorAttemptId: string;
   readonly authority: VerificationAuthority;
@@ -241,6 +248,8 @@ export interface AuditAttackResult {
   readonly findings: readonly WorkerFinding[];
 }
 export interface AuditorResult {
+  /** Exact records surviving the independent audit; global findings still hold all records. */
+  readonly survivingRecordIds?: readonly string[];
   readonly role: "ADVERSARIAL_AUDITOR";
   readonly attemptId: string;
   readonly producerAttemptId: string;
@@ -369,7 +378,7 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
       valid(object(metadata) && object(metadata.jurisdiction) && [metadata.jurisdiction.country, metadata.jurisdiction.state, metadata.jurisdiction.canonicalId].every(string) &&
         object(metadata.identity) && string(metadata.identity.namespace) && strings(metadata.identity.keyFields) && metadata.identity.keyFields.length > 0 &&
         object(metadata.sourceScope) && [metadata.sourceScope.sourceId, metadata.sourceScope.publisher].every(string) && [metadata.sourceScope.routeIds, metadata.sourceScope.canonicalUrls, metadata.sourceScope.observationArtifactIds].every(v => strings(v) && v.length > 0) && count(metadata.methodVersion) && Number(metadata.methodVersion) > 0, "PARSER_CONTRACT_METADATA");
-      valid((r.spans as unknown[]).every(span => object(span) && ["JSON_RECORDS", "HTML_TABLE", "DELIMITED_TEXT", "XML_RECORDS"].includes(String(span.sourceFormat))), "PARSER_SOURCE_FORMAT");
+      valid((r.spans as unknown[]).every(span => object(span) && ["JSON_RECORDS", "HTML_TABLE", "DELIMITED_TEXT", "XML_RECORDS", "TEXT_BLOCKS"].includes(String(span.sourceFormat))), "PARSER_SOURCE_FORMAT");
     }
   } else {
     array("findings"); array("artifactIds");
@@ -378,13 +387,15 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
     if (role === "VALIDATOR" && !["PASS", "FAIL", "INCONCLUSIVE"].includes(String(r.verdict))) throw new Error("WORKER_RESULT_SCHEMA_INVALID:VALIDATOR");
     if (role === "VALIDATOR") {
       valid(strings(r.checked) && count(r.validatedRecordCount), "VALIDATOR_CHECKS");
+      if (r.validatedRecordIds !== undefined) valid(strings(r.validatedRecordIds) && new Set(r.validatedRecordIds).size === r.validatedRecordIds.length && r.validatedRecordIds.length === Number(r.validatedRecordCount), "VALIDATOR_RECORD_IDS");
       if (r.extractionVerdict !== undefined) valid(["PASS", "FAIL", "INCONCLUSIVE"].includes(String(r.extractionVerdict)), "VALIDATOR_EXTRACTION_VERDICT");
       if (r.externalVerifications !== undefined) valid(Array.isArray(r.externalVerifications) && r.externalVerifications.every(v => object(v) &&
         string(v.candidateAttemptId) && v.validatorAttemptId === attemptId && object(v.authority) && string(v.authority.id) && string(v.authority.publisher) &&
         ["GOVERNMENT_REGISTER", "STATUTORY_RECORD", "OFFICIAL_DENOMINATOR"].includes(String(v.authority.type)) &&
-        object(v.comparison) && ["COUNT", "IDENTITY_SET", "RECORD_VALUES"].includes(String(v.comparison.kind)) && strings(v.comparison.keyFields) && strings(v.comparison.fields) &&
+        object(v.comparison) && ["COUNT", "IDENTITY_SET", "RECORD_VALUES", "RECORD_VALUES_SUBSET"].includes(String(v.comparison.kind)) && strings(v.comparison.keyFields) && strings(v.comparison.fields) &&
         Array.isArray(v.evidence) && v.evidence.every(e => object(e) && [e.artifactId, e.contentHash, e.acquiredByAttemptId, e.canonicalUrl, e.retrievedAt, e.sourceId, e.methodRouteId].every(string) && e.text === undefined) &&
         count(v.candidateCount) && (v.authorityCount === null || count(v.authorityCount)) && ["PASS", "FAIL", "INCONCLUSIVE"].includes(String(v.verdict)) &&
+        (v.verifiedRecordIds === undefined || strings(v.verifiedRecordIds) && new Set(v.verifiedRecordIds).size === v.verifiedRecordIds.length && v.verifiedRecordIds.length <= Number(v.candidateCount)) &&
         Array.isArray(v.discrepancies) && v.discrepancies.every(finding) && (v.verifiedAt === null ? v.verdict === "INCONCLUSIVE" : string(v.verifiedAt) && Number.isFinite(Date.parse(v.verifiedAt)))), "EXTERNAL_VERIFICATIONS");
     }
     if (role === "ADVERSARIAL_AUDITOR") {
@@ -392,6 +403,7 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
       if (!["SURVIVED", "BROKE", "INCONCLUSIVE"].includes(String(r.verdict)) || typeof r.validatorAttemptId !== "string" ||
           typeof r.reopenRequired !== "boolean" || (r.verdict === "BROKE" && r.reopenRequired !== true)) throw new Error("WORKER_RESULT_SCHEMA_INVALID:AUDITOR");
       valid(count(r.survivingRecordCount) && (r.startedFrom as unknown[]).every(v => AUDIT_EVIDENCE_BASES.includes(v as AuditEvidenceBase)), "AUDITOR_CONTEXT");
+      if (r.survivingRecordIds !== undefined) valid(strings(r.survivingRecordIds) && new Set(r.survivingRecordIds).size === r.survivingRecordIds.length && r.survivingRecordIds.length === Number(r.survivingRecordCount), "AUDITOR_RECORD_IDS");
       valid((r.attacks as unknown[]).every(attack => object(attack) && ATTACK_MODES.includes(attack.mode as AttackMode) && typeof attack.applicable === "boolean" &&
         typeof attack.executed === "boolean" && string(attack.reason) && ["SURVIVED", "BROKE", "INCONCLUSIVE", "NOT_APPLICABLE"].includes(String(attack.verdict)) &&
         Array.isArray(attack.findings) && attack.findings.every(finding)), "AUDITOR_ATTACKS");

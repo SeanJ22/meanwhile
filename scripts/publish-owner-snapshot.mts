@@ -56,6 +56,8 @@ import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts
 import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { buildChecklistCensus, exactScopeMembers } from "../lib/control-plane/readiness/checklist-census.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
@@ -749,7 +751,8 @@ async function main(): Promise<void> {
     });
   }
   const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
-  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, readings: providerBilling.readings }) : null;
+  const scopeMembers = reads?.assignmentSources.ok && reads.billingScopes ? exactScopeMembers(reads.billingScopes, reads.assignmentSources.value) : undefined;
+  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
   let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
   if (!DRY_RUN && reads?.assignmentSources.ok) {
     const workerReadback = await collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
@@ -757,7 +760,14 @@ async function main(): Promise<void> {
     const joined = new Map([...(servedReader?.witnesses ?? []), ...workerReadback.witnesses].map(w => [`${w.itemId}:${w.approvalId}`, w]));
     servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors] };
   }
-  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution };
+  const checklists = reads?.billingScopes?.filter(scope => scope.key === ORIGINAL_LIFETIME_HUNT.key &&
+    scope.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId && scope.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    scope.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
+    .map(scope => buildChecklistCensus({ scope,
+    sources: reads.assignmentSources.ok ? reads.assignmentSources.value : null,
+    observedAt: NOW_ISO, previous: existing?.value.checklists?.find(row => row.scopeId === scope.key) }))
+    ?? existing?.value.checklists?.map(row => ({ ...row, readsComplete: false }));
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, checklists };
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");

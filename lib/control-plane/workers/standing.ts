@@ -254,14 +254,17 @@ async function generalizedIndependentContext(input: {
 
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
 export function standingFleetRuntime(input: { root: string; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
+  lifetimeHuntSubject?: (subjectId: string) => boolean;
   /** MW-021 (2026-09-25): the auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
   const now = input.now ?? (() => new Date().toISOString());
   const method = JSON.parse(readFileSync(join(input.root, "data/method/knowledge.json"), "utf8"));
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
+    ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
     ...(input.transport ? { auditReasoner: modelAuditReasoner(input.repos, input.transport, now,
-      { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }) }) } : {}),
+      { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
+        ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }) }) } : {}),
     independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
       if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });

@@ -154,6 +154,7 @@ import {
   REWALK_REFUSAL_DAYS,
   SCOUT_LADDER,
   SCOUT_OUTCOMES,
+  SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,
   classifyPriorRung,
   distinctEvidenceRungs,
   validateScoutFinishWithCandidates,
@@ -451,7 +452,7 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     "5. A candidate route is GROUNDED: it cites artifact ids that tool results returned in THIS investigation (or inherited artifact ids you were given). A URL from memory is not a candidate. You may propose method knowledge; you may never promote it.",
     "6. Never generate a claim about a government, a candidate's position, or a record's contents beyond what a vaulted artifact shows. A Scout that only writes prose has failed.",
     "7. Label EVERY tool call with `rung` (a ladder name above, or other:<name>) and `why`. Use record_rung to note what a rung returned. Call finish exactly once, covering every rung index you walked.",
-    "8. Never re-read. A URL already vaulted in this investigation is in this conversation; a second fetch_public or browse of it is refused and hands back the artifact id. Reason over what you were shown, or open a materially different representation (the page's own API, a linked document, another host).",
+    "8. Reuse saved knowledge before another source call. find_manual searches the full applicable catalog beyond the short brief; read_manual opens a handed full method or document; read_held opens a handed sanitized artifact by offset or searches its saved bytes for a literal query such as a table heading, then returns a bounded passage and exact offset. These are free local reads. A URL already vaulted in this investigation is in this conversation; a second fetch_public or browse of it is refused and hands back the artifact id. Open a materially different representation only when needed.",
     "9. Never re-walk. The brief lists the rungs prior investigations already walked on this obligation and what each returned; a rung recorded as durably failed (an access control, a not-found) is refused if you try it again. A rung an older investigation refused for robots.txt alone is not a failure and may be walked. Start from the NEXT RUNGS the prior investigation named.",
     "10. Provenance is the machine's. In finish, a candidate's observedOn is the `retrieved` date on the cited artifact's envelope, its permission is the `permission` verdict on that envelope, and its recordClass is the obligation's. State them as shown; the executor derives the values from the vault record and refuses a finish whose claims disagree with it.",
     "",
@@ -559,7 +560,7 @@ export interface ScoutExecutorDeps {
     readonly inherited: InheritedEvidence;
     /** Current recorded Send questions, including marks saved during this cycle. */
     readonly ownerQuestions?: readonly WorkQuestion[];
-    readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs">;
+    readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs" | "readHeldArtifact" | "readManualDocument">;
     /**
      * The canonical executor decision for this row (`decideExecutor`). A
      * DETERMINISTIC decision reaching this executor is refused before any
@@ -1207,6 +1208,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs });
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
+      const knowledgeReads: NonNullable<ScoutResult["knowledgeReads"]>[number][] = [];
       const brief = scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited, ctx.ownerQuestions);
       /*
        * APPEND-ONLY (2026-09-25). Nothing already sent in this array is ever
@@ -1551,6 +1553,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               const rungLabel = typeof input.rung === "string" ? input.rung : null;
               const call = await toolkit.call(use.name, input, rungLabel);
               artifacts.push(...call.artifacts);
+              if (call.ok && call.knowledgeRead) knowledgeReads.push(call.knowledgeRead);
               for (const p of call.provenance ?? []) provenance.set(p.artifactId, p);
               if ((use.name === "fetch_public" || use.name === "browse") && rawUrl !== "") {
                 vaultedByCall.set(`${use.name}|${normalizedUrl(rawUrl)}`, call.artifacts.map((a) => a.artifactId));
@@ -2024,6 +2027,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         usd,
         elapsedMs,
         artifactIds: artifacts.map((a) => a.artifactId),
+        ...(ctx.tools.readHeldArtifact ? { recoveryCapabilityVersion: SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } : {}),
+        ...(knowledgeReads.length ? { knowledgeReads } : {}),
         methodCandidateIds: [],
         refusal,
         startedAt,

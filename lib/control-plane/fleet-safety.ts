@@ -360,6 +360,7 @@ export class FleetSafetyController {
   private readonly night: OperationalNight;
   private readonly paused: boolean;
   private readonly modelHold: string | null;
+  private readonly lifetimeHuntWork: (work: string) => boolean;
   private readonly clock: () => number;
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
@@ -394,6 +395,8 @@ export class FleetSafetyController {
      * ceiling.
      */
     readonly rollingCeilingUsd?: number | null;
+    /** Exact work covered by a separately reserved lifetime hunt allowance. */
+    readonly lifetimeHuntWork?: (work: string) => boolean;
     readonly clock?: () => number;
   }) {
     const ceiling = resolveRollingCeiling(input.rollingCeilingUsd);
@@ -406,6 +409,7 @@ export class FleetSafetyController {
     this.night = operationalNightAt(input.now);
     this.paused = input.paused ?? false;
     this.modelHold = input.modelHold ?? null;
+    this.lifetimeHuntWork = input.lifetimeHuntWork ?? (() => false);
     this.clock = input.clock ?? Date.now;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now);
@@ -436,7 +440,7 @@ export class FleetSafetyController {
       this.defer(work, code, why);
       return { admit: false as const, code, why };
     };
-    if (scheduledBlackoutAt(new Date(nowMs).toISOString())) return deny("SCHEDULED_BLACKOUT", "Saturday 18:00 through Sunday 06:00 America/Phoenix permits no billable or network research");
+    if (scheduledBlackoutAt(new Date(nowMs).toISOString()) && !this.lifetimeHuntWork(work)) return deny("SCHEDULED_BLACKOUT", "Saturday 18:00 through Sunday 06:00 America/Phoenix permits no billable or network research");
     if (nowMs - this.startedMs >= this.bounds.maxWallMsPerCycle) return deny("WALL_CLOCK_CEILING", `cycle reached ${this.bounds.maxWallMsPerCycle}ms`);
     // No per-cycle dispatch ceiling: the wall above and the rolling daily spend
     // ceiling are the limits. `dispatches` is still counted, for the admin panel.
@@ -445,7 +449,7 @@ export class FleetSafetyController {
   }
 
   admitProviderRequest(provider: string, work: string, outboundPayloadBytes = 0): number {
-    if (scheduledBlackoutAt(new Date(this.clock()).toISOString())) this.refuse(work, "SCHEDULED_BLACKOUT", "network/provider execution is disabled during the Saturday operational-night blackout");
+    if (scheduledBlackoutAt(new Date(this.clock()).toISOString()) && !this.lifetimeHuntWork(work)) this.refuse(work, "SCHEDULED_BLACKOUT", "network/provider execution is disabled during the Saturday operational-night blackout");
     const circuit = this.circuits.get(provider);
     if (circuit) {
       this.circuits.set(provider, {
@@ -499,8 +503,10 @@ export class FleetSafetyController {
     // operational-night model-spend cap. A model response's size is bounded by
     // its own `max_tokens`, so it needs no per-cycle payload check.
     const pending = this.cycleUsd + this.reservedUsd + reserve;
-    if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
-    if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+    if (!this.lifetimeHuntWork(work)) {
+      if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
+      if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+    }
     this.admitProviderRequest(provider, work, bodyBytes);
     this.reservedUsd += reserve;
     return { usd: reserve, provider, work, released: false };
@@ -578,8 +584,10 @@ export class FleetSafetyController {
    */
   rollingCeilingReached(
     worstCaseUsd = 0,
+    work = "",
   ): { readonly reached: boolean; readonly spentUsd: number | null; readonly capUsd: number } {
     const capUsd = this.bounds.rolling24HourModelUsd;
+    if (this.lifetimeHuntWork(work)) return { reached: false, spentUsd: this.historicalRollingUsd === null ? null : this.historicalRollingUsd + this.cycleUsd, capUsd };
     if (this.historicalRollingUsd === null) return { reached: false, spentUsd: null, capUsd };
     const projected = this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + worstCaseUsd;
     return { reached: projected > capUsd, spentUsd: this.historicalRollingUsd + this.cycleUsd, capUsd };
@@ -815,9 +823,11 @@ export class FleetSafetyController {
   holdModelBudget(work: string, usd: number): { readonly usd: number; readonly draw: (spentUsd: number) => void; readonly release: () => void } {
     if (!Number.isFinite(usd) || usd < 0) this.refuse(work, "UNMEASURED_MODEL_SPEND", `an escalation hold of ${String(usd)} USD is not a measured amount`);
     if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
-    if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
-    if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
-      this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+    if (!this.lifetimeHuntWork(work)) {
+      if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
+      if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
+        this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+      }
     }
     this.reservedUsd += usd;
     let held = usd;

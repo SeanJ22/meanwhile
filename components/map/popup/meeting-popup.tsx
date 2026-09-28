@@ -304,7 +304,7 @@ export function MeetingPopup({
       )}
 
       <PopupSectionLabel>{concluded ? "Records" : "Where to go"}</PopupSectionLabel>
-      <LinkLadder links={links} lookedAt={body?.lookedAt ?? false} />
+      <LinkLadder links={links} lookedAt={body?.lookedAt ?? false} publicationAttempt={body?.publicationAttempt} />
 
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (
@@ -339,24 +339,27 @@ const STATUS_LABEL: Record<Meeting["status"], string> = {
  * missing, because a link that looks right and goes nowhere is invisible until
  * somebody clicks it — the same failure that nulled 34 fixture URLs in 4.5.3.
  *
- * The empty copy distinguishes the two reasons a body has nothing here, using
- * the audit's `lookedAt`. "We haven't looked yet" is a promise we can keep;
- * "we looked and there's nothing published" is a finding about the body. Saying
- * the second when the first is true would be claiming diligence we never spent.
+ * A historical cited audit and a recent exact-body publication attempt are
+ * both narrower than an exhaustive agenda search. Neither can establish that
+ * no agenda exists, and an absent receipt cannot prove nobody looked.
  */
 function LinkLadder({
   links,
   lookedAt,
+  publicationAttempt,
 }: {
   links: OutboundLink[];
   lookedAt: boolean;
+  publicationAttempt?: CoveredBody["publicationAttempt"];
 }) {
   if (links.length === 0) {
     return (
       <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-        {lookedAt
-          ? "We went looking and this body publishes nothing we can link to."
-          : "Nothing to link to yet — nobody has gone looking for this body's agendas."}
+        {publicationAttempt
+          ? `A source publication attempt for this body was ${publicationAttempt.status === "HELD" ? "held" : publicationAttempt.status === "PARTIALLY_PUBLISHED" ? "partly published" : "published"} on ${publicationAttempt.at.slice(0, 10)}. No agenda link is held here; this attempt does not establish whether the body posts one.`
+          : lookedAt
+            ? "A dated source audit exists for this body, but no agenda link is held here."
+            : "No agenda link is held here. This view cannot establish whether an agenda search was attempted."}
       </p>
     );
   }

@@ -193,6 +193,27 @@ test("BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap ho
   }
 });
 
+test("original hunt paid search ignores only discretionary request counts and retains shared provider admission", async () => {
+  for (const [label, repos] of await eachStore("wtp-search-lifetime-")) {
+    let clock = Date.parse(NOW);
+    const now = () => new Date((clock += 2_000)).toISOString();
+    let huntAllowed = true;
+    const budget = durableSearchBudget({ repos, perCycle: 1, perDay: 1,
+      admit: () => "ordinary work is held", admitLifetimeHunt: () => huntAllowed ? null : "hunt provider held", now });
+    assert.match((await budget.take(SEARCH_HOSTS.brave)) ?? "", /ordinary work is held/, label);
+    assert.equal(await budget.lifetimeHunt.take(SEARCH_HOSTS.brave), null, label);
+    await budget.lifetimeHunt.done(SEARCH_HOSTS.brave);
+    assert.equal(await budget.lifetimeHunt.take(SEARCH_HOSTS.exa), null, `${label}: the second hunt request crosses both count caps`);
+    await budget.lifetimeHunt.done(SEARCH_HOSTS.exa);
+    assert.equal(budget.used(), 2);
+    assert.match((await budget.take(SEARCH_HOSTS.brave)) ?? "", /cycle's 1-request/, label);
+    assert.equal((await repos.budget.read()).value.vendors[DISCOVERY_SEARCH_VENDOR]?.dailyRequestCap, 1,
+      `${label}: the persisted nonhunt policy is unchanged`);
+    huntAllowed = false;
+    assert.match((await budget.lifetimeHunt.take(SEARCH_HOSTS.brave)) ?? "", /hunt provider held/, label);
+  }
+});
+
 test("WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method", async () => {
   for (const [label, repos] of await eachStore("wtp-search-walk-")) {
     const site = fakeOpen({

@@ -149,8 +149,15 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
   for (const previous of existing.members) {
     const retained = delivered.members.find(member => member.id === previous.id)!;
-    const { membershipSource: _source, ...facts } = retained;
+    const { membershipSource: _source, retainedFieldSources: _fieldSources, ...facts } = retained;
     assert.deepEqual(facts, previous, "independent existing fields and stable identities survive");
+    const earlierSource = { sourceUrl: existing.sourceUrl, sourceOrg: existing.sourceOrg, collectedAt: existing.collectedAt };
+    if (retained.membershipSource) {
+      assert.deepEqual(retained.membershipSource, earlierSource, "a wholly omitted member retains the earlier roster authority");
+    } else for (const field of ["termNote", "email", "phone", "websiteUrl"] as const) if (previous[field]) {
+      assert.deepEqual(retained.retainedFieldSources?.[field], earlierSource,
+        `the retained ${field} remains attributed to its original read`);
+    }
   }
   const added = delivered.members.find(member => member.name === "Morgan Example")!;
   assert.ok(added, "a newly verified holder reaches the existing reader projection");

@@ -95,6 +95,7 @@ import {
   type ExpansionScopeGeography,
 } from "../expansion/scopes.ts";
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
@@ -817,7 +818,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       type: "expansion.scope.set",
       label: "Select this geography for expansion",
       does:
-        "Records a geography you chose from the Census lookup, with its priority and its rolling 24-hour budget for paid work there, durably. " +
+        "Records a geography you chose from the Census lookup, with its priority and selected lifetime or rolling 24-hour budget for paid work there, durably. " +
         "When research is enabled, the standing runner wakes promptly for this Send. At the start of its next cycle it creates the work the registry defines there that no clock carries yet, and puts all work there first.",
       doesNot:
         `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_BOUNDS}. ` +
@@ -858,6 +859,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       let previous: { readonly priority: number; readonly budgetUsd: number } | null = null;
       let ceilingUsd: number;
       let lifetime = false;
+      let originalLifetime = false;
       try {
         const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
@@ -882,7 +884,10 @@ const REGISTRY: readonly RegisteredAction[] = [
           receiptId: context.receiptId,
         });
         previous = next.previous === null ? null : { priority: next.previous.priority, budgetUsd: next.previous.budgetUsd };
-        lifetime = Boolean(next.scopes.find(s => s.key === scopeKeyOf(geography))?.budgetStartedAt);
+        const selected = next.scopes.find(s => s.key === scopeKeyOf(geography));
+        lifetime = Boolean(selected?.budgetStartedAt);
+        originalLifetime = selected?.key === ORIGINAL_LIFETIME_HUNT.key && selected.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+          selected.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && selected.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd;
         const written = withExpansionScopes(current, { scopes: next.scopes, decidedAt: at });
         if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
         else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
@@ -900,7 +905,9 @@ const REGISTRY: readonly RegisteredAction[] = [
           "Recording it makes no model call itself. If research is enabled, the standing runner wakes promptly for this Send; if a cycle is already active, it finishes first. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
           `(${CREATION_BOUNDS}) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
           "Work that needs a model waits: the paid lane stays exactly as it is, " +
-          `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.` +
+          (originalLifetime
+            ? `and this exact original $${ORIGINAL_LIFETIME_HUNT.budgetUsd.toFixed(2)} lifetime hunt keeps its instruction receipt and allowance; the $${ceilingUsd.toFixed(2)} Fleet rolling ceiling does not bind its exact work. This action has its own saved receipt.`
+            : `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.`) +
           (questions.length > 0
             ? ` Your questions are kept on it and on every piece of work it reaches: ${questions.map((q) => WORK_QUESTION_WORDS[q]).join(" ")}`
             : ""),

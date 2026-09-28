@@ -8,6 +8,7 @@ import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
 import { COCHISE_VOTE_CENTERS_URL } from "../sources/cochise-vote-centers.ts";
 import { scheduledBlackoutAt } from "../control-plane/fleet-safety.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../control-plane/scheduler/hunt-continuation.ts";
+import { COCHISE_VOTING_SOURCE_TASK_ID } from "./voting-sites-source-task.ts";
 
 /** The owner did not pause the already-started original lifetime Send during
  * the scheduled blackout. Other Sends retain that policy unchanged. */
@@ -55,7 +56,8 @@ export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string, i
     const applicable = scopes.filter(scope => row.instructionIds.includes(scope.decision.receiptId));
     const contract = requiredManualProductionContract(row.id);
     return [{
-      id: row.id === "voting-sites" ? "voting-sites:cochise-2026" : row.id,
+      id: row.id === "voting-sites" ? COCHISE_VOTING_SOURCE_TASK_ID : row.id,
+      registeredContractId: contract.id,
       sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
       acquisitionFailureDomain: `routine-source:${contract.sourceId}`,
       requestedUrl: row.id === "voting-sites" ? COCHISE_VOTE_CENTERS_URL : "", authorityMode: "REGISTERED_SOURCE_ROUTES" as const,

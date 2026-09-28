@@ -2,7 +2,10 @@ import { ADMIN_EVIDENCE_STORE_NAME, type AdminEvidenceBlob, type AdminEvidenceCo
 
 /** Separate site-wide private namespace. Never use the public reader-artifacts store. */
 export class NetlifyAdminEvidenceRemote implements AdminEvidenceRemote {
-  constructor(private readonly credentials: { readonly siteID?: string; readonly token?: string } = {}) {}
+  private readonly credentials: { readonly siteID?: string; readonly token?: string };
+  constructor(credentials: { readonly siteID?: string; readonly token?: string } = {}) {
+    this.credentials = credentials;
+  }
 
   private async store() {
     const { getStore } = await import("@netlify/blobs");

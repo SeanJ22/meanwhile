@@ -30,7 +30,8 @@ export interface AdminEvidenceRemote {
 }
 
 export class AdminEvidenceRefusal extends Error {
-  constructor(readonly code: string) { super(code); this.name = "AdminEvidenceRefusal"; }
+  readonly code: string;
+  constructor(code: string) { super(code); this.code = code; this.name = "AdminEvidenceRefusal"; }
 }
 
 const sha = (bytes: Uint8Array): string => `sha256-${createHash("sha256").update(bytes).digest("hex")}`;

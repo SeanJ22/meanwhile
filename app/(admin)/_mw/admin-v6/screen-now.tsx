@@ -46,7 +46,7 @@ export function NowScreen() {
   return (
     <>
       <header>
-        <p className={s.eyebrow}>{v.place.name} · {v.period === "day" ? "Last 24 hours" : v.period === "hunt" ? "Whole hunt" : "September 2026"}</p>
+        <p className={s.eyebrow}>{v.place.name} · Account period: {v.period === "day" ? "Last 24 hours" : v.period === "hunt" ? "Whole hunt" : "September 2026"}</p>
         <h1 className={s.h1}>Now</h1>
       </header>
       {v.scopeKey === COUNTRY_KEY && <National />}

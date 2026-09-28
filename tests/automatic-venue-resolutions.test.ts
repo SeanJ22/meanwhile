@@ -1,9 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { automaticVenuePackage, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints, verifiedCensusVenuePoint } from "../lib/meetings/automatic-venue-resolutions.ts";
-import { derivedInputIssue } from "../lib/civic-data/derived-door.ts";
-import { absoluteEventSourceUrl } from "../lib/sources/ical/index.ts";
+import { absolutePublisherMeetingUrl, automaticVenuePackage, normalizeFamilyMeetingCitations, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints, verifiedCensusVenuePoint } from "../lib/meetings/automatic-venue-resolutions.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 
 const NOW = "2026-09-28T08:30:00.000Z";
@@ -57,8 +55,10 @@ test("a carried address cannot borrow a newer feed's acquisition receipt", async
 });
 
 test("an iCal event's relative URL becomes an absolute publisher link", () => {
-  assert.equal(absoluteEventSourceUrl("/calendar.aspx?EID=2980", FEED), "https://county.example.gov/calendar.aspx?EID=2980");
-  assert.equal(absoluteEventSourceUrl("javascript:alert(1)", FEED), FEED);
+  assert.equal(absolutePublisherMeetingUrl("/calendar.aspx?EID=2980", FEED), "https://county.example.gov/calendar.aspx?EID=2980");
+  assert.equal(absolutePublisherMeetingUrl("javascript:alert(1)", FEED), FEED);
+  assert.equal(normalizeFamilyMeetingCitations(snapshot.meetings, ROUTES)[0]?.provenance.sourceUrl,
+    "https://county.example.gov/calendar.aspx?EID=2980");
 });
 
 test("a retry retains only an exact previously verified sitting and address", () => {
@@ -66,13 +66,4 @@ test("a retry retains only an exact previously verified sitting and address", ()
   const prior = { ...fresh, location: { name: RAW, address: RAW, lat: 31.3939, lng: -109.9256 }, venueGap: undefined };
   assert.equal(retainPreviouslyVerifiedVenuePoints([fresh], [prior])[0]?.location?.lat, 31.3939);
   assert.equal(retainPreviouslyVerifiedVenuePoints([{ ...fresh, venueGap: { ...fresh.venueGap!, publishedText: "different address" } }], [prior])[0]?.location, null);
-});
-
-test("the derived family gate refuses a non-Census reference receipt", () => {
-  const reference = { kind: "REFERENCE_ACQUISITION" as const,
-    requestedUrl: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=1415+W+Melody+Ln+Bisbee+AZ+85603&benchmark=Public_AR_Current&format=json",
-    finalUrl: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
-    httpStatus: 200, rawHash: "a".repeat(64), retrievedAt: NOW };
-  assert.equal(derivedInputIssue(reference), null);
-  assert.match(derivedInputIssue({ ...reference, finalUrl: "https://example.com/geocoder/locations/onelineaddress" }) ?? "", /Census/);
 });

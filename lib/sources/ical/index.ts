@@ -102,16 +102,6 @@ import {
 
 const SOURCE_NAME = "ical";
 
-export function absoluteEventSourceUrl(eventUrl: string | null | undefined, feedUrl: string): string {
-  if (!eventUrl?.trim()) return feedUrl;
-  try {
-    const url = new URL(eventUrl, feedUrl);
-    return url.protocol === "https:" ? url.toString() : feedUrl;
-  } catch {
-    return feedUrl;
-  }
-}
-
 const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
 
@@ -1365,9 +1355,7 @@ export function makeIcalSource(
                 ? "CANCELED"
                 : statusOf(sitting.iso, now),
             provenance: {
-              // CivicPlus often puts a relative URL in the event. Resolve it
-              // against the acquired feed before it becomes a reader citation.
-              sourceUrl: absoluteEventSourceUrl(event.url, sourceUrl),
+              sourceUrl: event.url ?? sourceUrl,
               sourceOrg: wiring.publishingOrg,
               collectedAt,
               verifiedAt: null,

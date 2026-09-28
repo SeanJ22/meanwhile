@@ -11,6 +11,25 @@ const MAX_ADDRESSES_PER_PASS = 20;
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 const words = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const hasWords = (whole: string, part: string): boolean => ` ${whole} `.includes(` ${part} `);
+/** Resolve a relative event citation against the exact promoted publisher route. */
+export function absolutePublisherMeetingUrl(citation: string | null, route: string): string {
+  try {
+    const base = new URL(route);
+    const resolved = new URL(citation ?? "", base);
+    return base.protocol === "https:" && resolved.protocol === "https:" ? resolved.toString() : route;
+  } catch { return route; }
+}
+
+export function normalizeFamilyMeetingCitations(meetings: readonly Meeting[], routes: ReadonlyMap<string, string>): readonly Meeting[] {
+  return meetings.map((meeting): Meeting => {
+    const sourceId = meeting.id.split(":", 1)[0] ?? "";
+    const route = routes.get(`${sourceId}:${meeting.bodyId}`);
+    if (!route) return meeting;
+    const sourceUrl = absolutePublisherMeetingUrl(meeting.provenance.sourceUrl, route);
+    return sourceUrl === meeting.provenance.sourceUrl ? meeting
+      : { ...meeting, provenance: { ...meeting.provenance, sourceUrl } };
+  });
+}
 function samePublisherRoute(citation: string | null, acquired: string): boolean {
   if (!citation) return false;
   try {
@@ -86,8 +105,8 @@ export function retainPreviouslyVerifiedVenuePoints(meetings: readonly Meeting[]
 /**
  * Build an exact-source venue successor from already verified meeting acquisitions.
  * A failed or ambiguous geocode leaves the meeting's published address visible without a pin.
- * The clocked meeting-family caller names the Census receipts on its routine
- * derived candidate and promotes the placed meetings through that routine gate.
+ * The clocked meeting-family caller retains each exact Census receipt in the
+ * family read model and promotes the placed meetings through its routine gate.
  */
 export async function automaticVenuePackage(input: {
   readonly snapshot: MeetingsSnapshot;

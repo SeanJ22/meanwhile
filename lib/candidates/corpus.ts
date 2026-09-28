@@ -63,6 +63,29 @@ export type CandidateSourceClass =
  */
 export type CandidateUrlBasis = "HUNTED_AND_VERIFIED" | "STATED_IN_FILING";
 
+/** A source-stated publication date, not the time our crawler saw the page. */
+export interface CandidatePublicationDate {
+  readonly date: string;
+  readonly basis: "ARTICLE_PUBLISHED_TIME_META";
+  readonly artifactId: string;
+  readonly rawContentHash: string;
+  readonly start: number;
+  readonly end: number;
+  readonly quote: string;
+  readonly offsetUnit: "UTF16_CODE_UNITS";
+}
+
+/** One captured source revision; legacy corpus rows may lack this envelope. */
+export interface CandidateSourceRevision {
+  readonly revisionId: string;
+  readonly artifactId: string;
+  readonly canonicalUrl: string;
+  readonly rawContentHash: string;
+  readonly capturedAt: string;
+  readonly extractionVersion: number;
+  readonly supersedesRevisionId: string | null;
+}
+
 /** One retrieved version of one page. Append-only. */
 export interface CandidateDocument {
   /** `<candidateKey>@<contentHash>` — one row per distinct version. */
@@ -89,6 +112,9 @@ export interface CandidateDocument {
   /** New machine transcriptions keep the actual captured-byte hash separately
    * from the normalized text identity used by the existing corpus. */
   sourceContentHash?: string;
+  /** Present on newly derived captures; absent on retained older/manual rows. */
+  sourceRevision?: CandidateSourceRevision;
+  publicationDate?: CandidatePublicationDate;
   retrievedAt: string;
   contentType: string;
   /**
@@ -190,13 +216,24 @@ export type CandidateAnswer =
     };
 
 export interface MatchedPassage {
-  /** The candidate's own words, verbatim and short. */
+  /** Source text, verbatim and short; matching alone never establishes a personal stance. */
   quote: string;
   /** The phrase that matched, so the reader can see why this is here. */
   matchedPhrase: string;
   documentUrl: string;
   sourceClass: CandidateSourceClass;
   retrievedAt: string;
+  /** Exact span in extracted `document.text`, before display whitespace normalization. */
+  textStart?: number;
+  textEnd?: number;
+  textQuote?: string;
+  offsetUnit?: "UTF16_CODE_UNITS";
+  textContentHash?: string;
+  sourceRevisionId?: string;
+  sourceArtifactId?: string;
+  sourceContentHash?: string;
+  revisionStatus?: "CURRENT" | "HISTORICAL" | "UNKNOWN";
+  publicationDate?: CandidatePublicationDate;
 }
 
 /** What was actually searched. Rides on every answer that searched anything. */
@@ -206,6 +243,7 @@ export interface CorpusScope {
     documentUrl: string;
     sourceClass: CandidateSourceClass;
     retrievedAt: string;
+    revisionStatus?: "CURRENT" | "HISTORICAL" | "UNKNOWN";
   }>;
   /** Documents held but unreadable — counted, never read as empty. */
   unreadable: number;
@@ -215,6 +253,28 @@ export interface CorpusScope {
 const PASSAGE_CHARS = 320;
 /** Never more than this many passages per document — a quote, not a copy. */
 const MAX_PASSAGES_PER_DOCUMENT = 3;
+
+function exactExcerptSpan(text: string, at: number, matchLength: number): { start: number; end: number; quote: string } {
+  const half = Math.floor(PASSAGE_CHARS / 2);
+  let start = Math.max(0, at - half), end = Math.min(text.length, at + matchLength + half);
+  while (start > 0 && !/\s/.test(text[start - 1]!)) start -= 1;
+  while (end < text.length && !/\s/.test(text[end]!)) end += 1;
+  return { start, end, quote: text.slice(start, end) };
+}
+
+function revisionStatuses(documents: readonly CandidateDocument[]): Map<string, "CURRENT" | "HISTORICAL" | "UNKNOWN"> {
+  const latest = new Map<string, CandidateDocument>();
+  for (const doc of documents) {
+    if (!doc.sourceRevision) continue;
+    const key = `${doc.candidateKey}\u0000${doc.documentUrl}\u0000${doc.sourceRevision.extractionVersion}`;
+    const previous = latest.get(key);
+    if (!previous || doc.retrievedAt > previous.retrievedAt ||
+      (doc.retrievedAt === previous.retrievedAt && doc.sourceRevision.revisionId > previous.sourceRevision!.revisionId)) latest.set(key, doc);
+  }
+  return new Map(documents.map(doc => [doc.id, !doc.sourceRevision ? "UNKNOWN" :
+    latest.get(`${doc.candidateKey}\u0000${doc.documentUrl}\u0000${doc.sourceRevision.extractionVersion}`)?.id === doc.id
+      ? "CURRENT" : "HISTORICAL"]));
+}
 
 /**
  * Search one candidate's documents for a phrase set and build the answer.
@@ -237,11 +297,17 @@ export function answerFor(
   // F01-continued item 11: a page re-read by a newer extractor supersedes its
   // own older copy for reading. Both stay in the file.
   const readable = currentExtraction(documents).filter((d) => d.text);
+  const statuses = revisionStatuses(readable);
+  const ordered = [...readable].sort((a, b) => {
+    const rank = (doc: CandidateDocument) => statuses.get(doc.id) === "CURRENT" ? 0 : statuses.get(doc.id) === "UNKNOWN" ? 1 : 2;
+    return rank(a) - rank(b) || b.retrievedAt.localeCompare(a.retrievedAt) || a.id.localeCompare(b.id);
+  });
   const scope: CorpusScope = {
     documents: readable.map((d) => ({
       documentUrl: d.documentUrl,
       sourceClass: d.sourceClass,
       retrievedAt: d.retrievedAt,
+      revisionStatus: statuses.get(d.id) ?? "UNKNOWN",
     })),
     unreadable: documents.length - readable.length,
   };
@@ -263,7 +329,14 @@ export function answerFor(
    * were applied. (`scripts/chrome-sweep.mts` prints that number.)
    */
   const bySite = new Map<string, string[]>();
-  for (const doc of readable) {
+  const repetitionPages = new Set<string>();
+  for (const doc of readable.filter(row => statuses.get(row.id) !== "HISTORICAL")) {
+    // Three captures of the same URL and text are one page for the
+    // cross-page chrome test. The source versions remain held and searchable;
+    // they cannot manufacture a three-page repetition signal.
+    const pageIdentity = `${doc.documentUrl}\u0000${doc.text}`;
+    if (repetitionPages.has(pageIdentity)) continue;
+    repetitionPages.add(pageIdentity);
     let host = doc.documentUrl;
     try {
       host = new URL(doc.documentUrl).host;
@@ -275,7 +348,8 @@ export function answerFor(
   const repeatsBySite = new Map<string, ReturnType<typeof repeatedBlocks>>();
   for (const [host, texts] of bySite) repeatsBySite.set(host, repeatedBlocks(texts));
 
-  for (const doc of readable) {
+  const seenSourcePassages = new Set<string>();
+  for (const doc of ordered) {
     const haystack = doc.text!;
     const lower = haystack.toLowerCase();
     let host = doc.documentUrl;
@@ -309,13 +383,29 @@ export function answerFor(
         const key = quote.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
         if (repeats.has(key)) continue;
         if (seen.has(quote)) continue;
+        const sourcePassageKey = `${doc.candidateKey}\u0000${doc.documentUrl}\u0000${key}`;
+        if (seenSourcePassages.has(sourcePassageKey)) continue;
         seen.add(quote);
+        seenSourcePassages.add(sourcePassageKey);
+        const span = exactExcerptSpan(haystack, at, phrase.length);
         passages.push({
           quote,
           matchedPhrase: phrase,
           documentUrl: doc.documentUrl,
           sourceClass: doc.sourceClass,
           retrievedAt: doc.retrievedAt,
+          textStart: span.start,
+          textEnd: span.end,
+          textQuote: span.quote,
+          offsetUnit: "UTF16_CODE_UNITS",
+          ...(doc.sourceRevision ? {
+            textContentHash: doc.contentHash,
+            sourceRevisionId: doc.sourceRevision.revisionId,
+            sourceArtifactId: doc.sourceRevision.artifactId,
+            sourceContentHash: doc.sourceRevision.rawContentHash,
+            revisionStatus: statuses.get(doc.id) ?? "UNKNOWN",
+            ...(doc.publicationDate ? { publicationDate: doc.publicationDate } : {}),
+          } : { revisionStatus: "UNKNOWN" as const }),
         });
         found += 1;
       }
@@ -352,10 +442,10 @@ export function answerSentence(answer: CandidateAnswer, topicLabel: string): str
   const dates = [...new Set(answer.scope.documents.map((d) => d.retrievedAt.slice(0, 10)))]
     .sort()
     .join(", ");
-  const base =
-    n === 1
-      ? `We searched the one page we hold from them, read ${dates}`
-      : `We searched the ${n} pages we hold from them, read ${dates}`;
+  const versioned = answer.scope.documents.some(doc => doc.revisionStatus !== "UNKNOWN");
+  const base = n === 1
+    ? `We searched the one page we hold from them, read ${dates}`
+    : `We searched the ${n} ${versioned ? "page versions" : "pages"} we hold from them, read ${dates}`;
   const unreadable =
     answer.scope.unreadable > 0
       ? ` We hold ${answer.scope.unreadable} more we couldn't read, so ${answer.scope.unreadable === 1 ? "it isn't" : "they aren't"} included.`
@@ -367,6 +457,6 @@ export function answerSentence(answer: CandidateAnswer, topicLabel: string): str
   const count = answer.passages.length;
   return (
     `${base}. ${count} passage${count === 1 ? "" : "s"} mention${count === 1 ? "s" : ""} ` +
-    `${topicLabel}, in their own words below.${unreadable}`
+    `${topicLabel}, in the source pages below.${unreadable}`
   );
 }

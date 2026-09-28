@@ -109,6 +109,38 @@ test("D05: every answer that searched carries its own scope", () => {
   }
 });
 
+test("source revisions preserve a removed passage as historical and never duplicate unchanged current text", () => {
+  const old = doc({ id: "k@old", text: "We will build more homes.", retrievedAt: "2026-09-20T00:00:00.000Z",
+    sourceRevision: { revisionId: "old", artifactId: "ar-old", canonicalUrl: "https://example.org/",
+      rawContentHash: "raw-old", capturedAt: "2026-09-20T00:00:00.000Z", extractionVersion: 2, supersedesRevisionId: null },
+    extractorVersion: 2 });
+  const current = doc({ id: "k@new", text: "We will improve transit.", retrievedAt: "2026-09-21T00:00:00.000Z",
+    sourceRevision: { revisionId: "new", artifactId: "ar-new", canonicalUrl: "https://example.org/",
+      rawContentHash: "raw-new", capturedAt: "2026-09-21T00:00:00.000Z", extractionVersion: 2, supersedesRevisionId: "old" },
+    extractorVersion: 2 });
+  const historical = answerFor([old, current], ["homes"]);
+  assert.equal(historical.kind, "MATCHED");
+  if (historical.kind === "MATCHED") {
+    assert.equal(historical.passages[0]?.revisionStatus, "HISTORICAL");
+    assert.equal(old.text?.slice(historical.passages[0]!.textStart, historical.passages[0]!.textEnd), historical.passages[0]?.textQuote);
+  }
+  const repeated = answerFor([old, { ...current, text: old.text }], ["homes"]);
+  assert.equal(repeated.kind, "MATCHED");
+  if (repeated.kind === "MATCHED") {
+    assert.equal(repeated.passages.length, 1);
+    assert.equal(repeated.passages[0]?.revisionStatus, "CURRENT");
+  }
+});
+
+test("three captured revisions of one unchanged page cannot become three chrome pages", () => {
+  const same = "We will build more homes and cut the cost of housing across the state.";
+  const copies = [1, 2, 3].map(number => doc({ id: `k@capture-${number}`, text: same,
+    retrievedAt: `2026-09-${String(20 + number).padStart(2, "0")}T00:00:00.000Z` }));
+  const answer = answerFor(copies, ["cost of housing"]);
+  assert.equal(answer.kind, "MATCHED", "same-URL captures cannot suppress their own text as repeated site chrome");
+  if (answer.kind === "MATCHED") assert.equal(answer.passages.length, 1);
+});
+
 test("D05: a passage is a short quote with its link and date, never the page", () => {
   const long = "x ".repeat(4000) + "affordable housing " + "y ".repeat(4000);
   const answer = answerFor([doc({ text: long })], ["affordable housing"], null);

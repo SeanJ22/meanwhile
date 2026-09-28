@@ -36,9 +36,13 @@ export async function runCandidatePublicationCycle(input: {
   readonly spaceOut?: (host: string) => Promise<void>;
   readonly maxReads?: number;
   readonly budgetMs?: number;
+  /** Replay may compress the clock; production keeps the seven-day default. */
+  readonly recheckMs?: number;
 }): Promise<CandidatePublicationCycleReport> {
   const empty = { inventoried: 0, due: 0, acquired: 0, deferred: 0, failed: 0, outcomes: [] } as const;
   if (!input.eligibleCandidacyIds.size) return empty;
+  const recheckMs = input.recheckMs ?? CANDIDATE_PUBLICATION_RECHECK_MS;
+  if (!Number.isFinite(recheckMs) || recheckMs < 0) throw new Error("CANDIDATE_PUBLICATION_RECHECK_INVALID");
   const deadline = input.clock() + (input.budgetMs ?? CANDIDATE_PUBLICATION_BUDGET_MS);
   const recorder = campaignSiteReadRecorder({ repos: input.repos, vaultRoot: input.vaultRoot,
     methodVersion: input.methodVersion, now: () => new Date(input.clock()).toISOString(), heldVault: input.heldVault });
@@ -101,7 +105,7 @@ export async function runCandidatePublicationCycle(input: {
       row.canonicalUrl === link.url && !row.partial &&
       held !== undefined && held.contentHash === row.contentHash && held.workItemId === row.workItemId &&
       attempt?.outcome === "COMPLETED" && attempt.artifactIds.includes(row.artifactId) &&
-      Date.parse(row.recordedAt) > now - CANDIDATE_PUBLICATION_RECHECK_MS;
+      Date.parse(row.recordedAt) > now - recheckMs;
   })).sort((a, b) => {
     const aKey = `${a.source.candidacyId}\u0000${a.url}`, bKey = `${b.source.candidacyId}\u0000${b.url}`;
     return (lastAttemptByLink.get(aKey) ?? -Infinity) - (lastAttemptByLink.get(bKey) ?? -Infinity) || aKey.localeCompare(bKey);

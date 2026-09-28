@@ -179,6 +179,9 @@ test("each readable canonical statement subject can be searched without a genera
     const result = statementEvidenceFor({ kind: "PERSON", id: key, name: "This person" }, `What is the position on ${topic}?`, [key]);
     assert.ok(result.records.length, key);
     assert.ok(result.records.every((r) => readerPersonKeys(key).keys.includes(r.canonicalSubjectId!) && r.sourceUrl));
+    assert.ok(result.records.every((r) => /Searching a held (campaign|official) page linked to/.test(r.text) &&
+      /captured version|Source version status unknown/.test(r.text) &&
+      /does not establish a personal stance/.test(r.text)), key);
     tested += 1;
   }
   assert.ok(tested >= 40, `real current corpus: ${tested} subjects with quotable passages`);

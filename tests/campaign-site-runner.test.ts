@@ -50,6 +50,7 @@ import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedAuthorityFor } from "../lib/civic-data/derived-door.ts";
 import { refreshCandidateProfilesFromPromoted, refreshCandidateCorpusFromPromoted } from "../lib/civic-data/manual-read-models.ts";
 import { documentsFor } from "../lib/candidates/positions.ts";
+import { answerFor } from "../lib/candidates/corpus.ts";
 import { derivedCampaignSitesProjectionIssue } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   CAMPAIGN_SITE_VERIFICATION_TEMPLATE,
@@ -306,7 +307,7 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   await cycle(p, T1);
   await cycle(p, T2);
   const articleUrl = "https://www.lilytangwilliams.com/congress/issues/";
-  const article = "<html><main><h1>Priorities</h1><p>Our campaign supports accessible health care.</p></main></html>";
+  const article = "<html><!-- <meta property=\"article:published_time\" content=\"2026-09-01\"> --><head><script>const old = '<meta property=\"article:published_time\" content=\"2026-09-02\">';</script><meta property=\"article:published_time\" content=\"2026-09-22\"></head><main><h1>Priorities</h1><p>Our campaign supports accessible health care.</p></main></html>";
   const pages = { ...served(),
     "https://www.lilytangwilliams.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /congress/issues/\n" },
     [articleUrl]: { status: 200, body: article } };
@@ -345,6 +346,10 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   assert.equal(promoted.candidate.state, "PROMOTED", JSON.stringify(promoted.candidate.receipt?.checks.filter(row => row.verdict !== "PASS")));
   await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: new Date(clock.ms + 2000).toISOString() });
   assert.ok(documentsFor(key).some(row => row.documentUrl === articleUrl && row.text?.includes("accessible health care")));
+  const firstDocument = documentsFor(key).find(row => row.documentUrl === articleUrl)!;
+  assert.equal(firstDocument.publicationDate?.date, "2026-09-22");
+  assert.equal(article.slice(firstDocument.publicationDate!.start, firstDocument.publicationDate!.end), firstDocument.publicationDate!.quote);
+  assert.notEqual(firstDocument.publicationDate?.date, firstDocument.retrievedAt.slice(0, 10), "source publication date is not a retrieval date");
 
   const corrupted = { ...linked, body: linked.body.replace("health care", "fabricated claim") };
   const refused = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held,
@@ -352,6 +357,49 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   assert.equal(refused.plan?.held.some(row => row.code === "LINKED_PUBLICATION_UNVERIFIED"), true);
   assert.equal(refused.plan?.records.flatMap(row => row.publications ?? []).some(row => row.document.documentUrl === articleUrl), false);
   assert.ok(documentsFor(key).some(row => row.documentUrl === articleUrl), "An invalid later read does not replace the previously promoted document.");
+
+  /* The page changes its raw publication metadata without changing visible text.
+   * Both source revisions must remain, while one current quote reaches the Reader. */
+  clock.ms += 60 * 60 * 1000;
+  const revisedArticle = article.replace("2026-09-22", "2026-09-23");
+  const revisedWeb = servedRuntime({ ...pages, [articleUrl]: { status: 200, body: revisedArticle } }, new Date(clock.ms).toISOString());
+  const revisedRun = await runCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+    heldVault: await indexVault(p.vaultRoot), vaultRoot: p.vaultRoot, methodVersion: 1,
+    clock: () => (clock.ms += 5), sleep: async ms => { clock.ms += ms; }, openFor: () => revisedWeb.get,
+    maxReads: 100, budgetMs: 300_000, recheckMs: 30 * 60 * 1000 });
+  assert.equal(revisedRun.outcomes.some(row => row.url === articleUrl && row.code === "ACQUIRED"), true, JSON.stringify(revisedRun.outcomes));
+  const second = (await p.repos.artifacts.readAll()).find(row => row.canonicalUrl === articleUrl && row.publicationLink && row.artifactId !== capture.artifactId)!;
+  assert.ok(second);
+  const secondVault = (await indexVault(p.vaultRoot)).byId.get(second.artifactId)!;
+  assert.ok(secondVault);
+  const revisedLinked: HeldLinkedPublicationRead = { record: second, attempt: (await p.repos.attempts.mustRead(second.attemptId)).value,
+    workItemSubject: (await p.repos.workItems.mustRead(second.workItemId)).value.subject,
+    body: new TextDecoder().decode(await readHeldBytes(secondVault)), vaultSha256: secondVault.contentHash.slice(7),
+    vaultCanonicalUrl: secondVault.canonicalUrl, vaultRetrievalUrl: secondVault.retrievalUrl,
+    vaultWorkItemId: secondVault.workItemId, vaultAttemptId: secondVault.attemptId, vaultHttpStatus: secondVault.httpStatus,
+    vaultContentType: secondVault.contentType, vaultMethodRouteId: secondVault.methodRouteId, vaultPermission: secondVault.permission };
+  const revisionPass = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held,
+    linkedPublications: [linked, revisedLinked], profiles, gateOpen: true, now: new Date(clock.ms + 1000).toISOString() });
+  const revisions = revisionPass.plan!.records.find(row => row.id === key)!.publications!.filter(row => row.document.documentUrl === articleUrl);
+  assert.equal(revisions.length, 2);
+  assert.equal(revisions[0]!.document.contentHash, revisions[1]!.document.contentHash, "visible text is unchanged");
+  assert.notEqual(revisions[0]!.document.id, revisions[1]!.document.id, "raw revisions retain distinct identity");
+  assert.equal(revisions[1]!.document.sourceRevision?.supersedesRevisionId, revisions[0]!.document.sourceRevision?.revisionId);
+  assert.equal(revisions[1]!.document.publicationDate?.date, "2026-09-23");
+  const revisedPromotion = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived", revisionPass.candidate,
+    new Date(clock.ms + 1000).toISOString());
+  assert.equal(revisedPromotion.candidate.state, "PROMOTED");
+  await refreshCandidateCorpusFromPromoted({ store, bypassCache: true, now: new Date(clock.ms + 2000).toISOString() });
+  const answer = answerFor(documentsFor(key), ["health care"]);
+  assert.equal(answer.kind, "MATCHED");
+  if (answer.kind === "MATCHED") {
+    assert.equal(answer.passages.length, 1, "unchanged source text is not counted twice");
+    const passage = answer.passages[0]!;
+    assert.equal(passage.revisionStatus, "CURRENT");
+    assert.equal(passage.publicationDate?.date, "2026-09-23");
+    assert.equal(revisions[1]!.document.text!.slice(passage.textStart, passage.textEnd), passage.textQuote);
+    assert.equal(passage.sourceRevisionId, revisions[1]!.document.sourceRevision?.revisionId);
+  }
 });
 
 test("a blocked first linked page records a route Attempt and yields the next page on the next bounded pass", async (t) => {

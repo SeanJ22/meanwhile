@@ -13,6 +13,7 @@ import { officeIdentity } from "../officials/office-identity.ts";
 import { reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
 import type { MeasureAnalysis } from "../ballot/analyses.ts";
 import { readerContestScope } from "../ballot/reader-scope.ts";
+import type { CandidatePublicationDate, CandidateSourceClass } from "../candidates/corpus.ts";
 
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -347,6 +348,14 @@ export interface BallotRetrievalDeps {
     quote: string;
     documentUrl: string;
     retrievedAt: string;
+    sourceClass?: CandidateSourceClass;
+    sourceRevisionId?: string;
+    sourceArtifactId?: string;
+    sourceContentHash?: string;
+    textStart?: number;
+    textEnd?: number;
+    revisionStatus?: "CURRENT" | "HISTORICAL" | "UNKNOWN";
+    publicationDate?: CandidatePublicationDate;
   }[];
   /** The plain-language measure summary and the analysis it cites. */
   measureSummary?: (contestId: string) => { summary: string; summarizesUrl: string } | null;
@@ -513,6 +522,17 @@ export function ballotRecordsFor(
   ).values()];
   denominators.sourcedPositionPassages = positions.length;
   for (const [index, position] of positions.entries()) {
+    const source = position.sourceClass === "CAMPAIGN_SITE" ? "campaign page" :
+      position.sourceClass === "OFFICIAL_SITE" ? "official page" : "held public page";
+    const version = position.revisionStatus === "CURRENT" ? "Latest captured version." :
+      position.revisionStatus === "HISTORICAL" ? "Earlier captured version, not the latest captured page." :
+        "Source version status is unknown.";
+    const publication = position.publicationDate
+      ? ` Source-stated publication date ${position.publicationDate.date}.` : "";
+    const span = position.sourceRevisionId && position.sourceArtifactId &&
+      Number.isSafeInteger(position.textStart) && Number.isSafeInteger(position.textEnd)
+      ? ` Source revision ${position.sourceRevisionId}, capture ${position.sourceArtifactId}, extracted UTF-16 span ${position.textStart}-${position.textEnd}.`
+      : "";
     records.push({
       /*
        * **A POSITION IS A QUOTE, NEVER A CHARACTERISATION — and the sentence
@@ -531,10 +551,11 @@ export function ballotRecordsFor(
        * thing one step quieter.
        */
       kind: "POSITION",
-      id: `${record.id}#position-${index}`,
+      id: `${record.id}#position-${position.sourceRevisionId ?? index}`,
       text:
-        `Searching ${record.name}'s published material for ${position.issueLabel} ` +
-        `found this passage: "${position.quote}"`,
+        `Searching a ${source} linked to ${record.name} for ${position.issueLabel} ` +
+        `found this passage: "${position.quote}". ${version}${publication}${span} ` +
+        "A phrase match does not establish the candidate's personal stance or the passage's speaker.",
       sourceUrl: position.documentUrl,
       retrievedAt: position.retrievedAt,
     });

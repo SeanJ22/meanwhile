@@ -36,14 +36,28 @@ export function statementEvidenceFor(
     gaps.push({ whose: "OURS", statement: error instanceof ReaderPersonIdentityError ? error.message : `The published statements for ${subject.name} could not be read for this answer.` });
     return { records, gaps, denominators };
   }
-    for (const passage of answer.passages) {
+  const snapshots = new Map(corpus.snapshots.map(snapshot => [snapshot.id, snapshot]));
+  const latestBySource = new Map<string, string>();
+  for (const snapshot of corpus.snapshots) {
+    const key = `${snapshot.subjectId}\u0000${snapshot.url}`;
+    const previous = snapshots.get(latestBySource.get(key) ?? "");
+    if (!previous || snapshot.retrievedAt > previous.retrievedAt ||
+      (snapshot.retrievedAt === previous.retrievedAt && snapshot.id > previous.id)) latestBySource.set(key, snapshot.id);
+  }
+  for (const passage of answer.passages) {
+    const snapshot = snapshots.get(passage.snapshotId);
+    const source = passage.kind === "CAMPAIGN_SITE" ? "campaign page" : "official page";
+    const latest = snapshot ? latestBySource.get(`${snapshot.subjectId}\u0000${snapshot.url}`) : null;
+    const version = latest === null || latest === undefined ? "Source version status unknown." :
+      latest === passage.snapshotId ? "Latest captured version." : "Earlier captured version, not the latest captured page.";
       records.push({
         kind: "POSITION", id: passage.snapshotId, subjectId: subject.id,
         canonicalSubjectId: passage.canonicalSubjectId,
-        text: `Searching ${subject.name}'s published material for ${topic} found this passage: "${passage.quote}"`,
+        text: `Searching a held ${source} linked to ${subject.name} for ${topic} found this passage: "${passage.quote}". ` +
+          `${version} Read ${passage.retrievedAt}. A phrase match does not establish a personal stance or the passage's speaker.`,
         sourceUrl: passage.url, retrievedAt: passage.retrievedAt,
       });
-    }
+  }
   denominators.statementSnapshotsRead = answer.searched.snapshots;
   denominators.statementPagesRead = answer.searched.pages;
   denominators.statementSnapshotsUnreadable = answer.searched.unreadable;

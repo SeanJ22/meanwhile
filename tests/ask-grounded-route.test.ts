@@ -623,11 +623,12 @@ test("RECORDS: a position record states the SEARCH, never a stance", async () =>
    */
   const body = await ask("What has Katie Hobbs done?", { surface: "BALLOT" });
   for (const record of (body.records ?? []).filter((r) => r.kind === "POSITION")) {
-    assert.match(record.text, /^Searching .+ published material for /);
+    assert.match(record.text, /^Searching a (campaign|official|held public) page linked to .+ for /);
     assert.ok(
       !/^On .+ published:/.test(record.text),
       "a matched passage is not a statement ON the issue that matched it",
     );
+    assert.match(record.text, /A phrase match does not establish the candidate's personal stance/);
     assert.ok(record.sourceUrl, "and it carries the document it was read from");
   }
 });

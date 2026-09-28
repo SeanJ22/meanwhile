@@ -3178,10 +3178,16 @@ if (!dry && !canary) {
 // Leave a minute after the last worker for staging and the Admin state/heartbeat.
 // A prior cycle's late worker ended at the dispatch deadline, then its final
 // research state and heartbeat could not start before the hard wall.
-const autonomousDeadlineMs = DISPATCH_DEADLINE_MS - 60_000;
+// Selection can read several complete repositories before it admits a worker.
+// Its own store budget must end before finalization starts, while a worker
+// admitted earlier still has time to finish and settle. This is a technical
+// slice boundary, not a count or spend cap: undispatched work remains owed.
+const autonomousStoreDeadlineMs = lateWorkDeadlineMs(CLOCK) - 15_000;
+const autonomousDeadlineMs = Math.min(DISPATCH_DEADLINE_MS - 60_000, autonomousStoreDeadlineMs - 30_000);
 if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt) && Date.now() + 150_000 < autonomousDeadlineMs) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
+    await withStoreBudget("autonomous-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
     /* The autonomous Fleet's model transport, under the Fleet ceiling: built only while the paid lane is open. */
     const fleetTransport = modelLaneEnabled ? boundedAuditTransport(workerKey) : null;
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
@@ -3203,7 +3209,9 @@ if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt) && Date.now() + 1
     const heldWorkerAdmissionMs = 240_000;
     const heldFirst = Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs
       ? await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-          maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
+          maximumDispatches: 1, deadlineMs: autonomousDeadlineMs,
+          onDeferred: reason => runtimeConditions.push(`held worker deferred: ${reason}`),
+          admitDispatch: work => fleetSafety.admitDispatch(work),
         })
       : [];
     const autonomous = await runAutonomousCoordinator(fleet, { concurrency: 4,
@@ -3224,7 +3232,9 @@ if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt) && Date.now() + 1
     const remaining = Number.POSITIVE_INFINITY;
     for (let slot = 0; slot < remaining && Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs; slot += 1) {
       const next = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-        maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
+        maximumDispatches: 1, deadlineMs: autonomousDeadlineMs,
+        onDeferred: reason => runtimeConditions.push(`held worker deferred: ${reason}`),
+        admitDispatch: work => fleetSafety.admitDispatch(work),
       });
       legacy.push(...next);
       if (next.length === 0) break;
@@ -3234,11 +3244,14 @@ if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt) && Date.now() + 1
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
     if (fleetDispatches.some(row => row.outcome === "WORKED")) await projectRetainedFacts("new-worker-results:fact-projection");
+    });
   } catch (error) {
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
   } finally {
     leaveAutonomous();
   }
+} else if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt)) {
+  runtimeConditions.push("autonomous work deferred: the remaining technical slice could not admit and settle another normal worker before the cycle's finalization reserve; work remains owed");
 }
 finishPhase("autonomous-workers-and-projection");
 /* ------------------------------------------------------- the promotion tail --- */

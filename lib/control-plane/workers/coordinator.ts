@@ -3,6 +3,7 @@ import type { WorkItem } from "../work-item.ts";
 import { ZERO_COST } from "../attempt.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from "../repository/types.ts";
+import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
 import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
@@ -367,11 +368,27 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const minimumDispatchWallMs=Math.min(WORKER_MAX_WALL_MS,RESEARCH_BOUNDS.perDispatch.maxWallMs);
   const hasDispatchTime=()=>Date.now()+minimumDispatchWallMs<=(options.deadlineMs??Infinity);
   let cursor=0; let admitted=0; let scoutsAdmitted=0; let scoutsLimitedAdmitted=0;
-  await Promise.all(Array.from({length:concurrency},async()=>{
+  // Join every admitted lane even when another lane's selection fails. An
+  // early Promise.all rejection would let an already dispatched paid worker
+  // continue after the cycle began its final records.
+  const lanes=await Promise.allSettled(Array.from({length:concurrency},async()=>{
     while(cursor<ids.length && admitted<maximum && hasDispatchTime()) {
       const id=ids[cursor++];
       try {
-      const d=await nextAutonomousOperation(runtime,id,items.map(row=>row.value)); decisions.push(d);
+      let d: AutonomousDecision;
+      try {
+        d=await nextAutonomousOperation(runtime,id,items.map(row=>row.value));
+      } catch (error) {
+        // Only a bounded, pre-dispatch selection can be deferred as unpaid
+        // work. A timeout after dispatch may carry unknown provider exposure
+        // and must reach the ordinary durable attempt/hold failure path.
+        if (isControlPlaneRequestTimeout(error) && error.kind === "DEADLINE") {
+          deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"the bounded cycle ended during repository selection; this work remains owed"});
+          break;
+        }
+        throw error;
+      }
+      decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
       const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:WORKER_MAX_WALL_MS;
@@ -424,6 +441,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       }
     }
   }));
+  const failed=lanes.find((lane): lane is PromiseRejectedResult => lane.status==="rejected");
+  if(failed) throw failed.reason;
   for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
     ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
     : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});

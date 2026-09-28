@@ -149,7 +149,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
       const lastScout=scoutHistory.find(result=>result.attemptId===latest!.id);
       const continuation=createRouteTask({workItemId:item.id,routeId:`${baseRouteId}:continue:${latest.id}`,
-        routeLabel:`${scope} Continue after ${latest.id}; next: ${lastScout?.nextRungs.join("; ") || "reassess the remaining authoritative source methods"}`,
+        routeLabel:`${scope} Continue after ${latest.id}; next: ${Array.isArray(lastScout?.nextRungs) ? lastScout.nextRungs.filter((value): value is string => typeof value === "string").join("; ") || "reassess the remaining authoritative source methods" : "reassess the remaining authoritative source methods"}`,
         target:created.target,inherited:false,now});
       const existing=await repos.routeTasks.read(continuation.id);
       if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now)) return decision("BLOCKED",`Scout completed without settling the obligation; its next rungs remain owed after ${debt.retryAt}.`,task);

@@ -106,10 +106,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
               const issues="warnings" in result?result.warnings:result.findings;
               return `${w.id}: ${result.role} ${result.verdict}; recorded at ${w.endedAt}; issues ${issues.map(i=>i.code).join(", ") || "none recorded"}; unresolved results do not establish absence.`;
             }),
-            ...history.map(p=>`${p.attemptId}: ${p.outcome}; next ${p.nextRungs.join(", ")}`)].join("\n"),
+            ...history.map(p=>`${p.attemptId}: ${p.outcome}; next ${Array.isArray(p.nextRungs) ? p.nextRungs.filter((value): value is string => typeof value === "string").join(", ") : "stored list unreadable"}`)].join("\n"),
             priorRungs:[...history.flatMap(p=>p.rungs.map(r=>({rung:r.rung,tool:r.tool,target:r.target,observed:r.observed,ok:r.ok??null,at:r.at,attemptId:p.attemptId}))),
               ...walks.map(w=>({rung:w.rung,tool:w.tool,target:w.target,observed:w.observed,ok:w.outcome==="BLOCKED"?false:w.transport==="REACHABLE"?true:null,at:w.at,attemptId:w.attemptId}))],
-            nextRungs:[...new Set([...(history.at(-1)?.nextRungs??[]),...walks.flatMap(w=>w.nextRouteIds)])]},
+            nextRungs:[...new Set([...(Array.isArray(history.at(-1)?.nextRungs)
+              ? history.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string") : []),...walks.flatMap(w=>w.nextRouteIds)])]},
           tools:{spaceOut:tools.spaceOut,vault:async()=>{throw new Error("UNBOUND_SCOUT_VAULT_REFUSED");}},decision:"BOUNDED_MODEL_WORKER" as const};
       },onResult:async (result,artifacts)=>{
         let recorded=result;

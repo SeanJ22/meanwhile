@@ -1951,10 +1951,15 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const debt = debtsIn.find((d) => d.obligationId === id);
   const lines: string[] = [];
   for (const r of prior) {
+    // A retained legacy result can carry a non-array nextRungs value. Keep
+    // the evidence and resume from recorded rungs instead of aborting a Scout.
+    const nextRungs = Array.isArray(r.nextRungs)
+      ? r.nextRungs.filter((value): value is string => typeof value === "string")
+      : [];
     lines.push(
       `PRIOR SCOUT ${r.recordedAt}: ${r.refusal ? `REFUSED (${r.refusal.map((i) => i.code).join(", ")})` : r.outcome} (${r.stoppedBy}); ` +
         `rungs: ${r.rungs.map((g) => `${g.rung} -> ${g.target} [${g.observed}]`).join("; ") || "none"}; ` +
-        `next rungs it named: ${r.nextRungs.join("; ") || "none"}; ` +
+        `next rungs it named: ${nextRungs.join("; ") || "none"}${Array.isArray(r.nextRungs) ? "" : " (stored list unreadable; re-evaluate from retained rungs)"}; ` +
         `candidates: ${r.candidates.map((c) => `${c.routeId} <${c.url}>`).join(", ") || "none"}`,
     );
   }
@@ -2021,7 +2026,9 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     summary: [...manualLines, ...lines].join("\n"),
     provenance,
     priorRungs,
-    nextRungs: all.at(-1)?.nextRungs ?? [],
+    nextRungs: Array.isArray(all.at(-1)?.nextRungs)
+      ? all.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string")
+      : [],
   };
 }
 

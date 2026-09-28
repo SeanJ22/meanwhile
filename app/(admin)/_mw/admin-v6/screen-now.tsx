@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
 import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
-import { count, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StuckItem } from "./model.ts";
+import { count, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
@@ -68,6 +68,11 @@ export function NowScreen() {
 
 type NatSort = "stuck" | "hunts" | "items" | "name";
 
+function compareRows(sort: NatSort, a: StateRow, b: StateRow): number {
+  const by = sort === "stuck" ? (b.stuck ?? -1) - (a.stuck ?? -1) : sort === "hunts" ? (b.hunts ?? -1) - (a.hunts ?? -1) : sort === "items" ? (b.checklistItems ?? -1) - (a.checklistItems ?? -1) : 0;
+  return by || a.name.localeCompare(b.name);
+}
+
 function National() {
   const v = useV6();
   const [sort, setSort] = useState<NatSort>("stuck");
@@ -75,13 +80,7 @@ function National() {
   const rows = v.data.national.data ?? [];
   const known = v.data.national.state === "live" || v.data.national.state === "sample";
   const byCode = new Map(rows.map((r) => [r.code, r]));
-  const cmp: Record<NatSort, (a: (typeof rows)[number], b: (typeof rows)[number]) => number> = {
-    name: (a, b) => a.name.localeCompare(b.name),
-    stuck: (a, b) => (b.stuck ?? -1) - (a.stuck ?? -1) || a.name.localeCompare(b.name),
-    hunts: (a, b) => (b.hunts ?? -1) - (a.hunts ?? -1) || a.name.localeCompare(b.name),
-    items: (a, b) => (b.checklistItems ?? -1) - (a.checklistItems ?? -1) || a.name.localeCompare(b.name),
-  };
-  const sorted = [...rows].sort(cmp[sort]);
+  const sorted = [...rows].sort((a, b) => compareRows(sort, a, b));
   const shown = all ? sorted : sorted.filter((r) => r.tracked || (r.hunts ?? 0) > 0);
   const hunts = rows.reduce((a, r) => a + (r.hunts ?? 0), 0);
   const tracked = rows.filter((r) => r.tracked).length;

@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, Swatch } from "./charts.tsx";
 import { useV6, type Detail } from "./context.tsx";
-import { STAGE_NAMES, type ActionRef, type SavedDoc } from "./model.ts";
+import { mst, STAGE_NAMES, type ActionRef, type SavedDoc } from "./model.ts";
 import { relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { TaskStages } from "./screen-fix.tsx";
@@ -82,7 +82,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
                   {st.facts && (
                     <div className={s.tableWrap}><table className={s.table}><tbody>{st.facts.map((f) => <tr key={f.field}><td>{f.field}</td><td>{f.value}</td><td className={/conflict|retained|missing|not|wrong|hidden/i.test(f.note) ? s.textWarn : s.textGood}>{f.note}</td></tr>)}</tbody></table></div>
                   )}
-                  {st.publicLink && <span className={s.small}><a href={st.publicLink.url} target="_blank" rel="noreferrer noopener">{st.publicLink.label} ↗</a>{st.publicLink.seenAt ? <span className={s.dim}> · seen {st.publicLink.seenAt}</span> : <span className={s.textWarn}> · not seen on the page</span>}</span>}
+                  {st.publicLink && <span className={s.small}><a href={st.publicLink.url} target="_blank" rel="noreferrer noopener">{st.publicLink.label} ↗</a>{st.publicLink.seenAt ? <span className={s.dim}> · seen {mst(st.publicLink.seenAt)}</span> : <span className={s.textWarn}> · not seen on the page</span>}</span>}
                   <Technical lines={st.technical ?? []} />
                 </div>
               </li>

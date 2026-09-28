@@ -21,13 +21,14 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
   const follow: ReactElement[] = [];
   if (r.status === "unknown") {
     follow.push(
-      <button key="check" type="button" className={s.btn} aria-disabled={checkWhy ? "true" : undefined} title={checkWhy ?? "Asks what happened. Doesn’t do it again."}
+      <button key="check" type="button" className={s.btn} aria-disabled={checkWhy ? "true" : undefined} title={checkWhy ? checkWhy : "Asks what happened. Doesn’t do it again."}
         onClick={() => { if (!checkWhy) v.check(r); }}>Check what happened</button>,
     );
   }
   if ((r.status === "failed" || r.status === "refused") && r.kind !== "decide") follow.push(<ActionButton key="again" action={{ kind: r.kind, target: r.target }} label="Try again" />);
   if (r.kind === "decide" && r.status === "refused") follow.push(<ActionButton key="other" action={{ kind: "decide", target: r.target }} label="Choose another option" />);
   if (r.kind === "contain" && r.status === "done") follow.push(<ActionButton key="undo" action={{ kind: "uncontain", target: r.target }} label="Undo" />);
+  const readBack = r.readBackAt; // a console path, not a time
   const reached = LIFECYCLE_WORDS.filter(([k]) => r.lifecycle[k] !== null);
   return (
     <article className={s.row} aria-label={`${r.label}: ${r.statusWords}`}>
@@ -67,7 +68,7 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
       {!!follow.length && <div className={s.inline}>{follow}</div>}
       {checkWhy && <p className={s.why}>{checkWhy}</p>}
       {!props.compact && (
-        <Technical lines={[`action key ${r.key}`, `kind ${r.kind} · target ${r.target}`, ...(r.gatewayReceiptId ? [`gateway receipt ${r.gatewayReceiptId}`] : []), ...(r.readBackAt ? [`read back at ${r.readBackAt}`] : []), ...(r.replayed ? ["repeat submission: the gateway returned the earlier receipt"] : [])]} />
+        <Technical lines={[`action key ${r.key}`, `kind ${r.kind} · target ${r.target}`, ...(r.gatewayReceiptId ? [`gateway receipt ${r.gatewayReceiptId}`] : []), ...(readBack ? [`saved result can be read on the console page ${readBack}`] : []), ...(r.replayed ? ["repeat submission: the gateway returned the earlier receipt"] : [])]} />
       )}
     </article>
   );

@@ -36,7 +36,7 @@ export function WorkersScreen() {
       </header>
 
       {w?.update ? (
-        <Card title={w.update.title} tone="warn" aside={<span className={s.meta}>Checked {w.update.checkedAt}</span>}>
+        <Card title={w.update.title} tone="warn" aside={<span className={s.meta}>Checked {mst(w.update.checkedAt)}</span>}>
           <p className={s.p}>{w.update.what}</p>
           <dl className={s.facts}>
             <dt>Why it matters</dt><dd>{w.update.impact}</dd>
@@ -59,7 +59,7 @@ export function WorkersScreen() {
       <section aria-label="Status" className={s.gridTiles}>
         <div className={cx(s.row, !live && s.cardWarn)}><span className={s.eyebrow}>Live updates</span><strong className={live ? s.textGood : s.textWarn}>{connWords}</strong><span className={s.meta}>{live ? "News from the workers is coming in" : "Nothing new is arriving"}</span></div>
         <div className={s.row}><span className={s.eyebrow}>Workers last checked in</span><strong>{mst(st?.lastCheckIn ?? null)}</strong><span className={s.meta}>This only means they’re switched on{st?.runnerState ? ` (${runnerStateWords(st.runnerState)})` : ""}</span></div>
-        <div className={s.row}><span className={s.eyebrow}>Last useful progress</span><strong>{st?.lastUsefulProgress ? mst(st.lastUsefulProgress.at) : "Not reported"}</strong><span className={s.meta}>{st?.lastUsefulProgress?.what ?? "A check-in isn’t progress, so nothing is inferred from it."}</span></div>
+        <div className={s.row}><span className={s.eyebrow}>Last useful progress</span><strong>{st?.lastUsefulProgress ? mst(st.lastUsefulProgress.at) : "Not reported"}</strong><span className={s.meta}>{st?.lastUsefulProgress ? st.lastUsefulProgress.what : "A check-in isn’t progress, so nothing is inferred from it."}</span></div>
         <div className={s.row}><span className={s.eyebrow}>Current round of work</span><strong>{st?.roundStartedAt ? `Started ${mst(st.roundStartedAt, false)}` : st?.lastRoundFinishedAt ? `Last finished ${mst(st.lastRoundFinishedAt, false)}` : "Not reported"}</strong><span className={s.meta}>{st?.nextRoundDueAt ? `Next due ${mst(st.nextRoundDueAt, false)}` : "When the next round starts isn’t reported, so no finish time is shown"}</span></div>
         <div className={s.row}><span className={s.eyebrow}>Work in {v.place.name}</span><strong>{jobs ? `${jobs.length} working now · ${waiting?.length ?? 0} waiting` : st?.lanes ? `${st.lanes.reduce((a, l) => a + (l.active ?? 0), 0)} running · ${st.lanes.reduce((a, l) => a + l.waiting, 0)} waiting` : "Not reported"}</strong><span className={s.meta}>{jobs ? (live ? "The lists below add up to these counts" : "Last known, may be out of date") : st?.lanes ? "Whole system only; not split by place yet" : ""}</span></div>
       </section>
@@ -82,7 +82,7 @@ export function WorkersScreen() {
               {list.map((j) => (
                 <div key={j.id} className={s.row}>
                   <div className={s.spread}><strong style={{ fontSize: 13 }}>{j.title}</strong><span className={s.meta}>{j.hunt}</span></div>
-                  <span className={s.meta}>{v.index.get(j.placeKey)?.name} · {j.requirement} · started {j.startedAt} · {live ? j.elapsed : "last known"}</span>
+                  <span className={s.meta}>{v.index.get(j.placeKey)?.name} · {j.requirement} · started {mst(j.startedAt, false)} · {live ? j.elapsed : "last known"}</span>
                   <dl className={s.facts}>
                     <dt>Using</dt><dd>{j.method}</dd>
                     <dt>AI</dt><dd>{j.model} — {j.modelWhy}</dd>

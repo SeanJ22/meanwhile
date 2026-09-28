@@ -35,16 +35,21 @@ export interface LiveCommandCenterProps {
   readonly initialView?: View;
 }
 
+function fetchNoStore(url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) {
+  return fetch(url, { ...init, cache: "no-store" });
+}
+
+function scheduleTimeout(fn: () => void, ms: number): () => void {
+  const t = setTimeout(fn, ms);
+  return () => clearTimeout(t);
+}
+
 export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const router = useRouter();
   const pathname = usePathname();
   const search = useSearchParams();
   const [scopeKey, setScopeKey] = useState(props.initialScopeKey);
-  const [sync] = useState(() => new LiveSync({
-    scope: props.initialScopeKey,
-    fetch: (url, init) => fetch(url, { ...init, cache: "no-store" }),
-    schedule: (fn, ms) => { const t = setTimeout(fn, ms); return () => clearTimeout(t); },
-  }));
+  const [sync] = useState(() => new LiveSync({ scope: props.initialScopeKey, fetch: fetchNoStore, schedule: scheduleTimeout }));
   useEffect(() => () => sync.dispose(), [sync]);
 
   const snapshot = useSyncExternalStore((fn) => sync.subscribe(fn), () => sync.snapshot(), () => sync.snapshot());

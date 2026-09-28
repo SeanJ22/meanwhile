@@ -134,6 +134,7 @@ export interface TrailStage {
   readonly next?: string;
   readonly docs?: readonly SavedDoc[];
   readonly facts?: readonly { readonly field: string; readonly value: string; readonly note: string }[];
+  /** `seenAt` is ISO; the screen spells it out in Arizona time. */
   readonly publicLink?: { readonly url: string; readonly label: string; readonly seenAt: string | null };
   readonly technical?: readonly string[];
 }
@@ -586,6 +587,12 @@ export function usd(n: number): string {
 export function pctDown(part: number, whole: number): string {
   if (!whole) return "—";
   return (Math.floor((part / whole) * 1000) / 10).toFixed(1) + "%";
+}
+
+/** A calendar day in Arizona time, for dates without a meaningful clock time. */
+export function mstDay(iso: string | null): string {
+  if (!iso || !Number.isFinite(Date.parse(iso))) return "not reported";
+  return new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric" }).format(new Date(iso));
 }
 
 export function count(n: number): string {

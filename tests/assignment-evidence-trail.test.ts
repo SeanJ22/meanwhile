@@ -40,6 +40,7 @@ test("exact captured origin and committed zero-request result show saved-byte re
   assert.equal(reused?.sourceUrl,null,"a source URL with an unreviewed query is not exposed or rewritten to a possibly broken link");
   assert.ok(reused?.references.some(([name,value])=>name==="Original work item"&&value==="wi-origin"));
   assert.equal(trail.events.some(row=>row.title==="Current public result confirmed"),false);
+  assert.ok(trail.gaps.some(gap=>gap.includes("Opening the captured copy in Admin is not yet available")));
 });
 
 test("unconfirmed origin or nonzero request cannot claim validated reuse or avoided request",()=>{

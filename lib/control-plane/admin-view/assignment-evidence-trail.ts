@@ -55,6 +55,8 @@ export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:s
       references:ref(["Work item",item.id],["Subject",item.subject])});
   }
   for(const attempt of attempts) {
+    if(attempt.cost.durationMs!==null&&attempt.cost.durationMs>0&&attempt.startedAt===attempt.endedAt)
+      gaps.push(`Attempt ${attempt.id} records identical start and end times despite measured work. Its elapsed time cannot be recovered from those timestamps.`);
     const label=attempt.outcome===null?"Running or not closed":attempt.outcome==="COMPLETED"?"Completed":`Stopped: ${plainCode(attempt.outcome)}`;
     const requests=attempt.cost.requestCount;
     add({id:`attempt:${attempt.id}`,stage:"ATTEMPT",at:asTime(attempt.endedAt??attempt.startedAt),title:`${plainCode(attempt.worker.role)} attempt · ${label}`,
@@ -65,6 +67,8 @@ export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:s
   for(const artifact of sources.artifacts.filter(row=>workIds.has(row.workItemId))) {
     const attempt=byAttempt.get(artifact.attemptId);
     if(!attempt || !attempt.artifactIds.includes(artifact.artifactId)) continue;
+    if(asTime(artifact.recordedAt)&&asTime(attempt.endedAt)&&Date.parse(artifact.recordedAt)>Date.parse(attempt.endedAt!))
+      gaps.push(`Saved document ${artifact.artifactId} was recorded after its Attempt's stated end time. The historical event order is uncertain.`);
     add({id:`saved:${artifact.workItemId}:${artifact.artifactId}`,stage:"SAVED",at:asTime(artifact.recordedAt),title:artifact.partial?"Partial document saved":"Document saved",
       says:`${artifact.byteLength.toLocaleString("en-US")} bytes retained from the recorded source.${artifact.partial?" This is incomplete and cannot prove the full source.":" Saving it does not mean facts were extracted or published."}`,
       nextAction:artifact.partial?nextAction:null,sourceUrl:safeHttps(artifact.canonicalUrl),publicUrl:null,

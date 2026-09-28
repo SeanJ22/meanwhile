@@ -370,6 +370,10 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open details</Link>
         </div>; })}</div>}
       <Section title="Find any work item" lede="This index covers tracked work in the selected scope, including items omitted from the short cards below. Search retained names, meetings, failures and next steps attached to that work, then open its full record." />
+      <p className={s.note}>Published people and meetings have a separate full-history search; those records are not automatically attributed to this hunt.</p>
+      <Link className={s.btnLink} href={withScope("/admin/records",base.scope,{
+        q:workQuery||null,instruction:instructionFilter,workq:workQuery||null,workopen:openId,
+      })}>Search published people and meetings</Link>
       {scopedIndex === null ? <p className={s.goldNote}>An exact receipt-linked searchable index is not on this snapshot yet. Older work remains available after clearing the instruction filter; this hunt&apos;s count is unknown.</p> : <div className={`${s.card} ${s.cardList} ${s.gap20}`}>
         <form action={path} method="get" role="search" className={s.row10}>
           {scopeParam(base.scope) && <input type="hidden" name="scope" value={scopeParam(base.scope)!} />}

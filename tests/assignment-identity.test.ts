@@ -572,7 +572,7 @@ test("the hunt card uses its current ledger, labels last-cycle admissions, and s
   assert.doesNotMatch(view.spend, /\$0\.00/);
   assert.equal(view.lanes[0]?.pill, "ADMITTED LAST CYCLE");
   assert.doesNotMatch(view.lanes[0]?.note ?? "", /\$0 spent/);
-  assert.match(view.ack.find((fact) => fact.pill === "CURRENT SCOUTS")?.text ?? "", /no Scout running across the fleet/);
+  assert.match(view.ack.find((fact) => fact.pill === "CURRENT SCOUTS")?.text ?? "", /No Scout linked to this Send is running now/);
   const prior = instructionView({ decision: { ...decision(), budgetUsd: 50, budgetStartedAt: JOINED }, reading: expansion, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null, currentScouts: 0, assignment: { ...assignment, completion: { kind: "NO_MEMBERS", assignmentKey: A.key, says: "No obligation names this assignment" } }, assignmentAt: T0 });
   assert.match(prior.ack.find((fact) => fact.pill === "COMPLETION RECHECK")?.text ?? "", /1 linked obligation on this Send/);
   assert.doesNotMatch(prior.ack.map((fact) => fact.text).join(" "), /No obligation names this assignment/);

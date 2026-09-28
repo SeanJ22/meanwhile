@@ -150,7 +150,7 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.freshnessDebtRows, 2);
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
-  assert.match(narrowed.revision, /^2026-09-25T22:00:00\.000Z\|1\|1\|1\|0\|0\|-$/);
+  assert.match(narrowed.revision, /^2026-09-25T22:00:00\.000Z\|1\|1\|1\|1\|0\|0\|-$/);
 });
 
 test("the pulse reads the snapshot and the research state only narrowed, and only the fields it declares", async () => {

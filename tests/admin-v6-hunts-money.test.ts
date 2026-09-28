@@ -210,6 +210,10 @@ test("account readings keep their provider periods; missing readings are unknown
   assert.equal(neon.amountUsd, null);
   assert.match(neon.how, /last read failed/i);
   assert.equal(m.data.account.find(a => a.provider === "GitHub")!.amountUsd, null);
+  const estimated = envelope(money({ kind: "native" }, { providerBilling: { ...billing, readings: [reading("exa", { status: "ESTIMATED", reportedUsd: null, estimatedUsd: 4.2 })] } }));
+  const exa = estimated.data.account.find(a => a.provider === "Exa")!;
+  assert.equal(exa.amountUsd, null, "an estimate is not counted as a provider reading");
+  assert.match(exa.how, /Only an estimate, \$4\.20, which is not counted as a reading/);
   assert.equal(m.data.accountMonth, "Whole account · September 1, 2026 to September 28, 2026", "billing days are UTC dates");
   const mixed = envelope(money({ kind: "native" }, { providerBilling: { ...billing, readings: [...billing.readings, reading("exa", { periodStart: "2026-08-15T00:00:00.000Z" })] } }));
   assert.equal(mixed.data.accountMonth, "Whole account · each provider's own billing period");

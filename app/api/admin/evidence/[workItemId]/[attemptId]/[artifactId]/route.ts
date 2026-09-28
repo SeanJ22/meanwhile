@@ -63,7 +63,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{
   if (![workItemId, attemptId, artifactId].every(safeId))
     return NextResponse.json({ error: "Invalid evidence identity." }, { status: 400, headers: adminEvidencePrivateHeaders });
   if (process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
-      process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED !== "1" || !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN)
+      !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN)
     return NextResponse.json({ state: "REFUSED", code: "PRIVATE_COPY_NOT_ACTIVE",
       detail: "Private evidence requests are not active.", updatedAt: null },
       { status: 409, headers: adminEvidencePrivateHeaders });
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{
     if (!record || !attempt || !workItem)
       return NextResponse.json({ error: "No original capture is recorded for this work and attempt." }, { status: 404, headers: adminEvidencePrivateHeaders });
     const queued = await requestAdminEvidenceCopy({ repos: opened.repos, record, attempt: attempt.value,
-      owner: workItem.value, now: new Date().toISOString() });
+      owner: workItem.value, now: new Date().toISOString(), adminSessionRef: guard.sessionRef });
     let current = queued.state === "REFUSED" ? queued : await readAdminEvidenceCopyStatus({ repos: opened.repos,
       record, remote: new NetlifyAdminEvidenceRemote() });
     if (current.state === "PENDING" &&

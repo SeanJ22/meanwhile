@@ -13,6 +13,9 @@ export interface AdminEvidenceCopyRequest {
   readonly attemptId: string;
   readonly artifactId: string;
   readonly contentHash: string;
+  /** Hashed Admin session reference from the authenticated, same-origin POST. */
+  readonly requesterRef: string;
+  readonly authorizationKind: "AUTHENTICATED_ADMIN_EXACT_CAPTURE";
   readonly requestedAt: string;
   readonly updatedAt: string;
   readonly state: AdminCopyState;
@@ -38,9 +41,12 @@ const status = (row: AdminEvidenceCopyRequest | null): AdminCopyStatus => row
 /** The Admin request only queues an already recorded original; it never opens a URL. */
 export async function requestAdminEvidenceCopy(input: { readonly repos: ControlPlaneRepositories;
   readonly record: ArtifactRecord; readonly attempt: Attempt; readonly owner: WorkItem; readonly now: string;
+  readonly adminSessionRef: string;
 }): Promise<AdminCopyStatus> {
   const { record, attempt, owner, repos, now } = input;
   adminEvidenceKey(record);
+  if (!input.adminSessionRef || input.adminSessionRef.length > 512)
+    return { state: "REFUSED", code: "ADMIN_SESSION_REF_INVALID", detail: "The Admin session could not authorize this request.", updatedAt: now };
   if (owner.project !== "freshness" || owner.id !== record.workItemId || attempt.id !== record.attemptId ||
       attempt.workItemId !== owner.id || !attempt.artifactIds.includes(record.artifactId))
     return { state: "REFUSED", code: "ATTRIBUTION_MISMATCH", detail: "The saved work, attempt and capture do not match.", updatedAt: now };
@@ -53,7 +59,9 @@ export async function requestAdminEvidenceCopy(input: { readonly repos: ControlP
   if (previous) return previous.value.contentHash === record.contentHash ? status(previous.value) :
     { state: "REFUSED", code: "REQUEST_RECORD_MISMATCH", detail: "The request does not match the recorded capture.", updatedAt: previous.value.updatedAt };
   const request: AdminEvidenceCopyRequest = { id, workItemId: record.workItemId, attemptId: record.attemptId,
-    artifactId: record.artifactId, contentHash: record.contentHash, requestedAt: now, updatedAt: now,
+    artifactId: record.artifactId, contentHash: record.contentHash,
+    requesterRef: createHash("sha256").update(input.adminSessionRef).digest("hex"),
+    authorizationKind: "AUTHENTICATED_ADMIN_EXACT_CAPTURE", requestedAt: now, updatedAt: now,
     state: "PENDING", code: null, detail: null, retryAt: null, lease: null };
   try { await repos.adminEvidenceCopyRequests.put(id, request, now); }
   catch (error) {
@@ -108,7 +116,8 @@ export async function requeueUnavailableAdminCopy(input: { readonly repos: Contr
 
 const terminalCodes = new Set(["RAW_ONLY", "UNSCANNABLE_OR_MISMATCHED_CONTENT_TYPE", "RETENTION_NOT_MIRRORABLE",
   "PARTIAL_CAPTURE", "PARTIAL_SOURCE_RESPONSE", "ATTRIBUTION_MISMATCH", "EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB",
-  "BYTES_MISMATCH", "RESTRICTED_ON_RESCAN", "INVALID_RECORD_IDENTITY", "REMOTE_COPY_MISMATCH"]);
+  "BYTES_MISMATCH", "RESTRICTED_ON_RESCAN", "INVALID_RECORD_IDENTITY", "REMOTE_COPY_MISMATCH",
+  "REQUEST_AUTHORIZATION_MISSING"]);
 
 /** One bounded, CAS-leased operation. A process death leaves a retryable lease, not a false copy. */
 export async function pollAdminEvidenceCopyRequests(input: { readonly repos: ControlPlaneRepositories;
@@ -130,6 +139,8 @@ export async function pollAdminEvidenceCopyRequests(input: { readonly repos: Con
   catch { return { examined: 0, copied: 0, pending: pending.length, refused: 0 }; }
   let state: AdminCopyState = "PENDING", code: string | null = null, detail: string | null = null;
   try {
+    if (claimed.authorizationKind !== "AUTHENTICATED_ADMIN_EXACT_CAPTURE" ||
+        !/^[0-9a-f]{64}$/.test(claimed.requesterRef)) throw new Error("REQUEST_AUTHORIZATION_MISSING");
     const [rows, attempt, owner] = await Promise.all([
       input.repos.artifacts.read(claimed.workItemId), input.repos.attempts.read(claimed.attemptId),
       input.repos.workItems.read(claimed.workItemId),

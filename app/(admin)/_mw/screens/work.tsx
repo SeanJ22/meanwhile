@@ -44,6 +44,7 @@ import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { currentScoutsForHunt, huntActivity } from "@/lib/control-plane/admin-view/hunt-activity.ts";
 import { exactInstructionMembership } from "@/lib/control-plane/admin-view/instruction-membership.ts";
+import { huntOverview } from "@/lib/control-plane/admin-view/hunt-overview.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
 import { isAssignmentCycleReading } from "@/lib/control-plane/expansion/assignment-budget.ts";
 import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
@@ -77,6 +78,7 @@ import { buildDeliveryTrail } from "@/lib/control-plane/delivery-trail.ts";
 import { readActivationGate } from "@/lib/control-plane/promotion/activation-gate.ts";
 import { LaneStrip } from "../lane-strip.tsx";
 import { RunnerCard } from "../runner-card.tsx";
+import { WorkOverview } from "../work-overview.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
 import { scopeParam, withScope, type MwArea } from "../scope.ts";
 import { MwShell } from "../shell.tsx";
@@ -295,6 +297,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, instruction: instructionFilter, q: workQuery || null, page: String(indexPage), ...extra });
+  const overview = filteredDecision ? huntOverview({ decision: filteredDecision, assignments: view,
+    billing: snapshotOut.kind === "HELD" ? snapshotOut.value.billingAttribution ?? null : null,
+    reader: snapshotOut.kind === "HELD" ? snapshotOut.value.servedReaderReadback ?? null : null, now: base.nowIso }) : null;
+  const overviewScope = filteredDecision ? { kind: "geo" as const, type: filteredDecision.geography.type,
+    geoid: filteredDecision.geography.geoid, state: filteredDecision.geography.stateAbbr.toLowerCase() } : base.scope;
   /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — tracked ones first, then registered ones, each named for where it stands. */
   const stateHref: Record<string, string> = {};
   for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
@@ -335,7 +342,26 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
           census={censusUniverseWords(stateName(base.scope.state), censusEntryOf(base.scope.state))}
         />
       ) : null}
-      <Composer
+      <Section title="Work and delivery" lede="Choose a saved instruction to see what readers received, what is missing, what is happening and where your action can help." />
+      <nav aria-label="Saved hunt overview" className={s.row10}>
+        {base.selected.map(decision => <Link key={decision.receiptId} className={s.btnLink}
+          aria-current={filteredDecision?.receiptId === decision.receiptId ? "page" : undefined}
+          href={withScope(path, { kind: "geo", type: decision.geography.type, geoid: decision.geography.geoid,
+            state: decision.geography.stateAbbr.toLowerCase() }, { instruction: decision.key, open: instructionKey(decision) })}>
+          {decision.geography.label}
+        </Link>)}
+        {instructionFilter && <Link href={withScope(path, base.scope)} className={s.btnLink}>Show standing work and history</Link>}
+      </nav>
+      {overview && <WorkOverview overview={overview}
+        publishedAt={snapshotOut.kind === "HELD" ? snapshotOut.value.publishedAt : null}
+        nextCycleAt={heartbeatOut.kind === "HELD" ? heartbeatOut.value.nextCycleDueAt : null}
+        detailsHref={`${here({ open: instructionKey(overview.decision) })}#a-${encodeURIComponent(instructionKey(overview.decision))}`}
+        checklistHref={withScope("/readiness/done", overviewScope)} moneyHref={withScope("/admin/money", overviewScope)}
+        workHref={id => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />}
+      {!overview && <p className={s.note}>{instructionFilter ? "The selected instruction could not be matched to its saved receipt. No hunt totals are inferred." : "The standing work below follows the page’s scope. Select a saved instruction above for its exact hunt totals."}</p>}
+      <details className={s.card} open={geoParam !== null}>
+        <summary className={s.titleStrong16}>Add or change an instruction</summary>
+        <Composer
         states={composerStates}
         stateCode={composerState}
         geographies={geographies}
@@ -349,6 +375,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         stateHref={stateHref}
         workHref={withScope(path, base.scope)}
       />
+      </details>
 
       <Section
         id="assignments"
@@ -360,7 +387,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         ? <p className={s.note}>No blocked, failed, waiting or uncertain work with a recorded blocker or overdue state appears in this scope.</p>
         : <div className={s.stack10}>{priorities.map(priority => { const row = priority.row; return <div key={row.id} className={s.insetRow}>
           <div className={`${s.stack2} ${s.grow}`}>
-            <span className={s.text14}><strong className={s.strong}>{priority.rank}. {row.label}</strong> · {row.state.toLowerCase()} · {priority.category === "NEEDS_OWNER_DECISION" ? "Needs your decision" : priority.category === "NEEDS_CODE_CHANGE" ? "Needs a code repair" : priority.category === "WAITING_ON_PUBLISHER" ? "Waiting on the publisher" : priority.category === "OWNER_UNCLEAR" ? "Next owner unclear" : "Being fixed automatically"}</span>
+            <span className={s.text14}><strong className={s.strong}>{priority.rank}. {row.label}</strong> · {row.state.toLowerCase()} · {priority.category === "NEEDS_OWNER_DECISION" ? "Needs your decision" : priority.category === "NEEDS_CODE_CHANGE" ? "Needs a code repair" : priority.category === "WAITING_ON_PUBLISHER" ? "Waiting on the publisher" : priority.category === "OWNER_UNCLEAR" ? "Next owner unclear" : "Assigned to automatic repair"}</span>
              <span className={s.note}>{row.blocker === null ? "This row has no recorded blocker reason." : plainText(row.blocker)} {plainText(row.nextAction)}</span>
              {(row.blocker && plainText(row.blocker) !== row.blocker || plainText(row.nextAction) !== row.nextAction) && <details className={s.note}><summary>Recorded reason and action</summary>{row.blocker ?? "No reason recorded"} · {row.nextAction}</details>}
             <span className={s.note}>Why this ranks here: {priority.rankingWhy}</span>
@@ -384,7 +411,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
         </form>
         <p className={s.note}>{searchedIndex!.length.toLocaleString("en-US")} of {scopedIndex!.length.toLocaleString("en-US")} indexed work items match; showing {shownIndex.length} on page {indexPage} of {indexPages}. Each item is one job, not a missing fact.</p>
         <div className={s.stack8}>{shownIndex.map(row => <div key={row.id} className={s.insetRow}>
-          <Pill tone={row.state === "SUCCEEDED" ? "teal" : row.state === "FAILED" || row.state === "BLOCKED" ? "stone" : "slate"}>{row.state}</Pill>
+          <Pill tone={STATE_PILL[row.state].tone}>{STATE_PILL[row.state].pill}</Pill>
           <span className={`${s.text14} ${s.grow}`}>{row.label}{row.subjectName && row.subjectName !== row.label ? ` · ${row.subjectName}` : ""}{row.lastAttemptAt ? ` · last attempt ${formatEastern(row.lastAttemptAt)}` : ""}</span>
           <Link href={`${here({ open: row.id })}#a-${encodeURIComponent(row.id)}`} className={s.btnLink}>Open</Link>
         </div>)}</div>

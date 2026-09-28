@@ -51,7 +51,7 @@ export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 export const STATE_PILL: Readonly<Record<AssignmentState, { readonly pill: string; readonly tone: Tone }>> = {
   WORKING: { pill: "RUNNING", tone: "teal" },
   BLOCKED: { pill: "BLOCKED", tone: "amber" },
-  FAILED: { pill: "FAILED · RETRIES ITSELF", tone: "amber" },
+  FAILED: { pill: "FAILED · NEEDS RETRY", tone: "amber" },
   WAITING: { pill: "QUEUED", tone: "cyan" },
   SUCCEEDED: { pill: "LAST ROUND DONE", tone: "teal" },
   RETIRED: { pill: "RETIRED", tone: "slate" },

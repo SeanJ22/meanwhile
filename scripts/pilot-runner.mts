@@ -1887,6 +1887,14 @@ await publishConsole();
 while (cycle < CYCLES) {
   /* ADM-5: PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
   const owner = await holdWhilePaused();
+  // A deployment can finish while the runner is asleep (including a
+  // RUN_CYCLE_NOW wake). Reconcile before admitting another research child;
+  // the previous end-of-cycle check cannot observe a later deployment.
+  const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
+  if (wakeReleaseExit !== null) {
+    handoffExitCode = wakeReleaseExit;
+    break;
+  }
   cycle += 1;
   const startedAt = new Date().toISOString();
   console.log(

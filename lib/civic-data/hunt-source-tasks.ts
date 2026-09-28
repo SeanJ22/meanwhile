@@ -5,6 +5,20 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { isWorkerReaderContract } from "./worker-reader-contracts.ts";
+import { COCHISE_VOTE_CENTERS_URL } from "../sources/cochise-vote-centers.ts";
+import { scheduledBlackoutAt } from "../control-plane/fleet-safety.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../control-plane/scheduler/hunt-continuation.ts";
+
+/** The owner did not pause the already-started original lifetime Send during
+ * the scheduled blackout. Other Sends retain that policy unchanged. */
+export function admittedHuntSourceScopes(scopes: readonly ResolvedScope[], now: string): readonly ResolvedScope[] {
+  if (!scheduledBlackoutAt(now)) return scopes;
+  return scopes.filter(scope => scope.kind === "RESOLVED" &&
+    scope.decision.sourceWorkVersion === 1 && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
+    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
+}
 
 /** Only completed audits for an actual current Send reach this existing writer.
  * A retained publication receipt prevents unchanged re-publication. */
@@ -36,15 +50,16 @@ export function workerRosterSourceTasks(scopes: readonly ResolvedScope[], items:
   });
 }
 
-export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string): RoutineSourceTask[] {
-  return manualProducerInvocationMatrix(scopes, now).filter(row => row.commandReady).flatMap(row => {
+export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string, items: readonly WorkItem[] = []): RoutineSourceTask[] {
+  return manualProducerInvocationMatrix(scopes, now, items).filter(row => row.commandReady).flatMap(row => {
     const applicable = scopes.filter(scope => row.instructionIds.includes(scope.decision.receiptId));
     const contract = requiredManualProductionContract(row.id);
     return [{
-      id: row.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+      id: row.id === "voting-sites" ? "voting-sites:cochise-2026" : row.id,
+      sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
       acquisitionFailureDomain: `routine-source:${contract.sourceId}`,
-      requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES" as const,
-      parserVersion: contract.parserNormalizerVersion, command: contract.command,
+      requestedUrl: row.id === "voting-sites" ? COCHISE_VOTE_CENTERS_URL : "", authorityMode: "REGISTERED_SOURCE_ROUTES" as const,
+      parserVersion: contract.parserNormalizerVersion, command: row.id === "voting-sites" ? [...contract.command, "--cochise-only"] : contract.command,
       cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
       contract: { readerProjection: contract.readerProjection, cadence: { description: "One verified refresh for the owner's Send; no new standing schedule", defaultEveryMs: Number.POSITIVE_INFINITY } },
       ownerInvocation: {

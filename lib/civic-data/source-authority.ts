@@ -134,11 +134,13 @@ export const SOURCE_AUTHORITIES = {
   },
   "voting-sites": {
     id: "voting-sites",
-    publisher: "Pima County Elections, Morris County Elections, and New Hampshire state and local election authorities",
+    publisher: "Pima and Cochise County Elections, Morris County Elections, and New Hampshire state and local election authorities",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "MULTI_PUBLISHER_PRIMARY",
     routePrefixes: [
       "https://www.pima.gov/",
+      "https://cochise.az.gov/",
+      "https://www.cochise.az.gov/",
       "https://services2.arcgis.com/UTBp78iglGpbqp1B/",
       "https://www.morriscountynj.gov/",
       "https://app.sos.nh.gov/",
@@ -149,6 +151,8 @@ export const SOURCE_AUTHORITIES = {
     ],
     allowedFinalHosts: [
       "www.pima.gov",
+      "cochise.az.gov",
+      "www.cochise.az.gov",
       "services2.arcgis.com",
       "www.morriscountynj.gov",
       "app.sos.nh.gov",

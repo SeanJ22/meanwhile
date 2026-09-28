@@ -64,7 +64,7 @@ import { plainText } from "@/lib/control-plane/plain-words.ts";
 import { assignmentEvidenceTrail, type AssignmentEvidenceTrail } from "@/lib/control-plane/admin-view/assignment-evidence-trail.ts";
 import type { BillingAttribution } from "@/lib/control-plane/provider-billing-attribution.ts";
 import type { ArtifactRecord } from "@/lib/control-plane/repository/types.ts";
-import { adminMirrorableContentType } from "@/lib/control-plane/evidence/admin-bridge.ts";
+import { ADMIN_EVIDENCE_MAX_BYTES, adminMirrorableContentType } from "@/lib/control-plane/evidence/admin-bridge.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
@@ -901,9 +901,9 @@ function DetailSections({ detail, trail, trailPage, trailHref, says, artifacts, 
         <p className={s.note}>Showing page {shownEvidencePage} of {evidencePages}; {artifacts.length.toLocaleString("en-US")} recorded captures.</p>
         <div className={s.stack8}>{artifacts.slice((shownEvidencePage - 1) * 50, shownEvidencePage * 50).map(a => <div key={`${a.workItemId}:${a.attemptId}:${a.artifactId}`} className={s.insetRow}>
           <span className={s.monoSmall}>{a.artifactId} · {a.contentHash} · {a.byteLength.toLocaleString("en-US")} bytes</span>
-          {a.tier === "RAW" && !a.partial && adminMirrorableContentType(a.contentType)
+          {a.tier === "RAW" && !a.partial && a.byteLength <= ADMIN_EVIDENCE_MAX_BYTES && adminMirrorableContentType(a.contentType)
             ? <a className={s.btnLink} href={`/api/admin/evidence/${encodeURIComponent(a.workItemId)}/${encodeURIComponent(a.attemptId)}/${encodeURIComponent(a.artifactId)}`}>Download verified original</a>
-            : <span className={s.note}>{a.partial ? "Partial capture; original download unavailable" : a.tier !== "RAW" ? "Restricted or derived capture; original download unavailable" : "This binary capture has no verified safe private copy yet"}</span>}
+            : <span className={s.note}>{a.partial ? "Partial capture; original download unavailable" : a.tier !== "RAW" ? "Restricted or derived capture; original download unavailable" : a.byteLength > ADMIN_EVIDENCE_MAX_BYTES ? "Held original exceeds the 32 MiB private copy limit; available only in the runner vault" : "This content type has no verified safe private copy yet"}</span>}
         </div>)}</div>
         {evidenceHref && <div className={s.row10}>
           {shownEvidencePage > 1 && <Link href={evidenceHref(shownEvidencePage - 1)} className={s.btnLink}>Previous 50 captures</Link>}

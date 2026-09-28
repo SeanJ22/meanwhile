@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { artifactId } from "../lib/control-plane/evidence/artifact.ts";
 import { assertOriginalCapture, adminEvidenceKey, mirrorOriginalCapture, verifyAdminEvidenceBlob,
-  type AdminEvidenceBlob, type AdminEvidenceRemote } from "../lib/control-plane/evidence/admin-bridge.ts";
+  ADMIN_EVIDENCE_MAX_BYTES, type AdminEvidenceBlob, type AdminEvidenceRemote } from "../lib/control-plane/evidence/admin-bridge.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { ZERO_COST, type Attempt } from "../lib/control-plane/attempt.ts";
 import type { HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
@@ -79,6 +79,14 @@ test("an occupied immutable key with different bytes is refused, not overwritten
   remote.rows.set(adminEvidenceKey(record), { copy, bytes: new TextEncoder().encode("wrong") });
   await assert.rejects(mirrorOriginalCapture({ record, attempt, held, bytes, remote }), /REMOTE_COPY_MISMATCH/);
   assert.equal(new TextDecoder().decode(remote.rows.get(adminEvidenceKey(record))!.bytes), "wrong");
+});
+
+test("an oversized original has an explicit private-copy limit reason", () => {
+  const oversized = { ...record, byteLength: ADMIN_EVIDENCE_MAX_BYTES + 1 };
+  assert.throws(() => assertOriginalCapture(oversized, attempt, held, bytes), /EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB/);
+  const copy = { artifactId: oversized.artifactId, workItemId: oversized.workItemId, attemptId: oversized.attemptId,
+    contentHash: oversized.contentHash, byteLength: oversized.byteLength, tier: "RAW" as const, source: "VERIFIED_ORIGINAL_CAPTURE" as const };
+  assert.throws(() => verifyAdminEvidenceBlob(oversized, { copy, bytes }), /EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB/);
 });
 
 test("complete RAW PDF bytes use the established binary tier contract and remain byte-exact", async () => {

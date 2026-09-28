@@ -102,8 +102,10 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   const first = captured[0];
 
   const actualPlan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-  assert.equal(actualPlan.kind, "SKIP", "Haiku prefix below cache minimum must not spend");
-  const plan = { request: scoutPrewarmRequest({ model: first.model, effort: "medium", toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS }), minimumCacheablePrefixTokens: 4096 };
+  assert.equal(actualPlan.kind, "SEND", "the expanded held-evidence and manual tools now clear Haiku's cache minimum");
+  assert.ok(actualPlan.kind === "SEND");
+  assert.ok(actualPlan.prefixTokensAtLeast >= actualPlan.minimumCacheablePrefixTokens);
+  const plan = actualPlan;
   assert.equal(plan.request.model, first.model, "the model the loop starts on");
   assert.equal(JSON.stringify(plan.request.tools), JSON.stringify(first.tools), "byte-identical tools — search included");
   assert.equal(JSON.stringify(plan.request.system), JSON.stringify(first.system), "byte-identical system");
@@ -121,7 +123,9 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   /* The runner: the pre-warm's list and the Scout's toolkit follow the same `scoutSearch` switch. */
   const runner = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(runner, /scoutPrewarmPlan\(\{ toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
-  assert.match(runner, /buildScoutToolkit\(scoutSearch !== null \? \{ \.\.\.toolCtx, search: scoutSearch \} : toolCtx\)/, "the toolkit offers search on the same switch");
+  assert.match(runner, /const search = lifetimeHuntWork\(toolCtx\.obligation\.obligation\.id\) \? scoutSearchLifetime : scoutSearch;/, "the original lifetime hunt uses its matching search budget");
+  assert.match(runner, /const scoutSearchLifetime = searchBudget === null \|\| !hasLifetimeHunt \? null : makeScoutSearch\(/, "the lifetime route preserves the same owner-controlled search switch");
+  assert.match(runner, /buildScoutToolkit\(search !== null \? \{ \.\.\.toolCtx, search \} : toolCtx\)/, "the toolkit offers the selected search implementation with the same tool schema");
   assert.doesNotMatch(runner, /toolkitSpecs: SCOUT_TOOL_SPECS/, "no pre-warm from the list without search");
 });
 

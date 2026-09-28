@@ -4,7 +4,7 @@ import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.t
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
-import { exactInstructionAutonomousWorkIds, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { autonomousCycleAllowed, exactInstructionAutonomousWorkIds, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -2906,7 +2906,9 @@ async function makeAutonomousFleet() {
     auditCeilingUsd: effectiveCeilingUsd,
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
 }
-const earlyOriginal = !dry && !canary && hasLifetimeHunt && Date.now() + 150_000 < autonomousDeadlineMs
+const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
+  runnerPaused: intents.runnerPause.paused, scheduledBlackout, hasLifetimeHunt });
+const earlyOriginal = autonomousCycleOpen && hasLifetimeHunt && Date.now() + 150_000 < autonomousDeadlineMs
   ? (async () => {
       const leave = pending.enter("original-hunt-early-workers");
       try {
@@ -3242,7 +3244,7 @@ if (earlyAutonomous !== null) {
   if (autonomousWorked) fleetSafety.recordSuccessfulActivity(nowIso());
   for (const row of earlyAutonomous.dispatches) console.log(`  original hunt early worker: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
 }
-if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt) && Date.now() + 150_000 < autonomousDeadlineMs) {
+if (autonomousCycleOpen && Date.now() + 150_000 < autonomousDeadlineMs) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
     await withStoreBudget("autonomous-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
@@ -3304,7 +3306,7 @@ if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt) && Date.now() + 1
   } finally {
     leaveAutonomous();
   }
-} else if (!dry && !canary && (!scheduledBlackout || hasLifetimeHunt)) {
+} else if (autonomousCycleOpen) {
   runtimeConditions.push("autonomous work deferred: the remaining technical slice could not admit and settle another normal worker before the cycle's finalization reserve; work remains owed");
 }
 if (autonomousWorked) await projectRetainedFacts("new-worker-results:fact-projection");

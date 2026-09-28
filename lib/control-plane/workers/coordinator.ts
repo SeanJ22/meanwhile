@@ -39,6 +39,14 @@ export interface AutonomousDecision {
   readonly reason: string;
 }
 
+/** A filtered or paused cycle cannot start either autonomous entry point. */
+export function autonomousCycleAllowed(input: { readonly dry: boolean; readonly canary: boolean;
+  readonly only: string | null; readonly ids: ReadonlySet<string> | null; readonly runnerPaused: boolean;
+  readonly scheduledBlackout: boolean; readonly hasLifetimeHunt: boolean }): boolean {
+  return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused &&
+    (!input.scheduledBlackout || input.hasLifetimeHunt);
+}
+
 /** Exact immutable instruction lineage for an early technical slice. An old
  * occurrence can predate ownerInstructions on its WorkItem, but a later Send
  * on the same obligation cannot retroactively assign it to that instruction. */
@@ -47,21 +55,32 @@ export function exactInstructionAutonomousWorkIds(input: {
   workItems: readonly WorkItem[]; assignmentKey: string; receiptId: string;
 }): ReadonlySet<string> {
   const owners = new Map(input.obligations.map(row => [row.id, row] as const));
-  const roots = new Set(input.occurrences.flatMap(occurrence => {
+  const roots = new Set<string>();
+  const conflicted = new Set<string>();
+  for (const occurrence of input.occurrences) {
+    const openedAt = Date.parse(occurrence.openedAt);
+    if (!Number.isFinite(openedAt)) { conflicted.add(occurrence.workItemId); continue; }
     const marks = (owners.get(occurrence.obligationId)?.assignments ?? [])
-      .filter(mark => mark.assignmentKey === input.assignmentKey && Number.isFinite(Date.parse(mark.at)) &&
-        Date.parse(mark.at) <= Date.parse(occurrence.openedAt))
-      .sort((a, b) => a.at.localeCompare(b.at) || a.ref.localeCompare(b.ref));
-    return marks.at(-1)?.ref === input.receiptId ? [occurrence.workItemId] : [];
-  }));
+      .filter(mark => mark.assignmentKey === input.assignmentKey);
+    if (marks.some(mark => !Number.isFinite(Date.parse(mark.at)))) { conflicted.add(occurrence.workItemId); continue; }
+    const effective = marks.filter(mark => Date.parse(mark.at) <= openedAt);
+    if (!effective.length) continue;
+    const latestAt = Math.max(...effective.map(mark => Date.parse(mark.at)));
+    const latestRefs = new Set(effective.filter(mark => Date.parse(mark.at) === latestAt).map(mark => mark.ref));
+    if (latestRefs.size !== 1) { conflicted.add(occurrence.workItemId); continue; }
+    if (latestRefs.has(input.receiptId)) roots.add(occurrence.workItemId);
+  }
   const byId = new Map(input.workItems.map(item => [item.id, item] as const));
   const admitted = new Set<string>();
   for (const item of input.workItems) {
-    if (item.autonomousPlan?.ownerInstructions?.includes(input.receiptId)) { admitted.add(item.id); continue; }
+    const explicit = item.autonomousPlan?.ownerInstructions?.includes(input.receiptId) === true;
     let current: WorkItem | undefined = item;
     const seen = new Set<string>();
+    let inherited = false;
+    let ambiguous = false;
     while (current && !seen.has(current.id)) {
-      if (roots.has(current.id)) { admitted.add(item.id); break; }
+      if (conflicted.has(current.id)) { ambiguous = true; break; }
+      if (roots.has(current.id)) inherited = true;
       seen.add(current.id);
       const link: { readonly parentWorkItemId: string; readonly authority: string } | undefined =
         (current as WorkItem & { readonly planRepair?: {
@@ -70,6 +89,7 @@ export function exactInstructionAutonomousWorkIds(input: {
       const parent: WorkItem | undefined = link?.authority === "WORK_INSTRUCTIONS_ONLY" ? byId.get(link.parentWorkItemId) : undefined;
       current = parent?.project === item.project && parent.subject === item.subject ? parent : undefined;
     }
+    if (!ambiguous && (explicit || inherited)) admitted.add(item.id);
   }
   return admitted;
 }

@@ -380,6 +380,8 @@ export interface RunnerHeartbeat {
   readonly lastCycleFinishedAt: string | null;
   /** When the runner itself believes the next cycle is due. */
   readonly nextCycleDueAt: string | null;
+  /** Why the next cycle is scheduled sooner than the ordinary interval, when applicable. */
+  readonly nextCycleReason?: string | null;
   readonly lastCycleOk: boolean | null;
   /** The SHA the runner was executing at. */
   readonly testedSha: string | null;

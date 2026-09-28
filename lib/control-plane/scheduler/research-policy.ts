@@ -97,6 +97,8 @@ export interface RunningScout {
   readonly attemptId: string;
   readonly obligationId: string;
   readonly startedAt: string;
+  /** Exact Send marks on the obligation when this Scout started. Older rows omit this. */
+  readonly assignmentKeys?: readonly string[];
 }
 
 /**

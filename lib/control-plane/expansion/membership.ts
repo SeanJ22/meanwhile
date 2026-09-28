@@ -844,6 +844,7 @@ export function withCycleCounts(
   reading: ExpansionCycleReading,
   counts: {
     readonly dueByScope: ReadonlyMap<string, number>;
+    readonly dispatchedByScope?: ReadonlyMap<string, number>;
     readonly scoutPlacedFirstByScope: ReadonlyMap<string, number>;
     readonly gate: ScopeBudgetGate | null;
   },
@@ -859,6 +860,7 @@ export function withCycleCounts(
           : {
               ...s.work,
               dueThisCycle: counts.dueByScope.get(s.key) ?? 0,
+              ...(counts.dispatchedByScope ? { dispatchedThisCycle: counts.dispatchedByScope.get(s.key) ?? 0 } : {}),
               scoutRowsPlacedFirst: counts.scoutPlacedFirstByScope.get(s.key) ?? 0,
               scoutAdmitted: counts.gate === null ? null : counts.gate.admittedCount(s.key),
             },

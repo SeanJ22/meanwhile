@@ -41,6 +41,7 @@ import {
 } from "@/lib/control-plane/admin-view/work-view.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
+import { currentScoutsForHunt, huntActivity } from "@/lib/control-plane/admin-view/hunt-activity.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
 import { isAssignmentCycleReading } from "@/lib/control-plane/expansion/assignment-budget.ts";
 import { dispatchWorkReadingOf } from "@/lib/control-plane/expansion/view.ts";
@@ -211,7 +212,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
       runnerPaused: pause ? { since: pause.since ?? null } : null,
       activeCycleStartedAt: research?.cycleFinishedAt === null ? research.cycleStartedAt : null,
       nextCycleDueAt: heartbeatOut.kind === "HELD" ? heartbeatOut.value.nextCycleDueAt : null,
-      currentScouts: research?.running.length ?? null,
+      currentScouts: research === null ? null : currentScoutsForHunt(research.running, decision.key),
       assignment: sends?.assignments.find((a) => a.key === decision.key) ?? null,
       assignmentAt: sends?.at ?? null,
       dispatchWork: dispatchWorkReadingOf(research ? (research as { dispatchWork?: unknown }).dispatchWork : null),
@@ -345,7 +346,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
               card(
                 i.card,
                 opened.kind === "INSTRUCTION" && opened.view.card.id === i.card.id ? (
-                  <InstructionDetail view={i} sharedSources={sharedSources} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
+                  <InstructionDetail view={i} sharedSources={sharedSources} activity={view ? huntActivity(allRows, i.decision.key) : null} workHref={`${here({ instruction: i.decision.key, open: null, show: null })}#assignments`} openHref={(id) => `${here({ open: id })}#a-${encodeURIComponent(id)}`} />
                 ) : null,
               ),
             )
@@ -448,7 +449,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   );
 }
 
-function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null }) {
+function InstructionDetail({ view, openHref, workHref, sharedSources, activity }: { view: InstructionView; openHref: (id: string) => string; workHref: string; sharedSources: HuntSourceProgressRead | null; activity: ReturnType<typeof huntActivity> | null }) {
   const d = view.decision;
   const r = view.reach;
   const links = (ids: readonly string[], more: number) => (
@@ -502,6 +503,24 @@ function InstructionDetail({ view, openHref, workHref, sharedSources }: { view: 
         </p>}
         <p className={s.note}>This percentage measures recorded work, not proof that every applicable source or public result has been found. Full hunt completion still requires coverage and reader-delivery evidence.</p>
       </div>
+      <h4 className={s.h4}>Collection to readers</h4>
+      {activity === null ? <p className={s.goldNote}>The published work list could not be read; stage activity is unknown.</p> : <>
+        <p className={s.note}>Recorded activity on {activity.listed} listed work items linked to this Send. A work item can reach more than one stage. The published list may be bounded; the completion count above covers the full linked work.</p>
+        <div className={`${s.gridAuto220} ${s.gap20}`} style={{ marginBottom: 18 }}>
+          {([ ["Found", activity.stages.found], ["Parsed", activity.stages.parsed], ["Verified", activity.stages.verified], ["Promoted", activity.stages.promoted], ["Shown on live site", activity.stages.live] ] as const).map(([label, count]) =>
+            <div key={label} className={`${s.insetTile} ${s.stack6}`}><span className={s.titleStrong14}>{label}</span><span className={s.fig}>{count}</span></div>)}
+        </div>
+        <p className={s.note}>Found includes recorded leads and routes, not verified claims. Verified requires an accepted pipeline verification or a verified publication outcome. Promoted means the publication record says it reached the canonical version. Shown on live site requires a separate public reader readback. These are recorded work items, not a claim that all information is complete.</p>
+        {activity.roles.length > 0 && <p className={s.text14}><span className={s.strong}>Workers recorded on this work: </span>{activity.roles.map(([role, count]) => `${role} (${count} listed item${count === 1 ? "" : "s"})`).join(" · ")}. These are historical workers; current Scouts are reported above.</p>}
+        {activity.recent.length > 0 && <div className={s.stack8} style={{ marginBottom: 24 }}>
+          <span className={s.label}>Recent recorded work</span>
+          {activity.recent.map(row => <div key={row.id} className={s.insetRow}>
+            <Link href={openHref(row.id)} className={s.btnLink} scroll={false}>{row.title}</Link>
+            <span className={s.text14}>{row.stateSays}</span>
+            <span className={s.monoSmall}>{formatEastern(row.lastActivityAt)}</span>
+          </div>)}
+        </div>}
+      </>}
       <h4 className={s.h4}>What it addresses</h4>
       <div className={s.stack8} style={{ marginBottom: 24 }}>
         <div className={s.insetRow}>

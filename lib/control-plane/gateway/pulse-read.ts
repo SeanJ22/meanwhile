@@ -182,6 +182,7 @@ export async function readPulse(
   return {
     revision: pulseRevision({
       beatAt: beat?.beatAt ?? null,
+      heartbeatRevision: heartbeat.value?.revision ?? null,
       snapshotRevision: snapshot.value?.revision ?? null,
       decisionCount: decisions.value?.length ?? null,
       researchRevision: research.value?.revision ?? null,

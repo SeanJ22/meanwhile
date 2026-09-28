@@ -85,6 +85,8 @@ export interface ScopeWorkReading {
   readonly subjectIds: readonly string[];
   readonly subjectIdsComplete: boolean;
   readonly dueThisCycle: number;
+  /** Exact member obligations dispatched in this cycle; absent on older readings. */
+  readonly dispatchedThisCycle?: number;
   /** Due rows this scope placed ahead of the rest in the Scout order. */
   readonly scoutRowsPlacedFirst: number;
   /** Paid Scouts admitted for work in this scope this cycle. Null until the dispatch phase ends. */

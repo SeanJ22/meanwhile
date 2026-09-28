@@ -559,7 +559,7 @@ export function instructionView(input: {
   /** A cycle that started before this Send cannot be called this Send's work. */
   readonly activeCycleStartedAt?: string | null;
   readonly nextCycleDueAt?: string | null;
-  /** Current research-state Scouts across the fleet; null when unread. */
+  /** Current research-state Scouts with this exact Send mark; null when unread or an older runner did not record marks. */
   readonly currentScouts?: number | null;
   /** MW-001/MW-021: this instruction as the runner read it from the work (research state `assignments`); null when not recorded. */
   readonly assignment?: AssignmentReading | null;
@@ -612,10 +612,10 @@ export function instructionView(input: {
             : { pill: "NOT YET CREATED", tone: "stone" as Tone, text: creation.says, at: null },
         ]),
     { pill: "CURRENT SCOUTS", tone: "slate", text: input.currentScouts === null || input.currentScouts === undefined
-      ? "Current Scout activity was not read. The admission count below describes the last cycle, not workers running now."
+      ? "Current Scouts for this Send cannot be attributed from the latest runner state. The admission count below describes the last cycle, not workers running now."
       : input.currentScouts === 0
-        ? "The current research state reports no Scout running across the fleet. Last-cycle admissions below are not current workers."
-        : `${input.currentScouts} Scout${input.currentScouts === 1 ? " is" : "s are"} running across the fleet in the current research state. This bounded assignment view cannot attribute every active job to this Send; last-cycle admissions below are not current workers.`, at: null },
+        ? `No Scout linked to this Send is running now. Last-cycle admissions below are historical.${input.nextCycleDueAt ? ` The runner's next recorded cycle is ${formatEastern(input.nextCycleDueAt)}.` : " The next cycle time was not recorded."}`
+        : `${input.currentScouts} Scout${input.currentScouts === 1 ? " is" : "s are"} running on work linked to this Send now. Last-cycle admissions below are not current workers.`, at: null },
   ];
   if (input.paidLaneClosedBecause !== null) {
     ack.push({

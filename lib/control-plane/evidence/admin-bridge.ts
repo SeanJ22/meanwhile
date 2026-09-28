@@ -62,7 +62,9 @@ export function assertOriginalCapture(record: ArtifactRecord, attempt: Attempt, 
       record.canonicalUrl !== held.canonicalUrl || record.recordedAt !== held.retrievedAt ||
       attempt.id !== record.attemptId || attempt.workItemId !== record.workItemId ||
       !attempt.artifactIds.includes(record.artifactId)) throw new AdminEvidenceRefusal("ATTRIBUTION_MISMATCH");
-  if (bytes.byteLength > ADMIN_EVIDENCE_MAX_BYTES || bytes.byteLength !== record.byteLength ||
+  if (record.byteLength > ADMIN_EVIDENCE_MAX_BYTES || bytes.byteLength > ADMIN_EVIDENCE_MAX_BYTES)
+    throw new AdminEvidenceRefusal("EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB");
+  if (bytes.byteLength !== record.byteLength ||
       sha(bytes) !== record.contentHash || sha(bytes) !== held.bodySha256) throw new AdminEvidenceRefusal("BYTES_MISMATCH");
   // The original scanner is also the mirror's final gate. A newly recognized credential
   // must never be exported merely because an older sidecar called the body RAW.
@@ -73,13 +75,15 @@ export function assertOriginalCapture(record: ArtifactRecord, attempt: Attempt, 
 
 export function verifyAdminEvidenceBlob(record: ArtifactRecord, blob: AdminEvidenceBlob): Uint8Array {
   adminEvidenceKey(record);
+  if (record.byteLength > ADMIN_EVIDENCE_MAX_BYTES || blob.bytes.byteLength > ADMIN_EVIDENCE_MAX_BYTES)
+    throw new AdminEvidenceRefusal("EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB");
   const copy = blob.copy;
   if (record.tier !== "RAW" || record.partial || !adminMirrorableContentType(record.contentType) ||
       copy.tier !== "RAW" || copy.source !== "VERIFIED_ORIGINAL_CAPTURE" ||
       copy.artifactId !== record.artifactId || copy.workItemId !== record.workItemId ||
       copy.attemptId !== record.attemptId || copy.contentHash !== record.contentHash ||
       copy.byteLength !== record.byteLength || blob.bytes.byteLength !== record.byteLength ||
-      blob.bytes.byteLength > ADMIN_EVIDENCE_MAX_BYTES || sha(blob.bytes) !== record.contentHash ||
+      sha(blob.bytes) !== record.contentHash ||
       !remainsRaw(record.contentType, blob.bytes)) {
     throw new AdminEvidenceRefusal("REMOTE_COPY_MISMATCH");
   }

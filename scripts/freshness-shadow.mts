@@ -303,7 +303,7 @@ import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
-  FleetSafetyRefusal,
+  FleetPreSendRefusal,
   resolveRollingCeiling,
   scheduledBlackoutAt,
   scoutEscalationReservation,
@@ -1941,7 +1941,7 @@ const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: Aut
     priceOf: modelResponseUsd,
     nextHoldId: () => `autonomous:${NOW}:${(autonomousHoldSeq += 1)}`,
     now: nowIso,
-    refusedBeforeSending: (error) => error instanceof FleetSafetyRefusal,
+    refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
   });
 /* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */

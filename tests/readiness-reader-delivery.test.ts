@@ -238,7 +238,7 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // registered state (53 more than AZ, NH, NJ). + the verified campaign sites the runner publishes (2026-09-25).
   assert.equal(
     contracts.length,
-    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1 + 1, // independently verified official filing facts
+    169 + 56 + 1 + (REGISTRATION_TARGETS.length - 3) + 1 + 1 + 1, // official filing facts and separate AZ operational-reference contract
     "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)",
   );
   assert.deepEqual(

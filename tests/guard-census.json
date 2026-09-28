@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 875,
-    "named": 8356,
+    "files": 914,
+    "named": 8519,
     "dynamic": 33
   },
   "files": {
@@ -44,6 +44,28 @@
         "docs/rulings.md states the acquisition doctrine, near the top, undiluted, and CLAUDE.md applies it",
         "the AGENTS.md mirror has not drifted from current law",
         "the acquisition doctrine is CURRENT canonical law with author provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/acquisition-repair-held-reuse.test.ts": {
+      "names": [
+        "linked successor reuses exact completed ancestor bytes, while an undeclared cross-work artifact remains refused"
+      ],
+      "dynamic": 0
+    },
+    "tests/acquisition-repair-knowledge.test.ts": {
+      "names": [
+        "a later Scout locates a deep ordinary table in handed bytes without blind page reads or network",
+        "a later worker opens full handed method and saved sanitized bytes with measured receipts"
+      ],
+      "dynamic": 0
+    },
+    "tests/acquisition-repair-roster.test.ts": {
+      "names": [
+        "href extraction cannot be silently requested from non-HTML source shapes",
+        "ordinary official roster table retains contact and profile link with source spans",
+        "saved Sierra Vista roster replays from the original hash-verified bytes when supplied",
+        "unvaulted successful reads are recoverable while actual access controls remain restricted"
       ],
       "dynamic": 0
     },
@@ -1291,7 +1313,7 @@
         "CONTACTS: a measure's contacts are its OWN district's board, not the reader's legislators",
         "CONTACTS: an officeholder question carries that OFFICE's own published contact",
         "CONTACTS: the reader's own legislators are the FALLBACK, and they still appear",
-        "RECORDS: a position record states the SEARCH, never a stance",
+        "RECORDS: a source passage states the SEARCH, never a stance",
         "RECORDS: no ISO date reaches a reader, because these render verbatim",
         "RED CONTROL: 'What's on the Vail school district agenda?' resolves Vail and takes the NEXT sitting",
         "RED CONTROL: Hobbs resolves to the exact person AND office, and the record gap is NAMED",
@@ -1716,6 +1738,14 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-stance-answerability.test.ts": {
+      "names": [
+        "a candidate's filing or biography cannot substitute for a direct personal stance",
+        "a page match cannot authorize a paid writer to state a person's stance",
+        "a question about what the page says can quote the page without speaker attribution"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-topic-timeline.test.ts": {
       "names": [
         "ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPlus AgendaCenter) quotes the data-center ordinance, not its neighbour",
@@ -1753,6 +1783,7 @@
         "(c) three more name forms fail closed, and the cost of each is recorded",
         "(c) two people of one exact name is a REFUSAL, and the state exists before it is needed",
         "both published date shapes parse, and anything else is null rather than plausible",
+        "historical Ask totals retain the recent chamber denominator under an explicit name",
         "nothing here scores, ranks, rates or recommends",
         "the identity key drops only what is never identity",
         "the roster scope is read from the reader's own divisions, never from a state list"
@@ -1783,16 +1814,37 @@
       ],
       "dynamic": 0
     },
+    "tests/assignment-evidence-trail.test.ts": {
+      "names": [
+        "an older incomplete acquisition result becomes a named gap, not a broken detail page",
+        "by-ID read checks only declared origin records and never scans all artifacts",
+        "exact captured origin and committed zero-request result show saved-byte reuse without a dollar claim",
+        "historical Sierra Vista clock contradiction is disclosed without changing saved timestamps",
+        "only exact current publication version and body readback becomes a public link",
+        "origin metadata refuses unrelated owners, incomplete attempts and partial captures",
+        "unconfirmed origin or nonzero request cannot claim validated reuse or avoided request"
+      ],
+      "dynamic": 0
+    },
+    "tests/assignment-history-search.test.ts": {
+      "names": [
+        "historical public identities and failure codes remain searchable beyond visible rows without leaking arbitrary worker text"
+      ],
+      "dynamic": 0
+    },
     "tests/assignment-identity.test.ts": {
       "names": [
         "MW-015: a Send is complete only when every member is settled, and the instruction says which are not",
         "Money splits paid charges by what each recorded it was for; older rows say so, and test runs are inside the total on their own line",
         "REORDERED records share the per-cycle write budget after the creations, and the remainder is carried, not dropped",
         "a Scout on a spent assignment is refused by the assignment's own name, with spent and held",
+        "a Send during an active cycle is shown as saved and waiting, never as running",
         "a Send records itself on what it created and on what it found already on a clock — appended, never overwritten",
         "a Send with no budget of its own adds no limit; work no Send reached passes",
+        "a Send's completion uses the same created and reordered members as its linked work list",
         "a created row whose creator is not on record is never guessed into a Send",
         "a deployment may carry its own budget, kept on the DISPATCH intent",
+        "a new Send to the same key appends a new receipt and does not erase the old hunt",
         "a policy row that is not a policy holds paid work, by name, instead of reading as no scope",
         "a proof run charges under its own project, marked non-production — real money, kept apart",
         "a round names its question from the obligation's own state, never from the job type, and none when that state is missing",
@@ -1804,6 +1856,7 @@
         "every charge the dispatcher writes names its obligation, its Sends, its record class, its question and what it came to",
         "saved instruction wording preserves a hunt's token-only total and distinguishes legacy rolling budgets",
         "syncObligations keeps the Sends a row records when a provider's signals move, and withAssignment only appends",
+        "the hunt card uses its current ledger, labels last-cycle admissions, and separates current Scouts",
         "the owner's questions travel typed through expansion.scope.set onto the decision, and onto every obligation the Send reaches",
         "the runner's reading names what each Send reached and its budget — spent, held, left — with the window",
         "work several Sends reached runs while any budgeted one has room — under the most recent — and is refused only when none does"
@@ -1813,17 +1866,21 @@
     "tests/assignment-view.test.ts": {
       "names": [
         "a Scout that says only a person can move it is BLOCKED on you, though the runner committed it as a wall",
+        "a later same-key Send does not claim an earlier body publication",
         "a parser attempt that aborted without a result is a failed parse run, counted — never 'no parse has run'",
         "a refused hunter finish carries when it was refused, so a refusal quoting an old limit never reads as current",
         "a retry is work repeated after a failure — a scheduled re-reading after a discharged round is not one",
         "a shared cost (the Scout pre-warm) is named as shared, joined to no assignment, and never split",
         "an Attempt with no model recorded says 'model not recorded' — never an assumed model",
+        "an exact manual source gap is indexed under its Send while legacy unkeyed gaps remain unlinked",
         "an unmeasured cost (usd null on model work) is a named gap in the row, the list row and the summary — never $0",
+        "body publication attempts expose only recorded public-safe outcomes and retain partial status",
         "eligibility is the later of the next-due and the backoff retry",
         "every number the view draws carries a denominator and a contract, and every stated N equals the rows",
         "exact Send counts survive trimming and count shared work once per instruction without copying the work",
         "failed: a Scout that found nothing and a wall at the source read FAILED; REQUIRES_NEW_ADAPTER reads BLOCKED on engineering",
         "filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero",
+        "full index separates latest Attempt from activity and counts only measured dependency unlocks",
         "repair successor costs and publication remain on the original Send assignment",
         "routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered",
         "routine counts the projector could not state stay unknown — never replaced by a list length or a zero",
@@ -1884,6 +1941,26 @@
         "THE PLAN: an accepted row is never dropped; the same walk carries it byte-exactly, a newer walk renews it, an older one never does",
         "THE VERSION: every row passes C16 and names the reviewer's code version; a manual reviewer's row is refused",
         "an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection"
+      ],
+      "dynamic": 0
+    },
+    "tests/automatic-venue-resolutions.test.ts": {
+      "names": [
+        "a carried address cannot borrow a newer feed's acquisition receipt",
+        "a different city or an ambiguous response cannot create a pin",
+        "a retry retains only an exact previously verified sitting and address",
+        "an iCal event's relative URL becomes an absolute publisher link",
+        "one exact published address and Census match can place a meeting"
+      ],
+      "dynamic": 0
+    },
+    "tests/autonomous-cycle-wall.test.ts": {
+      "names": [
+        "a slow repository selection yields owed autonomous work and permits a durable completed cycle",
+        "held selection that consumes the remaining dispatch window leaves the worker queued without starting an attempt",
+        "the early slice's store deadline does not leak into independent cycle lanes",
+        "the normal cycle wires its autonomous store and dispatch deadlines ahead of finalization",
+        "the original instruction starts before independent lanes and joins before finalization"
       ],
       "dynamic": 0
     },
@@ -2535,6 +2612,7 @@
         "AZ, NH, and NJ finance candidates bind exact source/class/scope and promote with record-level receipts",
         "Pima filing index and transactions promote together; a capped successor preserves LKG",
         "a bad state candidate and a failed source attempt preserve the prior GOOD pointer",
+        "an official filing resolves the same candidacy's gap without treating it as an unexplained disappearance",
         "documentary state-money proof inventory binds every promoted authority and fails closed otherwise",
         "finance contracts are owner-only and executable paths cannot write tracked runtime truth",
         "one invalid state projection cannot suppress or erase another state's Reader",
@@ -2587,6 +2665,12 @@
       ],
       "dynamic": 0
     },
+    "tests/campaign-publication-links.test.ts": {
+      "names": [
+        "approved captured HTML yields exact same-host publication links without turning pointers into facts"
+      ],
+      "dynamic": 0
+    },
     "tests/campaign-site-chain.test.ts": {
       "names": [
         "a class opened for another field does not approve a campaign site",
@@ -2615,6 +2699,8 @@
     },
     "tests/campaign-site-runner.test.ts": {
       "names": [
+        "a blocked first linked page records a route Attempt and yields the next page on the next bounded pass",
+        "a bounded linked publication capture reaches the existing derived corpus with distinct approval, href and child Attempt",
         "a fetch that never answers cannot hold the pass: it ends at its wall-time budget and every unread lead stays owed, never refused",
         "a refused lead publishes nothing and keeps its typed reason where Admin reads it",
         "a runner cycle over held results publishes a verified site through the derived door with no owner step, and /ballot and Ask show it",
@@ -2666,8 +2752,9 @@
       "names": [
         "B14: a curated bio always outranks a derived one",
         "B14: a derived blurb carries its source class, exactly as a curated one does",
+        "B14: captured navigation, old-cycle appeals and truncated fragments do not masquerade as biographies",
         "B14: no markup ever reaches a reader inside a blurb",
-        "B14: the blurb rung reaches every candidate whose page we hold, equally",
+        "B14: the blurb rung reaches every candidate with a usable captured description, equally",
         "B14: the denominator is measured from the ballot, not quoted",
         "D05: a held-but-unreadable page is not a search that came back empty",
         "D05: a passage is a short quote with its link and date, never the page",
@@ -2679,7 +2766,9 @@
         "P02: equal effort — the same issue list for every candidate, no exceptions",
         "P02: no composite score exists — not a number, not an order, not a comparison",
         "P02: no issue phrase is a single loose word that turns a search into noise",
-        "P02: the headline is provenance and carries no count at all"
+        "P02: the headline is provenance and carries no count at all",
+        "source revisions preserve a removed passage as historical and never duplicate unchanged current text",
+        "three captured revisions of one unchanged page cannot become three chrome pages"
       ],
       "dynamic": 0
     },
@@ -2722,6 +2811,13 @@
         "every candidate-links key resolves to a real candidacy or lineup nominee",
         "every link was fetch-verified: url, verification sentence, and date present",
         "no ranking vocabulary anywhere in the links file"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-position-provenance.test.ts": {
+      "names": [
+        "Ask keeps source version, exact passage locator and source-stated date without claiming a personal stance",
+        "ballot card labels source versions and keeps source publication and read dates distinct"
       ],
       "dynamic": 0
     },
@@ -2918,6 +3014,72 @@
       ],
       "dynamic": 0
     },
+    "tests/checklist-census.test.ts": {
+      "names": [
+        "a later same-key hunt keeps old parsed people in history until its own result is recorded",
+        "a legacy read without occurrence lineage leaves delivery timing unmeasured",
+        "census uses exact saved instruction and keeps unmeasured universe open",
+        "failed read retains prior census and marks the current observation incomplete",
+        "retries cannot add objects, change inventory revision or earn checklist points"
+      ],
+      "dynamic": 0
+    },
+    "tests/checklist-connections.test.ts": {
+      "names": [
+        "a published source with a reader receipt is supporting evidence, not a full checklist pass",
+        "complete definition and dataset inventory never turns missing store reads into zeros or passes"
+      ],
+      "dynamic": 0
+    },
+    "tests/checklist-delivery-score.test.ts": {
+      "names": [
+        "a duplicate with conflicting requirements is refused and partial reads stay provisional",
+        "accepted object version is counted once across field requirements and needs all promised surfaces",
+        "an identity mismatch cannot earn public delivery or freshness",
+        "attempts, aliases and overlapping profiles cannot duplicate one obligation",
+        "never acquired is not fresh and expired public readbacks cannot prove current delivery",
+        "retains all original definitions and cannot certify a partially instantiated profile",
+        "stale and future observations cannot be substituted for current proof",
+        "unknown applicability and invalid absence decisions stay unresolved",
+        "work success, wrong geography, held publication and partial clauses do not earn delivery",
+        "zero denominator is unmeasured and display never rounds incomplete to 100"
+      ],
+      "dynamic": 0
+    },
+    "tests/checklist-dispatch-witness.test.ts": {
+      "names": [
+        "a later same-key instruction cannot inherit prior dispatch",
+        "aborted, future, partial, mismatched and proof work never establishes normal durable completion",
+        "joined ordinary dispatch proves only its one operating gate, never publication or full coverage"
+      ],
+      "dynamic": 0
+    },
+    "tests/checklist-running-release-witness.test.ts": {
+      "names": [
+        "JSONB key reordering preserves the adoption hash and completed-cycle witness",
+        "a running but unfinished cycle, stale beat or expired adoption cannot pass",
+        "an old CURRENT runner or tampered adoption cannot certify the required repair base",
+        "completed normal cycle on adopted required repair base earns only narrow GATE-02 witness",
+        "normal census connects only the running-release gate while the full inventory remains unresolved",
+        "post-cycle boundary retains matching adoption until it expires or process changes",
+        "process, deployed, integrity and exact instruction identities must agree"
+      ],
+      "dynamic": 0
+    },
+    "tests/checklist-timings.test.ts": {
+      "names": [
+        "a later same-key hunt does not inherit original legacy timing, but original history remains visible",
+        "a measured execution with identical endpoint stamps keeps its start unknown without hiding acquired work",
+        "a new occurrence at the same subject belongs to the later receipt without hiding the old occurrence",
+        "a readback for another version leaves the work unfinished with original registration age",
+        "a repair child inherits its original root unless it explicitly carries the later receipt",
+        "an unrelated passed audit cannot fill a missing publication audit",
+        "backwards clocks stay unknown and are flagged; unrelated scope is excluded",
+        "delivery clocks bind parser, approval and version without inventing source or readiness times",
+        "partial publication needs the exact audit to cover all accepted record IDs"
+      ],
+      "dynamic": 0
+    },
     "tests/chromium-pin.test.ts": {
       "names": [
         "a build directory with no binary in it blames the reader, not the installer",
@@ -3108,6 +3270,8 @@
         "bootstrap requires the explicit non-production fixture gate and never follows a read error",
         "canonical read distinguishes absent pointer, promoted LKG metadata, and store failure",
         "canonical read refuses a planted pointer/candidate proof mismatch",
+        "historical promotions page through an exact anchored chain and prove every former version",
+        "historical promotions refuse tampered rows, source switches, missing moves and cycles",
         "legacy FEC, NH, and ACS tracked-write commands are retired before acquisition",
         "production refuses tracked bootstrap even when a caller requests the fixture gate",
         "routine FEC target acquisition cannot reopen mutable tracked roster or ballot authority"
@@ -3227,6 +3391,16 @@
       "names": [
         "the real map client entry bundles without Node runtime builtins",
         "use-client modules cannot value-import the server civic-data graph"
+      ],
+      "dynamic": 0
+    },
+    "tests/cochise-voting-sites.test.ts": {
+      "names": [
+        "Pima source failure retains Pima only and a Cochise failure retains Cochise only",
+        "normal Cochise successor promotes through the existing pointer and leaves Pima/NH/NJ exact",
+        "official 2026 Cochise PDF yields exactly 18 countywide vote centers with exact raw hash",
+        "the next standard refresh carries Cochise unchanged while refreshing Pima, Morris and NH",
+        "wrong year, short or duplicate list, malformed address and missing general-election link refuse"
       ],
       "dynamic": 0
     },
@@ -4111,6 +4285,49 @@
       ],
       "dynamic": 0
     },
+    "tests/delivery-experience-action-receipt.test.ts": {
+      "names": [
+        "Admin actions claim saved state only from a DONE receipt"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-experience-admin-controls.test.ts": {
+      "names": [
+        "a retry keeps one key but changing the budget period or starting a new hunt cannot replay the old action",
+        "only a definitive saved or refused action releases the retry nonce"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-experience-admin-scope.test.ts": {
+      "names": [
+        "a saved ZIP instruction survives the shared Admin scope URL and header"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-experience-manual-reader.test.ts": {
+      "names": [
+        "manual reader witnesses require exact accepted record, current version, and visible control"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-experience-roster-provenance.test.ts": {
+      "names": [
+        "a reader's source panel distinguishes the current roster from retained contact evidence",
+        "an incomplete roster update cites the prior authority only for unchanged retained facts",
+        "changed or reattributed optional facts cannot inherit an older source receipt"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-experience-subset-verification.test.ts": {
+      "names": [
+        "a copy of the source, its URL, or its acquisition cannot be an independent profile",
+        "a global authority defect cannot issue any isolated validator IDs",
+        "a wrong office cannot confirm a named member",
+        "one independent profile confirms only its own roster row",
+        "one profile contradiction fails the whole chain but preserves only the unrelated row's safe IDs"
+      ],
+      "dynamic": 0
+    },
     "tests/delivery-trail.test.ts": {
       "names": [
         "Admin retains failed readback reason and time without turning it into verified delivery",
@@ -4265,7 +4482,8 @@
         "PROMOTE only when every check holds, from a reviewed crosswalk row, never from a find alone",
         "ROBOTS IS RECORDED, NOT BLOCKING: a walk over a disallowing robots.txt promotes the row; a recorded wall holds it as CHALLENGED; a pre-2026-09-25 robots skip holds it until the next walk",
         "THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact",
-        "THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined for, and anything else is held by name"
+        "THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined for, and anything else is held by name",
+        "a reviewed-registry body used to fill a registration gap remains in each wiring row's provenance"
       ],
       "dynamic": 0
     },
@@ -4574,6 +4792,14 @@
       ],
       "dynamic": 0
     },
+    "tests/early-hunt-membership.test.ts": {
+      "names": [
+        "an old original-hunt occurrence remains eligible without new ownerInstructions, while a later same-key Send does not inherit it",
+        "effective receipt uses instants, and conflicting same-instant marks fail closed",
+        "filtered and explicitly paused cycles cannot start either autonomous slice"
+      ],
+      "dynamic": 0
+    },
     "tests/error-diagnostic.test.ts": {
       "names": [
         "a plain message stays exactly itself, and a long chain is capped",
@@ -4613,6 +4839,48 @@
       "names": [
         "ambiguous mappings and traversal are rejected; JSON proof bytes cannot be redirected",
         "historical image aliases resolve exact bytes after the original is gone, without rewriting hash-bound reports"
+      ],
+      "dynamic": 0
+    },
+    "tests/execution-accountability-budget.test.ts": {
+      "names": [
+        "a different lifetime scope cannot discard an overlapping rolling budget",
+        "a lifetime-hunt job bypasses secondary time and rolling limits while unrelated work remains held",
+        "a new same-key hunt cannot inherit the old receipt's charges or an unmarked budget admission",
+        "historical autonomous cost joins a hunt only through exact recorded subject membership",
+        "lifetime hunt admits shared work despite exhausted older rolling Send and area limits",
+        "shared token charges are reported once but consume every exact beneficiary allowance",
+        "the original lifetime allowance still refuses concurrent holds and counts retries",
+        "unpriced usage preserves known hunt and service amounts"
+      ],
+      "dynamic": 0
+    },
+    "tests/execution-accountability-continuation.test.ts": {
+      "names": [
+        "downstream work keeps the exact hunt moving after standing due work is dispatched",
+        "one old Scout may retry saved evidence under the new held protocol, then normal debt resumes",
+        "the exact original hunt continues promptly after progress without lifting its lifetime cap",
+        "zero-dispatch retries back off without an arbitrary count barrier, while budget refusal stops fast retries"
+      ],
+      "dynamic": 0
+    },
+    "tests/execution-accountability-held-reuse.test.ts": {
+      "names": [
+        "held bytes cross only a linked same-subject repair ancestry with a completed origin capture"
+      ],
+      "dynamic": 0
+    },
+    "tests/execution-accountability-manual-gaps.test.ts": {
+      "names": [
+        "a different receipt cannot inherit the original hunt's source gaps",
+        "missing source capabilities persist as idempotent, non-executable work under the exact Send"
+      ],
+      "dynamic": 0
+    },
+    "tests/execution-accountability-priorities.test.ts": {
+      "names": [
+        "full-population blocker ranking names the actual next owner and does not invent downstream unlock",
+        "measured ready dependents improve intervention priority without claiming all dependencies are ready"
       ],
       "dynamic": 0
     },
@@ -4669,6 +4937,7 @@
         "a scope budget admits within it, reserves the worst case, and refuses by name past it",
         "a scope's geography, priority, budget, note and key are validated before anything is written",
         "an unresolved hunt retains its budget period and holds unrelated model admissions too",
+        "lifetime hunt edits retain instruction identity and accounting start while recording the new decision receipt",
         "on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans",
         "paid discovery follows exact hunt membership without consuming or requiring its token allowance",
         "registry governments join their Census unit territory by the generator's own id rule",
@@ -4839,6 +5108,7 @@
     },
     "tests/field-manual-scout.test.ts": {
       "names": [
+        "OFFICIAL_ROSTER inherits historic contact and roster methods before unrelated doors",
         "a dead door recorded for robots.txt alone is not a wall: the brief says so and marks it walkable; an access-control dead door stays a wall (owner decision 2026-09-25)",
         "a projection never exceeds its limit — a worker inherits a page, not the whole store",
         "compoundingPair flags a rebuilt-existing route as a defect (RULING 63)",
@@ -4952,6 +5222,7 @@
     },
     "tests/fleet-coordinator-progression.test.ts": {
       "names": [
+        "a directed Send takes the normal worker slot ahead of unrelated older work",
         "an already elapsed deadline is never described as a dispatch count limit",
         "insufficient dispatch time stops expensive planning and reports the actual ceiling",
         "unserved obligations receive a turn before an earlier item consumes another stage"
@@ -5558,6 +5829,12 @@
       ],
       "dynamic": 0
     },
+    "tests/host-spacing.test.ts": {
+      "names": [
+        "overlapping lanes serialize waits for one host without holding another host"
+      ],
+      "dynamic": 0
+    },
     "tests/hosted-cost-invariant.test.ts": {
       "names": [
         "FCP-9D · deploy classification remains distinct from software certification",
@@ -5672,10 +5949,22 @@
       ],
       "dynamic": 0
     },
+    "tests/hunt-continuation.test.ts": {
+      "names": [
+        "Admin stage counts use exact Send marks and separate publication from reader readback",
+        "a directed hunt continues promptly when its own cycle dispatched work and left due members",
+        "a next-cycle heartbeat update refreshes Admin even when beatAt is unchanged",
+        "current Scout activity is attributed to the exact Send rather than the fleet"
+      ],
+      "dynamic": 0
+    },
     "tests/hunt-source-tasks.test.ts": {
       "names": [
         "a pending publication is not hidden by another body's later success and keeps failure backoff",
+        "all registered manual contracts have an invocation disposition; only exact original 85635 adds scoped AZ reference and PRL",
         "an actual resolved Send selects shared producers once, without expanding the standing portfolio",
+        "only the exact original Cochise work binding admits the source-scoped voting-site task",
+        "scheduled blackout admits only the already-started exact original source Send",
         "source admission resumes from durable failure/success clocks rather than rerunning each pass or restart"
       ],
       "dynamic": 0
@@ -5880,6 +6169,13 @@
         "the installed dispatcher admits one exact registered manual contract",
         "the owner window cannot impersonate the standing clock",
         "unknown, missing, and duplicated manual contracts are refused"
+      ],
+      "dynamic": 0
+    },
+    "tests/instruction-membership.test.ts": {
+      "names": [
+        "older key-only snapshots cannot establish an exact receipt total or zero publications",
+        "the active receipt excludes old completed work and old publication while retaining shared history"
       ],
       "dynamic": 0
     },
@@ -6108,6 +6404,13 @@
       ],
       "dynamic": 0
     },
+    "tests/launch-wake.test.ts": {
+      "names": [
+        "a Send wakes only until a completed cycle names its exact receipt",
+        "a research Resume wakes once, but a later Pause or acknowledgment does not"
+      ],
+      "dynamic": 0
+    },
     "tests/lead-adjudication.test.ts": {
       "names": [
         "a body may not be promoted straight from a lead",
@@ -6137,7 +6440,7 @@
     },
     "tests/learning-trends.test.ts": {
       "names": [
-        "MW-025: a handed door counts as used when its url matches a walked rung or its routeId a proposed candidate",
+        "MW-025: actual successful route use gets one credit; a proposal and duplicate entry get none",
         "MW-027: no rows means no weeks and no measured series, never a row of zeros",
         "MW-027: the weeks run from the first record through now, and a week with no record is a gap in every series"
       ],
@@ -6934,7 +7237,8 @@
         "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
         "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
         "WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method",
-        "discovery search records hunt references on successful and failed charges, while an out-of-scope hold keeps free reads"
+        "discovery search records hunt references on successful and failed charges, while an out-of-scope hold keeps free reads",
+        "original hunt paid search ignores only discretionary request counts and retains shared provider admission"
       ],
       "dynamic": 0
     },
@@ -7782,6 +8086,7 @@
         "a semantically bad successor is refused without replacing the promoted reference",
         "first seed promotes with source-scoped evidence and a later HTTPS failure retains LKG",
         "live-input acquisition derives both Census sheets and carries exact response-byte receipts",
+        "scoped Arizona source promotes only Arizona and its installed registry wins over legacy without inventing another state",
         "standing jurisdiction obligations require the installed promoted projection and never read tracked JSON",
         "the production promoter has no tracked-input or Git-writer fallback"
       ],
@@ -8354,12 +8659,15 @@
       "names": [
         "Scout contract-repair context contains executable typed grammar rather than unspecified objects",
         "a newly dispatched source instruction can acquire an executable successor without inventing prior observations",
+        "a roster repair schedules only profile URLs grounded in exact official href spans",
         "completed Scout repair retains parent instructions and creates one ordinary successor that really acquires, parses and verifies",
         "completed fresh fetch can reobserve unchanged old bytes without rewriting their immutable acquisition time",
         "old content identity needs a real completed fetch rung for fresh observation; inherited replay cannot refresh it",
+        "registered publisher fallback refuses a different host even if the captured proposal cites it",
         "repair admits established school publishers and independent official records but refuses invented publishers and repeated source bytes",
         "repair refuses fabricated, stale, missing, unsupported and self-verifying evidence without altering required verification",
         "repair refuses unchanged ancestor proposals and invalid lineage without clearing the obligation",
+        "saved local-jurisdiction roster shape with no initial URL uses only an exact registered host and completed Scout bytes",
         "service and voter-access discovery can admit independently replayed repair instructions",
         "seven already observed proposals cannot starve an older actionable repair",
         "successor creation is atomic and an interrupted older registration is recoverable",
@@ -8728,6 +9036,13 @@
       ],
       "dynamic": 0
     },
+    "tests/publication-record-changes.test.ts": {
+      "names": [
+        "accepted-record changes distinguish facts from refreshed evidence and leave neighbours out",
+        "actual event dates and source changes remain changed; missing prior authority and duplicate identities fail"
+      ],
+      "dynamic": 0
+    },
     "tests/questionnaire-store.test.ts": {
       "names": [
         "RULING 112 — verbatim, swept by SHAPE",
@@ -8871,6 +9186,12 @@
     "tests/reader-ballot-scope.test.ts": {
       "names": [
         "current certified scope retires obsolete filing notes in Ask and the shared ballot footer, retaining their dated source"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-bill-summary-witness.test.ts": {
+      "names": [
+        "bill-summary witness uses the actually visible source window and distinct provenance"
       ],
       "dynamic": 0
     },
@@ -9171,6 +9492,7 @@
         "evidence packaging preserves the exact baseline JSON and deterministic archive",
         "fresh Reader closure admission requires authority while inherited historical receipts retain compatibility",
         "graph control crosses actual API fetches and fails when the reader import is removed",
+        "later verified AZ filings resolve three candidacy gaps without equating old mismatched committees",
         "legacy execution-authority compatibility is pinned to exact pre-seam path and bytes",
         "promoted officeholder-statement drift fails without redefining the frozen 29/3 denominator",
         "promoted roster member and disposition drift fails without shrinking the frozen child denominator",
@@ -9730,6 +10052,12 @@
         "a territory's governments are exactly its divisions TIGER/Line gives a governing status, read from the committed extract (2026-09-25)",
         "every Census government sits in exactly one state's file, every file is what the index says, and every row pairs or says why not",
         "the jurisdiction ids are the operational reference's own, collision suffixes included"
+      ],
+      "dynamic": 0
+    },
+    "tests/registration-reviewed-body.test.ts": {
+      "names": [
+        "reviewed body bridge requires an exact Census government-to-division pairing"
       ],
       "dynamic": 0
     },
@@ -10389,6 +10717,12 @@
       ],
       "dynamic": 0
     },
+    "tests/runner-release-wake.test.ts": {
+      "names": [
+        "a wake reconciles the deployed release before admitting another research cycle"
+      ],
+      "dynamic": 0
+    },
     "tests/runtime-authority.test.ts": {
       "names": [
         "a read that fails to answer during a shared-config rewrite is read again and admits on the answer",
@@ -10521,7 +10855,10 @@
         "W3.A: a worker that throws leaves NO disposition and the route stays owed",
         "W3.B: an occurrence that closes UNRESOLVED does not move the freshness anchor",
         "W3.C: a discharged obligation's debt is CLEARED rather than left to age forever",
-        "W3.F: a 200 with bytes becomes INGESTED with a hashed artifact"
+        "W3.F: a 200 with bytes becomes INGESTED with a hashed artifact",
+        "a backward executor end is named and uses an independently valid observed terminal clock",
+        "a dispatched run records measured start, executor end, disposition and charge time",
+        "a future executor end cannot put a completed disposition or charge ahead of observation"
       ],
       "dynamic": 0
     },
@@ -10573,7 +10910,7 @@
     "tests/scout-lane.test.ts": {
       "names": [
         "1. SEEDED: a route declared DETERMINISTIC never consumes a model",
-        "10. SEEDED (measured live): a provider refusal before any completion aborts with a MEASURED zero cost",
+        "10. a lost or server-error response keeps unknown spending reserved, including after metered turns",
         "11. SEEDED (RULING 243): a finish whose observedOn disagrees with the artifact record is REFUSED; the corrected claim is accepted and the candidate carries machine-owned provenance",
         "12. SEEDED (RULING 243): a permission claim the record contradicts, a citation of robots documents only, and an absent claim are each refused by name",
         "12b. robots.txt is RECORDED, never a refusal (owner decision 2026-09-25): a candidate citing a page retrieved under DISALLOWED or CANNOT_TELL is accepted, and the verdict is its machine-owned permission",
@@ -10595,8 +10932,13 @@
         "8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt",
         "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open",
         "EARLY STOP: a walk that stalls past minRungs finishes early instead of running to the turn bound",
+        "a later toolkit construction failure remains unpriced and cannot release an unknown hold",
         "a recorded Admin Send carries its selected questions into the actual Scout request without claiming publication",
-        "full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows"
+        "an unknown sent Scout request cannot settle away its original lifetime reservation",
+        "context assembly failure records a durable zero before any toolkit or provider request",
+        "full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows",
+        "only recognized request rejections establish zero, not timeout or arbitrary HTTP statuses",
+        "proven pre-send Scout refusals settle unused holds without erasing earlier measured turns"
       ],
       "dynamic": 0
     },
@@ -10692,7 +11034,7 @@
         "search: when no provider answers it is a named transport failure, not a false absence",
         "the permission read counts toward the cap: at cap-1 it consumes the last slot and the GET is refused by name",
         "the tool-call bound refuses the (N+1)th call and names it; read_inherited counts as a call",
-        "the toolkit exposes exactly the research tools, each requiring rung and why"
+        "the toolkit exposes exactly the research tools with their required locator and rationale"
       ],
       "dynamic": 3
     },
@@ -10786,6 +11128,7 @@
         "a ledger the store cannot read or write refuses the hold, by name: nothing runs unbudgeted",
         "a missing Send record or an unreadable budget refuses; with no Send budget nothing changes",
         "a pre-warm holds its own worst case on the budget of the work it serves, and is refused when that does not fit",
+        "a provider response with incomplete usage keeps the durable autonomous area hold, while a typed pre-send refusal releases it",
         "a settled job's measured spend counts until the cost history carries it, never twice",
         "an exhausted AZ area budget blocks an autonomous AZ job before it sends, whether the area is matched by member or by state",
         "an exhausted Send in NJ does not block an autonomous AZ job: autonomous work is never checked against a Send's budget",
@@ -11215,6 +11558,15 @@
         "ignoreTopLevel drops a run-accounting block only at the top",
         "key order is not a fact; array order is",
         "writeStampStable leaves unchanged facts byte-identical and records the observation; changed facts write"
+      ],
+      "dynamic": 0
+    },
+    "tests/standing-lineage.test.ts": {
+      "names": [
+        "coordinator keeps duplicate period roots recorded but defers their paid lane",
+        "one source period continues its richest actual held root without losing sibling history",
+        "sibling bytes require a completed same-period origin and actual official-host success rung",
+        "verified child publication advances the saved source clock once; partial work does not"
       ],
       "dynamic": 0
     },
@@ -11999,6 +12351,12 @@
         "every notice summary cites an exact document version in the snapshot",
         "explainers pass the register test: plain words, no advocacy",
         "the vote surface actually renders the explainers"
+      ],
+      "dynamic": 0
+    },
+    "tests/vote-history-bill-summary.test.ts": {
+      "names": [
+        "older roll calls retain reviewed bill explanations only at their exact official URL"
       ],
       "dynamic": 0
     },

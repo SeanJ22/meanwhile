@@ -184,7 +184,7 @@ test("the runner reads a state's registration before its providers run, before t
   assert.ok(registrationRead > 0 && ownershipRead > registrationRead && refusalReturn > ownershipRead,
     "a scope awaits registration and meeting ownership before returning its territory preflight, preserving refused registrations");
   assert.match(runner, /await preloadRegistrationJurisdictions\(\{ root: ROOT, states: dispatchTargets\.flatMap/, "a DISPATCH's states before its plan");
-  assert.match(runner, /addressSource: dispatchedAddressSource\(e\.reg, /, "a dispatched need's address names the registry it was recorded in");
+  assert.match(runner, /addressSource: dispatchedAddressSource\(e\.reg,\s*/, "a dispatched need's address names the registry it was recorded in");
   const wiring = readFileSync(join(ROOT, "scripts", "derive-meeting-source-wiring.mts"), "utf8");
   assert.match(wiring, /const stateOf = \(ocdId: string\): string \| null => ocdStateCode\(ocdId\)/, "the wiring derive reads a territory's registration too");
 });

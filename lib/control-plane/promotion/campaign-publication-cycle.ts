@@ -1,3 +1,5 @@
+/** @freshness-reads-here The retrievedAt clock is recorded only after this
+ * adapter receives the complete publisher body and verifies its byte hash. */
 import { createHash } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { VaultIndex } from "../evidence/read-only-vault.ts";

@@ -38,7 +38,10 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
   assert.ok(javascript && stylesheet, "the real component bundle must include its JS and CSS Modules");
   const server = createServer((request, response) => {
     if (request.url?.startsWith("/api/votes?")) {
-      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ member, votes, chamber: "house", keyVotes: [] }));
+      const history = new URL(request.url, "http://fixture.test").searchParams.get("history") === "1";
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(history
+        ? { historicalVotes: [], historyStatus: "COMPLETE", nextHistoricalVersionId: null, currentVersionId: "fixture:current" }
+        : { member, votes, chamber: "house", keyVotes: [] }));
     } else if (request.url === "/fixture.js") {
       response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     } else if (request.url === "/fixture.css") {

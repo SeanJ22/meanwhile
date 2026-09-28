@@ -133,7 +133,8 @@ function checkCycleFailsClosed(src: string): void {
   assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("const scoutFor ="), "the Scout tool is referenced before it is built");
 
   /* 8. The auditor admits against the ceiling in force. */
-  assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd \}\);/, "the auditor is not given the ceiling in force");
+  assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
+    "the auditor is not given the ceiling in force");
 }
 
 /** Free work runs exactly as before: nothing paid, and nothing unreadable, gates it. */
@@ -143,7 +144,7 @@ function checkFreeWorkUntouched(src: string): void {
     /\nif \(!dry && !canary && !scheduledBlackout && !intents\.runnerPause\.paused\) \{\s*try \{\s*const retained = await retainRecentRoutineMeetingEvidence\(/,
     "routine meeting intake is gated differently",
   );
-  const walk = src.slice(src.indexOf("let meetingsDiscoveryState: string;"), src.indexOf("meetingsDiscovery = await runMeetingsDiscovery(repos, {"));
+  const walk = src.slice(src.indexOf('let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";'), src.indexOf("meetingsDiscovery = await runMeetingsDiscovery(repos, {"));
   assert.ok(walk.length > 0, "the discovery walk anchors moved");
   assert.match(
     walk,
@@ -154,7 +155,16 @@ function checkFreeWorkUntouched(src: string): void {
     assert.ok(!walk.includes(paidFact), `the free discovery walk now depends on ${paidFact}`);
   }
   assert.match(src, /const MEETINGS_DISCOVERY_ENABLED = process\.env\.WTP_MEETINGS_DISCOVERY !== "off";/);
-  assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !scheduledBlackout && !intents\.runnerPause\.paused;/);
+  assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && \(!scheduledBlackout \|\| hasLifetimeHunt\) && !intents\.runnerPause\.paused;/);
+  assert.match(src, /const dispatchScopes = \(expansionPlan\?\.scopes \?\? \[\]\)\.filter\(scope => !scheduledBlackout \|\|[\s\S]*?scope\.decision\.key === ORIGINAL_LIFETIME_HUNT\.key &&[\s\S]*?scope\.decision\.receiptId === ORIGINAL_LIFETIME_HUNT\.receiptId &&[\s\S]*?scope\.decision\.budgetStartedAt === ORIGINAL_LIFETIME_HUNT\.budgetStartedAt &&[\s\S]*?scope\.decision\.budgetUsd === ORIGINAL_LIFETIME_HUNT\.budgetUsd\)\);/,
+    "blackout continuation must select only the original exact receipt");
+  assert.match(src, /if \(!scheduledBlackout\) \{\s*for \(const \{ intent \} of dispatchDetails\)[\s\S]*?for \(const t of carriedDispatchTargets/,
+    "other dispatch intents must not acquire work during the original hunt's blackout exception");
+  assert.match(src, /for \(const scope of dispatchScopes\) add\(scopeWorkTarget\(scope\)\)/);
+  assert.match(src, /applyManualSourceGaps\(repos, dispatchScopes,/,
+    "the blackout exception must not create source gaps for unrelated scopes");
+  assert.match(src, /for \(const \{ intent, detail \} of dispatchDetails\) \{\s*if \(scheduledBlackout\) continue;/,
+    "an unrelated DISPATCH cannot be marked honored during blackout");
 }
 
 test("freshness-shadow.mts closes every paid path on an unreadable or ignored control (items 1, 3, 4, 5, 7, 8)", () => {
@@ -173,7 +183,7 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
     ["  intentLogUnreadable = error instanceof Error ? error.message : String(error);\n", "", "an unreadable log that is not captured"],
     ["modelHold: laneDisabledReason,", "", "a FleetSafety that reserves under a closed lane"],
     ["const scoutSearch = searchBudget === null ? null : makeScoutSearch({", "const scoutSearch = makeScoutSearch({", "a Scout search outside the switch"],
-    ["auditCeilingUsd: effectiveCeilingUsd });", "});", "an auditor on the static default"],
+    ["auditCeilingUsd: effectiveCeilingUsd,", "", "an auditor on the static default"],
   ];
   for (const [from, to, what] of mutations) {
     const mutated = src.replace(from, to);
@@ -186,6 +196,9 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
   const walkOnUnreadable = src.replace('} else if ("unreadable" in gapLedgerRead) {', '} else if (unreadableControls.length > 0 || "unreadable" in gapLedgerRead) {');
   assert.notEqual(walkOnUnreadable, src);
   assert.ok(fails(() => checkFreeWorkUntouched(walkOnUnreadable)), "a free walk stopped by an unreadable control passed");
+  const nonHuntBlackout = src.replace("for (const scope of dispatchScopes) add(scopeWorkTarget(scope));", "for (const scope of expansionPlan?.scopes ?? []) add(scopeWorkTarget(scope));");
+  assert.notEqual(nonHuntBlackout, src);
+  assert.ok(fails(() => checkFreeWorkUntouched(nonHuntBlackout)), "unrelated scope work during blackout passed");
 });
 
 /* ------------------------------------------------ pilot-runner.mts, as text */
@@ -205,7 +218,8 @@ function checkRunnerFailsClosed(src: string): void {
   assert.ok(hold, "no holdWhilePaused() returning the unreadable fact");
   assert.match(hold[0], /while \(says === "HOLD"\)/, "the pause no longer holds");
   assert.match(hold[0], /return \{ ownerIntentsUnreadable: says === "UNREADABLE" \};/);
-  assert.match(src, /const owner = await holdWhilePaused\(\);\n\s*cycle \+= 1;[\s\S]*?const result = await runOneCycle\(owner\);/);
+  assert.match(src, /const owner = await holdWhilePaused\(\);[\s\S]*?const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary\(\);[\s\S]*?if \(wakeReleaseExit !== null\) \{[\s\S]*?break;[\s\S]*?cycle \+= 1;[\s\S]*?const result = await runOneCycle\(owner\);/,
+    "the owner pause is read before release reconciliation and the normal child inherits its unreadable state");
   assert.match(src, /\.\.\.\(owner\.ownerIntentsUnreadable \? \["--owner-intents-unreadable"\] : \[\]\),/, "the child is not told to hold its paid lane");
 }
 

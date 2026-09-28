@@ -1232,23 +1232,24 @@ async function persistCurrentRuntimeRelease(result:RuntimeReleaseObserved):Promi
     !result.integrityReceiptId||!result.integritySha||!result.integrityObservedAt) return;
   const repos=await ownerRepositories();
   if(repos===null) return;
-  const observedAt=new Date().toISOString();
+  // Process/deployment inspection time, not a publisher freshness timestamp.
+  const inspectedAt=new Date().toISOString();
   const fields:Omit<RuntimeReleaseAdoption,"evidenceHash">={
     formatVersion:1,phase:GATE02_REPAIR_PHASE,requiredBaseSha:GATE02_REQUIRED_BASE_SHA,
     baseContained:containsCommit(GATE02_REQUIRED_BASE_SHA,RUNNING_CODE_SHA,ROOT),
-    observedAt,processIdentity:PROCESS_IDENTITY,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
+    observedAt:inspectedAt,processIdentity:PROCESS_IDENTITY,runningSha:RUNNING_CODE_SHA,servedSha:result.targetSha,servedHow:result.servedHow,
     inspectionCode:"RUNTIME_RELEASE_CURRENT",integrityReceiptId:result.integrityReceiptId,
     integritySha:result.integritySha,integrityObservedAt:result.integrityObservedAt,
   };
   const runtimeRelease:RuntimeReleaseAdoption={...fields,evidenceHash:runtimeReleaseAdoptionHash(fields)};
   const current=await repos.runnerHeartbeat.read(RUNNER_ID);
   const base:RunnerHeartbeat=current?.value??{
-    formatVersion:OWNER_SURFACE_FORMAT_VERSION,beatAt:observedAt,lastCycleStartedAt:null,lastCycleFinishedAt:null,
+    formatVersion:OWNER_SURFACE_FORMAT_VERSION,beatAt:inspectedAt,lastCycleStartedAt:null,lastCycleFinishedAt:null,
     nextCycleDueAt:null,lastCycleOk:null,testedSha:RUNNING_CODE_SHA,host:hostname(),
   };
-  const next={...base,runtimeRelease:retainedRuntimeReleaseAdoption(current?.value.runtimeRelease,runtimeRelease,observedAt)};
-  if(current===null) await repos.runnerHeartbeat.put(RUNNER_ID,next,observedAt);
-  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,next,observedAt);
+  const next={...base,runtimeRelease:retainedRuntimeReleaseAdoption(current?.value.runtimeRelease,runtimeRelease,inspectedAt)};
+  if(current===null) await repos.runnerHeartbeat.put(RUNNER_ID,next,inspectedAt);
+  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,next,inspectedAt);
 }
 
 async function persistRuntimeBoundaryFailure(

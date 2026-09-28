@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { CHECKLIST_PROFILE, checklistFraction, checklistObligationKey, checklistRequiredClauses, evaluateChecklistSnapshot, type ChecklistInstance, type ChecklistSnapshot, type ChecklistWitness } from "../lib/control-plane/readiness/checklist-score.ts";
 
 function fixture(definitionId = "MTG-01") {
@@ -11,7 +12,7 @@ function fixture(definitionId = "MTG-01") {
   const witness: ChecklistWitness={id:`witness:${definitionId}`,obligationKey,objectId:instance.objectId,jurisdictionId:instance.jurisdictionId,period:instance.period,predicateKey,contractVersion:"fields/1",recordedAt:"2026-09-28T07:00:00Z",
     sourcePublication:"PUBLISHED",acquisition:"PRESENT",sourceIds:["source:one"],artifactIds:["artifact:one"],contentHashes:[`sha256-${"a".repeat(64)}`],attemptIds:["attempt:one"],verificationIds:["verification:one"],verification:"PASS",satisfiedClauses:instance.predicate.requiredClauses,conflict:false,
     freshness:{ruleId:"rule:daily",validUntil:"2026-09-29T00:00:00Z"},publication:{state:"ACCEPTED",candidateId:"candidate:one",version:"version:one",receiptId:"publication:one",at:"2026-09-28T06:00:00Z"},
-    surfaces:instance.requiredSurfaces.map(surfaceId=>({surfaceId,version:"version:one",objectId:instance.objectId,jurisdictionId:instance.jurisdictionId,period:instance.period,checkedAt:"2026-09-28T06:30:00Z",receiptId:`public:${surfaceId}`,url:"https://meanwhileusa.com/",visible:true})),change:"NEW"};
+    surfaces:instance.requiredSurfaces.map(surfaceId=>({surfaceId,version:"version:one",objectId:instance.objectId,jurisdictionId:instance.jurisdictionId,period:instance.period,checkedAt:"2026-09-28T06:30:00Z",receiptId:`public:${surfaceId}`,url:`${PUBLIC_SITE_ORIGIN}/`,visible:true})),change:"NEW"};
   const snapshot: ChecklistSnapshot={profile:CHECKLIST_PROFILE.version,scopeId:"85635",scopeRevision:"inventory/1",observedAt:"2026-09-28T08:00:00Z",inventory:{complete:true,evidenceIds:["inventory:one"],unresolvedObjects:0},readsComplete:true,instances:[instance],witnesses:[witness]};
   return {instance,witness,snapshot};
 }

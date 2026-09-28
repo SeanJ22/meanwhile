@@ -22,6 +22,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import ts from "typescript";
 
 // Plain .mjs, shared with the plain-node scripts that never see tsx.
 import { posixRelative } from "../scripts/repo-path.mjs";
@@ -301,15 +302,30 @@ test("every allowlisted content file is a file the sweep actually reaches", () =
   );
 });
 
+function handKeptStateList(source: string): boolean {
+  const tree = ts.createSourceFile("covered-state-sweep.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let found = false;
+  const visit = (node: ts.Node): void => {
+    if (ts.isArrayLiteralExpression(node)) {
+      const literals = new Set(node.elements.filter(ts.isStringLiteral).map(value => value.text));
+      if (COVERED_USPS.every(code => literals.has(code)) || COVERED_FIPS.every(code => literals.has(code))) found = true;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(tree);
+  return found;
+}
+
 test("no file outside the manifest holds a hand-kept list of every covered state", () => {
+  assert.equal(handKeptStateList('const duplicate = ["AZ", "NH", "NJ"]'), true,
+    "a real duplicate list must remain visible to the guard");
+  assert.equal(handKeptStateList('if (state === "AZ") az(); if (state === "NH") nh(); if (state === "NJ") nj();'), false,
+    "separate state-specific rules are not another coverage manifest");
   const offenders: string[] = [];
   for (const abs of sourceFiles()) {
     const rel = posixRel(abs);
     if (CONTENT_FILES.has(rel)) continue;
-    const text = readFileSync(abs, "utf8");
-    const holdsEveryUsps = COVERED_USPS.every((c) => text.includes(`"${c}"`));
-    const holdsEveryFips = COVERED_FIPS.every((c) => text.includes(`"${c}"`));
-    if (holdsEveryUsps || holdsEveryFips) offenders.push(rel);
+    if (handKeptStateList(readFileSync(abs, "utf8"))) offenders.push(rel);
   }
   assert.deepEqual(
     offenders,

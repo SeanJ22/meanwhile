@@ -327,7 +327,7 @@ test("POSITIVE CONTROL: a runner that drops the publish call, the readiness targ
   assert.notEqual(noDispatch, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noDispatch)), "a runner blind to DISPATCH passed");
 
-  const noHold = src.replace("\n  const owner = await holdWhilePaused();\n  cycle += 1;", "\n  const owner = { ownerIntentsUnreadable: false };\n  cycle += 1;");
+  const noHold = src.replace("const owner = await holdWhilePaused();", "const owner = { ownerIntentsUnreadable: false };");
   assert.notEqual(noHold, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noHold)), "a runner that cycles through a pause passed");
 

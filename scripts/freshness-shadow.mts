@@ -1760,6 +1760,13 @@ const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
           ? "the scheduled blackout"
           : "the owner has paused the runner";
 const dispatchTargets: DispatchWorkTarget[] = [];
+// The original saved hunt may continue through a scheduled blackout. That
+// exception does not reopen other dispatch intents or expansion scopes.
+const dispatchScopes = (expansionPlan?.scopes ?? []).filter(scope => !scheduledBlackout ||
+  (scope.kind === "RESOLVED" && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
+    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
+    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
+    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd));
 {
   const seen = new Set<string>();
   const add = (t: DispatchWorkTarget): void => {
@@ -1767,9 +1774,11 @@ const dispatchTargets: DispatchWorkTarget[] = [];
     seen.add(t.key);
     dispatchTargets.push(t);
   };
-  for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
-  for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
-  for (const scope of expansionPlan?.scopes ?? []) add(scopeWorkTarget(scope));
+  if (!scheduledBlackout) {
+    for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
+    for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
+  }
+  for (const scope of dispatchScopes) add(scopeWorkTarget(scope));
 }
 let dispatchWork: DispatchWorkReading | null = null;
 /* The Sends this cycle recorded on rows after they were read, for the assignment budgets below. */
@@ -1843,7 +1852,7 @@ if (dispatchTargets.length > 0) {
 }
 if (dispatchWorkWrites && expansionPlan !== null) {
   try {
-    const gaps = await applyManualSourceGaps(repos, expansionPlan.scopes, {
+    const gaps = await applyManualSourceGaps(repos, dispatchScopes, {
       now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS,
     });
     console.log(`  source capability gaps: ${gaps.created} created, ${gaps.carried} carried, ${gaps.deferred} deferred`);
@@ -1857,7 +1866,7 @@ for (let i = 0; i < ownerDispatches.length; i += 1) {
 }
 /* Each DISPATCH is honored after the step, so its HONORED record says what was matched AND what was created. */
 for (const { intent, detail } of dispatchDetails) {
-  if (scheduledBlackout && !hasLifetimeHunt) continue;
+  if (scheduledBlackout) continue;
   const work = dispatchWork?.targets.find((t) => t.key === `dispatch:${intent.intentId}`) ?? null;
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }

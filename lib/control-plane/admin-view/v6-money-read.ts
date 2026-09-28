@@ -57,7 +57,7 @@ function accountLine(provider: ReportingProvider, reading: ProviderReading | und
     : "Usage the provider reports for the whole account; not an invoice";
   return {
     provider: name, amountUsd: amount,
-    how: amount === null ? `${why ?? "The provider reported no dollar amount"} · ${span}`
+    how: amount === null ? `${why ?? (reading.status === "ESTIMATED" && typeof reading.estimatedUsd === "number" && Number.isFinite(reading.estimatedUsd) ? `Only an estimate, ${dollars(reading.estimatedUsd)}, which is not counted as a reading` : "The provider reported no dollar amount")} · ${span}`
       : `${what} · ${span}${why ? ` · ${why}` : ""} · read ${formatEastern(reading.syncedAt)}`,
     ...(amount !== null && billingStale(reading, now) ? { old: true } : {}),
   };

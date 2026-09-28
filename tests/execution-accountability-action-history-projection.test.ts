@@ -98,6 +98,8 @@ test("staged SQL is outside active bootstrap/migration registration", () => {
   const sql = readFileSync(new URL("../docs/migration-proposals/admin-action-history-cp-v14.sql", import.meta.url), "utf8");
   assert.match(sql, /STAGED DESIGN ONLY\. DO NOT APPLY/);
   assert.match(sql, /FOREIGN KEY \(gateway_log_key, gateway_receipt_id\)/);
+  assert.match(sql, /FOREIGN KEY \(instruction_log_key, instruction_receipt_id\)/);
+  assert.match(sql, /DEFERRABLE INITIALLY DEFERRED/);
   assert.match(sql, /instruction_receipt_id/);
   assert.match(sql, /status IN \('INCOMPLETE', 'READY'\)/);
 });

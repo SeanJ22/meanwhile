@@ -28,13 +28,16 @@ CREATE TABLE cp_admin_action_history_projection (
 CREATE TABLE cp_admin_action_history_scope_ref (
   gateway_receipt_id text NOT NULL REFERENCES cp_admin_action_history_projection (gateway_receipt_id),
   scope_key text NOT NULL,
+  instruction_log_key text NOT NULL DEFAULT 'admin-action' CHECK (instruction_log_key = 'admin-action'),
   instruction_receipt_id text,
   scope_kind text NOT NULL CHECK (scope_kind IN ('GLOBAL', 'INSTRUCTION')),
   PRIMARY KEY (gateway_receipt_id, scope_key),
   CONSTRAINT cp_action_history_scope_shape CHECK (
     (scope_kind = 'GLOBAL' AND scope_key = 'us' AND instruction_receipt_id IS NULL) OR
     (scope_kind = 'INSTRUCTION' AND scope_key <> 'us' AND instruction_receipt_id IS NOT NULL)
-  )
+  ),
+  CONSTRAINT cp_action_history_instruction_source FOREIGN KEY (instruction_log_key, instruction_receipt_id)
+    REFERENCES cp_log_admin_receipts (log_key, record_id)
 );
 CREATE INDEX cp_admin_action_history_by_instruction
   ON cp_admin_action_history_scope_ref (scope_key, instruction_receipt_id, gateway_receipt_id);
@@ -56,8 +59,92 @@ CREATE TABLE cp_admin_action_history_readiness (
   CONSTRAINT cp_action_history_ready_counts CHECK (status <> 'READY' OR source_count = projected_count)
 );
 
--- Future bootstrap must also install immutable UPDATE/DELETE rejection on both
--- projection tables, receipt-field parity checks, and a fail-closed append
--- boundary: a receipt insert and companion insert commit together, while a
--- missing companion invalidates READY in the same transaction. No such trigger
--- is installed by this staged proposal. No backfill or live write is included.
+-- These guards are STAGED with the tables. They must not be applied to an old
+-- gateway: its generic receipt append does not write the companion and would
+-- correctly fail at COMMIT. Deferred checks see the final state of the one
+-- atomic receipt+companion statement, not the intermediate CTE snapshot.
+CREATE FUNCTION cp_admin_action_history_reject_mutation() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  RAISE EXCEPTION 'admin action history is immutable' USING ERRCODE = '23514';
+END $$;
+CREATE TRIGGER cp_admin_action_history_projection_immutable
+BEFORE UPDATE OR DELETE ON cp_admin_action_history_projection
+FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_reject_mutation();
+CREATE TRIGGER cp_admin_action_history_scope_immutable
+BEFORE UPDATE OR DELETE ON cp_admin_action_history_scope_ref
+FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_reject_mutation();
+
+CREATE FUNCTION cp_admin_action_history_assert_projection() RETURNS trigger
+LANGUAGE plpgsql AS $$
+DECLARE
+  source_row cp_log_admin_receipts%ROWTYPE;
+  scope_count bigint;
+BEGIN
+  SELECT * INTO source_row FROM cp_log_admin_receipts
+    WHERE log_key = NEW.gateway_log_key AND record_id = NEW.gateway_receipt_id;
+  IF NOT FOUND OR source_row.position <> NEW.source_position OR
+     source_row.recorded_at <> NEW.source_recorded_at OR
+     source_row.record->>'receiptId' <> NEW.gateway_receipt_id OR
+     source_row.record->>'type' <> NEW.gateway_type OR
+     source_row.record->>'idempotencyKey' <> NEW.idempotency_key
+  THEN RAISE EXCEPTION 'admin history/source receipt mismatch' USING ERRCODE = '23514'; END IF;
+  SELECT count(*) INTO scope_count FROM cp_admin_action_history_scope_ref
+    WHERE gateway_receipt_id = NEW.gateway_receipt_id;
+  IF (NEW.mapping_state = 'UNMAPPED' AND scope_count <> 0) OR
+     (NEW.mapping_state <> 'UNMAPPED' AND scope_count <> 1)
+  THEN RAISE EXCEPTION 'admin history scope cardinality mismatch' USING ERRCODE = '23514'; END IF;
+  RETURN NEW;
+END $$;
+CREATE CONSTRAINT TRIGGER cp_admin_action_history_projection_parity
+AFTER INSERT ON cp_admin_action_history_projection DEFERRABLE INITIALLY DEFERRED
+FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_projection();
+
+CREATE FUNCTION cp_admin_action_history_assert_scope() RETURNS trigger
+LANGUAGE plpgsql AS $$
+DECLARE
+  action_type text;
+  action_subject text;
+  original_subject text;
+  original_type text;
+BEGIN
+  SELECT p.gateway_type, a.record->>'subject' INTO action_type, action_subject
+    FROM cp_admin_action_history_projection p
+    JOIN cp_log_admin_receipts a ON a.log_key = p.gateway_log_key AND a.record_id = p.gateway_receipt_id
+    WHERE p.gateway_receipt_id = NEW.gateway_receipt_id;
+  IF NEW.scope_kind = 'GLOBAL' THEN
+    IF action_type NOT IN ('runner.pause', 'runner.resume') OR NEW.scope_key <> 'us'
+    THEN RAISE EXCEPTION 'unproven global action scope' USING ERRCODE = '23514'; END IF;
+  ELSE
+    SELECT record->>'subject', record->>'type' INTO original_subject, original_type
+      FROM cp_log_admin_receipts WHERE log_key = 'admin-action' AND record_id = NEW.instruction_receipt_id;
+    IF action_type <> 'expansion.scope.set' OR action_subject <> NEW.scope_key OR
+       original_type <> 'expansion.scope.set' OR original_subject <> NEW.scope_key
+    THEN RAISE EXCEPTION 'unproven instruction action scope' USING ERRCODE = '23514'; END IF;
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE CONSTRAINT TRIGGER cp_admin_action_history_scope_parity
+AFTER INSERT ON cp_admin_action_history_scope_ref DEFERRABLE INITIALLY DEFERRED
+FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_scope();
+
+CREATE FUNCTION cp_admin_action_history_assert_receipt() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.log_key <> 'admin-action' THEN RETURN NEW; END IF;
+  IF NOT EXISTS (SELECT 1 FROM cp_admin_action_history_projection
+    WHERE gateway_receipt_id = NEW.record_id AND source_position = NEW.position)
+  THEN RAISE EXCEPTION 'admin receipt lacks atomic history companion' USING ERRCODE = '23514'; END IF;
+  IF EXISTS (SELECT 1 FROM cp_admin_action_history_readiness
+    WHERE singleton = true AND status = 'READY' AND source_through_position < NEW.position)
+  THEN RAISE EXCEPTION 'admin history READY watermark was not invalidated' USING ERRCODE = '23514'; END IF;
+  RETURN NEW;
+END $$;
+CREATE CONSTRAINT TRIGGER cp_admin_action_history_receipt_companion
+AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
+FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_receipt();
+
+-- No historical backfill, readiness activation, bootstrap registration, or
+-- live write is included. A later reviewed activation must prove source set
+-- equality and set READY only once old receipts have explicit mapped/unmapped
+-- rows, then atomically keep it valid or INCOMPLETE on every append.

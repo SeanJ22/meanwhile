@@ -341,6 +341,7 @@ import {
 import {
   DurableSpendHolds,
   JobSpend,
+  SendBudgetRefusal,
   areaGuardedTransport,
   type AutonomousJurisdiction,
   budgetGuardedTransport,
@@ -2453,6 +2454,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         worstCaseOf: modelRequestWorstCaseUsd,
         priceOf: modelResponseUsd,
       }),
+      refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal,
       /* MW-033: a Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling —
          and (MW-021) against the Send and area budgets the job runs under, before its first frontier request. */
       reserveEscalation: async (request) => {

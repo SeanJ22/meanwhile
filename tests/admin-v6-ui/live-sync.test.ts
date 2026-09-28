@@ -35,6 +35,29 @@ const pulse = (sections: Record<string, unknown> = {}, actions: Record<string, u
 const stuckAnn = (revision: string, contract = "admin-v6/stuck@1") => ({ stuck: { contract, href: "/api/admin/v6/stuck", revision } });
 const ok = (scope: string, revision: string, data: unknown) => ({ status: 200, body: { contract: "admin-v6/stuck@1", scope, revision, asOf: "2026-09-28T19:00:00.000Z", data } });
 
+test("changing the account period clears old figures and names an unavailable period", async () => {
+  const { sync, calls } = harness();
+  sync.onPulse(pulse({ money: { contract: "admin-v6/money@1", href: "/api/admin/v6/money", revision: "m1" } }));
+  calls[0].resolve({ status: 200, body: { contract: "admin-v6/money@1", scope: "st:az", revision: "m1",
+    asOf: "2026-09-28T19:00:00.000Z", data: { accountMonth: "September 2026" } } });
+  await flush();
+  assert.equal(sync.snapshot().money.phase, "live");
+  sync.setParams("money", { period: "last-24h" });
+  assert.equal(sync.snapshot().money.data, null, "monthly figures must disappear before the last-24h answer");
+  assert.match(calls[1].url, /period=last-24h/);
+  calls[1].resolve({ status: 409, body: { code: "PERIOD_NOT_AVAILABLE", dependency: "DEP-PERIOD",
+    says: "A complete last-24h account reading is unavailable." } });
+  await flush();
+  const unavailable = toSourced(sync.snapshot().money, SECTION_DEP.money);
+  assert.equal(unavailable.data, null);
+  assert.equal(unavailable.dependency?.id, "DEP-PERIOD");
+  sync.setParams("money", { period: "2026-09" });
+  calls[2].resolve({ status: 200, body: { contract: "admin-v6/money@1", scope: "st:az", revision: "m2",
+    asOf: "2026-09-28T19:01:00.000Z", data: { accountMonth: "September 2026" } } });
+  await flush();
+  assert.equal(sync.snapshot().money.phase, "live");
+});
+
 test("unavailable → available → the same open page shows real data → later changes appear", async () => {
   const { sync, calls } = harness();
   const seen: string[] = [];

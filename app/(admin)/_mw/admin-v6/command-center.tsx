@@ -50,6 +50,8 @@ export interface CommandCenterProps {
   readonly onViewChange?: (view: View) => void;
   /** Live paged sections: forward search, filters and cursors to the data source. */
   readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
+  /** The account-period selector. Hunt limits remain explicitly lifetime. */
+  readonly onPeriodChange?: (period: "hunt" | "day" | "month") => void;
   /** Extra header content for the development preview's review controls. */
   readonly reviewPanel?: ReactNode;
 }
@@ -192,6 +194,8 @@ export function CommandCenter(props: CommandCenterProps) {
     setPickerQ("");
     if (detail) setDetail(null);
     props.onScopeChange(key);
+    setPeriod("month");
+    props.onPeriodChange?.("month");
   };
 
   useEffect(() => {
@@ -256,8 +260,12 @@ export function CommandCenter(props: CommandCenterProps) {
             <button ref={pickerButton} type="button" className={s.btn} aria-expanded={pickerOpen} aria-controls="v6-picker" onClick={() => setPickerOpen((o) => !o)}>Change place</button>
             <span className={s.dim}>{scopeKind}</span>
             <label className={s.inline} style={{ gap: 6 }}>
-              <span className={s.dim}>Period</span>
-              <select className={s.select} value={effectivePeriod} onChange={(e) => setPeriod(e.target.value)}>
+              <span className={s.dim}>Account period</span>
+              <select className={s.select} value={effectivePeriod} onChange={(e) => {
+                const next = e.target.value as "hunt" | "day" | "month";
+                setPeriod(next);
+                props.onPeriodChange?.(next);
+              }}>
                 {hunt && <option value="hunt">Whole hunt · since {mst(hunt.startedAt)}</option>}
                 <option value="day">Last 24 hours</option>
                 <option value="month">September 2026</option>
@@ -339,4 +347,3 @@ export function CommandCenter(props: CommandCenterProps) {
     </V6Context.Provider>
   );
 }
-

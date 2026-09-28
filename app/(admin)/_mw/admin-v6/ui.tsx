@@ -69,7 +69,8 @@ export function SourceNote(props: { readonly source: Sourced<unknown>; readonly 
       </details>
     );
   }
-  const head = src.problem === "denied" ? "You don’t have access to this part."
+  const head = dep?.id === "DEP-PERIOD" ? "This period is not available yet."
+    : src.problem === "denied" ? "You don't have access to this part."
     : src.problem === "incompatible" ? "The backend sent a version this page can’t read yet."
     : src.problem === "failed" ? "This couldn’t be read just now. It will try again by itself."
     : "Not connected yet. This part turns on by itself as soon as the backend offers it.";

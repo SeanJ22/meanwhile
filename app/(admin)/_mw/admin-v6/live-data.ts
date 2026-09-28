@@ -14,7 +14,7 @@ import { SECTION_DEP } from "./dependencies.ts";
 import type { SectionId } from "./contract.ts";
 import type { SectionState } from "./live-sync.ts";
 import { toSourced } from "./live-sync.ts";
-import type { AdminV6Data, ChecklistView, Definition, Dependency, Place, StateRow, WorkerStatus } from "./model.ts";
+import type { AdminV6Data, ChecklistView, Definition, Dependency, Hunt, Place, StateRow, WorkerStatus } from "./model.ts";
 import { COUNTRY_KEY } from "./places.ts";
 
 export interface LiveReference {
@@ -27,10 +27,15 @@ export interface LiveReference {
   readonly observedAt: string;
 }
 
-export function referencePlaces(ref: LiveReference): readonly Place[] {
+export function referencePlaces(ref: LiveReference, hunts: readonly Hunt[] = []): readonly Place[] {
   const out: Place[] = [{ key: COUNTRY_KEY, name: "United States", kind: "Country", navParent: null, within: [] }];
   for (const s of ref.states) out.push({ key: `st:${s.code}`, name: s.name, kind: "State", navParent: COUNTRY_KEY, within: [COUNTRY_KEY], code: s.code.toUpperCase(), tracked: s.tracked });
   if (ref.geo) out.push({ key: ref.geo.key, name: ref.geo.name, kind: ref.geo.kind, navParent: `st:${ref.geo.state}`, within: [`st:${ref.geo.state}`] });
+  // A live hunt's own place, filed under the state its saved Census lookup names, until a places section exists.
+  for (const h of hunts) {
+    const geo = /^geo:([a-z]{2})\.([a-z_]+)\.[0-9A-Za-z]+$/.exec(h.placeKey);
+    if (geo && !out.some((p) => p.key === h.placeKey)) out.push({ key: h.placeKey, name: h.name.replace(/ hunt$/, ""), kind: geo[2] === "zcta" ? "ZIP" : geo[2] === "county" ? "County" : "Area", navParent: `st:${geo[1]}`, within: [`st:${geo[1]}`] });
+  }
   return out;
 }
 
@@ -55,7 +60,7 @@ export function referenceChecklist(ref: LiveReference): ChecklistView {
 
 export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionState>>, ref: LiveReference, pulseStatus: WorkerStatus): AdminV6Data {
   const src = <T,>(id: SectionId, dep: Dependency, fallback: T | null = null) => toSourced<T>(snapshot[id], dep, fallback);
-  const places = snapshot.places.phase === "live" ? src<readonly Place[]>("places", SECTION_DEP.places) : { ...src<readonly Place[]>("places", SECTION_DEP.places, referencePlaces(ref)), state: "live" as const, load: "partial" as const, missingParts: [`Only the country and its 56 states and territories are listed yet. ${SECTION_DEP.places.need}`] };
+  const places = snapshot.places.phase === "live" ? src<readonly Place[]>("places", SECTION_DEP.places) : { ...src<readonly Place[]>("places", SECTION_DEP.places, referencePlaces(ref, snapshot.hunts.phase === "live" ? (snapshot.hunts.data as readonly Hunt[]) : [])), state: "live" as const, load: "partial" as const, missingParts: [`Only the country and its 56 states and territories are listed yet. ${SECTION_DEP.places.need}`] };
   const workersLive = snapshot.workers.phase === "live";
   const workers = workersLive
     ? src<NonNullable<AdminV6Data["workers"]["data"]>>("workers", SECTION_DEP.workers)

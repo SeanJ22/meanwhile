@@ -8,6 +8,8 @@ Last updated: 2026-09-28, 1:30 PM MST. Branch `claude/meanwhile-admin-interface-
 
 **Honest summary.** UI work ready for integration; these product requirements remain blocked on the named Codex dependencies. Nothing here is "product complete". All sample figures are examples. No action was sent to production, no paid work was started, and the 85635 hunt and its $50 lifetime allowance were not touched.
 
+**Codex integration update, 2026-09-28 14:52 MST.** The authenticated Money and Hunts read adapters from Claude's four committed increments are integrated locally. A saved 85635 lifetime receipt and its published billing attribution supply real scoped values; the same open v6 component picks them up in focused tests. A trusted place adapter now locates the saved hunt in national and Arizona views; no general county/ZCTA overlap is inferred. The shared pulse announces these two read contracts only while the saved policy and owner snapshot are readable, with revisions tied to their source rows. The account-period selector now requests the selected month and names `DEP-PERIOD` for unsupported last-24h or whole-hunt account figures, clearing earlier figures while it waits. The hunt limit remains explicitly lifetime. **This is local integration, not hosted acceptance**; per-work costs, complete other-service bills, run state and most period splits remain unknown. Checklist place binding is separately integrated but its production index is absent, so checklist instances remain unannounced.
+
 ---
 
 ## 1. Contract (agreed in principle with Codex, 2026-09-28 20:18 UTC)
@@ -114,7 +116,7 @@ Each shows on screen as a recoverable waiting state and needs no frontend edit o
 |---|---|---|
 | DEP-NATIONAL | `national` section: per-state hunts, stuck, checklist items by status, checked-on-page; shared work counted once | Build + announce `admin-v6/national@1` |
 | DEP-SCOPE-IDENTITIES | `places` section with county/ZIP (and later body) identities and explicit `within` overlap | Build + announce `admin-v6/places@1` |
-| DEP-HUNTS | `hunts` section: place, lifetime limit + source, spent, set aside, unpriced | Build + announce |
+| DEP-HUNTS | `hunts` section: exact saved lifetime receipt, limit + source, priced spend, holds, unpriced | Connected and announced locally; hosted readback pending. Run state, general overlap and complete service cost remain gaps. |
 | DEP-READER-PROOF | `results` section: six stages, saved files, versions, exact public URL + time seen (MW-011) | Build + announce |
 | DEP-STUCK | `stuck` and `sameCause` sections | Build + announce |
 | DEP-WORK-ROWS | `workRows` paged section with exact totals | Build + announce (paged) |
@@ -124,7 +126,7 @@ Each shows on screen as a recoverable waiting state and needs no frontend edit o
 | DEP-WORKER-VERSION | Website vs workers version and update status (inside `workers.update`) | Build + include |
 | DEP-CHECKLIST-ITEMS | `checklist` paged section: items with part-by-part proof (definitions already real) | Build + announce (paged) |
 | DEP-SYSTEM-AUDIT | Audit status per whole-system definition (inside `checklist.systemGroups`) | Build + include |
-| DEP-MONEY-READ | `money` section: account readings, limits, per-work AI costs | Build + announce |
+| DEP-MONEY-READ | `money` section: account readings, limits, per-work AI costs | Connected and announced locally for dated account/provider readings and lifetime limits; hosted readback pending. Per-work costs and unknown service totals stay unconnected. |
 | DEP-LEARNING | `learning` section (MW-027) | Build + announce |
 | DEP-FIX-LIFECYCLE | `fixes` paged section: open fixes with task stages; fixed/came-back history with evidence-based learning status | Build + announce (paged) |
 | DEP-DECISIONS | `decided` section | Build + announce |
@@ -136,7 +138,7 @@ Each shows on screen as a recoverable waiting state and needs no frontend edit o
 | DEP-HUNT-START | Geography identity with plan version for `expansion.scope.set` | Implement + announce `hunt-start` |
 | DEP-PAID-PAUSE | Pause only paid research everywhere | Implement + announce `global-paid` |
 | DEP-ACCESS | Viewer / spending / outreach permissions for the signed-in session | Pass `access` from the route |
-| DEP-PERIOD | Period-split reads ("Whole hunt", "Last 24 hours", "September 2026") | Accept a `period` parameter in sections (the selector is UI-only today) |
+| DEP-PERIOD | Period-split reads ("Whole hunt", "Last 24 hours", "September 2026") | Account selector now sends the selected period and shows the backend's explicit `PERIOD_NOT_AVAILABLE` for unsupported splits; hunt limits remain lifetime. Full period reads remain open. |
 
 ## 7. Integration instructions for Codex
 

@@ -16,7 +16,7 @@ import { LiveSync, type SyncFetch } from "../app/(admin)/_mw/admin-v6/live-sync.
 import { buildLiveBundle } from "../app/(admin)/_mw/admin-v6/live-data.ts";
 import { liveReference } from "../app/(admin)/_mw/admin-v6/reference.ts";
 import { huntLeftUsd, type Hunt, type MoneyView } from "../app/(admin)/_mw/admin-v6/model.ts";
-import { huntAt, indexPlaces } from "../app/(admin)/_mw/admin-v6/places.ts";
+import { huntAt, huntsWithin, indexPlaces } from "../app/(admin)/_mw/admin-v6/places.ts";
 import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const NOW = "2026-09-28T20:00:00.000Z";
@@ -314,6 +314,14 @@ test("an open v6 page picks up both sections through LiveSync and renders the or
     assert.ok(hunt, "the Now and Money screens find the hunt at its own place key");
     assert.equal(hunt.limitUsd, 50);
     assert.equal(huntLeftUsd(hunt), 3.345158);
+    const national = buildLiveBundle(sync.snapshot(), liveReference({ scope: { kind: "all" }, observedAt: NOW }),
+      { lastCheckIn: null, lastUsefulProgress: null, roundStartedAt: null, lastRoundFinishedAt: null,
+        nextRoundDueAt: null, runnerState: null, lanes: null } as never);
+    const nationalPlaces = indexPlaces(national.places.data ?? []);
+    assert.equal(huntsWithin(nationalPlaces, national.hunts.data ?? [], "us").length, 1,
+      "the national view must not mislabel a saved hunt as absent");
+    assert.equal(huntsWithin(nationalPlaces, national.hunts.data ?? [], "st:az").length, 1,
+      "the saved filing state also locates its hunt");
     assert.equal(bundle.money.data?.drill, null);
     assert.equal(bundle.money.data?.account.length, 6);
   });

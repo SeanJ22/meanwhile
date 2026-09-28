@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { ADMIN_CAPABILITIES, ADMIN_CAPABILITY_NAMES } from "../lib/control-plane/admin-view/capabilities.ts";
-import { ADMIN_V6_CAPABILITIES, ADMIN_V6_CAPABILITY_REVISION } from "../lib/control-plane/admin-view/v6-capabilities.ts";
+import { adminV6ReadCapabilities, ADMIN_V6_CAPABILITIES, ADMIN_V6_CAPABILITY_REVISION } from "../lib/control-plane/admin-view/v6-capabilities.ts";
 import { pulseRevision } from "../lib/control-plane/live-pulse.ts";
 
 test("the Admin pulse advertises only implemented compatible reads", () => {
@@ -41,11 +41,26 @@ test("a compatible backend becoming available changes the shared pulse revision"
   assert.equal(after, pulseRevision({ ...base, capabilityRevision: ADMIN_CAPABILITIES.revision }));
 });
 
-test("v6 advertises only the implemented guarded exact receipt read", () => {
+test("v6 keeps the guarded exact receipt read when section sources are unproved", () => {
   assert.equal(ADMIN_V6_CAPABILITIES.version, 1);
   assert.deepEqual(ADMIN_V6_CAPABILITIES.sections, {});
   assert.deepEqual(ADMIN_V6_CAPABILITIES.actions, {});
   assert.deepEqual(ADMIN_V6_CAPABILITIES.receiptLookup,
     { contract: "admin-v6/receipt@1", href: "/api/admin/v6/receipt" });
   assert.match(ADMIN_V6_CAPABILITY_REVISION, /receipt\/1/);
+});
+
+test("v6 Money and Hunts announcements follow saved policy, snapshot and fleet revisions", () => {
+  const absent = adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 7, researchRevision: 9 });
+  assert.deepEqual(absent.sections, {});
+  const ready = adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 9 });
+  assert.deepEqual(ready.sections.hunts,
+    { contract: "admin-v6/hunts@1", href: "/api/admin/v6/hunts", revision: "hunts:3:7" });
+  assert.deepEqual(ready.sections.money,
+    { contract: "admin-v6/money@1", href: "/api/admin/v6/money", revision: "money:3:7:9" });
+  const moved = adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 8, researchRevision: 9 });
+  assert.notEqual(moved.sections.hunts.revision, ready.sections.hunts.revision);
+  const fleetMoved = adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: 7, researchRevision: 10 });
+  assert.equal(fleetMoved.sections.hunts.revision, ready.sections.hunts.revision);
+  assert.notEqual(fleetMoved.sections.money.revision, ready.sections.money.revision);
 });

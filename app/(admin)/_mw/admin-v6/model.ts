@@ -57,7 +57,7 @@ export function notConnected<T>(dependency: Dependency): Sourced<T> {
 
 /* ---------------------------------------------------------------- places */
 
-export type PlaceKind = "Country" | "State" | "County" | "ZIP" | "Body";
+export type PlaceKind = "Country" | "State" | "County" | "ZIP" | "Area" | "Body";
 
 /**
  * A canonical place. `navParent` drives breadcrumbs only. `within` lists every

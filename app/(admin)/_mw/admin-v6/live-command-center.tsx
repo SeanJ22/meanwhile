@@ -79,6 +79,7 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
       scopeKey={scopeKey}
       onScopeChange={onScopeChange}
       onQuery={(section, params) => sync.setParams(section, params)}
+      onPeriodChange={(period) => sync.setParams("money", { period: period === "hunt" ? "whole-hunt" : period === "day" ? "last-24h" : "2026-09" })}
       connection={conn.connection}
       lastGoodAt={conn.lastGoodAt}
       recovered={conn.recovered}

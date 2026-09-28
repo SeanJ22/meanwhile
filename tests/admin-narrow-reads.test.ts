@@ -150,7 +150,23 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.freshnessDebtRows, 2);
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
-  assert.match(narrowed.revision, /^2026-09-25T22:00:00\.000Z\|1\|1\|1\|1\|0\|0\|-$/);
+  assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|1|1|0|0|-|admin-capabilities/1:"));
+  assert.match(narrowed.revision, /admin-v6\/1:receipt\/1:hunts\/1:money\/1\|-/);
+});
+
+test("a saved owner policy and snapshot announce Money and Hunts on the existing pulse", async () => {
+  const repos = await publishedWorld();
+  const before = await readPulse(repos, NOW);
+  assert.deepEqual(before.v6?.sections, {}, "an unread owner policy cannot claim a hunt list");
+  await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
+  const after = await readPulse(repos, NOW);
+  assert.equal(after.v6?.sections.hunts?.contract, "admin-v6/hunts@1");
+  assert.equal(after.v6?.sections.money?.contract, "admin-v6/money@1");
+  assert.notEqual(after.revision, before.revision, "the open page discovers the contracts on its next pulse");
+  await repos.adminConfig.compareAndSet("current", 1, any({ expansionScopes: [], fleetSpendCeiling: { limitUsd: 100 } }), LATER);
+  const changed = await readPulse(repos, LATER);
+  assert.notEqual(changed.v6?.sections.hunts?.revision, after.v6?.sections.hunts?.revision,
+    "a saved policy change invalidates the hunt section");
 });
 
 test("the pulse reads the snapshot and the research state only narrowed, and only the fields it declares", async () => {

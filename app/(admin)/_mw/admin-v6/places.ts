@@ -109,7 +109,7 @@ export function scopeOfPlaceKey(key: string): MwScope | null {
 }
 
 /** Search the picker's places. Country first, then states, counties, ZIPs, bodies. */
-const KIND_ORDER = ["Country", "State", "County", "ZIP", "Body"];
+const KIND_ORDER = ["Country", "State", "County", "ZIP", "Area", "Body"];
 export function pickerMatches(places: readonly Place[], hunts: readonly Hunt[], query: string, limit = 30): readonly Place[] {
   const q = query.trim().toLowerCase();
   return places

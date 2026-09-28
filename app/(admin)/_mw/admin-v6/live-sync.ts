@@ -37,6 +37,7 @@ export interface SectionState {
   readonly missingParts: readonly string[];
   readonly attempts: number;
   readonly page?: SectionPage | null;
+  readonly dependency?: Dependency;
 }
 
 const WAITING: SectionState = { phase: "waiting", data: null, asOf: null, revision: null, missingParts: [], attempts: 0, page: null };
@@ -130,6 +131,9 @@ export class LiveSync {
     const clean = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== ""));
     if (JSON.stringify(clean) === JSON.stringify(slot.params)) return;
     slot.params = clean;
+    // A new period, filter or page is a different answer. Do not display the
+    // previous answer under its new label while the read is pending/refused.
+    this.set(id, WAITING);
     if (this.caps?.sections[id]) { this.read(id); this.emit(); }
   }
 
@@ -210,7 +214,10 @@ export class LiveSync {
     }
     const r = body as { contract?: unknown; scope?: unknown; revision?: unknown; asOf?: unknown; data?: unknown; missingParts?: unknown; page?: unknown } | null;
     if (status === 409 || (status === 200 && r && typeof r.contract === "string" && r.contract !== sectionContract(id))) {
-      this.set(id, { phase: "incompatible", attempts: 0 });
+      const error = body as { dependency?: unknown; says?: unknown } | null;
+      const dependency = status === 409 && typeof error?.dependency === "string" && typeof error?.says === "string"
+        ? { id: error.dependency, owner: "Codex (backend contract)", need: error.says } : undefined;
+      this.set(id, { phase: "incompatible", data: null, asOf: null, attempts: 0, dependency });
       this.emit();
       return;
     }
@@ -222,7 +229,7 @@ export class LiveSync {
         revision: typeof r.revision === "string" ? r.revision : slot.wanted,
         missingParts: Array.isArray(r.missingParts) ? r.missingParts.filter((x): x is string => typeof x === "string") : [],
         attempts: 0,
-        page: pageOf(r.page),
+        page: pageOf(r.page), dependency: undefined,
       });
       this.emit();
       return;
@@ -273,7 +280,7 @@ export function toSourced<T>(state: SectionState, dep: Dependency, fallback: T |
     case "denied":
       return { state: "not-connected", load: "failed", data: null, asOf: null, dependency: dep, problem: "denied" };
     case "incompatible":
-      return { state: "not-connected", load: "failed", data: state.data as T | null ?? fallback, asOf: state.asOf, dependency: dep, problem: "incompatible" };
+      return { state: "not-connected", load: "failed", data: null, asOf: null, dependency: state.dependency ?? dep, problem: "incompatible" };
     case "waiting":
     default:
       return { state: "not-connected", load: "ready", data: fallback, asOf: null, dependency: dep, problem: "waiting" };

@@ -10,6 +10,10 @@ test("the Admin pulse advertises only implemented compatible reads", () => {
   assert.deepEqual(Object.keys(ADMIN_CAPABILITIES.features).sort(), [...ADMIN_CAPABILITY_NAMES].sort());
   assert.deepEqual(ADMIN_CAPABILITIES.features.checklistDefinitions,
     { state: "SUPPORTED", contractVersion: 1 });
+  assert.deepEqual(ADMIN_CAPABILITIES.features.checklistInstances,
+    { state: "SUPPORTED", contractVersion: 1 });
+  assert.deepEqual(ADMIN_CAPABILITIES.features.fixHistory,
+    { state: "SUPPORTED", contractVersion: 1 });
   assert.deepEqual(ADMIN_CAPABILITIES.features.runnerProgress,
     { state: "SUPPORTED", contractVersion: 1 });
   assert.deepEqual(ADMIN_CAPABILITIES.features.publicReaderObservation,
@@ -17,7 +21,8 @@ test("the Admin pulse advertises only implemented compatible reads", () => {
   assert.deepEqual(ADMIN_CAPABILITIES.features.workerEvents,
     { state: "SUPPORTED", contractVersion: 1 });
   for (const name of ADMIN_CAPABILITY_NAMES.filter(name =>
-    name !== "checklistDefinitions" && name !== "runnerProgress" &&
+    name !== "checklistDefinitions" && name !== "checklistInstances" &&
+    name !== "fixHistory" && name !== "runnerProgress" &&
     name !== "publicReaderObservation" && name !== "workerEvents")) {
     assert.deepEqual(ADMIN_CAPABILITIES.features[name],
       { state: "UNAVAILABLE", contractVersion: null });

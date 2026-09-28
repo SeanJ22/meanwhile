@@ -38,9 +38,9 @@ export interface AdminCapabilityManifest {
 
 const FEATURES: AdminCapabilityManifest["features"] = Object.freeze({
   checklistDefinitions: { state: "SUPPORTED", contractVersion: 1 },
-  checklistInstances: { state: "UNAVAILABLE", contractVersion: null },
+  checklistInstances: { state: "SUPPORTED", contractVersion: 1 },
   engineeringTasks: { state: "UNAVAILABLE", contractVersion: null },
-  fixHistory: { state: "UNAVAILABLE", contractVersion: null },
+  fixHistory: { state: "SUPPORTED", contractVersion: 1 },
   nationalOverview: { state: "UNAVAILABLE", contractVersion: null },
   publicReaderObservation: { state: "SUPPORTED", contractVersion: 1 },
   rawCapture: { state: "UNAVAILABLE", contractVersion: null },
@@ -52,6 +52,6 @@ const FEATURES: AdminCapabilityManifest["features"] = Object.freeze({
 /** Static and tiny; the Admin route still checks host and session first. */
 export const ADMIN_CAPABILITIES: AdminCapabilityManifest = Object.freeze({
   schemaVersion: 1,
-  revision: "admin-capabilities/1:checklistDefinitions/1:publicReaderObservation/1:runnerProgress/1:workerEvents/1",
+  revision: "admin-capabilities/1:checklistDefinitions/1:checklistInstances/1:fixHistory/1:publicReaderObservation/1:runnerProgress/1:workerEvents/1",
   features: FEATURES,
 });

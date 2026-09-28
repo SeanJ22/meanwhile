@@ -18,6 +18,20 @@ export function runtimeReleaseAdoptionHash(value:Omit<RuntimeReleaseAdoption,"ev
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
 }
 
+/** Keep the first matching, fresh observation across a completed cycle. The
+ * post-cycle release check must not move adoption past that cycle's start. */
+export function retainedRuntimeReleaseAdoption(previous:RuntimeReleaseAdoption|null|undefined,
+  fresh:RuntimeReleaseAdoption, now:string):RuntimeReleaseAdoption {
+  if(!previous) return fresh;
+  const {evidenceHash,...hashed}=previous;
+  const age=at(now)-at(previous.observedAt);
+  if(!Number.isFinite(age)||age<0||age>=MAX_OBSERVATION_AGE_MS||
+    runtimeReleaseAdoptionHash(hashed)!==evidenceHash) return fresh;
+  const keys=["formatVersion","phase","requiredBaseSha","baseContained","processIdentity","runningSha",
+    "servedSha","servedHow","inspectionCode","integrityReceiptId","integritySha","integrityObservedAt"] as const;
+  return keys.every(key=>previous[key]===fresh[key])?previous:fresh;
+}
+
 /** GATE-02 proves only the running release identity for the original saved
  * instruction. It gives no credit for other gates or civic publication. */
 export function checklistRunningReleaseWitness(input:{
@@ -42,7 +56,7 @@ export function checklistRunningReleaseWitness(input:{
     !Number.isFinite(cycleStart)||!Number.isFinite(cycleEnd)||!Number.isFinite(codeRead)||
     adopted>now||beat>now||now-adopted>MAX_OBSERVATION_AGE_MS||now-beat>MAX_OBSERVATION_AGE_MS||
     heartbeat.lastCycleOk!==true||cycleStart<adopted||cycleEnd<cycleStart||cycleEnd>beat||codeRead<cycleStart||codeRead>beat||
-    proof.formatVersion!==1||proof.phase!==GATE02_REPAIR_PHASE||proof.requiredBaseSha!==GATE02_REQUIRED_BASE_SHA||
+    proof.formatVersion!==1||!proof.processIdentity||proof.phase!==GATE02_REPAIR_PHASE||proof.requiredBaseSha!==GATE02_REQUIRED_BASE_SHA||
     proof.baseContained!==true||proof.inspectionCode!=="RUNTIME_RELEASE_CURRENT"||
     !SHA.test(proof.runningSha)||proof.runningSha!==proof.servedSha||proof.runningSha!==proof.integritySha||
     proof.runningSha!==heartbeat.testedSha||proof.runningSha!==heartbeat.codeIdentity?.runnerTestedSha||

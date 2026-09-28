@@ -432,6 +432,8 @@ export interface RuntimeReleaseAdoption {
   readonly requiredBaseSha: string;
   readonly baseContained: boolean;
   readonly observedAt: string;
+  /** Host, PID and process-start nonce; a restarted runner must observe adoption anew. */
+  readonly processIdentity: string;
   readonly runningSha: string;
   readonly servedSha: string;
   readonly servedHow: string;

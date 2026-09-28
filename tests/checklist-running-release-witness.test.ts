@@ -6,7 +6,7 @@ import type { RunnerHeartbeat, RuntimeReleaseAdoption } from "../lib/control-pla
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { CHECKLIST_PROFILE, checklistObligationKey, checklistRequiredClauses, evaluateChecklistSnapshot, type ChecklistInstance } from "../lib/control-plane/readiness/checklist-score.ts";
 import { buildChecklistCensus } from "../lib/control-plane/readiness/checklist-census.ts";
-import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, checklistRunningReleaseWitness, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
+import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, checklistRunningReleaseWitness, retainedRuntimeReleaseAdoption, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
 
 const scope={key:ORIGINAL_LIFETIME_HUNT.key,receiptId:ORIGINAL_LIFETIME_HUNT.receiptId,
   budgetStartedAt:ORIGINAL_LIFETIME_HUNT.budgetStartedAt,budgetUsd:ORIGINAL_LIFETIME_HUNT.budgetUsd} as ExpansionScopeDecision;
@@ -17,7 +17,7 @@ const instance={obligationKey:checklistObligationKey("GATE-02",scope.key,scope.k
   predicate:{kind:"CAPABILITY",contractVersion:"checklist-field-contract/1",requiredClauses:checklistRequiredClauses("GATE-02")}} as ChecklistInstance;
 function adoption(change:Partial<Omit<RuntimeReleaseAdoption,"evidenceHash">>={}):RuntimeReleaseAdoption {
   const fields:Omit<RuntimeReleaseAdoption,"evidenceHash">={formatVersion:1,phase:GATE02_REPAIR_PHASE,
-    requiredBaseSha:GATE02_REQUIRED_BASE_SHA,baseContained:true,observedAt:"2026-09-28T09:00:00.000Z",
+    requiredBaseSha:GATE02_REQUIRED_BASE_SHA,baseContained:true,observedAt:"2026-09-28T09:00:00.000Z",processIdentity:"runner:12:start",
     runningSha:sha,servedSha:sha,servedHow:"GET https://example.org/api/build",inspectionCode:"RUNTIME_RELEASE_CURRENT",
     integrityReceiptId:"integrity-receipt",integritySha:sha,integrityObservedAt:"2026-09-28T08:00:00.000Z",...change};
   return {...fields,evidenceHash:runtimeReleaseAdoptionHash(fields)};
@@ -64,4 +64,13 @@ test("a running but unfinished cycle, stale beat or expired adoption cannot pass
   assert.equal(witness(heartbeat({lastCycleStartedAt:"2026-09-28T08:55:00.000Z"})).length,0);
   assert.equal(witness(heartbeat(),scope,"2026-09-28T13:01:00.000Z").length,0);
   assert.equal(witness(heartbeat({beatAt:"2026-09-28T08:59:00.000Z"})).length,0);
+});
+test("post-cycle boundary retains matching adoption until it expires or process changes",()=>{
+  const first=adoption();
+  const fresh=adoption({observedAt:"2026-09-28T09:07:00.000Z"});
+  assert.equal(retainedRuntimeReleaseAdoption(first,fresh,"2026-09-28T09:07:00.000Z"),first);
+  assert.equal(witness(heartbeat({runtimeRelease:retainedRuntimeReleaseAdoption(first,fresh,"2026-09-28T09:07:00.000Z")})).length,1);
+  assert.equal(retainedRuntimeReleaseAdoption(first,fresh,"2026-09-28T12:00:00.000Z"),fresh);
+  assert.equal(retainedRuntimeReleaseAdoption(first,adoption({processIdentity:"runner:13:new"}),"2026-09-28T09:07:00.000Z").processIdentity,"runner:13:new");
+  assert.equal(retainedRuntimeReleaseAdoption(first,adoption({integrityReceiptId:"replacement"}),"2026-09-28T09:07:00.000Z").integrityReceiptId,"replacement");
 });

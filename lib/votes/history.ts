@@ -7,12 +7,13 @@ import {
 import { FEDERAL_ROLLCALL_SCOPE } from "./data-plane.ts";
 import type { FederalRollCallsReadModel } from "./data-plane.ts";
 import type { RollCallVote, VotePosition } from "./types.ts";
+import type { BillSummariesFile, BillSummary } from "./bill-summaries.ts";
 
 export interface HistoricalFederalVote extends RollCallVote {
   readonly position: VotePosition;
   readonly partyBreakdown: null;
-  readonly billSummary: null;
-  readonly billSummaryPending: false;
+  readonly billSummary: BillSummary | null;
+  readonly billSummaryPending: boolean;
   /** The exact approved former projection, never the current recent window. */
   readonly historicalVersionId: string;
   readonly historicalSourceThrough: string | null;
@@ -25,6 +26,17 @@ export interface HistoricalFederalVotePage {
   readonly versionIds: readonly string[];
   readonly nextVersionId: string | null;
   readonly issue: string | null;
+}
+
+/** Reviewed summaries join an older roll call only by its exact official bill URL. */
+export function reviewedHistoricalBill(
+  billUrl: string | null,
+  reviewed: BillSummariesFile,
+): Pick<HistoricalFederalVote, "billSummary" | "billSummaryPending"> {
+  return {
+    billSummary: billUrl ? reviewed.summaries[billUrl] ?? null : null,
+    billSummaryPending: Boolean(billUrl && reviewed.pending.some((row) => row.billUrl === billUrl)),
+  };
 }
 
 /** Exhaust the same anchored pages for the reader proof census, never for a live member request. */
@@ -57,6 +69,7 @@ export async function readHistoricalFederalVotesForMember(
   const chain = await readPromotedCivicDataPredecessors("FEDERAL_ROLL_CALL", FEDERAL_ROLLCALL_SCOPE,
     current, options);
   const currentIds = new Set(current.value.snapshot.votes.map((vote) => vote.id));
+  const reviewedSummaries = current.value.billSummaries;
   const votes: HistoricalFederalVote[] = [];
   const seen = new Set<string>();
   for (const version of chain.versions) {
@@ -74,7 +87,11 @@ export async function readHistoricalFederalVotesForMember(
       const position = positions.get(vote.id);
       if (!position) continue;
       seen.add(vote.id);
-      votes.push({ ...vote, position, partyBreakdown: null, billSummary: null, billSummaryPending: false,
+      // The current canonical bill-summary corpus is keyed by the exact
+      // official bill URL. An older proven roll call can still carry its
+      // existing reviewed explanation even after it leaves Recent.
+      votes.push({ ...vote, position, partyBreakdown: null,
+        ...reviewedHistoricalBill(vote.billUrl, reviewedSummaries),
         historicalVersionId: version.projection.versionId,
         historicalSourceThrough: version.metadata.sourceThrough,
         historicalRetrievedAt: version.metadata.retrievedAt });

@@ -537,7 +537,7 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
     derivedPromotion: {
-      inputKinds: ["PROMOTED_VERSION", "MEMBER_ACQUISITION"],
+      inputKinds: ["PROMOTED_VERSION", "MEMBER_ACQUISITION", "REFERENCE_ACQUISITION"],
       authorization: "C16: owner decision recorded 2026-09-24T22:43Z",
     },
   },

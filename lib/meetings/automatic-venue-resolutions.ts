@@ -69,10 +69,25 @@ export function placeMeetingsFromVerifiedVenues(meetings: readonly Meeting[], re
   return { meetings: placed, placedCount };
 }
 
+/** Keep an already promoted point only while a fresh read repeats that exact sitting and address. */
+export function retainPreviouslyVerifiedVenuePoints(meetings: readonly Meeting[], previous: readonly Meeting[]): readonly Meeting[] {
+  const byId = new Map(previous.map((meeting) => [meeting.id, meeting]));
+  return meetings.map((meeting): Meeting => {
+    const prior = byId.get(meeting.id);
+    if (meeting.location || meeting.venueGap?.kind !== "STATED_NOT_PLACED" || !prior?.location ||
+        meeting.bodyId !== prior.bodyId || meeting.ocdId !== prior.ocdId ||
+        meeting.provenance.sourceUrl !== prior.provenance.sourceUrl ||
+        meeting.venueGap.publishedText?.trim() !== prior.location.address?.trim()) return meeting;
+    const { venueGap: _gap, ...rest } = meeting;
+    return { ...rest, location: prior.location };
+  });
+}
+
 /**
  * Build an exact-source venue successor from already verified meeting acquisitions.
  * A failed or ambiguous geocode leaves the meeting's published address visible without a pin.
- * The caller sends the package through the existing venue-resolutions promotion gate.
+ * The clocked meeting-family caller names the Census receipts on its routine
+ * derived candidate and promotes the placed meetings through that routine gate.
  */
 export async function automaticVenuePackage(input: {
   readonly snapshot: MeetingsSnapshot;

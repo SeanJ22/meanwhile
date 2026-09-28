@@ -108,6 +108,15 @@ export type DerivedInputRef =
       /** sha256 (bare hex) of the bytes read. */
       readonly rawHash: string;
       readonly retrievedAt: string;
+    }
+  | {
+      /** An exact Census geocoder read supporting a meeting-family venue point. */
+      readonly kind: "REFERENCE_ACQUISITION";
+      readonly requestedUrl: string;
+      readonly finalUrl: string;
+      readonly httpStatus: number;
+      readonly rawHash: string;
+      readonly retrievedAt: string;
     };
 
 export type DerivedInputKind = DerivedInputRef["kind"];
@@ -119,6 +128,7 @@ export const DERIVED_INPUT_KINDS = [
   "CROSSWALK_VERSION",
   "PIPELINE_APPROVAL",
   "MEMBER_ACQUISITION",
+  "REFERENCE_ACQUISITION",
 ] as const satisfies readonly DerivedInputKind[];
 
 /** Why a row's host may be read at all. A search find on a third-party host has none. */
@@ -443,7 +453,7 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
   const times = inputs
     .map((input) =>
       input.kind === "PROMOTED_VERSION" ? input.promotedAt
-        : input.kind === "VAULTED_EVIDENCE" || input.kind === "MEMBER_ACQUISITION" ? input.retrievedAt
+        : input.kind === "VAULTED_EVIDENCE" || input.kind === "MEMBER_ACQUISITION" || input.kind === "REFERENCE_ACQUISITION" ? input.retrievedAt
           : input.kind === "DISCOVERY_ATTEMPT" ? input.recordedAt
             : input.kind === "PIPELINE_APPROVAL" ? input.approvedAt
               : null)

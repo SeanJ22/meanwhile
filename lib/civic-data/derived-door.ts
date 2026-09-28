@@ -89,6 +89,21 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
           SHA256.test(input.rawHash) && instant(input.retrievedAt)
         ? null
         : `a member read lacks its member, https URLs, a 2xx status, its sha256 or its time`;
+    case "REFERENCE_ACQUISITION": {
+      if (httpsHost(input.requestedUrl) !== "geocoding.geo.census.gov" ||
+          httpsHost(input.finalUrl) !== "geocoding.geo.census.gov") {
+        return "a reference read must stay on the official Census geocoder host";
+      }
+      const requested = new URL(input.requestedUrl);
+      return requested.pathname === "/geocoder/locations/onelineaddress" &&
+          text(requested.searchParams.get("address")) &&
+          requested.searchParams.get("benchmark") === "Public_AR_Current" &&
+          requested.searchParams.get("format") === "json" &&
+          Number.isInteger(input.httpStatus) && input.httpStatus >= 200 && input.httpStatus < 300 &&
+          SHA256.test(input.rawHash) && instant(input.retrievedAt)
+        ? null
+        : "a reference read is not an exact successful Census geocoder receipt";
+    }
     default:
       return `an input of unknown kind`;
   }

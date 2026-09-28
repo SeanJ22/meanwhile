@@ -1,11 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { automaticVenuePackage, placeMeetingsFromVerifiedVenues, verifiedCensusVenuePoint } from "../lib/meetings/automatic-venue-resolutions.ts";
+import { automaticVenuePackage, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints, verifiedCensusVenuePoint } from "../lib/meetings/automatic-venue-resolutions.ts";
+import { derivedInputIssue } from "../lib/civic-data/derived-door.ts";
 import { absoluteEventSourceUrl } from "../lib/sources/ical/index.ts";
-import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 
 const NOW = "2026-09-28T08:30:00.000Z";
@@ -30,7 +28,7 @@ const snapshot = {
     httpStatus: 200, rawHash: "a".repeat(64), byteCount: 3000 }] }],
 } as unknown as MeetingsSnapshot;
 
-test("one exact published address and one exact Census match pass the existing venue promotion gate", async () => {
+test("one exact published address and Census match can place a meeting", async () => {
   const result = await automaticVenuePackage({ snapshot, existingIds: new Set(), memberRoutes: ROUTES, clock: () => NOW,
     fetchImpl: (async () => new Response(JSON.stringify(GEO), { status: 200 })) as typeof fetch });
   assert.deepEqual(result.held, []);
@@ -39,10 +37,6 @@ test("one exact published address and one exact Census match pass the existing v
   assert.equal(row.addressSourceUrl, FEED);
   assert.equal(row.coordinateSourceUrl, result.package.sourceReceipt.sources[1]!.finalUrl);
   assert.equal(row.lat, 31.393935355772);
-  const candidate = manualProjectionCandidate(result.package);
-  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "venue-resolutions", candidate, NOW);
-  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
-  assert.ok(outcome.promoted);
   const placed = placeMeetingsFromVerifiedVenues(snapshot.meetings, [row as unknown as Parameters<typeof placeMeetingsFromVerifiedVenues>[1][number]]);
   assert.equal(placed.placedCount, 1);
   assert.equal(placed.meetings[0]?.location?.lat, 31.393935355772);
@@ -65,4 +59,20 @@ test("a carried address cannot borrow a newer feed's acquisition receipt", async
 test("an iCal event's relative URL becomes an absolute publisher link", () => {
   assert.equal(absoluteEventSourceUrl("/calendar.aspx?EID=2980", FEED), "https://county.example.gov/calendar.aspx?EID=2980");
   assert.equal(absoluteEventSourceUrl("javascript:alert(1)", FEED), FEED);
+});
+
+test("a retry retains only an exact previously verified sitting and address", () => {
+  const fresh = snapshot.meetings[0]!;
+  const prior = { ...fresh, location: { name: RAW, address: RAW, lat: 31.3939, lng: -109.9256 }, venueGap: undefined };
+  assert.equal(retainPreviouslyVerifiedVenuePoints([fresh], [prior])[0]?.location?.lat, 31.3939);
+  assert.equal(retainPreviouslyVerifiedVenuePoints([{ ...fresh, venueGap: { ...fresh.venueGap!, publishedText: "different address" } }], [prior])[0]?.location, null);
+});
+
+test("the derived family gate refuses a non-Census reference receipt", () => {
+  const reference = { kind: "REFERENCE_ACQUISITION" as const,
+    requestedUrl: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=1415+W+Melody+Ln+Bisbee+AZ+85603&benchmark=Public_AR_Current&format=json",
+    finalUrl: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
+    httpStatus: 200, rawHash: "a".repeat(64), retrievedAt: NOW };
+  assert.equal(derivedInputIssue(reference), null);
+  assert.match(derivedInputIssue({ ...reference, finalUrl: "https://example.com/geocoder/locations/onelineaddress" }) ?? "", /Census/);
 });

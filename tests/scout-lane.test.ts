@@ -20,7 +20,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { DurableSpendHolds, JobSpend, budgetGuardedTransport } from "../lib/control-plane/expansion/spend-holds.ts";
+import { DurableSpendHolds, JobSpend, SendBudgetRefusal, budgetGuardedTransport } from "../lib/control-plane/expansion/spend-holds.ts";
+import { FleetSafetyController, FleetPreSendRefusal } from "../lib/control-plane/fleet-safety.ts";
 import {
   attemptsForRouteTask,
   registerRouteTask,
@@ -254,11 +255,13 @@ function executorWith(
     inherited?: InheritedEvidence;
     decision?: "DETERMINISTIC" | "BOUNDED_MODEL_WORKER";
     minRungs?: number;
+    refusedBeforeSending?: (error: unknown) => boolean;
   } = {},
 ) {
   const results: ScoutResult[] = [];
   const exec = scoutExecutor({
     transport,
+    refusedBeforeSending: opts.refusedBeforeSending,
     ...(opts.minRungs !== undefined ? { minRungs: opts.minRungs } : {}),
     toolkitFor: (_ctx: ScoutToolContext) => toolkit,
     contextFor: () => ({
@@ -879,6 +882,42 @@ test("only recognized request rejections establish zero, not timeout or arbitrar
     const rejected = [400, 401, 429].includes(status);
     assert.equal(result.cost?.usd, rejected ? 0 : null, `status ${status}`);
     assert.equal(result.cost?.requestCount, rejected ? 1 : null, `request count for status ${status}`);
+  }
+});
+
+test("proven pre-send Scout refusals settle unused holds without erasing earlier measured turns", async () => {
+  for (const mode of ["fleet-before-first", "budget-before-first", "fleet-after-metered", "unpriced-after-response"] as const) {
+    const { repos, task } = await registered();
+    const holds = new DurableSpendHolds({ budget: repos.budget, now: () => NOW, sleep: async () => undefined });
+    const line = { key: "area:zcta:2020/85635@2026-09-27T22:17:50.236Z", label: "original", budgetUsd: 50, historicalUsd: 0, historyReadAt: new Date(NOW_MS - 1_000).toISOString() };
+    const job = new JobSpend(holds, mode, OBLIGATION.id, { sends: [], areas: [line] });
+    assert.equal((await job.admit(2, "Scout")).admit, true);
+    const heldFleet = new FleetSafetyController({ now: NOW, costs: [], modelHold: "lane closed", clock: () => NOW_MS });
+    const openFleet = new FleetSafetyController({ now: NOW, costs: [], clock: () => NOW_MS });
+    let sent = 0;
+    const provider: ModelTransport = async request => {
+      sent++;
+      return { model: request.model, stop_reason: "tool_use", content: [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "w" })],
+        usage: mode === "unpriced-after-response" ? { input_tokens: 100 } : { input_tokens: 100, output_tokens: 10 } } as ModelResponse;
+    };
+    const guarded: ModelTransport = request => (mode === "fleet-before-first" || mode === "fleet-after-metered" && sent > 0 ? heldFleet : openFleet)
+      .guardedModelTransport("anthropic", OBLIGATION.id, provider)(request);
+    const transport = budgetGuardedTransport({ job: () => job,
+      worstCaseOf: () => mode === "budget-before-first" ? 51 : 1, priceOf: () => null, transport: guarded });
+    const { exec } = executorWith(transport, fakeToolkit(), {
+      refusedBeforeSending: error => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal,
+    });
+    const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id,
+      holder: mode, now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+    const expectedSent = mode === "fleet-after-metered" || mode === "unpriced-after-response" ? 1 : 0;
+    assert.equal(sent, expectedSent, mode);
+    assert.equal(result.cost?.requestCount, mode === "unpriced-after-response" ? null : expectedSent, mode);
+    if (mode === "unpriced-after-response") assert.equal(result.cost?.usd, null);
+    else if (mode === "fleet-after-metered") assert.ok((result.cost?.usd ?? 0) > 0);
+    else assert.equal(result.cost?.usd, 0);
+    await holds.settle(job.jobId, result.cost?.usd ?? null, NOW);
+    const left = (await holds.left([line]))?.[0].leftUsd;
+    assert.equal(left, 50 - (result.cost?.usd ?? 2), mode);
   }
 });
 

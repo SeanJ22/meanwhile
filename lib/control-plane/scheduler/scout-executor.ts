@@ -548,6 +548,9 @@ export function scoutBrief(
 
 export interface ScoutExecutorDeps {
   readonly transport: ModelTransport;
+  /** Trusted transport wrapper provenance only; message text never proves that
+   * a provider request was refused before sending. Unknown errors stay held. */
+  readonly refusedBeforeSending?: (error: unknown) => boolean;
   readonly model?: string;
   readonly bound?: ScoutBound;
   readonly minRungs?: number;
@@ -1444,7 +1447,12 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             // timeout, unrecognized status or lost response may follow billing.
             const rejectedRequest = error instanceof ModelTransportError && error.status !== null
               && [400, 401, 402, 403, 404, 413, 429].includes(error.status);
-            if (enteredTransport && !rejectedRequest) unpricedTransport = true;
+            const refusedBeforeSending = enteredTransport && deps.refusedBeforeSending?.(error) === true;
+            if (refusedBeforeSending) {
+              transportInvocations -= 1;
+              transportInvocationsByModel.set(current.model, (transportInvocationsByModel.get(current.model) ?? 1) - 1);
+            }
+            if (enteredTransport && !rejectedRequest && !refusedBeforeSending) unpricedTransport = true;
             break;
           }
           turns += 1;

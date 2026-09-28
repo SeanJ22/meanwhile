@@ -4,6 +4,8 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { failedAcquisitionCandidate, normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { manualCandidateContractIssue, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -12,6 +14,7 @@ import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
   pimaCampaignFinanceCandidate,
   stateCampaignFinanceCandidate,
+  stateCampaignFinanceMembers,
   type StateCampaignFinanceJurisdiction,
 } from "../lib/funding/data-plane.ts";
 import {
@@ -103,6 +106,32 @@ test("AZ, NH, and NJ finance candidates bind exact source/class/scope and promot
     assert.equal(outcome.candidate.candidate.changeSet?.changed.length, 0);
     assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
   }
+});
+
+test("an official filing resolves the same candidacy's gap without treating it as an unexplained disappearance", () => {
+  const base = fixture("AZ");
+  const gap = base.records.find(record => record.filingState === "OURS_GAP" && record.targetKeys.length === 1);
+  const filed = base.records.find(record => record.filingState === "FILED" && record.committeeId);
+  assert.ok(gap && filed);
+  const snapshot = (record: StateMoneySnapshot["records"][number]): StateMoneySnapshot => {
+    const records = [record];
+    const split = computeSplit(records, 1);
+    return { ...base, records, split, byJurisdiction: { AZ: { inScope: 1, filed: split.filed,
+      noReports: split.noReportsOnFile, lead: split.lead } } };
+  };
+  const prior = snapshot(gap);
+  const resolved = snapshot({ ...filed, targetKeys: gap.targetKeys });
+  const build = (next: StateMoneySnapshot) => stateCampaignFinanceCandidate({ jurisdiction: "AZ", snapshot: next,
+    rawBodies: ["official-AZ"], requestedUrl: URLS.AZ, finalUrl: URLS.AZ, retrievedAt: T1,
+    query: "bounded official filing projection", paginationComplete: true, declaredTotal: null });
+  const successor = build(resolved);
+  const check = (next: StateMoneySnapshot) => validateRoutineCandidate({ ...build(next),
+    changeSet: candidateChangeSet(build(next), prior) }, null, T1).receipt.checks
+    .find(row => row.code === "STATE_FINANCE_GAPS_RESOLVED_BY_OFFICIAL_FILINGS" ||
+      row.code === "INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED");
+  assert.deepEqual(candidateChangeSet(successor, prior).removed.map(row => row.key), stateCampaignFinanceMembers(prior).map(row => row.key));
+  assert.equal(check(resolved)?.verdict, "PASS");
+  assert.equal(check(snapshot(filed))?.code, "INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED");
 });
 
 test("a bad state candidate and a failed source attempt preserve the prior GOOD pointer", async () => {

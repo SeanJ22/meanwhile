@@ -2473,9 +2473,11 @@ export async function projectCanonicalReaderRecords(
     import("../ballot/general-lineup.ts"), import("../ballot/analyses.ts"), import("../votes/snapshot.ts"),
     import("../sources/prl/snapshot.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"), import("../votes/key-votes-projection.ts"), import("../routing/everyday-data-plane.ts"),
   ]);
+  const voteRead = votes.readFederalRollCallsProjection();
   await Promise.all([
     federal.refreshFundingFromPromoted(),
-    votes.readFederalRollCallsProjection(),
+    finance.refreshStateMoneyFromPromoted(),
+    voteRead,
     keyProjection.readFederalKeyVotesProjection(),
     votingSites.readVotingSitesProjection(),
     prl.readPrlProjection(),
@@ -2542,11 +2544,22 @@ export async function projectCanonicalReaderRecords(
   const currentMeetingWindow = (meeting: { startsAt: string }) => Date.parse(meeting.startsAt) >= asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000 && Date.parse(meeting.startsAt) <= asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
   const corpusById = new Map(corpus.unifiedCorpus().snapshots.map((row) => [row.id, row]));
   const federalVotes = votes.getVotesSnapshot();
+  const { readAllProvenFederalVoteHistoryForProof } = await import("../votes/history.ts");
+  const currentVoteRead = await voteRead;
+  const historicalVotes = currentVoteRead.kind === "PROMOTED"
+    ? await readAllProvenFederalVoteHistoryForProof(currentVoteRead)
+    : [];
+  const historicalVoteRecords = historicalVotes.toReversed().flatMap((read) => [
+    ...read.value.snapshot.votes, ...read.value.snapshot.positions,
+  ]);
   const allVoteRecords = [
+    ...historicalVoteRecords,
     ...federalVotes.votes,
     ...federalVotes.positions,
   ];
   const voteIdentity = (row: ObjectRow) => [row.id, row.officeholderId, row.voteId ?? row.rollCallId].filter(Boolean).join("|");
+  const currentVoteIdentities = new Set([...federalVotes.votes, ...federalVotes.positions]
+    .map((row) => voteIdentity(object(row))));
   const voteRecords = new Map(allVoteRecords.map((row) => [voteIdentity(object(row)), row]));
   const voting = votingSites.loadVotingSites();
   const bodyRosterHolders = new Map(rosters.currentBodyRosters().flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
@@ -2734,7 +2747,14 @@ export async function projectCanonicalReaderRecords(
           setResult("keyVotePositionFor", rows.every((row) => row.position === row.expected) && keyPositions.keyVoteRollCallHeld(key) ? rows : null);
         } else if (record.holdingPath.endsWith("key-votes-snapshot.json")) setResult("getKeyVotesSnapshot", keyVotes.getKeyVotesSnapshot().entries.find((entry) => entry.id === raw.id));
         else if (record.holdingPath.endsWith("bill-summaries.json") && input?.raw.identityKey) setResult("summaryForBill", billSummaries.summaryForBill(input.raw.identityKey));
-        else if (["votes", "positions", "rollCalls"].includes(record.unit)) setResult("getVotesSnapshot / getStateVotesSnapshot", voteRecords.get(voteIdentity(raw)));
+        else if (["votes", "positions", "rollCalls"].includes(record.unit)) {
+          const identity = voteIdentity(raw);
+          const selectedVote = voteRecords.get(identity);
+          setResult("getVotesSnapshot / getStateVotesSnapshot / proven earlier federal window", selectedVote);
+          if (selectedVote && !currentVoteIdentities.has(identity)) {
+            reason = "This held vote remains in a GOOD, hash-verified former federal roll-call version joined through the durable pointer-move chain. It is earlier history, not part of the current recent window.";
+          }
+        }
         else support("recorded-vote explanation input", "Key-vote titles, bill summaries and law-title caches are explanatory inputs to named vote selectors, not additional roll-call positions. Canonical vote rows are counted separately.");
         break;
       }
@@ -3484,6 +3504,24 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
     import("../../components/ballot/candidate-contact.tsx"), import("../../components/map/popup/meeting-records.tsx"), import("../../components/area/shuffled-facts.tsx"),
     import("../funding/state-snapshot.ts"), import("../ballot/candidate-contacts.ts"), import("../outcomes/store.ts"), import("../meetings/reader-records.ts"), import("../area/facts.ts"), import("../../components/officials/public-statements-profile.tsx"), import("../sources/prl/snapshot.ts"), import("../../components/officials/person-identity.tsx"), import("../../components/officials/contact-pills.tsx"), import("../registry/server.ts"), import("../registry/body-rosters.ts"), import("../../components/ballot/candidate-card.tsx"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"), import("../ballot/registry.ts"), import("../../components/map/popup/meeting-popup.tsx"), import("../../components/map/popup/district-popup.tsx"), import("../../components/map/popup/entity-modal.tsx"), import("../state/data.tsx"), import("../sources/snapshot/index.ts"), import("../map/format.ts"), import("../registry/links.ts"), import("../registry/body-membership.ts"), import("../meetings/minutes-summaries.ts"), import("../../components/map/meeting-panel.tsx"), import("../registry/comment-access.ts"), import("../state/derive.ts"),
   ]);
+  // The component harness runs in a fresh process. Read the same promoted
+  // state authorities the public ballot/funding routes settle before using
+  // stateMoneyForTarget; an uninitialized cache cannot prove a missing row.
+  await finance.refreshStateMoneyFromPromoted();
+  const federalVotes = await import("../votes/snapshot.ts");
+  const currentFederalVotes = await federalVotes.readFederalRollCallsProjection();
+  const { readAllProvenFederalVoteHistoryForProof } = await import("../votes/history.ts");
+  const historicalFederalVotes = currentFederalVotes.kind === "PROMOTED"
+    ? await readAllProvenFederalVoteHistoryForProof(currentFederalVotes)
+    : [];
+  const recentFederalVoteIds = new Set(federalVotes.getVotesSnapshot().votes.map((vote) => vote.id));
+  const historicalFederalMembers = new Set(historicalFederalVotes.flatMap((version) =>
+    version.value.snapshot.positions.filter((position) => !recentFederalVoteIds.has(position.voteId))
+      .map((position) => position.officeholderId)));
+  const canonicalFederalVotes = new Map([
+    ...historicalFederalVotes.toReversed().flatMap((version) => version.value.snapshot.votes),
+    ...federalVotes.getVotesSnapshot().votes,
+  ].map((vote) => [vote.id, vote]));
   const ballotSets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
   const candidateNames = new Map(ballotSets.flatMap((set) => [...set.candidacies, ...(set.removals ?? [])]).map((candidate) => [candidate.id, `${candidate.givenName} ${candidate.familyName}`]));
   const cardName = (key: string) => key.includes("|") ? key.slice(key.indexOf("|") + 1) : candidateNames.get(key);
@@ -3558,6 +3596,36 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
     const payload = await response.json() as { votes: ActualVote[]; attribution?: ActualAttribution; count: number };
     if (payload.count !== payload.votes.length) throw new Error(`Actual vote route false count ${member}`);
     for (const vote of payload.votes) { const selected = { member, vote, attribution: payload.attribution ?? null }; voteByMember.set(`${member}#${vote.id}`, selected); if (!voteById.has(vote.id)) voteById.set(vote.id, selected); }
+    if (historicalFederalMembers.has(member)) {
+      let cursor: string | null = null;
+      let anchor: string | null = null;
+      const cursors = new Set<string>();
+      for (;;) {
+        const query = `http://localhost/api/votes?member=${encodeURIComponent(member)}&history=1` +
+          (cursor ? `&cursor=${encodeURIComponent(cursor)}&anchor=${encodeURIComponent(anchor!)}` : "");
+        const historicalResponse = await voteRoute.GET(new Request(query));
+        if (historicalResponse.status !== 200) throw new Error(`Actual historical vote route failed ${member}`);
+        const page = await historicalResponse.json() as {
+          historicalVotes: (ActualVote & { historicalVersionId?: string })[];
+          historicalCount: number; historyStatus: "COMPLETE" | "MORE" | "UNAVAILABLE";
+          nextHistoricalVersionId: string | null; currentVersionId: string;
+        };
+        if (page.historyStatus === "UNAVAILABLE" || page.historicalCount !== page.historicalVotes.length ||
+          anchor !== null && page.currentVersionId !== anchor) {
+          throw new Error(`Actual historical vote route returned an unproved page for ${member}`);
+        }
+        anchor ??= page.currentVersionId;
+        for (const vote of page.historicalVotes) {
+          const selected = { member, vote, attribution: null };
+          if (!voteByMember.has(`${member}#${vote.id}`)) voteByMember.set(`${member}#${vote.id}`, selected);
+          if (!voteById.has(vote.id)) voteById.set(vote.id, selected);
+        }
+        if (page.historyStatus === "COMPLETE") break;
+        cursor = page.nextHistoricalVersionId;
+        if (!cursor || cursors.has(cursor)) throw new Error(`Historical vote route did not advance ${member}`);
+        cursors.add(cursor);
+      }
+    }
   }
   const agendaResponses = new Map<string, { documents: (Parameters<typeof AgendaDocuments>[0]["documents"][number] & { id: string })[]; documentCount: number; publication: Parameters<typeof AgendaDocuments>[0]["publication"] }>();
   const [{ proveVotingSites }, { VotingJurisdictionRecords }, votingSiteDisplay] = await Promise.all([import("../../scripts/reader-last-mile-voting-sites.mts"), import("../../components/map/voting-sites-panel.tsx"), import("../ballot/voting-sites.ts")]);
@@ -3705,10 +3773,25 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const markup = renderToStaticMarkup(createElement(BillPlainSummary, { billUrl: url, summary: selected, pending: false }));
       add(record, "components/map/popup/official-popup.tsx", "summaryForBill → BillPlainSummary", selected, [url], markup, [selected.summary], [], { summaries: { expected: 1, actual: [...markup.matchAll(/<details\b/g)].length } });
     } else if (record.family === "votes" && record.eligibility.state === "READER_ELIGIBLE" && ["votes", "positions", "rollCalls"].includes(record.unit)) {
+      // A roll-call row has no individual's position. Establish that its
+      // identity still exists in the promoted vote authority before using a
+      // member route as its reader witness; never invent a member vote.
+      const canonicalVote = record.unit === "votes" && record.holdingPath.endsWith("votes-snapshot.json")
+        ? canonicalFederalVotes.get(string(raw.id))
+        : undefined;
+      if (record.unit === "votes" && record.holdingPath.endsWith("votes-snapshot.json") && !canonicalVote) {
+        throw new Error(`Promoted federal vote selector could not resolve ${record.auditId}`);
+      }
       const selected = raw.officeholderId ? voteByMember.get(`${raw.officeholderId}#${raw.voteId ?? raw.rollCallId}`) : voteById.get(string(raw.id));
-      if (!selected || raw.officeholderId && selected.vote.position !== raw.position) throw new Error(`Actual member-vote payload lost or changed ${record.auditId}`);
+      if (!selected || raw.officeholderId && selected.vote.position !== raw.position ||
+        canonicalVote && (selected.vote.title !== canonicalVote.title || selected.vote.question !== canonicalVote.question)) {
+        throw new Error(`Actual member-vote payload lost or changed ${record.auditId}`);
+      }
       const markup = renderToStaticMarkup(createElement(RecentVoteRecords, { votes: [selected.vote], attribution: selected.attribution, failed: false, reactionContext: null }));
-      add(record, "components/map/popup/official-popup.tsx", "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)", selected, raw.officeholderId ? [selected.member, selected.vote.id] : [selected.vote.id], markup,
+      add(record, "components/map/popup/official-popup.tsx", selected.vote.historicalVersionId
+        ? "actual GET /api/votes history page → earlier-records RecentVoteRecords"
+        : "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)",
+      selected, raw.officeholderId ? [selected.member, selected.vote.id] : [selected.vote.id], markup,
         [selected.vote.title, selected.vote.question, selected.vote.result, ({ YES: "Voted yes", NO: "Voted no", ABSTAIN: "Abstained", PRESENT: "Voted present", NOT_VOTING: "Did not vote", UNKNOWN: "Publisher position unclassified" })[selected.vote.position], selected.vote.rollCallUrl, selected.vote.billUrl, selected.attribution?.text, selected.attribution?.url, selected.attribution?.licenceUrl].filter((value): value is string => Boolean(value)), [], { recordedVotes: { expected: 1, actual: occurrences(markup, "data-recent-vote-id") } });
     } else if (record.family === "ballot-navigation" && record.holdingPath.includes("polling-place")) {
       const selected = polling.pollingPlaceLinkFor(string(raw.state));

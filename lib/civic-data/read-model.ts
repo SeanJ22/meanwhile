@@ -985,6 +985,150 @@ export interface PinnedCivicDataVersion {
 /** The pinned read also needs the append-only event log that dates a promotion. */
 export type CivicDataPinnedReadStore = CivicDataReadStore & Pick<RoutineDataStore, "events">;
 
+export interface ProvenCivicDataHistory<T> {
+  /** Older, individually proven versions, newest first. Never includes current. */
+  readonly versions: readonly Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[];
+  /** True only when the durable pointer-move chain reaches bootstrap/no-version. */
+  readonly complete: boolean;
+  /** Exact next predecessor for a later page; null when the chain is complete or broken. */
+  readonly nextVersionId: string | null;
+  /** A failed read or proof is disclosed and never turned into an absence. */
+  readonly issue: string | null;
+}
+
+export interface ProvenCivicDataHistoryOptions {
+  readonly store?: Pick<RoutineDataStore, "readCandidate" | "events"> &
+    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents">>;
+  readonly cursor?: string | null;
+  /** Payloads per page, not a cap on the historical chain. */
+  readonly pageSize?: number;
+  readonly now?: string;
+  readonly bypassCache?: boolean;
+}
+
+const HISTORY_TTL_MS = 60_000;
+const historicalPages = new Map<string, { readonly expiresAt: number; readonly value: ProvenCivicDataHistory<unknown> }>();
+const historicalFlights = new Map<string, Promise<ProvenCivicDataHistory<unknown>>>();
+
+/**
+ * Normal Reader door for older versions of an already proven current pointer.
+ * A pointer-move event names each predecessor; every predecessor is then
+ * checked with the same GOOD receipt, hash, source and import proof used for
+ * a current promotion. The proof-only pin admission above remains separate.
+ */
+export async function readPromotedCivicDataPredecessors<T>(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  current: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>,
+  options: ProvenCivicDataHistoryOptions = {},
+): Promise<ProvenCivicDataHistory<T>> {
+  const pageSize = Math.min(16, Math.max(1, Math.floor(options.pageSize ?? 4)));
+  const currentId = current.projection.versionId;
+  const key = projectionKey(recordClass, scope);
+  if (current.projection.key !== key || current.projection.recordClass !== recordClass || current.projection.scope !== scope) {
+    return { versions: [], complete: false, nextVersionId: null, issue: "Current promoted pointer does not match the requested history scope." };
+  }
+  const cursor = options.cursor ?? null;
+  if (cursor !== null && (!cursor || cursor.length > 256 || /\s/.test(cursor))) {
+    return { versions: [], complete: false, nextVersionId: null, issue: "Historical continuation is malformed." };
+  }
+  const cacheKey = `${key}|${currentId}|${cursor ?? ""}|${pageSize}`;
+  if (!options.store && !options.bypassCache) {
+    const cached = historicalPages.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) return cached.value as ProvenCivicDataHistory<T>;
+    const pending = historicalFlights.get(cacheKey);
+    if (pending) return pending as Promise<ProvenCivicDataHistory<T>>;
+  }
+  const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
+    const store = options.store ?? new PostgresRoutineDataStore();
+    const versions: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[] = [];
+    const fail = (issue: string): ProvenCivicDataHistory<T> => ({ versions, complete: false, nextVersionId: null, issue });
+    const seen = new Set<string>();
+    const link = async (id: string): Promise<{ readonly previous: string | null; readonly at: string } | null> => {
+      const events = await readPointerMoveEvents(store, id);
+      const prefix = `Atomic pointer ${key} moved from `;
+      const suffix = ` to ${id}.`;
+      const matched = events.filter((event) => event.state === "PROMOTED" &&
+        event.detail.startsWith(prefix) && event.detail.endsWith(suffix));
+      if (matched.length !== 1) return null;
+      const previous = matched[0]!.detail.slice(prefix.length, -suffix.length);
+      if (!previous || /\s/.test(previous)) return null;
+      return { previous: previous === "bootstrap/no-version" ? null : previous, at: matched[0]!.at };
+    };
+    let id = currentId;
+    let next: string | null = null;
+    const moves = new Map<string, { readonly previous: string | null; readonly at: string }>();
+    const pageIds: string[] = [];
+    try {
+      // Rewalk the exact anchored links on a continuation. No caller-supplied
+      // version can jump into an unrelated candidate's history.
+      for (;;) {
+        if (seen.has(id)) return fail("Historical pointer-move chain contains a cycle.");
+        seen.add(id);
+        const move = await link(id);
+        if (!move) return fail(`Historical pointer-move proof is missing or ambiguous at ${id}.`);
+        moves.set(id, move);
+        next = move.previous;
+        if (cursor === null || next === cursor) break;
+        if (next === null) return fail("Historical continuation is not in the current pointer's chain.");
+        id = next;
+      }
+      if (next === null) return { versions, complete: true, nextVersionId: null, issue: null };
+      id = next;
+      while (pageIds.length < pageSize) {
+        if (seen.has(id)) return fail("Historical pointer-move chain contains a cycle.");
+        seen.add(id);
+        const move = await link(id);
+        if (!move) return fail(`Historical pointer-move proof is missing or ambiguous at ${id}.`);
+        moves.set(id, move);
+        pageIds.push(id);
+        if (move.previous === null) { next = null; break; }
+        next = move.previous;
+        id = next;
+      }
+      const candidateRows = typeof store.readCandidateProofs === "function"
+        ? await store.readCandidateProofs(pageIds)
+        : await Promise.all(pageIds.map(async (candidateId) => ({ candidateId,
+          record: await readProofCandidate(store, candidateId) })));
+      const candidates = new Map(candidateRows.filter((row): row is CandidateVersionReadback => row.record !== null)
+        .map((row) => [row.candidateId, row.record] as const));
+      for (const candidateId of pageIds) {
+        const candidate = candidates.get(candidateId);
+        if (!candidate) return fail(`Historical candidate ${candidateId} is missing.`);
+        if (candidate.candidate.sourceId !== current.projection.sourceId) {
+          return fail(`Historical candidate ${candidateId} changed the source authority.`);
+        }
+        const predecessorId = trustedLkgPredecessorVersionId(candidate);
+        const predecessor = predecessorId === null ? null : candidates.get(predecessorId) ?? await store.readCandidate(predecessorId);
+        const projection: PromotedProjection<T> = {
+          key, sourceId: candidate.candidate.sourceId, recordClass, scope,
+          versionId: candidateId, lastKnownGoodVersionId: candidateId,
+          promotedAt: moves.get(candidateId)!.at,
+          payload: candidate.candidate.readModel as T,
+          receipt: candidate.receipt as ValidationReceipt,
+        };
+        const proven = resultFromPromotionProof(recordClass, scope, projection, candidate, predecessor,
+          options.now ?? new Date().toISOString(), undefined);
+        if (proven.kind !== "PROMOTED") return fail(`Historical candidate ${candidateId} failed promotion proof.`);
+        versions.push(proven);
+      }
+      return { versions, complete: next === null, nextVersionId: next, issue: null };
+    } catch (error) {
+      return fail(`Historical store read failed (${error instanceof Error ? error.name : "unknown error"}).`);
+    }
+  })();
+  if (options.store || options.bypassCache) return work;
+  historicalFlights.set(cacheKey, work as Promise<ProvenCivicDataHistory<unknown>>);
+  try {
+    const result = await work;
+    if (result.issue === null) historicalPages.set(cacheKey,
+      { expiresAt: Date.now() + HISTORY_TTL_MS, value: result as ProvenCivicDataHistory<unknown> });
+    return result;
+  } finally {
+    historicalFlights.delete(cacheKey);
+  }
+}
+
 /**
  * **PROOF-ONLY exact-version read** (`lib/meetings/proof-pin.ts`, which admits
  * the pin only inside the Reader proof harness and never in a deployed build).

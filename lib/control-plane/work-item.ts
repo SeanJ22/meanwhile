@@ -298,6 +298,7 @@ export interface WorkItem {
     readonly recovery?: "WORKER" | "PUBLISHER";
     /** Verified reader records compared with this body's previous published records. */
     readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
+    readonly recordChanges?: readonly import("../civic-data/publication-record-changes.ts").PublicationRecordChange[];
     /** Exact source-record to public-member bindings admitted by this publication. */
     readonly acceptedMembers?: readonly { readonly recordId: string; readonly memberId: string }[];
     readonly acceptedRecordIds?: readonly string[];

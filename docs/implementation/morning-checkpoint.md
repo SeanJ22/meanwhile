@@ -21,6 +21,8 @@ Due: 2026-09-28 06:55 America/Phoenix (13:55 UTC). This file is an evolving repo
 - The elevated follow-through integration check passed 26 of 26 tests: same-period duplicate suppression, persisted freshness after complete publication, exact inherited-capture acquisition through parser/validator/auditor, retained-history search, and truthful delivery clocks. Original artifact ownership stays immutable. Partial publication does not advance the complete-source freshness clock.
 - Normal service, participation, voter-route and filing publication tests passed. New public readback collectors require the exact accepted version/record and visible source/control; a stored row alone cannot establish delivery.
 - The existing reader-closure gate correctly refuses the changed reader dependencies and holding inventory. Fresh full proof must replace the current certificate through the established workflow while retaining historical proof; no hash-only re-certification is accepted.
+- The first fresh proof on 5496ba6e passed build and meeting pin checks, then failed the census with three Arizona finance witnesses and 9,535 historical federal vote/position rows. Failed artifacts are retained outside the repository. The finance proof now initializes its actual promoted reader, and an ordinary source-verified Earlier records path exposes historical federal votes; no row is discarded to pass the census. Fresh proof on the integrated revision remains owed.
+- Exact-receipt work/accounting changes passed 87 integrated tests and the elevated type check. Shared charges appear once in combined reporting while consuming every applicable Anthropic allowance; unknown shared token prices make available allowance unknown. Candidate provenance passed 52 ballot/Ask checks, 19 corpus checks, the linked-page source-date fixture and an elevated type check.
 
 ## Remaining
 
@@ -28,7 +30,7 @@ Complete source-universe, applicability, period and clause-level witness produce
 
 ## Next checkpoint
 
-Finish the selected-hunt opening overview, freeze the code, execute fresh reader proof and remaining exact-head release gates, then validate normal execution under the original hunt identity and remaining lifetime allowance. Existing meeting release/adoption coordination remains active (venue PR 445). A separate candidate-source slice extends the already existing derived campaign-document pipeline to linked candidate-authored pages; it does not create another manual corpus writer. The candidate slice has no live publication claim yet.
+Freeze the integrated code, execute fresh reader proof and remaining exact-head release gates, then validate normal execution under the original hunt identity and remaining lifetime allowance. Existing meeting release/adoption coordination remains active (venue PR445, merged web revision a874b9f). Candidate linked-page acquisition and source revision preservation now join the existing derived campaign-document pipeline in this release; production publication and later reuse remain unverified.
 
 ## Decision needed
 

@@ -167,9 +167,11 @@ function SavedHuntOverview({ decision, scope, now, read }: {
       {visible === null ? <p className={s.note}>The publisher-attempt projection is unavailable; public results cannot be attributed here.</p>
         : visible.length === 0 ? <p className={s.note}>No linked publisher attempt has a current matching public readback. This does not mean no source work happened.</p>
           : <div className={s.stack8}>{visible.map(({attempt,witness}) => <div key={`${attempt.workItemId}:${attempt.workerResultId}`} className={s.insetRow}>
-            <a className={s.btnLink} href={witness.url}>Open published result</a><span className={s.note}>{attempt.status === "PARTIALLY_PUBLISHED" ? "Partial publication · " : ""}{attempt.acceptedCount === null ? "accepted count unrecorded" : `${attempt.acceptedCount} accepted`} · reader confirmed {formatEastern(witness.checkedAt)}</span><details className={s.note}><summary>Result reference</summary>{attempt.bodyId} · version {witness.versionId}</details>
+            <a className={s.btnLink} href={witness.url}>Open published result</a><span className={s.note}>{attempt.status === "PARTIALLY_PUBLISHED" ? "Partial publication · " : ""}{attempt.acceptedCount === null ? "accepted count unrecorded" : `${attempt.acceptedCount} accepted`} · reader confirmed {formatEastern(witness.checkedAt)}</span><details className={s.note}><summary>Result reference and recorded changes</summary>{attempt.bodyId} · version {witness.versionId}
+              {attempt.recordChanges?.length ? <ul>{attempt.recordChanges.map(row => <li key={row.recordId}>{row.change === "NEW" ? "New" : row.change === "UPDATED" ? "Updated" : "Reused unchanged"} · {row.readerId}{row.previousVersionId ? ` · compared with ${row.previousVersionId}` : " · no prior published record"}</li>)}</ul> : <p>Record changes were not recorded for this publication.</p>}
+            </details>
           </div>)}</div>}
-      <p className={s.note}>This overview does not classify accepted results as new, updated or reused; those labels require their own publication receipts.</p>
+      <p className={s.note}>New, updated and reused labels come from accepted records compared with the prior verified version. Reuse does not establish an avoided paid call or dollar saving; those amounts are not measured here.</p>
     </div>
   </>;
 }

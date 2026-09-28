@@ -18,6 +18,7 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScheduled, scheduleObligation } from "../control-plane/scheduler/obligation.ts";
 import { materializeBodyDirectoryWork, workerBodyDirectoryPackage } from "./worker-body-directory.ts";
+import { publicationRecordChanges } from "./publication-record-changes.ts";
 
 export interface WorkerPublicationCapture {
   readonly evidence: WorkerEvidence;
@@ -250,22 +251,6 @@ export async function publishWorkerRosterResults(input: {
         ? workerBodyDirectoryPackage({ plan, parser, validator, auditor, captures, prior, now: input.now }) : null;
       const prepared = directory?.prepared ?? workerRosterPublication({ plan, parser, validator, auditor, captures, prior, now: input.now });
       const before = prior.payload.bodyRosters.find(roster => roster.bodyId === plan.publication?.bodyId)?.members ?? [];
-      const counts = { added: 0, changed: 0, reused: 0 };
-      // Provenance becoming field-specific is a better explanation of the
-      // same fact, not a newly delivered or changed officeholder fact.
-      const memberFacts = (member: BodyRoster["members"][number]) => canonicalJson(Object.fromEntries(Object.entries(member).filter(([field]) =>
-        field !== "membershipSource" && field !== "retainedFieldSources")));
-      for (const member of prepared.payload.bodyRosters[0]?.members ?? []) {
-        const previous = before.find(held => held.id === member.id);
-        if (!previous) counts.added++;
-        else if (memberFacts(previous) === memberFacts(member)) counts.reused++;
-        else counts.changed++;
-      }
-      if (directory) for (const body of prepared.payload.registry.bodies) {
-        const old = prior.payload.registry.bodies.find(row => row.id === body.id);
-        const facts = (row: typeof body) => canonicalJson({ name: row.name, bodyClass: row.bodyClass, ocdId: row.ocdId, homepageUrl: row.homepageUrl });
-        if (!old) counts.added++; else if (facts(old) === facts(body)) counts.reused++; else counts.changed++;
-      }
       const unresolved = directory?.unresolved ?? prepared.payload.rosterReaderDispositions.filter(row => row.state === "IDENTITY_UNRESOLVED").map(row => row.sourceId);
       const unresolvedIds = new Set(unresolved);
       const acceptedMembers = directory ? [] : parser.result.records.flatMap(record => {
@@ -278,6 +263,16 @@ export async function publishWorkerRosterResults(input: {
       });
       if (!directory) requireThat(acceptedMembers.length > 0 && new Set(acceptedMembers.map(row => row.recordId)).size === acceptedMembers.length &&
         new Set(acceptedMembers.map(row => row.memberId)).size === acceptedMembers.length, "ROSTER_ACCEPTED_MEMBER_BINDING_INVALID");
+      const bodyFacts = (row: RegistryRuntimeReadModel["registry"]["bodies"][number]) =>
+        ({ name: row.name, bodyClass: row.bodyClass, ocdId: row.ocdId, homepageUrl: row.homepageUrl });
+      const changes = publicationRecordChanges({ previousVersionId: prior.versionId, accepted: directory
+        ? prepared.payload.registry.bodies.map(body => {
+          const previous = prior.payload.registry.bodies.find(row => row.id === body.id);
+          return { recordId: body.id, readerId: body.id, value: bodyFacts(body), previous: previous ? bodyFacts(previous) : undefined };
+        })
+        : acceptedMembers.map(binding => ({ recordId: binding.recordId, readerId: binding.memberId,
+          value: prepared.payload.bodyRosters[0].members.find(row => row.id === binding.memberId)!,
+          previous: before.find(row => row.id === binding.memberId) })) });
       const candidate = registryRuntimeCandidate(prepared, { prior });
       if (directory) requireThat(prepared.payload.registry.bodies.every(body => canonicalJson(body) ===
         canonicalJson((candidate.readModel as RegistryRuntimeReadModel).registry.bodies.find(row => row.id === body.id))), "WORKER_PUBLICATION_DIRECTORY_READER_FACTS_HELD");
@@ -293,7 +288,7 @@ export async function publishWorkerRosterResults(input: {
       outcome = { at: input.now, workerResultId: auditor.id, status: unresolved.length ? "PARTIALLY_PUBLISHED" : "PUBLISHED",
         code: unresolved.length ? directory ? "DIRECTORY_ROWS_REQUIRE_REPAIR" : "ROSTER_IDENTITIES_REQUIRE_REPAIR" : published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `Independent ${directory ? "body directory" : "roster"} checks passed for ${directory ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length} reader ${directory ? "bodies" : "members"}, the existing registry door accepted ${versionId}, and typed reader readback passed. ${unresolved.length ? `${unresolved.length} source rows remain identity-unresolved: ${unresolved.join(", ")}. Repair these automatically; do not infer unsupported people or territory.` : "Remaining information families are still owed."}`,
-        ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, records: counts,
+        ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, ...changes,
         ...(!directory ? { acceptedRecordIds: acceptedMembers.map(row => row.recordId), acceptedMembers } : {}),
         ...(directory ? { bodyIds: prepared.payload.registry.bodies.map(body => body.id) } : {}) };
       if (directory) {

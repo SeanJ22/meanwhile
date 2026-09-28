@@ -117,7 +117,10 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   }
   const published = await publishWorkerRosterResults(input);
   assert.equal(published[0].outcome.status, partial ? "PARTIALLY_PUBLISHED" : "PUBLISHED", JSON.stringify(published));
-  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length });
+  assert.deepEqual(published[0].outcome.records, { added: 1, changed: 0, reused: existing.members.length - (partial ? 1 : 0) },
+    "a retained neighbour whose new row is unresolved earns no accepted-result reuse credit");
+  assert.deepEqual(published[0].outcome.recordChanges?.map(row => row.recordId).sort(),
+    [...published[0].outcome.acceptedRecordIds ?? []].sort());
   const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0].outcome.records);
   if (auditLadder) assert.ok(deliveredAdmin.find(row => row.id === h.item.id)?.verification.checks.some(check => check.says.includes("Escalated")), "Admin shows the reason and exact model transition");

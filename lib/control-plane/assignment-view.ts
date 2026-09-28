@@ -370,6 +370,7 @@ export interface PublicAvailability {
 export interface AssignmentDelivery {
   /** Exact latest publication comparison, never downloads presented as new findings. */
   readonly records?: { readonly added: number; readonly changed: number; readonly reused: number };
+  readonly recordChanges?: NonNullable<WorkItem["publicationOutcome"]>["recordChanges"];
   /** Research items approved for promotion; null where promotion does not run through the research pipeline. */
   readonly approved: Held<Measured> | null;
   readonly promoted: Held<PromotionStatus>;
@@ -1841,7 +1842,8 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
   if (witnesses.length < approved) blockers.push(`${approved - witnesses.length} approved item(s) still lack a current public readback.`);
   return {
     approved: approvedHeld,
-    ...(workerPublication && workerPublication.status !== "HELD" && workerPublication.records ? { records: workerPublication.records } : {}),
+    ...(workerPublication && workerPublication.status !== "HELD" && workerPublication.records ? { records: workerPublication.records,
+      recordChanges: workerPublication.recordChanges } : {}),
     promoted,
     publiclyAvailable: witness ? held<PublicAvailability>({ state: "CONFIRMED", at: witness.checkedAt, says: `${witnesses.length} item(s) confirmed; this does not complete outstanding assignment scope.`, proof: witness.url }) : gap<PublicAvailability>(
       "OURS",
@@ -2632,6 +2634,7 @@ export interface BodyPublicationAttempt {
   readonly workerResultId: string;
   readonly acceptedCount: number | null;
   readonly versionId: string | null;
+  readonly recordChanges?: NonNullable<WorkItem["publicationOutcome"]>["recordChanges"];
 }
 
 export function bodyPublicationAttempts(workItems: readonly WorkItem[],
@@ -2677,8 +2680,8 @@ export function bodyPublicationAttempts(workItems: readonly WorkItem[],
       at: outcome.at, status: outcome.status,
       code: outcome.code, sourceUrl: item.autonomousPlan?.contract.schemaVersion === 2
         ? item.autonomousPlan.contract.sourceScope.canonicalUrls[0] ?? null : null,
-      workerResultId: outcome.workerResultId, acceptedCount: outcome.acceptedMembers?.length ?? null,
-      versionId: outcome.versionId }];
+      workerResultId: outcome.workerResultId, acceptedCount: outcome.acceptedMembers?.length ?? outcome.acceptedRecordIds?.length ?? outcome.bodyIds?.length ?? null,
+      versionId: outcome.versionId, ...(outcome.status !== "HELD" && outcome.recordChanges ? { recordChanges: outcome.recordChanges } : {}) }];
   }).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId));
 }
 

@@ -71,6 +71,17 @@
             "tests/autonomous-cycle-wall.test.ts"
           ],
           "scope": "Development implementation; not production acceptance"
+        },
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "b80abed242f0d37fad856a55d0514e4d7db64669",
+          "summary": "The original exact-receipt worker slice begins before independent lanes and joins before cycle finalization; filtered or paused cycles do not admit it, receipt-time and duplicate ownership fail closed, and blackout work uses exact original WorkItem membership. This remains a code repair until an adopted normal cycle finishes and advances the original source-to-reader chain.",
+          "testPaths": [
+            "tests/autonomous-cycle-wall.test.ts",
+            "tests/early-hunt-membership.test.ts",
+            "tests/host-spacing.test.ts"
+          ],
+          "scope": "Development implementation; not production acceptance"
         }
       ],
       "nextAction": "Deploy the certified release, observe automatic permanent-runner adoption and a completed normal cycle, and inspect its saved witness. Current production has not adopted this repair."
@@ -6869,24 +6880,24 @@
       "evidence": []
     }
   ],
-  "lastReconciledAt": "2026-09-28T14:35:02.014Z",
+  "lastReconciledAt": "2026-09-28T16:22:39.000Z",
   "release": {
-    "revision": "3712686786e3368c43756f327fc340aa8b53f4c3",
-    "state": "AWAITING_FRESH_EXACT_HEAD_READER_PROOF",
-    "authority": "Required repair ancestor includes historical federal vote and summary access through normal Ask, exact historical route instrumentation, positive pre-send refusal settlement, unknown post-response charge holds, wake-before-cycle release adoption, and bounded autonomous selection with finalization time. The failed 5429 proof exposed 9,535 historical votes and six summaries missing from normal Ask; failed evidence is preserved externally. A fresh complete proof of the final source revision is required. Focused tests are development evidence only. Full local gates, full CI, deployment, permanent-runner adoption, a completed normal cycle, and public readbacks remain owed."
+    "revision": "b80abed242f0d37fad856a55d0514e4d7db64669",
+    "state": "READER_PROOF_CLOSED_AWAITING_RELEASE_GATES",
+    "authority": "Required repair ancestor now includes the exact original-hunt early worker slice, explicit pause and filtered-cycle guards, receipt-time and duplicate-occurrence ownership, and exact blackout membership, in addition to historical Ask, spending, release-wake and finalization repairs. The full Reader proof executed at ancestor abd8d4d9 and closed with zero failures and 30/30 census tests; its 594 Reader source hashes are unchanged by these later runtime and witness edits. The proof commit is 46e542f6. The normal source fingerprint and census gate on this final descendant, full local gates, full CI, deployment, permanent-runner adoption, a completed normal cycle and public readbacks remain owed. The failed 5429 proof is preserved externally."
   },
   "originalHuntObservation": {
-    "at": "2026-09-28T14:11:16.903Z",
+    "at": "2026-09-28T16:06:05.660Z",
     "receipt": "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
     "budgetStartedAt": "2026-09-27T22:17:50.236Z",
     "memberObligations": 194,
-    "spentAnthropicUsd": 36.81565025000004,
+    "spentAnthropicUsd": 37.65875470000004,
     "heldAnthropicUsd": 6.12288,
-    "remainingAnthropicUsd": 7.06146974999996,
+    "remainingAnthropicUsd": 6.218365299999961,
     "knownOtherServiceUsd": 0.012,
-    "knownCombinedUsd": 36.82765025000004,
+    "knownCombinedUsd": 37.67075470000004,
     "otherServiceTotal": "UNKNOWN",
-    "unpricedLedgerRows": 372,
-    "evidence": "External original-cost-attribution-2026-09-28T14-11-16.903Z.json; repeatable-read SELECT-only attribution to the exact original receipt. Known other services are Brave $0.005 and Exa $0.007. Unpriced rows are mostly deterministic acquisition records, not a count of paid requests. Historical open holds remain unknown exposure."
+    "unpricedLedgerRows": 391,
+    "evidence": "External original-cost-attribution-2026-09-28T16-06-05.660Z.json; repeatable-read SELECT-only attribution to the exact original receipt. Known other services are Brave $0.005 and Exa $0.007. Unpriced rows are mostly deterministic acquisition records, not a count of paid requests. Historical open holds remain unknown exposure."
   }
 }

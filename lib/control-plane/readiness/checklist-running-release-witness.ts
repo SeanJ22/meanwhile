@@ -8,7 +8,7 @@ import { CHECKLIST_PROFILE, type ChecklistInstance, type ChecklistWitness } from
 /** Frozen PR446 phase-one repair base. Advancing this authority requires a
  * versioned code change; a process must never choose its own current HEAD. */
 export const GATE02_REPAIR_PHASE = "acquisition-to-reader-repair/phase1";
-export const GATE02_REQUIRED_BASE_SHA = "3712686786e3368c43756f327fc340aa8b53f4c3";
+export const GATE02_REQUIRED_BASE_SHA = "b80abed242f0d37fad856a55d0514e4d7db64669";
 const VERSION = "checklist-running-release/1";
 const MAX_OBSERVATION_AGE_MS = 3 * 60 * 60_000;
 const SHA = /^[0-9a-f]{40}$/;

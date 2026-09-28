@@ -106,3 +106,17 @@ test("an older incomplete acquisition result becomes a named gap, not a broken d
   const trail=assignmentEvidenceTrail(sources({workerResults:[old]}),child.id,null);
   assert.ok(trail.gaps.some(gap=>gap.includes("lacks a readable source")));
 });
+
+test("historical Sierra Vista clock contradiction is disclosed without changing saved timestamps",()=>{
+  const rosterAttempt={...childAttempt,id:"at-fdaa3625d1b2bb95157bdf44",worker:{role:"SCOUT"},
+    startedAt:"2026-09-28T06:23:49.440Z",endedAt:"2026-09-28T06:23:49.440Z",
+    artifactIds:["ar-be10df3d3aa3c72f6076ae6b"],cost:{...childAttempt.cost,durationMs:43131}} as unknown as Attempt;
+  const rosterArtifact={...artifact,artifactId:"ar-be10df3d3aa3c72f6076ae6b",workItemId:child.id,
+    attemptId:rosterAttempt.id,recordedAt:"2026-09-28T06:27:49.882Z",
+    canonicalUrl:"https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council"};
+  const trail=assignmentEvidenceTrail(sources({attempts:[rosterAttempt],artifacts:[rosterArtifact],workerResults:[]}),child.id,null);
+  assert.ok(trail.gaps.some(gap=>gap.includes("identical start and end")));
+  assert.ok(trail.gaps.some(gap=>gap.includes("recorded after its Attempt's stated end")));
+  assert.equal(trail.events.find(event=>event.stage==="SAVED")?.at,rosterArtifact.recordedAt);
+  assert.equal(trail.events.some(event=>event.stage==="EXTRACTED"||event.stage==="PUBLISHED"),false);
+});

@@ -186,9 +186,9 @@ test("a missing Send record or an unreadable budget refuses; with no Send budget
     { formatVersion: 1, kind: "INTENT", intentId: "ri-free", action: "DISPATCH", requestedAt: NOW, actor: "owner", adminSessionRef: "s", note: "Yuma County" },
   ];
   const membership = assignmentMembership([
-    { id: "ob-marked", subjectId: "az-pima", assignments: [{ assignmentKey: "dispatch:ri-budgeted", relation: "REORDERED", at: NOW }] as never },
-    { id: "ob-bad", subjectId: "az-maricopa", assignments: [{ assignmentKey: "dispatch:ri-bad", relation: "REORDERED", at: NOW }] as never },
-    { id: "ob-free", subjectId: "az-yuma", assignments: [{ assignmentKey: "dispatch:ri-free", relation: "REORDERED", at: NOW }] as never },
+    { id: "ob-marked", subjectId: "az-pima", assignments: [{ assignmentKey: "dispatch:ri-budgeted", ref: "ri-budgeted", relation: "REORDERED", at: NOW }] as never },
+    { id: "ob-bad", subjectId: "az-maricopa", assignments: [{ assignmentKey: "dispatch:ri-bad", ref: "ri-bad", relation: "REORDERED", at: NOW }] as never },
+    { id: "ob-free", subjectId: "az-yuma", assignments: [{ assignmentKey: "dispatch:ri-free", ref: "ri-free", relation: "REORDERED", at: NOW }] as never },
     { id: "ob-unmarked", subjectId: "az-pima" },
     { id: "ob-plain", subjectId: "nj-morris" },
   ]);
@@ -352,7 +352,7 @@ test("the runner wires autonomous work to its jurisdiction's area only, never to
   assert.ok(start > 0 && end > start);
   assert.match(block, /expansionBudget\.gate\.linesFor\(j\.subjectId, j\.state\)/);
   assert.doesNotMatch(block, /assignmentBudget|sends:/, "no Send budget is consulted for autonomous work");
-  assert.match(runner, /transportFor: autonomousTransportFor\(fleetGuarded\)/);
-  assert.match(runner, /const fleetGuarded = modelLaneEnabled \? fleetSafety\.guardedModelTransport\(/, "the autonomous transport exists only while the paid lane is open");
+  assert.match(runner, /transportFor: autonomousTransportFor\(fleetTransport\)/);
+  assert.match(runner, /const fleetTransport = modelLaneEnabled \? boundedAuditTransport\(workerKey\) : null/, "the autonomous transport exists only while the paid lane is open");
   assert.doesNotMatch(runner, /unattributedBudgetGuard|allLines\(/);
 });

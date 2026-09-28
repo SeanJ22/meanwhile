@@ -52,6 +52,8 @@ const read = (sources: AssignmentSources) => checklistOfficialFieldEvidence({
 test("normal roster lineage exposes exact verified fields and accepted reader binding without checklist credit", () => {
   const rows = read(source());
   assert.equal(rows.length, 1);
+  assert.equal(rows[0].workItemId, "wi-source", "the exact source WorkItem can link back to its Admin trail");
+  assert.equal(rows[0].recordLabel, "Alex Example");
   assert.deepEqual(rows[0].fields.map(field => [field.name, field.recordSurvivedChecks, field.independentlyMatched]), [
     ["name", true, true], ["office", true, true], ["phone", true, false],
   ]);
@@ -108,6 +110,7 @@ test("directory fields retain GOV residuals without inventing source-row to body
   const rows = checklistOfficialFieldEvidence({ scope, sources, observedAt: observed,
     knownRecordKeys: new Set([JSON.stringify([subject, "OFFICIAL_BOARD_DIRECTORY", "record-1"])]) });
   assert.equal(rows.length, 1);
+  assert.equal(rows[0].recordLabel, "Planning Board");
   assert.equal(rows[0].reader.state, "UNBOUND");
   assert.ok(rows[0].relatedPredicates.some(predicate => predicate.id === "GOV-11" && /denominator/.test(predicate.residual)));
   const bound = { ...sources, workItems: [{ ...sources.workItems[0], publicationOutcome: {

@@ -5,6 +5,9 @@ import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
  * witness: effective term, expected universe, freshness and public surface
  * must be proved separately before the original predicate can pass. */
 export interface ChecklistOfficialFieldEvidence {
+  readonly workItemId: string;
+  /** Source-spanned display text only; it does not assert current office or body status. */
+  readonly recordLabel?: string;
   readonly subjectId: string;
   readonly recordClass: "OFFICIAL_ROSTER" | "OFFICIAL_BOARD_DIRECTORY";
   readonly recordId: string;
@@ -130,7 +133,11 @@ export function checklistOfficialFieldEvidence(input: {
           publication.bodyIds?.includes(binding.bodyId) && publication.recordChanges?.some(change =>
             change.recordId === binding.recordId && change.readerId === binding.bodyId)) : null;
       const readerObjectId = member?.memberId ?? body?.bodyId ?? null;
-      rows.push({ subjectId: parsed.subjectId,
+      const labelField = parsed.recordClass === "OFFICIAL_BOARD_DIRECTORY" ? "bodyName" : "name";
+      const recordLabel = fields.some(field => field.name === labelField) &&
+        typeof record.fields[labelField] === "string" && record.fields[labelField].trim()
+        ? record.fields[labelField].trim().slice(0, 160) : record.id;
+      rows.push({ workItemId: owner.id, recordLabel, subjectId: parsed.subjectId,
         recordClass: parsed.recordClass as ChecklistOfficialFieldEvidence["recordClass"],
         recordId: record.id, observedAt: artifact.recordedAt, effectivePeriod: "UNRESOLVED",
         sourceUrl: artifact.canonicalUrl, artifactId: artifact.artifactId,

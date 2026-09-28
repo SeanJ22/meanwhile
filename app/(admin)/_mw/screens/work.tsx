@@ -268,7 +268,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
     else if (contractId !== null && routineRead !== null) {
       opened =
         routineRead.kind === "HELD"
-          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), trail: null, says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
+          ? { kind: "DETAIL", id: openId, detail: routineDetail(routineRead.view), trail: null, artifacts: [], says: `read from the production data plane at ${formatEastern(routineRead.asOf)}` }
           : { kind: "MISSING", id: openId, says: routineRead.detail };
     } else if (standingRead !== null) {
       const read = standingRead;

@@ -1,4 +1,4 @@
-import { formatEastern, formatEasternDate } from "../eastern-time.ts";
+import { formatEastern } from "../eastern-time.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
 import { billingStale, REPORTING_PROVIDERS, type ProviderReading, type ReportingProvider } from "../provider-billing.ts";
@@ -27,6 +27,8 @@ const PROVIDER_NAMES: Readonly<Record<ReportingProvider, string>> = {
   "anthropic-api": "Anthropic (API)", neon: "Neon", exa: "Exa", github: "GitHub", brave: "Brave Search", netlify: "Netlify",
 };
 
+/** Providers bill by UTC calendar day, so period edges are shown as UTC dates, not local times. */
+const billingDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 const monthWords = (month: string) => new Date(`${month}-01T12:00:00Z`).toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
 function monthBounds(month: string): { readonly start: number; readonly end: number } {
@@ -45,7 +47,7 @@ function periodWithin(reading: ProviderReading, month: string): "whole" | "to-da
 function accountLine(provider: ReportingProvider, reading: ProviderReading | undefined, period: V6Period, now: string) {
   const name = PROVIDER_NAMES[provider];
   if (!reading) return { provider: name, amountUsd: null, how: "No saved reading. This provider's bill is not read by the publisher." };
-  const span = `${formatEasternDate(reading.periodStart, { year: true })} to ${formatEasternDate(reading.periodEnd, { year: true })}`;
+  const span = `${billingDate(reading.periodStart)} to ${billingDate(reading.periodEnd)}`;
   if (period.kind === "month" && periodWithin(reading, period.month) === null)
     return { provider: name, amountUsd: null, how: `No saved reading for ${monthWords(period.month)}. The saved reading covers ${span}.` };
   const why = reading.status === "MISSING_ACCESS" ? "Access to this bill is not set up"
@@ -61,14 +63,15 @@ function accountLine(provider: ReportingProvider, reading: ProviderReading | und
   };
 }
 
-function accountPeriodWords(readings: readonly ProviderReading[], period: V6Period): string {
+function accountPeriodWords(all: readonly ProviderReading[], period: V6Period): string {
+  const readings = all.filter(r => r.syncedAt !== null);
   if (period.kind === "month") {
     const partial = readings.some(r => periodWithin(r, period.month) === "to-date");
     return `Whole account · ${monthWords(period.month)}${partial ? " to date" : ""}`;
   }
   const spans = new Set(readings.map(r => `${r.periodStart}|${r.periodEnd}`));
   if (readings.length === 0) return "Whole account · no provider reading saved";
-  if (spans.size === 1) return `Whole account · ${formatEasternDate(readings[0].periodStart, { year: true })} to ${formatEasternDate(readings[0].periodEnd, { year: true })}`;
+  if (spans.size === 1) return `Whole account · ${billingDate(readings[0].periodStart)} to ${billingDate(readings[0].periodEnd)}`;
   return "Whole account · each provider's own billing period";
 }
 

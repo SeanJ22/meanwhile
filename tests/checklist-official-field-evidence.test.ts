@@ -57,7 +57,7 @@ test("normal roster lineage exposes exact verified fields and accepted reader bi
   ]);
   assert.equal(rows[0].fields.find(field => field.name === "phone")?.officialContactEligible, true);
   assert.equal(rows[0].fields.every(field => field.readerFieldVisible === "UNMEASURED"), true);
-  assert.equal(rows[0].reader.state, "MEMBER_BINDING_ACCEPTED");
+  assert.equal(rows[0].reader.state, "EXACT_READER_BINDING_ACCEPTED");
   assert.equal(rows[0].reader.objectId, "member-1");
   assert.equal(rows[0].reader.publicSurface, "UNMEASURED");
   assert.equal(rows[0].effectivePeriod, "UNRESOLVED");
@@ -110,4 +110,17 @@ test("directory fields retain GOV residuals without inventing source-row to body
   assert.equal(rows.length, 1);
   assert.equal(rows[0].reader.state, "UNBOUND");
   assert.ok(rows[0].relatedPredicates.some(predicate => predicate.id === "GOV-11" && /denominator/.test(predicate.residual)));
+  const bound = { ...sources, workItems: [{ ...sources.workItems[0], publicationOutcome: {
+    ...sources.workItems[0].publicationOutcome, acceptedBodies: [{ recordId: "record-1", bodyId: "body-1" }],
+    recordChanges: [{ recordId: "record-1", readerId: "body-1" }],
+  } }] } as unknown as AssignmentSources;
+  const proven = checklistOfficialFieldEvidence({ scope, sources: bound, observedAt: observed,
+    knownRecordKeys: new Set([JSON.stringify([subject, "OFFICIAL_BOARD_DIRECTORY", "record-1"])]) });
+  assert.equal(proven[0].reader.state, "EXACT_READER_BINDING_ACCEPTED");
+  assert.equal(proven[0].reader.objectId, "body-1");
+  const wrong = { ...bound, workItems: [{ ...bound.workItems[0], publicationOutcome: {
+    ...bound.workItems[0].publicationOutcome, acceptedBodies: [{ recordId: "record-1", bodyId: "another-body" }],
+  } }] } as unknown as AssignmentSources;
+  assert.equal(checklistOfficialFieldEvidence({ scope, sources: wrong, observedAt: observed,
+    knownRecordKeys: new Set([JSON.stringify([subject, "OFFICIAL_BOARD_DIRECTORY", "record-1"])]) })[0].reader.state, "UNBOUND");
 });

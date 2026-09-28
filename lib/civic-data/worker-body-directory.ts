@@ -38,6 +38,8 @@ const bodyClasses: Record<string, BodyClass> = { governing: "GOVERNING", advisor
  * independent chain and territory assertion pass. Unresolved rows stay owed. */
 export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWorkerRecords>[0] & { prior: RegistryRuntimePrior }): {
   prepared: RegistryRuntimePackage; unresolved: readonly string[];
+  /** Emitted only from a source row admitted into the exact prepared body. */
+  acceptedBodies: readonly { recordId: string; bodyId: string }[];
 } {
   const checked = verifiedWorkerRecords(input);
   const subject = input.plan.directorySubject;
@@ -46,6 +48,7 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
   const division = input.prior.payload.registry.divisions.find(d => d.ocdId === subject.divisionId);
   requirePublication(division, "DIRECTORY_CENSUS_DIVISION_UNRESOLVED");
   const bodies: Body[] = [], unresolved: string[] = [];
+  const acceptedBodies: { recordId: string; bodyId: string }[] = [];
   for (const record of checked.extraction.records) {
     try {
       const f = record.fields;
@@ -79,18 +82,21 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
       const primaryDivision = prior?.ocdId ?? territoryIds[0];
       const id = prior?.id ?? subBodyId(primaryDivision, String(f.bodyName));
       requirePublication(!bodies.some(body => body.id === id), "DIRECTORY_DUPLICATE_BODY");
+      requirePublication(!acceptedBodies.some(binding => binding.recordId === record.id || binding.bodyId === id),
+        "DIRECTORY_SOURCE_BODY_BINDING_COLLISION");
       bodies.push({ ...(prior ?? { id, ocdId: primaryDivision, coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE",
         agendaSourceRef: null, meetingCadence: null, demandCount: 0 }), name: String(f.bodyName), bodyClass: classification,
         alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
         homepageUrl: url.href, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         provenance: { sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: checked.primary.observedAt, verifiedAt: input.now } });
+      acceptedBodies.push({ recordId: record.id, bodyId: id });
     } catch (error) {
       unresolved.push(`${record.id}: ${error instanceof Error ? error.message : "DIRECTORY_ROW_REQUIRES_REPAIR"}`);
     }
   }
   requirePublication(bodies.length > 0, `DIRECTORY_NO_ADMISSIBLE_BODY:${unresolved.join("; ")}`);
-  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${input.auditor.id}`,
+  return { unresolved, acceptedBodies, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${input.auditor.id}`,
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},

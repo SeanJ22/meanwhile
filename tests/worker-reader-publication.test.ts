@@ -127,6 +127,15 @@ test("verified directory bodies publish through the normal registry door and cre
   const read = (await readRegistryRuntimePrior(f.store, f.h.now()))!;
   const body = read.payload.registry.bodies.find(body => body.name === "Fixture Advisory Commission")!;
   assert.ok(body, "normal typed Reader contains the independently verified body");
+  const sourceRecord = f.results.find(row => row.result.role === "PARSER")!.result;
+  assert.equal(sourceRecord.role, "PARSER");
+  const admittedSourceId = sourceRecord.records.find(row => row.fields.bodyName === "Fixture Advisory Commission")!.id;
+  const refusedSourceId = sourceRecord.records.find(row => row.fields.bodyName === "Fixture Partial District Board")!.id;
+  assert.deepEqual(published[0].outcome.acceptedBodies, [{ recordId: admittedSourceId, bodyId: body.id }],
+    "durable receipt binds only the exact independently admitted directory row");
+  assert.ok(!published[0].outcome.acceptedBodies?.some(binding => binding.recordId === refusedSourceId));
+  assert.deepEqual(published[0].outcome.recordChanges?.map(change => [change.recordId, change.readerId]),
+    [[admittedSourceId, body.id]], "per-record change uses the source-to-reader binding");
   assert.equal(body.ocdId, f.body.ocdId);
   assert.equal(body.homepageUrl, f.rows[0].homepageUrl);
   assert.ok(!read.payload.registry.bodies.some(body => body.name === "Fixture Partial District Board"), "a county association never becomes an unsupported countywide body");

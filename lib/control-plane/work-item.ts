@@ -301,6 +301,8 @@ export interface WorkItem {
     readonly recordChanges?: readonly import("../civic-data/publication-record-changes.ts").PublicationRecordChange[];
     /** Exact source-record to public-member bindings admitted by this publication. */
     readonly acceptedMembers?: readonly { readonly recordId: string; readonly memberId: string }[];
+    /** Exact source directory row admitted as this reader body; absent on historical receipts. */
+    readonly acceptedBodies?: readonly { readonly recordId: string; readonly bodyId: string }[];
     readonly acceptedRecordIds?: readonly string[];
     /** Exact admitted body identities; used to recover downstream work after a restart. */
     readonly bodyIds?: readonly string[];

@@ -243,6 +243,7 @@ export async function publishWorkerRosterResults(input: {
       const validator = own.find(record => auditor.inputResultIds.includes(record.id) && record.result.role === "VALIDATOR");
       const parser = own.find(record => auditor.inputResultIds.includes(record.id) && record.result.role === "PARSER");
       if (!validator || !parser || parser.result.role !== "PARSER" || plan.contract.schemaVersion !== 2) throw new Error("ROSTER_WORKER_INPUT_CHAIN_MISSING");
+      const parsed = parser.result;
       const ids = [...new Set([parser.result.artifactId, ...plan.contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])])];
       const captures = await Promise.all(ids.map(artifact => input.readCapture(artifact, records)));
       const prior = await readRegistryRuntimePrior(input.store, input.now);
@@ -265,10 +266,16 @@ export async function publishWorkerRosterResults(input: {
         new Set(acceptedMembers.map(row => row.memberId)).size === acceptedMembers.length, "ROSTER_ACCEPTED_MEMBER_BINDING_INVALID");
       const bodyFacts = (row: RegistryRuntimeReadModel["registry"]["bodies"][number]) =>
         ({ name: row.name, bodyClass: row.bodyClass, ocdId: row.ocdId, homepageUrl: row.homepageUrl });
+      if (directory) requireThat(directory.acceptedBodies.length === prepared.payload.registry.bodies.length &&
+        new Set(directory.acceptedBodies.map(binding => binding.recordId)).size === directory.acceptedBodies.length &&
+        new Set(directory.acceptedBodies.map(binding => binding.bodyId)).size === directory.acceptedBodies.length &&
+        directory.acceptedBodies.every(binding => parsed.records.some(record => record.id === binding.recordId) &&
+          prepared.payload.registry.bodies.some(body => body.id === binding.bodyId)), "DIRECTORY_ACCEPTED_BODY_BINDING_INVALID");
       const changes = publicationRecordChanges({ previousVersionId: prior.versionId, accepted: directory
-        ? prepared.payload.registry.bodies.map(body => {
+        ? directory.acceptedBodies.map(binding => {
+          const body = prepared.payload.registry.bodies.find(row => row.id === binding.bodyId)!;
           const previous = prior.payload.registry.bodies.find(row => row.id === body.id);
-          return { recordId: body.id, readerId: body.id, value: bodyFacts(body), previous: previous ? bodyFacts(previous) : undefined };
+          return { recordId: binding.recordId, readerId: body.id, value: bodyFacts(body), previous: previous ? bodyFacts(previous) : undefined };
         })
         : acceptedMembers.map(binding => ({ recordId: binding.recordId, readerId: binding.memberId,
           value: prepared.payload.bodyRosters[0].members.find(row => row.id === binding.memberId)!,
@@ -290,7 +297,8 @@ export async function publishWorkerRosterResults(input: {
         detail: `Independent ${directory ? "body directory" : "roster"} checks passed for ${directory ? prepared.payload.registry.bodies.length : prepared.payload.bodyRosters[0].members.length} reader ${directory ? "bodies" : "members"}, the existing registry door accepted ${versionId}, and typed reader readback passed. ${unresolved.length ? `${unresolved.length} source rows remain identity-unresolved: ${unresolved.join(", ")}. Repair these automatically; do not infer unsupported people or territory.` : "Remaining information families are still owed."}`,
         ...(unresolved.length ? { recovery: "WORKER" as const } : {}), candidateId, versionId, ...changes,
         ...(!directory ? { acceptedRecordIds: acceptedMembers.map(row => row.recordId), acceptedMembers } : {}),
-        ...(directory ? { bodyIds: prepared.payload.registry.bodies.map(body => body.id) } : {}) };
+        ...(directory ? { bodyIds: prepared.payload.registry.bodies.map(body => body.id),
+          acceptedBodies: directory.acceptedBodies } : {}) };
       if (directory) {
         try { await materializeBodyDirectoryWork({ repos: input.repos, parent: { ...item, publicationOutcome: outcome }, bodies: prepared.payload.registry.bodies, now: input.now }); }
         catch { throw new Error("DIRECTORY_DOWNSTREAM_WRITE_FAILED:Verified bodies remain published; recover their downstream assignments on the next publisher cycle"); }

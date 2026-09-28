@@ -21,7 +21,7 @@ export interface ChecklistOfficialFieldEvidence {
     readonly recordSurvivedChecks: boolean; readonly independentlyMatched: boolean;
     readonly officialContactEligible: boolean; readonly readerFieldVisible: "UNMEASURED" }[];
   readonly reader: {
-    readonly state: "MEMBER_BINDING_ACCEPTED" | "UNBOUND";
+    readonly state: "EXACT_READER_BINDING_ACCEPTED" | "UNBOUND";
     readonly objectId: string | null;
     readonly candidateId: string | null;
     readonly versionId: string | null;
@@ -125,15 +125,18 @@ export function checklistOfficialFieldEvidence(input: {
         time(publication.at) <= time(observedAt);
       const member = parsed.recordClass === "OFFICIAL_ROSTER" && accepted
         ? publication.acceptedMembers?.find(binding => binding.recordId === record.id) : null;
-      // Body-directory outcome currently names body IDs but has no exact
-      // source-record→body binding; never assign one by matching prose.
+      const body = parsed.recordClass === "OFFICIAL_BOARD_DIRECTORY" && accepted
+        ? publication.acceptedBodies?.find(binding => binding.recordId === record.id &&
+          publication.bodyIds?.includes(binding.bodyId) && publication.recordChanges?.some(change =>
+            change.recordId === binding.recordId && change.readerId === binding.bodyId)) : null;
+      const readerObjectId = member?.memberId ?? body?.bodyId ?? null;
       rows.push({ subjectId: parsed.subjectId,
         recordClass: parsed.recordClass as ChecklistOfficialFieldEvidence["recordClass"],
         recordId: record.id, observedAt: artifact.recordedAt, effectivePeriod: "UNRESOLVED",
         sourceUrl: artifact.canonicalUrl, artifactId: artifact.artifactId,
         contentHash: artifact.contentHash, acquisitionAttemptId: acquired.id,
         parserResultId: parser.id, validatorResultId: validator?.id ?? null, auditorResultId: auditor?.id ?? null,
-        fields, reader: member && publication ? { state: "MEMBER_BINDING_ACCEPTED", objectId: member.memberId,
+        fields, reader: readerObjectId && publication ? { state: "EXACT_READER_BINDING_ACCEPTED", objectId: readerObjectId,
           candidateId: publication.candidateId, versionId: publication.versionId, publishedAt: publication.at,
           publicSurface: "UNMEASURED" } : { state: "UNBOUND", objectId: null,
           candidateId: null, versionId: null, publishedAt: null, publicSurface: "UNMEASURED" },
@@ -142,7 +145,7 @@ export function checklistOfficialFieldEvidence(input: {
   }
   rows.sort((a,b) => a.subjectId.localeCompare(b.subjectId) ||
     a.recordClass.localeCompare(b.recordClass) || a.recordId.localeCompare(b.recordId) ||
-    Number(b.reader.state === "MEMBER_BINDING_ACCEPTED") - Number(a.reader.state === "MEMBER_BINDING_ACCEPTED") ||
+    Number(b.reader.state === "EXACT_READER_BINDING_ACCEPTED") - Number(a.reader.state === "EXACT_READER_BINDING_ACCEPTED") ||
     b.observedAt.localeCompare(a.observedAt));
   // Retries remain in the canonical worker log. The census carries one
   // best-held field chain per exact record so repeated Scouts do not inflate it.

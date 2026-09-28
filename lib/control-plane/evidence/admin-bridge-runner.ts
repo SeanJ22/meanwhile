@@ -18,6 +18,9 @@ export interface AdminMirrorReport {
 
 type Lane = "original" | "recent" | "history";
 const LANES: readonly Lane[] = ["original", "recent", "history"];
+// The exact active hunt and new captures receive more turns, while history
+// still advances every six opportunities even under continuous new inflow.
+const TURN_ORDER: readonly Lane[] = ["original", "recent", "original", "history", "original", "recent"];
 const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 interface MirrorCursor {
   readonly version: 2;
@@ -120,8 +123,8 @@ export async function runAdminEvidenceMirror(input: {
   const perLaneVisited: Record<Lane, number> = { original: 0, recent: 0, history: 0 };
   const limit = input.maxExamined ?? Number.POSITIVE_INFINITY;
   while (visited < total && examined < limit && (input.deadlineMs === undefined || Date.now() < input.deadlineMs - 500)) {
-    const lane = LANES[cursor.turn % LANES.length];
-    cursor.turn = (cursor.turn + 1) % LANES.length;
+    const lane = TURN_ORDER[cursor.turn % TURN_ORDER.length];
+    cursor.turn = (cursor.turn + 1) % TURN_ORDER.length;
     const group = lanes[lane];
     if (!group.length || perLaneVisited[lane] >= group.length) continue;
     const index = cursor.nextByLane[lane] % group.length;

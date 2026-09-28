@@ -61,6 +61,16 @@
             "tests/checklist-running-release-witness.test.ts"
           ],
           "scope": "Focused development evidence; not production acceptance or full requirement satisfaction"
+        },
+        {
+          "kind": "DEVELOPMENT_IMPLEMENTATION",
+          "revision": "00d42b7e3c257f627cd80bf46d414e18de927579",
+          "summary": "Frozen required repair ancestry now includes the historical Ask, spending, release-wake and cycle-finalization repairs. No completed adopted production cycle is yet proved.",
+          "testPaths": [
+            "tests/checklist-running-release-witness.test.ts",
+            "tests/autonomous-cycle-wall.test.ts"
+          ],
+          "scope": "Development implementation; not production acceptance"
         }
       ],
       "nextAction": "Deploy the certified release, observe automatic permanent-runner adoption and a completed normal cycle, and inspect its saved witness. Current production has not adopted this repair."
@@ -6859,21 +6869,24 @@
       "evidence": []
     }
   ],
-  "lastReconciledAt": "2026-09-28T12:57:22.125Z",
+  "lastReconciledAt": "2026-09-28T14:35:02.014Z",
   "release": {
-    "revision": "879a1402de3ccab14cafefdb62ce3fc04d72df22",
+    "revision": "3712686786e3368c43756f327fc340aa8b53f4c3",
     "state": "AWAITING_FRESH_EXACT_HEAD_READER_PROOF",
-    "authority": "Failed full proofs remain preserved externally, including the 2d1e9ddc render failure on historical vote summaries in all four 85641 themes/layouts. Source-backed earlier-vote summaries and their actual browser control require fresh full proof. Integrated Admin trail focused checks passed, but raw saved-evidence access, publication-history search and full operator acceptance remain unproved. Required local gates, CI, deployment and actual permanent-runner adoption precede delivery claims."
+    "authority": "Required repair ancestor includes historical federal vote and summary access through normal Ask, exact historical route instrumentation, positive pre-send refusal settlement, unknown post-response charge holds, wake-before-cycle release adoption, and bounded autonomous selection with finalization time. The failed 5429 proof exposed 9,535 historical votes and six summaries missing from normal Ask; failed evidence is preserved externally. A fresh complete proof of the final source revision is required. Focused tests are development evidence only. Full local gates, full CI, deployment, permanent-runner adoption, a completed normal cycle, and public readbacks remain owed."
   },
   "originalHuntObservation": {
-    "at": "2026-09-28T12:43:39.841Z",
+    "at": "2026-09-28T14:11:16.903Z",
     "receipt": "expansion.scope.set:scope:85635:1yfuc2c:pgfomast",
     "budgetStartedAt": "2026-09-27T22:17:50.236Z",
     "memberObligations": 194,
-    "spentAnthropicUsd": 36.48897135000003,
+    "spentAnthropicUsd": 36.81565025000004,
     "heldAnthropicUsd": 6.12288,
-    "remainingAnthropicUsd": 7.388148649999971,
+    "remainingAnthropicUsd": 7.06146974999996,
+    "knownOtherServiceUsd": 0.012,
+    "knownCombinedUsd": 36.82765025000004,
     "otherServiceTotal": "UNKNOWN",
-    "evidence": "External1244-checkpoint/baseline.json; repeatable-read SELECT-only snapshot at12:43:39.841UTC. Exact original lifetime holds:418settled,3open. Other-service total is not reconciled."
+    "unpricedLedgerRows": 372,
+    "evidence": "External original-cost-attribution-2026-09-28T14-11-16.903Z.json; repeatable-read SELECT-only attribution to the exact original receipt. Known other services are Brave $0.005 and Exa $0.007. Unpriced rows are mostly deterministic acquisition records, not a count of paid requests. Historical open holds remain unknown exposure."
   }
 }

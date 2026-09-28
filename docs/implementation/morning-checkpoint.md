@@ -2,6 +2,18 @@
 
 Due: 2026-09-28 06:55 America/Phoenix (13:55 UTC). This file is an evolving report, not a completion certificate.
 
+## Current update — 07:36 Arizona
+
+The 06:55 checkpoint was delivered and the full assignment continues. All 325 definitions remain present; 36 have partial development implementation and none has full-program production acceptance. ADMIN-01–15 remain unverified.
+
+The failed 5429 Reader finalization exposed a real normal-Ask gap: 9,535 historical federal vote/position records and six summaries. Historical source stages and browser observations were retained, but they do not close missing normal-reader access. Revision 154b07a9 repairs the historical Ask join and explicitly instruments historical vote routes. A fresh complete exact-revision Reader proof is required because the earlier run never closed and the public dependency graph changed.
+
+Required repair ancestor 00d42b7e includes that repair, positive proof of pre-send refusal before releasing budget reservations, retained holds for unpriced provider responses, release checking before a newly awakened cycle, and bounded autonomous selection that reserves canonical cycle-finalization time. The timing repair passed 34 focused cases and type checking. Actual adoption and successful ordinary-cycle completion remain unverified. The old runner is preserved; a wake request would start another old-code cycle and is not an adoption shortcut.
+
+At 07:11:16 Arizona, the exact original receipt had $36.81565025 recorded Anthropic charges, $6.12288 reserved, and $7.06146975 unreserved of its original $50 lifetime allowance. Known Brave/Exa costs total $0.012 and known combined costs are $36.82765025. Complete other-service costs remain unknown; 372 unpriced ledger rows are mostly deterministic acquisition records, not 372 paid requests. Three historical open reservations remain unknown exposure. Evidence: external `original-cost-attribution-2026-09-28T14-11-16.903Z.json`.
+
+Separate follow-up development includes the plain-language Admin work/delivery overview, private captured-byte access, per-field OFF/GOV source chains, and full publication-history search. None is claimed deployed or accepted. Search benchmarks currently exceed the three-second standard for common and literal terms; a prepared isolated benchmark and cleanup await explicit permission after automatic approval review rejected their storage/compute effects. Planning-chat messaging also remains blocked pending permission; independent implementation continues.
+
 ## Delivered in development
 
 - Preserved all 325 original checklist definitions and separate score dimensions. The normal snapshot publisher now derives exact-instruction known-record inventories; unknown object universes and missing clause-level proof remain open.
@@ -37,4 +49,4 @@ Freeze the integrated code, execute fresh reader proof and remaining exact-head 
 
 ## Decision needed
 
-None at this checkpoint. No additional spending or geography has been authorized or requested.
+Two narrow permissions remain pending: sending implementation updates to the planning chat, and creating/removing the prepared additional benchmark objects on the existing isolated 0.25-CU database. Automatic approval review rejected these actions without explicit authorization. Neither blocks current release certification or independent code work. No new hunt, geography, or higher Anthropic ceiling is requested.

@@ -404,6 +404,14 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "build never writes the new receipt, and the build that does refuses safely without it " +
       "(STORE_REFUSED, then promotes as before). Apply BEFORE the deploy that records it.",
   },
+  "0030_publication_search_index": {
+    phase: "expand",
+    why:
+      "Creates a search-only table, trigger, functions and indexes. Existing promotion writes " +
+      "continue unchanged; the deferred trigger copies only their final GOOD/PROMOTED immutable " +
+      "records, and existing verified versions are backfilled without modifying authority. " +
+      "Apply before the Admin query first names this table.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

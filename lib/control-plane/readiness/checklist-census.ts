@@ -6,6 +6,7 @@ import { CHECKLIST_PROFILE, checklistObligationKey, checklistRequiredClauses, ty
 import { checklistDeliveryTimings, type WorkDeliveryTiming } from "./checklist-timings.ts";
 import { checklistDispatchWitness } from "./checklist-dispatch-witness.ts";
 import { checklistRunningReleaseWitness } from "./checklist-running-release-witness.ts";
+import { checklistOfficialFieldEvidence, type ChecklistOfficialFieldEvidence } from "./checklist-official-field-evidence.ts";
 
 /** A census projection, not a dispatcher. A receipt proves membership; matching
  * a state, a URL or a successful attempt never establishes object applicability. */
@@ -15,6 +16,8 @@ export interface ChecklistCensus extends ChecklistSnapshot {
   readonly population: { readonly knownSubjects: number; readonly knownRecords: number; readonly expectedObjects: null };
   readonly gaps: readonly string[];
   readonly deliveryTimings?: readonly WorkDeliveryTiming[];
+  /** Verified field progress; this is never a whole original requirement witness. */
+  readonly fieldEvidence?: readonly ChecklistOfficialFieldEvidence[];
 }
 
 export function exactScopeMembers(scopes: readonly ExpansionScopeDecision[], sources: Pick<AssignmentSources,"obligations">): ReadonlyMap<string,ReadonlySet<string>> {
@@ -125,6 +128,8 @@ export function buildChecklistCensus(input: {
     // Older snapshots without the occurrence population cannot establish an
     // exact receipt timing count. Leave it unmeasured instead of showing zero.
     deliveryTimings:sources?.occurrences?checklistDeliveryTimings(sources,scope,members,observedAt):undefined,
+    fieldEvidence:sources?checklistOfficialFieldEvidence({scope,sources,observedAt,
+      knownRecordKeys:new Set(recordObjects.keys())}):undefined,
     gaps:["The competent expected-object universe is not yet reconciled; known records are a lower bound.","Clause-level field, period and per-surface verification remain owed; worker completion alone earns no checklist credit.",
       ...(priorResultsWithheld? [`${priorResultsWithheld} earlier parsed record${priorResultsWithheld===1?"":"s"} on shared subjects lack this exact instruction's result or reuse receipt; they remain available as history, not this hunt's inventory.`]:[])]};
 }

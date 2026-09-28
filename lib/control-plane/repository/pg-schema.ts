@@ -109,7 +109,8 @@
  * repository. Until then Ask's write fails by name after the answer, and the
  * reader is not told.
  */
-export const BOOTSTRAP_VERSION = 13;
+/** Version 14 adds durable, CAS-leased Admin requests for already-held original bytes. */
+export const BOOTSTRAP_VERSION = 14;
 
 /**
  * The tables, and the shape each one carries.
@@ -235,6 +236,8 @@ export const AGGREGATE_KINDS = [
    *                         ask the same day is a count, never a new row.
    */
   "ask_gap_observations",
+  /** Original-byte copy requests; never source acquisition or a second scheduler. */
+  "admin_evidence_copy_requests",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

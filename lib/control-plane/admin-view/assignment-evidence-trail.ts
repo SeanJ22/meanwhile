@@ -24,8 +24,10 @@ function safeHttps(value:string|null|undefined,publicOnly=false):string|null {
   if(!value) return null;
   try {
     const url=new URL(value);
-    if(url.protocol!=="https:"||url.username||url.password||url.search||url.hash||publicOnly&&url.origin!==PUBLIC_SITE_ORIGIN) return null;
-    return `${url.origin}${url.pathname}`;
+    if(url.protocol!=="https:"||url.username||url.password||url.hash||publicOnly&&url.origin!==PUBLIC_SITE_ORIGIN) return null;
+    if(url.search && !(publicOnly && url.pathname==="/ballot" && [...url.searchParams.keys()].length===1 &&
+      /^\d{5}$/.test(url.searchParams.get("zip")??""))) return null;
+    return `${url.origin}${url.pathname}${url.search}`;
   } catch { return null; }
 }
 function findingCodes(result:{readonly findings?:readonly {readonly code:string}[]}):string {
@@ -142,7 +144,7 @@ export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:s
       references:ref(["Work item",item.id],["Publisher result",outcome.workerResultId],["Version",outcome.versionId],
         ["Candidate",outcome.candidateId],...(outcome.acceptedRecordIds??[]).map(id=>["Accepted record",id] as const))});
     const observation=latestServedObservation(sources.servedReader,item.id,outcome.workerResultId);
-    const current=servedWitness(sources.servedReader,item.id,outcome.workerResultId,sources.nowIso);
+    const current=servedWitness(sources.servedReader&&observation?{...sources.servedReader,witnesses:[observation]}:null,item.id,outcome.workerResultId,sources.nowIso);
     if(observation) {
       const matches=observation.versionId===outcome.versionId&&observation.readerKey===item.autonomousPlan?.publication?.bodyId&&
         observation.state==="CONFIRMED"&&current?.checkedAt===observation.checkedAt;

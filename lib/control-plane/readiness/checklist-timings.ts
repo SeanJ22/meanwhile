@@ -1,4 +1,5 @@
 import type { AssignmentSources } from "../assignment-view.ts";
+import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import { servedWitness } from "../served-reader.ts";
 
 export interface WorkDeliveryTiming {
@@ -33,14 +34,57 @@ const elapsed=(start:string|null,end:string|null)=>start && end && Date.parse(en
  * scheduler's later eligibility time nor a dashboard refresh resets its age.
  * Exact result/approval identities prevent joining a later unrelated check to
  * an earlier publication. These are process timings, never checklist credit. */
-export function checklistDeliveryTimings(sources:AssignmentSources, members:ReadonlySet<string>,now:string):WorkDeliveryTiming[] {
+export function checklistDeliveryTimings(sources:AssignmentSources, scope:ExpansionScopeDecision, members:ReadonlySet<string>,now:string):WorkDeliveryTiming[] {
+  const workById=new Map(sources.workItems.map(item=>[item.id,item] as const));
+  const obligationById=new Map(sources.obligations.map(row=>[row.id,row] as const));
+  const occurrenceByWorkId=new Map((sources.occurrences??[]).map(row=>[row.workItemId,row] as const));
+  const rootFor=(workId:string,seen=new Set<string>()):string|null=>{
+    if(seen.has(workId)) return null;
+    seen.add(workId);
+    if(occurrenceByWorkId.has(workId)) return workId;
+    const item=workById.get(workId);
+    if(!item) return null;
+    const repair=(item as typeof item & {readonly planRepair?:{readonly parentWorkItemId:string;readonly authority:string}}).planRepair;
+    if(repair?.authority==="WORK_INSTRUCTIONS_ONLY") {
+      const parent=workById.get(repair.parentWorkItemId);
+      if(parent?.project===item.project&&parent.subject===item.subject) return rootFor(parent.id,seen);
+    }
+    const directory=item.directoryParent;
+    if(directory) {
+      const parent=workById.get(directory.workItemId);
+      if(parent?.project===item.project&&parent.subject===item.subject&&
+        parent.publicationOutcome?.bodyIds?.includes(directory.bodyId)&&
+        item.autonomousPlan?.publication?.bodyId===directory.bodyId) return rootFor(parent.id,seen);
+    }
+    return null;
+  };
+  const belongsToInstruction=(item:AssignmentSources["workItems"][number]):boolean=>{
+    if(!members.has(item.subject)) return false;
+    const rootId=rootFor(item.id);
+    const occurrence=rootId?occurrenceByWorkId.get(rootId):undefined;
+    const obligation=occurrence?obligationById.get(occurrence.obligationId):undefined;
+    if(!occurrence||!obligation||obligation.subjectId!==item.subject) return false;
+    const marks=(obligation.assignments??[]).filter(mark=>mark.assignmentKey===scope.key&&Number.isFinite(Date.parse(mark.at)));
+    const exact=marks.find(mark=>mark.ref===scope.receiptId);
+    if(!exact) return false;
+    const explicit=item.autonomousPlan?.ownerInstructions;
+    if(explicit?.length) return explicit.includes(scope.receiptId)&&Date.parse(exact.at)<=Date.parse(item.createdAt);
+    const root=workById.get(rootId!);
+    const rootExplicit=root?.autonomousPlan?.ownerInstructions;
+    if(rootExplicit?.length) return rootExplicit.includes(scope.receiptId)&&Date.parse(exact.at)<=Date.parse(occurrence.openedAt);
+    // Legacy work had no receipt tag. Its recorded occurrence opening binds it
+    // to the instruction then in force; a later same-key Send cannot inherit it.
+    const effective=marks.filter(mark=>Date.parse(mark.at)<=Date.parse(occurrence.openedAt))
+      .sort((a,b)=>b.at.localeCompare(a.at)||b.ref.localeCompare(a.ref))[0];
+    return effective?.ref===scope.receiptId;
+  };
   const resultsByWork=new Map<string,AssignmentSources["workerResults"][number][]>();
   const attemptsByWork=new Map<string,AssignmentSources["attempts"][number][]>();
   const savedByWork=new Map<string,string[]>();
   for(const row of sources.workerResults) resultsByWork.set(row.workItemId,[...(resultsByWork.get(row.workItemId)??[]),row]);
   for(const row of sources.attempts) attemptsByWork.set(row.workItemId,[...(attemptsByWork.get(row.workItemId)??[]),row]);
   for(const row of sources.artifacts) if(!row.partial && row.tier!=="RESTRICTED_RAW") savedByWork.set(row.workItemId,[...(savedByWork.get(row.workItemId)??[]),row.recordedAt]);
-  return sources.workItems.filter(item=>members.has(item.subject)&&item.autonomousPlan).map(item=>{
+  return sources.workItems.filter(item=>item.autonomousPlan&&belongsToInstruction(item)).map(item=>{
     const results=resultsByWork.get(item.id)??[];
     const publication=item.publicationOutcome;
     const accepted=publication && publication.status!=="HELD" && publication.candidateId && publication.versionId ? publication:null;

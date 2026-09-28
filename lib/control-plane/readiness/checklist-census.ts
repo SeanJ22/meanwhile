@@ -118,7 +118,9 @@ export function buildChecklistCensus(input: {
     readsComplete:sources!==null&&sources.pipeline!==null,instances,
     witnesses:sources ? checklistDispatchWitness({scope,sources,instances,observedAt}) : [],
     population:{knownSubjects:members.size,knownRecords:recordObjects.size,expectedObjects:null},
-    deliveryTimings:sources?checklistDeliveryTimings(sources,members,observedAt):[],
+    // Older snapshots without the occurrence population cannot establish an
+    // exact receipt timing count. Leave it unmeasured instead of showing zero.
+    deliveryTimings:sources?.occurrences?checklistDeliveryTimings(sources,scope,members,observedAt):undefined,
     gaps:["The competent expected-object universe is not yet reconciled; known records are a lower bound.","Clause-level field, period and per-surface verification remain owed; worker completion alone earns no checklist credit.",
       ...(priorResultsWithheld? [`${priorResultsWithheld} earlier parsed record${priorResultsWithheld===1?"":"s"} on shared subjects lack this exact instruction's result or reuse receipt; they remain available as history, not this hunt's inventory.`]:[])]};
 }

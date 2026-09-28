@@ -51,6 +51,29 @@ test("a witness cannot transfer to a new approval or survive stale time", () => 
   assert.equal(servedWitness(read, "a", "v1", "2026-09-26T12:00:01Z"), null);
 });
 
+test("the latest exact Reader observation revokes an older success regardless of array order", () => {
+  const success: ServedReaderWitness = { itemId: "item", approvalId: "approval", versionId: "version", readerKey: "reader-a", url: `${PUBLIC_SITE_ORIGIN}/ballot`, checkedAt: "2026-09-26T09:00:00Z", state: "CONFIRMED", reason: "observed", responseSha256: "a".repeat(64) };
+  const failure: ServedReaderWitness = { ...success, checkedAt: "2026-09-26T09:01:00Z", state: "NOT_OBSERVED", reason: "no longer on public page", responseSha256: null };
+  const now = "2026-09-26T09:02:00Z";
+  for (const witnesses of [[success, failure], [failure, success]]) {
+    assert.equal(servedWitness({ checkedAt: now, witnesses, errors: [] }, "item", "approval", now, "version"), null);
+  }
+  for (const witnesses of [[success, { ...failure, checkedAt: success.checkedAt }], [{ ...failure, checkedAt: success.checkedAt }, success]]) {
+    assert.equal(servedWitness({ checkedAt: now, witnesses, errors: [] }, "item", "approval", now), null);
+  }
+});
+
+test("a failed Reader key or version does not revoke an independent successful one", () => {
+  const success: ServedReaderWitness = { itemId: "item", approvalId: "approval", versionId: "version-1", readerKey: "reader-a", url: `${PUBLIC_SITE_ORIGIN}/ballot`, checkedAt: "2026-09-26T09:00:00Z", state: "CONFIRMED", reason: "observed", responseSha256: "a".repeat(64) };
+  const failedKey: ServedReaderWitness = { ...success, readerKey: "reader-b", checkedAt: "2026-09-26T09:01:00Z", state: "NOT_OBSERVED", responseSha256: null };
+  const failedVersion: ServedReaderWitness = { ...failedKey, versionId: "version-2", readerKey: "reader-a" };
+  const now = "2026-09-26T09:02:00Z";
+  const read = { checkedAt: now, witnesses: [failedKey, failedVersion, success], errors: [] };
+  assert.equal(servedWitness(read, "item", "approval", now), success);
+  assert.equal(servedWitness(read, "item", "approval", now, "version-1"), success);
+  assert.equal(servedWitness(read, "item", "approval", now, "version-2"), null);
+});
+
 test("Battlecard evidence belongs only to the candidate whose controls were opened", async () => {
   const record = { id: "a", candidacyId: "a", campaign: { url: "https://campaign.test/", evidence: { approvalItemId: "a", approvalRecordId: "approved" } } } as DerivedCampaignSiteRecord;
   const run = (readerKey: string) => collectServedReader({ now: "2026-09-26T09:00:00Z", versionId: "d1", records: [record], destinations: new Map([["a", `${PUBLIC_SITE_ORIGIN}/ballot?zip=85635`]]), read: async () => ({ status: 200, html: "", openedLinks: [{ readerKey, href: record.campaign.url, domSha256: "b".repeat(64) }] }) });

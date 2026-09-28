@@ -94,8 +94,8 @@ export function checklistDeliveryTimings(sources:AssignmentSources, scope:Expans
       (row.result.verdict==="SURVIVED" || Boolean(accepted && accepted.acceptedRecordIds?.length &&
         accepted.acceptedRecordIds.every(id=>row.result.role==="ADVERSARIAL_AUDITOR" && row.result.survivingRecordIds?.includes(id)))))
       .map(row=>row.endedAt));
-    const witness=accepted?servedWitness(sources.servedReader,item.id,accepted.workerResultId,now):null;
-    const visibleAt=witness?.versionId===accepted?.versionId?valid(witness?.checkedAt):null;
+    const witness=accepted?servedWitness(sources.servedReader,item.id,accepted.workerResultId,now,accepted.versionId ?? undefined):null;
+    const visibleAt=witness?valid(witness.checkedAt):null;
     const registeredAt=item.createdAt;
     const attempts=attemptsByWork.get(item.id)??[];
     // Legacy dispatch sometimes stamped the cycle time onto both ends of a

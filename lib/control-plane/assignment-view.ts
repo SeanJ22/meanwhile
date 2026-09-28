@@ -1811,9 +1811,9 @@ function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
     return w ? [w] : [];
   }), ...g.workItems.flatMap(item => {
     const publication = item.publicationOutcome;
-    if (!publication || publication.status === "HELD") return [];
-    const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso);
-    return witness?.versionId === publication.versionId ? [witness] : [];
+    if (!publication || publication.status === "HELD" || !publication.versionId) return [];
+    const witness = servedWitness(src.servedReader, item.id, publication.workerResultId, src.nowIso, publication.versionId);
+    return witness ? [witness] : [];
   })];
   const witness = witnesses[0];
   const workerPublication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])

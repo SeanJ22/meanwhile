@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { campaignVisibleInHtml, collectServedReader } from "../lib/control-plane/served-reader-collector.ts";
-import { servedWitness, type ServedReaderWitness } from "../lib/control-plane/served-reader.ts";
+import { latestServedWitnesses, servedWitness, type ServedReaderWitness } from "../lib/control-plane/served-reader.ts";
 import type { DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { observeCampaignControls } from "../lib/control-plane/campaign-reader-controls.ts";
@@ -72,6 +72,20 @@ test("a failed Reader key or version does not revoke an independent successful o
   assert.equal(servedWitness(read, "item", "approval", now), success);
   assert.equal(servedWitness(read, "item", "approval", now, "version-1"), success);
   assert.equal(servedWitness(read, "item", "approval", now, "version-2"), null);
+});
+
+test("latest Reader observations keep exact identities and suppress malformed times", () => {
+  const success: ServedReaderWitness = { itemId: "item", approvalId: "approval", versionId: "version-1", readerKey: "reader-a", url: `${PUBLIC_SITE_ORIGIN}/ballot`, checkedAt: "2026-09-26T09:00:00Z", state: "CONFIRMED", reason: "observed", responseSha256: "a".repeat(64) };
+  const failed = { ...success, checkedAt: "2026-09-26T09:01:00Z", state: "NOT_OBSERVED" as const, responseSha256: null };
+  const otherVersion = { ...success, versionId: "version-2" };
+  const otherKey = { ...success, readerKey: "reader-b" };
+  const otherApproval = { ...success, approvalId: "other-approval" };
+  const otherItem = { ...success, itemId: "other-item" };
+  const read = { checkedAt: failed.checkedAt, witnesses: [success, failed, otherVersion, otherKey, otherApproval, otherItem], errors: [] };
+  assert.deepEqual(latestServedWitnesses(read), [failed, otherVersion, otherKey, otherApproval, otherItem]);
+  const malformed = { ...failed, checkedAt: "not a timestamp" };
+  assert.deepEqual(latestServedWitnesses({ ...read, witnesses: [success, malformed, otherVersion] }), [otherVersion]);
+  assert.equal(servedWitness({ ...read, witnesses: [success, malformed] }, "item", "approval", failed.checkedAt), null);
 });
 
 test("Battlecard evidence belongs only to the candidate whose controls were opened", async () => {

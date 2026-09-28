@@ -1,7 +1,8 @@
 import { keyVotesForMember } from "../votes/key-votes-reader.ts";
 import { keyVotePositionKey } from "../votes/key-vote-positions.ts";
 import { KEY_VOTES_CRITERIA } from "../votes/key-votes.ts";
-import { getVotesSnapshot } from "../votes/snapshot.ts";
+import { getVotesSnapshot, readFederalRollCallsProjection } from "../votes/snapshot.ts";
+import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import { summaryForBill } from "../votes/bill-summaries.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -65,18 +66,34 @@ export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOffi
           keyVote: { entryIds: [row.entry.id], positionKeys: [positionKey], chamber, congress: ref.congress, session: ref.session, rollNumber: ref.rollNumber, position, referenceVerifiedAt: ref.verifiedAt } });
       }
     }
-    // A summary is about the exact bill the member's held recent vote names.
-    // Nothing joins by title, keyword, party or the office they seek.
+    // A summary belongs to the exact official bill URL on a proven vote,
+    // whether that vote is still in Recent or now in verified Earlier records.
     try {
+      const addSummary = (billUrl: string | null, summary: ReturnType<typeof summaryForBill>) => {
+        if (!summary || !billUrl || seenSummaries.has(billUrl)) return;
+        seenSummaries.add(billUrl);
+        records.push({ kind: "BILL_SUMMARY", id: `bill-summary:${billUrl}`, subjectId: subject.id, canonicalSubjectId: member,
+          text: `${summary.title} (${summary.legisNum}): ${summary.summary} Basis: ${summary.basis}`,
+          sourceUrl: billUrl, sourceOrg: "Congressional Research Service", retrievedAt: summary.curatedAt });
+      };
       const snapshot = getVotesSnapshot();
       const mine = new Set(snapshot.positions.filter((position) => position.officeholderId === member).map((position) => position.voteId));
-      for (const vote of snapshot.votes.filter((vote) => mine.has(vote.id))) {
-        const summary = summaryForBill(vote.billUrl);
-        if (!summary || !vote.billUrl || seenSummaries.has(vote.billUrl)) continue;
-        seenSummaries.add(vote.billUrl);
-        records.push({ kind: "BILL_SUMMARY", id: `bill-summary:${vote.billUrl}`, subjectId: subject.id, canonicalSubjectId: member,
-          text: `${summary.title} (${summary.legisNum}): ${summary.summary} Basis: ${summary.basis}`,
-          sourceUrl: vote.billUrl, sourceOrg: "Congressional Research Service", retrievedAt: summary.curatedAt });
+      for (const vote of snapshot.votes.filter((vote) => mine.has(vote.id)))
+        addSummary(vote.billUrl, summaryForBill(vote.billUrl));
+      if (process.env.DATABASE_URL) {
+        const current = await readFederalRollCallsProjection();
+        if (current.kind !== "PROMOTED") throw new Error("No proven current federal vote window");
+        let cursor: string | null = null;
+        const seenCursors = new Set<string>();
+        for (;;) {
+          const page = await readHistoricalFederalVotesForMember(member, current, { cursor, pageSize: 16 });
+          for (const vote of page.votes) addSummary(vote.billUrl, vote.billSummary);
+          if (page.status === "COMPLETE") break;
+          if (page.status !== "MORE" || !page.nextVersionId || seenCursors.has(page.nextVersionId))
+            throw new Error("Earlier bill-summary source continuation unavailable");
+          cursor = page.nextVersionId;
+          seenCursors.add(cursor);
+        }
       }
     } catch {
       gaps.push({ whose: "OURS", statement: `The held bill-summary links for ${subject.name} could not be read for this answer.` });

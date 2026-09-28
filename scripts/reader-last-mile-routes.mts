@@ -9,6 +9,7 @@ import { divisionsAt } from "../lib/registry/server.ts";
 import { GET as divisionRepresentationRoute } from "../app/api/representation/[...division]/route.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
+import { readAllProvenFederalVoteHistoryForProof } from "../lib/votes/history.ts";
 import { readAvailableOfficialStateVotes } from "../lib/sources/legiscan/snapshot.ts";
 import { getOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
@@ -134,6 +135,21 @@ await each(moneyTargets, async (target) => {
   return { surface: "funding/state-money", target, payload: actual, payloadSha256: hash(actual) };
 });
 const federal = getVotesSnapshot();
+const historicalFederalVersions = await readAllProvenFederalVoteHistoryForProof(federalProjection);
+const currentFederalVoteIds = new Set(federal.votes.map((vote) => vote.id));
+const historicalVotesByMember = new Map<string, Map<string, { position: string; rollCallUrl: string; versionId: string }>>();
+for (const version of historicalFederalVersions) {
+  const votesById = new Map(version.value.snapshot.votes.map((vote) => [vote.id, vote]));
+  for (const position of version.value.snapshot.positions) {
+    if (currentFederalVoteIds.has(position.voteId)) continue;
+    const vote = votesById.get(position.voteId);
+    if (!vote) continue;
+    const member = historicalVotesByMember.get(position.officeholderId) ?? new Map();
+    if (!member.has(vote.id)) member.set(vote.id,
+      { position: position.position, rollCallUrl: vote.rollCallUrl, versionId: version.projection.versionId });
+    historicalVotesByMember.set(position.officeholderId, member);
+  }
+}
 const stateAuthority = await readAvailableOfficialStateVotes({ bypassCache: true });
 const stateSnapshots = stateAuthority.promoted.map(({ snapshot }) => snapshot);
 const state = {
@@ -141,7 +157,9 @@ const state = {
   positions: stateSnapshots.flatMap((snapshot) => snapshot.positions),
 };
 const memberDirectory = federalDirectory.directory;
-const memberIds = [...new Set([...federal.positions.map((position) => position.officeholderId), ...state.positions.map((position) => position.officeholderId), ...Object.keys(memberDirectory.byMember).map((id) => `congress:${id}`)])].sort();
+const memberIds = [...new Set([...federal.positions.map((position) => position.officeholderId),
+  ...historicalVotesByMember.keys(), ...state.positions.map((position) => position.officeholderId),
+  ...Object.keys(memberDirectory.byMember).map((id) => `congress:${id}`)])].sort();
 floored("vote member controls", "both canonical position snapshots", memberIds.length, memberIds.length);
 for (const member of memberIds) {
   const positions = member.startsWith("congress:")
@@ -155,6 +173,50 @@ for (const member of memberIds) {
   for (const vote of votes) assert.equal(vote.position, expected.get(String(vote.id)), `${member}/${vote.id}`);
   evidence.push({ surface: "votes", member, expectedCount: expected.size, statedCount: result.count, returnedCount: votes.length, canonicalIds: votes.map((vote) => vote.id), payloadSha256: hash(result) });
   if (member.startsWith("congress:")) {
+    const expectedHistory = historicalVotesByMember.get(member) ?? new Map();
+    const returnedHistory = new Map<string, { position: string; rollCallUrl: string; versionId: string }>();
+    const cursors = new Set<string>();
+    let cursor: string | null = null;
+    let anchor: string | null = null;
+    for (;;) {
+      const params = new URLSearchParams({ member, history: "1" });
+      if (cursor) params.set("cursor", cursor);
+      if (anchor) params.set("anchor", anchor);
+      const page = await get(`/api/votes?${params}`);
+      assert.equal(page.member, member);
+      assert.equal(page.currentVersionId, federalProjection.projection.versionId,
+        `${member}: historical answer must stay anchored to the current canonical version`);
+      anchor ??= String(page.currentVersionId);
+      assert.notEqual(page.historyStatus, "UNAVAILABLE", `${member}: historical source proof unavailable`);
+      const votes = rows(page.historicalVotes);
+      assert.equal(page.historicalCount, votes.length);
+      for (const vote of votes) {
+        const id = String(vote.id);
+        const known = expectedHistory.get(id);
+        assert.ok(known, `${member}/${id}: historical API returned an unrelated roll call`);
+        assert.equal(vote.position, known.position, `${member}/${id}: historical position differs`);
+        assert.equal(vote.rollCallUrl, known.rollCallUrl, `${member}/${id}: historical source link differs`);
+        assert.equal(vote.historicalVersionId, known.versionId,
+          `${member}/${id}: historical source version differs`);
+        // A later approved version may restate a roll call; the first proven
+        // occurrence in the anchored chain is its source identity here.
+        if (!returnedHistory.has(id)) returnedHistory.set(id,
+          { position: String(vote.position), rollCallUrl: String(vote.rollCallUrl),
+            versionId: String(vote.historicalVersionId) });
+      }
+      if (page.historyStatus === "COMPLETE") break;
+      assert.equal(page.historyStatus, "MORE", `${member}: history continuation state`);
+      const next = String(page.nextHistoricalVersionId ?? "");
+      assert.ok(next && !cursors.has(next), `${member}: history continuation must advance`);
+      cursor = next;
+      cursors.add(next);
+    }
+    assert.deepEqual([...returnedHistory.keys()].sort(), [...expectedHistory.keys()].sort(),
+      `${member}: exact proven historical vote IDs must all reach the public API`);
+    evidence.push({ surface: "votes-history", member, expectedCount: expectedHistory.size,
+      statedCount: returnedHistory.size, returnedCount: returnedHistory.size,
+      canonicalIds: [...returnedHistory.keys()], currentVersionId: anchor,
+      sourceVersionIds: [...new Set([...returnedHistory.values()].map((vote) => vote.versionId))] });
     const curated = await keyVotesForMember(member);
     assert.equal(result.chamber, curated.chamber);
     assert.deepEqual(result.keyVotes, JSON.parse(JSON.stringify(curated.rows)), `${member}: canonical chamber key votes`);

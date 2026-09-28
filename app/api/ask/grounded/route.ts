@@ -149,7 +149,7 @@ import {
   financeScopeGapFor,
   localFinanceEvidenceFor,
 } from "@/lib/ask/local-finance";
-import { statesOf, voteEvidenceFor, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
+import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
 
 /**
  * **POST /api/ask/grounded — the grounded civic answer (ASK01, 2026-08-27;
@@ -1630,7 +1630,8 @@ export async function POST(request: Request) {
        */
       if (ballotRecord.kind === "PERSON") {
         if (candidateSeats.some((seat) => voteEvidenceReadsStateRollCalls(ballotRecord.name, { officeholderId: seat.id }))) await personStateVotes();
-        const candidates = candidateSeats.map((seat) => voteEvidenceFor(ballotRecord.name, { officeholderId: seat.id }));
+        const candidates = await Promise.all(candidateSeats.map((seat) =>
+          voteEvidenceForIncludingHistory(ballotRecord.name, { officeholderId: seat.id })));
         const joined = candidates.filter((votes) => votes.identity.kind === "JOINED");
         for (const votes of joined) {
           records.push(...votes.records);
@@ -2083,7 +2084,8 @@ export async function POST(request: Request) {
          sitting legislator asked about by name reaches their own roll calls; a
          governor reaches the honest gap, because a governor casts none. */
       if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
-      const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
+      const votes = await voteEvidenceForIncludingHistory(subject.name,
+        { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
       if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
       records.push(...votes.records);
       gaps.push(...votes.gaps);

@@ -16,7 +16,8 @@ import type { StateRollCall, StateVotesSnapshot } from "../sources/legiscan/type
 import {
   officialStateVoteScopeForOfficeholderId,
 } from "../state-rollcalls/authority.ts";
-import { getVotesSnapshot } from "../votes/snapshot.ts";
+import { getVotesSnapshot, readFederalRollCallsProjection } from "../votes/snapshot.ts";
+import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import type { RollCallVote, VotesSnapshot } from "../votes/types.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
@@ -656,6 +657,59 @@ export function voteEvidenceFor(
     });
   }
   return { identity, records, gaps, denominators };
+}
+
+/**
+ * The normal Ask door includes older roll calls only after the same anchored,
+ * GOOD-receipt predecessor proof used by the public Earlier records view.
+ * A store failure preserves the current answer and states the missing scope.
+ */
+export async function voteEvidenceForIncludingHistory(
+  personName: string,
+  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
+): Promise<VoteEvidence> {
+  const current = voteEvidenceFor(personName, options);
+  if (current.identity.kind !== "JOINED" || current.identity.seat.rosterScope !== "us") return current;
+  const seat = current.identity.seat;
+  const promoted = await readFederalRollCallsProjection();
+  if (promoted.kind !== "PROMOTED") return { ...current, gaps: [...current.gaps, {
+    whose: "OURS", statement: `Earlier voting records for ${seat.name} could not be checked against a durable approved source just now. The recent records above remain available.`,
+  }] };
+  const records = [...current.records];
+  const gaps = [...current.gaps];
+  const seenVoteIds = new Set(records.filter((record) => record.kind === "ROLL_CALL_VOTE")
+    .map((record) => record.id));
+  const seenCursors = new Set<string>();
+  let cursor: string | null = null;
+  for (;;) {
+    const page = await readHistoricalFederalVotesForMember(seat.officeholderId, promoted,
+      { cursor, pageSize: 16 });
+    for (const vote of page.votes) {
+      const id = `${seat.officeholderId}#${vote.id}`;
+      if (seenVoteIds.has(id)) continue;
+      seenVoteIds.add(id);
+      records.push({ kind: "ROLL_CALL_VOTE", id,
+        text: `${federalVoteText(seat, vote, vote.position)} Earlier recorded vote.`,
+        occurredAt: isoDateOf(vote.date), sourceUrl: vote.rollCallUrl,
+        sourceOrg: federalPublisher(vote.chamber), retrievedAt: vote.retrievedAt });
+    }
+    if (page.status === "COMPLETE") break;
+    if (page.status !== "MORE" || !page.nextVersionId || seenCursors.has(page.nextVersionId)) {
+      gaps.push({ whose: "OURS", statement: `More earlier voting records for ${seat.name} could not be checked just now; the proven records above remain available.` });
+      break;
+    }
+    cursor = page.nextVersionId;
+    seenCursors.add(cursor);
+  }
+  const earlierCount = records.length - current.records.length;
+  const accurateGaps = earlierCount > 0
+    ? gaps.filter((gap) => !gap.statement.includes("so we have no voting record to show yet.")) : gaps;
+  return { identity: current.identity, records, gaps: accurateGaps,
+    denominators: { ...current.denominators,
+      recentRollCallVotesRecorded: current.denominators.rollCallVotesRecorded ?? 0,
+      rollCallVotesRecorded: (current.denominators.rollCallVotesRecorded ?? 0) + earlierCount,
+      rollCallVotesShown: records.filter((record) => record.kind === "ROLL_CALL_VOTE").length,
+      earlierRollCallVotesShown: earlierCount } };
 }
 
 /** The states a reader's divisions are in — the honest roster scope. */

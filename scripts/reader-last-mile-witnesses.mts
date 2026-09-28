@@ -12,6 +12,7 @@ import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { prepareReaderProofRuntime, requiredPreparedReaderProofMeetingsAuthority } from "./lib/reader-proof-runtime.ts";
 import { validateListingWitnessReadback, type ResolvedListingReadback } from "./lib/reader-full-reproof.ts";
+import { billSummaryWitnessSuffix } from "./lib/reader-bill-summary-witness.ts";
 
 interface RenderedReaderCase {
   label: string;
@@ -24,6 +25,9 @@ interface RenderedReaderCase {
 interface RenderedBillSummary extends BillSummary {
   billUrl: string;
   voteId: string;
+  sourceWindow: "CURRENT_RECENT" | "VERIFIED_EARLIER";
+  voteSourceVersionId: string;
+  summarySourceVersionId: string;
   actualLeaf: "BillPlainSummary";
   visible: boolean;
 }
@@ -90,7 +94,19 @@ const witnesses = requirements.filter(row => row.importReach).flatMap(row => {
   const [label, suffixes] = selected;
   const from = leaf === "funding-section" ? federal : report;
   const evidencePath = leaf === "funding-section" ? federalPath : reportPath;
-  const suffixesForSurface = suffixes.filter(suffix => row.surface === "ballot" ? !suffix.startsWith("map-") && (leaf !== "voting-sites-panel" || suffix.startsWith("ballot-")) : row.surface === "map" ? !suffix.startsWith("ballot-") : true);
+  const resultIndex = from.results.findIndex(result => result.label === label);
+  const selectedResult = from.results[resultIndex];
+  assert.ok(selectedResult, `Actual reader result missing ${label}`);
+  const selectedSummary = leaf === "official-popup"
+    ? selectedResult[row.surface === "ballot" ? "ballotFederalRecords" : "mapFederalRecords"]?.billSummary
+    : null;
+  if (leaf === "official-popup") {
+    assert.ok(row.surface === "map" || row.surface === "ballot", "Federal vote witness needs an exact reader surface");
+    assert.ok(selectedSummary, "Independent bill-summary leaf must be verified by this actual run");
+  }
+  const suffixesForSurface = leaf === "official-popup"
+    ? [billSummaryWitnessSuffix(row.surface as "map" | "ballot", selectedSummary!), `${row.surface}-recent-votes-last`]
+    : suffixes.filter(suffix => row.surface === "ballot" ? !suffix.startsWith("map-") && (leaf !== "voting-sites-panel" || suffix.startsWith("ballot-")) : row.surface === "map" ? !suffix.startsWith("ballot-") : true);
   assert.ok(suffixesForSurface.length, `No same-surface witness ${row.surface}/${leaf}`);
   const screenshots = suffixesForSurface.map(suffix => {
     const path = from.screenshots.find((path: string) => path.endsWith(`${label}-${suffix}.png`));
@@ -139,15 +155,13 @@ const witnesses = requirements.filter(row => row.importReach).flatMap(row => {
       screenshots.push({ path: relative(process.cwd(), path).replaceAll("\\", "/"), sha256: hash(path) });
     }
   }
-  const resultIndex = from.results.findIndex(result => result.label === label);
-  const selectedResult = from.results[resultIndex];
-  assert.ok(selectedResult, `Actual reader result missing ${label}`);
   const independent = leaf === "official-popup" ? {
     independentLeaves: ["RecentVoteRecords", "BillPlainSummary"],
-    heldBillSummary: selectedResult[row.surface === "ballot" ? "ballotFederalRecords" : "mapFederalRecords"]?.billSummary,
-    gesture: "Open Voting Record; verify all recent rows and the visible held plain-language bill summary, opening its disclosure if necessary.",
+    heldBillSummary: selectedSummary,
+    gesture: selectedSummary?.sourceWindow === "VERIFIED_EARLIER"
+      ? "Open Voting Record; verify all recent rows, open Earlier records, then open the visible reviewed summary on its exact older vote."
+      : "Open Voting Record; verify all recent rows and the visible reviewed summary on its exact recent vote.",
   } : {};
-  if (leaf === "official-popup") assert.ok(independent.heldBillSummary?.visible, "Independent bill-summary leaf must be verified by this actual run");
   return [{ ...row, ...independent, ...(listingCase ? { listingMultiplicity: listingCase.listingMultiplicity, listingResultPointer: `/results/${report.results.indexOf(listingCase)}` } : {}), exactHead: head, evidencePath, evidenceSha256: hash(evidencePath), resultPointer: `/results/${resultIndex}`, screenshots, status: "PROVEN", boundary: "Actual gestures and returned identity/value/count assertions. Component-class witness supplements exhaustive native-record and actual-leaf proof; it does not claim all records fit in one screenshot." }];
 });
 const requiredClasses = requirements.filter(row => row.importReach && !row.component.endsWith("/candidate-card.tsx")).length;

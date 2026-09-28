@@ -3101,7 +3101,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
       } else if (surface === "civic-routing") {
         const contact = object(entry.returnedContact);
         if (entry.sourceUrl === contact.sourceUrl && canonicalReaderAuthorityJson(entry.expectedFields) === canonicalReaderAuthorityJson(entry.returnedFields)) add("civic-routing", `contact:${canonicalReaderAuthorityJson(contact)}`, [string(contact.topicId), string(contact.sourceUrl)]);
-      } else if (surface === "votes") {
+      } else if (surface === "votes" || surface === "votes-history") {
         const ids = Array.isArray(entry.canonicalIds) ? entry.canonicalIds as string[] : [];
         if (entry.returnedCount !== ids.length || entry.statedCount !== ids.length || entry.expectedCount !== ids.length) { failures.push(`${evidencePath}: vote count differs`); continue; }
         for (const id of ids) { add("votes", `vote:${id}`, [id]); add("votes", `position:${entry.member}#${id}`, [string(entry.member), id]); }

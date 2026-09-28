@@ -74,3 +74,11 @@ test("post-cycle boundary retains matching adoption until it expires or process 
   assert.equal(retainedRuntimeReleaseAdoption(first,adoption({processIdentity:"runner:13:new"}),"2026-09-28T09:07:00.000Z").processIdentity,"runner:13:new");
   assert.equal(retainedRuntimeReleaseAdoption(first,adoption({integrityReceiptId:"replacement"}),"2026-09-28T09:07:00.000Z").integrityReceiptId,"replacement");
 });
+test("JSONB key reordering preserves the adoption hash and completed-cycle witness",()=>{
+  const first=adoption();
+  const reversed=Object.fromEntries(Object.entries(first).reverse()) as unknown as RuntimeReleaseAdoption;
+  const {evidenceHash:reversedHash,...reversedFields}=reversed;
+  assert.equal(runtimeReleaseAdoptionHash(reversedFields),reversedHash);
+  assert.equal(retainedRuntimeReleaseAdoption(reversed,adoption({observedAt:"2026-09-28T09:07:00.000Z"}),"2026-09-28T09:07:00.000Z"),reversed);
+  assert.equal(witness(heartbeat({runtimeRelease:reversed})).length,1);
+});

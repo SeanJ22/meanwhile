@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import type { RunnerHeartbeat, RuntimeReleaseAdoption } from "../owner-surface.ts";
+import { canonicalJson } from "../repository/types.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { CHECKLIST_PROFILE, type ChecklistInstance, type ChecklistWitness } from "./checklist-score.ts";
 
@@ -15,7 +16,7 @@ const at = (value:string|null|undefined)=>value?Date.parse(value):NaN;
 
 /** Hash only exact machine fields written to the canonical heartbeat. */
 export function runtimeReleaseAdoptionHash(value:Omit<RuntimeReleaseAdoption,"evidenceHash">):string {
-  return createHash("sha256").update(JSON.stringify(value)).digest("hex");
+  return createHash("sha256").update(canonicalJson(value)).digest("hex");
 }
 
 /** Keep the first matching, fresh observation across a completed cycle. The

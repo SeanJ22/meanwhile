@@ -13,7 +13,7 @@ import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
-import { formatMeetingDate, meetingRowTitle, meetingSubline } from "../lib/map/format.ts";
+import { formatMeetingDate, meetingEntryTitle, meetingRowTitle, meetingSubline } from "../lib/map/format.ts";
 import { minutesSummaryForMeeting } from "../lib/meetings/minutes-summaries.ts";
 import { noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
 import { venueGapLine, venueGapMark, venueGapOf } from "../lib/meetings/online.ts";
@@ -173,8 +173,11 @@ async function openSection(modal: Locator, label: string) {
 async function assertPublicStatementsProfile(section: Locator) {
   const held = prlProfileForSubject("congress:C001133");
   assert.ok(held && held.categories.length > 0, "The canonical Ciscomani PRL profile is held");
-  const text = await section.innerText();
   const count = held.statementCount.toLocaleString("en-US");
+  // The section first renders a loading state while its public PRL route
+  // resolves. Wait for the held value, then compare the actual visible count.
+  await section.locator("p").filter({ hasText: `${count} statements tracked.` }).waitFor({ state: "visible", timeout: 20_000 });
+  const text = await section.innerText();
   assert.ok(text.includes(`${count} statements tracked.`), "The visible tracked-statement count matches the current canonical PRL profile");
   const words = section.locator("details.mw-chart-words");
   if (await words.count()) await words.locator("summary").click();
@@ -182,7 +185,9 @@ async function assertPublicStatementsProfile(section: Locator) {
   for (const category of held.categories) {
     assert.ok(visibleText.includes(category.sentence), `The visible ${category.id} sentence matches the current canonical PRL profile`);
   }
-  assert.equal(await section.locator(`a[href="${held.attribution.url}"]`).count(), 1);
+  assert.equal(await section.locator(`.mw-feed-gap a[href="${held.attribution.url}"]`).count(), 1, "The statement-feed gap links to PRL's held data");
+  assert.equal(await section.getByRole("link", { name: held.attribution.citation, exact: true }).count(), 1, "The attribution citation links to PRL");
+  assert.equal(await section.locator(`a[href="${held.attribution.url}"]`).count(), 2, "The feed gap and citation are the two explicit links to PRL's data");
   assert.equal(await section.locator(`a[href="${held.attribution.licenceUrl}"]`).count(), 1);
   return { subjectId: held.subjectId, statementCount: held.statementCount, measuredAt: held.measuredAt, readAt: held.readAt, sourceUrl: held.sourceUrl };
 }
@@ -625,7 +630,9 @@ async function listingMultiplicityWitness(page: Page, label: string) {
     const card = page.getByRole("dialog", { name: "Meeting", exact: true });
     await card.waitFor({ state: "visible" });
     await card.locator(".account-modal-overlay").waitFor({ state: "visible" });
-    assert.ok((await card.innerText()).includes(meeting.title));
+    const cardTitle = meetingEntryTitle(meeting, { bodyShown: true });
+    assert.equal((await card.locator("h2.account-modal-title").innerText()).trim(), cardTitle, `${meetingId}: listing opens the canonical Meeting card`);
+    assert.ok((await card.innerText()).includes(formatMeetingDate(meeting)), `${meetingId}: card shows the selected sitting date`);
     const notice = card.locator('[data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]').filter({ has: page.locator(`a[data-calendar-listing-source="${meetingId}"]`) }).last();
     assert.ok((await notice.innerText()).includes(group.reason));
     assert.equal(await notice.locator("a[data-calendar-listing-source]").count(), group.sourceListingCount);
@@ -690,7 +697,9 @@ async function meetingWitness(page: Page, meetingId: string, label: string, comp
   const modal = page.getByRole("dialog", { name: "Meeting", exact: true });
   await modal.waitFor({ state: "visible" });
   await modal.locator(".account-modal-overlay").waitFor({ state: "visible" });
-  assert.ok((await modal.innerText()).includes(meeting.title), `${meetingId}: meeting card names its selected sitting`);
+  const cardTitle = meetingEntryTitle(meeting, { bodyShown: true });
+  assert.equal((await modal.locator("h2.account-modal-title").innerText()).trim(), cardTitle, `${meetingId}: meeting card names the canonical selected sitting`);
+  assert.ok((await modal.innerText()).includes(formatMeetingDate(meeting)), `${meetingId}: meeting card shows the selected sitting date`);
   if (venueGap) {
     const cardWhere = venueGapLine(venueGap);
     assert.ok((await modal.innerText()).includes(cardWhere), `${meetingId}: the card's Where line states the place as the reader sees it`);
@@ -707,7 +716,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string, comp
     assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
     await capture(page, `${label}-venue-meeting-panel`, entry);
     const back = venue.locator("button.mw-card-back");
-    assert.ok((await back.innerText()).includes(meeting.title), `${meetingId}: venue back control names the meeting`);
+    assert.ok((await back.innerText()).includes(cardTitle), `${meetingId}: venue back control names the meeting`);
     await back.click();
     await modal.waitFor({ state: "visible" });
   }

@@ -465,15 +465,23 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     const picker = page.getByRole("dialog", { name: "Choose a district", exact: true });
     await picker.waitFor({ state: "visible" });
     await picker.locator(".district-picker-row").filter({ has: page.getByText(body.divisionLabel, { exact: true }) }).click();
-    // On a compact/phone map a selected district shows a collapsed pill; the full
-    // .popup-card renders only once "Show … details" is tapped (map-entry.tsx:2234).
-    // No-op on desktop, where the popup-card is already visible.
-    const detailsPill = page.locator("[data-boundary-details]");
-    if (await detailsPill.isVisible().catch(() => false)) await detailsPill.click();
-    const district = page.locator(".popup-card").filter({ has: page.locator(`[data-roster-completeness-gap="${bodyId}"]`) });
+    // A map-picked division now opens the District ReaderCard. Its native OCD
+    // identity, heading, roster gap, and holders must all describe the exact
+    // division chosen above; the retired small .popup-card is no longer shown.
+    assert.ok(body.ocdId, "The roster body's covered division has an exact OCD ID");
+    const district = page.getByRole("dialog", { name: "District", exact: true });
     await district.waitFor({ state: "visible" });
-    assert.ok((await district.innerText()).includes(gap.statement));
-    for (const holder of holders) assert.ok((await district.innerText()).includes(holder.name));
+    assert.ok((await district.getAttribute("data-reader-card"))?.endsWith(`:${body.ocdId}`));
+    await district.getByRole("heading", { name: body.divisionLabel, exact: true }).waitFor({ state: "visible" });
+    const districtGap = district.locator(`[data-roster-completeness-gap="${bodyId}"]`);
+    await districtGap.waitFor({ state: "visible" });
+    assert.ok((await districtGap.innerText()).includes(gap.statement));
+    assert.equal(Number(await districtGap.getAttribute("data-verified-members")), holders.length);
+    assert.equal(Number(await districtGap.getAttribute("data-expected-members")), gap.expectedMembers);
+    assert.equal(await districtGap.locator(`a[href="${gap.sourceUrl}"]`).count(), 1);
+    const districtHolders = district.locator("[data-roster-holder]");
+    assert.deepEqual((await districtHolders.evaluateAll(elements => elements.map(element => element.getAttribute("data-roster-holder")))).sort(), holders.map(holder => holder.id).sort());
+    for (const holder of holders) assert.ok((await district.locator(`[data-roster-holder="${holder.id}"]`).innerText()).includes(holder.name));
     const districtScreenshot = await capture(page, `${label}-district-popup`, district);
     await page.goto(`${BASE}/ballot?zip=07444`, { waitUntil: "domcontentloaded", timeout: 90_000 });
     await page.locator("[data-battlecard-pill]").first().waitFor({ state: "visible", timeout: 30_000 });

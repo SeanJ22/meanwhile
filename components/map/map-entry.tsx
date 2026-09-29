@@ -2383,7 +2383,7 @@ function MapEntryInner() {
             )}
             {pop === "ask" &&
               (clusterCoverage && clusterZip ? (
-                <div data-ask-panel>
+                <div>
                   <AskBox
                     coverage={clusterCoverage}
                     zip={clusterZip}

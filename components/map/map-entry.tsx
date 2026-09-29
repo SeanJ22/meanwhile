@@ -1951,9 +1951,17 @@ function MapEntryInner() {
   // (approved design, INTERACTIONS §3), on top of filtering the meetings.
   const seenJurisdiction = useRef(ui.jurisdiction);
   useEffect(() => {
-    if (ui.jurisdiction === seenJurisdiction.current) return;
-    seenJurisdiction.current = ui.jurisdiction;
-    if (ui.jurisdiction) showDistrictOnMap(ui.jurisdiction);
+    const jurisdiction = ui.jurisdiction;
+    if (jurisdiction === seenJurisdiction.current) return;
+    if (!jurisdiction) {
+      seenJurisdiction.current = null;
+      return;
+    }
+    const frame = window.requestAnimationFrame(() => {
+      seenJurisdiction.current = jurisdiction;
+      showDistrictOnMap(jurisdiction);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [ui.jurisdiction, showDistrictOnMap]);
 
   const selectionTop =

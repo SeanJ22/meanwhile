@@ -1,10 +1,10 @@
 {
-  "exactHead": "29e88859913e027795f2db0715ba163c35962776",
-  "buildId": "lqycPNL1M3wVRzs-wTk3b",
+  "exactHead": "8b59f2b0c11f398347ef97ce6b1089b90353eed6",
+  "buildId": "i-rNpDDofROYkCt87Ab4g",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "29e88859913e027795f2db0715ba163c35962776",
-    "commitShort": "29e8885",
+    "commit": "8b59f2b0c11f398347ef97ce6b1089b90353eed6",
+    "commitShort": "8b59f2b",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "5100d8c655986fe31b3106c67d49f6bd31cd550954236144915e9159bed26f1f",
+  "buildLogSha256": "d9910b7944bfd7da40d303b74014066fd8924a5494b09673911923fa602617ce",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,

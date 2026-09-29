@@ -1,6 +1,6 @@
 {
-  "exactHead": "29e88859913e027795f2db0715ba163c35962776",
-  "buildId": "lqycPNL1M3wVRzs-wTk3b",
+  "exactHead": "8b59f2b0c11f398347ef97ce6b1089b90353eed6",
+  "buildId": "i-rNpDDofROYkCt87Ab4g",
   "base": "http://127.0.0.1:3214",
   "sourceHashes": [
     {
@@ -9128,7 +9128,7 @@
           "bodyId": "ocd-division/country:us/state:az/school_district:sunnyside_unified_district#board"
         }
       ],
-      "payloadSha256": "379d3abe21aaa7fffbf9a78fc72028f618e978211df7c950a69c6da002801a1e"
+      "payloadSha256": "410841d498b0b69d7bf89fd00ea9148eaf7c8ee8ecc0991b3766f7c3b78be577"
     },
     {
       "zip": "85701",
@@ -10227,7 +10227,7 @@
           "bodyId": "ocd-division/country:us/state:az/school_district:vail_unified_district#board"
         }
       ],
-      "payloadSha256": "b524b1d531231422f7247c4fd15a08ee1cbbfa2076d9a3b07e50cb196bee0c45"
+      "payloadSha256": "7034a108d06f546ad62d2ae929a7917aec79bbd9aca9e1fe8cab5d12e1a87b2d"
     },
     {
       "zip": "85641",
@@ -11384,7 +11384,7 @@
           "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board"
         }
       ],
-      "payloadSha256": "b37ab3909addeee20459449e1da7e2d2522b6051679017f437d63ff023be199d"
+      "payloadSha256": "a3cbf665bd8a1ef668cf039dc9a79a6c4f071c0ec65226478074719ac1c74096"
     },
     {
       "zip": "07866",
@@ -14583,7 +14583,7 @@
           "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#planning-board"
         }
       ],
-      "payloadSha256": "5c965a4724760f84a3f6adc88814a9124f6fb481a8d58b6a60bfaad166db2273"
+      "payloadSha256": "4e1f14bbaeec2785d233ac4aef7af53596924fade4e4fbb14f34d7e97ee6dc2d"
     },
     {
       "zip": "03255",
@@ -1043626,7 +1043626,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "4e8ec9eb06e524a6d74dc2b522379ca70b906b3013ab6ba5812fa3fc759c304b"
+      "payloadSha256": "46eb7a12f00b1ae18729c7c9c70c966535de35d367737bf4a6e392c9c0d21b48"
     },
     {
       "surface": "agenda/map",
@@ -1043645,7 +1043645,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "47cd18da06fae3b8c1f3e10ad949ef4378cb4411aa07495f9ddd8f7010900c67"
+      "payloadSha256": "53137ca9abe39af8bd2c9be31ca02f6ae3df175a3ab04b5971f9001ac89311cd"
     },
     {
       "surface": "agenda/map",
@@ -1043664,7 +1043664,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "e806fd5e94a2555225c9f276589d5310a8e0f0aacac82fd7cf471b6bae00c543"
+      "payloadSha256": "8792e3df84a4eef26fc6929d03fb83c5f2884d66d223bfbfa79168966a370721"
     },
     {
       "surface": "agenda/map",
@@ -1043683,7 +1043683,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "469d6d86bb419b1b2f4c6cf2c0258f5573c51331fb62a7c1150408fafa085ffc"
+      "payloadSha256": "4878d2e84353422bd1b0c5e1d3fb2c68f619593aa1d1c50bd938801e52d5d174"
     },
     {
       "surface": "agenda/map",
@@ -1043702,7 +1043702,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "61f43153f3e11af90884e010680d7b86abc2d35d66306125cc5d44bb4ed9da86"
+      "payloadSha256": "371c3132c3fa87adc9980da7622177d43744f68efe5c0aa78af0c168ccc7576c"
     },
     {
       "surface": "agenda/map",
@@ -1043721,7 +1043721,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "c78610d53dc7cfb790e22a93540af733cd6e0c4a3cf20b73af01a2512df759bd"
+      "payloadSha256": "3b7c516ce80183f070816910d6432ced5335701439bea86e348c26a4b8a8a033"
     },
     {
       "surface": "agenda/map",
@@ -1043740,7 +1043740,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8ebb76702a06f6f263e8106ff0aa6b5e9ebb068b89df67013f758ae3c814fbc2"
+      "payloadSha256": "0c3662410bd4200b6c9714d905025c56090dcbd1bca51d0302dd54f7fe970ed8"
     },
     {
       "surface": "agenda/map",
@@ -1043759,7 +1043759,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "89a5e64f47dcfe0e587e918d7213a908d3c6d545a9629188f98f0afb0406154f"
+      "payloadSha256": "0474d313bb753e993d60ce4a377e26f8bdcdf64351b24c35aca3069d05277dcc"
     },
     {
       "surface": "agenda/map",
@@ -1043778,7 +1043778,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "3de2a0e7e1344a29a33940dc15db4771021e20338410227b0d659864aecdaf8e"
+      "payloadSha256": "0545e217ccc127785211d1bb310475f590a101429e8bb802caea80c41e9960ff"
     },
     {
       "surface": "agenda/map",
@@ -1043797,7 +1043797,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "1790b6ae651190e05fff88ec2240a22953d6e89dce9b9a666bf2466dcd1ae530"
+      "payloadSha256": "4dbe5a03c807bd68a5f1d76288c151465f241f6bfaa7e1d7d72c70132f81f63b"
     },
     {
       "surface": "agenda/map",
@@ -1043816,7 +1043816,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "aa6b2213cf61b3b5fc4cfe2bb4f6c2f039badefe3fc7f04e731c3fa4eae0e098"
+      "payloadSha256": "4668522306879ebc150b386fe08083b0e56ff5d8d4107305a6d76b7aef26c13e"
     },
     {
       "surface": "agenda/map",
@@ -1043835,7 +1043835,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "6fce8db4d824a8ce46ae30e0e480c44f52ad02c21d18f1c1e167988a98b96fa0"
+      "payloadSha256": "f5452d8acf196be0a6f3b8a69b727a5d74da5f4034f71400eea9b62dc6af60df"
     },
     {
       "surface": "agenda/map",
@@ -1043854,7 +1043854,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "ecaba0c645e12d381acc9efa8457b32694bdea02a5c4e0860cded83949723d98"
+      "payloadSha256": "da7d89a115a47a98c6fc99f6f9db2838d1a98f0d3b153d62cf359890165cfb60"
     },
     {
       "surface": "agenda/map",
@@ -1043873,7 +1043873,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "e00083c6a4dcefdf48decd88fce03ed340a3260ce268f0364a1507c067e739c5"
+      "payloadSha256": "bfedbaa271084e35a735c1150b1af01bf537cb40e3b94e2a5719b852ee3aa374"
     },
     {
       "surface": "agenda/map",
@@ -1043892,7 +1043892,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "4239111877129dc4c944aa26b5bbfadb8d5b118ee1c482a802c81be9d8bdbe9c"
+      "payloadSha256": "b1b42a1dc066ed0e5a159b5b50cf9b7c3b562ea57706496ddb61f5cdbf7ea941"
     },
     {
       "surface": "agenda/map",
@@ -1043911,7 +1043911,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "d7fa4aabf5bea4d175ba2e38f0ee3a4fa66ad8758d806650eaa53ae4405fb73d"
+      "payloadSha256": "6dbab941f016dfbf06b881b99a15156d473383443ee919396080adabbd186726"
     },
     {
       "surface": "agenda/map",
@@ -1043930,7 +1043930,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "a4237129f2a4e71432d33b2f478c02b26e00793d2ca2ff74303e33fad375a629"
+      "payloadSha256": "8ad89bf5031bc0a21c58a5ba4ab6e673b46fe7534749ca625ae475f94db0a92b"
     },
     {
       "surface": "agenda/map",
@@ -1043949,7 +1043949,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "89cc9e47c69832c1bb23084abffd71f1a1250a3d6b0cdebe6ee128c785a9d6bd"
+      "payloadSha256": "e7829b0c19633b080318dabffbde760e129a211b742670d8626b59066db5d142"
     },
     {
       "surface": "agenda/map",
@@ -1043968,7 +1043968,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "0aec23ad649ee7117199feb37317b0a261c8f189fae0274fd393eb9fe38aab2b"
+      "payloadSha256": "e5ee0c3074f0b3d1084ca9e78ea780b0bf28bbe8723f3d32d3bfb9bb4d36322d"
     },
     {
       "surface": "agenda/map",
@@ -1043987,7 +1043987,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "452f2f8115b5126bd7c9f8311b90352ff11e7c29205c065b4d6af89d28cca274"
+      "payloadSha256": "0e05e8b2dff49d780768061a67fec13f503231dd56777b686d4472449aaf4ef8"
     },
     {
       "surface": "agenda/map",
@@ -1044006,7 +1044006,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "f9e56e04cf085e1f7d3633c5a5facd443290d2e31ce5e928eb679655e1a2e790"
+      "payloadSha256": "9c93cda445a8beb8f38200b178d52054887ca783efa89a6fd0adb6c438b0d024"
     },
     {
       "surface": "agenda/map",
@@ -1044025,7 +1044025,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "396d17ba2502b043cef93a21181dd49bf8c2a40e952e105f46b0cf31169f62d3"
+      "payloadSha256": "47bcf238bdcdbfb6549145b2ee727895b45286b32bb7e1f23f4be99ad803fadd"
     },
     {
       "surface": "agenda/map",
@@ -1044044,7 +1044044,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "75f0f04d4d5ad34c9bbb18124ccc81e3f8ea9b6c8309257ba708ec3fa86a86b3"
+      "payloadSha256": "640d7324cb6e2c10157d1ff33f3c6257299944a1c9bc977e49174036f926ae4d"
     },
     {
       "surface": "agenda/map",
@@ -1044063,7 +1044063,7 @@
         "votes": 0
       },
       "status": "NOT_HELD",
-      "payloadSha256": "8be6e959f2542e7b9bca5ec8d9aae3b5bb813c279c73f70da815e68c9f6e5fcd"
+      "payloadSha256": "7f6d758e7528c34084cef5e5de1e8599e03553ff8e7578b3d2fc8d2d5fd8eb41"
     },
     {
       "surface": "agenda/map",
@@ -1044082,7 +1044082,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "7f98af4d5b40e0b94ac26cdb3002f0350a25ad0000f90d4b7691d2401195a17a"
+      "payloadSha256": "b4e2cee112dc04e4d195f593b3690c2cda03e6ace7083b4f3da3df8909d13cbf"
     },
     {
       "surface": "agenda/map",
@@ -1044101,7 +1044101,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "109f6892c9c74ab84086448b46c681b9a1a1356507a5a202abadd737c83c4d70"
+      "payloadSha256": "372239d354b9ffce51975bd0cf0ba80093644eecbb577043cbfbe0ac49a57502"
     },
     {
       "surface": "agenda/map",
@@ -1044120,7 +1044120,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8ba7d441923a64d56c2c74ce62585367c9942beb4f341dc0cf697ed718684016"
+      "payloadSha256": "610a5b5d04e374aab7f469ad37fbef2168f8202b4880908c4d878a59f64c4fd9"
     },
     {
       "surface": "agenda/map",
@@ -1044139,7 +1044139,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "44deec088c5752ffa6fe4a22f649d6ee0dd16627a4f67898cb98b14c489a831d"
+      "payloadSha256": "c0001ccbe6fd5f9a2607cd976e203354a211618e9c4d79ffa878bbdaa2f6e6ea"
     },
     {
       "surface": "agenda/map",
@@ -1044158,7 +1044158,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "5c29f6634a3f8fe02151db9b44348b45d702ee5b43ab8d7b6f3efcd9fca79ff3"
+      "payloadSha256": "ee75e23628f0accbc3fe37eb179129be4bb695123a9505e8aa45f7f9548a7693"
     },
     {
       "surface": "agenda/map",
@@ -1044177,7 +1044177,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "a2d9f7b414af58db9abadeb82cf2a15bb94c9a214f8390bdc61f14f215df31ea"
+      "payloadSha256": "2ed5136eb31c1df83d57e84d6550559e79b368a796951a24cf5aff2d0f93d7e6"
     },
     {
       "surface": "agenda/map",
@@ -1044196,7 +1044196,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "6e9fea72dda9063fd6c71d67d469ec8e8a57c6cd8489f43d5560d81ae10552d0"
+      "payloadSha256": "5f7221dac798fb63f44f6171464f0c8530fb596a56ed9add8ed361307984eef1"
     },
     {
       "surface": "agenda/map",
@@ -1044215,7 +1044215,7 @@
         "votes": 220
       },
       "status": "HELD",
-      "payloadSha256": "1185e30139a61146aaf4bb828960612eb7de8a95e439a3813875d6d1c23f2460"
+      "payloadSha256": "79a3379d9773def6a3e50c175d0c67dd0570412389f24f845acc557b8f98d994"
     },
     {
       "surface": "agenda/map",
@@ -1044234,7 +1044234,7 @@
         "votes": 380
       },
       "status": "HELD",
-      "payloadSha256": "7a65d60f04c31d2715b1d7b920e1d3cf90ee6c23282e77e189f356baac94003b"
+      "payloadSha256": "25382ff421c5ceb606dc6e16d14ab7f58f514728b8d4d290260c399f47379878"
     },
     {
       "surface": "agenda/map",
@@ -1044253,7 +1044253,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "3e5dcd903f120e287672cecb1152095d737ff95469b830f1a23a188b0fb2d2c5"
+      "payloadSha256": "0a6740fb4aced40f0ad47f71d77f9f8843c2cb9afee3bf6736dbfc3e8e415add"
     },
     {
       "surface": "agenda/map",
@@ -1044272,7 +1044272,7 @@
         "votes": 145
       },
       "status": "HELD",
-      "payloadSha256": "2eeba861144cde92b14c228be0b44bac7ee8d5ab3b093f6c88efe4d9ede07425"
+      "payloadSha256": "0cf49d86f0801c1ea744e535c9e19a3cbf0f09ed05d7560cf998e04d74fab416"
     },
     {
       "surface": "agenda/map",
@@ -1044291,7 +1044291,7 @@
         "votes": 185
       },
       "status": "HELD",
-      "payloadSha256": "e2155ee56ff53d7e469ff3e4257fa6261b9f4708f3c77e80b3601da9ca32a064"
+      "payloadSha256": "b4b4d2aa11ad5de1a182e8894fec1c036fdcd5f785d63da2585d40256a27e5c1"
     },
     {
       "surface": "agenda/map",
@@ -1044310,7 +1044310,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "004468b4c24c075bc3c64e0b83e49aec8e01658397afe62eb518be5ccd7d6011"
+      "payloadSha256": "8d515ede1a01fed4d7b7facf61eab3f3bb42d7c3b650e1e8684e3dca2102b404"
     },
     {
       "surface": "agenda/map",
@@ -1044329,7 +1044329,7 @@
         "votes": 230
       },
       "status": "HELD",
-      "payloadSha256": "b7ed03ca7a603986ba0c56180d3bf33ef03f8b857f47613e783a46665de2e687"
+      "payloadSha256": "9a1e9edd3427b0050a287f36bd475cfc3c4db45cfacb5c393d0c27d3ed071733"
     },
     {
       "surface": "agenda/map",
@@ -1044348,7 +1044348,7 @@
         "votes": 285
       },
       "status": "HELD",
-      "payloadSha256": "3fbc946597bfc348a8e9f0e7e2056125f84a9b2d02bd5387a5ec34bcfd69f84b"
+      "payloadSha256": "7941af16658710cc02af03bd469e1e89d498a7d3c7c53a8767a28448011ef839"
     },
     {
       "surface": "agenda/map",
@@ -1044367,7 +1044367,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "d406c46948d29258d1bcb37ac3d95dee51639d9fbd6d3ccb0a7356892ce45f5f"
+      "payloadSha256": "d9ff648759cbdcd31241ec93d2a3bfcae3d8633804defa6e444162ffef9e7237"
     },
     {
       "surface": "agenda/map",
@@ -1044386,7 +1044386,7 @@
         "votes": 135
       },
       "status": "HELD",
-      "payloadSha256": "b1b450aa277e626031cce219722cec817672abdd76f617cc59ea2bb124e10ebf"
+      "payloadSha256": "771efd8918db073f8ff793e79adef53eda5fa942780825fe186d63553e6587c8"
     },
     {
       "surface": "agenda/map",
@@ -1044405,7 +1044405,7 @@
         "votes": 240
       },
       "status": "HELD",
-      "payloadSha256": "e752bc82ca67f522142e17e7482d737e925d8f3c1205b4ca979e6110d3217219"
+      "payloadSha256": "016db93e78ff2c704e1c63050d7586aa2dd05b1e1d016a79f3c0d743c51fdb4c"
     },
     {
       "surface": "agenda/map",
@@ -1044424,7 +1044424,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "9eccbe63915b5d2b2f82621120968a2882652839ebc54c54310e68419f5ad2aa"
+      "payloadSha256": "b28e075143dec503954f3bcbadff46fb94570b692fee5cbf40bc83c2a872cadf"
     },
     {
       "surface": "agenda/map",
@@ -1044443,7 +1044443,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "44eb0bc03970cba540d8091e2856b06aec4d3187a79873121ed84722051bd570"
+      "payloadSha256": "8a0638fd677781176d3894afef34c724f6e834060a2f4fc81ecbd8a677a75963"
     },
     {
       "surface": "agenda/map",
@@ -1044462,7 +1044462,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8860cadad2e700987c8259f6c000e6545a399995506295bc8847721826a835de"
+      "payloadSha256": "d2b28662ccbbeb2bf11c4f5428cd021c27c7f66d0cf571d08623b2ca346467c4"
     },
     {
       "surface": "agenda/map",
@@ -1044481,7 +1044481,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "f04f06d3d58e56dae8e73188f4c01ea68049ffc932c9f2a3d0c2c0c26369043d"
+      "payloadSha256": "5b0bbdcc2f3302bf1ff79bda7af643bf2f6e458a645fd610cee3c9dc8a4e4852"
     },
     {
       "surface": "agenda/map",
@@ -1044500,7 +1044500,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "ac601b4b8c9d2711af8cb056cdf880518584d9875970bf0c5b3ac0b7f32108a2"
+      "payloadSha256": "a751df89a14132b3573b5a9b97f4fd49caed78c9888f318f164228e616f9b7b9"
     },
     {
       "surface": "agenda/map",
@@ -1044519,7 +1044519,7 @@
         "votes": 8
       },
       "status": "HELD",
-      "payloadSha256": "a92203f9a1b3a5a9618ca2a984da1d25d83ebbc06b3cdb1afe94213648ea39ee"
+      "payloadSha256": "79cc6ecf21dff7cd1ccc9aae5fbade87ae6bf1a59e8edcf39fe010bb05ed5633"
     },
     {
       "surface": "agenda/map",
@@ -1044538,7 +1044538,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "0d43e2013264c626a9008156b0427390f9da7d208e535edf919a9fb799f965f1"
+      "payloadSha256": "74b271fb8e1bebcdb4aec64f1a3a123512cfc2489daa992dde209ade8ac0eb25"
     },
     {
       "surface": "agenda/map",
@@ -1044557,7 +1044557,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "7c31af41417850aa6b96810187c1d0e3277674b9034d4a37c3685afd1efa4b43"
+      "payloadSha256": "fce74aaf717a1d77eaf2558be7d951b5b52c009b447c8452755233e004dca54e"
     },
     {
       "surface": "agenda/map",
@@ -1044576,7 +1044576,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "3d3cdbb4f93097250866c76103e3e8b9b20547643e7b23ea80dfc4c8184912ff"
+      "payloadSha256": "5ffe922374ddcb1d0845bf8364bd92b585cdfca68078fa42858156209615ee07"
     },
     {
       "surface": "directory",
@@ -1137166,9 +1137166,9 @@
         "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97"
       ],
       "returnedRecordIds": [
+        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
         "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-        "az-sos-2026:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~d852ced51750d4420d0a73adb5830530491c57ddbcb0658b61f83294beff0db4",
-        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2"
+        "az-sos-2026:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~d852ced51750d4420d0a73adb5830530491c57ddbcb0658b61f83294beff0db4"
       ],
       "statedCount": 30,
       "returnedCount": 30,
@@ -1137176,6 +1137176,240 @@
         "kind": "MATCHED",
         "topic": "arizona",
         "passages": [
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Meet HUGH LYTLE A problem solver, a family man, and a believer in Arizona’s future Driven by a deep love for his family and a lifelong mission to heal broken systems, Hugh is stepping up to challenge the political status quo and build an Arizona where the next generation can thrive.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Together, they built their lives in Arizona, putting down deep roots and raising their three adult children: Emily, Hannah, and Harris.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh’s love for Arizona is rooted in its people.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "To do that, he is bringing his practical problem-solving mindset to government to focus on the challenges facing Arizona today.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "CREATE AN INCLUSIVE KNOWLEDGE ECONOMY Lowering the day-to-day cost of living and actively pitching Arizona to global employers so young people can afford homes and start businesses here.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh is committed to independent, long-term planning for our water future, free from partisan gridlock, ensuring Arizona remains a vibrant place to live and raise a family for generations to come.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "We Are ARIZONA Doing What is Right for Our State Hugh Lytle loves Arizona too much to watch its potential be limited by a broken, polarized system.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "That is why this campaign is built entirely around a single, powerful theme: We Are Arizona.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "This isn’t a political party; it is a movement bringing Arizonans together from every background, independent-minded voters, the vital Hispanic electorate, and the next generation, to do what is right for Arizona and its people.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Learn where he stands on the issues shaping Arizona’s future.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh AI is an innovative digital experience built from Hugh’s real priorities, experience, and vision for Arizona designed to make leadership more accessible, transparent, and responsive than ever before.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Together we can build Arizona needs you.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Contact Information If you have questions about this Privacy Policy or the Campaign’s data practices, you may contact us at: Email: campaign@hughlytle.com Website: https://hughlytle.com Thank You, Arizona.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "When we launched this campaign, we set out to prove that Arizona is bigger than partisan gridlock and that a pragmatic, problem-solving approach could unite our state.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Over $100 thousand raised, thousands of conversations, and an incredible movement built across every corner of Arizona showed us that people are ready for common-sense leadership.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Because through it all, We Are Arizona.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh believes Arizona should embrace innovation while ensuring it is used responsibly, ethically, and transparently.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "That’s the Arizona way.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
+          },
           {
             "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
             "url": "https://hughlytle.com/#",
@@ -1137294,123 +1137528,6 @@
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
           },
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Learn where he stands on the issues shaping Arizona’s future.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Hugh AI is an innovative digital experience built from Hugh’s real priorities, experience, and vision for Arizona designed to make leadership more accessible, transparent, and responsive than ever before.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Together we can build Arizona needs you.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Contact Information If you have questions about this Privacy Policy or the Campaign’s data practices, you may contact us at: Email: campaign@hughlytle.com Website: https://hughlytle.com Thank You, Arizona.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "When we launched this campaign, we set out to prove that Arizona is bigger than partisan gridlock and that a pragmatic, problem-solving approach could unite our state.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Over $100 thousand raised, thousands of conversations, and an incredible movement built across every corner of Arizona showed us that people are ready for common-sense leadership.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Because through it all, We Are Arizona.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Hugh believes Arizona should embrace innovation while ensuring it is used responsibly, ethically, and transparently.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "That’s the Arizona way.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
             "snapshotId": "az-sos-2026:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~d852ced51750d4420d0a73adb5830530491c57ddbcb0658b61f83294beff0db4",
             "url": "https://hughlytle.com/press-releases/",
             "kind": "CAMPAIGN_SITE",
@@ -1137448,120 +1137565,63 @@
             ],
             "changedSince": null,
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
+          }
+        ],
+        "canonicalSubjectKeys": [
+          "az-sos-2026:governor:lytle-hugh"
+        ],
+        "searched": {
+          "pages": 6,
+          "snapshots": 8,
+          "unreadable": 0,
+          "presentButUnquotable": 10
+        },
+        "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
+        "totalMatches": 30
+      },
+      "payloadSha256": "4833616e674a6ae5af7af27132df831b41810a2d42e38e1a7ebbb1966c5a51f3"
+    },
+    {
+      "surface": "positions",
+      "subject": "az-sos-2026:governor:lytle-hugh",
+      "topic": "meet",
+      "expectedRecordIds": [
+        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645"
+      ],
+      "returnedRecordIds": [
+        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+        "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97"
+      ],
+      "statedCount": 2,
+      "returnedCount": 2,
+      "payload": {
+        "kind": "MATCHED",
+        "topic": "meet",
+        "passages": [
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Meet HUGH LYTLE A problem solver, a family man, and a believer in Arizona’s future Driven by a deep love for his family and a lifelong mission to heal broken systems, Hugh is stepping up to challenge the political status quo and build an Arizona where the next generation can thrive.",
             "matchedTerms": [
-              "arizona"
+              "meet"
             ],
             "changedSince": null,
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
           },
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
+            "url": "https://hughlytle.com/#",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Together, they built their lives in Arizona, putting down deep roots and raising their three adult children: Emily, Hannah, and Harris.",
+            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "quote": "Meet Hugh Lytle Over Arizonans Are Watching Us Hugh in the News Follow Us --> HUGH AI 24/7 Direct Access to Hugh Lytle Imagine being able to sit down with Hugh Lytle whenever you want.",
             "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Hugh’s love for Arizona is rooted in its people.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "To do that, he is bringing his practical problem-solving mindset to government to focus on the challenges facing Arizona today.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "CREATE AN INCLUSIVE KNOWLEDGE ECONOMY Lowering the day-to-day cost of living and actively pitching Arizona to global employers so young people can afford homes and start businesses here.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Hugh is committed to independent, long-term planning for our water future, free from partisan gridlock, ensuring Arizona remains a vibrant place to live and raise a family for generations to come.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "We Are ARIZONA Doing What is Right for Our State Hugh Lytle loves Arizona too much to watch its potential be limited by a broken, polarized system.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "That is why this campaign is built entirely around a single, powerful theme: We Are Arizona.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "This isn’t a political party; it is a movement bringing Arizonans together from every background, independent-minded voters, the vital Hispanic electorate, and the next generation, to do what is right for Arizona and its people.",
-            "matchedTerms": [
-              "arizona"
+              "meet"
             ],
             "changedSince": null,
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
@@ -1137572,16 +1137632,16 @@
         ],
         "searched": {
           "pages": 6,
-          "snapshots": 7,
+          "snapshots": 8,
           "unreadable": 0,
-          "presentButUnquotable": 9
+          "presentButUnquotable": 0
         },
         "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
         "holdingStatus": "HELD",
         "unavailableAuthorities": [],
-        "totalMatches": 30
+        "totalMatches": 2
       },
-      "payloadSha256": "8f4c616f2000a9c93fc759bf559f9b8d44dbf3ab5da4e6fab7adbb9879935d64"
+      "payloadSha256": "1653ff49003965ecad2f2adbb84cb13fbaa1e3099d4a81d8de6190f2f09715cf"
     },
     {
       "surface": "positions",
@@ -1137591,7 +1137651,7 @@
         "az-sos-2026:governor:lytle-hugh@8f47aa583dfbf466a2f2626c7a135e74b1524b3389bd0de46ab189dad860a070~e737bca56b0efc9b550bea22d5e4a62762ddb803c0b40319073d48f92a1849f9"
       ],
       "returnedRecordIds": [
-        "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
+        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
         "az-sos-2026:governor:lytle-hugh@8f47aa583dfbf466a2f2626c7a135e74b1524b3389bd0de46ab189dad860a070~e737bca56b0efc9b550bea22d5e4a62762ddb803c0b40319073d48f92a1849f9"
       ],
       "statedCount": 5,
@@ -1137601,11 +1137661,11 @@
         "topic": "privacy",
         "passages": [
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "By using this website or providing information to the Campaign, you agree to the practices described in this Privacy Policy.",
             "matchedTerms": [
               "privacy"
@@ -1137614,11 +1137674,11 @@
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
           },
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Their use of information is governed by their own privacy policies.",
             "matchedTerms": [
               "privacy"
@@ -1137627,11 +1137687,11 @@
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
           },
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Updates to This Policy We may update this Privacy Policy from time to time.",
             "matchedTerms": [
               "privacy"
@@ -1137640,11 +1137700,11 @@
             "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
           },
           {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~a04e0b50a6f6ee3381dc44c8222d2fa260496468593f504a5e3bd7f339068645",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Contact Information If you have questions about this Privacy Policy or the Campaign’s data practices, you may contact us at: Email: campaign@hughlytle.com Website: https://hughlytle.com Thank You, Arizona.",
             "matchedTerms": [
               "privacy"
@@ -1137671,76 +1137731,16 @@
         ],
         "searched": {
           "pages": 6,
-          "snapshots": 7,
+          "snapshots": 8,
           "unreadable": 0,
-          "presentButUnquotable": 7
+          "presentButUnquotable": 8
         },
         "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
         "holdingStatus": "HELD",
         "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "f5c0a742fdf46a72ab1e2872959f6a33f8dfe91f058c341784097944532b56f6"
-    },
-    {
-      "surface": "positions",
-      "subject": "az-sos-2026:governor:lytle-hugh",
-      "topic": "meet",
-      "expectedRecordIds": [
-        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2"
-      ],
-      "returnedRecordIds": [
-        "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-        "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2"
-      ],
-      "statedCount": 2,
-      "returnedCount": 2,
-      "payload": {
-        "kind": "MATCHED",
-        "topic": "meet",
-        "passages": [
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~a3adcbfee3a388a2c28eca7efb6fe3b68655170b3889880a1eb68a331fa3ba97",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Meet Hugh Lytle Over Arizonans Are Watching Us Hugh in the News Follow Us --> HUGH AI 24/7 Direct Access to Hugh Lytle Imagine being able to sit down with Hugh Lytle whenever you want.",
-            "matchedTerms": [
-              "meet"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Meet HUGH LYTLE A problem solver, a family man, and a believer in Arizona’s future Driven by a deep love for his family and a lifelong mission to heal broken systems, Hugh is stepping up to challenge the political status quo and build an Arizona where the next generation can thrive.",
-            "matchedTerms": [
-              "meet"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "az-sos-2026:governor:lytle-hugh"
-          }
-        ],
-        "canonicalSubjectKeys": [
-          "az-sos-2026:governor:lytle-hugh"
-        ],
-        "searched": {
-          "pages": 6,
-          "snapshots": 7,
-          "unreadable": 0,
-          "presentButUnquotable": 0
-        },
-        "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
-        "holdingStatus": "HELD",
-        "unavailableAuthorities": [],
-        "totalMatches": 2
-      },
-      "payloadSha256": "35b3e8e4fca69083ceb28150de6c0ee48a01a7c19cc0e9e3e53d8b01a72efa86"
+      "payloadSha256": "fe99b28e22aefdcfd01445ecc290aaaeac58d2d5dfaa8fafe7fbb8bd2a4a1656"
     },
     {
       "surface": "positions",
@@ -1138490,9 +1138490,9 @@
         "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d"
       ],
       "returnedRecordIds": [
+        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
         "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-        "ballot-az-pima:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~be6497f6e907c2f84ac5e98e29f4fedae0a477f6a734f24022178086bcb4749c",
-        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab"
+        "ballot-az-pima:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~be6497f6e907c2f84ac5e98e29f4fedae0a477f6a734f24022178086bcb4749c"
       ],
       "statedCount": 30,
       "returnedCount": 30,
@@ -1138500,6 +1138500,240 @@
         "kind": "MATCHED",
         "topic": "arizona",
         "passages": [
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Meet HUGH LYTLE A problem solver, a family man, and a believer in Arizona’s future Driven by a deep love for his family and a lifelong mission to heal broken systems, Hugh is stepping up to challenge the political status quo and build an Arizona where the next generation can thrive.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Together, they built their lives in Arizona, putting down deep roots and raising their three adult children: Emily, Hannah, and Harris.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh’s love for Arizona is rooted in its people.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "To do that, he is bringing his practical problem-solving mindset to government to focus on the challenges facing Arizona today.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "CREATE AN INCLUSIVE KNOWLEDGE ECONOMY Lowering the day-to-day cost of living and actively pitching Arizona to global employers so young people can afford homes and start businesses here.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh is committed to independent, long-term planning for our water future, free from partisan gridlock, ensuring Arizona remains a vibrant place to live and raise a family for generations to come.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "We Are ARIZONA Doing What is Right for Our State Hugh Lytle loves Arizona too much to watch its potential be limited by a broken, polarized system.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "That is why this campaign is built entirely around a single, powerful theme: We Are Arizona.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "This isn’t a political party; it is a movement bringing Arizonans together from every background, independent-minded voters, the vital Hispanic electorate, and the next generation, to do what is right for Arizona and its people.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Learn where he stands on the issues shaping Arizona’s future.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh AI is an innovative digital experience built from Hugh’s real priorities, experience, and vision for Arizona designed to make leadership more accessible, transparent, and responsive than ever before.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Together we can build Arizona needs you.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Contact Information If you have questions about this Privacy Policy or the Campaign’s data practices, you may contact us at: Email: campaign@hughlytle.com Website: https://hughlytle.com Thank You, Arizona.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "When we launched this campaign, we set out to prove that Arizona is bigger than partisan gridlock and that a pragmatic, problem-solving approach could unite our state.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Over $100 thousand raised, thousands of conversations, and an incredible movement built across every corner of Arizona showed us that people are ready for common-sense leadership.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Because through it all, We Are Arizona.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "Hugh believes Arizona should embrace innovation while ensuring it is used responsibly, ethically, and transparently.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
+          {
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
+            "kind": "CAMPAIGN_SITE",
+            "title": null,
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
+            "quote": "That’s the Arizona way.",
+            "matchedTerms": [
+              "arizona"
+            ],
+            "changedSince": null,
+            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
+          },
           {
             "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
             "url": "https://hughlytle.com/#",
@@ -1138618,123 +1138852,6 @@
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
           },
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Learn where he stands on the issues shaping Arizona’s future.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Hugh AI is an innovative digital experience built from Hugh’s real priorities, experience, and vision for Arizona designed to make leadership more accessible, transparent, and responsive than ever before.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Together we can build Arizona needs you.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Contact Information If you have questions about this Privacy Policy or the Campaign’s data practices, you may contact us at: Email: campaign@hughlytle.com Website: https://hughlytle.com Thank You, Arizona.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "When we launched this campaign, we set out to prove that Arizona is bigger than partisan gridlock and that a pragmatic, problem-solving approach could unite our state.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Over $100 thousand raised, thousands of conversations, and an incredible movement built across every corner of Arizona showed us that people are ready for common-sense leadership.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Because through it all, We Are Arizona.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Hugh believes Arizona should embrace innovation while ensuring it is used responsibly, ethically, and transparently.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "That’s the Arizona way.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
             "snapshotId": "ballot-az-pima:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~be6497f6e907c2f84ac5e98e29f4fedae0a477f6a734f24022178086bcb4749c",
             "url": "https://hughlytle.com/press-releases/",
             "kind": "CAMPAIGN_SITE",
@@ -1138772,120 +1138889,63 @@
             ],
             "changedSince": null,
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
+          }
+        ],
+        "canonicalSubjectKeys": [
+          "ballot-az-pima:governor:lytle-hugh"
+        ],
+        "searched": {
+          "pages": 6,
+          "snapshots": 8,
+          "unreadable": 0,
+          "presentButUnquotable": 10
+        },
+        "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
+        "totalMatches": 30
+      },
+      "payloadSha256": "9ef51e3f027ed263e3d4a7ae7d842923f60381046cd61a96007d3a2671ed6ce2"
+    },
+    {
+      "surface": "positions",
+      "subject": "ballot-az-pima:governor:lytle-hugh",
+      "topic": "meet",
+      "expectedRecordIds": [
+        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b"
+      ],
+      "returnedRecordIds": [
+        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+        "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d"
+      ],
+      "statedCount": 2,
+      "returnedCount": 2,
+      "payload": {
+        "kind": "MATCHED",
+        "topic": "meet",
+        "passages": [
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Meet HUGH LYTLE A problem solver, a family man, and a believer in Arizona’s future Driven by a deep love for his family and a lifelong mission to heal broken systems, Hugh is stepping up to challenge the political status quo and build an Arizona where the next generation can thrive.",
             "matchedTerms": [
-              "arizona"
+              "meet"
             ],
             "changedSince": null,
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
           },
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
+            "url": "https://hughlytle.com/#",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Together, they built their lives in Arizona, putting down deep roots and raising their three adult children: Emily, Hannah, and Harris.",
+            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "quote": "Meet Hugh Lytle Over Arizonans Are Watching Us Hugh in the News Follow Us --> HUGH AI 24/7 Direct Access to Hugh Lytle Imagine being able to sit down with Hugh Lytle whenever you want.",
             "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Hugh’s love for Arizona is rooted in its people.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "To do that, he is bringing his practical problem-solving mindset to government to focus on the challenges facing Arizona today.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "CREATE AN INCLUSIVE KNOWLEDGE ECONOMY Lowering the day-to-day cost of living and actively pitching Arizona to global employers so young people can afford homes and start businesses here.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Hugh is committed to independent, long-term planning for our water future, free from partisan gridlock, ensuring Arizona remains a vibrant place to live and raise a family for generations to come.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "We Are ARIZONA Doing What is Right for Our State Hugh Lytle loves Arizona too much to watch its potential be limited by a broken, polarized system.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "That is why this campaign is built entirely around a single, powerful theme: We Are Arizona.",
-            "matchedTerms": [
-              "arizona"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "This isn’t a political party; it is a movement bringing Arizonans together from every background, independent-minded voters, the vital Hispanic electorate, and the next generation, to do what is right for Arizona and its people.",
-            "matchedTerms": [
-              "arizona"
+              "meet"
             ],
             "changedSince": null,
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
@@ -1138896,16 +1138956,16 @@
         ],
         "searched": {
           "pages": 6,
-          "snapshots": 7,
+          "snapshots": 8,
           "unreadable": 0,
-          "presentButUnquotable": 9
+          "presentButUnquotable": 0
         },
         "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
         "holdingStatus": "HELD",
         "unavailableAuthorities": [],
-        "totalMatches": 30
+        "totalMatches": 2
       },
-      "payloadSha256": "b29e8d2ae8408b9959a869d452bf83a94cd51108d0f3a79eb0ebad80bc99d195"
+      "payloadSha256": "c0ffae8cd796fd009e544c5339ca8ded54a80edd1f273d9332b0de88f17032c8"
     },
     {
       "surface": "positions",
@@ -1138915,7 +1138975,7 @@
         "ballot-az-pima:governor:lytle-hugh@8f47aa583dfbf466a2f2626c7a135e74b1524b3389bd0de46ab189dad860a070~1814294dde4c831d593b7f8e991fc149b69c70f6db170dc7c7aaa6aa9a97979b"
       ],
       "returnedRecordIds": [
-        "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
+        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
         "ballot-az-pima:governor:lytle-hugh@8f47aa583dfbf466a2f2626c7a135e74b1524b3389bd0de46ab189dad860a070~1814294dde4c831d593b7f8e991fc149b69c70f6db170dc7c7aaa6aa9a97979b"
       ],
       "statedCount": 5,
@@ -1138925,11 +1138985,11 @@
         "topic": "privacy",
         "passages": [
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "By using this website or providing information to the Campaign, you agree to the practices described in this Privacy Policy.",
             "matchedTerms": [
               "privacy"
@@ -1138938,11 +1138998,11 @@
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
           },
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Their use of information is governed by their own privacy policies.",
             "matchedTerms": [
               "privacy"
@@ -1138951,11 +1139011,11 @@
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
           },
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Updates to This Policy We may update this Privacy Policy from time to time.",
             "matchedTerms": [
               "privacy"
@@ -1138964,11 +1139024,11 @@
             "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
           },
           {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
+            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~811ce65313217fa114d1cfc091096e735ef9fae3db46aec6cc820eae9b737b4b",
+            "url": "https://hughlytle.com/meet-hugh-lytle/",
             "kind": "CAMPAIGN_SITE",
             "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
+            "retrievedAt": "2026-09-29T03:37:04.929Z",
             "quote": "Contact Information If you have questions about this Privacy Policy or the Campaign’s data practices, you may contact us at: Email: campaign@hughlytle.com Website: https://hughlytle.com Thank You, Arizona.",
             "matchedTerms": [
               "privacy"
@@ -1138995,76 +1139055,16 @@
         ],
         "searched": {
           "pages": 6,
-          "snapshots": 7,
+          "snapshots": 8,
           "unreadable": 0,
-          "presentButUnquotable": 7
+          "presentButUnquotable": 8
         },
         "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
         "holdingStatus": "HELD",
         "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "fed54d70231d6fc324862446dbe53d9a9431085410c518bbc2d048ffc403699f"
-    },
-    {
-      "surface": "positions",
-      "subject": "ballot-az-pima:governor:lytle-hugh",
-      "topic": "meet",
-      "expectedRecordIds": [
-        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab"
-      ],
-      "returnedRecordIds": [
-        "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-        "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab"
-      ],
-      "statedCount": 2,
-      "returnedCount": 2,
-      "payload": {
-        "kind": "MATCHED",
-        "topic": "meet",
-        "passages": [
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~6b14c6b4bc8586ab4c70b37b936a9e425ac360495a2fecb1080bdfbed5a4835d",
-            "url": "https://hughlytle.com/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-29T03:07:10.893Z",
-            "quote": "Meet Hugh Lytle Over Arizonans Are Watching Us Hugh in the News Follow Us --> HUGH AI 24/7 Direct Access to Hugh Lytle Imagine being able to sit down with Hugh Lytle whenever you want.",
-            "matchedTerms": [
-              "meet"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          },
-          {
-            "snapshotId": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
-            "url": "https://hughlytle.com/meet-hugh-lytle/#",
-            "kind": "CAMPAIGN_SITE",
-            "title": null,
-            "retrievedAt": "2026-09-28T19:58:08.574Z",
-            "quote": "Meet HUGH LYTLE A problem solver, a family man, and a believer in Arizona’s future Driven by a deep love for his family and a lifelong mission to heal broken systems, Hugh is stepping up to challenge the political status quo and build an Arizona where the next generation can thrive.",
-            "matchedTerms": [
-              "meet"
-            ],
-            "changedSince": null,
-            "canonicalSubjectId": "ballot-az-pima:governor:lytle-hugh"
-          }
-        ],
-        "canonicalSubjectKeys": [
-          "ballot-az-pima:governor:lytle-hugh"
-        ],
-        "searched": {
-          "pages": 6,
-          "snapshots": 7,
-          "unreadable": 0,
-          "presentButUnquotable": 0
-        },
-        "theirPage": "https://hughlytle.com/meet-hugh-lytle/",
-        "holdingStatus": "HELD",
-        "unavailableAuthorities": [],
-        "totalMatches": 2
-      },
-      "payloadSha256": "c4643978f3e42e4bcf4dd858b3b77761ea53e74f552b8a75e944c5a58c6ab3c3"
+      "payloadSha256": "c74813207a121039d371003adb71e046ffd2489049763c59b9a2c883b3242274"
     },
     {
       "surface": "positions",
@@ -1140244,6 +1140244,11 @@
           "reason": "No distinct quotable passage survives the canonical exact-text deduplication and complete-passage contract; another snapshot may carry identical source text. No failed loader or invented position is claimed."
         },
         {
+          "id": "az-sos-2026:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~37502ab78b6abb1808c816a3d8028b54eb88b6d771c16a8740d8d32043cbe4e2",
+          "state": "INTENTIONALLY_NOT_APPLICABLE",
+          "reason": "No distinct quotable passage survives the canonical exact-text deduplication and complete-passage contract; another snapshot may carry identical source text. No failed loader or invented position is claimed."
+        },
+        {
           "id": "az-sos-2026:governor:lytle-hugh@96c7bb32aa849053f08a7dfa95fe22e1258992e75c0b1606e57737869642f14f~50ab3ec64797681311d2917881c9996dd65a5bc47728cc6bb8b5204faf1bcfb7",
           "state": "INTENTIONALLY_NOT_APPLICABLE",
           "reason": "No distinct quotable passage survives the canonical exact-text deduplication and complete-passage contract; another snapshot may carry identical source text. No failed loader or invented position is claimed."
@@ -1140255,6 +1140260,11 @@
         },
         {
           "id": "ballot-az-pima:governor:lytle-hugh@d13b4153df51cddca9e6b6a234161914365aab940655ccf11db1fb1f652b5d52~9b541dad8c11b47dcdd56a743a99868e0a6e2620da5aa865392ec87af0d853eb",
+          "state": "INTENTIONALLY_NOT_APPLICABLE",
+          "reason": "No distinct quotable passage survives the canonical exact-text deduplication and complete-passage contract; another snapshot may carry identical source text. No failed loader or invented position is claimed."
+        },
+        {
+          "id": "ballot-az-pima:governor:lytle-hugh@069a81d9a8a39eec9a0a14496180e08f0d4c3726ebd66b5bc159969987c0c4c4~9a59e5ce209172208e70cf9887d2f4019a62cf589513a77d83ff095ec6d297ab",
           "state": "INTENTIONALLY_NOT_APPLICABLE",
           "reason": "No distinct quotable passage survives the canonical exact-text deduplication and complete-passage contract; another snapshot may carry identical source text. No failed loader or invented position is claimed."
         },

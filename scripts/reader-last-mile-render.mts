@@ -452,10 +452,16 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     const lastMemberScreenshot = await capture(page, `${label}-incomplete-roster-last-member`, rows.last());
     const renderedCount = await rows.count();
     await page.keyboard.press("Escape");
-    const canvas = page.locator(".maplibregl-canvas");
-    const bounds = await canvas.boundingBox();
-    assert.ok(bounds);
-    await canvas.click({ position: { x: bounds.width / 2, y: bounds.height / 2 } });
+    // The canvas midpoint is not the resolved ZIP point when the reader's
+    // sidebar shifts the camera: on 07444 it lands in Kinnelon. The visible
+    // ZIP-centre marker identifies the point whose coverage supplied this
+    // Pequannock body, and has pointer-events:none so the click reaches the
+    // real map district hit-test beneath it.
+    const marker = page.getByRole("img", { name: "Center of zip code 07444", exact: true });
+    await marker.waitFor({ state: "visible" });
+    const point = await marker.boundingBox();
+    assert.ok(point);
+    await page.mouse.click(point.x + point.width / 2, point.y + point.height / 2);
     const picker = page.getByRole("dialog", { name: "Choose a district", exact: true });
     await picker.waitFor({ state: "visible" });
     await picker.locator(".district-picker-row").filter({ has: page.getByText(body.divisionLabel, { exact: true }) }).click();
@@ -845,6 +851,23 @@ async function openVotingPanel(page: Page) {
   return { panel, gestures };
 }
 
+async function closeVotingPanel(page: Page, panel: Locator) {
+  // The map embeds the form in ReaderPopup, whose header owns Close. The
+  // direct ballot page renders the same form standalone with its own Close.
+  const directClose = panel.getByRole("button", { name: "Close", exact: true });
+  if (await directClose.count()) {
+    assert.equal(await directClose.count(), 1, "Standalone voting form has one Close control");
+    await directClose.click();
+  } else {
+    assert.equal(await panel.getAttribute("role"), null, "Embedded voting form delegates Close to its popup");
+    const popup = page.getByRole("dialog", { name: "Where can I vote?", exact: true });
+    assert.equal(await popup.locator(".voting-panel").count(), 1, "Voting popup contains the answered form");
+    await popup.getByRole("button", { name: "Close", exact: true }).click();
+    await popup.waitFor({ state: "hidden" });
+  }
+  await panel.waitFor({ state: "hidden" });
+}
+
 async function votingWitness(page: Page, label: string) {
   const { panel, gestures } = await openVotingPanel(page);
   await panel.getByLabel("Your street address").fill("240 N Stone Avenue, Tucson, AZ 85701");
@@ -867,7 +890,7 @@ async function votingWitness(page: Page, label: string) {
   for (const jurisdiction of answer.jurisdictions) assert.ok(await panel.locator(`a[href="${jurisdiction.sourceUrl}"]`).count());
   await capture(page, `${label}-voting-sites`, panel.locator(".voting-site").first());
   await capture(page, `${label}-voting-sites-source`, panel.locator(".voting-source").last());
-  await panel.getByRole("button", { name: "Close", exact: true }).click();
+  await closeVotingPanel(page, panel);
   return { ...answer, openerGestures: gestures, renderedJurisdictions: answer.jurisdictions.length, renderedSites: sites.length, layoutFailure };
 }
 
@@ -906,7 +929,7 @@ async function votingFallbackWitness(page: Page, label: string, kind: "outside-c
     assert.equal(await panel.locator(".voting-site").count(), answer.jurisdictions.reduce((sum, jurisdiction) => sum + jurisdiction.sites.length, 0));
     assert.equal(await panel.locator("[data-polling-lookup-fallback]").count(), 0);
     await capture(page, `${label}-voting-${kind}-answered`, panel.locator(".voting-jurisdiction").first());
-    await panel.getByRole("button", { name: "Close", exact: true }).click();
+    await closeVotingPanel(page, panel);
     return { requestedKind: kind, kind: "resolved-held-location", openerGestures: gestures, address, addressSource, attempts, answer, links: expected, renderedLinks: 0 };
   }
   const fallback = panel.locator("[data-polling-lookup-fallback]");
@@ -922,7 +945,7 @@ async function votingFallbackWitness(page: Page, label: string, kind: "outside-c
   assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= page.viewportSize()!.width, "Voting fallback fits the reader viewport");
   await capture(page, `${label}-voting-${kind}`, fallback);
   await capture(page, `${label}-voting-${kind}-last`, fallback.locator("[data-polling-lookup-state]").last());
-  await panel.getByRole("button", { name: "Close", exact: true }).click();
+  await closeVotingPanel(page, panel);
   return { requestedKind: kind, kind: answer.match ? kind : "address-unresolved", openerGestures: gestures, address, addressSource, attempts, answer, links: expected, renderedLinks: expected.length };
 }
 

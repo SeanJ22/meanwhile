@@ -665,7 +665,7 @@ function ContributorRow({
         </details>
       )}
 
-      {hop && <SecondHopPanel hop={hop} />}
+      {hop && <SecondHopPanel hop={hop} toCampaign={{ amount: group.amount, count: group.count, noun: group.countNoun }} />}
     </li>
   );
 }
@@ -681,7 +681,14 @@ function ContributorRow({
  * candidate's donors — the heading names the fund, and the note says what a
  * joint fundraiser actually does with the money.
  */
-function SecondHopPanel({ hop }: { hop: SecondHopCommittee }) {
+function SecondHopPanel({
+  hop,
+  toCampaign,
+}: {
+  hop: SecondHopCommittee;
+  /** What this committee gave THIS campaign, from the row above it. */
+  toCampaign?: { amount: number; count: number; noun: string };
+}) {
   const isJointFundraiser = hop.designation === "J";
   // The same fold as the outer list, for the same reason: ActBlue's books
   // carry one donor twice at $500,000 and WinRed's carry one three times.
@@ -702,6 +709,32 @@ function SecondHopPanel({ hop }: { hop: SecondHopCommittee }) {
         </span>
       </summary>
       <div className="mt-1.5 rounded-md border border-[var(--panel-border)] p-2">
+        {/*
+          Approved reader design: two sets of books, side by side and never
+          added together — what this committee gave the campaign (from the
+          campaign's filing) and what the committee itself reported raising
+          (from the committee's own filing).
+        */}
+        <div className="mw-books" data-books>
+          {toCampaign && (
+            <div className="mw-books-panel">
+              <span className="mw-books-label">The campaign&apos;s books</span>
+              <span className="mw-books-value">${Math.round(toCampaign.amount).toLocaleString("en-US")}</span>
+              <span className="mw-books-note">
+                from {hop.name}, {toCampaign.count} {toCampaign.count === 1 ? toCampaign.noun.replace(/s$/, "") : toCampaign.noun}
+              </span>
+            </div>
+          )}
+          {hop.receipts !== null && (
+            <div className="mw-books-panel">
+              <span className="mw-books-label">This committee&apos;s books</span>
+              <span className="mw-books-value">${Math.round(hop.receipts).toLocaleString("en-US")}</span>
+              <span className="mw-books-note">
+                raised by {hop.name} itself — separate money, not added to the campaign&apos;s totals
+              </span>
+            </div>
+          )}
+        </div>
         <p className="text-[0.6875rem] font-semibold text-paper">
           Who gives to {hop.name}
         </p>

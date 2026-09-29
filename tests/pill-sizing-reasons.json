@@ -72,6 +72,11 @@
       "selector": ".mw-selection-pill",
       "props": ["padding", "font-size"],
       "reason": "The map's selection pill (approved reader design, 2026-09-28) is a container holding a sentence and three action buttons, not a tag. Its inset and 14px type are the design's, so the sentence reads at body size above the map."
+    },
+    {
+      "selector": ".mw-back-pill",
+      "props": ["padding", "font-size"],
+      "reason": "The Back to the map ACTION on the secondary pages (approved reader design, 2026-09-28): a 44px touch target with the design control type, because it is the way out of the page; the reference is a 22px non-tappable tag."
     }
   ]
 }

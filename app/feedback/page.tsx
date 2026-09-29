@@ -29,7 +29,7 @@ export const metadata = {
 
 export default function FeedbackPage() {
   return (
-    <main className="min-h-dvh overflow-y-auto bg-[var(--bg)]">
+    <main className="mw-page min-h-dvh overflow-y-auto bg-[var(--bg)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
         {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
           display text in a 10px uppercase MONO treatment — the register this
@@ -107,7 +107,7 @@ export default function FeedbackPage() {
         <p className="mt-10 text-[0.8125rem]">
           <Link
             href="/"
-            className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+            className="mw-back-pill"
           >
             ← Back to the map
           </Link>

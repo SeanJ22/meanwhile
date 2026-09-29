@@ -1518,3 +1518,70 @@ details.mw-sources > summary {
 .mw-reader .mw-nav-wrap {
   margin: 0;
 }
+.mw-header-logo {
+  padding-inline-end: var(--space-3);
+}
+
+/* Secondary pages (About this area, Compare states, Feedback, What this site
+   collects) in the design language: the ground, a raised Back pill, and the
+   page headline at the design's 26px. */
+.mw-page {
+  background: var(--ground);
+  color: var(--text);
+}
+.mw-page h1 {
+  font-size: var(--text-mw-24);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.mw-back-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--mw-44);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  background-color: var(--ctl);
+  background-image: var(--ctl-img);
+  box-shadow: var(--ctl-shadow);
+  color: var(--text);
+  font-size: var(--text-mw-14);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Committee details: the two sets of books, never added together. */
+.mw-books {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.mw-books-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mw-2);
+  padding: var(--mw-10) var(--space-3);
+  border-radius: var(--radius-tile);
+  box-shadow: var(--well);
+}
+.mw-books-label {
+  font-size: var(--text-mw-11);
+  font-weight: 650;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.mw-books-value {
+  font-family: var(--font-app-mono, var(--font-mono));
+  font-size: var(--text-mw-16);
+}
+.mw-books-note {
+  font-size: var(--text-mw-12);
+  color: var(--text-dim);
+}
+.mw-reader [data-second-hop] > summary,
+.mw-route-body [data-second-hop] > summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--mw-44);
+  cursor: pointer;
+}

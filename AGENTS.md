@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # MEANWHILE — INSTRUCTIONS FOR CODEX AND EVERY CODING AGENT
 
-<!-- BEGIN:claude-md-mirror source=CLAUDE.md sha256=8160e86e0ae84239fa81a49e0a72b536340dd2172faa9efed1f1909b95dab567 bytes=3916 -->
+<!-- BEGIN:claude-md-mirror source=CLAUDE.md sha256=6108f4b911ece3409bd0e6f549f0f6c2cc4f76f6e23be3d4a908460d82a9a65e bytes=4969 -->
 **Codex and every other coding agent: Sean's standing decisions are `docs/rulings.md`,
 the single source for owner policy. Read it first. It binds you exactly as it binds Claude.**
 
@@ -25,19 +25,23 @@ by hand — change `CLAUDE.md` and regenerate.
 
 # Meanwhile — working guide for Claude
 
-Adopted September 25, 2026. This guide applies Sean's standing decisions in `docs/rulings.md`; it does not create a second policy source.
+Adopted September 25, 2026; updated September 29, 2026. This guide applies Sean's standing decisions in `docs/rulings.md`; it does not create a second policy source.
 
-## Start with the right instructions
+## Start with the goal
 
-Read Sean's current request and `docs/rulings.md` in the intended working copy. Identify the repository, branch, and revision. Read current project state and the technical documents needed for this task; do not reread all history without a specific reason.
+Read rulings §0 first. It says what Meanwhile is: from any US ZIP code, a resident sees who governs them, who those people are, how to hold them accountable, how they are funded, what boards and meetings are happening on a rolling 90-day calendar, what those bodies decide, and how to take part. Every task works backward from that picture, and every plan, change and report is judged by the §0 tests. Work that moves none of them waits.
+
+Then read Sean's current request and the rest of `docs/rulings.md` in the intended working copy. Identify the repository, branch, and revision. Read the current state summary and the technical documents needed for this task; do not reread all history without a specific reason.
 
 Apply the decision and approval rules in rulings §8–9. Check previous answers before asking again. Use actual scripts, configuration, and code for implementation facts. Another worktree's old instructions or a historical ACTIVE label does not establish current policy.
 
 ## Define and keep the objective
 
-Apply rulings §1. State the requested result and work backward through every required connection. Identify missing dependencies before building. Keep the original objective until completion, a fatal error derails it, or Sean changes it; ordinary obstacles require further work.
+Apply rulings §1. State the requested result in reader terms: what a resident will see that they could not see before. Work backward through every required connection. Identify missing dependencies before building. Keep the original objective until completion, a fatal error derails it, or Sean changes it; ordinary obstacles require further work.
 
-For expansion, trace the new place through work creation, discovery, acquisition, verification, status tracking, and public delivery. A completed screen or successful handoff is not proof that the connected workflow works.
+For expansion, trace the new place through work creation, discovery, acquisition, verification, status tracking, public delivery, and what Admin shows about it. A completed screen or successful handoff is not proof that the connected workflow works.
+
+Do not add a gate, proof step, certification, ledger, or scoring system without Sean's approval (§0). When unsure whether something is needed, ask which §0 test it moves.
 
 ## Execute without avoidable waiting
 
@@ -45,23 +49,23 @@ Apply rulings §5. Keep a brief plan with remaining tasks, one owner per task or
 
 Reuse valid evidence, remove duplicate work, and verify the version that ships. Use direct tests and equivalent measurements to remove idle waits. Keep working through build, testing, repair, promotion, and reader verification. Do not stop at a progress report or use optional polishing to delay delivery.
 
-If an actual owner action is needed, follow rulings §8: prepare the executable step, ask for only that dependency, and continue independent work. Preserve current spending controls and explicit pauses.
+If an actual owner action is needed, follow rulings §8: prepare the executable step, ask for only that dependency, and continue independent work. Preserve spending controls and pauses Sean sets in Admin.
 
 ## Acquire, publish, and learn
 
-Apply rulings §2–4 and §7. Check prior successful routes, held evidence, learned methods, and available resources. Search broadly beyond connected feeds and compare findings with the reader. Follow evidence through retrieval, parsing, verification, and publication.
+Apply rulings §2–4 and §7. Start every hunt from the place (§0): list what a reader there is owed, fill it from national sources and from everything already held for that place by any job, then send agents only for the blanks. Give every acquiring agent the APIs, feeds and tools Sean has provided. Search broadly beyond connected feeds and compare findings with the reader.
 
-Use the exact meeting coverage and refresh requirements in §4; do not copy separate thresholds into this guide. Preserve independent verified information while pursuing missing details. Register both successful sources and transferable methods, learn from failures, and apply those lessons to later work.
+Publish each fact as soon as it meets the §3 standard, and let later facts attach as they are verified. Keep every blank open as standing work. Use the exact meeting coverage and refresh requirements in §4; do not copy separate thresholds into this guide. Register both successful sources and transferable methods, learn from failures, and apply those lessons to later work.
 
 ## Verify before declaring completion
 
-Apply rulings §6. Test the full result, including actual connections, first-use performance, and the original failing conditions. Inspect visible changes. Investigate contradictions and second-attempt successes; fix causes rather than merely explaining them.
+Apply rulings §6. Verification means the §3 standard and the §0 tests. Test the full result, including actual connections, first-use performance, and the original failing conditions. Inspect visible changes on the live page. Investigate contradictions, and second-attempt successes in our own code; fix causes rather than merely explaining them.
 
-Keep required proof ahead of “all clear.” Identify which evidence proves each requirement and what later changes invalidate it. Later monitoring cannot replace unfinished verification. Preserve evidence and working data under §9; use the project's actual data-publishing and software-release processes.
+State which evidence shows the result works for readers. Do not report a skipped or failed check as passing. Retire proof steps that protect no reader outcome instead of repeating them. Preserve evidence and working data under §9; use the project's actual data-publishing and software-release processes.
 
 ## Finish and report
 
-Apply rulings §10. Give a verified win its own space and explain why it matters. Then briefly report what changed, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English and Arizona MST for schedules.
+Apply rulings §10. Give a verified win its own space and explain why it matters to a reader. Then briefly report what changed, which §0 test it moves, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English and Arizona MST for schedules.
 
 Update current state and shared learning with the result. Record engineering choices as engineering choices. Change standing rulings only for an actual owner decision, preserving its source and scope. Do not create another rule merely because an existing one applies to this incident.
 <!-- END:claude-md-mirror -->

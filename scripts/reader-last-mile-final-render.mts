@@ -164,6 +164,25 @@ async function openMeetingList(page: Page) {
   assert.equal(await page.locator(".al-row").count(), Number((await page.locator(".al-overlay-count").innerText()).split(" ")[0]), "Every stated listing must be accessible before selecting a witness");
 }
 
+/** The full snapshot disclosure lives in the sidebar's expandable About section. */
+async function visibleSnapshotDisclosure(page: Page, snapshot: SnapshotStatus) {
+  const card = page.getByRole("dialog");
+  await card.getByRole("button", { name: "Close", exact: true }).click();
+  await card.waitFor({ state: "hidden" });
+  const sidebar = page.locator('aside[aria-label="Meetings, filters and more"]');
+  if (!(await sidebar.isVisible())) {
+    await page.getByRole("button", { name: "Open sidebar", exact: true }).click();
+  }
+  const about = sidebar.getByRole("button", { name: /About this data/ });
+  await about.waitFor({ state: "visible" });
+  if ((await about.getAttribute("aria-expanded")) !== "true") await about.click();
+  const disclosed = sidebar.locator(".mw-disclosure-body");
+  await disclosed.waitFor({ state: "visible" });
+  const result = freshnessDisclosureProblems(await disclosed.innerText(), snapshot);
+  assert.deepEqual(result.problems, [], "the visible About disclosure does not say what the served snapshot requires");
+  return result;
+}
+
 async function inspectMeeting(page: Page, meetingId: string, proveParticipation = false, listOpen = false) {
   const meeting = snapshot.meetings.find((row) => row.id === meetingId); assert.ok(meeting);
   if (!listOpen) await openMeetingList(page);
@@ -365,8 +384,7 @@ try {
         const renderedListingRows = await page.locator(".al-row").count();
         assert.ok(renderedListingRows > 0 && renderedListingRows === stated, "Every stated meeting is an accessible row");
         assert.equal(await page.locator('.al-panel [data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]').count(), 0, "No unresolved-listing notice without an ambiguous group");
-        const disclosure = freshnessDisclosureProblems(await page.locator("body").innerText(), served.snapshot);
-        assert.deepEqual(disclosure.problems, [], "the footer does not disclose what the served snapshot requires");
+        const disclosure = await visibleSnapshotDisclosure(page, served.snapshot);
         results.push({ id: "newbury-listings-resolved", result: "PASS", groups, renderedListingRows, failedRefreshDisclosure: disclosure.required, screenshot });
       } else {
       assert.ok(
@@ -401,10 +419,8 @@ try {
         assert.equal(renderedIds.filter((id) => id === source.id).length, 1, `${source.id}: rendered listing row`);
         assert.equal(renderedSources.filter((row) => row.id === source.id && row.href === source.sourceUrl).length, 1, `${source.id}: rendered unresolved source link`);
       }
-      const pageText = await page.locator("body").innerText();
-      const disclosure = freshnessDisclosureProblems(pageText, served.snapshot);
-      assert.deepEqual(disclosure.problems, [], "the footer does not disclose what the served snapshot requires");
       const screenshot = await capture(notice, "03255-newbury-unresolved-listings");
+      const disclosure = await visibleSnapshotDisclosure(page, served.snapshot);
       results.push({ id: "newbury-unresolved-listings", result: "PASS", groups, renderedListingRows: await page.locator(".al-row").count(), failedRefreshDisclosure: disclosure.required, screenshot });
       }
     } finally { await context.close(); }

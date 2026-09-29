@@ -110,7 +110,7 @@ if (SUCCESSOR_PUBLIC) {
     assert.ok(route, "Hosted meetings route did not serve the exact promoted partition version and complete member IDs");
     const opener = successorPage.locator('[data-stat="meetings"]').first();
     if (!(await opener.isVisible())) {
-      const menu = successorPage.getByRole("button", { name: "Open menu", exact: true });
+      const menu = successorPage.getByRole("button", { name: "Open sidebar", exact: true });
       if (await menu.isVisible()) await menu.click();
     }
     await opener.click();
@@ -175,9 +175,12 @@ async function assertPublicStatementsProfile(section: Locator) {
   assert.ok(held && held.categories.length > 0, "The canonical Ciscomani PRL profile is held");
   const text = await section.innerText();
   const count = held.statementCount.toLocaleString("en-US");
-  assert.ok(text.includes(`${count} statements on file`), "The visible statement denominator matches the current canonical PRL profile");
+  assert.ok(text.includes(`${count} statements tracked.`), "The visible tracked-statement count matches the current canonical PRL profile");
+  const words = section.locator("details.mw-chart-words");
+  if (await words.count()) await words.locator("summary").click();
+  const visibleText = await section.innerText();
   for (const category of held.categories) {
-    assert.ok(text.includes(category.sentence), `The visible ${category.id} sentence matches the current canonical PRL profile`);
+    assert.ok(visibleText.includes(category.sentence), `The visible ${category.id} sentence matches the current canonical PRL profile`);
   }
   assert.equal(await section.locator(`a[href="${held.attribution.url}"]`).count(), 1);
   assert.equal(await section.locator(`a[href="${held.attribution.licenceUrl}"]`).count(), 1);
@@ -328,7 +331,7 @@ async function mapAt(page: Page, zip: string, theme: string) {
   const beforeTheme = (await page.locator("html").getAttribute("data-theme")) === "light" ? "light" : "dark";
   if (beforeTheme !== theme) {
     if (!(await switcher.isVisible().catch(() => false))) {
-      const menu = page.getByRole("button", { name: "Open menu", exact: true });
+      const menu = page.getByRole("button", { name: "Open sidebar", exact: true });
       if (await menu.isVisible()) await menu.click();
     }
     await switcher.waitFor({ state: "visible" });
@@ -355,12 +358,9 @@ async function openOfficial(page: Page, name: string) {
   const named = page.locator(".door-panel button").filter({ hasText: name }).first();
   await named.waitFor({ state: "visible", timeout: 20_000 });
   await named.click();
-  const modal = page.getByRole("dialog", { name, exact: true });
-  if (!(await modal.isVisible().catch(() => false))) {
-    const more = page.getByRole("button", { name: /More|View Battlecard/i }).first();
-    if (await more.isVisible().catch(() => false)) await more.click();
-  }
+  const modal = page.getByRole("dialog", { name: "Battlecard", exact: true });
   await modal.waitFor({ state: "visible", timeout: 20_000 });
+  await modal.getByRole("heading", { name, exact: true }).waitFor({ state: "visible" });
   return modal;
 }
 async function inspectMoney(modal: Locator, expectedKey: string, raised: string, spent: string) {
@@ -429,10 +429,11 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     assert.deepEqual(payload.rosterGaps, [gap]);
     assert.deepEqual(payload.holders.map((holder: { id: string }) => holder.id).sort(), holders.map(holder => holder.id).sort());
     const door = page.getByRole("button", { name: "Open the bodies here list", exact: true });
-    if (!(await door.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    if (!(await door.isVisible())) await page.getByRole("button", { name: "Open sidebar", exact: true }).click();
     await door.click();
     await page.locator(".door-panel").getByRole("button", { name: bodyLabel, exact: true }).click();
-    const modal = page.getByRole("dialog", { name: bodyLabel, exact: true });
+    const modal = page.getByRole("dialog", { name: "Body", exact: true });
+    await modal.getByText(bodyLabel, { exact: true }).first().waitFor({ state: "visible" });
     const representation = await openSection(modal, "Who sits on it");
     const renderedGap = representation.locator(`[data-roster-completeness-gap="${bodyId}"]`);
     await renderedGap.waitFor({ state: "visible" });
@@ -571,7 +572,7 @@ async function listingMultiplicityWitness(page: Page, label: string) {
   // below is data-derived from `groups`, so it exercises whatever is present.
   assert.ok(groups.every(g => g.uniqueMeetingCount === null && g.sourceIds.length >= 2 && g.sourceListingCount >= 2), "every unresolved Newbury group must disclose a null distinct count over multiple source listings");
   const stat = page.locator('[data-stat="meetings"]').first();
-  if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+  if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open sidebar", exact: true }).click();
   if (groups.length === 0) {
     // Newbury's identical twice-listed sittings merge at the source (7b3e5abb), so
     // a held projection can carry no ambiguous group. The proof is then the
@@ -596,7 +597,7 @@ async function listingMultiplicityWitness(page: Page, label: string) {
   const count = Number(await stat.locator(".num").innerText());
   await capture(page, `${label}-listing-count`, stat);
   const openList = async () => {
-    if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open sidebar", exact: true }).click();
     await stat.click();
     await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
     while (await page.locator(".al-more").count()) await page.locator(".al-more").click();
@@ -616,30 +617,24 @@ async function listingMultiplicityWitness(page: Page, label: string) {
     if (index > 0) await openList();
     const meetingId = group.sourceIds[0];
     const meeting = heldMeetings.find(row => row.id === meetingId)!;
-    await page.locator(`.al-row[data-meeting-id="${meetingId}"]`).click();
-    const venue = page.locator('aside[aria-label^="Calendar listings at"]:visible');
-    await venue.waitFor({ state: "visible" });
-    assert.ok((await venue.innerText()).includes(group.reason));
-    if (index === 0) await capture(page, `${label}-listing-venue`, venue.locator('[data-meeting-listing-identity]'));
-    await venue.locator(`article[data-meeting-id="${meetingId}"] h3 button`).click();
-    const expand = page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true });
-    await expand.waitFor({ state: "visible" });
-    const notice = page.locator('[data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]:visible').filter({ has: page.locator(`a[data-calendar-listing-source="${meetingId}"]`) }).last();
+    const [response] = await Promise.all([page.waitForResponse(response => new URL(response.url()).pathname === "/api/agenda" && new URL(response.url()).searchParams.get("meetingId") === meetingId), page.locator(`.al-row[data-meeting-id="${meetingId}"]`).click()]);
+    assert.equal(response.status(), 200);
+    const payload = await response.json();
+    assert.equal(payload.meetingId, meetingId);
+    assert.deepEqual(payload.listingIdentity.groups.find((candidate: { sourceIds: string[] }) => candidate.sourceIds.includes(meetingId)), group);
+    const card = page.getByRole("dialog", { name: "Meeting", exact: true });
+    await card.waitFor({ state: "visible" });
+    await card.locator(".account-modal-overlay").waitFor({ state: "visible" });
+    assert.ok((await card.innerText()).includes(meeting.title));
+    const notice = card.locator('[data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]').filter({ has: page.locator(`a[data-calendar-listing-source="${meetingId}"]`) }).last();
     assert.ok((await notice.innerText()).includes(group.reason));
     assert.equal(await notice.locator("a[data-calendar-listing-source]").count(), group.sourceListingCount);
     for (const source of group.sources) assert.equal(await notice.locator(`a[href="${source.sourceUrl}"]`).count(), 1);
-    await capture(page, `${label}-listing-popup-${index + 1}`, notice);
+    await capture(page, `${label}-listing-card-${index + 1}`, notice);
     if (index === 0) {
-      const [response] = await Promise.all([page.waitForResponse(response => new URL(response.url()).pathname === "/api/agenda" && new URL(response.url()).searchParams.get("meetingId") === meetingId), expand.click()]);
-      assert.equal(response.status(), 200);
-      const payload = await response.json();
-      assert.equal(payload.meetingId, meetingId);
-      assert.deepEqual(payload.listingIdentity.groups.find((candidate: { sourceIds: string[] }) => candidate.sourceIds.includes(meetingId)), group);
-      const modal = page.locator('.account-modal-overlay[role="dialog"]');
-      assert.ok((await modal.innerText()).includes(group.reason));
-      await capture(page, `${label}-listing-full-meeting`, modal.locator('[data-meeting-listing-identity]'));
-      await page.keyboard.press("Escape");
-    } else await page.keyboard.press("Escape");
+      await capture(page, `${label}-listing-full-meeting`, notice);
+    }
+    await page.keyboard.press("Escape");
     readbacks.push({ sourceIds: group.sourceIds, reason: group.reason, sourceListingCount: group.sourceListingCount, uniqueMeetingCount: group.uniqueMeetingCount });
   }
   return { renderedListingCount: count, groups: readbacks };
@@ -650,7 +645,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string, comp
   assert.ok(meeting, `${meetingId}: canonical sitting exists`);
   const listButton = page.locator('[data-stat="meetings"]').first();
   if (!(await listButton.isVisible())) {
-    const menu = page.getByRole("button", { name: "Open menu", exact: true });
+    const menu = page.getByRole("button", { name: "Open sidebar", exact: true });
     if (await menu.isVisible()) await menu.click();
   }
   await listButton.click();
@@ -675,58 +670,52 @@ async function meetingWitness(page: Page, meetingId: string, label: string, comp
   const title = [meetingRowTitle(meeting, { jurisdictionShown: groupedDiagnostic }), meetingSubline(meeting)].filter(Boolean).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s*");
   const row = groupedDiagnostic ? page.locator(".al-row").filter({ has: page.locator(".al-row-title").filter({ hasText: new RegExp(`^${title}$`) }) }).filter({ hasText: formatMeetingDate(meeting) }) : page.locator(`.al-row[data-meeting-id="${meetingId}"]`);
   assert.equal(await row.count(), 1, `${meetingId}: actual list has exactly one matching sitting: ${JSON.stringify(await row.allInnerTexts())}`);
-  // Route by the witness's own promoted row (owner decision 1, 2026-09-24, venue-fix
-  // owner). A sitting with a location keeps the map-popup path. A sitting with no
-  // location and a named venue gap has no pin, so a reader reaches it from its list
-  // row, which opens the full meeting card directly (map-entry onPickMeeting ->
-  // openLarge). That path is verified here: the row's stated-place mark, the card's
-  // Where line, and the same agenda payload and card assertions as the popup path.
+  // Every list row now opens its full meeting card. A located sitting also has
+  // a Where link to the venue; an unplaced row and card both state its gap.
   const venueGap = venueGapOf(meeting);
   const path = venueGap
     ? { kind: "LIST_ROW_TO_CARD", reason: "unplaced room pending venue review (owner decision 1)" }
-    : { kind: "MAP_POPUP", reason: meeting.location ? "the sitting has a location" : "no named venue gap" };
+    : { kind: "LIST_ROW_TO_CARD", reason: meeting.location ? "the sitting has a location" : "no named venue gap" };
   let placeless: { rowMark: string; cardWhere: string } | null = null;
-  let response: Awaited<ReturnType<Page["waitForResponse"]>>;
   if (venueGap) {
     const mark = row.locator("[data-meeting-where]");
     assert.equal(await mark.count(), 1, `${meetingId}: the placeless row states where it is held`);
     const rowMark = (await mark.innerText()).replace(/^\s*·\s*/, "").trim();
     assert.equal(rowMark, venueGapMark(venueGap), `${meetingId}: the row shows the stated place or the publisher's named gap`);
-    [response] = await Promise.all([page.waitForResponse(response => {
-      const url = new URL(response.url());
-      return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
-    }), row.click()]);
-    const card = page.locator('.account-modal-overlay[role="dialog"]');
-    await card.waitFor({ state: "visible" });
-    const cardWhere = venueGapLine(venueGap);
-    assert.ok((await card.innerText()).includes(cardWhere), `${meetingId}: the card's Where line states the place as the reader sees it`);
-    if (meetingId === "legistar:pima:1825") await capture(page, `${label}-meeting-card-unplaced`, card);
-    placeless = { rowMark, cardWhere };
-  } else {
-  await row.click();
-  if (meeting.location) {
-    // The list first opens the venue's real sitting list. The sitting's own
-    // article, its date, and its held agenda link when it has one (a calendar
-    // feed's sitting publishes none) distinguish regular/study sessions there.
-    const venueSittings = page.locator(`aside:is([aria-label^="Meetings at"],[aria-label^="Calendar listings at"]):visible article[data-meeting-id="${meetingId}"]`).filter({ hasText: formatMeetingDate(meeting) });
-    const entry = meeting.agendaUrl ? venueSittings.filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }) : venueSittings;
-    assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
-    if (componentWitness) await capture(page, `${label}-venue-meeting-panel`, entry);
-    await entry.locator("h3 button").click();
   }
-  if (componentWitness) await capture(page, `${label}-meeting-popup`, page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }));
-  if (groupedDiagnostic) await capture(page, `${label}-meeting-diagnostic-popup`);
-  [response] = await Promise.all([page.waitForResponse(response => {
+  const [response] = await Promise.all([page.waitForResponse(response => {
     const url = new URL(response.url());
     return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
-  }), page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }).click()]);
+  }), row.click()]);
+  const modal = page.getByRole("dialog", { name: "Meeting", exact: true });
+  await modal.waitFor({ state: "visible" });
+  await modal.locator(".account-modal-overlay").waitFor({ state: "visible" });
+  assert.ok((await modal.innerText()).includes(meeting.title), `${meetingId}: meeting card names its selected sitting`);
+  if (venueGap) {
+    const cardWhere = venueGapLine(venueGap);
+    assert.ok((await modal.innerText()).includes(cardWhere), `${meetingId}: the card's Where line states the place as the reader sees it`);
+    if (meetingId === "legistar:pima:1825") await capture(page, `${label}-meeting-card-unplaced`, modal);
+    placeless = { rowMark: venueGapMark(venueGap), cardWhere };
   }
+  if (meeting.location && componentWitness) {
+    await capture(page, `${label}-meeting-card`, modal);
+    await modal.getByRole("button", { name: /Where/ }).click();
+    const venue = page.getByRole("dialog", { name: "Venue", exact: true });
+    const venueSittings = venue.locator(`article[data-meeting-id="${meetingId}"]`).filter({ hasText: formatMeetingDate(meeting) });
+    const entry = meeting.agendaUrl ? venueSittings.filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }) : venueSittings;
+    await entry.waitFor({ state: "visible" });
+    assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
+    await capture(page, `${label}-venue-meeting-panel`, entry);
+    const back = venue.locator("button.mw-card-back");
+    assert.ok((await back.innerText()).includes(meeting.title), `${meetingId}: venue back control names the meeting`);
+    await back.click();
+    await modal.waitFor({ state: "visible" });
+  }
+  if (groupedDiagnostic) await capture(page, `${label}-meeting-diagnostic-card`, modal);
   assert.equal(response.status(), 200);
   const payload = await response.json() as { meetingId: string; documentCount: number; documents: { documentUrl: string; contentHash: string; text: string | null }[]; records: MeetingReaderRecords; publication: AgendaPublicationReading | null };
   assert.equal(payload.meetingId, meetingId);
   assert.equal(payload.documentCount, payload.documents.length);
-  const modal = page.locator('.account-modal-overlay[role="dialog"]');
-  await modal.waitFor({ state: "visible" });
   const records = modal.locator(`[data-meeting-records="${meetingId}"]`);
   if (payload.records.status === "HELD") {
     await records.waitFor({ state: "visible" });
@@ -829,7 +818,7 @@ async function activityWitnesses(page: Page, zip: string, label: string) {
 async function openVotingPanel(page: Page) {
   const opener = page.getByRole("button", { name: "Where can I vote?", exact: true });
   if (!(await opener.isVisible())) {
-    const menu = page.getByRole("button", { name: "Open menu", exact: true });
+    const menu = page.getByRole("button", { name: "Open sidebar", exact: true });
     if (await menu.isVisible()) await menu.click();
   }
   await opener.click();

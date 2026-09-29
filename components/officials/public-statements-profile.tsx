@@ -26,7 +26,7 @@ export type StatementsLoad =
   | { kind: "none" }
   | { kind: "failed" };
 
-export function initialStatementsLoad(subjectId: string): StatementsLoad {
+export function statementsLoadFor(subjectId: string): StatementsLoad {
   return PRL_SUBJECT.test(subjectId) ? { kind: "loading" } : { kind: "not-applicable" };
 }
 
@@ -40,7 +40,7 @@ export function settleStatementsAnswer(
 }
 
 function ProfileForIdentity({ subjectId }: { subjectId: string }) {
-  const [load, setLoad] = useState<StatementsLoad>(() => initialStatementsLoad(subjectId));
+  const [load, setLoad] = useState<StatementsLoad>(() => statementsLoadFor(subjectId));
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!PRL_SUBJECT.test(subjectId)) return;

@@ -2043,7 +2043,7 @@ function MapEntryInner() {
               })
             }
             onClose={closeCard}
-            canShowDistrict={(ocdId) => drawnDistricts.some((d) => d.ocdId === ocdId)}
+            showableDistrictIds={drawnDistricts.map((d) => d.ocdId)}
             onShowDistrict={showDistrictOnMap}
           />
         );

@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import {
   PublicStatementsProfileContent,
-  initialStatementsLoad,
+  statementsLoadFor,
   settleStatementsAnswer,
 } from "../components/officials/public-statements-profile.tsx";
 import { PRL_RHETORIC_ATTRIBUTION } from "../lib/sources/prl/types.ts";
@@ -46,10 +46,10 @@ function fixtureProfile(withShares: boolean): PrlReaderProfile {
 }
 
 test("a congressional card starts loading; any other identity has no section", () => {
-  assert.deepEqual(initialStatementsLoad(SUBJECT), { kind: "loading" });
-  assert.deepEqual(initialStatementsLoad("ocd-person/abc"), { kind: "not-applicable" });
+  assert.deepEqual(statementsLoadFor(SUBJECT), { kind: "loading" });
+  assert.deepEqual(statementsLoadFor("ocd-person/abc"), { kind: "not-applicable" });
   // The broken `d{6}` form the lead found must not come back: a real id matches.
-  assert.equal(initialStatementsLoad("congress:A000055").kind, "loading");
+  assert.equal(statementsLoadFor("congress:A000055").kind, "loading");
 });
 
 test("every successful answer settles — held, null and unexpected subject", () => {

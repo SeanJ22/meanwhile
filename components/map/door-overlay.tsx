@@ -49,7 +49,7 @@ export function DoorOverlay({
   onClose,
   embedded = false,
   onShowDistrict,
-  canShowDistrict,
+  showableDistrictIds = [],
 }: {
   door: "bodies" | "districts" | "officials";
   coverage: CoverageSummary | null;
@@ -97,7 +97,8 @@ export function DoorOverlay({
    * offered only for districts the map can actually fit.
    */
   onShowDistrict?: (ocdId: string) => void;
-  canShowDistrict?: (ocdId: string) => boolean;
+  /** The districts the map is drawing — only those can be fitted. */
+  showableDistrictIds?: readonly string[];
 }) {
   // "Districts in view", not "here": this list is what the map is drawing
   // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
@@ -159,7 +160,7 @@ export function DoorOverlay({
           // 3g: this door lists the districts the card counted — the same
           // list, not a different universe. It renders even with no
           // coverage; the drawn overlay is client-side and honest alone.
-          <ShowDistrictContext.Provider value={{ show: onShowDistrict, can: canShowDistrict }}>
+          <ShowDistrictContext.Provider value={{ onShow: onShowDistrict, showable: showableDistrictIds }}>
           <DistrictsDoor
             drawnDistricts={drawnDistricts}
             districtOverlayOn={districtOverlayOn}
@@ -479,9 +480,9 @@ function DoorSection({
 
 /** The design's "Show on the map" for a district row (see DoorOverlay). */
 const ShowDistrictContext = createContext<{
-  show?: (ocdId: string) => void;
-  can?: (ocdId: string) => boolean;
-}>({});
+  onShow?: (ocdId: string) => void;
+  showable: readonly string[];
+}>({ showable: [] });
 
 /** One row per district, shared by both modes so they cannot drift apart. */
 function DistrictRows({
@@ -511,11 +512,11 @@ function DistrictRows({
               {row.typeLabel}
             </span>
           </div>
-          {showDistrict.show && showDistrict.can?.(row.ocdId) && (
+          {showDistrict.onShow && showDistrict.showable.includes(row.ocdId) && (
             <button
               type="button"
               className="mw-link-btn mw-row-show"
-              onClick={() => showDistrict.show?.(row.ocdId)}
+              onClick={() => showDistrict.onShow?.(row.ocdId)}
             >
               Show the whole boundary on the map
             </button>

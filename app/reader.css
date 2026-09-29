@@ -1585,3 +1585,21 @@ details.mw-sources > summary {
   min-height: var(--mw-44);
   cursor: pointer;
 }
+.mw-chart-words > summary {
+  min-height: var(--mw-44);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--link);
+  font-size: var(--text-mw-13);
+}
+.mw-chart-words > p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-mw-13);
+  color: var(--text-dim);
+}
+.mw-feed-gap {
+  margin: 0;
+  font-size: var(--text-mw-13);
+  color: var(--text-dim);
+}

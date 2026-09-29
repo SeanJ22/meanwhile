@@ -87,6 +87,9 @@ test("held numeric shares draw five bars on one 0–100 scale, never counts", ()
     assert.ok(markup.includes(label), `${label} is labelled`);
   }
   assert.ok(markup.includes(">71%<"), "values are printed, not colour alone");
+  assert.match(markup, /published percentage for each category/, "PRL source units are named");
+  assert.match(markup, /does not state that it is the base/, "tracked count is not asserted as the percentage base");
+  assert.doesNotMatch(markup, /share of this member.s tracked statements/i, "no count-denominator claim");
   assert.doesNotMatch(markup, /5,6\d\d statements|× 7,918/, "no per-category count is derived from the tracked total");
   // The reader proof's contract: every held sentence reaches the markup.
   for (const sentence of fixtureProfile(true).categories.map((c) => c.sentence)) {

@@ -146,14 +146,16 @@ export function DoorOverlay({
           <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>
-          <button
-            type="button"
-            aria-label="Close"
-            onClick={onClose}
-            className="cursor-pointer rounded p-1 text-muted hover:text-paper"
-          >
-            <X className="size-4" />
-          </button>
+          {!embedded && (
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={onClose}
+              className="cursor-pointer rounded p-1 text-muted hover:text-paper"
+            >
+              <X className="size-4" />
+            </button>
+          )}
         </div>
 
         {door === "districts" ? (

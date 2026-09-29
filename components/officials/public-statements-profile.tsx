@@ -135,9 +135,10 @@ export function PublicStatementsProfileContent({ profile }: { profile: PrlReader
               per-category count (the tracked total is not their denominator).
             */}
             <p className="mw-chart-note">
-              The share of this member&apos;s tracked statements that PRL&apos;s
-              classifier placed in each category. Categories overlap, so they
-              don&apos;t add up to 100%.
+              PRL&apos;s published percentage for each category. Categories
+              overlap, so they don&apos;t add up to 100%. The tracked-statement
+              count below is separate; PRL does not state that it is the base
+              for these percentages.
             </p>
             <div className="mw-bars" role="group" aria-label="Public statements by category">
               {categories.map((category) => {

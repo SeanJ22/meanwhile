@@ -82,19 +82,17 @@ async function openOfficial(page: Page, name: string) {
   const doors = page.locator('button[aria-label*="officials list" i]').first();
   await doors.waitFor({ state: "attached", timeout: 30_000 });
   if (!(await doors.isVisible())) {
-    const menu = page.getByRole("button", { name: "Open menu", exact: true });
-    if (await menu.isVisible()) await menu.click();
+    const sidebar = page.getByRole("button", { name: "Open sidebar", exact: true });
+    if (await sidebar.isVisible()) await sidebar.click();
   }
+  await doors.waitFor({ state: "visible", timeout: 20_000 });
   if (!(await page.locator(".door-panel").isVisible().catch(() => false))) await doors.click();
   const named = page.locator(".door-panel button").filter({ hasText: name }).first();
   await named.waitFor({ state: "visible", timeout: 20_000 });
   await named.click();
-  const modal = page.getByRole("dialog", { name, exact: true });
-  if (!(await modal.isVisible().catch(() => false))) {
-    const more = page.getByRole("button", { name: /More|View Battlecard/i }).first();
-    if (await more.isVisible().catch(() => false)) await more.click();
-  }
+  const modal = page.getByRole("dialog", { name: "Battlecard", exact: true });
   await modal.waitFor({ state: "visible", timeout: 20_000 });
+  await modal.getByRole("heading", { name, exact: true }).waitFor({ state: "visible" });
   return modal;
 }
 
@@ -151,9 +149,10 @@ async function contextPage() {
 async function openMeetingList(page: Page) {
   const stat = page.locator('[data-stat="meetings"]').first();
   if (!(await stat.isVisible())) {
-    const menu = page.getByRole("button", { name: "Open menu", exact: true });
-    if (await menu.isVisible()) await menu.click();
+    const sidebar = page.getByRole("button", { name: "Open sidebar", exact: true });
+    if (await sidebar.isVisible()) await sidebar.click();
   }
+  await stat.waitFor({ state: "visible", timeout: 20_000 });
   await stat.click();
   await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
   await page.waitForFunction(() => document.querySelectorAll(".al-group-head").length === 0 && document.querySelectorAll(".al-row").length > 0);
@@ -174,28 +173,29 @@ async function inspectMeeting(page: Page, meetingId: string, proveParticipation 
     const url = new URL(response.url());
     return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
   });
-  // Online sittings open the large card directly from the list. Located
-  // sittings reach it through the venue panel and map popup.
-  let pending = meeting.location ? null : waitForAgenda();
-  await row.click();
-  if (meeting.location) {
-    const article = page.locator(`aside:visible article[data-meeting-id="${meetingId}"]`);
-    await article.waitFor({ state: "visible" });
-    assert.ok(normalize(await article.innerText()).includes(normalize(formatMeetingDate(meeting))));
-    await article.locator("h3 button").click();
-    const expand = page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true });
-    await expand.waitFor({ state: "visible" });
-    pending = waitForAgenda();
-    await expand.click();
-  }
-  assert.ok(pending);
-  const response = await pending;
+  // A list row opens the same full Meeting card for located and online
+  // sittings. The agenda response and selected identity belong to that click.
+  const [response] = await Promise.all([waitForAgenda(), row.click()]);
   assert.equal(response.status(), 200);
   const payload = await response.json();
   assert.equal(payload.meetingId, meetingId);
   assert.equal(payload.documentCount, payload.documents.length);
-  const modal = page.locator('.account-modal-overlay[role="dialog"]');
+  const modal = page.getByRole("dialog", { name: "Meeting", exact: true });
   await modal.waitFor({ state: "visible" });
+  await modal.locator(".account-modal-overlay").waitFor({ state: "visible" });
+  assert.ok((await modal.innerText()).includes(meeting.title), `${meetingId}: selected Meeting card title`);
+  if (meeting.location) {
+    await modal.getByRole("button", { name: /Where/ }).click();
+    const venue = page.getByRole("dialog", { name: "Venue", exact: true });
+    const article = venue.locator(`article[data-meeting-id="${meetingId}"]`);
+    await article.waitFor({ state: "visible" });
+    assert.ok(normalize(await article.innerText()).includes(normalize(formatMeetingDate(meeting))));
+    if (meeting.agendaUrl) assert.equal(await article.locator(`a[href="${meeting.agendaUrl}"]`).count(), 1);
+    const back = venue.locator("button.mw-card-back");
+    assert.ok((await back.innerText()).includes(meeting.title), `${meetingId}: venue back control names this meeting`);
+    await back.click();
+    await modal.locator(".account-modal-overlay").waitFor({ state: "visible" });
+  }
   const recordRoot = modal.locator(`[data-meeting-records="${meetingId}"]`);
   if (payload.records.status === "HELD") {
     await recordRoot.waitFor({ state: "visible" });
@@ -226,7 +226,7 @@ async function inspectMeeting(page: Page, meetingId: string, proveParticipation 
     assert.ok(await access.locator("li").count());
   }
   await page.keyboard.press("Escape");
-  return { meetingId, bodyId: meeting.bodyId, payloadCounts: payload.records.counts, documentCount: payload.documentCount, meetingPanel: Boolean(meeting.location), meetingPopup: Boolean(meeting.location), agendaSection: true, meetingRecords: payload.records.status === "HELD", participation };
+  return { meetingId, bodyId: meeting.bodyId, payloadCounts: payload.records.counts, documentCount: payload.documentCount, meetingPanel: Boolean(meeting.location), meetingPopup: false, meetingCard: true, agendaSection: true, meetingRecords: payload.records.status === "HELD", participation };
 }
 
 const browser = await launchGuarded({ label: "reader-last-mile-final-render" });
@@ -347,7 +347,7 @@ try {
       if (groups.length === 0) {
         const stat = page.locator('[data-stat="meetings"]').first();
         if (!(await stat.isVisible())) {
-          const menu = page.getByRole("button", { name: "Open menu", exact: true });
+          const menu = page.getByRole("button", { name: "Open sidebar", exact: true });
           if (await menu.isVisible()) await menu.click();
         }
         await stat.waitFor({ state: "visible" });
@@ -380,7 +380,7 @@ try {
       );
       const stat = page.locator('[data-stat="meetings"]').first();
       if (!(await stat.isVisible())) {
-        const menu = page.getByRole("button", { name: "Open menu", exact: true });
+        const menu = page.getByRole("button", { name: "Open sidebar", exact: true });
         if (await menu.isVisible()) await menu.click();
       }
       await stat.waitFor({ state: "visible" });

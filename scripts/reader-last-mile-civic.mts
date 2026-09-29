@@ -123,10 +123,10 @@ try {
     await page.locator("[data-pill-cluster]").first().waitFor({ state: "visible" });
     if (((await page.locator("html").getAttribute("data-theme")) === "light" ? "light" : "dark") !== view.theme) {
       const switcher = page.getByRole("button", { name: `Switch to ${view.theme} mode`, exact: true }).first();
-      if (!(await switcher.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+      if (!(await switcher.isVisible())) await page.getByRole("button", { name: "Open sidebar", exact: true }).click();
       await switcher.click();
     }
-    if (view.placement === "map" && await page.locator('[data-pill-cluster="sidebar"]').count()) await page.getByRole("button", { name: "Hide sidebar", exact: true }).click();
+    if (view.placement === "map" && await page.locator('[data-pill-cluster="sidebar"]').count()) await page.getByRole("button", { name: "Collapse sidebar", exact: true }).click();
     if (view.placement === "sidebar") {
       // A map pill can mount before the rail pill. Its temporary absence is
       // not proof that the rail is closed; in that state the menu button can
@@ -135,11 +135,11 @@ try {
       const ready = await page.waitForFunction(() => {
         const sidebar = document.querySelector('[data-pill-cluster="sidebar"]')?.getBoundingClientRect();
         if (sidebar && sidebar.width > 0 && sidebar.height > 0 && sidebar.right > 0 && sidebar.left < innerWidth) return "sidebar";
-        const menu = document.querySelector('button[aria-label="Open menu"]')?.getBoundingClientRect();
+        const menu = document.querySelector('button[aria-label="Open sidebar"]')?.getBoundingClientRect();
         if (menu && menu.width > 0 && menu.height > 0 && menu.right > 0 && menu.left < innerWidth) return "menu";
         return false;
       });
-      if (await ready.jsonValue() === "menu") await page.getByRole("button", { name: "Open menu", exact: true }).click();
+      if (await ready.jsonValue() === "menu") await page.getByRole("button", { name: "Open sidebar", exact: true }).click();
     }
     await page.locator(`[data-pill-cluster="${view.placement}"]`).waitFor({ state: "visible" });
     const point = resolveZip(zip); assert.ok(point.ok);
@@ -205,18 +205,24 @@ try {
         );
       }
       if (topicId === topicIds[0]) {
-        const geometry = await panel.evaluate(element => {
-          const expansion = element.closest(".ask-expansion")!;
-          const rectangle = expansion.getBoundingClientRect();
-          const style = getComputedStyle(expansion);
-          const row = element.closest("[data-pill-cluster]")!.querySelector(".map-floaters-row")!.getBoundingClientRect();
-          return { left: rectangle.left, right: rectangle.right, top: rectangle.top, bottom: rectangle.bottom, width: rectangle.width, height: rectangle.height, viewportWidth: innerWidth, viewportHeight: innerHeight, overflowX: expansion.scrollWidth > expansion.clientWidth + 1, overflowY: style.overflowY, rowBottom: row.bottom, placement: element.closest("[data-pill-cluster]")!.getAttribute("data-pill-cluster") };
-        });
+        const geometry = await panel.evaluate((element, placement) => {
+          const popup = element.closest('.mw-pop[data-pop="ask"]');
+          const cluster = Array.from(document.querySelectorAll(`[data-pill-cluster="${placement}"]`)).find(node => {
+            const bounds = node.getBoundingClientRect();
+            return bounds.width > 0 && bounds.height > 0;
+          });
+          if (!popup || !cluster) throw new Error("The Ask answer needs its visible popup and owning pill cluster");
+          const rectangle = popup.getBoundingClientRect();
+          const style = getComputedStyle(popup);
+          return { left: rectangle.left, right: rectangle.right, top: rectangle.top, bottom: rectangle.bottom, width: rectangle.width, height: rectangle.height, viewportWidth: innerWidth, viewportHeight: innerHeight, overflowX: popup.scrollWidth > popup.clientWidth + 1, overflowY: style.overflowY, rowBottom: cluster.getBoundingClientRect().bottom, placement: cluster.getAttribute("data-pill-cluster"), anchor: popup.getAttribute("data-anchor") };
+        }, view.placement);
         assert.equal(geometry.placement, view.placement);
+        assert.equal(geometry.anchor, view.placement === "map" ? "header" : "sidebar", "The Ask popup must remain attached to its active control");
         assert.equal(geometry.overflowX, false, `${zip}/${view.name}/${view.theme}/${view.placement}: horizontal answer overflow`);
-        if (view.name === "phone" && view.placement === "map") {
-          assert.ok(geometry.width >= view.width - 26, "The floating Ask answer needs the phone reading width, independent of pill width.");
-          assert.ok(geometry.left >= 11 && geometry.right <= view.width - 11 && geometry.top >= geometry.rowBottom && geometry.bottom <= view.height - 11, "The floating answer must fit below its own pill and inside the phone viewport.");
+        assert.ok(geometry.left >= 11 && geometry.right <= view.width - 11 && geometry.top >= 11 && geometry.bottom <= view.height - 11, "The Ask answer must fit inside the viewport");
+        if (view.name === "phone") {
+          assert.ok(geometry.width >= view.width - 26, "The Ask answer needs the phone reading width, independent of pill width.");
+          if (view.placement === "map") assert.ok(geometry.top >= geometry.rowBottom - 1, "The floating Ask answer must fit below its map pill");
           assert.equal(geometry.overflowY, "auto", "A long floating answer must retain a reachable scroll tail.");
         }
         const tail = panel.locator("p").last();
@@ -241,5 +247,5 @@ try {
 } finally { await browser.close(); }
 assert.equal(encountered.size, everydayRouting.denominator.contactRecords);
 assert.equal(encounteredOwed.size, everydayRouting.denominator.unknownContactOwedCells);
-const sourcePaths = ["lib/routing/everyday.ts", "lib/routing/everyday-data-plane.ts", "lib/routing/topics.ts", "lib/routing/ask.ts", "lib/officials/phone-numbers.ts", "components/ask/ask-box.tsx", "components/shell/pill-cluster.tsx", "app/globals.css"];
+const sourcePaths = ["lib/routing/everyday.ts", "lib/routing/everyday-data-plane.ts", "lib/routing/topics.ts", "lib/routing/ask.ts", "lib/officials/phone-numbers.ts", "components/ask/ask-box.tsx", "components/shell/pill-cluster.tsx", "components/shell/reader-popup.tsx", "components/map/map-entry.tsx", "app/globals.css", "app/reader.css"];
 writeFileSync("docs/evidence/reader-last-mile-civic.json", JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: Object.fromEntries(sourcePaths.map(path => [path, hash(readFileSync(path, "utf8"))])), everydayRoutingAuthority: { kind: everydayRoutingRead.kind, recordClass: everydayRoutingRead.metadata.recordClass, scope: everydayRoutingRead.metadata.scope, sourceId: everydayRoutingRead.metadata.sourceId, version: everydayRoutingRead.metadata.version, versionId: everydayRoutingRead.metadata.versionId, sourceThrough: everydayRoutingRead.metadata.sourceThrough, projectionSha256: hash(JSON.stringify(everydayRouting)), denominator: everydayRouting.denominator }, expectedCount: everydayRouting.denominator.contactRecords, renderedCount: encountered.size, expectedDispositionCount: everydayRouting.denominator.unknownContactOwedCells, recordedDispositionCount: encounteredOwed.size, records, layoutProofs, screenshots }, null, 2) + "\n");

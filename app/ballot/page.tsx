@@ -1394,7 +1394,7 @@ export default async function BallotPage({
         is already the page chrome, and a new bar would push the ballot itself
         further down the first screen.
       */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="ballot-page-chrome flex items-center justify-between gap-3">
         {/* 6b: the way back, top-left — the map is where the reader came from. */}
         <p className="text-[0.8125rem]">
           <Link
@@ -1418,7 +1418,7 @@ export default async function BallotPage({
           the wordmark reads first. 30px clears the 18px floor with room, and the
           headline drops from text-2xl to text-xl so the hierarchy reads logo,
           then page. Applied wherever the wordmark sits above a page headline. */}
-      <div className="mt-4">
+      <div className="ballot-page-chrome mt-4">
         <Logo variant="wordmark" size={30} />
       </div>
       <h1 className="mt-1.5 text-xl font-semibold tracking-tight">

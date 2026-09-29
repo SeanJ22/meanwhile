@@ -100,31 +100,32 @@ test("4a: the Ask pill opens Ask and nothing else", async () => {
    * surface, which is what the forbidden list below asserts and what the test
    * beneath this one asserts positively.
    */
-  const toggle = /const onToggleAsk = useCallback\(\(open: boolean\) => \{([\s\S]*?)\n  \}, \[[^\]]*\]\);/.exec(
-    entry,
-  );
-  assert.ok(toggle, "the Ask toggle is missing");
-  const body = toggle[1];
-  // The defect the rule names, pinned: tapping Ask used to un-collapse the
-  // who-governs card. Nothing in this handler may open, close or collapse any
-  // other surface.
+  /*
+   * **Approved reader design (2026-09-28; Sean: "one active contextual
+   * surface").** Ask is now one of the three small popups, so opening it DOES
+   * close the large card — the design's one-view rule supersedes 4a's "Ask
+   * closes nothing". What 4a named as the defect still may not happen: tapping
+   * Ask may never OPEN another surface (it used to un-collapse the
+   * who-governs card), and it never touches the sidebar.
+   */
+  const src = entry.replace(/\r/g, "");
+  const start = src.indexOf("const openPopup = useCallback(");
+  assert.ok(start >= 0, "the popup opener (which opens Ask) is missing");
+  const body = src.slice(start, src.indexOf("\n    [pop, closePop, closeCard, takeForeground],", start));
   for (const forbidden of [
-    "setNoticeCollapsed",
+    "setNoticeCollapsed(false)",
     "setSidebarState",
-    "setLarge",
+    "openLarge",
+    "pushLarge",
     "openSurface",
-    "dismissSidebar",
   ]) {
     assert.ok(
       !body.includes(forbidden),
-      `the Ask toggle calls ${forbidden} — 4a: Ask's expansion is not a surface for 4c`,
+      `opening Ask calls ${forbidden} — 4a: Ask may never open another surface`,
     );
   }
-
-  // And the reverse: no surface closes Ask. `askOpen` is set in exactly one
-  // place, which is that handler.
-  const setters = entry.match(/setAskOpen\(/g) ?? [];
-  assert.equal(setters.length, 1, "askOpen is set from more than one place");
+  const cluster = readFileSync(join(ROOT, "components", "shell", "pill-cluster.tsx"), "utf8");
+  assert.ok(cluster.includes(`onClick={() => onOpenPop("ask")}`), "the Ask pill opens the Ask popup");
 });
 
 test("4c: one surface at a time is one function, and every opener goes through it", async () => {

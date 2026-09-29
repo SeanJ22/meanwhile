@@ -2466,7 +2466,7 @@
         "app/icon.svg carries the dark theme's --bg and --mark, and the square is filled",
         "every var(--token) reference resolves to a declared token",
         "no Google font host is reachable from the app tree",
-        "the Ask positioning token is set on its cluster from initialized state",
+        "the Ask popup's placement tokens have values before layout measurement",
         "the brand square is filled, and no brand rule makes it hollow or dashed",
         "the record face is loaded through next/font and exposed as --font-record"
       ],
@@ -2844,7 +2844,7 @@
     "tests/card-navigation.test.ts": {
       "names": [
         "F01 2.4: a card opened from INSIDE another pushes; one opened from outside replaces",
-        "F01 2.4: both large surfaces close through the pop, not through a reset",
+        "F01 2.4: both large surfaces go back through the pop, not through a reset",
         "F01 2.4: the large surface is a stack, and closing pops one frame",
         "F01 2.4: the stack is bounded, and it drops the OLDEST frame"
       ],
@@ -8072,10 +8072,10 @@
         "BC-16: opening a venue card still closes an open district card",
         "MAP-3: an area click still leaves Who Governs Here open",
         "MAP-3: takeForeground does not run on an area click",
-        "MTG-11: Ask dismisses the small card, and only when OPENING",
-        "MTG-11: all three foreground controls call it",
+        "MTG-11: a popup closes the card BEFORE it opens",
+        "MTG-11: all three foreground controls go through one opener",
         "MTG-11: dismissal is ONE function, not three copies",
-        "MTG-11: the voting control dismisses BEFORE it opens",
+        "MTG-11: re-pressing a control closes its popup and dismisses nothing else",
         "WGH-15: selecting a district writes SELECTION and never the reader's home",
         "WGH-15: the map shell reads the home store, and never writes it"
       ],

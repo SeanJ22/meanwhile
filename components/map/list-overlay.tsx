@@ -89,8 +89,11 @@ function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
 
 export function ListOverlay({
   onPickMeeting,
+  embedded = false,
 }: {
   onPickMeeting: (meeting: Meeting) => void;
+  /** Rendered inside the design card, which owns the frame, Escape and Close. */
+  embedded?: boolean;
 }) {
   const { meetings, location, result, governing, zipPartial, basis } = useShellData();
   const listingIdentity = useMeetingListingIdentity();
@@ -118,13 +121,13 @@ export function ListOverlay({
    */
 
   useEffect(() => {
-    if (!ui.listOverlayOpen) return;
+    if (!ui.listOverlayOpen || embedded) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") dispatch({ type: "list/open", open: false });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [ui.listOverlayOpen, dispatch]);
+  }, [ui.listOverlayOpen, dispatch, embedded]);
 
   /*
    * ONE `now` for the whole render.
@@ -246,10 +249,11 @@ export function ListOverlay({
 
   return (
     <div
-      className="al-overlay"
-      role="dialog"
-      aria-label={`Visible ${listingCount.heading.toLowerCase()}`}
+      className={embedded ? "al-overlay mw-embedded" : "al-overlay"}
+      role={embedded ? undefined : "dialog"}
+      aria-label={embedded ? undefined : `Visible ${listingCount.heading.toLowerCase()}`}
       onClick={(e) => {
+        if (embedded) return;
         // A large popup, not a takeover (3): clicking the backdrop closes.
         if (e.target === e.currentTarget)
           dispatch({ type: "list/open", open: false });
@@ -285,6 +289,7 @@ export function ListOverlay({
             {focused.chip}
           </span>
         )}
+        {!embedded && (
         <button
           type="button"
           className="icon-btn al-overlay-close"
@@ -293,6 +298,7 @@ export function ListOverlay({
         >
           ✕
         </button>
+        )}
       </div>
 
       <div className="al-overlay-controls">

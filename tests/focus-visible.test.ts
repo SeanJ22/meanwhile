@@ -35,7 +35,7 @@ test("the focus sweep catches a suppressed ring — the instrument works (RULING
 });
 
 test("app/globals.css keeps a global focus-visible ring and never suppresses it bare", () => {
-  const css = readFileSync(GLOBALS, "utf8");
+  const css = readFileSync(GLOBALS, "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   assert.ok(globalFocusRingPresent(css), "expected a global :focus-visible outline ring");
   const offenders = focusRingSuppressedWithoutAlternative(css);
   assert.deepEqual(

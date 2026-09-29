@@ -99,7 +99,9 @@ test("app/layout.tsx writes its own props type", () => {
   const text = readFileSync(join(ROOT, "app", "layout.tsx"), "utf8");
   assert.match(
     text,
-    /export default function RootLayout\(\{\s*children,?\s*\}: \{\s*children: ReactNode;?\s*\}\)/,
+    // The reader design's @modal slot (the Ballot card) is a second prop, written
+    // out the same way — still no generated LayoutProps.
+    /export default function RootLayout\(\{\s*children,?\s*(?:modal,?\s*)?\}: \{\s*children: ReactNode;?\s*(?:\/\*\*[\s\S]*?\*\/\s*)?(?:modal: ReactNode;?\s*)?\}\)/,
     "the root layout's props are declared here, not imported from a build " +
       "artifact — this is the file whose annotation made the type check " +
       "unrunnable on a fresh clone",

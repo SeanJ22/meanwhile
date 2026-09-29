@@ -18,7 +18,7 @@ import {
 } from "../scripts/pill-census.mts";
 
 const ROOT = process.cwd();
-const css = () => readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+const css = () => readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
 const reasons = () =>
   JSON.parse(readFileSync(join(ROOT, "tests", "pill-sizing-reasons.json"), "utf8")) as PillReasons;
 

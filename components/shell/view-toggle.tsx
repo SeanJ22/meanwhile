@@ -31,7 +31,21 @@ export function ViewToggle() {
   const dispatch = useUiDispatch();
 
   return (
-    <div className="view-toggle" role="group" aria-label="Government tier">
+    <div
+      className="view-toggle"
+      role="group"
+      aria-label="Government tier"
+      // Arrow keys move between the three toggles (approved design, §9).
+      onKeyDown={(event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        const buttons = [...event.currentTarget.querySelectorAll<HTMLButtonElement>("button")];
+        const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+        if (at < 0) return;
+        event.preventDefault();
+        const step = event.key === "ArrowRight" ? 1 : -1;
+        buttons[(at + step + buttons.length) % buttons.length]?.focus();
+      }}
+    >
       {TIERS.map((tier: Tier) => {
         const active = tiers.includes(tier);
 

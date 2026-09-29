@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import { BoundaryLegend } from "@/components/map/boundary-legend";
-import { TutorialReplayButton } from "@/components/map/tutorial-overlay";
 import { RadiusControl } from "@/components/shell/radius-control";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
 import {
@@ -120,13 +119,16 @@ export function FiltersArea({
               state — a disclosure with no marker is a button a reader has to
               press to discover. */}
           <span className="filters-caret" aria-hidden="true">
-            ›
+            {ui.filtersPanelOpen ? "▾" : "▸"}
           </span>
           Filters
-          {count > 0 && <span className="filters-count">{count}</span>}
         </button>
-
-        <TutorialReplayButton />
+        {/* The design states where Filters stands while it is closed. */}
+        {count > 0 ? (
+          <span className="filters-count">{count} active</span>
+        ) : (
+          <span className="mw-disclosure-meta">None active</span>
+        )}
 
         {count > 0 && (
           <button

@@ -1,9 +1,13 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import { Logo } from "@/components/brand/logo";
+import { DataFreshness } from "@/components/map/data-freshness";
+import { Legend } from "@/components/map/legend";
+import { TutorialReplayButton } from "@/components/map/tutorial-overlay";
 import { ThemeToggle } from "@/components/theme-toggle";
+import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { useShellData } from "@/lib/state/data";
 
 import { FiltersArea } from "./filters-area";
@@ -13,268 +17,147 @@ import { StatsBar } from "./stats-bar";
 import { ViewToggle } from "./view-toggle";
 
 /**
- * The fixed left rail.
+ * The reader's sidebar (approved reader design, 2026-09-28).
  *
- * Structure follows EdiaStratMap: a header that does not scroll, holding the
- * brand, the theme and reset buttons, the view toggle and the scope selectors;
- * then everything else in a scrolling column.
+ * Order follows the design: the bare wordmark with the theme circle and the
+ * collapse control; the compound nav (Ballot · ZIP · Who governs here? ·
+ * Where can I vote?) with Ask directly below it; the Local/State/Federal well;
+ * the Jurisdiction and Body selects; then the scrolling half — stat tiles,
+ * Near me, Filters and About this data.
  *
- * ## M119 — ONE INPUT (2026-08-17)
+ * The compound nav and Ask arrive as one node from `map-entry`, which owns the
+ * popups they open, so there is still exactly one of each control on screen.
+ * Every control the old rail carried is still here: Reset view, the quick
+ * tour, the freshness line, and the transparency and feedback links moved into
+ * About this data rather than leaving.
  *
- * The rail used to carry two text inputs: the ask box near the top and the
- * entity search five controls down. The author's ruling was one, keyword-
- * first, with anything else routing as an ask. Both are now the single input
- * inside the pill cluster's Ask expansion (`components/ask/ask-box.tsx`), and
- * `search-box.tsx` is gone rather than left dark — a second component that
- * still renders an input is how "one input" quietly becomes two again.
- *
- * The rail therefore renders NO input of its own. What it renders is the slot
- * (4e) where the single pill cluster lands when the rail is the surface on
- * screen, and the cluster is constructed in `map-entry` so there is exactly
- * one of it.
+ * On a phone the same component is the bottom sheet (`.sidebar` CSS); its
+ * header then reads "▾ Close" instead of the collapse chevron.
  */
-
 export function Sidebar({
   onReset,
-  onChangeLocation,
   showDistricts,
   districtsFailed,
   onToggleDistricts,
   mobileOpen,
   onMobileClose,
   onNearMePoint,
-  pillCluster,
-  clusterElsewhere = false,
+  nav,
+  snapshot,
 }: {
   onReset: () => void;
-  /** Reopens the welcome overlay. */
-  onChangeLocation: () => void;
   /** Owned by use-district-layer, which persists it. The store mirrors it. */
   showDistricts: boolean;
   districtsFailed: boolean;
   onToggleDistricts: (value: boolean) => void;
-  /** Phone width only: the rail is a drawer, and this is its state. */
+  /** The rail's open state at phone width (the bottom sheet). */
   mobileOpen: boolean;
+  /** Collapses the rail at any width. */
   onMobileClose: () => void;
-  /** 6f: Near me resolved a point — the map answers at it (D53 machinery). */
+  /** Near me resolved a point — the map answers at it. */
   onNearMePoint?: (point: { lat: number; lng: number }) => void;
-  /**
-   * 4e: the single pill cluster, when the rail is where it belongs. Null at
-   * every other moment — the rail never builds one of its own, because a
-   * second constructor is a second instance waiting to happen.
-   */
-  pillCluster?: ReactNode;
-  /**
-   * A cluster painted SOMEWHERE — here, or on the who-governs card. The rail's
-   * own ballot link is the fallback for there being no cluster AT ALL, so it
-   * is suppressed by this rather than by the local slot being empty. Without
-   * the distinction, a desktop showing the rail and the card at once carries
-   * two doors onto one surface.
-   */
-  clusterElsewhere?: boolean;
+  /** The compound nav and the Ask pill, built once in map-entry. */
+  nav?: ReactNode;
+  /** The meetings snapshot, for the About this data freshness line. */
+  snapshot?: SnapshotStatus | null;
 }) {
   const { location } = useShellData();
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   return (
-    /*
-     * `data-dismiss-exempt` — g12, and the defect it fixes is a real one that
-     * `pnpm walk:all` caught against production before anybody read a line of
-     * this file.
-     *
-     * The who-governs card dismisses on any press outside it. Before 4e that
-     * was harmless: the rail's header was a static ballot link and minimizing
-     * the card changed nothing in the rail. Now the card minimizing MOVES THE
-     * PILL CLUSTER INTO THE RAIL'S HEADER, which grows it by about a hundred
-     * pixels — so the reader's first press on any rail control at desktop
-     * minimized the card, shifted everything under their finger downward, and
-     * the mouseup landed somewhere else. **The click did nothing**, which is
-     * the exact class of defect this session's own rules name.
-     *
-     * The rail is a PEER SURFACE, not the background: pressing it is using the
-     * app, not putting down what you were reading. So it is exempt, the layout
-     * never shifts under a press, and 4c is untouched — every explicit open
-     * still goes through `openSurface`, which closes the other two.
-     */
     <aside
       data-dismiss-exempt
       className={`sidebar${mobileOpen ? " sidebar-open" : ""}`}
+      aria-label="Meetings, filters and more"
     >
+      <button
+        type="button"
+        className="mw-sheet-close"
+        onClick={onMobileClose}
+      >
+        <span aria-hidden="true">▾</span> Close
+      </button>
       <div className="sidebar-header">
         <div className="brand">
-          {/* Slide the rail away — any width (2f); 44px thumb target. The
-              hamburger in map-entry brings it back. */}
-          <button
-            type="button"
-            className="icon-btn -ml-1 flex size-11 shrink-0 items-center justify-center"
-            aria-label="Hide sidebar"
-            title="Hide sidebar"
-            onClick={onMobileClose}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <polyline points="11 17 6 12 11 7" />
-              <polyline points="18 17 13 12 18 7" />
-            </svg>
-          </button>
-          {/*
-            ITEM J (2026-09-01) — THE PIN IS GONE, AND SO IS THE TIER COLOUR.
-
-            This rail used to open with a map-pin SVG stroked in
-            `var(--accent-local)`. Two separate defects in one 20px glyph:
-
-            1. A PIN DROPS ONTO A HOUSE, and a house is identity. This
-               product's standing rule is that a ZIP and a geolocation are
-               ORIENTATION, not identity — the brand may not say the opposite
-               in the first mark on the page.
-            2. `--accent-local` IS A TIER COLOUR. The map legend teaches a
-               reader that amber means local government, and the brand was
-               wearing it. That is the same failure
-               `.jurisdiction-badge[data-badge="GOVERNS"]` was fixed for: a
-               badge in a tier colour reads as a tier CLAIM.
-
-            The lockup replaces both. It sits one row above `.view-toggle`,
-            whose selected STATE tab fills `--tier-fill-state`; the mark and
-            that fill are the same teal by design, and the reason a small
-            square beside a serif wordmark still does not read as "state
-            government" is the scoping rule on `--mark` in globals.css.
-          */}
           <span className="brand-name">
-            <Logo variant="wordmark" size={22} />
-            <span className="brand-sub">
-              {location ? (
-                <>
-                  Meetings near {location.zip}
-                  <button
-                    type="button"
-                    className="brand-change"
-                    onClick={onChangeLocation}
-                  >
-                    Change
-                  </button>
-                </>
-              ) : (
-                "Public meetings near you"
-              )}
-            </span>
+            <Logo variant="wordmark" size={34} />
           </span>
-
-          <ThemeToggle className="theme-toggle-btn" />
-
-          <button
-            type="button"
-            className="icon-btn reset-view-btn"
-            title="Reset view"
-            aria-label="Reset view"
-            onClick={onReset}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
+          <span className="mw-brand-actions">
+            <ThemeToggle className="theme-toggle-btn" />
+            <button
+              type="button"
+              className="mw-ctl-btn mw-collapse-btn"
+              aria-label="Collapse sidebar"
+              title="Collapse sidebar"
+              onClick={onMobileClose}
             >
-              <path d="M3 12a9 9 0 1 0 3-6.7" />
-              <polyline points="3 4 3 9 8 9" />
-            </svg>
-          </button>
+              <span aria-hidden="true">«</span>
+            </button>
+          </span>
         </div>
 
-        {/*
-          Item 2 of the tester's mobile pass (2026-08-14): the ballot link
-          used to sit in this rail's FOOTER, under `mt-auto` — the very
-          bottom of a drawer that on a phone runs under the browser chrome.
-          The tester: "I don't think I would have found that without knowing
-          it existed." It moves to the header, above the fold at every
-          width, in words rather than an icon. The product's core surface
-          does not live at the bottom of a menu.
-        */}
-        {/*
-          4e: when the cluster is here, IT carries the ballot door — its
-          ballot pill is the same entry, with the zip beside it. Rendering the
-          rail's own link as well would be two doors onto one surface, which is
-          the duplicate-entry-point friction CLAUDE.md calls a defect.
-
-          The plain link stays as the fallback for the moments the cluster is
-          somewhere else (the first paint before the breakpoint is read, and
-          the case where no zip has resolved and the cluster renders nothing).
-          The rail never loses its ballot door; it just stops carrying two.
-        */}
-        {pillCluster ??
-          (clusterElsewhere ? null : (
-            <a
-              href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
-              className="sidebar-ballot-entry"
-            >
-              <span>What&apos;s on the ballot</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          ))}
+        {nav ?? (
+          <a
+            href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
+            className="sidebar-ballot-entry"
+          >
+            <span>What&apos;s on the ballot</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
 
         <ViewToggle />
         <ScopeSelectors />
       </div>
 
       <div className="sidebar-scroll">
-        {/*
-          LAY-4 (2026-08-24): the who-governs card is NOT here. LAY-1 nested
-          it in this column; the author's arrows put it back in the viewport
-          BENEATH the rail, and the supersession table says LAY-1 must not
-          exist as built. The rail renders the counts and nothing else claims
-          its column.
-        */}
         <StatsBar />
-        {/* M119: the rail's second input is gone. Searching a meeting, body,
-            district or person by name happens in the one input above. */}
-        {/*
-          g4 item 14: "Limit radius" and "Show districts" MOVED INSIDE
-          Filters; "Near me" stays out here.
-
-          The distinction the author is drawing is what each control is FOR.
-          Near me answers "where am I" — it is a way of telling the product
-          where the reader is standing, which is the same job as the zip, and
-          it keeps its honest approximate-location note beside it. Limiting
-          the radius and drawing district boundaries are both ways of
-          narrowing or annotating what is ALREADY on screen, which is what
-          Filters is.
-
-          6f: the resolved point rides up to the map, which answers at it.
-        */}
         <NearMeControl onPoint={onNearMePoint} />
-
         <FiltersArea
           showDistricts={showDistricts}
           districtsFailed={districtsFailed}
           onToggleDistricts={onToggleDistricts}
         />
-
-        {/*
-          **LAY-8 (2026-08-25) — the footer LEFT this column.**
-
-          The author's annotated capture `08-53-15` draws a red DOTTED ARROW
-          from this block down past the bottom of the rail to the "Last
-          checked" line at the foot of the page. It is now rendered there, in
-          `components/map/site-footnote.tsx`, beside the freshness line rather
-          than inside the rail.
-
-          Why it belongs there and not here: both are the same KIND of thing —
-          quiet standing provenance about the product itself, read once and
-          then ignored — and the rail is the column a reader is trying to get
-          THROUGH. Two footnotes in two places is one of them nobody finds.
-
-          The links are unchanged and neither was deleted. The block is only
-          gone from this component; see `site-footnote.tsx` for why it renders
-          unconditionally there.
-        */}
+        <div className="mw-phone-legend">
+          <Legend inline />
+        </div>
+        <div className="mw-disclosure" data-open={aboutOpen || undefined}>
+          <button
+            type="button"
+            className="mw-disclosure-head"
+            aria-expanded={aboutOpen}
+            onClick={() => setAboutOpen((v) => !v)}
+          >
+            <span>
+              <span aria-hidden="true">{aboutOpen ? "▾" : "▸"}</span> About this
+              data
+            </span>
+            {snapshot && (
+              <span className="mw-disclosure-meta">
+                <DataFreshness snapshot={snapshot} compact />
+              </span>
+            )}
+          </button>
+          {aboutOpen && (
+            <div className="mw-disclosure-body">
+              {snapshot && <DataFreshness snapshot={snapshot} />}
+              <div className="mw-link-row">
+                <a href="/about-area/compare">Compare states</a>
+                {location && (
+                  <a href={`/about-area?zip=${location.zip}`}>About this area</a>
+                )}
+                <a href="/transparency">What this site collects</a>
+                <a href="/feedback">Feedback</a>
+              </div>
+              <div className="mw-link-row">
+                <TutorialReplayButton />
+                <button type="button" className="mw-text-btn" onClick={onReset}>
+                  Reset view
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );

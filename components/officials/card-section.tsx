@@ -52,13 +52,26 @@ import {
 interface CardSectionGroupValue {
   openId: string | null;
   setOpenId: (id: string | null) => void;
+  /**
+   * Approved reader design (2026-09-28): on the Battlecard every section is
+   * its own disclosure, and Campaign money and Public statements start open.
+   * `independent` keeps the group (so callers need no second structure) but
+   * lets each section open and close on its own.
+   */
+  independent: boolean;
 }
 
 const CardSectionGroupContext = createContext<CardSectionGroupValue | null>(null);
 
-export function CardSectionGroup({ children }: { children: React.ReactNode }) {
+export function CardSectionGroup({
+  children,
+  independent = false,
+}: {
+  children: React.ReactNode;
+  independent?: boolean;
+}) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const value = useMemo(() => ({ openId, setOpenId }), [openId]);
+  const value = useMemo(() => ({ openId, setOpenId, independent }), [openId, independent]);
   return (
     <CardSectionGroupContext.Provider value={value}>
       {children}
@@ -130,7 +143,7 @@ export function CardSection({
   const id = useId();
   const group = useContext(CardSectionGroupContext);
   // Only TOP-LEVEL pills join the group. See the note on CardSectionGroup.
-  const grouped = group !== null && level !== "sub";
+  const grouped = group !== null && !group.independent && level !== "sub";
 
   const [localOpen, setLocalOpen] = useState(defaultOpen);
   const open = grouped ? group.openId === id : localOpen;

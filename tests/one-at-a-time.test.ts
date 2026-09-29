@@ -96,42 +96,46 @@ test("MTG-11: dismissal is ONE function, not three copies", () => {
   );
 });
 
-test("MTG-11: all three foreground controls call it", () => {
+/*
+ * Approved reader design (2026-09-28; Sean, "one active contextual surface").
+ * The three foreground controls — Where can I vote?, Ask and the ZIP — are now
+ * the three SMALL POPUPS, and all three open through ONE function,
+ * `openPopup`, which is the single call site of `takeForeground`. One call
+ * site serving three controls is the MTG-11 rule held by construction rather
+ * than by three copies that can drift.
+ */
+const openPopupBody = () => {
+  const src = entry().replace(/\r/g, "");
+  const start = src.indexOf("const openPopup = useCallback(");
+  assert.ok(start >= 0, "openPopup is missing from map-entry.tsx");
+  const end = src.indexOf("\n    [pop, closePop, closeCard, takeForeground],", start);
+  assert.ok(end > start, "openPopup's body could not be delimited");
+  return src.slice(start, end);
+};
+
+test("MTG-11: all three foreground controls go through one opener", () => {
   const src = entry();
   const calls = src.match(/takeForeground\(\); \/\/ MTG-11/g) ?? [];
-  assert.equal(
-    calls.length,
-    3,
-    `takeForeground is called from ${calls.length} place(s); the author named THREE — ` +
-      `Where can I vote?, Ask, and Change Zip. A control that stopped calling it would ` +
-      `leave the meetings card sitting behind it, which is MTG-11.`,
-  );
+  assert.equal(calls.length, 1, "takeForeground has exactly one call site: openPopup");
+  assert.match(openPopupBody(), /takeForeground\(\); \/\/ MTG-11/);
+  const cluster = readFileSync("components/shell/pill-cluster.tsx", "utf8");
+  for (const pop of ["zip", "vote", "ask"]) {
+    assert.ok(cluster.includes(`onOpenPop("${pop}")`), `the ${pop} control opens through onOpenPop`);
+  }
 });
 
-test("MTG-11: Ask dismisses the small card, and only when OPENING", () => {
-  const src = entry();
-  const toggle = /const onToggleAsk = useCallback\(\(open: boolean\) => \{([\s\S]*?)\n  \}, \[[^\]]*\]\);/.exec(
-    src,
-  );
-  assert.ok(toggle, "the Ask toggle is missing");
-  const body = toggle[1];
-  assert.match(body, /takeForeground\(\)/, "opening Ask must dismiss the small card");
-  /* The early return on close comes FIRST, so closing Ask dismisses nothing. */
-  assert.ok(
-    body.indexOf("if (!open) return;") < body.indexOf("takeForeground()"),
-    "closing Ask must not dismiss anything — the early return has to precede the call",
-  );
+test("MTG-11: re-pressing a control closes its popup and dismisses nothing else", () => {
+  const body = openPopupBody();
+  const close = body.indexOf("if (pop === next)");
+  const dismiss = body.indexOf("takeForeground()");
+  assert.ok(close >= 0 && dismiss > close, "the toggle-close returns before anything is dismissed");
 });
 
-test("MTG-11: the voting control dismisses BEFORE it opens", () => {
-  const src = entry();
-  const handler = /onClick=\{\(\) => \{\s*takeForeground\(\); \/\/ MTG-11\s*setVotingOpen\(true\);/.exec(
-    src,
-  );
-  assert.ok(
-    handler,
-    "the Where-can-I-vote control must dismiss the open card and then open the panel",
-  );
+test("MTG-11: a popup closes the card BEFORE it opens", () => {
+  const body = openPopupBody();
+  const closeCard = body.indexOf("closeCard()");
+  const open = body.indexOf("setPop(next)");
+  assert.ok(closeCard >= 0 && open > closeCard, "the card closes, then the popup opens");
 });
 
 /* -------------------------------------------------------------------------- */
@@ -238,9 +242,9 @@ test("MAP-3: takeForeground does not run on an area click", () => {
       `takeForeground is being called from what looks like an area click: ${line.trim()}`,
     );
   }
-  /* And the three sites are the three the author named. */
+  /* And the three controls the author named are still here, as the popups. */
   const src2 = src.replace(/\r/g, "");
-  assert.match(src2, /setVotingOpen\(true\)/, "the voting control is still here");
-  assert.match(src2, /setWelcomeRequested\(true\)/, "the change-zip control is still here");
-  assert.match(src2, /setAskOpen\(open\)/, "the Ask control is still here");
+  assert.ok(src2.includes(`{pop === "vote" && (`), "the voting control is still here");
+  assert.ok(src2.includes(`{pop === "zip" && (`), "the change-zip control is still here");
+  assert.ok(src2.includes(`{pop === "ask" &&`), "the Ask control is still here");
 });

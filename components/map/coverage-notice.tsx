@@ -156,6 +156,8 @@ interface CoverageNoticeProps {
    * constructor is a second instance waiting to happen.
    */
   pillCluster?: ReactNode;
+  /** Rendered as the body of the design card, which owns the frame. */
+  embedded?: boolean;
   /** A cluster painted SOMEWHERE. Same reason as the rail's copy. */
   clusterElsewhere?: boolean;
 }
@@ -1677,6 +1679,7 @@ export function CoverageNotice({
   onAddressCleared,
   pillCluster,
   clusterElsewhere = false,
+  embedded = false,
 }: CoverageNoticeProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   // Item 1 (2026-08-15): a press outside minimizes the card, the way a native
@@ -1720,7 +1723,11 @@ export function CoverageNotice({
     <div
       ref={rootRef}
       data-refreshing={refreshing ? "true" : undefined}
-      className="coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5"
+      className={
+        embedded
+          ? "coverage-notice mw-embedded relative"
+          : "coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5"
+      }
     >
       {onMinimize && (
         // The explicit way out (3) — engagement still collapses it, but the

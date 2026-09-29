@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { createContext, useContext } from "react";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
@@ -47,6 +48,8 @@ export function DoorOverlay({
   onOpenBody,
   onClose,
   embedded = false,
+  onShowDistrict,
+  canShowDistrict,
 }: {
   door: "bodies" | "districts" | "officials";
   coverage: CoverageSummary | null;
@@ -88,6 +91,13 @@ export function DoorOverlay({
   onClose: () => void;
   /** Rendered inside the design card, which owns the frame and the title. */
   embedded?: boolean;
+  /**
+   * Approved reader design: "Show on the map" on a district the map is
+   * drawing — fits its whole boundary and parks the card. Returns nothing;
+   * offered only for districts the map can actually fit.
+   */
+  onShowDistrict?: (ocdId: string) => void;
+  canShowDistrict?: (ocdId: string) => boolean;
 }) {
   // "Districts in view", not "here": this list is what the map is drawing
   // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
@@ -149,6 +159,7 @@ export function DoorOverlay({
           // 3g: this door lists the districts the card counted — the same
           // list, not a different universe. It renders even with no
           // coverage; the drawn overlay is client-side and honest alone.
+          <ShowDistrictContext.Provider value={{ show: onShowDistrict, can: canShowDistrict }}>
           <DistrictsDoor
             drawnDistricts={drawnDistricts}
             districtOverlayOn={districtOverlayOn}
@@ -157,6 +168,7 @@ export function DoorOverlay({
             coverage={coverage}
             onOpenOfficial={onOpenOfficial}
           />
+          </ShowDistrictContext.Provider>
         ) : !coverage ? (
           <p className="mt-3 text-[0.8125rem] text-muted">
             We couldn&apos;t resolve who governs this point — enter a zip
@@ -465,6 +477,12 @@ function DoorSection({
   );
 }
 
+/** The design's "Show on the map" for a district row (see DoorOverlay). */
+const ShowDistrictContext = createContext<{
+  show?: (ocdId: string) => void;
+  can?: (ocdId: string) => boolean;
+}>({});
+
 /** One row per district, shared by both modes so they cannot drift apart. */
 function DistrictRows({
   rows,
@@ -479,6 +497,7 @@ function DistrictRows({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
+  const showDistrict = useContext(ShowDistrictContext);
   return (
     <ul className="mt-3 space-y-2">
       {rows.map((row) => (
@@ -492,6 +511,15 @@ function DistrictRows({
               {row.typeLabel}
             </span>
           </div>
+          {showDistrict.show && showDistrict.can?.(row.ocdId) && (
+            <button
+              type="button"
+              className="mw-link-btn mw-row-show"
+              onClick={() => showDistrict.show?.(row.ocdId)}
+            >
+              Show the whole boundary on the map
+            </button>
+          )}
           {row.holders.map((holder) => (
             <button
               key={holder.id}

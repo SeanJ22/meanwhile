@@ -848,3 +848,58 @@ export function boundsOfDistrict(
     [east, north],
   ];
 }
+
+/**
+ * The WHOLE district's box, from the source's full geometry rather than from
+ * what is rendered (approved reader design: "fit the selected boundary in
+ * the usable viewport"). `boundsOfDistrict` above can only see the part of a
+ * district already on screen, so a boundary mostly off screen never fit.
+ * Null when the source is not loaded or holds no such feature — callers fall
+ * back to the rendered box.
+ */
+export async function fullBoundsOfDistrict(
+  map: MapLibreMap,
+  type: DistrictType,
+  ocdId: string,
+): Promise<[[number, number], [number, number]] | null> {
+  const source = map.getSource(sourceId(type)) as
+    | { getData?: () => Promise<unknown> }
+    | undefined;
+  if (!source?.getData) return null;
+  let data: unknown;
+  try {
+    data = await source.getData();
+  } catch {
+    return null;
+  }
+  const features = (data as { features?: { properties?: { ocdId?: unknown }; geometry?: { coordinates?: unknown } }[] })?.features;
+  if (!Array.isArray(features)) return null;
+  let west = Infinity;
+  let south = Infinity;
+  let east = -Infinity;
+  let north = -Infinity;
+  const walk = (coords: unknown): void => {
+    if (!Array.isArray(coords)) return;
+    if (typeof coords[0] === "number" && typeof coords[1] === "number") {
+      const [lng, lat] = coords as [number, number];
+      if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
+      west = Math.min(west, lng);
+      east = Math.max(east, lng);
+      south = Math.min(south, lat);
+      north = Math.max(north, lat);
+      return;
+    }
+    for (const c of coords) walk(c);
+  };
+  let found = 0;
+  for (const feature of features) {
+    if (String(feature.properties?.ocdId ?? "") !== ocdId) continue;
+    found += 1;
+    walk(feature.geometry?.coordinates);
+  }
+  if (found === 0 || !Number.isFinite(west) || !Number.isFinite(north)) return null;
+  return [
+    [west, south],
+    [east, north],
+  ];
+}

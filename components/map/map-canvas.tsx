@@ -36,6 +36,7 @@ import {
   DISTRICT_TYPES,
   addDistrictLayer,
   boundsOfDistrict,
+  fullBoundsOfDistrict,
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
@@ -1426,15 +1427,25 @@ export function MapCanvas({
      * computed from no geometry.
      */
     if (!selectedDistrict) return;
-    const bounds = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
-    if (!bounds) return;
-    map.fitBounds(bounds, {
-      // With `insets` the camera padding already excludes the sidebar, the
-      // header and the pill, so the fit only adds the design's 24px margin.
-      padding: insets ? 24 : { top: 96, bottom: 128, left: 64, right: 64 },
-      maxZoom: METRO_ZOOM,
-      duration: prefersReducedMotion() ? 0 : 900,
+    const rendered = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
+    // The whole boundary, from the source geometry, when it can be read;
+    // the rendered part otherwise.
+    let cancelled = false;
+    void fullBoundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId).then((full) => {
+      if (cancelled) return;
+      const box = full ?? rendered;
+      if (!box) return;
+      map.fitBounds(box, {
+        padding: insets ? 24 : { top: 96, bottom: 128, left: 64, right: 64 },
+        maxZoom: METRO_ZOOM,
+        duration: prefersReducedMotion() ? 0 : 900,
+      });
     });
+    return () => {
+      cancelled = true;
+    };
+    // With `insets` the camera padding already excludes the sidebar, the
+    // header and the pill, so the fit only adds the design's 24px margin.
     // `insets` is read, not a trigger: the refit effect below owns that.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDistrict, districtTypes]);
@@ -1457,13 +1468,20 @@ export function MapCanvas({
     lastFit.current = key;
     // The selection effect above already fits a NEW selection.
     if (first && fitNonce === 0) return;
-    const bounds = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
-    if (!bounds) return;
-    map.fitBounds(bounds, {
-      padding: 24,
-      maxZoom: METRO_ZOOM,
-      duration: prefersReducedMotion() ? 0 : 600,
+    const rendered = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
+    let cancelled = false;
+    void fullBoundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId).then((full) => {
+      const box = full ?? rendered;
+      if (cancelled || !box) return;
+      map.fitBounds(box, {
+        padding: 24,
+        maxZoom: METRO_ZOOM,
+        duration: prefersReducedMotion() ? 0 : 600,
+      });
     });
+    return () => {
+      cancelled = true;
+    };
   }, [selectedDistrict, insets, insetsKey, fitNonce]);
 
   // Narrowed-division shading (item 7): same feature-state mechanism,

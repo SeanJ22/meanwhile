@@ -1694,6 +1694,9 @@ function MapEntryInner() {
   const [parked, setParked] = useState(false);
   const cardScroll = useRef(0);
   const restoring = useRef(false);
+  // "Show the whole boundary" from the Districts list: the district card
+  // opens PARKED, so the map shows the fitted boundary with Details ↗.
+  const parkOnOpen = useRef(false);
   const lastCard = useRef<CardSnapshot | null>(null);
   const historyDepth = useRef(0);
 
@@ -1741,7 +1744,8 @@ function MapEntryInner() {
       cardScroll.current = 0;
       if (cardKey) {
         setPop(null);
-        setParked(false);
+        setParked(parkOnOpen.current);
+        parkOnOpen.current = false;
       }
     }
     restoring.current = false;
@@ -1993,6 +1997,24 @@ function MapEntryInner() {
               })
             }
             onClose={closeCard}
+            canShowDistrict={(ocdId) => drawnDistricts.some((d) => d.ocdId === ocdId)}
+            onShowDistrict={(ocdId) => {
+              const drawn = drawnDistricts.find((d) => d.ocdId === ocdId);
+              if (!drawn) return;
+              setLastHits([
+                {
+                  type: drawn.type,
+                  tier: drawn.tier,
+                  typeLabel: drawn.typeLabel,
+                  ocdId: drawn.ocdId,
+                  label: drawn.label,
+                  state: /state:([a-z]{2})/.exec(drawn.ocdId)?.[1]?.toUpperCase() ?? "",
+                },
+              ]);
+              parkOnOpen.current = true;
+              setShowDistricts(true);
+              dispatch({ type: "select/district", ocdId: drawn.ocdId, districtType: drawn.type });
+            }}
           />
         );
       case "venue":

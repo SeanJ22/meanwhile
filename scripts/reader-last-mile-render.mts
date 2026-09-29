@@ -341,9 +341,16 @@ async function openOfficial(page: Page, name: string) {
   const doors = page.locator('button[aria-label*="officials list" i]').first();
   await doors.waitFor({ state: "attached", timeout: 30_000 });
   if (!(await doors.isVisible())) {
-    const menu = page.getByRole("button", { name: "Open menu", exact: true });
-    if (await menu.isVisible()) await menu.click();
+    // The redesigned phone reader puts the stat doors in its bottom sheet.
+    // Open that real reader control before requiring the officials door.
+    const opener = page.getByRole("button", { name: "Open sidebar", exact: true });
+    if (await opener.isVisible()) await opener.click();
+    else {
+      const handle = page.getByRole("button", { name: /Meetings, filters and more/i });
+      if (await handle.isVisible()) await handle.click();
+    }
   }
+  await doors.waitFor({ state: "visible", timeout: 20_000 });
   if (!(await page.locator(".door-panel").isVisible().catch(() => false))) await doors.click();
   const named = page.locator(".door-panel button").filter({ hasText: name }).first();
   await named.waitFor({ state: "visible", timeout: 20_000 });

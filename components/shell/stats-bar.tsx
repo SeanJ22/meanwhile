@@ -23,7 +23,7 @@ const COVERAGE_LABEL = {
 } as const;
 
 export function StatsBar() {
-  const { meetings, drawnDistricts, dropped, result, searchFailed, atAddress } =
+  const { meetings, venues, location, drawnDistricts, dropped, result, searchFailed, atAddress } =
     useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -73,7 +73,12 @@ export function StatsBar() {
         statKey="meetings"
         label={listingCount.heading}
         value={view.meetings}
-        sub={listingCount.countNote}
+        sub={
+          listingCount.countNote ??
+          (searchFailed
+            ? null
+            : `${venues.length} ${venues.length === 1 ? "venue" : "venues"}`)
+        }
         style={accent}
         open={ui.listOverlayOpen}
         onOpen={() => dispatch({ type: "list/open", open: true })}
@@ -106,6 +111,7 @@ export function StatsBar() {
       <Card
         label="Officials"
         value={view.officials}
+        sub={location ? `Near ${location.zip}` : null}
         open={ui.door === "officials"}
         onOpen={() => dispatch({ type: "door/open", door: "officials" })}
       />

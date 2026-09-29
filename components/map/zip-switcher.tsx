@@ -26,10 +26,13 @@ export function ZipSwitcher({
   current,
   onPick,
   onClose,
+  embedded = false,
 }: {
   current: string | null;
   onPick: (zip: string, lat: number, lng: number) => void;
   onClose: () => void;
+  /** Inside the design ZIP popup, which owns dismissal and the title. */
+  embedded?: boolean;
 }) {
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -37,19 +40,20 @@ export function ZipSwitcher({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const recents = useRecentZips();
 
-  useDismissOnOutside(rootRef, onClose);
+  useDismissOnOutside(rootRef, onClose, !embedded);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   useEffect(() => {
+    if (embedded) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, embedded]);
 
   // P-002 · the switcher is opened deliberately, so warming it on open puts
   // the fetch entirely inside the time the reader spends choosing.
@@ -88,8 +92,13 @@ export function ZipSwitcher({
   const others = recents.filter((z) => z !== current);
 
   return (
-    <div ref={rootRef} className="zip-switcher panel" role="dialog" aria-label="Change zip">
-      <p className="t-eyebrow text-paper-dim">Show me</p>
+    <div
+      ref={rootRef}
+      className={embedded ? "zip-switcher mw-zip-switcher" : "zip-switcher panel"}
+      role={embedded ? undefined : "dialog"}
+      aria-label={embedded ? undefined : "Change zip"}
+    >
+      {!embedded && <p className="t-eyebrow text-paper-dim">Show me</p>}
       <div className="zip-switcher-entry">
         <input
           ref={inputRef}
@@ -117,7 +126,7 @@ export function ZipSwitcher({
 
       {others.length > 0 && (
         <>
-          <p className="zip-switcher-label">Recent on this device</p>
+          <p className="zip-switcher-label">{embedded ? "Recent" : "Recent on this device"}</p>
           <div className="zip-switcher-recents">
             {others.map((zip) => (
               /* Recents mix origins and nothing recorded which. UNKNOWN. */
@@ -127,6 +136,11 @@ export function ZipSwitcher({
             ))}
           </div>
         </>
+      )}
+      {embedded && (
+        <p className="mw-pop-note">
+          A ZIP is orientation, not your exact districts or ballot.
+        </p>
       )}
     </div>
   );

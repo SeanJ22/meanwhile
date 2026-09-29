@@ -46,6 +46,7 @@ export function DoorOverlay({
   onOpenMeeting,
   onOpenBody,
   onClose,
+  embedded = false,
 }: {
   door: "bodies" | "districts" | "officials";
   coverage: CoverageSummary | null;
@@ -85,6 +86,8 @@ export function DoorOverlay({
    */
   onOpenBody: (body: CoveredBody) => void;
   onClose: () => void;
+  /** Rendered inside the design card, which owns the frame and the title. */
+  embedded?: boolean;
 }) {
   // "Districts in view", not "here": this list is what the map is drawing
   // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
@@ -110,17 +113,25 @@ export function DoorOverlay({
     // 390px. The legend's own rule already says it must never cover a card
     // the reader opened; this is the other half of that rule.
     <div
-      className="door-overlay pointer-events-auto fixed inset-0 z-[1300] flex items-center justify-center bg-black/40 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      onClick={onClose}
+      className={
+        embedded
+          ? "door-overlay mw-embedded"
+          : "door-overlay pointer-events-auto fixed inset-0 z-[1300] flex items-center justify-center bg-black/40 p-4"
+      }
+      role={embedded ? undefined : "dialog"}
+      aria-modal={embedded ? undefined : "true"}
+      aria-label={embedded ? undefined : title}
+      onClick={embedded ? undefined : onClose}
     >
       <div
-        className="door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        className={
+          embedded
+            ? "door-panel"
+            : "door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        }
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between">
+        <div className={embedded ? "sr-only" : "flex items-center justify-between"}>
           <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>

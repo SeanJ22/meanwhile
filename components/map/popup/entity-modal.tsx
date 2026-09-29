@@ -360,6 +360,13 @@ interface EntityModalProps {
    * through a `BROWSING` location, which settles nothing by construction.
    */
   homeZip?: string | null;
+  /**
+   * Rendered as the body of the reader's one large card (approved design,
+   * 2026-09-28), which owns the frame, Escape, Back and Close.
+   */
+  embedded?: boolean;
+  /** "Show the whole boundary on the map": parks the card and fits the map. */
+  onShowOnMap?: () => void;
 }
 
 /**
@@ -662,18 +669,21 @@ export function EntityModal({
   onOpenPlaceBody,
   initialTab = "overview",
   homeZip = null,
+  embedded = false,
+  onShowOnMap,
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const sourceCount = sourceCountLabel(subject.sources);
 
   useEffect(() => {
+    if (embedded) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, embedded]);
 
   /*
    * NO pushed history entry (2026-08-14 third session, same diagnosis as
@@ -685,15 +695,15 @@ export function EntityModal({
 
   return (
     <div
-      className="account-modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-label={subject.title}
+      className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
+      role={embedded ? undefined : "dialog"}
+      aria-modal={embedded ? undefined : "true"}
+      aria-label={embedded ? undefined : subject.title}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (!embedded && event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="account-modal">
+      <div className={embedded ? "account-modal mw-entity" : "account-modal"}>
         <header className="account-modal-header">
           <div className="min-w-0">
             <p
@@ -728,6 +738,7 @@ export function EntityModal({
             )}
           </div>
 
+          {!embedded && (
           <button
             type="button"
             onClick={onClose}
@@ -736,7 +747,15 @@ export function EntityModal({
           >
             <X className="size-4" />
           </button>
+          )}
         </header>
+        {onShowOnMap && (
+          <div className="mw-action-row mw-entity-actions">
+            <button type="button" className="mw-pill-btn mw-pill-ring" onClick={onShowOnMap}>
+              Show the whole boundary on the map
+            </button>
+          </div>
+        )}
 
         {subject.bodyCard ? (
           <BodySections subject={subject} onOpenHolder={onOpenHolder} />

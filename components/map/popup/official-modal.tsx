@@ -49,6 +49,11 @@ interface OfficialModalProps {
   tier: Tier;
   reactionContext: ReactionViewContext | null;
   onClose: () => void;
+  /**
+   * Rendered as the body of the reader's one large card (approved design,
+   * 2026-09-28), which owns the frame, Escape, Back and Close.
+   */
+  embedded?: boolean;
 }
 
 export function OfficialModal({
@@ -57,14 +62,16 @@ export function OfficialModal({
   tier,
   reactionContext,
   onClose,
+  embedded = false,
 }: OfficialModalProps) {
   useEffect(() => {
+    if (embedded) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, embedded]);
 
   /*
    * Item 7's clean render, on the Sources section: the congress-legislators
@@ -103,15 +110,15 @@ export function OfficialModal({
 
   return (
     <div
-      className="account-modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-label={holder.name}
+      className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
+      role={embedded ? undefined : "dialog"}
+      aria-modal={embedded ? undefined : "true"}
+      aria-label={embedded ? undefined : holder.name}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (!embedded && event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="account-modal">
+      <div className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}>
         {/*
           Item 3 (2026-08-16): the header carries the TIER EYEBROW and the
           close control, and nothing else.
@@ -134,6 +141,7 @@ export function OfficialModal({
             </p>
           </div>
 
+          {!embedded && (
           <button
             type="button"
             onClick={onClose}
@@ -142,6 +150,7 @@ export function OfficialModal({
           >
             <X className="size-4" />
           </button>
+          )}
         </header>
 
         {/*

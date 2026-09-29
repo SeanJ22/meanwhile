@@ -22,8 +22,25 @@ import {
  * final rendered Reader proof requires of this footer. The prose lives there
  * once; this file renders it and holds no copy.
  */
-export function DataFreshness({ snapshot }: { snapshot: SnapshotStatus }) {
+export function DataFreshness({
+  snapshot,
+  compact = false,
+}: {
+  snapshot: SnapshotStatus;
+  /** The one-line "Checked … ago" form on the About this data header. */
+  compact?: boolean;
+}) {
   const when = new Date(Date.parse(snapshot.generatedAt));
+  if (compact) {
+    return (
+      <>
+        Checked{" "}
+        <time dateTime={snapshot.generatedAt} title={when.toLocaleString()}>
+          {relativeAge(snapshot.generatedAt)}
+        </time>
+      </>
+    );
+  }
   // hotfix-0817 (2026-08-17): "Last checked 6 hours ago" is true of the rows this
   // refresh fetched and FALSE of the rows it carried forward from the
   // previous one because a source refused. A carried row does not inherit the

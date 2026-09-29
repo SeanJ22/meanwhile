@@ -30,10 +30,16 @@ import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
 import { VotingSitesPanel } from "./voting-sites-panel";
 import type { VotingSitePin } from "./map-canvas";
-import { PillCluster } from "@/components/shell/pill-cluster";
-import { clusterPlacement } from "@/lib/map/cluster-placement";
+import { PillCluster, type ReaderPop } from "@/components/shell/pill-cluster";
+import { ReaderCard } from "@/components/shell/reader-card";
+import { ReaderPopup } from "@/components/shell/reader-popup";
+import { SelectionPill } from "@/components/shell/selection-pill";
+import { AskBox } from "@/components/ask/ask-box";
+import { Logo } from "@/components/brand/logo";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useReaderLayout } from "@/hooks/use-reader-layout";
+import { ZipSwitcher } from "./zip-switcher";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
-import { useCompactMap } from "@/hooks/use-compact-map";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -43,7 +49,6 @@ import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { lastReadByDivision } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
-import { divisionUpcoming, showDivisionUpcoming } from "@/lib/state/list-focus";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import {
@@ -76,7 +81,6 @@ import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/ju
 
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
-import { SiteFootnote } from "./site-footnote";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
@@ -99,18 +103,6 @@ import type { ModalSubject } from "./popup/entity-modal";
  * which only becomes true in a client effect. The map is NOT here — the
  * author's instruction is explicit and MapLibre is the landing product.
  */
-const DistrictPopup = dynamic(
-  () => import("./popup/district-popup").then((m) => m.DistrictPopup),
-  { ssr: false },
-);
-const MeetingPopup = dynamic(
-  () => import("./popup/meeting-popup").then((m) => m.MeetingPopup),
-  { ssr: false },
-);
-const OfficialPopup = dynamic(
-  () => import("./popup/official-popup").then((m) => m.OfficialPopup),
-  { ssr: false },
-);
 const OfficialModal = dynamic(
   () => import("./popup/official-modal").then((m) => m.OfficialModal),
   { ssr: false },
@@ -283,9 +275,8 @@ function MapEntryInner() {
    * which is why the first paint carried both surfaces at once.
    */
   const [noticeCollapsed, setNoticeCollapsed] = useState(true);
-  const compactMap = useCompactMap();
-  const [districtExpanded, setDistrictExpanded] = useState(false);
-  const compactBoundary = compactMap && Boolean(ui.selectedDistrictOcdId);
+  /** The one small popup on screen, if any (see THE ONE-VIEW MODEL below). */
+  const [pop, setPop] = useState<ReaderPop>(null);
 
   /*
    * Popup state, in the two-tier architecture (3). Declared before the
@@ -340,15 +331,6 @@ function MapEntryInner() {
   const setLarge = useCallback((next: LargeSurface | null) => {
     setLargeStack(next ? [next] : []);
   }, []);
-  /** Close the top card and return to the one under it — never straight out. */
-  const closeLarge = useCallback(() => {
-    setLargeStack((stack) => stack.slice(0, -1));
-  }, []);
-  const [officialPopup, setOfficialPopup] = useState<{
-    holder: SeatHolder;
-    seatLabel: string | null;
-    tier: "local" | "state" | "national";
-  } | null>(null);
   // The last set of districts a click landed in, so the popup can recover
   // the full hit — the store keeps only the identifier and type.
   const [lastHits, setLastHits] = useState<DistrictHit[]>([]);
@@ -492,8 +474,8 @@ function MapEntryInner() {
       // across a zip change is a stale-data bug (3).
       dispatch({ type: "select/district", ocdId: null, districtType: null });
       setPopupMeeting(null);
-      setOfficialPopup(null);
       setLarge(null);
+      setPop(null);
       setLastHits([]);
       setFailure(null);
       setWelcomeRequested(false);
@@ -710,9 +692,10 @@ function MapEntryInner() {
    */
   const openSurface = useCallback(
     (surface: "sidebar" | "wgh" | "large") => {
-      setSidebarState(surface === "sidebar" ? "open" : "closed");
+      // Approved reader design: the sidebar stays put (dimmed under the
+      // scrim) while the card is open; only opening it is a sidebar change.
+      if (surface === "sidebar") setSidebarState("open");
       setNoticeCollapsed(surface !== "wgh");
-      setDistrictExpanded(false);
       if (surface !== "large") setLarge(null);
     },
     [setLarge],
@@ -739,8 +722,7 @@ function MapEntryInner() {
       openSurface("large");
       // The large tier subsumes the compact card that opened it, and the
       // list overlay yields — three surfaces at once was the defect.
-      if (next.kind === "official") setOfficialPopup(null);
-      if (next.kind === "entity") setPopupMeeting(null);
+      setPopupMeeting(null);
       dispatch({ type: "list/open", open: false });
       // 8a: a sidebar door is a large surface too, and yields the same way.
       dispatch({ type: "door/close" });
@@ -755,16 +737,18 @@ function MapEntryInner() {
       tier: "local" | "state" | "national",
       ocdId: string | null,
     ) => {
-      setOfficialPopup({ holder, seatLabel, tier });
-      // BC-16: most recent click wins.
-      setPopupMeeting(null);
+      // Approved reader design (2026-09-28): a person opens their full
+      // Battlecard in the one large card. The compact popup is retired as a
+      // separate surface; the card carries everything it showed (identity,
+      // contacts, office, voting record) plus the rest of the record.
+      openLarge({ kind: "official", holder, seatLabel, tier });
       // Author-approved (1d), disclosed on /transparency in the same change.
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
         officialId: holder.id,
       });
     },
-    [],
+    [openLarge],
   );
 
   // Opening the list overlay closes any large popup — the same
@@ -799,12 +783,13 @@ function MapEntryInner() {
    * half sends nothing that could identify the reader, and the effects fire
    * on state *changes*, so a re-render logs nothing.
    */
+  // Filled in once `bodyForMeeting` exists (below); a click only ever runs
+  // after the render that assigned it.
+  const openMeetingCard = useRef<(meeting: Meeting) => void>(() => {});
   const openMeeting = useCallback((meeting: Meeting) => {
-    setPopupMeeting(meeting);
-    // BC-16: most recent click wins. See the effect below for the half of this
-    // that no opener can be relied on to do.
-    setOfficialPopup(null);
-    setNoticeCollapsed(true);
+    // Approved reader design: a meeting opens its full card (date, calendar,
+    // agenda, where, who holds it, Speak your mind) inside the one card.
+    openMeetingCard.current(meeting);
     // A division-less body (null ocdId) logs the event with no division.
     logEvent("MEETING_OPENED", meeting.ocdId ? [meeting.ocdId] : [], {
       meetingId: meeting.id,
@@ -1010,22 +995,11 @@ function MapEntryInner() {
     setPrevSelectionKey(selectionKey);
     if (ui.selectedVenueKey || ui.selectedDistrictOcdId) {
       setPopupMeeting(null);
-      setOfficialPopup(null);
     }
   }
 
-  // LAY-12: selected boundaries keep both details one tap away on smaller
-  // screens. The desktop reference still opens Who Governs Here.
-  const districtLayoutKey = `${compactMap}:${ui.selectedDistrictOcdId ?? ""}`;
-  const [lastDistrictLayout, setLastDistrictLayout] = useState(districtLayoutKey);
-  if (districtLayoutKey !== lastDistrictLayout) {
-    setLastDistrictLayout(districtLayoutKey);
-    if (ui.selectedDistrictOcdId) {
-      setNoticeCollapsed(compactMap);
-      setDistrictExpanded(false);
-      if (compactMap) setSidebarState("closed");
-    }
-  }
+  // A selected boundary opens its own district card (the one-view model,
+  // below); Who governs here? no longer opens as a side effect.
 
   /*
    * The engagement signals that shrink the who-governs card (2h): a pin, a
@@ -1117,6 +1091,13 @@ function MapEntryInner() {
     },
     [current],
   );
+  useEffect(() => {
+    openMeetingCard.current = (meeting: Meeting) =>
+      openLarge({
+        kind: "entity",
+        subject: meetingSubject(meeting, bodyForMeeting(meeting)),
+      });
+  }, [openLarge, bodyForMeeting]);
 
   useEffect(() => {
     if (!current) return;
@@ -1307,11 +1288,11 @@ function MapEntryInner() {
 
   const onPickMeeting = useCallback(
     (meeting: Meeting) => {
-      const venue = venues.find((v) =>
-        v.meetings.some((m) => m.id === meeting.id),
-      );
-      if (venue) dispatch({ type: "select/venue", key: venue.key });
-      setNoticeCollapsed(true);
+      // Approved reader design (2026-09-28): a list row opens that meeting's
+      // card, one level deeper inside the same card; Back returns to the list
+      // at the same scroll position. The camera still moves to the room, so
+      // closing the card lands on the meeting's place.
+      openMeeting(meeting);
       /*
        * D18: a meeting held online has nowhere to fly the camera to, and it
        * is in no venue — so the venue selection above finds nothing and the
@@ -1332,14 +1313,9 @@ function MapEntryInner() {
           zoom: 14,
           key: meeting.id,
         });
-      } else {
-        openLarge({
-          kind: "entity",
-          subject: meetingSubject(meeting, bodyForMeeting(meeting)),
-        });
       }
     },
-    [venues, dispatch, openLarge, bodyForMeeting],
+    [openMeeting],
   );
 
   /*
@@ -1566,31 +1542,28 @@ function MapEntryInner() {
   const onTilesRecovered = useCallback(() => setTilesFailed(false), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
   /*
-   * G05 RULE 4a — THE ASK PILL OPENS ASK, AND NOTHING ELSE.
+   * ── THE ONE-VIEW MODEL (approved reader design, 2026-09-28) ──
    *
-   * What it used to do is the whole reason the rule exists: `openAsk`
-   * un-collapsed the who-governs card and scrolled the cursor into the ask box
-   * living inside it, across two animation frames. Tapping "Ask" opened a
-   * different surface — which is precisely *"tapping the Ask pill never opens
-   * WGH"*. The two frames were needed because the box was somewhere else; now
-   * the box is under the pill, so there is nothing to wait for and nothing to
-   * scroll to.
+   * Two kinds of contextual surface, and never more than one on screen:
    *
-   * The expansion is one boolean, and it deliberately does not participate in
-   * 4c: opening Ask closes no surface, and no surface closes Ask.
+   * - SMALL POPUPS anchored to their control — the ZIP, Where can I vote? and
+   *   Ask. `pop` holds which one.
+   * - ONE LARGE CARD over a scrim — every list, Who governs here?, a venue, a
+   *   body, a district, a meeting and a person. Which view it shows is DERIVED
+   *   from the state the existing openers already write (the list and door
+   *   flags, the selected venue, the large stack, the who-governs flag), in a
+   *   fixed priority, so no opener anywhere had to learn a second API.
+   *
+   * Opening a popup closes the card; opening the card closes the popup;
+   * opening the sidebar closes both. Moving deeper inside the card records the
+   * view it left (its state and its scroll position) on `backStack`, so
+   * "← Back to …" restores exactly that view, and the browser's own Back does
+   * the same through one history entry per level.
    */
-  const [askOpen, setAskOpen] = useState(false);
-
   /*
-   * B19 — where the reader can actually vote.
-   *
-   * Three pieces of state and no more: whether the panel is open, the pins
-   * the answer produced, and which pin is selected. The pins live HERE rather
-   * than inside the panel because the map draws them and the panel does not,
-   * and a component that owns a list the map renders is the one that has to
-   * clear it when it closes.
+   * B19 — where the reader can actually vote. The pins live HERE because the
+   * map draws them; the popup that produced them clears them when it closes.
    */
-  const [votingOpen, setVotingOpen] = useState(false);
   const [votingPins, setVotingPins] = useState<VotingSitePin[]>([]);
   /** VOT-1: the point the reader's address resolved to, for the ten-mile ring. */
   const [votingAddressPoint, setVotingAddressPoint] = useState<{ lat: number; lng: number } | null>(
@@ -1599,38 +1572,15 @@ function MapEntryInner() {
   const [selectedVotingSiteId, setSelectedVotingSiteId] = useState<string | null>(
     null,
   );
-  const closeVoting = useCallback(() => {
-    setVotingOpen(false);
+  const closePop = useCallback(() => {
+    setPop(null);
     setVotingPins([]);
     setSelectedVotingSiteId(null);
   }, []);
 
-  // 4a: focus lands in the input the expansion just mounted. One frame,
-  // because the input is a child of the pill's own cluster rather than a
-  // surface that has to be opened first.
-  const onToggleAsk = useCallback((open: boolean) => {
-    setAskOpen(open);
-    if (!open) return;
-    takeForeground(); // MTG-11
-
-    requestAnimationFrame(() => {
-      document
-        .querySelector<HTMLInputElement>("[data-ask-panel] [data-ask-box]")
-        ?.focus({ preventScroll: true });
-    });
-  }, [takeForeground]);
-
   /*
-   * 6f: Near me resolves districts, through the SAME machinery a narrowed
-   * street address uses (D53). Reusing `onStreetPoint` rather than inventing
-   * a parallel path is the point — one definition of what a point means, one
-   * lifetime (React state, this tab), one promise about storage. A second
-   * path would drift, and the thing it would drift on is the promise.
-   *
-   * `street` is the label the card shows for where the answer came from.
-   * "your approximate location" is the honest one here: a browser fix is a
-   * radius, and calling it an address would be the overclaim the caveat on
-   * the control exists to prevent.
+   * 6f: Near me resolves districts through the SAME machinery a narrowed
+   * street address uses (D53) — one definition of what a point means.
    */
   const onNearMePoint = useCallback(
     (point: { lat: number; lng: number }) => {
@@ -1642,260 +1592,338 @@ function MapEntryInner() {
 
   const onSelectVenue = useCallback(
     (venue: Venue) => {
+      // A pin opens its venue card and focuses the map on the room.
+      setLarge(null);
+      dispatch({ type: "list/open", open: false });
+      dispatch({ type: "door/close" });
       dispatch({ type: "select/venue", key: venue.key });
-      // Engagement (2h): the reader picked something specific; the
-      // who-governs card gets out of the way.
       setNoticeCollapsed(true);
+      if (venue.lat !== null && venue.lng !== null) {
+        setFocus({ lat: venue.lat, lng: venue.lng, zoom: 15, key: `venue:${venue.key}` });
+      }
     },
-    [dispatch],
+    [dispatch, setLarge],
   );
 
-  /*
-   * G05 RULE 4e — THE SINGLE PILL CLUSTER.
-   *
-   * ONE `<PillCluster>` is constructed here and handed to exactly one of the
-   * three slots below. That is the enforcement: the placements are not three
-   * conditional mounts of the same markup, which is the shape that renders two
-   * the day a fourth state appears — they are one node, placed. The rule's own
-   * check counts rendered instances in the live DOM (`scripts/walk-all.mts`),
-   * because a variable holding one node and a page painting one cluster are
-   * different claims and only the second one is what a reader sees.
-   *
-   * Location is a function of two booleans and nothing else, exactly as the
-   * rule states — a large battlecard is not a parameter, so with one open the
-   * cluster is on the map.
-   */
   const sidebarVisible = useSidebarVisible(sidebarState);
-  /*
-   * F01 10.3 — is the rail a SIDE panel covering part of the map, or a
-   * full-width drawer over all of it?
-   *
-   * `useSidebarVisible("default")` is the media query on its own: at `sm` and
-   * up the rail shows by default, below it the rail is a drawer. Padding the
-   * camera by 364px while a phone drawer covers the whole screen would frame
-   * the map around a rail that is not there once the drawer closes, so the
-   * inset applies only where the rail is genuinely a 364px column.
-   */
-  const railIsAColumn = useSidebarVisible("default") && sidebarVisible;
-  /**
-   * **WGH-6 (2026-08-24) — the left REGION is a column even when the RAIL is
-   * not in it.**
-   *
-   * The author: *clicking Who Governs Here minimizes the sidebar to the left
-   * and takes over that space, wide enough that every entry — Morris Hills
-   * Regional School District included — fits on one line.*
-   *
-   * The minimizing half already worked: `openSurface("wgh")` closes the rail,
-   * which is 4c's mutual exclusion. What did not work is "takes over that
-   * space" — with the rail closed, `railIsAColumn` goes false and LAY-4 would
-   * send the floaters back over the map, so the card would abandon the space
-   * the rail had just vacated rather than claiming it.
-   *
-   * This is the question LAY-4 actually needs to ask, and it is a different
-   * one: is there a left COLUMN REGION at this width, whether or not the rail
-   * is currently occupying it. `railIsAColumn` stays exactly as it was for the
-   * camera inset, which genuinely is a question about what the rail covers.
-   */
-  const railRegionIsAColumn = useSidebarVisible("default");
-  /*
-   * **LAY-4 (2026-08-24, the author's annotated capture `11-55-29`) — THE
-   * FLOATING CARDS ARE BACK, AND THEY BELONG UNDER THE RAIL.**
-   *
-   * LAY-1 (2026-08-23) nested the who-governs card INSIDE the rail's
-   * scrolling column. The author's arrows say otherwise, and the supersession
-   * table in the 8/24 brief is explicit: LAY-1 must not exist as built. Who
-   * Governs Here, the meetings/venues count and the venue panel are SEPARATE
-   * FLOATING CARDS in the viewport region BENEATH the rail — none of the
-   * three inside the rail's content area.
-   *
-   * `railIsAColumn` still decides WHERE that region is, and it is still the
-   * existing boolean rather than a second breakpoint that could drift from
-   * it: where the rail is a 364px column the floaters sit under it in
-   * `.rail-floaters`; where it is a full-width drawer they keep their place
-   * over the map in `.map-bottom-stack`, unchanged.
-   *
-   * `.rail-column` is what makes LAY-3 true BY CONSTRUCTION rather than by
-   * measurement — the rail and the floaters are flex children of one fixed
-   * column, so neither can be laid out on top of the other at any viewport.
-   * A bound that has to be measured is a bound that holds until the content
-   * changes.
-   */
-  /*
-   * Is the who-governs card OPEN? One mechanism now, at every width.
-   */
+  const {
+    bp: layoutBp,
+    headerBottom,
+    measureHeader,
+    mapInsets: insetsFor,
+    sheetHeight,
+  } = useReaderLayout();
   const wghOpen = Boolean(shown) && !noticeCollapsed;
-  /**
-   * **WGH-8 / LAY-7 (2026-08-25) — EXACTLY ONE OF THE TWO IS UP. NEVER BOTH.**
-   *
-   * The author, on the popup WGH-6 shipped: *"hate the way it looks."* His
-   * capture `09-11-14` is the other half and it is the one that names the
-   * defect — the rail is up at 07866 AND the who-governs card is expanded
-   * underneath it, both scrolling internally, on a 2048px screen.
-   *
-   * **`openSurface` was not the problem and it never was.** It has enforced
-   * this since 4c: opening WGH sets `sidebarState` to `"closed"`. What it
-   * cannot enforce is the state nobody opened — `noticeCollapsed` began
-   * `false` and `sidebarState` began `"default"`, so the FIRST PAINT had both
-   * up, at every width, before any reader touched anything.
-   *
-   * That is the shape this repo names most often: a rule enforced by every
-   * path that calls it, and a default that never calls it. So the exclusion
-   * is DERIVED here rather than maintained by handlers — `sidebarUp` cannot be
-   * true while the card is open, whatever route the state arrived by, and
-   * there is no branch left where both can paint.
-   */
-  const sidebarUp = sidebarVisible && !wghOpen;
-  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarUp });
+  // The design keeps the sidebar under the scrim while a card is open; only
+  // an explicit collapse (or a phone, where it is a sheet) hides it.
+  const sidebarUp = sidebarVisible;
+
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
       : (shown.nearZip ?? null)
     : (location?.zip ?? null);
   const clusterCoverage = shown?.coverage ?? result?.coverage ?? null;
+  const clusterOcdIds = useMemo(
+    () =>
+      clusterCoverage
+        ? [
+            ...new Set(
+              [
+                ...clusterCoverage.bodies.map((b) => b.ocdId),
+                ...clusterCoverage.seats.map((s) => s.ocdId),
+              ].filter((id): id is string => Boolean(id)),
+            ),
+          ]
+        : [],
+    [clusterCoverage],
+  );
+
+  /* ── The large card: which view, and its label ── */
+  type CardView =
+    | { kind: "large"; surface: LargeSurface }
+    | { kind: "venue"; venue: Venue }
+    | { kind: "door"; door: "bodies" | "districts" | "officials" }
+    | { kind: "list" }
+    | { kind: "governs" };
+  const cardView: CardView | null = large
+    ? { kind: "large", surface: large }
+    : selectedVenue
+      ? { kind: "venue", venue: selectedVenue }
+      : ui.door
+        ? { kind: "door", door: ui.door }
+        : ui.listOverlayOpen
+          ? { kind: "list" }
+          : wghOpen
+            ? { kind: "governs" }
+            : null;
+  const cardKey = cardView
+    ? cardView.kind === "large"
+      ? `large:${largeStack.length}:${
+          cardView.surface.kind === "entity"
+            ? cardView.surface.subject.subjectId
+            : cardView.surface.holder.id
+        }`
+      : cardView.kind === "venue"
+        ? `venue:${cardView.venue.key}`
+        : cardView.kind === "door"
+          ? `door:${cardView.door}`
+          : cardView.kind
+    : null;
+  const cardLabel = cardView ? cardViewLabel(cardView) : "";
+
+  interface CardSnapshot {
+    key: string;
+    label: string;
+    largeStack: LargeSurface[];
+    venueKey: string | null;
+    door: "bodies" | "districts" | "officials" | null;
+    listOpen: boolean;
+    listFocus: {
+      focusBodyId: string | null;
+      focusBodyName: string | null;
+      focusDivision: { ocdId: string; name: string } | null;
+    };
+    wgh: boolean;
+    scroll: number;
+  }
+  const [backStack, setBackStack] = useState<CardSnapshot[]>([]);
+  const [restoreScroll, setRestoreScroll] = useState(0);
+  // Parked: the card is set aside so the map can show a boundary or a room,
+  // and the selection pill's "Details ↗" brings it back unchanged.
+  const [parked, setParked] = useState(false);
+  const cardScroll = useRef(0);
+  const restoring = useRef(false);
+  const lastCard = useRef<CardSnapshot | null>(null);
+  const historyDepth = useRef(0);
+
+  const snapshotNow: CardSnapshot | null = cardKey
+    ? {
+        key: cardKey,
+        label: cardLabel,
+        largeStack,
+        venueKey: ui.selectedVenueKey,
+        door: ui.door,
+        listOpen: ui.listOverlayOpen,
+        listFocus: {
+          focusBodyId: ui.listFocusBodyId,
+          focusBodyName: ui.listFocusBodyName,
+          focusDivision: ui.listFocusDivision,
+        },
+        wgh: !noticeCollapsed,
+        scroll: 0,
+      }
+    : null;
+
+  // Transitions only: runs when the view changes, reading the snapshot the
+  // previous render stored (the effect after this one keeps it current).
+  useEffect(() => {
+    const prev = lastCard.current;
+    const prevKey = prev?.key ?? null;
+    if (cardKey !== prevKey) {
+      if (restoring.current) {
+        // A Back: the restored view is not a new level.
+      } else if (prev && cardKey) {
+        // Deeper inside the card: remember where the reader was. Read the
+        // position now — the updater runs after this effect resets it.
+        const left = { ...prev, scroll: cardScroll.current };
+        setBackStack((stack) => [...stack, left]);
+        setRestoreScroll(0);
+        pushCardHistory(historyDepth);
+      } else if (cardKey) {
+        setBackStack([]);
+        setRestoreScroll(0);
+        pushCardHistory(historyDepth);
+      } else {
+        setBackStack([]);
+        unwindCardHistory(historyDepth);
+      }
+      cardScroll.current = 0;
+      if (cardKey) {
+        setPop(null);
+        setParked(false);
+      }
+    }
+    restoring.current = false;
+  }, [cardKey]);
+  useEffect(() => {
+    lastCard.current = snapshotNow;
+  });
+
+  const closeCard = useCallback(() => {
+    setLargeStack([]);
+    dispatch({ type: "list/open", open: false });
+    dispatch({ type: "door/close" });
+    dispatch({ type: "select/venue", key: null });
+    setNoticeCollapsed(true);
+    setBackStack([]);
+    setParked(false);
+  }, [dispatch]);
+
+  const applySnapshot = useCallback(
+    (snap: CardSnapshot) => {
+      setLargeStack(snap.largeStack);
+      dispatch({ type: "select/venue", key: snap.venueKey });
+      if (snap.listOpen) {
+        dispatch({ type: "list/open", open: true, ...snap.listFocus });
+      } else if (snap.door) {
+        dispatch({ type: "door/open", door: snap.door });
+      } else {
+        dispatch({ type: "list/open", open: false });
+        dispatch({ type: "door/close" });
+      }
+      setNoticeCollapsed(!snap.wgh);
+      setRestoreScroll(snap.scroll);
+    },
+    [dispatch],
+  );
+
+  const backCard = useCallback(() => {
+    const snap = backStack[backStack.length - 1];
+    if (!snap) {
+      closeCard();
+      return;
+    }
+    setBackStack((stack) => stack.slice(0, -1));
+    // The restored view is not a new level; flag it only when the view will
+    // actually change (the transition effect consumes the flag).
+    if (snap.key !== cardKey) restoring.current = true;
+    applySnapshot(snap);
+  }, [backStack, applySnapshot, closeCard, cardKey]);
+
+  /*
+   * Browser Back steps back through the card, exactly like "← Back to …",
+   * and from the first view closes it. One history entry per level, pushed
+   * with the same URL so no route is re-rendered and no deep link changes.
+   */
+  const backRef = useRef(backCard);
+  const closeRef = useRef(closeCard);
+  useEffect(() => {
+    backRef.current = backCard;
+    closeRef.current = closeCard;
+  }, [backCard, closeCard]);
+  useEffect(() => {
+    const onPop = () => {
+      if (historyDepth.current <= 0) return;
+      historyDepth.current -= 1;
+      if (historyDepth.current === 0) closeRef.current();
+      else backRef.current();
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  const onCardBack = useCallback(() => {
+    if (historyDepth.current > 1) window.history.back();
+    else backCard();
+  }, [backCard]);
+  const onCardClose = useCallback(() => {
+    closeCard();
+  }, [closeCard]);
+
+  const openPopup = useCallback(
+    (next: Exclude<ReaderPop, null>) => {
+      if (pop === next) {
+        closePop();
+        return;
+      }
+      if (pop === "vote") {
+        setVotingPins([]);
+        setSelectedVotingSiteId(null);
+      }
+      closeCard();
+      takeForeground(); // MTG-11
+      setPop(next);
+    },
+    [pop, closePop, closeCard, takeForeground],
+  );
+
+  const openGoverns = useCallback(() => {
+    if (wghOpen) {
+      closeCard();
+      return;
+    }
+    closeCard();
+    setPop(null);
+    setNoticeCollapsed(false);
+  }, [wghOpen, closeCard]);
+
+  const openSidebar = useCallback(() => {
+    closeCard();
+    setPop(null);
+    setSidebarState("open");
+  }, [closeCard]);
+  const collapseSidebar = useCallback(() => {
+    setPop(null);
+    setSidebarState("closed");
+  }, []);
+
+  /* ── The map's selection pill (district boundary or venue focus) ── */
+  const selectedDistrictHit = districtPopup;
+  const pillVenue = !cardView || parked ? selectedVenue : null;
+  const pillDistrict =
+    (!cardView || parked) && ui.selectedDistrictOcdId
+      ? (selectedDistrictHit ?? {
+          ocdId: ui.selectedDistrictOcdId,
+          label: "the selected district",
+          tier: "local" as const,
+        })
+      : null;
+  const [fitNonce, setFitNonce] = useState(0);
+  const parkCard = useCallback(() => setParked(true), []);
+
+  // A map click that selects a district opens its card (the district view).
+  const openedDistrict = useRef<string | null>(null);
+  useEffect(() => {
+    const id = ui.selectedDistrictOcdId;
+    if (!id) {
+      openedDistrict.current = null;
+      return;
+    }
+    if (id === openedDistrict.current || !districtPopup) return;
+    openedDistrict.current = id;
+    openLarge({
+      kind: "entity",
+      subject: districtSubject(
+        districtPopup,
+        current?.meetings ?? [],
+        current?.coverage ?? null,
+        districtRepresentation,
+      ),
+    });
+  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentation]);
+
+  const selectionTop =
+    pillVenue || pillDistrict ? (layoutBp === "phone" && (parked || pillVenue) ? 112 : 64) : 0;
+  const mapInsets = useMemo(
+    () => insetsFor({ sidebar: sidebarUp, selection: selectionTop }),
+    [insetsFor, sidebarUp, selectionTop],
+  );
+
   const cluster = (
     <PillCluster
-      placement={clusterAt}
+      placement={sidebarUp ? "sidebar" : "map"}
       zip={clusterZip}
       coverage={clusterCoverage}
-      onPickZip={search}
-      askOpen={askOpen}
-      onToggleAsk={onToggleAsk}
-      ocdIds={
-        clusterCoverage
-          ? [
-              ...new Set(
-                [
-                  ...clusterCoverage.bodies.map((b) => b.ocdId),
-                  ...clusterCoverage.seats.map((s) => s.ocdId),
-                ].filter((id): id is string => Boolean(id)),
-              ),
-            ]
-          : []
-      }
-      onSearchPick={onSearchPick}
-      /*
-        **ASK-3 / ASK-4 / ASK-8 (2026-08-24) — the SAME two openers the
-        who-governs card is handed, a few lines below.**
-
-        Not a second implementation: the who-governs card settled this click
-        grammar on 2026-08-16 — a person's name opens their card, a body's row
-        opens the body's — and handing Ask the identical handlers is what makes
-        "the name is a door" mean the same thing on both surfaces. A second
-        lookup keyed on a label could resolve one name to a different body,
-        which is the class of defect the distinct-keys rule names.
-
-        There is exactly one `PillCluster` in this app, constructed here, so
-        every placement of the Ask panel — the rail, the who-governs card, and
-        the collapsed top-right pill the author captured in `12-12-28` —
-        inherits both openers from this one line.
-      */
-      onOpenBody={(body) =>
-        openLarge({
-          kind: "entity",
-          subject: bodySubject(body, shown?.meetings ?? []),
-        })
-      }
-      onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
+      pop={pop}
+      governsOpen={cardView?.kind === "governs"}
+      onOpenPop={openPopup}
+      onOpenGoverns={openGoverns}
     />
   );
-  /*
-   * Is a cluster on screen ANYWHERE? `PillCluster` renders null without a
-   * resolved five-digit zip, so "we placed it" and "it painted" are different
-   * claims and only the second one decides whether a fallback ballot door is
-   * needed.
-   *
-   * THE DEFECT THIS FIXES, caught in a 390px screenshot rather than reasoned
-   * about: 4c makes the rail and the who-governs card mutually exclusive on
-   * every reader-initiated open, but it does not touch the DEFAULT state, and
-   * on desktop the default is a visible rail plus WGH's automatic first-show.
-   * With the cluster at WGH, the rail fell through to its own ballot link and
-   * the reader had two doors onto one surface — the duplicate-entry friction
-   * CLAUDE.md calls a defect. Each fallback is now conditioned on there being
-   * no cluster at all, so the count on screen is exactly one.
-   *
-   * The default state is deliberately left alone: closing the desktop rail on
-   * page load, before the reader has touched anything, would remove the app's
-   * primary navigation to satisfy a rule written about phone stacking.
-   */
-  const clusterRendered = Boolean(clusterZip && /^\d{5}$/.test(clusterZip));
 
-  /*
-   * **LAY-4: the floating cards, built ONCE and placed in one of two
-   * regions.**
-   *
-   * One constructor, two placements — a second construction is a second
-   * component that drifts, and LAY-1 proved it: the card had two prop lists
-   * and two collapse handlers, and `wghOpen` needed a conditional to work out
-   * which of them was in force.
-   *
-   * The order is the author's, read off `11-55-29` and `11-54-33`: the
-   * meetings/venues count leads, the who-governs card follows, the freshness
-   * footnote closes. Each is its OWN card — separate boxes with the map
-   * visible between them, never one panel with three sections in it.
-   */
-  const floaters = (
-    <>
-      <div className="pointer-events-auto">
-        <CountBadge />
-      </div>
+  const zipContext = clusterZip
+    ? `Near ${clusterZip} · orientation, not your exact districts`
+    : null;
 
-      {tilesFailed && <TileNotice />}
-      {failure && (
-        <SearchFailedNotice
-          failure={failure}
-          onRetry={() => setRetryNonce((n) => n + 1)}
-        />
-      )}
-
-      {/*
-        The skeleton stands ONLY before the first answer for this area — no
-        `shown` (held) answer yet and no failure. It used to also stand on
-        `!mapPresentationReady`, which meant the card fell back to skeleton bars
-        on every motion (and, on a software rasteriser, mid-fly-in) even with a
-        held answer in hand. A refresh now DIMS the held card through the
-        `data-refreshing` rule; it never unmounts. A first-time visitor sees the
-        skeleton the moment they enter a zip (location set, answer in flight),
-        never a blank.
-      */}
-      {location && !shown && !failure ? <GoverningSkeleton /> : shown &&
-        (noticeCollapsed ? (
-          /*
-           * Shrunk out of the way (2h), not gone: one tap brings the full
-           * card back. **LAY-4: the pill lands in the SAME region the card
-           * floated in** — never inside the rail, which is what
-           * `.sidebar-wgh-pill` did and is why that class is deleted.
-           */
-          <button
-            type="button"
-            className={`notice-fab pointer-events-auto${compactBoundary ? " boundary-info-pill" : ""}`}
-            aria-label="Show who governs here"
-            aria-expanded={false}
-            /* 4c: opening WGH closes the rail and any battlecard. */
-            onClick={() => openSurface("wgh")}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-            Who governs here
-          </button>
+  const cardBody = (() => {
+    if (!cardView) return null;
+    switch (cardView.kind) {
+      case "governs":
+        return !shown ? (
+          <GoverningSkeleton />
         ) : (
-          // NOT wrapped in a div: `.map-bottom-stack > .coverage-notice` and
-          // `.rail-floaters > .coverage-notice` are the bounds that keep this
-          // card inside its region (M54/M55), and a `>` combinator reads the
-          // DOM tree, not the box tree — a wrapper would silently unbind it
-          // and the card would grow off the top again. The refreshing state
-          // rides as a prop instead.
           <CoverageNotice
+            embedded
             tier={shown.tier}
             zip={shown.zip}
             radiusKm={shown.radiusKm}
@@ -1907,20 +1935,8 @@ function MapEntryInner() {
             failedSourceOcdIds={
               shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
             }
-            /* The snapshot's last-refresh instant, spelled out by the card's
-               per-body source notes (RULING 258). The card intersects
-               `failedSourceOcdIds` with the reader's own bodies, so the
-               unscoped site-wide failure list never puts another area's board
-               on this card. */
             lastCheckedAt={shown.snapshot?.generatedAt ?? null}
-            /* 2026-09-24: each division's own newest calendar read, from the
-               same rows the pins are drawn from. */
             lastReadByOcdId={lastReadByDivision(shown.meetings ?? [])}
-            /* F01 7.2: what the MAP is actually showing, so the card
-               cannot say “may be missing” about a body whose pins the
-               reader can see. Read off the same meeting array the pins
-               are drawn from — a second derivation is how two surfaces
-               come to disagree, which is the defect this closes. */
             ocdIdsWithMeetings={[
               ...new Set(
                 (shown.meetings ?? []).flatMap((m) => (m.ocdId ? [m.ocdId] : [])),
@@ -1933,197 +1949,166 @@ function MapEntryInner() {
                 subject: bodySubject(body, shown.meetings ?? []),
               })
             }
-            onMinimize={() => setNoticeCollapsed(true)}
             onNarrowApplied={onNarrowApplied}
             onStreetPoint={onStreetPoint}
-            /* 4e: the WGH slot, which wins over the other two. */
-            pillCluster={clusterAt === "wgh" ? cluster : null}
-            clusterElsewhere={clusterRendered}
+            clusterElsewhere
           />
-        ))}
+        );
+      case "list":
+        return <ListOverlay embedded onPickMeeting={onPickMeeting} />;
+      case "door":
+        return (
+          <DoorOverlay
+            embedded
+            door={cardView.door}
+            coverage={current?.coverage ?? null}
+            meetings={current?.meetings ?? []}
+            drawnDistricts={drawnDistricts}
+            districtOverlayOn={ui.showDistricts}
+            atAddress={data.atAddress}
+            onShowDistricts={() => setShowDistricts(true)}
+            onOpenOfficial={(holder, seatLabel, tier) =>
+              openLarge({ kind: "official", holder, seatLabel, tier })
+            }
+            onOpenMeeting={openMeeting}
+            onOpenBody={(body) =>
+              openLarge({
+                kind: "entity",
+                subject: bodySubject(body, current?.meetings ?? []),
+              })
+            }
+            onClose={closeCard}
+          />
+        );
+      case "venue":
+        return (
+          <MeetingPanel
+            embedded
+            venue={cardView.venue}
+            placeless={selectedVenuePlaceless}
+            onOpenMeeting={openMeeting}
+            onShowOnMap={parkCard}
+            onClose={closeCard}
+          />
+        );
+      case "large": {
+        const surface = cardView.surface;
+        if (surface.kind === "entity") {
+          const subject =
+            surface.subject.divisionOcdId &&
+            districtPopup &&
+            surface.subject.divisionOcdId === districtPopup.ocdId
+              ? districtSubject(
+                  districtPopup,
+                  current?.meetings ?? [],
+                  current?.coverage ?? null,
+                  districtRepresentation,
+                )
+              : surface.subject;
+          return (
+            <EntityModal
+              embedded
+              subject={subject}
+              onClose={closeCard}
+              homeZip={clusterZip}
+              onShowOnMap={
+                subject.divisionOcdId && subject.divisionOcdId === ui.selectedDistrictOcdId
+                  ? () => {
+                      setFitNonce((n) => n + 1);
+                      parkCard();
+                    }
+                  : undefined
+              }
+              onOpenHolder={(holder) =>
+                pushLarge({
+                  kind: "official",
+                  holder,
+                  seatLabel: null,
+                  tier: "local",
+                })
+              }
+              onOpenPlaceBody={(key) => {
+                const body = (current?.coverage?.bodies ?? []).find(
+                  (b) => b.bodyId === key,
+                );
+                if (body) {
+                  pushLarge({
+                    kind: "entity",
+                    subject: bodySubject(body, current?.meetings ?? []),
+                  });
+                }
+              }}
+            />
+          );
+        }
+        return (
+          <OfficialModal
+            embedded
+            holder={surface.holder}
+            seatLabel={surface.seatLabel}
+            tier={surface.tier}
+            reactionContext={
+              view
+                ? {
+                    zip:
+                      current && /^\d{5}$/.test(current.zip)
+                        ? current.zip
+                        : (view.zip ?? null),
+                    lat: view.lat,
+                    lng: view.lng,
+                  }
+                : null
+            }
+            onClose={closeCard}
+          />
+        );
+      }
+    }
+  })();
 
-      {compactMap && districtPopup && !districtExpanded && !officialPopup && !large && (
-        <button
-          type="button"
-          className="boundary-info-pill district-info-pill pointer-events-auto"
-          data-boundary-details={districtPopup.ocdId}
-          aria-label={`Show ${districtPopup.label} details`}
-          aria-expanded={false}
-          onClick={() => {
-            setNoticeCollapsed(true);
-            setSidebarState("closed");
-            setDistrictExpanded(true);
-          }}
-        >
-          <span>{districtPopup.label}</span>
-          <span aria-hidden="true">↗</span>
-        </button>
-      )}
+  const cardTone =
+    cardView?.kind === "large"
+      ? cardView.surface.kind === "entity"
+        ? `var(--accent-${cardView.surface.subject.tier})`
+        : `var(--accent-${cardView.surface.tier})`
+      : undefined;
+  const cardKicker =
+    cardView?.kind === "large"
+      ? cardView.surface.kind === "official"
+        ? "Battlecard"
+        : cardView.surface.subject.subjectKind === "MEETING"
+          ? "Meeting"
+          : cardView.surface.subject.divisionOcdId
+            ? "District"
+            : "Body"
+      : cardView?.kind === "venue"
+        ? "Venue"
+        : cardLabel;
 
-      {/* Provenance, not headline (3): "Last checked" demotes to a
-          footnote below the who-governs card — and LAY-8 (2026-08-25) sends
-          the rail’s "What this site collects / Feedback" block down to sit
-          beside it, which is where the author’s dotted arrow lands. */}
-      <SiteFootnote snapshot={shown?.snapshot ?? null} />
-    </>
-  );
+  const popTitle =
+    pop === "zip" ? "Show me a ZIP" : pop === "vote" ? "Where can I vote?" : "Ask";
 
   return (
     <DataProvider value={data}>
       {/*
-        `JUR-2` (2026-08-23). The jurisdiction badge renders on three surfaces,
-        every one of them several components deep, and until now it could only
-        ASSERT — clicking it did nothing, and what it asserted was resolved
-        from a zip. Providing the two handlers once here means a badge anywhere
-        can open the address prompt and have the whole page re-resolve from the
-        server's answer, without a dozen component signatures each getting a
-        chance to forget to pass them.
+        `JUR-2` (2026-08-23): the jurisdiction badge can open the address
+        prompt anywhere, and the whole page re-resolves from the answer.
       */}
       <AddressResolutionProvider
         value={{ onPoint: onStreetPoint, onResolved: onNarrowApplied }}
       >
       <main
-        className="relative h-dvh w-full overflow-hidden"
-        /* WGH-8: the attribute carries the DERIVED state, not the raw one.
-           Every CSS rule that hides the rail keys on this, so the exclusion is
-           true in the stylesheet as well as in the tree. */
-        data-sidebar={wghOpen ? "closed" : sidebarState}
-        data-compact-boundary={compactBoundary ? "true" : undefined}
+        className="mw-reader relative h-dvh w-full overflow-hidden"
+        data-sidebar={sidebarUp ? "open" : "closed"}
+        data-bp={layoutBp}
+        style={
+          {
+            "--hdr-bottom": `${headerBottom}px`,
+            "--sheet-h": `${sheetHeight(sidebarUp, selectionTop)}px`,
+          } as React.CSSProperties
+        }
       >
-        {/*
-          **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**
-
-          The author's annotated capture `11-55-29` draws two arrows: one from
-          the rail's bottom edge straight DOWN into the region below it, one
-          from the meetings/venues chip LEFT into that same region. That region
-          is `.rail-floaters`, and this wrapper is what makes it exist.
-
-          Flex children of one column cannot be laid out on top of each other.
-          That is LAY-3 answered BY CONSTRUCTION — no measured bound, nothing
-          to drift when the who-governs card grows from 12 bodies to 174. Both
-          children shrink and scroll inside themselves rather than overflowing,
-          and the rail shrinks FIRST (`flex-shrink: 2` against 1) because the
-          floaters carry the answer the reader came for.
-        */}
-        <div className="rail-column">
-          <Sidebar
-            onReset={onReset}
-            onChangeLocation={() => {
-              takeForeground(); // MTG-11
-              setWelcomeRequested(true);
-            }}
-            showDistricts={showDistricts}
-            districtsFailed={districtsFailed}
-            onToggleDistricts={setShowDistricts}
-            mobileOpen={sidebarState === "open"}
-            onMobileClose={() => setSidebarState("closed")}
-            onNearMePoint={onNearMePoint}
-            /* 4e: the sidebar slot. `clusterElsewhere` tells the rail whether a
-               cluster painted anywhere, so its fallback ballot link can never
-               become a second door onto the same surface. */
-            pillCluster={clusterAt === "sidebar" ? cluster : null}
-            clusterElsewhere={clusterRendered}
-          />
-
-          {/* Where the rail is a COLUMN, the floaters live under it. Where it
-              is a full-width drawer they keep their place over the map, in
-              `.map-bottom-stack` below — one boolean, no second breakpoint. */}
-          {railRegionIsAColumn && (
-            <div className="rail-floaters">{floaters}</div>
-          )}
-        </div>
-
-        {/* F01 9.4 (2026-08-19, the author): *"I don't like that I have to open
-            the sidebar to reset. A very, very, very small reset button or
-            widget should be available if I'm just looking around the map."*
-
-            Reset was reachable only from inside the rail, so a reader who had
-            panned somewhere strange had to open a panel to get home — a hidden
-            entry point, which the friction rule counts as a defect with the
-            same standing as a wrong number.
-
-            Deliberately governed by the SAME CSS rule as the hamburger it sits
-            under: visible exactly when the rail is not. The rail has its own
-            reset, and two reset buttons on one screen is worse than one in the
-            wrong place — the reader would have to work out whether they do the
-            same thing. 32px against the hamburger's 44 because it is the
-            secondary control of the pair, and it is what "very, very, very
-            small" translates to inside the committed scale. */}
-        <button
-          type="button"
-          className="map-reset-btn"
-          title="Reset view"
-          aria-label="Reset view"
-          onClick={onReset}
-        >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
-            <path d="M3 3v5h5" />
-          </svg>
-        </button>
-
-        {/* The hamburger (2f) — rendered always, shown by CSS whenever the
-            sidebar is effectively hidden, at any width. The backdrop is
-            phone-only: it sits under the sidebar's z-1000 so tapping the map
-            closes the drawer instead of dropping a pin through it. */}
-        <button
-          type="button"
-          className="sidebar-toggle"
-          aria-label="Open menu"
-          /* 4c: opening the rail closes the who-governs card and any
-             battlecard — mutual and symmetric with both. */
-          onClick={() => openSurface("sidebar")}
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
-        {sidebarState === "open" && (
-          <div
-            className="sidebar-backdrop sm:hidden"
-            onClick={dismissSidebar}
-          />
-        )}
-
-        {/* F01 10.3 (2026-08-19, the author): *"the main sidebar is floating
-            over essentially empty gray space... the floater should be over the
-            map."*
-
-            The map used to START where the rail ended (`sm:left-[364px]`).
-            The rail is content-height and floats, so the 364px column BELOW it
-            was reserved for a map that was not allowed to be there — the empty
-            gray block he drew a red box around.
-
-            The canvas is full-bleed now and the rail floats over it. Framing is
-            preserved by handing the rail's width to the camera as PADDING
-            (`leftInset` below), so a centroid still lands in the middle of what
-            the reader can SEE rather than sliding half a rail to the left.
-
-            The OVERLAY containers below keep their offset on purpose: the
-            who-governs card, the pill cluster and the meeting panel are things
-            a reader reads, and moving them under the rail to fix a background
-            would be trading a cosmetic gap for a covered card. Only the
-            district picker follows the canvas, because its coordinates come
-            from a click on the canvas and the two must share one space. */}
-        <div className="absolute inset-0">
+        <div className="mw-map-layer absolute inset-0">
           <MapCanvas
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
@@ -2131,15 +2116,8 @@ function MapEntryInner() {
             camera={camera}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
-            /* g5 item 2: while a full-screen overlay covers the map, the
-               state scrim is suspended. The reader cannot see the map through
-               it, and leaving it composited under a second backdrop-filter
-               surface is what stopped the meetings panel painting. The
-               welcome overlay and the account modal carry the same
-               `backdrop-filter` over the same canvas, so all three count. */
             overlayOpen={
-              ui.listOverlayOpen ||
-              ui.door !== null ||
+              Boolean(cardView && !parked) ||
               !location ||
               welcomeRequested
             }
@@ -2153,10 +2131,8 @@ function MapEntryInner() {
             narrowedDistricts={narrowedDistricts}
             onDistrictClick={onDistrictClick}
             theme={theme}
-            /* F01 10.3: what the rail covers, so the camera can frame around it.
-               Zero when the rail is hidden — then nothing is covered. The
-               breakpoint matches the `sm:` the overlays still use. */
-            leftInset={railIsAColumn ? 364 : 0}
+            insets={mapInsets}
+            fitNonce={fitNonce}
             onDistrictError={onDistrictError}
             onDrawnDistricts={setDrawnDistricts}
             onSelectVenue={onSelectVenue}
@@ -2170,8 +2146,6 @@ function MapEntryInner() {
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />
-          {/* e's 6b2, built in g3 item 10: quiet within a state, explicit
-              between states. Once per ordered border pair per session. */}
           {focusState.crossing && (
             <StateCrossingPrompt
               fromName={focusState.crossing.fromName}
@@ -2180,356 +2154,198 @@ function MapEntryInner() {
               onStay={focusState.dismissCrossing}
             />
           )}
-        </div>
-
-        <div
-          className={`pointer-events-none absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[364px]"
-          } flex flex-col`}
-        >
-          {/* pr clears MapLibre's zoom control in the top-right corner. The
-              ballot bubble (2b) leads the row so it stays visible left of the
-              meeting panel when one is open.
-
-              `map-top-row` (item 2, the tester's mobile pass 2026-08-14)
-              puts this band above the bottom stack explicitly. It used to
-              rely on DOM order and lost: the bottom stack is a later
-              sibling, so a tall who-governs card painted straight over the
-              ballot entry. Ordering this load-bearing is written down, not
-              inferred. */}
-          <div className="map-top-row flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16">
-            {/* 4e: the map slot. Occupied only when neither the sidebar nor
-                the who-governs card is on screen. */}
-            {clusterAt === "map" && (
-              <div className="pointer-events-auto">{cluster}</div>
-            )}
-            {/* B19's entry point, in the top band beside the ballot cluster.
-                One tap, no menu to hunt through — a hidden entry point is
-                reader friction and friction is a defect. Playful register on
-                the button, because it is an INTERACTION surface; every word
-                inside the panel it opens is level. */}
-            <div className="pointer-events-auto">
-              {votingOpen ? (
-                <VotingSitesPanel
-                  onSites={setVotingPins}
-                  onAddressPoint={setVotingAddressPoint}
-                  selectedSiteId={selectedVotingSiteId}
-                  onSelectSite={setSelectedVotingSiteId}
-                  onClose={closeVoting}
-                />
-              ) : (
-                <button
-                  type="button"
-                  className="voting-open-button"
-                  onClick={() => {
-                    takeForeground(); // MTG-11
-                    setVotingOpen(true);
-                  }}
-                >
-                  Where can I vote?
-                </button>
-              )}
-            </div>
-            {selectedVenue && (
-              <div className="pointer-events-auto hidden sm:block">
-                <MeetingPanel
-                  venue={selectedVenue}
-                  placeless={selectedVenuePlaceless}
-                  onOpenMeeting={openMeeting}
-                  onClose={() => dispatch({ type: "select/venue", key: null })}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Extra bottom padding clears the attribution, which now sits in
-              the bottom-left corner. Anchored to the bottom edge rather than
-              flexed below the top row — a tall meeting panel up there was
-              pushing this whole group below the fold.
-
-              Items 2 and 3 (the tester's mobile pass, 2026-08-14) share one
-              cause, measured at 390×844 before it was touched: this stack
-              was bottom-anchored with NO upper bound, so the who-governs
-              card grew to 893px against an 844px viewport and its top
-              landed at y = −113. Everything above the fold went with it —
-              the ballot bubble (rendered at y=12, painted over, untappable:
-              "the floater never appears on her phone"), the count badge at
-              y = −166, and the card's own minimize control at y = −104.
-              What DID stay on top were the fixed controls — the hamburger
-              at (12,12) and MapLibre's zoom column at (349,0) — sitting
-              over card text, which is item 3.
-
-              `map-bottom-stack` bounds it: at phone width the stack starts
-              below the control band, so no fixed control ever sits over
-              readable content, and the card shrinks to the space left and
-              scrolls inside itself rather than off the screen. */}
-          <div className="map-bottom-stack absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-3 p-3 pb-9 sm:p-5 sm:pb-10">
-            {/* LAY-4: where the rail is a COLUMN these render under it, in
-                `.rail-floaters`. This is the drawer placement — the same node,
-                so the two can never drift into two different cards. */}
-            {!railRegionIsAColumn && floaters}
-
-            {selectedVenue && (
-              // The phone form of the meeting panel: a bottom sheet pinned to
-              // the viewport edge, its own scroll, the map visible behind it.
-              <div className="bottom-sheet pointer-events-auto sm:hidden">
-                <MeetingPanel
-                  venue={selectedVenue}
-                  placeless={selectedVenuePlaceless}
-                  onOpenMeeting={openMeeting}
-                  onClose={() => dispatch({ type: "select/venue", key: null })}
-                />
-              </div>
-            )}
+          {/* The map-click disambiguation stays anchored to the click. */}
+          <div className="pointer-events-none absolute inset-0">
+            <DistrictPicker />
           </div>
         </div>
 
-        {/* Positioned against the map area, so its coordinates match the
-            click that produced it — which is why this one followed the canvas
-            to full-bleed in F01 10.3 while the reader-facing overlays did not.
-            A picker offset 364px from the click it belongs to is worse than
-            any gap it could have been protecting against. */}
-        <div className="pointer-events-none absolute inset-0">
-          <DistrictPicker />
-        </div>
-
-        {/* Popups sit above the panels and below the modal, and in the one
-            corner nothing else claims: the coverage notice owns bottom-left
-            and the meeting panel owns top-right. A first attempt put them at
-            bottom-left and they landed on top of the coverage notice, which a
-            screenshot caught. */}
-        <div className={`pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto${compactBoundary ? " boundary-details-corner" : ""}`}>
-          {officialPopup && !large && (
-            <OfficialPopup
-              holder={officialPopup.holder}
-              seatLabel={officialPopup.seatLabel}
-              tier={officialPopup.tier}
-              onExpand={() =>
-                openLarge({ kind: "official", ...officialPopup })
-              }
-              onClose={() => setOfficialPopup(null)}
-            />
-          )}
-
-          {districtPopup && !officialPopup && !large && (!compactMap || districtExpanded) && (
-            <DistrictPopup
-              district={districtPopup}
-              onMinimize={compactMap ? () => setDistrictExpanded(false) : undefined}
-              onOpenOfficial={(holder) =>
-                openOfficial(
-                  holder,
-                  districtPopup.label,
-                  districtPopup.tier,
-                  districtPopup.ocdId,
-                )
-              }
-              representation={districtRepresentation.holders}
-              rosterGaps={districtRepresentation.rosterGaps ?? []}
-              representationNoteState={noteStateFor(districtRepresentation.status)}
-              /* WGH-15: the reader own area, so this card can say how their home
-                 stands relative to the district they tapped. READ-ONLY -- everything
-                 downstream runs through a BROWSING location, which settles nothing. */
-              homeZip={clusterZip}
-              upcomingMeetings={
-                // A failed fetch may not stand behind "Upcoming: 0" — the
-                // popup renders couldn't-check instead (2a). The count is
-                // `divisionUpcoming`, the SAME predicate the door's list uses.
-                failure ? null : divisionUpcoming(meetings, districtPopup.ocdId).length
-              }
-              listingCount={failure ? undefined : readerMeetingCount(divisionUpcoming(meetings, districtPopup.ocdId), pinned?.listingIdentity)}
-              /* BC-8: minimize the card and open the list on this division's
-                 upcoming sittings.
-
-                 2026-09-23 (the Tucson Unified report): this dispatched a Body
-                 scope keyed on the division's bare OCD-ID. The Body scope's key
-                 is `<ocdId>|<bodyName>`, so no meeting could match it: the door
-                 under "Upcoming 3" opened "0 meetings — Nothing matches the
-                 current filters", and the scope then emptied every pin and list
-                 until "Reset all". It now opens the list FOCUSED on exactly the
-                 rows counted above — one-opening, named in a chip, cleared on
-                 close — through `showDivisionUpcoming`, and the Body scope's key
-                 is a type only `bodyScopeKey` can make. */
-              onShowMeetings={() => {
-                for (const action of showDivisionUpcoming(districtPopup)) dispatch(action);
-              }}
-              onClose={() =>
-                dispatch({ type: "select/district", ocdId: null, districtType: null })
-              }
-              onExpand={() =>
-                openLarge({
-                  kind: "entity",
-                  subject: districtSubject(
-                    districtPopup,
-                    current?.meetings ?? [],
-                    current?.coverage ?? null,
-                    districtRepresentation,
-                  ),
-                })
-              }
-            />
-          )}
-
-          {popupMeeting && !large && (
-            <MeetingPopup
-              meeting={popupMeeting}
-              body={bodyForMeeting(popupMeeting)}
-              // Tier-3 (5a): who sits on this body, curated with citations.
-              //
-              // The division fallback that used to sit here was removed on
-              // 2026-08-27 (Red Controls 2 and 3). Its stated purpose was
-              // real — a Sunnyside pin seen from downtown 85701 should still
-              // name its board — but it bought that by answering the body
-              // question with the division's government, which put the wrong
-              // five people on the CAWCD card and the Mayor and Council on 58
-              // appointed Tucson commissions. `membersOfBody` keeps the
-              // Sunnyside case working (that board HAS its own roster, keyed
-              // by body id, and a body id does not care which point was
-              // searched) without the claim.
-              representation={[...projectedBodyRoster(bodyForMeeting(popupMeeting)).members]}
-              onClose={() => setPopupMeeting(null)}
-              onExpand={() =>
-                openLarge({
-                  kind: "entity",
-                  subject: meetingSubject(
-                    popupMeeting,
-                    bodyForMeeting(popupMeeting),
-                  ),
-                })
-              }
-            />
-          )}
-        </div>
-
-        {large?.kind === "entity" && (
-          <EntityModal
-            subject={
-              // M112: the subject is a snapshot taken when the reader tapped
-              // "More", and the division-keyed officeholder lookup may still
-              // have been in flight. Re-derive it for the division that is
-              // still selected so the card FILLS IN rather than freezing on
-              // the looking line — and only for that division, so a
-              // meeting's card is never rebuilt as a district's.
-              large.subject.divisionOcdId &&
-              districtPopup &&
-              large.subject.divisionOcdId === districtPopup.ocdId
-                ? districtSubject(
-                    districtPopup,
-                    current?.meetings ?? [],
-                    current?.coverage ?? null,
-                    districtRepresentation,
-                  )
-                : large.subject
+        {(pillVenue || pillDistrict) && (
+          <SelectionPill
+            venue={pillVenue}
+            district={pillDistrict}
+            parked={parked && Boolean(cardView)}
+            onDetails={() => setParked(false)}
+            onBack={
+              pillVenue
+                ? () => {
+                    dispatch({ type: "select/venue", key: null });
+                    setParked(false);
+                  }
+                : undefined
             }
-            onClose={closeLarge}
-            /* WGH-15: the large card is the district popup expansion and inherits
-               the same question. The subject division is read off
-               subject.divisionOcdId, which is already null for a person or a
-               meeting card -- the line then does not render. */
-            homeZip={clusterZip}
-            /* F01 2.4: a roster name opens the person's full card ON TOP of this
-               one, so closing theirs returns here rather than to the map. This
-               is the author's Dr. Ravi Shah case exactly. */
-            onOpenHolder={(holder) =>
-              pushLarge({
-                kind: "official",
-                holder,
-                seatLabel: null,
-                tier: "local",
-              })
-            }
-            /*
-             * A place card's body row opens that body's battlecard — the same
-             * `bodySubject` every other door onto a body uses, so the reader
-             * never meets two cards for one body (g18, ruling A).
-             *
-             * Matched on `bodyId`, which is unique per body, NOT on the OCD-ID
-             * the place row carries: several bodies share one division, and an
-             * ocdId match would open one body's card from another's row. That
-             * is M135's other open case and this row does not repeat it. A key
-             * that resolves to nothing opens nothing rather than opening the
-             * first match — no card is worse than the wrong card only when the
-             * wrong card is impossible.
-             */
-            onOpenPlaceBody={(key) => {
-              const body = (current?.coverage?.bodies ?? []).find(
-                (b) => b.bodyId === key,
-              );
-              if (body) {
-                // F01 2.4: opened from inside the place card, so it stacks —
-                // closing the body card returns to the place it was listed on.
-                pushLarge({
-                  kind: "entity",
-                  subject: bodySubject(body, current?.meetings ?? []),
+            onRefit={() => {
+              if (pillVenue && pillVenue.lat !== null && pillVenue.lng !== null) {
+                setFocus({
+                  lat: pillVenue.lat,
+                  lng: pillVenue.lng,
+                  zoom: 15,
+                  key: `venue:${pillVenue.key}:${Date.now()}`,
                 });
+              } else {
+                setFitNonce((n) => n + 1);
               }
+            }}
+            onClear={() => {
+              closeCard();
+              dispatch({ type: "select/district", ocdId: null, districtType: null });
+              dispatch({ type: "select/venue", key: null });
             }}
           />
         )}
-        {large?.kind === "official" && (
-          <OfficialModal
-            holder={large.holder}
-            seatLabel={large.seatLabel}
-            tier={large.tier}
-            // Where the reader is looking, for reaction rows — the typed
-            // zip or the settled view, the search log's own basis (1b).
-            reactionContext={
-              view
-                ? {
-                    zip:
-                      current && /^\d{5}$/.test(current.zip)
-                        ? current.zip
-                        : (view.zip ?? null),
-                    lat: view.lat,
-                    lng: view.lng,
-                  }
+
+        <div className="mw-map-notices">
+          {tilesFailed && <TileNotice />}
+          {failure && (
+            <SearchFailedNotice
+              failure={failure}
+              onRetry={() => setRetryNonce((n) => n + 1)}
+            />
+          )}
+          {location && !shown && !failure && (
+            <p className="mw-loading-note" role="status">
+              Loading meetings near {location.zip}…
+            </p>
+          )}
+          {refreshing && !failure && (
+            <p className="mw-loading-note" role="status">
+              Updating for the new map area…
+            </p>
+          )}
+          {!sidebarUp && location && (
+            <div className="pointer-events-auto">
+              <CountBadge />
+            </div>
+          )}
+        </div>
+
+        {ui.tiers.length === 0 && (
+          <p className="mw-no-tier">No government layers selected</p>
+        )}
+
+        <div className="mw-legend-float">
+          <Legend />
+        </div>
+
+        {!sidebarUp && (
+          <header className="mw-header" data-bp={layoutBp} ref={measureHeader}>
+            <div className="mw-header-left">
+              <button
+                type="button"
+                className="mw-menu-btn sidebar-toggle"
+                aria-label="Open sidebar"
+                onClick={openSidebar}
+              >
+                <span aria-hidden="true">☰</span>
+              </button>
+              <span className="mw-header-logo">
+                <Logo variant="wordmark" size={30} />
+              </span>
+              <span className="mw-header-spacer" />
+              <ThemeToggle className="mw-header-theme" />
+            </div>
+            <div className="mw-header-right">{cluster}</div>
+          </header>
+        )}
+
+        {!sidebarUp && layoutBp === "phone" && (
+          <button type="button" className="mw-sheet-handle" onClick={openSidebar}>
+            Meetings, filters and more <span aria-hidden="true">▴</span>
+          </button>
+        )}
+
+        <Sidebar
+          onReset={onReset}
+          showDistricts={showDistricts}
+          districtsFailed={districtsFailed}
+          onToggleDistricts={setShowDistricts}
+          mobileOpen={sidebarState === "open"}
+          onMobileClose={collapseSidebar}
+          onNearMePoint={onNearMePoint}
+          nav={sidebarUp ? cluster : null}
+          snapshot={shown?.snapshot ?? null}
+        />
+
+        {pop && (
+          <ReaderPopup
+            pop={pop}
+            anchor={sidebarUp ? "sidebar" : "header"}
+            title={popTitle}
+            onClose={closePop}
+          >
+            {pop === "zip" && (
+              <ZipSwitcher
+                embedded
+                current={clusterZip}
+                onPick={search}
+                onClose={closePop}
+              />
+            )}
+            {pop === "vote" && (
+              <VotingSitesPanel
+                embedded
+                onSites={setVotingPins}
+                onAddressPoint={setVotingAddressPoint}
+                selectedSiteId={selectedVotingSiteId}
+                onSelectSite={setSelectedVotingSiteId}
+                onClose={closePop}
+              />
+            )}
+            {pop === "ask" &&
+              (clusterCoverage && clusterZip ? (
+                <div data-ask-panel>
+                  <AskBox
+                    coverage={clusterCoverage}
+                    zip={clusterZip}
+                    ocdIds={clusterOcdIds}
+                    onSearchPick={onSearchPick}
+                    onOpenBody={(body) =>
+                      openLarge({
+                        kind: "entity",
+                        subject: bodySubject(body, shown?.meetings ?? []),
+                      })
+                    }
+                    onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
+                  />
+                </div>
+              ) : (
+                <p className="mw-pop-note">
+                  We have not resolved who governs this point yet, so there is
+                  nothing here to route a question against. Choose a ZIP and ask
+                  again.
+                </p>
+              ))}
+          </ReaderPopup>
+        )}
+
+        {cardView && !parked && (
+          <ReaderCard
+            viewKey={cardKey ?? "card"}
+            kicker={cardKicker}
+            kickerTone={cardTone}
+            zipContext={
+              cardView.kind === "list" ||
+              cardView.kind === "door" ||
+              cardView.kind === "governs"
+                ? zipContext
                 : null
             }
-            /* F01 2.4: pops one level. A person opened from a body card returns
-               to that body card; a person opened from the map returns to the
-               map, because their frame is the only one on the stack. */
-            onClose={closeLarge}
-          />
+            backLabel={backStack.length > 0 ? backStack[backStack.length - 1].label : null}
+            onBack={onCardBack}
+            onClose={onCardClose}
+            restoreScroll={restoreScroll}
+            onScroll={(top) => {
+              cardScroll.current = top;
+            }}
+          >
+            {cardBody}
+          </ReaderCard>
         )}
 
-        {/* 8a: the sidebar-count doors — large-surface lists behind the
-            stat numbers, one at a time like every large surface. */}
-        {ui.door && (
-          <DoorOverlay
-            door={ui.door}
-            coverage={current?.coverage ?? null}
-            meetings={current?.meetings ?? []}
-            drawnDistricts={drawnDistricts}
-            districtOverlayOn={ui.showDistricts}
-            atAddress={data.atAddress}
-            onShowDistricts={() => setShowDistricts(true)}
-            onOpenOfficial={(holder, seatLabel, tier) =>
-              openLarge({ kind: "official", holder, seatLabel, tier })
-            }
-            onOpenMeeting={(meeting) =>
-              openLarge({
-                kind: "entity",
-                subject: meetingSubject(meeting, bodyForMeeting(meeting)),
-              })
-            }
-            // g4 item 9: the same card the who-governs list opens, built by
-            // the same subject builder — two doors onto one card, never two
-            // different cards for one body.
-            onOpenBody={(body) =>
-              openLarge({
-                kind: "entity",
-                subject: bodySubject(body, current?.meetings ?? []),
-              })
-            }
-            onClose={() => dispatch({ type: "door/close" })}
-          />
-        )}
-
-        <Legend />
-        <ListOverlay onPickMeeting={onPickMeeting} />
-
-        {/* Rendered last so it wins the z-1200 tie with the legend. Nothing
-            renders it until the stored zip has resolved, so a returning reader
-            never sees the prompt they already answered flash past. */}
+        {/*
+          WelcomeOverlay: the entry prompt, until the stored zip has resolved,
+          so a returning reader never sees the prompt they already answered.
+        */}
         {restored && (
           <WelcomeOverlay
             open={!location || welcomeRequested}
@@ -2539,9 +2355,6 @@ function MapEntryInner() {
             }
           />
         )}
-        {/* 6c (2026-08-14 second session): the first-run tour, once per
-            device, after the zip resolves and the welcome overlay is out
-            of the way. Skippable at every step. */}
         {restored && (
           <TutorialOverlay active={Boolean(location) && !welcomeRequested && mapPresentationReady} />
         )}
@@ -2549,6 +2362,57 @@ function MapEntryInner() {
       </AddressResolutionProvider>
     </DataProvider>
   );
+}
+
+/** The card's name for a view; also the "← Back to …" label. */
+function cardViewLabel(
+  view:
+    | { kind: "large"; surface: { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
+    | { kind: "venue"; venue: Venue }
+    | { kind: "door"; door: "bodies" | "districts" | "officials" }
+    | { kind: "list" }
+    | { kind: "governs" },
+): string {
+  switch (view.kind) {
+    case "large":
+      return view.surface.kind === "entity"
+        ? view.surface.subject.title
+        : view.surface.holder.name;
+    case "venue":
+      return view.venue.name;
+    case "door":
+      return view.door === "bodies"
+        ? "Bodies"
+        : view.door === "districts"
+          ? "Districts"
+          : "Officials";
+    case "list":
+      return "Meetings";
+    case "governs":
+      return "Who governs here?";
+  }
+}
+
+/** One history entry per card level; same URL, so no route re-renders. */
+function pushCardHistory(depth: { current: number }): void {
+  try {
+    window.history.pushState(window.history.state, "", window.location.href);
+    depth.current += 1;
+  } catch {
+    /* History unavailable (sandboxed frame): the in-card Back still works. */
+  }
+}
+
+/** The card closed from inside: drop the entries it pushed. */
+function unwindCardHistory(depth: { current: number }): void {
+  const n = depth.current;
+  if (n <= 0) return;
+  depth.current = 0;
+  try {
+    window.history.go(-n);
+  } catch {
+    /* Nothing to unwind. */
+  }
 }
 
 /**

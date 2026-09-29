@@ -47,7 +47,12 @@ export const SECTION_DEP = {
   workers: {
     id: "DEP-WORKER-EVENTS",
     owner: "Codex (runner progress read)",
-    need: "Per-worker jobs, waiting reasons and a plain event feed. The live pulse only says the workers checked in, not what they did. The local runner-progress read (81c2c791) is not deployed yet.",
+    need: "The detailed Workers reading (admin-v6/workers@1): waiting reasons, recent changes and last useful progress for this place. Until it arrives, the live pulse only says the workers checked in, not what they did.",
+  },
+  workerActive: {
+    id: "DEP-WORKER-ACTIVE-INDEX",
+    owner: "Codex (worker repository)",
+    need: "A bounded read of every unexpired work claim, including plain-code collection jobs outside the paid research list. Until it exists, the full list of running jobs and how many are working in a place are unknown.",
   },
   workerVersion: {
     id: "DEP-WORKER-VERSION",

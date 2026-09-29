@@ -9,11 +9,13 @@ import { useMemo, useState } from "react";
 
 import { StatusBar, StatusLegend, StatusTable } from "./charts.tsx";
 import { useV6 } from "./context.tsx";
+import { SECTION_DEP } from "./dependencies.ts";
 import { INSTRUCTION_EXAMPLES, parseInstruction, type Parsed } from "./instruction.ts";
-import { count, huntLeftUsd, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
+import { count, huntLeftUsd, mst, ITEM_STATUS_ORDER, pctDown, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
 import { COUNTRY_KEY, huntAt, huntsWithin, isWithin, relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
+import { ageWords, missingByCard, roundReading, usePageClock, workersSectionArrived } from "./screen-workers.tsx";
 import { ActionButton, Actions, Card, cx, Empty, Failed, Loading, Pill, SourceNote, StageDots } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -407,28 +409,51 @@ function Missing() {
 
 function Happening() {
   const v = useV6();
-  const w = v.data.workers.data;
-  const jobs = (w?.jobs ?? []).filter((j) => relation(v.index, [j.placeKey], v.scopeKey) !== null);
+  const now = usePageClock();
+  const src = v.data.workers;
+  const w = src.data;
+  const arrived = workersSectionArrived(src);
+  const miss = missingByCard(arrived ? src.missingParts : undefined);
+  const isCountry = v.place.kind === "Country";
+  const jobs = w?.jobs ? w.jobs.filter((j) => relation(v.index, [j.placeKey], v.scopeKey) !== null) : null;
+  const waiting = w?.waiting ? w.waiting.filter((x) => relation(v.index, x.applies, v.scopeKey) !== null) : null;
   const lanes = w?.status.lanes;
+  const round = roundReading(w?.status, now);
+  const progress = w?.status.lastUsefulProgress ?? null;
   return (
     <Card id="v6-happening" title="What’s happening now" aside={<button type="button" className={s.btnLink} onClick={() => v.go("workers")}>Open Workers →</button>}>
-      {w?.jobs ? (
-        <div className={s.gridTiles}>
-          <div className={s.row}><span className={s.big}>{jobs.length}</span><span className={s.meta}>jobs working now in {v.place.name}</span></div>
-          <div className={s.row}><span className={s.big}>{(w.waiting ?? []).filter((x) => relation(v.index, x.applies, v.scopeKey) !== null).length}</span><span className={s.meta}>waiting, each with a reason</span></div>
-          <div className={s.row}><span className={s.big}>{w.status.lastUsefulProgress ? w.status.lastUsefulProgress.at.slice(11, 16) : "—"}</span><span className={s.meta}>last useful progress{w.status.lastUsefulProgress ? `: ${w.status.lastUsefulProgress.what}` : " isn’t reported"}</span></div>
+      <div className={s.gridTiles}>
+        <div className={s.row}>
+          <span className={s.big}>{jobs ? jobs.length : "Unknown"}</span>
+          <span className={s.meta}>{jobs ? `jobs working now in ${v.place.name}` : `jobs working now${isCountry ? "" : ` in ${v.place.name}`}. The full list of running jobs isn’t available yet, so this isn’t zero`}</span>
         </div>
-      ) : lanes ? (
-        <div className={s.gridTiles}>
-          {lanes.map((l) => (
-            <div key={l.name} className={s.row}>
-              <span className={s.big}>{l.active ?? "—"}<span className={s.meta}> running · {count(l.waiting)} waiting</span></span>
-              <span className={s.meta}>{l.name}, whole system{l.blockedBy ? ` · ${l.blockedBy}` : ""}</span>
-            </div>
-          ))}
+        <div className={s.row}>
+          <span className={s.big}>{waiting ? waiting.length : "Unknown"}</span>
+          <span className={s.meta}>{waiting ? `waiting${isCountry ? "" : ` in ${v.place.name}`}, each with a reason${waiting.length ? `: ${waiting.slice(0, 2).map((x) => x.title).join(" · ")}${waiting.length > 2 ? ` · and ${waiting.length - 2} more` : ""}` : ""}` : arrived ? `A complete waiting list for ${v.place.name} isn’t available` : "Waiting reasons haven’t arrived yet"}</span>
         </div>
-      ) : null}
-      {!w?.jobs && <SourceNote source={{ state: "not-connected", load: "ready", data: null, asOf: null, dependency: { id: "DEP-WORKER-EVENTS", owner: "Codex (runner progress read)", need: "What each worker is doing, split by place. The live pulse only has whole-system counts." } }} />}
+        <div className={s.row}>
+          <span className={s.big}>{progress ? mst(progress.at, false) : "Unknown"}</span>
+          <span className={s.meta}>{progress ? `last useful progress (${ageWords(progress.at, now) ?? ""}): ${progress.what}` : `last useful progress. ${miss.progress.length ? miss.progress.join(" ") : "A check-in isn’t progress, so nothing is inferred from it."}`}</span>
+        </div>
+        <div className={cx(s.row, round.overdue && s.cardWarn)}>
+          <span className={cx(s.big, round.overdue && s.textWarn)}>{round.overdue ? "Late" : round.headline}</span>
+          <span className={s.meta}>{round.overdue ? `${round.headline}. ${round.detail}` : round.detail}</span>
+        </div>
+      </div>
+      {!jobs && lanes && (
+        <div className={s.stack}>
+          <p className={cx(s.p, s.meta)}>{isCountry ? "Whole system:" : `Whole system, every place, not just ${v.place.name}:`}</p>
+          <div className={s.gridTiles}>
+            {lanes.map((l) => (
+              <div key={l.name} className={s.row}>
+                <span className={s.big}>{l.active ?? "Unknown"}<span className={s.meta}> running · {count(l.waiting)} waiting</span></span>
+                <span className={s.meta}>{l.name}, whole system{l.blockedBy ? ` · ${l.blockedBy}` : ""}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {!arrived && <SourceNote source={{ state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.workers }} />}
     </Card>
   );
 }

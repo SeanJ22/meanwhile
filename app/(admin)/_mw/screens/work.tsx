@@ -71,6 +71,7 @@ import { loadWatchedBodies, loadWatchedBody } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
 import { TRACKED_STATE_CODES, stateName, statesByStanding } from "../load-shell.ts";
 import { DeliveryTrailCard } from "../delivery-trail.tsx";
+import { EvidenceCopyControl } from "../evidence-copy-control.tsx";
 import { loadLivePipeline } from "../data/live-pipeline.ts";
 import { loadHuntSourceProgress, type HuntSourceProgressRead } from "../data/hunt-source-progress.ts";
 import { buildDeliveryTrail } from "@/lib/control-plane/delivery-trail.ts";
@@ -753,6 +754,7 @@ function DetailSections({ detail, trail, trailPage, trailHref, says }: { detail:
             <span className={s.text14}>{event.says}</span>
             {event.nextAction && <span className={s.note}>Current work plan: {plainText(event.nextAction)}</span>}
             <div className={s.row10}>{event.sourceUrl && <a className={s.btnLink} href={event.sourceUrl} target="_blank" rel="noreferrer">Open source page</a>}{event.publicUrl && <a className={s.btnLink} href={event.publicUrl} target="_blank" rel="noreferrer">Open published result</a>}</div>
+            {event.privateCopy && <EvidenceCopyControl path={event.privateCopy.path} byteLength={event.privateCopy.byteLength} />}
             {event.references.length>0 && <details className={s.note}><summary>Exact records and receipts</summary><div className={s.stack2}>{event.references.map(([name,value],index)=><span key={`${name}:${value}:${index}`}>{name}: {value}</span>)}</div></details>}
           </div>
         </div>)}

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 914,
-    "named": 8519,
+    "files": 915,
+    "named": 8521,
     "dynamic": 33
   },
   "files": {
@@ -1576,7 +1576,7 @@
         "a question that reached only one arm names THAT arm",
         "carrying an incomparable question as unmeasured REFUSES the vacuous switch",
         "differing evidence packs void the comparison, and say why",
-        "the standing comparison is Opus 5.5 against the cheaper Sonnet 5, never a model against itself"
+        "the standing comparison uses the active Sonnet 5.5 tier while historical Sonnet 5 remains priced"
       ],
       "dynamic": 0
     },
@@ -7644,6 +7644,7 @@
         "PC-9: a ledger row predating the fields reads UNMEASURED by name; a null row reads UNREPORTED; a measured row reads its numbers",
         "PC-9: the parser reads the API's usage block, the split included, and never infers from the request",
         "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured",
+        "Sonnet 5.5 prices new usage at its own published row while Sonnet 5 history keeps its exact rate",
         "per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null",
         "§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess"
       ],
@@ -11350,6 +11351,12 @@
         "RULING 160: an unaligned buyer is COUNTED, never taken as a side",
         "RULING 160: constraint 4 — an offer at a rate that is not on the published card is off-catalog",
         "RULING 160: the worked example reconciles — both sides approached, same published rate, same day"
+      ],
+      "dynamic": 0
+    },
+    "tests/sonnet-tier-history.test.ts": {
+      "names": [
+        "a held Sonnet 5 audit can finish its original escalation without rewriting its model identity"
       ],
       "dynamic": 0
     },

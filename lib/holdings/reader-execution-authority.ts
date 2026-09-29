@@ -3,7 +3,9 @@ import { createHash } from "node:crypto";
 import type {
   ReaderClosureExecutionAuthorityEvidence,
   ReaderClosureExecutionPhase,
+  ReaderCensus,
 } from "./reader-census.ts";
+import { READER_SURFACES, type ReaderSurfaceId } from "./datasets.ts";
 import { DERIVED_MEETING_FAMILY_STATES } from "../civic-data/contracts.ts";
 import { derivedMeetingFamilyId } from "../civic-data/meeting-partitions.ts";
 import { parseReaderProjectionReadback } from "../civic-data/reader-readback.ts";
@@ -1369,10 +1371,39 @@ async function readAuthorityDatabase(
       throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
     }
   }
+  const eventsByCandidate = new Map<string, typeof normalizedEvents>();
+  for (const event of normalizedEvents) {
+    const bucket = eventsByCandidate.get(event.candidateId) ?? [];
+    bucket.push(event);
+    eventsByCandidate.set(event.candidateId, bucket);
+  }
   return {
     relations: relations.map(([relation]) => ({ relation, select: true as const, insert: false as const, update: false as const, delete: false as const, truncate: false as const, references: false as const, trigger: false as const })),
     pointerCount: normalized.length,
     pointerSha256: digest(canonicalReaderAuthorityJson(normalized)),
+    pointerBindings: normalized.map((pointer) => ({
+      key: pointer.key,
+      sourceId: pointer.sourceId,
+      recordClass: pointer.recordClass,
+      scope: pointer.scope,
+      currentVersionId: pointer.currentVersionId,
+      rowSha256: digest(canonicalReaderAuthorityJson(pointer)),
+    })),
+    candidateBindings: candidates.map((candidateRow) => {
+      const { pointer_key: _key, current_version_id: _version,
+        last_known_good_version_id: _lastKnownGood, pointer_promoted_at: _promotedAt,
+        ...persistent } = candidateRow;
+      const history = eventsByCandidate.get(String(candidateRow.candidate_id)) ?? [];
+      if (!history.length || history.some((event, index) => event.sequence !== index + 1)) {
+        throw new Error("Reader authority candidate binding lacks contiguous historical events");
+      }
+      return {
+        key: String(candidateRow.pointer_key),
+        candidateId: String(candidateRow.candidate_id),
+        rowSha256: digest(canonicalReaderAuthorityJson(persistent)),
+        eventSha256: history.map((event) => digest(canonicalReaderAuthorityJson(event))),
+      };
+    }),
     durableImport: {
       authorization: "PDC_V2_FROZEN_LKG_CUTOVER" as const,
       candidateCount: durableCandidates.length,
@@ -1432,7 +1463,7 @@ export async function buildReaderExecutionAuthorityEvidence(
   const endpoint = canonicalNeonEndpointHost(connection);
   const database = decodeURIComponent(connection.pathname.replace(/^\//, ""));
   return {
-    formatVersion: 1,
+    formatVersion: 2,
     phase: options.phase,
     exactHead: options.exactHead,
     store: {
@@ -1472,6 +1503,8 @@ export async function buildReaderExecutionAuthorityEvidence(
       dispositionSetSha256: imported.dispositionSetSha256,
       canonicalPointerSetSha256: live.pointerSha256,
       canonicalPointerCount: live.pointerCount,
+      pointerBindings: live.pointerBindings,
+      candidateBindings: live.candidateBindings,
       durableImport: live.durableImport,
     },
     clone: options.phase === "REHEARSAL" ? {
@@ -1480,6 +1513,359 @@ export async function buildReaderExecutionAuthorityEvidence(
       controlPlaneReceiptSha256: digest(options.providerMetadataBytes),
     } : null,
   };
+}
+
+export function readerAuthoritySuccessorProblems(
+  expected: ReaderClosureExecutionAuthorityEvidence,
+  observed: ReaderClosureExecutionAuthorityEvidence,
+): string[] {
+  if (canonicalReaderAuthorityJson(observed) === canonicalReaderAuthorityJson(expected)) return [];
+  if (expected.phase !== observed.phase || expected.exactHead !== observed.exactHead ||
+      canonicalReaderAuthorityJson(expected.store) !== canonicalReaderAuthorityJson(observed.store) ||
+      canonicalReaderAuthorityJson(expected.readOnly) !== canonicalReaderAuthorityJson(observed.readOnly) ||
+      expected.import.receiptSha256 !== observed.import.receiptSha256 ||
+      expected.import.dispositionSetSha256 !== observed.import.dispositionSetSha256 ||
+      expected.import.canonicalPointerCount !== observed.import.canonicalPointerCount) {
+    return ["Reader execution authority store, read-only principal, code head, or controller receipt changed"];
+  }
+  // Historical V1 evidence committed only whole-set hashes. A digest
+  // difference cannot identify a changed key or establish that its Reader
+  // projection and public route were re-proved.
+  if (expected.formatVersion === 1 || observed.formatVersion !== 2) {
+    return ["Reader execution authority V1 has no per-key baseline for live promotion drift; fresh exact-head Reader proof required"];
+  }
+  const before = new Map(expected.import.pointerBindings?.map((binding) => [binding.key, binding]));
+  const after = new Map(observed.import.pointerBindings?.map((binding) => [binding.key, binding]));
+  const priorCandidates = new Map(expected.import.candidateBindings?.map((binding) => [binding.key, binding]));
+  const liveCandidates = new Map(observed.import.candidateBindings?.map((binding) => [binding.key, binding]));
+  if (!before.size || before.size !== expected.import.canonicalPointerCount ||
+      after.size !== before.size || priorCandidates.size !== before.size || liveCandidates.size !== before.size ||
+      [...before.keys()].some((key) => !after.has(key) || !priorCandidates.has(key) || !liveCandidates.has(key))) {
+    return ["Reader execution authority canonical key population changed; eligibility and public readbacks require fresh proof"];
+  }
+  const changed = [...before].filter(([key, binding]) =>
+    binding.rowSha256 !== after.get(key)?.rowSha256 ||
+    binding.currentVersionId !== after.get(key)?.currentVersionId
+  );
+  if (changed.length) {
+    return changed.map(([key, binding]) =>
+      `Reader execution authority changed ${binding.recordClass} key ${key}; exact successor projection and public readback are unproved`
+    );
+  }
+  for (const [key, prior] of priorCandidates) {
+    const live = liveCandidates.get(key)!;
+    if (prior.candidateId !== live.candidateId || prior.rowSha256 !== live.rowSha256 ||
+        live.eventSha256.length < prior.eventSha256.length ||
+        prior.eventSha256.some((hash, index) => hash !== live.eventSha256[index])) {
+      return [`Reader execution authority candidate or event history changed without an exact append-only prefix at ${key}`];
+    }
+  }
+  const oldDurable = expected.import.durableImport;
+  const liveDurable = observed.import.durableImport;
+  const stable = ({ candidateSetSha256: _candidate, eventCount: _count, eventSetSha256: _events, ...rest }:
+    typeof oldDurable) => rest;
+  if (canonicalReaderAuthorityJson(stable(oldDurable)) !== canonicalReaderAuthorityJson(stable(liveDurable)) ||
+      liveDurable.eventCount < oldDurable.eventCount) {
+    return ["Reader execution authority imported membership or predecessor history changed"];
+  }
+  return [];
+}
+
+/** Conservative dependency set for a promoted canonical class. A class with
+ * unclear Reader reachability has no inferred safe subset. */
+export function readerAuthorityAffectedSurfaces(recordClasses: readonly string[]):
+  { readonly surfaces: readonly ReaderSurfaceId[]; readonly unknownClasses: readonly string[] } {
+  const all = READER_SURFACES.map((surface) => surface.id);
+  const known: Readonly<Record<string, readonly ReaderSurfaceId[]>> = {
+    BALLOT_FILING: ["ballot", "map", "ask", "civic-routing"],
+    MEETING: ["meetings", "agenda", "map", "ask", "about-area", "civic-routing"],
+    MEETING_OUTCOME: ["meetings", "agenda", "map", "ask", "civic-routing"],
+    STATE_LEGISLATOR_VOTES: ["votes", "ballot", "map", "representation", "ask"],
+    FEDERAL_ROLL_CALL: ["votes", "ballot", "map", "representation", "ask"],
+    FEDERAL_KEY_VOTE: ["votes", "ballot", "map", "representation", "ask"],
+    CENSUS_GEOGRAPHY: all,
+    REGISTRATION: all,
+    CURATED_READER_RECORD: all,
+  };
+  const unknownClasses = [...new Set(recordClasses.filter((value) => !known[value]))].sort();
+  const surfaces = [...new Set(recordClasses.flatMap((value) => known[value] ?? []))].sort();
+  return { surfaces, unknownClasses };
+}
+
+/** Compare the newly prepared canonical Reader population to the immutable
+ * certified census before any old route proof is inherited. A changed row is
+ * not made eligible by a successful HTTP response: it needs a fresh full
+ * canonical proof with its new denominator. */
+export function readerAuthoritySuccessorCensusProblems(
+  certified: ReaderCensus,
+  current: ReaderCensus,
+  changedClasses: readonly string[],
+  rowStructuralSha256: (row: ReaderCensus["rows"][number]) => string,
+): { readonly problems: readonly string[]; readonly affectedRowIds: readonly string[] } {
+  const affected = readerAuthorityAffectedSurfaces(changedClasses);
+  const problems: string[] = [];
+  if (affected.unknownClasses.length) {
+    problems.push(`Reader successor record classes have no classified public reachability: ${affected.unknownClasses.join(", ")}`);
+  }
+  if (certified.holdingsDigest !== current.holdingsDigest || certified.registrySha256 !== current.registrySha256 ||
+      certified.rows.length !== current.rows.length || certified.records.length !== current.records.length) {
+    problems.push("Reader successor canonical holdings, registry, or record denominator changed");
+  }
+  const currentRecords = new Map(current.records.map((record) => [record.auditId, record]));
+  if (currentRecords.size !== current.records.length) problems.push("Reader successor canonical records are duplicated");
+  for (const record of certified.records) {
+    const latest = currentRecords.get(record.auditId);
+    if (!latest || canonicalReaderAuthorityJson(record) !== canonicalReaderAuthorityJson(latest)) {
+      problems.push(`${record.auditId}: Reader successor canonical record or eligibility changed`);
+    }
+  }
+  const currentRows = new Map(current.rows.map((row) => [row.id, row]));
+  if (currentRows.size !== current.rows.length) problems.push("Reader successor canonical rows are duplicated");
+  for (const row of certified.rows) {
+    const latest = currentRows.get(row.id);
+    if (!latest || rowStructuralSha256(row) !== rowStructuralSha256(latest)) {
+      problems.push(`${row.id}: Reader successor canonical projection or eligibility changed`);
+    }
+  }
+  const surfaces = new Set(affected.surfaces);
+  const affectedRowIds = certified.rows.filter((row) => surfaces.has(row.readerSurface) &&
+    (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length > 0).map((row) => row.id).sort();
+  return { problems, affectedRowIds };
+}
+
+/** A scoped public readback belongs to the exact live authority it started
+ * from. A further promotion during that readback is a new, unproved state. */
+export function readerAuthorityPostReadbackProblems(
+  beforeReadback: ReaderClosureExecutionAuthorityEvidence,
+  afterReadback: ReaderClosureExecutionAuthorityEvidence,
+): string[] {
+  return canonicalReaderAuthorityJson(beforeReadback) === canonicalReaderAuthorityJson(afterReadback)
+    ? []
+    : ["Reader execution authority advanced during successor public readback"];
+}
+
+type CertifiedPointerBinding = NonNullable<ReaderClosureExecutionAuthorityEvidence["import"]["pointerBindings"]>[number];
+type CertifiedCandidateBinding = NonNullable<ReaderClosureExecutionAuthorityEvidence["import"]["candidateBindings"]>[number];
+
+/** Exact key-level delta for a successor readback plan. This names work; it
+ * never grants delivery credit. The surrounding authority validators must
+ * establish that both binding sets are complete before this is used. */
+export function readerAuthorityChangedPointers(
+  certified: ReaderClosureExecutionAuthorityEvidence,
+  current: ReaderClosureExecutionAuthorityEvidence,
+): readonly { readonly key: string; readonly recordClass: string; readonly scope: string;
+  readonly certifiedVersionId: string; readonly currentVersionId: string }[] {
+  if (certified.formatVersion !== 2 || current.formatVersion !== 2) return [];
+  const prior = new Map(certified.import.pointerBindings?.map((binding) => [binding.key, binding]));
+  return (current.import.pointerBindings ?? []).flatMap((binding) => {
+    const previous = prior.get(binding.key);
+    return previous && (previous.rowSha256 !== binding.rowSha256 ||
+      previous.currentVersionId !== binding.currentVersionId)
+      ? [{ key: binding.key, recordClass: binding.recordClass, scope: binding.scope,
+          certifiedVersionId: previous.currentVersionId, currentVersionId: binding.currentVersionId }]
+      : [];
+  });
+}
+
+/** Only these public GET routes can be observed without a model/provider call.
+ * A rejected path is not a license to infer delivery from a sibling route. */
+export function readerSuccessorPublicProbeKind(path: string):
+  "representation" | "meetings" | "agenda" | "votes" | null {
+  let url: URL;
+  try { url = new URL(path, "https://meanwhileusa.com"); }
+  catch { return null; }
+  if (url.origin !== "https://meanwhileusa.com" || url.hash ||
+      `${url.pathname}${url.search}` !== path) return null;
+  const keys = [...url.searchParams.keys()].sort();
+  if (url.pathname.startsWith("/api/representation/") &&
+      url.pathname.length > "/api/representation/".length && !keys.length) return "representation";
+  if (url.pathname === "/api/meetings" &&
+      JSON.stringify(keys) === JSON.stringify(["lat", "lng", "zip"]) &&
+      /^\d{5}$/.test(url.searchParams.get("zip") ?? "") &&
+      Number.isFinite(Number(url.searchParams.get("lat"))) &&
+      Number.isFinite(Number(url.searchParams.get("lng")))) return "meetings";
+  if (url.pathname === "/api/agenda" && keys.length === 1 && keys[0] === "meetingId" &&
+      Boolean(url.searchParams.get("meetingId"))) return "agenda";
+  if (url.pathname === "/api/votes" && keys.length === 1 && keys[0] === "member" &&
+      Boolean(url.searchParams.get("member"))) return "votes";
+  return null;
+}
+
+/** Reconstruct the certified pointer from an immutable historical candidate.
+ * The caller must retrieve this exact candidate ID and all its events from the
+ * same read-only authority store. Matching an ID alone is never sufficient. */
+export function readerAuthorityHistoricalCandidateProblems(
+  pointer: CertifiedPointerBinding,
+  binding: CertifiedCandidateBinding,
+  persistentCandidateRow: Record<string, unknown>,
+  normalizedEvents: readonly { candidateId: string; sequence: number; state: string; at: string; detail: string }[],
+): string[] {
+  const problems: string[] = [];
+  if (binding.key !== pointer.key || binding.candidateId !== pointer.currentVersionId ||
+      persistentCandidateRow.candidate_id !== binding.candidateId ||
+      digest(canonicalReaderAuthorityJson(persistentCandidateRow)) !== binding.rowSha256) {
+    return ["Reader successor historical candidate differs from the certified exact row"];
+  }
+  if (normalizedEvents.length < binding.eventSha256.length ||
+      normalizedEvents.some((event, index) => event.candidateId !== binding.candidateId || event.sequence !== index + 1) ||
+      binding.eventSha256.some((hash, index) => digest(canonicalReaderAuthorityJson(normalizedEvents[index])) !== hash)) {
+    return ["Reader successor historical event prefix differs from the certified exact history"];
+  }
+  const candidate = row(persistentCandidateRow.candidate);
+  const movePrefix = `Atomic pointer ${pointer.key} moved from `;
+  const moveSuffix = ` to ${binding.candidateId}.`;
+  const moves = normalizedEvents.filter((event) => event.state === "PROMOTED" &&
+    event.detail.startsWith(movePrefix) && event.detail.endsWith(moveSuffix));
+  const promoted = moves.length === 1 ? moves[0] : null;
+  if (!candidate || !promoted || persistentCandidateRow.state !== "PROMOTED" ||
+      persistentCandidateRow.promoted_version_id !== binding.candidateId ||
+      persistentCandidateRow.candidate_lkg_version_id !== binding.candidateId) {
+    return ["Reader successor historical candidate has no terminal promoted proof"];
+  }
+  const reconstructed = {
+    key: pointer.key,
+    sourceId: pointer.sourceId,
+    recordClass: pointer.recordClass,
+    scope: pointer.scope,
+    currentVersionId: binding.candidateId,
+    lastKnownGoodVersionId: binding.candidateId,
+    promotedAt: promoted.at,
+    payload: candidate.readModel,
+    validationReceipt: persistentCandidateRow.validation_receipt,
+  };
+  if (digest(canonicalReaderAuthorityJson(reconstructed)) !== pointer.rowSha256) {
+    problems.push("Reader successor historical pointer differs from the certified exact row");
+  }
+  return problems;
+}
+
+async function readCandidateHistoryForSuccessor(sql: ReaderAuthoritySql, candidateId: string) {
+  const rows = await sql.query(`
+    select c.id as candidate_id, c.source_id, c.record_class, c.scope, c.state,
+           c.acquisition_succeeded, c.promoted_version_id,
+           c.last_known_good_version_id as candidate_lkg_version_id,
+           c.failure_code, c.failure_detail, c.candidate, c.validation_receipt
+      from public.civic_data_candidates c where c.id = $1::text
+  `, [candidateId]);
+  if (rows.length !== 1 || rows[0]?.candidate_id !== candidateId) {
+    throw new Error("Reader successor historical candidate is missing or ambiguous");
+  }
+  const events: { candidateId: string; sequence: number; state: string; at: string; detail: string }[] = [];
+  let sequence = 0;
+  for (;;) {
+    const page = await sql.query(`
+      select e.candidate_id, e.sequence, e.state, e.at, e.detail
+        from public.civic_data_candidate_events e
+       where e.candidate_id = $1::text and e.sequence > $2::integer
+       order by e.sequence limit 32
+    `, [candidateId, sequence]);
+    if (page.length === 0) break;
+    for (const entry of page) {
+      const next = Number(entry.sequence);
+      if (entry.candidate_id !== candidateId || next !== sequence + 1) {
+        throw new Error("Reader successor historical event sequence is not contiguous");
+      }
+      sequence = next;
+      events.push({ candidateId, sequence, state: String(entry.state),
+        at: databaseTimestamp(entry.at), detail: String(entry.detail) });
+    }
+  }
+  if (!events.length) throw new Error("Reader successor historical candidate has no event history");
+  return { row: rows[0]!, events };
+}
+
+/** Prove the exact certified predecessor still exists, then follow every
+ * durable atomic pointer move to the newly observed version. No source fact or
+ * public delivery is inferred from this chain; the affected Reader routes
+ * still require new readbacks. */
+export async function readerAuthorityChangedKeyHistoryProblems(
+  expected: ReaderClosureExecutionAuthorityEvidence,
+  observed: ReaderClosureExecutionAuthorityEvidence,
+  sql: ReaderAuthoritySql,
+): Promise<string[]> {
+  if (expected.formatVersion !== 2 || observed.formatVersion !== 2) {
+    return ["Reader successor history requires a V2 certified per-key baseline"];
+  }
+  const oldPointers = new Map(expected.import.pointerBindings?.map((binding) => [binding.key, binding]));
+  const newPointers = new Map(observed.import.pointerBindings?.map((binding) => [binding.key, binding]));
+  const oldCandidates = new Map(expected.import.candidateBindings?.map((binding) => [binding.key, binding]));
+  if (!oldPointers.size || oldPointers.size !== newPointers.size || oldPointers.size !== oldCandidates.size ||
+      [...oldPointers.keys()].some((key) => !newPointers.has(key))) {
+    return ["Reader successor canonical key population changed or lacks historical candidate bindings"];
+  }
+  const problems: string[] = [];
+  for (const [key, prior] of oldPointers) {
+    const current = newPointers.get(key)!;
+    if (prior.rowSha256 === current.rowSha256 && prior.currentVersionId === current.currentVersionId) continue;
+    if (prior.sourceId !== current.sourceId || prior.recordClass !== current.recordClass || prior.scope !== current.scope ||
+        prior.currentVersionId === current.currentVersionId) {
+      problems.push(`${key}: successor identity or exact version transition is unproved`);
+      continue;
+    }
+    const oldCandidate = oldCandidates.get(key)!;
+    try {
+      const historical = await readCandidateHistoryForSuccessor(sql, oldCandidate.candidateId);
+      const continuity = readerAuthorityHistoricalCandidateProblems(prior, oldCandidate, historical.row, historical.events);
+      if (continuity.length) { problems.push(...continuity.map((issue) => `${key}: ${issue}`)); continue; }
+      let versionId = current.currentVersionId;
+      const seen = new Set<string>();
+      let newerAt = Number.POSITIVE_INFINITY;
+      while (versionId !== prior.currentVersionId) {
+        if (seen.has(versionId) || seen.size >= 256) throw new Error("pointer-move chain cycles or exceeds bounded replay");
+        seen.add(versionId);
+        const edition = await readCandidateHistoryForSuccessor(sql, versionId);
+        const prefix = `Atomic pointer ${key} moved from `;
+        const suffix = ` to ${versionId}.`;
+        const moves = edition.events.filter((event) => event.state === "PROMOTED" &&
+          event.detail.startsWith(prefix) && event.detail.endsWith(suffix));
+        if (moves.length !== 1) throw new Error("pointer-move event is missing or ambiguous");
+        const move = moves[0]!;
+        const priorVersion = move.detail.slice(prefix.length, -suffix.length);
+        const moveAt = Date.parse(move.at);
+        if (!priorVersion || priorVersion === "bootstrap/no-version" || !Number.isFinite(moveAt) || moveAt >= newerAt) {
+          throw new Error("pointer-move predecessor or chronology is invalid");
+        }
+        const candidate = row(edition.row.candidate);
+        if (!candidate || edition.row.source_id !== current.sourceId ||
+            edition.row.record_class !== current.recordClass || edition.row.scope !== current.scope) {
+          throw new Error("successor candidate identity differs from the certified source");
+        }
+        const receipt = exactValidationReceipt(edition.row.validation_receipt);
+        if (!receipt) throw new Error("successor candidate has no exact GOOD validation receipt");
+        const pointer: PromotedProjection = {
+          key, sourceId: current.sourceId, recordClass: current.recordClass as RoutineCandidate["recordClass"],
+          scope: current.scope, versionId, lastKnownGoodVersionId: String(edition.row.candidate_lkg_version_id),
+          promotedAt: move.at, payload: candidate.readModel, receipt,
+        };
+        const candidateRecord: CandidateVersionRecord = {
+          candidate: candidate as unknown as RoutineCandidate,
+          state: edition.row.state as CandidateVersionRecord["state"],
+          acquisitionSucceeded: boolean(edition.row.acquisition_succeeded),
+          receipt: edition.row.validation_receipt,
+          promotedVersion: edition.row.promoted_version_id,
+          lastKnownGoodVersion: edition.row.candidate_lkg_version_id,
+          failureCode: edition.row.failure_code,
+          failureDetail: edition.row.failure_detail,
+        } as CandidateVersionRecord;
+        const issue = promotionProofIssue(pointer.recordClass, pointer.scope, pointer, candidateRecord);
+        if (issue) throw new Error(`successor GOOD proof invalid: ${issue}`);
+        if (versionId === current.currentVersionId) {
+          const normalized = { key, sourceId: pointer.sourceId, recordClass: pointer.recordClass,
+            scope: pointer.scope, currentVersionId: versionId,
+            lastKnownGoodVersionId: pointer.lastKnownGoodVersionId, promotedAt: move.at,
+            payload: pointer.payload, validationReceipt: pointer.receipt };
+          if (digest(canonicalReaderAuthorityJson(normalized)) !== current.rowSha256) {
+            throw new Error("current pointer differs from its durable successor candidate");
+          }
+        }
+        newerAt = moveAt;
+        versionId = priorVersion;
+      }
+    } catch (error) {
+      problems.push(`${key}: ${error instanceof Error ? error.message : "successor history could not be read"}`);
+    }
+  }
+  return problems;
 }
 
 export async function readerExecutionAuthorityLiveProblems(
@@ -1492,9 +1878,12 @@ export async function readerExecutionAuthorityLiveProblems(
       phase: expected.phase,
       exactHead: expected.exactHead,
     });
-    return canonicalReaderAuthorityJson(observed) === canonicalReaderAuthorityJson(expected)
-      ? []
-      : ["Reader execution authority artifact differs from a fresh live authority readback"];
+    const problems = readerAuthoritySuccessorProblems(expected, observed);
+    if (expected.formatVersion === 2 && problems.some((issue) => issue.includes("exact successor projection and public readback"))) {
+      const historyProblems = await readerAuthorityChangedKeyHistoryProblems(expected, observed, options.sql);
+      if (historyProblems.length) return historyProblems;
+    }
+    return problems;
   } catch (error) {
     // Driver diagnostics may echo a connection string or credential. The
     // executable retains the detailed error only in memory; terminal output is

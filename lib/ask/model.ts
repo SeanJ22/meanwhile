@@ -1,4 +1,4 @@
-import { askModelEntry, askModelRefusal, canonicalAskModelId, type AskThinkingMode } from "./model-registry.ts";
+import { activeAskOverrideModelId, askModelEntry, askModelRefusal, canonicalAskModelId, type AskThinkingMode } from "./model-registry.ts";
 
 /**
  * **THE ASK MODELS: ONE TABLE OF ROLES, ONE MODULE, AND THIS IS IT.**
@@ -225,12 +225,16 @@ export function resolveAskRole(role: AskModelRole, env: AskModelEnv = process.en
       overriddenBy = name;
       break;
     }
-    const refusal = askModelRefusal(raw);
+    // Preserve an already-deployed Sonnet 5 override's intent (the Sonnet
+    // tier) without ever sending another new Sonnet 5 request. Historical
+    // receipts and the rate table keep the exact predecessor ID unchanged.
+    const active = activeAskOverrideModelId(raw);
+    const refusal = askModelRefusal(active);
     if (refusal) {
       refused.push(`${name}="${raw}" REFUSED — ${refusal}`);
       continue;
     }
-    model = canonicalAskModelId(raw);
+    model = canonicalAskModelId(active);
     overriddenBy = model === spec.defaultModel ? null : name;
     break;
   }

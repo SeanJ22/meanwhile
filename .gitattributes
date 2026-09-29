@@ -88,3 +88,7 @@ data/reference/**  -text
 # their historical hashes. Current large receipts are already lossless gzip.
 docs/evidence/provisional-bde7497/*.json -text whitespace=cr-at-eol
 docs/evidence/provisional-e504/*.json -text whitespace=cr-at-eol
+
+# Provider readback is byte-hashed in the certified Reader authority. Preserve
+# its recorded bytes across checkouts, including the source's final CRLF.
+docs/evidence/reader-last-mile-production-provider-metadata.json -text whitespace=cr-at-eol

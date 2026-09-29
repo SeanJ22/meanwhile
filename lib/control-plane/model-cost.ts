@@ -75,6 +75,14 @@ export const MODEL_RATES: readonly ModelRate[] = [
     source: "Anthropic first-party API rates, read from the claude-api reference (Opus 5, legacy)",
   },
   {
+    model: "claude-sonnet-5-5",
+    inputUsdPerMillion: 2.0,
+    outputUsdPerMillion: 10.0,
+    statedOn: "2026-09-28",
+    source: "Anthropic first-party Sonnet 5.5 migration guide and pricing page",
+  },
+  {
+    // Historical exact model identity remains priced for settled Sonnet 5 calls.
     model: "claude-sonnet-5",
     inputUsdPerMillion: 2.0,
     outputUsdPerMillion: 10.0,
@@ -132,6 +140,7 @@ export const MODEL_CACHE_MINIMUMS = {
      */
     "claude-opus-5-5": 512,
     "claude-opus-5": 512,
+    "claude-sonnet-5-5": 512,
     "claude-sonnet-5": 1024,
     "claude-haiku-4-5": 4096,
   } as Readonly<Record<string, number>>,

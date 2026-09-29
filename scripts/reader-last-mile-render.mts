@@ -18,6 +18,7 @@ import { noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
 import { venueGapLine, venueGapMark, venueGapOf } from "../lib/meetings/online.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
+import { prlProfileForSubject } from "../lib/sources/prl/snapshot.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt, coverageAt, seatHolderById } from "../lib/registry/server.ts";
 import { currentBodyRosters, rosterHoldersForBody, rosterGapForBody } from "../lib/registry/body-rosters.ts";
@@ -83,6 +84,20 @@ async function openSection(modal: Locator, label: string) {
   await button.waitFor({ state: "visible", timeout: 15_000 });
   if ((await button.getAttribute("aria-expanded")) !== "true") await button.click();
   return button.locator("..");
+}
+
+async function assertPublicStatementsProfile(section: Locator) {
+  const held = prlProfileForSubject("congress:C001133");
+  assert.ok(held && held.categories.length > 0, "The canonical Ciscomani PRL profile is held");
+  const text = await section.innerText();
+  const count = held.statementCount.toLocaleString("en-US");
+  assert.ok(text.includes(`${count} statements on file`), "The visible statement denominator matches the current canonical PRL profile");
+  for (const category of held.categories) {
+    assert.ok(text.includes(category.sentence), `The visible ${category.id} sentence matches the current canonical PRL profile`);
+  }
+  assert.equal(await section.locator(`a[href="${held.attribution.url}"]`).count(), 1);
+  assert.equal(await section.locator(`a[href="${held.attribution.licenceUrl}"]`).count(), 1);
+  return { subjectId: held.subjectId, statementCount: held.statementCount, measuredAt: held.measuredAt, readAt: held.readAt, sourceUrl: held.sourceUrl };
 }
 
 async function federalRecordsWitness(page: Page, modal: Locator, label: string, ballot: boolean) {
@@ -1008,10 +1023,11 @@ try {
         const mapActions = pilot.zip === "85701" ? await inspectOfficialActions(page, mapModal, expectedActions, `${label}-map`) : null;
         await page.keyboard.press("Escape");
         let mapFederalRecords = null;
+        let mapPublicStatements = null;
         if (pilot.zip === "85641") {
           const federal = await openOfficial(page, "Juan Ciscomani");
           const profile = await openSection(federal, "Public statements");
-          assert.match(await profile.innerText(), /6,944 statements/);
+          mapPublicStatements = await assertPublicStatementsProfile(profile);
           await capture(page, `${label}-map-profile`, profile);
           const money = await openSection(federal, "Campaign money");
           const federalApi = await (await context.request.get(`${BASE}/api/funding/congress%3AC001133`, readTransport)).json();
@@ -1054,10 +1070,12 @@ try {
           await page.keyboard.press("Escape");
         }
         let ballotFederalRecords = null;
+        let ballotPublicStatements = null;
         if (pilot.zip === "85641") {
           const federal = await openBallotCandidate(page, "Juan Ciscomani");
           const profile = await openSection(federal, "Public statements");
-          assert.match(await profile.innerText(), /6,944 statements/);
+          ballotPublicStatements = await assertPublicStatementsProfile(profile);
+          assert.deepEqual(ballotPublicStatements, mapPublicStatements, "Map and ballot show the same canonical PRL source version");
           await capture(page, `${label}-ballot-profile`, profile);
           ballotFederalRecords = await federalRecordsWitness(page, federal, `${label}-ballot`, true);
           assert.deepEqual(ballotFederalRecords, mapFederalRecords);
@@ -1073,7 +1091,7 @@ try {
         const incompleteRoster = pilot.zip === "07866" ? await incompleteRosterWitness({ width: viewport.width, height: viewport.height }, theme, label) : null;
         const layoutFailure = voting?.layoutFailure ?? ballotVoting?.layoutFailure;
         const result = layoutFailure ? "FAIL" : "PASS";
-        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, ballotScope, meetings, listingMultiplicity, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
+        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, ballotScope, meetings, listingMultiplicity, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapPublicStatements, ballotPublicStatements, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await Promise.allSettled(responseReads);

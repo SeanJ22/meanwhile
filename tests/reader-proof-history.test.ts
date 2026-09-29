@@ -495,6 +495,35 @@ test("fresh Reader history requires a hash-bound execution authority at the exac
   assert.throws(() => readerProofAuthority({ ...receipt, executionAuthority: { ...receipt.executionAuthority, extra: true } }, read, HEAD_A), /reference fields differ/);
 });
 
+test("V2 proof-head admission binds each exact key and ordered candidate event while retaining V1 history", () => {
+  const built = authorityArtifact("REHEARSAL");
+  const count = built.artifact.import.canonicalPointerCount;
+  const pointers = Array.from({ length: count }, (_, index) => ({
+    key: `TEST:${String(index).padStart(4, "0")}`, sourceId: "official-source",
+    recordClass: "TEST", scope: String(index).padStart(4, "0"),
+    currentVersionId: `candidate-${index}`, rowSha256: sha256(`pointer-${index}`),
+  }));
+  const candidates = pointers.map((pointer) => ({
+    key: pointer.key, candidateId: pointer.currentVersionId,
+    rowSha256: sha256(`candidate-${pointer.key}`), eventSha256: [sha256(`event-${pointer.key}`)],
+  }));
+  built.artifact.formatVersion = 2;
+  Object.assign(built.artifact.import, { pointerBindings: pointers, candidateBindings: candidates });
+  const accepted = authorityReceiptFromBuilt("REHEARSAL", built);
+  const read = evidence({ ...accepted.support, [accepted.receipt.executionAuthority.evidencePath]: accepted.artifact });
+  assert.deepEqual(readerProofAuthority(accepted.receipt, read, HEAD_A),
+    { phase: "REHEARSAL", importerCodeSha: HEAD_A });
+  const duplicate = authorityArtifact("REHEARSAL");
+  duplicate.artifact.formatVersion = 2;
+  Object.assign(duplicate.artifact.import, {
+    pointerBindings: [pointers[0], pointers[0], ...pointers.slice(2)], candidateBindings: candidates,
+  });
+  const refused = authorityReceiptFromBuilt("REHEARSAL", duplicate);
+  assert.throws(() => readerProofAuthority(refused.receipt,
+    evidence({ ...refused.support, [refused.receipt.executionAuthority.evidencePath]: refused.artifact }), HEAD_A),
+  /pointer bindings are incomplete or unordered/);
+});
+
 test("fresh Reader history re-parses exact archived provider and controller support instead of trusting matching hashes", () => {
   const fakeProvider = replaceSupport(
     authorityArtifact("REHEARSAL"),

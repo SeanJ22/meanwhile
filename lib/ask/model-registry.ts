@@ -7,8 +7,8 @@ import {
 } from "../control-plane/model-cost.ts";
 
 /**
- * **THE ASK MODEL REGISTRY — every model Ask may send a request to, and what
- * each one accepts.** (2026-09-25, the Ask model-routing test.)
+ * **THE ASK MODEL REGISTRY - active models and the exact Sonnet predecessor
+ * retained for historical interpretation.** (2026-09-25, the Ask model-routing test.)
  *
  * Sean, 2026-09-25 7:50 PM MST: *"Models release fairly consistently — and we
  * may at some point use multiple LLMs to source answers. Changing a model
@@ -48,6 +48,8 @@ export interface AskModelCapabilities {
    * (claude-api reference, "Migrating to Claude Opus 5.5", breaking change 1).
    */
   readonly thinkingDisabled: boolean;
+  /** Accepts the lowest-thinking `between_tools` mode instead of `disabled`. */
+  readonly betweenToolsThinking: boolean;
   /** Accepts `output_config.format` with a JSON schema. */
   readonly jsonSchemaOutput: boolean;
   /** Accepts a last-assistant-turn prefill. Ask sends none; recorded so a future rung cannot assume it. */
@@ -86,15 +88,23 @@ export const ASK_MODEL_REGISTRY: readonly AskModelEntry[] = [
     id: "claude-opus-5-5",
     provider: "anthropic",
     displayName: "Claude Opus 5.5",
-    capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: false, jsonSchemaOutput: true, prefill: false, alwaysThinks: true },
+    capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: false, betweenToolsThinking: false, jsonSchemaOutput: true, prefill: false, alwaysThinks: true },
     statedOn: "2026-09-25",
     source: "claude-api reference, Migrating to Claude Opus 5.5 (thinking cannot be disabled; forced tool_choice 400; effort default medium)",
+  },
+  {
+    id: "claude-sonnet-5-5",
+    provider: "anthropic",
+    displayName: "Claude Sonnet 5.5",
+    capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: false, betweenToolsThinking: true, jsonSchemaOutput: true, prefill: false, alwaysThinks: true },
+    statedOn: "2026-09-28",
+    source: "Anthropic first-party Migrating to Claude Sonnet 5.5 (between_tools replaces disabled; adaptive and effort supported)",
   },
   {
     id: "claude-sonnet-5",
     provider: "anthropic",
     displayName: "Claude Sonnet 5",
-    capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: true, jsonSchemaOutput: true, prefill: false, alwaysThinks: false },
+    capabilities: { adaptiveThinking: true, effort: true, thinkingDisabled: true, betweenToolsThinking: false, jsonSchemaOutput: true, prefill: false, alwaysThinks: false },
     statedOn: "2026-09-25",
     source: "claude-api reference, thinking & effort table (Sonnet 5: adaptive is the only on-mode; disabled accepted)",
   },
@@ -102,7 +112,7 @@ export const ASK_MODEL_REGISTRY: readonly AskModelEntry[] = [
     id: "claude-haiku-4-5",
     provider: "anthropic",
     displayName: "Claude Haiku 4.5",
-    capabilities: { adaptiveThinking: false, effort: false, thinkingDisabled: true, jsonSchemaOutput: true, prefill: true, alwaysThinks: false },
+    capabilities: { adaptiveThinking: false, effort: false, thinkingDisabled: true, betweenToolsThinking: false, jsonSchemaOutput: true, prefill: true, alwaysThinks: false },
     statedOn: "2026-09-25",
     source: "claude-api reference, thinking & effort table (Haiku 4.5: budget_tokens only; effort errors)",
   },
@@ -114,12 +124,18 @@ export const ASK_MODEL_REGISTRY: readonly AskModelEntry[] = [
  */
 export const ASK_RETIRED_MODELS: Readonly<Record<string, string>> = {
   "claude-opus-5": "retired from Ask on 2026-09-25 (Sean: out of the rotation completely); use claude-opus-5-5",
+  "claude-sonnet-5": "replaced for active use by claude-sonnet-5-5; retained only for historical pricing and receipts",
 };
 
 /** The id a request is sent with, aliases resolved (`claude-haiku-4-5-20251001` is `claude-haiku-4-5`). */
 export function canonicalAskModelId(model: string): string {
   const trimmed = model.trim();
   return MODEL_ID_ALIASES[trimmed] ?? trimmed;
+}
+
+/** A saved environment override for the predecessor keeps selecting the active Sonnet tier. */
+export function activeAskOverrideModelId(model: string): string {
+  return canonicalAskModelId(model) === "claude-sonnet-5" ? "claude-sonnet-5-5" : model;
 }
 
 export function askModelEntry(model: string): AskModelEntry | null {
@@ -151,7 +167,7 @@ export type AskThinkingMode = "ADAPTIVE" | "OFF";
 
 export interface AskRequestFields {
   /** The `thinking` field to send, or absent when the model must not be sent one. */
-  readonly thinking?: { readonly type: "adaptive" } | { readonly type: "disabled" };
+  readonly thinking?: { readonly type: "adaptive" } | { readonly type: "disabled" } | { readonly type: "between_tools" };
   /** `output_config.effort` to send, or absent when the model takes none. */
   readonly effort?: string;
   /** The smallest `max_tokens` this rung may send this model (thinking counts against it). */
@@ -179,7 +195,7 @@ export function askRequestFields(model: string, want: { thinking: AskThinkingMod
   const caps = entry.capabilities;
   const thinking = want.thinking === "ADAPTIVE"
     ? (caps.adaptiveThinking ? { type: "adaptive" as const } : undefined)
-    : (caps.thinkingDisabled ? { type: "disabled" as const } : undefined);
+    : (caps.thinkingDisabled ? { type: "disabled" as const } : caps.betweenToolsThinking ? { type: "between_tools" as const } : undefined);
   return {
     ...(thinking ? { thinking } : {}),
     ...(caps.effort && want.effort ? { effort: want.effort } : {}),

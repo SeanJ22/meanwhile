@@ -1,0 +1,517 @@
+/**
+ * **admin-v6/workers@1 — WHAT THE WORKERS ARE DOING IN ONE PLACE, FROM SAVED EVIDENCE.**
+ *
+ * Bounded reads only: the owner policy row, the runner heartbeat and the
+ * research state (each narrowed in the store), the newest
+ * `WORKERS_SOURCE_EVENT_LIMIT` hunt source receipts, and three point reads per
+ * Scout the research state lists as running (at most `WORKERS_RUNNING_MAX`).
+ * No `.list()`, no `readAll()`, no filtered log scan.
+ *
+ * What a fact needs before it is shown:
+ *   - running: an open Attempt whose own lease is unreleased and unexpired now.
+ *     A listed Scout with an expired lease is shown as stopped, never running.
+ *   - progress: a saved PUBLISHED/REUSED source receipt or a completed-window
+ *     promotion count. A heartbeat or lease renewal is only "switched on".
+ *   - result: an ended Attempt is not a delivered result, and a saved result is
+ *     not a public-page check; the words say so.
+ *   - place: an exact saved Send (geography key and original instruction
+ *     receipt) on the obligation or source receipt, matched to a saved hunt the
+ *     place binding (`scopedHunts`) proves is inside the place.
+ *
+ * `jobs` stays null: the store has no bounded read of every running job. Scouts
+ * are listed, but plain-code ACQUIRER attempts run outside that list (read-only
+ * probe 2026-09-28 21:58 UTC: 584 in 24 hours). See DEP-WORKER-ACTIVE-INDEX.
+ */
+import { NextResponse, type NextRequest } from "next/server";
+import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
+import { openControlPlane, readAdminConfig, RUNNER_ID } from "../admin-data.ts";
+import type { Attempt, ExecutionLease } from "../attempt.ts";
+import { expansionScopesOf, type ExpansionScopeDecision } from "../expansion/scopes.ts";
+import { guardAdminRequest } from "../gateway/admin-guard.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type HuntSourceProgress, type RunnerHeartbeat } from "../owner-surface.ts";
+import { recordClassWords } from "../plain-work.ts";
+import type { ControlPlaneRepositories, RecordProjection } from "../repository/types.ts";
+import { laneGauges, queueLanesOf } from "../scheduler/lane-reading.ts";
+import type { ObligationAssignment } from "../scheduler/obligation.ts";
+import { RESEARCH_STATE_ID, type RunningScout } from "../scheduler/research-policy.ts";
+import { RUNNER_PROGRESS_HEARTBEAT_FIELDS } from "./runner-progress-read.ts";
+import { huntName, scopedHunts, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
+
+export const ADMIN_V6_WORKERS_CONTRACT = "admin-v6/workers@1" as const;
+/** The research state's own bound on its running list (runner-progress-read.ts). */
+export const WORKERS_RUNNING_MAX = 16;
+export const WORKERS_SOURCE_EVENT_LIMIT = 25;
+export const WORKERS_EVENT_LIMIT = 20;
+const ASSIGNMENT_READING_MAX = 64;
+
+export const WORKERS_RESEARCH_FIELDS = {
+  beatAt: true, cycleStartedAt: true, cycleFinishedAt: true, pausedByOwner: true,
+  queue: ["lanes"], running: true, researchProgression: ["windowId", "since", "through", "promoted", "readerVisible"],
+  assignments: true,
+} as const satisfies RecordProjection;
+const ATTEMPT_FIELDS = { id: true, routeTaskId: true, workItemId: true, worker: true, leaseId: true, startedAt: true,
+  endedAt: true, outcome: true } as const satisfies RecordProjection;
+const OBLIGATION_FIELDS = { id: true, recordClass: true, assignments: true } as const satisfies RecordProjection;
+
+export const DEP_WORKER_ACTIVE_INDEX = "DEP-WORKER-ACTIVE-INDEX";
+
+/* ------------------------------------------------ the UI shape (model.ts) */
+
+/** Structurally `WorkerStatus` in app/(admin)/_mw/admin-v6/model.ts. */
+export interface V6WorkerStatus {
+  readonly lastCheckIn: string | null;
+  readonly lastUsefulProgress: { readonly at: string; readonly what: string } | null;
+  readonly roundStartedAt: string | null;
+  readonly lastRoundFinishedAt: string | null;
+  readonly nextRoundDueAt: string | null;
+  readonly runnerState: string | null;
+  readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
+  readonly unread: readonly string[];
+}
+export interface V6WaitingItem {
+  readonly kind: string; readonly title: string; readonly why: string; readonly nextTime: string; readonly owner: string;
+  readonly applies: readonly string[]; readonly actions: readonly never[];
+}
+export interface V6WorkerEvent {
+  readonly at: string; readonly kind: string; readonly text: string; readonly applies: readonly string[];
+  readonly tone: "good" | "info" | "warn";
+}
+/** `AdminV6Data.workers.data`. `jobs` and `update` are null until their dependencies land. */
+export interface AdminV6WorkersView {
+  readonly status: V6WorkerStatus;
+  readonly jobs: null;
+  readonly waiting: readonly V6WaitingItem[] | null;
+  readonly events: readonly V6WorkerEvent[] | null;
+  readonly update: null;
+  readonly next: readonly string[] | null;
+}
+
+/* ------------------------------------------------------------ the sources */
+
+type Read<T> = { readonly state: "READ"; readonly value: T; readonly revision: number } | { readonly state: "MISSING" } | { readonly state: "UNREAD" };
+
+export interface ScoutEvidence {
+  readonly scout: RunningScout;
+  readonly attempt: Read<Partial<Attempt>>;
+  readonly lease: Read<Partial<ExecutionLease>>;
+  readonly obligation: Read<{ readonly recordClass?: unknown; readonly assignments?: unknown }>;
+}
+
+export interface V6WorkersSources {
+  readonly readAt: string;
+  readonly config: { readonly state: "READ"; readonly scopes: readonly ExpansionScopeDecision[]; readonly malformed: number }
+    | { readonly state: "UNREAD"; readonly detail: string };
+  readonly heartbeat: Read<Partial<RunnerHeartbeat>>;
+  readonly research: Read<Record<string, unknown>>;
+  /** Newest first. */
+  readonly sourceEvents: { readonly state: "READ"; readonly records: readonly unknown[] } | { readonly state: "UNREAD" };
+  /** Null when the research state was not read or its running list is not a valid bounded list. */
+  readonly scouts: readonly ScoutEvidence[] | null;
+}
+
+const clock = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
+const count = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) >= 0;
+const text = (value: unknown, max = 200): value is string => typeof value === "string" && value.length > 0 && value.length <= max;
+
+async function point<T>(read: () => Promise<{ readonly revision: number; readonly value: unknown } | null>): Promise<Read<T>> {
+  try {
+    const row = await read();
+    return row === null ? { state: "MISSING" } : { state: "READ", value: row.value as T, revision: row.revision };
+  } catch { return { state: "UNREAD" }; }
+}
+
+/** The research state's running list, when it is the bounded list the runner writes. */
+export function runningScoutsOf(research: unknown): readonly RunningScout[] | null {
+  const running = (research as { running?: unknown } | null)?.running;
+  if (!Array.isArray(running) || running.length > WORKERS_RUNNING_MAX) return null;
+  const ok = running.every((row: Partial<RunningScout>) => row !== null && typeof row === "object" && text(row.attemptId) &&
+    text(row.obligationId) && clock(row.startedAt) && (row.assignmentKeys === undefined ||
+      Array.isArray(row.assignmentKeys) && row.assignmentKeys.length <= 16 && row.assignmentKeys.every(key => text(key))));
+  return ok ? running as RunningScout[] : null;
+}
+
+/** Every read this section makes, each bounded. Nothing here writes. */
+export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string): Promise<V6WorkersSources> {
+  const [config, heartbeat, research, sourceEvents] = await Promise.all([
+    readAdminConfig(repos),
+    point<Partial<RunnerHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, RUNNER_PROGRESS_HEARTBEAT_FIELDS)),
+    point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
+    repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
+      .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
+  ]);
+  const running = research.state === "READ" ? runningScoutsOf(research.value) : null;
+  const scouts = running === null ? null : await Promise.all(running.map(async (scout): Promise<ScoutEvidence> => {
+    const [attempt, obligation] = await Promise.all([
+      point<Partial<Attempt>>(() => repos.attempts.readNarrowed(scout.attemptId, ATTEMPT_FIELDS)),
+      point<{ recordClass?: unknown; assignments?: unknown }>(() => repos.obligations.readNarrowed(scout.obligationId, OBLIGATION_FIELDS)),
+    ]);
+    const taskId = attempt.state === "READ" ? attempt.value.routeTaskId : undefined;
+    const lease: Read<Partial<ExecutionLease>> = !text(taskId) ? { state: attempt.state === "UNREAD" ? "UNREAD" : "MISSING" }
+      : await point<Partial<ExecutionLease>>(() => repos.leases.read(taskId));
+    return { scout, attempt, lease, obligation };
+  }));
+  const parsed = config.kind === "HELD" ? expansionScopesOf(config.value) : null;
+  return {
+    readAt,
+    config: config.kind === "STORE_UNREACHABLE" ? { state: "UNREAD", detail: config.detail }
+      : { state: "READ", scopes: parsed?.scopes ?? [], malformed: parsed?.malformed ?? 0 },
+    heartbeat, research, sourceEvents, scouts,
+  };
+}
+
+/* ------------------------------------------------------------- the words */
+
+const MST = new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+/** Arizona time, the way the owner reads schedules. */
+const mstWords = (iso: string) => `${MST.format(new Date(iso))} MST`;
+
+function modelWords(version: unknown): string {
+  if (!text(version)) return "Not recorded";
+  if (/haiku/i.test(version)) return `Cheapest AI (${version})`;
+  if (/sonnet/i.test(version)) return `Mid-level AI (${version})`;
+  if (/opus|fable/i.test(version)) return `Strongest AI (${version})`;
+  return version;
+}
+
+const SOURCE_STAGE: Readonly<Record<HuntSourceProgress["stage"], { kind: string; says: string; tone: V6WorkerEvent["tone"] }>> = {
+  QUEUED: { kind: "Queued", says: "was put in line to run", tone: "info" },
+  COLLECTING_AND_VERIFYING: { kind: "Collecting", says: "started collecting and checking", tone: "info" },
+  PUBLISHED: { kind: "Published", says: "was checked and published", tone: "good" },
+  REUSED: { kind: "Reused", says: "was already current, so the saved published copy was kept", tone: "good" },
+  HELD: { kind: "Held", says: "was held back and not published", tone: "warn" },
+  FAILED: { kind: "Failed", says: "stopped before publishing", tone: "warn" },
+};
+
+const FAILURE_WORDS: Readonly<Record<string, string>> = {
+  RECEIPT_COUNT_INVALID: "The run ended without the one receipt it must save, so nothing from it could be published.",
+};
+function failureWords(detail: unknown): string {
+  const code = typeof detail === "string" ? /^([A-Z][A-Z0-9_]{2,63})\b/.exec(detail)?.[1] ?? null : null;
+  if (code === null) return "The run stopped before publishing. No reason code was saved.";
+  return `${FAILURE_WORDS[code] ?? "The run stopped before publishing."} (Saved reason code: ${code}.)`;
+}
+
+const sourceName = (sourceId: string) => `The ${sourceId.replaceAll(/[-_]/g, " ")} source`;
+const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
+
+/* ------------------------------------------------------------- membership */
+
+type Relation = "member" | "outside" | "unresolved";
+
+interface Binding {
+  /** The whole country: every saved fact is inside. */
+  readonly all: boolean;
+  /** Saved Sends inside the place, by `key` → original instruction receipt. */
+  readonly members: readonly ExpansionScopeDecision[];
+  /** Every saved Send, for names and for proving a Send is outside. */
+  readonly saved: readonly ExpansionScopeDecision[];
+}
+
+function sendRelation(binding: Binding, key: string, ref: string): Relation {
+  if (binding.all) return "member";
+  if (binding.members.some(d => d.key === key && d.receiptId === ref)) return "member";
+  return binding.saved.some(d => d.key === key && d.receiptId === ref) ? "outside" : "unresolved";
+}
+
+/** A set of Sends: inside when any is; outside only when every one is a saved Send proven outside. */
+function sendsRelation(binding: Binding, sends: readonly { readonly key: string; readonly ref: string }[]): Relation {
+  if (binding.all) return "member";
+  const each = sends.map(s => sendRelation(binding, s.key, s.ref));
+  if (each.includes("member")) return "member";
+  return each.length > 0 && each.every(r => r === "outside") ? "outside" : "unresolved";
+}
+
+/** The Send marks that stood when this Scout started (and that it recorded, when it recorded them). */
+function scoutSends(evidence: ScoutEvidence): readonly { key: string; ref: string }[] | null {
+  if (evidence.obligation.state !== "READ") return null;
+  const marks = evidence.obligation.value.assignments;
+  if (marks === undefined) return [];
+  if (!Array.isArray(marks)) return null;
+  const started = Date.parse(evidence.scout.startedAt);
+  return (marks as Partial<ObligationAssignment>[]).filter(m => text(m.assignmentKey) && text(m.ref) && clock(m.at) && Date.parse(m.at) <= started &&
+    (evidence.scout.assignmentKeys === undefined || evidence.scout.assignmentKeys.includes(m.assignmentKey)))
+    .map(m => ({ key: m.assignmentKey!, ref: m.ref! }));
+}
+
+function namesOf(binding: Binding, sends: readonly { key: string; ref: string }[]): string {
+  const names = [...new Set(sends.flatMap(s => binding.saved.filter(d => d.key === s.key && d.receiptId === s.ref).map(huntName)))];
+  return names.length === 0 ? "work not tied to a current hunt" : names.length === 1 ? `the ${names[0]}` : `${names.length} hunts (${names.join(", ")})`;
+}
+
+/* ------------------------------------------------------------ the section */
+
+type ScoutState = "RUNNING" | "EXPIRED" | "ENDED" | "UNKNOWN";
+
+/** Running only with an open Attempt and its own unreleased, unexpired lease at `now`. */
+export function scoutState(evidence: ScoutEvidence, now: string): ScoutState {
+  if (evidence.attempt.state !== "READ") return "UNKNOWN";
+  const a = evidence.attempt.value;
+  if (a.outcome !== null && a.outcome !== undefined) return "ENDED";
+  if (evidence.lease.state === "UNREAD") return "UNKNOWN";
+  const lease = evidence.lease.state === "READ" ? evidence.lease.value : null;
+  const live = lease !== null && lease.id === a.leaseId && lease.released === false && clock(lease.expiresAt) &&
+    Date.parse(lease.expiresAt) > Date.parse(now);
+  return live ? "RUNNING" : "EXPIRED";
+}
+
+interface SourceRow { readonly at: string; readonly p: HuntSourceProgress }
+
+function sourceRows(records: readonly unknown[]): { rows: SourceRow[]; invalid: number } {
+  const rows: SourceRow[] = [];
+  let invalid = 0;
+  for (const record of records) {
+    const p = (record as { huntSourceProgress?: Partial<HuntSourceProgress> } | null)?.huntSourceProgress;
+    if (!p || !clock(p.at) || !p.stage || !(p.stage in SOURCE_STAGE) || !text(p.taskId) || !text(p.sourceId) ||
+      !Array.isArray(p.instructionIds) || p.instructionIds.length > 16 || !p.instructionIds.every(id => text(id))) { invalid++; continue; }
+    rows.push({ at: p.at, p: p as HuntSourceProgress });
+  }
+  return { rows, invalid };
+}
+
+/** A receipt names instruction receipts only; each must match exactly one saved Send to be placed. */
+function sourceSends(binding: Binding, p: HuntSourceProgress): { key: string; ref: string }[] {
+  return p.instructionIds.flatMap(id => {
+    const d = binding.saved.filter(s => s.receiptId === id);
+    return d.length === 1 ? [{ key: d[0].key, ref: id }] : [{ key: `?${id}`, ref: id }];
+  });
+}
+
+export function unboundScope(scopeKey: string): V6Refusal {
+  return { kind: "refused", status: 409, code: "SCOPE_BINDING_NOT_CONNECTED",
+    says: `${scopeKey} is not a place this section can bind yet; governing-body identities and overlaps are not proven.`, dependency: "DEP-SCOPE-IDENTITIES" };
+}
+
+/**
+ * **admin-v6/workers@1.** Pure: the same sources give the same answer. The
+ * lists are non-null only when every fact in them is proven for this place;
+ * an empty list is returned only when the reads that would fill it all
+ * succeeded and found nothing here.
+ */
+export function v6WorkersSection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope | null; readonly sources: V6WorkersSources }):
+  AdminV6SectionEnvelope<AdminV6WorkersView> | V6Refusal {
+  const { scopeKey, scope, sources } = input;
+  const now = sources.readAt;
+  if (scope === null) return unboundScope(scopeKey);
+  if (sources.research.state === "UNREAD") return { kind: "refused", status: 503, code: "WORKER_STATE_UNREAD",
+    says: "The saved research state could not be read, so what the workers are doing is unknown." };
+  const saved = sources.config.state === "READ" ? sources.config.scopes : [];
+  let binding: Binding;
+  if (scope.kind === "country") binding = { all: true, members: saved, saved };
+  else {
+    const scoped = scopedHunts(scope, scopeKey, { scopes: sources.config.state === "READ" ? sources.config.scopes : null,
+      malformedScopes: sources.config.state === "READ" ? sources.config.malformed : 0,
+      configGap: sources.config.state === "UNREAD" ? sources.config.detail : null, attribution: undefined, snapshotGap: null, readAt: now });
+    if ("kind" in scoped) return scoped;
+    binding = { all: false, members: [...scoped.lifetime, ...scoped.rolling], saved };
+  }
+  const applies = [scopeKey];
+  const missing: string[] = [];
+  const unread: string[] = [];
+
+  /* status: the heartbeat says "switched on", never "made progress" */
+  const hb = sources.heartbeat.state === "READ" && clock(sources.heartbeat.value.beatAt) ? sources.heartbeat.value as RunnerHeartbeat : null;
+  if (sources.heartbeat.state === "UNREAD" || (sources.heartbeat.state === "READ" && hb === null)) unread.push("the workers' last check-in");
+  const research = sources.research.state === "READ" ? sources.research.value : null;
+  const lanes = research === null ? null : queueLanesOf(research);
+  const gauges = laneGauges(lanes);
+  if (research !== null && gauges === null) unread.push("the queue counts");
+  if (sources.sourceEvents.state === "UNREAD") unread.push("the recent source receipts");
+  const started = hb && clock(hb.lastCycleStartedAt) ? hb.lastCycleStartedAt : null;
+  const finished = hb && clock(hb.lastCycleFinishedAt) ? hb.lastCycleFinishedAt : null;
+  const nextDue = hb && clock(hb.nextCycleDueAt) ? hb.nextCycleDueAt : null;
+
+  /* the Scouts the research state lists, each checked against its own Attempt and lease now */
+  const scoutRows = (sources.scouts ?? []).map(evidence => {
+    const sends = scoutSends(evidence);
+    return { evidence, state: scoutState(evidence, now), sends, relation: sends === null ? "unresolved" as Relation : sendsRelation(binding, sends) };
+  });
+  if (research !== null && sources.scouts === null) missing.push("The saved list of running paid research jobs is not a valid bounded list, so which of them are running is unknown.");
+  const scoutUnknown = scoutRows.filter(r => r.state === "UNKNOWN").length;
+  if (scoutUnknown > 0) missing.push(`${plural(scoutUnknown, "listed paid research job")} could not be checked against ${scoutUnknown === 1 ? "its" : "their"} saved attempt and work claim.`);
+  const scoutUnplaced = scoutRows.filter(r => r.relation === "unresolved").length;
+  if (scoutUnplaced > 0) missing.push(`${plural(scoutUnplaced, "listed paid research job")} could not be placed: ${scoutUnplaced === 1 ? "its" : "their"} saved task names no hunt that settles whether it is in ${scopeKey}.`);
+
+  /* source receipts, placed by exact instruction receipt */
+  const read = sources.sourceEvents.state === "READ" ? sourceRows(sources.sourceEvents.records) : null;
+  if (read && read.invalid > 0) missing.push(`${plural(read.invalid, "recent source receipt")} had an unreadable shape and ${read.invalid === 1 ? "was" : "were"} left out.`);
+  const placed = (read?.rows ?? []).map(row => ({ row, sends: sourceSends(binding, row.p) }))
+    .map(x => ({ ...x, relation: sendsRelation(binding, x.sends) }));
+  const sourceUnplaced = placed.filter(x => x.relation === "unresolved").length;
+  if (sourceUnplaced > 0) missing.push(`${plural(sourceUnplaced, "recent source receipt")} named an instruction that is not a saved hunt, so ${sourceUnplaced === 1 ? "it" : "they"} could not be placed.`);
+  const inScope = placed.filter(x => x.relation === "member");
+  if (read && read.rows.length === WORKERS_SOURCE_EVENT_LIMIT) {
+    const oldest = read.rows[read.rows.length - 1].at;
+    missing.push(`Only the newest ${WORKERS_SOURCE_EVENT_LIMIT} source receipts are read (back to ${mstWords(oldest)}). Older changes are not shown here.`);
+  }
+
+  /* last useful progress: a publication or a promotion, never a check-in */
+  const useful: { at: string; what: string }[] = [];
+  for (const x of inScope) if (x.row.p.stage === "PUBLISHED" || x.row.p.stage === "REUSED") useful.push({ at: x.row.at,
+    what: `${sourceName(x.row.p.sourceId)} for ${namesOf(binding, x.sends)} ${SOURCE_STAGE[x.row.p.stage].says}.` });
+  const progression = research?.researchProgression as { since?: unknown; through?: unknown; promoted?: { count?: unknown }; readerVisible?: { count?: unknown } } | null | undefined;
+  const window = progression && clock(progression.since) && clock(progression.through) ? {
+    since: progression.since, through: progression.through,
+    promoted: count(progression.promoted?.count) ? progression.promoted!.count as number : null,
+    visible: count(progression.readerVisible?.count) ? progression.readerVisible!.count as number : null } : null;
+  if (binding.all && window && window.promoted !== null && window.promoted > 0) useful.push({ at: window.through,
+    what: `${plural(window.promoted, "record")} ${window.promoted === 1 ? "was" : "were"} promoted in the round window ending ${mstWords(window.through)}.` });
+  useful.sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  if (useful.length === 0) missing.push(`No publication or promotion ${binding.all ? "" : `for ${scopeKey} `}is in the saved readings this section can read, so the last useful progress is not reported. A check-in only means the workers are switched on.`);
+
+  const status: V6WorkerStatus = {
+    lastCheckIn: hb?.beatAt ?? null,
+    lastUsefulProgress: useful[0] ?? null,
+    roundStartedAt: started !== null && (finished === null || Date.parse(finished) < Date.parse(started)) ? started : null,
+    lastRoundFinishedAt: finished,
+    nextRoundDueAt: nextDue,
+    runnerState: hb ? livenessOf(hb, now).state : sources.heartbeat.state === "MISSING" ? "NEVER_BEAT" : null,
+    lanes: gauges?.map(g => ({ name: g.name, active: g.active, waiting: g.waiting, blockedBy: g.blockedBy })) ?? null,
+    unread,
+  };
+
+  /* waiting, and why: per-hunt completion and money from the runner's own Send reading */
+  const reading = research?.assignments as { at?: unknown; assignments?: unknown } | null | undefined;
+  const sends = reading && clock(reading.at) && Array.isArray(reading.assignments) && reading.assignments.length <= ASSIGNMENT_READING_MAX
+    ? (reading.assignments as Record<string, unknown>[]).filter(r => r && text(r.key) && (r.ref === null || text(r.ref))) : null;
+  const memberSends = (sends ?? []).filter(r => r.kind !== "DISPATCH" && text(r.ref) && sendRelation(binding, r.key as string, r.ref as string) === "member");
+  const waiting: V6WaitingItem[] = [];
+  const next: string[] = [];
+  const nextTime = !nextDue ? "Not reported" : Date.parse(nextDue) > Date.parse(now) ? `The next round, due ${mstWords(nextDue)}`
+    : `The next round (it was due ${mstWords(nextDue)})`;
+  if (research?.pausedByOwner === true) next.push("Paid research is paused by you. Plain-code work keeps going.");
+  for (const r of memberSends) {
+    const d = binding.saved.find(s => s.key === r.key && s.receiptId === r.ref);
+    const name = d ? huntName(d) : typeof r.label === "string" ? `${r.label} hunt` : `The hunt sent as ${r.key as string}`;
+    const c = r.completion as { kind?: unknown; members?: unknown; settled?: unknown; exceptions?: unknown; refusedCount?: unknown; unsettledCount?: unknown } | null | undefined;
+    if (c?.kind === "NOT_COMPLETE" && count(c.members) && count(c.settled)) {
+      const exceptions = Array.isArray(c.exceptions) ? c.exceptions as { kind?: unknown }[] : [];
+      const refused = count(c.refusedCount) ? c.refusedCount : exceptions.filter(e => e.kind === "REFUSED").length;
+      const unsettled = count(c.unsettledCount) ? c.unsettledCount : exceptions.filter(e => e.kind === "UNSETTLED").length;
+      const open = c.members - c.settled;
+      waiting.push({ kind: "Not finished", title: `${name}: ${open.toLocaleString("en-US")} of ${plural(c.members, "assigned task")} not finished`,
+        why: `${plural(refused, "task")} ${refused === 1 ? "was" : "were"} stopped by a check, and ${plural(unsettled, "task")} ${unsettled === 1 ? "has" : "have"} no finished, checked result yet. Counted ${mstWords(reading!.at as string)}.`,
+        nextTime, owner: "Workers", applies, actions: [] });
+      next.push(`${name}: finish the other ${plural(open, "assigned task")} and pass ${open === 1 ? "its" : "their"} checks.`);
+    } else if (c?.kind === "NO_MEMBERS") {
+      waiting.push({ kind: "Not started", title: `${name}: no tasks are assigned yet`,
+        why: "No task has been linked to this hunt, so nothing can be finished for it yet.", nextTime, owner: "Workers", applies, actions: [] });
+    } else if (c?.kind === "COMPLETE" && count(c.members)) {
+      next.push(`${name}: all ${plural(c.members, "assigned task")} passed their checks.`);
+    } else missing.push(`Whether the ${name}'s tasks are finished was not counted in the latest saved reading.`);
+    const b = r.budget as { refused?: unknown; leftUsd?: unknown; heldUsd?: unknown; budgetUsd?: unknown } | null | undefined;
+    if (b && count(b.refused) && b.refused > 0) waiting.push({ kind: "Money limit",
+      title: `${name}: paid research was turned away ${plural(b.refused, "time")} by the hunt's money limit`,
+      why: `${typeof b.leftUsd === "number" ? `$${b.leftUsd.toFixed(2)} is left` : "The amount left is unknown"} of the $${typeof b.budgetUsd === "number" ? b.budgetUsd.toFixed(2) : "?"} limit${typeof b.heldUsd === "number" && b.heldUsd > 0 ? `, with $${b.heldUsd.toFixed(2)} set aside for work already started` : ""}. Counted ${mstWords(reading!.at as string)}.`,
+      nextTime: "When money is freed up or you change the limit", owner: "You", applies, actions: [] });
+  }
+  /* a source whose newest receipt here is a failure or a hold is waiting on that failure */
+  const byTask = new Map<string, typeof inScope>();
+  for (const x of inScope) byTask.set(x.row.p.taskId, [...(byTask.get(x.row.p.taskId) ?? []), x]);
+  for (const [, rows] of byTask) {
+    const latest = rows[0];
+    if (latest.row.p.stage !== "FAILED" && latest.row.p.stage !== "HELD") continue;
+    const failures = rows.filter(x => x.row.p.stage === latest.row.p.stage);
+    const since = failures[failures.length - 1].row.at;
+    waiting.push({ kind: latest.row.p.stage === "FAILED" ? "Keeps failing" : "Held",
+      title: `${sourceName(latest.row.p.sourceId)} for ${namesOf(binding, latest.sends)}: ${failures.length === 1 ? (latest.row.p.stage === "FAILED" ? "failed" : "held") : `${failures.length} ${latest.row.p.stage === "FAILED" ? "failed tries" : "holds"} since ${mstWords(since)}`}`,
+      why: latest.row.p.stage === "FAILED" ? failureWords(latest.row.p.detail) : "The run was held back, so nothing from it was published.",
+      nextTime: "The workers try it again on their own. The next try time is not saved.",
+      owner: failures.length > 1 ? "Engineering (the same failure keeps coming back)" : "Workers", applies, actions: [] });
+  }
+  if (binding.all && gauges) for (const g of gauges) if (g.waiting > 0) waiting.push({ kind: "In line",
+    title: `${plural(g.waiting, "task")} waiting: ${g.name.toLowerCase()}`,
+    why: g.blockedBy ?? "Why they wait is counted when the current round ends.",
+    nextTime: g.oldestWaitingDueAt ? `The oldest has been due since ${mstWords(g.oldestWaitingDueAt)}` : nextTime, owner: "Workers", applies, actions: [] });
+  // "Nothing is waiting" is provable only for the whole country, from the queue counts. In a place,
+  // work not sent to a hunt cannot be placed, so an empty list there would be a guess.
+  const waitingComplete = binding.all && gauges !== null && sources.sourceEvents.state === "READ";
+  if (!binding.all) missing.push(`Only work sent to a hunt is split by place. Other queued work is counted for the whole system only, in the lane counts.`);
+  if (!binding.all && sends === null) missing.push("The runner's per-hunt reading of finished and unfinished tasks could not be read.");
+
+  /* what changed: each source's newest receipt (a retry loop is one line), checked Scout starts and stops, the completed window */
+  const events: (V6WorkerEvent & { iso: string })[] = [];
+  for (const [, rows] of byTask) {
+    const newest = rows[0], p = newest.row.p, stage = SOURCE_STAGE[p.stage];
+    const same = rows.filter(x => x.row.p.stage === p.stage);
+    const times = same.length > 1 ? ` ${same.length} times since ${mstWords(same[same.length - 1].row.at)}` : "";
+    events.push({ iso: newest.row.at, at: mstWords(newest.row.at), kind: stage.kind, tone: stage.tone, applies,
+      text: `${sourceName(p.sourceId)} for ${namesOf(binding, newest.sends)} ${stage.says}${times}.${p.stage === "FAILED" ? ` ${failureWords(p.detail)}` : ""}` });
+  }
+  for (const r of scoutRows) {
+    if (r.relation !== "member" || r.state === "UNKNOWN") continue;
+    const a = r.evidence.attempt.state === "READ" ? r.evidence.attempt.value : {};
+    const what = `Paid research on a ${r.evidence.obligation.state === "READ" ? recordClassWords(r.evidence.obligation.value.recordClass as string) : "public record"} task for ${namesOf(binding, r.sends ?? [])}`;
+    const lease = r.evidence.lease.state === "READ" ? r.evidence.lease.value : null;
+    if (r.state === "RUNNING") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "Paid research started", tone: "info", applies,
+      text: `${what} is running now with ${modelWords(a.worker?.version)}. Its work claim holds until ${mstWords(lease!.expiresAt!)}. No result is saved yet, and its cost is measured when it ends.` });
+    else if (r.state === "EXPIRED") events.push({ iso: r.evidence.scout.startedAt, at: mstWords(r.evidence.scout.startedAt), kind: "No live work claim", tone: "warn", applies,
+      text: `${what} started ${mstWords(r.evidence.scout.startedAt)}, but its work claim ${lease && clock(lease.expiresAt) ? `ran out ${mstWords(lease.expiresAt)}` : "is gone"}. It is not proven running now. No finish is saved for this attempt; delivery must be checked separately.` });
+    else if (clock(a.endedAt)) events.push({ iso: a.endedAt, at: mstWords(a.endedAt), kind: "Paid research ended", tone: a.outcome === "COMPLETED" ? "info" : "warn", applies,
+      text: `${what} ended (${String(a.outcome).toLowerCase().replaceAll("_", " ")}). Ending is not the same as a checked, published result.` });
+  }
+  if (binding.all && window) events.push({ iso: window.through, at: mstWords(window.through), kind: "Round results", applies,
+    tone: window.promoted !== null && window.promoted > 0 ? "good" : "info",
+    text: `From ${mstWords(window.since)} to ${mstWords(window.through)}: ${window.promoted === null ? "records promoted were not counted" : `${plural(window.promoted, "record")} promoted`}; ${window.visible === null ? "how many readers can see was not counted" : `${plural(window.visible, "record")} visible to readers`}.` });
+  events.sort((a, b) => Date.parse(b.iso) - Date.parse(a.iso) || a.text.localeCompare(b.text));
+  // Plain-code jobs record no change this section can read, so no scope can claim "no recorded changes".
+
+  if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `The next round of work is due ${mstWords(nextDue)}.`
+    : `The next round was due ${mstWords(nextDue)}. No newer start is saved yet.`);
+  missing.push(`${DEP_WORKER_ACTIVE_INDEX}: the full list of jobs running now is not shown. Paid research jobs are checked one by one and appear under What changed, but plain-code collection jobs run outside that list and the store has no bounded read of every unexpired work claim yet.`);
+
+  const data: AdminV6WorkersView = {
+    status, jobs: null,
+    waiting: waiting.length > 0 || waitingComplete ? waiting : null,
+    events: events.length > 0 ? events.slice(0, WORKERS_EVENT_LIMIT).map(({ iso: _iso, ...e }) => e) : null,
+    update: null,
+    next: next.length > 0 ? next : null,
+  };
+  if (events.length > WORKERS_EVENT_LIMIT) missing.push(`Showing the newest ${WORKERS_EVENT_LIMIT} of ${events.length} changes read.`);
+  const revision = sectionRevision("workers", {
+    scopeKey, config: sources.config.state === "READ" ? sources.config.scopes.map(d => [d.key, d.receiptId]) : null,
+    heartbeat: sources.heartbeat.state === "READ" ? sources.heartbeat.revision : sources.heartbeat.state,
+    research: sources.research.state === "READ" ? sources.research.revision : sources.research.state,
+    sources: read?.rows.map(r => [r.p.taskId, r.p.stage, r.at]) ?? null,
+    scouts: scoutRows.map(r => [r.evidence.scout.attemptId, r.state, r.evidence.attempt.state === "READ" ? r.evidence.attempt.revision : null]),
+  });
+  return { contract: ADMIN_V6_WORKERS_CONTRACT, scope: scopeKey, revision, asOf: now, data, missingParts: missing };
+}
+
+/* -------------------------------------------------------------- the route */
+
+const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
+
+/** Only `scope`, exactly once; the place-key grammar is the Hunts/Money one. */
+export function validateWorkersQuery(params: URLSearchParams): ReturnType<typeof validateV6Query> {
+  if ([...params.keys()].some(key => key !== "scope")) return { ok: false, code: "UNKNOWN_PARAMETER" };
+  return validateV6Query(params);
+}
+
+/**
+ * GET `admin-v6/workers@1`: Admin host only (404), signed session (401),
+ * bounded query (400), unread store (503), unbound place (409). Private and
+ * never cached. Read-only: nothing here writes, starts or stops work.
+ */
+export async function v6WorkersGet(request: NextRequest, seams: {
+  readonly open?: () => ReturnType<typeof openControlPlane>;
+  readonly now?: () => string;
+} = {}): Promise<NextResponse> {
+  const guard = await guardAdminRequest({ headers: request.headers,
+    cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
+    nowSeconds: Math.floor(Date.now() / 1000) });
+  if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404, headers: NO_STORE })
+    : NextResponse.json({ says: guard.says }, { status: guard.status, headers: NO_STORE });
+  const query = validateWorkersQuery(request.nextUrl.searchParams);
+  if (!query.ok) return NextResponse.json({ code: query.code }, { status: 400, headers: NO_STORE });
+  if (query.scope === null) {
+    const out = unboundScope(query.scopeKey);
+    return NextResponse.json({ code: out.code, says: out.says, dependency: out.dependency }, { status: out.status, headers: NO_STORE });
+  }
+  const opened = await (seams.open ?? openControlPlane)();
+  if (!opened.ok) return NextResponse.json({ state: "UNREAD", code: "CONTROL_PLANE_UNREAD", says: opened.detail }, { status: 503, headers: NO_STORE });
+  const sources = await readV6WorkersSources(opened.repos, (seams.now ?? (() => new Date().toISOString()))());
+  const out = v6WorkersSection({ scopeKey: query.scopeKey, scope: query.scope, sources });
+  if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says, ...(out.dependency ? { dependency: out.dependency } : {}) },
+    { status: out.status, headers: NO_STORE });
+  return NextResponse.json(out, { headers: NO_STORE });
+}

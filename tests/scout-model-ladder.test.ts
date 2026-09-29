@@ -66,7 +66,7 @@ import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 const NOW = "2026-09-23T18:00:00.000Z"; // a Wednesday: outside the Saturday blackout the controller enforces
 const NOW_MS = Date.parse(NOW);
 const HAIKU = "claude-haiku-4-5-20251001";
-const SONNET = "claude-sonnet-5";
+const SONNET = "claude-sonnet-5-5";
 const OPUS = "claude-opus-5-5";
 
 const OBLIGATION: FreshnessObligation = {
@@ -146,7 +146,10 @@ const candidateFinish = (id: string, evidence: string, rungsWalked: readonly { i
   });
 
 type Usage = ModelResponse["usage"];
-const CHEAP_USAGE: Usage = { input_tokens: 1000, output_tokens: 100, cache_read_input_tokens: 500, cache_creation_input_tokens: 0 };
+// Repeated turns read the prefix from cache. At Sonnet 5.5's 512-token
+// minimum, the old synthetic 1,000 uncached tokens would correctly register
+// a stationary-breakpoint defect rather than represent a healthy cache hit.
+const CHEAP_USAGE: Usage = { input_tokens: 100, output_tokens: 100, cache_read_input_tokens: 1400, cache_creation_input_tokens: 0 };
 
 /**
  * The fake provider, scripted PER MODEL: each model has its own turn list and
@@ -353,7 +356,7 @@ const REASON_CASES: readonly ReasonCase[] = [
     /* The provider refuses the Sonnet request as invalid for that model. */
     sonnet: [new ModelTransportError('HTTP 400: {"type":"invalid_request_error","message":"this model does not support the requested feature"}', 400)],
     opus: [[fetchOf("o1", "https://a.gov/meetings")], [candidateFinish("f", "art-1", [{ index: 0, note: "meetings page" }])]],
-    evidence: /the provider refused the claude-sonnet-5 request as invalid \(HTTP 400\)/,
+    evidence: /the provider refused the claude-sonnet-5-5 request as invalid \(HTTP 400\)/,
     carried: null,
   },
 ];
@@ -387,7 +390,7 @@ for (const c of REASON_CASES) {
     assert.deepEqual({ from: asked.from, to: asked.to, reason: asked.reason }, { from: { modelClass: "sonnet", model: SONNET }, to: { modelClass: "frontier", model: OPUS }, reason: c.reason });
     assert.ok(close(asked.worstCaseUsd, scoutAttemptWorstCaseUsd(OPUS, { ...RESEARCH_BOUNDS.perDispatch, ...(c.bound ?? {}) }) ?? Number.NaN), "the hold is the frontier attempt's worst case");
     const lastUser = JSON.stringify(transport.requests[firstOpus].messages.at(-1));
-    assert.match(lastUser, /ESCALATED: this investigation moves from claude-sonnet-5 to claude-opus-5-5 because/);
+    assert.match(lastUser, /ESCALATED: this investigation moves from claude-sonnet-5-5 to claude-opus-5-5 because/);
     for (const r of transport.requests.slice(firstOpus)) {
       assert.equal(r.model, OPUS);
       assert.deepEqual(r.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the frontier's requests keep the same breakpoints");
@@ -527,8 +530,8 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   assert.equal(plan.model, SONNET);
   assert.equal(plan.request.model, SONNET);
   assert.equal(plan.request.max_tokens, 0);
-  assert.equal(plan.minimumCacheablePrefixTokens, 1024);
-  assert.ok(plan.prefixTokensAtLeast >= 1024);
+  assert.equal(plan.minimumCacheablePrefixTokens, 512);
+  assert.ok(plan.prefixTokensAtLeast >= 512);
 
   /* The loop's own first request, captured, over the same toolkit specs. */
   const captured: ModelRequest[] = [];

@@ -88,6 +88,7 @@ import {
   type SwitchVerdict,
 } from "../lib/ask/model-economics.ts";
 import { ASK_EFFORT_LEVELS, resolveAskEffort, type AskEffort } from "../lib/ask/model.ts";
+import { askModelRefusal } from "../lib/ask/model-registry.ts";
 import { batchEnabledFor } from "../lib/control-plane/model-batch.ts";
 import { validateAnswer, type KnownSubjectName } from "../lib/ask/validate.ts";
 import {
@@ -224,6 +225,17 @@ const NO_RECORD = process.argv.slice(2).includes("--no-record");
  * which route ran.
  */
 const COMPARE_BATCH = batchEnabledFor("ask-model-comparison");
+// Explicit command-line arms still make new paid requests. Historical run
+// records retain old IDs; a new run cannot send the replaced Sonnet 5 tier.
+if (!REGENERATE) {
+  for (const model of [INCUMBENT_ARM, CHALLENGER_ARM]) {
+    const refusal = askModelRefusal(model);
+    if (refusal) {
+      console.error(`ask:model-compare REFUSED - ${refusal}`);
+      process.exit(1);
+    }
+  }
+}
 if (COMPARE_BATCH) console.log("ask:model-compare · BATCH route ON (WTP_ASK_COMPARE_BATCH): every arm goes through /v1/messages/batches at half price and waits for the batch to end");
 
 /* A run whose arms are the same model measures nothing and would print a

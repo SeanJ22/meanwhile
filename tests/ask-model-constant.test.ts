@@ -95,7 +95,7 @@ test("a set override is honoured, and is REPORTED as an override", () => {
    * and that is exactly why the value must not be hardcoded here at runtime.
    */
   const current: string = ASK_SYNTHESIS_MODEL;
-  const other = current === "claude-sonnet-5" ? "claude-opus-5-5" : "claude-sonnet-5";
+  const other = current === "claude-sonnet-5-5" ? "claude-opus-5-5" : "claude-sonnet-5-5";
   const env = { [ASK_MODEL_ENV]: other };
   assert.notEqual(other, ASK_SYNTHESIS_MODEL, "the override must differ from the default");
   assert.equal(resolveAskModel(env), other);

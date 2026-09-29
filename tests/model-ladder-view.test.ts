@@ -46,7 +46,9 @@ test("an escalation on record reads as the classes by name, the reason, the evid
         obligationId: "freshness:x",
         subjectId: "ocd-division/country:us/state:az/place:x",
         from: "sonnet",
+        fromModel: "claude-sonnet-5",
         to: "frontier",
+        toModel: "claude-opus-5-5",
         reason: "RESULT_REFUSED",
         evidence: "finish refused after 4 turn(s): SCOUT_CANDIDATE_WITHOUT_EVIDENCE",
         refused: null,
@@ -65,6 +67,9 @@ test("an escalation on record reads as the classes by name, the reason, the evid
   assert.equal(refused, "A Scout stayed on Claude Sonnet 5 on Oct 1 although it stopped without giving an answer, because the spending ceiling could not cover a second try; it cost $0.0093.");
   const unmeasured = escalationSentence({ ...ladder.latest[0], combinedUsd: null, attemptsUsd: [null, 0.03] });
   assert.match(unmeasured, /both tries together cost an unmeasured amount \(an unmeasured amount \+ \$0\.0300\)/, "an unmeasured cost is never shown as $0");
+  assert.match(escalationSentence({ ...ladder.latest[0], fromModel: null, toModel: null }), /the sonnet class \(exact model not recorded\)/,
+    "class-only history cannot be relabeled with today's active Sonnet version");
+  assert.match(escalationSentence({ ...ladder.latest[0], fromModel: "claude-sonnet-5-5" }), /Claude Sonnet 5\.5/);
 });
 
 test("every recorded reason and every refusal has owner words — the closed lists and the words cannot drift apart", () => {

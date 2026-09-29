@@ -9,6 +9,16 @@
   ],
   "groups": [
     {
+      "id": "shape:lib/control-plane/scheduler/model-routing.ts#assertStepMayEscalate,lib/holdings/reader-execution-authority.ts#readerAuthorityChangedPointers",
+      "disposition": "ALLOWED",
+      "reason": "The class sweep sees a superficial guard-and-map shape, but model escalation validates a paid-call ladder and ceiling while Reader pointer comparison only lists exact changed civic keys for later proof. They share no state, policy, types, or useful helper; merging them would couple budget authority to Reader evidence."
+    },
+    {
+      "id": "shape:lib/civic-data/routine-due-request.ts#canonicalInstant,lib/control-plane/admin-view/worker-version-read.ts#canonicalInstant",
+      "disposition": "OWED",
+      "reason": "The new Admin worker-version reader independently validates canonical instants with the same rule as the civic routine-due request. Consolidation into a shared low-level validator is owed; importing a civic acquisition module into the control-plane read path would create the wrong dependency. This duplicate is recorded explicitly while the certified Reader source graph is frozen for the coordinated release."
+    },
+    {
       "id": "exact:lib/civic-data/jurisdiction-reference-acquisition.ts#crc32,tests/operational-reference-data-plane.test.ts#crc32",
       "disposition": "ALLOWED",
       "reason": "The production copy validates CRCs in official ZIP members; the test-only copy independently constructs raw ZIP fixtures. Importing the production checksum into that fixture builder would make the parser manufacture its expected CRC with the implementation under test and erase the corruption oracle. No second production path exists."

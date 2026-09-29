@@ -39,10 +39,18 @@ import {
   PDC_NEON_PROJECT_ID,
   PDC_PRODUCTION_BRANCH_ID,
   readerExecutionAuthorityArchivedSupportProblems,
+  readerAuthorityPostReadbackProblems,
+  readerAuthorityHistoricalCandidateProblems,
+  readerAuthorityChangedKeyHistoryProblems,
+  readerAuthorityChangedPointers,
+  readerAuthorityAffectedSurfaces,
+  readerAuthoritySuccessorCensusProblems,
+  readerAuthoritySuccessorProblems,
   readerExecutionAuthorityLiveProblems,
   type BuildReaderAuthorityOptions,
   type ReaderAuthoritySql,
 } from "../lib/holdings/reader-execution-authority.ts";
+import type { ReaderCensus } from "../lib/holdings/reader-census.ts";
 import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import {
@@ -652,7 +660,9 @@ function eventRows(pointers: readonly Row[]): Row[] {
       sequence: index + 1,
       state,
       at: NOW,
-      detail: `${state} fixture receipt`,
+      detail: state === "PROMOTED"
+        ? `Atomic pointer ${pointer.key} moved from bootstrap/no-version to ${pointer.current_version_id}.`
+        : `${state} fixture receipt`,
     })).concat({
       candidate_id: pointer.current_version_id,
       sequence: 5,
@@ -2221,6 +2231,186 @@ test("the terminal comparator re-reads live authority and emits no driver secret
   });
   assert.deepEqual(failure, ["Reader execution authority live readback failed"]);
   assert.equal(failure.join(" ").includes("test-only-password"), false);
+});
+
+test("V2 successor binding names changed ballot, meeting, and vote keys without granting them delivery credit", async () => {
+  const baseline = await buildReaderExecutionAuthorityEvidence(options());
+  assert.equal(baseline.formatVersion, 2);
+  assert.equal(baseline.import.pointerBindings?.length, baseline.import.canonicalPointerCount);
+  const original = baseline.import.pointerBindings!;
+  for (const recordClass of ["BALLOT_FILING", "MEETING", "STATE_LEGISLATOR_VOTES"]) {
+    const key = `${recordClass}:test-scope`;
+    const replacement = { ...original[0]!, key, recordClass, scope: "test-scope" };
+    const candidateBindings = baseline.import.candidateBindings!;
+    const certified = { ...baseline, import: { ...baseline.import,
+      pointerBindings: [replacement, ...original.slice(1)],
+      candidateBindings: [{ ...candidateBindings[0]!, key }, ...candidateBindings.slice(1)],
+    } };
+    const advanced = { ...certified, import: {
+      ...certified.import,
+      pointerBindings: [{ ...replacement, currentVersionId: `new-${recordClass}`, rowSha256: "f".repeat(64) }, ...original.slice(1)],
+    } };
+    assert.deepEqual(readerAuthoritySuccessorProblems(certified, advanced), [
+      `Reader execution authority changed ${recordClass} key ${key}; exact successor projection and public readback are unproved`,
+    ]);
+    assert.deepEqual(readerAuthorityChangedPointers(certified, advanced), [{
+      key, recordClass, scope: "test-scope", certifiedVersionId: replacement.currentVersionId,
+      currentVersionId: `new-${recordClass}`,
+    }]);
+  }
+});
+
+test("V1 drift and a further promotion during public readback both fail closed", async () => {
+  const baseline = await buildReaderExecutionAuthorityEvidence(options());
+  const { pointerBindings: _bindings, ...oldImport } = baseline.import;
+  const historical = { ...baseline, formatVersion: 1 as const, import: oldImport };
+  const advanced = { ...baseline, import: { ...baseline.import, canonicalPointerSetSha256: "f".repeat(64) } };
+  assert.match(readerAuthoritySuccessorProblems(historical, advanced).join(" "), /V1 has no per-key baseline/);
+  assert.deepEqual(readerAuthorityPostReadbackProblems(baseline, baseline), []);
+  assert.deepEqual(readerAuthorityPostReadbackProblems(baseline, advanced), [
+    "Reader execution authority advanced during successor public readback",
+  ]);
+});
+
+test("V2 historical candidate binding preserves exact row and event prefix", async () => {
+  const pointers = pointerRows();
+  const baseline = await buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ pointers }) }));
+  const pointer = baseline.import.pointerBindings![0]!;
+  const binding = baseline.import.candidateBindings![0]!;
+  const source = candidateRows(pointers).find((entry) => entry.pointer_key === pointer.key)!;
+  const { pointer_key: _key, current_version_id: _current, last_known_good_version_id: _lkg,
+    pointer_promoted_at: _promotedAt, ...persistent } = source;
+  const history = eventRows(pointers).filter((entry) => entry.candidate_id === binding.candidateId)
+    .map((entry) => ({
+      candidateId: String(entry.candidate_id), sequence: Number(entry.sequence),
+      state: String(entry.state), at: new Date(String(entry.at)).toISOString(),
+      detail: String(entry.detail),
+    }));
+  assert.deepEqual(readerAuthorityHistoricalCandidateProblems(pointer, binding, persistent, history), []);
+  assert.match(readerAuthorityHistoricalCandidateProblems(pointer, binding, {
+    ...persistent, failure_detail: "rewritten",
+  }, history).join(" "), /candidate differs/);
+  assert.match(readerAuthorityHistoricalCandidateProblems(pointer, binding, persistent, [
+    { ...history[0]!, detail: "rewritten" }, ...history.slice(1),
+  ]).join(" "), /event prefix differs/);
+});
+
+test("unchanged V2 pointers admit only append-only event drift, never rewritten history", async () => {
+  const baseline = await buildReaderExecutionAuthorityEvidence(options());
+  const candidates = baseline.import.candidateBindings!;
+  const appended = { ...baseline, import: {
+    ...baseline.import,
+    candidateBindings: [{ ...candidates[0]!, eventSha256: [...candidates[0]!.eventSha256, "f".repeat(64)] }, ...candidates.slice(1)],
+    durableImport: { ...baseline.import.durableImport,
+      candidateSetSha256: "e".repeat(64), eventSetSha256: "f".repeat(64),
+      eventCount: baseline.import.durableImport.eventCount + 1 },
+  } };
+  assert.deepEqual(readerAuthoritySuccessorProblems(baseline, appended), []);
+  const rewritten = { ...appended, import: { ...appended.import,
+    candidateBindings: [{ ...candidates[0]!, eventSha256: ["f".repeat(64), ...candidates[0]!.eventSha256.slice(1)] }, ...candidates.slice(1)] },
+  };
+  assert.match(readerAuthoritySuccessorProblems(baseline, rewritten).join(" "), /without an exact append-only prefix/);
+});
+
+test("a changed key cannot claim a successor when its certified candidate is unavailable", async () => {
+  const baseline = await buildReaderExecutionAuthorityEvidence(options());
+  const prior = baseline.import.pointerBindings![0]!;
+  const observed = { ...baseline, import: { ...baseline.import,
+    pointerBindings: [{ ...prior, currentVersionId: "cv-unproven-successor", rowSha256: "f".repeat(64) },
+      ...baseline.import.pointerBindings!.slice(1)] },
+  };
+  const problems = await readerAuthorityChangedKeyHistoryProblems(baseline, observed, {
+    query: async () => [], readOnlyTransaction: async () => [],
+  });
+  assert.match(problems.join(" "), /historical candidate is missing or ambiguous/);
+});
+
+test("an exact GOOD pointer-move chain retains the certified candidate while replacing its version", async () => {
+  const pointers = pointerRows();
+  const baseline = await buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ pointers }) }));
+  const prior = baseline.import.pointerBindings![0]!;
+  const oldSource = candidateRows(pointers).find((entry) => entry.pointer_key === prior.key)!;
+  const { pointer_key: _key, current_version_id: _current,
+    last_known_good_version_id: _lkg, pointer_promoted_at: _promotedAt,
+    ...oldPersistent } = oldSource;
+  const oldHistory = eventRows(pointers).filter((event) => event.candidate_id === prior.currentVersionId);
+  const { bootstrapImport: _import, ...candidateWithoutImport } =
+    structuredClone(oldPersistent.candidate) as RoutineCandidate & { bootstrapImport?: unknown };
+  const candidate = { ...candidateWithoutImport, id: "cv-successor-good-fixture" } as RoutineCandidate;
+  const receipt = validationReceiptFor(candidate, "SOURCE_PRIMARY_AUTHENTICATED");
+  const promotedAt = new Date(Date.parse(NOW) + 1_000).toISOString();
+  const newPersistent = { ...oldPersistent, candidate_id: candidate.id,
+    candidate, validation_receipt: receipt, promoted_version_id: candidate.id,
+    candidate_lkg_version_id: candidate.id };
+  const nextPointer = { key: prior.key, sourceId: prior.sourceId,
+    recordClass: prior.recordClass, scope: prior.scope, currentVersionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, promotedAt,
+    payload: candidate.readModel, validationReceipt: receipt };
+  const move = `Atomic pointer ${prior.key} moved from ${prior.currentVersionId} to ${candidate.id}.`;
+  const newHistory = ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"].map((state, index) => ({
+    candidate_id: candidate.id, sequence: index + 1, state, at: promotedAt,
+    detail: state === "PROMOTED" ? move : `Fixture ${state}`,
+  }));
+  const observed = { ...baseline, import: { ...baseline.import,
+    pointerBindings: [{ ...prior, currentVersionId: candidate.id,
+      rowSha256: sha256(canonicalReaderAuthorityJson(nextPointer)) },
+      ...baseline.import.pointerBindings!.slice(1)],
+  } };
+  const sql = (events: Row[]): ReaderAuthoritySql => ({
+    query: async (statement, parameters = []) => {
+      const id = String(parameters[0]);
+      if (statement.includes("from public.civic_data_candidates")) {
+        return id === candidate.id ? [newPersistent] : id === prior.currentVersionId ? [oldPersistent] : [];
+      }
+      if (statement.includes("from public.civic_data_candidate_events")) {
+        return (id === candidate.id ? events : id === prior.currentVersionId ? oldHistory : [])
+          .filter((event) => Number(event.sequence) > Number(parameters[1]))
+          .slice(0, 32);
+      }
+      throw new Error("Unexpected successor fixture query");
+    },
+    readOnlyTransaction: async () => [],
+  });
+  assert.deepEqual(await readerAuthorityChangedKeyHistoryProblems(baseline, observed, sql(newHistory)), []);
+  const broken = newHistory.map((event) => event.state === "PROMOTED"
+    ? { ...event, detail: move.replace(prior.currentVersionId, "cv-unrelated") }
+    : event);
+  assert.match((await readerAuthorityChangedKeyHistoryProblems(baseline, observed, sql(broken))).join(" "),
+    /historical candidate is missing|pointer-move/);
+});
+
+test("successor readbacks cover the declared public surfaces and unknown classes stay unclassified", () => {
+  const ballot = readerAuthorityAffectedSurfaces(["BALLOT_FILING"]);
+  assert.deepEqual(ballot.unknownClasses, []);
+  assert.ok(ballot.surfaces.includes("ballot") && ballot.surfaces.includes("ask"));
+  const crossCutting = readerAuthorityAffectedSurfaces(["CENSUS_GEOGRAPHY"]);
+  assert.equal(crossCutting.surfaces.length, 13);
+  const unknown = readerAuthorityAffectedSurfaces(["NEW_READER_CLASS"]);
+  assert.deepEqual(unknown, { surfaces: [], unknownClasses: ["NEW_READER_CLASS"] });
+});
+
+test("a successor cannot inherit a changed canonical ballot or vote eligibility denominator", () => {
+  const row = { id: "row:ballot", readerSurface: "ballot", eligibleRecordIds: ["held:one"] };
+  const vote = { id: "row:votes", readerSurface: "votes", eligibleRecordIds: ["held:vote"] };
+  const baseline = { holdingsDigest: "held", registrySha256: "registry", records: [
+    { auditId: "held:one", eligibility: { state: "READER_ELIGIBLE" } },
+    { auditId: "held:vote", eligibility: { state: "READER_ELIGIBLE" } },
+  ], rows: [row, vote] } as unknown as ReaderCensus;
+  const fingerprint = (value: ReaderCensus["rows"][number]) =>
+    JSON.stringify({ id: value.id, eligibleRecordIds: value.eligibleRecordIds });
+  assert.deepEqual(readerAuthoritySuccessorCensusProblems(baseline, baseline,
+    ["BALLOT_FILING", "STATE_LEGISLATOR_VOTES"], fingerprint), {
+    problems: [], affectedRowIds: ["row:ballot", "row:votes"],
+  });
+  const changed = { ...baseline, rows: [{ ...row, eligibleRecordIds: [] }, vote] } as unknown as ReaderCensus;
+  assert.match(readerAuthoritySuccessorCensusProblems(baseline, changed,
+    ["BALLOT_FILING"], fingerprint).problems.join(" "), /projection or eligibility changed/);
+  const changedRecord = { ...baseline, records: [
+    { auditId: "held:one", eligibility: { state: "STAGED_NOT_ELIGIBLE" } },
+    baseline.records[1],
+  ] } as ReaderCensus;
+  assert.match(readerAuthoritySuccessorCensusProblems(baseline, changedRecord,
+    ["BALLOT_FILING"], fingerprint).problems.join(" "), /canonical record or eligibility changed/);
 });
 
 test("the CLI surface never accepts a database URL and derives phase-specific paths", () => {

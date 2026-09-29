@@ -62,6 +62,13 @@ import { ASK_SYNTHESIS_MODEL } from "./synthesize.ts";
  * rate somebody remembered.
  */
 export const ASK_MODEL_RATES: Readonly<Record<string, ModelRate>> = {
+  "claude-sonnet-5-5": {
+    model: "claude-sonnet-5-5",
+    inputUsdPerMillion: 2.0,
+    outputUsdPerMillion: 10.0,
+    statedOn: "2026-09-28",
+    source: "Anthropic first-party Sonnet 5.5 migration guide and pricing page",
+  },
   "claude-opus-5": {
     model: "claude-opus-5",
     inputUsdPerMillion: 5.0,
@@ -135,7 +142,7 @@ export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
  * Sonnet 5, Opus 5.5 on identical inputs) is recorded in
  * meanwhile-evidence/admin-completion/2026-09-25/ask-model-test/.
  */
-export const ASK_CHALLENGER_MODEL = "claude-sonnet-5";
+export const ASK_CHALLENGER_MODEL = "claude-sonnet-5-5";
 
 /**
  * How much cheaper the challenger's tokens are, on the published rates alone.

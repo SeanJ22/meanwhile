@@ -121,6 +121,7 @@ test("SEEDED: an unauthenticated admin page request on the ADMIN host is refused
 test("SEEDED: an unauthenticated admin API request on the ADMIN host is refused with 401", async () => {
   const response = await middleware(request(ADMIN_HOST, "/api/admin/decision"));
   assert.equal(response.status, 401);
+  assert.equal(response.headers.get("cache-control"), "private, no-store");
 });
 
 test("the committed /admin/fleet page is guarded like any other admin page", async () => {

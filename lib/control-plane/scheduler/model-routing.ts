@@ -43,7 +43,7 @@ export type ModelClass = (typeof MODEL_CLASSES)[number];
 /** The exact model id each class runs today. Ids as the claude-api reference lists them. */
 export const MODEL_FOR_CLASS: Readonly<Record<ModelClass, string>> = {
   haiku: "claude-haiku-4-5-20251001",
-  sonnet: "claude-sonnet-5",
+  sonnet: "claude-sonnet-5-5",
   frontier: "claude-opus-5-5",
 };
 

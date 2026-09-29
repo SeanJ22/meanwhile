@@ -95,6 +95,8 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
     assert.ok(audits.every(row => row.cost.requestCount === 1 && row.cost.usd! > 0), "every failed and successful request retains its own model-priced receipt");
     assert.equal(audits[1].modelReview?.escalation?.previousResultId, audits[0].id);
     assert.equal(audits[2].modelReview?.escalation?.previousResultId, audits[1].id);
+    assert.equal(nextAuditEscalation({ ...audits[1], modelReview: { ...audits[1].modelReview!, model: "claude-sonnet-5" } })?.to, "frontier",
+      "a previously recorded Sonnet 5 inconclusive result retains its next escalation after the active tier changes");
     assert.equal(nextAuditEscalation({ ...audits[0], modelReview: { ...audits[0].modelReview!, challenges: [{ code: "GROUNDED", detail: "Repair source", artifactId: artifact.id, quote: "records" }] } }), null,
       "a grounded challenge routes to evidence repair, never another model's approval");
     await assert.rejects(runtime.auditReasoner!.review(await runtime.independentContext({ ...audits[0].completion.completedTask.workerTask!, methodVersion: runtime.methodVersion }),

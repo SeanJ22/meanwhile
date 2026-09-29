@@ -34,6 +34,9 @@ export function routineSupervisorCycleId(host: string, startedAt: string): strin
 
 export interface RoutineSourceTask {
   readonly id: string;
+  /** When a source-scoped task has a distinct supervisor id, the child still
+   * receives the exact registered manual contract for its write authority. */
+  readonly registeredContractId?: string;
   readonly sourceId: string;
   readonly acquisitionFailureDomain: string;
   readonly recordClass: RoutineRecordClass;

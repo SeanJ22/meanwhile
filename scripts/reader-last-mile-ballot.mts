@@ -9,6 +9,7 @@ import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt } from "../lib/registry/server.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { publishedZipDistricts } from "../lib/geo/zip-census-districts.ts";
 import { readAllZipDivisions } from "../lib/geo/zip-division-index.ts";
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
@@ -52,14 +53,38 @@ const targets = new Set(sets.flatMap(({ set }) => set.contests.map((contest) => 
 const absenceTargets = new Set(sets.flatMap(({ set }) => set.absences.map((absence) => `absence:${absence.ocdId}`)));
 const planIds = (plan: typeof plans[number]) => [...plan.contests.map(contest => contest.id), ...plan.absences.map(absence => `absence:${absence.ocdId}`)];
 floored("canonical ballot contests", "all currently normalized registered ballot sources", targets.size, targets.size);
-const chosen = plans.filter((plan) => ["85701", "85641", "07866", "03255"].includes(plan.zip));
+// The page and this planner both add the current published Census district
+// overlap to the sampled ZIP shard. A transient 1 s read can leave a planner
+// ZIP on the older shard while the served page later gets the published slice.
+// Require a settled read for every selected ZIP before claiming exact equality;
+// keep NOT_PUBLISHED distinct from a failed read.
+async function currentPlan(plan: BallotPlan): Promise<BallotPlan> {
+  let districtRead = await publishedZipDistricts(plan.zip);
+  for (let attempt = 1; districtRead.kind === "UNREAD" && attempt < 3; attempt++) {
+    districtRead = await publishedZipDistricts(plan.zip);
+  }
+  assert.notEqual(districtRead.kind, "UNREAD", `${plan.zip}: current Census district scope could not be read for exact ballot comparison`);
+  const point = resolveZip(plan.zip);
+  assert.ok(point.ok, `${plan.zip}: selected ZIP no longer resolves`);
+  const divisionIds = await divisionIdsForZipArea(
+    plan.zip,
+    (await divisionsAt(point.centroid.lat, point.centroid.lng)).map((division) => division.ocdId),
+  );
+  return { ...plan, ...contestsForDivisions(plan.set, divisionIds) };
+}
+
+const chosen: BallotPlan[] = [];
+for (const plan of plans.filter((plan) => ["85701", "85641", "07866", "03255"].includes(plan.zip))) {
+  chosen.push(await currentPlan(plan));
+}
 const remaining = new Set([...targets, ...absenceTargets]);
 for (const plan of chosen) for (const id of planIds(plan)) remaining.delete(id);
 while (remaining.size) {
-  const best = plans.filter((plan) => !chosen.includes(plan)).map((plan) => ({ plan, added: planIds(plan).filter(id => remaining.has(id)).length })).sort((a, b) => b.added - a.added || a.plan.zip.localeCompare(b.plan.zip))[0];
+  const best = plans.filter((plan) => !chosen.some((selected) => selected.zip === plan.zip && selected.state === plan.state)).map((plan) => ({ plan, added: planIds(plan).filter(id => remaining.has(id)).length })).sort((a, b) => b.added - a.added || a.plan.zip.localeCompare(b.plan.zip))[0];
   if (!best?.added) break;
-  chosen.push(best.plan);
-  planIds(best.plan).forEach(id => remaining.delete(id));
+  const current = await currentPlan(best.plan);
+  chosen.push(current);
+  planIds(current).forEach(id => remaining.delete(id));
 }
 const planEvidence = { rule: "Deterministic ZIP set cover over every ZIP the national ZIP index gives a division of a ballot state, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.", contests: targets.size, sourcedAbsences: absenceTargets.size, chosen: chosen.map(({ zip, state, contests, absences }) => ({ zip, state, contestIds: contests.map((contest) => contest.id), absenceOcdIds: absences.map(absence => absence.ocdId) })), unresolvedContestIds: [...remaining].filter(id => !id.startsWith("absence:")).sort(), unresolvedAbsenceIds: [...remaining].filter(id => id.startsWith("absence:")).sort() };
 writeFileSync(planOutputPath, JSON.stringify(planEvidence, null, 2) + "\n");

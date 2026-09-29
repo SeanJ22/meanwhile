@@ -650,7 +650,7 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
   }
   const secrets = authoritySecrets(evidence);
   if (secrets.length) throw new Error(secrets.join("; "));
-  if (evidence?.formatVersion !== 1 || evidence?.phase !== reference.phase) {
+  if (![1, 2].includes(evidence?.formatVersion) || evidence?.phase !== reference.phase) {
     throw new Error("Reader execution authority artifact phase or format differs from its receipt.");
   }
   if (!EXACT_HEAD.test(evidence?.exactHead ?? "") || evidence.exactHead !== readerHead) {
@@ -685,11 +685,29 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
     throw new Error("Reader execution authority does not prove the exact read-only civic-data relation set.");
   }
   const imported = evidence?.import;
-  if (!exactKeys(imported, ["importerCodeSha", "receiptPath", "receiptSha256", "resultSha256", "dispositionSetSha256", "canonicalPointerSetSha256", "canonicalPointerCount", "durableImport"])) {
+  if (!exactKeys(imported, ["importerCodeSha", "receiptPath", "receiptSha256", "resultSha256", "dispositionSetSha256", "canonicalPointerSetSha256", "canonicalPointerCount", ...(evidence.formatVersion === 2 ? ["pointerBindings", "candidateBindings"] : []), "durableImport"])) {
     throw new Error("Reader execution authority import fields differ from the exact schema.");
   }
   if (!EXACT_HEAD.test(imported?.importerCodeSha ?? "") || !EXACT_SHA256.test(imported?.receiptSha256 ?? "") || !EXACT_SHA256.test(imported?.resultSha256 ?? "") || !EXACT_SHA256.test(imported?.dispositionSetSha256 ?? "") || !EXACT_SHA256.test(imported?.canonicalPointerSetSha256 ?? "") || !Number.isSafeInteger(imported?.canonicalPointerCount) || imported.canonicalPointerCount <= 0) {
     throw new Error("Reader execution authority does not bind an exact importer receipt and canonical pointer set.");
+  }
+  if (evidence.formatVersion === 2) {
+    const bindings = imported.pointerBindings;
+    const candidates = imported.candidateBindings;
+    if (!Array.isArray(bindings) || bindings.length !== imported.canonicalPointerCount || bindings.some((binding, index) =>
+      !exactKeys(binding, ["key", "sourceId", "recordClass", "scope", "currentVersionId", "rowSha256"]) ||
+      typeof binding.key !== "string" || !binding.key || binding.key !== `${binding.recordClass}:${binding.scope}` ||
+      (index > 0 && binding.key <= bindings[index - 1].key) ||
+      typeof binding.sourceId !== "string" || !binding.sourceId ||
+      typeof binding.currentVersionId !== "string" || !binding.currentVersionId ||
+      !EXACT_SHA256.test(binding.rowSha256)
+    )) throw new Error("Reader execution authority pointer bindings are incomplete or unordered.");
+    if (!Array.isArray(candidates) || candidates.length !== bindings.length || candidates.some((candidate, index) =>
+      !exactKeys(candidate, ["key", "candidateId", "rowSha256", "eventSha256"]) ||
+      candidate.key !== bindings[index].key || candidate.candidateId !== bindings[index].currentVersionId ||
+      !EXACT_SHA256.test(candidate.rowSha256) || !Array.isArray(candidate.eventSha256) ||
+      candidate.eventSha256.length === 0 || candidate.eventSha256.some((hash) => !EXACT_SHA256.test(hash))
+    )) throw new Error("Reader execution authority candidate bindings lack exact event commitments.");
   }
   if (reference.phase === "PRODUCTION" && imported.importerCodeSha === evidence.exactHead) {
     throw new Error("Reader production execution authority was generated before the importer was deleted in child commit B.");

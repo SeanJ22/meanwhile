@@ -40,7 +40,22 @@ test("exact captured origin and committed zero-request result show saved-byte re
   assert.equal(reused?.sourceUrl,null,"a source URL with an unreviewed query is not exposed or rewritten to a possibly broken link");
   assert.ok(reused?.references.some(([name,value])=>name==="Original work item"&&value==="wi-origin"));
   assert.equal(trail.events.some(row=>row.title==="Current public result confirmed"),false);
-  assert.ok(trail.gaps.some(gap=>gap.includes("Opening the captured copy in Admin is not yet available")));
+  assert.ok(trail.gaps.some(gap=>gap.includes("no eligible private original-copy control")));
+});
+
+test("only a complete RAW capture on exact freshness work offers the private copy control",()=>{
+  const work={...child,project:"freshness"} as WorkItem;
+  const saved={...artifact,workItemId:work.id,attemptId:childAttempt.id,artifactId:"ar-complete",
+    tier:"RAW",partial:false,byteLength:107106} as ArtifactRecord;
+  const attempt={...childAttempt,artifactIds:[saved.artifactId]} as Attempt;
+  const event=(row:ArtifactRecord, owner:WorkItem=work)=>assignmentEvidenceTrail(sources({workItems:[owner],attempts:[attempt],
+    artifacts:[row],workerResults:[]}),owner.id,null).events.find(e=>e.id===`saved:${owner.id}:${row.artifactId}`);
+  assert.deepEqual(event(saved)?.privateCopy,{path:`/api/admin/evidence/${work.id}/${attempt.id}/${saved.artifactId}`,
+    byteLength:saved.byteLength});
+  assert.equal(event({...saved,partial:true})?.privateCopy,undefined);
+  assert.equal(event({...saved,tier:"RESTRICTED_RAW"})?.privateCopy,undefined);
+  assert.equal(event({...saved,byteLength:32*1024*1024+1})?.privateCopy,undefined);
+  assert.equal(event(saved,{...work,project:"civic"})?.privateCopy,undefined);
 });
 
 test("unconfirmed origin or nonzero request cannot claim validated reuse or avoided request",()=>{

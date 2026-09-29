@@ -1,0 +1,182 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { contentHash } from "../lib/control-plane/ids.ts";
+import { artifactId } from "../lib/control-plane/evidence/artifact.ts";
+import { assertOriginalCapture, adminEvidenceKey, mirrorOriginalCapture, verifyAdminEvidenceBlob,
+  ADMIN_EVIDENCE_MAX_BYTES, type AdminEvidenceBlob, type AdminEvidenceRemote } from "../lib/control-plane/evidence/admin-bridge.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { ZERO_COST, type Attempt } from "../lib/control-plane/attempt.ts";
+import type { HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
+import { putArtifact } from "../lib/control-plane/evidence/store.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+const bytes = new TextEncoder().encode("<html><body>Official public meeting record</body></html>");
+const hash = contentHash(bytes);
+const id = artifactId("RAW", hash);
+const record: ArtifactRecord = { artifactId: id, workItemId: "wi-1234", attemptId: "at-5678",
+  routeTaskId: "rt-1234", tier: "RAW", contentHash: hash, byteLength: bytes.byteLength,
+  contentType: "text/html", canonicalUrl: "https://city.example.gov/meeting", partial: false,
+  recordedAt: "2026-09-28T00:00:00.000Z" };
+const attempt: Attempt = { id: record.attemptId, routeTaskId: record.routeTaskId!, workItemId: record.workItemId,
+  worker: { role: "ACQUIRER", provider: "deterministic", version: "test", instance: "test" }, leaseId: "ls-1",
+  startedAt: record.recordedAt, endedAt: record.recordedAt, outcome: "COMPLETED", abortReason: null,
+  artifactIds: [id], cost: ZERO_COST, methodVersion: 1, policyVersion: "test" };
+const held: HeldVaultArtifact = { id, tier: "RAW", contentHash: hash, contentType: "text/html",
+  canonicalUrl: record.canonicalUrl, retrievalUrl: record.canonicalUrl,
+  retrievedAt: record.recordedAt, httpStatus: 200, sourceId: "official-city", workItemId: record.workItemId,
+  attemptId: record.attemptId, methodRouteId: "official-html", permission: "ALLOWED",
+  retentionPolicy: "EVIDENCE_PERMANENT", bodyPath: "unused", bodySha256: hash };
+
+class MemoryPrivateStore implements AdminEvidenceRemote {
+  readonly rows = new Map<string, AdminEvidenceBlob>();
+  async read(key: string) { return this.rows.get(key) ?? null; }
+  async create(key: string, blob: AdminEvidenceBlob) {
+    if (this.rows.has(key)) return false;
+    this.rows.set(key, blob);
+    return true;
+  }
+}
+
+test("exact complete raw capture is copied once under work, attempt, artifact and hash, then verified", async () => {
+  const remote = new MemoryPrivateStore();
+  assert.match(adminEvidenceKey(record), /^freshness\/wi-1234\/at-5678\/ar-[a-f0-9]+\/sha256-[a-f0-9]{64}$/);
+  assert.equal(await mirrorOriginalCapture({ record, attempt, held, bytes, remote }), "COPIED");
+  assert.equal(await mirrorOriginalCapture({ record, attempt, held, bytes, remote }), "ALREADY_VERIFIED");
+  assert.deepEqual(verifyAdminEvidenceBlob(record, (await remote.read(adminEvidenceKey(record)))!), bytes);
+});
+
+test("a partial, mismatched owner, stale hash, restricted tier or reclassified credential never leaves the vault", async () => {
+  const remote = new MemoryPrivateStore();
+  for (const altered of [
+    { record: { ...record, partial: true }, attempt, held, bytes },
+    { record, attempt: { ...attempt, workItemId: "wi-other" }, held, bytes },
+    { record, attempt, held: { ...held, attemptId: "at-other" }, bytes },
+    { record, attempt, held: { ...held, httpStatus: 206 }, bytes },
+    { record, attempt, held: { ...held, retentionPolicy: "LICENCE_LIMITED" }, bytes },
+    { record, attempt, held, bytes: new TextEncoder().encode("altered source") },
+    { record: { ...record, tier: "RESTRICTED_RAW" as const }, attempt, held, bytes },
+    { record: { ...record, contentType: "application/octet-stream" }, attempt, held, bytes },
+  ]) await assert.rejects(mirrorOriginalCapture({ ...altered, remote }));
+  assert.equal(remote.rows.size, 0);
+  const fakeKey = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
+  const credential = new TextEncoder().encode(`<html><script>window.__B='{"k":"${fakeKey}"}'</script></html>`);
+  const credentialRecord = { ...record, contentHash: contentHash(credential), byteLength: credential.length };
+  const credentialHeld = { ...held, contentHash: credentialRecord.contentHash, bodySha256: credentialRecord.contentHash };
+  // Even if a forged old metadata row says RAW, the current scanner is the final gate.
+  assert.throws(() => assertOriginalCapture(credentialRecord, attempt, credentialHeld, credential));
+});
+
+test("an occupied immutable key with different bytes is refused, not overwritten", async () => {
+  const remote = new MemoryPrivateStore();
+  const copy = assertOriginalCapture(record, attempt, held, bytes);
+  remote.rows.set(adminEvidenceKey(record), { copy, bytes: new TextEncoder().encode("wrong") });
+  await assert.rejects(mirrorOriginalCapture({ record, attempt, held, bytes, remote }), /REMOTE_COPY_MISMATCH/);
+  assert.equal(new TextDecoder().decode(remote.rows.get(adminEvidenceKey(record))!.bytes), "wrong");
+});
+
+test("an oversized original has an explicit private-copy limit reason", () => {
+  const oversized = { ...record, byteLength: ADMIN_EVIDENCE_MAX_BYTES + 1 };
+  assert.throws(() => assertOriginalCapture(oversized, attempt, held, bytes), /EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB/);
+  const copy = { artifactId: oversized.artifactId, workItemId: oversized.workItemId, attemptId: oversized.attemptId,
+    contentHash: oversized.contentHash, byteLength: oversized.byteLength, tier: "RAW" as const, source: "VERIFIED_ORIGINAL_CAPTURE" as const };
+  assert.throws(() => verifyAdminEvidenceBlob(oversized, { copy, bytes }), /EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB/);
+});
+
+test("complete RAW PDF bytes use the established binary tier contract and remain byte-exact", async () => {
+  const pdf = new Uint8Array([37, 80, 68, 70, 45, 49, 46, 55, 10, 0, 255, 128, 10]);
+  const pdfHash = contentHash(pdf);
+  const pdfId = artifactId("RAW", pdfHash);
+  const pdfRecord = { ...record, artifactId: pdfId, contentHash: pdfHash, byteLength: pdf.length,
+    contentType: "application/pdf", canonicalUrl: "https://city.example.gov/agenda.pdf" };
+  const pdfHeld = { ...held, id: pdfId, contentHash: pdfHash, bodySha256: pdfHash,
+    contentType: "application/pdf", canonicalUrl: pdfRecord.canonicalUrl };
+  const pdfAttempt = { ...attempt, artifactIds: [pdfId] };
+  const remote = new MemoryPrivateStore();
+  assert.equal(await mirrorOriginalCapture({ record: pdfRecord, attempt: pdfAttempt, held: pdfHeld, bytes: pdf, remote }), "COPIED");
+  assert.deepEqual(verifyAdminEvidenceBlob(pdfRecord, (await remote.read(adminEvidenceKey(pdfRecord)))!), pdf);
+});
+
+test("ordinary reconciliation rotates past a failed first capture and copies the next held original", async (t) => {
+  const root = await mkdtemp(join(tmpdir(), "admin-evidence-bridge-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const repos = createMemoryRepositories();
+  const remote = new MemoryPrivateStore();
+  const now = "2026-09-28T00:00:00.000Z";
+  const work = createWorkItem({ project: "freshness", subject: "city", obligation: "official-source", why: "test", now });
+  await repos.workItems.put(work.id, work, now);
+  for (let n = 0; n < 2; n++) {
+    const at = `at-${n + 1}`;
+    const body = `<html><body>Official document ${n + 1}</body></html>`;
+    const { artifact } = recordAcquisition({ canonicalUrl: `https://city.example.gov/document-${n + 1}`,
+      retrievedAt: now, httpStatus: 200, contentType: "text/html", sourceId: "city", methodRouteId: "source",
+      workItemId: work.id, attemptId: at, permission: "ALLOWED", transport: "REACHABLE" }, body);
+    await putArtifact(new DurableEvidenceStore(root), "freshness", artifact, new TextEncoder().encode(body));
+    await repos.attempts.put(at, { ...attempt, id: at, workItemId: work.id, artifactIds: [artifact.id] }, now);
+    await repos.artifacts.append(work.id, artifact.id, { ...record, artifactId: artifact.id, workItemId: work.id,
+      attemptId: at, canonicalUrl: artifact.canonicalUrl, contentHash: artifact.contentHash,
+      byteLength: artifact.byteLength }, now);
+  }
+  const cursorPath = join(root, "cursor.json");
+  const originalCreate = remote.create.bind(remote);
+  let first = true;
+  remote.create = async (key, blob) => {
+    if (first) { first = false; throw new Error("REMOTE_TEMPORARILY_UNAVAILABLE"); }
+    return originalCreate(key, blob);
+  };
+  const input = { repos, vaultRoot: root, cursorPath, remote,
+    env: { WTP_ADMIN_EVIDENCE_MIRROR_ENABLED: "1" }, maxExamined: 1 };
+  const failed = await runAdminEvidenceMirror(input);
+  assert.equal(failed.refused, 1);
+  const next = await runAdminEvidenceMirror(input);
+  assert.equal(next.copied, 1, "a first failing capture cannot starve the next capture");
+  assert.equal(remote.rows.size, 1);
+});
+
+test("exact-hunt and recent captures advance with historical backfill across durable slices", async (t) => {
+  const root = await mkdtemp(join(tmpdir(), "admin-evidence-priority-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const repos = createMemoryRepositories();
+  const remote = new MemoryPrivateStore();
+  const now = "2026-09-28T14:00:00.000Z";
+  const cases = [
+    { label: "original", at: "2026-09-27T06:00:00.000Z", original: true },
+    { label: "recent", at: "2026-09-28T13:00:00.000Z", original: false },
+    { label: "history", at: "2026-09-20T06:00:00.000Z", original: false },
+  ] as const;
+  const ids: Record<string, string> = {};
+  for (const item of cases) {
+    const base = createWorkItem({ project: "freshness", subject: item.label, obligation: "official-source", why: "test", now: item.at });
+    const work: WorkItem = item.original ? { ...base, autonomousPlan: {
+      ownerInstructions: [ORIGINAL_LIFETIME_HUNT.receiptId],
+    } as unknown as WorkItem["autonomousPlan"] } : base;
+    await repos.workItems.put(work.id, work, item.at);
+    const at = `at-${item.label}`;
+    const body = `<html><body>Official ${item.label} document</body></html>`;
+    const { artifact } = recordAcquisition({ canonicalUrl: `https://city.example.gov/${item.label}`,
+      retrievedAt: item.at, httpStatus: 200, contentType: "text/html", sourceId: "city", methodRouteId: "source",
+      workItemId: work.id, attemptId: at, permission: "ALLOWED", transport: "REACHABLE" }, body);
+    await putArtifact(new DurableEvidenceStore(root), "freshness", artifact, new TextEncoder().encode(body));
+    await repos.attempts.put(at, { ...attempt, id: at, workItemId: work.id, artifactIds: [artifact.id] }, item.at);
+    await repos.artifacts.append(work.id, artifact.id, { ...record, artifactId: artifact.id, workItemId: work.id,
+      attemptId: at, canonicalUrl: artifact.canonicalUrl, contentHash: artifact.contentHash,
+      byteLength: artifact.byteLength, recordedAt: item.at }, item.at);
+    ids[item.label] = artifact.id;
+  }
+  const input = { repos, vaultRoot: root, cursorPath: join(root, "cursor.json"), remote,
+    env: { WTP_ADMIN_EVIDENCE_MIRROR_ENABLED: "1" }, maxExamined: 1, nowMs: Date.parse(now) };
+  for (const label of ["original", "recent", "history"]) {
+    const result = await runAdminEvidenceMirror(input);
+    assert.equal(result.copied, 1, `${label} receives its own bounded slice`);
+    assert.equal([...remote.rows.values()].at(-1)?.copy.artifactId, ids[label]);
+  }
+  assert.equal((await runAdminEvidenceMirror(input)).examined, 0, "verified copies are skipped until scheduled recheck");
+});

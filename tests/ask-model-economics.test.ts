@@ -134,7 +134,7 @@ test("H2: both candidates' rates carry a date and a source", () => {
   }
 });
 
-test("the standing comparison is Opus 5.5 against the cheaper Sonnet 5, never a model against itself", () => {
+test("the standing comparison uses the active Sonnet 5.5 tier while historical Sonnet 5 remains priced", () => {
   /*
    * The history is kept because each earlier version of this assertion was
    * written on purpose.
@@ -154,7 +154,8 @@ test("the standing comparison is Opus 5.5 against the cheaper Sonnet 5, never a 
    * `switchVerdict` never reads a price.
    */
   /* 2026-09-25: the incumbent became Opus 5.5 (Opus 5 retired), so the standing arm moved to Sonnet 5. */
-  assert.equal(ASK_CHALLENGER_MODEL, "claude-sonnet-5");
+  assert.equal(ASK_CHALLENGER_MODEL, "claude-sonnet-5-5");
+  assert.equal(ASK_MODEL_RATES["claude-sonnet-5"].inputUsdPerMillion, 2);
   assert.notEqual(
     ASK_CHALLENGER_MODEL,
     ASK_INCUMBENT_MODEL,

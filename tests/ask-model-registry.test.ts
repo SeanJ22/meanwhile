@@ -135,19 +135,19 @@ test("each role has its own override, and the specific one beats the WTP_ASK_MOD
   for (const role of ASK_MODEL_ROLE_NAMES) {
     const specific = ROLE_ENV[role];
     assert.ok(ASK_MODEL_ROLES[role].env.includes(specific), `${role} has no ${specific}`);
-    const other = ASK_MODEL_ROLES[role].defaultModel === "claude-sonnet-5" ? "claude-haiku-4-5" : "claude-sonnet-5";
+    const other = ASK_MODEL_ROLES[role].defaultModel === "claude-sonnet-5-5" ? "claude-haiku-4-5" : "claude-sonnet-5-5";
     const resolved = resolveAskRole(role, { [specific]: other, WTP_ASK_MODEL: "claude-opus-5-5" });
     assert.equal(resolved.model, other);
     assert.equal(resolved.overriddenBy, specific);
   }
   /* The legacy alias still moves every frontier-default role — and only those. */
   for (const role of ["ESCALATION_WRITER", "UNSOURCED"] as const) {
-    assert.equal(resolveAskRoleModel(role, { WTP_ASK_MODEL: "claude-sonnet-5" }), "claude-sonnet-5");
+    assert.equal(resolveAskRoleModel(role, { WTP_ASK_MODEL: "claude-sonnet-5" }), "claude-sonnet-5-5");
   }
   for (const role of ["READER", "CLASSIFIER"] as const) {
     assert.equal(resolveAskRoleModel(role, { WTP_ASK_MODEL: "claude-sonnet-5" }), ASK_MODEL_ROLES[role].defaultModel, `${role} is not a frontier role`);
   }
-  assert.equal(resolveAskModel({ WTP_ASK_MODEL: "claude-sonnet-5" }), "claude-sonnet-5");
+  assert.equal(resolveAskModel({ WTP_ASK_MODEL: "claude-sonnet-5" }), "claude-sonnet-5-5");
   /* The fast writer keeps its own switch, including off. */
   assert.equal(resolveAskFastWriter({ WTP_ASK_FAST_MODEL: "off" }), null);
   assert.equal(resolveAskFastWriter({ WTP_ASK_FAST_MODEL: "none" }), null);
@@ -203,7 +203,8 @@ test("an unknown model override is REFUSED by name, the default stands, and the 
   assert.equal(resolved.overriddenBy, null);
   assert.match(resolved.refused[0], /not in the Ask model registry/);
   assert.match(askModelStartupLine(env), /WTP_ASK_CLASSIFIER_MODEL="claude-opus-9-typo" REFUSED/);
-  assert.equal(askModelRefusal("claude-sonnet-5"), null);
+  assert.match(askModelRefusal("claude-sonnet-5") ?? "", /replaced for active use/);
+  assert.equal(askModelRefusal("claude-sonnet-5-5"), null);
   assert.equal(canonicalAskModelId(" claude-haiku-4-5-20251001 "), "claude-haiku-4-5");
   /* An unregistered id never gets a thinking or effort field it might reject. */
   assert.deepEqual(askRequestFields("claude-unknown", { thinking: "ADAPTIVE", effort: "low" }), { minMaxTokens: 0 });
@@ -217,8 +218,10 @@ function assertAccepted(body: Record<string, unknown>, model: string, want: "ADA
   const effort = (body.output_config as { effort?: string } | undefined)?.effort;
   assert.equal(body.model, model, `${where}: sent ${String(body.model)}`);
   if (thinking?.type === "disabled") assert.ok(caps.thinkingDisabled, `${where}: ${model} rejects thinking disabled`);
+  if (thinking?.type === "between_tools") assert.ok(caps.betweenToolsThinking, `${where}: ${model} rejects between_tools`);
   if (thinking?.type === "adaptive") assert.ok(caps.adaptiveThinking, `${where}: ${model} rejects adaptive thinking`);
   if (want === "OFF" && caps.thinkingDisabled) assert.equal(thinking?.type, "disabled", `${where}: thinking should be off on ${model}`);
+  if (want === "OFF" && caps.betweenToolsThinking) assert.equal(thinking?.type, "between_tools", `${where}: ${model} uses the lowest supported thinking setting`);
   if (want === "ADAPTIVE" && caps.adaptiveThinking) assert.equal(thinking?.type, "adaptive", `${where}: thinking should be adaptive on ${model}`);
   if (!caps.adaptiveThinking && want === "ADAPTIVE") assert.equal(thinking, undefined, `${where}: ${model} takes no thinking field`);
   assert.equal(effort !== undefined, caps.effort, `${where}: effort ${effort === undefined ? "missing" : "sent"} on ${model}`);
@@ -228,7 +231,7 @@ function assertAccepted(body: Record<string, unknown>, model: string, want: "ADA
 }
 
 test("the reading rung sends each registry model only what it accepts, and records the served model", async () => {
-  for (const { id } of ASK_MODEL_REGISTRY) {
+  for (const { id } of ASK_MODEL_REGISTRY.filter(({ id }) => id !== "claude-sonnet-5")) {
     const { bodies, fetchImpl } = capture({ intent: "UNKNOWN", entityMentions: [], normalizedMentions: [], temporal: { kind: "NONE" }, referent: null }, `${id}-served`);
     const outcome = await withEnv({ WTP_ASK_READER_MODEL: id, WTP_ASK_MODEL: undefined }, () =>
       interpretQuestion("what will the weather be", { inventory: [], today: "2026-09-25" }, { apiKey: "sk-test", fetchImpl }));
@@ -240,7 +243,7 @@ test("the reading rung sends each registry model only what it accepts, and recor
 });
 
 test("both writing rungs send each registry model only what it accepts, and the ladder records the served model", async () => {
-  for (const { id } of ASK_MODEL_REGISTRY) {
+  for (const { id } of ASK_MODEL_REGISTRY.filter(({ id }) => id !== "claude-sonnet-5")) {
     for (const effort of ["low", "medium"] as const) {
       assertAccepted(synthesisRequestBody(pack(), { model: id, cached: true, effort }), id, "ADAPTIVE", `writer/${id}/${effort}`);
     }
@@ -254,7 +257,7 @@ test("both writing rungs send each registry model only what it accepts, and the 
 });
 
 test("the topic classifier sends each registry model only what it accepts (no disabled thinking on Opus 5.5)", async () => {
-  for (const { id } of ASK_MODEL_REGISTRY) {
+  for (const { id } of ASK_MODEL_REGISTRY.filter(({ id }) => id !== "claude-sonnet-5")) {
     resetClassifierState();
     const { bodies, fetchImpl } = capture({ topic: "NONE" }, `${id}-served`);
     const outcome = await withEnv({ WTP_ASK_CLASSIFIER_MODEL: id, WTP_ASK_MODEL: undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
@@ -267,10 +270,15 @@ test("the topic classifier sends each registry model only what it accepts (no di
   const opus55 = askRequestFields("claude-opus-5-5", { thinking: "OFF", effort: "low" });
   assert.equal(opus55.thinking, undefined, "Opus 5.5 answers thinking disabled with HTTP 400");
   assert.equal(opus55.effort, "low");
+  const sonnet55 = askRequestFields("claude-sonnet-5-5", { thinking: "OFF", effort: "low" });
+  assert.deepEqual(sonnet55.thinking, { type: "between_tools" });
+  assert.equal(sonnet55.effort, "low");
+  assert.equal(askModelPrice("claude-sonnet-5-5")?.cacheMinimumTokens, 512);
+  assert.equal(askModelPrice("claude-sonnet-5")?.cacheMinimumTokens, 1024);
 });
 
 test("the unsourced fallback sends each registry model only what it accepts", async () => {
-  for (const { id } of ASK_MODEL_REGISTRY) {
+  for (const { id } of ASK_MODEL_REGISTRY.filter(({ id }) => id !== "claude-sonnet-5")) {
     const { bodies, fetchImpl } = capture("It rains when warm moist air cools.", `${id}-served`);
     await withEnv({ WTP_ASK_UNSOURCED_MODEL: id, WTP_ASK_MODEL: undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
       askUnsourced("why is it raining", { fetchImpl }));

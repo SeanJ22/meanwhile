@@ -1,6 +1,6 @@
 {
-  "exactHead": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
-  "buildId": "Xxv_W19PzrRUTWKf7Misd",
+  "exactHead": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
+  "buildId": "YKKpzuWNkFAimtYMhLDVN",
   "sourceHashes": {
     "lib/routing/everyday.ts": "953572cf5c682372c569f576086f9a9e77ae2acb394d9a5187375c43c1d33b9f",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
@@ -187,7 +187,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "fff31ff3076cd7a8f813724b960b63b9be02f55421ea6843a1cfa0d5ad1342b4",
+      "canonicalAnswerSha256": "5b652d51b5e8653e3d9167ba5f72034c3ebdf2e8021cb3bf8c662e90d4252cee",
       "renderedTextSha256": "9c0fabfbac5455453cb94d888dd45ec73e19bd9d3c4c90226a835f923fedd50b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -235,7 +235,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "74b8e92ae1a0e05c9ab8832705de834c462c11740a6b84fc2679360be2322e88",
+      "canonicalAnswerSha256": "d04a88ab662738be11aefcdab1713714d890ea24d51cc6d8798748677b52cea5",
       "renderedTextSha256": "6387e74e9d8d6777f5e547e77a6740b6d1269bff618508e8e563ed77d6800fb9",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -2630,7 +2630,7 @@
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
       "canonicalAnswerSha256": "caa51eb0085b855ff876e503408c7734074b662e62d673dc9efbfa9607f0028d",
-      "renderedTextSha256": "cf465bf0b6c37d1b792f94aa552ee3985624f10d7f2ee06e5259ce9397da6dd6",
+      "renderedTextSha256": "1e88942ef4ea8809bc14dc03711a52f96f4c24a9b9a523062aadc4c6012d5457",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {

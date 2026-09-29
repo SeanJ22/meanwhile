@@ -127,7 +127,20 @@ try {
       await switcher.click();
     }
     if (view.placement === "map" && await page.locator('[data-pill-cluster="sidebar"]').count()) await page.getByRole("button", { name: "Hide sidebar", exact: true }).click();
-    if (view.placement === "sidebar" && !(await page.locator('[data-pill-cluster="sidebar"]').count())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    if (view.placement === "sidebar") {
+      // A map pill can mount before the rail pill. Its temporary absence is
+      // not proof that the rail is closed; in that state the menu button can
+      // also be hidden. Wait for an actual on-screen rail or an actionable
+      // menu before deciding whether the reader needs to open it.
+      const ready = await page.waitForFunction(() => {
+        const sidebar = document.querySelector('[data-pill-cluster="sidebar"]')?.getBoundingClientRect();
+        if (sidebar && sidebar.width > 0 && sidebar.height > 0 && sidebar.right > 0 && sidebar.left < innerWidth) return "sidebar";
+        const menu = document.querySelector('button[aria-label="Open menu"]')?.getBoundingClientRect();
+        if (menu && menu.width > 0 && menu.height > 0 && menu.right > 0 && menu.left < innerWidth) return "menu";
+        return false;
+      });
+      if (await ready.jsonValue() === "menu") await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    }
     await page.locator(`[data-pill-cluster="${view.placement}"]`).waitFor({ state: "visible" });
     const point = resolveZip(zip); assert.ok(point.ok);
     const response = await page.request.get(`${base}/api/meetings?${new URLSearchParams({ zip, lat: String(point.centroid.lat), lng: String(point.centroid.lng) })}`);

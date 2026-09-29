@@ -104,9 +104,15 @@ test("the exit code reads Node's own process.exitCode shapes", () => {
 
 test("the research cycle arms the grace as its last statement, after the stall worker stops", () => {
   const source = readFileSync(join(process.cwd(), "scripts", "freshness-shadow.mts"), "utf8");
-  const tail = source.trimEnd().split("\n").slice(-12).join("\n");
+  const stopAt = source.lastIndexOf("await stallDiagnostic?.stop();");
+  const digestAt = source.indexOf('await finalStep("digest:append"');
+  assert.ok(digestAt >= 0 && stopAt > digestAt,
+    "the stall worker stops after the canonical cycle outcome is written");
+  const tail = source.slice(stopAt);
   assert.match(tail, /await stallDiagnostic\?\.stop\(\);[\s\S]*exitAfterDrainGrace\(\{/);
+  assert.match(tail, /runBoundedStep\(\{ label: "private-admin-evidence-mirror"/,
+    "the optional mirror remains a bounded final step before exit grace");
   assert.match(tail, /activeResources: \(\) => process\.getActiveResourcesInfo\(\)/);
   assert.match(tail, /exitCode: \(\) => chosenExitCode\(process\.exitCode\)/);
-  assert.ok(tail.trimEnd().endsWith("});"), "nothing may run after the grace is armed");
+  assert.ok(source.trimEnd().endsWith("});"), "nothing may run after the grace is armed");
 });

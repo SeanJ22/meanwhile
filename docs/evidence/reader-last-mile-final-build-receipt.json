@@ -1,10 +1,10 @@
 {
-  "exactHead": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
-  "buildId": "Xxv_W19PzrRUTWKf7Misd",
+  "exactHead": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
+  "buildId": "YKKpzuWNkFAimtYMhLDVN",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "abd8d4d93b510cb0e293a4f84b8880bb51299a61",
-    "commitShort": "abd8d4d",
+    "commit": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
+    "commitShort": "7e50dd5",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -22,7 +22,7 @@
       "dbRole": "production"
     }
   },
-  "buildLogSha256": "9ffc8d295fb7065188aee67bda3e3daa013af551296b5883b07b2a54719ede4c",
+  "buildLogSha256": "096a09c1b92b5180e60d52873a490c5a9347e06d58102b9e37bf61b2be2baedf",
   "traceRoutes": 11,
   "traceRequirements": 16,
   "requiredHoldingFiles": 129,
@@ -1930,7 +1930,7 @@
     },
     {
       "path": "lib/ask/model-registry.ts",
-      "sha256": "7b5d37d518f9f82101ebcbaeb5b85be20d9d9e93dbcab447b28854c0796472e6"
+      "sha256": "bb6dc1df1f9f7e3248378a00ce6c1a1d2f16e8d5c5b779e687c3a5e9cd57083d"
     },
     {
       "path": "lib/ask/model-result-cache.ts",
@@ -1938,7 +1938,7 @@
     },
     {
       "path": "lib/ask/model.ts",
-      "sha256": "284b73136943d6e94ea874e20cf06bdce2234be970451bbe77766f0a69cf4682"
+      "sha256": "3c1a912d3b28a3c59e927c951b647ddabe895b145ca747efa5e03aecbb793d0f"
     },
     {
       "path": "lib/ask/money-answer.ts",
@@ -2373,6 +2373,14 @@
       "sha256": "ff22f02c63ba91e55902106d702a1b98614b51f008833f7c88729f3bb012c0d0"
     },
     {
+      "path": "lib/control-plane/attempt.ts",
+      "sha256": "379e8b28cb9459513306fd97d8f8ae170f4578d536c21e923983e6f08c2d7034"
+    },
+    {
+      "path": "lib/control-plane/cache-defects.ts",
+      "sha256": "124cff759a38eb06b78de29160445236a61827c201fec2ba7cca256759603c27"
+    },
+    {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
       "sha256": "b45347c316050792eb7e8e793b0ccc3f6227f2ff22bbeca1ef83791efd7a8856"
     },
@@ -2385,12 +2393,36 @@
       "sha256": "a3e71ffeb8df300a89bd04eb6d22237ad2fc5bd2dfa34ab6794ee8b224d570a4"
     },
     {
+      "path": "lib/control-plane/fleet-safety.ts",
+      "sha256": "ba7ccdc5648ad2b8a051453705a8b58a7e028ec51babfdc44c8e8b0dd0d9f932"
+    },
+    {
+      "path": "lib/control-plane/ids.ts",
+      "sha256": "b3c121e3badff9cf46ee9ad0dafd6f8065f94ab5d2d33659ec782eded04ffa21"
+    },
+    {
       "path": "lib/control-plane/model-cost.ts",
-      "sha256": "408d3899060842a89c68568b7638caf521679d5c88fa85668db592c031a5c542"
+      "sha256": "efc0df2a91a5b0af454e79c710dca5da10e51f5ffb09fa125f6c179c334255f6"
+    },
+    {
+      "path": "lib/control-plane/owner-surface.ts",
+      "sha256": "f81290f81bd5251f45d1f881842c94bd45e7232ab3519e226e721c4ff04b68e0"
+    },
+    {
+      "path": "lib/control-plane/promotion/types.ts",
+      "sha256": "938eb6354c85640748d3f292b6c9ca3b4ba7dd7d926360a2092d7c2f64c39e44"
+    },
+    {
+      "path": "lib/control-plane/promotion/window.ts",
+      "sha256": "cf0948a0e22519a9ccc4c1e9ceeb9b8ff96ab08a9848d61a40b578b4398e3685"
     },
     {
       "path": "lib/control-plane/provider-billing.ts",
       "sha256": "e550b2f8c429121db0ba348d7e90934576e77f4d1d2c3f0791c616a0e2200bb3"
+    },
+    {
+      "path": "lib/control-plane/repository/active-work-claims.ts",
+      "sha256": "051ad4fedc6123b56f152c138edd66c92e887782d8f604333725cc46858c1222"
     },
     {
       "path": "lib/control-plane/repository/connect-retry.ts",
@@ -2398,11 +2430,11 @@
     },
     {
       "path": "lib/control-plane/repository/pg-schema.ts",
-      "sha256": "d79d013c6528b01ded4eacac49c843c959166f23c4f55e8772559f4dc18ddaea"
+      "sha256": "5655515ca7ffaa113bc775e5d9f19094a751178a56cc7dce72e201c0975d1ec2"
     },
     {
       "path": "lib/control-plane/repository/pg-store.ts",
-      "sha256": "f7ace7e2ac4788cac4ef07403f952ff8a3d487cd2509cc59c3eff19c5496e642"
+      "sha256": "f130dd380813b77293918df8eec5a6846e3aeb35aaa3a9967ef5e26ec457ce5e"
     },
     {
       "path": "lib/control-plane/repository/request-bounds.ts",
@@ -2414,11 +2446,39 @@
     },
     {
       "path": "lib/control-plane/repository/types.ts",
-      "sha256": "69767ecb594100a70620bb1381c73c1603c5458cc72fdf90c55bb373bfd2ff2d"
+      "sha256": "df78f14b8c5741881ec54793daa0ccad6b4770507debe07dc119f8311149a686"
+    },
+    {
+      "path": "lib/control-plane/scheduler/model-routing.ts",
+      "sha256": "15cc20be247bfbd8f22ecbe4869541232350fddede55f36c8be6157b73824b05"
+    },
+    {
+      "path": "lib/control-plane/scheduler/research-policy.ts",
+      "sha256": "36963672cc80467fef26788f7c6a74866dcd6dccff0f9afadcc55ba0a91484d0"
     },
     {
       "path": "lib/control-plane/scheduler/robots.ts",
       "sha256": "1077b3333f4ae85120a4be07b7282447969ebd611483429926e988b095747fbb"
+    },
+    {
+      "path": "lib/control-plane/scheduler/scout-contract.ts",
+      "sha256": "f203256bef0d77a4b27332fb0076c4fb56703600d23c525f62700fb14e8fe41a"
+    },
+    {
+      "path": "lib/control-plane/scheduler/scout-executor.ts",
+      "sha256": "aff77ec939a80e22a5eb0a4e317ed8391efc8728dcab78c8effbb4e3d9ff8c64"
+    },
+    {
+      "path": "lib/control-plane/scheduler/scout-result.ts",
+      "sha256": "f7a48549d9648d465137473ba7a38038817f2255713b7b5060f134ccc2837aeb"
+    },
+    {
+      "path": "lib/control-plane/startup-read-retry.ts",
+      "sha256": "16364add2181c5cd024da14034760d196ab7addef1f23d7ddfcab917007cea08"
+    },
+    {
+      "path": "lib/control-plane/work-question.ts",
+      "sha256": "1135a7ab13e2c6a1a29305d0471c0f7e4927d74cd8e71ab4e82c34edaad509b6"
     },
     {
       "path": "lib/corpus/data-plane.ts",
@@ -3001,8 +3061,16 @@
       "sha256": "e779ae01b37b9f5b67b471e7777b3d67e7580467df6e3c1d7cf177574cfcd501"
     },
     {
+      "path": "lib/ops/error-diagnostic.ts",
+      "sha256": "e4cc9b2a9f94fe350549443a81eabd9e8dd26823d19123f168fea2a0783dcf75"
+    },
+    {
       "path": "lib/ops/freshness.ts",
       "sha256": "2a2d40097284f969bf3f4b84dd4f28f77dc6d8a0dd8efbbcb0a6c9b993accbee"
+    },
+    {
+      "path": "lib/ops/intake-runtime.ts",
+      "sha256": "672f3b17e1af8c2b481ea4823882b2882d71565c5969fb50d340a5318b7ed88a"
     },
     {
       "path": "lib/ops/origins.ts",
@@ -3263,6 +3331,10 @@
     {
       "path": "lib/signal/reactions.ts",
       "sha256": "864138efa8add846acfbb2318bff10ef53a7c1ca2a79860c53cf24b7cff15f0c"
+    },
+    {
+      "path": "lib/signal/tripwire.ts",
+      "sha256": "6d965e6a6fcf2368bfaa1c5101bd1e71bb4976b5ceefe623b6c795b2df6e6ea0"
     },
     {
       "path": "lib/sources/acquisition-deadline.ts",

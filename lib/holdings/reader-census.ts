@@ -1116,7 +1116,9 @@ export interface ReaderClosureExecutionAuthorityReference {
 }
 
 export interface ReaderClosureExecutionAuthorityEvidence {
-  readonly formatVersion: 1;
+  /** Version 1 remains admissible as immutable historical proof, but cannot
+   * identify individual pointers for a later successor-state comparison. */
+  readonly formatVersion: 1 | 2;
   readonly phase: ReaderClosureExecutionPhase;
   /** Exact committed code/build head exercised by every applicable census row. */
   readonly exactHead: string;
@@ -1173,6 +1175,26 @@ export interface ReaderClosureExecutionAuthorityEvidence {
     readonly dispositionSetSha256: string;
     readonly canonicalPointerSetSha256: string;
     readonly canonicalPointerCount: number;
+    /** V2 binds every exact canonical key to the row observed during proof.
+     * A future promotion may be assessed against this baseline; a V1 whole-set
+     * digest alone cannot establish which key changed. */
+    readonly pointerBindings?: readonly {
+      readonly key: string;
+      readonly sourceId: string;
+      readonly recordClass: string;
+      readonly scope: string;
+      readonly currentVersionId: string;
+      readonly rowSha256: string;
+    }[];
+    /** V2 terminal candidate rows and ordered event commitments for the same
+     * exact keys. Historical versions can later be checked for mutation before
+     * a new promotion is treated as a successor. */
+    readonly candidateBindings?: readonly {
+      readonly key: string;
+      readonly candidateId: string;
+      readonly rowSha256: string;
+      readonly eventSha256: readonly string[];
+    }[];
     /** Live readback of the imported candidate envelopes and append-only events. */
     readonly durableImport: {
       readonly authorization: "PDC_V2_FROZEN_LKG_CUTOVER";
@@ -1338,7 +1360,7 @@ export function readerClosureExecutionAuthorityEvidenceProblems(
   const row = object(evidence);
   failures.push(...readerAuthoritySecretProblems(evidence));
   failures.push(...exactObjectKeysProblems(row, ["formatVersion", "phase", "exactHead", "store", "readOnly", "import", "clone"], "Reader execution authority"));
-  if (row.formatVersion !== 1) failures.push("Reader execution authority format is not version 1");
+  if (row.formatVersion !== 1 && row.formatVersion !== 2) failures.push("Reader execution authority format is unsupported");
   if (row.phase !== "REHEARSAL" && row.phase !== "PRODUCTION") failures.push("Reader execution authority phase is invalid");
   if (row.phase !== expected.phase) failures.push("Reader closure authority reference phase differs from its evidence");
   if (expected.requiredPhase && row.phase !== expected.requiredPhase) failures.push(`Reader closure requires ${expected.requiredPhase} execution authority`);
@@ -1393,7 +1415,7 @@ export function readerClosureExecutionAuthorityEvidenceProblems(
   }
 
   const imported = object(row.import);
-  failures.push(...exactObjectKeysProblems(imported, ["importerCodeSha", "receiptPath", "receiptSha256", "resultSha256", "dispositionSetSha256", "canonicalPointerSetSha256", "canonicalPointerCount", "durableImport"], "Reader execution authority import"));
+  failures.push(...exactObjectKeysProblems(imported, ["importerCodeSha", "receiptPath", "receiptSha256", "resultSha256", "dispositionSetSha256", "canonicalPointerSetSha256", "canonicalPointerCount", ...(row.formatVersion === 2 ? ["pointerBindings", "candidateBindings"] : []), "durableImport"], "Reader execution authority import"));
   if (!EXACT_GIT_HEAD.test(string(imported.importerCodeSha))) failures.push("Reader execution authority importer code identity is not an exact Git head");
   if (!expected.importerIsAncestor) failures.push("Reader execution authority importer code is not an ancestor of the proved code head");
   if (row.phase === "PRODUCTION" && imported.importerCodeSha === row.exactHead) failures.push("Reader production execution authority was generated before the importer was deleted in child commit B");
@@ -1403,6 +1425,34 @@ export function readerClosureExecutionAuthorityEvidenceProblems(
   }
   if (!expectedPaths || imported.receiptPath !== expectedPaths.importReceipt) failures.push("Reader execution authority import receipt path does not match its exact phase-specific support path");
   if (!Number.isSafeInteger(imported.canonicalPointerCount) || Number(imported.canonicalPointerCount) <= 0) failures.push("Reader execution authority canonical pointer set is empty or uncounted");
+  if (row.formatVersion === 2) {
+    const bindings = Array.isArray(imported.pointerBindings) ? imported.pointerBindings : [];
+    const candidates = Array.isArray(imported.candidateBindings) ? imported.candidateBindings : [];
+    if (bindings.length !== imported.canonicalPointerCount) failures.push("Reader execution authority pointer bindings do not cover the exact canonical count");
+    if (candidates.length !== bindings.length) failures.push("Reader execution authority candidate bindings do not cover the exact canonical pointer keys");
+    let previousKey = "";
+    for (const value of bindings) {
+      const binding = object(value);
+      failures.push(...exactObjectKeysProblems(binding, ["key", "sourceId", "recordClass", "scope", "currentVersionId", "rowSha256"], "Reader execution authority pointer binding"));
+      const key = string(binding.key);
+      if (!key || key <= previousKey || key !== `${string(binding.recordClass)}:${string(binding.scope)}` ||
+          !string(binding.sourceId) || !string(binding.currentVersionId) || !EXACT_SHA256.test(string(binding.rowSha256))) {
+        failures.push("Reader execution authority pointer bindings contain an unbound, duplicated, or unsorted key");
+      }
+      previousKey = key;
+    }
+    for (let index = 0; index < candidates.length; index += 1) {
+      const candidate = object(candidates[index]);
+      failures.push(...exactObjectKeysProblems(candidate, ["key", "candidateId", "rowSha256", "eventSha256"], "Reader execution authority candidate binding"));
+      if (candidate.key !== object(bindings[index]).key ||
+          candidate.candidateId !== object(bindings[index]).currentVersionId ||
+          !EXACT_SHA256.test(string(candidate.rowSha256)) ||
+          !Array.isArray(candidate.eventSha256) || candidate.eventSha256.length === 0 ||
+          candidate.eventSha256.some((hash: unknown) => !EXACT_SHA256.test(string(hash)))) {
+        failures.push("Reader execution authority candidate binding lacks its pointer or ordered event commitment");
+      }
+    }
+  }
 
   const durable = object(imported.durableImport);
   failures.push(...exactObjectKeysProblems(durable, [

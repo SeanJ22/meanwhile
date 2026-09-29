@@ -163,7 +163,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     if (pathname.startsWith("/api/")) {
       return new NextResponse(
         JSON.stringify({ error: "authentication required", rejection: verdict.rejection }),
-        { status: 401, headers: { "content-type": "application/json" } },
+        { status: 401, headers: { "content-type": "application/json", "cache-control": "private, no-store" } },
       );
     }
     const login = new URL("/admin/login", request.url);

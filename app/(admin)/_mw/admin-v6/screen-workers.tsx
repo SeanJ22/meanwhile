@@ -112,7 +112,8 @@ export function missingByCard(parts: readonly string[] | undefined): Readonly<Re
       : /source receipts?|^Showing the newest/i.test(m) ? "events"
       : /split by place|per-hunt reading|tasks are finished/i.test(m) ? "waiting"
       : "other";
-    out[card].push(m.startsWith(`${SECTION_DEP.workerActive.id}: `) ? m.slice(SECTION_DEP.workerActive.id.length + 2) : m);
+    const plain = m.startsWith(`${SECTION_DEP.workerActive.id}: `) ? m.slice(SECTION_DEP.workerActive.id.length + 2) : m;
+    out[card].push(plain.charAt(0).toUpperCase() + plain.slice(1));
   }
   return out;
 }
@@ -166,7 +167,7 @@ export function WorkersScreen() {
   const live = v.connection === "live";
   const arrived = workersSectionArrived(src);
   const sample = src.state === "sample";
-  const miss = missingByCard(arrived ? src.missingParts : undefined);
+  const miss = missingByCard(arrived ? src.missingParts?.map((m) => v.scopeKey.includes(":") ? m.replaceAll(v.scopeKey, v.place.name) : m) : undefined);
   const isCountry = v.place.kind === "Country";
   const inScope = (applies: readonly string[]) => relation(v.index, applies, v.scopeKey) !== null;
   const jobs = w?.jobs?.filter((j) => inScope([j.placeKey])) ?? null;
@@ -220,7 +221,7 @@ export function WorkersScreen() {
 
       <section aria-label="Status" className={s.gridTiles}>
         <div className={cx(s.row, !live && s.cardWarn)}><span className={s.eyebrow}>Live updates</span><strong className={live ? s.textGood : s.textWarn}>{connWords}</strong><span className={s.meta}>{live ? "News from the workers is coming in" : "Nothing new is arriving. What’s shown is the last good reading"}</span></div>
-        <div className={s.row}><span className={s.eyebrow}>Workers last checked in</span><strong>{mst(st?.lastCheckIn ?? null)}</strong><span className={s.meta}>{checkIn ? `${checkIn}. ` : ""}This only means they’re switched on{st?.runnerState ? ` (${runnerStateWords(st.runnerState)})` : ""}, not that they made progress.</span></div>
+        <div className={s.row}><span className={s.eyebrow}>Workers last checked in</span><strong>{mst(st?.lastCheckIn ?? null)}</strong><span className={s.meta}>{checkIn ? `${checkIn}. ` : ""}{st?.runnerState && st.runnerState !== "ALIVE" ? `Workers: ${runnerStateWords(st.runnerState)}. ` : ""}A check-in only means they’re switched on, not that they made progress.</span></div>
         <div className={s.row}>
           <span className={s.eyebrow}>Last useful progress{isCountry ? "" : ` in ${v.place.name}`}</span>
           <strong>{st?.lastUsefulProgress ? mst(st.lastUsefulProgress.at) : "Unknown"}</strong>

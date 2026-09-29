@@ -413,7 +413,7 @@ function Happening() {
   const src = v.data.workers;
   const w = src.data;
   const arrived = workersSectionArrived(src);
-  const miss = missingByCard(arrived ? src.missingParts : undefined);
+  const miss = missingByCard(arrived ? src.missingParts?.map((m) => v.scopeKey.includes(":") ? m.replaceAll(v.scopeKey, v.place.name) : m) : undefined);
   const isCountry = v.place.kind === "Country";
   const jobs = w?.jobs ? w.jobs.filter((j) => relation(v.index, [j.placeKey], v.scopeKey) !== null) : null;
   const waiting = w?.waiting ? w.waiting.filter((x) => relation(v.index, x.applies, v.scopeKey) !== null) : null;

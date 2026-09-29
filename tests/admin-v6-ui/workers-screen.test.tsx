@@ -142,14 +142,15 @@ test("the saved readback explains itself on Workers for the country, Arizona and
       assert.match(t, /Last useful progress[^.]*Unknown No publication or promotion/, key);
       // The round is late, from saved times.
       assert.match(t, /The next round is late It was due 3:01 PM MST, about 10 minutes ago, and no newer start is saved/, key);
-      assert.match(t, /Workers last checked in Sep 28, 2:58 PM MST about 10 minutes ago\. This only means they’re switched on \(switched on\), not that they made progress/, key);
+      assert.match(t, /Workers last checked in Sep 28, 2:58 PM MST about 10 minutes ago\. A check-in only means they’re switched on, not that they made progress/, key);
       // Jobs: unknown, not zero; the active-index reason sits in the jobs card.
       assert.match(t, /how many are working [^.]*is unknown, not zero/, key);
-      assert.match(t, /the full list of jobs running now is not shown\. Paid research jobs are checked one by one/, key);
+      assert.match(t, /The full list of jobs running now is not shown\. Paid research jobs are checked one by one/, key);
       assert.match(t, /Supplied by Codex \(worker repository\) · DEP-WORKER-ACTIVE-INDEX/, key);
       assert.doesNotMatch(t, /\b0 running · 2,585 waiting/, `${key}: an unknown lane is not summed as 0`);
       assert.match(t, /Unknown number running · 2,585 waiting/, key);
       // Whole-system counts stay whole-system in a place.
+      if (key !== "us") assert.ok(!t.includes(key), `${key}: the place is named, not its key`);
       if (key === "us") assert.match(t, /Whole system/);
       else {
         assert.match(t, new RegExp(`Whole system, not just ${name}`), key);
@@ -249,13 +250,13 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.equal(occurrences(t, "failed tries since"), 1, "replaced, not appended");
 
     // 4. Five minutes on, the same revision: no read, but the ages step on.
-    assert.match(t, /about 10 minutes ago\. This only means/);
+    assert.match(t, /about 10 minutes ago\. A check-in only means/);
     mock.timers.setTime(Date.parse(PULSE_AT) + 5 * 60_000);
     sync.onPulse(pulse("w2", new Date(Date.now()).toISOString()));
     await settle(sync);
     assert.equal(b.log.length, 2, "an unchanged revision reads nothing");
     t = text(page(sync, scope, key, "workers"));
-    assert.match(t, /about 15 minutes ago\. This only means/);
+    assert.match(t, /about 15 minutes ago\. A check-in only means/);
     assert.match(t, /It was due 3:01 PM MST, about 15 minutes ago/);
 
     // 5. Disconnected: no pulses, the last good reading stays and says so.

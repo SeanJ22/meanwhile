@@ -55,6 +55,17 @@ reads, a fresh canonical census projection, and per-changed-key historical
 candidate reads are additional database reads; their wall time and read count
 must be measured on a real run rather than estimated as dollars.
 
+One changed MEETING source/body partition can additionally use a guarded map
+observer. The ordinary `/api/meetings` response now includes only the promoted
+partition versions that contributed returned meeting IDs. The observer reads
+that exact partition's current promoted version and at most 16 member IDs,
+opens one named ZIP in the public map, requires the API's exact scope/version
+and complete member ID set, and checks each actual meeting-list row. A cached
+old version, an ambiguous source/body join, a partial radius result, or more
+than one changed MEETING pointer fails closed. This does not prove agenda,
+Ask, other meeting partitions, or unrelated map content. It has not been run
+against the hosted site; the successor terminal gate remains red.
+
 At the preserved live-drift diagnosis, 21 canonical pointers had advanced:
 11 REGISTRATION, 4 MEETING, 2 MEETING_OUTCOME, and one each of BALLOT_FILING,
 CENSUS_GEOGRAPHY, CURATED_READER_RECORD, and STATE_LEGISLATOR_VOTES. These
@@ -64,7 +75,8 @@ applicable record-surface pairs for that class set. These are an upper bound,
 not a claim that 47,710 records changed or that 47,710 HTTP calls are needed.
 The exact per-key route/identity join is not yet published.
 
-The remaining hosted seam must cover ballot/map DOM, voting sites, funding,
+The remaining hosted seam must cover changed keys beyond the single guarded
+Morris ballot and one-partition map modes, plus voting sites, funding,
 positions, civic routing, about-area, and other affected surfaces through
 their actual public selectors, not through a proof-only endpoint. It also needs
 a generated, exact-key route/identity plan so unchanged scopes can retain their

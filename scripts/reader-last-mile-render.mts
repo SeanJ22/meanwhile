@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { execFileSync } from "node:child_process";
 import type { Locator, Page } from "playwright";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
@@ -41,16 +42,99 @@ import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, type PositionAnswer } from "../lib/corpus/positions.ts";
 import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
 import { getGeneralLineup } from "../lib/ballot/general-lineup.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { readMeetingPartitionProjection } from "../lib/meetings/snapshot.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { readerSourceFingerprint } from "../lib/holdings/reader-census.ts";
+import { hostedMeetingPartitionMatches } from "../lib/meetings/served-partition-versions.ts";
 import {
   prepareReaderProofRuntime,
   requiredPreparedReaderProofMeetingsAuthority,
 } from "./lib/reader-proof-runtime.ts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
-assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
+const SUCCESSOR_PUBLIC = process.argv.includes("--successor-public");
+if (SUCCESSOR_PUBLIC) assert.equal(BASE, PUBLIC_SITE_ORIGIN, "Successor meeting readback uses the canonical public origin");
+else assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
 const PROVISIONAL = process.env.READER_RENDER_PHASE === "provisional";
 const OUT = join(process.cwd(), "screenshots", "reader-last-mile", ...(PROVISIONAL ? ["provisional"] : []));
 const REPORT = process.env.READER_PROOF_OUTPUT ?? join(process.cwd(), "docs", "evidence", process.env.READER_RENDER_FOCUS === "federal-money" ? "reader-last-mile-render-federal-money.json" : PROVISIONAL ? "reader-last-mile-render-provisional.json" : "reader-last-mile-render.json");
+if (SUCCESSOR_PUBLIC) {
+  const key = process.env.READER_SUCCESSOR_KEY ?? "";
+  const versionId = process.env.READER_SUCCESSOR_VERSION_ID ?? "";
+  const deployedCommit = process.env.READER_DEPLOYED_COMMIT ?? "";
+  const zip = process.env.READER_SUCCESSOR_ZIP ?? "";
+  assert.match(deployedCommit, /^[0-9a-f]{40}$/, "Successor meeting readback needs the exact deployed commit");
+  assert.match(zip, /^\d{5}$/, "Successor meeting readback needs one exact ZIP");
+  assert.match(REPORT.replaceAll("\\", "/"), /(?:^|\/)docs\/evidence\/reader-last-mile-successor-map-[a-z0-9-]+\.json$/,
+    "Successor meeting readback needs separate evidence");
+  const partition = MEETING_PARTITION_CONTRACTS.find((row) => key === `MEETING:${row.scope}`);
+  assert.ok(partition, "Successor meeting key must name one registered source/body partition");
+  assert.ok(versionId && !versionId.startsWith("bootstrap:"), "Successor meeting readback needs a promoted exact version");
+  const selected = await readMeetingPartitionProjection(partition, { bypassCache: true });
+  assert.equal(selected.kind, "PROMOTED", "Successor meeting partition must be promoted");
+  assert.equal(selected.metadata.versionId, versionId, "Successor meeting partition selected a different version");
+  const expected = [...selected.value.meetings].sort((a, b) => a.id.localeCompare(b.id));
+  assert.ok(expected.length > 0 && expected.length <= 16, "Successor map readback is bounded to 1–16 exact partition meetings");
+  assert.equal(new Set(expected.map((row) => row.id)).size, expected.length);
+  const checkBuild = async () => {
+    const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { cache: "no-store" });
+    assert.equal(response.status, 200);
+    assert.equal((await response.json() as { commit?: unknown }).commit, deployedCommit,
+      "Successor map serves a different deployed commit");
+  };
+  await checkBuild();
+  const successorBrowser = await launchGuarded({ label: "reader-successor-map" });
+  const successorContext = await successorBrowser.context({ viewport: { width: 1440, height: 1000 } });
+  const successorPage = await successorContext.newPage();
+  const meetingResponses: unknown[] = [];
+  const responseReads: Promise<void>[] = [];
+  successorPage.on("response", (response) => {
+    if (new URL(response.url()).pathname !== "/api/meetings") return;
+    responseReads.push((async () => {
+      if (response.status() === 200) meetingResponses.push(await response.json());
+    })());
+  });
+  try {
+    const firstMeetingResponse = successorPage.waitForResponse((response) =>
+      new URL(response.url()).pathname === "/api/meetings", { timeout: 90_000 });
+    await mapAt(successorPage, zip, "light");
+    await firstMeetingResponse;
+    await Promise.all(responseReads);
+    const matching = meetingResponses.filter((response): response is {
+      meetings: { id: string }[]; snapshot: { partitionVersions?: {
+        scope: string; versionId: string; meetingIds: string[] }[] } } =>
+      Boolean(response && typeof response === "object" && "snapshot" in response));
+    const route = matching.find((response) => hostedMeetingPartitionMatches(
+      response.snapshot?.partitionVersions, partition.scope, versionId, expected.map((meeting) => meeting.id)));
+    assert.ok(route, "Hosted meetings route did not serve the exact promoted partition version and complete member IDs");
+    const opener = successorPage.locator('[data-stat="meetings"]').first();
+    if (!(await opener.isVisible())) {
+      const menu = successorPage.getByRole("button", { name: "Open menu", exact: true });
+      if (await menu.isVisible()) await menu.click();
+    }
+    await opener.click();
+    await successorPage.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
+    for (let pageIndex = 0; await successorPage.locator(".al-more").count(); pageIndex++) {
+      assert.ok(pageIndex < 32, "Successor meeting list exceeds 32 bounded page expansions");
+      await successorPage.locator(".al-more").click();
+    }
+    for (const meeting of expected) {
+      const row = successorPage.locator(`.al-row[data-meeting-id="${meeting.id}"]`);
+      assert.equal(await row.count(), 1, `${meeting.id}: hosted map meeting row is missing or duplicated`);
+      assert.ok((await row.innerText()).includes(meeting.title), `${meeting.id}: hosted map row title differs`);
+    }
+    await checkBuild();
+    writeFileSync(REPORT, `${JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
+      sourceHashes: readerSourceFingerprint(process.cwd()),
+      origin: PUBLIC_SITE_ORIGIN, deployedCommit, pointerKey: key, sourceVersionId: versionId,
+      zip, meetingIds: expected.map((meeting) => meeting.id), hostedVersionObserved: true,
+      routeMatched: true, renderedRows: expected.length, paidRequests: 0,
+      records: [{ surface: "meetings/map", returnedCount: expected.length,
+        identities: expected.map((meeting) => ({ id: meeting.id, bodyId: meeting.bodyId })) }] }, null, 2)}\n`, { flag: "wx" });
+  } finally { await successorContext.close(); await successorBrowser.close(); }
+  process.exit(0);
+}
 mkdirSync(OUT, { recursive: true });
 const pilots = [
   { zip: "85701", name: "Katie Hobbs", official: "statewide:az/governor", key: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613" },

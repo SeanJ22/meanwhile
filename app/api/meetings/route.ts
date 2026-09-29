@@ -30,6 +30,7 @@ import { WIRED_STATUSES } from "@/lib/registry/coverage";
 import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, prepareCoverage } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
+import { servedMeetingPartitionVersions } from "@/lib/meetings/served-partition-versions";
 import { stageTimer } from "@/lib/api/server-timing";
 import { currentCommentAccess, type CommentAccess } from "@/lib/registry/comment-access";
 import { refreshCommentAccessFromPromoted } from "@/lib/civic-data/curated-reader-read-model";
@@ -577,6 +578,7 @@ export async function GET(request: Request) {
     ? {
         version: 2 as const,
         generatedAt: meta.generatedAt,
+        partitionVersions: servedMeetingPartitionVersions(result.meetings, meta.partitions),
         ...(meta.carried ? { carried: meta.carried } : {}),
         failed: meta.sources
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)

@@ -93,11 +93,21 @@ if (args.includes("--execute")) {
   const evidenceOutput = option("--evidence-output");
   const ballotEvidenceOutput = optional("--ballot-evidence-output");
   const ballotPlanOutput = optional("--ballot-plan-output");
+  const mapEvidenceOutput = optional("--map-evidence-output");
+  const mapZip = optional("--map-zip");
   const probePlan = readJson<{ readonly probes: readonly { readonly key: string; readonly path: string }[] }>(option("--probes"));
   if (!/^[0-9a-f]{40}$/.test(deployedCommit) || !/^docs\/evidence\/reader-last-mile-successor-[a-z0-9-]+\.json$/.test(evidenceOutput)) {
     throw new Error("Successor execution requires a deployed commit and a new named evidence path");
   }
   const ballotPointer = changedPointers.find((pointer) => pointer.recordClass === "BALLOT_FILING");
+  const meetingPointers = changedPointers.filter((pointer) => pointer.recordClass === "MEETING");
+  const meetingPointer = meetingPointers.length === 1 ? meetingPointers[0] : undefined;
+  if (meetingPointers.length > 1 || meetingPointers.length && (!mapEvidenceOutput || !mapZip) ||
+      !meetingPointers.length && (mapEvidenceOutput || mapZip) ||
+      mapEvidenceOutput && !/^docs\/evidence\/reader-last-mile-successor-map-[a-z0-9-]+\.json$/.test(mapEvidenceOutput) ||
+      mapZip && !/^\d{5}$/.test(mapZip)) {
+    throw new Error("Successor map execution needs one exact partition and bounded named evidence");
+  }
   if (ballotPointer && (ballotPointer.key !== "BALLOT_FILING:US-NJ:county:morris:2026-general" ||
       !ballotEvidenceOutput || !ballotPlanOutput) ||
       !ballotPointer && (ballotEvidenceOutput || ballotPlanOutput) ||
@@ -107,9 +117,9 @@ if (args.includes("--execute")) {
   }
   if (status !== "BLOCKED_PENDING_HISTORICAL_CHAIN_AND_PUBLIC_READBACK" || !connection ||
       !Array.isArray(probePlan.probes) || probePlan.probes.length > 256 ||
-      !probePlan.probes.length && !ballotPointer ||
+      !probePlan.probes.length && !ballotPointer && !meetingPointer ||
       new Set(probePlan.probes.map((probe) => probe.path)).size !== probePlan.probes.length ||
-      changedPointers.some((pointer) => pointer.key !== ballotPointer?.key &&
+      changedPointers.some((pointer) => pointer.key !== ballotPointer?.key && pointer.key !== meetingPointer?.key &&
         !probePlan.probes.some((probe) => probe.key === pointer.key)) ||
       probePlan.probes.some((probe) => !changedPointers.some((pointer) => pointer.key === probe.key &&
         readerSuccessorPublicProbeBindsPointer(pointer, probe.path)))) {
@@ -179,6 +189,36 @@ if (args.includes("--execute")) {
         ballotEvidence.deployedCommit !== deployedCommit ||
         ballotEvidence.exactHead !== current.exactHead) {
       throw new Error("Successor ballot DOM evidence is not bound to the exact promoted version and build");
+    }
+  }
+  if (meetingPointer && mapEvidenceOutput && mapZip) {
+    stage = "PUBLIC_MEETING_MAP_DOM";
+    await new Promise<void>((resolveRun, rejectRun) => {
+      const child = spawn(process.execPath, ["--experimental-strip-types", "--import",
+        "./scripts/register-test-loader.mjs", "scripts/reader-last-mile-render.mts",
+        "--successor-public"], {
+        cwd: root, windowsHide: true, stdio: "ignore",
+        env: { ...process.env, DATABASE_URL: connection,
+          ANTHROPIC_API_KEY: "", OPENAI_API_KEY: "", WTP_PROVIDER_ACCESS: "",
+          SHOOT_BASE_URL: PUBLIC_SITE_ORIGIN, READER_DEPLOYED_COMMIT: deployedCommit,
+          READER_SUCCESSOR_KEY: meetingPointer.key,
+          READER_SUCCESSOR_VERSION_ID: meetingPointer.currentVersionId,
+          READER_SUCCESSOR_ZIP: mapZip, READER_PROOF_OUTPUT: mapEvidenceOutput },
+      });
+      child.on("error", () => rejectRun(new Error("Successor map browser could not start")));
+      child.on("exit", (code) => code === 0 ? resolveRun()
+        : rejectRun(new Error("Successor map browser refused its exact public proof")));
+    });
+    const mapEvidence = readJson<{ pointerKey?: unknown; sourceVersionId?: unknown;
+      origin?: unknown; deployedCommit?: unknown; exactHead?: unknown;
+      hostedVersionObserved?: unknown }>(mapEvidenceOutput);
+    if (mapEvidence.pointerKey !== meetingPointer.key ||
+        mapEvidence.sourceVersionId !== meetingPointer.currentVersionId ||
+        mapEvidence.origin !== PUBLIC_SITE_ORIGIN ||
+        mapEvidence.deployedCommit !== deployedCommit ||
+        mapEvidence.exactHead !== current.exactHead ||
+        mapEvidence.hostedVersionObserved !== true) {
+      throw new Error("Successor map DOM evidence is not bound to the exact partition version and build");
     }
   }
   stage = "PUBLIC_ROUTE_READBACK";
@@ -251,7 +291,8 @@ if (args.includes("--execute")) {
   writeFileSync(resolve(evidenceOutput), `${JSON.stringify(evidence, null, 2)}\n`, { flag: "wx" });
   stage = "CENSUS_RECONCILIATION";
   const composed = composeCanonicalRouteProofs(root, liveCensus,
-    [evidenceOutput, ...(ballotEvidenceOutput ? [ballotEvidenceOutput] : [])]);
+    [evidenceOutput, ...(ballotEvidenceOutput ? [ballotEvidenceOutput] : []),
+      ...(mapEvidenceOutput ? [mapEvidenceOutput] : [])]);
   const unproved: string[] = [];
   for (const rowId of liveImpact.affectedRowIds) {
     const original = liveCensus.rows.find((row) => row.id === rowId)!;
@@ -270,6 +311,7 @@ if (args.includes("--execute")) {
     ? "BLOCKED_INCOMPLETE_PUBLIC_READBACK" : "PUBLIC_READBACK_MEASURED_PENDING_TERMINAL_ADMISSION",
     execution: { publicRequests: probePlan.probes.length + 2,
       ballotNavigations: ballotEvidenceOutput ? "bounded-at-32" : 0, paidRequests: 0,
+      mapNavigations: mapEvidenceOutput ? "one ZIP, at most 16 partition meetings" : 0,
       publicReadbackComplete: unproved.length === 0 && composed.failures.length === 0,
       historicalChainChecked: true, postReadbackAuthorityChecked: true },
     evidenceOutput, unprovedRows: [...new Set(unproved)].sort(), routeFailures: composed.failures };

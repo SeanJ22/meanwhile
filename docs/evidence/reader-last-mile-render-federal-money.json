@@ -1,17 +1,17 @@
 {
   "date": "2026-09-28",
   "base": "http://127.0.0.1:3214",
-  "buildId": "YKKpzuWNkFAimtYMhLDVN",
-  "exactHead": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
-  "runId": "reader-last-mile-render@2026-09-29T01:16:34.362Z",
+  "buildId": "lqycPNL1M3wVRzs-wTk3b",
+  "exactHead": "29e88859913e027795f2db0715ba163c35962776",
+  "runId": "reader-last-mile-render@2026-09-29T04:19:12.807Z",
   "results": [
     {
       "label": "85641-desktop-dark",
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
-        "commitShort": "7e50dd5",
+        "commit": "29e88859913e027795f2db0715ba163c35962776",
+        "commitShort": "29e8885",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -696,29 +696,29 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-f75974121ce21a272652874cad666b8a",
-          "lastKnownGoodVersionId": "cv-f75974121ce21a272652874cad666b8a",
+          "versionId": "cv-ae0b6e6422815911d92979067b7a0d23",
+          "lastKnownGoodVersionId": "cv-ae0b6e6422815911d92979067b7a0d23",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-28T21:34:12.572Z",
-          "promotedAt": "2026-09-28T21:34:12.917Z",
+          "retrievedAt": "2026-09-29T03:42:33.770Z",
+          "promotedAt": "2026-09-29T03:42:34.068Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-05T21:34:12.572Z"
+          "staleAt": "2026-10-06T03:42:33.770Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
       "mapText": "Campaign money\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
       "ballotText": "Campaign money\n\nCAMPAIGN MONEY · FEC\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
-      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-dark-map-federal-money.png",
-      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-dark-ballot-federal-money.png"
+      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-dark-map-federal-money.png",
+      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-dark-ballot-federal-money.png"
     },
     {
       "label": "85641-desktop-light",
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
-        "commitShort": "7e50dd5",
+        "commit": "29e88859913e027795f2db0715ba163c35962776",
+        "commitShort": "29e8885",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -1403,29 +1403,29 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-f75974121ce21a272652874cad666b8a",
-          "lastKnownGoodVersionId": "cv-f75974121ce21a272652874cad666b8a",
+          "versionId": "cv-ae0b6e6422815911d92979067b7a0d23",
+          "lastKnownGoodVersionId": "cv-ae0b6e6422815911d92979067b7a0d23",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-28T21:34:12.572Z",
-          "promotedAt": "2026-09-28T21:34:12.917Z",
+          "retrievedAt": "2026-09-29T03:42:33.770Z",
+          "promotedAt": "2026-09-29T03:42:34.068Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-05T21:34:12.572Z"
+          "staleAt": "2026-10-06T03:42:33.770Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
       "mapText": "Campaign money\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
       "ballotText": "Campaign money\n\nCAMPAIGN MONEY · FEC\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
-      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-light-map-federal-money.png",
-      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-light-ballot-federal-money.png"
+      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-light-map-federal-money.png",
+      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-light-ballot-federal-money.png"
     },
     {
       "label": "85641-phone-dark",
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
-        "commitShort": "7e50dd5",
+        "commit": "29e88859913e027795f2db0715ba163c35962776",
+        "commitShort": "29e8885",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -2110,29 +2110,29 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-f75974121ce21a272652874cad666b8a",
-          "lastKnownGoodVersionId": "cv-f75974121ce21a272652874cad666b8a",
+          "versionId": "cv-ae0b6e6422815911d92979067b7a0d23",
+          "lastKnownGoodVersionId": "cv-ae0b6e6422815911d92979067b7a0d23",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-28T21:34:12.572Z",
-          "promotedAt": "2026-09-28T21:34:12.917Z",
+          "retrievedAt": "2026-09-29T03:42:33.770Z",
+          "promotedAt": "2026-09-29T03:42:34.068Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-05T21:34:12.572Z"
+          "staleAt": "2026-10-06T03:42:33.770Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
       "mapText": "Campaign money\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
       "ballotText": "Campaign money\n\nCAMPAIGN MONEY · FEC\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
-      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-dark-map-federal-money.png",
-      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-dark-ballot-federal-money.png"
+      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-dark-map-federal-money.png",
+      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-dark-ballot-federal-money.png"
     },
     {
       "label": "85641-phone-light",
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
-        "commitShort": "7e50dd5",
+        "commit": "29e88859913e027795f2db0715ba163c35962776",
+        "commitShort": "29e8885",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -2817,32 +2817,32 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-f75974121ce21a272652874cad666b8a",
-          "lastKnownGoodVersionId": "cv-f75974121ce21a272652874cad666b8a",
+          "versionId": "cv-ae0b6e6422815911d92979067b7a0d23",
+          "lastKnownGoodVersionId": "cv-ae0b6e6422815911d92979067b7a0d23",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-28T21:34:12.572Z",
-          "promotedAt": "2026-09-28T21:34:12.917Z",
+          "retrievedAt": "2026-09-29T03:42:33.770Z",
+          "promotedAt": "2026-09-29T03:42:34.068Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-05T21:34:12.572Z"
+          "staleAt": "2026-10-06T03:42:33.770Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
       "mapText": "Campaign money\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
       "ballotText": "Campaign money\n\nCAMPAIGN MONEY · FEC\n\nThis campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand.\n\nAbout 8% of the money came from small donors — people who gave under $200 in total.\n\nHow do you feel about how this campaign is funded?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n\nLARGEST REPORTED CONTRIBUTIONS\n\nThe biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups.\n\nCOMMITTEES & ORGANIZATIONS\n\nGROW THE MAJORITY · ALEXANDRIA, VA\n$324,332\nJOINT FUNDRAISING COMMITTEE\n3 transfers · $324,332\nGive me the tea\nCISCOMANI VICTORY FUND · TUCSON, AZ\n$288,000\nJOINT FUNDRAISING COMMITTEE\n2 transfers · $288,000\nGive me the tea\n\nINDIVIDUAL DONORS\n\n5 people · 5 filings\n$35,000\nAZ · 2 people\n$14,000\nTX · 2 people\n$14,000\nUT · 1 person\n$7,000\n\nHow do you feel about these contributions?\n\nLove it\nLike it\nDon't like it\nHate it\nDon't care\n›\nWhere that money came from\n›\nWhat kind of money it was\n\nFederal Election Commission · reported through July 1st, 2026 · read September 28th, 2026",
-      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-light-map-federal-money.png",
-      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-light-ballot-federal-money.png"
+      "mapScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-light-map-federal-money.png",
+      "ballotScreenshot": "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-light-ballot-federal-money.png"
     }
   ],
   "screenshots": [
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-dark-map-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-dark-ballot-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-light-map-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-desktop-light-ballot-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-dark-map-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-dark-ballot-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-light-map-federal-money.png",
-    "C:\\Users\\seanj\\dev\\meanwhile-sonnet55\\screenshots\\reader-last-mile\\85641-phone-light-ballot-federal-money.png"
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-dark-map-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-dark-ballot-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-light-map-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-desktop-light-ballot-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-dark-map-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-dark-ballot-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-light-map-federal-money.png",
+    "C:\\Users\\seanj\\dev\\meanwhile-release-review\\screenshots\\reader-last-mile\\85641-phone-light-ballot-federal-money.png"
   ],
   "screenshotsReadAsImages": []
 }

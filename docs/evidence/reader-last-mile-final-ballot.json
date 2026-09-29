@@ -1,6 +1,6 @@
 {
-  "exactHead": "7e50dd5c07430274a5bff5d422c796ae17da3c49",
-  "buildId": "YKKpzuWNkFAimtYMhLDVN",
+  "exactHead": "29e88859913e027795f2db0715ba163c35962776",
+  "buildId": "lqycPNL1M3wVRzs-wTk3b",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -40,7 +40,7 @@
     },
     {
       "path": "app/api/meetings/route.ts",
-      "sha256": "90b230cd7bf640c00623611bba6f6b0178a25ed7222c25ab80d6544b06e4d10d"
+      "sha256": "10dfe3cb7644e82954e861e93d84f7ae681ca89336c4b1322da7a1bfd1224deb"
     },
     {
       "path": "app/api/official-actions/[subject]/route.ts",
@@ -76,7 +76,7 @@
     },
     {
       "path": "app/ballot/page.tsx",
-      "sha256": "b2d3d22d370197f72ea66cf98904070333d02ebc30669c06c5bd630a93f3956a"
+      "sha256": "41b3b8140abda8eec02f5bb6c8db50b53c397f8e31531ef436b6b6cb490e1ff8"
     },
     {
       "path": "app/globals.css",
@@ -2857,6 +2857,10 @@
     {
       "path": "lib/meetings/registry.ts",
       "sha256": "8644b1f2e7699ad9d29dc8ada523f37b4f6a67db46ca0bddc96b5a60e846b0c4"
+    },
+    {
+      "path": "lib/meetings/served-partition-versions.ts",
+      "sha256": "690f5317477516c95b58e3ba5bf3f95bdcdfb64dd6c31efa4cd6a51d94b75463"
     },
     {
       "path": "lib/meetings/snapshot.ts",
@@ -15795,9 +15799,8 @@
           "provisionIds": [],
           "removalIds": [],
           "summaryHeld": false,
-          "textSha256": "875b3b9c2099474bf3c79491bedbc8daf2f3bce06f11e3f8960b0c5d9c78e04d",
+          "textSha256": "e66a069922fd6243dfe0cc7c660b01b4d4101f8f64e4d9494f6bc6e6d0cb1337",
           "sourceUrls": [
-            "#jurisdiction-note",
             "#source-note-0",
             "https://www.joehathawayforcongress.com",
             "https://randolphrepublicans.org/",

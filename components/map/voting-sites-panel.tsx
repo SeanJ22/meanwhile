@@ -171,6 +171,8 @@ export function VotingSitesPanel({
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder={PLACEHOLDER_ADDRESS}
+          // The design popup opens with the cursor in the address field.
+          autoFocus={embedded}
           autoComplete="off"
           inputMode="text"
         />

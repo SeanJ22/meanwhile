@@ -1855,6 +1855,17 @@ function MapEntryInner() {
     return () => window.removeEventListener("mw:open-pop", onRequest);
   }, [closeCard]);
 
+  // Ask opens with the cursor in its box (4a's original focus rule, kept).
+  useEffect(() => {
+    if (pop !== "ask") return;
+    const frame = requestAnimationFrame(() => {
+      document
+        .querySelector<HTMLInputElement>("[data-ask-panel] [data-ask-box]")
+        ?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [pop]);
+
   const openGoverns = useCallback(() => {
     if (wghOpen) {
       closeCard();
@@ -1909,6 +1920,41 @@ function MapEntryInner() {
       ),
     });
   }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentation]);
+
+  /**
+   * Fit a drawn district's whole boundary and park its card behind the
+   * selection pill (Districts list, and the sidebar's Jurisdiction select).
+   * Only districts the map is drawing can be fitted; others are left alone.
+   */
+  const showDistrictOnMap = useCallback(
+    (ocdId: string) => {
+      const drawn = drawnDistricts.find((d) => d.ocdId === ocdId);
+      if (!drawn) return;
+      setLastHits([
+        {
+          type: drawn.type,
+          tier: drawn.tier,
+          typeLabel: drawn.typeLabel,
+          ocdId: drawn.ocdId,
+          label: drawn.label,
+          state: /state:([a-z]{2})/.exec(drawn.ocdId)?.[1]?.toUpperCase() ?? "",
+        },
+      ]);
+      parkOnOpen.current = true;
+      setShowDistricts(true);
+      dispatch({ type: "select/district", ocdId: drawn.ocdId, districtType: drawn.type });
+    },
+    [drawnDistricts, dispatch, setShowDistricts],
+  );
+
+  // The Jurisdiction select also shows that jurisdiction's whole boundary
+  // (approved design, INTERACTIONS §3), on top of filtering the meetings.
+  const seenJurisdiction = useRef(ui.jurisdiction);
+  useEffect(() => {
+    if (ui.jurisdiction === seenJurisdiction.current) return;
+    seenJurisdiction.current = ui.jurisdiction;
+    if (ui.jurisdiction) showDistrictOnMap(ui.jurisdiction);
+  }, [ui.jurisdiction, showDistrictOnMap]);
 
   const selectionTop =
     pillVenue || pillDistrict ? (layoutBp === "phone" && (parked || pillVenue) ? 112 : 64) : 0;
@@ -1998,23 +2044,7 @@ function MapEntryInner() {
             }
             onClose={closeCard}
             canShowDistrict={(ocdId) => drawnDistricts.some((d) => d.ocdId === ocdId)}
-            onShowDistrict={(ocdId) => {
-              const drawn = drawnDistricts.find((d) => d.ocdId === ocdId);
-              if (!drawn) return;
-              setLastHits([
-                {
-                  type: drawn.type,
-                  tier: drawn.tier,
-                  typeLabel: drawn.typeLabel,
-                  ocdId: drawn.ocdId,
-                  label: drawn.label,
-                  state: /state:([a-z]{2})/.exec(drawn.ocdId)?.[1]?.toUpperCase() ?? "",
-                },
-              ]);
-              parkOnOpen.current = true;
-              setShowDistricts(true);
-              dispatch({ type: "select/district", ocdId: drawn.ocdId, districtType: drawn.type });
-            }}
+            onShowDistrict={showDistrictOnMap}
           />
         );
       case "venue":

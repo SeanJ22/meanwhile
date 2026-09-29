@@ -60,6 +60,14 @@ import { SPEAK_MAX_CHARS } from "@/lib/speak/limits";
  *    "there is no store" and "it failed" get different sentences and only
  *    `RECORDED` is thanked.
  */
+/**
+ * Unsent drafts, per subject, for this tab only (approved reader design:
+ * "keep unsent drafts through navigation"). In memory — never written to
+ * storage and never sent — so moving deeper in the card and coming Back
+ * finds the words where the reader left them; a reload starts clean.
+ */
+const drafts = new Map<string, string>();
+
 export function SpeakYourMind({
   subjectType,
   subjectId,
@@ -77,7 +85,8 @@ export function SpeakYourMind({
   subject: string;
   context?: { lat?: number | null; lng?: number | null };
 }) {
-  const [open, setOpen] = useState(false);
+  const draftKey = `${subjectType}:${subjectId}`;
+  const [open, setOpen] = useState(() => (drafts.get(draftKey) ?? "") !== "");
   const rootRef = useRef<HTMLDivElement>(null);
 
   /*
@@ -129,7 +138,12 @@ export function SpeakYourMind({
    * `sending` and `result` with `open`, which is what the first paragraph
    * asked for all along.
    */
-  const [text, setText] = useState("");
+  const [text, setTextState] = useState(() => drafts.get(draftKey) ?? "");
+  const setText = (value: string) => {
+    setTextState(value);
+    if (value) drafts.set(draftKey, value);
+    else drafts.delete(draftKey);
+  };
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<SpeakResult | null>(null);
 

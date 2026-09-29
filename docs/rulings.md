@@ -4,7 +4,9 @@ Adopted as a consolidated replacement — September 25, 2026. Adoption records S
 
 ## 0. What Meanwhile is, and how all work is judged
 
-Anyone in the United States can enter their ZIP code and right away understand everything government does that touches them, at every level: federal, state, county, city, school district and special district. For their ZIP, a resident sees:
+Anyone in the United States can enter their ZIP code and right away understand everything government does that touches them, at every level: federal, state, county, city, school district and special district. The bar is the best way anyone has ever had to understand and act on their government: complete, correct, current, fast, and a pleasure to use.
+
+To show what that means, a resident sees, among other things:
 
 - **Who governs them:** every official and every board, commission and body with authority over where they live.
 - **Who those people are:** background, role, term, and what they say publicly, including their public statements as tracked by sources such as the Polarization Research Lab.
@@ -13,6 +15,8 @@ Anyone in the United States can enter their ZIP code and right away understand e
 - **What boards and meetings are happening,** shown on a map and a rolling 90-day calendar, with when the next meeting is and when the last one was.
 - **What those bodies make decisions on:** agendas before the meeting, minutes and outcomes after, in plain English.
 - **How to take part:** how to attend, comment, or say something in the app.
+
+**This list shows the intent. It is not the whole of it, and it will change.** Anything a resident would reasonably need to understand and act on their government is in scope whether or not it is written here. That includes things Sean has not named, such as the boundaries of every district a resident lives in, an interface that is beautiful, fast and easy, and an Ask that answers as well as asking Claude directly. Agents are expected to notice what a resident would miss and raise it or build it, without waiting for Sean to name it. No list in this document, the success checklist, or any plan is a ceiling, and nothing is out of scope because it is missing from one.
 
 Everything comes from official sources, shows when it was last checked, and stays current without anyone touching it. Where something is not covered yet, the page says so plainly, so a blank never reads as "nothing here." Every plan works backward from this picture. How information gets into the site is a means to it, never the goal. Every other section of this document serves this one.
 
@@ -24,6 +28,7 @@ Everything comes from official sources, shows when it was last checked, and stay
 **Every plan, change and report is judged by these tests:**
 
 - Does it bring more ZIPs closer to the full picture above, with the page saying plainly what is still missing?
+- Would a resident using it find it complete, correct, fast, and a pleasure to use?
 - Does a hunt for any ZIP return everything we already hold, then go after the blanks?
 - Does a verified fact reach readers within minutes, and keep filling in?
 - Can Sean see in Admin what is happening and where it is stuck, and send agents to fix it?

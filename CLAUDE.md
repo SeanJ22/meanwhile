@@ -4,7 +4,7 @@ Adopted September 25, 2026; updated September 29, 2026. This guide applies Sean'
 
 ## Start with the goal
 
-Read rulings §0 first. It says what Meanwhile is: from any US ZIP code, a resident sees who governs them, who those people are, how to hold them accountable, how they are funded, what boards and meetings are happening on a rolling 90-day calendar, what those bodies decide, and how to take part. Every task works backward from that picture, and every plan, change and report is judged by the §0 tests. Work that moves none of them waits.
+Read rulings §0 first. It says what Meanwhile is: from any US ZIP code, a resident right away understands everything government does that touches them, in the best civic product anyone has used. Its list shows the intent and is never a ceiling; if a resident would reasonably need something, it is in scope whether or not it is written down, and you are expected to notice it and raise or build it. Every task works backward from that picture, and every plan, change and report is judged by the §0 tests. Work that moves none of them waits.
 
 Then read Sean's current request and the rest of `docs/rulings.md` in the intended working copy. Identify the repository, branch, and revision. Read the current state summary and the technical documents needed for this task; do not reread all history without a specific reason.
 

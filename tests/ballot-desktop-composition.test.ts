@@ -33,7 +33,7 @@ function code(src: string): string {
 }
 
 function mainClasses(src: string): string[] {
-  const found = /<main className="([^"]+)"/.exec(code(src));
+  const found = /<main\b[^>]*\bclassName="([^"]+)"/.exec(code(src));
   assert.ok(found, "the route renders a <main> with a class list");
   return found![1]!.split(/\s+/).filter(Boolean);
 }

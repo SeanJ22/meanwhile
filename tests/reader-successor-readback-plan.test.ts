@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { readerSuccessorPublicProbeBindsPointer,
   readerSuccessorPublicProbeKind } from "../lib/holdings/reader-execution-authority.ts";
 
@@ -100,7 +101,7 @@ test("a state vote probe joins the exact promoted member scope, never a sibling 
 test("hosted ballot mode rejects a wrong origin or unrelated canonical key before acquisition", () => {
   const base = {
     ...process.env,
-    SHOOT_BASE_URL: "https://meanwhileusa.com",
+    SHOOT_BASE_URL: PUBLIC_SITE_ORIGIN,
     READER_DEPLOYED_COMMIT: head,
     READER_SUCCESSOR_KEY: "BALLOT_FILING:US-NJ:county:morris:2026-general",
     READER_SUCCESSOR_VERSION_ID: "candidate-promoted",

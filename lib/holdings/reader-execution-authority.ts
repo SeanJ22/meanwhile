@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 
 import type {
   ReaderClosureExecutionAuthorityEvidence,
@@ -1672,9 +1673,9 @@ export function readerAuthorityChangedPointers(
 export function readerSuccessorPublicProbeKind(path: string):
   "representation" | "meetings" | "agenda" | "votes" | null {
   let url: URL;
-  try { url = new URL(path, "https://meanwhileusa.com"); }
+  try { url = new URL(path, PUBLIC_SITE_ORIGIN); }
   catch { return null; }
-  if (url.origin !== "https://meanwhileusa.com" || url.hash ||
+  if (url.origin !== PUBLIC_SITE_ORIGIN || url.hash ||
       `${url.pathname}${url.search}` !== path) return null;
   const keys = [...url.searchParams.keys()].sort();
   if (url.pathname.startsWith("/api/representation/") &&
@@ -1701,7 +1702,7 @@ export function readerSuccessorPublicProbeBindsPointer(
   const kind = readerSuccessorPublicProbeKind(path);
   if (kind !== "votes" || pointer.recordClass !== "STATE_LEGISLATOR_VOTES" ||
       !pointer.scope.includes(":") || pointer.scope.startsWith("US-")) return false;
-  return new URL(path, "https://meanwhileusa.com").searchParams.get("member") === pointer.scope;
+  return new URL(path, PUBLIC_SITE_ORIGIN).searchParams.get("member") === pointer.scope;
 }
 
 /** Reconstruct the certified pointer from an immutable historical candidate.

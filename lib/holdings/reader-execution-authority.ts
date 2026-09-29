@@ -1691,6 +1691,19 @@ export function readerSuccessorPublicProbeKind(path: string):
   return null;
 }
 
+/** A public probe must bind to a named canonical pointer, not merely share a
+ * record class or state. Broader meeting and jurisdiction scopes need an
+ * explicit candidate-to-route membership map before they can use this seam. */
+export function readerSuccessorPublicProbeBindsPointer(
+  pointer: { readonly recordClass: string; readonly scope: string },
+  path: string,
+): boolean {
+  const kind = readerSuccessorPublicProbeKind(path);
+  if (kind !== "votes" || pointer.recordClass !== "STATE_LEGISLATOR_VOTES" ||
+      !pointer.scope.includes(":") || pointer.scope.startsWith("US-")) return false;
+  return new URL(path, "https://meanwhileusa.com").searchParams.get("member") === pointer.scope;
+}
+
 /** Reconstruct the certified pointer from an immutable historical candidate.
  * The caller must retrieve this exact candidate ID and all its events from the
  * same read-only authority store. Matching an ID alone is never sufficient. */

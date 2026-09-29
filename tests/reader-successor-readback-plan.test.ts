@@ -4,7 +4,8 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { readerSuccessorPublicProbeKind } from "../lib/holdings/reader-execution-authority.ts";
+import { readerSuccessorPublicProbeBindsPointer,
+  readerSuccessorPublicProbeKind } from "../lib/holdings/reader-execution-authority.ts";
 
 const head = "a".repeat(40);
 const sha = "b".repeat(64);
@@ -82,4 +83,41 @@ test("hosted successor probes admit only bounded GET routes without Ask or histo
   for (const path of ["/api/ask/grounded", "/api/votes?member=congress%3AC001133&history=1",
     "https://example.org/api/votes?member=congress%3AC001133", "/api/meetings?zip=85701"])
     assert.equal(readerSuccessorPublicProbeKind(path), null, path);
+});
+
+test("a state vote probe joins the exact promoted member scope, never a sibling or session marker", () => {
+  const path = "/api/votes?member=nh-general-court%3A77";
+  assert.equal(readerSuccessorPublicProbeBindsPointer(
+    { recordClass: "STATE_LEGISLATOR_VOTES", scope: "nh-general-court:77" }, path), true);
+  assert.equal(readerSuccessorPublicProbeBindsPointer(
+    { recordClass: "STATE_LEGISLATOR_VOTES", scope: "nh-general-court:78" }, path), false);
+  assert.equal(readerSuccessorPublicProbeBindsPointer(
+    { recordClass: "STATE_LEGISLATOR_VOTES", scope: "US-NH" }, path), false);
+  assert.equal(readerSuccessorPublicProbeBindsPointer(
+    { recordClass: "MEETING", scope: "nh-general-court:77" }, path), false);
+});
+
+test("hosted ballot mode rejects a wrong origin or unrelated canonical key before acquisition", () => {
+  const base = {
+    ...process.env,
+    SHOOT_BASE_URL: "https://meanwhileusa.com",
+    READER_DEPLOYED_COMMIT: head,
+    READER_SUCCESSOR_KEY: "BALLOT_FILING:US-NJ:county:morris:2026-general",
+    READER_SUCCESSOR_VERSION_ID: "candidate-promoted",
+    READER_BALLOT_STATES: "nj",
+    READER_PROOF_OUTPUT: "docs/evidence/reader-last-mile-successor-ballot-test.json",
+    READER_BALLOT_PLAN_OUTPUT: "docs/evidence/reader-last-mile-successor-ballot-plan-test.json",
+  };
+  for (const changed of [
+    { SHOOT_BASE_URL: "https://example.org" },
+    { READER_SUCCESSOR_KEY: "BALLOT_FILING:US-AZ:pima:2026" },
+    { READER_SUCCESSOR_VERSION_ID: "bootstrap:unproved" },
+    { READER_BALLOT_STATES: "az,nj" },
+  ]) {
+    const result = spawnSync(process.execPath, ["--experimental-strip-types", "--import",
+      "./scripts/register-test-loader.mjs", "scripts/reader-last-mile-ballot.mts", "--successor-public"],
+    { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, env: { ...base, ...changed } });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Successor ballot/);
+  }
 });

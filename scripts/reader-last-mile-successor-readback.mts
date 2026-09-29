@@ -6,6 +6,7 @@
  * No Ask request or provider call is made here.
  */
 import { createHash } from "node:crypto";
+import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -18,6 +19,7 @@ import {
   readerAuthoritySuccessorCensusProblems,
   readerAuthoritySuccessorProblems,
   readerSuccessorPublicProbeKind,
+  readerSuccessorPublicProbeBindsPointer,
 } from "../lib/holdings/reader-execution-authority.ts";
 import { applyReaderApplicability, buildReaderCensus, composeCanonicalRouteProofs,
   projectCanonicalReaderRecords, readerRowStructuralSha256, readerSourceFingerprint,
@@ -28,6 +30,7 @@ import { createNeonReaderAuthoritySql } from "./reader-execution-authority-evide
 import { prepareReaderProofRuntime, requiredPreparedReaderProofMeetingsAuthority } from "./lib/reader-proof-runtime.ts";
 
 const args = process.argv.slice(2);
+const optional = (name: string) => { const at = args.indexOf(name); return at < 0 ? undefined : args[at + 1]; };
 function option(name: string): string {
   const at = args.indexOf(name);
   if (at < 0 || !args[at + 1] || args[at + 1]!.startsWith("--")) {
@@ -88,15 +91,28 @@ if (args.includes("--execute")) {
   }
   const deployedCommit = option("--deployed-commit");
   const evidenceOutput = option("--evidence-output");
+  const ballotEvidenceOutput = optional("--ballot-evidence-output");
+  const ballotPlanOutput = optional("--ballot-plan-output");
   const probePlan = readJson<{ readonly probes: readonly { readonly key: string; readonly path: string }[] }>(option("--probes"));
   if (!/^[0-9a-f]{40}$/.test(deployedCommit) || !/^docs\/evidence\/reader-last-mile-successor-[a-z0-9-]+\.json$/.test(evidenceOutput)) {
     throw new Error("Successor execution requires a deployed commit and a new named evidence path");
   }
+  const ballotPointer = changedPointers.find((pointer) => pointer.recordClass === "BALLOT_FILING");
+  if (ballotPointer && (ballotPointer.key !== "BALLOT_FILING:US-NJ:county:morris:2026-general" ||
+      !ballotEvidenceOutput || !ballotPlanOutput) ||
+      !ballotPointer && (ballotEvidenceOutput || ballotPlanOutput) ||
+      ballotEvidenceOutput && !/^docs\/evidence\/reader-last-mile-successor-ballot-[a-z0-9-]+\.json$/.test(ballotEvidenceOutput) ||
+      ballotPlanOutput && !/^docs\/evidence\/reader-last-mile-successor-ballot-plan-[a-z0-9-]+\.json$/.test(ballotPlanOutput)) {
+    throw new Error("Successor ballot execution lacks its exact Morris key or separate evidence paths");
+  }
   if (status !== "BLOCKED_PENDING_HISTORICAL_CHAIN_AND_PUBLIC_READBACK" || !connection ||
-      !Array.isArray(probePlan.probes) || !probePlan.probes.length || probePlan.probes.length > 256 ||
+      !Array.isArray(probePlan.probes) || probePlan.probes.length > 256 ||
+      !probePlan.probes.length && !ballotPointer ||
       new Set(probePlan.probes.map((probe) => probe.path)).size !== probePlan.probes.length ||
-      changedPointers.some((pointer) => !probePlan.probes.some((probe) => probe.key === pointer.key)) ||
-      probePlan.probes.some((probe) => !changedPointers.some((pointer) => pointer.key === probe.key))) {
+      changedPointers.some((pointer) => pointer.key !== ballotPointer?.key &&
+        !probePlan.probes.some((probe) => probe.key === pointer.key)) ||
+      probePlan.probes.some((probe) => !changedPointers.some((pointer) => pointer.key === probe.key &&
+        readerSuccessorPublicProbeBindsPointer(pointer, probe.path)))) {
     throw new Error("Successor execution plan is incomplete, unbounded, or has no exact changed-key binding");
   }
   const sql = createNeonReaderAuthoritySql(connection);
@@ -136,6 +152,35 @@ if (args.includes("--execute")) {
   stage = "PUBLIC_BUILD_BEFORE";
   await buildRead();
   const records: Record<string, unknown>[] = [];
+  if (ballotPointer && ballotEvidenceOutput && ballotPlanOutput) {
+    stage = "PUBLIC_BALLOT_DOM";
+    await new Promise<void>((resolveRun, rejectRun) => {
+      const child = spawn(process.execPath, ["--experimental-strip-types", "--import",
+        "./scripts/register-test-loader.mjs", "scripts/reader-last-mile-ballot.mts",
+        "--successor-public"], {
+        cwd: root, windowsHide: true, stdio: "ignore",
+        env: { ...process.env, DATABASE_URL: connection,
+          ANTHROPIC_API_KEY: "", OPENAI_API_KEY: "", WTP_PROVIDER_ACCESS: "",
+          SHOOT_BASE_URL: PUBLIC_SITE_ORIGIN, READER_DEPLOYED_COMMIT: deployedCommit,
+          READER_SUCCESSOR_KEY: ballotPointer.key,
+          READER_SUCCESSOR_VERSION_ID: ballotPointer.currentVersionId,
+          READER_BALLOT_STATES: "nj", READER_PROOF_OUTPUT: ballotEvidenceOutput,
+          READER_BALLOT_PLAN_OUTPUT: ballotPlanOutput },
+      });
+      child.on("error", () => rejectRun(new Error("Successor ballot browser could not start")));
+      child.on("exit", (code) => code === 0 ? resolveRun()
+        : rejectRun(new Error("Successor ballot browser refused its exact public proof")));
+    });
+    const ballotEvidence = readJson<{ pointerKey?: unknown; sourceVersionId?: unknown;
+      origin?: unknown; deployedCommit?: unknown; exactHead?: unknown }>(ballotEvidenceOutput);
+    if (ballotEvidence.pointerKey !== ballotPointer.key ||
+        ballotEvidence.sourceVersionId !== ballotPointer.currentVersionId ||
+        ballotEvidence.origin !== PUBLIC_SITE_ORIGIN ||
+        ballotEvidence.deployedCommit !== deployedCommit ||
+        ballotEvidence.exactHead !== current.exactHead) {
+      throw new Error("Successor ballot DOM evidence is not bound to the exact promoted version and build");
+    }
+  }
   stage = "PUBLIC_ROUTE_READBACK";
   for (const probe of probePlan.probes) {
     const url = new URL(probe.path, PUBLIC_SITE_ORIGIN);
@@ -205,7 +250,8 @@ if (args.includes("--execute")) {
     sourceHashes: readerSourceFingerprint(root), records, failures: [] as string[] };
   writeFileSync(resolve(evidenceOutput), `${JSON.stringify(evidence, null, 2)}\n`, { flag: "wx" });
   stage = "CENSUS_RECONCILIATION";
-  const composed = composeCanonicalRouteProofs(root, liveCensus, [evidenceOutput]);
+  const composed = composeCanonicalRouteProofs(root, liveCensus,
+    [evidenceOutput, ...(ballotEvidenceOutput ? [ballotEvidenceOutput] : [])]);
   const unproved: string[] = [];
   for (const rowId of liveImpact.affectedRowIds) {
     const original = liveCensus.rows.find((row) => row.id === rowId)!;
@@ -222,7 +268,8 @@ if (args.includes("--execute")) {
   }
   const final = { ...report, status: unproved.length || composed.failures.length
     ? "BLOCKED_INCOMPLETE_PUBLIC_READBACK" : "PUBLIC_READBACK_MEASURED_PENDING_TERMINAL_ADMISSION",
-    execution: { publicRequests: probePlan.probes.length + 2, paidRequests: 0,
+    execution: { publicRequests: probePlan.probes.length + 2,
+      ballotNavigations: ballotEvidenceOutput ? "bounded-at-32" : 0, paidRequests: 0,
       publicReadbackComplete: unproved.length === 0 && composed.failures.length === 0,
       historicalChainChecked: true, postReadbackAuthorityChecked: true },
     evidenceOutput, unprovedRows: [...new Set(unproved)].sort(), routeFailures: composed.failures };

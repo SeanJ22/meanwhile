@@ -26,7 +26,10 @@ Its `NO_CHANGED_POINTER_READBACK_REQUIRED` result is advisory;
 
 An explicit `--execute` mode is a bounded, read-only hosted observation seam:
 at most 256 named GET probes plus two `/api/build` reads, restricted to
-representation, meetings, agenda, and current votes. It uses the same route
+representation, meetings, agenda, and current votes. The GET planner currently
+accepts only a state-vote `member` query exactly equal to the changed canonical
+pointer scope; wider meeting and jurisdiction scopes still lack a safe
+candidate-to-route join and therefore fail closed. It uses the same route
 handler locally against the read-only production handle, compares the complete
 public JSON response, records exact native IDs/counts and payload hashes,
 reconciles those with every affected census row, and brackets the work with
@@ -35,8 +38,19 @@ It refuses incomplete rows and unknown routes. The mode has not been run
 against production; no paid or hosted calls were made for this change. Its
 readback result is still pending terminal admission wiring and cannot by
 itself make `reader:production-closure` pass.
-The maximum hosted request count for one execution is 258 GETs, with zero
-model/provider requests and zero database writes. Two full read-only authority
+For the single registered Morris ballot filing key, the guarded ballot mode
+also reuses the existing exhaustive NJ ZIP set-cover and actual public DOM
+assertions. It requires the canonical public origin, the exact promoted filing
+version in the local source selector, the deployed build before and after, and
+separate write-once evidence/plan paths. It refuses more than 32 ZIP
+navigations. Each public ballot page now exposes the version ID of the
+promoted NJ filing it actually selected, and the observer requires exact
+equality on every ZIP. This is source code only; it has not made a hosted
+request. Other affected classes and surfaces still block terminal admission.
+
+Outside ballot mode, the maximum hosted request count for one execution is
+258 GETs, with zero model/provider requests and zero database writes. Ballot
+mode adds up to 32 public navigations and two more `/api/build` reads. Two full read-only authority
 reads, a fresh canonical census projection, and per-changed-key historical
 candidate reads are additional database reads; their wall time and read count
 must be measured on a real run rather than estimated as dollars.

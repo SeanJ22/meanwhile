@@ -4,7 +4,7 @@ import { OfficialFilings } from "@/components/ballot/official-filings";
 import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/official-filings";
 import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
-import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
+import { contestsForDivisions, readNjMorrisFiling } from "@/lib/sources/ballot-nj-morris";
 import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
@@ -896,6 +896,7 @@ export default async function BallotPage({
     // pointer. An unavailable ballot in another state cannot take this
     // Reader path down.
   let set: BallotSet | null = null;
+  let ballotSourceVersionId: string | null = null;
   let matched: {
     contests: Contest[];
     absences: BallotAbsence[];
@@ -973,11 +974,19 @@ export default async function BallotPage({
     askOcdIds = ocdIds;
     for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
       try {
-        const candidate = source.normalize(await source.fetch());
+        // Keep the version and ballot bytes from the same typed read. A
+        // module-global last-read marker could be replaced by another request
+        // before this page renders and would not prove its own selection.
+        const selected = state === "nj" ? await readNjMorrisFiling() : null;
+        if (selected && selected.kind !== "PROMOTED" && selected.kind !== "BOOTSTRAP") {
+          throw new Error(`NJ filing selection is ${selected.kind}`);
+        }
+        const candidate = source.normalize(selected ? [selected.value.ballot] : await source.fetch());
         const hit = contestsForDivisions(candidate, ocdIds);
         if (hit.contests.length > 0 || hit.absences.length > 0) {
           set = candidate;
           matched = hit;
+          ballotSourceVersionId = selected?.kind === "PROMOTED" ? selected.metadata.versionId : null;
           coverageNotes = coverageNotesForScope(candidate, zip, ocdIds);
           break;
         }
@@ -1363,7 +1372,7 @@ export default async function BallotPage({
       whole grid cell and stacks internally exactly as it does on a phone, so
       the trap has nothing to bite: the columns divide CARDS, not FIELDS.
     */
-    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
+    <main data-ballot-source-version-id={ballotSourceVersionId ?? undefined} className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
       {/*
         **DARK-3 (2026-08-25) — THE TOGGLE IS ON THIS PAGE TOO.**
 

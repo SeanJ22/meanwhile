@@ -24,15 +24,41 @@ import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
 import { formatDateMDY } from "../lib/map/format.ts";
 import { groupAbsences } from "../lib/ballot/absence-grouping.ts";
 import { inspectReaderMarkup, sha256, type ReaderComponentCase } from "../lib/holdings/reader-census.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { njMorrisFilingReadState } from "../lib/sources/ballot-nj-morris/index.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-ballot.json";
 const planOutputPath = process.env.READER_BALLOT_PLAN_OUTPUT ?? "docs/evidence/reader-last-mile-ballot-plan.json";
 const proofSourcesPath = process.env.READER_PROOF_SOURCES;
-assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
+const successorPublic = process.argv.includes("--successor-public");
+const deployedCommit = process.env.READER_DEPLOYED_COMMIT ?? "";
+const successorKey = process.env.READER_SUCCESSOR_KEY ?? "";
+const successorVersionId = process.env.READER_SUCCESSOR_VERSION_ID ?? "";
+if (successorPublic) {
+  assert.equal(base, PUBLIC_SITE_ORIGIN, "Successor ballot readback uses only the canonical public origin");
+  assert.match(deployedCommit, /^[0-9a-f]{40}$/, "Successor ballot readback needs the exact deployed commit");
+  assert.equal(successorKey, "BALLOT_FILING:US-NJ:county:morris:2026-general",
+    "Successor ballot key must be the exact registered Morris filing authority");
+  assert.ok(successorVersionId && !successorVersionId.startsWith("bootstrap:"),
+    "Successor ballot readback requires a promoted exact version");
+  assert.equal(process.env.READER_BALLOT_STATES, "nj", "Successor ballot scope is exactly New Jersey");
+  assert.match(outputPath, /^docs\/evidence\/reader-last-mile-successor-ballot-[a-z0-9-]+\.json$/,
+    "Successor ballot must write a separately named execution artifact");
+  assert.match(planOutputPath, /^docs\/evidence\/reader-last-mile-successor-ballot-plan-[a-z0-9-]+\.json$/,
+    "Successor ballot plan must be separately named");
+} else {
+  assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
+}
 const requestedStates = process.env.READER_BALLOT_STATES?.split(",").map((state) => state.trim()).filter(Boolean);
 await prepareReaderProofRuntime();
 const sets = await Promise.all(BALLOT_SOURCES.filter(({ state }) => !requestedStates?.length || requestedStates.includes(state)).map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
+if (successorPublic) {
+  const read = njMorrisFilingReadState();
+  assert.equal(read.kind, "PROMOTED", "Successor ballot cannot inherit a bootstrap or unavailable filing");
+  assert.equal(read.metadata.versionId, successorVersionId,
+    "Successor ballot local selector is not bound to the changed canonical version");
+}
 // Every indexed ZIP that reaches a ballot state: a ZIP reaching none of them cannot match any contest or absence here.
 const ballotStates = sets.map(({ state }) => `/state:${state}`);
 const indexedZips = [...readAllZipDivisions(process.cwd())].filter(([, entry]) => entry.ids.some((id) => ballotStates.some((st) => id.includes(st)))).map(([zip]) => zip);
@@ -86,10 +112,20 @@ while (remaining.size) {
   chosen.push(current);
   planIds(current).forEach(id => remaining.delete(id));
 }
+if (successorPublic) assert.ok(chosen.length <= 32,
+  "Successor ballot ZIP set-cover exceeds its 32-navigation hosted limit");
 const planEvidence = { rule: "Deterministic ZIP set cover over every ZIP the national ZIP index gives a division of a ballot state, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.", contests: targets.size, sourcedAbsences: absenceTargets.size, chosen: chosen.map(({ zip, state, contests, absences }) => ({ zip, state, contestIds: contests.map((contest) => contest.id), absenceOcdIds: absences.map(absence => absence.ocdId) })), unresolvedContestIds: [...remaining].filter(id => !id.startsWith("absence:")).sort(), unresolvedAbsenceIds: [...remaining].filter(id => id.startsWith("absence:")).sort() };
-writeFileSync(planOutputPath, JSON.stringify(planEvidence, null, 2) + "\n");
+writeFileSync(planOutputPath, JSON.stringify(planEvidence, null, 2) + "\n", successorPublic ? { flag: "wx" } : undefined);
 if (process.argv.includes("--plan-only")) { console.log(JSON.stringify(planEvidence, null, 2)); process.exit(remaining.size ? 1 : 0); }
 assert.equal(remaining.size, 0, `Held current contests cannot reach any indexed ZIP: ${[...remaining].join(", ")}`);
+const checkHostedBuild = async () => {
+  if (!successorPublic) return;
+  const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { cache: "no-store" });
+  assert.equal(response.status, 200, "Hosted ballot build identity is unavailable");
+  const served = await response.json() as { commit?: unknown };
+  assert.equal(served.commit, deployedCommit, "Hosted ballot serves a different deployed commit");
+};
+await checkHostedBuild();
 const browser = await launchGuarded({ label: "reader-last-mile-all-ballots" });
 const context = await browser.context({ viewport: { width: 1440, height: 1000 } });
 const page = await context.newPage();
@@ -99,6 +135,10 @@ const normalize = (value: string) => value.replace(/\s+/g, " ").trim();
 try {
   for (const plan of chosen) {
     await page.goto(`${base}/ballot?zip=${plan.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+    if (successorPublic) {
+      assert.equal(await page.locator("main[data-ballot-source-version-id]").getAttribute("data-ballot-source-version-id"),
+        successorVersionId, `${plan.zip}: hosted ballot did not select the exact promoted Morris filing`);
+    }
     const dates = electionDatesFor(plan.set.election.state);
     const registration = registrationLinkFor(plan.set.election.state);
     const polling = pollingPlaceLinkFor(plan.set.election.state);
@@ -176,8 +216,11 @@ try {
       if (absence.provenance.sourceUrl) assert.equal(await section.locator(`a[href="${absence.provenance.sourceUrl}"]`).count(), 1);
       assert.ok(normalize(await section.innerText()).includes(absence.provenance.sourceOrg));
     }
-    rows.push({ zip: plan.zip, state: plan.state, navigation: { dates, registration, polling, pollingLinkRendered }, analysisContestIds: plan.contests.filter((contest) => analysisForContest(contest.id)?.text).map((contest) => contest.id), statedContestCount: plan.contests.length, returnedContestCount: actualContests.length, proofs, absenceOcdIds: actualAbsences });
+    rows.push({ zip: plan.zip, state: plan.state,
+      ...(successorPublic ? { hostedSourceVersionId: successorVersionId } : {}),
+      navigation: { dates, registration, polling, pollingLinkRendered }, analysisContestIds: plan.contests.filter((contest) => analysisForContest(contest.id)?.text).map((contest) => contest.id), statedContestCount: plan.contests.length, returnedContestCount: actualContests.length, proofs, absenceOcdIds: actualAbsences });
     console.log(JSON.stringify({ zip: plan.zip, contests: plan.contests.length, result: "PROVEN" }));
   }
 } finally { await context.close(); await browser.close(); }
-writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: proofSourcesPath ? JSON.parse(readFileSync(proofSourcesPath, "utf8")) : readerProofSources(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows, ...(cases.length ? { cases } : {}) }, null, 2) + "\n");
+await checkHostedBuild();
+writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: proofSourcesPath ? JSON.parse(readFileSync(proofSourcesPath, "utf8")) : readerProofSources(), plan: planEvidence, execution: successorPublic ? "Actual canonical public ballot DOM at the named deployed commit; Morris filing local selector and every selected ZIP bound to the exact promoted version; no model request." : "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", ...(successorPublic ? { origin: PUBLIC_SITE_ORIGIN, deployedCommit, pointerKey: successorKey, sourceVersionId: successorVersionId } : {}), rows, ...(cases.length ? { cases } : {}) }, null, 2) + "\n", successorPublic ? { flag: "wx" } : undefined);

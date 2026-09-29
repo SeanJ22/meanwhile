@@ -22,13 +22,11 @@ const door = {
 };
 
 test("an embedded Bodies door exposes only its visible card Close control", () => {
-  const markup = renderToStaticMarkup(createElement(ReaderCard, {
-    viewKey: "door:bodies",
-    kicker: "Bodies here",
-    backLabel: null,
-    onBack: noOp,
-    onClose: noOp,
-  }, createElement(DoorOverlay, { ...door, embedded: true })));
+  const markup = renderToStaticMarkup(
+    <ReaderCard viewKey="door:bodies" kicker="Bodies here" backLabel={null} onBack={noOp} onClose={noOp}>
+      <DoorOverlay {...door} embedded />
+    </ReaderCard>,
+  );
   assert.equal([...markup.matchAll(/aria-label="Close"/g)].length, 1);
   assert.match(markup, /data-mw="card-close"/);
   assert.match(markup, /<h2[^>]*>Bodies here<\/h2>/);

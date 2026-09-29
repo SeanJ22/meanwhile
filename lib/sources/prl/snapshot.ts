@@ -15,6 +15,7 @@ import { shareSentence } from "./index.ts";
 import {
   PRL_CATEGORIES,
   PRL_RHETORIC_ATTRIBUTION,
+  type PrlCategoryKey,
   type PrlMemberProfile,
   type PrlSnapshot,
 } from "./types.ts";
@@ -23,9 +24,16 @@ export interface PrlReaderProfile {
   subjectId: string;
   bioguideId: string;
   statementCount: number;
+  /** PRL's published percentages, with unavailable measurements left null. The count is not an inferred denominator. */
+  shares: Record<PrlCategoryKey, number | null>;
   measuredAt: string;
   readAt: string;
-  categories: { id: string; sentence: string }[];
+  /** When the source file was retrieved; the existing readAt field remains for older clients. */
+  retrievedAt: string;
+  /** Literal source labels in the held profile (currently only "all"), not an inferred channel inventory. */
+  communicationSources: string[];
+  /** Numeric share is PRL's published 0–100 mean, never count / statementCount. */
+  categories: { id: PrlCategoryKey; share: number; sentence: string }[];
   attribution: typeof PRL_RHETORIC_ATTRIBUTION;
   sourceUrl: string;
 }
@@ -37,18 +45,33 @@ export function projectPrlProfile(
 ): PrlReaderProfile | null {
   if (!/^[A-Z]\d{6}$/.test(profile.bioguideId) || !Number.isInteger(profile.statementCount) || profile.statementCount <= 0) return null;
   if (snapshot.attribution.citation !== PRL_RHETORIC_ATTRIBUTION.citation || !snapshot.sourceUrl || !snapshot.fetchedAt) return null;
+  const share = (key: PrlCategoryKey): number | null => {
+    const value = profile.shares?.[key];
+    return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 100 ? value : null;
+  };
+  const shares: PrlReaderProfile["shares"] = {
+    policy: share("policy"),
+    "attack-policy": share("attack-policy"),
+    "attack-personal": share("attack-personal"),
+    creditclaiming: share("creditclaiming"),
+    bipartisanship: share("bipartisanship"),
+  };
   const categories = PRL_CATEGORIES.flatMap((category) => {
-    const value = profile.shares[category.key];
-    if (value === null || !Number.isFinite(value) || value < 0 || value > 100) return [];
+    const value = shares[category.key];
+    if (value === null) return [];
     const sentence = shareSentence(profile, category.key);
-    return sentence ? [{ id: category.key, sentence }] : [];
+    return sentence ? [{ id: category.key, share: value, sentence }] : [];
   });
   return {
     subjectId: `congress:${profile.bioguideId}`,
     bioguideId: profile.bioguideId,
     statementCount: profile.statementCount,
+    shares,
     measuredAt: profile.measuredAt,
     readAt: snapshot.fetchedAt,
+    retrievedAt: snapshot.fetchedAt,
+    communicationSources: Array.isArray(profile.sources)
+      ? profile.sources.filter((source): source is string => typeof source === "string" && source.trim() !== "") : [],
     categories,
     attribution: PRL_RHETORIC_ATTRIBUTION,
     sourceUrl: snapshot.sourceUrl,

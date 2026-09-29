@@ -39,6 +39,7 @@ export function PillCluster({
   governsOpen,
   onOpenPop,
   onOpenGoverns,
+  onOpenBallot,
 }: {
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null shows a ZIP chooser. */
@@ -50,6 +51,8 @@ export function PillCluster({
   /** Toggles a small popup (opening the open one closes it). */
   onOpenPop: (pop: Exclude<ReaderPop, null>) => void;
   onOpenGoverns: () => void;
+  /** Ballot opens as the large card (an intercepted route); close any popup first. */
+  onOpenBallot?: () => void;
 }) {
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
   const state = coverage
@@ -69,6 +72,7 @@ export function PillCluster({
         <Link
           href={validZip ? `/ballot?zip=${validZip}` : "/ballot"}
           className="mw-nav-seg mw-nav-ballot"
+          onClick={onOpenBallot}
           title={
             covered
               ? `What's on the ballot${validZip ? ` near ${validZip}` : ""}`

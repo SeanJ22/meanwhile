@@ -17,6 +17,7 @@ import type { SecondHopCommittee } from "@/lib/funding/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { formatDateMDY } from "@/lib/map/format";
+import { plainMoney } from "@/lib/funding/plain-money";
 
 /**
  * The Funding section (D34) — campaign money in the plain register, on
@@ -319,27 +320,11 @@ function MoneyOverview({ data }: { data: FundingDisplayData }) {
   );
 }
 
-/**
- * "$41 million", "$657,000" — the same rounding as `plainMoney` in
- * lib/funding/display.ts, repeated here because that module reaches the
- * server data plane and must not enter the client bundle.
- */
-function tileMoney(amount: number): string {
-  const abs = Math.abs(amount);
-  if (abs >= 1_000_000) {
-    const millions = amount / 1_000_000;
-    const rounded = millions >= 10 ? Math.round(millions) : Math.round(millions * 10) / 10;
-    return `${rounded} million`;
-  }
-  if (abs >= 10_000) return `${(Math.round(amount / 1000) * 1000).toLocaleString("en-US")}`;
-  return `${Math.round(amount).toLocaleString("en-US")}`;
-}
-
 function MoneyTile({ label, amount }: { label: string; amount: number }) {
   return (
     <div className="mw-money-tile">
       <span className="mw-money-tile-label">{label}</span>
-      <span className="mw-money-tile-value">{tileMoney(amount)}</span>
+      <span className="mw-money-tile-value">{plainMoney(amount)}</span>
     </div>
   );
 }

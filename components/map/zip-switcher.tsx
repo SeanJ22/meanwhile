@@ -43,7 +43,9 @@ export function ZipSwitcher({
   useDismissOnOutside(rootRef, onClose, !embedded);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // preventScroll: inside a popup over an overflow-hidden map, a scrolling
+    // focus shifts the whole screen sideways on a phone.
+    inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   useEffect(() => {

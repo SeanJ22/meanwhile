@@ -1837,6 +1837,20 @@ function MapEntryInner() {
     [pop, closePop, closeCard, takeForeground],
   );
 
+  // The Ballot card's "Where can I vote?" closes that card and asks the map
+  // for its small popup (components/shell/route-card.tsx).
+  useEffect(() => {
+    const onRequest = (event: Event) => {
+      const detail = (event as CustomEvent<unknown>).detail;
+      if (detail === "vote" || detail === "zip" || detail === "ask") {
+        closeCard();
+        setPop(detail);
+      }
+    };
+    window.addEventListener("mw:open-pop", onRequest);
+    return () => window.removeEventListener("mw:open-pop", onRequest);
+  }, [closeCard]);
+
   const openGoverns = useCallback(() => {
     if (wghOpen) {
       closeCard();
@@ -1908,6 +1922,7 @@ function MapEntryInner() {
       governsOpen={cardView?.kind === "governs"}
       onOpenPop={openPopup}
       onOpenGoverns={openGoverns}
+      onOpenBallot={closePop}
     />
   );
 

@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { VotingSitesPanel } from "@/components/map/voting-sites-panel";
+import { useRouteCard } from "@/components/shell/route-card";
 
 /**
  * **"Find your polling place" stops leaving the app.** — F01-continued
@@ -55,6 +56,10 @@ export function WhereToVote() {
   // No map on this surface, so there is nowhere to drop pins. The callback
   // stays because the shared panel's contract does.
   const onSites = useCallback(() => {}, []);
+  // Inside the Ballot card (approved reader design): the button closes the
+  // card and opens the map's small Where can I vote? popup instead of
+  // expanding a second panel here.
+  const routeCard = useRouteCard();
 
   return (
     <div data-where-to-vote>
@@ -70,7 +75,7 @@ export function WhereToVote() {
           type="button"
           className="voting-open-button"
           data-where-to-vote-pill
-          onClick={() => setOpen(true)}
+          onClick={() => (routeCard ? routeCard.openVote() : setOpen(true))}
         >
           {/* The map pill's own words, verbatim. Two surfaces asking the same
               question in two different sentences is the same defect one layer

@@ -37,6 +37,7 @@ export function ReaderCard({
   onClose,
   restoreScroll,
   onScroll,
+  fixed = false,
   children,
 }: {
   /** Identity of the view on screen; a new key starts at the top. */
@@ -53,6 +54,8 @@ export function ReaderCard({
   restoreScroll?: number;
   /** Reports the body's scroll position so Back can restore it. */
   onScroll?: (top: number) => void;
+  /** A route-level card (the Ballot) sits over the whole viewport. */
+  fixed?: boolean;
   children: ReactNode;
 }) {
   const cardRef = useRef<HTMLElement>(null);
@@ -107,10 +110,10 @@ export function ReaderCard({
 
   return (
     <>
-      <div className="mw-scrim" onClick={onClose} aria-hidden="true" />
+      <div className={fixed ? "mw-scrim mw-fixed" : "mw-scrim"} onClick={onClose} aria-hidden="true" />
       <section
         ref={cardRef}
-        className="mw-card"
+        className={fixed ? "mw-card mw-fixed" : "mw-card"}
         role="dialog"
         aria-modal="true"
         aria-label={kicker}

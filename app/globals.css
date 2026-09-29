@@ -6197,6 +6197,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   --cat-bipartisan: #72c6a3;
   --knob: #ffffff;
   --knob-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --press-inset: inset 0 2px 4px rgba(0, 0, 0, 0.25);
 
   /* Geometry named for the rhythm guard (lib/design/rhythm.ts). */
   --radius-ctl: 12px;

@@ -103,8 +103,16 @@ const THEME_SCRIPT = `try{if(localStorage.getItem("wtp.theme")==="light")documen
 */
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: ReactNode;
+  /**
+   * The approved reader design's Ballot card: `app/@modal/(.)ballot`
+   * intercepts a click on Ballot from the map and renders the ballot OVER the
+   * map as the one large card. A direct visit to /ballot is still the full
+   * page, so every existing deep link keeps working.
+   */
+  modal: ReactNode;
 }) {
   return (
     <html
@@ -117,7 +125,10 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {children}
+        {modal}
+      </body>
     </html>
   );
 }

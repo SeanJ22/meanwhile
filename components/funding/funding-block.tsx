@@ -71,7 +71,9 @@ function FundingBlockInner({
   }, [holder.id]);
 
   if (loadFailed) return <StateFundingNote note="We couldn’t load our campaign-finance records just now." />;
-  if (!answer) return null;
+  // A visible loading line (approved design): an empty open section reads as
+  // "nothing here", which is a claim, while the records are still on the way.
+  if (!answer) return <p className="mw-loading-inline" role="status">Loading campaign money…</p>;
   // The disclosure sentence is computed by the one shared helper so the map
   // popup and the ballot battlecard render byte-identical text for the same
   // holding (the render proof asserts map === ballot funding text).

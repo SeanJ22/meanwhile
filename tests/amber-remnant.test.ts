@@ -29,7 +29,7 @@ import test from "node:test";
  */
 
 const ROOT = process.cwd();
-const CSS = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+const CSS = readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
 
 /**
  * Where the tier accent is genuinely the meaning. Each entry is a whole

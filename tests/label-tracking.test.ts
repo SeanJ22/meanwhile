@@ -59,7 +59,7 @@ function sourceFiles(): string[] {
 }
 
 test("LBL-2: the shared letter-spaced label classes trim their trailing space", () => {
-  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   assert.match(
     css,
     /\.trailing-space-trimmed\s*\{[^}]*margin-inline-end:\s*-0\.15em/,
@@ -131,7 +131,7 @@ test("OFF-2: EVERY letter-spaced run trims its trailing space, not only the pinn
 test("OFF-2: the trim MATCHES its run's tracking, never a near-enough value", () => {
   // A -0.15em compensation on a 0.1em run pulls the label 0.05em into whatever
   // precedes it. Smaller than the defect it fixes, and the same carelessness.
-  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   const mismatched: string[] = [];
   for (const file of sourceFiles()) {
     const src = readFileSync(join(ROOT, file), "utf8");
@@ -266,7 +266,7 @@ const LABEL_PX = 11;
 type SpacedRule = { selector: string; value: string; em: number };
 
 function stylesheetRules(): { spaced: SpacedRule[]; compensated: Set<string> } {
-  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   const spaced = new Map<string, SpacedRule>();
   const compensated = new Set<string>();
   for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
@@ -369,7 +369,7 @@ test("LBL-2: the stylesheet sweep catches a real offender", () => {
    * it renders `WHO RUNS IT` pinned inside a card. Stripping its trim must be
    * visible to the sweep.
    */
-  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   const rule = /\n\.popup-section-label\s*\{([^}]*)\}/.exec(css);
   assert.ok(rule, ".popup-section-label is gone — the plant cannot be made");
   assert.match(

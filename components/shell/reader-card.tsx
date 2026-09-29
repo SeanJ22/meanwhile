@@ -89,6 +89,11 @@ export function ReaderCard({
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      // A dialog opened FROM the card (the calendar chooser, a phone choice)
+      // lives outside it and handles its own keys; the card steps aside.
+      const active = document.activeElement;
+      const card = cardRef.current;
+      if (card && active && active !== document.body && !card.contains(active)) return;
       if (event.key === "Escape") {
         event.stopPropagation();
         onClose();

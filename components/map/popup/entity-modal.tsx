@@ -242,6 +242,12 @@ export interface ModalSubject {
   subjectId: string;
   subjectKind: "OFFICIAL" | "BODY" | "MEETING";
   /**
+   * A meeting card's body, by its registry id, so "Held by" opens the body's
+   * card one level deeper (approved reader design, 2026-09-28). Absent when
+   * the meeting's body is not in the coverage set.
+   */
+  heldByBodyId?: string | null;
+  /**
    * What KIND of thing this subject is, in either the registry vocabulary
    * (place, county, school_district, cd, sldu, sldl) or the map one
    * (municipal, congressional, state-senate). LBL-1 (2026-08-22) is the only
@@ -367,6 +373,8 @@ interface EntityModalProps {
   embedded?: boolean;
   /** "Show the whole boundary on the map": parks the card and fits the map. */
   onShowOnMap?: () => void;
+  /** A meeting's "Where": opens the venue card for this meeting's room. */
+  onOpenVenue?: () => void;
 }
 
 /**
@@ -671,6 +679,7 @@ export function EntityModal({
   homeZip = null,
   embedded = false,
   onShowOnMap,
+  onOpenVenue,
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
@@ -692,6 +701,146 @@ export function EntityModal({
    * state — the modal dies the tick it opens, at every phone viewport.
    * ×, Escape, and backdrop click close; the back button navigates.
    */
+
+  // The overview, shared by the tabbed card and the design card's single
+  // scrolling view (which renders every section in order instead of tabs).
+  const overview = (
+              <>
+                {subject.agenda && <MeetingListingNotice groups={listingCount.groups} />}
+                {subject.facts.map((fact) => (
+                  <PopupRow key={fact.label} label={fact.label} mono={fact.mono}>
+                    {fact.value}
+                  </PopupRow>
+                ))}
+  
+                {/* 6f2: the district explainer, from the shipped office-type
+                    library. Renders nothing when the library has no entry for
+                    the office — an absent explainer is better than a made-up
+                    one, and the tabs below still carry the record. */}
+                {subject.representedByOfficeTitle &&
+                  (() => {
+                    const blurb = blurbForTitle(subject.representedByOfficeTitle);
+                    if (!blurb) return null;
+                    return (
+                      <>
+                        {/*
+                          **BC-17 (2026-08-25) — THE HEADING BRANCHES ON WHETHER
+                          THE DIVISION IS A GOVERNMENT OR A CONSTITUENCY.**
+  
+                          The author read "What the person who represents this
+                          district does" off Tucson Unified District on
+                          `09-04-04`. The sentence is not wrong in general, and
+                          the note on `representedByOfficeTitle` above explains
+                          why it was chosen: a CONGRESSIONAL district is not a
+                          government, it is a constituency, and the useful thing
+                          to know about it is what the person elected from it can
+                          actually do.
+  
+                          A SCHOOL DISTRICT is a government. It has a board, it
+                          meets, it sets a budget — and the paragraph underneath
+                          this heading says exactly that. So the heading
+                          described a person while its own prose described a
+                          body.
+  
+                          `runsSomething` is the discriminator this card already
+                          uses a few lines away to decide whether to render a
+                          "Who runs it" section at all. Asking it here means the
+                          two answers cannot disagree about the same division.
+                        */}
+                        <PopupSectionLabel>
+                          {runsSomething(subject.divisionKind)
+                            ? "What this body does"
+                            : "What the person who represents this district does"}
+                        </PopupSectionLabel>
+                        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
+                          {blurb.text}
+                        </p>
+                        <p className="mt-1 text-[0.625rem] text-muted">
+                          Powers defined in:{" "}
+                          {blurb.basisUrl ? (
+                            <a
+                              href={blurb.basisUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="underline decoration-dotted hover:text-link"
+                            >
+                              {blurb.basis}
+                            </a>
+                          ) : (
+                            blurb.basis
+                          )}
+                        </p>
+                      </>
+                    );
+                  })()}
+  
+                {/*
+                  MTG-3 (2026-08-23, the author's 8/22 walkthrough). Add to
+                  Calendar lived on the Meetings tab and nowhere else, and
+                  Directions lived on the venue panel and nowhere else — so the
+                  large battlecard, which is the surface a reader lands on when
+                  they click a meeting, had neither. A reader deciding whether to
+                  go needs both, on whichever tab they are standing on.
+  
+                  The Location row above is the Directions link. This is the
+                  other half.
+                */}
+                {subject.agenda &&
+                  subject.meetings.length === 1 &&
+                  subject.meetings[0].status === "SCHEDULED" && (
+                    <CalendarLinks meeting={subject.meetings[0]} />
+                  )}
+  
+                {subject.agenda && (
+                  <>
+                    <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
+                    <AgendaSection
+                      meetingId={subject.agenda.meetingId}
+                      agendaUrl={subject.agenda.agendaUrl}
+                      agendaSlotObservedEmpty={subject.agenda.agendaSlotObservedEmpty}
+                      provenance={subject.agenda.provenance}
+                      carried={subject.agenda.carried}
+                    />
+                  </>
+                )}
+  
+                {subject.commentAccess && (
+                  <HowToBeHeard
+                    ocdId={subject.commentAccess.ocdId}
+                    bodyName={subject.commentAccess.bodyName}
+                    bodyId={subject.commentAccess.bodyId}
+                  />
+                )}
+              </>
+    );
+
+  // Approved reader design: "Where" and "Held by" rows on a meeting, each one
+  // level deeper inside the same card.
+  const meetingLinks =
+    embedded && subject.subjectKind === "MEETING" && (onOpenVenue || (subject.heldByBodyId && onOpenPlaceBody)) ? (
+      <div className="mw-link-rows">
+        {onOpenVenue && subject.meetings[0]?.location && (
+          <button type="button" className="mw-row-link" onClick={onOpenVenue}>
+            <span className="mw-row-link-label">Where</span>
+            <span className="mw-row-link-value">
+              {subject.meetings[0].location.name ?? subject.meetings[0].location.address}
+            </span>
+            <span aria-hidden="true">›</span>
+          </button>
+        )}
+        {subject.heldByBodyId && onOpenPlaceBody && (
+          <button
+            type="button"
+            className="mw-row-link"
+            onClick={() => onOpenPlaceBody(subject.heldByBodyId!)}
+          >
+            <span className="mw-row-link-label">Held by</span>
+            <span className="mw-row-link-value">{subject.subtitle}</span>
+            <span aria-hidden="true">›</span>
+          </button>
+        )}
+      </div>
+    ) : null;
 
   return (
     <div
@@ -762,6 +911,38 @@ export function EntityModal({
         ) : subject.placeCard ? (
           <PlaceSections subject={subject} onOpenPlaceBody={onOpenPlaceBody} />
         ) : (
+        embedded ? (
+        <div className="account-modal-body mw-sections">
+          {overview}
+          {meetingLinks}
+          <section className="mw-section">
+            <h3 className="mw-section-title">
+              {subject.subjectKind === "MEETING" || subject.divisionOcdId == null
+                ? "Who sits on it"
+                : "Representation"}
+            </h3>
+            <Representation
+              holders={subject.representation}
+              gaps={subject.rosterGaps}
+              note={subject.representationNote}
+              onOpenHolder={onOpenHolder}
+              showTopOffices={runsSomething(subject.divisionKind)}
+            />
+          </section>
+          {subject.subjectKind !== "MEETING" && (
+            <section className="mw-section">
+              <h3 className="mw-section-title">{listingCount.heading}</h3>
+              <Meetings meetings={subject.meetings} />
+            </section>
+          )}
+          <details className="mw-section mw-sources">
+            <summary className="mw-section-title">
+              Sources{sourceCount ? ` (${sourceCount})` : ""}
+            </summary>
+            <Sources sources={subject.sources} />
+          </details>
+        </div>
+        ) : (
         <>
         <div className="account-modal-tabs" role="tablist">
           {TABS.map((entry) => (
@@ -786,115 +967,7 @@ export function EntityModal({
         </div>
 
         <div className="account-modal-body" role="tabpanel">
-          {tab === "overview" && (
-            <>
-              {subject.agenda && <MeetingListingNotice groups={listingCount.groups} />}
-              {subject.facts.map((fact) => (
-                <PopupRow key={fact.label} label={fact.label} mono={fact.mono}>
-                  {fact.value}
-                </PopupRow>
-              ))}
-
-              {/* 6f2: the district explainer, from the shipped office-type
-                  library. Renders nothing when the library has no entry for
-                  the office — an absent explainer is better than a made-up
-                  one, and the tabs below still carry the record. */}
-              {subject.representedByOfficeTitle &&
-                (() => {
-                  const blurb = blurbForTitle(subject.representedByOfficeTitle);
-                  if (!blurb) return null;
-                  return (
-                    <>
-                      {/*
-                        **BC-17 (2026-08-25) — THE HEADING BRANCHES ON WHETHER
-                        THE DIVISION IS A GOVERNMENT OR A CONSTITUENCY.**
-
-                        The author read "What the person who represents this
-                        district does" off Tucson Unified District on
-                        `09-04-04`. The sentence is not wrong in general, and
-                        the note on `representedByOfficeTitle` above explains
-                        why it was chosen: a CONGRESSIONAL district is not a
-                        government, it is a constituency, and the useful thing
-                        to know about it is what the person elected from it can
-                        actually do.
-
-                        A SCHOOL DISTRICT is a government. It has a board, it
-                        meets, it sets a budget — and the paragraph underneath
-                        this heading says exactly that. So the heading
-                        described a person while its own prose described a
-                        body.
-
-                        `runsSomething` is the discriminator this card already
-                        uses a few lines away to decide whether to render a
-                        "Who runs it" section at all. Asking it here means the
-                        two answers cannot disagree about the same division.
-                      */}
-                      <PopupSectionLabel>
-                        {runsSomething(subject.divisionKind)
-                          ? "What this body does"
-                          : "What the person who represents this district does"}
-                      </PopupSectionLabel>
-                      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
-                        {blurb.text}
-                      </p>
-                      <p className="mt-1 text-[0.625rem] text-muted">
-                        Powers defined in:{" "}
-                        {blurb.basisUrl ? (
-                          <a
-                            href={blurb.basisUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="underline decoration-dotted hover:text-link"
-                          >
-                            {blurb.basis}
-                          </a>
-                        ) : (
-                          blurb.basis
-                        )}
-                      </p>
-                    </>
-                  );
-                })()}
-
-              {/*
-                MTG-3 (2026-08-23, the author's 8/22 walkthrough). Add to
-                Calendar lived on the Meetings tab and nowhere else, and
-                Directions lived on the venue panel and nowhere else — so the
-                large battlecard, which is the surface a reader lands on when
-                they click a meeting, had neither. A reader deciding whether to
-                go needs both, on whichever tab they are standing on.
-
-                The Location row above is the Directions link. This is the
-                other half.
-              */}
-              {subject.agenda &&
-                subject.meetings.length === 1 &&
-                subject.meetings[0].status === "SCHEDULED" && (
-                  <CalendarLinks meeting={subject.meetings[0]} />
-                )}
-
-              {subject.agenda && (
-                <>
-                  <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
-                  <AgendaSection
-                    meetingId={subject.agenda.meetingId}
-                    agendaUrl={subject.agenda.agendaUrl}
-                    agendaSlotObservedEmpty={subject.agenda.agendaSlotObservedEmpty}
-                    provenance={subject.agenda.provenance}
-                    carried={subject.agenda.carried}
-                  />
-                </>
-              )}
-
-              {subject.commentAccess && (
-                <HowToBeHeard
-                  ocdId={subject.commentAccess.ocdId}
-                  bodyName={subject.commentAccess.bodyName}
-                  bodyId={subject.commentAccess.bodyId}
-                />
-              )}
-            </>
-          )}
+          {tab === "overview" && overview}
 
           {tab === "representation" && (
             <Representation
@@ -926,6 +999,7 @@ export function EntityModal({
         </div>
 
         </>
+        )
         )}
 
         {/*

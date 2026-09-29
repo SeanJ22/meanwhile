@@ -2011,6 +2011,29 @@ function MapEntryInner() {
               subject={subject}
               onClose={closeCard}
               homeZip={clusterZip}
+              onOpenVenue={
+                subject.subjectKind === "MEETING"
+                  ? (() => {
+                      const venue = venues.find((v) =>
+                        v.meetings.some((m) => m.id === subject.subjectId),
+                      );
+                      return venue
+                        ? () => {
+                            // One level deeper: the room, with every sitting
+                            // held there, and the map focused on it.
+                            setLargeStack([]);
+                            dispatch({ type: "select/venue", key: venue.key });
+                            setFocus({
+                              lat: venue.lat,
+                              lng: venue.lng,
+                              zoom: 15,
+                              key: `venue:${venue.key}`,
+                            });
+                          }
+                        : undefined;
+                    })()
+                  : undefined
+              }
               onShowOnMap={
                 subject.divisionOcdId && subject.divisionOcdId === ui.selectedDistrictOcdId
                   ? () => {
@@ -2482,6 +2505,7 @@ function meetingSubject(
     // BC-11: what this card is ABOUT, keyed rather than titled.
     subjectId: meeting.id,
     subjectKind: "MEETING" as const,
+    heldByBodyId: body?.bodyId ?? null,
     title: meetingEntryTitle(meeting, { bodyShown: true }),
     /*
      * DATA-2 (2026-08-28): THE IDENTITY LINE COMES FROM THE REGISTRY.

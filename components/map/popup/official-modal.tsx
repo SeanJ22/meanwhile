@@ -183,7 +183,7 @@ export function OfficialModal({
             ONE group, so opening any collapses the rest. The wrap is here, at
             the card, because the pills are constructed by five different
             components and only their common ancestor can hold the state. */}
-        <CardSectionGroup>
+        <CardSectionGroup independent={embedded}>
         <div className="account-modal-body">
           {/*
             Item 3 (2026-08-16), the author's ruling. Circle portrait with a
@@ -250,7 +250,7 @@ export function OfficialModal({
 
           {/* D34: campaign money — FUNDING tier, its own section, never
               blended with the votes. */}
-          <CardSection title="Campaign money">
+          <CardSection title="Campaign money" defaultOpen={embedded}>
             <FundingBlock holder={holder} reactionContext={reactionContext} bare />
           </CardSection>
           <PublicStatementsProfile subjectId={holder.id} />

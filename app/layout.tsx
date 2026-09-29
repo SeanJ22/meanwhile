@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./reader.css";
 import { titleFor } from "@/lib/brand";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins";
 

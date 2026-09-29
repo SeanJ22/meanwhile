@@ -62,6 +62,16 @@
       "selector": ".ballot-pill-zip::after",
       "props": ["height"],
       "reason": "Not the pill body: the Lumen horizon line at the base of the ballot pill's zip half (design handoff 2026-09-13), a 1px lit gradient, sized as a hairline rather than against the reference tag."
+    },
+    {
+      "selector": ".mw-pill-btn",
+      "props": ["padding", "font-size"],
+      "reason": "An ACTION pill in the approved reader design (2026-09-28): Back, Details, Show on the map. It carries the 44px touch target and the design's 13px control type, because a reader taps it; the reference is a 22px non-tappable tag."
+    },
+    {
+      "selector": ".mw-selection-pill",
+      "props": ["padding", "font-size"],
+      "reason": "The map's selection pill (approved reader design, 2026-09-28) is a container holding a sentence and three action buttons, not a tag. Its inset and 14px type are the design's, so the sentence reads at body size above the map."
     }
   ]
 }

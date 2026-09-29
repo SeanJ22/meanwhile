@@ -67,6 +67,7 @@ export function FundingDisplay({
       }
     >
       {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money · FEC</p>}
+      <MoneyOverview data={data} />
       {data.sentences.map((sentence) => (
         <p key={sentence} className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
           {sentence}
@@ -183,6 +184,7 @@ export function FundingDisplay({
             LARGEST reported contributions and not the campaign's whole
             book, and a percentage without that base is a false claim.
           */}
+          {data.concentration && <OriginBars data={data} />}
           <ul className="mt-1 space-y-1.5">
             {data.concentrationSentences.map((sentence) => (
               <li
@@ -238,6 +240,7 @@ export function FundingDisplay({
             committee and individual lists were sampled separately, so a
             band spanning both would be a share of a base we chose.
           */}
+          <TypeBars data={data} />
           <ul className="mt-1 space-y-1.5">
             {data.typeConcentrationSentences.map((sentence) => (
               <li
@@ -269,6 +272,179 @@ export function FundingDisplay({
         )}{" "}
         · read {formatDateMDY(data.collectedAt)}
       </p>
+    </div>
+  );
+}
+
+/**
+ * The overview line and, when the reader projection carries the committee's
+ * reported totals as numbers, the three figure tiles (approved reader design,
+ * 2026-09-28). Raised, spent and cash on hand are three SEPARATE reported
+ * values — cash is never raised minus spent — so each tile shows its own
+ * figure or nothing. Without numbers the sentences below carry the totals.
+ */
+type ReportedTotals = {
+  receipts: number;
+  disbursements: number;
+  cashOnHand: number;
+  smallDonorShare?: number | null;
+};
+
+function reportedTotalsOf(data: FundingDisplayData): ReportedTotals | null {
+  const totals = (data as FundingDisplayData & { totals?: ReportedTotals | null }).totals;
+  if (!totals) return null;
+  const ok = [totals.receipts, totals.disbursements, totals.cashOnHand].every(
+    (n) => typeof n === "number" && Number.isFinite(n),
+  );
+  return ok ? totals : null;
+}
+
+function MoneyOverview({ data }: { data: FundingDisplayData }) {
+  const totals = reportedTotalsOf(data);
+  return (
+    <div className="mw-money-overview" data-money-overview>
+      <p className="mw-money-meta">
+        Cycle {data.cycleLabel}
+        {data.reportedThrough && <> · reported through {formatDateMDY(data.reportedThrough)}</>}
+        {" · "}read {formatDateMDY(data.collectedAt)}
+      </p>
+      {totals && (
+        <div className="mw-money-tiles">
+          <MoneyTile label="Raised" amount={totals.receipts} />
+          <MoneyTile label="Spent" amount={totals.disbursements} />
+          <MoneyTile label="Cash on hand" amount={totals.cashOnHand} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * "$41 million", "$657,000" — the same rounding as `plainMoney` in
+ * lib/funding/display.ts, repeated here because that module reaches the
+ * server data plane and must not enter the client bundle.
+ */
+function tileMoney(amount: number): string {
+  const abs = Math.abs(amount);
+  if (abs >= 1_000_000) {
+    const millions = amount / 1_000_000;
+    const rounded = millions >= 10 ? Math.round(millions) : Math.round(millions * 10) / 10;
+    return `${rounded} million`;
+  }
+  if (abs >= 10_000) return `${(Math.round(amount / 1000) * 1000).toLocaleString("en-US")}`;
+  return `${Math.round(amount).toLocaleString("en-US")}`;
+}
+
+function MoneyTile({ label, amount }: { label: string; amount: number }) {
+  return (
+    <div className="mw-money-tile">
+      <span className="mw-money-tile-label">{label}</span>
+      <span className="mw-money-tile-value">{tileMoney(amount)}</span>
+    </div>
+  );
+}
+
+/** A labelled bar on the shared 0–100% scale, with its value in words. */
+function ShareBar({ label, share, detail }: { label: string; share: number; detail: string }) {
+  const pct = Math.max(0, Math.min(100, share * 100));
+  return (
+    <div className="mw-share-row">
+      <span className="mw-share-label">{label}</span>
+      <span className="mw-bar-track" aria-hidden="true">
+        <span className="mw-bar-fill" style={{ width: `${pct}%`, background: "var(--bar)" }} />
+      </span>
+      <span className="mw-share-value">
+        {Math.round(pct)}%<span className="mw-share-detail"> · {detail}</span>
+      </span>
+    </div>
+  );
+}
+
+function usd(n: number): string {
+  return `${Math.round(n).toLocaleString("en-US")}`;
+}
+
+/**
+ * "Where that money came from", drawn from the held concentration numbers.
+ * The scope badge states the base — the contributions listed above, not the
+ * whole campaign — and the location is the state on the filing, not a district.
+ */
+function OriginBars({ data }: { data: FundingDisplayData }) {
+  const c = data.concentration;
+  if (!c || c.totalAmount <= 0) return null;
+  const outCount = c.contributionCount - c.inStateCount;
+  const outAmount = c.totalAmount - c.inStateAmount;
+  return (
+    <div className="mw-share-block">
+      <p className="mw-scope-badge">
+        Covers the {c.contributionCount} contributions listed above · {usd(c.totalAmount)}. Not the whole campaign.
+      </p>
+      {c.hasGeography && (
+        <>
+          <p className="mw-share-heading">State on the filing</p>
+          <ShareBar
+            label={`Inside ${c.candidateState}`}
+            share={c.inStateAmount / c.totalAmount}
+            detail={`${usd(c.inStateAmount)}, ${c.inStateCount} of ${c.contributionCount}`}
+          />
+          <ShareBar
+            label={`Outside ${c.candidateState}`}
+            share={outAmount / c.totalAmount}
+            detail={`${usd(outAmount)}, ${outCount} of ${c.contributionCount}`}
+          />
+        </>
+      )}
+      <p className="mw-share-heading">Who filed it</p>
+      <ShareBar
+        label="Committees and organizations"
+        share={c.organizationAmount / c.totalAmount}
+        detail={`${usd(c.organizationAmount)}, ${c.organizationCount}`}
+      />
+      <ShareBar
+        label="Individual people"
+        share={c.individualAmount / c.totalAmount}
+        detail={`${usd(c.individualAmount)}, ${c.individualCount}`}
+      />
+      <p className="mw-share-note">
+        The single biggest of them is {Math.round((c.largestAmount / c.totalAmount) * 100)}% of the {usd(c.totalAmount)}.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * "What kind of money it was": the committee and organization rows listed
+ * above, by the type each filer put on its own FEC filing. Individual donors
+ * are excluded — a different base — and the badge says which base this is.
+ */
+function TypeBars({ data }: { data: FundingDisplayData }) {
+  const rows = data.contributorGroups.organizations;
+  const total = rows.reduce((sum, row) => sum + row.amount, 0);
+  if (rows.length === 0 || total <= 0) return null;
+  const byType = new Map<string, { label: string; amount: number; count: number }>();
+  for (const row of rows) {
+    const label = contributorTypeLabel(row);
+    const name = label ? committeePillLabel(label) : "Type not stated on the filing";
+    const entry = byType.get(name) ?? { label: name, amount: 0, count: 0 };
+    entry.amount += row.amount;
+    entry.count += row.count;
+    byType.set(name, entry);
+  }
+  const count = rows.reduce((sum, row) => sum + row.count, 0);
+  const kinds = [...byType.values()].sort((a, b) => b.amount - a.amount);
+  return (
+    <div className="mw-share-block">
+      <p className="mw-scope-badge">
+        Covers the {count} committee and organization contributions listed above · {usd(total)}.
+      </p>
+      {kinds.map((kind) => (
+        <ShareBar
+          key={kind.label}
+          label={kind.label}
+          share={kind.amount / total}
+          detail={`${usd(kind.amount)}, ${kind.count} ${kind.count === 1 ? "contribution" : "contributions"}`}
+        />
+      ))}
     </div>
   );
 }

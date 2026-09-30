@@ -24,6 +24,7 @@ import {
 import {
   ROUTINE_SUPERVISOR_HISTORY_FIELDS,
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+  frontierHistoryTasks,
 } from "../lib/civic-data/supervisor-history.ts";
 import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
@@ -572,8 +573,13 @@ for (const read of clockReads) {
 
 step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
-try {
-  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
+const historyTasks = frontierHistoryTasks(dueCandidates.map(({ pending, clock }) => ({
+  task: pending.task,
+  deadlineMs: routineDueRequestDeadlineMs(routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)), honouredDueRequests.get(pending.task.id) ?? null),
+})),
+  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+if (historyTasks.length > 0) try {
+  const history = await latestUnreceiptedSupervisorAttempts(historyTasks);
   supervisorAttempts = history.attempts;
   for (const issue of history.issues) {
     const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);

@@ -321,6 +321,7 @@ interface Payload {
     synthesis: { ran: boolean; why?: string; cached?: boolean; model?: string; writers?: { model: string; role: string; result: string; failed?: string[]; detail?: string }[]; escalation?: string; writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number } };
     validation: { ran: boolean; passed?: boolean; failed?: string[] };
     composition?: { shape: string; composed: boolean; passed?: boolean };
+    sourcesLoaded?: string;
   };
 }
 
@@ -363,11 +364,33 @@ test("ROUTE: a settled question whose records need writing makes ONE call — th
   assert.equal(payload.trace.synthesis.escalation, undefined, "the frontier writer did not run");
 });
 
-test("ROUTE: a named-subject question is read in code too — one writing call, no reading call", { concurrency: false }, async () => {
+test("ROUTE: who sits on a named body is read in code and composed from its roster — no model call at all", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who sits on the Vail school board?", [AZ, PIMA, VAIL]);
-  assert.deepEqual(made.map((call) => call.kind), ["SYNTHESIZE"]);
+  assert.deepEqual(made, [], "neither rung called a model");
   assert.equal(payload.trace.interpretation.why, "lexical-reading");
-  assert.equal(payload.mode, "GROUNDED_CLAUDE");
+  assert.equal(payload.trace.synthesis.why, "composed-from-roster-records");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.trace.validation.passed, true, "the composed prose passed the same validator a model answer faces");
+  assert.match(payload.answer ?? "", /^Vail Unified School District Governing Board has \d+ members: /);
+  assert.ok(payload.records.some((record) => record.kind === "CONTACT"), "the people the prose names are records the reader is shown");
+});
+
+test("ROUTE: who is my state senator is read from the words and composed from the officeholders held for the reader's divisions — no model call, no other source read", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who is my state senator?", [AZ, PIMA, VAIL, "ocd-division/country:us/state:az/sldu:19", "ocd-division/country:us/state:az/sldl:19"]);
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.trace.interpretation.why, "reader-officials-shape");
+  assert.equal(payload.trace.synthesis.why, "composed-from-officeholder-records");
+  assert.equal(payload.trace.composition?.composed, true);
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.match(payload.answer ?? "", /^Your state senator is .+ for District 19\.$/);
+  assert.ok(payload.records.some((record) => record.kind === "OFFICEHOLDER"), "the person the prose names is a record the reader is shown");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL", "the registry and the federal directory are all it reads");
+});
+
+test("ROUTE: who represents me in Congress names the two U.S. Senators the state holds beside the district's Representative", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("Who represents me in Congress?", [PIMA, VAIL, "ocd-division/country:us/state:az/cd:6"]);
+  assert.deepEqual(made, []);
+  assert.match(payload.answer ?? "", /^Your United States Senators are .+ and .+; your United States Representative is .+ for District 6\.$/);
 });
 
 test("ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree", { concurrency: false }, async () => {

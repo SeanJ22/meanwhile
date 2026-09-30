@@ -95,7 +95,7 @@ const FINANCE_PHRASES: readonly RegExp[] = [
    * is funding the school district?" is a question about a budget, and
    * answering it with committee filings would be the product not listening.
    */
-  /\bwho (?:funded|is funding|has funded|financed|is financing|bankrolled|is bankrolling) (?:\w+ ){0,6}(?:campaign|race|candidac\w*|candidate|election|bid)/,
+  /\bwho (?:funded|funds|is funding|has funded|financed|finances|is financing|bankrolled|bankrolls|is bankrolling|paid for|pays for|is paying for) (?:\w+ ){0,6}(?:campaign|race|candidac\w*|candidate|election|bid)/,
   /\bwho (?:gave|donated|is giving) money\b/,
   /\bwho (?:has |have )?donated\b/,
   /\bhow much (?:money )?(?:has|have|did|was|were) (?:\w+ ){0,8}(?:raised|spent)\b/,

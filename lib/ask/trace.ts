@@ -156,11 +156,11 @@ export interface AskTrace {
    * named here and was never shown; the model wrote the answer instead.
    */
   composition?: {
-    /** SITTING: a body's sitting (`lib/ask/sitting-answer.ts`); MONEY: a person's held campaign-money records (`lib/ask/money-answer.ts`). */
-    kind: "SITTING" | "MONEY";
+    /** SITTING: a body's sitting (`lib/ask/sitting-answer.ts`); MONEY: a person's held campaign-money records (`lib/ask/money-answer.ts`); OFFICIALS: the reader's own officeholders (`lib/ask/reader-officials.ts`). */
+    kind: "SITTING" | "MONEY" | "OFFICIALS" | "ROSTER";
     shape: string;
     /** Which records it was read from: recorded actions, roll calls, the sitting and its named gaps, or state committee filings. */
-    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER";
+    basis?: "RECORDED_ACTIONS" | "ROLL_CALLS" | "SITTING_AND_GAPS" | "STATE_COMMITTEE_FILINGS" | "BALLOT_ABSENCE_AND_COUNTY_REGISTER" | "HELD_OFFICEHOLDERS" | "HELD_ROSTER";
     composed: boolean;
     passed?: boolean;
     failed?: string[];

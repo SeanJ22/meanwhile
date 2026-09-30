@@ -2,6 +2,7 @@ import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
 import { AUTHORITY_FAMILIES, type AuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -52,6 +53,7 @@ import { unavailableInterpretation, type AskIntent, type AskInterpretation, type
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
 import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, shapeForBoundBody } from "@/lib/ask/lexical-reading";
+import { composeBodyRoster, composeReaderOfficials, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
@@ -712,6 +714,8 @@ export async function POST(request: Request) {
    * request or relabelling every unrelated source as unavailable.
    */
   const topicRoute = topicFocusedQuestion(question);
+  /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
+  const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question) : null;
   // A shape is only a scheduling hint here. The complete subject inventory
   // still loads, and lexicalReading below must prove the body binding before
   // unrelated evidence may stay unread. A failed/ambiguous binding restores
@@ -757,9 +761,9 @@ export async function POST(request: Request) {
   const onEdge = (family: AuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
   // Each database read is observed at once, so a failure while the edge is
   // fetched is never an unhandled rejection; the settle below still records it.
-  const outcomesFromDatabase = onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = officialsAsk || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !onEdge("comment-access")
+  const commentAccessFromDatabase = production && !officialsAsk && !onEdge("comment-access")
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
@@ -770,7 +774,8 @@ export async function POST(request: Request) {
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
     authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
-      deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
+      officialsAsk ? READER_MAP_AUTHORITY_FAMILIES
+        : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   const essentialPreloads = [
@@ -844,7 +849,8 @@ export async function POST(request: Request) {
     timed("candidateCorpus", settleCandidateCorpusRead),
     ...(!deferUnrelatedEvidence ? unrelatedPreloads : []),
   ];
-  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
+  /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
+  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : officialsAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
   // The recorded outcomes are what a topic answer leads with. A cold read that
   // failed (a transient connect timeout on the first request) is retried once
   // rather than silently answering from agenda lines alone. A retry that
@@ -953,7 +959,7 @@ export async function POST(request: Request) {
     }
     if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
   }
-  trace.sourcesLoaded = !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
+  trace.sourcesLoaded = officialsAsk ? "ESSENTIAL" : !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
   const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
   let namedPeople = 0;
   try {
@@ -988,7 +994,7 @@ export async function POST(request: Request) {
    */
   // A topic question bound lexically to a body is not a ballot question; its
   // ballot is not read (loadBallotForDivisions([]) is the empty holding).
-  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute ? [] : ocdIds);
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || officialsAsk ? [] : ocdIds);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
@@ -1004,7 +1010,7 @@ export async function POST(request: Request) {
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
     [...preferredOfficialIds, ...[question, ...comparedSlots].flatMap((text) => namedSourceFilingIds(text, ballot.set))]);
   let heldFilings: HeldFilingSubject[] = [];
-  if (ocdIds.some(id => /\/state:az(?:\/|$)/.test(id)) && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) {
+  if (ocdIds.some(id => /\/state:az(?:\/|$)/.test(id)) && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !officialsAsk) {
     try {
       const represented = new Set([...ballotInventory.subjects.values()].flatMap(row => [row.id, ...(row.kind === "PERSON" && row.candidacyId ? [row.candidacyId] : [])]));
       heldFilings = requestedHeldFilings(azHeldFilingSubjects(), question, preferredOfficialIds, represented);
@@ -1162,7 +1168,7 @@ export async function POST(request: Request) {
       : [],
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute;
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || Boolean(officialsAsk);
   /*
    * **THE LEXICAL READING.** (2026-09-25, the Ask latency repair.) A question
    * in one of a few canonical shapes ("when does the Mesa City Council meet
@@ -1205,7 +1211,11 @@ export async function POST(request: Request) {
   const outcome = modelFreeTopicRoute || lexical ? null : cachedInterpretation ?? await modelReading!;
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
-  if (outcome === null && lexical) {
+  if (outcome === null && officialsAsk) {
+    /* The reader's own officials: read from the words, answered from the held officeholders. */
+    interpretation = { ...unavailableInterpretation(), intent: "PERSON_RECORD", temporal: { kind: "NONE" } };
+    trace.interpretation = { ran: false, why: "reader-officials-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+  } else if (outcome === null && lexical) {
     interpretation = structuredClone(lexical.interpretation);
     trace.interpretation = {
       ran: false,
@@ -2255,6 +2265,28 @@ export async function POST(request: Request) {
     }
 
     /*
+     * **THE READER'S OWN OFFICIALS.** (2026-09-29, S3; `lib/ask/reader-officials.ts`.)
+     * "Who is my state senator?" names no subject; the officeholders the route
+     * already loaded for the reader's divisions and bodies are the answer. Each one
+     * named is a record beside the composed sentence, with their published contact.
+     */
+    const officials = officialsAsk && !subject ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0 }) : null;
+    if (officials) {
+      for (const { seat, bodyName } of officials.named) {
+        records.push(officeholderEvidence(seat));
+        contacts.push({
+          id: seat.id, name: seat.name, officeTitle: seat.officeTitle,
+          relationship: bodyName ? `${seat.officeTitle} on ${bodyName}` : `Your ${seat.officeTitle}`,
+          basis: bodyName ? "BODY_MEMBER" : "READER_REPRESENTATIVE",
+          email: seat.email, phone: seat.phone, websiteUrl: seat.websiteUrl,
+          sourceUrl: seat.sourceUrl, sourceOrg: seat.provenance?.sourceOrg ?? null, retrievedAt: seat.provenance?.collectedAt ?? null,
+        });
+      }
+      gaps.push(...officials.gaps);
+      denominators.officeholderRecords = officials.named.length;
+    }
+
+    /*
      * **THE READER'S OWN LEGISLATORS — A FALLBACK, NOT AN ADDITION TO EVERY
      * ANSWER.** (Scoped 2026-08-28, after reading the panel.)
      *
@@ -2611,11 +2643,48 @@ export async function POST(request: Request) {
         ...(groupSettled.verdict?.kind === "FAILED" ? { failed: groupSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed;
+    /* The reader's own officials (lib/ask/reader-officials.ts): composed from the held officeholders, held to the same validator. */
+    const officialsSettled = settleSittingComposition(
+      officials && !topicComposed ? { answer: officials.answer, citedUrls: officials.citedUrls } : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (officialsAsk) {
+      trace.composition = {
+        kind: "OFFICIALS",
+        shape: officialsAsk.keys.join("+"),
+        basis: "HELD_OFFICEHOLDERS",
+        composed: Boolean(officialsSettled.verdict),
+        ...(officialsSettled.verdict ? { passed: officialsSettled.verdict.kind === "PASSED" } : {}),
+        ...(officialsSettled.verdict?.kind === "FAILED" ? { failed: officialsSettled.verdict.failed } : {}),
+      };
+    }
+    /* Who sits on a named body, from its roster (lib/ask/reader-officials.ts): the same validator decides. */
+    const rosterSettled = settleSittingComposition(
+      !topicComposed && !sittingSettled.composed && subject?.kind === "BODY" && lexical?.shape === "BODY_ROSTER" && lexical.subjectId === subject.id
+        ? composeBodyRoster({ bodyName: subject.name, contacts: shownContacts, gaps: rosterGaps.gaps })
+        : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (subject?.kind === "BODY" && lexical?.shape === "BODY_ROSTER") {
+      trace.composition = {
+        kind: "ROSTER",
+        shape: "BODY_ROSTER",
+        basis: "HELD_ROSTER",
+        composed: Boolean(rosterSettled.verdict),
+        ...(rosterSettled.verdict ? { passed: rosterSettled.verdict.kind === "PASSED" } : {}),
+        ...(rosterSettled.verdict?.kind === "FAILED" ? { failed: rosterSettled.verdict.failed } : {}),
+      };
+    }
+    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed;
+    const composedWhy = topicComposed ? "composed-from-structured-evidence"
+      : sittingSettled.composed ? "composed-from-sitting-records"
+        : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
+          : officialsSettled.composed ? "composed-from-officeholder-records"
+            : rosterSettled.composed ? "composed-from-roster-records" : "composed-from-sitting-records";
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
       shownContacts, resolvedSittings, agendaQuestion, capture,
-      moneyComposed: Boolean(moneySettled.composed ?? groupSettled.composed) && !topicComposed && !sittingSettled.composed,
+      composedWhy,
     };
   }
 
@@ -2649,7 +2718,7 @@ export async function POST(request: Request) {
     return path.respond();
   }
   lapAt("resolutionAndRetrieval", path.retrievedAt);
-  const { pack, packRecords, packGaps, subject, composed, topicComposed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, moneyComposed } = path;
+  const { pack, packRecords, packGaps, subject, composed, topicComposed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
   /*
    * **THE WRITING LADDER.** (2026-09-25, the Ask latency repair.) The fast
    * writer answers first; the frontier model writes only when that answer fails
@@ -2689,7 +2758,7 @@ export async function POST(request: Request) {
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (composed) {
-    trace.synthesis = { ran: false, why: topicComposed ? "composed-from-structured-evidence" : moneyComposed ? "composed-from-money-records" : "composed-from-sitting-records", ms: 0 };
+    trace.synthesis = { ran: false, why: composedWhy, ms: 0 };
     const verdict = validateAnswer(composed.answer, composed.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {

@@ -1,0 +1,135 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { composeBodyRoster, composeReaderOfficials, readerOfficialsQuestion, stateDivisionsOf, type HeldOfficial } from "../lib/ask/reader-officials.ts";
+import type { SeatHolder } from "../lib/officials/lookup.ts";
+
+/**
+ * **THE READER'S OWN OFFICIALS, ANSWERED FROM WHAT WE HOLD.** (2026-09-29, S3.)
+ *
+ * "Who is my state senator?" names no subject; the officeholders held for the
+ * reader's divisions and bodies are the answer, and the answer never needs a
+ * model. These tests pin the two halves: the words that are recognised (a closed
+ * table — anything else is the model's), and what the composed sentence says
+ * for a ZIP that reaches one district, a ZIP that reaches two, a body's seats,
+ * and an office we hold no one for.
+ */
+
+const AZ = "ocd-division/country:us/state:az";
+const seat = (id: string, name: string, officeTitle: string, partyLabel: string | null = "Republican"): SeatHolder => ({
+  id, name, officeTitle, partyLabel, termEnd: null, birthDate: null, websiteUrl: null, sourceUrl: `https://example.gov/${id}`, provenance: null, email: null, phone: null,
+  contactFormUrl: null, photoUrl: null, campaignUrl: null,
+});
+const held = (s: SeatHolder, divisionIds: string[] = [], body: { id: string; name: string } | null = null): HeldOfficial => ({ seat: s, divisionIds, bodyId: body?.id ?? null, bodyName: body?.name ?? null });
+
+test("the closed forms are read; a qualifier, a second subject or an unlisted office is left to the model", () => {
+  const accepted: [string, string[]][] = [
+    ["Who is my state senator?", ["state_senator"]],
+    ["who's my congressman", ["us_representative"]],
+    ["Who are my state representatives?", ["state_lower_house"]],
+    ["Who represents me in Congress?", ["us_senator", "us_representative"]],
+    ["Who is my U.S. senator?", ["us_senator"]],
+    ["Who is my senator?", ["us_senator", "state_senator"]],
+    ["Who is my county supervisor?", ["county_supervisor"]],
+    ["Who is my mayor?", ["mayor"]],
+    ["Who is my governor?", ["governor"]],
+    ["Who are my elected officials?", ["us_senator", "us_representative", "governor", "state_senator", "state_lower_house"]],
+    ["Who is my school board member?", ["school_board"]],
+    ["List my legislators", ["state_senator", "state_lower_house"]],
+  ];
+  for (const [question, keys] of accepted) assert.deepEqual(readerOfficialsQuestion(question)?.keys, keys, question);
+  for (const question of [
+    "Who is my state senator and how did she vote on the budget?",
+    "Who is my dogcatcher?",
+    "Who is Katie Hobbs?",
+    "Who is the state senator for Mesa?",
+    "How do I contact my state senator?",
+    "What did my county supervisor decide?",
+    "",
+  ]) assert.equal(readerOfficialsQuestion(question), null, question);
+});
+
+test("one district: the holder is named with their district and party", () => {
+  const ask = readerOfficialsQuestion("Who is my state senator?")!;
+  const answer = composeReaderOfficials({ ask, holdingFailed: false, held: [held(seat("s19", "David Gowan", "State Senator"), [`${AZ}/sldu:19`]), held(seat("s17", "Other Person", "State Senator"), [`${AZ}/sldu:17`])] });
+  assert.equal(answer?.answer, "Your ZIP code reaches 2 state senate districts: Other Person (Republican) for District 17 and David Gowan (Republican) for District 19.");
+  const single = composeReaderOfficials({ ask, holdingFailed: false, held: [held(seat("s19", "David Gowan", "State Senator"), [`${AZ}/sldu:19`])] });
+  assert.equal(single?.answer, "Your state senator is David Gowan (Republican) for District 19.");
+  assert.deepEqual(single?.citedUrls, ["https://example.gov/s19"]);
+  assert.deepEqual(single?.named.map((entry) => entry.seat.id), ["s19"]);
+});
+
+test("a multi-member district names every member once, and a ZIP that reaches two districts names both", () => {
+  const ask = readerOfficialsQuestion("Who are my state representatives?")!;
+  const houses = [
+    held(seat("h1", "A One", "State Representative"), [`${AZ}/sldl:19`]),
+    held(seat("h2", "B Two", "State Representative"), [`${AZ}/sldl:19`]),
+    held(seat("h3", "C Three", "State Representative", "Democratic"), [`${AZ}/sldl:17`]),
+    held(seat("h3", "C Three", "State Representative", "Democratic"), [`${AZ}/sldl:17`]),
+  ];
+  const answer = composeReaderOfficials({ ask, holdingFailed: false, held: houses });
+  assert.equal(answer?.answer, "Your ZIP code reaches 2 state house districts: C Three (Democratic) for District 17 and A One (Republican) and B Two (Republican) for District 19.");
+  assert.equal(answer?.named.length, 3, "one person is named once however many divisions hold them");
+});
+
+test("the federal offices are spelled out, so the length contract does not count U.S. as a sentence end", () => {
+  const ask = readerOfficialsQuestion("Who represents me in Congress?")!;
+  const answer = composeReaderOfficials({
+    ask, holdingFailed: false,
+    held: [
+      held(seat("k", "Mark Kelly", "U.S. Senator", "Democrat"), [AZ]),
+      held(seat("g", "Ruben Gallego", "U.S. Senator", "Democrat"), [AZ]),
+      held(seat("c", "Juan Ciscomani", "U.S. Representative"), [`${AZ}/cd:6`]),
+    ],
+  });
+  assert.equal(answer?.answer, "Your United States Senators are Mark Kelly (Democrat) and Ruben Gallego (Democrat); your United States Representative is Juan Ciscomani (Republican) for District 6.");
+});
+
+test("a body's seats are named with the body; a seat that depends on the address says we do not hold it", () => {
+  const board = { id: "ocd-division/country:us/state:az/county:pima#governing", name: "Pima County Board Of Supervisors" };
+  const supervisors = [1, 2, 3].map((n) => held(seat(`p${n}`, `Person ${n}`, `County Supervisor, District ${n}${n === 2 ? " (Vice Chair)" : ""}`, n === 3 ? null : "Democratic"), [], board));
+  const answer = composeReaderOfficials({ ask: readerOfficialsQuestion("Who is my county supervisor?")!, holdingFailed: false, held: supervisors });
+  assert.equal(answer?.answer,
+    "Pima County Board of Supervisors has 3 county supervisors: Person 1 (Democratic, District 1), Person 2 (Democratic, District 2), and Person 3 (District 3). We have not recorded which county supervisor district your address is in, so we cannot say which of them is yours.");
+  assert.deepEqual(answer?.gaps.map((gap) => gap.whose), ["OURS"]);
+  const mayor = composeReaderOfficials({ ask: readerOfficialsQuestion("Who is my mayor?")!, holdingFailed: false, held: [held(seat("m", "Regina Romero", "Mayor", "Democratic"), [], { id: "x#governing", name: "Tucson Mayor & Council" })] });
+  assert.equal(mayor?.answer, "On Tucson Mayor & Council, the mayor is Regina Romero (Democratic).");
+});
+
+test("a school board's seats are known by the body they sit on, and its superintendent is not a board member", () => {
+  const board = { id: "ocd-division/country:us/state:az/school_district:vail_unified_district#board", name: "Vail Unified School District Governing Board" };
+  const answer = composeReaderOfficials({
+    ask: readerOfficialsQuestion("Who is my school board member?")!, holdingFailed: false,
+    held: [held(seat("a", "Allison Pratt", "Governing Board President", null), [], board), held(seat("b", "Ed Buster", "Governing Board Member", null), [], board), held(seat("s", "John Carruth", "Superintendent", null), [], board)],
+  });
+  assert.equal(answer?.answer, "Vail Unified School District Governing Board has 2 school board members: Allison Pratt and Ed Buster.");
+});
+
+test("an office we hold no one for is said as a gap of ours; a failed read is said as a failure of ours, never as no one holding it", () => {
+  const ask = readerOfficialsQuestion("Who is my mayor?")!;
+  const none = composeReaderOfficials({ ask, holdingFailed: false, held: [] });
+  assert.equal(none?.answer, "We have not recorded who your mayor is yet.");
+  assert.deepEqual(none?.gaps, [{ whose: "OURS", statement: "We have not recorded who holds the office of mayor for your area yet." }]);
+  const failed = composeReaderOfficials({ ask, holdingFailed: true, held: [] });
+  assert.match(failed?.answer ?? "", /could not read our officeholder records/);
+  assert.match(failed?.gaps[0]?.statement ?? "", /not a finding that no one holds the office/);
+});
+
+test("the state each division sits in is read, because the U.S. Senators and the statewide executives are held under it", () => {
+  assert.deepEqual(stateDivisionsOf([`${AZ}/cd:6`, `${AZ}/county:pima`, "ocd-division/country:us/state:nh/place:concord"]), [AZ, "ocd-division/country:us/state:nh"]);
+  assert.deepEqual(stateDivisionsOf(["ocd-division/country:us"]), []);
+});
+
+test("a roster is composed alphabetically with roles beside names, its staff after, and its gaps in their own words", () => {
+  const contacts = [
+    { name: "Allison Pratt", officeTitle: "Governing Board President", basis: "BODY_MEMBER", sourceUrl: "https://example.gov/r" },
+    { name: "Chris King", officeTitle: "Governing Board Member", basis: "BODY_MEMBER", sourceUrl: "https://example.gov/r" },
+    { name: "Jennifer Allen", officeTitle: "County Supervisor, District 3 (Chair)", basis: "BODY_MEMBER", sourceUrl: "https://example.gov/s" },
+    { name: "John Carruth", officeTitle: "Superintendent", basis: "BODY_STAFF", sourceUrl: "https://example.gov/r" },
+  ];
+  assert.deepEqual(composeBodyRoster({ bodyName: "Vail Unified School District Governing Board", contacts, gaps: [{ whose: "OURS", statement: "One seat is not yet identified." }] }), {
+    answer: "Vail Unified School District Governing Board has 3 members: Allison Pratt (Governing Board President), Chris King, and Jennifer Allen (County Supervisor, District 3, Chair). Its roster also lists John Carruth (Superintendent). One seat is not yet identified.",
+    citedUrls: ["https://example.gov/r", "https://example.gov/s"],
+  });
+  assert.equal(composeBodyRoster({ bodyName: "Sierra Vista", contacts: [], gaps: [] })?.answer, "We have not recorded who sits on Sierra Vista yet.");
+});

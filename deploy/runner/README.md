@@ -1,15 +1,5 @@
 # Linux runner
 
-The approved host is `146.190.74.145`: Ubuntu 24.04, 4 vCPU, 8 GiB, $48/month.
-`setup.ps1` installs current main with Node 24, pnpm, Chromium, OCR, and the
-systemd unit. It leaves `meanwhile-runner.service` disabled and stopped.
-
-From PowerShell, run `./deploy/runner/setup.ps1`. It copies only the shared
-staging settings, converts Windows paths, and signs the service user into
-GitHub. The host keeps secrets in `/etc/meanwhile/runner.env`; `.env.local` in
-`/opt/meanwhile` is a link to that file. Keep the GitHub credential available to
-the `meanwhile` user for Engineer PRs.
-
 ## Staging Blobs destination
 
 Use a **separate Netlify project**, proposed name `meanwhile-runner-staging`.
@@ -27,14 +17,18 @@ To create a storage project without importing live settings:
    to `meanwhile-runner-staging` and copy its **Project ID**. Record its name
    and ID in the S13 PR before any transfer. Keep the live site's domain and
    settings on the live project.
-3. From User settings → Applications → Personal access tokens, create the
-   runner token. Enter it privately on Linux using
+3. From User settings → Applications → Personal access tokens, choose **New
+   access token**, name it **Meanwhile runner staging**, choose its expiration,
+   then **Generate token** and copy the value. Enter it privately on Linux using
    `ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145 "nano /etc/meanwhile/runner.env"`.
 4. Add `WTP_VAULT_PROVIDER=netlify`, `WTP_BLOBS_SITE_ID=<staging Project ID>`,
    and `WTP_BLOBS_TOKEN=<token>`. For staging reader-artifact publication and
    Admin evidence copies, also set `NETLIFY_SITE_ID` to that same staging ID
    and `NETLIFY_BLOBS_TOKEN` to that same token. Keep
    `WTP_RUNTIME_MODE=staging` and `WTP_DB_ROLE=local`.
+
+Save the single `nano` edit with **Ctrl+O**, **Enter**, then **Ctrl+X**. Keep the
+token out of GitHub and chat; post only the staging project's name and ID.
 
 The transfer uses `meanwhile-evidence` and `meanwhile-portraits` in that staging
 project. After the retained source has been uploaded and extracted into
@@ -48,6 +42,25 @@ runuser -u meanwhile -- node --env-file=/etc/meanwhile/runner.env --experimental
 Keep the source originals until Sean's deletion approval. A later production
 cutover must use the live project's own settings and data; a staging transfer
 does not authorize that cutover.
+
+When an app deploy on the separate staging project is ready, set
+`WTP_VAULT_PROVIDER=netlify` in that project's build settings and redeploy.
+Existing `/officials/*` and `/candidates/*` URLs then use `/api/portraits/*` and
+that project's `meanwhile-portraits` store. Hosted portrait reads use Netlify's
+supplied credentials. Do this after copying the objects. The live project keeps
+its current provider until its own production migration is authorized.
+
+## Installed host
+
+The approved host is `146.190.74.145`: Ubuntu 24.04, 4 vCPU, 8 GiB, $48/month.
+`setup.ps1` installs current main with Node 24, pnpm, Chromium, OCR, and the
+systemd unit. It leaves `meanwhile-runner.service` disabled and stopped.
+
+From PowerShell, run `./deploy/runner/setup.ps1`. It copies only the shared
+staging settings, converts Windows paths, and signs the service user into
+GitHub. The host keeps secrets in `/etc/meanwhile/runner.env`; `.env.local` in
+`/opt/meanwhile` is a link to that file. Keep the GitHub credential available to
+the `meanwhile` user for Engineer PRs.
 
 ## PC-off staging run
 

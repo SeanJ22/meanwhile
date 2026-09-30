@@ -50,6 +50,17 @@ export class NetlifyEvidenceStore implements EvidenceStore {
     return keys.sort();
   }
 
+  async directories(prefix: string): Promise<string[]> {
+    const directories = new Set<string>();
+    for await (const page of this.store.list({ prefix, directories: true, paginate: true })) {
+      for (const directory of page.directories) {
+        const key = directory.startsWith(prefix) ? directory : prefix + directory;
+        directories.add(key.replace(/\/$/, ""));
+      }
+    }
+    return [...directories].sort();
+  }
+
   private metadata(key: string, metadata: Record<string, unknown>): { meta: ObjectMeta; bodySha256: string } {
     const meta = metadata.meta as ObjectMeta | undefined;
     if (!meta || typeof meta.contentHash !== "string" || typeof meta.contentType !== "string" || !Number.isSafeInteger(meta.byteLength) || typeof metadata.bodySha256 !== "string") {

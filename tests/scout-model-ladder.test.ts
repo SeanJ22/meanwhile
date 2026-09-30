@@ -254,7 +254,8 @@ test("L1: acquisition starts with Haiku and omits unsupported effort and adaptiv
   }
   assert.equal(minimumCacheablePrefixTokensFor(HAIKU), 4096);
   const prewarm = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-  assert.equal(prewarm.kind, "SKIP", "do not spend on a prefix below Haiku's cache minimum");
+  assert.equal(prewarm.kind, "SEND", "the full direct-API toolkit now clears Haiku's cache minimum");
+  if (prewarm.kind === "SEND") assert.ok(prewarm.prefixTokensAtLeast >= minimumCacheablePrefixTokensFor(HAIKU)!);
   assert.equal(result.modelClass, "haiku");
   assert.equal(result.worker.model, HAIKU);
   assert.equal(result.escalatedFrom, null);
@@ -550,8 +551,8 @@ test("L6: the pre-warm warms the model the loop STARTS on — byte-identical to 
   assert.equal(JSON.stringify(captured[0].system), JSON.stringify(plan.request.system), "byte-identical system");
   assert.deepEqual(captured[0].output_config, plan.request.output_config, "the same effort, so the warmed entry is the one read");
 
-  /* Haiku 4.5's minimum is 4,096; the prefix's lower bound does not prove it clears that, so no paid call is made. */
-  const haiku = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: "claude-haiku-4-5" });
+  /* A small toolkit does not clear Haiku's 4,096-token minimum, so no paid call is made. */
+  const haiku = scoutPrewarmPlan({ toolkitSpecs: [], bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS, model: HAIKU });
   assert.equal(haiku.kind, "SKIP");
   assert.equal(haiku.kind === "SKIP" ? haiku.code : null, "BELOW_CACHE_MINIMUM");
   assert.match(haiku.kind === "SKIP" ? haiku.detail : "", /4096-token cacheable minimum/);

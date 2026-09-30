@@ -1,4 +1,4 @@
-import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../scheduler/scout-result.ts";
+import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, archiveCapture } from "../scheduler/scout-result.ts";
 import { scoutExecutor } from "../scheduler/scout-executor.ts";
 import { ZERO_COST } from "../attempt.ts";
 import {installedAdapters,installedAdapterVersion} from '../scheduler/scout-adapters.ts';
@@ -243,8 +243,11 @@ export function scoutFactGrounded(result: import('../scheduler/scout-result.ts')
 /** Facts-only success supplies its captured source for plain acquisition/parse, never another Scout. */
 export function reusableScoutCandidates(result: import('../scheduler/scout-result.ts').ScoutResult): import('../scheduler/scout-result.ts').ScoutCandidate[] {
   if (result.refusal !== null) return [];
-  const facts = result.findings.filter(f=>f.kind==='RECORD' && f.field && f.exactQuote && f.sourceUrl && f.artifactIds.length);
-  return [...result.candidates,...facts.filter(f=>!result.candidates.some(c=>c.url===f.sourceUrl)).map(f=>({
+  const rejected = new Set((result.sourceDeadEnds ?? []).map(source => source.artifactId));
+  const candidates = result.candidates.filter(c=>!archiveCapture(c.url) && !c.evidenceArtifactIds.some(id=>rejected.has(id)));
+  const facts = result.findings.filter(f=>f.kind==='RECORD' && f.field && f.exactQuote && f.sourceUrl && !archiveCapture(f.sourceUrl) &&
+    f.artifactIds.length && !f.artifactIds.some(id=>rejected.has(id)));
+  return [...candidates,...facts.filter(f=>!candidates.some(c=>c.url===f.sourceUrl)).map(f=>({
     routeId:'held-fact:'+contentHash(f.sourceUrl!).slice(0,24),title:f.field!,url:f.sourceUrl!,procedure:'Read the captured source and parse its exact field value.',
     relevance:'Already solved for this subject and class: '+f.field,permission:'NOT_APPLICABLE' as const,permissionReading:'Saved source facts; normal acquisition and verification still apply.',
     evidenceArtifactIds:f.artifactIds,observedOn:result.recordedAt.slice(0,10),recordClass:result.recordClass,deterministic:true,unverified:[],

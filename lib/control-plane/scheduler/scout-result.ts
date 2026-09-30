@@ -204,6 +204,38 @@ export interface ScoutFinding {
   readonly kind: "RECORD" | "POINTER";
 }
 
+/** An archive's capture date must never become today's observation date. */
+export function archiveCapture(url: string): { capturedAt: string | null } | null {
+  try {
+    const source = new URL(url);
+    if (!/^(?:web\.archive\.org|(?:www\.)?archive\.(?:today|is|ph|vn|fo|li|md))$/i.test(source.hostname)) return null;
+    const stamp = /\/web\/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/.exec(source.pathname);
+    const at = stamp ? `${stamp[1]}-${stamp[2]}-${stamp[3]}T${stamp[4]}:${stamp[5]}:${stamp[6]}Z` : null;
+    return { capturedAt: at && Number.isFinite(Date.parse(at)) ? at : null };
+  } catch { return null; }
+}
+
+export interface ScoutSourceDeadEnd {
+  readonly artifactId: string;
+  readonly url: string;
+  readonly sourceDate: string | null;
+  readonly reason: string;
+}
+
+/** Uses the fact obligation's existing cadence; no separate freshness schedule. */
+export function scoutSourceDeadEnds(evidence: ReadonlyMap<string, import('./scout-contract.ts').ScoutFactEvidence>,
+  now: string, cadenceHours: number): ScoutSourceDeadEnd[] {
+  return [...evidence].flatMap(([artifactId, source]) => {
+    const archive = archiveCapture(source.retrievalUrl ?? source.sourceUrl) ?? archiveCapture(source.sourceUrl);
+    const sourceDate = archive ? archive.capturedAt : source.retrievedAt;
+    const age = sourceDate ? Date.parse(now) - Date.parse(sourceDate) : NaN;
+    const outside = !Number.isFinite(age) || age < 0 || !Number.isFinite(cadenceHours) || cadenceHours <= 0 || age > cadenceHours * 3_600_000;
+    if (!archive && !outside) return [];
+    return [{ artifactId, url: source.retrievalUrl ?? source.sourceUrl, sourceDate,
+      reason: `${archive ? 'Archived capture cannot verify a current fact; use the current official page. ' : ''}${outside ? `Source date is outside the existing ${cadenceHours}h fact cadence (checked ${now}).` : ''}`.trim() }];
+  });
+}
+
 /** Provider-reported usage, summed over the Attempt's model turns. Null where unreported. `inputTokens` is the UNCACHED remainder. */
 export interface ScoutUsage {
   readonly inputTokens: number | null;
@@ -316,6 +348,8 @@ export interface ScoutEscalationRefused {
 
 /** The typed result, as persisted. */
 export interface ScoutResult {
+  /** Rejected source observations, retained as dead ends rather than discoveries. */
+  readonly sourceDeadEnds?: readonly ScoutSourceDeadEnd[];
   /** The failure responder shares the research format and tools; legacy rows are Scouts. */
   readonly researchRole?: 'SCOUT' | 'DETECTIVE';
   readonly formatVersion: 1;
@@ -650,6 +684,7 @@ export function validateScoutFinish(input: {
     readonly provenance: ReadonlyMap<string, ArtifactProvenance>;
     readonly recordClass: string;
     readonly factEvidence?: ReadonlyMap<string, import('./scout-contract.ts').ScoutFactEvidence>;
+    readonly freshness?: { readonly now: string; readonly cadenceHours: number };
   };
 }): ScoutIssue[] {
   return validateScoutFinishWithCandidates(input).issues;
@@ -661,6 +696,9 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
   readonly candidates: ScoutCandidate[];
 } {
   const issues: ScoutIssue[] = [];
+  const stale = new Map((input.machine?.factEvidence && input.machine.freshness
+    ? scoutSourceDeadEnds(input.machine.factEvidence, input.machine.freshness.now, input.machine.freshness.cadenceHours)
+    : []).map(source => [source.artifactId, source]));
   const min = input.minRungs ?? MIN_DISTINCT_RUNGS;
   const f = input.finish;
 
@@ -698,6 +736,9 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
   const known = (id: string): boolean => input.vaulted.has(id) || input.inherited.has(id);
   const rewritten: ScoutCandidate[] = [];
   for (const c of f.candidates ?? []) {
+    if (archiveCapture(c.url) || c.evidenceArtifactIds?.some(id => stale.has(id))) {
+      issues.push({ code: 'SCOUT_FINDING_WITHOUT_EVIDENCE', detail: `Route ${c.url} cites a historical or out-of-window source. Use the current official page; this capture is a dead end for current facts.` });
+    }
     const cited = c.evidenceArtifactIds ?? [];
     const unknown = cited.filter((id) => !known(id));
     if (cited.length === 0 || unknown.length > 0) {
@@ -773,6 +814,9 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
   }
   for (const finding of f.findings ?? []) {
     const cited = finding.artifactIds ?? [];
+    if (archiveCapture(finding.sourceUrl ?? '') || cited.some(id => stale.has(id))) {
+      issues.push({ code: 'SCOUT_FINDING_WITHOUT_EVIDENCE', detail: `Finding ${finding.field ?? finding.summary} cites a historical or out-of-window source. Record that capture as a dead end, not a current source.` });
+    }
     const unknown = cited.filter((id) => !known(id));
     if (cited.length === 0 || unknown.length > 0) {
       issues.push({
@@ -788,11 +832,12 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
         (typeof value==='string' || typeof value==='number' || typeof value==='boolean') && String(value).length &&
         quote.includes(String(value)) && cited.some(id=>{
           const source=input.machine!.factEvidence!.get(id);
-          return source && (source.sourceUrl===finding.sourceUrl || source.retrievalUrl===finding.sourceUrl) &&
+          return source && !stale.has(id) && !archiveCapture(source.retrievalUrl??source.sourceUrl) &&
+            !archiveCapture(source.sourceUrl) && (source.sourceUrl===finding.sourceUrl || source.retrievalUrl===finding.sourceUrl) &&
             (source.text.includes(quote) || source.visibleText.includes(quote));
         }));
       if(!grounded)issues.push({code:'SCOUT_FINDING_WITHOUT_EVIDENCE',detail:
-        `Fact ${finding.field??'(missing field)'} must copy a contiguous exactQuote containing its literal value from a cited, opened source at sourceUrl. Use read_held for inherited bytes; do not infer, reformat, or join quotations with ellipses.`});
+        `Fact ${finding.field??'(missing field)'} must copy a contiguous exactQuote containing its literal value from a cited, opened current source at sourceUrl within the fact's existing cadence. Archives cannot verify current facts. Use read_held for inherited bytes; do not infer, reformat, or join quotations with ellipses. ${cited.flatMap(id=>stale.has(id)?[stale.get(id)!.reason]:[]).join(' ')}`});
     }
   }
 

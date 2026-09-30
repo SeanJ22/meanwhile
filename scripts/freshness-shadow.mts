@@ -175,6 +175,8 @@ import {
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
+import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
+import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
@@ -2335,6 +2337,8 @@ await writeResearchState(null);
 /* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
+const readScoutEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
+const readScoutCapture = researchVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
 const spacer = serializeHostSpacing(hostSpacer());
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
@@ -2484,6 +2488,14 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         tools: {
           vault: vault.put,
           vaultBytes: vault.putBytes,
+          readHeldArtifact: async id => {
+            const [evidence, { artifact }] = await Promise.all([readScoutEvidence(id), readScoutCapture(id)]);
+            return { ...evidenceProjection(evidence), provenance: {
+              artifactId: id, canonicalUrl: artifact.canonicalUrl, retrievalUrl: artifact.retrievalUrl,
+              contentType: artifact.contentType, retrievedAt: artifact.retrievedAt, permission: artifact.permission,
+              methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
+            } };
+          },
           spaceOut: spacer,
           openOne: fleetSafety.guardedOpenOne("public-web", scheduled.obligation.id),
           openBytes: fleetSafety.guardedOpenBytes("public-web", scheduled.obligation.id),
@@ -2496,7 +2508,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
       },
       onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
         let amended = result;
-        if (result.refusal === null && result.candidates.length > 0) {
+        if ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length) {
           try {
             const report = await proposeScoutCandidates({ repos, root: ROOT, result, artifacts, stamp: today() });
             candidateReports.push(report);

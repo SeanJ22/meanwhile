@@ -657,7 +657,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const saved=await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
     if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
       !artifact.methodRouteId.endsWith(':network-observation'))factEvidence.set(artifact.id,{
-      sourceUrl:artifact.canonicalUrl,retrievalUrl:artifact.retrievalUrl,text:input.text,
+      sourceUrl:artifact.canonicalUrl,retrievalUrl:artifact.retrievalUrl,retrievedAt:artifact.retrievedAt,text:input.text,
       visibleText:artifact.contentType.includes('html')?visibleText(input.text):input.text});
     return saved;
   }
@@ -1310,7 +1310,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const withProvenance = (passage: ScoutToolCallResult): ScoutToolCallResult => provenance
         ? { ...passage, provenance: [provenance], forModel: `HELD_VAULT_ENVELOPE ${provenance.artifactId}; retrieved ${provenance.retrievedAt}; permission ${provenance.permission}; HTTP ${provenance.httpStatus ?? "none"}; URL ${provenance.canonicalUrl}.\n${passage.forModel}` }
         : passage;
-      factEvidence.set(evidence.artifactId,{sourceUrl:evidence.canonicalUrl,retrievalUrl:provenance?.retrievalUrl,
+      factEvidence.set(evidence.artifactId,{sourceUrl:evidence.canonicalUrl,retrievalUrl:provenance?.retrievalUrl,retrievedAt:evidence.retrievedAt,
         text:evidence.text,visibleText:visibleText(evidence.text)});
       if (query !== null) {
         const lower = evidence.text.toLowerCase(), needle = query.toLowerCase();

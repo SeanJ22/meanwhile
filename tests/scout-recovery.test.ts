@@ -63,6 +63,8 @@ test('facts-only Scout success supplies a source to every job for its subject, g
  assert.equal(scoutFactGrounded(result,'https://county.gov/council','Different holder'),false);
  assert.equal(scoutFactGrounded(result,'https://other.gov/council','Council holder: Ada Clerk'),false);
  assert.equal(reusableScoutCandidates({...result,refusal:{issues:[]}} as unknown as ScoutResult).length,0);
+ const archive={...result,findings:result.findings.map(f=>({...f,sourceUrl:'https://web.archive.org/web/20211027002420/https://county.gov/council'}))};
+ assert.equal(reusableScoutCandidates(archive).length,0,'legacy archival findings cannot keep a current blank marked solved');
 });
 
 test('an installed adapter wakes its class and reads every held link without a request',async()=>{

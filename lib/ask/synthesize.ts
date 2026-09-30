@@ -3,7 +3,7 @@ import { writerSelection } from "./writer-selection.ts";
 import { stanceAnswerability } from "./stance-answerability.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelEnv } from "./model.ts";
-import { askRequestFields, servedModelOf } from "./model-registry.ts";
+import { modelRequestFields, servedModelOf } from "../models.ts";
 import type { ValidationVerdict } from "./validate.ts";
 import {
   SYNTHESIS_CACHE_TTL,
@@ -437,9 +437,9 @@ export function synthesisRequestBody(
    * system field stays the plain string the comparison seam measures.
    */
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
-  /* What this model accepts, from the registry (lib/ask/model-registry.ts): adaptive thinking where it
+  /* What this model accepts, from the registry (lib/models.ts): adaptive thinking where it
      takes it (none on Haiku 4.5), the effort only where it takes one. */
-  const fields = askRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
+  const fields = modelRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
   const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] = shape.cached
     ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.cacheControl }]
     : synthesisPrompt(pack);

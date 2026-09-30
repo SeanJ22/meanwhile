@@ -49,44 +49,20 @@
  * `relativeNonRegressionAnalysis`, a diagnostic with its own type.
  */
 
-import type { ModelRate } from "../control-plane/model-cost.ts";
+import { MODEL_RATES, type ModelRate } from "../control-plane/model-cost.ts";
+import { MODELS } from "../models.ts";
 
 import { ASK_SYNTHESIS_MODEL } from "./synthesize.ts";
 
 /**
- * The published first-party rates for the two candidates.
+ * The published first-party rate of every model, by id: one table with the fleet's
+ * (`MODEL_RATES` in `lib/control-plane/model-cost.ts`, built from `lib/models.ts`),
+ * legacy rows for old records included.
  *
- * A price is DATA WITH A DATE — the shape and the reasoning are inherited from
- * `lib/control-plane/model-cost.ts`, which this deliberately reuses rather than
- * re-deciding. A rate hardcoded with no provenance is indistinguishable from a
- * rate somebody remembered.
+ * A price is DATA WITH A DATE: a rate hardcoded with no provenance is
+ * indistinguishable from a rate somebody remembered.
  */
-export const ASK_MODEL_RATES: Readonly<Record<string, ModelRate>> = {
-  "claude-opus-5": {
-    model: "claude-opus-5",
-    inputUsdPerMillion: 5.0,
-    outputUsdPerMillion: 25.0,
-    statedOn: "2026-08-31",
-    source: "Anthropic first-party API rates, read from the claude-api reference",
-  },
-  "claude-sonnet-5": {
-    model: "claude-sonnet-5",
-    inputUsdPerMillion: 2.0,
-    outputUsdPerMillion: 10.0,
-    statedOn: "2026-08-31",
-    source: "Anthropic first-party API rates, read from the claude-api reference",
-  },
-  /* The fleet's frontier since 2026-09-22 (owner directive; lib/control-plane/model-cost.ts
-     MODEL_WORKER_RATES carries the same dated rate). Recorded here so an Ask comparison
-     against Opus 5.5 prices both arms instead of reporting the challenger's cost as null. */
-  "claude-opus-5-5": {
-    model: "claude-opus-5-5",
-    inputUsdPerMillion: 4.0,
-    outputUsdPerMillion: 20.0,
-    statedOn: "2026-09-22",
-    source: "Anthropic first-party API rates, read from platform.claude.com (Claude Opus 5.5)",
-  },
-};
+export const ASK_MODEL_RATES: Readonly<Record<string, ModelRate>> = Object.fromEntries(MODEL_RATES.map((rate) => [rate.model, rate]));
 
 /** The model Ask runs today, read from the code that runs it. */
 export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
@@ -135,7 +111,7 @@ export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
  * Sonnet 5, Opus 5.5 on identical inputs) is recorded in
  * meanwhile-evidence/admin-completion/2026-09-25/ask-model-test/.
  */
-export const ASK_CHALLENGER_MODEL = "claude-sonnet-5";
+export const ASK_CHALLENGER_MODEL: string = MODELS.sonnet.model;
 
 /**
  * How much cheaper the challenger's tokens are, on the published rates alone.

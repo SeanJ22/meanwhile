@@ -1,6 +1,6 @@
 import { scrubFreeText } from "../log/scrub.ts";
 import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
-import { askRequestFields, servedModelOf } from "./model-registry.ts";
+import { modelRequestFields, servedModelOf } from "../models.ts";
 import { asksForBodyAgenda } from "../routing/named-entity.ts";
 import { askHedgeMs, hedgedFetch } from "./hedged-fetch.ts";
 import { SYNTHESIS_CACHE_TTL } from "./prompt-cache.ts";
@@ -249,7 +249,7 @@ export async function interpretQuestion(
   const impl = options.fetchImpl ?? fetch;
   /* Resolved once: the same id is sent and recorded. */
   const model = askModel();
-  const fields = askRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
+  const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
   const priorTurns = (context.priorTurns ?? []).slice(-MAX_PRIOR_TURNS);
   const system = interpretSystem(context);
 

@@ -83,8 +83,9 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
       const key = env[cfg.key]?.trim();
       if (!key) throw new Error(`${cfg.key} is not configured`);
       const path = typeof input.path === 'string' ? input.path.replace(/^\/+/, '') : cfg.path;
-      url = new URL(path === 'schools' && name === 'data_gov_api' ? 'schools.json' : path,cfg.base);
-      if (url.origin !== new URL(cfg.base).origin || !url.pathname.startsWith(new URL(cfg.base).pathname)) throw new Error('API path must stay under its provider base');
+      const providerBase = new URL(cfg.base);
+      url = new URL(path === 'schools' && name === 'data_gov_api' ? 'schools.json' : path,providerBase);
+      if (url.origin !== providerBase.origin || !url.pathname.startsWith(providerBase.pathname)) throw new Error('API path must stay under its provider base');
       if (cfg.header) headers[cfg.header] = (cfg.prefix ?? '') + key;
     }
     for (const [key,value] of Object.entries(params)) {

@@ -42,7 +42,7 @@ import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
  *                       read that did not happen.
  * ```
  *
- * ## Locks are ADVISORY LOCKS, and that is the cross-machine half
+ * ## Locks use a pinned WebSocket transaction
  *
  * `pg_advisory_xact_lock` is held by the DATABASE, so two processes on two
  * machines contend correctly — which is the single thing the filesystem
@@ -61,7 +61,7 @@ import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
  * rather than passing.
  */
 
-import { neon } from "@neondatabase/serverless";
+import { neon, Pool, neonConfig } from "@neondatabase/serverless";
 import type {
   CacheObservationRecord,
   OwnerDecisionIntent,
@@ -806,40 +806,32 @@ export function pgAppendOnlyRepository<T>(
   };
 }
 
-/**
- * Advisory locks, held by the DATABASE.
- *
- * This is the cross-machine half of RULING 220 and the one thing the file
- * provider structurally cannot do. `pg_try_advisory_lock` rather than the
- * blocking form, so a held lock is a NAMED REFUSAL exactly as the interface
- * requires — a silent wait in a library that promised not to read a clock is a
- * lie about both.
- */
-function pgLockManager(sql: Sql, bounds: ControlPlaneRequestBounds): LockManager {
-  const run = boundedRunner(sql, "pg_advisory_lock", bounds);
+/** Locks use one pinned WebSocket transaction. HTTP queries have no shared session. */
+function pgLockManager(connectionString: string): LockManager {
   return {
     async withLock<R>(name: string, fn: () => Promise<R>): Promise<R> {
-      const key = advisoryLockKey(name).toString();
-      const got = (await run("try", "POINT", `SELECT pg_try_advisory_lock($1::bigint) AS ok`, [key])) as {
-        ok: boolean;
-      }[];
-      if (!got[0]?.ok) {
-        const { RepositoryLockHeld } = await import("./types.ts");
-        throw new RepositoryLockHeld(
-          name,
-          `advisory key ${key} is held by another session, possibly on another machine`,
-        );
-      }
+      if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
+      // Session state requires the endpoint itself, not transaction pooling.
+      const direct = new URL(connectionString);
+      direct.hostname = direct.hostname.replace("-pooler.", ".");
+      const pool = new Pool({ connectionString: direct.toString() });
       try {
-        return await fn();
-      } finally {
-        /* Released in a finally because this one CAN be: the lock is
-           session-scoped rather than transaction-scoped, so a process that
-           returns normally must hand it back. A process that DIES holds
-           nothing — the connection closes and Postgres releases it, which is
-           the property that makes this safe across a crash. */
-        await run("unlock", "POINT", `SELECT pg_advisory_unlock($1::bigint)`, [key]);
-      }
+        const client = await pool.connect();
+        try {
+          await client.query("BEGIN");
+          const got = await client.query("SELECT pg_try_advisory_xact_lock($1::bigint) AS ok", [advisoryLockKey(name).toString()]);
+          if (!got.rows[0]?.ok) {
+            const { RepositoryLockHeld } = await import("./types.ts");
+            throw new RepositoryLockHeld(name, "another pinned transaction holds this repository lock");
+          }
+          const result = await fn();
+          await client.query("COMMIT");
+          return result;
+        } catch (error) {
+          await client.query("ROLLBACK").catch(() => {});
+          throw error;
+        } finally { client.release(); }
+      } finally { await pool.end(); }
     },
   };
 }
@@ -923,7 +915,7 @@ export async function createPgRepositories(
         ),
     });
   }
-  const locks = pgLockManager(sql, bounds);
+  const locks = pgLockManager(connectionString);
 
   const receiptLog = pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded);
   const adminReceipts: AppendOnlyRepository<ActionReceipt> = {

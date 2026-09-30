@@ -192,3 +192,21 @@ async function proveRosterPublication(partial = false) {
 
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
+
+test("owed roster work with nothing readable yet is held with its reason", async () => {
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
+  const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text: "{}" } });
+  const current = await h.repos.workItems.mustRead(h.item.id);
+  const plan = current.value.autonomousPlan!;
+  await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value,
+    autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.bodyRosters[0]!.bodyId } } }, h.now());
+  const report = await publishWorkerRosterResults({ repos: h.repos, store, workItemIds: [h.item.id], now: h.now(),
+    readCapture: async () => { throw new Error("no extraction"); }, readHeld: async () => null });
+  assert.deepEqual(report.map(row => [row.workItemId, row.outcome.status, row.outcome.code, row.outcome.recovery]),
+    [[h.item.id, "HELD", "ROSTER_NO_READABLE_SAVED_PAGE", "WORKER"]], "every offered item is reported, never silently skipped");
+  assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.publicationOutcome?.code, "ROSTER_NO_READABLE_SAVED_PAGE", "Admin sees why");
+  assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], [], h.now()).length, 0, "re-read hourly, not every pass");
+});

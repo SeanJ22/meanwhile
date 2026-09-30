@@ -8,7 +8,7 @@ await Promise.all([
   installRegistryRuntimeFirstSeeds(),
 ]);
 
-import { lexicalQuestionShape, lexicalReading } from "../lib/ask/lexical-reading.ts";
+import { lexicalQuestionShape, lexicalReading, unheldNamedBodyQuestion } from "../lib/ask/lexical-reading.ts";
 import {
   composeSittingAnswer,
   plainGapStatement,
@@ -50,6 +50,15 @@ const INVENTORY: BindableEntity[] = [
   { id: MESA, name: "Mesa", nameClass: "body", divisionType: "place", level: "BODY" } as BindableEntity,
   { id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", nameClass: "body", divisionType: "school_district", level: "BODY" } as BindableEntity,
 ];
+
+test("a named body missing from our records gets a gap while held ambiguities and pronouns keep their resolution", () => {
+  for (const name of ["Columbus City Council", "Tempe City Council", "Example County Board of Supervisors"]) {
+    assert.deepEqual(unheldNamedBodyQuestion(`When does ${name} meet next?`, INVENTORY), { shape: "MEETING_TIME", name: name.toLowerCase() });
+  }
+  for (const question of ["When does Mesa City Council meet next?", "When do they meet next?", "When does the city council meet next?", "When does the Msea City Council meet next?", "When does Columbus City Council meet next about the budget?"]) {
+    assert.equal(unheldNamedBodyQuestion(question, INVENTORY), null, question);
+  }
+});
 
 /* ── the lexical reading ─────────────────────────────────────────────────── */
 

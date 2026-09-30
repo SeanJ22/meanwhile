@@ -351,8 +351,8 @@ export function composeReaderOfficials(input: {
     const holders = [...seats.values()];
     if (holders.length === 0) {
       if (input.holdingFailed) {
-        gap("Our officeholder records could not be read for this answer. This is a failure of our holding, not a finding that no one holds the office.");
-        clauses.push(`we could not read our officeholder records for your ${singular}`);
+        gap("We couldn't load our records of who holds this office. Please try again in a moment.");
+        clauses.push(`we couldn't load the name of your ${singular}`);
       } else {
         const where = input.ask.place ? input.ask.place.split("_").map((word) => word[0]!.toUpperCase() + word.slice(1)).join(" ") : null;
         gap(`We have not recorded who holds the office of ${singular} for ${where ?? "your area"} yet.`);

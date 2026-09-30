@@ -422,7 +422,7 @@ test("CREATES: a body readers were told we hold no meeting of gets its own work,
   try {
     const body = await ask("when does the marana town council meet next");
     assert.equal(body.subject?.id, MARANA);
-    assert.ok(body.gaps.some((g) => g.code === "MEETINGS_NOT_HELD" && g.bodyId === MARANA && g.statement === "We have not recorded any meetings for Marana yet."));
+    assert.ok(body.gaps.some((g) => g.code === "MEETINGS_NOT_HELD" && g.bodyId === MARANA && g.statement === "We don't have Marana's calendar yet."));
     const observed = await readAskGapObservations(store);
     assert.ok(!("unreadable" in observed));
     assert.deepEqual(observed.rows, [{ bodyId: MARANA, code: "MEETINGS_NOT_HELD", recordClass: "MEETING", day: DAY, count: 1 }]);

@@ -229,6 +229,12 @@ export function unresolvedAnswer(mention: string, trace: AskTrace): AskAnswerPay
   return { ...base("UNRESOLVED", trace), mention };
 }
 
+/** The missing information is ours; this never creates a government or claims its calendar is empty. */
+export function unheldBodyAnswer(name: string, information: string, trace: AskTrace): AskAnswerPayload {
+  const answer = `We don't have ${name}'s ${information} yet.`;
+  return { ...base("NO_EVIDENCE", trace), answer, gaps: [{ whose: "OURS", statement: answer }] };
+}
+
 export function unresolvedReadLine(answer: { mention?: string; denominators?: Record<string, number> }): string {
   return answer.denominators?.identityUnresolved
     ? `We could not resolve the supplied identity for “${answer.mention ?? "this subject"}”.`

@@ -12,7 +12,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { materializeBodyDirectoryWork, workerBodyDirectoryPackage } from "./worker-body-directory.ts";
+import { heldDirectoryReading, materializeBodyDirectoryWork, workerBodyDirectoryPackage, type DirectoryReading } from "./worker-body-directory.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { capturesForPublication, captureIntact, latestParserResult, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
@@ -270,6 +270,7 @@ export async function publishWorkerRosterResults(input: {
   // Several jobs can owe the same body. Its saved pages are read once per pass, and
   // once a reading is published every other job for that body reuses that publication.
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
+  const heldDirectories = new Map<string, Promise<DirectoryReading | null>>();
   const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
   // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
   const manual = await readValidatorManual(input.repos);
@@ -281,14 +282,24 @@ export async function publishWorkerRosterResults(input: {
     const bodyId = plan.publication.bodyId;
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null;
-    let captures: WorkerPublicationCapture[] = [], reading: RosterReading | null = null, wentLive = 0;
+    let captures: WorkerPublicationCapture[] = [], reading: RosterReading | null = null, heldDirectory: DirectoryReading | null = null, wentLive = 0;
     try {
       const prior = registry ??= await readRegistryRuntimePrior(input.store, input.now);
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
       const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY";
-      if (directory && !parser) continue;
       captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture: input.readCapture, officialLinks: manual.officialLinks }) : [];
+      if (directory && !parser) {
+        // No extraction yet: read the government's saved directory pages in code, once per government per pass.
+        const government = plan.directorySubject?.jurisdiction.id ?? id;
+        if (!heldDirectories.has(government)) heldDirectories.set(government, (async () => {
+          const siblings = allItems.filter(other => (other.autonomousPlan?.directorySubject?.jurisdiction.id ?? other.id) === government);
+          const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
+          return heldDirectoryReading({ plan, prior, now: input.now, artifacts, readHeld });
+        })());
+        heldDirectory = await heldDirectories.get(government)!;
+        if (!heldDirectory) continue;
+      }
       if (!directory) {
         reading = parser ? parserReading(parser, plan.contract, captures) : null;
         if (!reading) {
@@ -301,12 +312,13 @@ export async function publishWorkerRosterResults(input: {
         }
         if (!reading) continue;
       }
-      readingId = directory ? parser!.id : reading!.id;
+      readingId = directory ? parser?.id ?? heldDirectory!.id : reading!.id;
       if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.status !== "HELD") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
       const already = publishedByBody.get(`${bodyId}
 ${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
-      const directoryPackage = directory ? workerBodyDirectoryPackage({ plan, parser: parser!, captures, prior, now: input.now }) : null;
+      const directoryPackage = !directory ? null : parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now })
+        : workerBodyDirectoryPackage({ plan, held: heldDirectory!, prior, now: input.now });
       const roster = directory ? null : workerRosterPublication({ bodyId, reading: reading!, prior, now: input.now });
       const prepared: RegistryRuntimePackage = directoryPackage?.prepared ?? roster!;
       const unresolved = directoryPackage?.unresolved ?? roster!.unresolved;
@@ -365,7 +377,8 @@ ${readingId}`, outcome);
     const current = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
-    if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: captures[0] ?? reading?.capture, captures, published: wentLive, outcome }));
+    const pages = captures.length ? captures : [reading?.capture ?? heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
+    if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));
   }
   await writeValidatorLessons(input.repos, learned, input.now);
   return report;

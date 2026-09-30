@@ -10,7 +10,8 @@ const HOUR = 3_600_000;
 /**
  * Which owed work items the publisher should try now (§3). A work item with a
  * reader door is offered when it holds an extraction not yet published, or —
- * for rosters — hourly, so saved official pages from any job are read in code.
+ * for rosters and body directories — hourly, so saved official pages from any
+ * job are read in code.
  * No live Send, auditor or owner instruction is needed: publication is not
  * paid work, and verified facts reach readers within minutes.
  */
@@ -28,8 +29,8 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
       if (outcome?.workerResultId === parser.id && (outcome.status !== "HELD" || outcome.recovery === "WORKER")) return [];
       return [{ item, requestedAt: parser.endedAt }];
     }
-    // No extraction yet: a roster can still be read in code from saved official pages.
-    if (target !== "registry-runtime-bindings" || plan.contract.recordClass !== "OFFICIAL_ROSTER") return [];
+    // No extraction yet: a roster or a body directory can still be read in code from saved official pages.
+    if (target !== "registry-runtime-bindings" || !["OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY"].includes(plan.contract.recordClass)) return [];
     if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
     return [{ item, requestedAt: hour }];
   });

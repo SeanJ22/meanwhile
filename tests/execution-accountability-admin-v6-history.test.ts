@@ -59,18 +59,13 @@ test("repository reads only exact action-type partitions; a place scope reads no
   const calls: string[] = [];
   const repos = { adminReceipts: { readWhere: async (key: string, path: readonly string[], value: string) => {
     calls.push(`${key}:${path.join(".")}:${value}`); return [receipt(value === "runner.pause" ? "k1" : "k2", value)];
-  }, read: () => { throw new Error("whole log read"); } }, researchIntents: {
-    readWhere: async (key: string, path: readonly string[], value: string) => {
-      calls.push(`${key}:${path.join(".")}:${value}`); return [];
-    }, read: () => { throw new Error("whole intent log read"); },
-  } } as unknown as ControlPlaneRepositories;
+  }, read: () => { throw new Error("whole log read"); } } } as unknown as ControlPlaneRepositories;
   const section = await readV6History(repos, { scope, asOf });
   assert.equal(section.data.length, 2);
-  assert.deepEqual(calls, ["admin-action:type:runner.pause", "admin-action:type:runner.resume",
-    "level-1:honors:intent-k1", "level-1:honors:intent-k2"]);
+  assert.deepEqual(calls, ["admin-action:type:runner.pause", "admin-action:type:runner.resume"]);
   const local = await readV6History(repos, { scope: "zcta:2020/85635", asOf });
   assert.equal(local.data.length, 0);
-  assert.equal(calls.length, 4);
+  assert.equal(calls.length, 2);
 });
 
 test("route enforces Admin host/session and bounded query before touching the store", async () => {
@@ -85,29 +80,4 @@ test("route enforces Admin host/session and bounded query before touching the st
       { headers: { host: ADMIN_HOST, cookie: await adminSessionCookie() } }));
     assert.equal(badLimit.status, 400);
   });
-});
-
-
-test("existing runner acknowledgement completes only its own action and invalidates old history cursors", () => {
-  const rows = [receipt("k1"), receipt("k2", "runner.resume")];
-  const before = projectV6History(rows, { scope, asOf, limit: 1 });
-  const honor = { formatVersion: 1 as const, kind: "HONORED" as const,
-    intentId: "intent-k1:honored", honors: "intent-k1", action: "PAUSE_RUNNER" as const,
-    honoredAt: "2026-09-28T20:02:00.000Z", honoredBy: "pilot-runner@host#1",
-    detail: "pause applied; the current cycle is settling" };
-  const after = projectV6History(rows, { scope, asOf }, [honor]);
-  const done = after.data.find(row => row.key === "k1")!;
-  assert.equal(done.status, "done");
-  assert.equal(done.lifecycle.workFinished, honor.honoredAt);
-  assert.equal(done.says, honor.detail);
-  assert.equal(done.lifecycle.published, null);
-  assert.equal(after.data.find(row => row.key === "k2")?.status, "queued");
-  assert.throws(() => projectV6History(rows, { scope, asOf, cursor: before.page.nextCursor }, [honor]), /STALE_HISTORY_CURSOR/);
-  for (const wrong of [{ ...honor, honors: "another-intent" },
-    { ...honor, action: "RESUME_RUNNER" as const },
-    { ...honor, honoredAt: "2026-09-28T19:00:00.000Z" },
-    { ...honor, honoredAt: "2026-09-28T22:00:00.000Z" }]) {
-    assert.equal(projectV6History([rows[0]], { scope, asOf }, [wrong]).data[0]?.status, "queued");
-  }
-  assert.equal(projectV6History([receipt("k1", "runner.pause", "REFUSED")], { scope, asOf }, [honor]).data[0]?.status, "refused");
 });

@@ -9,6 +9,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import type { SectionId } from "./contract.ts";
 
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { useV6 } from "./context.tsx";
 import { STAGE_NAMES, type ActionRef, type Sourced, type StageMark, type UiReceipt } from "./model.ts";
 import { STATUS_TONE } from "./receipts.ts";
@@ -53,7 +54,7 @@ export function SourceNote(props: { readonly source: Sourced<unknown>; readonly 
   ) : null;
   const stale = src.state === "live" && src.load === "failed" && src.data !== null ? (
     <div className={cx(s.notice, s.noticeMissing)} role="status">
-      <strong>The latest read failed. These are the last good figures{src.asOf ? ` from ${new Date(src.asOf).toLocaleString("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })} MST` : ""}.</strong>
+      <strong>The latest read failed. These are the last good figures{src.asOf ? ` from ${formatEastern(src.asOf)}` : ""}.</strong>
       <span>It tries again by itself. Nothing is shown as zero.</span>
     </div>
   ) : null;

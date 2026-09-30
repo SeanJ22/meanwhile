@@ -248,9 +248,23 @@ export interface AuditAttackResult {
   readonly verdict: "SURVIVED" | "BROKE" | "INCONCLUSIVE" | "NOT_APPLICABLE";
   readonly findings: readonly WorkerFinding[];
 }
+/** How much of what applies has been checked: a number, never a verdict. */
+export interface AuditCoverage {
+  readonly routesApplicable: number;
+  readonly routesChecked: number;
+  readonly sourceRecords: number | null;
+  readonly extractedRecords: number;
+  /** Whole percent; null when nothing applies (no denominator). */
+  readonly sourcesPercent: number | null;
+  readonly recordsPercent: number | null;
+}
 export interface AuditorResult {
-  /** Exact records surviving the independent audit; global findings still hold all records. */
+  /** Exact records surviving the independent audit. An INCONCLUSIVE audit lists none: unchecked is not broken. */
   readonly survivingRecordIds?: readonly string[];
+  /** Records a BLOCKING finding names (or every record, when the whole capture is untrustworthy): the ones to pull. */
+  readonly brokenRecordIds?: readonly string[];
+  /** Other official sources and records not yet checked, as a number. Never holds back a verified fact. */
+  readonly coverage?: AuditCoverage;
   readonly role: "ADVERSARIAL_AUDITOR";
   readonly attemptId: string;
   readonly producerAttemptId: string;
@@ -406,6 +420,9 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
       if (!["SURVIVED", "BROKE", "INCONCLUSIVE"].includes(String(r.verdict)) || typeof r.validatorAttemptId !== "string" ||
           typeof r.reopenRequired !== "boolean" || (r.verdict === "BROKE" && r.reopenRequired !== true)) throw new Error("WORKER_RESULT_SCHEMA_INVALID:AUDITOR");
       valid(count(r.survivingRecordCount) && (r.startedFrom as unknown[]).every(v => AUDIT_EVIDENCE_BASES.includes(v as AuditEvidenceBase)), "AUDITOR_CONTEXT");
+      if (r.brokenRecordIds !== undefined) valid(strings(r.brokenRecordIds) && new Set(r.brokenRecordIds).size === r.brokenRecordIds.length, "AUDITOR_BROKEN_RECORD_IDS");
+      if (r.coverage !== undefined) valid(object(r.coverage) && [r.coverage.routesApplicable, r.coverage.routesChecked, r.coverage.extractedRecords].every(count) &&
+        (r.coverage.sourceRecords === null || count(r.coverage.sourceRecords)) && [r.coverage.sourcesPercent, r.coverage.recordsPercent].every(v => v === null || count(v)), "AUDITOR_COVERAGE");
       if (r.survivingRecordIds !== undefined) valid(strings(r.survivingRecordIds) && new Set(r.survivingRecordIds).size === r.survivingRecordIds.length && r.survivingRecordIds.length === Number(r.survivingRecordCount), "AUDITOR_RECORD_IDS");
       valid((r.attacks as unknown[]).every(attack => object(attack) && ATTACK_MODES.includes(attack.mode as AttackMode) && typeof attack.applicable === "boolean" &&
         typeof attack.executed === "boolean" && string(attack.reason) && ["SURVIVED", "BROKE", "INCONCLUSIVE", "NOT_APPLICABLE"].includes(String(attack.verdict)) &&

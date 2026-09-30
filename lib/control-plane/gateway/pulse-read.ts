@@ -45,9 +45,7 @@
  * connection or reads the environment.
  */
 
-import { DECISION_LOG_KEY, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
-import { collapseDecisionLog } from "../decision-log.ts";
-import { splitDecided } from "../decision-receipt.ts";
+import { RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type OwnerSnapshot } from "../owner-surface.ts";
 import { pulseRevision, type LivePulse } from "../live-pulse.ts";
 import { ADMIN_CAPABILITIES } from "../admin-view/capabilities.ts";
@@ -93,7 +91,6 @@ async function reading<T>(name: string, read: () => Promise<T | null>): Promise<
  * so the pulse is the same pulse, byte for byte: every field it reads is kept.
  */
 export const PULSE_SNAPSHOT_FIELDS = {
-  decisionCards: true,
   freshnessDebtRows: true,
   incidents: true,
   obligationsByState: true,
@@ -133,11 +130,10 @@ export async function readPulse(
   repos: ControlPlaneRepositories,
   nowIso: string,
 ): Promise<LivePulse> {
-  const [heartbeat, snapshot, research, decisions, receipts, jobs, intents, sourceProgress, config] = await Promise.all([
+  const [heartbeat, snapshot, research, receipts, jobs, intents, sourceProgress, config] = await Promise.all([
     reading("the runner's heartbeat", async () => (await repos.runnerHeartbeat.read(RUNNER_ID)) ?? null),
     reading("the control centre snapshot", async () => (await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, PULSE_SNAPSHOT_FIELDS)) ?? null),
     reading("the research lane's state", async () => (await repos.researchState.readNarrowed(RESEARCH_STATE_ID, PULSE_RESEARCH_FIELDS)) ?? null),
-    reading("the decisions you have recorded", async () => repos.ownerDecisions.read(DECISION_LOG_KEY)),
     reading("what this console has already done", async () => repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY)),
     reading("the jobs running for you", async () => repos.agentJobs.read(AGENT_JOB_LOG_KEY)),
     reading("your research requests", async () => repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)),
@@ -157,21 +153,17 @@ export async function readPulse(
   const jobCount = jobs.value === null ? null : liveJobCount(jobs.value);
 
   /*
-   * "Waiting on you" is the published cards MINUS the ones already decided, and
-   * the split is the one `splitDecided` already does for the control centre. A
-   * second definition of "waiting" would let the strip and the page below it
-   * disagree about the number the owner is looking straight at.
+   * The old tracker's decision cards are no longer counted or drawn anywhere
+   * (Sean, 2026-09-30): they were rows from a spreadsheet, not decisions the
+   * product waits on. The field stays on the pulse as "not counted" so no
+   * reader mistakes its absence for zero, and it is not reported as unread.
    */
-  let decisionsWaiting: number | null = null;
-  if (snapshotValue !== null && decisions.value !== null) {
-    decisionsWaiting = splitDecided(snapshotValue.decisionCards, collapseDecisionLog(decisions.value)).waiting.length;
-  }
+  const decisionsWaiting: number | null = null;
 
   const unread = [
     heartbeat.unread,
     snapshot.unread,
     research.unread,
-    decisions.unread,
     receipts.unread,
     jobs.unread,
     intents.unread,
@@ -181,9 +173,6 @@ export async function readPulse(
       ? "how many jobs are running for you (the log holds rows this strip cannot read)"
       : null,
     ...counts.unread,
-    decisionsWaiting === null && snapshot.unread === null && decisions.unread === null
-      ? "how many decisions are waiting on you"
-      : null,
   ].filter((name): name is string => name !== null);
 
   const beat = heartbeat.value?.value ?? null;
@@ -192,7 +181,7 @@ export async function readPulse(
       beatAt: beat?.beatAt ?? null,
       heartbeatRevision: heartbeat.value?.revision ?? null,
       snapshotRevision: snapshot.value?.revision ?? null,
-      decisionCount: decisions.value?.length ?? null,
+      decisionCount: null,
       researchRevision: research.value?.revision ?? null,
       receiptCount: receipts.value?.length ?? null,
       researchIntentCount: intents.value?.length ?? null,
@@ -205,7 +194,8 @@ export async function readPulse(
       snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null,
       heartbeatRevision: heartbeat.value?.revision ?? null,
       sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
-      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000) }),
+      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000),
+      historyRevision: receipts.value !== null && intents.value !== null ? `${receipts.value.length}:${intents.value.length}` : null }),
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

@@ -28,10 +28,10 @@
  * were built around, and a gateway that executed rather than recorded would
  * have broken it while looking like a tidy-up.
  *
- * ## Two entries refuse on purpose
+ * ## One entry refuses on purpose
  *
- * `fleet.retryWorkItem` and `prohibited.promotionOn` are declared so that their
- * refusals are TYPED, PROVABLE and visible on the same surface as everything
+ * `fleet.retryWorkItem` is declared so that its
+ * refusal is TYPED, PROVABLE and visible on the same surface as everything
  * else. An action that is simply absent produces "the console does not know
  * this action"; an action that is declared and refuses produces the real
  * sentence, and for the retry it names the exact seam that does not exist yet.
@@ -97,6 +97,9 @@ import {
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
+import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
+import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -210,10 +213,7 @@ const refuse = (refusal: RefusalCode, says: string): ActionRefusal => ({ ok: fal
  * the connection string, and this text reaches a browser.
  */
 function storeRefusal(what: string, error: unknown): ActionRefusal {
-  return refuse(
-    "DOWNSTREAM_REFUSED",
-    `${what} could not be written (${(error as Error)?.name ?? "error"}), so nothing was recorded.`,
-  );
+  return refuse("DOWNSTREAM_REFUSED", writeFailureSays(what, error));
 }
 
 /** The owner-decision intent both decision-shaped actions append. */
@@ -249,7 +249,7 @@ function decisionIntent(input: {
 async function appendIntent(
   deps: GatewayDeps,
   context: ActionContext,
-  action: "PAUSE" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
+  action: "PAUSE" | "RESUME" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
   /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */
@@ -258,7 +258,7 @@ async function appendIntent(
   const requestedAt = context.at;
   const intent = buildResearchIntent(action, requestedAt, context.request.actorRef, note, undefined, budgetUsd);
   const wrote = await appendResearchIntent(deps.repos, intent, requestedAt);
-  if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+  if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
   return {
     ok: true,
     outcome: "QUEUED",
@@ -326,7 +326,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         actorRef: context.request.actorRef,
       });
       const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
       return {
         ok: true,
         outcome: "QUEUED",
@@ -386,7 +386,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         actorRef: context.request.actorRef,
       });
       const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
       return {
         ok: true,
         outcome: "DONE",
@@ -419,6 +419,30 @@ const REGISTRY: readonly RegisteredAction[] = [
       return appendIntent(deps, context, "PAUSE", input.note === null ? null : String(input.note), {
         says: "The paid research lane has been asked to pause. New paid work waits when the runner next reads this intent; work already in flight may finish.",
         undo: "A separate paid-research resume intent is required to resume paid work.",
+      });
+    },
+  },
+
+  /* ----------------------------------------------------- research.resume */
+  {
+    definition: {
+      type: "research.resume",
+      label: "Resume paid research",
+      does: "Records that the paid research lane may run again, on the runner's next read.",
+      doesNot: "Does not start a round immediately, raise any spending limit, or resume a runner that is paused as a whole.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "the paid research lane",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const note = validateIntentNote("RESUME", input.note);
+      return note.ok ? { ok: true, value: { note: note.note } } : bad(note.detail);
+    },
+    execute(deps, context, input) {
+      return appendIntent(deps, context, "RESUME", input.note === null ? null : String(input.note), {
+        says: "The paid research lane has been asked to run again. The next round opens the lane, inside every spending limit that still stands.",
+        undo: "Pause paid research again.",
       });
     },
   },
@@ -960,6 +984,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
     validate(input) {
+      // A hunt is named by its scope key, or by the place key a screen shows it under (S11).
+      const placeKey = typeof input.placeKey === "string" ? input.placeKey.trim() : "";
+      if (placeKey !== "") {
+        return /^geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}$/.test(placeKey) ? { ok: true, value: { key: placeKey } } : bad("say which hunt, by its place");
+      }
       const key = validateScopeKey(input.key);
       return key.ok ? { ok: true, value: { key: key.value } } : bad(key.why);
     },
@@ -980,7 +1009,8 @@ const REGISTRY: readonly RegisteredAction[] = [
             `${held.malformed} stored scope entr${held.malformed === 1 ? "y" : "ies"} on your policy row could not be read, so nothing was changed — rewriting the list would silently drop them.`,
           );
         }
-        const next = withScopeRemoved(held.scopes, key);
+        const named = held.scopes.find((s) => s.key === key || huntPlaceKey(s) === key);
+        const next = withScopeRemoved(held.scopes, named?.key ?? key);
         if (next.removed === null) {
           return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/work", undo: null };
         }
@@ -1002,6 +1032,9 @@ const REGISTRY: readonly RegisteredAction[] = [
       };
     },
   },
+
+  /* ------------------------------------ expansion.scope.setMany and .budget */
+  ...BULK_ACTIONS,
 
   /* ---------------------------------------------------- billing.fact.record */
   {
@@ -1203,31 +1236,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------- prohibited.promotionOn */
-  {
-    definition: {
-      type: "prohibited.promotionOn",
-      label: "Turn promotion on",
-      does: "Nothing. This is refused every time, by design, and the refusal is recorded.",
-      doesNot: "Does not turn promotion on, ask anyone whether it should, or leave a way to.",
-      authority: "PROHIBITED",
-      subjectKind: "the nightly promotion door",
-      requiresStateVersion: false,
-      refusals: ["PROHIBITED_ACTION"],
-    },
-    validate() {
-      // Declared so the refusal is typed and provable. The gateway refuses a
-      // PROHIBITED class before it ever validates, so this is unreachable — and
-      // it fails closed anyway rather than returning a value nobody checked.
-      return bad("this is never allowed from here");
-    },
-    async execute() {
-      return refuse(
-        "PROHIBITED_ACTION",
-        "Promotion is not something this console can turn on. That is deliberate and there is no version of this button that works.",
-      );
-    },
-  },
 ];
 
 /**

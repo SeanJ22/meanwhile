@@ -20,6 +20,7 @@
  *
  * PURE except `newActionKey`, which reads the platform's random source.
  */
+import type { Confirmation } from "@/lib/control-plane/gateway/confirmation.ts";
 import type { ActionOutcome } from "@/lib/control-plane/gateway/contract.ts";
 import type { ActionDef } from "./actions.ts";
 import type { Lifecycle, ReceiptStatus, UiReceipt } from "./model.ts";
@@ -110,6 +111,42 @@ function isOutcome(body: unknown): body is ActionOutcome {
     typeof (r as { outcome?: unknown }).outcome === "string";
 }
 
+/** The runner's answer, when the gateway or the receipt lookup sent one along. */
+export function confirmationOf(body: unknown): Confirmation | null {
+  const c = body && typeof body === "object" ? (body as { confirmation?: unknown }).confirmation : null;
+  if (!c || typeof c !== "object") return null;
+  const x = c as Partial<Confirmation>;
+  const okState = x.state === "applied" || x.state === "waiting" || x.state === "not-needed" || x.state === "unread";
+  return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words } : null;
+}
+
+/**
+ * Fold what the runner did into a receipt that is still open. "Done" is the
+ * runner's word, not the click's: a saved request stays queued, with the words
+ * saying what it is waiting on, until the runner's own record names it. A final
+ * state is never overwritten.
+ */
+export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string): UiReceipt {
+  if (prev.status !== "queued" && prev.status !== "read" && prev.status !== "running") return prev;
+  if (c.state === "applied") {
+    return {
+      ...prev,
+      status: "done",
+      statusWords: "Done",
+      steps: [...prev.steps, { label: "Runner confirmed", at: c.at ?? at }],
+      says: c.words,
+      lifecycle: { ...prev.lifecycle, workersReceived: c.at ?? at },
+    };
+  }
+  if (c.state === "waiting" || c.state === "unread") return { ...prev, status: "queued", statusWords: STATUS_WORDS.queued, says: c.words };
+  return prev;
+}
+
+/** Open means the runner has not confirmed it, so the screen keeps asking. */
+export function isOpen(r: Pick<UiReceipt, "status">): boolean {
+  return r.status === "queued" || r.status === "read" || r.status === "running";
+}
+
 /** Fold the gateway's answer into the receipt. */
 export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: number | null, body: unknown, at: string): UiReceipt {
   const step = (label: string) => [...prev.steps, { label, at }];
@@ -130,6 +167,14 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
     if (body.ok !== true) {
       return { ...base, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
     }
+    const confirmation = confirmationOf(body);
+    if (r.outcome === "DONE" && confirmation !== null && (confirmation.state === "waiting" || confirmation.state === "unread")) {
+      return applyConfirmation(
+        { ...base, status: "queued", statusWords: STATUS_WORDS.queued, steps: step("Saved"), says: confirmation.words, lifecycle: { ...prev.lifecycle, saved: r.completedAt ?? r.startedAt ?? at } },
+        confirmation,
+        at,
+      );
+    }
     if (r.outcome === "DONE") {
       return {
         ...base,
@@ -140,8 +185,8 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
         lifecycle: { ...prev.lifecycle, saved: r.completedAt ?? r.startedAt ?? at },
       };
     }
-    // QUEUED or IN_PROGRESS: saved, not finished.
-    return {
+    // QUEUED or IN_PROGRESS: saved, not finished. Unless the runner already confirmed it (a replay).
+    const saved: UiReceipt = {
       ...base,
       status: r.outcome === "QUEUED" ? "queued" : "running",
       statusWords: r.outcome === "QUEUED" ? STATUS_WORDS.queued : STATUS_WORDS.running,
@@ -149,6 +194,7 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
       says: r.says,
       lifecycle: { ...prev.lifecycle, saved: r.startedAt ?? at },
     };
+    return confirmation === null ? saved : applyConfirmation(saved, confirmation, at);
   }
   return { ...prev, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
 }

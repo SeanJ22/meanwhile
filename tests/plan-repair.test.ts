@@ -485,6 +485,15 @@ test("a source with real bytes but no honest mapping is admitted as a bound cont
   assert.deepEqual(evaluated.contract.sourceScope.canonicalUrls, [f.evidence[0].canonicalUrl], "bound to the exact captured source");
   assert.deepEqual(evaluated.contract.sourceScope.observationArtifactIds, f.evidence.map((row) => row.artifactId), "the cited captures are the observation");
   assert.deepEqual(evaluated.contract.extraction.fields, {}, "no mapping is invented");
+  // The media type the Scout observed rides into the contract; a pattern that lost its backslash turned every real type into "unobserved".
+  const mediaTypeOf = (mediaType: unknown) => evaluatePlanRepair({ plan: unobserved, evidence: f.evidence, now: f.h.now(), candidate: { ...candidate,
+    contractRepair: { schemaVersion: 1, sourceArtifactId: f.evidence[0].artifactId, extraction: { format: "UNSUPPORTED", mediaType }, authorities: [] } as never } }).contract.extraction;
+  for (const kept of ["text/plain", "application/pdf", "text/html", "application/vnd.ms-excel", "image/svg+xml"]) {
+    assert.equal((mediaTypeOf(kept) as { mediaType?: string }).mediaType, kept, `${kept} is kept`);
+  }
+  for (const dropped of ["", "text plain", "x".repeat(101), 7, null]) {
+    assert.equal((mediaTypeOf(dropped) as { mediaType?: string }).mediaType, "unobserved", `${JSON.stringify(dropped)} is not a media type`);
+  }
   assert.ok(evaluated.unresolved.includes("EXTRACTION_BY_QUOTED_MODEL"));
   assert.deepEqual(evaluated.profileRoutes, []);
 

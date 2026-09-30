@@ -108,8 +108,7 @@ import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignm
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat, type RuntimeReleaseAdoption } from "../lib/control-plane/owner-surface.ts";
-import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, retainedRuntimeReleaseAdoption, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -407,10 +406,9 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   }], {
     cwd: ROOT,
     env: process.env,
-    /* The supervisor is the aggregate wall-clock backstop. */
-    timeoutMs: 0,
     maxBufferBytes: 64 * 1024 * 1024,
-
+    onStdout: (_id, output) => { process.stdout.write(output); },
+    onStderr: (_id, output) => { process.stderr.write(output); },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;

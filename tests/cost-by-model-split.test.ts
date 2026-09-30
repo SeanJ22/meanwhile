@@ -26,6 +26,14 @@ import { isScheduled, scheduleObligation, type FreshnessObligation } from "../li
 
 const NOW = "2026-09-25T18:00:00.000Z";
 
+test("Ask charges retain their recorded model without a worker Attempt", () => {
+  const entry: CostEntry = costEntryWithModel({ attemptId: "ask-request", workItemId: "ask", routeTaskId: null,
+    routeId: "ask:interpret", source: "api.anthropic.com", jurisdiction: null, project: "ask", role: "ASK",
+    cost: { ...ZERO_COST, usd: 0.01, requestCount: 1 }, recordedAt: NOW }, MODELS.haiku.model);
+  assert.equal(costPortionsByModel(entry, "unknown")[0].model, MODELS.haiku.model);
+  assert.equal(buildCostPanel({ costs: [entry], attempts: [], cacheByRole: null, share: null, verifiedRecords: null }).costByModel[0].key, MODELS.haiku.model);
+});
+
 test("tier read keeps older charges unrecorded and counts multi-model shares once", () => {
   const base: CostEntry = { attemptId: "fixture", workItemId: "work", routeTaskId: null, routeId: null,
     source: null, jurisdiction: null, project: "fixture", role: "SCOUT", recordedAt: NOW,

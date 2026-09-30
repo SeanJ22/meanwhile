@@ -1,4 +1,4 @@
-import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor } from "../lib/control-plane/model-batch.ts";
+import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
@@ -2833,15 +2833,25 @@ async function runAutonomousWave() {
       inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
+      const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && batchEnabledFor("background-worker-audit");
+      const journal = attemptBatchJournal(repos, taskId, nowIso);
+      const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
+      if (batching && await journal.read(batchRequestHash(request))) {
+        // Recovery reads an already submitted request, so it neither reserves
+        // nor spends a second request allowance. Settle its original hold.
+        const response = await workerBatch.withJournal(journal)(request);
+        const measured = modelResponseUsd(response);
+        if (measured !== null) await spendHolds.settle(requestJobId, measured, nowIso());
+        return response;
+      }
       const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
       const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
       const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
       if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
-      const job = new JobSpend(spendHolds, `worker-request:${taskId}:${randomUUID()}`, owner?.value.obligationId ?? task.id, found.lines);
+      const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
       const transport = budgetGuardedTransport({ job: () => job,
         transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
-          task.workerTask?.role === "ADVERSARIAL_AUDITOR" && batchEnabledFor("background-worker-audit")
-            ? workerBatch.withJournal(attemptBatchJournal(repos, taskId, nowIso)) : workerMessages),
+          batching ? workerBatch.withJournal(journal) : workerMessages),
         worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
       let response;
       try { response = await transport(request); }

@@ -64,6 +64,25 @@ import {
 const NOW = "2026-09-01T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
 
+test('a solved held route bypasses paid admission and prewarming and counts as deterministic',async()=>{
+  const {repos,task}=await registered();let requests=0,admissions=0,warms=0;
+  const solved={refusal:null,outcome:'EVIDENCE_FOUND',subjectId:OBLIGATION.subjectId,recordClass:OBLIGATION.recordClass,
+    attemptId:'held-attempt',recordedAt:NOW,candidates:[],findings:[{kind:'RECORD',field:'holder',value:'Ada',exactQuote:'Clerk Ada',
+      sourceUrl:'https://county.gov/clerk',artifactIds:['held']}]} as unknown as ScoutResult;
+  const held=failureResponderExecutor({solved,transport:async()=>{requests++;throw Error('No model');},
+    toolkitFor:()=>{throw Error('No tools');},contextFor:()=>{throw Error('No new research');},now:()=>NOW});
+  const cycle=await runCycle({repos,obligations:[OBLIGATION],debts:[],routeTaskFor:()=>task.id,maturity:()=> 'UNGRADUATED',
+    holder:'held-cycle',now:NOW,leaseTtlMs:60_000,executor:{lane:'DETERMINISTIC',run:async()=>{throw Error('Use the held executor');}},
+    reader:{contract:'READER',state:'NOT_READY',reason:'fixture'},truth:{contract:'TRUTH',state:'NOT_READY',reason:'fixture'},
+    research:{decide:()=>({kind:'BOUNDED_MODEL_WORKER',why:'old route classification',disagreement:null}),
+      admitScout:()=>{admissions++;return {admit:false,code:'PAUSED',why:'Paid work paused'};},
+      prewarm:async()=>{warms++;throw Error('No prewarm');},modelExecutor:()=>held,workerCapacity:1,scoutLeaseTtlMs:420_000}});
+  assert.equal(requests,0);assert.equal(admissions,0);assert.equal(warms,0);
+  assert.equal(cycle.lanes?.model.dispatched,0);assert.equal(cycle.lanes?.deterministic.dispatched,1);
+  assert.equal(cycle.dispatched[0].executor,'DETERMINISTIC');assert.equal(cycle.dispatched[0].cost?.usd,0);
+  assert.equal(cycle.dispatched[0].cost?.requestCount,0);assert.equal(cycle.dispatched[0].executorMismatch,false);
+});
+
 test("full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows", async () => {
   const { repos, task } = await registered();
   const obligations = [

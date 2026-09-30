@@ -75,6 +75,16 @@ test("model admission accumulates cycle spend with no per-cycle cap; only the ro
     error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
 
+test("a funded lifetime hunt still obeys the Admin spend dial for requests and escalations", () => {
+  const safety = fundedController({ now: NIGHT, costs: [cost(99.5, NIGHT)], clock: () => Date.parse(NIGHT),
+    lifetimeHuntWork: () => true });
+  assert.equal(safety.rollingCeilingReached(0.6, "funded-hunt").reached, true);
+  assert.throws(() => safety.reserveModelRequest("anthropic", "funded-hunt", REQUEST),
+    (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+  assert.throws(() => safety.holdModelBudget("funded-hunt", 0.6),
+    (error: unknown) => error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+});
+
 test("rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals", () => {
   const cap = 100;
   const recent = "2026-09-05T02:00:00.000Z"; // within 24h of NIGHT

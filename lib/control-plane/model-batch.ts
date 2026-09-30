@@ -167,6 +167,10 @@ export interface BatchJournal {
   readonly write: (record: AttemptProviderBatch) => Promise<void>;
 }
 
+export function batchRequestHash(request: ModelRequest): string {
+  return createHash("sha256").update(canonicalJson(cachedModelRequest(request))).digest("hex");
+}
+
 /** Reclaimed tasks inherit provider identities, while writes require the new live lease. */
 export function attemptBatchJournal(repos: ControlPlaneRepositories, taskId: string, now: () => string): BatchJournal {
   return {
@@ -256,7 +260,7 @@ export function backgroundBatchTransport(options: Omit<SingleRequestBatchOptions
   }
   const send = async (request: ModelRequest, journal = options.journal): Promise<ModelResponse> => {
     if (request.max_tokens < 1) throw new ModelTransportError("BACKGROUND_BATCH_MAX_TOKENS_INVALID", 400);
-    const hash = createHash("sha256").update(canonicalJson(cachedModelRequest(request))).digest("hex");
+    const hash = batchRequestHash(request);
     const existing = await journal?.read(hash);
     if (existing) {
       const batch = existing.batchId ? await retrieveMessageBatch(options.apiKey, existing.batchId, fetchImpl, options.endpoint) : await recoverUncertain(existing);

@@ -240,7 +240,7 @@ export function spendByTier(entries: readonly CostEntry[], range: { readonly sin
  */
 export function costPortionsByModel(entry: CostEntry, attemptModel: string): readonly { readonly model: string; readonly entry: CostEntry }[] {
   const shares = entry.byModel;
-  if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: attemptModel, entry }];
+  if (shares === undefined || shares.length === 0 || !splitMatchesCharge(entry.cost, shares)) return [{ model: entry.model ?? attemptModel, entry }];
   const otherRequests = shares.slice(1).reduce((n, s) => n + s.requestCount, 0);
   return shares.map((s, i) => ({
     model: s.model,

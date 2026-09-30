@@ -284,11 +284,9 @@ export function modelParseReasoner(
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
-    if (!options.lifetimeHuntSubject?.(contract.subjectId)) {
-      const spend = researchSpendInWindow(await repos.costs.readAll(), now());
-      const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
-      if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
-    }
+    const spend = researchSpendInWindow(await repos.costs.readAll(), now());
+    const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
+    if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
     const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass });
     const route = routeParse(manual.store, { recordClass: contract.recordClass, host });

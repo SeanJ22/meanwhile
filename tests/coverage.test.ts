@@ -14,6 +14,29 @@ import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-fir
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { planPlaceHunt, placeFieldWork } from "../lib/hunt/place-plan.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { runPlaceSource } from "../lib/hunt/place-source.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+
+test("the place source reads shared holdings, publishes source data, then uses the actual published projection", async () => {
+  const repos = createMemoryRepositories();
+  const now = "2026-09-30T00:00:00Z";
+  const division = { id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" };
+  const body = { id: `${division.id}#executive`, label: "Governor", kind: "body" as const, divisionIds: [division.id] };
+  const events: string[] = [];
+  let live = false;
+  const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
+    geographyCaptures: [], readSource: async (url, knowledge) => {
+      events.push("source"); assert.equal(knowledge.error, undefined);
+      return { url, text: "<h1>Public source</h1>", collectedAt: now };
+    },
+    readHeld: async () => { events.push("held"); return { subjects: [body], held: live ? [{ subjectId: body.id,
+      checklistId: "GOV-01", state: "published", sourceUrl: "https://example.gov", checkedAt: now, freshUntil: "2026-10-01T00:00:00Z" }] : [] }; },
+    publish: async () => { events.push("publish"); live = true; return { published: true }; } });
+  assert.equal(events[0], "held");
+  assert.equal(events.at(-1), "held");
+  assert.ok(events.indexOf("source") < events.indexOf("publish"));
+  assert.equal(result.items.find(item => item.subject.id === body.id && item.checklistId === "GOV-01")?.state, "published");
+});
 
 test("a place inherits other jobs' published fields before national acquisition and closes only those fields", async () => {
   const repos = createMemoryRepositories();

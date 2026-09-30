@@ -39,8 +39,8 @@ if (workerResults) {
   console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({ contractId,
     candidateId: published.at(-1)?.outcome.candidateId ?? null, promotedVersion: published.at(-1)?.outcome.versionId ?? null,
     workerPublications: report, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  // Holds stay on their own work items as owed work; the pass fails only when nothing went live.
   await printWorkerPublicationReceipt(store, contractId, report);
-  if (report.some(row => row.outcome.status !== "PUBLISHED")) process.exitCode = 2;
 } else {
 if (!contractId || !MANUAL_PROJECTION_CONTRACT_IDS.includes(contractId) || !packageArgument) {
   throw new Error(

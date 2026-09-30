@@ -288,6 +288,8 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
       select record->>'startedAt' as at, record->>'obligationId' as id, record->>'subjectId' as subject,
         coalesce(record->>'escalatedFrom', record->>'modelClass') as from_class,
         case when record->>'escalatedFrom' is not null then record->>'modelClass' end as to_class,
+        record->'modelAttempts'->0->>'model' as from_model,
+        record->'modelAttempts'->-1->>'model' as to_model,
         record->>'escalationReason' as reason, record->>'escalationEvidence' as evidence,
         record->'escalationRefused'->>'code' as refused, record->>'usd' as usd,
         (select jsonb_agg(a->'usd') from jsonb_array_elements(case when jsonb_typeof(record->'modelAttempts') = 'array' then record->'modelAttempts' else '[]'::jsonb end) a) as attempts
@@ -375,7 +377,9 @@ export async function readSpendFacts(connection: string, nowIso: string): Promis
           obligationId: String(r.id ?? ""),
           subjectId: str(r.subject),
           from: String(r.from_class ?? ""),
+          fromModel: str(r.from_model),
           to: str(r.to_class),
+          toModel: str(r.to_model),
           reason: String(r.reason ?? ""),
           evidence: str(r.evidence),
           refused: str(r.refused),

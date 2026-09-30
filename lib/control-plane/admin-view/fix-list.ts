@@ -81,7 +81,7 @@ export const FIX_ITEMS: readonly FixItem[] = [
     status: "PARTLY IN PLACE",
     body: "Each step names its cheapest class and its escalation target, and the ladder tops out at the frontier. What is missing is the evidence that triggered a move up, and the combined cost of both attempts.",
     checkFirst: "Each Scout result now keeps the class, the reason (one of four), a short evidence line and every attempt's cost (scout-result.ts); Fleet · Money reads them. The assignment view does not join them yet.",
-    standing: "Since Sep 25 the Scout loop starts on Sonnet 5 and moves up to Opus 5.5 only for a recorded reason, and the audit stays on Opus by design. Checked with a stand-in provider only: no paid call has run under it, because paid research has been paused since Sep 22.",
+    standing: "The configured Scout loop starts on Haiku 4.5, then may move to Sonnet 5.5 and Opus 5.5 only for recorded reasons and spending holds. Independent audit also starts on Haiku and can escalate when its result is inconclusive. This describes routing policy, not evidence that a paid call ran; actual attempts and charges appear in Work and Money.",
     provenance: "was f16 · x10",
     defaultMark: "MUST",
   },

@@ -29,7 +29,7 @@
  * instant against one another, and four independently-timed counts assembled
  * into one strip would imply a coherence they do not have.
  *
- * ## Six reads, each alone, and a failure is named rather than zeroed
+ * ## Bounded reads, each alone, and a failure is named rather than zeroed
  *
  * Every read is its own try/catch. One store hiccup must not blank the strip,
  * and — the rule that matters — a read that did not happen must never render as
@@ -50,6 +50,9 @@ import { collapseDecisionLog } from "../decision-log.ts";
 import { splitDecided } from "../decision-receipt.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type OwnerSnapshot } from "../owner-surface.ts";
 import { pulseRevision, type LivePulse } from "../live-pulse.ts";
+import { ADMIN_CAPABILITIES } from "../admin-view/capabilities.ts";
+import { adminV6ReadCapabilities, ADMIN_V6_CAPABILITY_REVISION } from "../admin-view/v6-capabilities.ts";
+import { ADMIN_CONFIG_ID } from "./admin-config.ts";
 import { ADMIN_RECEIPT_LOG_KEY } from "./contract.ts";
 import { AGENT_JOB_LOG_KEY, liveJobCount } from "./agent-job.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
@@ -96,6 +99,8 @@ export const PULSE_SNAPSHOT_FIELDS = {
   obligationsByState: true,
 } as const satisfies RecordProjection & Partial<Record<keyof OwnerSnapshot, true>>;
 export const PULSE_RESEARCH_FIELDS = { queue: true } as const satisfies RecordProjection;
+/** Money/Hunts need only the saved policy revision on each pulse, no policy payload. */
+export const PULSE_CONFIG_REVISION_FIELDS = {} as const satisfies RecordProjection;
 
 type PulseSnapshot = Pick<OwnerSnapshot, keyof typeof PULSE_SNAPSHOT_FIELDS>;
 
@@ -128,7 +133,7 @@ export async function readPulse(
   repos: ControlPlaneRepositories,
   nowIso: string,
 ): Promise<LivePulse> {
-  const [heartbeat, snapshot, research, decisions, receipts, jobs, intents, sourceProgress] = await Promise.all([
+  const [heartbeat, snapshot, research, decisions, receipts, jobs, intents, sourceProgress, config] = await Promise.all([
     reading("the runner's heartbeat", async () => (await repos.runnerHeartbeat.read(RUNNER_ID)) ?? null),
     reading("the control centre snapshot", async () => (await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, PULSE_SNAPSHOT_FIELDS)) ?? null),
     reading("the research lane's state", async () => (await repos.researchState.readNarrowed(RESEARCH_STATE_ID, PULSE_RESEARCH_FIELDS)) ?? null),
@@ -137,6 +142,8 @@ export async function readPulse(
     reading("the jobs running for you", async () => repos.agentJobs.read(AGENT_JOB_LOG_KEY)),
     reading("your research requests", async () => repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)),
     reading("shared source activity", async () => repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, 1)),
+    reading("the saved hunt policy", async () => (await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID,
+      PULSE_CONFIG_REVISION_FIELDS)) ?? null),
   ]);
 
   const snapshotValue = (snapshot.value?.value ?? null) as PulseSnapshot | null;
@@ -169,6 +176,7 @@ export async function readPulse(
     jobs.unread,
     intents.unread,
     sourceProgress.unread,
+    config.failed ? config.unread : null,
     jobCount !== null && jobCount.unreadable > 0
       ? "how many jobs are running for you (the log holds rows this strip cannot read)"
       : null,
@@ -189,8 +197,15 @@ export async function readPulse(
       receiptCount: receipts.value?.length ?? null,
       researchIntentCount: intents.value?.length ?? null,
       sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
+      capabilityRevision: `${ADMIN_CAPABILITIES.revision}|${ADMIN_V6_CAPABILITY_REVISION}|${config.value?.revision ?? "-"}`,
     }),
     at: nowIso,
+    capabilities: ADMIN_CAPABILITIES,
+    v6: adminV6ReadCapabilities({ configRevision: config.value?.revision ?? null,
+      snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null,
+      heartbeatRevision: heartbeat.value?.revision ?? null,
+      sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
+      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000) }),
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

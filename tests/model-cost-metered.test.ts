@@ -41,6 +41,14 @@ const known: MeteredUsage = {
   cacheCreation1hInputTokens: 100_000,
   batch: false,
 };
+
+test("Sonnet 5.5 prices new usage at its own published row while Sonnet 5 history keeps its exact rate", () => {
+  const oldCharge = priceMeteredUsage("claude-sonnet-5", known, "5m");
+  const newCharge = priceMeteredUsage("claude-sonnet-5-5", known, "5m");
+  assert.ok(oldCharge.usd !== null && newCharge.usd !== null);
+  assert.equal(newCharge.usd, oldCharge.usd, "the two models have the same unit rates, without aliasing their identities");
+  assert.equal(MODEL_RATES.filter(row => row.model.startsWith("claude-sonnet-5")).length, 2);
+});
 /* 1M × $5 + 200k × $6.25 + 100k × $10 + 2M × $0.50 + 100k × $25 = 5 + 1.25 + 1 + 1 + 2.5 */
 const KNOWN_USD = 5 + 1.25 + 1 + 1 + 2.5;
 
@@ -188,6 +196,7 @@ test("per-model minimum cacheable prefix: looked up by model, non-monotonic, ali
   assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5"), 512);
   assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5-5"), 512, "Opus 5.5 keeps the 512 minimum");
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5"), 1024);
+  assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5-5"), 512);
   assert.equal(minimumCacheablePrefixTokensFor("claude-haiku-4-5"), 4096);
   /* THE LOAD-BEARING PROPERTY: the cheapest model's minimum is the HIGHEST, so
      a single scalar cannot serve a lane that may route to a cheaper class. */

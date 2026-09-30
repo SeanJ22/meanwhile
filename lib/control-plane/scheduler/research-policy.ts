@@ -633,8 +633,8 @@ export function deriveLevel1(input: {
 
 /**
  * The model the Scout lane STARTS on, for records that must name it: the
- * research loop's base class in the step registry (Sonnet 5 since MW-033,
- * 2026-09-25; the frontier before). A loop that escalates names the higher
+ * research loop's base class in the step registry (currently Haiku 4.5).
+ * A loop that escalates names the higher
  * model on its own result (`ScoutResult.modelClass`, `modelAttempts`).
  */
 export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].modelClass];

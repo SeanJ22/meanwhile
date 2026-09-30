@@ -965,7 +965,7 @@ export const LADDER_RULES: readonly { readonly holds: boolean; readonly text: st
   },
   {
     holds: true,
-    text: "Cheapest first, moving up only for a recorded reason. Enforced in code since Sep 25: the Scout's research starts on Sonnet 5 and moves up to Opus 5.5 only for one of four recorded reasons, after the spending ceiling holds room for the second try, and the result keeps the reason, the evidence and what both tries cost. The audit stays on Opus by design (MW-035). Checked with a stand-in provider only: no paid call has run under it yet (MW-031, MW-033).",
+    text: "Cheapest suitable class first, moving up only for a recorded reason and a new spending hold. The configured Scout starts on Haiku 4.5 and can escalate to Sonnet 5.5, then Opus 5.5; each attempt retains its exact model, reason and measured cost. Independent audit follows its own recorded escalation. Configuration alone does not show that a paid call ran; read the attempt and charge receipts for that.",
   },
   {
     holds: true,

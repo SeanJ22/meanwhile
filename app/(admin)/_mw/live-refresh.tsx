@@ -25,12 +25,20 @@ export function LiveRefresh() {
       try {
         const response = await fetch("/api/admin/live", { cache: "no-store", headers: { accept: "application/json" } });
         const pulse = await response.json() as LivePulse;
-        if (!response.ok || !pulse.revision || pulse.revision === "unread" || !Number.isFinite(Date.parse(pulse.at))) throw new Error("pulse unread");
+        if (!response.ok || !pulse.revision || !Number.isFinite(Date.parse(pulse.at))) throw new Error("pulse unread");
         if (stopped) return;
+        // Even if the control-plane store is unread, this authenticated pulse
+        // can advertise a newly deployed compatible read API. Mounted adapters
+        // listen to the same event and retry only their eligible scoped read.
+        window.dispatchEvent(new CustomEvent("meanwhile:admin-pulse", { detail: pulse }));
+        if (pulse.revision === "unread") {
+          setFailed(true);
+          setUnread(pulse.unread);
+          return;
+        }
         setFailed(false);
         setLastSuccessfulAt(pulse.at);
         setUnread(pulse.unread);
-        window.dispatchEvent(new CustomEvent("meanwhile:admin-pulse", { detail: pulse }));
         // The first successful pulse also reconciles work done since the server render.
         if (revision !== pulse.revision) { revision = pulse.revision; router.refresh(); }
         if ((pulse.counts.agentJobsRunning ?? 0) > 0 || pulse.lanes?.final === false) interval = PULSE_ACTIVE_INTERVAL_MS;

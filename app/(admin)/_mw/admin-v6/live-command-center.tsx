@@ -1,0 +1,90 @@
+"use client";
+
+/**
+ * **THE PRODUCTION ENTRY POINT.** Mount this in the Admin route (Codex owns the
+ * route; see ACCEPTANCE.md "Integration").
+ *
+ * The route must also render the shell's existing `LiveRefresh` exactly once:
+ * it is the single `/api/admin/live` poller, and this component listens to its
+ * `meanwhile:admin-pulse` events (Codex, 2026-09-28 20:18 UTC). Each pulse
+ * updates the connection indicator and feeds `LiveSync`, which reads the
+ * sections the pulse announces and re-reads them when their revision moves. A
+ * reconnect re-reads once. The executor is the live gateway executor. No sample
+ * data is imported here.
+ *
+ * Scope stays in the deployed `?scope=` URL (country, state, Census geography).
+ */
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+import { scopeParam } from "../scope.ts";
+import { CommandCenter } from "./command-center.tsx";
+import type { View } from "./context.tsx";
+import type { Access } from "./eligibility.ts";
+import { liveExecutor } from "./executor.ts";
+import { usePulseFeed } from "./live-connection.ts";
+import { buildLiveBundle, type LiveReference } from "./live-data.ts";
+import { LiveSync } from "./live-sync.ts";
+import { scopeOfPlaceKey } from "./places.ts";
+import { workerStatusFromPulse } from "./pulse-view.ts";
+
+export interface LiveCommandCenterProps {
+  readonly reference: LiveReference;
+  readonly initialScopeKey: string;
+  readonly access: Access;
+  readonly initialView?: View;
+}
+
+function fetchNoStore(url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) {
+  return fetch(url, { ...init, cache: "no-store" });
+}
+
+function scheduleTimeout(fn: () => void, ms: number): () => void {
+  const t = setTimeout(fn, ms);
+  return () => clearTimeout(t);
+}
+
+export function LiveCommandCenter(props: LiveCommandCenterProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const [scopeKey, setScopeKey] = useState(props.initialScopeKey);
+  const [sync] = useState(() => new LiveSync({ scope: props.initialScopeKey, fetch: fetchNoStore, schedule: scheduleTimeout }));
+  useEffect(() => () => sync.dispose(), [sync]);
+
+  const snapshot = useSyncExternalStore((fn) => sync.subscribe(fn), () => sync.snapshot(), () => sync.snapshot());
+  const conn = usePulseFeed({ onPulse: (pulse) => sync.onPulse(pulse), onReconnected: () => sync.catchUp() });
+  const executor = useMemo(() => liveExecutor({ capabilities: () => sync.capabilities(), stateVersion: () => sync.revision() }), [sync]);
+  const data = useMemo(() => buildLiveBundle(snapshot, props.reference, workerStatusFromPulse(conn.pulse)), [snapshot, props.reference, conn.pulse]);
+
+  const onScopeChange = (key: string) => {
+    setScopeKey(key);
+    sync.setScope(key);
+    const scope = scopeOfPlaceKey(key);
+    if (scope) {
+      const params = new URLSearchParams(search?.toString() ?? "");
+      const value = scopeParam(scope);
+      if (value === null) params.delete("scope");
+      else params.set("scope", value);
+      const q = params.toString();
+      router.replace(`${pathname}${q ? `?${q}` : ""}`, { scroll: false });
+    }
+  };
+
+  return (
+    <CommandCenter
+      data={data}
+      mode="live"
+      executor={executor}
+      scopeKey={scopeKey}
+      onScopeChange={onScopeChange}
+      onQuery={(section, params) => sync.setParams(section, params)}
+      onPeriodChange={(period) => sync.setParams("money", { period: period === "hunt" ? "whole-hunt" : period === "day" ? "last-24h" : "2026-09" })}
+      connection={conn.connection}
+      lastGoodAt={conn.lastGoodAt}
+      recovered={conn.recovered}
+      access={props.access}
+      initialView={props.initialView}
+    />
+  );
+}

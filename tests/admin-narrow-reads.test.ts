@@ -26,7 +26,8 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { readDecisionCards, readSnapshot, SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
-import { PULSE_RESEARCH_FIELDS, PULSE_SNAPSHOT_FIELDS, readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
+import { ADMIN_V6_CAPABILITY_REVISION } from "../lib/control-plane/admin-view/v6-capabilities.ts";
+import { PULSE_CONFIG_REVISION_FIELDS, PULSE_RESEARCH_FIELDS, PULSE_SNAPSHOT_FIELDS, readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
 import type { OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "../lib/control-plane/readiness/model.ts";
 import { READINESS_GRID_FIELDS, readReadinessGridFrom, readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
@@ -150,7 +151,25 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.freshnessDebtRows, 2);
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
-  assert.match(narrowed.revision, /^2026-09-25T22:00:00\.000Z\|1\|1\|1\|1\|0\|0\|-$/);
+  assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|1|1|0|0|-|admin-capabilities/1:"));
+  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:workers\/1$/, "Workers has its own v6 capability revision");
+  assert.ok(narrowed.revision.includes(`|${ADMIN_V6_CAPABILITY_REVISION}|-`),
+    "the pulse revision names the current Admin v6 contracts, including Workers");
+});
+
+test("a saved owner policy and snapshot announce Money and Hunts on the existing pulse", async () => {
+  const repos = await publishedWorld();
+  const before = await readPulse(repos, NOW);
+  assert.deepEqual(before.v6?.sections, {}, "an unread owner policy cannot claim a hunt list");
+  await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
+  const after = await readPulse(repos, NOW);
+  assert.equal(after.v6?.sections.hunts?.contract, "admin-v6/hunts@1");
+  assert.equal(after.v6?.sections.money?.contract, "admin-v6/money@1");
+  assert.notEqual(after.revision, before.revision, "the open page discovers the contracts on its next pulse");
+  await repos.adminConfig.compareAndSet("current", 1, any({ expansionScopes: [], fleetSpendCeiling: { limitUsd: 100 } }), LATER);
+  const changed = await readPulse(repos, LATER);
+  assert.notEqual(changed.v6?.sections.hunts?.revision, after.v6?.sections.hunts?.revision,
+    "a saved policy change invalidates the hunt section");
 });
 
 test("the pulse reads the snapshot and the research state only narrowed, and only the fields it declares", async () => {
@@ -167,14 +186,17 @@ test("the pulse reads the snapshot and the research state only narrowed, and onl
       return r.readNarrowed(id, projection);
     },
   });
-  const pulse = await readPulse({ ...repos, ownerSnapshots: watch("the snapshot", repos.ownerSnapshots), researchState: watch("the research state", repos.researchState) }, NOW);
+  const pulse = await readPulse({ ...repos, ownerSnapshots: watch("the snapshot", repos.ownerSnapshots),
+    researchState: watch("the research state", repos.researchState), adminConfig: watch("the hunt policy", repos.adminConfig) }, NOW);
   assert.deepEqual(pulse.unread, [], "nothing it reads was refused");
   assert.deepEqual(asked, [
     { which: "the snapshot", projection: PULSE_SNAPSHOT_FIELDS },
     { which: "the research state", projection: PULSE_RESEARCH_FIELDS },
+    { which: "the hunt policy", projection: PULSE_CONFIG_REVISION_FIELDS },
   ]);
   assert.deepEqual(Object.keys(PULSE_SNAPSHOT_FIELDS).sort(), ["decisionCards", "freshnessDebtRows", "incidents", "obligationsByState"]);
   assert.deepEqual(Object.keys(PULSE_RESEARCH_FIELDS), ["queue"]);
+  assert.deepEqual(Object.keys(PULSE_CONFIG_REVISION_FIELDS), [], "the pulse reads no saved hunt policy payload");
 });
 
 /* ------------------------------------------------------------------ Fleet · Now's cards */

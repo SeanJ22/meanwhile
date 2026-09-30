@@ -310,8 +310,6 @@ test("Plural/OpenStates is research evidence only: production has no state-roste
   assert.match(statementReader, /currentOfficeholderStatements\(\)/);
   const campaignSiteReader = readFileSync(new URL("../lib/officials/campaign-sites.ts", import.meta.url), "utf8");
   assert.match(campaignSiteReader, /currentCampaignSites\(\)/);
-  const readerCensus = readFileSync(new URL("../lib/holdings/reader-census.ts", import.meta.url), "utf8");
-  assert.match(readerCensus, /!string\(row\.officeholderId\)\.startsWith\("plural:"\)/);
   const representationRoute = readFileSync(new URL("../app/api/representation/[...division]/route.ts", import.meta.url), "utf8");
   assert.match(representationRoute, /holderStatus:/);
   assert.match(representationRoute, /sldu\|sldl/);

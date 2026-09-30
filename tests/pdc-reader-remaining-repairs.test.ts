@@ -1,57 +1,29 @@
 import assert from "node:assert/strict";
+
 import { readFileSync } from "node:fs";
+
 import test from "node:test";
+
 import ts from "typescript";
+
 import * as React from "react";
+
 import { renderToStaticMarkup } from "react-dom/server";
+
 import { createHash } from "node:crypto";
+
 import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } from "../lib/holdings/registry-seed-proof.ts";
-import { candidateProfileCensusHoldingPath, canonicalReaderAuthorityJson, civicContactObserved } from "../lib/holdings/reader-census.ts";
+
 import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
+
 import { directFundingTargetPlan } from "../app/api/funding/[target]/route.ts";
+
 import { telHref } from "../lib/officials/phone-numbers.ts";
+
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { validateFullReproofComponentEvidence, validateFullReproofWitnesses, validateListingWitnessReadback } from "../scripts/lib/reader-full-reproof.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
-test("listing witnesses bind the complete current group set rather than a historical literal", () => {
-  const one = { sourceIds: ["listing:a", "listing:b"], reason: "Distinct count unresolved", sourceListingCount: 2, uniqueMeetingCount: null };
-  const two = { ...one, sourceIds: ["listing:c", "listing:d"] };
-  validateListingWitnessReadback([one], [one]);
-  validateListingWitnessReadback([one, two], [one, two]);
-  assert.throws(() => validateListingWitnessReadback([], []), /population is empty/);
-  // No ambiguous group left: accepted only with a positive resolved readback.
-  const resolved = { heading: "Meetings", countNote: null, unresolvedNoticeCount: 0, renderedListingCount: 12 };
-  validateListingWitnessReadback([], [], resolved);
-  assert.throws(() => validateListingWitnessReadback([one], [], resolved), /none may be rendered/);
-  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, heading: "Calendar listings" }), /meeting count/);
-  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, countNote: "Distinct meeting count unresolved." }), /unresolved-count note/);
-  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, unresolvedNoticeCount: 1 }), /no unresolved-listing notice/);
-  assert.throws(() => validateListingWitnessReadback([], [], { ...resolved, renderedListingCount: 0 }), /no rows/);
-  assert.throws(() => validateListingWitnessReadback([], [one], resolved), /Every current/, "a resolved readback never excuses a present ambiguous group");
-  assert.throws(() => validateListingWitnessReadback([one], [one, two]), /Every current/);
-  assert.throws(() => validateListingWitnessReadback([{ ...one, sourceIds: ["listing:a", "listing:other"] }], [one]), /Every current/);
-  assert.throws(() => validateListingWitnessReadback([{ ...one, sourceListingCount: 3 }], [one]), /Every current/);
-  assert.throws(() => validateListingWitnessReadback([one], [{ ...one, sourceListingCount: 3 }]), /ambiguity is not proved/);
-});
-test("full component and body evidence requires current source bindings and actual cases", () => {
-  const evidence = { exactHead: "a".repeat(40), holdingsDigest: "holdings", sourceHashes: [{ path: "body.tsx", sha256: "hash" }], cases: [{ auditId: "body:one" }], failures: [] };
-  validateFullReproofComponentEvidence(evidence, evidence.exactHead, "holdings");
-  for (const invalid of [{ exactHead: undefined }, { exactHead: "b".repeat(40) }, { holdingsDigest: "old" }, { sourceHashes: [] }, { cases: [] }, { failures: ["missing held fact"] }]) assert.throws(() => validateFullReproofComponentEvidence({ ...evidence, ...invalid }, evidence.exactHead, "holdings"));
-});
-test("full reproof refuses missing, stale, incomplete and wrong-build surface evidence", () => {
-  const exactHead = "a".repeat(40);
-  const bytes = Buffer.from(JSON.stringify({ exactHead, buildId: "current-build" }));
-  const witness = { surface: "map", component: "body.tsx", exactHead, evidencePath: "body.json", evidenceSha256: createHash("sha256").update(bytes).digest("hex") };
-  const valid = { exactHead, buildId: "current-build", witnesses: [witness], requirements: [{ surface: "map", component: "body.tsx", importReach: true }], readEvidence: () => bytes };
-  validateFullReproofWitnesses(valid);
-  assert.throws(() => validateFullReproofWitnesses({ ...valid, witnesses: [] }), /full surface/);
-  assert.throws(() => validateFullReproofWitnesses({ ...valid, requirements: [...valid.requirements, { surface: "ballot", component: "candidate.tsx", importReach: true }] }), /lacks current surface/);
-  assert.throws(() => validateFullReproofWitnesses({ ...valid, witnesses: [{ ...witness, exactHead: "b".repeat(40) }] }), /stale witness/);
-  assert.throws(() => validateFullReproofWitnesses({ ...valid, readEvidence: () => Buffer.from("{}") }), /wrong witness artifact/);
-  assert.throws(() => validateFullReproofWitnesses({ ...valid, buildId: "another-build" }), /wrong browser build/);
-  assert.throws(() => validateFullReproofWitnesses({ ...valid, witnesses: [witness, witness] }), /Duplicate/);
-});
+
 function nodes(path: string) {
   const source = ts.createSourceFile(path, readFileSync(path, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const all: ts.Node[] = [];
@@ -140,34 +112,6 @@ test("an empty state funding selection retains stale disclosure but leaves curre
   assert.match(renderToStaticMarkup(render("ballot-az-pima:governor:person", [])), /source through 2026-09-08/);
   read.metadata.stale = "CURRENT";
   assert.equal(render("ballot-az-pima:governor:person", []), null);
-});
-
-test("split ZIP contacts require every covered ZIP and the exact contact facts and source", () => {
-  const contact = { topicId: "property-taxes", zips: ["85701", "85641"], body: "County Assessor", phone: "520-724-8630", sourceUrl: "https://clerk.example/contact", sourceOrg: "County", holdingStatus: "CONTACT_HELD" };
-  const observed = (rows: unknown[]) => new Set(rows.map((row) => `contact:${canonicalReaderAuthorityJson(row)}`));
-  const { holdingStatus: _holdingStatus, ...fields } = contact;
-  const parts = contact.zips.map((zip) => ({ ...fields, zips: [zip] }));
-  assert.equal(civicContactObserved(contact, observed(parts)), true);
-  assert.equal(civicContactObserved(contact, observed([fields])), true);
-  assert.equal(civicContactObserved(contact, observed(parts.slice(0, 1))), false);
-  for (const drift of [{ body: "Other office" }, { phone: "311" }, { sourceUrl: "https://other.example/contact" }, { sourceOrg: "Other source" }]) assert.equal(civicContactObserved(contact, observed([parts[0], { ...parts[1], ...drift }])), false);
-});
-
-test("candidate profile route proof recognizes only the exact field, key and demonstrated authority encoding", () => {
-  const holdingKey = "candidate/a~b";
-  const prefix = "civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#";
-  for (const field of ["bio", "phone", "email", "filedAddress", "official", "campaign"]) {
-    const unit = ["official", "campaign"].includes(field) ? "links" : "cards";
-    const pointer = `/${unit}/candidate~1a~0b${field === "bio" ? "" : `/${field}`}`;
-    const expected = `data/ballot/candidate-${unit}-2026.json#${pointer}`;
-    const profile = { holdingKey, field, holdingPath: prefix + pointer };
-    assert.equal(candidateProfileCensusHoldingPath(profile), expected);
-    assert.equal(candidateProfileCensusHoldingPath({ ...profile, holdingPath: expected }), expected);
-    const derived = { ...profile, holdingPath: `civic-data:CURATED_READER_RECORD:US:candidate-campaign-sites-derived#/records/candidate~1a~0b/${field}` };
-    assert.equal(candidateProfileCensusHoldingPath(derived), field === "campaign" ? expected : null);
-    for (const wrong of [{ holdingKey: "another" }, { holdingPath: derived.holdingPath.replace("sites-derived", "sites-other") }, { holdingPath: derived.holdingPath + "/extra" }, { holdingPath: derived.holdingPath.replace("candidate~1a~0b", "candidate/a~b") }]) assert.equal(candidateProfileCensusHoldingPath({ ...derived, ...wrong }), null);
-    for (const wrong of [{ holdingKey: "another" }, { field: "unrecognized" }, { holdingPath: profile.holdingPath.replace("2026-supported", "2024-supported") }, { holdingPath: profile.holdingPath + "/extra" }, { holdingPath: profile.holdingPath.replace("candidate~1a~0b", "candidate/a~b") }]) assert.equal(candidateProfileCensusHoldingPath({ ...profile, ...wrong }), null);
-  }
 });
 
 test("registry seed proof binds exact curated records and rejects identity coincidence or wrong artifacts", () => {

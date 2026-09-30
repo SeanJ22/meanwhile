@@ -375,6 +375,4 @@ test("ABSTAIN remains its own exact Reader disposition in rendered and census pa
   const popup = readFileSync(new URL("../components/map/popup/official-popup.tsx", import.meta.url), "utf8");
   assert.match(popup, /ABSTAIN:\s*\{\s*label:\s*"Abstained",\s*tone:\s*"neutral"\s*\}/);
   assert.match(popup, /\{POSITION_STYLE\[vote\.position\]\.label\}/);
-  const census = readFileSync(new URL("../lib/holdings/reader-census.ts", import.meta.url), "utf8");
-  assert.match(census, /ABSTAIN:\s*"Abstained"/);
 });

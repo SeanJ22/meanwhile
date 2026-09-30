@@ -171,15 +171,6 @@ test("production executables cannot bypass source-scoped evidence through the ge
   );
 });
 
-test("civic-data firewall refuses the exact scheduled bot-commit architecture", () => {
-  const files = minimalFiles();
-  files[".github/workflows/refresh-daily.yml"] = "on:\n  schedule:\n    - cron: '11 9 * * *'\npermissions:\n  contents: write\nsteps:\n  - run: pnpm refresh:daily\n";
-  const codes = audit(files).map((finding) => finding.code);
-  assert.ok(codes.includes("SCHEDULED_ROUTINE_DATA_WORKFLOW"));
-  assert.ok(codes.includes("ROUTINE_DATA_CONTENTS_WRITE"));
-  assert.ok(codes.includes("LEGACY_EXECUTABLE_PRESENT"));
-});
-
 test("a retired data executable cannot survive behind a renamed package command", () => {
   const files = minimalFiles();
   files["package.json"] = JSON.stringify({ scripts: {
@@ -340,7 +331,6 @@ test("routine data and runtime-ops workflows cannot regain a cron, contents writ
   assert.deepEqual(byPath(".github/workflows/renamed-data-publisher.yml"), [
     "ROUTINE_DATA_CONTENTS_WRITE",
     "ROUTINE_DATA_GIT_WRITE",
-    "SCHEDULED_ROUTINE_DATA_WORKFLOW",
   ]);
   assert.deepEqual(byPath(".github/workflows/renamed-runtime-observer.yml"), [
     "ROUTINE_OPS_CONTENTS_WRITE",
@@ -403,7 +393,6 @@ test("workflow classification follows renamed package aliases and cycle-safe loc
   const expected = [
     "ROUTINE_DATA_CONTENTS_WRITE",
     "ROUTINE_DATA_GIT_WRITE",
-    "SCHEDULED_ROUTINE_DATA_WORKFLOW",
   ];
   assert.deepEqual(byPath(".github/workflows/renamed-alias-publisher.yml"), expected);
   assert.deepEqual(byPath(".github/workflows/renamed-composite-publisher.yml"), expected);

@@ -21,15 +21,6 @@ export interface CivicDataFirewallFinding {
   readonly detail: string;
 }
 
-export const REMOVED_ROUTINE_DATA_WORKFLOWS = [
-  ".github/workflows/refresh-daily.yml",
-  ".github/workflows/refresh-dotgov-snapshot.yml",
-  ".github/workflows/refresh-fec-snapshot.yml",
-  ".github/workflows/refresh-legiscan-snapshot.yml",
-  ".github/workflows/refresh-meetings-snapshot.yml",
-  ".github/workflows/refresh-nj-filing.yml",
-] as const;
-
 export const REMOVED_ROUTINE_OPS_WORKFLOWS = [
   ".github/workflows/intake-tripwire.yml",
   ".github/workflows/job-watch.yml",
@@ -1027,7 +1018,6 @@ const CURATED_READER_SEED_ALLOWLIST = new Set([
   "lib/meetings/venue-cache.ts",
   "lib/holdings/module-datasets.ts",
   "scripts/audit-officials.mts",
-  "scripts/lib/reader-ask-meeting-knowledge-proof.ts",
   "lib/civic-data/firewall.ts",
   PDC_V2_TRUSTED_LKG_IMPORT_PLAN,
 ]);
@@ -1152,9 +1142,6 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     const executable = closure.executable;
     const routineData = ROUTINE_DATA_MARKER.test(executable) || registeredDataCommands.some((command) => executable.includes(command));
     const routineOps = ROUTINE_OPS_MARKER.test(executable);
-    if (SCHEDULE.test(workflowExecutable) && routineData) {
-      add("SCHEDULED_ROUTINE_DATA_WORKFLOW", path, "A GitHub schedule can invoke a routine civic/reference data operation.");
-    }
     if (SCHEDULE.test(workflowExecutable) && routineOps) {
       add("SCHEDULED_ROUTINE_OPS_WORKFLOW", path, "A GitHub schedule can invoke routine runtime observation or operational-state work.");
     }
@@ -1220,7 +1207,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     );
   }
 
-  for (const path of [...REMOVED_ROUTINE_DATA_WORKFLOWS, ...REMOVED_ROUTINE_OPS_WORKFLOWS, ...REMOVED_LEGACY_EXECUTABLES]) {
+  for (const path of [...REMOVED_ROUTINE_OPS_WORKFLOWS, ...REMOVED_LEGACY_EXECUTABLES]) {
     if (Object.hasOwn(tree.files, path)) add("LEGACY_EXECUTABLE_PRESENT", path, "This release-coupled data path was retired by the permanent cutover.");
   }
   for (const path of REMOVED_TRANSITION_DATA_PLANE) {

@@ -42,48 +42,9 @@
   # (answers.netlify.com/t/5349), so a 4 GiB V8 limit fits.
   NODE_OPTIONS = "--max-old-space-size=4096"
 
-# PR PREVIEWS DO NOT BUILD (g17, 2026-08-18, the author's configuration order).
-#
-# Netlify's own switch for this lives in the dashboard under Project
-# configuration > Build & deploy > Continuous deployment > Deploy Previews,
-# and the connector this repo has exposes no build-settings write at all — it
-# can set env vars, forms, access controls and the project name, and nothing
-# else. So the half that CAN be done from the repo is done here, and the
-# dashboard toggle is named in the session report rather than claimed.
-#
-# The `ignore` command runs before the build: exit 0 CANCELS it, a non-zero
-# exit lets it run. Scoped to deploy-preview, so production and branch deploys
-# are untouched — a preview that never builds cannot break a deploy that does.
-#
-# Every session here merges its own PR minutes after opening it, so a preview
-# build is a full Next build nobody looks at, on every push to every session
-# branch. .github/workflows/build-check.yml already runs the same command on
-# ubuntu in both modes and its log is readable without a Netlify login, which
-# is the check the preview was standing in for.
-# ITEM I, 2026-09-01 — A CONFLICT REPRESENTED, NOT RESOLVED.
-#
-# The ITEM I brief states that "Deploy Previews per PR remain available at their
-# Netlify URLs for pre-integration checks." That sentence has a false premise:
-# previews are not currently available to REMAIN available. They have been
-# cancelled here since g17 (2026-08-18, the author's configuration order), and
-# the measurement above is why.
-#
-# Re-enabling them would AMEND g17, and CLAUDE.md's authority precedence puts a
-# session brief (level 5) below current law (levels 2-3). A brief that conflicts
-# with current law does not silently win — the conflict is represented rather
-# than resolved by whichever document was read last. So this block is left
-# exactly as g17 set it, and the conflict is carried in the session report for
-# the author.
-#
-# The reconciliation on the merits, offered rather than applied: what the brief
-# wants a preview FOR — a rendered pre-integration target the owner can open —
-# is precisely what the integration branch deploy now provides, at a stable
-# hostname, against an isolated database, with an observer watching it. A
-# per-PR preview would be a second, weaker answer to a question ITEM I has just
-# answered properly. If the author wants previews back regardless, that is a
-# one-line change here plus a ruling that names g17.
+# PR previews build only when the pull request has the preview label.
 [context.deploy-preview]
-  ignore = "exit 0"
+  ignore = "node scripts/netlify-ignore.mjs"
 
 # BRANCH DEPLOYS BUILD FOR EXACTLY ONE BRANCH (ITEM I, 2026-09-01).
 #

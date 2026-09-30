@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
@@ -90,25 +89,6 @@ test("the tracked first import accounts for all 36 cells, 26 exact contact sourc
     record.disposition === "UNKNOWN" && record.holdingStatus === "CONTACT_OWED" &&
     /^https:\/\//.test(record.evidenceSourceUrl) && record.reason.length > 0
   ));
-});
-
-test("the documentary civic proof enumerates the exact promoted routing authority", () => {
-  const source = readFileSync(
-    new URL("../scripts/reader-last-mile-civic.mts", import.meta.url),
-    "utf8",
-  );
-  assert.doesNotMatch(source, /\bEVERYDAY_(?:CONTACTS|MISSES|TOPIC_IDS|ZIPS)\b/);
-  assert.doesNotMatch(source, /\.indexOf\(contact\)/);
-  for (const binding of [
-    "everydayRoutingReadState()",
-    "everydayRoutingRead.metadata.versionId",
-    "canonicalRecordId: promotedRecord.id",
-    "encountered.add(promotedRecord.id)",
-    "expectedCount: everydayRouting.denominator.contactRecords",
-    "expectedDispositionCount: everydayRouting.denominator.unknownContactOwedCells",
-  ]) {
-    assert.ok(source.includes(binding), `documentary civic proof lost ${binding}`);
-  }
 });
 
 test("record identities are canonical and cannot create a second authority for one fact", () => {

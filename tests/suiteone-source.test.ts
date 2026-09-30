@@ -16,7 +16,7 @@ import test from "node:test";
 
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
-import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
+import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import {
   makeSuiteOneSource,
@@ -43,7 +43,7 @@ test("WINSLOW · the wired body is Winslow's registered governing body, read fro
   assert.equal(WIRING.timeZone, "America/Phoenix");
   const partition = meetingPartitionForRow("suiteone", WIRING.bodyId);
   assert.equal(partition.acquisitionFailureDomain, "meeting-upstream:winslowaz.suiteonemedia.com");
-  assert.ok(PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(partition.id), "named as registered after the frozen import");
+  assert.ok(POST_FIXTURE_MEETING_PARTITIONS.includes(partition.id), "named as registered after the frozen import");
   assert.equal(authorityFor("meetings-public-bodies", "MEETING", PORTAL).ok, true);
   assert.equal(authorityFor("meetings-public-bodies", "MEETING", at("/Account/LoadLoginModal")).ok, false,
     "authority is the one page read, not the whole tenant");

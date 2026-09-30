@@ -23,6 +23,7 @@ export function resolvePilotMirror(root, configured, staging) {
   if (!staging) return configured ?? "G:/My Drive/we-the-people";
   if (!configured?.trim()) return null;
   const target = resolve(root, configured);
+  if (!isInside(resolve(root), target)) return null;
   const canonicalRoot = realpathSync(root);
   let ancestor = target;
   while (!existsSync(ancestor)) ancestor = dirname(ancestor);

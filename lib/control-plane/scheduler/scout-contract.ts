@@ -276,8 +276,17 @@ export type ScoutSearch = (
   input: { readonly query: string; readonly includeDomains?: readonly string[] },
 ) => Promise<SearchProvidersResult>;
 
+export interface ScoutFactEvidence {
+  readonly sourceUrl: string;
+  readonly retrievalUrl?: string;
+  readonly text: string;
+  readonly visibleText: string;
+}
+
 export interface ScoutToolkit {
   readonly specs: readonly ScoutToolSpec[];
+  /** Only text actually saved or opened from the vault during this attempt. */
+  readonly factEvidence?: ReadonlyMap<string, ScoutFactEvidence>;
   /** Runtime evidence that this Attempt actually had brokered held-byte reading. */
   readonly heldEvidenceProtocolAvailable?: boolean;
   /**

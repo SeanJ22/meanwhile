@@ -649,6 +649,7 @@ export function validateScoutFinish(input: {
   readonly machine?: {
     readonly provenance: ReadonlyMap<string, ArtifactProvenance>;
     readonly recordClass: string;
+    readonly factEvidence?: ReadonlyMap<string, import('./scout-contract.ts').ScoutFactEvidence>;
   };
 }): ScoutIssue[] {
   return validateScoutFinishWithCandidates(input).issues;
@@ -780,6 +781,18 @@ export function validateScoutFinishWithCandidates(input: Parameters<typeof valid
           `finding "${(finding.summary ?? "").slice(0, 80)}" cites ` +
           (cited.length === 0 ? "NO artifact" : `unknown artifact id(s): ${unknown.join(", ")}`),
       });
+    }
+    if (input.machine?.factEvidence && (finding.kind==='RECORD' || finding.field)) {
+      const quote=finding.exactQuote?.trim(),value=finding.value;
+      const grounded=Boolean(finding.field && quote && value!==null && value!==undefined &&
+        (typeof value==='string' || typeof value==='number' || typeof value==='boolean') && String(value).length &&
+        quote.includes(String(value)) && cited.some(id=>{
+          const source=input.machine!.factEvidence!.get(id);
+          return source && (source.sourceUrl===finding.sourceUrl || source.retrievalUrl===finding.sourceUrl) &&
+            (source.text.includes(quote) || source.visibleText.includes(quote));
+        }));
+      if(!grounded)issues.push({code:'SCOUT_FINDING_WITHOUT_EVIDENCE',detail:
+        `Fact ${finding.field??'(missing field)'} must copy a contiguous exactQuote containing its literal value from a cited, opened source at sourceUrl. Use read_held for inherited bytes; do not infer, reformat, or join quotations with ellipses.`});
     }
   }
 

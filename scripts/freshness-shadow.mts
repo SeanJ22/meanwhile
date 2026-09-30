@@ -1459,7 +1459,7 @@ const openOccurrenceInStep = async (
     const resumed = await resumeOpenOccurrence(repos, obligation);
     if (resumed?.kind === "SETTLED") {
       /* The model lane admits a row before opening it; a recovery runs no Scout, so it hands its admission back. */
-      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") {
+      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER" && scoutFor(row).lane !== "DETERMINISTIC") {
         openedModel += 1;
         scoutsAdmittedThisCycle = Math.max(0, scoutsAdmittedThisCycle - 1);
         if (!lifetimeHuntWork(id)) scoutsAdmittedOutsideLifetime = Math.max(0, scoutsAdmittedOutsideLifetime - 1);
@@ -1474,7 +1474,7 @@ const openOccurrenceInStep = async (
       if (occ === null) return false;
       occurrenceByObligation.set(id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     }
-    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
+    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER" && scoutFor(row).lane !== "DETERMINISTIC") openedModel += 1;
     else openedDeterministic += 1;
     return true;
   } catch (error) {
@@ -2443,9 +2443,11 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  * lane is enabled; otherwise a refusing stand-in that `admitScout` never
  * reaches.
  */
-const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
+const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...priorScoutResults.values()].flat(),
+  scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
+const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
   ? failureResponderExecutor({
-      solved:solvedScoutResult([...priorScoutResults.values()].flat(),scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId),
+      solved:heldScoutFor(scheduled),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
         transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),

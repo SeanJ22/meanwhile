@@ -1533,7 +1533,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
                 vaulted: toolkit.vaultedArtifactIds,
                 inherited,
                 minRungs,
-                machine: { provenance, recordClass: sourceRecordClass },
+                machine: { provenance, recordClass: sourceRecordClass, factEvidence:toolkit.factEvidence },
               });
               const issues = validated.issues;
               /*

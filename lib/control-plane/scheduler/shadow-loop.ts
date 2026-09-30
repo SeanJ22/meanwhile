@@ -670,6 +670,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   const research = input.research;
   const decisions = new Map<string, ExecutorDecision>();
+  const resolvedDeterministic = new Map<string, DeclaredExecutor>();
   const deterministicRows: ScheduledObligation[] = [];
   const modelRows: ScheduledObligation[] = [];
   /* A row recovered before dispatch is withheld from both lanes, so it is recovered once and never walked. */
@@ -678,7 +679,16 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     deterministicRows.push(...laneWork);
   } else {
     for (const row of laneWork) {
-      const decision = research.decide(row);
+      let decision = research.decide(row);
+      if (decision.kind === "BOUNDED_MODEL_WORKER") {
+        // Held discoveries declare their actual lane before any paid admission.
+        // Other factories still resolve at dispatch, inheriting same-cycle work.
+        const executor = typeof research.modelExecutor === "function" ? research.modelExecutor(row) : research.modelExecutor;
+        if (executor.lane === "DETERMINISTIC") {
+          resolvedDeterministic.set(row.obligation.id, executor);
+          decision = { ...decision, kind: "DETERMINISTIC", why: "The resolved executor reuses held work without a model request." };
+        }
+      }
       decisions.set(row.obligation.id, decision);
       (decision.kind === "BOUNDED_MODEL_WORKER" ? modelRows : deterministicRows).push(row);
     }
@@ -802,7 +812,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       admitted += 1;
       deterministicDispatched += 1;
       const result = await dispatchRow(row, {
-        executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
+        executor: resolvedDeterministic.get(row.obligation.id) ?? (typeof input.executor === "function" ? input.executor(row) : input.executor),
         leaseTtlMs: input.leaseTtlMs,
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });

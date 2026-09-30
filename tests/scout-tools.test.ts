@@ -20,6 +20,7 @@ import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
 import { contentHash } from '../lib/control-plane/ids.ts';
+import { validateScoutFinish } from '../lib/control-plane/scheduler/scout-result.ts';
 import { MemoryEvidenceStore, objectKey, putArtifact, readForParser } from "../lib/control-plane/evidence/store.ts";
 import { issueParserInput } from "../lib/control-plane/evidence/parser-boundary.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
@@ -43,6 +44,23 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
  */
 
 const NOW = "2026-09-01T12:00:00.000Z";
+
+test('Scout facts require a literal value and exact quotation from opened source bytes',async()=>{
+  const url='https://county.gov/clerk',text='<p>Clerk <b>Ada</b></p><p>Call 555-0100</p>';
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({[url]:{status:200,body:text}}).open}));
+  const call=await kit.call('fetch_public',{url,why:'Read clerk',rung:'primary-site-navigation'},null);
+  const id=call.artifacts.find(a=>a.canonicalUrl===url)!.artifactId;
+  const base={toolCalls:kit.toolCalls,rungs:[],stoppedBy:'MODEL' as const,vaulted:kit.vaultedArtifactIds,inherited:new Set<string>(),
+    machine:{provenance:new Map((call.provenance??[]).map(p=>[p.artifactId,p])),recordClass:'officials',factEvidence:kit.factEvidence}};
+  const finding={kind:'RECORD' as const,summary:'Clerk name',field:'holder',value:'Ada',exactQuote:'Clerk Ada',sourceUrl:url,artifactIds:[id]};
+  const check=(fact:typeof finding)=>validateScoutFinish({...base,finish:{outcome:'EVIDENCE_FOUND',candidates:[],findings:[fact],rungsWalked:[],nextRungs:[],unverified:[],narrative:'source facts'}});
+  assert.deepEqual(check(finding),[]);
+  for(const fact of [{...finding,value:'Ada Smith'},{...finding,exactQuote:'Clerk Ada ... Call 555-0100'},
+    {...finding,sourceUrl:'https://other.gov/clerk'},{...finding,artifactIds:['unopened']},
+    {...finding,value:'555-0100',exactQuote:'Clerk Ada'}]) {
+    assert.ok(check(fact).some(i=>i.code==='SCOUT_FINDING_WITHOUT_EVIDENCE'));
+  }
+});
 
 test('collector reads held bytes before HTTP and preserves their observation time',async()=>{
   const url='https://county.gov/clerk',old='2026-08-30T00:00:00Z';

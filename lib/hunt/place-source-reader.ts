@@ -43,10 +43,14 @@ export async function placeSourceReader(input: {
     subjectId: context.obligation.obligation.subjectId, routeId: null, active: true,
     readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: at }, Date.parse(at));
   const cutoff = Date.parse(at) - ("cadenceHours" in cadence ? cadence.cadenceHours : 24) * 3_600_000;
-  const records = (await tools.repos.artifacts.readAll()).filter(row => !row.partial && row.tier !== "RESTRICTED_RAW" &&
+  const allRecords = await tools.repos.artifacts.readAll();
+  const records = allRecords.filter(row => !row.partial && row.tier !== "RESTRICTED_RAW" &&
     Date.parse(row.recordedAt) >= cutoff && Date.parse(row.recordedAt) <= Date.parse(at));
-  const readHeld = workerVaultResolver(tools.repos, tools.store, project, { snapshot: true });
-  const readObject = researchVaultResolver(tools.repos, tools.store, project);
+  // This reader resolves the same initial held set throughout the attempt;
+  // new captures are already available in its in-memory capture map.
+  const heldRepos = { ...tools.repos, artifacts: { ...tools.repos.artifacts, readAll: async () => allRecords } };
+  const readHeld = workerVaultResolver(heldRepos, tools.store, project, { snapshot: true });
+  const readObject = researchVaultResolver(heldRepos, tools.store, project);
   const provenance: ArtifactProvenance[] = [];
   const inherited = new Map<string, WorkerPublicationCapture>();
   const resolvedUrls = new Set<string>();

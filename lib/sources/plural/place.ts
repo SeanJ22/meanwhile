@@ -155,7 +155,10 @@ export async function collectNationalPlaceSources(input: {
         for (const heading of page.text.matchAll(/<h([1-3])\b[^>]*>([\s\S]*?)<\/h\1>/gi)) {
           const label = cellText(heading[2]).replace(/\s+/g, " ").trim();
           const name = label.replace(new RegExp(`^(?:${OFFICE})\\s+`, "i"), "");
-          if (label === name && (heading[1] !== "1" || !looksLikeNameCell(name))) continue;
+          // A site's news carousel can contain several name-shaped H1s.
+          // Bind the person to the office in this heading, not elsewhere on
+          // the page; a bare heading remains extraction work.
+          if (label === name || !looksLikeNameCell(name)) continue;
           if (!/^[\p{Lu}][\p{L}.'’ -]+$/u.test(name) || name.split(/\s+/).length < 2 || name.length > 80 ||
             /\b(?:office|about|contact|state|government|attorney|general|governor|secretary|welcome|news|services)\b/i.test(name)) continue;
           const at = words.indexOf(name);

@@ -8,7 +8,7 @@ import {MODELS} from '../lib/models.ts';
 import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
 import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts} from '../lib/control-plane/workers/detective.ts';
 import { sourceReliabilityKey } from '../lib/control-plane/scheduler/scout-reliability.ts';
-import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureNeedsInvestigation, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
+import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
 import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
 import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.ts';
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
@@ -80,16 +80,6 @@ test('an installed adapter wakes its class and reads every held link without a r
  await assert.rejects(runInstalledAdapter('../private','', 'https://county.gov'),/NOT_INSTALLED/);
 });
 
-test('failed acquisition and blank parse reach a Detective before another unchanged retry',()=>{
- for(const verdict of ['BLOCKED','REFUSED','AMBIGUOUS']) {
-  const records=[{endedAt:'2026-09-29T01:00:00Z',result:{verdict,findings:[]}}] as unknown as Parameters<typeof failureNeedsInvestigation>[0];
-  assert.equal(failureNeedsInvestigation(records,[]),true);
-  const reply={researchRole:'DETECTIVE',refusal:null,recordedAt:'2026-09-29T02:00:00Z'} as ScoutResult;
-  assert.equal(failureNeedsInvestigation(records,[reply]),false);
-  assert.equal(failureNeedsInvestigation(records,[{...reply,recordedAt:'2026-09-28T02:00:00Z'}]),true);
- }
-});
-
 test('legacy adapter debts wake for installed code and stay held after that same implementation was tried',async()=>{
  const repos=createMemoryRepositories(),name='uncapped-source-links',now='2026-09-30T00:00:00Z';
  const pending={refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Need uncapped links from raw HTML extraction',nextRungs:[],candidates:[],rungs:[]} as unknown as ScoutResult;
@@ -123,6 +113,14 @@ test('the legacy research lane declares a failure responder before dispatch and 
   assert.equal(executor.workerFor!(args).role,failed?'DETECTIVE':'SCOUT');
   executor.workerFor!(args);assert.equal(reads,1);
  }
+});
+
+test('unrelated failed manual entries do not turn new discovery into a Detective assignment',()=>{
+ const executor=failureResponderExecutor({transport:async()=>{throw Error('No model');},toolkitFor:()=>{throw Error('No tools');},contextFor:()=>({
+   route:null,providerId:null,reason:'new discovery',inherited:{artifactIds:[],summary:'FIELD MANUAL — shared knowledge\n  A BLOCKED or FAILED door is a wall only when access controls stop it.\n  • SHARED/SOURCE_DEAD_END FAILED (az): another district archive'},
+   tools:{vault:async()=>({stored:true,where:'test',why:'saved'}),spaceOut:async()=>{}},
+ })});
+ assert.equal(executor.workerFor!({obligation:{obligation:{id:'new-discovery'}},holder:'worker'} as Parameters<NonNullable<typeof executor.workerFor>>[0]).role,'SCOUT');
 });
 
 test('legacy jobs reuse solved subjects without refreshing old facts or calling a model',async()=>{

@@ -84,6 +84,7 @@ import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
   artifactId,
   recordAcquisition,
+  deriveSanitized,
   type Artifact,
   type RetentionPolicy,
 } from "../evidence/artifact.ts";
@@ -620,6 +621,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     readonly artifact: Artifact;
     readonly stored: boolean;
     readonly why: string;
+    readonly text?: string;
   }
 
   async function vaultText(
@@ -654,12 +656,23 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       },
       input.text,
     );
-    const saved=await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
-    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
-      artifact.methodRouteId!=='scout:read_permission' && !artifact.methodRouteId.endsWith(':network-observation'))factEvidence.set(artifact.id,{
-      sourceUrl:artifact.canonicalUrl,retrievalUrl:artifact.retrievalUrl,retrievedAt:artifact.retrievedAt,text:input.text,
-      visibleText:artifact.contentType.includes('html')?visibleText(input.text):input.text});
-    return saved;
+    let saved=await put(artifact, () => ctx.vault(artifact, input.text), at, acc);
+    let text=input.text;
+    if(artifact.tier==='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC') {
+      // Same acquisition path as the meetings collector: retain the raw hash
+      // and redaction derivation even when no restricted substrate is present.
+      const derived=deriveSanitized(artifact,input.text,at);
+      const rawNote=saved.stored?'Restricted original vaulted.':`Restricted original not retained: ${saved.why}.`;
+      saved=await put(derived.artifact,()=>ctx.vault(derived.artifact,derived.text),at,acc);
+      saved={...saved,why:`${rawNote} Sanitized derivative: ${saved.why}`};
+      text=derived.text;
+    }
+    const held=saved.artifact;
+    if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
+      held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation'))factEvidence.set(held.id,{
+      sourceUrl:held.canonicalUrl,retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,text,
+      visibleText:held.contentType.includes('html')?visibleText(text):text});
+    return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
   }
 
   async function vaultBinary(
@@ -958,7 +971,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         { url, finalUrl, status, contentType: got.contentType, text, methodRouteId: "scout:fetch_public", permission, transport: "REACHABLE" },
         acc,
       );
-      const head = `${envelope(report.artifact, url.toString(), finalUrl, status, got.byteLength)}\n${permLine}`;
+      const head = `${envelope(report.artifact, url.toString(), finalUrl, status, got.byteLength)}\n${permLine}${report.artifact.tier==='SANITIZED_DERIVED'?`\n${report.why}`:''}`;
       if (!report.stored) {
         return result(
           false,
@@ -973,11 +986,12 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           rung(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`), acc, permission
         );
       }
-      if (/html/i.test(got.contentType)) nextHopUrls = extractLinks(text, url).map(link => link.url);
+      const readable=report.text??'';
+      if (/html/i.test(got.contentType)) nextHopUrls = extractLinks(readable, url).map(link => link.url);
       if (/json/i.test(got.contentType)) {
-        try { const rows: unknown = JSON.parse(text); if (Array.isArray(rows)) returnedCount = rows.length; } catch { /* Raw bytes remain evidence; parsing is another worker's burden. */ }
+        try { const rows: unknown = JSON.parse(readable); if (Array.isArray(rows)) returnedCount = rows.length; } catch { /* Saved bytes remain evidence; parsing is another worker's burden. */ }
       }
-      return result(true, textRepresentation(head, text, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, permission);
+      return result(true, textRepresentation(head, readable, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}${report.artifact.tier==='SANITIZED_DERIVED'?'; '+report.why:''}`), acc, permission);
     }
 
     /* Non-2xx: the answer is DIAGNOSTIC evidence that the rung was walked; the body is never shown. */
@@ -1200,14 +1214,16 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } else if (page.artifact.tier === "RESTRICTED_RAW") {
       parts.push(`${head}\nQUARANTINED: the rendered page carries a confirmed third-party credential and is stored RESTRICTED_RAW. Nothing of it is shown.`);
     } else {
-      browserNextHopUrls = extractLinks(obs.html, new URL(finalUrl), 200).map(link => link.url);
-      const body = capText(visibleText(obs.html));
-      parts.push(UNTRUSTED_CONTENT_HEADER, head, DATA_BEGIN, `TITLE: ${htmlTitle(obs.html) ?? "(none)"}`, `TEXT (${body.note}):`, body.text, DATA_END);
+      const readable=page.text??'';
+      browserNextHopUrls = extractLinks(readable, new URL(finalUrl), 200).map(link => link.url);
+      const body = capText(visibleText(readable));
+      parts.push(UNTRUSTED_CONTENT_HEADER, head, ...(page.artifact.tier==='SANITIZED_DERIVED'?[page.why]:[]), DATA_BEGIN, `TITLE: ${htmlTitle(readable) ?? "(none)"}`, `TEXT (${body.note}):`, body.text, DATA_END);
     }
     if (!network.stored) {
       parts.push(`NETWORK OBSERVATION not vaulted: ${network.why}. The request list is not shown.`);
     } else {
-      const ordered = [...obs.requests]
+      const requests=(JSON.parse(network.text??'{"requests":[]}') as {requests:typeof obs.requests}).requests;
+      const ordered = [...requests]
         .map((r, i) => ({ r, i }))
         .sort((a, b) => rank(a.r, host) - rank(b.r, host) || a.i - b.i)
         .slice(0, REQUEST_LIST_CAP)
@@ -1385,7 +1401,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         artifactIds:acc.artifacts.map(a=>a.artifactId),transport:ok?'REACHABLE':'FAILED_AT_RUNG',httpStatus:response.status,
         returnedCount:null,applicableBecause:input.why,nextHopUrls:[]};
       if (!saved.stored) return result(false, saved.why, rung, acc);
-      return result(ok, 'SOURCE '+response.sourceUrl+' | artifact '+saved.artifact.id+' | retrieved '+saved.artifact.retrievedAt+' | permission NOT_APPLICABLE\n'+DATA_BEGIN+'\n'+capText(response.text).text+'\n'+DATA_END,rung,acc);
+      return result(ok, 'SOURCE '+response.sourceUrl+' | artifact '+saved.artifact.id+' | retrieved '+saved.artifact.retrievedAt+' | permission NOT_APPLICABLE\n'+DATA_BEGIN+'\n'+capText(saved.text??'').text+'\n'+DATA_END,rung,acc);
     } catch(error) { return refusal(name+': '+(error instanceof Error ? error.message : String(error))); }
   }
 

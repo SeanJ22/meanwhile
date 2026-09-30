@@ -751,7 +751,7 @@ test("a 403 is a WALL: the challenge page is vaulted DIAGNOSTIC, its body is nev
 
 /* ============================================ quarantine (RESTRICTED_RAW) */
 
-test("a body carrying a confirmed third-party credential is RESTRICTED_RAW and the model sees nothing of it", async () => {
+test("Scout saves a sanitized derivative of credential-bearing pages even when restricted originals cannot be retained", async () => {
   const fakeKey = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
   const body = `<html><head><title>Schedule</title></head><body><p>${MARKER}</p><script>window.__B='{"k":"${fakeKey}"}'</script></body></html>`;
   const { open } = fakeTransport({
@@ -759,19 +759,46 @@ test("a body carrying a confirmed third-party credential is RESTRICTED_RAW and t
     [`${HOST}/s`]: { status: 200, body },
   });
   const vault = recordingVault("accept");
-  const kit = buildScoutToolkit(context({ openOne: open, vault: vault.put }));
+  const kit = buildScoutToolkit(context({ openOne: open, vault:async(artifact,text)=>artifact.tier==='RESTRICTED_RAW'
+    ? {stored:false,where:'',why:'No restricted provider'} : vault.put(artifact,text) }));
   const r = await kit.call("fetch_public", { url: `${HOST}/s`, ...IN }, null);
-  assert.ok(!r.forModel.includes(MARKER));
+  assert.equal(r.ok,true);
+  assert.ok(r.forModel.includes(MARKER));
   assert.ok(!r.forModel.includes(fakeKey));
-  assert.ok(!r.forModel.includes("Schedule"), "not even the title");
-  assert.match(r.forModel, /RESTRICTED_RAW/);
+  assert.ok(r.forModel.includes("Schedule"));
+  assert.match(r.forModel, /Restricted original not retained/);
   const page = r.artifacts.find((a) => a.canonicalUrl === `${HOST}/s`);
-  assert.equal(page?.tier, "RESTRICTED_RAW", "the tier is decided by scanning the bytes");
-  assert.ok(r.forModel.includes(page.artifactId), "the quarantined artifact is still citable by id");
-  assert.match(r.rung?.observed ?? "", /RESTRICTED_RAW/);
+  assert.equal(page?.tier, "SANITIZED_DERIVED");
+  const saved=vault.puts.find(p=>p.artifact.id===page!.artifactId)!;
+  assert.ok(saved.artifact.derivation?.rawHash);
+  assert.ok(!saved.body.includes(fakeKey));
+  assert.ok(kit.factEvidence?.get(page!.artifactId)?.text.includes(MARKER));
+  assert.ok(!kit.factEvidence?.get(page!.artifactId)?.text.includes(fakeKey));
+  const denied=buildScoutToolkit(context({openOne:open,vault:recordingVault('refuse').put}));
+  const failed=await denied.call('fetch_public',{url:`${HOST}/s`,...IN},null);
+  assert.equal(failed.ok,false);
+  assert.ok(!failed.forModel.includes(MARKER) && !failed.forModel.includes(fakeKey));
 });
 
 /* ================================================== binary and PDF bodies */
+
+test('browser text and observed network URLs come only from saved sanitized derivatives',async()=>{
+  const key=['AI','za'].join('')+'SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp'.slice(0,35);
+  const html=`<html><body>Clerk Ada<script>const key="${key}"</script></body></html>`;
+  const vault=recordingVault();
+  const kit=buildScoutToolkit(context({openOne:fakeTransport({}).open,
+    vault:async(artifact,text)=>artifact.tier==='RESTRICTED_RAW'?{stored:false,where:'',why:'restricted originals unavailable'}:vault.put(artifact,text),
+    browse:async({url})=>({finalUrl:url,status:200,html,text:'Clerk Ada',transportError:null,durationMs:1,
+      requests:[{url:`https://county.gov/api?key=${key}`,method:'GET',status:200,resourceType:'xhr',contentType:'application/json'}]}),
+  }));
+  const result=await kit.call('browse',{url:'https://county.gov/clerk',...IN},null);
+  assert.equal(result.ok,true);
+  assert.ok(result.forModel.includes('Clerk Ada'));
+  assert.ok(!result.forModel.includes(key));
+  const saved=vault.puts.filter(p=>p.artifact.methodRouteId.startsWith('scout:browse'));
+  assert.equal(saved.length,2);
+  assert.ok(saved.every(p=>p.artifact.tier==='SANITIZED_DERIVED'&&!p.body.includes(key)));
+});
 
 function minimalPdf(text: string, contentStream?: string): Uint8Array {
   const stream = contentStream ?? `BT /F1 18 Tf 10 50 Td (${text}) Tj ET`;

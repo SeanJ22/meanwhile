@@ -1,4 +1,4 @@
-import { adapterWaitReason, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded, failureNeedsInvestigation } from "./detective.ts";
+import { adapterWaitReason, reusableScoutCandidates, subjectScoutHistory, scoutFactGrounded } from "./detective.ts";
 import { installedAdapters } from '../scheduler/scout-adapters.ts';
 import { randomUUID } from "node:crypto";
 import type { WorkItem } from "../work-item.ts";
@@ -255,7 +255,6 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     if (["PENDING","RECLAIMABLE"].includes(task.state) && (!debt||Date.parse(debt.retryAt)<=Date.parse(now)||task.id===recoveryTaskId)) return decision("SCOUT",scope,task);
     return decision("BLOCKED","Scout has no accepted grounded route; preserve its next rungs and retry state.",task);
   };
-  if (failureNeedsInvestigation(records,subjectScoutHistory(await repos.scoutResults.readAll(),item.subject,plan.contract.recordClass))) return scoutOperation(true);
   if (!acquisitions.length) return scoutOperation(false);
   let staged = false;
   let unresolved = false;

@@ -139,8 +139,12 @@ export function failureResponderExecutor(deps: import('../scheduler/scout-execut
   const choose=(row:Parameters<typeof contextFor>[0])=>{
     try {
       const inherited=contextFor(row).inherited;
+      // Shared manual failures are knowledge, not failures of this job. Its
+      // projected entries/instructions are indented; keep actual prior-result
+      // and debt lines for role selection while handing the full brief onward.
+      const ownHistory=inherited.summary.split('\n').filter(line=>!/^\s|^FIELD MANUAL/.test(line)).join('\n');
       return (inherited.priorRungs ?? []).some(r=>r.ok===false || /transport failure|HTTP [45]\d\d|NOT VAULTED/i.test(r.observed)) ||
-        /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop/i.test(inherited.summary) ? detective : scout;
+        /\b(?:REFUSED|BLOCKED|NO_PROGRESS|NEEDS_ADAPTER|REQUIRED_FIELD_MISSING)\b|failed parse|blocked route|retry loop|DEBT: [1-9]\d* consecutive failure/i.test(ownHistory) ? detective : scout;
     } catch { return scout; }
   };
   const held=deps.solved;
@@ -226,14 +230,6 @@ export async function wakeInstalledAdapterDebts(repos:import('../repository/type
       !hasUntriedAdapter(result,adapters))return debt;
     return {...debt,cause:'EXTRACTION_FAILED' as const,retryAt:now,detail:debt.detail+'; installed adapter changed: Detective can try the saved bytes.'};
   });
-}
-
-/** A completed failed worker reaches Detective before the same acquisition is retried. */
-export function failureNeedsInvestigation(records: readonly import('./types.ts').WorkerResultRecord[], scouts: readonly import('../scheduler/scout-result.ts').ScoutResult[]): boolean {
-  const failures = records.filter(row=>!['ACQUIRED','EXTRACTED','PASS','SUPPORTED','SURVIVED','CANDIDATE_PROVED'].includes(row.result.verdict) ||
-    ('warnings' in row.result ? row.result.warnings : row.result.findings).some(f=>f.severity==='BLOCKING'));
-  const newest = failures.sort((a,b)=>b.endedAt.localeCompare(a.endedAt))[0];
-  return Boolean(newest && !scouts.some(s=>s.researchRole==='DETECTIVE' && s.refusal===null && s.recordedAt>=newest.endedAt));
 }
 
 export function scoutFactGrounded(result: import('../scheduler/scout-result.ts').ScoutResult, sourceUrl: string, text: string): boolean {

@@ -21,12 +21,10 @@ import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 const NOW = "2026-09-02T00:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
-const SCOUT_WALL_MS = 300_000; // 5 min
 /* The injected clock reads 100s into the cycle — after the pre-dispatch phases. */
 const CLOCK_MS = NOW_MS + 100_000;
-/* The deterministic lane's deadline AFTER the downstream reserve: too tight for a
-   5-min Scout (100s + 300s = 400s > 350s). This is what starved the Scouts. */
-const RESERVED_DEADLINE = NOW_MS + 350_000;
+/* The deterministic lane deadline expired during pre-dispatch work. */
+const RESERVED_DEADLINE = NOW_MS + 50_000;
 /* The hard dispatch wall the Scout lane should admit against: 13 min, room to spare. */
 const HARD_DEADLINE = NOW_MS + 780_000;
 
@@ -65,7 +63,6 @@ async function runScoutCycle(scoutDeadlineMs: number | undefined) {
       modelExecutor,
       maxConcurrentScouts: 2,
       scoutLeaseTtlMs: 1000,
-      scoutWallMs: SCOUT_WALL_MS,
       ...(scoutDeadlineMs !== undefined ? { scoutDeadlineMs } : {}),
     },
   });
@@ -91,11 +88,10 @@ test("FIX: scoutDeadlineMs floors admission to the hard wall, so the same Scout 
   );
 });
 
-test("the floor still stops a Scout that genuinely cannot finish before the hard wall", async () => {
-  /* A hard deadline only 100s ahead of the clock: 100s + 300s wall > it, so even
-     with the floor the Scout is correctly deferred — the fix restores the window,
-     it does not remove the wall (a Scout killed mid-walk leaves an orphan Attempt). */
-  const cycle = await runScoutCycle(CLOCK_MS + 100_000);
-  assert.equal(cycle.lanes?.model.dispatched, 0, "no Scout is started when it cannot finish before the wall");
-  assert.equal(cycle.lanes?.model.deferredBy.BUDGET, 1, "deferred for BUDGET, honestly");
+test("Scout admission uses the actual cycle deadline without a predicted five-minute duration", async () => {
+  const live=await runScoutCycle(CLOCK_MS + 100_000);
+  assert.equal(live.lanes?.model.dispatched,1);
+  const expired=await runScoutCycle(CLOCK_MS);
+  assert.equal(expired.lanes?.model.dispatched,0);
+  assert.equal(expired.lanes?.model.deferredBy.BUDGET,1);
 });

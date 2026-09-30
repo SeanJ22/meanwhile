@@ -126,7 +126,6 @@ async function dispatcherRun(input: { readonly cycles: number; readonly perCycle
         modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => { throw new Error("no Scout may start"); } },
         maxConcurrentScouts: 1,
         scoutLeaseTtlMs: 60_000,
-        scoutWallMs: 1_000,
       },
     });
     debts = cycle.debts;

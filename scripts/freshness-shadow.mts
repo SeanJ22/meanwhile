@@ -2790,8 +2790,7 @@ const cycle = await runCycle({
     },
     modelExecutor: scoutFor,
     maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
-    scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
-    scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
+    scoutLeaseTtlMs: 300_000,
     /*
      * The Scout lane admits against the HARD dispatch wall, not the reserve-reduced
      * deadline the deterministic lane runs under (2026-09-18). `fleetReserveMs` caps

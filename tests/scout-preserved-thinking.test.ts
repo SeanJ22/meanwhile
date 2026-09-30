@@ -181,7 +181,7 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
     attemptId: "at-pt",
     holder: "h",
     executor: "BOUNDED_MODEL_WORKER",
-    bound: { maxAttempts: 1, maxWallMs: b.maxWallMs, maxCostUnits: 1 },
+    bound: { maxAttempts: 1, maxWallMs: 0, maxCostUnits: 1 },
   } as never);
   assert.equal(results.length, 1);
   return { outcome, result: results[0] };

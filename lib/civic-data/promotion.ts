@@ -173,9 +173,8 @@ export async function processRegisteredRoutineCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  // A caller turns confirmations on only once its receipt names the confirmed
-  // version (`routineReceiptFields`); an old receipt would name a candidate
-  // that was never written.
+  // Rechecks keep the held version by default. Explicit false is reserved for
+  // callers that need a distinct candidate even when its facts are unchanged.
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
@@ -407,6 +406,7 @@ export async function processRegisteredManualCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -424,7 +424,7 @@ export async function processRegisteredManualCandidate(
   return appendTypedReaderProjectionReadback(
     store,
     contract,
-    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
+    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification, options),
     now,
   );
 }
@@ -561,7 +561,7 @@ export async function processRoutineCandidate(
   // moved, an import is pointed, the hash differs, the evidence is malformed)
   // falls through to the ordinary candidate and promotion below.
   if (
-    options.confirmUnchanged === true &&
+    options.confirmUnchanged !== false &&
     typeof store.confirmUnchanged === "function" &&
     current !== null && lkg !== null && lkgProofIssue === null && !preloadedBaseChanged &&
     current.versionId === current.lastKnownGoodVersionId && lkg.candidate.id === current.versionId &&

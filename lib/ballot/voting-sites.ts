@@ -128,6 +128,23 @@ export interface VotingSitesFile {
   jurisdictions: VotingJurisdiction[];
 }
 
+export const votingSiteAddressKey = (address: string): string => address.toLowerCase().replace(/\s+/g, " ").trim();
+
+/** Reuse a held point only for the same published address; unresolved points retry. */
+export function heldVotingSiteCoordinates(file: VotingSitesFile | null): Map<string, { lat: number; lng: number }> {
+  const points = new Map<string, { lat: number; lng: number }>();
+  const ambiguous = new Set<string>();
+  for (const jurisdiction of file?.jurisdictions ?? []) for (const site of jurisdiction.sites) {
+    if (site.lat === null || site.lng === null || !Number.isFinite(site.lat) || !Number.isFinite(site.lng)) continue;
+    const key = votingSiteAddressKey(site.address);
+    if (!key || ambiguous.has(key)) continue;
+    const prior = points.get(key);
+    if (prior && (prior.lat !== site.lat || prior.lng !== site.lng)) { points.delete(key); ambiguous.add(key); }
+    else points.set(key, { lat: site.lat, lng: site.lng });
+  }
+  return points;
+}
+
 /**
  * Counts for the report and for the guard, because an operation that can
  * return nothing must be asked what it returned.

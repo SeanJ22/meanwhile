@@ -182,6 +182,7 @@ export async function publishReaderEdgeChecks(
 export interface PublishReaderExtras {
   readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
+  readonly versionIds?: ReaderManifest["extrasVersionIds"];
 }
 
 /** One large "authority" family the runner publishes as its own compressed artifact. */
@@ -238,6 +239,7 @@ function extrasFingerprint(extras: PublishReaderExtras | undefined): string {
   return sha256OfJson({
     commentAccess: extras?.commentAccess ?? null,
     everydayRouting: extras?.everydayRouting ?? null,
+    versionIds: extras?.versionIds ?? null,
   });
 }
 
@@ -342,6 +344,7 @@ export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",
+  "voting-sites",
   "official-filings",
   "nh-members",
   "federal-funding",
@@ -551,7 +554,7 @@ function scopeDataSha(artifact: ReaderGeoArtifact): string {
  * configured so the runner degrades to the DB prepared row rather than failing.
  */
 export async function publishReaderEdgeArtifacts(
-  snapshot: MeetingsSnapshot,
+  snapshot: MeetingsSnapshot | null,
   metadata: PublishMetadata,
   options: {
     readonly store?: ReaderArtifactStore | null;
@@ -569,7 +572,7 @@ export async function publishReaderEdgeArtifacts(
 
   let artifacts: ReaderGeoArtifact[];
   try {
-    artifacts = partitionSnapshotByScope(snapshot, now);
+    artifacts = snapshot === null ? [] : partitionSnapshotByScope(snapshot, now);
   } catch (error) {
     return { status: "NOT_COMPOSABLE", detail: error instanceof Error ? error.message : String(error) };
   }
@@ -598,19 +601,23 @@ export async function publishReaderEdgeArtifacts(
   // the pointer, because all of them are part of what serves.
   if (current) {
     const currentShas = new Map(current.manifest.scopes.map((s) => [s.scope, s.sha256]));
-    const sameSet = currentShas.size === shaByScope.size &&
-      [...shaByScope].every(([scope, sha]) => currentShas.get(scope) === sha);
+    const sameSet = snapshot === null || (currentShas.size === shaByScope.size &&
+      [...shaByScope].every(([scope, sha]) => currentShas.get(scope) === sha));
     const sameExtras = extrasFingerprint({
       commentAccess: current.manifest.commentAccess,
       everydayRouting: current.manifest.everydayRouting,
+      versionIds: current.manifest.extrasVersionIds,
     }) === extrasSha;
     const sameAuthority = authorityVersions(current.manifest) === newAuthorityVersions;
     const sameRegistrations = registrationVersions(
       current.manifest.registrations === undefined ? null : Object.entries(current.manifest.registrations).map(([state, ref]) => [state, ref.version] as const),
     ) === newRegistrationVersions;
     if (sameSet && sameExtras && sameAuthority && sameRegistrations) {
-      if (manifestStatesChecks(current.manifest, snapshot.generatedAt || now, options.checks)) {
-        return { status: "CURRENT", sequence: current.manifest.sequence, scopes: artifacts.length };
+      const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
+      const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
+        ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
+      if (manifestStatesChecks(current.manifest, generatedAt, checks)) {
+        return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
       }
       // The same data, re-checked: "Last checked" and the route checks move and
       // nothing else, so the manifest points at the artifacts it already serves.
@@ -618,20 +625,20 @@ export async function publishReaderEdgeArtifacts(
       let written;
       try {
         written = await store.writeManifest(
-          { ...manifestWithChecks(current.manifest, sequence, { generatedAt: snapshot.generatedAt || now, retrievedAt: metadata.retrievedAt, checks: options.checks }), sources: snapshot.sources },
+          { ...manifestWithChecks(current.manifest, sequence, { generatedAt, retrievedAt: metadata.retrievedAt, checks }), sources: snapshot?.sources ?? current.manifest.sources },
           current.etag ?? null,
         );
       } catch (error) {
         return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
       }
       return written.modified
-        ? { status: "PUBLISHED", sequence, scopes: artifacts.length, meetings: snapshot.meetings.length }
+        ? { status: "PUBLISHED", sequence, scopes: current.manifest.scopes.length, meetings: snapshot?.meetings.length ?? current.manifest.scopes.reduce((sum, scope) => sum + scope.meetingCount, 0) }
         : { status: "RACED", sequence };
     }
   }
 
   const sequence = (current?.manifest.sequence ?? 0) + 1;
-  const manifestScopes: ReaderManifestScope[] = [];
+  const manifestScopes: ReaderManifestScope[] = snapshot === null ? [...(current?.manifest.scopes ?? [])] : [];
   const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = {};
   const registrations: Record<string, AuthorityArtifactRef> = {};
   // Complete or absent: one carried state the manifest no longer serves at that version drops the whole section this
@@ -702,18 +709,21 @@ export async function publishReaderEdgeArtifacts(
   const manifest: ReaderManifest = {
     formatVersion: READER_ARTIFACT_FORMAT_VERSION,
     sequence,
-    generatedAt: snapshot.generatedAt || now,
-    sourceThrough: metadata.sourceThrough,
-    retrievedAt: metadata.retrievedAt,
-    promotedThrough: metadata.promotedThrough,
-    sources: snapshot.sources,
+    generatedAt: snapshot?.generatedAt || (options.checks ? laterCheck(current?.manifest.generatedAt ?? null, metadata.retrievedAt) : null) || current?.manifest.generatedAt || now,
+    sourceThrough: snapshot === null ? current?.manifest.sourceThrough ?? null : metadata.sourceThrough,
+    retrievedAt: snapshot === null ? laterCheck(current?.manifest.retrievedAt ?? null, options.checks ? metadata.retrievedAt : null) : metadata.retrievedAt,
+    promotedThrough: snapshot === null ? current?.manifest.promotedThrough ?? null : metadata.promotedThrough,
+    sources: snapshot?.sources ?? current?.manifest.sources ?? [],
     scopes: manifestScopes,
     ...(options.extras?.commentAccess !== undefined ? { commentAccess: options.extras.commentAccess } : {}),
     ...(options.extras?.everydayRouting !== undefined ? { everydayRouting: options.extras.everydayRouting } : {}),
+    ...(options.extras?.versionIds !== undefined ? { extrasVersionIds: options.extras.versionIds } : {}),
     ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
     ...(registrationsComplete ? { registrations } : {}),
-    ...(options.checks && Object.keys(options.checks.freshChecks).length > 0 ? { freshChecks: options.checks.freshChecks } : {}),
-    ...(options.checks ? { composition: options.checks.composition } : {}),
+    ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
+      ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),
+    ...((options.checks?.composition ?? (snapshot === null ? current?.manifest.composition : undefined)) !== undefined
+      ? { composition: options.checks?.composition ?? current!.manifest.composition } : {}),
   };
   let result;
   try {
@@ -724,7 +734,7 @@ export async function publishReaderEdgeArtifacts(
   // CAS miss → a newer publish won; the immutable artifacts we wrote are simply
   // unreferenced. Never regress the pointer.
   return result.modified
-    ? { status: "PUBLISHED", sequence, scopes: artifacts.length, meetings: snapshot.meetings.length }
+    ? { status: "PUBLISHED", sequence, scopes: manifestScopes.length, meetings: snapshot?.meetings.length ?? manifestScopes.reduce((sum, scope) => sum + scope.meetingCount, 0) }
     : { status: "RACED", sequence };
 }
 

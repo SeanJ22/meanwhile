@@ -5,6 +5,8 @@ import test from "node:test";
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
+import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
@@ -41,6 +43,22 @@ import {
   routineSupervisorCycleIsolationIssue,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+
+test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {
+  const now = Date.parse("2026-09-30T12:00:00Z");
+  for (const task of AUTOMATIC_REFRESH_TASKS) {
+    assert.equal(task.ownerInvocation, undefined);
+    assert.equal(automaticRefreshContract(task.id), task.id);
+    assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
+    assert.equal(routineTaskDue(task, undefined, now), true);
+    const checked = "2026-09-29T12:00:00Z";
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now), true);
+    const failed = "2026-09-30T11:00:00Z";
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
+  }
+});
 import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_TIMEOUT_MS,
@@ -62,6 +80,7 @@ import {
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  selectedReaderRepairContracts,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import {
   STANDING_NEON_REQUEST_DEADLINE_MS,
@@ -1056,7 +1075,14 @@ test("--only selection refuses typos and empty tokens before store access", () =
   });
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2))");
+  const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))])");
+  const publication = routineTaskSelection(["--only=registry-runtime-bindings"], [
+    ...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id })),
+  ]);
+  assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
+  if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
+  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(\);/,
+    "a selected publication door must read its owed work; readHuntSourceTasks skips selected source-only passes itself");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");
   const writeHandle = runner.indexOf("prepareProductionCivicDataWrite()");
@@ -1086,7 +1112,7 @@ test("Reader readback repair covers the observable registry independently of sou
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const child = readFileSync("scripts/routine-civic-data-reader-repair.mts", "utf8");
   const protocol = readFileSync("lib/civic-data/reader-repair-protocol.ts", "utf8");
-  assert.match(runner, /const readerContracts = \[[\s\S]*\.\.\.observableRoutineContracts\(\),[\s\S]*\.\.\.MANUAL_PRODUCTION_SOURCE_CONTRACTS/);
+  assert.match(runner, /const readerContracts = selectedReaderRepairContracts\(/);
   assert.match(runner, /const readerDomains = routineReaderRepairDomains\(readerContracts\)/);
   // Launched racing-first (C6, lib/civic-data/hot-read-catch-up.ts); every domain still runs.
   assert.match(runner, /runBoundedChildPass\([\s\S]*readerLaunch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
@@ -1096,12 +1122,13 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
-  // One composition per pass serves both the readbacks and the prepared snapshot.
+  // Repair composes once when needed; serving-copy publication runs independently.
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
   // A receipt from an earlier commit is carried, not re-read, when no Reader code changed (R31).
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
-  assert.match(child, /preparePublishedMeetingSnapshot\(store, observedAt, \{ aggregate \}\)/);
+  assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
+  assert.match(runner, /publishRoutineReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/);
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
@@ -1771,4 +1798,17 @@ test("C6: two reads of one host in one pass start at least the gap apart; other 
   const chain = routineRunnerBoundedWorkMs(6, 3, bounds);
   const noGapChain = routineChildPassWorstCaseMs(6, ROUTINE_CHILD_TIMEOUT_MS + 1_000, ROUTINE_CHILD_CONCURRENCY, 3);
   assert.equal(chain, noGapChain + 2 * ROUTINE_SAME_DOMAIN_CHILD_GAP_MS + 1 * 1_000 + 1 * 1_000, "two gaps in a chain of three, plus the clock and coordination requests");
+});
+
+test("scoped source passes repair only matching reader pointers, including narrow meeting domains", () => {
+  const all = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
+  const voting = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === "voting-sites")!;
+  const selected = selectedReaderRepairContracts(all, [voting]);
+  assert.deepEqual(selected.map(contract => contract.id), ["voting-sites"]);
+  assert.deepEqual(routineReaderRepairDomains(selected).map(domain => domain.id), ["reader-readback:voting-sites"]);
+  const meetings = MEETING_PARTITION_CONTRACTS.slice(0, 2);
+  const domains = routineReaderRepairDomains(selectedReaderRepairContracts(all, meetings));
+  assert.equal(domains.length, 1);
+  assert.deepEqual(domains[0].contracts.map(contract => contract.id), meetings.map(contract => contract.id));
+  assert.equal(selectedReaderRepairContracts(all, null), all);
 });

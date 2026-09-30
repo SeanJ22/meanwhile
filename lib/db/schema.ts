@@ -671,6 +671,7 @@ export const feedback = pgTable(
   "feedback",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    site: text("site", { enum: ["live", "tester"] }).notNull().default("live"),
     receivedAt: timestamp("received_at", { withTimezone: true, mode: "string" }).notNull(),
     /** What the reader wrote, scrubbed (T09). Capped at the route. */
     message: text("message").notNull(),
@@ -1371,6 +1372,13 @@ export const demandSignals = pgTable(
  * operational data, never repository snapshots. A failed candidate remains
  * evidence that acquisition happened, while the promoted pointer stays on LKG.
  */
+/** Immutable payload storage. A candidate names reused parts instead of
+ * rewriting the national registry and its duplicate evidence copies. */
+export const civicDataPayloadParts = pgTable("civic_data_payload_parts", {
+  hash: text("hash").primaryKey(),
+  payload: jsonb("payload").notNull(),
+});
+
 export const civicDataCandidates = pgTable(
   "civic_data_candidates",
   {

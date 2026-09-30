@@ -368,6 +368,7 @@ test("the feedback store holds no continuity key of any kind", () => {
       "received_at",
       "run_class",
       "run_id",
+      "site", // Sean's approved report origin (S0 on #461, 5918009182); §9: no reader identity.
       "surface",
       "suspect_reason",
     ],

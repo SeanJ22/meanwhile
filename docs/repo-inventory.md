@@ -806,7 +806,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-948 file(s).
+949 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1245,6 +1245,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/held-directory.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-meetings.test.ts`
 - `tests/held-roster-publication.test.ts`
 - `tests/holdings-readback.test.ts`
 - `tests/host-spacing.test.ts`
@@ -1759,7 +1760,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7028 file(s).
+7030 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -4947,6 +4948,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/civic-data/website-corrections.ts`
 - `lib/civic-data/worker-body-directory.ts`
 - `lib/civic-data/worker-held-directory.ts`
+- `lib/civic-data/worker-held-meetings.ts`
 - `lib/civic-data/worker-held-roster.ts`
 - `lib/civic-data/worker-national-publication.ts`
 - `lib/civic-data/worker-publication-context.ts`
@@ -8252,6 +8254,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/held-directory.test.ts`
 - `tests/held-filing-subjects.test.ts`
 - `tests/held-meeting-partition.test.ts`
+- `tests/held-meetings.test.ts`
 - `tests/held-roster-publication.test.ts`
 - `tests/helpers/ask-gap-unit.ts`
 - `tests/helpers/autonomous-fleet.ts`

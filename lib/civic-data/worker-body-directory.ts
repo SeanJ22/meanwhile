@@ -17,22 +17,26 @@ import { subBodyId } from "./meeting-body-crosswalk.ts";
 import type { JurisdictionRouteHints } from "../hunt/meetings-route-hints.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 
-/** Published directory routes feed the existing meeting walk. They remain
- * leads until that walk, crosswalk reviewer and meeting publisher verify them. */
+/** Published bodies' agenda and home pages (from a directory or a roster, read
+ * by any job) feed the existing meeting walk. They remain leads until that
+ * walk, crosswalk reviewer and meeting publisher verify them. */
 export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeReadModel,
   baseline: readonly JurisdictionRouteHints[]): readonly JurisdictionRouteHints[] {
   const hints = new Map(baseline.map(hint => [hint.jurisdictionId, hint]));
   for (const item of items) {
-    const jurisdictionId = item.autonomousPlan?.directorySubject?.jurisdiction.id;
+    const plan = item.autonomousPlan;
+    const jurisdictionId = plan?.directorySubject?.jurisdiction.id ?? (plan?.publication?.contractId === "registry-runtime-bindings" ? plan.contract.subjectId : undefined);
     const publication = item.publicationOutcome;
-    if (!jurisdictionId || !publication?.bodyIds?.length || publication.status === "HELD") continue;
+    const bodyIds = publication?.bodyIds ?? (plan?.publication?.bodyId ? [plan.publication.bodyId] : []);
+    if (!jurisdictionId || !publication || !bodyIds.length || publication.status === "HELD") continue;
     const before = hints.get(jurisdictionId) ?? { jurisdictionId, officialSite: null, routes: [] };
-    const additions = registry.registry.bodies.filter(body => publication.bodyIds!.includes(body.id) && body.homepageUrl && body.name)
-      .map(body => ({ url: body.homepageUrl!, kind: "PAGE" as const, body: body.name!, platform: "official-page-events",
-        verifyAs: "official-page-events" as const,
-        evidence: `Independently verified directory ${item.id}, published version ${publication.versionId}; ${body.provenance.sourceUrl}. Calendar acquisition and attribution remain owed.`,
-        observed: { at: body.provenance.verifiedAt ?? publication.at, by: publication.workerResultId } }));
-    hints.set(jurisdictionId, { ...before, routes: [...before.routes, ...additions.filter(row => !before.routes.some(old => old.url === row.url))] });
+    const additions = registry.registry.bodies.filter(body => bodyIds.includes(body.id) && body.name)
+      .flatMap(body => [...new Set([body.agendaSourceRef, body.homepageUrl].filter((url): url is string => Boolean(url)))].map(url => ({
+        url, kind: "PAGE" as const, body: body.name!, platform: "official-page-events", verifyAs: "official-page-events" as const,
+        evidence: `Independently verified ${url === body.agendaSourceRef ? "agenda link" : "home page"} from ${item.id}, published version ${publication.versionId}; ${body.provenance.sourceUrl}. Calendar acquisition and attribution remain owed.`,
+        observed: { at: body.provenance.verifiedAt ?? publication.at, by: publication.workerResultId } })));
+    hints.set(jurisdictionId, { ...before, routes: [...before.routes, ...additions.filter((row, index) =>
+      !before.routes.some(old => old.url === row.url) && additions.findIndex(other => other.url === row.url) === index)] });
   }
   return [...hints.values()];
 }

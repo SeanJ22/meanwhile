@@ -171,6 +171,8 @@ export interface CoveredBody {
   homepageUrl: string | null;
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
+  /** When the body regularly meets, in its official page's words, with that page. */
+  meetingCadence?: { text: string; sourceUrl: string | null } | null;
   /**
    * Whether a dated, cited hunt for this exact body is in the historical audit.
    * False means no such receipt is held here, not that nobody has searched.
@@ -421,6 +423,9 @@ export function summarizeCoverage(
       coverageStatus: body.coverageStatus,
       homepageUrl: body.homepageUrl,
       agendaSourceRef: body.agendaSourceRef,
+      meetingCadence: body.meetingCadence
+        ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
+        : null,
       lookedAt: DOCUMENTED_SEARCHES.has(body.id),
       tier: division?.tier ?? "local",
     };

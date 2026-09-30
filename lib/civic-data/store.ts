@@ -333,8 +333,11 @@ export function assertRoutineDataStoreMutationAuthority(
   env: Readonly<Record<string, string | undefined>> = process.env,
 ): RuntimeAuthorityEnvelope {
   assertWriteAllowed(CIVIC_DATA_PROMOTION_OPERATION, env);
-  assertSanctionedRuntimeAuthority(CIVIC_DATA_PROMOTION_OPERATION, env);
-  const authority = runtimeAuthorityEnvelope(env);
+  const admitted = assertSanctionedRuntimeAuthority(CIVIC_DATA_PROMOTION_OPERATION, env);
+  // S13's direct staging parent has already been admitted on its explicit
+  // staging settings. Children carry that envelope in env; the parent must
+  // retain the same returned authority rather than require a child envelope.
+  const authority = runtimeAuthorityEnvelope(env) ?? (env.WTP_RUNTIME_MODE === "staging" ? admitted : null);
   if (authority === null) throw new RuntimeAuthorityRefused("routine data store mutation authority is unreadable");
   return authority;
 }

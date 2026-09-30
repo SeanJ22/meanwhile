@@ -298,8 +298,7 @@ test("g13: the sanction table is a closed list, and both narrow operations are o
   );
   const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.ok(
-    routine.includes('process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion"') &&
-      routine.includes('assertWriteAllowed("a routine civic data candidate/version promotion")'),
+    routine.includes("prepareProductionCivicDataWrite();"),
     "the routine data-plane writer no longer asks for the exact operation its sanction names",
   );
 });

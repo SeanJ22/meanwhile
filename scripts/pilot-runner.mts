@@ -101,7 +101,7 @@ import {
   type ControlPlaneRepositories,
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
@@ -116,7 +116,6 @@ import {
 import {
   RESEARCH_FORMAT_VERSION,
   RESEARCH_INTENT_LOG_KEY,
-  RESEARCH_STATE_ID,
   readIntents,
   type ResearchIntent,
   type ResearchIntentRequest,
@@ -135,7 +134,6 @@ import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "..
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
-  STANDING_NEON_REQUEST_DEADLINE_MS,
   installNeonRequestDeadline,
 } from "../lib/ops/neon-request-deadline.ts";
 import { runnerControlReader } from "./pilot-runtime-control.mts";

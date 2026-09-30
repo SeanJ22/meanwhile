@@ -393,16 +393,15 @@ test("extracted canonical envelopes count roster records and render every member
   assert.match(text, /2026-08-27/);
 });
 
-test("a transitive generator code change invalidates manifests independently of held data", (t) => {
+test("a transitive generator code change leaves unchanged state holdings current", (t) => {
   const root = fixture(t);
   mkdirSync(join(root, "scripts"), { recursive: true });
   writeFileSync(join(root, "scripts/state-manifest.mts"), "import { value } from './fixture-engine-helper.ts';\n");
   writeFileSync(join(root, "scripts/fixture-engine-helper.ts"), "export const value = 1;\n");
   const initial = loadManifestContext(root);
-  assert.ok(initial.inputs.some((input) => input.path === "scripts/fixture-engine-helper.ts"));
+  assert.ok(!initial.inputs.some((input) => input.path === "scripts/fixture-engine-helper.ts"));
   writeManifests(root, expectedManifests(initial));
   writeFileSync(join(root, "scripts/fixture-engine-helper.ts"), "export const value = 2;\n");
   const changed = loadManifestContext(root);
-  assert.notEqual(changed.inputDigest, initial.inputDigest);
-  assert.ok(checkManifests(root, expectedManifests(changed)).includes("STALE docs/states/az.md"));
+  assert.deepEqual(checkManifests(root, expectedManifests(changed)), []);
 });

@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # MEANWHILE — INSTRUCTIONS FOR CODEX AND EVERY CODING AGENT
 
-<!-- BEGIN:claude-md-mirror source=CLAUDE.md sha256=52dc01eadd1ea30faf90a16270793d50f241e4fcec8490730c42e0d3a0f8caa2 bytes=5072 -->
+<!-- BEGIN:claude-md-mirror source=CLAUDE.md sha256=555fcf3a1319053b446074dfac469933157c844f2b17b4db74929782493d17cb bytes=5118 -->
 **Codex and every other coding agent: Sean's standing decisions are `docs/rulings.md`,
 the single source for owner policy. Read it first. It binds you exactly as it binds Claude.**
 
@@ -45,7 +45,7 @@ Do not add a gate, proof step, certification, ledger, or scoring system without 
 
 ## Execute without avoidable waiting
 
-Apply rulings §5. Keep a brief plan with remaining tasks, one owner per task or shared check, real dependencies, justified durations, and earliest starts. Start ready work now, parallelize independent work, and challenge delays across active sessions before repeating their estimates.
+Apply rulings §5. Keep a brief plan with remaining tasks, one owner per task or shared check, and real dependencies; plans carry no durations or dates. Start ready work now, parallelize independent work, and challenge delays across active sessions before repeating their estimates.
 
 Reuse valid evidence, remove duplicate work, and verify the version that ships. Use direct tests and equivalent measurements to remove idle waits. Keep working through build, testing, repair, promotion, and reader verification. Do not stop at a progress report or use optional polishing to delay delivery.
 
@@ -65,7 +65,7 @@ State which evidence shows the result works for readers. Do not report a skipped
 
 ## Finish and report
 
-Apply rulings §10. Give a verified win its own space and explain why it matters to a reader. Then briefly report what changed, which §0 test it moves, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English and Arizona MST for schedules.
+Apply rulings §10. Give a verified win its own space and explain why it matters to a reader. Then briefly report what changed, which §0 test it moves, how it was verified, actual delivery status, and any remaining work with its owner and next action. Use plain English. Admin shows times in Eastern time; schedules reported to Sean use Arizona MST.
 
 Update current state and shared learning with the result. Record engineering choices as engineering choices. Change standing rulings only for an actual owner decision, preserving its source and scope. Do not create another rule merely because an existing one applies to this incident.
 <!-- END:claude-md-mirror -->

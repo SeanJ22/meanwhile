@@ -59,9 +59,9 @@ export async function runNationalPlaceTask(input: {
           try {
             const saved = await placeSourceReader({ tools, project: "freshness", context: {
               obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
-              // This finite national walk is plain code. Model-turn/tool caps do
-              // not limit how many official pages its parser can read.
-              bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: Infinity, maxRequestsPerHost: Infinity, maxWallMs: Infinity },
+              // This finite national walk is plain code; it retains the shared
+              // ten-request limit for each website.
+              bound: { ...RESEARCH_BOUNDS.perDispatch, maxToolCalls: Infinity, maxWallMs: Infinity },
             } });
             report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
               readSource: async url => { if (leaseError) throw leaseError; return saved.read(url); },

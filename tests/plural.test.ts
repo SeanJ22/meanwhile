@@ -96,7 +96,7 @@ test("official profile headings produce officeholders; news headlines do not", a
   const pages: Record<string, string> = {
     "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
     "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
-    "https://ag.example.gov/": '<h2>TRUE TRANSPARENCY</h2><a href="/about">Attorney General</a>',
+    "https://ag.example.gov/": '<h1>TRUE TRANSPARENCY</h1><h1>POLICE TRAINING PROVIDED REGIONALLY</h1><h1>True Transparency</h1><a href="/about">Attorney General</a>',
     "https://ag.example.gov/about": '<h1>Attorney General Jane Doe</h1>',
   };
   const result = await collectNationalPlaceSources({ now: "2026-09-30T00:00:00Z",

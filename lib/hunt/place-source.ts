@@ -44,6 +44,7 @@ export async function runPlaceSource(input: {
     { store: input.store, now: input.clock?.() ?? input.now, bypassCache: true }));
   let sources: NationalPlaceSources | null = null;
   let publication: unknown = null;
+  const publications: unknown[] = [];
   const closed = new Set<string>();
   const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async () => {
@@ -55,6 +56,7 @@ export async function runPlaceSource(input: {
         publicationQueue = publicationQueue.then(async () => {
           publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
             geographyCaptures: input.geographyCaptures, sources: ready });
+          publications.push(publication);
           const now = input.clock?.() ?? input.now;
           const captured = await readHeld(ids);
           const items = buildPlaceOwedList({ divisions, ...captured, now });
@@ -71,5 +73,5 @@ export async function runPlaceSource(input: {
       // successful function return or a collected field for a published value.
       return { ...await readHeld(ids), replacesHeld: true };
     } });
-  return { ...plan, closed: [...new Set([...closed, ...plan.closed])], zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication };
+  return { ...plan, closed: [...new Set([...closed, ...plan.closed])], zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication, publications };
 }

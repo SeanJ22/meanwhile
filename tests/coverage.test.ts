@@ -84,6 +84,30 @@ test("the place source reads shared holdings, publishes source data, then uses t
   assert.equal(result.items.find(item => item.subject.id === body.id && item.checklistId === "GOV-01")?.state, "published");
 });
 
+test("a registry publication failure leaves its fields open while later election fields still reach publication", async () => {
+  const now = "2026-09-30T00:00:00Z";
+  const division = { id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" };
+  const pages: Record<string, string> = {
+    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
+    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://governor.example.gov/">Governor Jane Doe</a><a href="https://elections.example.gov/">Voting</a>',
+    "https://elections.example.gov/": '<p>October 5, 2026: Last day to register to vote.</p>',
+  };
+  let offers = 0;
+  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", now,
+    divisions: [division], geographyCaptures: [], readHeld: async () => ({ subjects: [], held: [] }),
+    readSource: async url => { if (!(url in pages)) throw Error("Unavailable source"); return { url, text: pages[url], collectedAt: now }; },
+    publish: async () => { offers++; throw Error("Registry temporarily unavailable"); },
+    publishElection: async (fields, publishedAt) => {
+      assert.equal(publishedAt, now);
+      assert.equal(fields[0].kind, "registration_deadline");
+      return { candidateId: "election-candidate", promotedVersionId: "election-version", fields: ["deadline"], gaps: [] };
+    } });
+  assert.equal(offers, 2, "later publication batches survive the earlier rejected call");
+  assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }, { error: "Registry temporarily unavailable" }]);
+  assert.equal(result.electionPublications.length, 1);
+  assert.deepEqual(result.closed, [], "a callback alone never closes a field absent from canonical readback");
+});
+
 test("a place inherits other jobs' published fields before national acquisition and closes only those fields", async () => {
   const repos = createMemoryRepositories();
   const now = "2026-09-30T00:00:00Z";

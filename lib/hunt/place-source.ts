@@ -31,6 +31,8 @@ export async function runPlaceSource(input: {
   readonly readSource: (url: string, knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<HeldSourcePage>;
   readonly knowledge?: Awaited<ReturnType<typeof readFieldManual>>;
   readonly publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
+  /** Worker brokers serialize shared-pointer writes while acquisition runs in parallel. */
+  readonly publishElection?: (fields: NationalPlaceSources["electionFields"], now: string) => ReturnType<typeof publishElectionFields>;
   readonly geography?: GeographyReadOptions;
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
   readonly divisions?: readonly PlaceDivision[];
@@ -57,13 +59,20 @@ export async function runPlaceSource(input: {
       let publishedBatches = 0;
       const publish = (ready: NationalPlaceSources) => {
         publicationQueue = publicationQueue.then(async () => {
-          publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
-            geographyCaptures: input.geographyCaptures, sources: ready });
+          try {
+            publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
+              geographyCaptures: input.geographyCaptures, sources: ready });
+          } catch (error) {
+            publication = { error: error instanceof Error ? error.message : String(error) };
+          }
           publications.push(publication);
           if (ready.electionFields.length) {
-            try { electionPublications.push(await publishElectionFields({
-              store: input.store, now: input.clock?.() ?? input.now, fields: ready.electionFields, verify: section3Record,
-            })); }
+            try {
+              const now = input.clock?.() ?? input.now;
+              electionPublications.push(await (input.publishElection
+                ? input.publishElection(ready.electionFields, now)
+                : publishElectionFields({ store: input.store, now, fields: ready.electionFields, verify: section3Record })));
+            }
             catch (error) { electionPublications.push({ error: error instanceof Error ? error.message : String(error) }); }
           }
           const now = input.clock?.() ?? input.now;

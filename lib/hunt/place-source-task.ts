@@ -19,6 +19,7 @@ export async function runNationalPlaceTask(input: {
   store: RoutineDataStore;
   zips: readonly string[];
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
+  publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
 }) {
   const reports: Awaited<ReturnType<typeof runPlaceSource>>[] = [];
   const { tools } = input;
@@ -76,7 +77,8 @@ export async function runNationalPlaceTask(input: {
                 const response = await fetch(url, options);
                 return response;
               } }, geographyCaptures: saved.geographyCaptures,
-              publish: async value => { if (leaseError) throw leaseError; return input.publish(value); } });
+              publish: async value => { if (leaseError) throw leaseError; return input.publish(value); },
+              ...(input.publishElection ? { publishElection: input.publishElection } : {}) });
             if (leaseError) throw leaseError;
             const artifacts = [...saved.artifacts.values()];
             return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts,

@@ -3478,7 +3478,6 @@ try {
     const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
     const nextHeartbeat: RunnerHeartbeat = {
       ...heartbeat,
-      runtimeRelease: beat?.value.runtimeRelease ?? null,
       /* The intake observer runs immediately after this child. Preserve its
          latest durable receipt while refreshing cycle/liveness fields; a cycle
          crash before the observer runs must not erase the last known reading. */

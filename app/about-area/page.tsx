@@ -52,11 +52,11 @@ export default async function AboutAreaPage({
   const facts = state ? areaFactsForState(state) : null;
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8 text-paper">
+    <main className="mw-page mx-auto max-w-2xl px-4 py-8 text-paper">
       <p className="text-[0.8125rem]">
         <Link
           href={zip ? `/ballot?zip=${zip}` : "/"}
-          className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+          className="mw-back-pill"
         >
           ← Back
         </Link>

@@ -127,7 +127,10 @@ test("the district card's door opens exactly the rows its count counted, never a
   // The component dispatches the shared action and nothing else, and no
   // component but the Body dropdown dispatches a Body scope at all.
   const entry = readFileSync(join(ROOT, "components/map/map-entry.tsx"), "utf8");
-  assert.match(entry, /onShowMeetings=\{\(\) => \{\s*for \(const action of showDivisionUpcoming\(districtPopup\)\) dispatch\(action\);/);
+  // Approved reader design (2026-09-28): a selected district opens its full
+  // card inside the one large card, and that card lists the division's
+  // sittings itself (its Meetings section) rather than behind a list filter.
+  assert.ok(entry.includes("subject: districtSubject("), "a selected district opens its district card");
   assert.doesNotMatch(entry, /type: "scope\/body"/, "map-entry dispatches a Body scope");
 });
 

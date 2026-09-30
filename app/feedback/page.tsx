@@ -27,9 +27,17 @@ export const metadata = {
   title: titleFor("Feedback"),
 };
 
-export default function FeedbackPage() {
+export default async function FeedbackPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ about?: string }>;
+}) {
+  const { about } = await searchParams;
+  // "Report a problem" on a card names the card, so the reader starts with
+  // the part they would otherwise have to remember to say.
+  const topic = about?.trim().slice(0, 80);
   return (
-    <main className="min-h-dvh overflow-y-auto bg-[var(--bg)]">
+    <main className="mw-page min-h-dvh overflow-y-auto bg-[var(--bg)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
         {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
           display text in a 10px uppercase MONO treatment — the register this
@@ -51,7 +59,10 @@ export default function FeedbackPage() {
           made no sense — all of it is worth sending. So is anything else.
         </p>
 
-        <FeedbackForm surface="SIDEBAR" />
+        <FeedbackForm
+          surface="SIDEBAR"
+          initialMessage={topic ? `About "${topic}": ` : ""}
+        />
 
         {/* Every word below is a claim, so every word below is level. */}
         <section className="mt-10 border-t border-[var(--panel-border)] pt-6">
@@ -107,7 +118,7 @@ export default function FeedbackPage() {
         <p className="mt-10 text-[0.8125rem]">
           <Link
             href="/"
-            className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
+            className="mw-back-pill"
           >
             ← Back to the map
           </Link>

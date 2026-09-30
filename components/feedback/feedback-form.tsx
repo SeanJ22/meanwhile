@@ -50,8 +50,15 @@ import {
  * not — because the previous version of this form promised flatly that nobody
  * could write back, and that sentence is now only true of the blank case.
  */
-export function FeedbackForm({ surface }: { surface: FeedbackSurface }) {
-  const [message, setMessage] = useState("");
+export function FeedbackForm({
+  surface,
+  initialMessage = "",
+}: {
+  surface: FeedbackSurface;
+  /** Opened from a card: the message starts by naming it. */
+  initialMessage?: string;
+}) {
+  const [message, setMessage] = useState(initialMessage);
   const [replyTo, setReplyTo] = useState("");
   /**
    * Whether the submission that SUCCEEDED carried an address — captured at

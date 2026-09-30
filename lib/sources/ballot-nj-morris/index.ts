@@ -10,6 +10,7 @@ import {
   type PromotedCivicDataReadOptions,
 } from "../../civic-data/read-model.ts";
 import { requiredRoutineContract, routineFreshnessMs } from "../../civic-data/contracts.ts";
+import { ballotFreshnessNote } from "../ballot-curated/freshness-note.ts";
 
 import type {
   BallotAbsence,
@@ -204,13 +205,7 @@ export const ballotNjMorrisSource: BallotSource = {
   normalize(raw: unknown[]): BallotSet {
     const [file] = raw;
     validateBallotFile(file);
-    const freshnessNote = readState.kind === "BOOTSTRAP"
-      ? "This Morris County ballot is using the bundled first-bootstrap projection because no canonical production version is recorded."
-      : readState.kind === "PROMOTED" && readState.metadata.stale === "STALE"
-        ? `This Morris County ballot is serving its last known good version, which is stale${readState.metadata.sourceThrough ? ` (source through ${readState.metadata.sourceThrough})` : ""}.`
-        : readState.kind === "PROMOTED" && readState.metadata.stale === "UNKNOWN"
-          ? "The freshness of the canonical Morris County ballot could not be established."
-          : null;
+    const freshnessNote = ballotFreshnessNote(readState, "the Morris County ballot");
     return {
       election: file.election,
       contests: file.contests,

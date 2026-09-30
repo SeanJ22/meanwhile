@@ -100,6 +100,12 @@ export function AddToCalendar({
               <p className="text-[0.9375rem] font-semibold leading-snug text-paper">
                 Add to which calendar?
               </p>
+              {event.endEstimated && (
+                <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim" data-end-estimated>
+                  The end time was not published, so the entry blocks 90
+                  minutes as a placeholder and says so in its notes.
+                </p>
+              )}
               <div className="mt-3.5 flex flex-col gap-2">
                 <a
                   href={ics}

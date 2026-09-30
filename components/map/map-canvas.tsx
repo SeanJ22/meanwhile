@@ -10,7 +10,6 @@ import {
   LngLatBounds,
   MapLibreMap,
   Marker,
-  NavigationControl,
   prewarm,
   setWorkerUrl,
   type ErrorEvent as MapErrorEvent,
@@ -37,6 +36,7 @@ import {
   DISTRICT_TYPES,
   addDistrictLayer,
   boundsOfDistrict,
+  fullBoundsOfDistrict,
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
@@ -173,6 +173,16 @@ interface MapCanvasProps {
    * actually SEE rather than in the middle of what is painted.
    */
   leftInset?: number;
+  /**
+   * The unobstructed map area (approved reader design, DESIGN-SPEC §5): clear
+   * of the sidebar, the collapsed header, the selection pill and the phone
+   * sheet. When present it replaces `leftInset` as the camera padding, so a
+   * boundary fit lands where the reader can see it, and it refits when this
+   * area changes.
+   */
+  insets?: { top: number; right: number; bottom: number; left: number };
+  /** Bumped by "Fit boundary": re-fit the selected district. */
+  fitNonce?: number;
   onSelectVenue: (venue: Venue) => void;
   onTileError: () => void;
   /**
@@ -334,6 +344,8 @@ export function MapCanvas({
   narrowedDistricts,
   theme,
   leftInset = 0,
+  insets,
+  fitNonce = 0,
   onDistrictError,
   onDrawnDistricts,
   onDistrictClick,
@@ -559,7 +571,13 @@ export function MapCanvas({
     // The legend owns the bottom-right corner (Edia puts it there and the port
     // keeps it), so the map's own controls move out of its way rather than
     // stacking on top of it.
-    map.addControl(new NavigationControl({ showCompass: false }), "top-right");
+    // Approved reader design (2026-09-28): no +/− buttons. Zoom stays fully
+    // operable — wheel/trackpad, pinch, double-click, and the keyboard
+    // (+ / − / arrows) on the focusable map canvas, which is labelled below.
+    map.getCanvas().setAttribute(
+      "aria-label",
+      "Map. Use plus and minus to zoom, arrow keys to pan.",
+    );
     map.addControl(new AttributionControl({ compact: true }), "bottom-left");
     map.touchZoomRotate.disableRotation();
 
@@ -1155,8 +1173,11 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.setPadding({ top: 0, bottom: 0, left: leftInset, right: 0 }, { duration: 0 });
-  }, [leftInset]);
+    map.setPadding(
+      insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 },
+      { duration: 0 },
+    );
+  }, [leftInset, insets]);
 
   // Fly to a new center, at the zip's deliberate first-view altitude (6f).
   useEffect(() => {
@@ -1406,14 +1427,62 @@ export function MapCanvas({
      * computed from no geometry.
      */
     if (!selectedDistrict) return;
-    const bounds = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
-    if (!bounds) return;
-    map.fitBounds(bounds, {
-      padding: { top: 96, bottom: 128, left: 64, right: 64 },
-      maxZoom: METRO_ZOOM,
-      duration: prefersReducedMotion() ? 0 : 900,
+    const rendered = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
+    // The whole boundary, from the source geometry, when it can be read;
+    // the rendered part otherwise.
+    let cancelled = false;
+    void fullBoundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId).then((full) => {
+      if (cancelled) return;
+      const box = full ?? rendered;
+      if (!box) return;
+      map.fitBounds(box, {
+        padding: insets ? 24 : { top: 96, bottom: 128, left: 64, right: 64 },
+        maxZoom: METRO_ZOOM,
+        duration: prefersReducedMotion() ? 0 : 900,
+      });
     });
+    return () => {
+      cancelled = true;
+    };
+    // With `insets` the camera padding already excludes the sidebar, the
+    // header and the pill, so the fit only adds the design's 24px margin.
+    // `insets` is read, not a trigger: the refit effect below owns that.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDistrict, districtTypes]);
+
+  /*
+   * Approved reader design (DESIGN-SPEC §5): the selected boundary REFITS when
+   * the unobstructed area changes — a resize, the sidebar opening or closing,
+   * the selection pill appearing — and when the reader presses Fit boundary.
+   */
+  const insetsKey = insets
+    ? `${insets.top}|${insets.right}|${insets.bottom}|${insets.left}`
+    : "";
+  const lastFit = useRef("");
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !selectedDistrict || !insets) return;
+    const key = `${selectedDistrict.ocdId}|${insetsKey}|${fitNonce}`;
+    if (key === lastFit.current) return;
+    const first = lastFit.current === "" || !lastFit.current.startsWith(`${selectedDistrict.ocdId}|`);
+    lastFit.current = key;
+    // The selection effect above already fits a NEW selection.
+    if (first && fitNonce === 0) return;
+    const rendered = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
+    let cancelled = false;
+    void fullBoundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId).then((full) => {
+      const box = full ?? rendered;
+      if (cancelled || !box) return;
+      map.fitBounds(box, {
+        padding: 24,
+        maxZoom: METRO_ZOOM,
+        duration: prefersReducedMotion() ? 0 : 600,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedDistrict, insets, insetsKey, fitNonce]);
 
   // Narrowed-division shading (item 7): same feature-state mechanism,
   // re-applied on the map's load signals because the boundary layers load

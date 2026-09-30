@@ -1,6 +1,7 @@
 import type { BallotSet, BallotSource } from "../../ballot/types.ts";
 import { curatedCoverageNotes } from "../../ballot/coverage-notes.ts";
 import { validateBallotFile } from "../ballot-nj-morris/index.ts";
+import { ballotFreshnessNote } from "./freshness-note.ts";
 import { CivicDataStoreUnavailableError, type CivicDataReadResult } from "../../civic-data/read-model.ts";
 import {
   azBallotReadState,
@@ -75,11 +76,7 @@ export function curatedBallotSource(name: string): BallotSource {
       validateBallotFile(parsed);
       const notes = curatedCoverageNotes(name, parsed as { coverageNotes?: unknown; scopedCoverageNotes?: unknown });
       const state = entry.state();
-      const authorityNote = state.kind === "BOOTSTRAP"
-        ? "This ballot is using its bundled first-bootstrap seed because the canonical store answered with no promoted pointer."
-        : state.kind === "PROMOTED" && state.metadata.stale === "STALE"
-          ? "This ballot is serving its last known good manual projection; its source-through receipt is stale."
-          : null;
+      const authorityNote = ballotFreshnessNote(state, "this ballot");
       return {
         election: parsed.election,
         contests: parsed.contests,

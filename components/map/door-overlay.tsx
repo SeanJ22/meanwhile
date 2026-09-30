@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { createContext, useContext } from "react";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
@@ -46,6 +47,9 @@ export function DoorOverlay({
   onOpenMeeting,
   onOpenBody,
   onClose,
+  embedded = false,
+  onShowDistrict,
+  showableDistrictIds = [],
 }: {
   door: "bodies" | "districts" | "officials";
   coverage: CoverageSummary | null;
@@ -85,6 +89,16 @@ export function DoorOverlay({
    */
   onOpenBody: (body: CoveredBody) => void;
   onClose: () => void;
+  /** Rendered inside the design card, which owns the frame and the title. */
+  embedded?: boolean;
+  /**
+   * Approved reader design: "Show on the map" on a district the map is
+   * drawing — fits its whole boundary and parks the card. Returns nothing;
+   * offered only for districts the map can actually fit.
+   */
+  onShowDistrict?: (ocdId: string) => void;
+  /** The districts the map is drawing — only those can be fitted. */
+  showableDistrictIds?: readonly string[];
 }) {
   // "Districts in view", not "here": this list is what the map is drawing
   // across the whole viewport, so at 85701 it holds Marana and Oro Valley —
@@ -110,17 +124,25 @@ export function DoorOverlay({
     // 390px. The legend's own rule already says it must never cover a card
     // the reader opened; this is the other half of that rule.
     <div
-      className="door-overlay pointer-events-auto fixed inset-0 z-[1300] flex items-center justify-center bg-black/40 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      onClick={onClose}
+      className={
+        embedded
+          ? "door-overlay mw-embedded"
+          : "door-overlay pointer-events-auto fixed inset-0 z-[1300] flex items-center justify-center bg-black/40 p-4"
+      }
+      role={embedded ? undefined : "dialog"}
+      aria-modal={embedded ? undefined : "true"}
+      aria-label={embedded ? undefined : title}
+      onClick={embedded ? undefined : onClose}
     >
       <div
-        className="door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        className={
+          embedded
+            ? "door-panel"
+            : "door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        }
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between">
+        <div className={embedded ? "sr-only" : "flex items-center justify-between"}>
           <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>
@@ -138,6 +160,7 @@ export function DoorOverlay({
           // 3g: this door lists the districts the card counted — the same
           // list, not a different universe. It renders even with no
           // coverage; the drawn overlay is client-side and honest alone.
+          <ShowDistrictContext.Provider value={{ onShow: onShowDistrict, showable: showableDistrictIds }}>
           <DistrictsDoor
             drawnDistricts={drawnDistricts}
             districtOverlayOn={districtOverlayOn}
@@ -146,6 +169,7 @@ export function DoorOverlay({
             coverage={coverage}
             onOpenOfficial={onOpenOfficial}
           />
+          </ShowDistrictContext.Provider>
         ) : !coverage ? (
           <p className="mt-3 text-[0.8125rem] text-muted">
             We couldn&apos;t resolve who governs this point — enter a zip
@@ -454,6 +478,12 @@ function DoorSection({
   );
 }
 
+/** The design's "Show on the map" for a district row (see DoorOverlay). */
+const ShowDistrictContext = createContext<{
+  onShow?: (ocdId: string) => void;
+  showable: readonly string[];
+}>({ showable: [] });
+
 /** One row per district, shared by both modes so they cannot drift apart. */
 function DistrictRows({
   rows,
@@ -468,6 +498,7 @@ function DistrictRows({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
+  const showDistrict = useContext(ShowDistrictContext);
   return (
     <ul className="mt-3 space-y-2">
       {rows.map((row) => (
@@ -481,6 +512,15 @@ function DistrictRows({
               {row.typeLabel}
             </span>
           </div>
+          {showDistrict.onShow && showDistrict.showable.includes(row.ocdId) && (
+            <button
+              type="button"
+              className="mw-link-btn mw-row-show"
+              onClick={() => showDistrict.onShow?.(row.ocdId)}
+            >
+              Show the whole boundary on the map
+            </button>
+          )}
           {row.holders.map((holder) => (
             <button
               key={holder.id}

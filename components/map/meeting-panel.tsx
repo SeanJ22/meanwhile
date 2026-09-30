@@ -65,11 +65,22 @@ interface MeetingPanelProps {
    */
   placeless?: readonly Meeting[];
   onClose: () => void;
+  /** Rendered inside the design card, which owns the frame and Close. */
+  embedded?: boolean;
+  /** "Show on the map": park the card and focus the map on this venue. */
+  onShowOnMap?: () => void;
   /** Opens the meeting popup. Omitted leaves the rows inert. */
   onOpenMeeting?: (meeting: Meeting) => void;
 }
 
-export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: MeetingPanelProps) {
+export function MeetingPanel({
+  venue,
+  placeless = [],
+  onClose,
+  onOpenMeeting,
+  embedded = false,
+  onShowOnMap,
+}: MeetingPanelProps) {
   // One `now` per mount, never read during render (item 11's rule): a clock
   // read in a render body would let a meeting crossing the 30-day line
   // reshuffle the list under a reader mid-scroll.
@@ -142,7 +153,11 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
   return (
     <aside
       aria-label={`${listingCount.heading} at ${venue.name}${elsewhere.length > 0 ? `, and ${elsewhere.join(" and ")} from the bodies that meet here` : ""}`}
-      className="panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
+      className={
+        embedded
+          ? "mw-embedded mw-venue flex flex-col"
+          : "panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
+      }
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
         <div className="min-w-0">
@@ -188,7 +203,26 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
             built from coordinates we hold rather than a page anyone opened, so
             it is offered as a convenience and never as a citation.
           */}
-          {directions && (
+          {embedded ? (
+            <div className="mw-action-row">
+              {directions && (
+                <a
+                  href={directions.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={directions.hint}
+                  className="mw-directions"
+                >
+                  <span aria-hidden="true">➚</span> Directions
+                </a>
+              )}
+              {onShowOnMap && (
+                <button type="button" className="mw-pill-btn" onClick={onShowOnMap}>
+                  Show on the map
+                </button>
+              )}
+            </div>
+          ) : directions && (
             <a
               href={directions.url}
               target="_blank"
@@ -202,6 +236,7 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
           )}
         </div>
 
+        {!embedded && (
         <button
           onClick={onClose}
           aria-label="Close"
@@ -209,6 +244,7 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
         >
           <X className="size-4" />
         </button>
+        )}
       </header>
 
       {/* F01 3.1 + 3.2 (2026-08-19). This list used to render `venue.meetings`
@@ -217,7 +253,7 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
           first row of an eight-meeting card. It now renders the three groups,
           and the whole card's provenance collapses to ONE credit line at the
           foot (SRC-1). */}
-      <div className="min-h-0 overflow-y-auto">
+      <div className={embedded ? "" : "min-h-0 overflow-y-auto"}>
         {/* The unresolved-listing notice lives in this SCROLLING body, never the
             pinned header above. It grows one line per listing group, and in the
             header a long one outgrew the panel's height cap on a phone (Newbury

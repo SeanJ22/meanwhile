@@ -86,7 +86,12 @@ export function NearMeControl({
           onChange={(e) => request(e.target.checked)}
         />
         <span className="prox-slider" />
-        <span className="prox-label">Near Me</span>
+        <span className="prox-label">
+          Near me
+          <span className="mw-switch-sub">
+            {ui.nearMeEnabled ? "On · around your location" : "Off · showing the whole area"}
+          </span>
+        </span>
       </label>
 
       {/*

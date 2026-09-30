@@ -44,7 +44,20 @@ const LEVEL_ACCENT: Record<GovernmentLevel, React.CSSProperties> = {
   } as React.CSSProperties,
 };
 
-export function Legend() {
+/** The tier toggle each legend level follows. Schools follow Local. */
+const LEVEL_TIER: Record<GovernmentLevel, "local" | "state" | "national"> = {
+  school: "local",
+  local: "local",
+  state: "state",
+  federal: "national",
+};
+
+/**
+ * `inline` renders the same key inside the phone sheet (the design moves the
+ * floating legend into the sidebar below 640px). A level whose tier toggle is
+ * off is struck through with a faded dot, so the key and the map agree.
+ */
+export function Legend({ inline = false }: { inline?: boolean } = {}) {
   const { meetings } = useShellData();
   const ui = useUi();
 
@@ -62,12 +75,13 @@ export function Legend() {
   }, [meetings]);
 
   return (
-    <div className="legend">
+    <div className={inline ? "legend legend-inline" : "legend"}>
       {LEVEL_ORDER.map((level) => (
         <span
           className="legend-item"
           key={level}
           data-muted={!present.levels.has(level)}
+          data-off={!ui.tiers.includes(LEVEL_TIER[level]) || undefined}
           title={
             present.levels.has(level)
               ? undefined

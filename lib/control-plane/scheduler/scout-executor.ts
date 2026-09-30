@@ -107,6 +107,7 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
+import { MODELS } from '../../models.ts';
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { WORK_QUESTIONS, WORK_QUESTION_WORDS, type WorkQuestion } from "../work-question.ts";
 import type { CostModelShare } from "../cost.ts";
@@ -246,7 +247,7 @@ export const SCOUT_THINKING = {
 
 /** Haiku 4.5 rejects adaptive thinking and effort; do not pay for a known-invalid request. */
 export function scoutThinkingOptions(model: string, effort: ModelEffort): Pick<ModelRequest, "thinking" | "output_config"> {
-  return model.startsWith("claude-haiku-4-5") ? {} : { thinking: SCOUT_THINKING, output_config: { effort } };
+  return model === MODELS.haiku.model || model.startsWith(MODELS.haiku.model+'-') ? {} : { thinking: SCOUT_THINKING, output_config: { effort } };
 }
 
 /** The beta header value `thinking.block_binding` requires. */

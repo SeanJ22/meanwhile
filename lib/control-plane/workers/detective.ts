@@ -112,11 +112,34 @@ export function runDetective(input: DetectiveWorkerInput): DetectiveResult {
 
 /** Reuses the research loop and every source tool for failure response. */
 export function detectiveExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps) {
-  return scoutExecutor({...deps, role:'DETECTIVE', contextFor:row=>{
+  return scoutExecutor({...deps, role:'DETECTIVE',onResult:async(result,artifacts)=>{
+    const recorded={...result,researchRole:'DETECTIVE' as const};
+    return deps.onResult ? await deps.onResult(recorded,artifacts) : recorded;
+  }, contextFor:row=>{
     const context=deps.contextFor(row);
     return {...context,reason:'DETECTIVE FAILURE RESPONSE: '+context.reason,
       inherited:{...context.inherited,summary:'Investigate the recorded blank field, blocked route, failed parse or retry loop. Read inherited facts and methods first, then use every available API/tool. Return a reusable new route with field/value/exactQuote data, or a documented dead end naming what was tried and what evidence would reopen it. Never retry the same unchanged failure.\n'+context.inherited.summary}};
   }});
+}
+
+/** Both Scout lanes use the same failure responder and keep their existing budgets and tools. */
+export function failureResponderExecutor(deps: import('../scheduler/scout-executor.ts').ScoutExecutorDeps): import('../scheduler/dispatch.ts').DeclaredExecutor {
+  const contexts=new Map<string,{value?:ReturnType<typeof deps.contextFor>;error?:unknown}>();
+  const contextFor: typeof deps.contextFor = row=>{
+    let saved=contexts.get(row.obligation.id);
+    if (!saved) { try {saved={value:deps.contextFor(row)};} catch(error) {saved={error};} contexts.set(row.obligation.id,saved); }
+    if (!saved.value) throw saved.error;
+    return saved.value;
+  };
+  const scout=scoutExecutor({...deps,contextFor}), detective=detectiveExecutor({...deps,contextFor});
+  const choose=(row:Parameters<typeof contextFor>[0])=>{
+    try {
+      const inherited=contextFor(row).inherited;
+      return (inherited.priorRungs ?? []).some(r=>r.ok===false || /transport failure|HTTP [45]\d\d|NOT VAULTED/i.test(r.observed)) ||
+        /REFUSED:|failed parse|REQUIRED_FIELD_MISSING|blocked route|retry loop/i.test(inherited.summary) ? detective : scout;
+    } catch { return scout; }
+  };
+  return {lane:'BOUNDED_MODEL_WORKER',workerFor:input=>choose(input.obligation).workerFor!(input),run:input=>choose(input.obligation).run(input)};
 }
 
 /** The latest result for a civic subject serves all work items for that subject and class. */
@@ -127,8 +150,33 @@ export function subjectScoutHistory(results: readonly import('../scheduler/scout
 export function investigationRole(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], failedWorkers:boolean): 'SCOUT'|'DETECTIVE' {
   return failedWorkers || results.some(result=>result.refusal !== null || ['BLOCKED','NO_PROGRESS','NEEDS_ADAPTER'].includes(result.outcome)) ? 'DETECTIVE':'SCOUT';
 }
-export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[]): string|null {
+export function adapterWaitReason(results: readonly import('../scheduler/scout-result.ts').ScoutResult[], installed: readonly string[] = []): string|null {
   const latest=results.at(-1);
+  const description = latest ? [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase() : '';
+  if (installed.some(name=>description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description)))) return null;
   return latest?.refusal === null && latest.outcome === 'NEEDS_ADAPTER' && latest.recoveryCapabilityVersion === SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION
     ? 'AWAITING_ADAPTER: '+latest.narrative+'; Engineer owns this work. Resume when its adapter is available.' : null;
+}
+
+/** A completed failed worker reaches Detective before the same acquisition is retried. */
+export function failureNeedsInvestigation(records: readonly import('./types.ts').WorkerResultRecord[], scouts: readonly import('../scheduler/scout-result.ts').ScoutResult[]): boolean {
+  const failures = records.filter(row=>!['ACQUIRED','EXTRACTED','PASS','SUPPORTED','SURVIVED','CANDIDATE_PROVED'].includes(row.result.verdict) ||
+    ('warnings' in row.result ? row.result.warnings : row.result.findings).some(f=>f.severity==='BLOCKING'));
+  const newest = failures.sort((a,b)=>b.endedAt.localeCompare(a.endedAt))[0];
+  return Boolean(newest && !scouts.some(s=>s.researchRole==='DETECTIVE' && s.refusal===null && s.recordedAt>=newest.endedAt));
+}
+
+export function scoutFactGrounded(result: import('../scheduler/scout-result.ts').ScoutResult, sourceUrl: string, text: string): boolean {
+  return result.findings.some(f=>f.sourceUrl===sourceUrl && f.field && f.exactQuote && text.includes(f.exactQuote) && f.value !== null && f.value !== undefined && f.exactQuote.includes(String(f.value)));
+}
+
+/** Facts-only success supplies its captured source for plain acquisition/parse, never another Scout. */
+export function reusableScoutCandidates(result: import('../scheduler/scout-result.ts').ScoutResult): import('../scheduler/scout-result.ts').ScoutCandidate[] {
+  if (result.refusal !== null) return [];
+  const facts = result.findings.filter(f=>f.kind==='RECORD' && f.field && f.exactQuote && f.sourceUrl && f.artifactIds.length);
+  return [...result.candidates,...facts.filter(f=>!result.candidates.some(c=>c.url===f.sourceUrl)).map(f=>({
+    routeId:'held-fact:'+contentHash(f.sourceUrl!).slice(0,24),title:f.field!,url:f.sourceUrl!,procedure:'Read the captured source and parse its exact field value.',
+    relevance:'Already solved for this subject and class: '+f.field,permission:'NOT_APPLICABLE' as const,permissionReading:'Saved source facts; normal acquisition and verification still apply.',
+    evidenceArtifactIds:f.artifactIds,observedOn:result.recordedAt.slice(0,10),recordClass:result.recordClass,deterministic:true,unverified:[],
+  }))];
 }

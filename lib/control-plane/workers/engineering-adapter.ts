@@ -2,6 +2,7 @@
 import { execFile } from 'node:child_process';
 import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
+import { installedAdapters } from '../scheduler/scout-adapters.ts';
 
 export const ENGINEER_ADAPTER_PREFIX = 'lib/sources/platform-adapters/';
 export interface AdapterFile {path:string;content:string}
@@ -79,12 +80,16 @@ export async function workAdapterQueue(input:{repos:import('../repository/types.
   const manual=await readFieldManual(input.repos,{role:'ENGINEER'});
   const opened:AdapterPullRequest[]=[];
   const done=new Set(manual.store.entries.filter(e=>e.kind==='ENGINEER_ADAPTER_PR').map(e=>e.title));
-  const pending=input.results.filter(r=>r.outcome==='NEEDS_ADAPTER' && r.refusal===null);
+  const installed=new Set(await installedAdapters());
+  const latest=new Map<string,ScoutResult>();
+  for(const result of [...input.results].sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt))) latest.set(result.subjectId+':'+result.recordClass,result);
+  const pending=[...latest.values()].filter(r=>r.outcome==='NEEDS_ADAPTER' && r.refusal===null);
   for(const result of pending) {
-    const platform=adapterBranchKey(result.candidates[0]?.routeId ?? result.recordClass);
-    if(done.has(platform))continue;
+    const plain=plainAdapterFor(result);
+    const platform=adapterBranchKey(plain?.platform ?? result.candidates[0]?.routeId ?? result.recordClass);
+    if(done.has(platform) || installed.has(platform))continue;
     try {
-    let candidate=plainAdapterFor(result);
+    let candidate=plain;
     if(!candidate && input.transport) {
       const {MODELS}=await import('../../models.ts');
       const response=await input.transport({model:MODELS.haiku.model,max_tokens:8000,

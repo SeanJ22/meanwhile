@@ -1241,6 +1241,24 @@ export interface OfficialPageRaw {
   error?: string;
 }
 
+/** Rebuild official linking chains from saved pages; no host list or invented endorsement. */
+export function officialLinkingPageFrom(url: string, pages: readonly {canonicalUrl:string;text:string}[]): OfficialLinkingPage | null {
+  if (isOfficialSource(url)) return null;
+  const chains = new Map<string,OfficialLinkingPage>();
+  for (const page of pages) if (isOfficialSource(page.canonicalUrl)) chains.set(page.canonicalUrl,{url:page.canonicalUrl,html:page.text});
+  for (let pass=0;pass<pages.length;pass++) {
+    for (const parent of chains.values()) if (isOfficialSource(url,parent)) return parent;
+    let added=false;
+    for (const page of pages) {
+      if (chains.has(page.canonicalUrl)) continue;
+      const parent=[...chains.values()].find(chain=>isOfficialSource(page.canonicalUrl,chain));
+      if (parent) { chains.set(page.canonicalUrl,{url:page.canonicalUrl,html:page.text,linkingPage:parent}); added=true; }
+    }
+    if (!added) break;
+  }
+  return [...chains.values()].find(chain=>isOfficialSource(url,chain)) ?? null;
+}
+
 
 function nameTermsFor(wiring: BodySourceWiring): string[] {
   return (wiring.config.nameTerms ?? "").split("|").map((t) => t.trim()).filter(Boolean);

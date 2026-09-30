@@ -316,6 +316,8 @@ export interface ScoutEscalationRefused {
 
 /** The typed result, as persisted. */
 export interface ScoutResult {
+  /** The failure responder shares the research format and tools; legacy rows are Scouts. */
+  readonly researchRole?: 'SCOUT' | 'DETECTIVE';
   readonly formatVersion: 1;
   readonly attemptId: string;
   readonly obligationId: string;
@@ -427,7 +429,7 @@ export interface ScoutResult {
   readonly contextRestarts?: number;
 }
 
-export const SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION = "held-query-provenance/1" as const;
+export const SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION = "held-query-provenance/2" as const;
 
 /** One `input_transformations` entry, with the turn and model it came back on. */
 export interface ScoutInputTransformation {

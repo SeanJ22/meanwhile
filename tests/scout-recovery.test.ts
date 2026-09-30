@@ -4,7 +4,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { publishAdapterPullRequest, plainAdapterFor } from '../lib/control-plane/workers/engineering-adapter.ts';
 import { sourceReliabilityKey } from '../lib/control-plane/scheduler/scout-reliability.ts';
-import { adapterWaitReason, investigationRole, subjectScoutHistory } from '../lib/control-plane/workers/detective.ts';
+import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureNeedsInvestigation, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
+import { installedAdapters, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
+import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.ts';
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
 
 test('adapter PR publication creates only adapter files and applies the merge label',async()=>{
@@ -47,5 +49,61 @@ test('plain Engineer reuses a dated sitemap implementation across government sub
   const url=publisherOrigin+'/2026-09-30-board';
   const output=adapterModule.inventoryStreamlineSitemap({xml:'<urlset><url><loc>'+url+'</loc></url></urlset>',subjectId:publisherOrigin,publisherOrigin});
   assert.equal(output.entries[0].sourceUrl,url);
+ }
+});
+
+test('facts-only Scout success supplies a source to every job for its subject, grounded in exact bytes',()=>{
+ const result={refusal:null,subjectId:'county',recordClass:'officials',recordedAt:'2026-09-29T00:00:00Z',candidates:[],findings:[{field:'holder',value:'Ada Clerk',exactQuote:'Council holder: Ada Clerk',sourceUrl:'https://county.gov/council',artifactIds:['saved'],kind:'RECORD'}]} as unknown as ScoutResult;
+ assert.equal(reusableScoutCandidates(result)[0].url,'https://county.gov/council');
+ assert.equal(scoutFactGrounded(result,'https://county.gov/council','Council holder: Ada Clerk'),true);
+ assert.equal(scoutFactGrounded(result,'https://county.gov/council','Different holder'),false);
+ assert.equal(scoutFactGrounded(result,'https://other.gov/council','Council holder: Ada Clerk'),false);
+ assert.equal(reusableScoutCandidates({...result,refusal:{issues:[]}} as unknown as ScoutResult).length,0);
+});
+
+test('an installed adapter wakes its class and reads every held link without a request',async()=>{
+ assert.ok((await installedAdapters()).includes('uncapped-source-links'));
+ const latest={refusal:null,outcome:'NEEDS_ADAPTER',recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION,narrative:'Need uncapped links from raw HTML extraction',nextRungs:[],candidates:[]} as unknown as ScoutResult;
+ assert.match(adapterWaitReason([latest])!,/AWAITING_ADAPTER/);
+ assert.equal(adapterWaitReason([latest],['uncapped-source-links']),null);
+ assert.match(adapterWaitReason([latest],['other-platform'])!,/AWAITING_ADAPTER/);
+ for(const source of ['https://county.gov/','https://city.gov/']) {
+  const links=await runInstalledAdapter('uncapped-source-links',Array.from({length:95},(_,i)=>'<a href="/record/'+i+'">Record '+i+'</a>').join(''),source) as {url:string;sourceUrl:string}[];
+  assert.equal(links.length,95);assert.ok(links.every(row=>row.sourceUrl===source));
+ }
+ await assert.rejects(runInstalledAdapter('../private','', 'https://county.gov'),/NOT_INSTALLED/);
+});
+
+test('failed acquisition and blank parse reach a Detective before another unchanged retry',()=>{
+ for(const verdict of ['BLOCKED','REFUSED','AMBIGUOUS']) {
+  const records=[{endedAt:'2026-09-29T01:00:00Z',result:{verdict,findings:[]}}] as unknown as Parameters<typeof failureNeedsInvestigation>[0];
+  assert.equal(failureNeedsInvestigation(records,[]),true);
+  const reply={researchRole:'DETECTIVE',refusal:null,recordedAt:'2026-09-29T02:00:00Z'} as ScoutResult;
+  assert.equal(failureNeedsInvestigation(records,[reply]),false);
+  assert.equal(failureNeedsInvestigation(records,[{...reply,recordedAt:'2026-09-28T02:00:00Z'}]),true);
+ }
+});
+
+test('shared client tools preserve source bytes and date-window paging',async()=>{
+ const rows=Array.from({length:90},(_,i)=>'person-'+i+',Member '+i+',lower,'+(i+1)).join('\n');
+ const csv='id,name,current_chamber,current_district\n'+rows;
+ const plural=await readClientSource('plural_roster',{state:'AZ'},{fetchImpl:async()=>new Response(csv) as never});
+ assert.equal(JSON.parse(plural.text).data.length,90);assert.equal(JSON.parse(plural.text).captures[0].text,csv);
+ assert.equal(plural.sourceUrl,'https://data.openstates.org/people/current/az.csv');
+ const requests:string[]=[];
+ const calendar=await readClientSource('legistar_events',{tenant:'pima',from:'2026-09-29',to:'2026-12-28'},{fetchImpl:async(url)=>{requests.push(String(url));return new Response(JSON.stringify([{EventId:123,EventDate:'2026-10-01'}]));}});
+ assert.equal(JSON.parse(calendar.text).data[0].EventId,123);assert.match(requests[0],/EventDate/);assert.equal(calendar.requests,1);
+ await assert.rejects(readClientSource('legistar_events',{tenant:'../private',from:'2026-09-29',to:'2026-12-28'},{}),/WINDOW_REQUIRED/);
+});
+
+test('the legacy research lane declares a failure responder before dispatch and assembles context once',()=>{
+ for(const failed of [false,true]) {
+  let reads=0;
+  const executor=failureResponderExecutor({transport:async()=>{throw Error('No model call expected');},toolkitFor:()=>{throw Error('No tool call expected');},contextFor:()=>{
+   reads++;return {route:null,providerId:null,reason:'fill missing field',decision:'BOUNDED_MODEL_WORKER',tools:{vault:async()=>{throw Error('No vault call expected');},spaceOut:async()=>{}},inherited:{artifactIds:[],summary:failed?'REFUSED: SCOUT_TRANSPORT_FAILED':''}};
+  }});
+  const args={obligation:{obligation:{id:'legacy-gap'}},holder:'worker',executor:'BOUNDED_MODEL_WORKER'} as Parameters<NonNullable<typeof executor.workerFor>>[0];
+  assert.equal(executor.workerFor!(args).role,failed?'DETECTIVE':'SCOUT');
+  executor.workerFor!(args);assert.equal(reads,1);
  }
 });

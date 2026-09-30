@@ -13,12 +13,24 @@ import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
 import {
   extractOfficialPageEvents,
   makeOfficialPageEventsSource,
+  officialLinkingPageFrom,
   statedTime,
   verifyExtractedEvents,
   verifyOfficialPageEvents,
   type OfficialPageBody,
   type OfficialPageRaw,
 } from "../lib/sources/official-page-events/index.ts";
+
+test('saved official chains reach external calendars without trusting an unlinked host',()=>{
+ for(const government of ['https://county.gov','https://city.gov']) {
+  const pages=[{canonicalUrl:government+'/education',text:'<a href="https://school.example.org">School</a>'},
+    {canonicalUrl:'https://school.example.org',text:'<a href="https://calendar.example.edu/events">Meetings</a>'}];
+  const chain=officialLinkingPageFrom('https://calendar.example.edu/events',pages);
+  assert.ok(chain);assert.equal(isOfficialSource('https://calendar.example.edu/events',chain),true);
+  assert.equal(officialLinkingPageFrom('https://unlinked.example.org',pages),null);
+  assert.equal(officialLinkingPageFrom('https://calendar.example.edu/events',pages.slice(1)),null);
+ }
+});
 
 /**
  * Official-page events (2026-09-23) — against pages recorded with one

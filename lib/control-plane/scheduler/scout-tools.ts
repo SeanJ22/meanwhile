@@ -1,4 +1,6 @@
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
+import { installedAdapters, runInstalledAdapter } from './scout-adapters.ts';
+import { readClientSource, type ClientTool } from './scout-clients.ts';
 /**
  * **THE SCOUT'S RESEARCH TOOLS.** (Level 1 activation, 2026-09-01.)
  *
@@ -78,6 +80,12 @@ const WHY_SCHEMA = {
 const URL_SCHEMA = { type: "string", description: "An absolute public http(s) URL." };
 
 export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
+  {name:'plural_roster',description:'Read a whole state legislature with the Plural bulk client and parser. Returns people, official links and exact raw CSV with its source URL. No API key needed; prefer this to per-person requests.',input_schema:{type:'object',properties:{state:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['state','rung','why']}},
+  {name:'legistar_events',description:'Read a Legistar tenant calendar through the shared paged client within a date window of up to 97 days. Returns event data and raw source responses with links.',input_schema:{type:'object',properties:{tenant:{type:'string'},from:{type:'string'},to:{type:'string'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['tenant','from','to','rung','why']}},
+  {
+    name: 'run_adapter', description: 'Run installed platform adapters over inherited sanitized bytes with no network. Omit adapter to list installed names; supply adapter and artifactId to extract source-attributed data. offset pages long results.',
+    input_schema: {type:'object', properties:{adapter:{type:'string'},artifactId:{type:'string'},offset:{type:'integer'},rung:RUNG_SCHEMA,why:WHY_SCHEMA},required:['rung','why']},
+  },
   {
     name: "read_permission",
     description:
@@ -796,7 +804,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   /** The shared front half of fetch_public and browse. A string is a refusal. */
   async function admit(
     input: ParsedInput,
-    tool: "fetch_public" | "browse",
+    _tool: "fetch_public" | "browse",
   ): Promise<
     | { readonly kind: "GO"; readonly url: URL; readonly acc: CallAccount; readonly reading: PermissionReading; readonly robots: HostRobots }
     | { readonly kind: "REFUSED"; readonly result: ScoutToolCallResult }
@@ -1301,12 +1309,13 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return result(answered, forModel, rung, acc);
   }
 
-  async function sourceApi(name: SourceApiTool, raw: unknown, input: ParsedInput): Promise<ScoutToolCallResult> {
+  async function sourceApi(name: SourceApiTool | ClientTool, raw: unknown, input: ParsedInput): Promise<ScoutToolCallResult> {
     const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     try {
-      const response = await readSourceApi(name, raw, { ...ctx.sourceApi, timeoutMs,
+      const options = { ...ctx.sourceApi, timeoutMs,
         spaceOut: async host => { const exceeded = overCap(host); if (exceeded) throw new Error(exceeded);
-          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } });
+          hostCounts.set(host, (hostCounts.get(host) ?? 0) + 1); await ctx.spaceOut(host); } } satisfies import('./scout-api.ts').SourceApiOptions;
+      const response = name === 'plural_roster' || name === 'legistar_events' ? await readClientSource(name,raw as Record<string,unknown>,options) : await readSourceApi(name,raw,options);
       acc.requests = response.requests; acc.bytes = response.bytes;
       requestCount += response.requests; bytesFetched += response.bytes;
       const ok = response.status >= 200 && response.status < 300;
@@ -1339,6 +1348,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const parsed = parseInput(input, rungLabel, needsUrl);
     if (!parsed.ok) return refusal(parsed.why);
     if ((SOURCE_API_TOOLS as readonly string[]).includes(tool)) return sourceApi(tool as SourceApiTool, input, parsed.value);
+    if (tool === 'plural_roster' || tool === 'legistar_events') return sourceApi(tool,input,parsed.value);
     switch (tool) {
       case "read_permission":
         return await readPermission(parsed.value);
@@ -1354,6 +1364,22 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return await readManual(input);
       case "read_held":
         return await readHeld(input);
+      case "run_adapter": {
+        const raw = input as Record<string, unknown>;
+        if (typeof raw.adapter !== 'string') return {ok:true,forModel:JSON.stringify(await installedAdapters()),artifacts:[],provenance:[],rung:null,requestCount:0,bytesFetched:0};
+        if (typeof raw.artifactId !== 'string' || !ctx.inherited.artifactIds.includes(raw.artifactId) || !ctx.readHeldArtifact) return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
+        try {
+          const held = await ctx.readHeldArtifact(raw.artifactId);
+          if (held.artifactId !== raw.artifactId || held.contentHash !== contentHash(held.text) || !held.provenance) return refusal('ADAPTER_ARTIFACT_IDENTITY_MISMATCH');
+          const data = await runInstalledAdapter(raw.adapter, held.text, held.canonicalUrl);
+          const serialized=JSON.stringify({sourceUrl:held.canonicalUrl,data}), offset=readOffset(input) ?? 0;
+          if (offset>serialized.length) return refusal('ADAPTER_OUTPUT_OFFSET_OUT_OF_RANGE');
+          const end=Math.min(serialized.length,offset+READ_PASSAGE_CHARS);
+          return {ok:true,forModel:`ADAPTER ${raw.adapter} read held artifact ${held.artifactId}; source ${held.canonicalUrl}. Derived result ${offset}..${end} of ${serialized.length}${end<serialized.length?`; continue at offset ${end}`:''}. Exact fact quotes must still occur in the held source.\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${serialized.slice(offset,end)}\n${DATA_END}`,
+            artifacts:[],requestCount:0,bytesFetched:0,knowledgeRead:{kind:'HELD_ARTIFACT',id:held.artifactId,contentHash:held.contentHash,offset:0,length:held.text.length},
+            provenance:[held.provenance],rung:{rung:parsed.value.rung,tool:'run_adapter',target:held.canonicalUrl,observed:'Installed adapter '+raw.adapter,artifactIds:[held.artifactId]}};
+        } catch(error) { return refusal('ADAPTER_FAILED: '+(error instanceof Error?error.message:String(error))); }
+      }
       case "search": {
         const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
         const query = typeof o.query === "string" ? o.query.trim() : "";

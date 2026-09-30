@@ -984,18 +984,17 @@ test("the pilot outer bound contains the frontier (one a pass, two on a meeting 
   assert.match(runner, /discardOutputAfterSettlement:\s*true/);
   assert.doesNotMatch(runner, /waveStart|pendingWave/);
   assert.doesNotMatch(runner, /spawnSync/);
-  assert.match(pilot, /ROUTINE_PASS_BOUND = routineFrontierPassBound\(\);[\s\S]*ROUTINE_DATA_TIMEOUT_MS = routineRunnerOuterTimeoutMs\([\s\S]*ROUTINE_PASS_BOUND\.commandCount[\s\S]*ROUTINE_PASS_BOUND\.largestFailureDomainSize[\s\S]*settlementRequestsPerCommand:[\s\S]*clockTaskCount:[\s\S]*readerSingleDomains:[\s\S]*readerMeetingDomains:/);
+  assert.match(pilot, /runRuntimeChildren\(/);
   assert.match(pilot, /ROUTINE_DATA_ADMISSION_MS,[\s\S]*from "\.\.\/lib\/civic-data\/runner\.ts"/);
   assert.match(pilot, /id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS/);
-  assert.match(pilot, /timeoutMs:\s*ROUTINE_DATA_TIMEOUT_MS/);
-  assert.doesNotMatch(pilot, /ROUTINE_DATA_TIMEOUT_MS\s*=\s*35\s*\*/);
+  assert.doesNotMatch(pilot, /ROUTINE_DATA_TIMEOUT_MS|ROUTINE_PASS_BOUND/);
 });
 
 test("the routine writer acquires its own OS singleton before store or clock access", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const authority = runner.indexOf('assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] })');
   const singleton = runner.indexOf("await acquireProcessSingleton(");
-  const writeHandle = runner.indexOf("resolveProductionWriteHandle()");
+  const writeHandle = runner.indexOf("prepareProductionCivicDataWrite()");
   const clock = runner.indexOf("store.clock(");
   assert.ok(authority > 0 && singleton > authority);
   assert.ok(writeHandle > singleton);
@@ -1004,7 +1003,7 @@ test("the routine writer acquires its own OS singleton before store or clock acc
   assert.match(runner, /ProcessSingletonHeldError/);
   assert.match(runner, /SUPERVISOR_FAILURE \(REFUSED_CONCURRENT\)/);
   assert.match(runner, /zero source candidates or clocks were written/);
-  assert.match(runner, /if \(ROUTINE_DATA_PROCESS_LEASE !== null\) \{[\s\S]*resolveProductionWriteHandle\(\)/);
+  assert.match(runner, /if \(ROUTINE_DATA_PROCESS_LEASE !== null\) \{[\s\S]*prepareProductionCivicDataWrite\(\)/);
   assert.match(runner, /await ROUTINE_DATA_PROCESS_LEASE\.release\(\)/);
 });
 
@@ -1061,7 +1060,7 @@ test("--only selection refuses typos and empty tokens before store access", () =
   const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2))");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");
-  const writeHandle = runner.indexOf("resolveProductionWriteHandle()");
+  const writeHandle = runner.indexOf("prepareProductionCivicDataWrite()");
   const clock = runner.indexOf("store.clock(");
   assert.ok(selection > 0 && refusal > selection);
   assert.ok(singleton > refusal && writeHandle > singleton && clock > writeHandle);
@@ -1137,8 +1136,9 @@ test("the pilot awaits independently bounded routine and intake children without
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /async function runRoutineCivicData\(\): Promise<void>/);
   assert.match(pilot, /async function runIntakeRuntime\(\): Promise<void>/);
-  assert.match(pilot, /id:\s*"routine-civic-data"[\s\S]*timeoutMs:\s*ROUTINE_DATA_TIMEOUT_MS/);
-  assert.match(pilot, /id:\s*"intake-runtime"[\s\S]*timeoutMs:\s*PUBLISH_TIMEOUT_MS/);
+  assert.match(pilot, /runRuntimeChildren\(\[\{\s*id:\s*"routine-civic-data"/);
+  assert.match(pilot, /runRuntimeChildren\(\[\{\s*id:\s*"intake-runtime"/);
+  assert.doesNotMatch(pilot, /ROUTINE_DATA_TIMEOUT_MS|PUBLISH_TIMEOUT_MS/);
   assert.match(pilot, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run:\s*runRoutineCivicData[\s\S]*run:\s*runIntakeRuntime/);
   assert.match(pilot, /standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/);
   assert.match(pilot, /async function runOneCycle\(owner: \{ readonly ownerIntentsUnreadable: boolean \}\): Promise</);

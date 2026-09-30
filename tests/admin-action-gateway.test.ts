@@ -116,19 +116,20 @@ function ask(over: Partial<ActionRequest> = {}): ActionRequest {
 test("ADM-C6: the registry is closed and every entry carries a full definition", () => {
   const definitions = actionDefinitions();
   /*
-   * THE DENOMINATOR. Seventeen actions are registered today (the expansion
+   * THE DENOMINATOR. Eighteen actions are registered today (the expansion
    * controls added the scope set/remove pair; the Money screen added the
    * billing-figure record/remove pair and the paid discovery search switch). Pinning the count is what makes
    * the loop below a sweep rather than a coincidence: an entry silently
    * dropped in a refactor would otherwise leave every assertion passing over a
    * smaller population.
    */
-  assert.equal(definitions.length, 17, "the registry no longer holds the seventeen actions declared");
+  assert.equal(definitions.length, 18, "the registry no longer holds the eighteen actions declared");
   assert.deepEqual(
     [...ACTION_TYPES],
     [
       "queue.add",
       "decision.record",
+      "research.pause",
       "runner.pause",
       "runner.resume",
       "runner.runCycleNow",

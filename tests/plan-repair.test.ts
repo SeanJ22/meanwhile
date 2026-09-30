@@ -1,3 +1,4 @@
+import { parseGeneralizedRecords } from "../lib/control-plane/workers/generalized-parser.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_BODY, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";

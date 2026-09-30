@@ -116,8 +116,23 @@ export function rosterTableFieldOmissions(evidence: WorkerEvidence, shape: Recor
   const omissions: string[] = [];
   const phoneColumn = headers.findIndex(cell => /^(?:phone|office phone|contact phone|telephone)$/i.test(cell.value));
   if (phoneColumn >= 0 && members.every(row => Boolean(row[phoneColumn]?.value.trim())) &&
-    !Object.entries(shape.fields).some(([name, field]) => field.source === phoneColumn && field.attribute === undefined && /^(?:phone|officePhone|telephone)$/i.test(name))) {
+    !Object.entries(shape.fields).some(([name, field]) => name === "phone" && field.source === phoneColumn && field.attribute === undefined)) {
     omissions.push("phone");
+  }
+  // Only an address visible in every selected row is mappable by the current
+  // tabular parser. A JavaScript "Email" button is not an email address, and
+  // a differently named field would be dropped by the roster publisher.
+  const emailColumn = headers.findIndex(cell => /^(?:e-?mail|(?:office|official) e-?mail)$/i.test(cell.value));
+  if (emailColumn >= 0 && members.every(row => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(row[emailColumn]?.value.trim() ?? "")) &&
+    !Object.entries(shape.fields).some(([name, field]) => name === "email" && field.source === emailColumn && field.attribute === undefined)) {
+    omissions.push("email");
+  }
+  // Keep the publisher's wording as a note. A term column alone does not
+  // establish current service, a start date, an end date, or a holdover rule.
+  const termColumn = headers.findIndex(cell => /^(?:term|term dates?|term ends?|term expires?|term expiration|term of office)$/i.test(cell.value));
+  if (termColumn >= 0 && members.every(row => Boolean(row[termColumn]?.value.trim())) &&
+    !Object.entries(shape.fields).some(([name, field]) => name === "termNote" && field.source === termColumn && field.attribute === undefined)) {
+    omissions.push("termNote");
   }
   const nameColumn = Object.entries(shape.fields).find(([name, field]) => name === "name" && typeof field.source === "number")?.[1].source;
   if (typeof nameColumn === "number" && members.every(row => {

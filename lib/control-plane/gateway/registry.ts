@@ -399,6 +399,30 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
+  /* ------------------------------------------------------ research.pause */
+  {
+    definition: {
+      type: "research.pause",
+      label: "Pause paid research",
+      does: "Records a pause for the paid research lane on the runner's next read.",
+      doesNot: "Does not stop the runner, cancel work already in flight, or pause plain-code work.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "the paid research lane",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const note = validateIntentNote("PAUSE", input.note);
+      return note.ok ? { ok: true, value: { note: note.note } } : bad(note.detail);
+    },
+    execute(deps, context, input) {
+      return appendIntent(deps, context, "PAUSE", input.note === null ? null : String(input.note), {
+        says: "The paid research lane has been asked to pause. New paid work waits when the runner next reads this intent; work already in flight may finish.",
+        undo: "A separate paid-research resume intent is required to resume paid work.",
+      });
+    },
+  },
+
   /* -------------------------------------------------------- runner.pause */
   {
     definition: {

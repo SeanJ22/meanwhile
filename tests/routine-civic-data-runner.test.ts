@@ -54,8 +54,8 @@ test("source refreshes are admitted daily without a Send and retry failed source
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked }, now), true);
     const failed = "2026-09-30T11:00:00Z";
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed, lastSucceededAt: null }, now - 1), false);
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed, lastSucceededAt: null }, now), true);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
   }
 });
 import {

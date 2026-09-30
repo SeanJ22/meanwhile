@@ -14,7 +14,8 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
+import { capturesForPublication, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
@@ -134,6 +135,9 @@ export async function publishWorkerReaderResults(input: {
 }) {
   const results = await readCompletedWorkerResults(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
+  // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
+  const manual = await readValidatorManual(input.repos);
+  const learned: ValidatorObservation[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan: AutonomousWorkPlan | undefined = item.autonomousPlan;
@@ -144,10 +148,10 @@ export async function publishWorkerReaderResults(input: {
       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
     }
     let outcome: NonNullable<WorkItem["publicationOutcome"]>, candidateId: string | null = null, versionId: string | null = null;
-    let workerChecksComplete = false;
+    let workerChecksComplete = false, captures: WorkerPublicationCapture[] = [], wentLive = 0;
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
-      const captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture: input.readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now);
       const checked = workerReaderPackage({ plan, parser, captures, registry, now: input.now });
       const prior = await readManualProjectionPrior(input.contractId, input.store, input.now);
@@ -174,6 +178,7 @@ export async function publishWorkerReaderResults(input: {
       outcome = { at: input.now, workerResultId: parser.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
         detail: `${input.contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.`, candidateId, versionId,
         ...changes, acceptedRecordIds: delivered.map(row => row.id) };
+      wentLive = delivered.length;
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const recovery = workerChecksComplete || !detail.startsWith("WORKER_PUBLICATION_") ? "PUBLISHER" : "WORKER";
@@ -183,6 +188,8 @@ export async function publishWorkerReaderResults(input: {
     const latest = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
+    if (plan) learned.push(validatorObservation({ plan, workItemId: id, page: captures[0], captures, published: wentLive, outcome }));
   }
+  await writeValidatorLessons(input.repos, learned, input.now);
   return report;
 }

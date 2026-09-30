@@ -8,6 +8,7 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ManualSourceSetReceipt } from "./types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { isOfficialSource } from "./source-authority.ts";
+import { hostOfUrl, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 
 export function requirePublication(value: unknown, reason: string): asserts value {
   if (!value) throw new Error(`WORKER_PUBLICATION_${reason}`);
@@ -86,17 +87,41 @@ export function latestParserResult(results: readonly WorkerResultRecord[], workI
 
 /**
  * The saved pages a publication rests on: the extraction's own page, plus —
- * when that page is not `.gov` — the work's saved `.gov` pages, one of which
- * must link it for it to count as official (`isOfficialSource`).
+ * when that page is not `.gov` — saved `.gov` pages, one of which must link it
+ * for it to count as official (`isOfficialSource`). Those are the work's own
+ * pages and, from the field manual, pages any earlier job saved that link the
+ * same host.
  */
 export async function capturesForPublication(input: {
   repos: Pick<ControlPlaneRepositories, "artifacts">; workItemId: string; primaryId: string; results: readonly WorkerResultRecord[];
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
+  officialLinks?: ReadonlyMap<string, readonly string[]>;
 }): Promise<WorkerPublicationCapture[]> {
   const primary = await input.readCapture(input.primaryId, input.results);
   if (isOfficialSource(primary.evidence.canonicalUrl)) return [primary];
-  const official = (await input.repos.artifacts.read(input.workItemId))
-    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl)).slice(-10);
-  const read = await Promise.all(official.map(a => input.readCapture(a.artifactId, input.results).catch(() => null)));
+  const own = (await input.repos.artifacts.read(input.workItemId))
+    .filter(a => a.artifactId !== input.primaryId && !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl)).slice(-10).map(a => a.artifactId);
+  const learned = input.officialLinks?.get(hostOfUrl(primary.evidence.canonicalUrl) ?? "")?.slice(0, 3) ?? [];
+  const read = await Promise.all([...new Set([...learned, ...own])].map(id => input.readCapture(id, input.results).catch(() => null)));
   return [primary, ...read.filter((c): c is WorkerPublicationCapture => c !== null)];
+}
+
+/**
+ * One publication attempt as the Validator records it in the field manual:
+ * the page read, the official page that linked it when it is not `.gov`, how
+ * many records went live, and — for a source-side hold — why §3 refused it.
+ */
+export function validatorObservation(input: {
+  plan: AutonomousWorkPlan; workItemId: string; page: WorkerPublicationCapture | null | undefined; captures: readonly WorkerPublicationCapture[]; published: number;
+  outcome: { readonly status: string; readonly code: string; readonly detail: string; readonly recovery?: string };
+}): ValidatorObservation {
+  const { page, outcome } = input;
+  const linking = page && !isOfficialSource(page.evidence.canonicalUrl)
+    ? linkingPageFrom(page.evidence.canonicalUrl, input.captures.filter(captureIntact).map(c => c.evidence)) : null;
+  const linkingCapture = linking ? input.captures.find(c => c.evidence.canonicalUrl === linking.url) : undefined;
+  return { recordClass: input.plan.contract.recordClass, state: input.plan.contract.schemaVersion === 2 ? input.plan.contract.jurisdiction.state : null,
+    workItemId: input.workItemId, published: input.published,
+    page: page ? { url: page.evidence.canonicalUrl, artifactId: page.evidence.artifactId, contentHash: page.evidence.contentHash } : null,
+    linking: linkingCapture ? { url: linkingCapture.evidence.canonicalUrl, artifactId: linkingCapture.evidence.artifactId } : null,
+    refusal: input.published === 0 && outcome.status === "HELD" && outcome.recovery === "WORKER" ? { code: outcome.code, detail: outcome.detail } : null };
 }

@@ -14,7 +14,8 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { materializeBodyDirectoryWork, workerBodyDirectoryPackage } from "./worker-body-directory.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
-import { capturesForPublication, captureIntact, latestParserResult, section3SourceReceipt } from "./worker-publication-evidence.ts";
+import { capturesForPublication, captureIntact, latestParserResult, section3SourceReceipt, validatorObservation } from "./worker-publication-evidence.ts";
+import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { localHeldCaptureReader } from "./worker-publication-context.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "./source-authority.ts";
@@ -270,6 +271,9 @@ export async function publishWorkerRosterResults(input: {
   // once a reading is published every other job for that body reuses that publication.
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
   const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
+  // The Validator reads what earlier passes learned before it checks anything, and writes back once at the end.
+  const manual = await readValidatorManual(input.repos);
+  const learned: ValidatorObservation[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan = item.autonomousPlan;
@@ -277,14 +281,14 @@ export async function publishWorkerRosterResults(input: {
     const bodyId = plan.publication.bodyId;
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null;
+    let captures: WorkerPublicationCapture[] = [], reading: RosterReading | null = null, wentLive = 0;
     try {
       const prior = registry ??= await readRegistryRuntimePrior(input.store, input.now);
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
       const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY";
       if (directory && !parser) continue;
-      const captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture: input.readCapture }) : [];
-      let reading: RosterReading | null = null;
+      captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture: input.readCapture, officialLinks: manual.officialLinks }) : [];
       if (!directory) {
         reading = parser ? parserReading(parser, plan.contract, captures) : null;
         if (!reading) {
@@ -342,6 +346,7 @@ ${readingId}`);
         try { await materializeBodyDirectoryWork({ repos: input.repos, parent: { ...item, publicationOutcome: outcome }, bodies: prepared.payload.registry.bodies, now: input.now }); }
         catch { throw new Error("DIRECTORY_DOWNSTREAM_WRITE_FAILED:Verified bodies remain published; recover their downstream assignments on the next publisher cycle"); }
       }
+      wentLive = count;
       if (outcome.status !== "HELD") publishedByBody.set(`${bodyId}
 ${readingId}`, outcome);
     } catch (error) {
@@ -360,7 +365,9 @@ ${readingId}`, outcome);
     const current = await input.repos.workItems.mustRead(id);
     await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
+    if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: captures[0] ?? reading?.capture, captures, published: wentLive, outcome }));
   }
+  await writeValidatorLessons(input.repos, learned, input.now);
   return report;
 }
 

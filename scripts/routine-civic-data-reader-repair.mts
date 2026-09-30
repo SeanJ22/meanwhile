@@ -23,7 +23,7 @@ import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
-import { readerVerifierClosureAttestor } from "./lib/reader-verifier-attestation.ts";
+import { readerVerifierClosureAttestor } from "./lib/verifier-attestation.ts";
 function safeFailure(value: string): string {
   return value
     .replace(/(postgres(?:ql)?:\/\/)[^@\s]+@/gi, "$1[credentials-redacted]@")

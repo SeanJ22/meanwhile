@@ -832,10 +832,10 @@ export async function promoteDerivedMeetingFamily(
     reads,
     previous,
     generatedAt,
-    reconcile: (read, previousSlice) => {
+    reconcile: (read, previousSlice, windowAnchor) => {
       const reconciled = reconcileSuccessfulMeetingPartition({
         sourceName: DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        generatedAt,
+        generatedAt: windowAnchor,
         freshMeetings: read.freshMeetings,
         freshAgendaDocuments: read.freshAgendaDocuments,
         previous: previousSlice,
@@ -880,7 +880,7 @@ export async function promoteDerivedMeetingFamily(
     ...(venueReferenceEvidence.length > 0 ? { venueReferenceEvidence } : {}) } };
   const candidate = derivedFamilyCandidate(partition, finalBuild);
   // An unchanged family pass is receipted on the pointed version (R23).
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt, undefined, { confirmUnchanged: true });
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,

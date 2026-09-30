@@ -63,6 +63,8 @@ test("the canonical shapes are read, and anything with more in it is not", () =>
     ["When did the Mesa City Council last meet?", "MEETING_TIME"],
     ["When's the Chandler City Council's next meeting?", "MEETING_TIME"],
     ["What's on the Pima County Board of Supervisors agenda?", "BODY_AGENDA"],
+    ["What's on the agenda for the next Pima County Board of Supervisors meeting?", "BODY_AGENDA"],
+    ["What is on the agenda for the upcoming Vail school board meeting?", "BODY_AGENDA"],
     ["What is on the agenda for the Tucson City Council?", "BODY_AGENDA"],
     ["What did the Mesa City Council decide recently?", "MEETING_OUTCOME"],
     ["How did the Pima County Board of Supervisors vote last time?", "MEETING_OUTCOME"],
@@ -417,6 +419,16 @@ test("ROUTE: who represents me in Congress names the two U.S. Senators the state
   const { payload, calls: made } = await ask("Who represents me in Congress?", [PIMA, VAIL, "ocd-division/country:us/state:az/cd:6"]);
   assert.deepEqual(made, []);
   assert.match(payload.answer ?? "", /^Your United States Senators are .+ and .+; your United States Representative is .+ for District 6\.$/);
+});
+
+test("ROUTE: can I speak at a meeting is read from the words and composed from the sitting and the held comment rules — no model call", { concurrency: false }, async () => {
+  for (const question of ["Can I speak at the next Vail school board meeting?", "Does the Vail school board take public comment?"]) {
+    const { payload, calls: made } = await ask(question, [AZ, PIMA, VAIL]);
+    assert.deepEqual(made, [], `${question}: neither rung called a model`);
+    assert.equal(payload.mode, "GROUNDED_COMPOSED", question);
+    assert.equal(payload.trace.validation.passed, true, question);
+    assert.match(payload.answer ?? "", /Vail|We have not recorded how the public can comment/, question);
+  }
 });
 
 test("ROUTE: any other question is still read by the model; the answer starts from the code's reading meanwhile and is kept because the readings agree", { concurrency: false }, async () => {

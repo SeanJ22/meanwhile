@@ -732,7 +732,7 @@ export async function POST(request: Request) {
   // still loads, and lexicalReading below must prove the body binding before
   // unrelated evidence may stay unread. A failed/ambiguous binding restores
   // every family before the normal interpretation and retrieval path runs.
-  const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
+  const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
   /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
      unless it is a money question. Deferred the same way the sitting shapes are, on the same proof (2026-09-29, S3). */
   const noPersonRecordShapes = new Set([...sittingShapes, "BODY_ROSTER", "BODY_CIVICS", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
@@ -1702,6 +1702,12 @@ export async function POST(request: Request) {
       const access = commentAccessEvidenceFor(subject.id, bound?.ocdId ?? null, subject.name);
       records.push(...access.records);
       gaps.push(...access.gaps);
+      /* "How can I comment at the Vail school board meeting?": with no standing rule held, the answer says we have not recorded how
+         (the model used to say the district has not published it — a claim about them made from a gap of ours). */
+      const publicCommentAsk = shapeForBoundBody(question, inventory, subject.id) === "PUBLIC_COMMENT";
+      if (publicCommentAsk) {
+        for (const gap of access.gaps) sittingGaps.push({ role: "COMMENT", gap });
+      }
       denominators.publicCommentAccessRecordsReturned = access.records.length;
       if (identity?.nameIsBodysOwn && identity.sourceUrl) {
         records.push({ kind: "BODY", id: subject.id, bodyId: subject.id,
@@ -2074,6 +2080,9 @@ export async function POST(request: Request) {
        * "Superintendent" — never an assessment of who matters. See
        * `lib/ask/contacts.ts` for why "most influential" is unbuildable here.
        */
+      if (publicCommentAsk && access.records.length === 0 && access.gaps.length === 0) {
+        attachSittingGaps("COMMENT", [{ whose: "OURS", statement: `We have not recorded how the public can comment at ${subject.name}.` }]);
+      }
       contacts.push(
         ...contactsForBody(
           {

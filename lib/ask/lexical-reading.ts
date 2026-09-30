@@ -61,7 +61,7 @@ import type { AskSubjectRef } from "./subject.ts";
  */
 
 /** The shapes about one body's sittings — the ones `lib/ask/sitting-answer.ts` can compose. */
-export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME";
+export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | "PUBLIC_COMMENT";
 /**
  * The closed set of question shapes this module reads. `MONEY` (2026-09-25)
  * is a named person's campaign money — how much, who gave, or a comparison of
@@ -111,11 +111,16 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "MEETING_TIME", kind: "BODY", pattern: /^what (?:is|s) the (?:next|upcoming) (.+?) (?:meeting|session)$/ },
   /* BODY_AGENDA — what is on a named body's own docket. */
   { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on (?:the )?(.+?)(?: s)? (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:meeting )?(?:agenda|docket)$/ },
-  { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on the (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:agenda|docket) (?:for|of|at) (?:the )?(.+?)(?: (?:next )?meeting)?$/ },
+  /* "...for the next Pima County Board of Supervisors meeting": the tense word is the deterministic reader's, never part of the name (2026-09-29). */
+  { shape: "BODY_AGENDA", kind: "BODY", pattern: /^what (?:s|is|are|was|were) on the (?:(?:next|upcoming|last|latest|most recent|previous) )?(?:agenda|docket) (?:for|of|at) (?:the )?(?:(?:next|upcoming|last|latest|most recent|previous) )?(.+?)(?: s)?(?: (?:(?:next|upcoming) )?(?:meeting|session))?$/ },
   /* MEETING_OUTCOME — what a named body decided, or how it voted. */
   { shape: "MEETING_OUTCOME", kind: "BODY", pattern: /^what did (?:the )?(.+?) (?:decide|approve|pass|adopt) at (?:its|their|the) (?:\d{4} \d{1,2} \d{1,2}|(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?) \d{1,2}(?:st|nd|rd|th)? \d{4}) meeting$/ },
   { shape: "MEETING_OUTCOME", kind: "BODY", pattern: new RegExp(`^what did (?:the )?(.+?) (?:decide|decide on|vote on|approve|pass|adopt)${RECENTLY}$`) },
   { shape: "MEETING_OUTCOME", kind: "BODY", pattern: new RegExp(`^how did (?:the )?(.+?) vote${RECENTLY}$`) },
+  /* PUBLIC_COMMENT — how to take part in a named body's meeting: comment, speak, attend (2026-09-29). */
+  { shape: "PUBLIC_COMMENT", kind: "BODY", pattern: /^(?:how|where) (?:can|do|could|would|should) (?:i|we) (?:comment|speak|give (?:public )?comment|make (?:a )?(?:public )?comment|participate|attend|sign up to speak|say something|give input|weigh in) (?:at|in|for|during|to) (?:the )?(?:(?:next|upcoming) )?(.+?)(?: (?:(?:next|upcoming) )?(?:meeting|session))?$/ },
+  { shape: "PUBLIC_COMMENT", kind: "BODY", pattern: /^can (?:i|we) (?:comment|speak|attend|participate|give (?:public )?comment|make (?:a )?(?:public )?comment)(?: at| in| for| during| to)? (?:the )?(?:(?:next|upcoming) )?(.+?)(?: (?:(?:next|upcoming) )?(?:meeting|session))?$/ },
+  { shape: "PUBLIC_COMMENT", kind: "BODY", pattern: /^(?:does|do) (?:the )?(.+?) (?:take|allow|have|accept|hold|offer) (?:public )?(?:comments?|public comment)$/ },
   /* BODY_ROSTER — who sits on a named body. Before PERSON_RECORD: "who is on X" is not "who is X". */
   { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who (?:sits|serves) on (?:the )?(.+?)$/ },
   { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who (?:is|s|are) on (?:the )?(.+?)$/ },
@@ -146,7 +151,7 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "CONTACT", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:contact information|contact info|phone number|email address)$/ },
 ];
 
-const SITTING_SHAPES: ReadonlySet<LexicalShape> = new Set<LexicalShape>(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME"]);
+const SITTING_SHAPES: ReadonlySet<LexicalShape> = new Set<LexicalShape>(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
 
 /**
  * The intent each named-subject shape carries: what `claude-opus-5` returned
@@ -517,6 +522,8 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
      * Council last meet?"), which it calls PAST_MEETING; so does this.
      */
     if (temporal.kind === "RANGE" || (temporal.kind === "DATE" && found.shape !== "MEETING_OUTCOME")) return null;
+    /* How to take part is asked of the next sitting: a tense that says otherwise is the model's. */
+    if (found.shape === "PUBLIC_COMMENT" && temporal.kind !== "NONE" && temporal.kind !== "NEXT") return null;
     if (found.shape === "MEETING_OUTCOME" && temporal.kind !== "LAST" && temporal.kind !== "DATE") return null;
     intent = shapeIntent(found.shape, temporal);
   } else {

@@ -59,6 +59,11 @@ test("the place source reads shared holdings, publishes source data, then uses t
   let live = false;
   let clock = now;
   const acquiredAt = "2026-09-30T00:02:00Z";
+  const name = buildPlaceOwedList({ divisions: [division], subjects: [body], held: [], now })
+    .find(item => item.subject.id === body.id && item.checklistId === "GOV-01")!;
+  const work = placeFieldWork(name, now);
+  await repos.workItems.put(work.id, work, now);
+  let canonicalReads = 0;
   const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
     clock: () => clock,
     geographyCaptures: [], readSource: async (url, knowledge) => {
@@ -66,12 +71,16 @@ test("the place source reads shared holdings, publishes source data, then uses t
       clock = acquiredAt;
       return { url, text: "<h1>Public source</h1>", collectedAt: acquiredAt };
     },
-    readHeld: async () => { events.push("held"); return { subjects: [body], held: live ? [{ subjectId: body.id,
+    readHeld: async () => {
+      if (++canonicalReads === 3) assert.equal((await repos.workItems.mustRead(work.id)).value.state, "VERIFIED_COMPLETE",
+        "the publication closes its own field before the final whole-place read");
+      events.push("held"); return { subjects: [body], held: live ? [{ subjectId: body.id,
       checklistId: "GOV-01", state: "published", sourceUrl: "https://example.gov", checkedAt: acquiredAt, freshUntil: "2026-10-01T00:00:00Z" }] : [] }; },
     publish: async input => { assert.equal(input.now, acquiredAt); events.push("publish"); live = true; return { published: true }; } });
   assert.equal(events[0], "held");
   assert.equal(events.at(-1), "held");
   assert.ok(events.indexOf("source") < events.indexOf("publish"));
+  assert.deepEqual(result.closed, [work.id]);
   assert.equal(result.items.find(item => item.subject.id === body.id && item.checklistId === "GOV-01")?.state, "published");
 });
 

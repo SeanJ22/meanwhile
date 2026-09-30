@@ -27,6 +27,7 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
 import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
 import { publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
+import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 
 async function main(): Promise<void> {
@@ -48,7 +49,7 @@ async function main(): Promise<void> {
     const failures: string[] = [];
     if (nationalZips) {
       try {
-        const places = await runNationalPlaceTask({ tools: { repos, store: vault, spaceOut: hostSpacer(),
+        const places = await runNationalPlaceTask({ tools: { repos, store: vault, spaceOut: serializeHostSpacing(hostSpacer()),
           browse: browseWithPlaywright, now: () => new Date().toISOString() }, store,
           zips: nationalZips.split(",").filter(Boolean), publish: async input => {
             const publication = await publishNationalPlaceSources({ ...input,

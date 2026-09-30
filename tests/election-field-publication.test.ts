@@ -5,6 +5,7 @@ import { publishElectionFields, type ElectionFieldVerifier } from "../lib/civic-
 import type { ElectionFieldInput } from "../lib/civic-data/election-fields.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { section3Record } from "../lib/control-plane/promotion/section3.ts";
 
 const now = "2026-09-30T12:00:00.000Z";
 const division = "ocd-division/country:us/state:oh";
@@ -17,9 +18,7 @@ const make = (text: string, kind: ElectionFieldInput["kind"] = "registration_dea
       artifactId: "saved-election-page", acquiredByAttemptId: "official-page-acquisition", methodRouteId: "official-page" } } },
 });
 
-// The publisher delegates the verdict to S4. This substitute tests its use of
-// that verdict and actual captured bytes, not S4's independent predicate.
-const verify: ElectionFieldVerifier = input => ({ live: Object.values(input.fields).every(value => input.page.text.includes(String(value))), reason: "Unconfirmed field" });
+const verify: ElectionFieldVerifier = section3Record;
 
 test("one verified election field publishes while an unrelated unconfirmed field stays open", async () => {
   const store = new MemoryRoutineDataStore();
@@ -88,4 +87,17 @@ test("an unchanged later source capture confirms the prior version without anoth
   const second = await publishElectionFields({ store, now: later, fields: [refreshed], verify });
   assert.equal(second.promotedVersionId, first.promotedVersionId);
   assert.equal(second.candidateId, first.candidateId);
+});
+
+test("the actual section3 verifier holds stale captures without holding fresh sibling fields", async () => {
+  const store = new MemoryRoutineDataStore();
+  const field = make("Registration deadline October 5, 2026");
+  const staleAt = "2026-09-01T00:00:00.000Z";
+  const stale = { ...field, document: { ...field.document, collectedAt: staleAt,
+    capture: { ...field.document.capture!, observedAt: staleAt,
+      evidence: { ...field.document.capture!.evidence, retrievedAt: staleAt } } } };
+  const result = await publishElectionFields({ store, now, fields: [stale, field], verify });
+  assert.equal(result.fields.length, 1);
+  assert.equal(result.gaps.length, 1);
+  assert.match(result.gaps[0].detail, /OUTSIDE_FRESHNESS_WINDOW/);
 });

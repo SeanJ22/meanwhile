@@ -25,6 +25,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { openControlPlane, readAdminConfig, RUNNER_ID } from "../admin-data.ts";
+import { EASTERN_ZONE } from "../eastern-time.ts";
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "../expansion/scopes.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
@@ -161,9 +162,9 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
 
 /* ------------------------------------------------------------- the words */
 
-const MST = new Intl.DateTimeFormat("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-/** Arizona time, the way the owner reads schedules. */
-const mstWords = (iso: string) => `${MST.format(new Date(iso))} MST`;
+const EASTERN = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+/** Eastern time, the way Admin shows every time (rulings §10). The name is older than that ruling. */
+const mstWords = (iso: string) => `${EASTERN.format(new Date(iso))} ET`;
 
 function modelWords(version: unknown): string {
   if (!text(version)) return "Not recorded";

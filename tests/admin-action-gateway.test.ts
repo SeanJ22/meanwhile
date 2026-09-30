@@ -1090,11 +1090,12 @@ test("ADM-34: the counts come from the published snapshot, so the strip and the 
   assert.equal(pulse.counts.obligations, 10, "obligations were not summed from the snapshot");
   assert.equal(pulse.counts.freshnessDebtRows, 2);
   assert.equal(pulse.counts.incidents, 1);
-  assert.equal(pulse.counts.decisionsWaiting, 2, "both cards are waiting until one is decided");
+  assert.equal(pulse.counts.decisionsWaiting, null, "the old tracker's decision cards are not counted any more");
+  assert.ok(!pulse.unread.some((w) => /decision/.test(w)), "and their absence is not reported as an unread count");
   assert.equal(pulse.runner.state, "ALIVE");
   assert.equal(pulse.runner.nextCycleDueAt, "2026-09-06T12:20:00.000Z");
 
-  /* Decide one, and the waiting count drops without the snapshot being republished. */
+  /* Recording a decision still works; it is simply not counted on the strip. */
   const decided = await submit(
     ask({
       type: "decision.record",
@@ -1106,7 +1107,7 @@ test("ADM-34: the counts come from the published snapshot, so the strip and the 
     deps(repos, { currentStateVersion: null }),
   );
   assert.equal(decided.ok, true, decided.receipt.says);
-  assert.equal((await readPulse(repos, NOW)).counts.decisionsWaiting, 1);
+  assert.equal((await readPulse(repos, NOW)).counts.decisionsWaiting, null);
 });
 
 /* ==========================================================================

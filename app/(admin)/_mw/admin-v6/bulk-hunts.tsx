@@ -192,12 +192,12 @@ export function BulkHunts(props: {
           <div className={s.stack} style={{ gap: 8 }}>
             <div className={s.inline}>
               <label className={s.small}>State{" "}
-                <select className={s.input} value={pickState} onChange={(e) => setPickState(e.target.value)}>
+                <select className={cx(s.input, s.select)} value={pickState} onChange={(e) => setPickState(e.target.value)}>
                   {US_STATES.map((st) => <option key={st.code} value={st.code.toUpperCase()}>{st.name}</option>)}
                 </select>
               </label>
               <label className={s.small}>Pick{" "}
-                <select className={s.input} value={pickType} onChange={(e) => setPickType(e.target.value as typeof pickType)}>
+                <select className={cx(s.input, s.select)} value={pickType} onChange={(e) => setPickType(e.target.value as typeof pickType)}>
                   <option value="congressional_district">Congressional districts</option>
                   <option value="county">Counties</option>
                   <option value="state">The whole state</option>

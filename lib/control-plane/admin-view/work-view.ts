@@ -31,6 +31,7 @@ import {
   type AssignmentState,
   type WorkerModel,
 } from "../assignment-view.ts";
+import { easternize } from "../eastern-time.ts";
 import type { ExpansionCycleReading, ExpansionScopeReading } from "../expansion/reading.ts";
 import { SCOPE_TYPE_WORDS, scopeKeyOf, type ExpansionScopeDecision } from "../expansion/scopes.ts";
 import type { DispatchWorkReading } from "../expansion/dispatch-work.ts";
@@ -100,7 +101,7 @@ export function standingCard(row: AssignmentListRow): CardView {
     pill: p.pill,
     tone: p.tone,
     title: row.subjectName ? `${row.title} — ${row.subjectName}` : row.title,
-    summary: `${row.stateSays}${cost}`,
+    summary: easternize(`${row.stateSays}${cost}`),
   };
 }
 
@@ -376,7 +377,7 @@ export function standingDetail(row: AssignmentRow, evidence: { readonly scouts?:
     const whoMoves = walk?.whoMoves ?? `${OWNER_WORDS[w.owner]}${w.backoff ? ` — ${w.backoff.says}` : ""}`;
     unsettled.push({
       pill: row.state === "BLOCKED" ? "BLOCKED" : row.state === "FAILED" ? "FAILED" : "CAN'T TELL",
-      title: w.blocker.kind === "NAMED" ? w.blocker.says : w.blocker.kind === "UNKNOWN" ? w.blocker.gap.says : row.stateSays,
+      title: easternize(w.blocker.kind === "NAMED" ? w.blocker.says : w.blocker.kind === "UNKNOWN" ? w.blocker.gap.says : row.stateSays),
       ruledOut: walk?.ruledOut ?? null,
       wouldSettle,
       whoMoves,

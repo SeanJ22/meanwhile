@@ -283,13 +283,8 @@ test("ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a
 
 test("ADM-16: the page renders the split and receipt, while tracked tracker synchronization stays outside the immutable runtime", () => {
   const now = codeOf("app/(admin)/admin/page.tsx");
-  assert.match(now, /splitDecided\(snapshot\.decisionCards, collapseDecisionLog\(decisionLog\)\)/, "the page splits the cards against the live decision log");
-  assert.match(now, /const waiting = split \? split\.waiting : \[\];/, "a card with a recorded decision leaves the list");
-  assert.match(now, /const steps = stepsFrom\(waiting\);/, "the count is the WAITING cards, not every card");
-  // Admin redesign, 2026-09-23: the decided cards are listed again under the next steps, each with its three-leg receipt — the gateway's answer promises the card will say when the sync has acted.
-  assert.match(now, /const decided = split \? split\.decided : \[\];/, "what was decided is listed from the same split");
-  assert.match(now, /receiptHeadline\(entry\.steps\)/, "each decided card leads with how far its receipt has got");
-  assert.match(now, /entry\.steps\.map\(/, "and shows every leg of the receipt");
+  // S11 (Sean, 2026-09-30): the old tracker's decision cards are off the home screen, so the page no longer splits, counts or lists them.
+  assert.doesNotMatch(now, /splitDecided\(|readDecisionCards\(|readDecisions\(|NextSteps|receiptHeadline\(/, "the home screen does not draw the old tracker decisions");
   // Admin redesign, 2026-09-23: the old queue's client-side count that dropped before the network answered was removed; the card itself changes at once, and the server-drawn count drops on the refresh after the receipt.
   const steps = codeOf("app/(admin)/_mw/next-steps.tsx");
   const saving = steps.indexOf('set(card.rowId, { kind: "SAVING", what });');
@@ -297,7 +292,6 @@ test("ADM-16: the page renders the split and receipt, while tracked tracker sync
   // The card itself also says what was recorded, at once, before the page refreshes.
   assert.match(steps, /RECORDED VERBATIM/, "the receipt says what was recorded");
   assert.match(steps, /A PERSON APPLIES IT/, "and who carries it into the tracker");
-  assert.match(now, /returnTo=\{base\.here\}/);
   assert.match(steps, /returnTo: props\.returnTo/);
   assert.doesNotMatch(surface("home"), /carried into the tracker at the next sync, where the row closes/, "the old one-sentence promise is gone");
   assert.equal(consoleReturnPath("/readiness/az", "/admin"), "/readiness/az");

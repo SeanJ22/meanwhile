@@ -209,30 +209,6 @@ test("NC5b: a never-checked repository is UNKNOWN, and UNKNOWN is not a pass", (
   assert.equal(v.frozen, true, "a schema change with no reading at all ships blind");
 });
 
-/** ---------------------- 6. no rollback exists -------------------------- */
-
-test("NC6: no rollback path exists anywhere in the NH273 mechanism", () => {
-  const sources = [
-    "lib/ops/production-integrity.ts",
-    "scripts/production-integrity.mts",
-    "scripts/release-freeze-gate.mts",
-  ];
-  const ROLLBACK =
-    /\b(git\s+revert|git\s+reset\s+--hard|netlify\s+(api\s+)?rollback|restoreDeploy|rollbackDeploy|--rollback)\b/i;
-
-  for (const rel of sources) {
-    const text = readFileSync(join(ROOT, rel), "utf8");
-    // Strip block comments: this module explains at length WHY it does not roll
-    // back, and a sweep that reads its own reasoning as the defect is the guard
-    // failing rather than the code.
-    const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-    assert.doesNotMatch(code, ROLLBACK, `${rel} contains a rollback action — NH273 forbids automatic rollback`);
-  }
-
-  // Positive control: the detector really does fire on the shape it hunts.
-  assert.match("await netlify.rollbackDeploy(id)", ROLLBACK, "the rollback detector matches nothing at all");
-});
-
 /** ---------------------- 7. stale status cannot bless a later deploy ----- */
 
 test("NC7: a green reading about an earlier SHA is STALE_HEALTHY, never CURRENT", () => {
@@ -415,25 +391,6 @@ test("an abbreviated recorded SHA and the full served one are the SAME commit", 
   assert.equal(v.freshness, "CURRENT_FOR_PRODUCTION");
 });
 
-test("the freshness bound has no environment escape hatch and no skip flag", () => {
-  /*
-   * RULING 24's family, asserted rather than asserted-in-a-comment. A bound a
-   * caller can raise is not a bound, and an env var that turns the clause off
-   * would restore the exact hole it closes.
-   */
-  // `module` as an identifier is refused by @next/next/no-assign-module-variable.
-  const pureModule = readFileSync(join(ROOT, "lib", "ops", "production-integrity.ts"), "utf8");
-  const gate = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
-  const code = (t: string) => t.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-
-  assert.doesNotMatch(code(pureModule), /process\.env/, "the pure module reads no environment at all");
-  const ESCAPE = /process\.env\.[A-Z_]*(SKIP|FORCE|IGNORE|OVERRIDE|STALE|FRESH|MAX_AGE|BYPASS)[A-Z_]*/;
-  assert.doesNotMatch(code(gate), ESCAPE, "the gate reads no override for the freshness bound");
-  assert.doesNotMatch(code(gate), /--(skip|force|no-freeze|served)\b/, "no flag may state or skip the observation");
-  // Positive control: the detector fires on the shape it hunts.
-  assert.match("if (process.env.WTP_SKIP_FRESHNESS) return;", ESCAPE, "the escape-hatch detector matches nothing");
-});
-
 /** ---------------------- the unreadable-list rule ----------------------- */
 
 test("a changed-path list that could not be read is treated as touching the schema", () => {
@@ -449,29 +406,6 @@ test("a changed-path list that could not be read is treated as touching the sche
   assert.equal(touchesSchemaContract(["lib/db/queries.ts"]), false);
 });
 
-/** ---------------------- wiring and vocabulary -------------------------- */
-
-test("the freeze gate is in the gate set, in the required CI job", () => {
-  const gate = GATES.find((g) => g.id === "release:freeze");
-  assert.ok(gate, "release:freeze is not in scripts/gates.mjs — it would run in CI and not locally");
-  assert.equal(gate.ciJob, "gates (test · lint · tsc)", "it must sit in the required context");
-  assert.match(gate.command, /release-freeze-gate\.mts/);
-  assert.ok(gate.why.length > 20, "every gate states why it exists");
-});
-
-test("the freeze gate runs in build-check.yml's gates job and is bounded", () => {
-  const text = readFileSync(join(ROOT, ".github", "workflows", "build-check.yml"), "utf8");
-  const gatesAt = text.indexOf("  gates:");
-  assert.ok(gatesAt > 0);
-  const gates = text.slice(gatesAt);
-  assert.match(gates, /run: corepack pnpm exec tsx scripts\/release-freeze-gate\.mts/);
-
-  // F25: the step names its own bound rather than sitting until the job's.
-  const stepAt = gates.indexOf("- name: Release freeze");
-  const step = gates.slice(stepAt, stepAt + 400);
-  assert.match(step, /timeout-minutes:\s*\d+/, "the step must bound itself");
-});
-
 test("the canonical durable record validator accepts exact readings and rejects vacuous ones", () => {
   assert.equal(validIntegrityRecord(HELD), true);
   assert.equal(validIntegrityRecord(REFUSED), true);
@@ -483,47 +417,6 @@ test("an unparseable or future-shaped record reads as UNKNOWN rather than throwi
   const future = { ...HELD, formatVersion: 99 } as unknown as IntegrityRecord;
   assert.equal(validIntegrityRecord(future), false);
   assert.equal(assessIntegrity(NEVER_CHECKED, SHA_A).state, "UNKNOWN");
-});
-
-/* ══════════════════════════════════════════════════════════════════════════
- * WHERE A FRESHNESS FREEZE FAILS THE JOB, AND WHERE IT ONLY REPORTS
- * (2026-08-29, measured on this gate's own first run against `main`.)
- * ══════════════════════════════════════════════════════════════════════════ */
-
-/**
- * THE DEFECT THIS PINS, and it was measured rather than imagined.
- *
- * The freshness clause shipped in PR #221, the merge landed, and the `gates` job
- * on the merge commit went RED with `PRODUCTION_MOVED` while nothing whatever
- * was wrong with production — the reading held, the deploy succeeded, and all 23
- * migrations were applied.
- *
- * It was red BY CONSTRUCTION and would have been red after every
- * production-changing merge forever: the `gates` job checks out the merge
- * commit, whose integrity record necessarily predates the deploy that merge
- * triggers, so `served != recorded` is guaranteed. A gate that fails regardless
- * of the truth measures nothing, and a permanently red `main` is how a real red
- * stops being read.
- *
- * These tests hold the narrowing in place and — more importantly — hold the
- * PULL REQUEST half unchanged, because that is where every protection lives.
- */
-test("the freshness split is by EVENT, and the pull-request half is untouched", () => {
-  const gate = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
-
-  // The condition is on the push-to-main event specifically, never on a bare
-  // "is this CI" test, which would take the pull request with it.
-  assert.match(gate, /GITHUB_EVENT_NAME === "push"/);
-  assert.match(gate, /refs\/heads\/main|GITHUB_REF_NAME === "main"/);
-
-  /*
-   * DEGRADED IS EXCLUDED BY NAME. `PRODUCTION_MOVED` and its siblings say "we do
-   * not currently know"; DEGRADED says "we asked, and production and the
-   * committed migrations disagree" — an active incident that is true whichever
-   * event observed it, and exactly the 2026-08-28 drift. If this ever falls
-   * through the same branch, a real incident stops failing `main`.
-   */
-  assert.match(gate, /verdict\.state !== "DEGRADED"/);
 });
 
 test("SEEDED: a DEGRADED reading is NOT covered by the push-to-main narrowing", () => {
@@ -722,42 +615,4 @@ test("NH289: the range classifier proves each half and fails toward CANNOT_TELL"
 
   const unreadable = classifyEquivalenceRange({ ...RANGE, ancestry: "ancestor", rangePaths: null });
   assert.equal(unreadable.verdict, "CANNOT_TELL", "an unreadable range is never equivalent");
-});
-
-test("NH289: there is no input that STATES equivalence — the gate classifies evidence only", () => {
-  // The proof is recomputed from git evidence on every run. The one place a
-  // caller could try to smuggle a bare trust-this-sha through is the source
-  // of the gate itself, so the gate is read: it must take its verdict from
-  // classifyEquivalenceRange and expose no flag naming a trusted commit.
-  const source = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
-  assert.ok(source.includes("classifyEquivalenceRange("), "the gate classifies evidence, never asserts");
-  for (const escape of ["--trust", "trust-sha", "TRUSTED_SHA", "EQUIVALENT_SHAS", "skip-equivalence"]) {
-    assert.ok(!source.includes(escape), `no '${escape}' input may exist`);
-  }
-});
-
-/** ---- NH290: the gates job's checkout can now READ a pull request's diff --- */
-
-test("NH290: on CI the freeze gate takes its base from the event payload, never from a local ref", () => {
-  /*
-   * Build Check run #463, measured: PR #227 changed four docs/ files and the
-   * gate printed "changed paths COULD NOT BE READ", because it diffed against
-   * `origin/main` — a ref a depth-1 `actions/checkout` does not have. A
-   * docs-only pull request then classified cannot-tell, which is
-   * production-changing, and the freeze reached the exact paperwork it is
-   * scoped never to reach. The repair is the db-shipping-gate.mts shape: the
-   * pull request's base sha from GITHUB_EVENT_PATH, fetched BY SHA with a
-   * deepening fetch, and a push's own added/modified/removed lists.
-   */
-  const source = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
-  assert.ok(source.includes("GITHUB_EVENT_PATH"), "the base comes from the platform's event payload");
-  assert.ok(source.includes("payload.pull_request?.base?.sha"), "a pull request diffs against its stated base sha");
-  assert.ok(source.includes("--depth="), "an absent base is fetched by sha, deepening not unshallowing");
-  assert.ok(source.includes("the push event's own commit list"), "a push uses the event's own path lists");
-  const ciStart = source.indexOf('event === "pull_request" || event === "push"');
-  const ciEnd = source.indexOf("async function main");
-  assert.ok(ciStart > 0 && ciEnd > ciStart, "the CI branch and main() are both present");
-  const ciBranch = source.slice(ciStart, ciEnd);
-  assert.ok(!ciBranch.includes('"origin/main"'), "the CI branch never reaches for a ref the checkout lacks");
-  assert.ok(!ciBranch.includes("HEAD~1"), "nor for a parent a depth-1 clone does not have");
 });

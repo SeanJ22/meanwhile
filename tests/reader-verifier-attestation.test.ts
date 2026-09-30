@@ -8,7 +8,7 @@ import test from "node:test";
 import {
   READER_VERIFIER_ENTRY,
   readerVerifierClosureAttestor,
-} from "../scripts/lib/reader-verifier-attestation.ts";
+} from "../scripts/lib/verifier-attestation.ts";
 
 function git(dir: string, args: readonly string[]): string {
   return execFileSync("git", [...args], { cwd: dir, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();

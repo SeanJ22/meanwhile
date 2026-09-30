@@ -54,9 +54,9 @@ import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
-import { readerEdgeCarriesForward } from "./lib/reader-edge-current.ts";
+import { readerEdgeCarriesForward } from "./lib/edge-current.ts";
 import { censusEdgePublication } from "./lib/census-edge-publication.ts";
-import { readerVerifierClosureAttestor } from "./lib/reader-verifier-attestation.ts";
+import { readerVerifierClosureAttestor } from "./lib/verifier-attestation.ts";
 
 function safeFailure(value: string): string {
   return value
@@ -179,7 +179,7 @@ if (meetingAggregate) {
   //
   // R28 (2026-09-25): the served manifest is read first, and the prepared row
   // (about 7.5 MB) is read only when the publish could change something
-  // (scripts/lib/reader-edge-current.ts). Every pass once read the whole row to
+  // (scripts/lib/edge-current.ts). Every pass once read the whole row to
   // learn that the manifest was already current.
   try {
     // The runner write store, when this host has one; without it the publish

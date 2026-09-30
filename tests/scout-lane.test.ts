@@ -77,7 +77,7 @@ test('a solved held route bypasses paid admission and prewarming and counts as d
     reader:{contract:'READER',state:'NOT_READY',reason:'fixture'},truth:{contract:'TRUTH',state:'NOT_READY',reason:'fixture'},
     research:{decide:()=>({kind:'BOUNDED_MODEL_WORKER',why:'old route classification',disagreement:null}),
       admitScout:()=>{admissions++;return {admit:false,code:'PAUSED',why:'Paid work paused'};},
-      prewarm:async()=>{warms++;throw Error('No prewarm');},modelExecutor:()=>held,maxConcurrentScouts:1,scoutLeaseTtlMs:420_000,scoutWallMs:300_000}});
+      prewarm:async()=>{warms++;throw Error('No prewarm');},modelExecutor:()=>held,maxConcurrentScouts:1,scoutLeaseTtlMs:420_000}});
   assert.equal(requests,0);assert.equal(admissions,0);assert.equal(warms,0);
   assert.equal(cycle.lanes?.model.dispatched,0);assert.equal(cycle.lanes?.deterministic.dispatched,1);
   assert.equal(cycle.dispatched[0].executor,'DETERMINISTIC');assert.equal(cycle.dispatched[0].cost?.usd,0);
@@ -108,7 +108,7 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
         executions += 1;
         return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "bounded recorded fixture attempt" };
       } },
-      maxConcurrentScouts: 2, scoutLeaseTtlMs: 420_000, scoutWallMs: 300_000,
+      maxConcurrentScouts: 2, scoutLeaseTtlMs: 420_000,
     },
   });
   assert.equal(executions, 1);
@@ -422,7 +422,6 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
       modelExecutor: exec,
       maxConcurrentScouts: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
     },
   });
   assert.equal(transport.requests.length, 0, "no model request may be made for a deterministic route");
@@ -638,7 +637,6 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
       modelExecutor: exec,
       maxConcurrentScouts: 2,
       scoutLeaseTtlMs: 60_000,
-      scoutWallMs: 1000,
     },
   });
   assert.equal(transport.requests.length, 0);

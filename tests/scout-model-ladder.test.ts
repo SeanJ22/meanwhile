@@ -224,7 +224,7 @@ async function runLadder(input: {
     attemptId: "at-ladder",
     holder: "h",
     executor: "BOUNDED_MODEL_WORKER",
-    bound: { maxAttempts: 1, maxWallMs: bound.maxWallMs, maxCostUnits: 1 },
+    bound: { maxAttempts: 1, maxWallMs: 0, maxCostUnits: 1 },
   } as never);
   assert.equal(results.length, 1, "the typed result was handed to onResult exactly once");
   return { outcome, result: results[0] };
@@ -233,12 +233,14 @@ async function runLadder(input: {
 const turnUsd = (model: string, usage: Usage): number => priceMeteredUsage(model, readMeteredUsage(usage), "5m").usd ?? Number.NaN;
 const close = (a: number | null | undefined, b: number): boolean => a !== null && a !== undefined && Math.abs(a - b) < 1e-12;
 
-test('a long Scout walks beyond the former turn, tool and token limits until finished or the real budget refuses',async()=>{
+test('a long Scout walks beyond the former turn, tool, token and wall limits until finished or the real budget refuses',async()=>{
+ const actualNow=Date.now;let elapsed=actualNow();Date.now=()=>elapsed;
+ try {
  const walks=Array.from({length:40},(_,i)=>[fetchOf('u'+i,`https://source${i}.gov/meetings`)]);
  const script=[...walks,[candidateFinish('done','art-40',walks.map((_,index)=>({index,note:'opened source'})))]];
  for(const ceiling of [100,0.75]) {
   const controller=new FleetSafetyController({now:NOW,costs:[],rollingCeilingUsd:ceiling,clock:()=>NOW_MS});
-  const fake=perModelTransport({[HAIKU]:script},()=>({input_tokens:20_000,output_tokens:100}));
+  const fake=perModelTransport({[HAIKU]:script},()=>{elapsed+=60_000;return {input_tokens:20_000,output_tokens:100};});
   const {outcome,result}=await runLadder({model:HAIKU,transport:controller.guardedModelTransport('anthropic',OBLIGATION.id,fake)});
   assert.ok(fake.requests.length>18,'long work passes the old model turn cap');
   assert.ok(result.usage.toolCalls>16,'long work passes the old tool cap');
@@ -247,6 +249,7 @@ test('a long Scout walks beyond the former turn, tool and token limits until fin
   else {assert.equal(outcome.kind,'ABORTED');assert.ok(fake.requests.length<41);assert.match(result.refusal?.map(row=>row.detail).join(" ")??"",/CEILING|budget/i);
    assert.ok(controller.snapshot(NOW).deferred.some(row=>row.code==='ROLLING_24_HOUR_MODEL_SPEND_CEILING'));}
  }
+ }finally{Date.now=actualNow;}
 });
 
 /* --------------------------------------------------------------------- L1 */
@@ -495,13 +498,7 @@ test("L5 FleetSafety.holdModelBudget: the hold counts against the rolling ceilin
   assert.throws(() => controller.holdModelBudget("w2", 10.5), /ROLLING_24_HOUR_MODEL_SPEND_CEILING/);
 });
 
-test("L5 WALL_CLOCK / UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request", async () => {
-  /* WALL_CLOCK: a 30-second Attempt cannot leave the minute a second attempt needs. */
-  const wall = perModelTransport(LOOPING_SONNET);
-  const w = await runLadder({ transport: wall, bound: { maxWallMs: 30_000 }, reserveEscalation: recordingReservation().seam });
-  assert.equal(w.result.escalationRefused?.code, "WALL_CLOCK");
-  assert.equal(wall.requests.filter((r) => r.model === OPUS).length, 0);
-
+test("L5 UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request", async () => {
   /* UNMEASURED_SPEND: a Sonnet attempt that reported no usage cannot be combined with anything. */
   const unmeasured = perModelTransport(LOOPING_SONNET, () => ({}));
   const u = await runLadder({ transport: unmeasured, reserveEscalation: recordingReservation().seam });

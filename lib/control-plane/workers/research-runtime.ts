@@ -123,7 +123,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
       if (spec.role === "ACQUIRER") {
         if (!spec.acquisition || spec.acquisition.route.subjectId !== item.subject) throw new Error("ACQUIRER_TASK_BINDING_REFUSED");
         const toolkit = buildScoutToolkit({obligation:scheduledWorkerObligation(task),route:null,providerId:null,attemptId,workItemId,routeTaskId,
-          holder,bound:{...RESEARCH_BOUNDS.perDispatch,maxWallMs:Math.min(bound.maxWallMs,RESEARCH_BOUNDS.perDispatch.maxWallMs)},now:tools.now,
+          holder,bound:RESEARCH_BOUNDS.perDispatch,now:tools.now,
           inherited:{artifactIds:[],summary:learned.projection.lines.join("\n"),manualEntries:learned.store.entries},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
           openBytes: async request => {
             const remaining = deadline-Date.now();

@@ -235,8 +235,6 @@ export interface ResearchLanes {
   readonly modelExecutor: DeclaredExecutor | ((row: ScheduledObligation) => DeclaredExecutor);
   readonly maxConcurrentScouts: number;
   readonly scoutLeaseTtlMs: number;
-  /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
-  readonly scoutWallMs: number;
   /**
    * **THE SCOUT LANE'S OWN ADMISSION DEADLINE — A FLOOR THE RESERVE CANNOT ZERO.**
    * (2026-09-18. Two clean cycles deferred every scout for BUDGET.)
@@ -516,7 +514,9 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     if (recoveredBeforeDispatch.has(obligationId)) continue;
     deferred.push({
       obligationId,
-      why:
+      why: debt.cause === 'AWAITING_ADAPTER'
+        ? 'AWAITING_ADAPTER: the required adapter has not changed; elapsed backoff cannot supply missing code. The obligation remains owed to Engineer.'
+        :
         `its clock has passed and it is holding ${debt.consecutiveFailures} consecutive failure(s), ` +
         `so the backoff computed for it stands until ${debt.retryAt}. Held out of this cycle ` +
         "and counted here — a walled route re-opened every cycle is a hot loop reported as an outage.",
@@ -864,13 +864,12 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       if (
         scoutDeadline !== undefined &&
         input.budget !== undefined &&
-        input.budget.now() + research.scoutWallMs >= scoutDeadline
+        input.budget.now() >= scoutDeadline
       ) {
         deferred.push({
           obligationId: row.obligation.id,
           why:
-            `the cycle's dispatch budget was spent at ${new Date(scoutDeadline).toISOString()} before ` +
-            `this Scout could finish inside its ${Math.round(research.scoutWallMs / 1000)}s wall. It keeps ` +
+            `the cycle's dispatch budget was spent at ${new Date(scoutDeadline).toISOString()}. It keeps ` +
             "its next-due and is dispatched by a later cycle.",
         });
         holdModel(row, "BUDGET");

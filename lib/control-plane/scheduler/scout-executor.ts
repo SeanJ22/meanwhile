@@ -627,15 +627,6 @@ export type ScoutEscalationAdmission =
     }
   | { readonly admit: false; readonly code: ModelEscalationRefusal; readonly why: string };
 
-/**
- * The least of the Attempt's shared wall clock a second attempt needs to be
- * worth reserving (2026-09-25; an engineering choice). The escalated attempt
- * shares the Attempt's wall — the lease and the cycle's hard wall are sized to
- * ONE bound — so it gets what is left; below a minute, a frontier attempt could
- * make a turn or two at most, and the escalation is refused `WALL_CLOCK` instead.
- */
-export const SCOUT_ESCALATION_MIN_WALL_MS = 60_000;
-
 /** The escalation evidence line is short: a sentence an owner reads, never a transcript. */
 export const SCOUT_ESCALATION_EVIDENCE_MAX_CHARS = 300;
 
@@ -1328,10 +1319,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         ];
       }
 
-      const boundReached = (): string | null => {
-        if (Date.now() - startedMs >= bound.maxWallMs) return `the wall-clock bound (${Math.round(bound.maxWallMs / 1000)}s) is reached`;
-        return null;
-      };
 
       /** The no-re-read / no-re-walk guard. A string is the refusal the model reads. */
       const guard = (tool: string, rawUrl: string): string | null => {
@@ -1384,22 +1371,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       }
       const runModelAttempt = async (current: ModelAttemptRun): Promise<void> => {
         while (finish === null && lastRefusal?.[0]?.code !== "SCOUT_GRADUATED_ROUTE") {
-          const reached = boundReached();
-          if (reached !== null && boundNotice === null) {
-            stoppedBy = "BOUND";
-            boundNotice = reached;
-            messages.push({
-              role: "user",
-              content: [
-                {
-                  type: "text",
-                  text:
-                    `BOUND REACHED: ${reached}. Call finish NOW with the typed result: rungsWalked covering every rung index, ` +
-                    "nextRungs naming exactly what you would have tried next, and the outcome your evidence supports. No further research tools will run.",
-                },
-              ] satisfies UserContent,
-            });
-          }
           if (boundNotice !== null && graceUsed >= GRACE_TURNS) break;
           if (boundNotice !== null) graceUsed += 1;
 
@@ -1753,7 +1724,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         escalationEvidence = observed.evidence;
         const spentUsd = modelAttempts.some(a => a.usd === null) ? null : modelAttempts.reduce((n,a) => n + (a.usd ?? 0),0);
         const worstCaseUsd = scoutAttemptWorstCaseUsd(escalationTarget.model, bound);
-        const remainingWallMs = bound.maxWallMs - (Date.now() - startedMs);
         let admission: ScoutEscalationAdmission;
         if (spentUsd === null || worstCaseUsd === null) {
           admission = {
@@ -1763,12 +1733,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               spentUsd === null
                 ? `the ${base.modelClass} attempt's cost is unmeasured, so the combined cost could not be known or reserved against`
                 : `${escalationTarget.model} has no stated rate, so its worst case could not be reserved`,
-          };
-        } else if (remainingWallMs < SCOUT_ESCALATION_MIN_WALL_MS) {
-          admission = {
-            admit: false,
-            code: "WALL_CLOCK",
-            why: `${Math.max(0, Math.round(remainingWallMs / 1000))}s of the Attempt's ${Math.round(bound.maxWallMs / 1000)}s wall clock remain, under the ${SCOUT_ESCALATION_MIN_WALL_MS / 1000}s a second attempt needs`,
           };
         } else if (deps.reserveEscalation === undefined) {
           admission = { admit: false, code: "NOT_RESERVED", why: "no escalation reservation was wired to this executor, so the second attempt could not be reserved first" };

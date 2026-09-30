@@ -227,6 +227,12 @@ export function unheldNamedBodyQuestion(question: string, bodies: readonly Binda
   return { shape: match.shape, name: match.slot };
 }
 
+/** Keep the reader's body name when it binds to the resolved body; a pronoun or another name cannot rename it. */
+export function bodyNameFromQuestion(question: string, inventory: readonly BindableEntity[], bodyId: string): string | null {
+  const match = shapeMatches(question).find((entry) => entry.kind === "BODY");
+  return match && slotNames(match.slot, inventory, bodyId) ? match.slot : null;
+}
+
 /**
  * The intent a shape carries for a subject of the kind it asks about — the one
  * rule `lexicalReading` applies below, for a caller that reads the question

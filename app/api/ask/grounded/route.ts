@@ -52,7 +52,7 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion } from "@/lib/ask/lexical-reading";
+import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion } from "@/lib/ask/lexical-reading";
 import { composePersonVotes } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
@@ -1790,7 +1790,7 @@ export async function POST(request: Request) {
                   ? `We don't have a meeting for ${subject.name} on ${formatDateLong(requestedMeetingDate.date) ?? requestedMeetingDate.date} in our records.`
                   : `Please give one date for the meeting you want to ask about.`
               : forBody.length === 0
-              ? `We don't have ${subject.name}'s calendar yet.`
+              ? `We don't have ${titleCaseName(bodyNameFromQuestion(question, namedBodies, subject.id) ?? subject.name)}'s calendar yet.`
               : selection === "LAST"
                 ? `We hold meetings for ${subject.name} but none that have already happened.`
                 : `We hold meetings for ${subject.name} but none scheduled in the future.`,

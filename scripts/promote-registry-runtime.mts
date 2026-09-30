@@ -57,7 +57,7 @@ async function main(): Promise<void> {
     console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? null,
       promotedVersionId: published.at(-1)?.outcome.versionId ?? null, workerPublications: report }, null, 2));
     // Holds stay on their own work items as owed work; the pass fails only when nothing went live.
-    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report);
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report, null, now);
     return;
   }
   const packagePath = assignment(process.argv, "package");

@@ -30,7 +30,9 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
       // A published extraction, or a hold only new evidence can clear, waits for a newer extraction.
       // ...unless the Auditor broke it after that publication: then it is re-checked once.
       const pull = auditPull(results, parser);
-      if (outcome?.workerResultId === parser.id && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
+      // A roster publication names its reading as `<parser>+<schedule page>` when a saved schedule page attached.
+      const published = outcome?.workerResultId === parser.id || outcome?.workerResultId.startsWith(`${parser.id}+`);
+      if (outcome && published && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
       return [{ item, requestedAt: parser.endedAt }];
     }
     // No extraction yet: a roster or a body directory can still be read in code from saved official pages.
@@ -60,10 +62,12 @@ export function workerPublicationTasks(items: readonly WorkItem[], results: read
 export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore, "readCandidate">, source: string,
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
-  extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null): Promise<boolean> {
-  const delivered = publicationDelivery(report, extra);
-  // Only this pass's own publications: an already-published item reports its earlier outcome, whose version may no longer be current.
-  const passAt = report.map(row => row.outcome.at).sort().at(-1);
+  extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
+  /** This pass's clock. An item already published reports its earlier outcome, whose version may no longer be current. */
+  now?: string): Promise<boolean> {
+  const delivered = publicationDelivery(report, extra, now);
+  // Only this pass's own publications; a pass that only re-reports earlier ones published nothing.
+  const passAt = now ?? report.map(row => row.outcome.at).sort().at(-1);
   const last = [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId && row.outcome.at === passAt).map(row => row.outcome),
     ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
   const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
@@ -82,8 +86,9 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
 export function publicationDelivery(
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   extra: { readonly records: number; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
+  now?: string,
 ): { readonly records: number; readonly gaps: number; readonly gapReasons: Readonly<Record<string, number>> } {
-  const passAt = report.map(row => row.outcome.at).sort().at(-1);
+  const passAt = now ?? report.map(row => row.outcome.at).sort().at(-1);
   const live = report.filter(row => row.outcome.status !== "HELD" && row.outcome.code !== "VERIFIED_RESULT_REUSED" && row.outcome.at === passAt);
   const gaps = [...report.filter(row => row.outcome.status === "HELD").map(row => row.outcome.code), ...(extra?.gaps ?? []).map(gap => gap.detail.split(":")[0])];
   const gapReasons: Record<string, number> = {};

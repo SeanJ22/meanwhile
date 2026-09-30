@@ -40,7 +40,7 @@ if (workerResults) {
     candidateId: published.at(-1)?.outcome.candidateId ?? null, promotedVersion: published.at(-1)?.outcome.versionId ?? null,
     workerPublications: report, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
   // Holds stay on their own work items as owed work; the pass fails only when nothing went live.
-  await printWorkerPublicationReceipt(store, contractId, report);
+  await printWorkerPublicationReceipt(store, contractId, report, null, now);
 } else {
 if (!contractId || !MANUAL_PROJECTION_CONTRACT_IDS.includes(contractId) || !packageArgument) {
   throw new Error(

@@ -350,7 +350,8 @@ export async function publishWorkerRosterResults(input: {
         })());
         schedule = await schedules.get(bodyId)!;
       }
-      readingId = directory ? parser?.id ?? heldDirectory!.id : reading!.id;
+      // A newly saved schedule page is new evidence for the body even when its roster is unchanged.
+      readingId = directory ? parser?.id ?? heldDirectory!.id : `${reading!.id}${schedule ? `+${schedule.capture.evidence.artifactId}` : ""}`;
       const brokeAfter = parser ? auditPull(records, parser) : null;
       if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
       const already = publishedByBody.get(`${bodyId}

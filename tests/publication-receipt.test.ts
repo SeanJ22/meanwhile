@@ -24,3 +24,18 @@ test("the receipt names this pass's publication and counts only what this pass p
   assert.equal(receipt.candidateId, "cv-new");
   assert.deepEqual(receipt.delivered, { records: 3, gaps: 1, gapReasons: { ROSTER_PAGE_NOT_THIS_BODY: 1 } });
 });
+
+test("a pass that only re-reports earlier publications prints no receipt and exits non-zero", async () => {
+  const lines: string[] = [];
+  const log = console.log;
+  const exitCode = process.exitCode;
+  console.log = (line: string) => { lines.push(line); };
+  try {
+    const printed = await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [
+      { workItemId: "wi-roster", outcome: outcome("2026-09-30T17:55:00.000Z", "cv-old", { acceptedRecordIds: ["m1"] }) },
+    ] as never, null, "2026-09-30T21:04:00.000Z");
+    assert.equal(printed, false, "an earlier version is never this pass's receipt");
+    assert.equal(process.exitCode, 2);
+  } finally { console.log = log; process.exitCode = exitCode; }
+  assert.equal(lines.some(line => line.startsWith("RCD_RECEIPT=")), false);
+});

@@ -192,7 +192,7 @@ export interface DerivedWiringInputs {
   };
   /** The registration input a row's division rests on, or why the division is not registered. */
   readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef; readonly identityInput?: DerivedInputRef } | { readonly notRegistered: string };
-  /** The latest walk of each government, with its log record id and time. */
+  /** Saved walks containing each route's newest actual read, with original log identity. */
   readonly attempts: readonly { readonly attempt: MeetingsDiscoveryAttempt; readonly recordId: string; readonly recordedAt: string }[];
   /** A hand-wired SOURCE_WIRING route already serves the body: shadow-compared, never a second writer. */
   readonly handWired: (bodyId: string) => boolean;
@@ -212,6 +212,30 @@ export interface DerivedWiringInputs {
   readonly previous: readonly DerivedVersionEntry<DerivedWiringRow>[];
   /** This pass's instant, the time a newly observed trigger is recorded at. */
   readonly now: string;
+}
+
+/** Original saved walks containing the newest actual read of each route.
+ * Rotating through a site's request allowance never makes other routes absent. */
+export const CURRENT_CALENDAR_READS_SQL = `
+WITH latest_reads AS (
+  SELECT DISTINCT ON (log_key, step->>'url') log_key, position, step->>'url' AS route
+  FROM cp_log_discovery_attempts
+  CROSS JOIN LATERAL jsonb_array_elements(record->'steps') step
+  WHERE ($1::text[] IS NULL OR log_key = ANY($1::text[]))
+    AND step->>'purpose' = 'endpoint'
+    AND (step->>'status' IS NOT NULL OR step->>'transportError' IS NOT NULL)
+  ORDER BY log_key, step->>'url', record->>'finishedAt' DESC, position DESC
+)
+SELECT saved.log_key AS id, saved.position, saved.record AS value, array_agg(reads.route) AS routes
+FROM cp_log_discovery_attempts saved
+JOIN latest_reads reads ON reads.log_key = saved.log_key AND reads.position = saved.position
+GROUP BY saved.log_key, saved.position, saved.record`;
+
+export function latestCalendarWalk(attempts: DerivedWiringInputs["attempts"], jurisdictionId: string, route: string) {
+  const walks = attempts.filter(walk => walk.attempt.jurisdictionId === jurisdictionId)
+    .sort((a, b) => b.attempt.finishedAt.localeCompare(a.attempt.finishedAt));
+  return walks.find(walk => walk.attempt.steps.some(step => step.purpose === "endpoint" &&
+    sameRoute(step.url, route) && (step.status !== null || step.transportError !== null))) ?? walks[0];
 }
 
 /** Two URLs name the same route: scheme and host case aside, and a trailing slash aside. */
@@ -262,7 +286,6 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
   const previous = new Map(inputs.previous.map((entry) => [entry.key, entry]));
   const decisions = new Map<string, Decision>();
   const crosswalkInput = inputs.crosswalk.input;
-  const byJurisdiction = new Map(inputs.attempts.map((a) => [a.attempt.jurisdictionId, a]));
   const active = inputs.crosswalk.rows.filter((row) => row.status === "ACTIVE");
   /* Selections, to find two bodies claiming the same sittings; resolved after every row is read. */
   const selections = new Map<string, { readonly bodyId: string; readonly selected: ReadonlySet<string> }>();
@@ -295,7 +318,7 @@ export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Dec
     }
     base.push(registration.input);
     if (registration.identityInput !== undefined) base.push(registration.identityInput);
-    const walked = byJurisdiction.get(reviewed.jurisdictionId);
+    const walked = latestCalendarWalk(inputs.attempts, reviewed.jurisdictionId, reviewed.route);
     if (walked === undefined) {
       decide(hold(key, "WALK_ABSENT", `no walk of ${reviewed.jurisdictionId} is recorded`, base));
       continue;

@@ -109,6 +109,17 @@ const SITE = (feed = FEED, home = HOME): Record<string, RecordedReply> => ({
   [ROUTE]: { status: 200, body: feed, contentType: "text/calendar" },
 });
 
+test("route selection leaves the original saved walk intact and does not re-review superseded calendars", async () => {
+  const recorded = await walk(SITE());
+  const before = JSON.stringify(recorded.attempt);
+  const selected = review(recorded.attempt, recorded.bodies, { routes: [ROUTE] });
+  assert.ok(selected.accepted.length > 0);
+  const superseded = review(recorded.attempt, recorded.bodies, { routes: ["https://elsewhere.example.gov/another.ics"] });
+  assert.deepEqual(superseded.accepted, []);
+  assert.deepEqual(superseded.held, []);
+  assert.equal(JSON.stringify(recorded.attempt), before);
+});
+
 test("an official school's linked Diligent portal becomes a reviewed, body-filtered reader connection", async () => {
   const portal = "https://fixture.community.highbond.com/Portal/";
   const portalHtml = '<h1>Fixture Accommodation Schools</h1><h2>Governing Board</h2><a href="/Portal/MeetingSchedule.aspx">Calendar</a>';

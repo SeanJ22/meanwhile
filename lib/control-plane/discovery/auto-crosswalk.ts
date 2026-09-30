@@ -119,9 +119,12 @@ export interface AutoCrosswalkReviewInput {
   /** `auto-crosswalk-reviewer@<12 hex>`: the reviewer's code version. */
   readonly reviewer: string;
   readonly now: string;
+  /** Routes whose newest actual read is this original saved walk. */
+  readonly routes?: readonly string[];
 }
 
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = { ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR" };
+export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
 const flat = (s: string): string => s.replace(/\s+/g, " ").trim();
 const low = (s: string): string => flat(s).toLowerCase();
@@ -698,6 +701,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
   for (const find of attempt.found) if (!byRoute.has(find.url)) byRoute.set(find.url, find);
   for (const find of byRoute.values()) {
     const route = find.url;
+    if (input.routes && !input.routes.some(current => sameRoute(current, route))) continue;
     const kind = KIND_OF_VENDOR[find.vendor];
     if (kind === undefined) {
       hold(route, "KIND_NOT_REVIEWABLE", `a ${find.vendor} route confirmed by content; the reviewer defines filters for iCal feeds and official events pages only`);

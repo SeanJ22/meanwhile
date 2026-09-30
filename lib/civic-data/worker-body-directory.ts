@@ -34,8 +34,9 @@ const words = (value: unknown) => typeof value === "string" ? value.toLowerCase(
 const bodyClasses: Record<string, BodyClass> = { governing: "GOVERNING", advisory: "ADVISORY", commission: "COMMISSION", regional: "REGIONAL",
   "private association": "PRIVATE_ASSOCIATION", "executive agency": "EXECUTIVE_AGENCY", "sovereign tribal": "SOVEREIGN_TRIBAL" };
 
-/** Directory facts enter the existing registry door only after the complete
- * independent chain and territory assertion pass. Unresolved rows stay owed. */
+/** Directory facts enter the existing registry door when a body's name and type
+ * pass §3 on the government's own official page; its territory is that
+ * government unless the page names other divisions. Unresolved rows stay owed. */
 export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWorkerRecords>[0] & { prior: RegistryRuntimePrior }): {
   prepared: RegistryRuntimePackage; unresolved: readonly string[];
 } {
@@ -51,10 +52,11 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
       const f = record.fields;
       requirePublication(Object.keys(f).every(key => ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence", "territoryNames"].includes(key)), "DIRECTORY_FIELD_UNSUPPORTED");
       const classification = bodyClasses[words(f.bodyClass)];
-      requirePublication(classification && words(f.bodyName) && typeof f.homepageUrl === "string", "DIRECTORY_BODY_IDENTITY_MISSING");
-      const url = new URL(f.homepageUrl as string);
-      requirePublication(url.protocol === "https:" && !url.username && !url.password, "DIRECTORY_PUBLIC_URL_INVALID");
-      requirePublication([words(subject.jurisdiction.name), words(division.label)].includes(words(f.jurisdictionName)), "DIRECTORY_JURISDICTION_MISMATCH");
+      requirePublication(classification && words(f.bodyName), "DIRECTORY_BODY_IDENTITY_MISSING");
+      // A home page attaches when verified; its absence is an open blank, not a hold.
+      const url = typeof f.homepageUrl === "string" ? new URL(f.homepageUrl) : null;
+      requirePublication(url === null || (url.protocol === "https:" && !url.username && !url.password), "DIRECTORY_PUBLIC_URL_INVALID");
+      requirePublication(f.jurisdictionName === undefined || [words(subject.jurisdiction.name), words(division.label)].includes(words(f.jurisdictionName)), "DIRECTORY_JURISDICTION_MISMATCH");
       const named = typeof f.territoryNames === "string" ? f.territoryNames.split(";").map(name => name.trim()).filter(Boolean) : [];
       const territory = named.length ? named.map(name => {
         // These are independently captured legal coverage statements, not
@@ -63,13 +65,12 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
         requirePublication(matches.length === 1 && words(f.coverageEvidence).includes(words(name)), "DIRECTORY_NAMED_TERRITORY_UNRESOLVED");
         return matches[0];
       }) : [division];
-      requirePublication(named.length ? words(f.coverage) === "entire listed divisions" :
-        ["entire jurisdiction", "entire division", "citywide", "townwide", "countywide", "statewide", "districtwide"].includes(words(f.coverage)) &&
-        words(f.coverageEvidence).includes(words(f.jurisdictionName)), "DIRECTORY_TERRITORY_REQUIRES_REPAIR");
+      requirePublication(named.length ? words(f.coverage) === "entire listed divisions" : f.coverage === undefined ||
+        ["entire jurisdiction", "entire division", "citywide", "townwide", "countywide", "statewide", "districtwide"].includes(words(f.coverage)), "DIRECTORY_TERRITORY_REQUIRES_REPAIR");
       const territoryIds = [...new Set(territory.map(row => row.ocdId))].sort();
       requirePublication(territoryIds.length === territory.length, "DIRECTORY_DUPLICATE_TERRITORY");
       const existing = input.prior.payload.registry.bodies.filter(body => (body.ocdId !== null && territoryIds.includes(body.ocdId) ||
-        words(body.name) === words(f.bodyName) && body.homepageUrl === url.href) &&
+        words(body.name) === words(f.bodyName) && url !== null && body.homepageUrl === url.href) &&
         (words(body.name) === words(f.bodyName) || (body.id === input.plan.publication?.bodyId && !body.name && body.bodyClass === classification)));
       requirePublication(existing.length <= 1, "DIRECTORY_BODY_IDENTITY_AMBIGUOUS");
       // Same name on another territory is a cross-territory identity question,
@@ -82,7 +83,7 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
       bodies.push({ ...(prior ?? { id, ocdId: primaryDivision, coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE",
         agendaSourceRef: null, meetingCadence: null, demandCount: 0 }), name: String(f.bodyName), bodyClass: classification,
         alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
-        homepageUrl: url.href, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
+        homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
         provenance: { sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: checked.primary.observedAt, verifiedAt: input.now } });
     } catch (error) {
@@ -90,7 +91,7 @@ export function workerBodyDirectoryPackage(input: Parameters<typeof verifiedWork
     }
   }
   requirePublication(bodies.length > 0, `DIRECTORY_NO_ADMISSIBLE_BODY:${unresolved.join("; ")}`);
-  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${input.auditor.id}`,
+  return { unresolved, prepared: { contractId: "registry-runtime-bindings", version: `worker-directory:${input.parser.id}`,
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},

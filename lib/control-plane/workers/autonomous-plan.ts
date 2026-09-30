@@ -7,8 +7,9 @@ import type { Jurisdiction, JurisdictionSource } from "../../hunt/jurisdiction-u
 import type { WorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 
 /** Initial instructions for an owner-requested family. Registry addresses are
- * leads, never invented observations. An evidence-backed repair must supply
- * the extraction mapping and independent authorities before parsing can pass. */
+ * leads, never invented observations. An evidence-backed repair supplies the
+ * extraction mapping; the Validator then applies §3 to the saved official page.
+ * No second source is required: these families are not judgment calls. */
 export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: JurisdictionSource, routeId: string, bodyId: string | null = jurisdiction.bodyId ?? null): AutonomousWorkPlan | null {
   if (source.recordClass === "MEETINGS") return null; // Existing meeting discovery/publishing owns this path.
   if (source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(jurisdiction, bodyId);
@@ -42,8 +43,8 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       // before consuming any repair or dispatching a worker.
       expectedSourceDate: null, methodVersion: 0,
       sourceScope: { sourceId: `unobserved:${routeId}`, publisher: source.authority, routeIds: [routeId], canonicalUrls: [], observationArtifactIds: [] },
-      extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Discover actual source bytes, applicability, an executable mapping and independent verification authorities." },
-      verification: { required: true, authorities: [] },
+      extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Discover actual source bytes, applicability and an executable mapping." },
+      verification: { required: false, authorities: [] },
     },
   };
 }
@@ -55,14 +56,14 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
   const routeId = "coverage-discovery:public-comment";
   const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
     authorityBasis: "Exact registered governing body; its participation rules have not been acquired or verified.", scope: "THIS_JURISDICTION",
-    routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Verify each independently; do not infer permission to speak from an open meeting.",
+    routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED", owed: "Find the body's published public-comment rules, including signup, written comments, attendance and speaking limits. Take each from the body's own official page; do not infer permission to speak from an open meeting.",
     citation: `Registered government ${jurisdiction.id}, body ${bodyId}.` }, routeId, bodyId)!;
   if (base.contract.schemaVersion !== 2) throw new Error("PUBLIC_COMMENT_TEMPLATE_INVALID");
   return { ...base, capability: "meetings/public-comment", publication: { contractId: "comment-access", bodyId },
     sourceRegistryReferences: [...base.sourceRegistryReferences, bodyId],
     contract: { ...base.contract, recordClass: "PUBLIC_COMMENT_RULE", requiredFields: ["bodyName", "commentPeriod", "commentPeriodDetail"],
       identity: { namespace: `${jurisdiction.id}:public-comment`, keyFields: ["bodyName"] },
-      completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Independently check each provided instruction; this work does not discharge calendars, agendas, minutes or other bodies.` } };
+      completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Each instruction must appear on the saved official page; this work does not discharge calendars, agendas, minutes or other bodies.` } };
 }
 
 /** A roster cannot establish which other boards exist. Keep directory discovery
@@ -72,7 +73,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
   const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
     authorityBasis: "Discover governing and subordinate bodies from official directory and independent legal authority.",
     scope: "THIS_JURISDICTION", routeId, url: jurisdiction.ownWebAddress, state: "DISCOVERY_OWED",
-    owed: "Identify every governing and subordinate body, its official name, home page, classification and actual jurisdiction. Independently verify territorial applicability; association with a county is not countywide authority.",
+    owed: "Identify every governing and subordinate body, its official name, home page, classification and actual jurisdiction. Take territorial applicability from an official page; association with a county is not countywide authority.",
     citation: `Registered government ${jurisdiction.id}.` }, routeId, bodyId)!;
   if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
   const { publication: _old, ...plan } = base;
@@ -83,7 +84,7 @@ export function bodyDirectoryDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
     contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
       requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
       identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] },
-      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record needs independent evidence for identity, classification and actual territory. When legal coverage is the entirety of specific Census divisions rather than the parent jurisdiction, extract territoryNames as the source's semicolon-separated division names, coverage as "entire listed divisions", and coverageEvidence containing the independently verified legal coverage statement. Every name must join exactly one registered division in this state. A partial division, ambiguous name or unrecorded boundary remains owed; do not infer territory from a mailing address.` } };
+      completenessScope: `Every official body of ${jurisdiction.name}, including subordinate bodies. Each record's identity, classification and territory must appear on a saved official page. When legal coverage is the entirety of specific Census divisions rather than the parent jurisdiction, extract territoryNames as the source's semicolon-separated division names, coverage as "entire listed divisions", and coverageEvidence containing the official page's legal coverage statement. Every name must join exactly one registered division in this state. A partial division, ambiguous name or unrecorded boundary remains owed; do not infer territory from a mailing address.` } };
 }
 
 /**

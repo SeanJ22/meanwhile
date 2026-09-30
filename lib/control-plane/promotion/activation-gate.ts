@@ -6,11 +6,11 @@
  * 2026-09-21: "You may enable automatic promotion for qualifying results. Fix
  * the gap, recover value already paid for."
  *
- * Campaign sites currently have the complete deterministic chain and derived
- * Reader connection here. Other fields still need their missing class-specific
- * checks/projection connections; their closed state is an implementation gap,
- * never a policy restriction. Dedicated routine meeting/data contracts have
- * their own verification and publication doors and are not disabled here.
+ * §3 is the whole standard. Officials and rosters, bodies, meetings, election
+ * contacts, comment rules, service contacts, filings and candidate bios are
+ * open (activation-policy.ts). A class without a reader door yet is an
+ * implementation gap, never a policy restriction. Dedicated routine
+ * meeting/data contracts keep their own publication doors.
  *
  * Opening a publication route does not resume the owner's paused paid lane.
  * Local diagnostic run files cannot change production authority.
@@ -64,9 +64,9 @@ export function readActivationGate(root: string): ActivationGateReading {
     readFrom: null,
     reason:
       `IMPLEMENTED RESEARCH ROUTES — ${ACTIVATION_GATE.openRecordClasses.length} record class(es): ${open}. ` +
-      "Standing rulings §3 authorize automatic publication after the complete verification chain. " +
-      "Campaign sites publish through their derived civic-data contract. Other generic research fields still " +
-      "require class-specific verification and Reader connections; this is an implementation gap, not an owner approval wait. " +
+      "Standing rulings §3 authorize automatic publication as soon as a fact passes §3. " +
+      "Campaign sites publish through their derived civic-data contract; rosters, bodies and worker reader classes through their typed doors. " +
+      "A class with no reader door yet is an implementation gap, not an owner approval wait. " +
       "Dedicated routine data contracts keep their existing automatic publication paths. Local shadow run records remain non-authoritative diagnostics after PDC. Paid acquisition remains subject to its own pause and budget.",
   };
 }

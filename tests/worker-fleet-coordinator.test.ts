@@ -235,14 +235,14 @@ test("an independent Auditor break remains blocked and never becomes staged inve
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state,"REOPENED");
 });
 
-test("explicitly required external verification remains missing while the diagnostic audit records an honest inconclusive result", async () => {
+test("a stored plan that still demands verification with no authorities validates on §3 instead of sitting inconclusive", async () => {
   const h=await autonomousHarness({plan:plan=>({...plan,contract:{...plan.contract,schemaVersion:2,verification:{required:true,authorities:[]}} as typeof plan.contract})});
   for(let index=0;index<4;index++) {
     const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
-  const records=await h.repos.workerResults.readAll(); assert.equal(records.find(r=>r.result.role==="VALIDATOR")?.result.verdict,"INCONCLUSIVE");
-  assert.equal(records.find(r=>r.result.role==="ADVERSARIAL_AUDITOR")?.result.verdict,"INCONCLUSIVE");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
+  const records=await h.repos.workerResults.readAll(); const validated=records.find(r=>r.result.role==="VALIDATOR")?.result;
+  assert.equal(validated?.verdict,"PASS",JSON.stringify(validated));
+  assert.ok(validated?.role==="VALIDATOR" && !validated.findings.some(f=>f.code==="EXTERNAL_VERIFICATION_MISSING"),"the empty-authority demand no longer makes every result inconclusive");
   assert.ok(Date.parse(FIXTURE_NOW)<Date.parse(h.now()));
 });
 

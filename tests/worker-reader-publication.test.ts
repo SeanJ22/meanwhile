@@ -19,11 +19,11 @@ import { readManualProjectionPrior, type CuratedReaderProjection } from "../lib/
 import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { commentAccessEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
-import { workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
+import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { projectedCommentAccessFor, type CommentAccess } from "../lib/registry/comment-access-client.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 import { publishWorkerRosterResults } from "../lib/civic-data/worker-roster-publication.ts";
 import { directoryMeetingHints, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
@@ -104,15 +104,14 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS", "SURVIVED"]);
-  const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-send" } } as ResolvedScope;
-  const queued = workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
+  const queued = workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
   if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
   assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-rosters" : "worker-results"}=${h.item.id}`));
   const input = { repos: h.repos, store, contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };
-  return { input, h, store, body, rows, scope, results, artifact, ready, prior, runtime };
+  return { input, h, store, body, rows, results, artifact, ready, prior, runtime };
 }
 
 test("verified directory bodies publish through the normal registry door and create durable scope-bound work without manual admission", async () => {
@@ -145,13 +144,14 @@ test("verified directory bodies publish through the normal registry door and cre
   }
   assert.deepEqual(await publishWorkerRosterResults(f.input), published, "durable publication prevents duplicate bodies or child work");
   assert.equal((await f.h.repos.workItems.list()).length, 4);
-  const parser = f.results.find(row => row.result.role === "PARSER")!, validator = f.results.find(row => row.result.role === "VALIDATOR")!, auditor = f.results.find(row => row.result.role === "ADVERSARIAL_AUDITOR")!;
+  const parser = f.results.find(row => row.result.role === "PARSER")!;
   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", f.artifact.id].map(f.input.readCapture));
-  const checked = { plan: f.ready, parser, validator, auditor, captures, prior: f.prior, now: f.h.now() };
+  const checked = { plan: f.ready, parser, captures, prior: f.prior, now: f.h.now() };
   assert.throws(() => workerBodyDirectoryPackage({ ...checked, plan: { ...f.ready, directorySubject: { ...f.ready.directorySubject!, divisionId: "unsupported-division" } } }), /CENSUS_DIVISION_UNRESOLVED/);
-  assert.throws(() => workerBodyDirectoryPackage({ ...checked, captures: captures.slice(0, 1) }), /AUTHORITY_CAPTURE_MISSING/);
+  assert.throws(() => workerBodyDirectoryPackage({ ...checked, captures: captures.map(c => ({ ...c, observedAt: "2026-07-01T00:00:00.000Z" })) }), /OUTSIDE_FRESHNESS_WINDOW/);
   const altered = { ...parser, result: parser.result.role === "PARSER" ? { ...parser.result, records: parser.result.records.map(row => ({ ...row, fields: { ...row.fields, coverage: "countywide" } })) } : parser.result };
-  assert.throws(() => workerBodyDirectoryPackage({ ...checked, parser: altered }), /SOURCE_REPLAY_FAILED/);
+  // A value that does not replay from its source row stays open instead of publishing; the rest of the row still can.
+  assert.equal(verifiedWorkerRecords({ ...checked, parser: altered }).extraction.records.every(row => row.fields.coverage === undefined), true);
 });
 
 test("a verified shared directory body serves its exact listed Census divisions without countywide coverage or duplicate identities", async () => {
@@ -210,7 +210,7 @@ test("independent candidate and committee filings automatically publish source f
 });
 
 test("independent normal workers automatically publish public-comment rules through the existing reader and retain repair evidence", async () => {
-  const { input, h, store, body, rows, scope, results, artifact, ready, prior } = await workerFixture("comment-access", {
+  const { input, h, store, body, rows, results, artifact, ready, prior } = await workerFixture("comment-access", {
     commentPeriod: "YES", commentPeriodDetail: "The board provides a public comment period.", signup: "Sign up before the meeting." });
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
@@ -223,12 +223,12 @@ test("independent normal workers automatically publish public-comment rules thro
   const rendered = projectedCommentAccessFor(body.ocdId ?? null, body.name ?? undefined, body.id, read.value.records as unknown as CommentAccess[]);
   assert.equal(rendered?.signup, rows[0]["signup"]);
   assert.deepEqual(await publishWorkerReaderResults(input), published, "restart reuses the publication and spends nothing");
-  assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0);
-  const parser = results.find(row => row.result.role === "PARSER")!, validator = results.find(row => row.result.role === "VALIDATOR")!, auditor = results.find(row => row.result.role === "ADVERSARIAL_AUDITOR")!;
+  assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0, "a published extraction is not offered again");
+  const parser = results.find(row => row.result.role === "PARSER")!;
   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", artifact.id].map(input.readCapture));
-  const checked = { plan: ready, parser, validator, auditor, captures, registry: prior, now: h.now() };
-  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.slice(0, 1) }), /AUTHORITY_CAPTURE_MISSING/);
-  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, partial: true })) }), /CAPTURE_STALE_OR_UNPROVEN/);
+  const checked = { plan: ready, parser, captures, registry: prior, now: h.now() };
+  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, partial: true })) }), /PRIMARY_CAPTURE_MISSING_OR_INCOMPLETE/);
+  assert.throws(() => workerReaderPackage({ ...checked, captures: captures.map(c => ({ ...c, evidence: { ...c.evidence, canonicalUrl: "https://mirror.example.com/rules" } })) }), /NOT_OFFICIAL_SOURCE/);
   assert.throws(() => workerReaderPackage({ ...checked, plan: { ...ready, publication: { contractId: "comment-access", bodyId: "unknown-body" } } }), /CANONICAL_BODY_MISSING/);
   // The current evidence can omit a detail without suppressing its verified
   // neighbours or deleting independently proven last-good instructions.

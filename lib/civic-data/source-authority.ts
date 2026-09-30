@@ -21,11 +21,16 @@ export interface OfficialLinkingPage {
   readonly linkingPage?: OfficialLinkingPage | null;
 }
 
+// Plain string parsing: this runs inside the isolated Validator realm, which has no URL global.
 const hostOf = (url: string, base?: string): string | null => {
-  try {
-    const parsed = new URL(url, base);
-    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.hostname.toLowerCase().replace(/^www\./, "") : null;
-  } catch { return null; }
+  const absolute = /^(https?):\/\/([^/?#\s]+)/i.exec(url.trim());
+  if (absolute) {
+    const host = absolute[2].replace(/^[^@]*@/, "").replace(/:\d*$/, "").toLowerCase();
+    return /^[a-z0-9.-]+$/.test(host) ? host.replace(/^www\./, "") : null;
+  }
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url.trim())) return null; // mailto:, tel:, javascript: — not a page
+  if (url.trim().startsWith("//")) return hostOf(`https:${url.trim()}`);
+  return base === undefined ? null : hostOf(base);
 };
 
 /**

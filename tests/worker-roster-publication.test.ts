@@ -20,8 +20,7 @@ import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-da
 import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
 import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
-import { workerRosterSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
+import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
@@ -111,8 +110,7 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
       at: h.now(), workerResultId: results.at(-1)!.id, status: "HELD", code: "ROSTER_READER_IDENTITY_UNRESOLVED",
       detail: "Recorded pre-fix whole-roster identity hold", recovery: "WORKER", candidateId: null, versionId: null,
     } }, h.now());
-    const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-owner-send" } } as ResolvedScope;
-    assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
+    assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 1,
       "the normal runner retries an old whole-roster hold instead of leaving it stranded");
   }
   const published = await publishWorkerRosterResults(input);
@@ -169,10 +167,9 @@ async function proveRosterPublication(partial = false, auditLadder = false) {
   assert.deepEqual(await publishWorkerRosterResults(input), published, "restart reuses the durable publication receipt");
   if (partial) {
     assert.ok(!delivered.members.some(member => member.name === "Contact us"), "navigation text never becomes a person");
-    assert.match(published[0].outcome.detail, /1 source rows remain identity-unresolved/);
+    assert.match(published[0].outcome.detail, /1 row\(s\) stay open as work/);
     assert.equal(published[0].outcome.recovery, "WORKER");
-    const scope = { kind: "RESOLVED", decision: { sourceWorkVersion: 1, receiptId: "offline-owner-send" } } as ResolvedScope;
-    assert.equal(workerRosterSourceTasks([scope], [(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0,
+    assert.equal(workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now()).length, 0,
       "retained partial results wait for changed worker evidence, not unchanged publication retries");
     const partialAdmin = deliveredAdmin.find(row => row.id === h.item.id)!;
     assert.equal(partialAdmin.state, "WAITING");

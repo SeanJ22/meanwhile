@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
-import { readFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { readFieldManual, writeFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
+import { auditLearningEntries } from "../lib/control-plane/workers/audit-sampling.ts";
 import { documentWindows, modelParseReasoner, parseLearningEntries, routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { confirmQuotedRecords, isQuotedExtraction, quotedSourceFindings, quotesHoldAgainst } from "../lib/control-plane/workers/quoted-proof.ts";
 import { validateGeneralizedExtraction } from "../lib/control-plane/workers/generalized-validator.ts";
@@ -193,4 +194,27 @@ test("a response without the record_extraction call is refused, not read as pros
 test("the lane refuses a contract that already has a parsing rule", async () => {
   const withRule = { ...contract, extraction: { format: "JSON_RECORDS", rowsPointer: "/rows", fields: {} } } as GeneralizedCivicExtractionContract;
   await assert.rejects(modelParseReasoner(createMemoryRepositories(), async (r) => respond(r.model, []), () => NOW).parse({ ...input(), contract: withRule }, input().worker), /PARSE_MODEL_LANE_NOT_APPLICABLE/);
+});
+
+test("an audit that breaks a model-parsed publisher sends the next parse one tier up", async () => {
+  const repos = createMemoryRepositories();
+  const seen: string[] = [];
+  const transport: ModelTransport = async (request: ModelRequest) => { seen.push(request.model); return respond(request.model, GOOD_PROPOSAL); };
+  const first = await modelParseReasoner(repos, transport, () => NOW).parse(input(), input().worker);
+  assert.equal(first.review.tier, "haiku");
+  assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku]);
+
+  // A sampled audit finds a record the saved document does not support.
+  const broke = { role: "ADVERSARIAL_AUDITOR" as const, attemptId: "a", producerAttemptId: "p", validatorAttemptId: "v", verdict: "BROKE" as const, startedFrom: [], attacks: [],
+    findings: [{ code: "QUOTE_NOT_IN_DOCUMENT", detail: "gone", severity: "BLOCKING" as const, recordId: first.result.records[0]!.id }],
+    artifactIds: ["art-agenda"], survivingRecordCount: 1, survivingRecordIds: [first.result.records[1]!.id], brokenRecordIds: [first.result.records[0]!.id], reopenRequired: true };
+  const learned = auditLearningEntries({ result: broke, auditResultId: "wr-x", modelReviewed: true, contract, parser: { modelParse: first.review }, observedAt: NOW });
+  assert.deepEqual(learned.map((e) => e.kind).sort(), ["AUDIT_STRATUM", "PARSE_OUTCOME"]);
+  assert.equal(learned.find((e) => e.kind === "AUDIT_STRATUM")!.outcome, "FAILED");
+  await writeFieldManual(repos, learned, NOW);
+
+  seen.length = 0;
+  const second = await modelParseReasoner(repos, transport, () => NOW).parse({ ...input(), attemptId: "parse-2" }, input().worker);
+  assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the next Parser reads what the Auditor wrote and starts a tier up");
+  assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
 });

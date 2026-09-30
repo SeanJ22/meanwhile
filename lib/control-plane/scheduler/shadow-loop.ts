@@ -585,7 +585,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   ): Promise<DispatchResult> => {
     let result: DispatchResult;
     try {
-      result = await dispatchOne(input.repos, {
+      const dispatch = opts.executor.dispatch ?? (request => dispatchOne(input.repos, { ...request, executor: opts.executor }));
+      result = await dispatch({
         obligation: row,
         routeTaskId: input.routeTaskFor(row.obligation.id),
         holder: input.holder,
@@ -594,7 +595,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         leaseTtlMs: opts.leaseTtlMs,
         bound: input.bound,
         maturity: input.maturity,
-        executor: opts.executor,
         ...(opts.decision !== undefined ? { decision: opts.decision } : {}),
         ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
         ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),

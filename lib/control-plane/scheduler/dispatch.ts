@@ -502,6 +502,8 @@ export interface DeclaredExecutor {
   /** The worker identity, when the executor knows its own. */
   readonly workerFor?: WorkerFor;
   readonly run: RunWork;
+  /** A process worker claims and renews the same canonical lease itself. */
+  readonly dispatch?: (input: Omit<Parameters<typeof dispatchOne>[1], "executor">) => Promise<DispatchResult>;
 }
 
 export type WorkerFor = (input: {

@@ -1,8 +1,8 @@
 import { fork } from "node:child_process";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import type { DispatchResult } from "../scheduler/dispatch.ts";
-import type { ModelRequest, ModelTransport, ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
+import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
+import { scoutExecutor, type ModelRequest, type ModelTransport, type ScoutExecutorDeps } from "../scheduler/scout-executor.ts";
 import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import type { AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 import type { runNationalPlaceTask } from "../../hunt/place-source-task.ts";
@@ -11,6 +11,12 @@ import type { NationalPlacePublicationInput } from "../../hunt/place-source.ts";
 export type NationalPlaceReport = Awaited<ReturnType<typeof runNationalPlaceTask>>[number];
 type NationalPublication = Omit<NationalPlacePublicationInput, "store">;
 type ElectionPublisher = NonNullable<Parameters<typeof runNationalPlaceTask>[0]["publishElection"]>;
+type ScoutDispatch = Parameters<NonNullable<DeclaredExecutor["dispatch"]>>[0];
+type ScoutContext = ReturnType<ScoutExecutorDeps["contextFor"]>;
+type ScoutProcessDispatch = Omit<ScoutDispatch, "clock" | "maturity"> & {
+  readonly liveClock: boolean;
+  readonly maturity: "GRADUATED" | "UNGRADUATED";
+};
 
 export interface LeaseWorkerConfig {
   readonly root: string;
@@ -23,6 +29,61 @@ export interface LeaseWorkerConfig {
   readonly fundedSubjects: readonly string[];
   /** Plain-code ZIP tasks use S9's ordinary canonical acquisition lease. */
   readonly nationalZips?: readonly string[];
+  readonly scoutDispatch?: {
+    readonly input: ScoutProcessDispatch;
+    readonly context?: Omit<ScoutContext, "tools">;
+    readonly contextError?: string;
+    readonly toolNames: readonly string[];
+    readonly toolTimeoutMs?: number;
+    readonly options: Pick<ScoutExecutorDeps, "model" | "bound" | "minRungs" | "role">;
+  };
+}
+
+/** Budget and publication callbacks stay in the parent; the child owns the lease and research loop. */
+export function scoutProcessExecutor(input: {
+  readonly root: string;
+  readonly postgres: boolean;
+  readonly fileStoreRoot?: string;
+  readonly deps: ScoutExecutorDeps;
+  readonly search?: ScoutToolContext["search"];
+  readonly onStarted?: (pid: number) => void;
+}): DeclaredExecutor {
+  const original = scoutExecutor(input.deps);
+  return { ...original, dispatch: async request => {
+    let context: Omit<ScoutContext, "tools"> | undefined;
+    let contextError: string | undefined;
+    let tools: ScoutContext["tools"] = { vault: async () => { throw new Error("SCOUT_CONTEXT_UNAVAILABLE"); }, spaceOut: async () => {} };
+    try {
+      const assembled = input.deps.contextFor(request.obligation);
+      const { tools: assembledTools, ...metadata } = assembled;
+      tools = assembledTools;
+      context = metadata;
+    } catch (error) { contextError = error instanceof Error ? error.message : String(error); }
+    const { clock, maturity, ...data } = request;
+    const toolsByName = new Map<string, (...args: readonly unknown[]) => unknown>();
+    for (const [name, tool] of Object.entries(tools)) {
+      if (typeof tool === "function") toolsByName.set(name, tool as (...args: readonly unknown[]) => unknown);
+    }
+    if (input.search) toolsByName.set("search", input.search as (...args: readonly unknown[]) => unknown);
+    const results = await runLeaseWorkerProcesses({ config: {
+      root: input.root, postgres: input.postgres, fileStoreRoot: input.fileStoreRoot,
+      taskIds: [request.routeTaskId ?? request.obligation.obligation.id], modelEnabled: true,
+      searchEnabled: Boolean(input.search), ceilingUsd: 0, fundedSubjects: [],
+      scoutDispatch: { input: { ...data, liveClock: Boolean(clock), maturity: maturity(request.obligation.obligation.routeId) },
+        context, contextError, toolNames: [...toolsByName.keys()], toolTimeoutMs: tools.timeoutMs, options: { model: input.deps.model,
+          bound: input.deps.bound, minRungs: input.deps.minRungs, role: input.deps.role } },
+    }, capacity: () => 1, onStarted: input.onStarted, transportFor: () => input.deps.transport,
+    reserveEscalation: input.deps.reserveEscalation,
+    scout: { onStart: input.deps.onStart, onResult: input.deps.onResult,
+      tool: async (name, args) => {
+        const tool = toolsByName.get(name);
+        if (!tool) throw new Error(`SCOUT_PROCESS_TOOL_UNAVAILABLE:${name}`);
+        return tool(...args);
+      } },
+    });
+    if (results.length !== 1) throw new Error("SCOUT_PROCESS_RESULT_MISSING");
+    return results[0]!;
+  } };
 }
 
 export async function runNationalPlaceWorkerProcesses(input: {
@@ -63,6 +124,11 @@ export async function runLeaseWorkerProcesses(input: {
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
   readonly reserveEscalation?: ScoutExecutorDeps["reserveEscalation"];
   readonly onStarted?: (pid: number) => void;
+  readonly scout?: {
+    readonly onStart?: ScoutExecutorDeps["onStart"];
+    readonly onResult?: ScoutExecutorDeps["onResult"];
+    readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown>;
+  };
   readonly national?: {
     readonly publish: (input: NationalPublication) => Promise<unknown>;
     readonly publishElection: ElectionPublisher;
@@ -108,7 +174,22 @@ export async function runLeaseWorkerProcesses(input: {
       }
       try {
         let body: unknown;
-        if (message.kind === "national-publication") {
+        if (message.kind === "scout-tool") {
+          if (!input.scout) throw new Error("SCOUT_PROCESS_BROKER_UNAVAILABLE");
+          const request = message.body as { name: string; args: readonly unknown[] };
+          body = await input.scout.tool(request.name, request.args);
+        } else if (message.kind === "scout-start") {
+          await input.scout?.onStart?.(message.body as Parameters<NonNullable<ScoutExecutorDeps["onStart"]>>[0]);
+          body = null;
+        } else if (message.kind === "scout-result") {
+          const request = message.body as { result: Parameters<NonNullable<ScoutExecutorDeps["onResult"]>>[0]; artifacts: Parameters<NonNullable<ScoutExecutorDeps["onResult"]>>[1] };
+          body = await input.scout?.onResult?.(request.result, request.artifacts);
+        } else if (message.kind === "scout-dispatch-result") {
+          const result = message.body as DispatchResult;
+          results.push(result);
+          for (const id of ids) pending.delete(id);
+          body = null;
+        } else if (message.kind === "national-publication") {
           if (!input.national) throw new Error("NATIONAL_PUBLICATION_BROKER_UNAVAILABLE");
           body = await input.national.publish(message.body as NationalPublication);
         } else if (message.kind === "election-publication") {

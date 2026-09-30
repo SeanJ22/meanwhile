@@ -1,7 +1,10 @@
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { RepositoryLockHeld } from "../repository/types.ts";
-import { ModelTransportError, type ModelResponse, type ScoutEscalationAdmission } from "../scheduler/scout-executor.ts";
+import { ModelTransportError, scoutExecutor, type ScoutExecutorDeps, type ModelResponse, type ScoutEscalationAdmission } from "../scheduler/scout-executor.ts";
+import { dispatchOne } from "../scheduler/dispatch.ts";
+import { buildScoutToolkit } from "../scheduler/scout-tools.ts";
+import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import { FleetSafetyController, FleetSafetyRefusal, FleetPreSendRefusal, type FleetStopCode } from "../fleet-safety.ts";
 import { SendBudgetRefusal, type AutonomousJurisdiction } from "../expansion/spend-holds.ts";
 import { autonomousStandingRuntime } from "./standing-runtime.ts";
@@ -35,6 +38,36 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   if (config.postgres && !url) throw new Error("CONTROL_PLANE_DATABASE_UNCONFIGURED");
   const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true })
     : await createFileRepositories(config.fileStoreRoot ?? join(config.root, ".runtime/control-plane/freshness-shadow"));
+  if (config.scoutDispatch) {
+    const { input, context, contextError, toolNames, toolTimeoutMs, options } = config.scoutDispatch;
+    taskId = input.routeTaskId ?? input.obligation.obligation.id;
+    jurisdiction = { subjectId: input.obligation.obligation.subjectId, state: null };
+    const tools = { ...Object.fromEntries(toolNames.map(name => [name,
+      (...args: readonly unknown[]) => call("scout-tool", { name, args })])),
+      timeoutMs: toolTimeoutMs } as unknown as ReturnType<ScoutExecutorDeps["contextFor"]>["tools"] & Pick<ScoutToolContext, "search" | "openBytes">;
+    const clock = input.liveClock ? () => new Date().toISOString() : () => input.now;
+    const executor = scoutExecutor({ ...options, now: clock,
+      contextFor: () => {
+        if (!context || contextError) throw new Error(contextError ?? "SCOUT_CONTEXT_UNAVAILABLE");
+        return { ...context, tools };
+      },
+      toolkitFor: ctx => buildScoutToolkit({ ...ctx, ...tools, sourceApi: { env: process.env } }),
+      transport: request => call<ModelResponse>("model", request),
+      refusedBeforeSending: error => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal,
+      onStart: info => call("scout-start", info),
+      onResult: (result, artifacts) => call("scout-result", { result, artifacts }),
+      reserveEscalation: async request => {
+        const response = await call<(Omit<Extract<ScoutEscalationAdmission, { admit: true }>, "draw" | "release"> & { reservationId: string }) |
+          Extract<ScoutEscalationAdmission, { admit: false }>>("escalation", request);
+        return response.admit ? { ...response, draw: usd => send("draw", response.reservationId, usd), release: () => send("release", response.reservationId, null) } : response;
+      },
+    });
+    const result = await dispatchOne(repos, { ...input, holder: `${input.holder}:worker:${process.pid}`,
+      clock, maturity: () => input.maturity, executor });
+    await call("scout-dispatch-result", result);
+    process.disconnect();
+    return;
+  }
   if (config.nationalZips) {
     const [{ runNationalPlaceTask }, { PostgresRoutineDataStore },
       { DurableEvidenceStore }, { VAULT_DIR }, { hostSpacer }, { serializeHostSpacing }] = await Promise.all([

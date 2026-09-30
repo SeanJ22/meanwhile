@@ -1,7 +1,7 @@
 import { attemptBatchJournal, backgroundBatchTransport, batchEnabledFor, batchRequestHash } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { createHash, randomUUID } from "node:crypto";
-import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, scoutProcessExecutor } from "../lib/control-plane/workers/process-pool.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
 import { costEntryWithModel } from "../lib/control-plane/cost.ts";
@@ -236,7 +236,7 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -2379,7 +2379,11 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  * reaches.
  */
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
-  ? scoutExecutor({
+  ? scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
+      fileStoreRoot: CONTROL_PLANE_ROOT,
+      search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
+      onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`),
+      deps: {
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
         transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, workerMessages),
@@ -2485,7 +2489,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         scoutResultsThisCycle.push(amended);
         return amended;
       },
-    })
+    } })
   : {
       lane: "BOUNDED_MODEL_WORKER",
       run: async () => ({

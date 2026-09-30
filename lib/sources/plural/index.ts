@@ -6,6 +6,7 @@ import type {
 
 import { notADocument, sourceUserAgent } from "../http.ts";
 import { shortTransfer } from "../bulk-completeness.ts";
+import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 /**
  * State legislators, from Plural Open (ex-Open States). Phase 5.2 tier 2,
@@ -24,8 +25,10 @@ const SOURCE_NAME = "plural";
 
 const SOURCE_ORG = "Plural Open States (CC-0)";
 
-/** States with boundary coverage. Adding one is adding a line. */
-export const PLURAL_STATES = ["az", "nj", "nh"] as const;
+/** Acquisition is national; a missing local boundary never suppresses a roster. */
+export const PLURAL_STATES: readonly string[] = Object.values(FIPS_TO_STATE)
+  .filter(state => state.prefix === "state" || state.postal === "DC" || state.postal === "PR")
+  .map(state => state.postal.toLowerCase());
 
 export type PluralState = (typeof PLURAL_STATES)[number];
 
@@ -47,6 +50,14 @@ const CHAMBER_TITLE: Record<string, { upper: string; lower: string }> = {
   nh: { upper: "State Senator", lower: "State Representative" },
   nj: { upper: "State Senator", lower: "Assemblymember" },
 };
+
+for (const state of PLURAL_STATES) {
+  CHAMBER_TITLE[state] ??= {
+    upper: state === "dc" ? "Councilmember" : "State Senator",
+    lower: ["ca", "nv", "ny", "wi"].includes(state) ? "Assemblymember"
+      : ["md", "va", "wv"].includes(state) ? "Delegate" : "State Representative",
+  };
+}
 
 export interface PluralPerson {
   /** An `ocd-person/<uuid>` identifier. Stable across runs. */
@@ -84,7 +95,7 @@ export function designationKey(value: string): string {
     .replace(/\b0+(\d)/g, "$1");
 }
 
-const LABEL_PREFIX = /^State (Senate|House) District\s*/i;
+const LABEL_PREFIX = /^(?:State (?:Senate|House)|State Legislative Districts?\s*-?\s*(?:Upper|Lower)|Senatorial|Representative) District\s*/i;
 const NJ_LABEL_PREFIX = /^(Assembly|Senate) District\s*/i;
 
 /** The designation a registry division's Census-sourced label encodes. */

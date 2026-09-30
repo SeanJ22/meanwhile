@@ -10,15 +10,13 @@
  */
 
 import {
-  emptyFieldManual,
   fieldManualEntryId,
   projectFieldManual,
-  upsertEntries,
+  writeFieldManual,
   type FieldManualEntry,
   type FieldManualProjection,
   type FieldManualStore,
 } from "../field-manual.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 
 /** The source label a scout's own write-backs carry, so a re-observation updates one row. */
@@ -226,28 +224,5 @@ export function usedFieldManualEntryIds(result: ScoutResult, handedIds: readonly
   });
 }
 
-/**
- * Write a scout's discoveries into the growing field manual, live, with the
- * store's own CAS to survive a concurrent write. A write-back failure is a fact
- * about our store, returned to the caller — never an uncaught crash that would
- * lose the scout result that was already learned.
- */
-export async function writeFieldManualDiscoveries(
-  repos: Pick<ControlPlaneRepositories, "fieldManual">,
-  entries: readonly FieldManualEntry[],
-  now: string,
-): Promise<{ readonly written: number; readonly error?: string }> {
-  if (entries.length === 0) return { written: 0 };
-  for (let attempt = 0; attempt < 4; attempt += 1) {
-    try {
-      const current = await repos.fieldManual.read("live");
-      const next = upsertEntries(current?.value ?? emptyFieldManual(), entries, now);
-      if (current === null) await repos.fieldManual.put("live", next, now);
-      else await repos.fieldManual.compareAndSet("live", current.revision, next, now);
-      return { written: entries.length };
-    } catch (error) {
-      if (attempt === 3) return { written: 0, error: error instanceof Error ? error.message : String(error) };
-    }
-  }
-  return { written: 0 };
-}
+/** A scout's write-back is the shared field-manual write (`writeFieldManual`). */
+export const writeFieldManualDiscoveries = writeFieldManual;

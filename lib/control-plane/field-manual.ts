@@ -34,12 +34,19 @@
  * next worker of any role reads it on its next walk. There is no admission
  * gate between the two.
  *
- * This module is pure (no db, fs, clock, or source-type imports) so the exact
- * projection and grow-only rules are tested without a database, and so the
- * heavy source adapters live in the seed/write callers, not here.
+ * ## The two calls every role uses
+ *
+ * `readFieldManual(repos, query)` and `writeFieldManual(repos, entries, now)`
+ * are the whole interface: a role reads the projection that applies to it, and
+ * writes what it learned straight back. Everything above them is pure (no db,
+ * fs, clock, or source-type imports) so the projection and grow-only rules are
+ * tested without a database; the two calls take the repositories as an
+ * argument, so this module still imports nothing that touches a store.
  */
 
 import { createHash } from "node:crypto";
+
+import type { ControlPlaneRepositories } from "./repository/types.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
@@ -228,4 +235,89 @@ export function fieldManualLine(entry: FieldManualEntry): string {
   const door = entry.url ? ` <${entry.url}>` : "";
   const seen = entry.observedAt ? ` seen ${entry.observedAt.slice(0, 10)}` : "";
   return `${entry.role}/${entry.kind} ${entry.outcome} (${where})${on}: ${entry.title}${door} — ${entry.summary}${seen}`.replace(/\s+/g, " ").trim();
+}
+
+/** The repositories the two calls need: just the manual's own aggregate. */
+export type FieldManualRepos = Pick<ControlPlaneRepositories, "fieldManual">;
+
+/** The aggregate id the one live manual is stored under. */
+export const FIELD_MANUAL_ID = "live";
+
+export interface FieldManualRead {
+  /** What applies to the asking role/jurisdiction: the lines to put in front of the worker and the ids offered. */
+  readonly projection: FieldManualProjection;
+  /** The whole store the projection was cut from, for a caller that narrows it further (a scout's catalog, a used-door check). */
+  readonly store: FieldManualStore;
+  /** The stored revision this read saw; null when the manual has never been written. */
+  readonly revision: number | null;
+  /** Set when the store could not be read. The projection is then empty: a failed read is a fact about our store, never a crash in the worker. */
+  readonly error?: string;
+}
+
+/**
+ * **THE ONE READ.** Every role reads the manual through this call: the current
+ * stored manual, cut down to `query` (role, state, record class, platform). A
+ * read failure comes back as `error` with an empty projection so the worker
+ * walks without inherited knowledge rather than failing.
+ */
+export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
+  try {
+    const row = await repos.fieldManual.read(FIELD_MANUAL_ID);
+    const store = row?.value ?? emptyFieldManual();
+    return { projection: projectFieldManual(store, query), store, revision: row?.revision ?? null };
+  } catch (error) {
+    const store = emptyFieldManual();
+    return {
+      projection: projectFieldManual(store, query),
+      store,
+      revision: null,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/** Build one entry from the few fields a role actually has; everything else takes the neutral default. */
+export function newFieldManualEntry(
+  source: string,
+  key: string,
+  fields: Pick<FieldManualEntry, "role" | "kind" | "title" | "summary" | "outcome"> & Partial<FieldManualEntry>,
+): FieldManualEntry {
+  return {
+    states: [],
+    recordClasses: [],
+    platforms: [],
+    url: null,
+    observedAt: null,
+    tier: null,
+    payload: {},
+    ...fields,
+    id: fieldManualEntryId(source, key),
+    source,
+  };
+}
+
+/**
+ * **THE ONE WRITE.** Fold what a role just learned into the live manual, grow-only,
+ * using the store's own compare-and-set to survive a concurrent writer. A write
+ * failure is returned, never thrown: it must not lose the result that was
+ * already learned.
+ */
+export async function writeFieldManual(
+  repos: FieldManualRepos,
+  entries: readonly FieldManualEntry[],
+  now: string,
+): Promise<{ readonly written: number; readonly error?: string }> {
+  if (entries.length === 0) return { written: 0 };
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      const current = await repos.fieldManual.read(FIELD_MANUAL_ID);
+      const next = upsertEntries(current?.value ?? emptyFieldManual(), entries, now);
+      if (current === null) await repos.fieldManual.put(FIELD_MANUAL_ID, next, now);
+      else await repos.fieldManual.compareAndSet(FIELD_MANUAL_ID, current.revision, next, now);
+      return { written: entries.length };
+    } catch (error) {
+      if (attempt === 3) return { written: 0, error: error instanceof Error ? error.message : String(error) };
+    }
+  }
+  return { written: 0 };
 }

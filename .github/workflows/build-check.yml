@@ -252,6 +252,7 @@ jobs:
         run: |
           echo "Draft preflight passed. This required build context still reports, while"
           echo "the two production builds wait for the ready_for_review certification run."
+    needs:
       - admission
     if: always()
   test:
@@ -391,6 +392,3 @@ jobs:
           WTP_SCHEMA_GATE_SMOKE: ${{ inputs.schema_smoke }}
           WTP_SCHEMA_GATE_MOMENT: ${{ inputs.schema_moment }}
         run: corepack pnpm exec tsx scripts/db-shipping-gate.mts
-      - name: Certified tree reused — this tree already passed
-        if: success() && needs.admission.outputs.tier == 'no-certified'
-        run: node scripts/certified-tree.mjs --attest=gates

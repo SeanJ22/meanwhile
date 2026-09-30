@@ -46,9 +46,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
-  DIGEST_FILE,
   GENERATED,
-  type DigestFile,
 } from "../lib/ops/generated-register.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 

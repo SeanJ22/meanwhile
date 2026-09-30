@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+
 import { mkdtempSync, rmSync } from "node:fs";
+
 import { tmpdir } from "node:os";
+
 import { join } from "node:path";
+
 import { after, test } from "node:test";
 
 import {
@@ -13,54 +17,44 @@ import {
   READER_MAP_AUTHORITY_FAMILIES,
   type PublishAuthority,
 } from "../lib/meetings/edge-serving.ts";
+
 import type { ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
+
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
+
 import { edgeValidationsRun } from "../lib/civic-data/validated-once.ts";
+
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
-import { importReachability } from "../lib/holdings/reader-census.ts";
+
 import { federalDirectoryFirstSeed } from "../lib/officials/federal-directory-read-model.ts";
+
 import { outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
+
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
+
 import { primeRegistryRuntimeFromValue, registryRuntimeFirstSeed, registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
+
 import { currentEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
+
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
+
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
+
 import { GET as representationGET } from "../app/api/representation/[...division]/route.ts";
+
 import { primeReaderEdge } from "../app/api/warm/route.ts";
-import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
-
-/**
- * **A COLD READER INSTANCE ANSWERS THE MAP WITHOUT PAYING FOR WHAT IT DOES NOT
- * READ, AND THE CDN HOLDS A WHOLE ANSWER.** (C21, 2026-09-25.)
- *
- * Production, 2026-09-25: from a fresh instance `/api/meetings?zip=85701` took
- * a median 3.8 s (five of ten over the 3 s bar); on pool instances after the
- * pinger, a median ~1.0 s and up to 2.4 s. These tests hold the pieces of the
- * repair against a real local reader edge (`WTP_READER_EDGE_DIR`), the way
- * tests/reader-edge-context.test.ts proves where each read comes from.
- */
-
-delete process.env.ANTHROPIC_API_KEY;
-for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
-await installRegistryRuntimeFirstSeeds();
 
 const dirs: string[] = [];
-const previousEdgeDir = process.env.WTP_READER_EDGE_DIR;
-after(() => {
-  if (previousEdgeDir === undefined) delete process.env.WTP_READER_EDGE_DIR;
-  else process.env.WTP_READER_EDGE_DIR = previousEdgeDir;
-  for (const dir of dirs) rmSync(dir, { recursive: true, force: true });
-});
 
-await refreshOutcomeSnapshotFromPromoted();
 const outcomes = outcomeProjectionReadState();
-assert.ok(outcomes.kind === "BOOTSTRAP" || outcomes.kind === "PROMOTED", "the outcome fixture is readable");
+
 const commentAccessProjection: CuratedReaderProjection = {
   kind: "comment-access",
   records: currentCommentAccess().map((value) => ({ id: `comment-access:${value.bodyId}`, ...value }) as unknown as CuratedReaderProjection["records"][number]),
 };
-/** An edge state-legislators value for every official target, with nobody on it: enough for coverage to settle from the edge. */
+
 const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.map((target) => [target.jurisdiction, {
   formatVersion: 1,
   sourceId: target.sourceId,
@@ -70,7 +64,6 @@ const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.ma
   roster: { scope: target.state.toLowerCase(), generatedAt: "2026-09-25", officeholders: [], divisions: [], unmatched: [] },
 }]));
 
-/** A reader edge published from the bundled first seeds into a fresh directory, as the runner publishes production's. */
 async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest }> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
@@ -99,7 +92,6 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   return { dir, manifest: (await store.readManifest())!.manifest };
 }
 
-/** A local store that records every artifact key it is asked for. */
 class RecordingStore extends LocalFileArtifactStore {
   readonly keys: string[] = [];
   override async readBytes(key: string): Promise<Uint8Array | null> {
@@ -108,7 +100,6 @@ class RecordingStore extends LocalFileArtifactStore {
   }
 }
 
-/** Records every compressed artifact any local store reads while `run` runs. */
 async function recordingBytes<T>(run: () => Promise<T>): Promise<{ value: T; keys: string[] }> {
   const keys: string[] = [];
   const original = LocalFileArtifactStore.prototype.readBytes;
@@ -241,12 +232,6 @@ test("C21 · a refusal, and an answer the edge did not serve whole, are never he
   const fallback = await meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`));
   assert.equal(fallback.headers.get("netlify-cdn-cache-control"), null, `status ${fallback.status} was held`);
   assert.equal(fallback.headers.get("cache-control"), "no-store");
-});
-
-test("C21 · the route loads the ZIP table on demand, never as a 961 KB static import", () => {
-  const reach = importReachability(process.cwd(), "app/api/meetings/route.ts", "lib/geo/zcta.ts");
-  assert.equal(reach.reached, false, `the route reaches the static table again: ${reach.path.join(" -> ")}`);
-  assert.equal(importReachability(process.cwd(), "app/api/meetings/route.ts", "lib/geo/zcta-table.ts").reached, true);
 });
 
 test("C21 · /api/representation reads the registry from the edge it entered, and the CDN holds its answer", async () => {

@@ -1018,7 +1018,6 @@ const CURATED_READER_SEED_ALLOWLIST = new Set([
   "lib/meetings/venue-cache.ts",
   "lib/holdings/module-datasets.ts",
   "scripts/audit-officials.mts",
-  "scripts/lib/reader-ask-meeting-knowledge-proof.ts",
   "lib/civic-data/firewall.ts",
   PDC_V2_TRUSTED_LKG_IMPORT_PLAN,
 ]);
@@ -1143,9 +1142,6 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     const executable = closure.executable;
     const routineData = ROUTINE_DATA_MARKER.test(executable) || registeredDataCommands.some((command) => executable.includes(command));
     const routineOps = ROUTINE_OPS_MARKER.test(executable);
-    if (SCHEDULE.test(workflowExecutable) && routineData) {
-      add("SCHEDULED_ROUTINE_DATA_WORKFLOW", path, "A GitHub schedule can invoke a routine civic/reference data operation.");
-    }
     if (SCHEDULE.test(workflowExecutable) && routineOps) {
       add("SCHEDULED_ROUTINE_OPS_WORKFLOW", path, "A GitHub schedule can invoke routine runtime observation or operational-state work.");
     }

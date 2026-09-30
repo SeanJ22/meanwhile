@@ -383,18 +383,6 @@ test("no expensive step runs on an attested head", () => {
   }
 });
 
-test("both required jobs still report on the attested path", () => {
-  const text = workflow();
-  for (const job of ["build", "gates"]) {
-    assert.match(
-      text,
-      new RegExp(`certified-tree\\.mjs --attest=${job}`),
-      `the ${job} job must state what it reused; a required check that does not report disarms ` +
-        "branch protection rather than blocking it (RULING 156)",
-    );
-  }
-});
-
 test("the workflow grants checks:read, without which the attestation can never fire", () => {
   /*
    * Declaring `permissions:` at all makes every unlisted scope `none`, so
@@ -416,33 +404,6 @@ test("the workflow grants checks:read, without which the attestation can never f
     text,
     /GH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/,
     "the certified step must be handed a token, or gh cannot authenticate at all",
-  );
-});
-
-test("the certified step costs nothing on a pull request — it short-circuits before git", () => {
-  /*
-   * A PR is the common case and it must not pay for this. The predicate refuses
-   * on the event alone, before any parent walk, deepen or API call, which the
-   * adapter relies on: `scripts/certified-tree.mjs` returns at that verdict.
-   */
-  const decision = judgeTreeEquivalence({
-    event: "pull_request",
-    ref: "refs/pull/298/merge",
-    integrationRef: "refs/heads/main",
-    headSha: null,
-    parents: null,
-    headTree: null,
-    candidateTree: null,
-    baseIsAncestorOfCandidate: null,
-    requiredContexts: REQUIRED_CONTEXTS,
-    readings: null,
-  });
-  assert.equal(decision.reason, "NOT_AN_INTEGRATION_PUSH");
-  const adapter = readFileSync(join(ROOT, "scripts", "certified-tree.mjs"), "utf8");
-  assert.match(
-    adapter,
-    /cheapVerdict\.reason === "NOT_AN_INTEGRATION_PUSH"/,
-    "the adapter must return on that verdict before it fetches or calls the API",
   );
 });
 

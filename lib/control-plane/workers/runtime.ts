@@ -224,12 +224,6 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
       "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: permanent SOURCE_WIRING-derived meeting-partition contracts are the only standing acquisition authorities",
     );
   }
-  // Scout and model-assisted audit share the same durable spend ledger. Hold
-  // admission through completion so concurrent calls cannot spend one allowance.
-  if (((task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner) || (task.workerTask && usesModelParse(runtime, task.workerTask))) &&
-      !runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) {
-    return runtime.repos.locks.withLock("autonomous-model-admission", () => dispatchAdmittedWorkerTask(runtime, task));
-  }
   return dispatchAdmittedWorkerTask(runtime, task);
 }
 

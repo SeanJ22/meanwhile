@@ -640,8 +640,17 @@ export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].mo
 export function researchWorkerCapacity(input: {
   readonly hunts: number; readonly availableUsd: number;
   readonly requestUsd: number; readonly requestsPerMinute?: number;
+  readonly inputTokensPerMinute?: number; readonly outputTokensPerMinute?: number;
+  readonly inputTokensPerRequest?: number; readonly outputTokensPerRequest?: number;
 }): number {
+  if (![input.hunts, input.availableUsd, input.requestUsd, ...[input.requestsPerMinute,
+    input.inputTokensPerMinute, input.outputTokensPerMinute, input.inputTokensPerRequest,
+    input.outputTokensPerRequest].filter(value => value !== undefined)].every(value => Number.isFinite(value) && value! >= 0)) return 0;
   if (input.hunts <= 0 || input.availableUsd <= 0 || input.requestUsd <= 0) return 0;
   const provider = input.requestsPerMinute === undefined ? input.hunts : Math.floor(input.requestsPerMinute);
-  return Math.max(0, Math.min(input.hunts, Math.floor(input.availableUsd / input.requestUsd), provider));
+  const inputCapacity = input.inputTokensPerMinute === undefined ? input.hunts
+    : Math.floor(input.inputTokensPerMinute / Math.max(1, input.inputTokensPerRequest ?? 1));
+  const outputCapacity = input.outputTokensPerMinute === undefined ? input.hunts
+    : Math.floor(input.outputTokensPerMinute / Math.max(1, input.outputTokensPerRequest ?? 1));
+  return Math.max(0, Math.min(input.hunts, Math.floor(input.availableUsd / input.requestUsd), provider, inputCapacity, outputCapacity));
 }

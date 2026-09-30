@@ -37,7 +37,8 @@ export async function applyManualSourceGaps(
   input: { readonly now: string },
 ): Promise<{ readonly created: number; readonly carried: number; readonly deferred: number }> {
   const applicable = scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1);
-  let created = 0, carried = 0, deferred = 0;
+  let created = 0, carried = 0;
+  const deferred = 0;
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
     if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
     const receipts = [...row.instructionIds];

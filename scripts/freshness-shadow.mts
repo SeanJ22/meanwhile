@@ -1,5 +1,6 @@
 import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
+import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
 import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
@@ -419,7 +420,7 @@ let CLOCK: CycleClock = cycleClock({
   wallMs: Number.POSITIVE_INFINITY,
   stallLeadMs: CYCLE_STALL_LEAD_MS,
 });
-let stallDiagnostic: CycleStallDiagnostic | null = null;
+const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
 
@@ -1273,6 +1274,7 @@ const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.ha
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
+let providerLimits: import("../lib/control-plane/scheduler/scout-executor.ts").AnthropicRateLimits | null = null;
 const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
   availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
   requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
@@ -2855,7 +2857,8 @@ console.log(
 const autonomousStoreDeadlineMs = lateWorkDeadlineMs(CLOCK) - 15_000;
 const autonomousDeadlineMs = Math.min(DISPATCH_DEADLINE_MS - 60_000, autonomousStoreDeadlineMs - 30_000);
 async function makeAutonomousFleet() {
-  const fleetTransport = modelLaneEnabled ? boundedAuditTransport(workerKey) : null;
+  const fleetTransport = modelLaneEnabled ? anthropicTransport(workerKey, fetch, undefined,
+    { onRateLimits: limits => { providerLimits = limits; } }) : null;
   return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
@@ -2867,33 +2870,50 @@ async function makeAutonomousFleet() {
     auditCeilingUsd: effectiveCeilingUsd,
     lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
 }
+async function runAutonomousProcesses() {
+  const fleet = await makeAutonomousFleet();
+  const planned = await runAutonomousCoordinator(fleet, { planOnly: true,
+    prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
+      .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })) });
+  const taskIds = planned.decisions.filter(row => row.task && ["SCOUT", "WORKER"].includes(row.action)).map(row => row.task!.id);
+  const availableUsd = Math.max(0, effectiveCeilingUsd - (spendWindow.windowUsd ?? effectiveCeilingUsd));
+  const dispatches = await runLeaseWorkerProcesses({
+    config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: modelLaneEnabled,
+      searchEnabled: scoutSearch !== null, ceilingUsd: effectiveCeilingUsd, fundedSubjects: [...lifetimeHuntSubjects] },
+    capacity: () => modelLaneEnabled ? researchWorkerCapacity({ hunts: taskIds.length, availableUsd,
+      requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+      requestsPerMinute: providerLimits?.requestsPerMinute ?? Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ?? 1),
+      inputTokensPerMinute: providerLimits?.inputTokensPerMinute ?? undefined,
+      outputTokensPerMinute: providerLimits?.outputTokensPerMinute ?? undefined,
+      inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
+    transportFor: (jurisdiction, taskId) => async request => {
+      const task = (await repos.routeTasks.mustRead(taskId)).value;
+      const occurrences = await repos.occurrences.listWhere(["workItemId"], task.workItemId);
+      const owner = occurrences.find(row => row.value.routeTaskId === task.id) ?? (occurrences.length === 1 ? occurrences[0] : null);
+      const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
+      if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
+      const job = new JobSpend(spendHolds, `worker-request:${taskId}:${randomUUID()}`, owner?.value.obligationId ?? task.id, found.lines);
+      const transport = budgetGuardedTransport({ job: () => job,
+        transport: fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
+          anthropicTransport(workerKey, fetch, undefined, { onRateLimits: limits => { providerLimits = limits; } })),
+        worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
+      const response = await transport(request);
+      const measured = modelResponseUsd(response);
+      if (measured !== null) await spendHolds.settle(job.jobId, measured, nowIso());
+      return response;
+    },
+    ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
+    reserveEscalation: scoutEscalationReservation(fleetSafety),
+    onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`) });
+  const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
+  return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
+}
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused, scheduledBlackout, hasLifetimeHunt });
-let earlyExactWorkIds: ReadonlySet<string> | null = null;
-const earlyOriginal = autonomousCycleOpen && hasLifetimeHunt && Date.now() + 150_000 < autonomousDeadlineMs
-  ? (async () => {
-      const leave = pending.enter("original-hunt-early-workers");
-      try {
-        return await withStoreBudget("original-hunt-early-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
-          const [occurrences, workItems] = await Promise.all([repos.occurrences.list(), repos.workItems.list()]);
-          const exactWorkIds = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetStartedAt)
-            .flatMap(scope => [...exactInstructionAutonomousWorkIds({ obligations: sync.all,
-              occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
-              assignmentKey: scope.decision.key, receiptId: scope.decision.receiptId })]));
-          earlyExactWorkIds = exactWorkIds;
-          const fleet = await makeAutonomousFleet();
-          return runAutonomousCoordinator(fleet, { concurrency: Math.max(1, workerCapacity), deadlineMs: autonomousDeadlineMs,
-            prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
-              .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
-            acceptsWorkItem: item => lifetimeHuntSubjects.has(item.subject) && exactWorkIds.has(item.id),
-            admitDispatch: work => fleetSafety.admitDispatch(work) });
-        });
-      } catch (error) {
-        runtimeConditions.push(`original hunt's early autonomous slice could not complete: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}; work remains owed`);
-        return null;
-      } finally { leave(); }
-    })()
-  : null;
+const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
+  runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
+  return null;
+}) : null;
 let earlyAutonomous: Awaited<typeof earlyOriginal> = null;
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";
@@ -3208,74 +3228,22 @@ if (earlyAutonomous !== null) {
   if (autonomousWorked) fleetSafety.recordSuccessfulActivity(nowIso());
   for (const row of earlyAutonomous.dispatches) console.log(`  original hunt early worker: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
 }
-if (autonomousCycleOpen && Date.now() + 150_000 < autonomousDeadlineMs) {
+if (autonomousCycleOpen) {
   const leaveAutonomous = pending.enter("autonomous-workers");
   try {
-    await withStoreBudget("autonomous-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
-    const fleet = await makeAutonomousFleet();
-    // Retained civic bytes get one stage before new discovery.
-    // A held worker first scans retained evidence before its 120 s execution
-    // bound. Do not open that scan when only enough time for execution remains.
-    const heldWorkerAdmissionMs = 240_000;
-    const heldFirst = Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs
-      ? await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-          maximumDispatches: 1, deadlineMs: autonomousDeadlineMs,
-          onDeferred: reason => runtimeConditions.push(`held worker deferred: ${reason}`),
-          admitDispatch: work => fleetSafety.admitDispatch(work),
-        })
-      : [];
-    const autonomous = await runAutonomousCoordinator(fleet, { concurrency: Math.max(1, workerCapacity),
-      prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
-        .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
-      deadlineMs: autonomousDeadlineMs,
-      ...(Number.isFinite(SCOUT_MAX) ? { maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedOutsideLifetime) } : {}),
-      ...(scheduledBlackout ? { acceptsWorkItem: (item: { readonly id: string; readonly subject: string }) =>
-        lifetimeHuntSubjects.has(item.subject) && earlyExactWorkIds?.has(item.id) === true } : {}),
-      admitDispatch: work => fleetSafety.admitDispatch(work) });
+    const autonomous = await runAutonomousProcesses();
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
-    /* MW-014: the coordinator's deferrals AND its silent non-dispatches (BLOCKED, STAGED), counted by reason. */
-    if (finalQueueLanes !== null) {
-      const lateLane = coordinatorLane(autonomous);
-      // Two operations on one WorkItem are two durable attempts but one due
-      // assignment in the queue; the separate research counter counts attempts.
-      const dispatchedTasks = new Set([...(earlyAutonomous?.dispatches ?? []), ...autonomous.dispatches]
-        .map(row => row.routeTaskId).filter((id): id is string => id !== null));
-      const dispatchedItems = new Set([...(earlyAutonomous?.decisions ?? []), ...autonomous.decisions]
-        .filter(row => row.task !== null && dispatchedTasks.has(row.task.id)).map(row => row.workItemId));
-      const dispatched = dispatchedItems.size;
-      finalQueueLanes = { ...finalQueueLanes, autonomous: { ...lateLane, dispatched,
-        waiting: Math.max(0, lateLane.due - dispatched) } };
-    }
+    if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
     scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
-    const legacy = [...heldFirst];
-    // No per-cycle dispatch cap: the held-worker loop runs until the wall
-    // (checked in the loop condition) or until no held work remains.
-    const remaining = Number.POSITIVE_INFINITY;
-    for (let slot = 0; slot < remaining && Date.now() + heldWorkerAdmissionMs <= autonomousDeadlineMs; slot += 1) {
-      const next = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
-        maximumDispatches: 1, deadlineMs: autonomousDeadlineMs,
-        onDeferred: reason => runtimeConditions.push(`held worker deferred: ${reason}`),
-        admitDispatch: work => fleetSafety.admitDispatch(work),
-      });
-      legacy.push(...next);
-      if (next.length === 0) break;
-    }
-    const fleetDispatches = [...legacy, ...autonomous.dispatches];
-    autonomousDispatchedThisCycle += fleetDispatches.filter(row => row.attemptId !== null).length;
-    if (fleetDispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
-    for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
-    });
+    autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
+    if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
+    for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {
-    runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
-  } finally {
-    leaveAutonomous();
-  }
-} else if (autonomousCycleOpen) {
-  runtimeConditions.push("autonomous work deferred: the remaining technical slice could not admit and settle another normal worker before the cycle's finalization reserve; work remains owed");
+    runtimeConditions.push(`worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
+  } finally { leaveAutonomous(); }
 }
-if (autonomousWorked) await projectRetainedFacts("new-worker-results:fact-projection");
-finishPhase("autonomous-workers-and-projection");
+
 /* ------------------------------------------------------- the promotion tail --- */
 
 /*

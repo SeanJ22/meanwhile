@@ -10,6 +10,14 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
 import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { unchangedScoutFailure } from "../lib/control-plane/workers/scout-scheduling.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -354,4 +362,47 @@ test("unresolved identity permits independent diagnosis but never staging", asyn
   assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
+});
+
+ test("coordinator selection hands out canonical tasks without running tools or opening an Attempt", async () => {
+  const h = await autonomousHarness({ plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+  const before = (await h.repos.attempts.list()).length;
+  const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true });
+  assert.equal(planned.decisions[0]?.action, "SCOUT");
+  assert.equal(planned.dispatches.length, 0);
+  assert.equal((await h.repos.attempts.list()).length, before);
+  assert.equal(h.calls.length, 0);
+});
+
+ test("separate processes pull shared tasks and each existing lease admits one Attempt", async () => {
+  const root = await mkdtemp(join(tmpdir(), "s7-lease-worker-"));
+  try {
+    const repos = await createFileRepositories(root);
+    const h = await autonomousHarness({ repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
+    const selected = await nextAutonomousOperation(h.runtime, h.item.id);
+    const second = createRouteTask({ workItemId: h.item.id, routeId: selected.task!.routeId + ":second",
+      routeLabel: selected.task!.routeLabel, target: selected.task!.target, inherited: false, now: h.now() });
+    await registerRouteTask(repos, second, h.now());
+    const pids: number[] = [];
+    const results = await runLeaseWorkerProcesses({
+      config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
+        modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
+      capacity: () => 2, onStarted: pid => pids.push(pid),
+      transportFor: () => async () => { throw new Error("unexpected paid call"); } });
+    assert.equal(pids.length, 2);
+    assert.ok(pids.every(pid => pid !== process.pid));
+    const attempts = (await repos.attempts.list()).map(row => row.value).filter(row => row.routeTaskId === selected.task!.id);
+    assert.equal(attempts.length, 1);
+    assert.equal(attempts[0]!.outcome, "DENIED_BY_POLICY");
+    assert.equal(results.filter(row => row.attemptId !== null).length, 2);
+    assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+ test("unchanged Scout request failures stay blocked while provider outages retain backoff", async () => {
+  const h = await autonomousHarness();
+  const base = (await h.repos.attempts.list())[0]!.value;
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 400: malformed schema" }), true);
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 429: rate limited" }), false);
+  assert.equal(unchangedScoutFailure({ ...base, outcome: "ABORTED", abortReason: "HTTP 503: provider unavailable" }), false);
 });

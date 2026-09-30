@@ -5,6 +5,8 @@ import test from "node:test";
 
 import {
   censusOf,
+  heldVotingSiteCoordinates,
+  votingSiteAddressKey,
   directionsUrl,
   isPinnable,
   modelSentence,
@@ -349,4 +351,15 @@ test("B19: a site's election label is never filled in from its jurisdiction", ()
       "every site carries a label while the source has blanks — a default filled a gap",
     );
   }
+});
+
+
+test("automatic refresh reuses exact held addresses but retries missing or conflicting points", () => {
+  const jurisdiction = file.jurisdictions.find(row => row.sites.some(site => site.lat !== null && site.lng !== null))!;
+  const site = jurisdiction.sites.find(row => row.lat !== null && row.lng !== null)!;
+  const held = { generatedAt: file.generatedAt, jurisdictions: [{ ...jurisdiction, sites: [site] }] };
+  assert.deepEqual(heldVotingSiteCoordinates(held).get(votingSiteAddressKey(site.address.toUpperCase())), { lat: site.lat, lng: site.lng });
+  assert.equal(heldVotingSiteCoordinates({ ...held, jurisdictions: [{ ...jurisdiction, sites: [{ ...site, lat: null }] }] }).size, 0);
+  assert.equal(heldVotingSiteCoordinates({ ...held, jurisdictions: [{ ...jurisdiction, sites: [site, { ...site, lat: site.lat! + 1 }] }] }).size, 0);
+  assert.equal(heldVotingSiteCoordinates(held).has(votingSiteAddressKey(site.address + " different")), false);
 });

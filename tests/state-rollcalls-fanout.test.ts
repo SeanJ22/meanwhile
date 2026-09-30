@@ -148,7 +148,7 @@ test("a member scope and the marker scope never collide", async () => {
   if (markerRead.kind === "PROMOTED") assert.ok(!("positions" in markerRead.value));
 });
 
-test("a changed member re-promotes to a new version; the plane does not content-dedupe", async () => {
+test("a changed member re-promotes to a new version; unchanged votes confirm that version", async () => {
   const store = new MemoryRoutineDataStore();
   const first = await processRegisteredFanOutCandidate(store, CONTRACT_ID, member("nh-general-court:1", [pos(1)], T0), T0);
   // A changed vote set is a new version.
@@ -156,13 +156,13 @@ test("a changed member re-promotes to a new version; the plane does not content-
   assert.equal(changed.candidate.state, "PROMOTED");
   assert.notEqual(changed.promoted?.versionId, first.promoted?.versionId);
 
-  // Identical votes acquired at a new instant are STILL a new plane version:
-  // candidateId folds in retrievedAt, so the plane itself never treats an
-  // unchanged member as a no-op. The child's batched skip-unchanged gate — not
-  // the plane — is what keeps an unchanged member from being re-written.
-  const again = await processRegisteredFanOutCandidate(store, CONTRACT_ID, member("nh-general-court:1", [pos(1), pos(2)], "2026-09-15T12:20:00.000Z"), "2026-09-15T12:20:00.000Z");
+  // §0/§5/§7 and Sean's S6 instruction retire a new version for unchanged facts.
+  const recheck = member("nh-general-court:1", [pos(1), pos(2)], "2026-09-15T12:20:00.000Z");
+  const again = await processRegisteredFanOutCandidate(store, CONTRACT_ID, recheck, "2026-09-15T12:20:00.000Z");
   assert.equal(again.candidate.state, "PROMOTED");
-  assert.notEqual(again.promoted?.versionId, changed.promoted?.versionId);
+  assert.equal(again.promoted?.versionId, changed.promoted?.versionId);
+  assert.equal(again.confirmed?.recheck.changeSet?.outcome, "UNCHANGED");
+  assert.equal(await store.readCandidate(recheck.id), null, "identical votes do not store another payload");
 });
 
 test("the fan-out door refuses a candidate scope outside the state's family", async () => {

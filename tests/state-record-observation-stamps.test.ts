@@ -34,6 +34,21 @@ function roll(id: string, at: string, over: Record<string, unknown> = {}) {
 const EARLIER = "2026-09-24T18:00:03.000Z";
 const LATER = "2026-09-24T19:10:04.000Z";
 
+test("voting and money rechecks ignore collection stamps but keep actual election and filing facts", () => {
+  const voting = (at: string, election = "November 3, 2026") => ({ jurisdictions: [{
+    ocdId: "ocd-division/country:us/state:az/county:cochise", collectedAt: at, election,
+    sourceUrl: "https://www.cochise.az.gov/elections", sites: [{ id: "center", name: "Vote center" }],
+  }] });
+  assert.equal(candidateChangeSet(candidate("VOTING_SITE", voting(LATER)), voting(EARLIER)).outcome, "UNCHANGED");
+  assert.equal(candidateChangeSet(candidate("VOTING_SITE", voting(LATER, "November 2, 2026")), voting(EARLIER)).outcome, "CHANGED");
+  const money = (at: string, raised = 100) => ({ records: [{ jurisdiction: "AZ", electionYear: 2026,
+    committeeId: "committee", filingState: "FILED", checkedAt: at, totals: { raised },
+    provenance: { sourceUrl: "https://seethemoney.az.gov/", collectedAt: at },
+  }] });
+  assert.equal(candidateChangeSet(candidate("STATE_CAMPAIGN_FINANCE", money(LATER)), money(EARLIER)).outcome, "UNCHANGED");
+  assert.equal(candidateChangeSet(candidate("STATE_CAMPAIGN_FINANCE", money(LATER, 101)), money(EARLIER)).outcome, "CHANGED");
+});
+
 test("a roster re-read whose members differ only in provenance stamps is unchanged", () => {
   const prior = { roster: { officeholders: [member("nj-legislature:1", EARLIER), member("nj-legislature:2", EARLIER)] } };
   const next = { roster: { officeholders: [member("nj-legislature:1", LATER), member("nj-legislature:2", LATER)] } };
@@ -87,7 +102,7 @@ test("a re-check whose cited roster moved is not a no-change, even when its reco
 test("the confirmation door requires the cited authority, and a confirmation takes no second readback", async () => {
   const { readFileSync } = await import("node:fs");
   const source = readFileSync(new URL("../lib/civic-data/promotion.ts", import.meta.url), "utf8");
-  const eligibility = source.slice(source.indexOf("options.confirmUnchanged === true &&"), source.indexOf("const retained ="));
+  const eligibility = source.slice(source.indexOf("options.confirmUnchanged !== false &&"), source.indexOf("const retained ="));
   assert.match(eligibility, /sameHeldRecords\(candidate, lkg\.candidate\) &&\s+sameCitedAuthority\(candidate, lkg\.candidate\)/);
   assert.match(source, /if \(outcome\.promoted === null \|\| outcome\.confirmed \|\| contract\.readerProjection === null\) return outcome;/);
 });

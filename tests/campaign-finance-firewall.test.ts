@@ -83,7 +83,9 @@ test("RULING 126 + RCD-4 wall 1: campaign finance is confined to isolated operat
     );
   }
 
-  const civicTables = ["civic_data_candidate_events", "civic_data_candidates", "civic_data_promotions", "civic_data_reader_projections"];
+  // §9 isolation still applies to the content-addressed parts introduced to
+  // satisfy Sean's S6 transfer-reduction instruction (§0/§5/§7).
+  const civicTables = ["civic_data_candidate_events", "civic_data_candidates", "civic_data_payload_parts", "civic_data_promotions", "civic_data_reader_projections"];
   assert.deepEqual(
     tablesInClass("OPERATIONAL").filter((name) => name.startsWith("civic_data_")),
     civicTables,

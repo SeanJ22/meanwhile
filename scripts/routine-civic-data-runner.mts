@@ -9,6 +9,7 @@
  * and never replaces a candidate's own source-through or retrieved-at facts.
  */
 import { hostname } from "node:os";
+import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
@@ -23,6 +24,7 @@ import {
 import {
   ROUTINE_SUPERVISOR_HISTORY_FIELDS,
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+  frontierHistoryTasks,
 } from "../lib/civic-data/supervisor-history.ts";
 import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
@@ -91,6 +93,7 @@ import {
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  selectedReaderRepairContracts,
   type RoutineReaderRepairDomain,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import {
@@ -117,6 +120,8 @@ import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/co
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { getDb } from "../lib/db/index.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
+import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
@@ -133,7 +138,8 @@ installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
 const FORCE = process.argv.includes("--force");
-const TASK_SELECTION = routineTaskSelection(process.argv.slice(2));
+const STANDING_SOURCE_TASKS = [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS];
+const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
 const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inheritedStartedAt)) &&
@@ -454,7 +460,9 @@ try {
   supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });
   console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
-const selectedTasks = [...ROUTINE_SOURCE_TASKS, ...huntTasks].filter((task) => !ONLY || ONLY.has(task.id));
+// A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
+const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
+  .filter((task) => !ONLY || ONLY.has(task.id));
 step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
@@ -467,7 +475,7 @@ const clockReads = FORCE
 // publisher-stated end, where one exists, decides when it concluded (C6); an
 // unreadable end set falls back to the day bound and is reported.
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
-if (!FORCE) {
+if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
     const byScope = statedSittingEndsByScope(await statedSittingEndsRead(getDb()));
     statedEndsByTask = new Map(selectedTasks.flatMap((task) =>
@@ -560,8 +568,13 @@ for (const read of clockReads) {
 
 step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
-try {
-  const history = await latestUnreceiptedSupervisorAttempts(selectedTasks);
+const historyTasks = frontierHistoryTasks(dueCandidates.map(({ pending, clock }) => ({
+  task: pending.task,
+  deadlineMs: routineDueRequestDeadlineMs(routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)), honouredDueRequests.get(pending.task.id) ?? null),
+})),
+  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+if (historyTasks.length > 0) try {
+  const history = await latestUnreceiptedSupervisorAttempts(historyTasks);
   supervisorAttempts = history.attempts;
   for (const issue of history.issues) {
     const detail = safeFailure(`${issue.digestId}: ${issue.detail}`);
@@ -653,10 +666,10 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
     env: {
-      ...(pending.task.ownerInvocation ? admittedRuntimeChildEnvironment({
+      ...(pending.task.ownerInvocation || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "MANUAL_CONTRACT",
-        contract: pending.task.registeredContractId ?? pending.task.id,
+        contract: pending.task.registeredContractId ?? automaticRefreshContract(pending.task.id) ?? pending.task.id,
         parentPid: process.pid,
       }) : admittedRuntimeChildEnvironment({
         parentEnv: process.env,
@@ -819,10 +832,10 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
 // actual Reader composes them together exactly once. Parent settlement only
 // parses/correlates protocol lines, so a hung application read cannot leave an
 // orphan Promise, delay source attribution, or mutate any source disposition.
-const readerContracts = [
+const readerContracts = selectedReaderRepairContracts([
   ...observableRoutineContracts(),
   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
-];
+], ONLY === null ? null : selectedTasks);
 const readerDomains = routineReaderRepairDomains(readerContracts);
 const readerReadbackReferences: RoutineCivicDataReaderReadbackReference[] = readerContracts
   .filter(({ readerProjection }) => readerProjection === null)
@@ -908,6 +921,7 @@ function startReaderRepair(
         "--experimental-strip-types",
         "scripts/routine-civic-data-reader-repair.mts",
         domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : `--contract=${domain.contracts[0]!.id}`,
+        ...(domain.mode === "MEETING_AGGREGATE" ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
         `--observed-at=${readerObservedAt}`,
       ],
       timeoutMs: domain.timeoutMs,
@@ -1015,6 +1029,11 @@ for (const error of pass.errors) {
   console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 const readerRuns = pass.repair;
+// Source settlement publishes serving copies even when a readback child fails.
+step = "publishing changed reader edge copies";
+if (!await publishRoutineReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks)) {
+  supervisorFailures.push({ taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED", detail: "Reader edge publication failed; the previous serving copies remain available." });
+}
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");
@@ -1108,7 +1127,7 @@ try {
 const attemptedCount = floored(
   "attempted routine source tasks",
   "the configured routine source/body partition registry",
-  ROUTINE_SOURCE_TASKS.length,
+  STANDING_SOURCE_TASKS.length,
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({
@@ -1134,6 +1153,8 @@ console.log("RCD_RUN=" + JSON.stringify({
 // A source refusal is a durable data-plane event, not a failed supervisor
 // process. Only a process/protocol failure makes the runner nonzero.
 if (supervisorFailures.length > 0) process.exitCode = 2;
+step = "saving the daily database byte counter";
+if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }

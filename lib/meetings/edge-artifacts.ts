@@ -99,6 +99,8 @@ export interface ReaderManifest {
    */
   readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
+  /** Pointer identities for the embedded serving copies; old manifests refresh once. */
+  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
   /**
    * The large "authority" reader families — the map's division/coverage/roster
    * bindings (registry-runtime, ~3.7 MB), the federal directory (~1.2 MB) and
@@ -159,6 +161,7 @@ export type PromotedAuthorityFamily =
   | "candidate-profiles"
   | "candidate-publications"
   | "ballot-navigation"
+  | "voting-sites"
   | "official-filings"
   | "nh-members"
   | "federal-funding"
@@ -175,6 +178,7 @@ export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",
+  "voting-sites",
   "official-filings",
   "nh-members",
   "federal-funding",

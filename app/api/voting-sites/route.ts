@@ -5,6 +5,8 @@ import {
   parseCensusPoint,
 } from "@/lib/geo/census-geocoder";
 import { divisionsAt } from "@/lib/registry/server";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import {
   loadVotingSites,
   readVotingSitesProjection,
@@ -118,6 +120,13 @@ const empty = (
   );
 
 export async function POST(request: Request) {
+  const manifest = await readReaderManifest().catch(() => null);
+  if (manifest?.authorityArtifacts) {
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, [
+      "census-districts", "registry-runtime", "ballot-navigation", "voting-sites",
+    ]).catch(() => null);
+    if (edge) enterReaderAuthorityEdge(edge);
+  }
   let pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
   let ballotNavigationDataState: BallotNavigationDataState = "FIRST_SEED";
   try {

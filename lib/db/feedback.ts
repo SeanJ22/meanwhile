@@ -7,7 +7,11 @@ import {
 import { scrubFreeText } from "../log/scrub.ts";
 import { randomUUID } from "node:crypto";
 
-import { getDb } from "./index.ts";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+import { and, desc, eq, gt } from "drizzle-orm";
+import * as schema from "./schema.ts";
+import { installDatabaseTransferCounter } from "./transfer.ts";
 import { ORGANIC, type RunMarker } from "./run-marker.ts";
 import { feedback, feedbackContact } from "./schema.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
@@ -29,6 +33,37 @@ import { assertWriteAllowed } from "./write-guard.ts";
  */
 
 export type { FeedbackSurface };
+
+export type FeedbackSite = "live" | "tester";
+
+/** Both directions use the independent feedback branch once configured. */
+export function feedbackConnection(env: Readonly<Record<string, string | undefined>> = process.env): string | null {
+  return env.FEEDBACK_DATABASE_URL || env.DATABASE_URL || null;
+}
+
+const databases = new Map<string, ReturnType<typeof drizzle<typeof schema>>>();
+function feedbackDb() {
+  const connection = feedbackConnection();
+  if (!connection) throw new Error("Feedback database is not configured.");
+  installDatabaseTransferCounter();
+  let db = databases.get(connection);
+  if (!db) { db = drizzle(neon(connection), { schema }); databases.set(connection, db); }
+  return db;
+}
+
+/** Author/Admin read: site is origin, never a reader identifier or referrer. */
+export async function readFeedback(input: { readonly since: string; readonly site?: FeedbackSite }) {
+  if (!Number.isFinite(Date.parse(input.since))) throw new Error("Feedback since date is invalid.");
+  if (input.site !== undefined && input.site !== "live" && input.site !== "tester") throw new Error("Feedback site is invalid.");
+  return feedbackDb().select({
+    id: feedback.id, receivedAt: feedback.receivedAt, message: feedback.message,
+    surface: feedback.surface, site: feedback.site, runClass: feedback.runClass,
+    runId: feedback.runId, suspectReason: feedback.suspectReason,
+    replyAddress: feedbackContact.address,
+  }).from(feedback).leftJoin(feedbackContact, eq(feedback.contactRef, feedbackContact.contactRef))
+    .where(and(gt(feedback.receivedAt, input.since), input.site ? eq(feedback.site, input.site) : undefined))
+    .orderBy(desc(feedback.receivedAt), desc(feedback.id));
+}
 
 export type FeedbackWriteResult =
   /** It is in the store. The only outcome a reader may be thanked for. */
@@ -126,7 +161,7 @@ export async function writeFeedback(
 
   const marker = submission.marker ?? ORGANIC;
 
-  if (!process.env.DATABASE_URL) return { kind: "NO_STORE" };
+  if (!feedbackConnection()) return { kind: "NO_STORE" };
 
   // Ordered after the DATABASE_URL check for the same reason as the search
   // log's: "there is no database" is ordinary, "there is a production
@@ -149,16 +184,17 @@ export async function writeFeedback(
      * write path).
      */
     if (contactRef && replyTo) {
-      await getDb()
+      await feedbackDb()
         .insert(feedbackContact)
         .values({ contactRef, address: replyTo, receivedAt });
     }
-    await getDb()
+    await feedbackDb()
       .insert(feedback)
       .values({
         receivedAt,
         message,
         surface: submission.surface,
+        site: process.env.WTP_SITE === "tester" ? "tester" : "live",
         contactRef,
         runClass: marker.runClass,
         runId: marker.runClass === "ORGANIC" ? null : marker.runId,

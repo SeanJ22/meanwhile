@@ -1,5 +1,6 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
+import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
@@ -897,6 +898,7 @@ export async function createPgRepositories(
         "RULING 220 separates on purpose.",
     );
   }
+  installDatabaseTransferCounter();
   const sql = neon(connectionString);
   const bounds: ControlPlaneRequestBounds = { ...CONTROL_PLANE_REQUEST_BOUNDS_MS, ...options.requestBounds };
   for (const [callClass, ms] of Object.entries(bounds)) {

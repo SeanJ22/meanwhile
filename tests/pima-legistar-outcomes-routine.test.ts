@@ -27,6 +27,7 @@ import {
   successfulRoutineRunnerReceiptIssue,
 } from "../lib/civic-data/runner-receipt.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { latestUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import { readOutcomeProjection, resetOutcomeSnapshotCache } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
@@ -446,8 +447,9 @@ test("an unchanged day costs one events request and ends in a validated no-chang
   assert.equal(result.tally.walked, 0);
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
-  const receipt = await store.readCandidate(verdict.candidateId);
-  assert.equal(receipt?.candidate.changeSet?.outcome, "UNCHANGED");
+  // §0/§5/§7 + Sean's S6 instruction: an unchanged pass confirms the existing version.
+  assert.equal(verdict.candidateId, pointerBefore?.versionId);
+  assert.equal(latestUnchangedConfirmation(await store.events(verdict.candidateId), verdict.candidateId)?.retrieval.retrievedAt, "2026-09-21T03:00:03.000Z");
   const pointerAfter = await store.readPromotion("MEETING_OUTCOME", SCOPE);
   assert.deepEqual(pointerAfter?.payload, pointerBefore?.payload);
   resetOutcomeSnapshotCache();

@@ -19,6 +19,8 @@ import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
 import { normalizedParserResult } from "./parser.ts";
 import type { ModelParseOutcome, modelParseReasoner } from "./model-parser.ts";
+import { auditLearningEntries } from "./audit-sampling.ts";
+import { writeFieldManual } from "../field-manual.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
   type FleetRole, type IndependentAuditContext, type ParserWorkerInput, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
 
@@ -59,6 +61,11 @@ export interface FleetRuntime {
   readonly independentContext: (input: Pick<WorkerTaskSpec, "artifactId" | "contract" | "auditScope"> & { methodVersion: number; workItemId?: string }) => Promise<IndependentAuditContext>;
   readonly methodVersion: number;
   readonly requireModelAudit?: boolean;
+  /**
+   * Whether the model's adversarial review runs on an audit (audit-sampling.ts). Absent: every audit is reviewed, as before.
+   * The deterministic audit is code and runs on every validated record either way; the review is what costs money.
+   */
+  readonly modelAuditSample?: (spec: WorkerTaskSpec) => Promise<boolean>;
   /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   readonly now?: () => string;
@@ -98,7 +105,11 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   return (await registerRouteTask(repos, task, input.now)).value;
 }
 
-export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: string): DeclaredExecutor {
+/**
+ * `modelAudit`: whether the model's adversarial review runs on this audit. The deterministic audit runs on every
+ * validated record; the model review is sampled across strata (audit-sampling.ts), on the cheapest tier.
+ */
+export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: string, modelAudit = true): DeclaredExecutor {
   const spec = task.workerTask;
   if (!spec) throw new Error("WORKER_TASK_SPEC_MISSING");
   const role = spec.role;
@@ -107,10 +118,11 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     return runtime.roleExecutor(task, holder);
   }
   const parseAssisted = usesModelParse(runtime, spec);
-  const assisted = (role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined) || parseAssisted;
+  const auditAssisted = role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined && modelAudit;
+  const assisted = auditAssisted || parseAssisted;
   const lane = assisted ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC";
-  const worker: WorkerRef = { role, provider: parseAssisted ? runtime.parseReasoner!.workerProvider : assisted ? runtime.auditReasoner!.workerProvider : "we-the-people",
-    version: parseAssisted ? runtime.parseReasoner!.workerVersion : assisted ? spec.auditEscalation ? MODEL_FOR_CLASS[spec.auditEscalation.to] : runtime.auditReasoner!.workerVersion : FLEET_IMPLEMENTATION_VERSION, instance: holder };
+  const worker: WorkerRef = { role, provider: parseAssisted ? runtime.parseReasoner!.workerProvider : auditAssisted ? runtime.auditReasoner!.workerProvider : "we-the-people",
+    version: parseAssisted ? runtime.parseReasoner!.workerVersion : auditAssisted ? spec.auditEscalation ? MODEL_FOR_CLASS[spec.auditEscalation.to] : runtime.auditReasoner!.workerVersion : FLEET_IMPLEMENTATION_VERSION, instance: holder };
   return { lane, workerFor: () => worker, run: async ({ attemptId, workItemId, routeTaskId, bound }) => {
     const started = performance.now();
     const now = runtime.now ?? (() => new Date().toISOString());
@@ -124,6 +136,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     let independent: IndependentAuditContext | undefined;
     let model: Awaited<ReturnType<NonNullable<FleetRuntime["auditReasoner"]>["review"]>> | undefined;
     let parsed: ModelParseOutcome | undefined;
+    let producerRecord: WorkerResultRecord | undefined;
     let modelRequested = false;
     try {
     if (role === "ADVERSARIAL_AUDITOR") {
@@ -132,7 +145,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       const allowed = new Set(["subjectId", "contract", "publisherSurfaces", "methodVersion", "routes", "evidence", "surfaceEvidence", "authorityEvidence", "startedFrom", "scope"]);
       if (Object.keys(independent).some(k => !allowed.has(k)) || independent.subjectId !== spec.contract.subjectId ||
           independent.methodVersion !== runtime.methodVersion || independent.startedFrom.includes("OUR_SUMMARY")) throw new Error("AUDIT_STARTING_CONTEXT_NOT_INDEPENDENT");
-      if (runtime.auditReasoner) {
+      if (runtime.auditReasoner && modelAudit) {
         requireCapability(grant, "NETWORK_PUBLIC_READ");
         modelRequested = true;
         model = await runtime.auditReasoner.review(independent, attemptId, spec.auditEscalation);
@@ -149,6 +162,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
           producer.record.workItemId !== workItemId || producer.record.result.artifactId !== spec.artifactId ||
           canonicalJson(producer.record.completion.completedTask.workerTask!.contract) !== canonicalJson(spec.contract)) throw new Error("WORKER_EXACT_CANDIDATE_BINDING_REFUSED");
       inputs.push(producer.record.id);
+      producerRecord = producer.record;
       if (role === "VALIDATOR") input = { attemptId, worker, producer: producer.attempt.worker, producerAttemptId: producer.attempt.id, evidence, contract: spec.contract, candidate: producer.record.result,
         verifiedAt: now(), authorityEvidence: spec.contract.schemaVersion === 2 ? await Promise.all([...new Set(spec.contract.verification.authorities.flatMap(a => [...a.artifactIds, ...a.authorityEvidenceArtifactIds]))].map(async id => evidenceProjection(await runtime.readEvidence(id)))) : [] };
       else {
@@ -177,6 +191,11 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
         { code: "AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE", detail: "The independent model review left an unresolved challenge; its assertions do not certify civic facts.", severity: "BLOCKING" }] } satisfies AuditorResult;
     }
     assertFleetResult(result, role, attemptId);
+    if (result.role === "ADVERSARIAL_AUDITOR") {
+      // What the audit found is written where the next agent reads it (best effort: a store hiccup must not lose the result).
+      await writeFieldManual(runtime.repos, auditLearningEntries({ result, auditResultId: `wr-${fingerprint([attemptId])}`, modelReviewed: model !== undefined,
+        contract: spec.contract, ...(producerRecord ? { parser: producerRecord } : {}), observedAt: now() }), now()).catch(() => undefined);
+    }
     const durationMs = Math.round(performance.now() - started);
     const usage = model?.usage ?? parsed?.usage ?? NULL_USAGE;
     /*
@@ -225,22 +244,24 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
       "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: permanent SOURCE_WIRING-derived meeting-partition contracts are the only standing acquisition authorities",
     );
   }
+  const modelAudit = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined
+    ? (runtime.modelAuditSample ? await runtime.modelAuditSample(task.workerTask) : true) : false;
   // Scout and model-assisted audit share the same durable spend ledger. Hold
   // admission through completion so concurrent calls cannot spend one allowance.
-  if (((task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner) || (task.workerTask && usesModelParse(runtime, task.workerTask))) &&
-      !runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) {
-    return runtime.repos.locks.withLock("autonomous-model-admission", () => dispatchAdmittedWorkerTask(runtime, task));
+  if ((modelAudit || (task.workerTask && usesModelParse(runtime, task.workerTask))) &&
+      task.workerTask && !runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) {
+    return runtime.repos.locks.withLock("autonomous-model-admission", () => dispatchAdmittedWorkerTask(runtime, task, modelAudit));
   }
-  return dispatchAdmittedWorkerTask(runtime, task);
+  return dispatchAdmittedWorkerTask(runtime, task, modelAudit);
 }
 
-async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask): Promise<DispatchResult> {
+async function dispatchAdmittedWorkerTask(runtime: FleetRuntime, task: RouteTask, modelAudit: boolean): Promise<DispatchResult> {
   task = (await runtime.repos.routeTasks.mustRead(task.id)).value;
   if (!task.workerTask) throw new Error("WORKER_TASK_SPEC_MISSING");
   if (!["PENDING", "RECLAIMABLE"].includes(task.state)) throw new Error("WORKER_TASK_NOT_DISPATCHABLE");
   const now = (runtime.now ?? (() => new Date().toISOString()))();
   const holder = `fleet:${task.workerTask.role}:${randomUUID()}`;
-  const executor = fleetExecutor(runtime, task, holder);
+  const executor = fleetExecutor(runtime, task, holder, modelAudit);
   const obligation: ScheduledObligation = { obligation: { id: task.id, recordClass: task.workerTask.contract.recordClass,
     subjectId: task.workerTask.contract.subjectId, routeId: task.routeId, active: true, readerImpactAt: null,
     observedChangeRateHours: null, lastWorkedAt: null }, nextDueAt: task.createdAt, cadenceHours: 24,

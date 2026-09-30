@@ -49,6 +49,12 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.review.contextHash, contentHash(String(request?.messages[0].content)));
 });
 
+test("the provider's dated alias of the requested model is the same model, not an identity mismatch", async () => {
+  const reviewed = await run(response({ verdict: "SURVIVED", challenges: [] }, { model: `${MODEL}-20251001` }));
+  assert.equal(reviewed.review.verdict, "SURVIVED");
+  assert.ok(!reviewed.review.validationError);
+});
+
 test("cheaper-first audit uses auto tool choice and a strict schema compatible with the later Opus escalation", async () => {
   let request: ModelRequest | undefined;
   const transport: ModelTransport = async (value) => { request = value; return response({ verdict: "SURVIVED", challenges: [] }); };

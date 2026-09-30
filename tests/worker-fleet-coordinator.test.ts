@@ -4,7 +4,7 @@ import { autonomousHarness, FIXTURE_NOW, FIXTURE_URL } from "./helpers/autonomou
 import { nextAutonomousOperation, runAutonomousCoordinator, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
 import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/workers/runtime.ts";
 import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
-import { validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
+import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION, validateScoutFinishWithCandidates, type ScoutResult, type ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -188,6 +188,49 @@ test("completed Scout without a candidate continues after canonical backoff with
   assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED","Repeated completed searches retain the existing doubled backoff.");
   h.advanceTo(new Date(Date.parse(secondAttempt.endedAt!)+2*FIRST_BACKOFF_MINUTES*60_000).toISOString());
   assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"SCOUT");
+});
+
+test("a brokered sibling capture admits one old-protocol Scout continuation before backoff, without repeating it", async () => {
+  const h = await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});
+  const heldId = (await h.repos.artifacts.readAll())[0]!.artifactId;
+  let walks = 0;
+  const runtime: AutonomousCoordinatorRuntime = {...h.runtime, scoutFor:(item,task)=>({
+    lane:"BOUNDED_MODEL_WORKER", workerFor:({holder})=>({role:"SCOUT",provider:"offline-fixture",version:"1",instance:holder}),
+    run:async({attemptId})=>{
+      walks++;
+      const at = h.now();
+      const attempt = (await h.repos.attempts.mustRead(attemptId)).value;
+      const result: ScoutResult = {formatVersion:1,attemptId,obligationId:task.id,routeTaskId:task.id,
+        workItemId:item.id,subjectId:item.subject,routeId:task.routeId,recordClass:"OFFICIAL_ROSTER",providerId:null,
+        reason:"Offline legacy held-protocol fixture",outcome:"BLOCKED",stoppedBy:"BOUND",rungs:[],distinctEvidenceRungs:0,
+        candidates:[],findings:[],nextRungs:["read handed saved representation"],unverified:["Source remains unresolved"],
+        narrative:"No civic facts established.",worker:{provider:"offline-fixture",model:"none",modelReported:null},
+        usage:{inputTokens:0,outputTokens:0,cacheReadInputTokens:0,cacheCreationInputTokens:0,turns:0,toolCalls:0},
+        usd:0,elapsedMs:0,artifactIds:[],methodCandidateIds:[],refusal:null,startedAt:attempt.startedAt,recordedAt:at,
+        ...(walks > 1 ? {recoveryCapabilityVersion:SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION} : {})};
+      await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,at);
+      return {kind:"DISPOSED",ranAs:"BOUNDED_MODEL_WORKER",endedAt:at,cost:ZERO_COST,artifacts:[],
+        disposition:{disposition:"BLOCKED_CURRENTLY",observation:null,permission:"ALLOWED",transport:"OTHER_NAMED_FAILURE",
+          note:"Offline fixture keeps the obligation open."},detail:result.narrative};
+    },
+  })};
+  const first = await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1});
+  assert.equal(first.dispatches[0]?.outcome,"WORKED");
+  assert.equal((await nextAutonomousOperation(runtime,h.item.id)).action,"BLOCKED",
+    "a sibling's capture must not bypass backoff unless the standing broker handed it to this root");
+  const brokered: AutonomousCoordinatorRuntime = {...runtime,lifetimeHuntSubject:subject=>subject===h.item.subject,
+    authorizedSiblingHeldArtifactIdsFor:item=>
+    item.id===h.item.id ? [heldId] : []};
+  const next = await nextAutonomousOperation(brokered,h.item.id);
+  assert.equal(next.action,"SCOUT");
+  assert.match(next.task!.routeId,/:continue:/);
+  assert.equal((await nextAutonomousOperation(brokered,h.item.id)).task?.id,next.task?.id,
+    "the same continuation is reused durably");
+  const second = await runAutonomousCoordinator(brokered,{maximum:1,concurrency:1});
+  assert.equal(second.dispatches[0]?.routeTaskId,next.task?.id);
+  assert.equal(walks,2);
+  assert.equal((await nextAutonomousOperation(brokered,h.item.id)).action,"BLOCKED",
+    "after a new-protocol Scout has run, ordinary debt applies to further investigation");
 });
 
 test("shared model admission contention defers Scout without an Attempt and releases for a later cycle",async()=>{

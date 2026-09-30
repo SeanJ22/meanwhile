@@ -31,6 +31,9 @@ const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", 
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
   /** Existing Scout executor, configured with this canonical WorkItem and its inherited history. */
   readonly scoutFor?: (item: WorkItem, task: RouteTask, history?: readonly ScoutResult[]) => DeclaredExecutor;
+  /** Only the standing lineage broker may hand complete, attributed sibling captures to this root.
+   * Keep the scheduling recovery gate in sync with the Scout's actual inherited artifact IDs. */
+  readonly authorizedSiblingHeldArtifactIdsFor?: (item: WorkItem) => readonly string[];
 }
 export interface AutonomousDecision {
   readonly workItemId: string;
@@ -217,7 +220,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       .sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
     const retained = (item as WorkItem & { readonly planRepair?: { readonly retainedEvidenceIds?: readonly string[]; readonly sourceArtifactId?: string } }).planRepair;
     const handedHeldIds = [...new Set([...scoutHistory.flatMap(result => result.artifactIds),
-      ...(retained?.retainedEvidenceIds ?? []), ...(retained?.sourceArtifactId ? [retained.sourceArtifactId] : [])])];
+      ...(retained?.retainedEvidenceIds ?? []), ...(retained?.sourceArtifactId ? [retained.sourceArtifactId] : []),
+      ...(runtime.authorizedSiblingHeldArtifactIdsFor?.(item) ?? [])])];
     let recoveryTaskId: string | null = null;
     let latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {

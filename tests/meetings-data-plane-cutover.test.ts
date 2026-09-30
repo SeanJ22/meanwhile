@@ -238,8 +238,8 @@ test("meetings promotion fails closed without per-child bytes or on an untrusted
   };
   const refused = await promoteMeetingPartition(new MemoryRoutineDataStore(), partition, redirected);
   assert.equal(refused.outcome.promoted, null);
-  assert.equal(refused.outcome.candidate.failureCode, "FINAL_HOST_NOT_AUTHORIZED");
-  assert.match(refused.outcome.candidate.failureDetail ?? "", /does not inherit authority/);
+  assert.equal(refused.outcome.candidate.failureCode, "FINAL_ROUTE_NOT_REGISTERED");
+  assert.match(refused.outcome.candidate.failureDetail ?? "", /outside .* registered publication routes/);
 
   const first = candidateForMeetingPartition(partition, evidenced);
   const changedBytes = {

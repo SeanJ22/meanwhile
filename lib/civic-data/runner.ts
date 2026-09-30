@@ -75,7 +75,7 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
         const registered = sourceAuthority(contract.sourceId);
         return registered !== null && registered.derivedPromotion !== undefined &&
             (registered.recordClasses as readonly RoutineRecordClass[]).includes(contract.recordClass) &&
-            registered.routePrefixes.length === 0 && registered.allowedFinalHosts.length === 0
+            registered.routePrefixes.length === 0
           ? { ok: true as const, contract: registered }
           : { ok: false as const, code: "DERIVED_AUTHORITY_INVALID" };
       })()

@@ -96,11 +96,6 @@ function check(name: VerificationCheckName, failures: readonly string[], measure
     : { name, result: "FAIL", detail: `${FACT_VERIFICATION_VERSION}: ${failures.join("; ")}` };
 }
 
-function hostOf(url: string | null): string | null {
-  if (url === null) return null;
-  try { return new URL(url).hostname.toLowerCase(); } catch { return null; }
-}
-
 function zoneIsKnown(zone: string): boolean {
   try { new Intl.DateTimeFormat("en-US", { timeZone: zone }); return true; } catch { return false; }
 }
@@ -189,12 +184,9 @@ function assertionClassBurdens(input: FactVerificationInput, row: Record<string,
   if (m.venueGap && (m.location !== null || m.online)) failures.push("a venue gap alongside a location or an online block; the three must agree");
   if (m.location !== null && m.online) failures.push("both a location and an online block; the two must agree");
   if (m.location !== null && (!Number.isFinite(m.location.lat) || !Number.isFinite(m.location.lng) || !m.location.name)) failures.push("a placed meeting without coordinates or a venue name");
+  // The capture's route authority is where "the right place" is decided (§3);
+  // the record's own link only has to exist.
   if (m.provenance.sourceUrl === null) failures.push("no source URL on the record");
-  const sourceHost = hostOf(m.provenance.sourceUrl);
-  const publisherHosts = fact.source.sourceId === "legistar"
-    ? [`${fact.source.publisherSlug}.legistar.com`]
-    : [`${fact.source.publisherSlug}.portal.civicclerk.com`];
-  if (sourceHost !== null && !publisherHosts.includes(sourceHost)) failures.push(`source URL host ${sourceHost} is not the publisher's (${publisherHosts.join(", ")})`);
   if (!m.provenance.sourceOrg.trim()) failures.push("no publishing organisation on the record");
   if (m.provenance.collectedAt !== fact.source.acquiredAt) failures.push(`collectedAt ${m.provenance.collectedAt} is not the acquisition ${fact.source.acquiredAt}`);
   if (m.provenance.verifiedAt !== null) failures.push("verifiedAt is set by a machine bridge; no human or check confirmed this record");

@@ -251,7 +251,7 @@ test("PDC-8 meetings: changed rows promote with exact added/changed/removed/held
     id: `${next.id}-unauthorized-final-host`,
     retrieval: { ...next.retrieval, finalUrl: "https://untrusted.example/meetings" },
   };
-  await assertRefusalHoldsExactLkg({ store, bad, expectedState: "SOURCE_BLOCKED", expectedCode: "FINAL_HOST_NOT_AUTHORIZED" });
+  await assertRefusalHoldsExactLkg({ store, bad, expectedState: "SOURCE_BLOCKED", expectedCode: "FINAL_ROUTE_NOT_REGISTERED" });
 });
 
 test("PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG", async () => {

@@ -115,8 +115,6 @@ export interface SourceAuthorityContract {
   readonly trust: SourceTrustClass;
   readonly sourceClass: "FEDERAL_AGENCY" | "FEDERAL_LEGISLATURE" | "STATE_LEGISLATURE" | "OFFICIAL_PLATFORM" | "MULTI_PUBLISHER_PRIMARY" | "INTERMEDIARY";
   readonly routePrefixes: readonly string[];
-  /** Redirect/final hosts. Authority inheritance is explicit, never `.gov`-wide. */
-  readonly allowedFinalHosts: readonly string[];
   readonly jurisdictions: readonly string[];
   readonly recordClasses: readonly RoutineRecordClass[];
   readonly competentFacts: readonly string[];

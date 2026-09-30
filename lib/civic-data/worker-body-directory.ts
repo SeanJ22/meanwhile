@@ -91,12 +91,14 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
       const primaryDivision = prior?.ocdId ?? territoryIds[0];
       const id = prior?.id ?? subBodyId(primaryDivision, String(f.bodyName));
       requirePublication(!bodies.some(body => body.id === id), "DIRECTORY_DUPLICATE_BODY");
-      bodies.push({ ...(prior ?? { id, ocdId: primaryDivision, coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE",
-        agendaSourceRef: null, meetingCadence: null, demandCount: 0 }), name: String(f.bodyName), bodyClass: classification,
+      // The directory page's own statement of the schedule: its source is the body's provenance below, so an
+      // earlier separate schedule source leaves the row (never as an undefined key, which the door hashes).
+      const { meetingCadenceSource: _earlierSource, ...base } = prior ?? { id, ocdId: primaryDivision, coverageStatus: "NOT_ATTEMPTED" as const, agendaSourceType: "NONE" as const,
+        agendaSourceRef: null, meetingCadence: null, demandCount: 0 };
+      bodies.push({ ...(typeof f.meetingCadence === "string" ? base : prior ?? base), name: String(f.bodyName), bodyClass: classification,
         alsoServesOcdIds: territoryIds.filter(id => id !== primaryDivision),
         homepageUrl: url?.href ?? prior?.homepageUrl ?? null, bodyOrigin: "SOURCED", sourceDataset: "GOV_DIRECTORY",
-        // The directory page's own statement of the schedule; its source is the body's provenance below.
-        ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence, meetingCadenceSource: undefined } : {}),
+        ...(typeof f.meetingCadence === "string" ? { meetingCadence: f.meetingCadence } : {}),
         provenance: { sourceUrl: (checked.sourceOf?.get(record.id) ?? checked.primary).evidence.canonicalUrl, sourceOrg: checked.contract.sourceScope.publisher,
           collectedAt: (checked.sourceOf?.get(record.id) ?? checked.primary).observedAt, verifiedAt: input.now } });
     } catch (error) {

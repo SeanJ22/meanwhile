@@ -219,6 +219,35 @@ function Agents() {
   );
 }
 
+/**
+ * **HOW RELIABLE OUR SOURCES ARE.** Each source's record from the workers' completed reads, with the next retry time the
+ * dispatcher itself will use. A source failing is usually the source's doing: it shows here as reliability, and is not
+ * a separate problem to investigate each time.
+ */
+function Reliability() {
+  const v = useV6();
+  const src = v.data.reliability;
+  const rows = src.data ?? [];
+  const { page, pager } = usePager(rows, 8);
+  const failing = rows.filter((r) => r.state === "failing").length;
+  return (
+    <Card title="How reliable our sources are" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources · ${count(failing)} failing now` : "Reading…"}</span>}>
+      <SourceNote source={src} what="Source reliability" />
+      {src.data && !rows.length && <Empty>No source has been read yet.</Empty>}
+      <div className={s.stack}>
+        {page.map((r) => (
+          <div key={r.source} className={s.row}>
+            <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.source.replace(/^https?:\/\//, "")}</strong><Pill tone={r.state === "failing" ? "warn" : r.state === "recovering" ? "gold" : "good"}>{r.state === "failing" ? `${r.consecutiveFailures} failed in a row` : r.state === "recovering" ? "Recovered" : "Healthy"}</Pill></div>
+            <span className={s.meta}>{count(r.successes)} worked · {count(r.failures)} failed · last try {mst(r.lastAttemptAt)}{r.retryAt ? ` · next try ${mst(r.retryAt)}` : ""}</span>
+            {r.state === "failing" && <span className={s.small}>{r.detail || "No reason recorded."}</span>}
+          </div>
+        ))}
+      </div>
+      {pager}
+    </Card>
+  );
+}
+
 /* ---------------------------------------------------------------- screen */
 
 export function WorkersScreen() {
@@ -300,6 +329,8 @@ export function WorkersScreen() {
       {!!st?.unread.length && <p className={cx(s.p, s.meta)}>Not read this time: {st.unread.join("; ")}. Other readings continue to update.</p>}
 
       <Agents />
+
+      <Reliability />
 
       <Card title="Working now, by stage" aside={jobs ? <span className={s.meta}>{jobs.length} jobs working at the same time across {huntsOrAreas} hunts or shared areas</span> : totals ? <WholeSystem place={v.place.name} isCountry={isCountry} /> : undefined}>
         {!jobs && sample && <SourceNote source={src} />}

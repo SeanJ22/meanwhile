@@ -453,6 +453,20 @@ export interface MoneyView {
   readonly otherServices: string;
 }
 
+/* ------------------------------------------------------------ reliability */
+
+/** One source's record from the workers' own results (server: v6-reliability-read.ts, the dispatcher's own reducer). */
+export interface SourceReliabilityRow {
+  readonly source: string;
+  readonly state: "failing" | "recovering" | "healthy";
+  readonly successes: number;
+  readonly failures: number;
+  readonly consecutiveFailures: number;
+  readonly lastAttemptAt: string;
+  readonly retryAt: string | null;
+  readonly detail: string;
+}
+
 /* ----------------------------------------------------------------- sends */
 
 /** An instruction the owner sent the fleet with "Deploy fleet here", and where it stands (server: v6-sends-read.ts). */
@@ -665,6 +679,7 @@ export interface AdminV6Data {
   readonly agents: Sourced<readonly AgentRun[]>;
   readonly spend: Sourced<SpendView>;
   readonly sends: Sourced<readonly SentInstruction[]>;
+  readonly reliability: Sourced<readonly SourceReliabilityRow[]>;
   readonly money: Sourced<MoneyView>;
   readonly learning: Sourced<LearningView>;
   readonly fixes: Sourced<FixView>;

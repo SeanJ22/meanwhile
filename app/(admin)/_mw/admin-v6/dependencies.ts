@@ -69,6 +69,11 @@ export const SECTION_DEP = {
     owner: "S12 (admin-view)",
     need: "The instructions sent to the fleet, where each stands, and whether the runner has recorded a cancel.",
   },
+  reliability: {
+    id: "DEP-SOURCE-RELIABILITY",
+    owner: "S12 (admin-view), S8 (reducer)",
+    need: "Each source's successes, failures, failures in a row and next retry, from the workers' completed reads.",
+  },
   workerVersion: {
     id: "DEP-WORKER-VERSION",
     owner: "Codex (runner adoption)",

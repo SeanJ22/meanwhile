@@ -519,6 +519,7 @@ export function buildSampleData(w: SampleWorld, defs: readonly Definition[], pro
     workRows: sample({ rows: sampleRows(), totals: [{ stage: "waiting", total: 932 }, { stage: "stuck", total: 78 }, { stage: "retrying", total: 731 }, { stage: "done", total: 1069 }, { stage: "retired", total: 591 }] }, SECTION_DEP.work, SAMPLE_AS_OF),
     agents: sample([], SECTION_DEP.agents, SAMPLE_AS_OF),
     sends: sample([], SECTION_DEP.sends, SAMPLE_AS_OF),
+    reliability: sample([], SECTION_DEP.reliability, SAMPLE_AS_OF),
     spend: { state: "not-connected", load: "ready", data: null, asOf: null, dependency: SECTION_DEP.spend },
     history: sample(sampleHistory(), SECTION_DEP.history, SAMPLE_AS_OF),
     workers: sample({

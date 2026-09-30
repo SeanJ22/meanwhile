@@ -463,7 +463,7 @@ test("PASS: every walk is appended under its jurisdiction; a need not yet due is
       need("az:d:no-site", null, "NO_MEETINGS_SOURCE_RECORDED"),
     ];
     const earlier = await walkMeetingsDiscoveryNeed(need("az:c:not-due", "notdue.gov"), runtime(fakeOpen({}).open, {
-      now: () => "2026-09-23T00:00:00.000Z",
+      now: () => "2026-09-24T00:00:00.000Z",
     }));
     await repos.discoveryAttempts.append("az:c:not-due", earlier.attemptId, { ...earlier, recheckAfter: "2026-10-01T00:00:00.000Z" }, earlier.finishedAt);
 
@@ -854,5 +854,12 @@ test("A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out 
     assert.deepEqual(pass.walked.map((a) => a.jurisdictionId), ["az:a:found"], `${label}: the find without provenance is due again`);
     const again = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
     assert.deepEqual(again.notDue, ["az:a:found"], `${label}: once it carries provenance it waits for its recheck`);
+    const latest = pass.walked[0];
+    await repos.discoveryAttempts.append(latest.jurisdictionId, `${latest.attemptId}-legacy`,
+      { ...latest, recheckAfter: "2026-12-24T01:00:00.000Z" }, latest.finishedAt);
+    const next = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")],
+      runtime: runtime(open, { now: () => "2026-09-24T14:00:00.000Z" }), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(next.walked.map(attempt => attempt.jurisdictionId), [latest.jurisdictionId],
+      `${label}: an old ninety-day hold cannot hide new calendars beyond the twice-daily cadence`);
   }
 });

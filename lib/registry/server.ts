@@ -1,4 +1,5 @@
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import type { Meeting } from "../sources/types.ts";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -932,6 +933,7 @@ export async function coverageAt(
    * written into the data as an absence.
    */
   resolvedDivisions?: Division[],
+  heldMeetings: readonly Meeting[] = [],
 ): Promise<CoverageSummary> {
   // Optional metadata starts beside the existing coverage read. Edge-only
   // requests never open a new database path just to annotate a body card.
@@ -958,6 +960,7 @@ export async function coverageAt(
     exactDivisions,
     territory,
     stateLegislators.authorities,
+    heldMeetings,
   );
   const publicAttempts = await attemptRead;
   const latestAttempt = new Map<string, PublicBodyAttempt>();

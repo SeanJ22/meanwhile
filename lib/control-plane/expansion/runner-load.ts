@@ -48,6 +48,7 @@ import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 import { declaredWorkMembers, type ScopedStandingWork } from "./declared-work-scope.ts";
 import { addCensusSchoolShares, withCensusSchoolTerritories } from "./census-scope-observations.ts";
 import dependentSchools from "./reference/census-dependent-school-territories.json" with { type: "json" };
+import { readFieldManual, type FieldManualRead } from "../field-manual.ts";
 
 /** Where the committed Census unit territories live, relative to the repository root. */
 export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
@@ -228,6 +229,8 @@ export async function resolveScopes(
 type LookupState = { readonly lookup: CensusGeographyLookup; readonly source: PublishedLookupSource; readonly versionId: string };
 
 export interface ExpansionLoad {
+  /** Inherited sources, methods and dead ends, read before geography or dispatch. */
+  readonly knowledge?: FieldManualRead;
   /** Null when no scope is selected and nothing on the policy row is unreadable: the cycle runs exactly as before. */
   readonly plan: ExpansionPlan | null;
   /** Named runtime conditions for the research state. Empty when nothing went wrong. */
@@ -297,6 +300,8 @@ export async function loadExpansionPlan(input: {
     );
   }
   if (decisions.length === 0 && malformed === 0) return { plan: null, conditions };
+  const knowledge = await readFieldManual(input.repos);
+  if (knowledge.error) conditions.push(`Shared knowledge could not be read: ${knowledge.error}`);
   if (malformed > 0 && conditions.length === 0) {
     conditions.push(`${malformed} entr${malformed === 1 ? "y" : "ies"} on the owner's expansion scope list could not be read; paid Scout work is held this cycle`);
   }
@@ -342,6 +347,7 @@ export async function loadExpansionPlan(input: {
     catch (error) { malformed += 1; conditions.push(`Shared-work scope attribution failed; paid work is held: ${error instanceof Error ? error.message : String(error)}`); }
   }
   return {
+    knowledge,
     plan: planExpansion({
       declaredMembers,
       now: input.now,

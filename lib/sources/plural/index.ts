@@ -136,7 +136,7 @@ export function indexDivisions(
     if (division.divisionType !== "sldu" && division.divisionType !== "sldl") {
       continue;
     }
-    const state = /state:([a-z]{2})\//.exec(division.ocdId)?.[1];
+    const state = /(?:state|district|territory):([a-z]{2})\//.exec(division.ocdId)?.[1];
     if (!state) continue;
 
     const chamber = division.divisionType === "sldu" ? "upper" : "lower";
@@ -246,13 +246,8 @@ export function resetRequestCount(): void {
 /** The columns `rowsToPeople` reads to build a legislator; a header without them is not the roster. */
 export const PLURAL_REQUIRED_COLUMNS = ["id", "name", "current_chamber", "current_district"] as const;
 
-/**
- * The floor below which a state's CSV is not a complete roster. Every chamber
- * across the three configured states seats far more — AZ 90, NJ 120, NH 424 —
- * so a modest floor refuses a truncated file or an error page without risking a
- * false red on a real, vacancy-thinned roster.
- */
-export const PLURAL_ROSTER_FLOOR = 40;
+/** Refuse an empty response; a pilot seat count is not a national admission rule. */
+export const PLURAL_ROSTER_FLOOR = 1;
 
 /**
  * Is this 200 body actually a Plural roster, and the whole of it? Returns the

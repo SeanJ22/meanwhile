@@ -130,7 +130,7 @@ export function bodySourceWiringFor(row: DerivedWiringRow): BodySourceWiring {
     bodyId: row.bodyId,
     ocdId: row.ocdId as BodySourceWiring["ocdId"],
     agendaSourceType: row.kind,
-    jurisdiction: row.jurisdictionId,
+    jurisdiction: row.publishingOrg,
     publishingOrg: row.publishingOrg,
     timeZone: row.timeZone,
     config: { ...row.config },

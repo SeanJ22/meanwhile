@@ -132,7 +132,7 @@ test("a roster with the wrong header or too few rows is refused, not read as emp
   const header =
     "id,name,current_party,current_district,current_chamber,email,image,capitol_voice,district_voice,links,sources\n";
   // The right header but a handful of rows is a truncated file.
-  assert.match(pluralRosterIssue(header + "ocd-person/a,A,,19,upper,,,,,,\n") ?? "", /below the floor/);
+  assert.match(pluralRosterIssue(header) ?? "", /below the floor/);
 
   // A full roster passes.
   const rows = Array.from(

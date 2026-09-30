@@ -36,8 +36,8 @@
  * 3. the calendar's bytes and the naming page's bytes are held in the vault,
  *    cited by their sha256;
  * 4. the state's registration pairs the government with a body;
- * 5. a page of the government's own host the walk saved prints the body's name,
- *    and that page is not the calendar itself. When no title names the
+ * 5. a saved official document prints the body's name; the attested calendar
+ *    itself counts under rulings §3. When no title names the
  *    governing body, a CivicPlus category feed whose own site files it under
  *    exactly that body's name (the vaulted iCalendar index that linked it,
  *    re-read here) names it instead, and the whole feed is its
@@ -775,7 +775,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       }
     }
 
-    /* The pages that may name a body: saved, read (2xx) with robots.txt read first, on the calendar's own host, never the calendar itself. */
+    /* Prefer a separate saved naming page when available; the official calendar can supply the same fact itself. */
     const pageOrder = [find.via?.page ?? null, homepage?.url ?? null];
     const pages = steps
       .filter((s) => (s.purpose === "homepage" || s.purpose === "endpoint") && readOk(s) && s.artifactId !== null && !sameRoute(s.url, route))
@@ -886,13 +886,20 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         continue;
       }
       /* A category feed's naming page is the index that files the feed under the body's name, and no other. */
-      const printed = proposal.scope !== undefined ? printedOn(proposal.spellings, [proposal.scope.page]) : printedOn(proposal.category !== null ? [proposal.category, ...proposal.spellings] : proposal.spellings);
+      const names = proposal.category !== null ? [proposal.category, ...proposal.spellings] : proposal.spellings;
+      const printed = proposal.scope !== undefined ? printedOn(proposal.spellings, [proposal.scope.page])
+        : printedOn(names) ?? printedOn(names, [calendarStep]);
       if (printed === null) {
         const eventPage = selection.selected.map((e) => e.url).find((u) => u !== null && httpsHost(u) !== null && bare(httpsHost(u)!) === bare(routeHost));
         hold(route, "NAME_NOT_PRINTED_ON_OWN_PAGE", `no page of ${routeHost} the walk saved prints "${shown}"${eventPage ? `; the event page ${eventPage} may` : ""}`, shown);
         continue;
       }
-      const bodyId = proposal.role === "SUB_BODY" ? subBodyId(registered.ocdId, printed.bodyName) : proposal.bodyId;
+      // The jurisdiction already owns the prefix. Keep the body's exact
+      // printed suffix so "County Board of Adjustment" and "Board of
+      // Adjustment" in that county do not create two identities.
+      const nameAt = proposal.role === "SUB_BODY" ? wordAt(printed.bodyName, proposal.key) : -1;
+      const bodyName = nameAt < 0 ? printed.bodyName : printed.bodyName.slice(nameAt);
+      const bodyId = proposal.role === "SUB_BODY" ? subBodyId(registered.ocdId, bodyName) : proposal.bodyId;
       if (input.handWired(bodyId)) {
         hold(route, "ALREADY_WIRED", `a hand-wired route serves ${bodyId}`, printed.bodyName, bodyId);
         continue;
@@ -909,7 +916,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         ocdId: registered.ocdId,
         bodyId,
         bodyRole: proposal.role,
-        bodyName: printed.bodyName,
+        bodyName,
         kind,
         route,
         officialHost: routeHost,

@@ -51,7 +51,7 @@ function shape(value: unknown): RecordExtractionShape {
 function unmappedShape(value: unknown): (RecordExtractionShape & { readonly format: "UNSUPPORTED" }) | null {
   if (!value || typeof value !== "object" || Array.isArray(value) || (value as { format?: unknown }).format !== "UNSUPPORTED") return null;
   const mediaType = (value as { mediaType?: unknown }).mediaType;
-  return { format: "UNSUPPORTED", fields: {}, mediaType: typeof mediaType === "string" && /^[w.+/-]{1,100}$/.test(mediaType) ? mediaType : "unobserved",
+  return { format: "UNSUPPORTED", fields: {}, mediaType: typeof mediaType === "string" && /^[\w.+/-]{1,100}$/.test(mediaType) ? mediaType : "unobserved",
     reason: "Bound to the captured source. No parsing rule exists for this record type, so a model pulls the fields with exact quotes and code confirms each quote is in the saved document." };
 }
 

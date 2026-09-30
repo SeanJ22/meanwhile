@@ -404,6 +404,18 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "build never writes the new receipt, and the build that does refuses safely without it " +
       "(STORE_REFUSED, then promotes as before). Apply BEFORE the deploy that records it.",
   },
+  "0030_database_transfer_daily": {
+    phase: "expand",
+    why: "Creates daily database byte aggregates. Existing readers and writers are unaffected by the new table.",
+  },
+  "0031_civic_payload_parts": {
+    phase: "expand",
+    why: "Creates immutable civic payload parts. The new store requires it; the old store keeps reading inline payloads.",
+  },
+  "0032_feedback_site": {
+    phase: "expand",
+    why: "Adds feedback.site with a live default, so existing feedback inserts that omit it still work.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

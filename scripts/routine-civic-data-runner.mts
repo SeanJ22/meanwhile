@@ -140,7 +140,7 @@ installFatalLine("routine-civic-data-runner", () => step);
 const ROOT = process.cwd();
 const FORCE = process.argv.includes("--force");
 const STANDING_SOURCE_TASKS = [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS];
-const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), STANDING_SOURCE_TASKS);
+const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
 const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inheritedStartedAt)) &&

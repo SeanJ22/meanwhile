@@ -6,6 +6,7 @@ import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-da
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
+import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
 import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
@@ -1075,7 +1076,12 @@ test("--only selection refuses typos and empty tokens before store access", () =
   });
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2), STANDING_SOURCE_TASKS)");
+  const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))])");
+  const publication = routineTaskSelection(["--only=registry-runtime-bindings"], [
+    ...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id })),
+  ]);
+  assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
+  if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");
   const writeHandle = runner.indexOf("resolveProductionWriteHandle()");

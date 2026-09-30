@@ -58,6 +58,7 @@ export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
   "runner.resume",
   "runner.runCycleNow",
   "research.pause",
+  "research.resume",
   "fleet.deployHere",
 ]);
 
@@ -77,6 +78,7 @@ const APPLIED_WORDS: Readonly<Record<string, string>> = {
   "runner.resume": "Resumed. The runner confirmed it and is starting its next round.",
   "runner.runCycleNow": "Started. The runner confirmed it and began a round.",
   "research.pause": "Paid research is paused. The runner confirmed it; no new paid work starts.",
+  "research.resume": "Paid research may run again. The runner confirmed it.",
   "fleet.deployHere": "Sent. The runner read it and put that work first.",
   "expansion.scope.set": "The runner has read it and is working on it.",
   "expansion.scope.setMany": "The runner has read the list and is creating the work for each place.",
@@ -91,6 +93,7 @@ const WAITING_WORDS: Readonly<Record<string, string>> = {
   "runner.resume": "Saved. Waiting for the runner to confirm it is running again.",
   "runner.runCycleNow": "Saved. Waiting for the runner to start the round.",
   "research.pause": "Saved. Waiting for the next round to close the paid lane.",
+  "research.resume": "Saved. Waiting for the next round to open the paid lane.",
   "fleet.deployHere": "Saved. Waiting for the runner to read it.",
   "expansion.scope.set": "Saved. Waiting for the runner to read it.",
   "expansion.scope.setMany": "Saved. Waiting for the runner to read the list.",

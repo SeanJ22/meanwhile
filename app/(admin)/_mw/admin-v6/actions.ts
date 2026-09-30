@@ -440,6 +440,23 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
+    kind: "global-paid-resume",
+    label: "Resume paid research",
+    needs: "spend",
+    doneWords: "Saved. Paid research may run again from the start of the next round.",
+    preview: () => ({
+      title: "Let paid research run again everywhere",
+      level: "global",
+      rows: [
+        ["Scope", "Whole system: every hunt, every state"],
+        ["What changes", "Paid AI calls may start again, inside every hunt's limit and the Fleet ceiling."],
+        ["Won’t", "Won’t start a round immediately, raise a limit, or resume workers that are paused as a whole."],
+      ],
+    }),
+    gateway: { type: "research.resume" },
+    dependency: null,
+  },
+  {
     kind: "global-runner-pause",
     label: "Pause all workers",
     needs: "owner",

@@ -191,6 +191,7 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
     case "hunt-stop":
       return { placeKey: s.target };
     case "global-paid":
+    case "global-paid-resume":
       return {};
     case "global-runner-pause":
     case "global-runner-resume":

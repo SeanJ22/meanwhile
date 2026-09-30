@@ -249,7 +249,7 @@ function decisionIntent(input: {
 async function appendIntent(
   deps: GatewayDeps,
   context: ActionContext,
-  action: "PAUSE" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
+  action: "PAUSE" | "RESUME" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
   /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */
@@ -419,6 +419,30 @@ const REGISTRY: readonly RegisteredAction[] = [
       return appendIntent(deps, context, "PAUSE", input.note === null ? null : String(input.note), {
         says: "The paid research lane has been asked to pause. New paid work waits when the runner next reads this intent; work already in flight may finish.",
         undo: "A separate paid-research resume intent is required to resume paid work.",
+      });
+    },
+  },
+
+  /* ----------------------------------------------------- research.resume */
+  {
+    definition: {
+      type: "research.resume",
+      label: "Resume paid research",
+      does: "Records that the paid research lane may run again, on the runner's next read.",
+      doesNot: "Does not start a round immediately, raise any spending limit, or resume a runner that is paused as a whole.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "the paid research lane",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const note = validateIntentNote("RESUME", input.note);
+      return note.ok ? { ok: true, value: { note: note.note } } : bad(note.detail);
+    },
+    execute(deps, context, input) {
+      return appendIntent(deps, context, "RESUME", input.note === null ? null : String(input.note), {
+        says: "The paid research lane has been asked to run again. The next round opens the lane, inside every spending limit that still stands.",
+        undo: "Pause paid research again.",
       });
     },
   },

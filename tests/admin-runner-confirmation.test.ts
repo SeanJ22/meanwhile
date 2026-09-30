@@ -292,3 +292,16 @@ test("an intent append that timed out after landing is reported as queued, not a
   assert.equal(out.receipt.outcome, "QUEUED");
   assert.equal((await real.read(RESEARCH_INTENT_LOG_KEY)).length, 1, "exactly one intent, not two");
 });
+
+test("paid research can be paused and resumed, and each is Done only when the runner honors it", async () => {
+  const repos = createMemoryRepositories();
+  const paused = await submit(ask("research.pause", "paid-pause-key-001"), deps(repos));
+  const resumed = await submit(ask("research.resume", "paid-resume-key-01"), deps(repos));
+  assert.equal(paused.ok && resumed.ok, true, resumed.receipt.says);
+  assert.equal((await confirmReceipt(repos, resumed.receipt)).state, "waiting");
+  await runnerHonors(repos, resumed.receipt.subject, "PAUSE", "2026-09-30T18:05:00.000Z");
+  const done = await confirmReceipt(repos, resumed.receipt);
+  assert.equal(done.state, "applied");
+  assert.match(done.words, /Paid research may run again/);
+  assert.equal((await confirmReceipt(repos, paused.receipt)).state, "waiting", "the pause is a different intent and is still waiting");
+});

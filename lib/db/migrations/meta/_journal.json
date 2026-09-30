@@ -225,6 +225,13 @@
       "when": 1790798400000,
       "tag": "0031_civic_payload_parts",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1790798400001,
+      "tag": "0032_feedback_site",
+      "breakpoints": true
     }
   ]
 }

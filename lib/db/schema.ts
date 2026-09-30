@@ -671,6 +671,7 @@ export const feedback = pgTable(
   "feedback",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    site: text("site", { enum: ["live", "tester"] }).notNull().default("live"),
     receivedAt: timestamp("received_at", { withTimezone: true, mode: "string" }).notNull(),
     /** What the reader wrote, scrubbed (T09). Capped at the route. */
     message: text("message").notNull(),

@@ -97,3 +97,34 @@ test("an official page whose text is not the saved bytes is a named gap, and the
   const delivered = nationalDelivery([result]);
   assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 1, true]);
 });
+
+test("a missing seat body uses current Census bytes for a held division with an older source URL", async () => {
+  const s = await store();
+  // No official yet: the division publishes without its legislative seat body.
+  await publishNationalPlaceSources({ store: s, now: NOW, divisions: [divisions[1]], geographyCaptures: geography, sources: { officials: [] } });
+  const currentUrl = `${houseUrl}&vintage=current`;
+  const current = capture(geography[1].evidence.text, currentUrl);
+  const result = await publishNationalPlaceSources({ store: s, now: NOW,
+    divisions: [{ ...divisions[1], sourceUrl: currentUrl }], geographyCaptures: [current], sources: { officials: [
+      { discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: profile } },
+    ] } });
+  assert.deepEqual(result.divisions, [], "held division remains in place");
+  assert.deepEqual(result.bodies, [`${OH}/sldl:7#seat`]);
+  assert.deepEqual(result.gaps, []);
+  assert.deepEqual(result.members.flatMap(member => member.discoveryIds), ["russo"]);
+  const after = (await readRegistryRuntimePrior(s, NOW))!;
+  assert.equal(after.payload.registry.divisions.find(d => d.ocdId === divisions[1].id)?.provenance.sourceUrl, houseUrl);
+  assert.equal(after.payload.registry.bodies.find(b => b.id === `${OH}/sldl:7#seat`)?.provenance.sourceUrl, currentUrl);
+});
+
+test("missing current geography leaves a body owed without blocking an independently sourced statewide official", async () => {
+  const s = await store();
+  await publishNationalPlaceSources({ store: s, now: NOW, divisions: [divisions[1]], geographyCaptures: geography, sources: { officials: [] } });
+  const result = await publishNationalPlaceSources({ store: s, now: NOW, divisions, geographyCaptures: [], sources: { officials: [
+    { discoveryId: "russo", divisionId: `${OH}/sldl:7`, name: "Allison Russo", officeTitle: "Representative", officialUrl: profileUrl, document: { url: profileUrl, capture: profile } },
+    { discoveryId: "dewine", divisionId: OH, name: "Mike DeWine", officeTitle: "Governor", officialUrl: governorUrl, document: { url: governorUrl, capture: governor } },
+  ] } });
+  assert.deepEqual(result.bodies, []);
+  assert.deepEqual(result.members.flatMap(member => member.discoveryIds), ["dewine"]);
+  assert.ok(result.gaps.some(g => g.key === `division:${OH}/sldl:7` && g.detail.startsWith("DIVISION_SOURCE_NOT_SAVED:")));
+});

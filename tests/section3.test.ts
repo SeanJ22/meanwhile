@@ -26,3 +26,13 @@ test("a contest goes live on its saved official list; each candidate attaches wh
   assert.deepEqual([other.live, other.openCandidates.length], [false, 3]);
   assert.match(other.reason!, /MINIMUM_FACTS_UNVERIFIED: office/);
 });
+
+test("a candidate counts only inside their own contest's section, not anywhere on the page", () => {
+  const two = `<h1>2026 General Election — Candidate List</h1><h2>Sheriff</h2><p>Mark Dannels</p><p>Jane Ortiz</p><h2>County Attorney</h2><p>Brian McIntyre</p>`;
+  const sheriff = section3Contest({ page: page(two), now: NOW, pageOffices: ["Sheriff", "County Attorney"],
+    contest: { election: "2026 General Election", office: "Sheriff", candidates: ["Mark Dannels", "Jane Ortiz", "Brian McIntyre"] } });
+  assert.deepEqual([sheriff.verifiedCandidates, sheriff.openCandidates], [["Mark Dannels", "Jane Ortiz"], ["Brian McIntyre"]]);
+  const attorney = section3Contest({ page: page(two), now: NOW, pageOffices: ["Sheriff", "County Attorney"],
+    contest: { election: "2026 General Election", office: "County Attorney", candidates: ["Brian McIntyre", "Mark Dannels"] } });
+  assert.deepEqual([attorney.verifiedCandidates, attorney.openCandidates], [["Brian McIntyre"], ["Mark Dannels"]]);
+});

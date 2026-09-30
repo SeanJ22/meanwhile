@@ -181,18 +181,30 @@ export function section3Record(input: {
 /**
  * §3 for one contest on a saved official ballot or candidate list (for
  * unattended ballot refresh). The contest goes live when its election and
- * office are on the page; each candidate attaches when their name is on it
- * too; the rest stay open as work.
+ * office are on the page. Each candidate attaches only when named inside the
+ * contest's own section: from each place the page names the office to the next
+ * place it names another of the page's offices (`pageOffices`; the rest of the
+ * page when none follows). The rest stay open as work.
  */
 export function section3Contest(input: {
   readonly page: Section3Page;
   readonly now: string;
   readonly contest: { readonly election: string; readonly office: string; readonly candidates: readonly string[] };
+  /** Every office the same page lists, so one contest's section ends where the next begins. */
+  readonly pageOffices?: readonly string[];
 }): { readonly live: boolean; readonly verifiedCandidates: readonly string[]; readonly openCandidates: readonly string[]; readonly reason: string | null } {
   const pageVerdict = section3Page(input.page, "BALLOT_CONTEST", input.now);
   const verdict = section3Record({ recordClass: "BALLOT_CONTEST", fields: { election: input.contest.election, office: input.contest.office }, page: input.page, now: input.now, pageVerdict });
   if (!verdict.live) return { live: false, verifiedCandidates: [], openCandidates: [...input.contest.candidates], reason: verdict.reason };
   const words = pageWords(input.page.text);
-  const verifiedCandidates = input.contest.candidates.filter(name => valueOnPage(name, input.page.text, words));
+  const office = pageWords(input.contest.office);
+  const others = (input.pageOffices ?? []).map(pageWords).filter(other => other && other !== office && !office.includes(other));
+  const sections: string[] = [];
+  for (let at = words.indexOf(office); at >= 0; at = words.indexOf(office, at + office.length)) {
+    const ends = others.map(other => words.indexOf(other, at + office.length)).filter(end => end >= 0);
+    sections.push(words.slice(at, ends.length ? Math.min(...ends) : words.length));
+  }
+  const inSection = (name: string) => sections.some(section => ` ${section} `.includes(` ${pageWords(name)} `));
+  const verifiedCandidates = input.contest.candidates.filter(inSection);
   return { live: true, verifiedCandidates, openCandidates: input.contest.candidates.filter(name => !verifiedCandidates.includes(name)), reason: null };
 }

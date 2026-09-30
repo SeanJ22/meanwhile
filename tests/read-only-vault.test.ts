@@ -17,6 +17,7 @@ import { artifactMeta, objectKey, putArtifact } from "../lib/control-plane/evide
 import { NetlifyEvidenceStore } from "../lib/control-plane/evidence/netlify-store.ts";
 import type { Store } from "@netlify/blobs";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { copyVaultObjects } from "../scripts/pilot-runtime-transfer.mts";
 
 /**
  * **THE VAULT, READ BY A ROUTINE CHILD THAT MAY NOT WRITE.** (C16, 2026-09-24.)
@@ -123,4 +124,28 @@ test("remote source directory listing paginates without fetching bodies or metad
     },
   } as unknown as Store);
   assert.deepEqual(await store.directories(prefix), [prefix + "city.example.gov", prefix + "registered-source"]);
+});
+
+test("vault transfer keeps healthy originals moving after a missing body and stops on destination failure", async () => {
+  const transferred: string[] = [], failures: string[] = [];
+  const bytes = new TextEncoder().encode("held original");
+  const source = {
+    async list() { return ["missing-body", "healthy-original", "later-original"]; },
+    async get(key: string) {
+      if (key === "missing-body") throw new Error("ENOENT");
+      return { key, bytes, meta: { contentType: "text/plain", contentHash: "sha256-held", byteLength: bytes.length } };
+    },
+  };
+  const result = await copyVaultObjects(source, {
+    async put(key, body) { transferred.push(key); assert.deepEqual(body, bytes); },
+  }, key => { failures.push(key); });
+  assert.deepEqual(result, { transferred: 2, failed: 1 });
+  assert.deepEqual(transferred, ["healthy-original", "later-original"]);
+  assert.deepEqual(failures, ["missing-body"]);
+
+  let destinationCalls = 0;
+  await assert.rejects(copyVaultObjects(source, {
+    async put() { destinationCalls++; throw new Error("DESTINATION_UNAVAILABLE"); },
+  }, () => {}), /DESTINATION_UNAVAILABLE/);
+  assert.equal(destinationCalls, 1);
 });

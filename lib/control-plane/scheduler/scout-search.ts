@@ -48,6 +48,8 @@ const EXA_ENDPOINT = "https://api.exa.ai/search";
 /** The budget's host keys; the same hosts the discovery walk's per-day cap is kept under (`SEARCH_HOSTS`). */
 export const SCOUT_SEARCH_HOSTS = { brave: new URL(BRAVE_ENDPOINT).host, exa: new URL(EXA_ENDPOINT).host } as const;
 const DEFAULT_TIMEOUT_MS = 8_000;
+/** Covers the bounded HTTP call and delayed budget release after a crashed process. */
+export const SEARCH_REQUEST_LIFETIME_MS = 120_000;
 const DEFAULT_PER_PROVIDER = 5;
 const DEFAULT_MAX_HITS = 8;
 
@@ -145,7 +147,7 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
   const exaKey = options.exaKey?.trim() || null;
   if (!braveKey && !exaKey) return null;
   const fetchImpl = options.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const timeoutMs = Math.min(options.timeoutMs ?? DEFAULT_TIMEOUT_MS, SEARCH_REQUEST_LIFETIME_MS / 2);
   const perProvider = options.perProvider ?? DEFAULT_PER_PROVIDER;
   const maxHits = options.maxHits ?? DEFAULT_MAX_HITS;
 
@@ -163,7 +165,7 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
     // Admission is taken one provider at a time, so two requests cannot both
     // pass the last unit of the per-cycle cap. A budget that throws (its ledger
     // could not be read) is a refusal: nothing is sent.
-    const jobs: typeof candidates = [];
+    const jobs: (typeof candidates[number] & { pending: Promise<PromiseSettledResult<{ hits: SearchHit[]; bytes: number }>> })[] = [];
     for (const candidate of candidates) {
       let refused: string | null;
       try {
@@ -171,15 +173,21 @@ export function makeScoutSearch(options: ScoutSearchOptions): ScoutSearch | null
       } catch (error) {
         refused = `the paid-search budget could not be read (${error instanceof Error ? error.message : String(error)})`;
       }
-      if (refused === null) jobs.push(candidate);
+      if (refused === null) jobs.push({ ...candidate, pending: candidate.run().then(
+        value => ({ status: 'fulfilled' as const, value }), reason => ({ status: 'rejected' as const, reason }),
+      ) });
       else errors.push(`${candidate.name}: not sent, ${refused}`.slice(0, 200));
     }
 
     let settled: PromiseSettledResult<{ hits: SearchHit[]; bytes: number }>[];
     try {
-      settled = await Promise.allSettled(jobs.map((j) => j.run()));
+      settled = await Promise.all(jobs.map(j => j.pending));
     } finally {
-      for (const j of jobs) await options.budget.done(j.host);
+      // A failed release must not strand the other provider's slot as well.
+      const releases = await Promise.allSettled(jobs.map(j => options.budget.done(j.host)));
+      releases.forEach((release, index) => {
+        if (release.status === 'rejected') errors.push(`${jobs[index].name}: budget slot release failed; acquisition ended but shared capacity needs recovery`);
+      });
     }
     let bytesFetched = 0;
     let requestCount = 0;

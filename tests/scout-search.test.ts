@@ -151,6 +151,18 @@ test("a budget that cannot be read sends no paid request at all", async () => {
   assert.ok(res.errors.every((e) => e.includes("the paid-search budget could not be read (budget ledger unreadable)")));
 });
 
+test('one failed budget release does not strand the other provider or discard returned source data', async()=>{
+  const released:string[]=[];
+  const {fetchImpl}=fakeFetch([{match:'api.search.brave.com',body:BRAVE_BODY},{match:'api.exa.ai',body:EXA_BODY}]);
+  const result=await makeScoutSearch({braveKey:'b',exaKey:'e',fetchImpl,budget:{take:async()=>null,done:async host=>{
+    released.push(host);if(host===SCOUT_SEARCH_HOSTS.brave)throw Error('temporary persistence failure');
+  }}})!({query:'q'});
+  assert.deepEqual(released,[SCOUT_SEARCH_HOSTS.brave,SCOUT_SEARCH_HOSTS.exa]);
+  assert.equal(result.requestCount,2);
+  assert.ok(result.hits.length>0);
+  assert.ok(result.errors.some(error=>error.includes('budget slot release failed')));
+});
+
 test("the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both", () => {
   assert.deepEqual({ ...SCOUT_SEARCH_HOSTS }, { ...SEARCH_HOSTS });
 });

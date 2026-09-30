@@ -306,13 +306,14 @@ export async function publishWorkerRosterResults(input: {
     if (plan?.publication?.contractId !== "registry-runtime-bindings" || plan.contract.schemaVersion !== 2) continue;
     const bodyId = plan.publication.bodyId;
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
-    let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null;
+    let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null, parserId: string | null = null;
     let captures: WorkerPublicationCapture[] = [], reading: RosterReading | null = null, heldDirectory: DirectoryReading | null = null, wentLive = 0;
     let schedule: HeldBodySchedule | null = null;
     try {
       const prior = registry ??= await readRegistryRuntimePrior(input.store, input.now);
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
+      parserId = parser?.id ?? null;
       const directory = plan.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY";
       captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture: input.readCapture, officialLinks: manual.officialLinks }) : [];
       if (directory && !parser) {
@@ -324,7 +325,7 @@ export async function publishWorkerRosterResults(input: {
           return heldDirectoryReading({ plan, prior, now: input.now, artifacts, readHeld });
         })());
         heldDirectory = await heldDirectories.get(government)!;
-        if (!heldDirectory) continue;
+        if (!heldDirectory) throw new Error("DIRECTORY_NO_READABLE_SAVED_PAGE:No saved official page for this government lists a board or commission that passes §3 yet");
       }
       if (!directory) {
         const pull = parser ? auditPull(records, parser) : null;
@@ -338,7 +339,7 @@ export async function publishWorkerRosterResults(input: {
           })());
           reading = await heldByBody.get(bodyId)!;
         }
-        if (!reading) continue;
+        if (!reading) throw new Error("ROSTER_NO_READABLE_SAVED_PAGE:No extraction yet, and no saved official page for this body has a member table that passes §3");
         // The body's regular schedule, from any job's saved official pages for the same government.
         if (!schedules.has(bodyId)) schedules.set(bodyId, (async () => {
           const body = prior.payload.registry.bodies.find(row => row.id === bodyId);
@@ -409,8 +410,9 @@ ${readingId}`, outcome);
       else {
       const detail = sanitizedErrorDiagnostic(error);
       const code = detail.split(":")[0];
-      const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") ? "WORKER" : "PUBLISHER";
-      outcome = { at: input.now, workerResultId: readingId ?? "none", status: "HELD", code,
+      const recovery = (code.startsWith("ROSTER_") && !["ROSTER_PRIOR_READER_AUTHORITY_MISSING", "ROSTER_READER_READBACK_FAILED"].includes(code)) || code.startsWith("WORKER_PUBLICATION_") || code === "DIRECTORY_NO_READABLE_SAVED_PAGE" ? "WORKER" : "PUBLISHER";
+      // A hold names the extraction it judged, so owed worker repair waits for a newer one instead of retrying every pass.
+      outcome = { at: input.now, workerResultId: readingId ?? parserId ?? "none", status: "HELD", code,
         detail: `${detail}. ${recovery === "WORKER" ? "Continue source work through the existing worker" : "Retry the publication with the verified evidence retained"}; no owner approval is required.`, recovery, candidateId, versionId };
       // A moved base is retried by the next job for this body; any other hold is this reading's result for the pass.
       if (readingId && code !== "PROMOTION_BASE_CHANGED") publishedByBody.set(`${bodyId}\n${readingId}`, outcome);

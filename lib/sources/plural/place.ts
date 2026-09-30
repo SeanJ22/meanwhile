@@ -3,17 +3,22 @@ import { cellText, decodeEntities, extractRoster, looksLikeNameCell } from "../.
 import type { PlaceDivision } from "../../control-plane/expansion/national-geography.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
+import type { WorkerPublicationCapture } from "../../civic-data/worker-roster-publication.ts";
 
 export interface HeldSourcePage {
   readonly url: string;
   readonly text: string;
   readonly collectedAt: string;
+  /** Metadata for these same bytes in the ordinary shared evidence vault. */
+  readonly capture?: WorkerPublicationCapture;
 }
 export interface NationalOfficialCandidate {
   readonly discoveryId: string;
   readonly divisionId: string;
   readonly name: string;
   readonly officeTitle: string;
+  /** Discovery label, not source-verified text or an identity merge. */
+  readonly seatLabel?: string;
   readonly officialUrl: string;
   readonly document: HeldSourcePage;
   /** Exact source words, never a claim that the publisher has verified them. */
@@ -108,8 +113,13 @@ export async function collectNationalPlaceSources(input: {
           const name = looksLikeNameCell(heading) ? heading : text.includes(person.name) ? person.name : null;
           const at = name ? text.indexOf(name) : -1;
           if (!name || at < 0) { gaps.push({ sourceUrl: document.url, detail: `The official profile needs name extraction for ${person.name}` }); return; }
-          officials.push({ discoveryId: person.id, divisionId: memberships.get(person.id)!, name,
-            officeTitle: person.officeTitle, officialUrl: person.websiteUrl, document,
+          const divisionId = memberships.get(person.id)!;
+          const officePattern = divisionId.includes("/sldu:") ? /\b(?:State\s+)?Senator\b/i
+            : /\b(?:State\s+)?(?:Representative|Delegate|Assembly\s*member|Assemblyman|Assemblywoman)\b/i;
+          const office = officePattern.exec(text)?.[0];
+          if (!office) { gaps.push({ sourceUrl: document.url, detail: `The official profile needs source seat words for ${name}` }); return; }
+          officials.push({ discoveryId: person.id, divisionId, name,
+            officeTitle: office, seatLabel: person.officeTitle, officialUrl: person.websiteUrl, document,
             quote: text.slice(Math.max(0, at - 100), at + name.length + 160) });
         }));
       }
@@ -207,29 +217,32 @@ export async function collectNationalPlaceSources(input: {
     const stateName = cellText(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(statePage.text)?.[1] ?? "");
     const selection = electionIndex && electionDirectorySelection(electionIndex, stateName);
     const federalElectionPage = selection ? await attempt(selection) : null;
-    const elections = [...new Set([...stateLinks, ...(federalElectionPage ? links(federalElectionPage) : [])]
-      .filter(l => /election|voting|register|registration|polling|ballot/i.test(l.label) && !/\b(?:usa|eac)\.gov$/.test(new URL(l.url).hostname)).map(l => l.url))];
-    await Promise.all(elections.map(async url => {
+    const elections = new Map([...stateLinks.map(link => ({ ...link, parent: statePage })),
+      ...(federalElectionPage ? links(federalElectionPage).map(link => ({ ...link, parent: federalElectionPage })) : [])]
+      .filter(l => /election|voting|register|registration|polling|ballot/i.test(l.label) && !/\b(?:usa|eac)\.gov$/.test(new URL(l.url).hostname))
+      .map(l => [l.url, { url: l.parent.url, html: l.parent.text }]));
+    await Promise.all([...elections].map(async ([url, parent]) => {
       const page = await attempt(url);
       if (!page) return;
       electionDocuments.push(page);
-      electionFields.push(...electionPageFields(page, divisionId));
-      addOfficials(page);
+      electionFields.push(...electionPageFields(page, divisionId, parent));
+      addOfficials(page, undefined, parent);
+      const provenance = { url: page.url, html: page.text, linkingPage: parent };
       await Promise.all(links(page).flatMap(l => {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
-        return office ? [followOffice({ url: l.url, office }, { url: page.url, html: page.text })] : [];
+        return office ? [followOffice({ url: l.url, office }, provenance)] : [];
       }));
       const routes = [...new Set(links(page).filter(l => /registration|deadline|early voting|polling|voting location|voting schedule|certified|canvass|election results/i.test(l.label)).map(l => l.url))];
       await Promise.all(routes.map(async route => {
         const document = await attempt(route);
         if (!document) return;
         electionDocuments.push(document);
-        electionFields.push(...electionPageFields(document, divisionId));
+        electionFields.push(...electionPageFields(document, divisionId, provenance));
         await Promise.all(links(document).filter(l => /text.only|accessible version/i.test(l.label)).map(async l => {
           const accessible = await attempt(l.url);
           if (accessible) {
             electionDocuments.push(accessible);
-            electionFields.push(...electionPageFields(accessible, divisionId));
+            electionFields.push(...electionPageFields(accessible, divisionId, { url: document.url, html: document.text, linkingPage: provenance }));
           }
         }));
       }));

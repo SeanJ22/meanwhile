@@ -10,6 +10,7 @@ export interface ElectionFieldCandidate {
   readonly quote: string;
   readonly dates: readonly string[];
   readonly document: HeldSourcePage;
+  readonly linkingPage?: OfficialLinkingPage;
 }
 
 const MONTHS = "January February March April May June July August September October November December".split(" ");
@@ -21,7 +22,7 @@ export function electionPageFields(page: HeldSourcePage, divisionId: string, lin
   if (!isOfficialSource(page.url, linkingPage)) return [];
   const out: ElectionFieldCandidate[] = [];
   const add = (kind: ElectionFieldCandidate["kind"], value: string, quote: string, dates: string[] = []) => {
-    out.push({ kind, divisionId, sourceUrl: page.url, value, quote, dates, document: page });
+    out.push({ kind, divisionId, sourceUrl: page.url, value, quote, dates, document: page, linkingPage });
   };
   const headings = [...page.text.matchAll(/<h[1-3]\b[^>]*>([\s\S]*?)<\/h[1-3]>/gi)].map(m => cellText(m[1]));
   const datedHeading = headings.find(h => /\b20\d{2}\b/.test(h) && /vot|election|schedule|calendar/i.test(h));

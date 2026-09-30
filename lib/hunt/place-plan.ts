@@ -20,11 +20,21 @@ export function placeFieldWork(item: PlaceOwedItem, now: string): WorkItem {
  * Acquisition alone never closes work, and a broad worker id is not a field id. */
 export async function closePublishedPlaceWork(repos: ControlPlaneRepositories, items: readonly PlaceOwedItem[], now: string): Promise<string[]> {
   const closed: string[] = [];
+  // Read only these subjects once, rather than querying every checklist blank
+  // (or scanning the complete work history) on every hunt.
+  const existing = new Map((await Promise.all([...new Set(items.map(item => item.subject.id))]
+    .map(subject => repos.workItems.listWhere(["subject"], subject)))).flat().map(row => [row.id, row]));
   for (const item of items) {
-    if (item.state !== "published" && item.state !== "unpublished") continue;
     const id = placeFieldWork(item, now).id;
-    const current = await repos.workItems.read(id);
+    const current = existing.get(id);
     if (!current) continue;
+    if (item.state !== "published" && item.state !== "unpublished") {
+      if (current.value.state === "VERIFIED_COMPLETE" || current.value.state === "NOT_YET_PUBLISHED") {
+        await transitionWorkItem(repos, { workItemId: id, to: "REOPENED", now, by: "place-capture",
+          why: `${item.requirement}: the current shared read model no longer has a fresh published field or a fresh official unpublished finding` });
+      }
+      continue;
+    }
     const to = item.state === "published" ? "VERIFIED_COMPLETE" : "NOT_YET_PUBLISHED";
     if (current.value.state === to) continue;
     await transitionWorkItem(repos, { workItemId: id, to, now, by: "place-capture",

@@ -52,6 +52,12 @@ test("election dates use explicit source year and official lookup links remain n
   assert.equal(fields.find(f => f.kind === "polling_lookup")?.value, "https://elections.example.gov/poll");
   assert.equal(electionPageFields({ ...page, text: "<p>October 5: Deadline to register to vote.</p>" }, "division").length, 0);
   assert.equal(electionPageFields({ ...page, text: "<p>February 30, 2027: Deadline to register to vote.</p>" }, "division").length, 0);
+  const vendor = { ...page, url: "https://state-election-office.org/calendar" };
+  assert.equal(electionPageFields(vendor, "division").length, 0);
+  const linkingPage = { url: "https://www.eac.gov/state", html: '<a href="https://state-election-office.org">State election office</a>' };
+  const linked = electionPageFields(vendor, "division", linkingPage);
+  assert.equal(linked.length, 3);
+  assert.deepEqual(linked[0].linkingPage, linkingPage, "official ancestry survives to the publisher");
 });
 
 /**

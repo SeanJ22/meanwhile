@@ -403,6 +403,16 @@ test("ROUTE: what meetings are coming up is read from the words and composed fro
   assert.notEqual(focused.payload.trace.interpretation.why, "area-meetings-shape");
 });
 
+test("ROUTE: what is on my ballot is read from the words and composed from the contests the reader's divisions reach — no model call", { concurrency: false }, async () => {
+  const { payload, calls: made } = await ask("What is on my ballot?", [AZ, PIMA, VAIL]);
+  assert.deepEqual(made, [], "neither rung called a model");
+  assert.equal(payload.trace.interpretation.why, "ballot-shape");
+  assert.equal(payload.trace.synthesis.why, "composed-from-ballot-records");
+  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.match(payload.answer ?? "", /^Your ballot for the .+ on .+ has \d+ races? and \d+ ballot measures?\./);
+  assert.ok(payload.records.some((record) => record.kind === "CONTEST"), "each contest is a record the reader is shown");
+});
+
 test("ROUTE: who represents me in Congress names the two U.S. Senators the state holds beside the district's Representative", { concurrency: false }, async () => {
   const { payload, calls: made } = await ask("Who represents me in Congress?", [PIMA, VAIL, "ocd-division/country:us/state:az/cd:6"]);
   assert.deepEqual(made, []);

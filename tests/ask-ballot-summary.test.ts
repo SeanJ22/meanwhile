@@ -1,0 +1,89 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import type { Candidacy, Contest, Election } from "../lib/ballot/types.ts";
+import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "../lib/ask/ballot-summary.ts";
+import type { EvidencePack } from "../lib/ask/evidence.ts";
+import { validateAnswer } from "../lib/ask/validate.ts";
+
+/**
+ * **"WHAT IS ON MY BALLOT?" AND "WHO IS RUNNING FOR STATE SENATE IN MY
+ * DISTRICT?"** (2026-09-29, S3.) Both returned no answer on staging: the first
+ * names nothing, the second names an office where the binder wants a contest's
+ * own title. These pin the words that are read, the contests an office reaches
+ * (two, for a ZIP that reaches two districts), the candidates named, and the
+ * honest sentence for a contest with no one held.
+ */
+
+const ELECTION: Election = { id: "az-2026-11-03", date: "2026-11-03", name: "2026 General Election", state: "az" };
+const provenance = (path: string) => ({ sourceUrl: `https://example.gov/${path}`, sourceOrg: "Example County", collectedAt: "2026-09-20", secondHand: false }) as Contest["provenance"];
+const contest = (id: string, title: string, ocdId = "ocd-division/country:us/state:az", type: Contest["type"] = "CANDIDACY"): Contest => ({
+  id, electionId: ELECTION.id, ocdId, divisionVintage: "2025", title, type, voteFor: 1, termYears: 4, scopeNote: null, provenance: provenance(id),
+});
+const candidacy = (id: string, contestId: string, givenName: string, familyName: string, partyLabel: string | null): Candidacy => ({
+  id, contestId, givenName, familyName, partyLabel, slogan: null, incumbent: null, websiteUrl: null, provenance: provenance(id),
+});
+
+const CONTESTS: Contest[] = [
+  contest("gov", "Governor"),
+  contest("cd6", "U.S. Representative, District 6", "ocd-division/country:us/state:az/cd:6"),
+  contest("sldu19", "State Senator, District 19", "ocd-division/country:us/state:az/sldu:19"),
+  contest("sldu17", "State Senator, District 17", "ocd-division/country:us/state:az/sldu:17"),
+  contest("p141", "Proposition 141: Prohibit tax; monitoring; vehicle mileage", "ocd-division/country:us/state:az", "MEASURE"),
+  contest("p423", "Proposition 423: Vail Unified School District budget override continuation", "ocd-division/country:us/state:az/school_district:vail_unified_district", "MEASURE"),
+];
+
+test("the ballot questions are read from their words; an office the table does not hold, or a named person, is not this", () => {
+  for (const question of ["What is on my ballot?", "What's on my ballot", "What am I voting on?", "What races are on my ballot?", "What do I vote on?", "Show me my ballot"]) {
+    assert.deepEqual(ballotQuestionShape(question), { kind: "SUMMARY" }, question);
+  }
+  const offices: [string, string][] = [
+    ["Who is running for state senate in my district?", "state_senator"],
+    ["Who is running for Congress?", "us_representative"],
+    ["Who is running for the state house?", "state_lower_house"],
+    ["Who's running for governor?", "governor"],
+    ["Who are the candidates for attorney general?", "attorney_general"],
+    ["Who is running for U.S. Senate?", "us_senator"],
+  ];
+  for (const [question, key] of offices) {
+    const read = ballotQuestionShape(question);
+    assert.ok(read?.kind === "OFFICE" && read.key === key, question);
+  }
+  for (const question of ["Who is running for mayor of Tucson?", "Who is running against Katie Hobbs?", "Who is on the Vail school board?", "What is on my ballot about taxes?", "Explain Prop 141"]) {
+    assert.equal(ballotQuestionShape(question), null, question);
+  }
+});
+
+test("the summary counts the races and the measures and names them, spelling out U.S. so the length contract does not count it as a sentence end", () => {
+  const composed = composeBallotSummary({ contests: CONTESTS, election: ELECTION });
+  assert.equal(composed?.answer,
+    "Your ballot for the 2026 General Election on November 3rd, 2026 has 4 races and 2 ballot measures. The races are Governor, United States Representative, District 6, State Senator, District 19, and State Senator, District 17. The measures are Proposition 141 and Proposition 423.");
+  assert.equal(composed?.records.length, 6, "every contest is a record the reader is shown");
+  assert.deepEqual(composed?.citedUrls.length, 6);
+  const pack: EvidencePack = { question: "What is on my ballot?", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records: composed!.records, gaps: [], denominators: {}, today: "2026-09-30" };
+  assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack).kind, "PASSED");
+  assert.equal(composeBallotSummary({ contests: [], election: ELECTION }), null, "a ballot we hold nothing of is not summarised");
+});
+
+test("an office's field is every contest of that office the reader's divisions reach — two districts, both — with the certified lineup's candidates and parties", () => {
+  assert.deepEqual(contestsOfOffice(CONTESTS, "state_senator").map((entry) => entry.id), ["sldu19", "sldu17"]);
+  const composed = composeOfficeField({
+    key: "state_senator", contests: CONTESTS, election: ELECTION,
+    nominees: (id) => id === "sldu19" ? [{ name: "Gail Griffin", partyLabel: "Republican", sourceUrl: "https://example.gov/canvass" }, { name: "Bob Karp", partyLabel: "Democratic", sourceUrl: "https://example.gov/canvass" }] : [],
+    candidacies: [candidacy("c1", "sldu17", "Christopher", "King", "Republican"), candidacy("c2", "sldu17", "Edgar", "Soto", "Democratic"), candidacy("c3", "sldu17", "Removed", "Person", "Green")],
+    removedCandidacyIds: new Set(["c3"]),
+  });
+  assert.equal(composed?.answer, "On your ballot for the 2026 General Election on November 3rd, 2026, State Senator, District 19: Gail Griffin (Republican) and Bob Karp (Democratic); State Senator, District 17: Christopher King (Republican) and Edgar Soto (Democratic).");
+  assert.deepEqual(composed?.gaps, []);
+  assert.equal(composed?.records.filter((record) => record.kind === "CANDIDACY").length, 4, "each candidate named is a record with its own source");
+  assert.ok(composed?.records.every((record) => record.kind !== "CANDIDACY" || record.text.includes("filed as")), "the party is the record's own");
+  const pack: EvidencePack = { question: "Who is running for state senate in my district?", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records: composed!.records, gaps: [], denominators: {}, today: "2026-09-30" };
+  assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack).kind, "PASSED");
+});
+
+test("a contest with no candidate held says so as a gap of ours; an office with no contest is the caller's", () => {
+  const none = composeOfficeField({ key: "governor", contests: CONTESTS, election: ELECTION, nominees: () => [], candidacies: [], removedCandidacyIds: new Set() });
+  assert.equal(none?.answer, "On your ballot for the 2026 General Election on November 3rd, 2026, we have not recorded who is running for Governor.");
+  assert.deepEqual(none?.gaps, ["We have not recorded who is running for Governor."]);
+  assert.equal(composeOfficeField({ key: "us_senator", contests: CONTESTS, election: ELECTION, nominees: () => [], candidacies: [], removedCandidacyIds: new Set() }), null);
+});

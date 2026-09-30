@@ -56,6 +56,7 @@ import { groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, m
 import { composePersonVotes } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
+import { ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsOfOffice } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeGroupMoneyAnswer, composeMoneyAnswer, composeNoRaceMoneyAnswer, contestFitsBody, moneyQuestionShape } from "@/lib/ask/money-answer";
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/ask/speculative-reading";
@@ -1121,6 +1122,25 @@ export async function POST(request: Request) {
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
   const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
 
+  /*
+   * **THE READER'S BALLOT, AND AN OFFICE'S FIELD.** (2026-09-29, S3; `lib/ask/ballot-summary.ts`.)
+   * "What is on my ballot?" and "Who is running for state senate in my district?" name no
+   * contest the binder can bind. They are answered from the contests the reader's divisions
+   * reach — and only when the composition can be made: an office with no held contest, or a
+   * contest whose candidates carry a party conflict between two authorities, goes the
+   * ordinary way (the model reads it and the records are retrieved by subject).
+   */
+  const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question) : null;
+  const ballotComposed = !ballotShape || !ballot.set ? null
+    : ballotShape.kind === "SUMMARY"
+      ? composeBallotSummary({ contests: ballot.contests, election: ballot.set.election })
+      : contestsOfOffice(ballot.contests, ballotShape.key).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
+        ? null
+        : composeOfficeField({
+          key: ballotShape.key, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
+          removedCandidacyIds: new Set((ballot.set.removals ?? []).map((removal) => removal.id)),
+        });
+  const ballotAsk = ballotComposed ? ballotShape : null;
   lap("officeholdersAndBallot");
   // A literal reader date outranks inferred tense, including a model's reading (applied in `answerPath`).
   const requestedMeetingDate = meetingDateInQuestion(question);
@@ -1190,7 +1210,7 @@ export async function POST(request: Request) {
       : [],
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk;
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk);
   /*
    * **THE LEXICAL READING.** (2026-09-25, the Ask latency repair.) A question
    * in one of a few canonical shapes ("when does the Mesa City Council meet
@@ -1236,10 +1256,10 @@ export async function POST(request: Request) {
   const outcome = modelFreeTopicRoute || lexical ? null : cachedInterpretation ?? await modelReading!;
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
-  if (outcome === null && leanAsk) {
-    /* The reader's own officials, or the meetings held for their area: read from the words, answered from what is held. */
-    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : "MEETING_TIME", temporal: officialsAsk ? { kind: "NONE" } : { kind: "NEXT" } };
-    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : "area-meetings-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+  if (outcome === null && (leanAsk || ballotAsk)) {
+    /* The reader's own officials, the meetings held for their area, or their ballot: read from the words, answered from what is held. */
+    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
+    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
   } else if (outcome === null && lexical) {
     interpretation = structuredClone(lexical.interpretation);
     trace.interpretation = {
@@ -2319,6 +2339,13 @@ export async function POST(request: Request) {
       denominators.officeholderRecords = officials.named.length;
     }
 
+    /* The reader's ballot, composed above from the contests their divisions reach: each contest is a record they are shown. */
+    if (ballotAsk && ballotComposed && !subject) {
+      records.push(...ballotComposed.records);
+      for (const statement of ballotComposed.gaps) gaps.push({ whose: "OURS", statement });
+      denominators.contestsOnTheBallot = ballot.contests.length;
+    }
+
     /*
      * **THE MEETINGS HELD FOR THE READER'S AREA.** (2026-09-29, S3; `lib/ask/area-meetings.ts`.)
      * "What meetings are happening this week?" names no body: the sittings held for
@@ -2762,14 +2789,31 @@ export async function POST(request: Request) {
         ...(calendarSettled.verdict?.kind === "FAILED" ? { failed: calendarSettled.verdict.failed } : {}),
       };
     }
-    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed;
+    /* The reader's ballot (lib/ask/ballot-summary.ts): composed above, held to the same validator. */
+    const ballotSettled = settleSittingComposition(
+      ballotAsk && ballotComposed && !topicComposed && (!subject || (subject.kind === "CONTEST" && ballotAsk.kind === "OFFICE" && contestsOfOffice(ballot.contests, ballotAsk.key).some((contest) => contest.id === subject.id)))
+        ? { answer: ballotComposed.answer, citedUrls: ballotComposed.citedUrls } : null,
+      (text, urls) => validateAnswer(text, urls, pack, bodies),
+    );
+    if (ballotAsk) {
+      trace.composition = {
+        kind: "BALLOT",
+        shape: ballotAsk.kind === "SUMMARY" ? "SUMMARY" : `OFFICE_${ballotAsk.key}`,
+        basis: "HELD_BALLOT",
+        composed: Boolean(ballotSettled.verdict),
+        ...(ballotSettled.verdict ? { passed: ballotSettled.verdict.kind === "PASSED" } : {}),
+        ...(ballotSettled.verdict?.kind === "FAILED" ? { failed: ballotSettled.verdict.failed } : {}),
+      };
+    }
+    const composed = topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
     const composedWhy = topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"
             : rosterSettled.composed ? "composed-from-roster-records"
               : votesSettled.composed ? "composed-from-vote-records"
-                : calendarSettled.composed ? "composed-from-calendar-records" : "composed-from-sitting-records";
+                : calendarSettled.composed ? "composed-from-calendar-records"
+                  : ballotSettled.composed ? "composed-from-ballot-records" : "composed-from-sitting-records";
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
       shownContacts, resolvedSittings, agendaQuestion, capture,

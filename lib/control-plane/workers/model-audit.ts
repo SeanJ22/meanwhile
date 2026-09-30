@@ -231,12 +231,12 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
 }
 
 /** Bounds the whole injected review path, even if a test or provider transport never settles. */
-async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, timeoutMs: number): Promise<T> {
+export async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, timeoutMs: number, failure = "AUDIT_PROVIDER_FAILURE"): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const controller = new AbortController();
   try {
     return await Promise.race([operation(controller.signal), new Promise<never>((_, reject) => {
-      timer = setTimeout(() => { controller.abort(); reject(new Error("AUDIT_PROVIDER_FAILURE:TIMEOUT; usage NOT MEASURED")); }, timeoutMs);
+      timer = setTimeout(() => { controller.abort(); reject(new Error(`${failure}:TIMEOUT; usage NOT MEASURED`)); }, timeoutMs);
     })]);
   } finally { if (timer !== undefined) clearTimeout(timer); }
 }

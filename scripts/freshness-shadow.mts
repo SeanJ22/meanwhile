@@ -515,13 +515,6 @@ if (canary && (IDS === null || IDS.size !== 1)) {
   console.error("freshness:shadow · --canary requires exactly one registered obligation via --ids=<id>.");
   process.exit(1);
 }
-/*
- * The hard wall budget, in minutes from PROCESS START. The runner kills a child
- * at fifteen minutes; dispatch admission stops two minutes earlier,
- * so it finishes cleanly — record written, occurrences closable — instead of
- * dying mid-write. Measured from process start because that is what the
- * supervisor's ceiling is measured from.
- */
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
 /* ------------------------------------------------------------- provider --- */
@@ -598,18 +591,17 @@ if (wantsPostgres) {
  * authority as Admin. A missing/unreachable pointer is a named failed cycle;
  * the retired tracked jurisdiction projections are never a silent fallback.
  */
-const legacyOperationalReference = await retryStartupRead(
+const [legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
   () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
   console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
   return null;
-});
-const azOperationalReference = await retryStartupRead(
+}), retryStartupRead(
   () => preloadAzOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
   console.log(`  scoped AZ operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
   return null;
-});
+})]);
 if (!legacyOperationalReference && !azOperationalReference) throw new Error(
   "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
 );
@@ -1869,6 +1861,16 @@ const autonomousTransportFor = (transport: ModelTransport) => (jurisdiction: Aut
     now: nowIso,
     refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal,
   });
+const spacer = serializeHostSpacing(hostSpacer());
+// Hand out durable leases before unrelated histories or parent execution.
+const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
+  runnerPaused: intents.runnerPause.paused });
+const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
+  runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
+  return null;
+}) : null;
+let earlyAutonomous: Awaited<typeof earlyOriginal> = null;
+
 /* MW-015: visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
@@ -2262,7 +2264,8 @@ await writeResearchState(null);
 /* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
-const spacer = serializeHostSpacing(hostSpacer());
+const readScoutEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
+const readScoutCapture = researchVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
@@ -2796,10 +2799,8 @@ console.log(
     (persisted.clearedAsRetired.length > 0 ? `, ${persisted.clearedAsRetired.length} tombstoned as retired` : ""),
 );
 
-// Start the exact original instruction's owed work while the independent
-// discovery/publication passes run. These passes are joined below, before
-// finalization: no paid request or repository write is abandoned at the wall.
-// The ordinary lanes have already completed and kept their own dispatch budget.
+// Worker processes pull the existing ledger. Their results are joined before
+// finalization, alongside the independent discovery/publication passes.
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? workerMessages : null;
   return autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
@@ -2883,13 +2884,6 @@ async function runAutonomousProcesses() {
   }
   return report;
 }
-const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
-  runnerPaused: intents.runnerPause.paused });
-const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
-  runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
-  return null;
-}) : null;
-let earlyAutonomous: Awaited<typeof earlyOriginal> = null;
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";
 let campaignSites: CampaignSiteCycleReport | null = null;
@@ -3476,13 +3470,13 @@ try {
     const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
     const nextHeartbeat: RunnerHeartbeat = {
       ...heartbeat,
+      runtimeRelease: beat?.value.runtimeRelease ?? null,
       /* The intake observer runs immediately after this child. Preserve its
          latest durable receipt while refreshing cycle/liveness fields; a cycle
          crash before the observer runs must not erase the last known reading. */
       intakeRuntime: beat?.value.intakeRuntime ?? null,
       /* The parent recorded this release adoption at a separate boundary.
          Carry the original observation unchanged; a cycle is not a recheck. */
-      runtimeRelease: beat?.value.runtimeRelease ?? null,
     };
     await pending.step("heartbeat:write", async () => {
       if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);

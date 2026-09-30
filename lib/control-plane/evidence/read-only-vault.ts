@@ -22,6 +22,7 @@ import type { Dirent } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
 import { ARTIFACT_TIERS, artifactId, type ArtifactTier } from "./artifact.ts";
 
 /** The project every standing-runner artifact is filed under (`FRESHNESS_PROJECT`). */
@@ -74,6 +75,34 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
   const byId = new Map<string, HeldVaultArtifact>();
   const byHash = new Map<string, HeldVaultArtifact>();
   const byWorkItem = new Map<string, HeldVaultArtifact[]>();
+  const add = (sidecar: Sidecar, bodyPath: string): void => {
+    const meta = sidecar.meta;
+    const tier = meta?.custom?.tier;
+    const hash = meta?.contentHash;
+    if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier)) return;
+    if (typeof sidecar.bodySha256 !== "string") return;
+    const status = Number(meta.custom?.httpStatus);
+    const held: HeldVaultArtifact = {
+      id: artifactId(tier as ArtifactTier, hash),
+      tier: tier as ArtifactTier,
+      contentHash: hash,
+      contentType: meta.contentType ?? "",
+      canonicalUrl: meta.custom?.canonicalUrl ?? null,
+      retrievalUrl: meta.custom?.retrievalUrl ?? null,
+      retrievedAt: meta.custom?.retrievedAt ?? null,
+      httpStatus: Number.isInteger(status) ? status : null,
+      sourceId: meta.custom?.sourceId ?? null,
+      workItemId: meta.custom?.workItemId ?? null,
+      attemptId: meta.custom?.attemptId ?? null,
+      methodRouteId: meta.custom?.methodRouteId ?? null,
+      permission: meta.custom?.permission ?? null,
+      bodyPath,
+      bodySha256: sidecar.bodySha256,
+    };
+    byId.set(held.id, held);
+    byHash.set(hash.slice("sha256-".length), held);
+    if (held.workItemId !== null) byWorkItem.set(held.workItemId, [...(byWorkItem.get(held.workItemId) ?? []), held]);
+  };
   const walk = async (directory: string): Promise<void> => {
     let entries: Dirent[];
     try {
@@ -91,35 +120,18 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
       }
       if (!entry.name.endsWith(SIDECAR_SUFFIX)) continue;
       const sidecar = JSON.parse(await readFile(path, "utf8")) as Sidecar;
-      const meta = sidecar.meta;
-      const tier = meta?.custom?.tier;
-      const hash = meta?.contentHash;
-      if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier)) continue;
-      if (typeof sidecar.bodySha256 !== "string") continue;
-      const status = Number(meta.custom?.httpStatus);
-      const held: HeldVaultArtifact = {
-        id: artifactId(tier as ArtifactTier, hash),
-        tier: tier as ArtifactTier,
-        contentHash: hash,
-        contentType: meta.contentType ?? "",
-        canonicalUrl: meta.custom?.canonicalUrl ?? null,
-        retrievalUrl: meta.custom?.retrievalUrl ?? null,
-        retrievedAt: meta.custom?.retrievedAt ?? null,
-        httpStatus: Number.isInteger(status) ? status : null,
-        sourceId: meta.custom?.sourceId ?? null,
-        workItemId: meta.custom?.workItemId ?? null,
-        attemptId: meta.custom?.attemptId ?? null,
-        methodRouteId: meta.custom?.methodRouteId ?? null,
-        permission: meta.custom?.permission ?? null,
-        bodyPath: path.slice(0, -SIDECAR_SUFFIX.length),
-        bodySha256: sidecar.bodySha256,
-      };
-      byId.set(held.id, held);
-      byHash.set(hash.slice("sha256-".length), held);
-      if (held.workItemId !== null) byWorkItem.set(held.workItemId, [...(byWorkItem.get(held.workItemId) ?? []), held]);
+      add(sidecar, path.slice(0, -SIDECAR_SUFFIX.length));
     }
   };
-  await walk(join(root, "project", project));
+  const remote = netlifyEvidenceStoreFromEnv();
+  if (remote) {
+    for (const key of await remote.list(`project/${project}/`)) {
+      const description = await remote.describe(key);
+      if (description) add(description, `netlify:${key}`);
+    }
+  } else {
+    await walk(join(root, "project", project));
+  }
   return { byId, byHash, byWorkItem };
 }
 
@@ -133,7 +145,11 @@ export function crosswalkEvidenceWorkItem(rawSha256: string): string {
 
 /** The held bytes, proved to be the bytes the sidecar committed. */
 export async function readHeldBytes(artifact: HeldVaultArtifact): Promise<Uint8Array> {
-  const bytes = await readFile(artifact.bodyPath);
+  const remote = artifact.bodyPath.startsWith("netlify:") ? netlifyEvidenceStoreFromEnv() : null;
+  if (artifact.bodyPath.startsWith("netlify:") && !remote) throw new Error("NETLIFY_VAULT_UNCONFIGURED");
+  const held = remote ? await remote.get(artifact.bodyPath.slice("netlify:".length)) : null;
+  if (remote && !held) throw new Error(`VAULT_BODY_MISSING:${artifact.id}`);
+  const bytes = held?.bytes ?? await readFile(artifact.bodyPath);
   const actual = `sha256-${createHash("sha256").update(bytes).digest("hex")}`;
   if (actual !== artifact.bodySha256) {
     throw new Error(`VAULT_BODY_CORRUPTED:${artifact.id}: the sidecar committed ${artifact.bodySha256}, the body hashes to ${actual}`);

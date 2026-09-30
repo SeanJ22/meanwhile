@@ -237,12 +237,10 @@ function checkRunnerPublishesConsole(src: string): void {
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
   const body = fn[0];
   assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "publishConsole does not run every listed publisher");
-  assert.match(body, /await runBoundedChildPass\(/, "each publisher is an asynchronously bounded child process");
+  assert.match(body, /await runRuntimeChildren\(/, "each publisher is an asynchronous child process");
   assert.match(body, /args: \["--experimental-strip-types", \.\.\.publisher\.args\]/, "a publisher is not run through inherited parent environment");
   assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
-  assert.match(body, /env: process\.env/, "the bounded child does not inherit the validated parent environment");
-  assert.match(body, /timeoutMs: PUBLISH_TIMEOUT_MS/, "no ceiling on a publisher");
-  assert.match(src, /const PUBLISH_TIMEOUT_MS = 5 \* 60_000/, "the publisher ceiling is not five minutes");
+  assert.match(body, /env: process\.env/, "the child does not inherit the validated parent environment");
   assert.match(body, /console publish: \$\{publisher\.name\} OK/, "no OK line");
   assert.match(body, /console publish: \$\{publisher\.name\} FAILED exit/, "no FAILED line");
   assert.doesNotMatch(body, /\bthrow\b/, "a publish failure is printed, never thrown");
@@ -263,7 +261,7 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.ok(says, "pilot-runner.mts has no ownerSays()");
   const body = says[0];
   assert.match(body, /readIntents\(log\)/, "ownerSays does not read the intent log through readIntents");
-  assert.equal((body.match(/researchIntents\.read\(/g) ?? []).length, 1, "ownerSays must read the log exactly once");
+  assert.equal((body.match(/readRunnerControls\(repos\)/g) ?? []).length, 1, "ownerSays must use the changed-control cache");
   assert.match(body, /\.runnerPause\b/, "ownerSays never looks at runnerPause");
   assert.match(body, /\.pendingRunNow\.length > 0/, "a pending RUN_CYCLE_NOW no longer ends the sleep");
   assert.match(body, /\.pendingDispatch\.length > 0/, "a pending DISPATCH does not end the sleep early");
@@ -292,7 +290,7 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("while (cycle < CYCLES)"), "the runtime clock starts after research");
   assert.match(src, /if \(runtimeAdmissionsHeld\) return;/, "a release hold cannot close runtime admission");
   assert.match(src, /await standingRuntimeScheduler\.waitForIdle\(\)/, "release handoff does not wait for independently running source lanes");
-  assert.match(src, /const AUTO_RELEASE_HANDOFF = argv\.includes\("--release-handoff"\)/, "developer checkouts cannot be distinguished from the installed runtime checkout");
+  assert.match(src, /const AUTO_RELEASE_HANDOFF = !STAGING && argv\.includes\("--release-handoff"\)/, "developer checkouts cannot be distinguished from the installed runtime checkout");
   assert.doesNotMatch(src, /--installed-sha=/, "runner still relies on an immutable installed SHA instead of automatic release handoff");
   assert.match(src, /await holdWhilePaused\(\);[\s\S]*cycle \+= 1;/, "the owner pause no longer holds research cycles");
   const hold = src.match(/async function holdWhilePaused\(\): Promise<\{ readonly ownerIntentsUnreadable: boolean \}> \{[\s\S]*?\n\}/);

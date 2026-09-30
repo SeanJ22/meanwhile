@@ -70,9 +70,11 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null, "the fixture council is Census-derived and unnamed");
   const meetings = capture(MEETINGS, MEETINGS_URL), roster = capture(ROSTER, ROSTER_URL);
   const other = capture(shell("Planning Commission Meetings", "<p>The Planning Commission meets the first Monday of each month at 6:00 p.m.</p>"), "https://www.bensonaz.gov/planning");
-  const pages = new Map([meetings, roster, other].map(c => [c.evidence.artifactId, c]));
+  // A later capture of the same page is the host's "Access Denied" wall (Sierra Vista's, 2026-09-29).
+  const wall = { ...capture("<html><head><title>Access Denied</title></head><body><h1>Access Denied</h1></body></html>", MEETINGS_URL, "2026-09-29T06:00:00.000Z"), httpStatus: 403 };
+  const pages = new Map([meetings, roster, other, wall].map(c => [c.evidence.artifactId, c]));
   const schedule = await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
-    artifacts: [artifact(other), artifact(meetings), artifact(roster)], readHeld: async record => pages.get(record.artifactId) ?? null });
+    artifacts: [artifact(wall), artifact(other), artifact(meetings), artifact(roster)], readHeld: async record => pages.get(record.artifactId) ?? null });
   assert.equal(schedule?.capture.evidence.canonicalUrl, MEETINGS_URL, "another body's schedule never attaches to the council");
   const stale = await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
     artifacts: [artifact(capture(MEETINGS, MEETINGS_URL, "2026-07-01T00:00:00.000Z"))], readHeld: async () => capture(MEETINGS, MEETINGS_URL, "2026-07-01T00:00:00.000Z") });

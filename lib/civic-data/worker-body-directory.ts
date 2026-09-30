@@ -137,16 +137,21 @@ export async function heldDirectoryReading(input: {
   const seen = new Set<string>();
   const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
-    .filter(a => !seen.has(a.contentHash) && Boolean(seen.add(a.contentHash)) && !seen.has(a.canonicalUrl) && Boolean(seen.add(a.canonicalUrl)))
+    .filter(a => !seen.has(a.contentHash) && Boolean(seen.add(a.contentHash)))
     .slice(0, input.limit ?? 40);
   const records: { id: string; fields: Record<string, unknown> }[] = [], sourceOf = new Map<string, WorkerPublicationCapture>(), used: WorkerPublicationCapture[] = [];
+  // The newest usable copy of each page speaks for it: an older copy never re-adds a board the newer one dropped,
+  // and a later "Access Denied" capture never shadows a good one.
+  const readUrls = new Set<string>();
   for (const artifact of candidates) {
+    if (readUrls.has(artifact.canonicalUrl)) continue;
     const capture = await input.readHeld(artifact);
     if (!capture || !captureIntact(capture)) continue;
     const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
     const pageVerdict = section3Page(page, contract.recordClass, input.now);
     // The right place: the government's own page names that government.
     if (!pageVerdict.ok || !pageWords(capture.evidence.text).includes(division.label.toLowerCase())) continue;
+    readUrls.add(artifact.canonicalUrl);
     const rows = readHeldDirectory(capture.evidence.text) ?? [];
     let kept = false;
     for (const row of rows) {

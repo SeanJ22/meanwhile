@@ -111,14 +111,18 @@ export async function heldBodySchedule(input: {
   const seen = new Set<string>();
   const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
-    .filter(a => !seen.has(a.canonicalUrl) && Boolean(seen.add(a.canonicalUrl)))
+    .filter(a => !seen.has(a.contentHash) && Boolean(seen.add(a.contentHash)))
     .slice(0, input.limit ?? 60);
+  // The newest usable copy of each page speaks for it; a later "Access Denied" capture never shadows a good one.
+  const readUrls = new Set<string>();
   for (const record of candidates) {
+    if (readUrls.has(record.canonicalUrl)) continue;
     const capture = await input.readHeld(record);
     if (!capture || !captureIntact(capture)) continue;
     const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt };
     const pageVerdict = section3Page(page, "OFFICIAL_BOARD_DIRECTORY", input.now);
     if (!pageVerdict.ok || (input.divisionLabel && !pageWords(page.text).includes(input.divisionLabel.toLowerCase()))) continue;
+    readUrls.add(record.canonicalUrl);
     const read = readHeldMeetingSchedule(page.text, page.url);
     if (!read) continue;
     const about = pageIsAboutBody(page.text, input.body, input.divisionLabel) ||

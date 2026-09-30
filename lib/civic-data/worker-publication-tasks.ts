@@ -62,7 +62,9 @@ export async function printWorkerPublicationReceipt(store: Pick<RoutineDataStore
   /** Anything else this pass published outside work items (the national place publisher), with its gaps. */
   extra: { readonly records: number; readonly versionId: string | null; readonly candidateId: string | null; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null): Promise<boolean> {
   const delivered = publicationDelivery(report, extra);
-  const last = [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId).map(row => row.outcome),
+  // Only this pass's own publications: an already-published item reports its earlier outcome, whose version may no longer be current.
+  const passAt = report.map(row => row.outcome.at).sort().at(-1);
+  const last = [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId && row.outcome.at === passAt).map(row => row.outcome),
     ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
   const created = last?.candidateId ? await store.readCandidate(last.candidateId) : null;
   const record = created ?? (last?.versionId ? await store.readCandidate(last.versionId) : null);
@@ -81,7 +83,8 @@ export function publicationDelivery(
   report: readonly { readonly workItemId: string; readonly outcome: NonNullable<WorkItem["publicationOutcome"]> }[],
   extra: { readonly records: number; readonly gaps: readonly { readonly key: string; readonly detail: string }[] } | null = null,
 ): { readonly records: number; readonly gaps: number; readonly gapReasons: Readonly<Record<string, number>> } {
-  const live = report.filter(row => row.outcome.status !== "HELD" && row.outcome.code !== "VERIFIED_RESULT_REUSED");
+  const passAt = report.map(row => row.outcome.at).sort().at(-1);
+  const live = report.filter(row => row.outcome.status !== "HELD" && row.outcome.code !== "VERIFIED_RESULT_REUSED" && row.outcome.at === passAt);
   const gaps = [...report.filter(row => row.outcome.status === "HELD").map(row => row.outcome.code), ...(extra?.gaps ?? []).map(gap => gap.detail.split(":")[0])];
   const gapReasons: Record<string, number> = {};
   for (const code of gaps) gapReasons[code] = (gapReasons[code] ?? 0) + 1;

@@ -179,6 +179,74 @@ test("a roster repair schedules only profile URLs grounded in exact official hre
   assert.deepEqual(repaired.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
 });
 
+test("roster repair preserves visible office email and the exact phone field consumed by publication", async () => {
+  const f = await fixture();
+  const { createHash } = await import("node:crypto");
+  const capture = (text: string) => ({ ...f.evidence[0], text,
+    contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` });
+  const rows = (emailCell: string) => `<table><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th></tr>
+    <tr><td>1</td><td>Ada One</td><td>(520) 555-0100</td><td>${emailCell}</td></tr>
+    <tr><td>2</td><td>Bea Two</td><td>(520) 555-0100</td><td>${emailCell.replace("ada", "bea")}</td></tr></table>`;
+  const emailEvidence = capture(rows("ada@city.example.gov"));
+  const baseFields = { id: { source: 0, type: "STRING" as const }, name: { source: 1, type: "STRING" as const } };
+  const repair = (fields: Record<string, { source: number; type: "STRING" }>) => ({
+    schemaVersion: 1 as const, sourceArtifactId: emailEvidence.artifactId,
+    extraction: { format: "HTML_TABLE" as const, tableIndex: 0, headerRows: 1, fields }, authorities: [] });
+  const candidate = (contractRepair: ReturnType<typeof repair>) => ({ ...f.candidate,
+    evidenceArtifactIds: [emailEvidence.artifactId], contractRepair });
+  const evaluate = (contractRepair: ReturnType<typeof repair>, evidence = emailEvidence) =>
+    evaluatePlanRepair({ plan: f.h.item.autonomousPlan!, candidate: candidate(contractRepair), evidence: [evidence], now: f.h.now() });
+
+  assert.throws(() => evaluate(repair({ ...baseFields, officePhone: { source: 2, type: "STRING" } })),
+    /REPAIR_SUPPORTED_FIELDS_OMITTED:phone,email/,
+    "a field named officePhone would parse but the roster publisher consumes only phone");
+  assert.throws(() => evaluate(repair({ ...baseFields, phone: { source: 2, type: "STRING" } })),
+    /REPAIR_SUPPORTED_FIELDS_OMITTED:email/);
+  const complete = evaluate(repair({ ...baseFields, phone: { source: 2, type: "STRING" }, email: { source: 3, type: "STRING" } }));
+  assert.deepEqual(complete.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"],
+    "capturing both contact fields still does not verify either person");
+
+  const buttonEvidence = capture(rows('<a href="javascript:void(0);">Email</a>'));
+  assert.deepEqual(evaluate(repair({ ...baseFields, phone: { source: 2, type: "STRING" } }), buttonEvidence).unresolved,
+    ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"],
+    "the source's JavaScript Email button is not a visible address to invent or require");
+  const mappedButton = repair({ ...baseFields, phone: { source: 2, type: "STRING" }, email: { source: 3, type: "STRING" } });
+  assert.throws(() => evaluate(mappedButton, buttonEvidence), /REPAIR_EXTRACTION_REFUSED:OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS/,
+    "mapping a JavaScript Email button must not turn its label into a public contact");
+  const direct = parseGeneralizedRecords({ attemptId: "at-roster-email-button", worker: {
+    role: "PARSER", provider: "deterministic", version: "2", instance: "roster-email-button" },
+    evidence: buttonEvidence, contract: complete.contract }, complete.contract);
+  assert.equal(direct.verdict, "FAILED", "an initial contract is held by the same parser rule as a repaired contract");
+  assert.equal(direct.warnings[0]?.code, "OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS");
+});
+
+test("roster repair retains a fully visible source-stated term without inferring tenure dates", async () => {
+  const f = await fixture();
+  const { createHash } = await import("node:crypto");
+  const text = `<table><tr><th>ID</th><th>Name</th><th>Term ends</th></tr>
+    <tr><td>1</td><td>Ada One</td><td>Serves until successor qualifies</td></tr>
+    <tr><td>2</td><td>Bea Two</td><td>December 2028</td></tr></table>`;
+  const evidence = { ...f.evidence[0], text, contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}` };
+  const fields = { id: { source: 0, type: "STRING" as const }, name: { source: 1, type: "STRING" as const } };
+  const repair = (mapped: Record<string, { source: number; type: "STRING" }>) => ({ schemaVersion: 1 as const,
+    sourceArtifactId: evidence.artifactId, extraction: { format: "HTML_TABLE" as const, tableIndex: 0, headerRows: 1,
+      fields: mapped }, authorities: [] });
+  const evaluate = (mapped: Record<string, { source: number; type: "STRING" }>) => evaluatePlanRepair({
+    plan: f.h.item.autonomousPlan!, candidate: { ...f.candidate, evidenceArtifactIds: [evidence.artifactId], contractRepair: repair(mapped) },
+    evidence: [evidence], now: f.h.now() });
+  assert.throws(() => evaluate(fields), /REPAIR_SUPPORTED_FIELDS_OMITTED:termNote/);
+  assert.throws(() => evaluate({ ...fields, term: { source: 2, type: "STRING" } }),
+    /REPAIR_SUPPORTED_FIELDS_OMITTED:termNote/, "a different field name would be dropped by the roster publisher");
+  const accepted = evaluate({ ...fields, termNote: { source: 2, type: "STRING" } });
+  assert.deepEqual(accepted.unresolved, ["EXTERNAL_VERIFICATION_MISSING", "UNVERIFIED_ROSTER_MEMBERS:2"]);
+  const parsed = parseGeneralizedRecords({ attemptId: "at-term-note-test", worker: {
+    role: "PARSER", provider: "deterministic", version: "2", instance: "term-note-test" },
+    evidence, contract: accepted.contract }, accepted.contract);
+  assert.deepEqual(parsed.records.map(row => row.fields.termNote),
+    ["Serves until successor qualifies", "December 2028"], "the source wording survives without invented service dates");
+  assert.equal(accepted.contract.dateFields, undefined);
+});
+
 test("roster repair isolates an independently contradicted person without crediting that row", async () => {
   const f = await fixture();
   const { createHash } = await import("node:crypto");

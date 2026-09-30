@@ -20,6 +20,14 @@ export function parseGeneralizedRecords(input: ParserWorkerInput, contract: Gene
       const fields: Record<string, FieldValue> = Object.create(null);
       for (const [field, cell] of Object.entries(row)) fields[field] = cell.value;
       for (const field of contract.requiredFields) if (fields[field] === null || fields[field] === undefined || fields[field] === "") throw new RecordEvidenceRefusal("REQUIRED_FIELD_MISSING", `Record ${rowIndex} lacks required ${field}.`);
+      // A roster's Email button or JavaScript contact action is not an
+      // address. Refuse that mapping before it can become a verified-looking
+      // public office contact; a blank optional cell remains simply absent.
+      const email = fields.email;
+      if (contract.recordClass === "OFFICIAL_ROSTER" && email !== null && email !== undefined && email !== "" &&
+        (typeof email !== "string" || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email.trim()))) {
+        throw new RecordEvidenceRefusal("OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS", `Record ${rowIndex} maps an Email cell without a literal address.`);
+      }
       const id = recordIdentity(fields, contract.identity);
       if (seen.has(id)) warnings.push({ code: "DUPLICATE_SOURCE_RECORD_ID", severity: "WARNING", recordId: id, detail: "Source records share a stable identity; preserve both pending independent reconciliation." });
       seen.add(id); const evidenceSpanIds: string[] = [];

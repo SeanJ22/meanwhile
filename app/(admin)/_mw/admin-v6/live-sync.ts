@@ -151,6 +151,9 @@ export class LiveSync {
         if (slot.state.phase !== "waiting" && slot.wanted !== null) {
           slot.inFlight?.abort();
           slot.inFlight = null;
+          slot.retry?.();
+          slot.retry = null;
+          slot.seq += 1;
           slot.wanted = null;
           this.set(id, { phase: slot.state.data === null ? "waiting" : "failed" });
           changed = true;
@@ -232,7 +235,8 @@ export class LiveSync {
       this.emit();
       return;
     }
-    if (status === 200 && r && r.contract === sectionContract(id) && r.scope === scope && "data" in r) {
+    if (status === 200 && r && r.contract === sectionContract(id) && r.scope === scope &&
+      r.revision === slot.wanted && "data" in r) {
       this.set(id, {
         phase: "live",
         data: r.data ?? null,

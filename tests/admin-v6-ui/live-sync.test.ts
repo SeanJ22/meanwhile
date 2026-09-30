@@ -52,7 +52,7 @@ test("changing the account period clears old figures and names an unavailable pe
   assert.equal(unavailable.data, null);
   assert.equal(unavailable.dependency?.id, "DEP-PERIOD");
   sync.setParams("money", { period: "2026-09" });
-  calls[2].resolve({ status: 200, body: { contract: "admin-v6/money@1", scope: "st:az", revision: "m2",
+  calls[2].resolve({ status: 200, body: { contract: "admin-v6/money@1", scope: "st:az", revision: "m1",
     asOf: "2026-09-28T19:01:00.000Z", data: { accountMonth: "September 2026" } } });
   await flush();
   assert.equal(sync.snapshot().money.phase, "live");
@@ -107,6 +107,36 @@ test("only one read per section is in flight, and an out-of-order answer is drop
   calls[0].resolve(ok("st:az", "v1", ["old"]));
   await flush();
   assert.deepEqual(sync.snapshot().stuck.data, ["new"]);
+});
+
+test("a stale 200 response cannot claim the newly announced section revision", async () => {
+  const { sync, calls, timers } = harness();
+  sync.onPulse(pulse(stuckAnn("v1")));
+  calls[0].resolve(ok("st:az", "v1", ["previous"]));
+  await flush();
+  sync.onPulse(pulse(stuckAnn("v2")));
+  calls[1].resolve(ok("st:az", "v1", ["stale answer"]));
+  await flush();
+  assert.equal(sync.snapshot().stuck.phase, "failed");
+  assert.deepEqual(sync.snapshot().stuck.data, ["previous"], "last confirmed data remains visibly stale");
+  assert.equal(timers.filter(t => !t.cancelled).at(-1)?.ms, RETRY_DELAYS_MS[0]);
+  timers.filter(t => !t.cancelled).at(-1)!.fn();
+  calls[2].resolve(ok("st:az", "v2", ["current"]));
+  await flush();
+  assert.deepEqual(sync.snapshot().stuck.data, ["current"]);
+});
+
+test("a withdrawn capability invalidates an in-flight answer and its retry", async () => {
+  const { sync, calls, timers } = harness();
+  sync.onPulse(pulse(stuckAnn("v1")));
+  sync.onPulse(pulse());
+  calls[0].resolve(ok("st:az", "v1", ["not available"]));
+  await flush();
+  assert.equal(sync.snapshot().stuck.phase, "waiting");
+  assert.equal(sync.snapshot().stuck.data, null);
+  assert.equal(timers.filter(t => !t.cancelled).length, 0);
+  sync.onPulse(pulse(stuckAnn("v1")));
+  assert.equal(calls.length, 2, "the returned capability starts one fresh read");
 });
 
 test("changing scope clears the old scope's data and drops its late answer", async () => {

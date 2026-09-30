@@ -20,7 +20,7 @@
  * overdue, stale or offline. Data is replaced, never appended, so catching up
  * cannot double count.
  */
-import { useEffect, useEffectEvent, useState, useSyncExternalStore } from "react";
+import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from "react";
 
 import { PULSE_INTERVAL_MS, PULSE_STALE_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
 
@@ -67,6 +67,9 @@ export function usePulseFeed(opts: { readonly onPulse: (pulse: LivePulse) => voi
   const [receivedAt, setReceivedAt] = useState<number | null>(null);
   const [now, setNow] = useState(0);
   const [recovered, setRecovered] = useState(false);
+  // navigator.onLine can already be true again when the next pulse arrives.
+  // Remember an intervening offline event until that pulse catches up.
+  const lostSincePulse = useRef(false);
   const onPulse = useEffectEvent((p: LivePulse) => opts.onPulse(p));
   const onReconnected = useEffectEvent(() => opts.onReconnected());
   const wasLost = useEffectEvent(() => !online || (receivedAt !== null && Date.now() - receivedAt > RECONNECTING_AFTER_MS));
@@ -74,10 +77,12 @@ export function usePulseFeed(opts: { readonly onPulse: (pulse: LivePulse) => voi
   useEffect(() => {
     let recoverTimer: ReturnType<typeof setTimeout> | undefined;
     const clock = setInterval(() => setNow(Date.now()), 5_000);
+    const markOffline = () => { lostSincePulse.current = true; };
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<unknown>).detail;
       if (!isUsablePulse(detail)) return;
-      const lost = wasLost();
+      const lost = lostSincePulse.current || wasLost();
+      lostSincePulse.current = false;
       const t = Date.now();
       setPulse(detail);
       setReceivedAt(t);
@@ -90,12 +95,14 @@ export function usePulseFeed(opts: { readonly onPulse: (pulse: LivePulse) => voi
         recoverTimer = setTimeout(() => setRecovered(false), 8_000);
       }
     };
+    window.addEventListener("offline", markOffline);
     window.addEventListener(PULSE_EVENT, handler);
-    return () => { window.removeEventListener(PULSE_EVENT, handler); clearInterval(clock); clearTimeout(recoverTimer); };
+    return () => { window.removeEventListener("offline", markOffline); window.removeEventListener(PULSE_EVENT, handler); clearInterval(clock); clearTimeout(recoverTimer); };
   }, []);
 
   return {
-    connection: connectionOf({ online, receivedAt, now: Math.max(now, receivedAt ?? 0) }),
+    connection: online && lostSincePulse.current ? "reconnecting" :
+      connectionOf({ online, receivedAt, now: Math.max(now, receivedAt ?? 0) }),
     pulse,
     lastGoodAt: pulse?.at ?? null,
     recovered,

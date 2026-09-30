@@ -6,7 +6,6 @@
  */
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { readFileSync } from "node:fs";
-import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { resolve, join } from "node:path";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";

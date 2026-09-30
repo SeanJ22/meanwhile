@@ -15,7 +15,7 @@ import {
   type ScoutToolContext,
   type VaultBytes,
 } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
@@ -43,6 +43,28 @@ import { evidenceProjection } from "../lib/control-plane/workers/evidence-projec
  */
 
 const NOW = "2026-09-01T12:00:00.000Z";
+
+test('collector reads held bytes before HTTP and preserves their observation time',async()=>{
+  const url='https://county.gov/clerk',old='2026-08-30T00:00:00Z';
+  const read=savedPageReader(context({openOne:async()=>{throw Error('No network for held bytes');},
+    inherited:{artifactIds:['held'],summary:'',provenance:[{artifactId:'held',canonicalUrl:url,retrievedAt:old,httpStatus:200,permission:'ALLOWED',methodRouteId:'scout:fetch_public'}]},
+    readHeldArtifact:async()=>({artifactId:'held',canonicalUrl:url,text:'Clerk Ada',retrievedAt:old} as never)}));
+  assert.deepEqual(await read(url),{url,text:'Clerk Ada',collectedAt:old,artifactId:'held',artifacts:[]});
+});
+
+test('collector falls back to the existing browser and returns only saved public page bytes',async()=>{
+  const url='https://county.gov/clerk',html='<html><body>Clerk Ada</body></html>';
+  const http=fakeTransport({[url]:{status:403,body:'Forbidden'}}),vault=recordingVault();let browsed=0;
+  const read=savedPageReader(context({openOne:http.open,vault:vault.put,browse:async()=>{
+    browsed++;return {finalUrl:url,status:200,html,text:'Clerk Ada',requests:[],transportError:null,durationMs:1};
+  }}));
+  const got=await read(url);
+  assert.equal(got.text,html);assert.equal(got.collectedAt,NOW);assert.equal(browsed,1);
+  assert.ok(vault.puts.some(row=>row.artifact.id===got.artifactId && row.body===html));
+  assert.equal((await read(url)).artifactId,got.artifactId);assert.equal(browsed,1);
+  const refused=savedPageReader(context({openOne:fakeTransport({[url]:{status:200,body:html}}).open,vault:recordingVault('refuse').put}));
+  await assert.rejects(refused(url),/SOURCE_PAGE_UNREADABLE/);
+});
 
 /* --------------------------------------------------------------- fakes */
 

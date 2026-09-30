@@ -1,5 +1,44 @@
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
-import { installedAdapters, runInstalledAdapter } from './scout-adapters.ts';
+import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from './scout-adapters.ts';
+
+/** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
+export function savedPageReader(context:ScoutToolContext) {
+  const captured=new Map<string,{artifact:Artifact;text:string}>();
+  const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
+    const saved=await context.vault(artifact,text);
+    if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC')captured.set(artifact.id,{artifact,text});
+    return saved;
+  }});
+  return async(url:string):Promise<{url:string;text:string;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
+    for(const saved of captured.values()) {
+      if(saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 && saved.artifact.contentType.includes('text/html'))
+        return {url:saved.artifact.retrievalUrl,text:saved.text,collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts:[]};
+    }
+    for(const provenance of context.inherited.provenance??[]) {
+      if(provenance.canonicalUrl!==url || provenance.httpStatus!==200 || !context.readHeldArtifact)continue;
+      try {
+        const held=await context.readHeldArtifact(provenance.artifactId);
+        if(held.canonicalUrl===url)return {url,text:held.text,collectedAt:held.retrievedAt,artifactId:held.artifactId,artifacts:[]};
+      } catch { /* The same source remains owed when its prior bytes cannot be read. */ }
+    }
+    const artifacts:WorkArtifact[]=[];
+    const failures:string[]=[];
+    for(const tool of context.browse?['fetch_public','browse']:['fetch_public']) {
+      const result=await toolkit.call(tool,{url,why:'Read the official source for the collector, retaining its exact bytes.'},'other:collector-source');
+      artifacts.push(...result.artifacts);
+      if(result.ok) {
+        for(const row of [...result.artifacts].reverse()) {
+          const saved=captured.get(row.artifactId);
+          if(saved && saved.artifact.canonicalUrl===url && saved.artifact.httpStatus===200 &&
+            saved.artifact.contentType.includes('text/html'))return {url:saved.artifact.retrievalUrl,text:saved.text,
+              collectedAt:saved.artifact.retrievedAt,artifactId:saved.artifact.id,artifacts};
+        }
+      }
+      failures.push(result.rung?.observed??result.forModel);
+    }
+    throw new Error('SOURCE_PAGE_UNREADABLE: '+failures.join('; '));
+  };
+}
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /**
  * **THE SCOUT'S RESEARCH TOOLS.** (Level 1 activation, 2026-09-01.)
@@ -1368,6 +1407,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         const raw = input as Record<string, unknown>;
         if (typeof raw.adapter !== 'string') return {ok:true,forModel:JSON.stringify(await installedAdapters()),artifacts:[],provenance:[],rung:null,requestCount:0,bytesFetched:0};
         if (typeof raw.artifactId !== 'string' || !ctx.inherited.artifactIds.includes(raw.artifactId) || !ctx.readHeldArtifact) return refusal('ADAPTER_ARTIFACT_NOT_HANDED');
+        const adapterIdentity=raw.adapter+'@'+installedAdapterVersion(raw.adapter);
         try {
           const held = await ctx.readHeldArtifact(raw.artifactId);
           if (held.artifactId !== raw.artifactId || held.contentHash !== contentHash(held.text) || !held.provenance) return refusal('ADAPTER_ARTIFACT_IDENTITY_MISMATCH');
@@ -1377,8 +1417,9 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           const end=Math.min(serialized.length,offset+READ_PASSAGE_CHARS);
           return {ok:true,forModel:`ADAPTER ${raw.adapter} read held artifact ${held.artifactId}; source ${held.canonicalUrl}. Derived result ${offset}..${end} of ${serialized.length}${end<serialized.length?`; continue at offset ${end}`:''}. Exact fact quotes must still occur in the held source.\n${UNTRUSTED_CONTENT_HEADER}\n${DATA_BEGIN}\n${serialized.slice(offset,end)}\n${DATA_END}`,
             artifacts:[],requestCount:0,bytesFetched:0,knowledgeRead:{kind:'HELD_ARTIFACT',id:held.artifactId,contentHash:held.contentHash,offset:0,length:held.text.length},
-            provenance:[held.provenance],rung:{rung:parsed.value.rung,tool:'run_adapter',target:held.canonicalUrl,observed:'Installed adapter '+raw.adapter,artifactIds:[held.artifactId]}};
-        } catch(error) { return refusal('ADAPTER_FAILED: '+(error instanceof Error?error.message:String(error))); }
+            provenance:[held.provenance],rung:{rung:parsed.value.rung,tool:'run_adapter',target:held.canonicalUrl,observed:'Installed adapter '+adapterIdentity,artifactIds:[held.artifactId]}};
+        } catch(error) { const detail='ADAPTER_FAILED: '+(error instanceof Error?error.message:String(error));
+          return {...refusal(detail),rung:{rung:parsed.value.rung,tool:'run_adapter',target:raw.artifactId,observed:'Installed adapter '+adapterIdentity+'; '+detail,artifactIds:[],ok:false}}; }
       }
       case "search": {
         const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;

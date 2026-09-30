@@ -2,10 +2,14 @@ import type { ScoutResult } from '../lib/control-plane/scheduler/scout-result.ts
 import { SCOUT_HELD_EVIDENCE_PROTOCOL_VERSION } from "../lib/control-plane/scheduler/scout-result.ts";
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { publishAdapterPullRequest, plainAdapterFor } from '../lib/control-plane/workers/engineering-adapter.ts';
+import { publishAdapterPullRequest, plainAdapterFor, workAdapterQueue } from '../lib/control-plane/workers/engineering-adapter.ts';
+import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
+import {MODELS} from '../lib/models.ts';
+import {SendBudgetRefusal} from '../lib/control-plane/expansion/spend-holds.ts';
+import {solvedScoutResult,readSubjectScoutHistory,wakeInstalledAdapterDebts} from '../lib/control-plane/workers/detective.ts';
 import { sourceReliabilityKey } from '../lib/control-plane/scheduler/scout-reliability.ts';
 import { adapterWaitReason, investigationRole, subjectScoutHistory, reusableScoutCandidates, scoutFactGrounded, failureNeedsInvestigation, failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
-import { installedAdapters, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
+import { installedAdapters, installedAdapterVersion, runInstalledAdapter } from '../lib/control-plane/scheduler/scout-adapters.ts';
 import { readClientSource } from '../lib/control-plane/scheduler/scout-clients.ts';
 import { retryable } from '../lib/control-plane/scheduler/debt.ts';
 
@@ -84,6 +88,17 @@ test('failed acquisition and blank parse reach a Detective before another unchan
  }
 });
 
+test('legacy adapter debts wake for installed code and stay held after that same implementation was tried',async()=>{
+ const repos=createMemoryRepositories(),name='uncapped-source-links',now='2026-09-30T00:00:00Z';
+ const pending={refusal:null,outcome:'NEEDS_ADAPTER',narrative:'Need uncapped links from raw HTML extraction',nextRungs:[],candidates:[],rungs:[]} as unknown as ScoutResult;
+ const debt={obligationId:'pending',cause:'AWAITING_ADAPTER',retryAt:'2026-10-01',consecutiveFailures:2058} as Parameters<typeof wakeInstalledAdapterDebts>[1][number];
+ await repos.scoutResults.append('pending','old',pending,now);
+ const reopened=(await wakeInstalledAdapterDebts(repos,[debt],now))[0];
+ assert.equal(reopened.cause,'EXTRACTION_FAILED');assert.equal(reopened.retryAt,now);assert.equal(reopened.consecutiveFailures,2058);
+ await repos.scoutResults.append('pending','tried',{...pending,rungs:[{tool:'run_adapter',observed:'Installed adapter '+name+'@'+installedAdapterVersion(name)} as never]},now);
+ assert.equal((await wakeInstalledAdapterDebts(repos,[debt],now))[0].cause,'AWAITING_ADAPTER');
+});
+
 test('shared client tools preserve source bytes and date-window paging',async()=>{
  const rows=Array.from({length:90},(_,i)=>'person-'+i+',Member '+i+',lower,'+(i+1)).join('\n');
  const csv='id,name,current_chamber,current_district\n'+rows;
@@ -106,4 +121,47 @@ test('the legacy research lane declares a failure responder before dispatch and 
   assert.equal(executor.workerFor!(args).role,failed?'DETECTIVE':'SCOUT');
   executor.workerFor!(args);assert.equal(reads,1);
  }
+});
+
+test('legacy jobs reuse solved subjects without refreshing old facts or calling a model',async()=>{
+ const solved={refusal:null,outcome:'EVIDENCE_FOUND',subjectId:'county',recordClass:'officials',attemptId:'first',recordedAt:'2026-09-29',
+   candidates:[],findings:[{kind:'RECORD',field:'holder',value:'Ada',exactQuote:'Clerk Ada',sourceUrl:'https://county.gov/clerk',artifactIds:['held']}]} as unknown as ScoutResult;
+ assert.equal(solvedScoutResult([solved],'other','officials'),null);
+ assert.equal(solvedScoutResult([solved,{...solved,outcome:'BLOCKED',recordedAt:'2026-09-30'}],'county','officials'),null);
+ const executor=failureResponderExecutor({solved:solvedScoutResult([solved],'county','officials'),transport:async()=>{throw Error('No model');},toolkitFor:()=>{throw Error('No tools');},contextFor:()=>{throw Error('No new research');}});
+ const output=await executor.run({} as Parameters<typeof executor.run>[0]);
+ assert.equal(executor.lane,'DETERMINISTIC');assert.equal(output.disposition?.disposition,'DISCOVERED');
+ assert.equal(output.cost?.requestCount,0);assert.equal(output.cost?.usd,0);assert.deepEqual(output.artifacts,[]);
+});
+
+test('batch history finds the same subject under other job keys without downloading the full log',async()=>{
+ const repos=createMemoryRepositories();
+ const base={refusal:null,outcome:'EVIDENCE_FOUND',recordClass:'officials',rungs:[],findings:[],candidates:[],recordedAt:'2026-09-29'} as unknown as ScoutResult;
+ for(const [key,subjectId] of [['old-job','county'],['other-job','city']])await repos.scoutResults.append(key,key,{...base,subjectId,obligationId:key},'2026-09-29');
+ const rows=await readSubjectScoutHistory(repos,[{subjectId:'county',recordClass:'officials'}]);
+ assert.deepEqual(rows.map(r=>r.obligationId),['old-job']);
+});
+
+test('Engineer uses guarded named tiers, preserves held context, accounts requests and stops exhausted repeats',async()=>{
+ const repos=createMemoryRepositories(),models:string[]=[];
+ const source={refusal:null,outcome:'NEEDS_ADAPTER',subjectId:'county',recordClass:'officials',attemptId:'failed-parse',
+   obligationId:'obligation',workItemId:'work',recordedAt:'2026-09-29',narrative:'A new civic feed needs a parser',rungs:[],candidates:[],nextRungs:[],findings:[],artifactIds:['held']} as unknown as ScoutResult;
+ const input={repos,results:[source],now:'2026-09-30T00:00:00Z',readEvidence:async()=>({text:'Clerk Ada',canonicalUrl:'https://county.gov/clerk',artifactId:'held'} as never),
+   transportFor:()=>async(request:import('../lib/control-plane/scheduler/scout-executor.ts').ModelRequest)=>{
+     models.push(request.model);assert.match(JSON.stringify(request.messages),/Clerk Ada/);
+     return {model:request.model,stop_reason:'end_turn',content:[{type:'text' as const,text:'{"files":[]}'}],usage:{input_tokens:100,output_tokens:10,cache_read_input_tokens:0,cache_creation_input_tokens:0}};
+   }};
+ await workAdapterQueue(input);
+ assert.deepEqual(models,[MODELS.haiku.model,MODELS.sonnet.model,MODELS.opus.model]);
+ const costs=await repos.costs.readAll();assert.equal(costs.length,3);assert.ok(costs.every(c=>c.role==='ENGINEERING' && c.cost.usd!>0));
+ await workAdapterQueue(input);assert.equal(models.length,3);
+});
+
+test('Engineer does not escalate or publish when the existing budget transport refuses',async()=>{
+ const repos=createMemoryRepositories();let calls=0;
+ const source={refusal:null,outcome:'NEEDS_ADAPTER',subjectId:'county',recordClass:'officials',attemptId:'refused',recordedAt:'2026-09-29',
+   narrative:'A new civic feed needs a parser',rungs:[],candidates:[],nextRungs:[],findings:[],artifactIds:['held']} as unknown as ScoutResult;
+ const prs=await workAdapterQueue({repos,results:[source],now:'2026-09-30',readEvidence:async()=>({text:'Clerk Ada'} as never),
+   transportFor:()=>async()=>{calls++;throw new SendBudgetRefusal('CEILING','already spent');},request:async()=>{throw Error('Must not publish');}});
+ assert.deepEqual(prs,[]);assert.equal(calls,1);assert.equal((await repos.costs.readAll()).length,0);
 });

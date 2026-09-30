@@ -232,7 +232,7 @@ import {
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { failureResponderExecutor } from '../lib/control-plane/workers/detective.ts';
+import { failureResponderExecutor, readSubjectScoutHistory, solvedScoutResult, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
 import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -255,7 +255,7 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { emptyFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import { emptyFieldManual, readFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
 import {
   compoundingPair,
   fieldManualBriefLines,
@@ -1048,12 +1048,12 @@ const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
 
 /* A retired obligation owes no freshness: its debt stays out of the cycle, and `persistDebts` tombstones it as retired (2026-09-23). */
-const debtsIn = (canary
+const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
   ? (await Promise.all(corpus.map((obligation) => repos.debts.read(obligation.id))))
       .filter((row) => row !== null)
       .map((row) => row.value)
   : await loadDebts(repos)
-).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
+).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
@@ -1984,9 +1984,7 @@ const inheritedFieldManualCounts = new Map<string, number>();
 const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
 if (modelLaneEnabled && dueModel.length > 0) {
   try {
-    const priorResults = canary
-      ? (await Promise.all(dueModel.map((row) => repos.scoutResults.read(row.obligation.id)))).flat()
-      : await repos.scoutResults.readAll();
+    const priorResults = await readSubjectScoutHistory(repos,dueModel.map(row=>row.obligation));
     for (const r of priorResults) {
       const list = priorScoutResults.get(r.obligationId) ?? [];
       list.push(r);
@@ -1996,11 +1994,9 @@ if (modelLaneEnabled && dueModel.length > 0) {
     runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
   try {
-    const fm = await repos.fieldManual.read("live");
-    if (fm) {
-      fieldManual = fm.value;
-      fieldManualRevision = fm.revision;
-    }
+    const fm = await readFieldManual(repos,{role:'SCOUT'});
+    fieldManual = fm.store;
+    fieldManualRevision = fm.revision??0;
   } catch (error) {
     runtimeConditions.push(`the field manual could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -2043,7 +2039,7 @@ const PRIOR_RUNGS_BRIEFED = 40;
 
 function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const id = row.obligation.id;
-  const all = [...(priorScoutResults.get(id) ?? [])].sort((a, b) => (a.recordedAt < b.recordedAt ? -1 : a.recordedAt > b.recordedAt ? 1 : 0));
+  const all = subjectScoutHistory([...priorScoutResults.values()].flat(),row.obligation.subjectId,row.obligation.recordClass);
   const prior = all.slice(-2);
   const dispositions = (priorDispositionsByObligation.get(id) ?? []).slice(-3);
   const debt = debtsIn.find((d) => d.obligationId === id);
@@ -2449,6 +2445,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
  */
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? failureResponderExecutor({
+      solved:solvedScoutResult([...priorScoutResults.values()].flat(),scheduled.obligation.subjectId,scheduled.obligation.recordClass),
       /* MW-021: every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
       transport: budgetGuardedTransport({
         transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
@@ -2543,8 +2540,8 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
             amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
           } else {
             try {
-              const refreshed = await repos.fieldManual.read("live");
-              if (refreshed && refreshed.revision >= fieldManualRevision) { fieldManualRevision = refreshed.revision; fieldManual = refreshed.value; }
+              const refreshed = await readFieldManual(repos,{role:'SCOUT'});
+              if ((refreshed.revision??0) >= fieldManualRevision) { fieldManualRevision = refreshed.revision??0; fieldManual = refreshed.store; }
             } catch (error) {
               amended = { ...amended, unverified: [...amended.unverified, `field manual saved but refresh failed: ${String(error)}`] };
             }
@@ -2552,6 +2549,7 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         }
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
         scoutResultsThisCycle.push(amended);
+        priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
         return amended;
       },
     })

@@ -25,6 +25,14 @@ export interface CalendarEventInput {
   title: string;
   /** Timed event: ISO instant. Exactly one of these two is set. */
   startsAtIso?: string;
+  /**
+   * The published end instant, when the source states one. Without it the
+   * entry blocks a placeholder window and says so in its own description —
+   * never a silent invented end time.
+   */
+  endsAtIso?: string;
+  /** A timed entry whose end was not published (the placeholder window). */
+  endEstimated?: boolean;
   /** All-day event: YYYY-MM-DD. */
   allDayDate?: string;
   /**
@@ -83,12 +91,22 @@ function allDayStamps(date: string, lastDate?: string): { start: string; end: st
   return { start, end: next.toISOString().slice(0, 10).replace(/-/g, "") };
 }
 
-function timedStamps(iso: string): { start: string; end: string } {
+function timedStamps(iso: string, endIso?: string): { start: string; end: string } {
   const startMs = Date.parse(iso);
+  const endMs = endIso ? Date.parse(endIso) : Number.NaN;
+  const end = Number.isFinite(endMs) && endMs > startMs ? endMs : startMs + TIMED_BLOCK_MINUTES * 60_000;
   return {
     start: toCalStamp(new Date(startMs).toISOString()),
-    end: toCalStamp(new Date(startMs + TIMED_BLOCK_MINUTES * 60_000).toISOString()),
+    end: toCalStamp(new Date(end).toISOString()),
   };
+}
+
+/** True when a timed meeting's calendar entry uses a published end time. */
+export function hasPublishedEnd(meeting: { startsAt: string; endsAt?: string | null }): boolean {
+  if (!meeting.endsAt) return false;
+  const start = Date.parse(meeting.startsAt);
+  const end = Date.parse(meeting.endsAt);
+  return Number.isFinite(start) && Number.isFinite(end) && end > start;
 }
 
 export function googleCalendarUrl(event: CalendarEventInput): string {
@@ -98,7 +116,7 @@ export function googleCalendarUrl(event: CalendarEventInput): string {
         return `${start}/${end}`;
       })()
     : (() => {
-        const { start, end } = timedStamps(event.startsAtIso ?? "");
+        const { start, end } = timedStamps(event.startsAtIso ?? "", event.endsAtIso);
         return `${start}/${end}`;
       })();
   const params = new URLSearchParams({
@@ -120,7 +138,7 @@ export function icsDataHref(event: CalendarEventInput): string {
     lines.push(`DTSTART;VALUE=DATE:${start}`);
     lines.push(`DTEND;VALUE=DATE:${end}`);
   } else {
-    const { start, end } = timedStamps(event.startsAtIso ?? "");
+    const { start, end } = timedStamps(event.startsAtIso ?? "", event.endsAtIso);
     lines.push(`DTSTAMP:${start}`, `DTSTART:${start}`, `DTEND:${end}`);
   }
   lines.push(`SUMMARY:${esc(event.title)}`);
@@ -150,19 +168,27 @@ export function meetingCalendarEvent(
   options: { origin?: string } = {},
 ): CalendarEventInput {
   const timed = startTimeIsKnown(meeting);
+  const publishedEnd = timed && hasPublishedEnd(meeting);
   const lines = [
     meeting.bodyName,
     timed ? null : TIME_NOT_POSTED,
     meeting.agendaUrl ? `Agenda: ${meeting.agendaUrl}` : null,
     options.origin ? `Found via ${PRODUCT_NAME}: ${options.origin}/` : null,
-    timed ? "End time is an estimate — public bodies rarely publish one." : null,
+    timed && !publishedEnd
+      ? "End time was not published. This entry blocks 90 minutes as a placeholder."
+      : null,
   ].filter(Boolean) as string[];
 
   return {
     id: meeting.id,
     title: meetingHeadline(meeting),
     ...(timed
-      ? { startsAtIso: meeting.startsAt }
+      ? {
+          startsAtIso: meeting.startsAt,
+          ...(publishedEnd && meeting.endsAt
+            ? { endsAtIso: meeting.endsAt }
+            : { endEstimated: true }),
+        }
       : { allDayDate: meetingLocalDate(meeting) }),
     /*
      * An online meeting's LOCATION line carries what the body published —

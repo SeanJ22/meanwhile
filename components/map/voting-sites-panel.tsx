@@ -61,6 +61,8 @@ export interface VotingSitesPanelProps {
   selectedSiteId: string | null;
   onSelectSite: (id: string | null) => void;
   onClose: () => void;
+  /** Inside the design popup, which owns the title and the close control. */
+  embedded?: boolean;
 }
 
 type State =
@@ -75,6 +77,7 @@ export function VotingSitesPanel({
   selectedSiteId,
   onSelectSite,
   onClose,
+  embedded = false,
 }: VotingSitesPanelProps) {
   const [address, setAddress] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
@@ -139,11 +142,12 @@ export function VotingSitesPanel({
 
   return (
     <section
-      className="voting-panel"
-      role="dialog"
-      aria-label="Where can I vote"
-      aria-modal="false"
+      className={embedded ? "voting-panel mw-voting-panel" : "voting-panel"}
+      role={embedded ? undefined : "dialog"}
+      aria-label={embedded ? undefined : "Where can I vote"}
+      aria-modal={embedded ? undefined : "false"}
     >
+      {!embedded && (
       <header className="voting-panel-head">
         <h2 className="voting-panel-title">Where can I vote?</h2>
         <button
@@ -155,6 +159,7 @@ export function VotingSitesPanel({
           <X aria-hidden size={16} />
         </button>
       </header>
+      )}
 
       <form onSubmit={submit} className="voting-panel-form">
         <label htmlFor={inputId} className="voting-panel-label">
@@ -166,6 +171,8 @@ export function VotingSitesPanel({
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder={PLACEHOLDER_ADDRESS}
+          // The design popup opens with the cursor in the address field.
+          autoFocus={embedded}
           autoComplete="off"
           inputMode="text"
         />

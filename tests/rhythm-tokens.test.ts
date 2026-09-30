@@ -37,7 +37,8 @@ interface Baseline {
   elevation: Category;
 }
 
-const css = readFileSync(GLOBALS, "utf8");
+// The reader design rules live in app/reader.css (globals.css mirror cap); the scale applies to both.
+const css = readFileSync(GLOBALS, "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
 const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Baseline;
 
 const CATEGORIES: { name: keyof Baseline; sweep: (c: string) => RhythmOffender[] }[] = [

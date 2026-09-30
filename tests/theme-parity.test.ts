@@ -40,7 +40,7 @@ test("the parity classifier reads literal vs derived correctly (RULING 110)", ()
 });
 
 test("app/globals.css authors every literal colour in both themes", () => {
-  const css = readFileSync(GLOBALS, "utf8");
+  const css = readFileSync(GLOBALS, "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   const { darkOnly, lightOnly } = themeParityGaps(css);
   assert.deepEqual(
     darkOnly,

@@ -22,7 +22,12 @@ import { useUi, useUiDispatch } from "@/lib/state/provider";
  * name alone, so two "Planning Commission" entries in different towns stay
  * distinct.
  */
-export function ScopeSelectors() {
+export function ScopeSelectors({
+  onJurisdictionChosen,
+}: {
+  /** The reader picked a jurisdiction — the map shows its whole boundary. */
+  onJurisdictionChosen?: (ocdId: string) => void;
+}) {
   const { allMeetings, result } = useShellData();
   const { tiers, jurisdiction, body } = useUi();
   const dispatch = useUiDispatch();
@@ -88,12 +93,11 @@ export function ScopeSelectors() {
           className="scope-select"
           data-active={jurisdiction !== null}
           value={jurisdiction ?? ""}
-          onChange={(e) =>
-            dispatch({
-              type: "scope/jurisdiction",
-              ocdId: e.target.value || null,
-            })
-          }
+          onChange={(e) => {
+            const chosen = e.target.value || null;
+            dispatch({ type: "scope/jurisdiction", ocdId: chosen });
+            if (chosen) onJurisdictionChosen?.(chosen);
+          }}
         >
           <option value="">All jurisdictions</option>
           {jurisdictions.map(([ocdId, label]) => (

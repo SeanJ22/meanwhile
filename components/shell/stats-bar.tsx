@@ -16,14 +16,14 @@ import { tierSetVars } from "./tier-style";
  */
 
 const COVERAGE_LABEL = {
-  exact: "Exact",
-  widened: "Widened",
-  concluded: "Concluded",
-  none: "No coverage",
+  exact: "Showing meetings near you",
+  widened: "Nothing closer, so showing meetings from farther out",
+  concluded: "Nothing upcoming; showing recent meetings",
+  none: "No meetings collected for this area yet",
 } as const;
 
 export function StatsBar() {
-  const { meetings, drawnDistricts, dropped, result, searchFailed, atAddress } =
+  const { meetings, venues, location, drawnDistricts, dropped, result, searchFailed, atAddress } =
     useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -73,7 +73,12 @@ export function StatsBar() {
         statKey="meetings"
         label={listingCount.heading}
         value={view.meetings}
-        sub={listingCount.countNote}
+        sub={
+          listingCount.countNote ??
+          (searchFailed
+            ? null
+            : `${venues.length} ${venues.length === 1 ? "venue" : "venues"}`)
+        }
         style={accent}
         open={ui.listOverlayOpen}
         onOpen={() => dispatch({ type: "list/open", open: true })}
@@ -106,6 +111,7 @@ export function StatsBar() {
       <Card
         label="Officials"
         value={view.officials}
+        sub={location ? `Near ${location.zip}` : null}
         open={ui.door === "officials"}
         onOpen={() => dispatch({ type: "door/open", door: "officials" })}
       />
@@ -129,7 +135,7 @@ export function StatsBar() {
           notice. */}
       {coverage && !searchFailed && (
         <p className="stat-missing" style={{ color: "var(--text-muted)" }}>
-          Coverage: {COVERAGE_LABEL[coverage]}
+          {COVERAGE_LABEL[coverage]}
           {widened ? ` (${widened})` : ""}
         </p>
       )}

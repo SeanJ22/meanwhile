@@ -64,7 +64,7 @@ test("the motion sweep catches a raw duration — the instrument works (RULING 1
 });
 
 test("app/globals.css carries no raw duration in any transition or animation", () => {
-  const css = readFileSync(GLOBALS, "utf8");
+  const css = readFileSync(GLOBALS, "utf8") + "\n" + readFileSync(join(ROOT, "app", "reader.css"), "utf8");
   const offenders = rawMotionInCss(css);
   assert.deepEqual(
     offenders,

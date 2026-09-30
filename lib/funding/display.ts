@@ -15,6 +15,7 @@ import {
   secondHopForGroups,
 } from "./snapshot.ts";
 import type { ContributionRow, SecondHopCommittee } from "./types.ts";
+import { plainMoney } from "./plain-money.ts";
 
 /**
  * The funding display payload — everything either surface (the ballot page,
@@ -85,17 +86,8 @@ export type FundingAnswer =
   | { kind: "absence"; data: FundingAbsenceData }
   | { kind: "none" };
 
-/** "$4.2 million", "$657,000", "$325" — rounded the way people say money. */
-export function plainMoney(amount: number): string {
-  const abs = Math.abs(amount);
-  if (abs >= 1_000_000) {
-    const millions = amount / 1_000_000;
-    const rounded = millions >= 10 ? Math.round(millions) : Math.round(millions * 10) / 10;
-    return `$${rounded} million`;
-  }
-  if (abs >= 10_000) return `$${(Math.round(amount / 1000) * 1000).toLocaleString("en-US")}`;
-  return `$${Math.round(amount).toLocaleString("en-US")}`;
-}
+/** "$4.2 million", "$657,000", "$325" — one shared rounding rule (./plain-money.ts). */
+export { plainMoney };
 
 function cycleLabelFor(cycle: number): string {
   return `${cycle - 1}–${String(cycle).slice(2)}`;

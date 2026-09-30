@@ -25,11 +25,14 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
     new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
     const connection = headers.get("neon-connection-string");
     if (connection === null || internal.getStore()) return response;
+    // A dedicated feedback branch is neither of these two civic databases.
+    if (connection === process.env.FEEDBACK_DATABASE_URL && connection !== process.env.DATABASE_URL &&
+        connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return response;
     const bytes = await response.arrayBuffer();
     await record({
       day: new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(new Date()),
       database: connection === process.env.DATABASE_URL ? "reader" : "control-plane",
-      client: process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY ? "runner" : "reader",
+      client: process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion" ? "runner" : "reader",
       requests: 1,
       requestBytes: typeof init?.body === "string" ? Buffer.byteLength(init.body) : 0,
       responseBytes: bytes.byteLength,

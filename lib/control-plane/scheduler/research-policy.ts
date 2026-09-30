@@ -59,7 +59,7 @@ export interface ScoutBound {
 }
 
 export interface ResearchBounds {
-  readonly maxConcurrentScouts: number;
+  readonly workerCapacity: number;
   readonly perDispatch: ScoutBound;
   /**
    * The rolling daily model-spend ceiling — the ONE spend limit standing
@@ -73,7 +73,7 @@ export interface ResearchBounds {
 }
 
 export const RESEARCH_BOUNDS: ResearchBounds = {
-  maxConcurrentScouts: 4,
+  workerCapacity: 0,
   perDispatch: {
     maxTurns: 18,
     maxToolCalls: 16,
@@ -82,7 +82,7 @@ export const RESEARCH_BOUNDS: ResearchBounds = {
     maxRequestsPerHost: 10,
     maxOutputTokensPerTurn: 8_192,
   },
-  dailyCeilingUsd: 100,
+  dailyCeilingUsd: 0,
   windowHours: 24,
 };
 
@@ -638,3 +638,13 @@ export function deriveLevel1(input: {
  * model on its own result (`ScoutResult.modelClass`, `modelAttempts`).
  */
 export const SCOUT_MODEL = MODEL_FOR_CLASS[SCOUT_STEPS["scout-research-loop"].modelClass];
+
+/** Available processes, derived from funded hunts and the provider's request capacity. */
+export function researchWorkerCapacity(input: {
+  readonly hunts: number; readonly availableUsd: number;
+  readonly requestUsd: number; readonly requestsPerMinute?: number;
+}): number {
+  if (input.hunts <= 0 || input.availableUsd <= 0 || input.requestUsd <= 0) return 0;
+  const provider = input.requestsPerMinute === undefined ? input.hunts : Math.floor(input.requestsPerMinute);
+  return Math.max(0, Math.min(input.hunts, Math.floor(input.availableUsd / input.requestUsd), provider));
+}

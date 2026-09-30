@@ -63,7 +63,7 @@ async function runScoutCycle(scoutDeadlineMs: number | undefined) {
       decide: () => modelDecision,
       admitScout: () => ({ admit: true }),
       modelExecutor,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 1000,
       scoutWallMs: SCOUT_WALL_MS,
       ...(scoutDeadlineMs !== undefined ? { scoutDeadlineMs } : {}),

@@ -61,7 +61,7 @@ test("reasons are ordered: blackout, dry, no-model, owner pause, runner pause, u
     scheduledBlackout: true, dry: true, noModel: true, credentialConfigured: false, activation: CLOSED_GATE,
     paused: true, pauseIntentId: "ri-1", runnerPaused: true, runnerPauseIntentId: "PAUSE_RUNNER:x", unreadableControls: ["the log could not be read"],
   });
-  assert.equal(modelLaneClosure(all)?.code, "SCHEDULED_BLACKOUT");
+  assert.equal(modelLaneClosure(all)?.code, "LANE_DISABLED");
   assert.match(modelLaneClosure({ ...all, scheduledBlackout: false })!.reason, /^--dry/);
   assert.match(modelLaneClosure({ ...all, scheduledBlackout: false, dry: false })!.reason, /^--no-model/);
   const invocation = { scheduledBlackout: false, dry: false, noModel: false };

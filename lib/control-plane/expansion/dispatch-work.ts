@@ -142,7 +142,6 @@ import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "./dispatch
 import { manualProducerInvocationMatrix } from "../../civic-data/manual-producer-invocation.ts";
 import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import type { ResolvedScope } from "./membership.ts";
 
 /* ------------------------------------------------------------------ bounds */
@@ -156,21 +155,13 @@ export async function applyManualSourceGaps(
   input: { readonly now: string; readonly deadlineReached?: () => boolean },
 ): Promise<{ readonly created: number; readonly carried: number; readonly deferred: number }> {
   const applicable = scopes.filter(scope => scope.kind === "RESOLVED" && scope.decision.sourceWorkVersion === 1);
-  const exactOriginal = applicable.find(scope => scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd);
   let created = 0, carried = 0, deferred = 0;
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
     if (row.mode !== "REVIEWED_INPUT" && row.mode !== "SCOPED_ADAPTER_OWED") continue;
     const receipts = [...row.instructionIds];
-    // These two gaps are owed by the original AZ Send, but the existing
-    // commands have no scoped source path. County-only adapters are not linked
-    // from state membership because that would imply unproved applicability.
-    if (row.mode === "SCOPED_ADAPTER_OWED" && exactOriginal?.kind === "RESOLVED" &&
-      exactOriginal.states.includes("AZ") &&
-      (row.id === "jurisdiction-operational-reference" || row.id === "voting-sites")) {
-      receipts.push(exactOriginal.decision.receiptId);
+    // An unscoped adapter gap is owed by every resolved hunt, irrespective of ZIP.
+    if (row.mode === "SCOPED_ADAPTER_OWED") {
+      receipts.push(...applicable.map(scope => scope.decision.receiptId));
     }
     for (const receipt of new Set(receipts)) {
       if (input.deadlineReached?.()) { deferred += 1; continue; }

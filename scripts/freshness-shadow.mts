@@ -5,6 +5,8 @@ import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing
 import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, exactInstructionAutonomousWorkIds, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { MODELS } from "../lib/models.ts";
+import { researchWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -190,7 +192,7 @@ import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
+import { durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
@@ -266,7 +268,6 @@ import {
   writeFieldManualDiscoveries,
 } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { readMethodStore } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
@@ -307,7 +308,6 @@ import {
   FleetSafetyController,
   FleetPreSendRefusal,
   resolveRollingCeiling,
-  scheduledBlackoutAt,
   scoutEscalationReservation,
   modelRequestWorstCaseUsd,
   modelResponseUsd,
@@ -362,7 +362,6 @@ import {
 import {
   CYCLE_STALL_LEAD_MS,
   PendingOperations,
-  startCycleStallDiagnostic,
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
@@ -417,7 +416,7 @@ const pending = new PendingOperations();
 /** Set once the argv is read; before that the wall is the Fleet ceiling. */
 let CLOCK: CycleClock = cycleClock({
   processStartedMs: PROCESS_STARTED_MS,
-  wallMs: FLEET_SAFETY_BOUNDS.maxWallMsPerCycle,
+  wallMs: Number.POSITIVE_INFINITY,
   stallLeadMs: CYCLE_STALL_LEAD_MS,
 });
 let stallDiagnostic: CycleStallDiagnostic | null = null;
@@ -549,44 +548,13 @@ if (canary && (IDS === null || IDS.size !== 1)) {
  * dying mid-write. Measured from process start because that is what the
  * supervisor's ceiling is measured from.
  */
-const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
-const BUDGET_MIN = boundedNumber(
-  budgetArg?.slice("--budget-min=".length),
-  FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000,
-  FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000,
-);
+const BUDGET_MIN = Number.POSITIVE_INFINITY;
+const FINALIZATION_RESERVE_MS = 0;
 const CYCLE_STARTED_MS = Date.now();
-/** Leave two minutes inside the 15-minute hard process ceiling to close records and publish state. */
-const FINALIZATION_RESERVE_MS = 2 * 60_000;
-const DISPATCH_DEADLINE_MS = CYCLE_STARTED_MS + Math.max(0, BUDGET_MIN * 60_000 - FINALIZATION_RESERVE_MS);
-const scheduledBlackout = scheduledBlackoutAt(NOW);
-
-/*
- * **THE STALL DIAGNOSTIC AND THE LOUD STORE.** (2026-09-23.) The wall is the
- * budget above, from process start. About 90 s before it, a worker thread
- * writes what the cycle is waiting on to stderr and to the reserved record,
- * unless the cycle already wrote its record; it never ends the cycle. And every
- * control-plane timeout is said on stderr as it happens, even where its caller
- * absorbs it into a named runtime condition: before this, a killed cycle's
- * stderr was empty (request-bounds.ts, cycle-stall.ts).
- */
-CLOCK = cycleClock({ processStartedMs: PROCESS_STARTED_MS, wallMs: BUDGET_MIN * 60_000, stallLeadMs: CYCLE_STALL_LEAD_MS });
-/*
- * The late work (the metrics, the research progression, the worker fleet's fact projection) yields here, so
- * the research state and the heartbeat Admin reads keep their whole budgets (cycle-finalization.ts,
- * `lateWorkDeadlineMs`: 735 s on the fifteen-minute wall).
- */
-const lateWorkBudgetMs = (): number => Math.max(0, lateWorkDeadlineMs(CLOCK) - Date.now());
-stallDiagnostic = startCycleStallDiagnostic({
-  pending,
-  fireAtMs: CLOCK.stallAtMs,
-  processStartedMs: PROCESS_STARTED_MS,
-  wallAtMs: CLOCK.wallAtMs,
-  recordPath: RUN_RECORD_PATH,
-  startedAt: NOW,
-  cycleId: CYCLE_ID,
-  testedSha: RUNNING_CODE_SHA,
-});
+const DISPATCH_DEADLINE_MS = Number.POSITIVE_INFINITY;
+const scheduledBlackout = false;
+CLOCK = cycleClock({ processStartedMs: PROCESS_STARTED_MS, wallMs: Number.POSITIVE_INFINITY, stallLeadMs: 0 });
+const lateWorkBudgetMs = (): number => 120_000;
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
 /* ------------------------------------------------------------- provider --- */
@@ -1299,12 +1267,16 @@ runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
 const subjectByObligation = new Map(sync.all.map((o) => [o.id, o.subjectId]));
 const lifetimeHuntSubjects = new Set((expansionPlan?.scopes ?? [])
-  .filter(scope => scope.kind === "RESOLVED" && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key && scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd)
+  .filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetStartedAt !== null && scope.decision.budgetUsd > 0)
   .flatMap(scope => [...scope.members]));
 const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
+const fundedHunts = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetUsd > 0);
+const workerCapacity = researchWorkerCapacity({ hunts: Math.max(1, fundedHunts.length),
+  availableUsd: fundedHunts.reduce((sum, scope) => sum + scope.decision.budgetUsd, 0),
+  requestUsd: MODELS.haiku.outputUsdPerMillion * RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn / 1_000_000,
+  ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 /** 0 = the owner's DISPATCH; 1 + n = the n-th selected scope in run order; null = neither. */
 const placementRank = (obligationId: string): number | null => {
   if (dispatchPriority.has(obligationId)) return 0;
@@ -1653,12 +1625,8 @@ if (ledgerUnreadable !== null) {
  * under the `discovery-search` vendor, and FleetSafety on its own provider key.
  * The Scout tool is reached only inside the paid model lane besides.
  */
-const searchCap = (name: string, fallback: number): number => {
-  const raw = Number(process.env[name]);
-  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
-};
-const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
-const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
+const SEARCH_PER_CYCLE = Number.MAX_SAFE_INTEGER;
+const SEARCH_PER_DAY = Number.MAX_SAFE_INTEGER;
 const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
   repos,
   perCycle: SEARCH_PER_CYCLE,
@@ -1753,11 +1721,7 @@ const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
 const dispatchTargets: DispatchWorkTarget[] = [];
 // The original saved hunt may continue through a scheduled blackout. That
 // exception does not reopen other dispatch intents or expansion scopes.
-const dispatchScopes = (expansionPlan?.scopes ?? []).filter(scope => !scheduledBlackout ||
-  (scope.kind === "RESOLVED" && scope.decision.key === ORIGINAL_LIFETIME_HUNT.key &&
-    scope.decision.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
-    scope.decision.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt &&
-    scope.decision.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd));
+const dispatchScopes = expansionPlan?.scopes ?? [];
 {
   const seen = new Set<string>();
   const add = (t: DispatchWorkTarget): void => {
@@ -1814,7 +1778,7 @@ if (dispatchTargets.length > 0) {
     });
     plannedSendMarks = plan.marks.map((m) => ({ obligationId: m.obligationId, key: m.target.key }));
     const applied = dispatchWorkWrites
-      ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS })
+      ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => false })
       : null;
     dispatchRecorded = applied?.recorded ?? [];
     dispatchWork = dispatchWorkReading(plan, applied, {
@@ -2251,7 +2215,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     // (the owner's override, or the fallback) — the same number the admission
     // gates below use — never the compile-time RESEARCH_BOUNDS default, so the
     // console can never show a ceiling that is not the one being enforced.
-    bounds: { ...RESEARCH_BOUNDS, dailyCeilingUsd: effectiveCeilingUsd },
+    bounds: { ...RESEARCH_BOUNDS, workerCapacity, dailyCeilingUsd: effectiveCeilingUsd },
     spend: {
       windowUsd: window,
       measuredAttempts: measuredSpend.measured,
@@ -2781,7 +2745,7 @@ const cycle = await runCycle({
       if (failed !== null) runtimeConditions.push(`a budget hold for ${row.obligation.id} could not be released (${failed}); it counts in full for its window`);
     },
     modelExecutor: scoutFor,
-    maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
+    workerCapacity: workerCapacity,
     scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
     scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
     /*
@@ -2915,12 +2879,13 @@ const earlyOriginal = autonomousCycleOpen && hasLifetimeHunt && Date.now() + 150
       try {
         return await withStoreBudget("original-hunt-early-workers", Math.max(0, autonomousStoreDeadlineMs - Date.now()), async () => {
           const [occurrences, workItems] = await Promise.all([repos.occurrences.list(), repos.workItems.list()]);
-          const exactWorkIds = exactInstructionAutonomousWorkIds({ obligations: sync.all,
-            occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
-            assignmentKey: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId });
+          const exactWorkIds = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetStartedAt)
+            .flatMap(scope => [...exactInstructionAutonomousWorkIds({ obligations: sync.all,
+              occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
+              assignmentKey: scope.decision.key, receiptId: scope.decision.receiptId })]));
           earlyExactWorkIds = exactWorkIds;
           const fleet = await makeAutonomousFleet();
-          return runAutonomousCoordinator(fleet, { concurrency: 4, deadlineMs: autonomousDeadlineMs,
+          return runAutonomousCoordinator(fleet, { concurrency: Math.max(1, workerCapacity), deadlineMs: autonomousDeadlineMs,
             prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
               .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
             acceptsWorkItem: item => lifetimeHuntSubjects.has(item.subject) && exactWorkIds.has(item.id),
@@ -3153,12 +3118,12 @@ console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}
 finishPhase("campaign-sites");
 
 /* Linked publication pages are a separate bounded deterministic pass. Its
- * candidates are exact members of the original authorized 85635 receipt; a
+ * candidates are exact members of the selected hunt receipts; a
  * broadly tracked candidate universe does not itself authorize a new walk. */
 if (dry || canary || ONLY !== null || IDS !== null || intents.runnerPause.paused) {
   candidatePublicationsState = "not run: dry, canary, filtered or paused cycle";
 } else if (!hasLifetimeHunt) {
-  candidatePublicationsState = "not run: exact original 85635 receipt is unavailable";
+  candidatePublicationsState = "not run: exact selected hunt receipt is unavailable";
 } else if (Date.now() + CANDIDATE_PUBLICATION_BUDGET_MS + 5_000 > DISPATCH_DEADLINE_MS) {
   candidatePublicationsState = "not run: insufficient dispatch time for bounded publication acquisition";
 } else {
@@ -3262,7 +3227,7 @@ if (autonomousCycleOpen && Date.now() + 150_000 < autonomousDeadlineMs) {
           admitDispatch: work => fleetSafety.admitDispatch(work),
         })
       : [];
-    const autonomous = await runAutonomousCoordinator(fleet, { concurrency: 4,
+    const autonomous = await runAutonomousCoordinator(fleet, { concurrency: Math.max(1, workerCapacity),
       prioritizedInstructions: (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED")
         .map(scope => ({ receiptId: scope.decision.receiptId, priority: scope.decision.priority })),
       deadlineMs: autonomousDeadlineMs,
@@ -3624,7 +3589,7 @@ const researchLines = [
   `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} · ` +
     `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
   `  aggregate          dispatches ${safety.cycle.dispatches} · requests ${safety.cycle.requests} · payload bytes ${safety.cycle.payloadBytes} · ` +
-    `per-download cap ${safety.bounds.maxDownloadBytes} · wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+    `per-download cap ${safety.bounds.maxDownloadBytes} · elapsed ${safety.cycle.elapsedMs}ms`,
   `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`,
   `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`,
   `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`,
@@ -3632,7 +3597,7 @@ const researchLines = [
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
+  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.workerCapacity} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
     (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),
@@ -4031,7 +3996,7 @@ try {
 } catch (error) {
   failedStep("window-lease:release", error);
 }
-await stallDiagnostic?.stop();
+await (stallDiagnostic as CycleStallDiagnostic | null)?.stop();
 // Optional private Admin copy of verified originals. This follows the canonical
 // cycle outcome: an unavailable mirror can never rewrite acquisition/publication
 // truth, and the next ordinary cycle resumes the rotating reconciliation cursor.

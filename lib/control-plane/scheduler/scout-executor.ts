@@ -458,7 +458,7 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     "10. Provenance is the machine's. In finish, a candidate's observedOn is the `retrieved` date on the cited artifact's envelope, its permission is the `permission` verdict on that envelope, and its recordClass is the obligation's. State them as shown; the executor derives the values from the vault record and refuses a finish whose claims disagree with it.",
     "",
     "BOUNDS",
-    `${bound.maxTurns} model turns, ${bound.maxToolCalls} tool calls, ${bound.maxRequestsPerHost} requests per host, ${Math.round(bound.maxWallMs / 60_000)} minutes. When you are told BOUND REACHED, call finish immediately: outcome from what you have, rungsWalked complete, nextRungs naming exactly what you would have tried next so the next Attempt resumes rather than restarts.`,
+    `${bound.maxTurns} model turns, ${bound.maxToolCalls} tool calls, ${bound.maxRequestsPerHost} requests per host. When you are told BOUND REACHED, call finish immediately: outcome from what you have, rungsWalked complete, nextRungs naming exactly what you would have tried next so the next Attempt resumes rather than restarts.`,
     "",
     "OUTCOMES: ROUTE_CANDIDATE (an evidence-backed route to the record), EVIDENCE_FOUND (the record or a pointer to it was acquired and vaulted), NEEDS_ADAPTER (a specific adapter is all that remains), BLOCKED (every walked rung hit an access control; robots.txt is never one), NO_PROGRESS (the ladder was walked and nothing advanced), HUMAN_REQUIRED (only a human or offline act remains).",
     "Be terse. Prose outside tool calls is wasted budget.",
@@ -627,7 +627,7 @@ export type ScoutEscalationAdmission =
  * ONE bound — so it gets what is left; below a minute, a frontier attempt could
  * make a turn or two at most, and the escalation is refused `WALL_CLOCK` instead.
  */
-export const SCOUT_ESCALATION_MIN_WALL_MS = 60_000;
+
 
 /** The escalation evidence line is short: a sentence an owner reads, never a transcript. */
 export const SCOUT_ESCALATION_EVIDENCE_MAX_CHARS = 300;
@@ -1334,7 +1334,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const boundReached = (): string | null => {
         if (attemptTurns >= bound.maxTurns) return `the turn bound (${bound.maxTurns}) is reached`;
         if (toolkit.toolCalls >= bound.maxToolCalls) return `the tool-call bound (${bound.maxToolCalls}) is reached`;
-        if (Date.now() - startedMs >= bound.maxWallMs) return `the wall-clock bound (${Math.round(bound.maxWallMs / 1000)}s) is reached`;
+
         if (tokensSoFar() - attemptTokensBase >= bound.maxTokens) return `the token bound (${bound.maxTokens}) is reached`;
         return null;
       };
@@ -1758,7 +1758,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         escalationEvidence = observed.evidence;
         const spentUsd = modelAttempts.some(a => a.usd === null) ? null : modelAttempts.reduce((n,a) => n + (a.usd ?? 0),0);
         const worstCaseUsd = scoutAttemptWorstCaseUsd(escalationTarget.model, bound);
-        const remainingWallMs = bound.maxWallMs - (Date.now() - startedMs);
         let admission: ScoutEscalationAdmission;
         if (spentUsd === null || worstCaseUsd === null) {
           admission = {
@@ -1768,12 +1767,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               spentUsd === null
                 ? `the ${base.modelClass} attempt's cost is unmeasured, so the combined cost could not be known or reserved against`
                 : `${escalationTarget.model} has no stated rate, so its worst case could not be reserved`,
-          };
-        } else if (remainingWallMs < SCOUT_ESCALATION_MIN_WALL_MS) {
-          admission = {
-            admit: false,
-            code: "WALL_CLOCK",
-            why: `${Math.max(0, Math.round(remainingWallMs / 1000))}s of the Attempt's ${Math.round(bound.maxWallMs / 1000)}s wall clock remain, under the ${SCOUT_ESCALATION_MIN_WALL_MS / 1000}s a second attempt needs`,
           };
         } else if (deps.reserveEscalation === undefined) {
           admission = { admit: false, code: "NOT_RESERVED", why: "no escalation reservation was wired to this executor, so the second attempt could not be reserved first" };

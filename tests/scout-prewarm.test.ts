@@ -207,7 +207,7 @@ async function cycleWith(input: { readonly rows: number; readonly admit: boolean
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "test", disagreement: null }),
       admitScout: () => (input.admit ? { admit: true } : { admit: false, code: "CEILING", why: "test" }),
       modelExecutor: scout,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
       scoutWallMs: 1000,
       prewarm,

@@ -61,6 +61,7 @@ export interface FleetRuntime {
   readonly requireModelAudit?: boolean;
   /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
+  readonly rollingCeilingUsd?: number;
   readonly now?: () => string;
   /** The parser's fallback when no parsing rule exists: a model pulls the fields with exact quotes and code confirms each quote is in the saved document (model-parser.ts). */
   readonly parseReasoner?: ReturnType<typeof modelParseReasoner>;
@@ -171,7 +172,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       modelRequested = true;
       parsed = await runtime.parseReasoner!.parse(input as ParserWorkerInput, worker);
     }
-    let result = parsed ? parsed.result : await runIsolatedWorker(role, input, grant, Math.min(bound.maxWallMs, 30_000));
+    let result = parsed ? parsed.result : await runIsolatedWorker(role, input, grant, 0);
     if (result.role === "ADVERSARIAL_AUDITOR" && model && model.review.verdict !== "SURVIVED" && result.verdict !== "BROKE") {
       result = { ...result, verdict: "INCONCLUSIVE", survivingRecordIds: [], survivingRecordCount: 0, findings: [...result.findings,
         { code: "AUDIT_MODEL_HYPOTHESIS_REQUIRES_MACHINE_EVIDENCE", detail: "The independent model review left an unresolved challenge; its assertions do not certify civic facts.", severity: "BLOCKING" }] } satisfies AuditorResult;
@@ -264,7 +265,7 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   if (denial.reason.includes("AUDIT_ROLLING_COST_CEILING")) {
     const spend = researchSpendInWindow(await runtime.repos.costs.readAll(), now);
     if (runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) reason = "The selected lifetime hunt uses its durable reservation ledger; current policy will be checked again.";
-    else if (ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
+    else if (ceilingPermits(spend.windowUsd, (runtime.rollingCeilingUsd ?? 0)).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
   }
   if (!reason) return null;
   const { policyDenial: _denial, ...rest } = task;

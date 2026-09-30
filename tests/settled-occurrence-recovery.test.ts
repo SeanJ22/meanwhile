@@ -803,7 +803,7 @@ function closedScoutLane(modelIds: ReadonlySet<string>): ResearchLanes {
         : { kind: "DETERMINISTIC", why: "fixture deterministic row", disagreement: null },
     admitScout: () => ({ admit: false, code: "LANE_DISABLED", why: "the fixture Scout lane is closed" }),
     modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: neverRuns },
-    maxConcurrentScouts: 2,
+    workerCapacity: 2,
     scoutLeaseTtlMs: TTL,
     scoutWallMs: 60_000,
   };

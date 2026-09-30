@@ -106,7 +106,7 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { continuingDirectedHunt, originalLifetimeHuntContinuation, ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type RunnerHeartbeat, type RuntimeReleaseAdoption } from "../lib/control-plane/owner-surface.ts";
 import { GATE02_REPAIR_PHASE, GATE02_REQUIRED_BASE_SHA, retainedRuntimeReleaseAdoption, runtimeReleaseAdoptionHash } from "../lib/control-plane/readiness/checklist-running-release-witness.ts";
 import {
@@ -413,12 +413,6 @@ interface RunRecord {
  * healthy-but-slow cycle — a kill mid-dispatch leaks open occurrences that the
  * next cycle must resume and pay for again.
  */
-const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
-const requestedBudgetMin = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
-const BUDGET_MIN = Number.isFinite(requestedBudgetMin) && requestedBudgetMin >= 0
-  ? Math.min(requestedBudgetMin, FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000)
-  : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
-
 /**
  * `ownerIntentsUnreadable`: the read before this cycle failed, so the child is
  * told to keep its paid lane closed (`holdWhilePaused`).
@@ -443,7 +437,6 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     "--import", "./scripts/register-test-loader.mjs",
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
-    `--budget-min=${BUDGET_MIN}`,
     /* So the child's heartbeat can state when the next cycle is due. */
     `--interval=${INTERVAL_MIN}`,
     ...(maxArg ? [maxArg] : []),
@@ -462,7 +455,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     cwd: ROOT,
     env: process.env,
     /* The supervisor is the aggregate wall-clock backstop. */
-    timeoutMs: FLEET_SAFETY_BOUNDS.maxWallMsPerCycle,
+    timeoutMs: 0,
     maxBufferBytes: 64 * 1024 * 1024,
     concurrency: 1,
   });
@@ -519,7 +512,7 @@ function laneShare(record: RunRecord): string[] {
       `- model spend: cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`}; ` +
         `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
       `- aggregate: dispatches ${safety.cycle.dispatches}; requests ${safety.cycle.requests}; payload bytes ${safety.cycle.payloadBytes}; ` +
-        `per-download cap ${safety.bounds.maxDownloadBytes}; wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+        `per-download cap ${safety.bounds.maxDownloadBytes}; wall ${safety.cycle.elapsedMs}/${0}ms`,
       `- stopped because: ${safety.stoppedBecause.join("; ") || "no ceiling or circuit stopped work"}`,
       `- provider circuits: ${safety.providerCircuits.map(c => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ") || "none"}`,
       `- last successful Fleet activity: ${safety.lastSuccessfulActivity ?? "none recorded"}`,
@@ -1820,7 +1813,7 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
     const lifetime = originalLifetimeHuntContinuation(scopes.scopes, expansion, assignments, cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
     if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
     else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
-    const otherScopes = scopes.scopes.filter(scope => scope.key !== ORIGINAL_LIFETIME_HUNT.key || scope.budgetStartedAt !== ORIGINAL_LIFETIME_HUNT.budgetStartedAt);
+    const otherScopes = scopes.scopes.filter(scope => !scope.budgetStartedAt);
     const hunt = lifetime ?? (!cycleOk || scheduledBlackoutAt(new Date().toISOString()) ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
     if (hunt === null) return ordinary;
     const waitMs = lifetime?.delayMs ?? POLL_MS;

@@ -656,7 +656,7 @@ test("NH328: canonical reader-impact priority reaches the Scout pool before an o
           : { admit: false, code: "CYCLE_MAX", why: "the one-slot fixture ceiling is spent" };
       },
       modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => ({ ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "fixture" }) },
-      maxConcurrentScouts: 1,
+      workerCapacity: 1,
       scoutLeaseTtlMs: 60_000,
       scoutWallMs: 1_000,
     },

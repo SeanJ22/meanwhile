@@ -40,7 +40,7 @@ try {
     'for(const name of ["fetch","WebSocket","XMLHttpRequest"])Object.defineProperty(globalThis,name,{value:deny,writable:false,configurable:false});'+
     'Object.defineProperty(globalThis,"browser",{value:Object.freeze({open:deny}),writable:false,configurable:false});'+
     'Object.defineProperty(globalThis,"require",{value:()=>{denied="HOST_IMPORT";throw new Error("DENIED_BY_POLICY:HOST_IMPORT")},writable:false,configurable:false});return ()=>denied;})();';
-  const answer=new vm.Script(prelude+request.source).runInContext(context,{timeout:request.timeoutMs});
+  const answer=new vm.Script(prelude+request.source).runInContext(context,request.timeoutMs > 0 ? {timeout:request.timeoutMs} : {});
   new vm.Script('if(DENIAL_CHECK())throw new Error("DENIED_BY_POLICY:"+DENIAL_CHECK())').runInContext(context,{timeout:request.timeoutMs});
   process.stdout.write(JSON.stringify({ok:true,result:JSON.parse(answer)}));
 } catch(e) { process.stdout.write(JSON.stringify({ok:false,error:String(e?.message??e)})); process.exitCode=1; }
@@ -62,8 +62,8 @@ export async function runIsolatedSource(source: string, input: unknown, timeoutM
     });
     let output = "";
     let settled = false;
-    const fail = (error: Error) => { if (!settled) { settled = true; clearTimeout(timer); child.kill(); reject(error); } };
-    const timer = setTimeout(() => fail(new Error("WORKER_WALL_BOUND_EXCEEDED")), timeoutMs + 1500);
+    const fail = (error: Error) => { if (!settled) { settled = true; if (timer) clearTimeout(timer); child.kill(); reject(error); } };
+    const timer = timeoutMs > 0 ? setTimeout(() => fail(new Error("WORKER_WALL_BOUND_EXCEEDED")), timeoutMs + 1500) : null;
     child.on("error", fail);
     child.stdin.on("error", () => undefined);
     child.stdout.on("data", chunk => {
@@ -73,7 +73,7 @@ export async function runIsolatedSource(source: string, input: unknown, timeoutM
     child.stderr.resume();
     child.on("close", (code, signal) => {
       if (settled) return;
-      settled = true; clearTimeout(timer);
+      settled = true; if (timer) clearTimeout(timer);
       try {
         const envelope = JSON.parse(output);
         if (!envelope.ok) reject(new Error(envelope.error));

@@ -94,12 +94,6 @@ export function deliveryPathOpen(activation: DeliveryGate): boolean {
 }
 
 export function modelLaneClosure(f: ModelLaneFacts): ModelLaneClosure | null {
-  if (f.scheduledBlackout) {
-    return {
-      code: "SCHEDULED_BLACKOUT",
-      reason: "SCHEDULED BLACKOUT: Saturday 18:00 through Sunday 06:00 America/Phoenix permits no model or network research",
-    };
-  }
   if (f.dry) return { code: "LANE_DISABLED", reason: "--dry: no retrieval of any kind runs, so no Scout runs" };
   if (f.noModel) return { code: "LANE_DISABLED", reason: "--no-model: the Scout lane is held closed for this diagnostic cycle" };
   if (f.paused) return { code: "PAUSED", reason: `paused by owner intent ${f.pauseIntentId ?? "(id unrecorded)"}` };

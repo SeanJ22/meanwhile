@@ -605,9 +605,9 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
     ? count(
         "Scouts running",
         state.running.length,
-        bounds.maxConcurrentScouts,
+        bounds.workerCapacity,
         "Scouts the runner has started and not yet closed, against the concurrency bound",
-        `${boundsSource}: maxConcurrentScouts`,
+        `${boundsSource}: workerCapacity`,
       )
     : stateGap();
 

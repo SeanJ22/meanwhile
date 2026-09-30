@@ -88,7 +88,7 @@ test("full-size due queue dispatches an opened Scout before its deadline and nev
         executions += 1;
         return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "bounded recorded fixture attempt" };
       } },
-      maxConcurrentScouts: 2, scoutLeaseTtlMs: 420_000, scoutWallMs: 300_000,
+      workerCapacity: 2, scoutLeaseTtlMs: 420_000, scoutWallMs: 300_000,
     },
   });
   assert.equal(executions, 1);
@@ -400,7 +400,7 @@ test("1. SEEDED: a route declared DETERMINISTIC never consumes a model", async (
       decide: () => ({ kind: "DETERMINISTIC", why: "declared", disagreement: null }),
       admitScout: () => ({ admit: true }),
       modelExecutor: exec,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
       scoutWallMs: 1000,
     },
@@ -616,7 +616,7 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
       decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "novel", disagreement: null }),
       admitScout: () => ({ admit: false, code: "CEILING", why: "the rolling daily research ceiling is reached: $25.0000 of $25" }),
       modelExecutor: exec,
-      maxConcurrentScouts: 2,
+      workerCapacity: 2,
       scoutLeaseTtlMs: 60_000,
       scoutWallMs: 1000,
     },

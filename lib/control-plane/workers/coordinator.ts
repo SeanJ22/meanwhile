@@ -8,7 +8,7 @@ import { registerRouteTask } from "../repository/coordinator.ts";
 import { dispatchOne, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
-import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
+import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { autonomousScoutHistory, eligibleHeldProtocolRecovery, scoutTransientDenial } from "./scout-scheduling.ts";
 import { selectStandingLineages } from "./standing-lineage.ts";
@@ -48,7 +48,7 @@ export function autonomousCycleAllowed(input: { readonly dry: boolean; readonly 
   readonly only: string | null; readonly ids: ReadonlySet<string> | null; readonly runnerPaused: boolean;
   readonly scheduledBlackout: boolean; readonly hasLifetimeHunt: boolean }): boolean {
   return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused &&
-    (!input.scheduledBlackout || input.hasLifetimeHunt);
+    true;
 }
 
 /** Exact immutable instruction lineage for an early technical slice. An old
@@ -241,7 +241,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && debt && Date.parse(debt.retryAt)<=Date.parse(now)) {
       const deniedCondition=scoutTransientDenial(latest.abortReason);
       const spend=researchSpendInWindow(await repos.costs.readAll(),now);
-      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&(Boolean(runtime.lifetimeHuntSubject?.(item.subject))||ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits);
+      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&(Boolean(runtime.lifetimeHuntSubject?.(item.subject))||ceilingPermits(spend.windowUsd,(runtime.rollingCeilingUsd ?? 0)).permits);
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
         task=(await repos.routeTasks.compareAndSet(task.id,row.revision,{...rest,state:"RECLAIMABLE",policyReauthorizations:[...(task.policyReauthorizations??[]),{at:now,denial:policyDenial!,reason:"The named Scout transport or rolling-cost condition changed; current policy will be checked again."}]},now)).value;
@@ -460,14 +460,13 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   // sub-cap; an unbounded value clamps to `maximum`.
   const maxScoutDispatches=Math.min(options.maxScoutDispatches??maximum,maximum);
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
-  const minimumDispatchWallMs=Math.min(WORKER_MAX_WALL_MS,RESEARCH_BOUNDS.perDispatch.maxWallMs);
-  const hasDispatchTime=()=>Date.now()+minimumDispatchWallMs<=(options.deadlineMs??Infinity);
+
   let cursor=0; let admitted=0; let scoutsAdmitted=0; let scoutsLimitedAdmitted=0;
   // Join every admitted lane even when another lane's selection fails. An
   // early Promise.all rejection would let an already dispatched paid worker
   // continue after the cycle began its final records.
   const lanes=await Promise.allSettled(Array.from({length:concurrency},async()=>{
-    while(cursor<ids.length && admitted<maximum && hasDispatchTime()) {
+    while(cursor<ids.length && admitted<maximum) {
       const id=ids[cursor++];
       try {
       let d: AutonomousDecision;
@@ -488,8 +487,6 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
-      const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:WORKER_MAX_WALL_MS;
-      if(Date.now()+wall>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); continue; }
       const lifetimeScout = runtime.lifetimeHuntSubject?.(itemSubjectById.get(id) ?? "") === true;
       if(d.action==="SCOUT"&&!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); continue; }
       if (d.action==="WORKER") {
@@ -499,11 +496,10 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
         dispatches.push(await dispatchWorkerTask(runtime,d.task));
         continue;
       }
-      // Serialize model admission and completion so another fleet Scout cannot spend the same uncommitted allowance.
+      // Shared durable reservations arbitrate model spending; task leases arbitrate execution.
       const dispatchScout = async()=>{
         if(admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); return; }
         if(!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); return; }
-        if(Date.now()+RESEARCH_BOUNDS.perDispatch.maxWallMs>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); return; }
         const aggregate=options.admitDispatch?.(d.task!.id)??{admit:true as const};
         if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); return; }
         const spend=researchSpendInWindow(await runtime.repos.costs.readAll(),now());
@@ -530,8 +526,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       };
       // The lifetime hunt's durable reservation ledger arbitrates concurrent model calls.
       // Other work retains the legacy serialization until it has the same guarantee.
-      if(runtime.lifetimeHuntSubject?.(itemSubjectById.get(id) ?? "")) await dispatchScout();
-      else await runtime.repos.locks.withLock("autonomous-model-admission",dispatchScout);
+      await dispatchScout();
       } catch(error) {
         if(!(error instanceof RepositoryLockHeld)) throw error;
         deferred.push({workItemId:id,reason:"REPOSITORY_LOCK_HELD",detail:error.message});

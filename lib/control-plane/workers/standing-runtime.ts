@@ -117,7 +117,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       return { evidence: evidenceProjection(await heldRuntime.readEvidence(id)), permission: artifact.permission, transport: artifact.transport,
         httpStatus: artifact.httpStatus, partial: artifact.httpStatus === 206 || Boolean(artifact.headers["content-range"]) || artifact.retentionPolicy === "DIAGNOSTIC" };
     } });
-  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     authorizedSiblingHeldArtifactIdsFor:item=>sharedHeldByRoot.get(item.id)??[],
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transportFor?input.transportFor({subjectId:item.subject,state:item.autonomousPlan?.jurisdiction??null}):input.transport!,now,

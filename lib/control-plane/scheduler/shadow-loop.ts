@@ -233,7 +233,7 @@ export interface ResearchLanes {
     row: ScheduledObligation,
   ) => ScoutAdmission | Promise<ScoutAdmission>;
   readonly modelExecutor: DeclaredExecutor | ((row: ScheduledObligation) => DeclaredExecutor);
-  readonly maxConcurrentScouts: number;
+  readonly workerCapacity: number;
   readonly scoutLeaseTtlMs: number;
   /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
   readonly scoutWallMs: number;
@@ -836,34 +836,10 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
-    await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
+    await runPool(modelRows, research.workerCapacity, async (row) => {
       if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         holdModel(row, "NO_OPEN_OCCURRENCE");
-        return;
-      }
-      /*
-       * The Scout lane admits against its OWN deadline (`scoutDeadlineMs`,
-       * floored to the hard dispatch wall), NOT the reserve-reduced deterministic
-       * deadline. `budgetSpent()` is deliberately not consulted here: it reads
-       * the reduced `budget.deadlineMs`, which is the shared value the downstream
-       * reserve shrank — and gating Scouts on it is what starved them. A Scout
-       * with an open occurrence runs while it can still finish before the wall.
-       */
-      const scoutDeadline = research.scoutDeadlineMs ?? input.budget?.deadlineMs;
-      if (
-        scoutDeadline !== undefined &&
-        input.budget !== undefined &&
-        input.budget.now() + research.scoutWallMs >= scoutDeadline
-      ) {
-        deferred.push({
-          obligationId: row.obligation.id,
-          why:
-            `the cycle's dispatch budget was spent at ${new Date(scoutDeadline).toISOString()} before ` +
-            `this Scout could finish inside its ${Math.round(research.scoutWallMs / 1000)}s wall. It keeps ` +
-            "its next-due and is dispatched by a later cycle.",
-        });
-        holdModel(row, "BUDGET");
         return;
       }
       const admit = await research.admitScout(row);

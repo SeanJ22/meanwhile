@@ -106,7 +106,6 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
   const worker: WorkerRef = {role:spec.role,provider:"we-the-people",version:RESEARCH_WORKER_VERSION,instance:holder};
   return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId,bound}) => {
     const started = performance.now();
-    const deadline = Date.now() + bound.maxWallMs;
     const item = (await tools.repos.workItems.mustRead(workItemId)).value;
     const attempt = await tools.repos.attempts.mustRead(attemptId);
     const baseGrant = defaultGrant({role:spec.role,project:item.project,policyVersion:FLEET_POLICY_VERSION,grantedAt:attempt.value.startedAt});
@@ -121,12 +120,10 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
       if (spec.role === "ACQUIRER") {
         if (!spec.acquisition || spec.acquisition.route.subjectId !== item.subject) throw new Error("ACQUIRER_TASK_BINDING_REFUSED");
         const toolkit = buildScoutToolkit({obligation:scheduledWorkerObligation(task),route:null,providerId:null,attemptId,workItemId,routeTaskId,
-          holder,bound:{...RESEARCH_BOUNDS.perDispatch,maxWallMs:Math.min(bound.maxWallMs,RESEARCH_BOUNDS.perDispatch.maxWallMs)},now:tools.now,
+          holder,bound:RESEARCH_BOUNDS.perDispatch,now:tools.now,
           inherited:{artifactIds:[],summary:"Grounded acquisition through the existing toolkit."},...durableResearchTools(tools,{project:item.project,attemptId,workItemId,routeTaskId}),
           openBytes: async request => {
-            const remaining = deadline-Date.now();
-            if (remaining <= 0) return {status:null,bytes:new Uint8Array(),contentType:"",finalUrl:null,durationMs:0,transportError:"ACQUIRER_WALL_BOUND_EXCEEDED"};
-            return (tools.openBytesFor?.(item.subject)??tools.openBytes??realOpenBytes)({...request,timeoutMs:Math.min(request.timeoutMs,remaining)});
+            return (tools.openBytesFor?.(item.subject)??tools.openBytes??realOpenBytes)(request);
           }});
         measuredToolkit = toolkit;
         result = await runAcquirer({...spec.acquisition,attemptId,worker,project:item.project,workItemId,grant,now:tools.now},

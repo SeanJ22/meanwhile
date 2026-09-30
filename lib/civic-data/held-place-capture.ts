@@ -3,11 +3,12 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 import { readPromotedCivicDataBatch, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
+import { projectHeldPlaceFamilies, readHeldPlaceFamilies, type HeldPlaceFamilies } from "./held-place-families.ts";
 
 /** Derived from canonical published records, never filtered by their original job or ZIP. */
 export interface HeldPlaceCapture {
-  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar"; divisionIds: readonly string[]; label: string }[];
-  readonly held: readonly { subjectId: string; checklistId: string; state: "published";
+  readonly subjects: readonly { id: string; kind: "body" | "seat" | "calendar" | "contest" | "funding" | "deadline"; divisionIds: readonly string[]; label: string }[];
+  readonly held: readonly { subjectId: string; checklistId: string; state: "published" | "held";
     sourceUrl: string; checkedAt: string; freshUntil: string; value: unknown }[];
 }
 
@@ -21,6 +22,7 @@ function published<T>(read: CivicDataReadResult<T>): T | null {
 export function projectHeldPlaceCapture(
   divisionIds: readonly string[], registryRead: CivicDataReadResult<RegistryRuntimeReadModel>,
   meetingReads: readonly CivicDataReadResult<MeetingsSnapshot>[], now: string,
+  families: HeldPlaceFamilies = {},
 ): HeldPlaceCapture {
   const registry = published(registryRead);
   const wanted = new Set(divisionIds);
@@ -36,7 +38,8 @@ export function projectHeldPlaceCapture(
     checkedAt: string, hours: number) => {
     const checked = Date.parse(checkedAt);
     if (!sourceUrl || !Number.isFinite(checked)) return;
-    const key = `${subjectId}:${checklistId}`;
+    const fieldKeys = value !== null && typeof value === "object" ? Object.keys(value).sort().join(",") : "";
+    const key = `${subjectId}:${checklistId}:${fieldKeys}`;
     const prior = held.get(key);
     if (prior && Date.parse(prior.checkedAt) >= checked) return;
     held.set(key, { subjectId, checklistId, state: "published", sourceUrl, checkedAt,
@@ -58,7 +61,14 @@ export function projectHeldPlaceCapture(
       subjects.set(member.id, { id: member.id, kind: "seat", divisionIds: divisions, label: member.officeTitle });
       const source = member.membershipSource ?? roster;
       add(member.id, "OFF-04", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, 30 * 24);
-      add(member.id, "OFF-08", { name: member.name, office: member.officeTitle, profile: member.websiteUrl }, source.sourceUrl, source.collectedAt, 30 * 24);
+      add(member.id, "OFF-08", { name: member.name, office: member.officeTitle }, source.sourceUrl, source.collectedAt, 30 * 24);
+      // Optional facts retained from older reads keep their own source clocks.
+      for (const key of ["termNote", "email", "phone", "websiteUrl"] as const) {
+        if (!member[key]) continue;
+        const origin = member.retainedFieldSources?.[key] ?? source;
+        add(member.id, key === "termNote" ? "OFF-06" : key === "websiteUrl" ? "OFF-08" : "OFF-09", { [key]: member[key], contactScope: member.contactScope },
+          origin.sourceUrl, origin.collectedAt, 30 * 24);
+      }
     }
   }
   for (const read of meetingReads) {
@@ -75,9 +85,12 @@ export function projectHeldPlaceCapture(
       if (meeting.location || meeting.online) field("MTG-08", meeting.location ?? meeting.online);
       field("MTG-10", meeting.status);
       field("MTG-12", meeting.provenance.sourceUrl);
+      if (meeting.online) field("MTG-09", meeting.online);
+      if (meeting.agendaUrl) field("DOC-01", { url: meeting.agendaUrl });
     }
   }
-  return { subjects: [...subjects.values()], held: [...held.values()] };
+  const extra = projectHeldPlaceFamilies(divisionIds, registry, families);
+  return { subjects: [...subjects.values(), ...extra.subjects], held: [...held.values(), ...extra.held] };
 }
 
 export async function readHeldPlaceCapture(divisionIds: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<HeldPlaceCapture> {
@@ -88,6 +101,9 @@ export async function readHeldPlaceCapture(divisionIds: readonly string[], optio
   const partitions = MEETING_PARTITION_CONTRACTS.filter(partition =>
     bodies.has(partition.bodyId) || (partition.ocdId !== null && divisionIds.includes(partition.ocdId)) ||
     (partition.derivedFamily !== null && divisionIds.some(id => id.includes(`/state:${partition.derivedFamily!.slice(3).toLowerCase()}`))));
-  const meetings = await readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options);
-  return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString());
+  const [meetings, families] = await Promise.all([
+    readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
+    readHeldPlaceFamilies(divisionIds, options),
+  ]);
+  return projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families);
 }

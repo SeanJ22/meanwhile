@@ -13,6 +13,8 @@ export interface AssignmentEvidenceEvent {
   readonly nextAction: string | null;
   readonly sourceUrl: string | null;
   readonly publicUrl: string | null;
+  /** Exact private request route, only for a complete RAW capture on this work. */
+  readonly privateCopy?: { readonly path: string; readonly byteLength: number };
   readonly references: readonly (readonly [string,string])[];
 }
 export interface AssignmentEvidenceTrail {
@@ -69,11 +71,17 @@ export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:s
   for(const artifact of sources.artifacts.filter(row=>workIds.has(row.workItemId))) {
     const attempt=byAttempt.get(artifact.attemptId);
     if(!attempt || !attempt.artifactIds.includes(artifact.artifactId)) continue;
+    const eligibleCopy=artifact.tier==="RAW"&&!artifact.partial&&artifact.byteLength>0&&artifact.byteLength<=32*1024*1024&&
+      itemById(items,artifact.workItemId)?.project==="freshness"&&
+      [artifact.workItemId,artifact.attemptId,artifact.artifactId].every(id=>/^[a-z][a-z0-9-]{1,120}$/.test(id))&&
+      artifact.artifactId.startsWith("ar-");
     if(asTime(artifact.recordedAt)&&asTime(attempt.endedAt)&&Date.parse(artifact.recordedAt)>Date.parse(attempt.endedAt!))
       gaps.push(`Saved document ${artifact.artifactId} was recorded after its Attempt's stated end time. The historical event order is uncertain.`);
     add({id:`saved:${artifact.workItemId}:${artifact.artifactId}`,stage:"SAVED",at:asTime(artifact.recordedAt),title:artifact.partial?"Partial document saved":"Document saved",
       says:`${artifact.byteLength.toLocaleString("en-US")} bytes retained from the recorded source.${artifact.partial?" This is incomplete and cannot prove the full source.":" Saving it does not mean facts were extracted or published."}`,
       nextAction:artifact.partial?nextAction:null,sourceUrl:safeHttps(artifact.canonicalUrl),publicUrl:null,
+      ...(eligibleCopy?{privateCopy:{path:`/api/admin/evidence/${artifact.workItemId}/${artifact.attemptId}/${artifact.artifactId}`,
+        byteLength:artifact.byteLength}}:{}),
       references:ref(["Saved document",artifact.artifactId],["Content hash",artifact.contentHash],["Original attempt",artifact.attemptId],["Work item",artifact.workItemId])});
   }
   for(const scout of sources.scoutResults.filter(row=>workIds.has(row.workItemId))) {
@@ -158,7 +166,7 @@ export function assignmentEvidenceTrail(sources:AssignmentSources,assignmentId:s
     }
   }
   if(sources.servedReader===null) gaps.push("The public reader check was not readable with this work item; publication cannot be called visible here.");
-  if(events.some(event=>event.stage==="SAVED")) gaps.push("This view shows when and where documents were saved. Opening the captured copy in Admin is not yet available; the source-page link may show a later version.");
+  if(events.some(event=>event.stage==="SAVED"&&!event.privateCopy)) gaps.push("Some saved documents have no eligible private original-copy control here. The source-page link may show a later version.");
   events.sort((a,b)=>(Date.parse(b.at??"")||0)-(Date.parse(a.at??"")||0)||a.id.localeCompare(b.id));
   return {events,gaps};
 }

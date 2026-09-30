@@ -1,3 +1,5 @@
+import type { ResearchIntent, ResearchIntentRequest } from "./research-policy.ts";
+
 /**
  * WHY THE RESEARCH CYCLE'S MODEL LANE IS CLOSED, OR NULL WHEN IT IS OPEN.
  *
@@ -63,6 +65,27 @@ export interface ModelLaneFacts {
 export interface ModelLaneClosure {
   readonly code: "SCHEDULED_BLACKOUT" | "LANE_DISABLED" | "PAUSED";
   readonly reason: string;
+}
+
+/** The latest saved lane decision awaiting this normal cycle's acknowledgement. */
+export function pendingResearchLaneAcknowledgment(
+  log: readonly ResearchIntent[],
+  laneClosure: ModelLaneClosure | null,
+): { readonly intent: ResearchIntentRequest; readonly detail: string } | null {
+  const pending = log
+    .filter((r): r is ResearchIntentRequest =>
+      r.kind === "INTENT" && (r.action === "PAUSE" || r.action === "RESUME"))
+    .sort((a, b) => a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0);
+  const latest = pending.at(-1);
+  if (latest === undefined || log.some(r => r.kind === "HONORED" && r.honors === latest.intentId)) return null;
+  return {
+    intent: latest,
+    detail: latest.action === "PAUSE"
+      ? "model lane closed for this cycle"
+      : laneClosure === null
+        ? "model lane reopened"
+        : `model lane reopened by the owner, but it stays closed this cycle: ${laneClosure.reason}`,
+  };
 }
 
 /** True when promotion is on and at least one record class is open to it. */

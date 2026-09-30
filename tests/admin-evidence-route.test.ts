@@ -1,0 +1,90 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { NextRequest } from "next/server";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { GET } from "../app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/route.ts";
+import { ADMIN_EVIDENCE_RESPONSE_BYTES, originalEvidenceAttachment } from "../lib/control-plane/evidence/admin-bridge-http.ts";
+import { contentHash } from "../lib/control-plane/ids.ts";
+import { artifactId } from "../lib/control-plane/evidence/artifact.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+
+const ids = { params: Promise.resolve({ workItemId: "wi-123", attemptId: "at-456", artifactId: "ar-789" }) };
+
+test("private original route hides on the public host before storage access", async () => {
+  const request = new NextRequest(`${PUBLIC_SITE_ORIGIN}/api/admin/evidence/wi-123/at-456/ar-789`, {
+    headers: { host: new URL(PUBLIC_SITE_ORIGIN).host },
+  });
+  const response = await GET(request, ids);
+  assert.equal(response.status, 404);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+});
+
+test("private original route requires a valid Admin session before reading an artifact", async () => {
+  const host = new URL(ADMIN_ORIGIN).host;
+  const request = new NextRequest(`${ADMIN_ORIGIN}/api/admin/evidence/wi-123/at-456/ar-789`, {
+    headers: { host },
+  });
+  const response = await GET(request, ids);
+  assert.equal(response.status, 401);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+});
+
+test("verified HTML source bytes are exact but always delivered as an inert attachment", async () => {
+  const bytes = new TextEncoder().encode("<html><script>alert('source code')</script></html>");
+  const hash = contentHash(bytes);
+  const id = artifactId("RAW", hash);
+  const record: ArtifactRecord = { artifactId: id, workItemId: "wi-123", attemptId: "at-456", routeTaskId: null,
+    tier: "RAW", contentHash: hash, byteLength: bytes.length, contentType: "text/html",
+    canonicalUrl: "https://city.example.gov/record", partial: false, recordedAt: "2026-09-28T00:00:00Z" };
+  const response = originalEvidenceAttachment(record, { bytes, copy: { artifactId: id, workItemId: record.workItemId,
+    attemptId: record.attemptId, contentHash: hash, byteLength: bytes.length, tier: "RAW", source: "VERIFIED_ORIGINAL_CAPTURE" } });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("content-type"), "application/octet-stream");
+  assert.match(response.headers.get("content-disposition") ?? "", /^attachment;/);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.match(response.headers.get("content-security-policy") ?? "", /sandbox/);
+  assert.deepEqual(new Uint8Array(await response.arrayBuffer()), bytes);
+});
+
+test("verified binary PDF source bytes are an exact inert download, never an inline PDF", async () => {
+  const bytes = new Uint8Array([37, 80, 68, 70, 45, 49, 46, 55, 10, 0, 255]);
+  const hash = contentHash(bytes);
+  const id = artifactId("RAW", hash);
+  const record: ArtifactRecord = { artifactId: id, workItemId: "wi-123", attemptId: "at-456", routeTaskId: null,
+    tier: "RAW", contentHash: hash, byteLength: bytes.length, contentType: "application/pdf",
+    canonicalUrl: "https://city.example.gov/agenda.pdf", partial: false, recordedAt: "2026-09-28T00:00:00Z" };
+  const response = originalEvidenceAttachment(record, { bytes, copy: { artifactId: id, workItemId: record.workItemId,
+    attemptId: record.attemptId, contentHash: hash, byteLength: bytes.length, tier: "RAW", source: "VERIFIED_ORIGINAL_CAPTURE" } });
+  assert.equal(response.headers.get("content-type"), "application/octet-stream");
+  assert.match(response.headers.get("content-disposition") ?? "", /^attachment;/);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.deepEqual(new Uint8Array(await response.arrayBuffer()), bytes);
+});
+
+test("a complete 32 MiB-eligible capture is served in verified function-safe parts", async () => {
+  const bytes = new Uint8Array(ADMIN_EVIDENCE_RESPONSE_BYTES + 17);
+  bytes.fill(65);
+  const hash = contentHash(bytes);
+  const id = artifactId("RAW", hash);
+  const record: ArtifactRecord = { artifactId: id, workItemId: "wi-123", attemptId: "at-456", routeTaskId: null,
+    tier: "RAW", contentHash: hash, byteLength: bytes.length, contentType: "application/pdf",
+    canonicalUrl: "https://city.example.gov/agenda.pdf", partial: false, recordedAt: "2026-09-28T00:00:00Z" };
+  const blob = { bytes, copy: { artifactId: id, workItemId: record.workItemId, attemptId: record.attemptId,
+    contentHash: hash, byteLength: bytes.length, tier: "RAW" as const, source: "VERIFIED_ORIGINAL_CAPTURE" as const } };
+  assert.throws(() => originalEvidenceAttachment(record, blob), /CHUNKED_DOWNLOAD_REQUIRED/);
+  const first = originalEvidenceAttachment(record, blob, 0);
+  const last = originalEvidenceAttachment(record, blob, 1);
+  assert.equal(first.headers.get("content-length"), String(ADMIN_EVIDENCE_RESPONSE_BYTES));
+  assert.equal(last.headers.get("content-length"), "17");
+  assert.equal(first.headers.get("x-evidence-parts"), "2");
+  assert.equal(last.headers.get("x-evidence-part"), "1");
+  assert.equal(last.headers.get("x-evidence-byte-offset"), String(ADMIN_EVIDENCE_RESPONSE_BYTES));
+  assert.equal(first.headers.get("x-evidence-sha256"), hash);
+  const reconstructed = new Uint8Array(bytes.length);
+  reconstructed.set(new Uint8Array(await first.arrayBuffer()), 0);
+  reconstructed.set(new Uint8Array(await last.arrayBuffer()), ADMIN_EVIDENCE_RESPONSE_BYTES);
+  assert.deepEqual(reconstructed, bytes);
+  assert.throws(() => originalEvidenceAttachment(record, blob, 2), /INVALID_EVIDENCE_PART/);
+});

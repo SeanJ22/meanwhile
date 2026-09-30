@@ -28,6 +28,7 @@
 
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { neon } from "@neondatabase/serverless";
 
 import {
   freshnessContract,
@@ -57,6 +58,7 @@ import { collectProviderBilling } from "../lib/control-plane/provider-billing-co
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { buildChecklistCensus, exactScopeMembers } from "../lib/control-plane/readiness/checklist-census.ts";
+import { CHECKLIST_INDEX_ENABLED_VAR, publishChecklistIndexAfterSnapshot } from "../lib/control-plane/admin-view/checklist-index-publisher.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
@@ -875,10 +877,22 @@ async function main(): Promise<void> {
 
   // The snapshot is a SINGLE aggregate that moves, so a put on an existing id
   // is a no-op — compare-and-set is the write that actually replaces it.
-  if (existing === null) {
-    await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
-  } else {
-    await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
+  const persistedSnapshot = existing === null
+    ? (await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO)).persisted
+    : await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
+  // Only a successfully persisted revision may be indexed. This optional private
+  // projection cannot fail the authoritative snapshot or the normal cycle.
+  if (process.env[CHECKLIST_INDEX_ENABLED_VAR] === "1") {
+    let indexState: string;
+    try {
+      const url = controlPlaneUrlFromEnv();
+      const result = await publishChecklistIndexAfterSnapshot({ enabled: true, persisted: persistedSnapshot,
+        sql: url === null ? null : neon(url) });
+      indexState = result.state === "FAILED" ? `${result.state}:${result.code}` : result.state;
+    } catch {
+      indexState = "FAILED:INDEX_CONNECT_UNAVAILABLE";
+    }
+    log(`  checklist index: ${indexState}; snapshot revision ${persistedSnapshot.revision}`);
   }
 
   /*

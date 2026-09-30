@@ -49,8 +49,11 @@ export interface EscalationFact {
   readonly subjectId: string | null;
   /** The class the loop started on. */
   readonly from: string;
+  /** Exact recorded model, when the source receipt has it. Never inferred from today's class map. */
+  readonly fromModel?: string | null;
   /** The class it moved up to; null when the move was refused. */
   readonly to: string | null;
+  readonly toModel?: string | null;
   readonly reason: string;
   readonly evidence: string | null;
   /** The refusal code when the move was refused. */
@@ -82,10 +85,11 @@ function money(usd: number | null): string {
   return usd === null ? "an unmeasured amount" : `$${usd.toFixed(usd < 1 ? 4 : 2)}`;
 }
 
-function className(modelClass: string | null | undefined): string {
+function className(modelClass: string | null | undefined, recordedModel?: string | null): string {
+  if (recordedModel) return modelName(recordedModel);
   if (modelClass === null || modelClass === undefined || modelClass === "") return "an unrecorded class";
-  const id = (MODEL_FOR_CLASS as Readonly<Record<string, string>>)[modelClass];
-  return id === undefined ? modelClass : modelName(id);
+  return (MODEL_FOR_CLASS as Readonly<Record<string, string>>)[modelClass] === undefined
+    ? modelClass : `the ${modelClass} class (exact model not recorded)`;
 }
 
 function reasonWords(reason: string): string {
@@ -134,16 +138,16 @@ export function ladderHeadline(input: {
 export function escalationSentence(e: EscalationFact): string {
   const when = e.at === null ? "" : ` on ${day(e.at)}`;
   const shown = e.evidence ? ` (${e.evidence})` : "";
-  if (e.role === "ADVERSARIAL_AUDITOR") return `An independent audit moved from ${className(e.from)} to ${className(e.to)}${when} because ${reasonWords(e.reason)}${shown}. This attempt cost ${money(e.combinedUsd)}; earlier attempts remain in the spending ledger.`;
+  if (e.role === "ADVERSARIAL_AUDITOR") return `An independent audit moved from ${modelName(e.from)} to ${modelName(e.to)}${when} because ${reasonWords(e.reason)}${shown}. This attempt cost ${money(e.combinedUsd)}; earlier attempts remain in the spending ledger.`;
   if (e.to === null || e.refused !== null) {
     return (
-      `A Scout stayed on ${className(e.from)}${when} although ${reasonWords(e.reason)}${shown}, because ` +
+      `A Scout stayed on ${className(e.from, e.fromModel)}${when} although ${reasonWords(e.reason)}${shown}, because ` +
       `${refusalWords(e.refused ?? "")}; it cost ${money(e.combinedUsd)}.`
     );
   }
   const split = e.attemptsUsd.length > 1 ? ` (${e.attemptsUsd.map(money).join(" + ")})` : "";
   return (
-    `A Scout moved from ${className(e.from)} to ${className(e.to)}${when} because ${reasonWords(e.reason)}${shown}; ` +
+    `A Scout moved from ${className(e.from, e.fromModel)} to ${className(e.to, e.toModel)}${when} because ${reasonWords(e.reason)}${shown}; ` +
     `both tries together cost ${money(e.combinedUsd)}${split}.`
   );
 }
@@ -184,7 +188,9 @@ export function scoutModelLine(
           obligationId: result.obligationId,
           subjectId: result.subjectId,
           from: started,
+          fromModel: attempts[0]?.model ?? null,
           to: result.escalationRefused ? null : result.modelClass,
+          toModel: result.escalationRefused ? null : attempts.at(-1)?.model ?? null,
           reason: result.escalationReason,
           evidence: result.escalationEvidence ?? null,
           refused: result.escalationRefused?.code ?? null,
@@ -192,7 +198,7 @@ export function scoutModelLine(
           combinedUsd: result.usd,
         };
   return {
-    chosen: className(started),
+    chosen: className(started, attempts[0]?.model),
     why: result.modelClassWhy ?? "No reason was recorded for the class.",
     escalation: attempts.some(a => a.escalation) ? attempts.filter(a => a.escalation).map(a => `${a.escalation!.at}: ${a.escalation!.from} → ${a.model}; ${a.escalation!.reason}: ${a.escalation!.evidence}. ${a.accepted ? "Typed result accepted; public delivery requires the linked validation and publication receipts." : "No accepted result."} Cost ${a.usd === null ? "unmeasured" : `$${a.usd.toFixed(4)}`}.`).join(" ") + (result.escalationRefused && fact ? ` ${escalationSentence(fact)}` : "") : fact === null ? null : escalationSentence(fact),
   };

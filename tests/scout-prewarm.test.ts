@@ -115,6 +115,7 @@ test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts ac
   /* The per-model minimum check still decides: Sonnet 5's is 1,024 (Opus 5.5's recorded 512). */
   assert.equal(plan.minimumCacheablePrefixTokens, minimumCacheablePrefixTokensFor(first.model));
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5"), 1024);
+  assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5-5"), 512);
   assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5-5"), 512);
   /* Negative control: the list without search is a different prefix — the entry the old pre-warm wrote was never read. */
   const without = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });

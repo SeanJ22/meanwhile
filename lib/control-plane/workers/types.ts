@@ -56,6 +56,7 @@ export type RecordExtractionShape = {
 } & (
   | { readonly format: "JSON_RECORDS"; readonly rowsPointer: string; readonly countPointer?: string; readonly headerRows?: number }
   | { readonly format: "HTML_TABLE"; readonly tableIndex: number; readonly headerRows: number }
+  | { readonly format: "HTML_PROFILE" }
   | { readonly format: "DELIMITED_TEXT"; readonly delimiter: "," | "\t"; readonly headerRows: number }
   | { readonly format: "XML_RECORDS"; readonly rowTag: string }
   | { readonly format: "TEXT_BLOCKS"; readonly recordStart: string; readonly recordEnd?: string }

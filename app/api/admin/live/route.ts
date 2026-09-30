@@ -45,6 +45,7 @@ import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import type { LivePulse } from "@/lib/control-plane/live-pulse.ts";
+import { ADMIN_CAPABILITIES } from "@/lib/control-plane/admin-view/capabilities.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -63,6 +64,7 @@ function unreadPulse(at: string): LivePulse {
   return {
     revision: "unread",
     at,
+    capabilities: ADMIN_CAPABILITIES,
     runner: { beatAt: null, lastCycleFinishedAt: null, nextCycleDueAt: null, state: null },
     counts: {
       decisionsWaiting: null,

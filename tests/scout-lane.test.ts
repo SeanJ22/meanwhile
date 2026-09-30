@@ -732,7 +732,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(attempt.outcome, "COMPLETED");
   assert.equal(attempt.worker.role, "SCOUT");
   assert.equal(attempt.worker.provider, "anthropic");
-  assert.equal(attempt.worker.version, "claude-haiku-4-5-20251001", "MW-033: the Scout loop starts on the cheapest suitable class, Sonnet 5");
+  assert.equal(attempt.worker.version, "claude-haiku-4-5", "MW-033: the Scout loop starts on the cheapest suitable class, Sonnet 5");
   assert.equal(attempt.cost.inputTokens, 3 * 1500, "input tokens include cache reads, summed over turns");
   assert.equal(attempt.cost.outputTokens, 300);
   assert.ok((attempt.cost.usd ?? 0) > 0);
@@ -752,7 +752,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   const r = results[0];
   assert.equal(r.outcome, "ROUTE_CANDIDATE");
   assert.equal(r.rungs[1].note, "meetings page", "the model's per-rung note travels; the rung itself is machine-derived");
-  assert.equal(r.worker.modelReported, "claude-haiku-4-5-20251001");
+  assert.equal(r.worker.modelReported, "claude-haiku-4-5");
   assert.equal(r.modelClass, "haiku");
   assert.equal(r.escalatedFrom, null, "a Sonnet attempt that finished never moved up");
   assert.equal(r.usage.turns, 3);
@@ -1159,10 +1159,10 @@ test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED
   assert.throws(() => assertStepMayInvokeModel("date-parsing"), DeterministicStepInvokedModel);
   assert.throws(() => assertStepMayInvokeModel("made-up-step"), UnknownStepInvokedModel);
   const loop = assertStepMayInvokeModel("scout-research-loop");
-  assert.deepEqual(loop, { model: "claude-haiku-4-5-20251001", modelClass: "haiku", effort: "medium", role: "SCOUT" }, "the loop starts on Haiku");
+  assert.deepEqual(loop, { model: "claude-haiku-4-5", modelClass: "haiku", effort: "medium", role: "SCOUT" }, "the loop starts on Haiku");
   assert.equal(assertStepMayInvokeModel("scout-research-loop", true).modelClass, "sonnet", "and escalates to Sonnet");
   const extraction = assertStepMayInvokeModel("extraction");
-  assert.deepEqual(extraction, { model: "claude-haiku-4-5-20251001", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
+  assert.deepEqual(extraction, { model: "claude-haiku-4-5", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
   const escalated = assertStepMayInvokeModel("extraction", true);
   assert.equal(escalated.modelClass, "sonnet", "a cheaper model that fails the standard escalates one class");
   assert.equal(assertStepMayInvokeModel("summarization", true).modelClass, "frontier");
@@ -1325,7 +1325,7 @@ test("19. every turn is a recorded step: model, effort, tokens by category and c
   assert.equal(model.length, 3);
   for (const [i, s] of model.entries()) {
     assert.equal(s.turn, i + 1);
-    assert.equal(s.model, "claude-haiku-4-5-20251001", "MW-033: the loop's turns run on Sonnet 5 unless it escalates");
+    assert.equal(s.model, "claude-haiku-4-5", "MW-033: the loop's turns run on Sonnet 5 unless it escalates");
     assert.equal(s.effort, null);
     assert.deepEqual(s.tokens, { cacheRead: 500, cacheWrite: 0, uncachedInput: 1000, output: 100 });
     assert.ok((s.usd ?? 0) > 0);

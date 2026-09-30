@@ -25,6 +25,7 @@ import { OtherPages } from "./_mw/header-controls.tsx";
 import s from "./_mw/mw.module.css";
 
 export type ConsoleView =
+  | "changes"
   | "research"
   | "release-review"
   | "system-map"
@@ -37,6 +38,7 @@ export type ConsoleView =
   | "fleet";
 
 const VIEW_LABEL: Readonly<Record<ConsoleView, string>> = {
+  changes: "Changes",
   research: "Runner and research detail",
   "release-review": "Software release review",
   "system-map": "System map",

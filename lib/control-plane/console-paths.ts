@@ -14,6 +14,7 @@
 
 export const CONSOLE_VIEWS: readonly string[] = [
   "/admin",
+  "/admin/changes",
   "/admin/research",
   "/admin/release-review",
   "/admin/steward",

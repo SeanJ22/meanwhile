@@ -114,3 +114,24 @@ test("an official page whose text is not the saved bytes is a named gap, and the
   const delivered = nationalDelivery([result]);
   assert.deepEqual([delivered.records, delivered.gaps.length, delivered.versionId === result.promotedVersionId], [0, 1, true]);
 });
+
+test("a statewide office's holder: the same one is confirmed without losing their live facts; a new one owes the candidacy check again", async () => {
+  const s = await store();
+  const AZ = "ocd-division/country:us/state:az";
+  const agUrl = "https://www.azag.gov/office/about-ag";
+  const page = (name: string) => capture(`<html><head><title>About the Attorney General | Arizona Attorney General</title></head><body><h1>Attorney General ${name}</h1><p>Arizona's chief legal officer.</p></body></html>`, agUrl);
+  const official = (name: string) => ({ discoveryId: `ag-${name}`, divisionId: AZ, name, officeTitle: "Attorney General", officialUrl: agUrl, document: { url: agUrl, capture: page(name) } });
+  const azDivision = [{ id: AZ, label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: agUrl, sourceDataset: "TIGER_CB2023" as const }];
+  const before = (await readRegistryRuntimePrior(s, NOW))!;
+  const live = before.payload.statewideExecutives.find(row => row.holder.id === "statewide:az/attorney-general")!;
+  const same = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Kris Mayes")] } });
+  assert.deepEqual([same.candidateId, same.gaps, same.members.map(m => m.discoveryIds)], [null, [], [["ag-Kris Mayes"]]], "confirmed, not replaced");
+  assert.deepEqual((await readRegistryRuntimePrior(s, NOW))!.payload.statewideExecutives.find(row => row.holder.id === live.holder.id), live);
+
+  const changed = await publishNationalPlaceSources({ store: s, now: NOW, divisions: azDivision, geographyCaptures: [], sources: { officials: [official("Jordan Reyes")] } });
+  assert.deepEqual(changed.gaps, [], "a new holder of the office is not refused as a holder/candidacy mismatch");
+  const after = (await readRegistryRuntimePrior(s, NOW))!;
+  assert.equal(after.payload.statewideExecutives.find(row => row.holder.id === live.holder.id)?.holder.name, "Jordan Reyes");
+  const bridge = after.payload.officialCandidacies.rows.find(row => row.holder.id === live.holder.id)!;
+  assert.deepEqual([bridge.holder.name, bridge.status, bridge.candidacy], ["Jordan Reyes", "NOT_CHECKED", null], "the last holder's candidacy is never carried to the new one");
+});

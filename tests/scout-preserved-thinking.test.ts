@@ -49,7 +49,7 @@ import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 
 const NOW = "2026-09-23T18:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
-const SONNET = "claude-sonnet-5";
+const SONNET = "claude-sonnet-5-5";
 const OPUS = "claude-opus-5-5";
 /** A fetch representation under fetch_public's 64,000-byte budget; three of them pass the 100 KB context budget. */
 const PAGE_BYTES = 45_000;
@@ -249,7 +249,7 @@ test("PT-2: the escalation appends to the same conversation — Sonnet's reply, 
   const n = lastSonnet.messages.length;
   assert.equal(json(firstOpus.messages.slice(0, n)), json(lastSonnet.messages), "the frontier's first request begins with everything Sonnet was sent, unchanged");
   assert.equal(json(firstOpus.messages[n]), json({ role: "assistant", content: sonnetReply }), "then Sonnet's reply, its thinking block unchanged — never stripped");
-  assert.match(json(firstOpus.messages.at(-1)), /ESCALATED: this investigation moves from claude-sonnet-5 to claude-opus-5-5/);
+  assert.match(json(firstOpus.messages.at(-1)), /ESCALATED: this investigation moves from claude-sonnet-5-5 to claude-opus-5-5/);
   assert.equal(firstOpus.messages.length, n + 2, "only appended: the reply and the escalation notice");
   assert.equal(json(firstOpus.system), json(lastSonnet.system), "the same system: the prefix the Sonnet blocks are bound to");
   assert.equal(json(firstOpus.tools), json(lastSonnet.tools), "the same tools");

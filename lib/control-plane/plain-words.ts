@@ -36,6 +36,8 @@
  */
 
 /** What one machine constant is called, and what it means, in the owner's words. */
+import { MODELS, modelTierFor } from "../models.ts";
+
 export interface PlainWord {
   /** The constant as a short label. Sentence case, no underscores. */
   readonly words: string;
@@ -350,6 +352,8 @@ const MODEL_NAMES: Readonly<Record<string, string>> = {
 export function modelName(id: string | null | undefined): string {
   const raw = (id ?? "").trim();
   if (raw === "") return "";
+  const tier = modelTierFor(raw);
+  if (tier) return MODELS[tier].name;
   const known = MODEL_NAMES[raw];
   if (known) return known;
   if (!/^[a-z0-9]+(-[a-z0-9.]+)+$/.test(raw)) return raw;

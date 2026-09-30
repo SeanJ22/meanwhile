@@ -16,6 +16,28 @@ import { planPlaceHunt, placeFieldWork } from "../lib/hunt/place-plan.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { runPlaceSource } from "../lib/hunt/place-source.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { loadStateDistrictBoundaries } from "../lib/control-plane/expansion/national-geography.ts";
+
+test("national district provenance identifies its saved query rather than layer metadata", async () => {
+  const captures = new Map<string, string>();
+  const districts = await loadStateDistrictBoundaries("OH", { congress: 119, legislativeYear: 2024,
+    capture: async (url, text) => { captures.set(url, text); },
+    fetchImpl: (async (url, options) => {
+      if (String(url).endsWith("?f=json")) return Response.json({ layers: [
+        { id: 1, type: "Feature Layer", name: "119th Congressional Districts" },
+        { id: 2, type: "Feature Layer", name: "2024 State Legislative Districts - Upper" },
+        { id: 3, type: "Feature Layer", name: "2024 State Legislative Districts - Lower" },
+      ] });
+      assert.equal(options?.method, "POST");
+      return Response.json({ features: [{ attributes: { STATE: "39", GEOID: "39007", NAME: "District 7", CD: "7", SLDU: "7", SLDL: "7" } }] });
+    }) as typeof fetch });
+  assert.equal(districts.length, 3);
+  for (const district of districts) {
+    assert.equal(district.sourceDataset, "TIGERWEB_CURRENT");
+    assert.equal(new URL(district.sourceUrl).searchParams.get("where"), "STATE='39'");
+    assert.match(captures.get(district.sourceUrl) ?? "", /39007/);
+  }
+});
 
 test("Census statistical and duplicate subdivisions stay geography without invented government inventories", () => {
   const items = buildPlaceOwedList({ now: "2026-09-30T00:00:00Z", subjects: [], held: [], divisions: [

@@ -97,7 +97,6 @@ export const OTHER_PAGES: readonly { readonly href: string; readonly label: stri
   { href: "/admin/agents", label: "Delegated work", note: "Work handed to agents and its state" },
   { href: "/admin/chat", label: "Ask the console", note: "Questions about the system, answered from its records" },
   { href: "/admin/fleet", label: "Fleet operations map", note: "Triage bands, work in flight, panels and blind spots" },
-  { href: "/admin/system-map", label: "System map", note: "How the parts fit together" },
 ];
 
 export function OtherPages(props: { scope: string }) {

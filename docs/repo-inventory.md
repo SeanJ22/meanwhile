@@ -8,7 +8,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Routes and pages
 
-91 file(s). Paths retain route groups and dynamic segments as written.
+90 file(s). Paths retain route groups and dynamic segments as written.
 
 - `/(admin)/admin/agents` — `app/(admin)/admin/agents/page.tsx`
 - `/(admin)/admin/assignments` — `app/(admin)/admin/assignments/page.tsx`
@@ -30,7 +30,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `/(admin)/admin/research` — `app/(admin)/admin/research/page.tsx`
 - `/(admin)/admin/sources` — `app/(admin)/admin/sources/page.tsx`
 - `/(admin)/admin/steward` — `app/(admin)/admin/steward/page.tsx`
-- `/(admin)/admin/system-map` — `app/(admin)/admin/system-map/page.tsx`
 - `/(admin)/admin/work` — `app/(admin)/admin/work/page.tsx`
 - `/(admin)/readiness/[state]` — `app/(admin)/readiness/[state]/page.tsx`
 - `/(admin)/readiness/cost` — `app/(admin)/readiness/cost/page.tsx`
@@ -818,7 +817,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Tests
 
-960 file(s).
+959 file(s).
 
 - `lib/sources/platform-adapters/uncapped-source-links.test.ts`
 - `tests/abandoned-occurrences.test.ts`
@@ -1692,7 +1691,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/subdivisions.test.ts`
 - `tests/suiteone-source.test.ts`
 - `tests/superseded-obligation-retirement.test.ts`
-- `tests/system-map.test.ts`
 - `tests/tenant-body-binding.test.ts`
 - `tests/test-alias-loader.test.ts`
 - `tests/tester-9-4-ask.test.ts`
@@ -1783,7 +1781,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7076 file(s).
+7074 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -1919,7 +1917,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `app/(admin)/admin/sources/publication-status-panel.tsx`
 - `app/(admin)/admin/sources/routine-data-panel.tsx`
 - `app/(admin)/admin/steward/page.tsx`
-- `app/(admin)/admin/system-map/page.tsx`
 - `app/(admin)/admin/work/page.tsx`
 - `app/(admin)/charts.tsx`
 - `app/(admin)/console-nav.tsx`
@@ -2023,7 +2020,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `components/admin/fleet-triage-bands.tsx`
 - `components/admin/fleet-triage-tab.tsx`
 - `components/admin/research-progress.tsx`
-- `components/admin/system-map.tsx`
 - `components/area/shuffled-facts.tsx`
 - `components/ask/answer-contacts.tsx`
 - `components/ask/answer-records.tsx`
@@ -4280,6 +4276,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `data/workstate/orchestration/2026-09-02-worker-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-03-autonomous-agent-fleet.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
 - `data/workstate/orchestration/2026-09-04-reader-last-mile.json` <!-- expected-future: date copied from a file path; no measurement date is claimed -->
+- `deploy/runner/README.md`
 - `deploy/runner/install.sh`
 - `deploy/runner/meanwhile-runner.service`
 - `deploy/runner/setup.ps1`
@@ -4715,6 +4712,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `docs/status-ledger.md`
 - `docs/status.md`
 - `docs/synthetic-runs.md`
+- `docs/system-map.md`
 - `docs/tester-pass.md`
 - `docs/tracker-assignments.json`
 - `docs/tracker-deletions.json`
@@ -4757,7 +4755,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/admin/fleet-operations-view.ts`
 - `lib/admin/fleet-seed.ts`
 - `lib/admin/fleet-triage.ts`
-- `lib/admin/system-map-model.ts`
 - `lib/answerability/record-class.ts`
 - `lib/answerability/report.ts`
 - `lib/answerability/stages.ts`
@@ -8771,7 +8768,6 @@ Read each source file for its current exports, configuration, commands and data.
 - `tests/subdivisions.test.ts`
 - `tests/suiteone-source.test.ts`
 - `tests/superseded-obligation-retirement.test.ts`
-- `tests/system-map.test.ts`
 - `tests/tenant-body-binding.test.ts`
 - `tests/test-alias-loader.test.ts`
 - `tests/tester-9-4-ask.test.ts`

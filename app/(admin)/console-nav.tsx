@@ -28,7 +28,6 @@ export type ConsoleView =
   | "changes"
   | "research"
   | "release-review"
-  | "system-map"
   | "steward"
   | "sources"
   | "reader"
@@ -41,7 +40,6 @@ const VIEW_LABEL: Readonly<Record<ConsoleView, string>> = {
   changes: "Changes",
   research: "Runner and research detail",
   "release-review": "Software release review",
-  "system-map": "System map",
   steward: "Shipping and integration",
   sources: "Sources and APIs",
   reader: "What readers are doing",

@@ -24,24 +24,47 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
+import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
+import { publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
+import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
+import { browseWithPlaywright } from "./scout-browse.mts";
 
 async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
     throw new Error("Refusing a non-promoting registry operation. Pass --promote; tracked registry runtime files are first-seed/test evidence only.");
   }
   const workerRosters = assignment(process.argv, "worker-rosters");
-  if (workerRosters) {
+  const nationalZips = assignment(process.argv, "national-zips");
+  if (workerRosters || nationalZips) {
     prepareProductionCivicDataWrite();
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("ROSTER_CONTROL_PLANE_UNAVAILABLE");
     const now = new Date().toISOString();
     const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
     const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
+    const store = new PostgresRoutineDataStore();
+    const nationalPublications: NationalPlacePublication[] = [];
+    const nationalPlaces: { zip: string; officials: number; publishedFields: number; owedFields: number; sourceGaps: unknown }[] = [];
+    const failures: string[] = [];
+    if (nationalZips) {
+      try {
+        const places = await runNationalPlaceTask({ tools: { repos, store: vault, spaceOut: hostSpacer(),
+          browse: browseWithPlaywright, now: () => new Date().toISOString() }, store,
+          zips: nationalZips.split(",").filter(Boolean), publish: async input => {
+            const publication = await publishNationalPlaceSources({ ...input,
+              divisions: input.divisions.filter(row => row.sourceDataset).map(row => ({ ...row, sourceDataset: row.sourceDataset! })) });
+            nationalPublications.push(publication);
+            return publication;
+          } });
+        nationalPlaces.push(...places.map(place => ({ zip: place.zip, officials: place.sources?.officials.length ?? 0,
+          publishedFields: place.items.filter(item => item.state === "published").length,
+          owedFields: place.work.length, sourceGaps: place.sources?.gaps ?? [] })));
+      } catch (error) { failures.push(error instanceof Error ? error.message : String(error)); }
+    }
     const readObject = researchVaultResolver(repos, vault, "freshness");
     const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
-    const store = new PostgresRoutineDataStore();
     const report = await publishWorkerRosterResults({ repos, store,
-      workItemIds: workerRosters.split(",").filter(Boolean), now, readCapture: async (id, records) => {
+      workItemIds: workerRosters?.split(",").filter(Boolean) ?? [], now: new Date().toISOString(), readCapture: async (id, records) => {
         const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);
         const evidence = evidenceProjection(input);
         const observations = records.flatMap(record => {
@@ -54,10 +77,11 @@ async function main(): Promise<void> {
           httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" };
       } });
     const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
-    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? null,
-      promotedVersionId: published.at(-1)?.outcome.versionId ?? null, workerPublications: report }, null, 2));
-    // Holds stay on their own work items as owed work; the pass fails only when nothing went live.
+    console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? nationalPublications.findLast(row => row.candidateId)?.candidateId ?? null,
+      promotedVersionId: published.at(-1)?.outcome.versionId ?? nationalPublications.findLast(row => row.promotedVersionId)?.promotedVersionId ?? null,
+      workerPublications: report, nationalPlaces, nationalPublications, failures }, null, 2));
     await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report);
+    if (failures.length) throw new Error(failures.join("; "));
     return;
   }
   const packagePath = assignment(process.argv, "package");

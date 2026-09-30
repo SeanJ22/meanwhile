@@ -5,7 +5,8 @@ import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { collectNationalPlaceSources, type HeldSourcePage, type NationalPlaceSources } from "../sources/plural/place.ts";
-import { planPlaceHunt, type PlaceCapture } from "./place-plan.ts";
+import { closePublishedPlaceWork, planPlaceHunt, type PlaceCapture } from "./place-plan.ts";
+import { buildPlaceOwedList } from "../coverage/place-owed.ts";
 
 export interface NationalPlacePublicationInput {
   readonly store: RoutineDataStore;
@@ -43,6 +44,7 @@ export async function runPlaceSource(input: {
     { store: input.store, now: input.clock?.() ?? input.now, bypassCache: true }));
   let sources: NationalPlaceSources | null = null;
   let publication: unknown = null;
+  const closed = new Set<string>();
   const plan = await planPlaceHunt({ repos: input.repos, divisions, now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async () => {
       // One pointer is updated serially, while source reads remain parallel.
@@ -53,6 +55,10 @@ export async function runPlaceSource(input: {
         publicationQueue = publicationQueue.then(async () => {
           publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
             geographyCaptures: input.geographyCaptures, sources: ready });
+          const now = input.clock?.() ?? input.now;
+          const captured = await readHeld(ids);
+          const items = buildPlaceOwedList({ divisions, ...captured, now });
+          for (const id of await closePublishedPlaceWork(input.repos, items, now)) closed.add(id);
           publishedBatches++;
         });
         return publicationQueue;
@@ -65,5 +71,5 @@ export async function runPlaceSource(input: {
       // successful function return or a collected field for a published value.
       return { ...await readHeld(ids), replacesHeld: true };
     } });
-  return { ...plan, zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication };
+  return { ...plan, closed: [...new Set([...closed, ...plan.closed])], zip: input.zip, divisions, sources: sources as NationalPlaceSources | null, publication };
 }

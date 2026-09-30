@@ -3,7 +3,7 @@ import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, sta
 
 const TIGER = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb";
 type Polygon = { rings: number[][][]; spatialReference?: { wkid: number } };
-type Feature = { attributes: Record<string, string | number>; geometry?: Polygon };
+type Feature = { attributes: Record<string, string | number>; geometry?: Polygon; sourceUrl?: string };
 type Layer = { id: number; name: string; type: string };
 export interface GeographyReadOptions {
   fetchImpl?: typeof fetch;
@@ -19,13 +19,14 @@ export interface PlaceDivision {
   divisionType: string;
   geoid: string;
   sourceUrl: string;
+  sourceDataset?: "TIGERWEB_CURRENT";
   boundary?: Polygon;
   lsad?: string;
   funcstat?: string;
   classfp?: string;
 }
 
-async function readJson<T>(url: string, options: GeographyReadOptions, body?: URLSearchParams): Promise<T> {
+async function readJson<T>(url: string, options: GeographyReadOptions, body?: URLSearchParams, captureUrl = url): Promise<T> {
   const response = await (options.fetchImpl ?? fetch)(url, {
     ...(body ? { method: "POST", body } : {}),
     signal: options.signal ?? AbortSignal.timeout(60_000),
@@ -35,7 +36,7 @@ async function readJson<T>(url: string, options: GeographyReadOptions, body?: UR
   const text = await response.text();
   const value = JSON.parse(text);
   if (value.error) throw new Error(`Geography source: ${value.error.message ?? value.error.code}`);
-  await options.capture?.(url, text);
+  await options.capture?.(captureUrl, text);
   return value as T;
 }
 
@@ -52,9 +53,10 @@ async function query(endpoint: string, params: Record<string, string>, options: 
   for (let offset = 0; ; offset += 1000) {
     const body = new URLSearchParams({ f: "json", outFields: "*", outSR: "4326", returnGeometry: "true",
       resultRecordCount: "1000", resultOffset: String(offset), ...params });
-    const page = await readJson<{ features: Feature[]; exceededTransferLimit?: boolean }>(`${endpoint}/query`, options, body);
+    const sourceUrl = `${endpoint}/query?${body}`;
+    const page = await readJson<{ features: Feature[]; exceededTransferLimit?: boolean }>(`${endpoint}/query`, options, body, sourceUrl);
     if (!Array.isArray(page.features)) throw new Error("Census returned no feature collection");
-    out.push(...page.features);
+    out.push(...page.features.map(feature => ({ ...feature, sourceUrl })));
     if (!page.exceededTransferLimit) return out;
     if (!page.features.length) throw new Error("Census paging stopped before the collection ended");
   }
@@ -75,12 +77,13 @@ async function legislativeLayers(options: GeographyReadOptions): Promise<{ type:
 }
 
 function division(feature: Feature, type: string, sourceUrl: string, counties: ReadonlyMap<string, string> = new Map()): PlaceDivision | null {
+  sourceUrl = feature.sourceUrl ?? sourceUrl;
   const a = feature.attributes;
   const state = String(a.STATE ?? a.STATEFP ?? "");
   const name = String(a.BASENAME ?? a.NAME ?? "");
   if (type === "state") {
     const identity = stateBase(state);
-    return identity ? { id: identity.base, label: name, divisionType: type, geoid: String(a.GEOID ?? state), sourceUrl, boundary: feature.geometry } : null;
+    return identity ? { id: identity.base, label: name, divisionType: type, geoid: String(a.GEOID ?? state), sourceUrl, sourceDataset: "TIGERWEB_CURRENT", boundary: feature.geometry } : null;
   }
   const lsad = String(a.LSAD ?? a.LSADC ?? ""), funcstat = String(a.FUNCSTAT ?? ""), classfp = String(a.CLASSFP ?? a.COUSUBCC ?? a.PLACECC ?? "");
   const countyName = type === "cousub" ? counties.get(`${state}${a.COUNTY}`) : undefined;
@@ -92,7 +95,7 @@ function division(feature: Feature, type: string, sourceUrl: string, counties: R
     : type === "cousub" ? subdivisionIdentity(state, countyName!, String(a.NAME ?? name), lsad, funcstat, classfp)
     : schoolIdentity(state, name);
   if (!identity) return null;
-  return { id: identity.ocdId, label: String(a.NAME ?? name), divisionType: type, geoid: String(a.GEOID ?? ""), sourceUrl, boundary: feature.geometry, lsad, funcstat, classfp };
+  return { id: identity.ocdId, label: String(a.NAME ?? name), divisionType: type, geoid: String(a.GEOID ?? ""), sourceUrl, sourceDataset: "TIGERWEB_CURRENT", boundary: feature.geometry, lsad, funcstat, classfp };
 }
 
 /** Download any state's serving legislative boundaries without a state dossier. */

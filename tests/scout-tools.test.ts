@@ -70,6 +70,7 @@ test('the actual Palominas archive capture is a dead end; only the current page 
   assert.deepEqual(check({...finding,sourceUrl:current,artifactIds:[liveId]}),[],'current page wins even when the historical quote is identical');
   const sourceDeadEnds=scoutSourceDeadEnds(kit.factEvidence!,freshness.now,freshness.cadenceHours);
   assert.equal(sourceDeadEnds.length,1);
+  assert.ok(!sourceDeadEnds.some(source=>source.url.endsWith('robots.txt')),'permission observations are not civic fact sources');
   assert.equal(sourceDeadEnds[0].sourceDate,'2021-09-25T09:42:51Z','redirect capture date, never 2026 retrieval time');
   const repos=createMemoryRepositories();
   const entries=scoutDiscoveryEntries({subjectId:'az:school:palominas-school-district-49',recordClass:'PUBLIC_COMMENT_RULE',

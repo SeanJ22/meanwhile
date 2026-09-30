@@ -223,12 +223,6 @@ const PROHIBITIONS: readonly ProhibitionRule[] = [
       /^(?:please\s+|now\s+|just\s+|go\s+ahead\s+and\s+|lets\s+|let\s+s\s+)?(?:merge|ship|push|land|integrate|cut|deploy(?!\s+(?:the\s+|a\s+)?fleet\b)|release(?!\s+(?:review|notes|manifest|state)))\b|\b(?:can|could|would|will)\s+you\s+(?:please\s+)?(?:merge|ship|push|land|integrate|release|deploy(?!\s+(?:the\s+|a\s+)?fleet\b))\b|\b(?:you\s+should|we\s+should|go\s+ahead\s+and|i\s+want\s+you\s+to)\s+(?:merge|ship|push|land|integrate|release|deploy(?!\s+(?:the\s+|a\s+)?fleet\b))\b/,
     interrogativeIsFine: true,
   },
-  {
-    code: "PROMOTION_BY_PROSE",
-    pattern:
-      /\bpromote\b|\b(?:turn|switch|flip)\s+(?:on\s+)?promotion\b|\bpromotion\s+(?:on|live)\b|\b(?:activate|enable|open)\b[^.?!]{0,40}\b(?:record\s+class|promotion)\b/,
-    interrogativeIsFine: true,
-  },
 ];
 
 /**

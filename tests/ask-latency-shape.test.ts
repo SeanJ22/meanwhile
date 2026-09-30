@@ -293,8 +293,9 @@ delete process.env.WTP_ASK_FAST_MODEL;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`latency test refused an outbound request: ${url}`);
-  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; output_config?: { effort?: unknown } };
-  const synthesis = Array.isArray(body.system);
+  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; output_config?: { effort?: unknown; format?: { schema?: { properties?: Record<string, unknown> } } } };
+  /* The writer's schema has an answer; the reading's does not (both marks their system prompt now). */
+  const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   calls.push({ kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
   const planned = writerAnswers[body.model] ?? writerAnswers.default;
   if (synthesis && planned === "HTTP_529") return new Response(JSON.stringify({ error: { type: "overloaded_error" } }), { status: 529 });

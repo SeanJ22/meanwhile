@@ -127,8 +127,8 @@ delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`speculation test refused an outbound request: ${url}`);
-  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string };
-  const synthesis = Array.isArray(body.system);
+  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; output_config?: { format?: { schema?: { properties?: Record<string, unknown> } } } };
+  const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   const call: Call = { kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, startedAt: performance.now() };
   calls.push(call);
   const planned = synthesis ? writerQueue.shift() ?? PASSING : reading;

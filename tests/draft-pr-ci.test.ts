@@ -93,12 +93,11 @@ test("admission alone classifies draft/full before preflight", () => {
       WTP_EVENT_ACTION: "${{ github.event.action }}",
       WTP_PR_DRAFT: "${{ github.event.pull_request.draft }}",
     });
-    assert.match(preflight.if ?? "", /github\.event_name == 'pull_request'/, `${jobId} can reuse or cheap-skip the draft/ready preflight`);
+    assert.equal(preflight.if, undefined, `${jobId} suppresses deterministic preflight`);
     assert.match(tier.run ?? "", /steps\.pr_tier\.outputs\.tier/);
     assert.match(tier.run ?? "", /expensive=draft/);
     const fullAt = (tier.run ?? "").indexOf('steps.pr_tier.outputs.tier }}" = "full"');
-    const certifiedAt = (tier.run ?? "").indexOf('steps.certified.outputs.certified }}" = "yes"');
-    assert.ok(fullAt >= 0 && fullAt < certifiedAt, `${jobId} can reuse draft contexts after a PR becomes ready`);
+    assert.ok(fullAt >= 0, `${jobId} lost the full tier`);
     assert.doesNotMatch(tier.run ?? "", /steps\.cost|no-cheap/, `${jobId} retained the obsolete runtime-path cost tier`);
   }
 });
@@ -135,12 +134,10 @@ test("draft cannot buy builds, browsers, the full suite, or shipping-only gates"
     "Trace census",
     "Keep the trace list",
     "Frozen holdings base for extraction proofs",
-    "Reader closure proof ancestry",
     "Install the browser the suite needs",
     "Prove the browser is actually there",
     "Test",
     "Schema shipping gate (only when the schema contract moved)",
-    "Release freeze (refuses a release on a DEGRADED production reading)",
   ];
 
   for (const name of fullOnly) {
@@ -156,7 +153,7 @@ test("draft cannot buy builds, browsers, the full suite, or shipping-only gates"
   assert.doesNotMatch(browserCache.if ?? "", /tier == 'draft'/);
 });
 
-test("required contexts, read-only permissions, and the exact-head rerun stay intact", () => {
+test("required contexts, read-only permissions, and ready-for-review tests stay intact", () => {
   const buildCheck = workflow();
   const produced = [buildCheck.jobs.gates, buildCheck.jobs.build].flatMap((job) =>
     job.name.includes("${{ matrix.mode }}")
@@ -177,7 +174,6 @@ test("required contexts, read-only permissions, and the exact-head rerun stay in
   for (const [jobId, job] of Object.entries(buildCheck.jobs).filter(([id]) => id === "admission")) {
     const decision = named(job, "Decide whether the expensive tier runs").run ?? "";
     const fullAt = decision.indexOf('steps.pr_tier.outputs.tier }}" = "full"');
-    const reuseAt = decision.indexOf('steps.certified.outputs.certified }}" = "yes"');
-    assert.ok(fullAt >= 0 && reuseAt >= 0 && fullAt < reuseAt, `${jobId} reuses draft certification instead of fully certifying ready_for_review`);
+    assert.ok(fullAt >= 0, `${jobId} lost ready-for-review full testing`);
   }
 });

@@ -14,7 +14,7 @@ import {
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PrepareMeetingSnapshotResult } from "../lib/meetings/prepared-snapshot.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
-import { readerEdgeCarriesForward } from "../scripts/lib/reader-edge-current.ts";
+import { readerEdgeCarriesForward } from "../scripts/lib/edge-current.ts";
 
 const GENERATED_AT = "2026-09-25T15:00:00.000Z";
 const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };

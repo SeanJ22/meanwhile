@@ -74,7 +74,6 @@ const NOT_A_GATE = [
   "git cat-file -e \"${pdc_frozen_base}:lib/funding/official-candidacies.json\" 2>/dev/null || git fetch --no-tags --depth=1 origin \"$pdc_frozen_base\"",
   "git cat-file -e \"${pdc_frozen_base}:lib/funding/official-candidacies.json\"",
   // Shallow-checkout setup for the committed reader receipt's ancestry proof.
-  "node scripts/reader-proof-history.mjs",
   /*
    * RULING 279 — THE TIER DECISION IS NOT A CHECK, AND NEITHER IS SAYING SO.
    *
@@ -133,9 +132,6 @@ const NOT_A_GATE = [
    * `lib/control-plane/shipping/tree-equivalence.ts`, and THAT is covered by a
    * gate: `tests/tree-equivalence.test.ts` runs inside `pnpm test`.
    */
-  "node scripts/certified-tree.mjs",
-  "node scripts/certified-tree.mjs --attest=build",
-  "node scripts/certified-tree.mjs --attest=gates",
   'elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then',
   'echo "expensive=no-certified" >> "$GITHUB_OUTPUT"',
 ];

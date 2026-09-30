@@ -19,7 +19,7 @@ import test from "node:test";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { WEBSITE_CORRECTIONS } from "../lib/civic-data/website-corrections.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
-import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
+import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import {
   datedLabel,
@@ -55,7 +55,7 @@ test("HOLBROOK · the wired body is Holbrook's registered governing body, on the
   assert.equal(new URL(correction.corrected).hostname, WIRING.config.officialHost, "the registry's reviewed website is the host read");
   const partition = meetingPartitionForRow("document-listing", WIRING.bodyId);
   assert.equal(partition.acquisitionFailureDomain, "meeting-upstream:holbrookaz.gov");
-  assert.ok(PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(partition.id), "named as registered after the frozen import");
+  assert.ok(POST_FIXTURE_MEETING_PARTITIONS.includes(partition.id), "named as registered after the frozen import");
   for (const url of ["https://holbrookaz.gov/robots.txt", URL_2026, URL_2027]) {
     assert.equal(authorityFor("meetings-public-bodies", "MEETING", url).ok, true, url);
   }

@@ -661,7 +661,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
       ...(pending.task.ownerInvocation ? admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "MANUAL_CONTRACT",
-        contract: pending.task.id,
+        contract: pending.task.registeredContractId ?? pending.task.id,
         parentPid: process.pid,
       }) : admittedRuntimeChildEnvironment({
         parentEnv: process.env,

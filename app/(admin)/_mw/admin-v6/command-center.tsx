@@ -1,0 +1,354 @@
+"use client";
+// @server-boundary-exempt CommandCenter takes a live Executor object and callbacks; only client entry points (LiveCommandCenter, the dev preview harness) render it, never a Server Component.
+
+/**
+ * **MEANWHILE ADMIN COMMAND CENTER (v6).** The seven screens in one shell.
+ *
+ * This component owns only interface state: which screen, which detail, the
+ * picker, the search box, the open action preview, and the receipts of sends
+ * made on this page. Data arrives as `AdminV6Data` (live: from LiveSync;
+ * development preview: from ./sample/). Outcomes come only from the executor.
+ *
+ * Scope, filters, open detail and unsent input survive data refreshes because
+ * refreshing replaces `data`, never this component's state.
+ */
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+
+import { ActionDialog, type DialogSend } from "./action-dialog.tsx";
+import { actionDef, type PreviewContext } from "./actions.ts";
+import type { SectionId } from "./contract.ts";
+import { V6Context, VIEWS, type Detail, type V6, type View } from "./context.tsx";
+import { DetailPanel } from "./details.tsx";
+import { whyNot, type Access, type Connection } from "./eligibility.ts";
+import type { Executor } from "./executor.ts";
+import { instructionDraftFor, withInstructionDraft, type InstructionDrafts } from "./instruction-draft.ts";
+import { mst, type ActionKind, type ActionRef, type AdminV6Data, type Place, type UiReceipt } from "./model.ts";
+import { breadcrumbs, COUNTRY_KEY, huntAt, huntsWithin, indexPlaces, pickerMatches, relation } from "./places.ts";
+import { newActionKey, startReceipt } from "./receipts.ts";
+import { ChecklistScreen } from "./screen-checklist.tsx";
+import { FixScreen } from "./screen-fix.tsx";
+import { LearningScreen } from "./screen-learning.tsx";
+import { MoneyScreen } from "./screen-money.tsx";
+import { NowScreen } from "./screen-now.tsx";
+import { WorkScreen } from "./screen-work.tsx";
+import { WorkersScreen } from "./screen-workers.tsx";
+import { cx } from "./ui.tsx";
+import s from "./v6.module.css";
+
+export interface CommandCenterProps {
+  readonly data: AdminV6Data;
+  readonly mode: "live" | "sample";
+  readonly executor: Executor;
+  readonly scopeKey: string;
+  readonly onScopeChange: (key: string) => void;
+  readonly connection: Connection;
+  readonly lastGoodAt: string | null;
+  readonly recovered: boolean;
+  readonly access: Access;
+  /** Item-state reason (eligibility rule 5), when the data source knows one. */
+  readonly itemState?: (kind: ActionKind, target: string) => string | null;
+  readonly initialView?: View;
+  readonly onViewChange?: (view: View) => void;
+  /** Live paged sections: forward search, filters and cursors to the data source. */
+  readonly onQuery?: (section: SectionId, params: Readonly<Record<string, string>>) => void;
+  /** The account-period selector. Hunt limits remain explicitly lifetime. */
+  readonly onPeriodChange?: (period: "hunt" | "day" | "month") => void;
+  /** Extra header content for the development preview's review controls. */
+  readonly reviewPanel?: ReactNode;
+}
+
+const CONN_WORDS: Readonly<Record<Connection, string>> = {
+  connecting: "Connecting",
+  live: "Live",
+  stale: "Out of date",
+  reconnecting: "Reconnecting",
+  offline: "Disconnected",
+};
+
+export function CommandCenter(props: CommandCenterProps) {
+  const { data } = props;
+  const [view, setView] = useState<View>(props.initialView ?? "now");
+  const [stack, setStack] = useState<readonly { readonly view: View; readonly detail: Detail | null }[]>([]);
+  const [detail, setDetail] = useState<Detail | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerQ, setPickerQ] = useState("");
+  const [query, setQuery] = useState("");
+  const [period, setPeriod] = useState("month");
+  const [sent, setSent] = useState<readonly UiReceipt[]>([]);
+  const [dialog, setDialog] = useState<{ readonly ref: ActionRef; readonly key: string } | null>(null);
+  const [announce, setAnnounce] = useState("");
+  const [instructionDrafts, setInstructionDrafts] = useState<InstructionDrafts>({});
+  const sendingKeys = useRef(new Set<string>());
+  const pickerInput = useRef<HTMLInputElement>(null);
+  const pickerButton = useRef<HTMLButtonElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+
+  const places = useMemo(() => data.places.data ?? [], [data.places.data]);
+  const index = useMemo(() => indexPlaces(places), [places]);
+  const hunts = useMemo(() => data.hunts.data ?? [], [data.hunts.data]);
+  const place: Place = index.get(props.scopeKey) ?? index.get(COUNTRY_KEY) ?? { key: COUNTRY_KEY, name: "United States", kind: "Country", navParent: null, within: [] };
+  const scopeKey = place.key;
+  const instructionDraft = instructionDraftFor(instructionDrafts, scopeKey);
+  const hunt = huntAt(index, hunts, scopeKey);
+  const inHunts = huntsWithin(index, hunts, scopeKey);
+  const effectivePeriod = period === "hunt" && !hunt ? "month" : period;
+
+  const receipts = useMemo(() => {
+    const keys = new Set(sent.map((r) => r.key));
+    return [...sent, ...(data.history.data ?? []).filter((r) => !keys.has(r.key))];
+  }, [sent, data.history.data]);
+
+  const nameOf = (id: string): string => {
+    const stuck = data.stuck.data?.find((i) => i.id === id);
+    if (stuck) return stuck.title;
+    const res = data.results.data?.find((r) => r.id === id);
+    if (res) return res.title;
+    const fix = data.fixes.data?.open.find((f) => f.id === id);
+    if (fix) return fix.title;
+    const p = index.get(id);
+    if (p) return p.name;
+    for (const r of data.results.data ?? []) for (const st of r.trail) for (const d of st.docs ?? []) if (d.id === id) return d.name;
+    const job = data.workers.data?.jobs?.find((j) => j.id === id);
+    if (job) return job.title;
+    const row = data.workRows.data?.rows.find((w) => w.id === id);
+    if (row) return row.title;
+    const dec = data.stuck.data?.find((i) => i.decision?.id === id);
+    if (dec) return dec.title;
+    const wf = data.stuck.data?.find((i) => i.actions.some((a) => a.kind === "workfirst" && a.target === id));
+    if (wf) return wf.title.replace(/ (are|is) saved but never read$/, " meeting extraction");
+    return id;
+  };
+
+  const previewCtx = (ref: ActionRef): PreviewContext => {
+    const matching = (ref.kind === "scope-stop" || ref.kind === "retry-method")
+      ? (data.stuck.data ?? []).filter((i) => i.actions.some((a) => a.kind === "stopmethod") && !i.latest?.startsWith("Method stopped") && relation(index, i.applies, ref.target || scopeKey) === "local")
+        .map((i) => ({ id: i.id, name: i.title, where: index.get(i.applies[0])?.name ?? "" }))
+      : undefined;
+    const openFix = data.fixes.data?.open.find((f) => f.id === ref.target);
+    const stuckForFix = data.stuck.data?.find((i) => i.fixId === ref.target);
+    return {
+      target: ref.target,
+      targetName: nameOf(ref.target || scopeKey),
+      scopeName: index.get(ref.target)?.name ?? place.name,
+      scopeIsCountry: (index.get(ref.target)?.kind ?? place.kind) === "Country",
+      matching,
+      hunt: hunts.find((h) => h.placeKey === ref.target) ?? null,
+      decision: data.stuck.data?.find((i) => i.decision?.id === ref.target)?.decision,
+      fix: openFix ? { id: openFix.id, title: openFix.title, owner: openFix.owner, resourcesNow: openFix.resourcesNow, helps: openFix.helps, needsCode: openFix.origin === "engineering" && openFix.tab !== "update" }
+        : stuckForFix ? { id: ref.target, title: nameOf(ref.target), owner: stuckForFix.owner, resourcesNow: "Not reported", helps: stuckForFix.title, needsCode: true } : undefined,
+      url: ref.payload?.url,
+      waitingCount: scopeKey === COUNTRY_KEY ? data.workRows.data?.totals.find((t) => t.stage === "waiting")?.total ?? null : null,
+      outreachAuthorized: props.access.outreachAuthorized,
+    };
+  };
+
+  const whyNotRef = (ref: ActionRef): string | null => {
+    const def = actionDef(ref.kind);
+    const target = ref.kind === "scope-stop" && !ref.target ? scopeKey : ref.target;
+    return whyNot({ connection: props.connection, access: props.access, def, target, receipts, mode: props.mode, supported: props.executor.supports(def), itemState: props.itemState?.(ref.kind, target) ?? null });
+  };
+
+  const update = (next: UiReceipt) => {
+    setSent((list) => list.some((r) => r.key === next.key) ? list.map((r) => (r.key === next.key ? next : r)) : [next, ...list]);
+    setAnnounce(`${next.label}: ${next.statusWords}.`);
+  };
+
+  const doSend = (ref: ActionRef, key: string, send: DialogSend) => {
+    if (sendingKeys.current.has(key)) return; // one send per preview, however many clicks
+    sendingKeys.current.add(key);
+    const def = actionDef(ref.kind);
+    const target = ref.kind === "scope-stop" && !ref.target ? scopeKey : ref.target;
+    const ctx = previewCtx({ ...ref, target });
+    const pv = def.preview(ctx);
+    const optionLabel = pv.options?.find((o) => o.id === send.option)?.label;
+    const receipt = startReceipt({
+      key, def, target, targetName: ctx.targetName, label: optionLabel ? `${def.label}: ${optionLabel}` : ref.label ?? def.label,
+      scopeKey, scopeName: place.name, level: pv.level, at: new Date().toISOString(), simulated: props.mode === "sample", words: send.words.trim() || undefined,
+    });
+    update(receipt);
+    setDialog(null);
+    void props.executor.send(receipt, { def, target, scopeKey, option: send.option, words: send.words, amount: send.amount, selectedItems: send.selected, payload: ref.payload }, update);
+  };
+
+  const openDetail = (d: Detail) => {
+    setStack((st) => [...st, { view, detail }].slice(-20));
+    setDetail(d);
+    requestAnimationFrame(() => { window.scrollTo(0, 0); mainRef.current?.focus(); });
+  };
+
+  const goView = (v: View) => {
+    setStack((st) => (v === view && !detail ? st : [...st, { view, detail }].slice(-20)));
+    setView(v);
+    setDetail(null);
+    props.onViewChange?.(v);
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+  };
+
+  const back = () => {
+    const last = stack[stack.length - 1];
+    if (!last) return;
+    setStack(stack.slice(0, -1));
+    setView(last.view);
+    setDetail(last.detail);
+  };
+
+  const setScope = (key: string) => {
+    setPickerOpen(false);
+    setPickerQ("");
+    if (detail) setDetail(null);
+    props.onScopeChange(key);
+    setPeriod("month");
+    props.onPeriodChange?.("month");
+  };
+
+  useEffect(() => {
+    if (pickerOpen) pickerInput.current?.focus();
+  }, [pickerOpen]);
+
+  const v6: V6 = {
+    data, mode: props.mode, scopeKey, place, places, index, hunts, connection: props.connection, access: props.access, receipts, period: effectivePeriod,
+    instructionDraft,
+    setInstructionDraft: (draft) => setInstructionDrafts((current) => withInstructionDraft(current, scopeKey, draft)),
+    go: goView,
+    open: openDetail,
+    setScope,
+    whyNot: whyNotRef,
+    act: (ref) => { if (!whyNotRef(ref)) setDialog({ ref, key: newActionKey() }); },
+    check: (r) => { const p = props.executor.check(r, actionDef(r.kind), update); if (p) void p; },
+    canCheck: () => {
+      if (props.connection !== "live") return "Reconnect first.";
+      return props.executor.canCheck() ? null : "Checking needs a read-only receipt lookup that isn’t connected yet. It turns on by itself. Don’t send the action again until its result is known.";
+    },
+    defOf: (ref) => actionDef(ref.kind),
+    nameOf,
+    query: (section, params) => props.onQuery?.(section, params),
+    focusInstruction: () => { goView("now"); setTimeout(() => document.getElementById("v6-instruct-input")?.focus(), 60); },
+  };
+
+  const crumbs = breadcrumbs(index, scopeKey);
+  const scopeKind = `${place.kind}${hunt ? (hunt.placeKey === scopeKey ? ` · has a hunt (${hunt.name})` : ` · inside ${hunt.name}`) : inHunts.length ? ` · ${inHunts.length} ${inHunts.length === 1 ? "hunt" : "hunts"} inside` : data.hunts.state === "live" ? " · no hunt" : ""}`;
+  const pickerHits = pickerMatches(places, hunts, pickerQ);
+  const connWarn = props.connection !== "live";
+  const lastGood = props.lastGoodAt ? mst(props.lastGoodAt, false) : null;
+  const connLabel = props.connection === "live" ? (lastGood ? `Live · updated ${lastGood}` : "Live") : `${CONN_WORDS[props.connection]}${lastGood ? ` · last update ${lastGood}` : ""}`;
+  const dialogDef = dialog ? actionDef(dialog.ref.kind) : null;
+  const dialogTarget = dialog ? (dialog.ref.kind === "scope-stop" && !dialog.ref.target ? scopeKey : dialog.ref.target) : "";
+
+  return (
+    <V6Context.Provider value={v6}>
+      <div className={s.root}>
+        <a className={s.skip} href="#v6-main">Skip to the page</a>
+        <header className={s.header}>
+          <div className={s.headerTop}>
+            <span className={s.brand}>meanwhile<span style={{ color: "var(--pill-teal-text)" }}> …</span></span>
+            <nav className={s.nav} aria-label="Admin">
+              {VIEWS.map(([id, label]) => (
+                <button key={id} type="button" className={s.navBtn} aria-current={view === id && !detail ? "page" : undefined} onClick={() => goView(id)}>{label}</button>
+              ))}
+            </nav>
+            {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
+            <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
+              <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
+                onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Escape") setQuery(""); }} />
+            </form>
+          </div>
+          <div className={s.scopeBar}>
+            <nav className={s.crumbs} aria-label="Where you are">
+              {crumbs.map((c, i) => (
+                <span key={c.key} className={s.inline} style={{ gap: 6 }}>
+                  <button type="button" className={s.crumb} aria-current={i === crumbs.length - 1 ? "location" : undefined} onClick={() => i < crumbs.length - 1 && setScope(c.key)}>{c.name}</button>
+                  {i < crumbs.length - 1 && <span className={s.crumbSep} aria-hidden="true">›</span>}
+                </span>
+              ))}
+            </nav>
+            {scopeKey !== COUNTRY_KEY && <button type="button" className={cx(s.btn, s.btnPrimary)} onClick={() => setScope(COUNTRY_KEY)}>← United States</button>}
+            <button ref={pickerButton} type="button" className={s.btn} aria-expanded={pickerOpen} aria-controls="v6-picker" onClick={() => setPickerOpen((o) => !o)}>Change place</button>
+            <span className={s.dim}>{scopeKind}</span>
+            <label className={s.inline} style={{ gap: 6 }}>
+              <span className={s.dim}>Account period</span>
+              <select className={s.select} value={effectivePeriod} onChange={(e) => {
+                const next = e.target.value as "hunt" | "day" | "month";
+                setPeriod(next);
+                props.onPeriodChange?.(next);
+              }}>
+                {hunt && <option value="hunt">Whole hunt · since {mst(hunt.startedAt)}</option>}
+                <option value="day">Last 24 hours</option>
+                <option value="month">September 2026</option>
+              </select>
+            </label>
+            <span role="status" aria-live="polite" className={cx(s.connection, connWarn ? s.connWarn : s.connLive)}>
+              <span aria-hidden="true" className={cx(s.connDot, props.connection === "reconnecting" && s.pulse)} />
+              {connLabel}
+            </span>
+          </div>
+          {pickerOpen && (
+            <div id="v6-picker" className={s.picker} role="dialog" aria-label="Choose a place"
+              onKeyDown={(e) => { if (e.key === "Escape") { setPickerOpen(false); pickerButton.current?.focus(); } }}>
+              <input ref={pickerInput} className={s.input} aria-label="Find a state, county, ZIP, body or hunt" placeholder="Type a state, county, ZIP, body or hunt" value={pickerQ}
+                onChange={(e) => setPickerQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && pickerHits[0]) setScope(pickerHits[0].key); }} />
+              <div className={s.pickerGrid}>
+                {pickerHits.map((p) => {
+                  const h = hunts.find((x) => x.placeKey === p.key && x.status !== "stopped");
+                  return (
+                    <button key={p.key} type="button" className={s.pickerHit} onClick={() => setScope(p.key)}>
+                      <span style={{ fontSize: 13 }}>{p.name}</span>
+                      <span className={s.meta}>{p.kind} · {h ? `hunt: ${h.name}` : p.kind === "State" ? (p.tracked ? "tracked" : "no hunt") : p.navParent ? `in ${index.get(p.navParent)?.name ?? ""}` : ""}</span>
+                    </button>
+                  );
+                })}
+                {!pickerHits.length && <span className={s.meta}>No place matches “{pickerQ}”.</span>}
+              </div>
+              <span className={s.meta}>
+                {data.places.state === "live" && data.places.load === "ready"
+                  ? "Searches every place the backend knows. A ZIP or body can overlap more than one county; its counts follow where it actually belongs."
+                  : data.places.state === "sample" ? "Sample places: 56 states and territories plus a few counties, ZIPs and bodies." : "Counties, ZIPs and bodies appear here by themselves once the backend lists them. Right now: the country and its 56 states and territories."}
+              </span>
+            </div>
+          )}
+        </header>
+
+        <main id="v6-main" ref={mainRef} tabIndex={-1} className={s.main} style={{ outline: "none" }}>
+          {props.reviewPanel}
+          {connWarn && props.connection !== "connecting" && (
+            <div className={cx(s.banner, props.connection === "reconnecting" && s.bannerCalm)} role="status">
+              <strong>{props.connection === "stale" ? "These figures are out of date." : props.connection === "reconnecting" ? "Reconnecting." : "Disconnected."}</strong>
+              <span className={s.small}>Showing the last good data{lastGood ? ` from ${lastGood}` : ""}. Your place and open item stay put. Buttons that change things are off until updates come back. Then anything you missed is filled in once, and nothing is counted twice.</span>
+            </div>
+          )}
+          {props.recovered && (
+            <div className={cx(s.banner, s.bannerGood)} role="status">
+              <strong>Back online.</strong>
+              <span className={s.small}>Caught up with what changed while you were away.</span>
+            </div>
+          )}
+          {detail && stack.length > 0 && (
+            <div><button type="button" className={s.btnLink} onClick={back}>← Back</button></div>
+          )}
+          {detail ? <DetailPanel detail={detail} /> : (
+            <>
+              {view === "now" && <NowScreen key={scopeKey} />}
+              {view === "workers" && <WorkersScreen />}
+              {view === "work" && <WorkScreen />}
+              {view === "checklist" && <ChecklistScreen />}
+              {view === "money" && <MoneyScreen />}
+              {view === "learning" && <LearningScreen />}
+              {view === "fix" && <FixScreen />}
+            </>
+          )}
+        </main>
+        <span className={s.srOnly} role="status" aria-live="polite">{announce}</span>
+
+        {dialog && dialogDef && (
+          <ActionDialog
+            def={dialogDef}
+            preview={dialogDef.preview(previewCtx({ ...dialog.ref, target: dialogTarget }))}
+            mode={props.mode}
+            blocked={whyNotRef({ ...dialog.ref, target: dialogTarget })}
+            onClose={() => setDialog(null)}
+            onSend={(send) => doSend(dialog.ref, dialog.key, send)}
+          />
+        )}
+      </div>
+    </V6Context.Provider>
+  );
+}

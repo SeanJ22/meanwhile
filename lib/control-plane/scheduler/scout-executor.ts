@@ -78,7 +78,7 @@
  *
  * ## The ladder — cheapest suitable class first (MW-031, MW-033, 2026-09-25)
  *
- * The loop's first attempt runs on the step registry's base class (Sonnet 5;
+ * The loop's first attempt runs on the step registry's base class (currently Haiku 4.5;
  * `scoutLoopBase`, which the pre-warm reads too). When that attempt ends with
  * one of the closed `MODEL_ESCALATION_REASONS` observed — bound exhausted
  * without a result, a refused result never corrected, no typed result, or an

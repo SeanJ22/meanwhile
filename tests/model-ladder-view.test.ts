@@ -46,7 +46,9 @@ test("an escalation on record reads as the classes by name, the reason, the evid
         obligationId: "freshness:x",
         subjectId: "ocd-division/country:us/state:az/place:x",
         from: "sonnet",
+        fromModel: "claude-sonnet-5",
         to: "frontier",
+        toModel: "claude-opus-5-5",
         reason: "RESULT_REFUSED",
         evidence: "finish refused after 4 turn(s): SCOUT_CANDIDATE_WITHOUT_EVIDENCE",
         refused: null,
@@ -58,13 +60,16 @@ test("an escalation on record reads as the classes by name, the reason, the evid
   const line = ladderHeadline({ ladder, lastPaidAt: LAST_PAID, pausedByOwner: false });
   assert.equal(
     line,
-    "Escalations recorded: 3. 1 more was called for and refused. Latest: A Scout moved from Claude Sonnet 5.5 to Claude Opus 5.5 on Oct 1 because its answer failed our checks and was never fixed " +
+    "Escalations recorded: 3. 1 more was called for and refused. Latest: A Scout moved from Claude Sonnet 5 to Claude Opus 5.5 on Oct 1 because its answer failed our checks and was never fixed " +
       "(finish refused after 4 turn(s): SCOUT_CANDIDATE_WITHOUT_EVIDENCE); both tries together cost $0.0429 ($0.0124 + $0.0305).",
   );
   const refused = escalationSentence({ ...ladder.latest[0], to: null, refused: "CEILING", reason: "NO_TYPED_RESULT", evidence: null, attemptsUsd: [0.0093], combinedUsd: 0.0093 });
-  assert.equal(refused, "A Scout stayed on Claude Sonnet 5.5 on Oct 1 although it stopped without giving an answer, because the spending ceiling could not cover a second try; it cost $0.0093.");
+  assert.equal(refused, "A Scout stayed on Claude Sonnet 5 on Oct 1 although it stopped without giving an answer, because the spending ceiling could not cover a second try; it cost $0.0093.");
   const unmeasured = escalationSentence({ ...ladder.latest[0], combinedUsd: null, attemptsUsd: [null, 0.03] });
   assert.match(unmeasured, /both tries together cost an unmeasured amount \(an unmeasured amount \+ \$0\.0300\)/, "an unmeasured cost is never shown as $0");
+  assert.match(escalationSentence({ ...ladder.latest[0], fromModel: null, toModel: null }), /the sonnet class \(exact model not recorded\)/,
+    "class-only history cannot be relabeled with today's active Sonnet version");
+  assert.match(escalationSentence({ ...ladder.latest[0], fromModel: "claude-sonnet-5-5" }), /Claude Sonnet 5\.5/);
 });
 
 test("every recorded reason and every refusal has owner words — the closed lists and the words cannot drift apart", () => {

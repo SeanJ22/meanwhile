@@ -1,0 +1,382 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { NextRequest } from "next/server";
+import { GET } from "../app/api/admin/v6/workers/route.ts";
+import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
+import { DEP_WORKER_ACTIVE_INDEX, readV6WorkersSources, v6WorkersGet, v6WorkersSection, validateWorkersQuery, WORKERS_SOURCE_EVENT_LIMIT,
+  type AdminV6WorkersView, type V6WorkersSources } from "../lib/control-plane/admin-view/v6-workers-read.ts";
+import type { V6Refusal } from "../lib/control-plane/admin-view/v6-hunts-read.ts";
+import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, type HuntSourceProgress } from "../lib/control-plane/owner-surface.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
+import { LiveSync, type SyncFetch } from "../app/(admin)/_mw/admin-v6/live-sync.ts";
+import { buildLiveBundle } from "../app/(admin)/_mw/admin-v6/live-data.ts";
+import { liveReference } from "../app/(admin)/_mw/admin-v6/reference.ts";
+import type { AdminV6Data } from "../app/(admin)/_mw/admin-v6/model.ts";
+import { indexPlaces, relation } from "../app/(admin)/_mw/admin-v6/places.ts";
+import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
+
+const NOW = "2026-09-28T22:00:00.000Z";
+const Z85635 = "geo:az.zcta.85635";
+/** The one saved hunt in production at the 2026-09-28 21:58 UTC read-only probe (workers-probe-20260928T215807Z.json). */
+const ORIGINAL: ExpansionScopeDecision = {
+  key: ORIGINAL_LIFETIME_HUNT.key,
+  geography: { type: "zcta", geoid: "85635", version: "zcta:2020", label: "ZIP 85635 (Census ZCTA)", stateAbbr: "AZ" },
+  priority: 1, budgetUsd: 50, budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, sourceWorkVersion: 1,
+  note: null, decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, decidedBy: "session:owner", receiptId: ORIGINAL_LIFETIME_HUNT.receiptId, previous: null,
+};
+/** A synthetic second ZIP hunt in another state (two ZCTA GEOIDs never overlap), to prove "outside" comes from saved Sends. */
+const NH: ExpansionScopeDecision = {
+  ...ORIGINAL, key: "zcta:2020/03301", receiptId: "expansion.scope.set:scope:03301:test",
+  geography: { type: "zcta", geoid: "03301", version: "zcta:2020", label: "ZIP 03301 (Census ZCTA)", stateAbbr: "NH" },
+  budgetStartedAt: "2026-09-28T01:00:00.000Z", decidedAt: "2026-09-28T01:00:00.000Z",
+};
+
+const mark = (d: ExpansionScopeDecision, at = "2026-09-27T23:10:31.451Z") => ({ assignmentKey: d.key, ref: d.receiptId, relation: "REORDERED", at });
+
+/** The saved 21:06–21:56 UTC loop: QUEUED → COLLECTING_AND_VERIFYING → FAILED on the Cochise voting-sites source. */
+function votingSitesLoop(n: number, lastAt = Date.parse("2026-09-28T21:56:48.000Z")): { id: string; p: HuntSourceProgress }[] {
+  const stages: HuntSourceProgress["stage"][] = ["FAILED", "COLLECTING_AND_VERIFYING", "QUEUED"];
+  return Array.from({ length: n }, (_, i) => {
+    const at = new Date(lastAt - i * 100_000).toISOString();
+    const stage = stages[i % 3];
+    return { id: `cycle-${n - i}:voting-sites:cochise-2026:${stage}`, p: { instructionIds: [ORIGINAL.receiptId], taskId: "voting-sites:cochise-2026",
+      sourceId: "voting-sites", scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions", stage, at,
+      detail: stage === "FAILED" ? "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0." : "", candidateId: null, readerPaths: [] } };
+  }).reverse();
+}
+
+interface ScoutFixture { attemptId: string; obligationId: string; startedAt: string; outcome?: string | null; endedAt?: string | null;
+  lease?: { expiresAt: string; released?: boolean; id?: string } | null; marks?: unknown[] | undefined; assignmentKeys?: string[] }
+
+const LIVE: ScoutFixture = { attemptId: "at-live", obligationId: "ob-live", startedAt: "2026-09-28T21:50:00.000Z",
+  lease: { expiresAt: "2026-09-28T22:10:00.000Z" }, marks: [mark(ORIGINAL)], assignmentKeys: [ORIGINAL.key] };
+const EXPIRED: ScoutFixture = { attemptId: "at-expired", obligationId: "ob-expired", startedAt: "2026-09-28T20:00:00.000Z",
+  lease: { expiresAt: "2026-09-28T20:25:00.000Z" }, marks: [mark(ORIGINAL)], assignmentKeys: [ORIGINAL.key] };
+const ENDED: ScoutFixture = { attemptId: "at-ended", obligationId: "ob-ended", startedAt: "2026-09-28T21:00:00.000Z",
+  outcome: "COMPLETED", endedAt: "2026-09-28T21:20:00.000Z", lease: { expiresAt: "2026-09-28T21:45:00.000Z", released: true },
+  marks: [mark(ORIGINAL)], assignmentKeys: [ORIGINAL.key] };
+const NH_SCOUT: ScoutFixture = { attemptId: "at-nh", obligationId: "ob-nh", startedAt: "2026-09-28T21:55:00.000Z",
+  lease: { expiresAt: "2026-09-28T22:15:00.000Z" }, marks: [mark(NH, "2026-09-28T02:00:00.000Z")], assignmentKeys: [NH.key] };
+const UNSENT: ScoutFixture = { attemptId: "at-unsent", obligationId: "ob-unsent", startedAt: "2026-09-28T21:56:00.000Z",
+  lease: { expiresAt: "2026-09-28T22:16:00.000Z" }, marks: undefined, assignmentKeys: [] };
+
+const LANES = { at: "2026-09-28T21:52:41.202Z", final: false, autonomous: null,
+  model: { due: 1285, dispatched: 1, active: 0, waiting: 1284, skippedBy: null, oldestWaitingDueAt: "2026-08-27T00:00:00.000Z" },
+  deterministic: { due: 1303, dispatched: 3, active: null, waiting: 1300, skippedBy: null, oldestWaitingDueAt: "2026-09-15T17:58:43.000Z" } };
+
+const SENDS = { formatVersion: 1, at: "2026-09-28T21:52:41.202Z", costsReadable: true, intentsReadable: true, rule: "",
+  assignments: [{ key: ORIGINAL.key, kind: "SCOPE", label: ORIGINAL.geography.label, ref: ORIGINAL.receiptId,
+    members: { created: 0, reordered: 194, createdSample: [], reorderedSample: [] },
+    budget: { lifetime: true, budgetUsd: 50, windowHours: 24, since: ORIGINAL.budgetStartedAt, until: NOW, spentUsd: 38.49, heldUsd: 8.16,
+      leftUsd: 3.35, measuredRows: 400, unmeasuredRows: 0, bySubjectRows: 0, admitted: 1, refused: 4 },
+    budgetWhyNot: null,
+    completion: { kind: "NOT_COMPLETE", assignmentKey: ORIGINAL.key, members: 194, settled: 20, exceptions: [], refusedCount: 30, unsettledCount: 144 } }] };
+
+async function world(opts: { scouts?: ScoutFixture[]; sources?: { id: string; p: HuntSourceProgress }[]; scopes?: ExpansionScopeDecision[];
+  research?: Record<string, unknown> | null; heartbeat?: Record<string, unknown> | null } = {}): Promise<ControlPlaneRepositories> {
+  const repos = createMemoryRepositories();
+  await repos.adminConfig.put("current", { expansionScopes: opts.scopes ?? [ORIGINAL] } as never, NOW);
+  if (opts.heartbeat !== null) await repos.runnerHeartbeat.put(RUNNER_ID, { beatAt: "2026-09-28T21:59:30.000Z", lastCycleStartedAt: "2026-09-28T21:46:34.342Z",
+    lastCycleFinishedAt: "2026-09-28T21:30:00.000Z", lastCycleOk: true, nextCycleDueAt: "2026-09-28T22:30:00.000Z", testedSha: "a".repeat(40),
+    ...opts.heartbeat } as never, NOW);
+  const scouts = opts.scouts ?? [LIVE, EXPIRED, ENDED];
+  if (opts.research !== null) await repos.researchState.put(RESEARCH_STATE_ID, { beatAt: "2026-09-28T21:52:41.202Z", cycleStartedAt: "2026-09-28T21:46:34.342Z",
+    cycleFinishedAt: null, pausedByOwner: false, queue: { lanes: LANES }, assignments: SENDS,
+    running: scouts.map(s => ({ attemptId: s.attemptId, obligationId: s.obligationId, startedAt: s.startedAt,
+      ...(s.assignmentKeys ? { assignmentKeys: s.assignmentKeys } : {}) })), ...opts.research } as never, NOW);
+  for (const s of scouts) {
+    const task = `rt-${s.attemptId}`;
+    await repos.attempts.put(s.attemptId, { id: s.attemptId, routeTaskId: task, workItemId: `wi-${s.attemptId}`, leaseId: `ls-${s.attemptId}`,
+      worker: { role: "SCOUT", provider: "anthropic", version: "claude-haiku-4-5-20251001", instance: "i" }, startedAt: s.startedAt,
+      endedAt: s.endedAt ?? null, outcome: s.outcome ?? null } as never, NOW);
+    if (s.lease) await repos.leases.put(task, { id: s.lease.id ?? `ls-${s.attemptId}`, routeTaskId: task, holder: "cycle@test", claimedAt: s.startedAt,
+      expiresAt: s.lease.expiresAt, heartbeatAt: s.startedAt, released: s.lease.released ?? false }, NOW);
+    await repos.obligations.put(s.obligationId, { id: s.obligationId, recordClass: "meetings", subjectId: "body-x", routeId: null, active: true,
+      ...(s.marks ? { assignments: s.marks } : {}) } as never, NOW);
+  }
+  for (const { id, p } of opts.sources ?? votingSitesLoop(6)) await repos.ownerDigests.append(HUNT_SOURCE_PROGRESS_LOG_KEY, id,
+    { formatVersion: 1, digestId: id, writtenAt: p.at, headline: `${p.taskId}: ${p.stage}`, lines: [p.detail], cycleOk: null, testedSha: null, huntSourceProgress: p }, p.at);
+  return repos;
+}
+
+async function section(scopeKey: string, repos: ControlPlaneRepositories) {
+  const q = validateWorkersQuery(new URLSearchParams({ scope: scopeKey }));
+  assert.ok(q.ok);
+  return v6WorkersSection({ scopeKey, scope: q.scope, sources: await readV6WorkersSources(repos, NOW) });
+}
+function ok(out: unknown): { data: AdminV6WorkersView; missingParts: readonly string[]; revision: string; asOf: string; scope: string; contract: string } {
+  assert.ok(out && typeof out === "object" && !("kind" in out), `expected a section, got ${JSON.stringify(out)}`);
+  return out as never;
+}
+function refused(out: unknown): V6Refusal {
+  assert.ok(out && typeof out === "object" && "kind" in out, "expected a refusal");
+  return out as V6Refusal;
+}
+
+/* ------------------------------------------------ running, expired, ended */
+
+test("only an open attempt with its own live lease is running; an expired lease and an ended attempt are not", async () => {
+  const s = ok(await section("us", await world()));
+  const events = s.data.events ?? [];
+  const started = events.filter(e => e.kind === "Paid research started");
+  assert.equal(started.length, 1, "the live Scout alone is running");
+  assert.match(started[0].text, /running now with Cheapest AI \(claude-haiku-4-5-20251001\)\..*No result is saved yet/);
+  const stopped = events.filter(e => e.kind === "No live work claim");
+  assert.equal(stopped.length, 1);
+  assert.match(stopped[0].text, /not proven running now.*delivery must be checked separately/);
+  assert.equal(stopped[0].tone, "warn");
+  const ended = events.filter(e => e.kind === "Paid research ended");
+  assert.equal(ended.length, 1);
+  assert.match(ended[0].text, /not the same as a checked, published result/);
+  assert.equal(s.data.jobs, null, "the running universe is not complete, so no job list is claimed");
+  assert.ok(s.missingParts.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)));
+});
+
+test("a released lease, a lease held under another id, and a missing lease never count as running", async () => {
+  const released = { ...LIVE, attemptId: "at-rel", obligationId: "ob-rel", lease: { expiresAt: LIVE.lease!.expiresAt, released: true } };
+  const swapped = { ...LIVE, attemptId: "at-swap", obligationId: "ob-swap", lease: { expiresAt: LIVE.lease!.expiresAt, id: "ls-someone-else" } };
+  const none = { ...LIVE, attemptId: "at-none", obligationId: "ob-none", lease: null };
+  const s = ok(await section("us", await world({ scouts: [released, swapped, none] })));
+  assert.equal(s.data.events?.filter(e => e.kind === "Paid research started").length, 0);
+  assert.equal(s.data.events?.filter(e => e.kind === "No live work claim").length, 3);
+});
+
+test("a heartbeat is not progress: a live check-in with only failures leaves last useful progress unreported", async () => {
+  const s = ok(await section(Z85635, await world({ scouts: [] })));
+  assert.equal(s.data.status.lastCheckIn, "2026-09-28T21:59:30.000Z");
+  assert.equal(s.data.status.runnerState, "ALIVE");
+  assert.equal(s.data.status.lastUsefulProgress, null);
+  assert.ok(s.missingParts.some(m => /A check-in only means the workers are switched on/.test(m)));
+  assert.equal(s.data.status.roundStartedAt, "2026-09-28T21:46:34.342Z", "a round started after the last finish is in progress");
+});
+
+test("a saved publication for the hunt's exact receipt is the last useful progress", async () => {
+  const published = { id: "c9:voting-sites:PUBLISHED", p: { ...votingSitesLoop(1)[0].p, stage: "PUBLISHED" as const, at: "2026-09-28T21:58:00.000Z", detail: "" } };
+  const s = ok(await section(Z85635, await world({ scouts: [], sources: [...votingSitesLoop(3), published] })));
+  assert.equal(s.data.status.lastUsefulProgress?.at, "2026-09-28T21:58:00.000Z");
+  assert.match(s.data.status.lastUsefulProgress?.what ?? "", /voting sites source for the ZIP 85635 \(Census ZCTA\) hunt was checked and published/);
+});
+
+test("the saved retry loop is one feed line, and a past-due round is not presented as upcoming", async () => {
+  const s = ok(await section(Z85635, await world({ scouts: [], sources: votingSitesLoop(25),
+    heartbeat: { nextCycleDueAt: "2026-09-28T21:55:00.000Z" } })));
+  const voting = (s.data.events ?? []).filter(e => /voting sites/.test(e.text));
+  assert.equal(voting.length, 1, "QUEUED → COLLECTING → FAILED repeats are one line about the newest state");
+  assert.match(voting[0].text, /stopped before publishing 9 times since/);
+  assert.ok(s.data.next?.includes("The next round was due Sep 28, 2:55 PM MST. No newer start is saved yet."));
+  assert.ok(!(s.data.next ?? []).some(n => /is due/.test(n)));
+});
+
+/* ------------------------------------------------------- place binding */
+
+test("the 85635 hunt's work is bound by its exact original receipt; other hunts and unsent work stay out", async () => {
+  const repos = await world({ scouts: [LIVE, NH_SCOUT, UNSENT], scopes: [ORIGINAL, NH] });
+  const s = ok(await section(Z85635, repos));
+  const started = (s.data.events ?? []).filter(e => e.kind === "Paid research started");
+  assert.equal(started.length, 1, "only the Scout whose obligation carries the 85635 Send");
+  assert.match(started[0].text, /ZIP 85635/);
+  assert.ok(s.data.events!.every(e => e.applies.length === 1 && e.applies[0] === Z85635));
+  assert.ok(s.missingParts.some(m => /1 listed paid research job could not be placed/.test(m)), "unsent work is unknown here, not dropped silently");
+  const nh = ok(await section("st:nh", repos));
+  assert.equal(nh.data.events?.filter(e => e.kind === "Paid research started").length, 1);
+  assert.ok(!(nh.data.events ?? []).some(e => /voting sites/.test(e.text)), "the 85635 source receipts are outside New Hampshire");
+  const whole = ok(await section("us", repos));
+  assert.equal(whole.data.events?.filter(e => e.kind === "Paid research started").length, 3);
+});
+
+test("a Send mark made after the Scout started, or with a different receipt, does not place it", async () => {
+  const late = { ...LIVE, attemptId: "at-late", obligationId: "ob-late", marks: [mark(ORIGINAL, "2026-09-28T21:55:00.000Z")] };
+  const other = { ...LIVE, attemptId: "at-other", obligationId: "ob-other", marks: [{ ...mark(ORIGINAL), ref: "expansion.scope.set:scope:85635:someone-else" }] };
+  const s = ok(await section(Z85635, await world({ scouts: [late, other] })));
+  assert.equal(s.data.events?.filter(e => e.kind === "Paid research started").length ?? 0, 0);
+  assert.ok(s.missingParts.some(m => /2 listed paid research jobs could not be placed/.test(m)));
+});
+
+test("an unbound place refuses 409 instead of guessing from a breadcrumb or prefix", async () => {
+  const repos = await world();
+  for (const key of ["body:hereford-nrcd", "geo:az.county.04003"]) {
+    const r = refused(await section(key, repos));
+    assert.equal(r.status, 409, key);
+    assert.equal(r.code, "SCOPE_BINDING_NOT_CONNECTED");
+  }
+});
+
+/* ---------------------------------------------- waiting, next, and unknowns */
+
+test("waiting explains the hunt's unfinished tasks, its money limit and the failing source in plain words", async () => {
+  const s = ok(await section(Z85635, await world({ scouts: [] })));
+  const w = s.data.waiting ?? [];
+  const unfinished = w.find(x => x.kind === "Not finished");
+  assert.equal(unfinished?.title, "ZIP 85635 (Census ZCTA) hunt: 174 of 194 assigned tasks not finished");
+  assert.match(unfinished!.why, /30 tasks were stopped by a check, and 144 tasks have no finished, checked result yet/);
+  assert.match(w.find(x => x.kind === "Money limit")?.why ?? "", /\$3\.35 is left of the \$50\.00 limit, with \$8\.16 set aside/);
+  const failing = w.find(x => x.kind === "Keeps failing");
+  assert.match(failing?.title ?? "", /voting sites source .*: 2 failed tries since/);
+  assert.match(failing!.why, /without the one receipt it must save/);
+  assert.ok(!w.some(x => x.kind === "In line"), "whole-system queue counts are not presented as this ZIP's waiting work");
+  assert.ok(s.missingParts.some(m => /Only work sent to a hunt is split by place/.test(m)));
+  assert.ok(s.data.next?.some(n => /finish the other 174 assigned tasks/.test(n)));
+  assert.ok(s.data.next?.some(n => /next round of work is due Sep 28, 3:30 PM MST/.test(n)));
+});
+
+test("the whole country lists queue lanes as waiting, with the oldest due time", async () => {
+  const s = ok(await section("us", await world({ scouts: [] })));
+  const lanes = (s.data.waiting ?? []).filter(x => x.kind === "In line");
+  assert.equal(lanes.length, 2);
+  assert.ok(lanes.some(x => /1,284 tasks waiting: paid research \(scout\)/.test(x.title)));
+  assert.equal(s.data.status.lanes?.length, 2);
+  assert.equal(s.data.status.lanes?.find(l => /Plain-code/.test(l.name))?.active, null, "an unrecorded in-flight count stays unknown");
+});
+
+test("missing readings are unknown, never zero or an empty list", async () => {
+  const empty = ok(await section("us", await world({ research: { running: undefined, queue: undefined, assignments: undefined }, sources: [], scouts: [] })));
+  assert.equal(empty.data.status.lanes, null);
+  assert.equal(empty.data.waiting, null, "without queue counts, nothing-waiting is not proven");
+  assert.equal(empty.data.events, null, "no recorded changes is never claimed");
+  assert.ok(empty.data.status.unread.includes("the queue counts"));
+  const noState = ok(await section("us", await world({ research: null, heartbeat: null, scouts: [] })));
+  assert.equal(noState.data.status.lastCheckIn, null);
+  assert.equal(noState.data.status.runnerState, "NEVER_BEAT");
+  assert.ok(!(noState.data.waiting ?? []).some(x => x.kind === "In line" || x.kind === "Not finished"), "no queue or hunt reading means no such items");
+  assert.ok((noState.data.waiting ?? []).some(x => x.kind === "Keeps failing"), "a proven source failure is still shown");
+  const place = ok(await section("st:nm", await world({ scouts: [], sources: [] })));
+  assert.equal(place.data.waiting, null, "a place with no hunt cannot claim that nothing waits there");
+});
+
+test("incomplete reads are named: an unreadable attempt, an oversize running list, a full receipt page, an unread log", async () => {
+  const repos = await world();
+  const flaky: ControlPlaneRepositories = { ...repos, attempts: { ...repos.attempts,
+    readNarrowed: async (id, p) => { if (id === EXPIRED.attemptId) throw Error("postgresql://private"); return repos.attempts.readNarrowed(id, p); } } };
+  const one = ok(await section("us", flaky));
+  assert.ok(one.missingParts.some(m => /1 listed paid research job could not be checked/.test(m)));
+  assert.doesNotMatch(JSON.stringify(one), /postgresql|private/);
+
+  const big = Array.from({ length: 17 }, (_, i) => ({ ...LIVE, attemptId: `at-${i}`, obligationId: `ob-${i}` }));
+  const over = ok(await section("us", await world({ scouts: big })));
+  assert.ok(over.missingParts.some(m => /not a valid bounded list/.test(m)));
+  assert.ok(!(over.data.events ?? []).some(e => e.kind === "Paid research started"));
+
+  const full = ok(await section("us", await world({ scouts: [], sources: votingSitesLoop(40) })));
+  assert.ok(full.missingParts.some(m => new RegExp(`Only the newest ${WORKERS_SOURCE_EVENT_LIMIT} source receipts are read`).test(m)));
+
+  const noLog: ControlPlaneRepositories = { ...repos, ownerDigests: { ...repos.ownerDigests, readRecent: async () => { throw Error("down"); } } };
+  const unreadLog = ok(await section(Z85635, noLog));
+  assert.ok(unreadLog.data.status.unread.includes("the recent source receipts"));
+  assert.ok(!(unreadLog.data.waiting ?? []).some(x => x.kind === "Keeps failing"));
+});
+
+test("an unreadable research state is 503; an unreadable hunt list is 503 for a place and not needed for the country", async () => {
+  const repos = await world();
+  const noResearch = { ...repos, researchState: { ...repos.researchState, readNarrowed: async () => { throw Error("x"); } } };
+  assert.equal(refused(await section("us", noResearch)).code, "WORKER_STATE_UNREAD");
+  const noConfig = { ...repos, adminConfig: { ...repos.adminConfig, read: async () => { throw Error("x"); } } };
+  const r = refused(await section("st:az", noConfig));
+  assert.equal(r.status, 503);
+  assert.equal(r.code, "HUNT_LIST_UNREAD");
+  ok(await section("us", noConfig));
+});
+
+test("reads stay bounded: no list, no whole-log read, no filtered scan", async () => {
+  const repos = await world({ scouts: [LIVE, EXPIRED, ENDED, NH_SCOUT, UNSENT], scopes: [ORIGINAL, NH] });
+  const calls: string[] = [];
+  const guard = <T extends object>(name: string, store: T): T => new Proxy(store, { get(target, prop, recv) {
+    const v = Reflect.get(target, prop, recv);
+    if (typeof v !== "function") return v;
+    return (...args: unknown[]) => {
+      calls.push(`${name}.${String(prop)}`);
+      if (["list", "listWhere", "readAll", "keys", "readWhere", "readRecentWhere"].includes(String(prop))) throw Error(`unbounded ${name}.${String(prop)}`);
+      return (v as (...a: unknown[]) => unknown).apply(target, args);
+    };
+  } });
+  const wrapped = Object.fromEntries(Object.entries(repos).map(([k, v]) => [k, v && typeof v === "object" ? guard(k, v) : v])) as unknown as ControlPlaneRepositories;
+  ok(await section("us", wrapped));
+  assert.ok(calls.filter(c => c.startsWith("attempts.")).length <= 16);
+  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent"]);
+});
+
+test("the revision follows saved sources, not the clock or a lease renewal", async () => {
+  const a = ok(await section("us", await world()));
+  const b = ok(await section("us", await world()));
+  assert.equal(a.revision, b.revision);
+  const renewed = ok(await section("us", await world({ scouts: [{ ...LIVE, lease: { expiresAt: "2026-09-28T22:40:00.000Z" } }, EXPIRED, ENDED] })));
+  assert.equal(renewed.revision, a.revision, "a renewed claim is a heartbeat, not a change");
+  const expiredNow = ok(await section("us", await world({ scouts: [{ ...LIVE, lease: { expiresAt: "2026-09-28T21:59:00.000Z" } }, EXPIRED, ENDED] })));
+  assert.notEqual(expiredNow.revision, a.revision, "running → stopped is a change");
+});
+
+/* --------------------------------------------------------------- the route */
+
+test("route: public 404, unauthenticated 401, strict query 400, unbound 409, unread 503, private no-store 200", async () => {
+  const path = "/api/admin/v6/workers?scope=us";
+  assert.equal((await GET(new NextRequest(`https://${PUBLIC_HOST}${path}`, { headers: { host: PUBLIC_HOST } }))).status, 404);
+  const anon = await GET(new NextRequest(`https://${ADMIN_HOST}${path}`, { headers: { host: ADMIN_HOST } }));
+  assert.equal(anon.status, 401);
+  assert.match(anon.headers.get("cache-control") ?? "", /private, no-store/);
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
+    const req = (suffix: string) => new NextRequest(`https://${ADMIN_HOST}${suffix}`, { headers: { host: ADMIN_HOST, cookie } });
+    for (const bad of ["?scope=us&period=whole-hunt", "?scope=us&scope=us", "?scope=AZ", "?", `?scope=${"x".repeat(80)}`]) {
+      const res = await GET(req(`/api/admin/v6/workers${bad}`));
+      assert.equal(res.status, 400, bad);
+    }
+    const body = await GET(req("/api/admin/v6/workers?scope=body%3Ahereford-nrcd"));
+    assert.equal(body.status, 409);
+    assert.equal((await body.json()).code, "SCOPE_BINDING_NOT_CONNECTED");
+    const saved = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+    delete process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+    try {
+      const unread = await GET(req(path));
+      assert.equal(unread.status, 503, "an unconfigured control plane is unread, never an empty section");
+      assert.match(unread.headers.get("cache-control") ?? "", /private, no-store/);
+    } finally { if (saved !== undefined) process.env.WTP_CONTROL_PLANE_DATABASE_URL = saved; }
+    const repos = await world();
+    const res = await v6WorkersGet(req(`/api/admin/v6/workers?scope=${encodeURIComponent(Z85635)}`), { open: async () => ({ ok: true as const, repos }), now: () => NOW });
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("cache-control") ?? "", /private, no-store/);
+    const json = await res.json();
+    assert.equal(json.contract, "admin-v6/workers@1");
+    assert.equal(json.scope, Z85635);
+    assert.equal(json.asOf, NOW);
+    assert.deepEqual(Object.keys(json.data).sort(), ["events", "jobs", "next", "status", "update", "waiting"]);
+  });
+});
+
+/* ------------------------------------------------ the page reads this section */
+
+test("an open v6 page picks up the Workers section through LiveSync and shows every row for its place", async () => {
+  const repos = await world({ scouts: [LIVE, EXPIRED, NH_SCOUT], scopes: [ORIGINAL, NH] });
+  const open = async () => ({ ok: true as const, repos });
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
+    const fetch: SyncFetch = async (url) => {
+      const res = await v6WorkersGet(new NextRequest(`https://${ADMIN_HOST}${url}`, { headers: { host: ADMIN_HOST, cookie } }), { open, now: () => NOW });
+      return { status: res.status, json: async () => res.json() };
+    };
+    for (const [scope, mw] of [[Z85635, { kind: "geo", type: "zcta", geoid: "85635", state: "az" }], ["st:az", { kind: "state", state: "az" }], ["us", { kind: "us" }]] as const) {
+      const sync = new LiveSync({ scope, fetch, schedule: () => () => {} });
+      sync.onPulse({ revision: "r1", at: NOW, v6: { version: 1, actions: {}, sections: {
+        workers: { contract: "admin-v6/workers@1", href: "/api/admin/v6/workers", revision: "w1" } } } });
+      for (let i = 0; i < 20 && sync.snapshot().workers.phase !== "live"; i++) await new Promise(r => setTimeout(r, 5));
+      assert.equal(sync.snapshot().workers.phase, "live", scope);
+      const ref = liveReference({ scope: mw as never, observedAt: NOW });
+      const bundle = buildLiveBundle(sync.snapshot(), ref, null as never);
+      const w = bundle.workers.data!;
+      const index = indexPlaces(bundle.places.data ?? []);
+      // The Workers screen filters by `relation(index, applies, scopeKey)`; nothing proven here may vanish.
+      assert.equal(w.events?.filter(e => relation(index, e.applies, scope) !== null).length, w.events?.length, scope);
+      assert.equal(w.waiting?.filter(x => relation(index, x.applies, scope) !== null).length, w.waiting?.length, scope);
+      assert.equal(w.jobs, null);
+      assert.ok(bundle.workers.missingParts?.some(m => m.startsWith(DEP_WORKER_ACTIVE_INDEX)), scope);
+    }
+  });
+});
+
+// Compile-time proof the backend shape is the UI's shape (tsc checks tests).
+const _workersFit = (w: AdminV6WorkersView): NonNullable<AdminV6Data["workers"]["data"]> => w;
+void _workersFit;
+const _sources = (s: V6WorkersSources) => s;
+void _sources;

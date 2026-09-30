@@ -1,6 +1,8 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
+import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
 /**
  * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
  *
@@ -70,6 +72,7 @@ import type {
 import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
+import { appendActionReceiptWithHistoryAtomic } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
@@ -922,6 +925,24 @@ export async function createPgRepositories(
   }
   const locks = pgLockManager(sql, bounds);
 
+  const receiptLog = pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded);
+  const adminReceipts: AppendOnlyRepository<ActionReceipt> = {
+    ...receiptLog,
+    async append(key, recordId, record, recordedAt) {
+      if (key !== "admin-action") return receiptLog.append(key, recordId, record, recordedAt);
+      if (recordId !== record.receiptId) throw new Error("ADMIN_RECEIPT_ID_MISMATCH");
+      const globalRunner = (record.type === "runner.pause" || record.type === "runner.resume") &&
+        record.subjectKind === "the standing runner";
+      const outcome = await appendActionReceiptWithHistoryAtomic({ sql, receipt: record,
+        sourceRecordedAt: recordedAt, bounds,
+        validatedAction: globalRunner
+          ? { kind: "GLOBAL_RUNNER", type: record.type as "runner.pause" | "runner.resume" }
+          : { kind: "UNAVAILABLE", legacy: false },
+      });
+      return { appended: outcome.state === "APPENDED", recordId, record, position: outcome.position };
+    },
+  };
+
   return {
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
     routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
@@ -940,10 +961,12 @@ export async function createPgRepositories(
     ),
     debts: pgAggregateRepository<FreshnessDebt>(sql, "FreshnessDebt", "cp_debts", bounded),
     leases: pgAggregateRepository<ExecutionLease>(sql, "ExecutionLease", "cp_leases", bounded),
+    activeWorkClaims: pgActiveWorkClaimReader(sql),
     transitions: pgAppendOnlyRepository<RecordedTransition>(sql, "transitions", bounded),
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
+    adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
     /* The owner control centre's data plane (ITEM H, schema v3). */
     ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(
@@ -992,7 +1015,7 @@ export async function createPgRepositories(
     /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews", bounded),
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
-    adminReceipts: pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded),
+    adminReceipts,
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),

@@ -12,6 +12,7 @@ import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
@@ -321,7 +322,7 @@ import {
 } from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
-import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
+import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
 import {
   armExpansionBudget,
   countByScope,
@@ -1145,9 +1146,6 @@ try {
   );
 }
 const intents = readIntents(intentLog);
-const intentByTime = (a: ResearchIntentRequest, b: ResearchIntentRequest): number =>
-  a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0;
-const honoredBefore = new Set(intentLog.filter((r) => r.kind === "HONORED").map((r) => r.honors));
 
 /**
  * Append this cycle's HONORED record beside an intent. The runner never edits
@@ -1593,18 +1591,11 @@ const modelLaneEnabled = laneClosure === null;
  */
 const honoredLaneIntents: string[] = [];
 {
-  const laneIntents = intentLog
-    .filter((r): r is ResearchIntentRequest => r.kind === "INTENT" && (r.action === "PAUSE" || r.action === "RESUME"))
-    .sort(intentByTime);
-  const latest = laneIntents.at(-1);
-  if (latest !== undefined && !honoredBefore.has(latest.intentId)) {
-    const detail =
-      latest.action === "PAUSE"
-        ? "model lane closed for this cycle"
-        : modelLaneEnabled
-          ? "model lane reopened"
-          : `model lane reopened by the owner, but it stays closed this cycle: ${laneDisabledReason}`;
-    if (await honorIntent(latest, detail)) honoredLaneIntents.push(latest.intentId);
+  const pendingAcknowledgment = pendingResearchLaneAcknowledgment(intentLog, laneClosure);
+  if (pendingAcknowledgment !== null) {
+    if (await honorIntent(pendingAcknowledgment.intent, pendingAcknowledgment.detail)) {
+      honoredLaneIntents.push(pendingAcknowledgment.intent.intentId);
+    }
   }
 }
 
@@ -4041,6 +4032,25 @@ try {
   failedStep("window-lease:release", error);
 }
 await stallDiagnostic?.stop();
+// Optional private Admin copy of verified originals. This follows the canonical
+// cycle outcome: an unavailable mirror can never rewrite acquisition/publication
+// truth, and the next ordinary cycle resumes the rotating reconciliation cursor.
+if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
+  try {
+    const mirrorDeadlineMs = Math.min(Date.now() + 15_000, CLOCK.recordsDeadlineMs);
+    const mirror = await runBoundedStep({ label: "private-admin-evidence-mirror",
+      budgetMs: Math.max(0, mirrorDeadlineMs - Date.now()),
+      fn: () => runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),
+        cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json"),
+        deadlineMs: mirrorDeadlineMs }) });
+    console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
+    if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
+  } catch (error) {
+    // A timeout leaves remote-copy status UNKNOWN, never success. A later cycle
+    // reads the immutable key first and verifies it before retrying the CAS copy.
+    console.error(`  private Admin evidence mirror unavailable or unverified; original vault unchanged: ${error instanceof Error ? error.message : "unknown failure"}`);
+  }
+}
 /* Nothing is left to await. A drained loop exits now; anything still holding it open is named, then the cycle exits with its own code instead of waiting for the wall (cycle-exit.ts). */
 exitAfterDrainGrace({
   graceMs: CYCLE_DRAIN_GRACE_MS,

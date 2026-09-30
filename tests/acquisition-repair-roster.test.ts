@@ -88,6 +88,11 @@ test("saved Sierra Vista roster replays from the original hash-verified bytes wh
   const repair = candidate.contractRepair as { schemaVersion: 1; sourceArtifactId: string; extraction: GeneralizedCivicExtractionContract["extraction"]; authorities: readonly unknown[] };
   const extraction = repair.extraction as Extract<GeneralizedCivicExtractionContract["extraction"], { format: "HTML_TABLE" }>;
   assert.throws(() => evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
+    ...repair, extraction: { ...extraction, fields: { ...extraction.fields, email: { source: 3, type: "STRING" } } },
+  } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress }),
+  /REPAIR_EXTRACTION_REFUSED:OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS/,
+  "the original retained Email buttons cannot be published as seven addresses");
+  assert.throws(() => evaluatePlanRepair({ plan, candidate: { ...candidate, contractRepair: {
     ...repair, extraction: { ...extraction, fields: { name: extraction.fields.name, office: extraction.fields.office } },
   } }, evidence: [evidence], now: "2026-09-28T08:00:00.000Z", registeredPublisherAddress }), /REPAIR_SUPPORTED_FIELDS_OMITTED:phone,websiteUrl/);
 });

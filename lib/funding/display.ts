@@ -14,7 +14,7 @@ import {
   fundingForTarget,
   secondHopForGroups,
 } from "./snapshot.ts";
-import type { ContributionRow, SecondHopCommittee } from "./types.ts";
+import type { CommitteeTotals, ContributionRow, SecondHopCommittee } from "./types.ts";
 import { plainMoney } from "./plain-money.ts";
 
 /**
@@ -32,6 +32,8 @@ export interface FundingDisplayData {
   cycleLabel: string;
   /** The plain-language money sentences, prebuilt so both surfaces agree. */
   sentences: string[];
+  /** Five filed committee values for numeric display; cash is never inferred from receipts minus spending. */
+  totals: Pick<CommitteeTotals, "receipts" | "disbursements" | "cashOnHand" | "smallDonorShare" | "coverageEndDate"> | null;
   /** Ripcord-filtered. Empty either means none fetched or display pulled —
    *  `contributorsShown` says which. */
   contributors: ContributionRow[];
@@ -168,6 +170,13 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
         name: candidate.name,
         cycleLabel: cycleLabelFor(candidate.cycle),
         sentences,
+        totals: {
+          receipts: totals.receipts,
+          disbursements: totals.disbursements,
+          cashOnHand: totals.cashOnHand,
+          smallDonorShare: totals.smallDonorShare,
+          coverageEndDate: totals.coverageEndDate,
+        },
         contributors,
         contributorGroups,
         secondHop: secondHopForGroups(contributorGroups),

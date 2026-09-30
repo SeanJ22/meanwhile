@@ -7,6 +7,10 @@ import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-cont
 import { routineTaskDue, ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import { DEFAULT_CONTRACT, type WorkItem } from "../lib/control-plane/work-item.ts";
+import { runtimeAuthorityIssue, type RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
+import { votingSitesReceiptSource } from "../lib/civic-data/voting-sites-source-task.ts";
+import { parseRoutineRunnerReceipt, printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import type { PromotionOutcome } from "../lib/civic-data/promotion.ts";
 
 const NOW = "2026-09-27T02:00:00.000Z";
 function scope(state: string, id = "owner-send-1"): ResolvedScope {
@@ -96,6 +100,19 @@ test("only the exact original Cochise work binding admits the source-scoped voti
   const vote = tasks.find(task => task.id === "voting-sites:cochise-2026");
   assert.ok(vote);
   assert.deepEqual(vote.command.slice(-2), ["--promote", "--cochise-only"]);
+  assert.equal(vote.registeredContractId, "voting-sites");
+  assert.equal(votingSitesReceiptSource(true), vote.id);
+  assert.equal(votingSitesReceiptSource(false), vote.registeredContractId);
+  const cwd = process.cwd();
+  const envelope: RuntimeAuthorityEnvelope = { repo: cwd, sha: "a".repeat(40),
+    capability: "MANUAL_CONTRACT", contract: vote.registeredContractId, parentPid: 42, nonce: "b".repeat(64) };
+  const checkout = { repositoryRoot: cwd, headSha: envelope.sha, clean: true,
+    detached: true, headOnOriginMain: true, readable: true };
+  assert.equal(runtimeAuthorityIssue({ envelope, expectation: { capabilities: ["MANUAL_CONTRACT"],
+    contract: "voting-sites", immediateParentPid: 42 }, checkout, cwd }), null);
+  assert.match(runtimeAuthorityIssue({ envelope: { ...envelope, contract: vote.id },
+    expectation: { capabilities: ["MANUAL_CONTRACT"], contract: "voting-sites", immediateParentPid: 42 },
+    checkout, cwd }) ?? "", /not voting-sites/);
   assert.deepEqual(vote.ownerInvocation?.instructions, [ORIGINAL_LIFETIME_HUNT.receiptId]);
   assert.equal(huntSourceTasks([original], now, [{ ...work, subject: "az:county:county-of-pima" }]).some(task => task.id === vote.id), false);
   assert.equal(huntSourceTasks([original], now, [{ ...work, state: "VERIFIED_COMPLETE" }]).some(task => task.id === vote.id), false);
@@ -113,6 +130,25 @@ test("scheduled blackout admits only the already-started exact original source S
   assert.deepEqual(admittedHuntSourceScopes([original, other], blackout), [original]);
   assert.deepEqual(admittedHuntSourceScopes([{ ...original, decision: { ...original.decision, budgetUsd: 51 } }], blackout), []);
   assert.deepEqual(admittedHuntSourceScopes([original, other], "2026-10-05T12:00:00.000Z"), [original, other]);
+});
+
+test("Cochise candidate outcome emits the one source-task receipt expected by the supervisor", () => {
+  const captured: string[] = [];
+  const log = console.log;
+  const candidate = { id: "cv-cochise" };
+  const outcome = { candidate: { candidate, acquisitionSucceeded: true, state: "PROMOTED",
+    receipt: { decision: "GOOD" }, lastKnownGoodVersion: candidate.id },
+    promoted: { versionId: candidate.id }, confirmed: null } as unknown as PromotionOutcome;
+  try {
+    console.log = (...parts: unknown[]) => { captured.push(String(parts[0])); };
+    printSourceRunnerReceipt(votingSitesReceiptSource(true), candidate, outcome);
+  } finally { console.log = log; }
+  const parsed = parseRoutineRunnerReceipt(captured.join("\n"));
+  assert.equal(parsed.ok, true);
+  if (parsed.ok) {
+    assert.equal(parsed.receipt.source, "voting-sites:cochise-2026");
+    assert.equal(parsed.receipt.candidateId, candidate.id);
+  }
 });
 
 test("a pending publication is not hidden by another body's later success and keeps failure backoff", () => {

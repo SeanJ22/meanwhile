@@ -10,6 +10,8 @@ export interface GeographyReadOptions {
   signal?: AbortSignal;
   /** The acquisition caller saves source bytes in its ordinary evidence store. */
   capture?: (sourceUrl: string, text: string) => Promise<void>;
+  /** Reuse the same saved response without advancing its observation time. */
+  readHeld?: (sourceUrl: string) => Promise<string | null>;
   congress?: number;
   legislativeYear?: number;
 }
@@ -27,6 +29,8 @@ export interface PlaceDivision {
 }
 
 async function readJson<T>(url: string, options: GeographyReadOptions, body?: URLSearchParams, captureUrl = url): Promise<T> {
+  const held = await options.readHeld?.(captureUrl);
+  if (held !== null && held !== undefined) return JSON.parse(held) as T;
   const response = await (options.fetchImpl ?? fetch)(url, {
     ...(body ? { method: "POST", body } : {}),
     signal: options.signal ?? AbortSignal.timeout(60_000),

@@ -28,10 +28,10 @@
  * were built around, and a gateway that executed rather than recorded would
  * have broken it while looking like a tidy-up.
  *
- * ## Two entries refuse on purpose
+ * ## One entry refuses on purpose
  *
- * `fleet.retryWorkItem` and `prohibited.promotionOn` are declared so that their
- * refusals are TYPED, PROVABLE and visible on the same surface as everything
+ * `fleet.retryWorkItem` is declared so that its
+ * refusal is TYPED, PROVABLE and visible on the same surface as everything
  * else. An action that is simply absent produces "the console does not know
  * this action"; an action that is declared and refuses produces the real
  * sentence, and for the retry it names the exact seam that does not exist yet.
@@ -99,6 +99,7 @@ import { ORIGINAL_LIFETIME_HUNT } from "../scheduler/hunt-continuation.ts";
 import { WORK_QUESTION_WORDS, validateWorkQuestions, type WorkQuestion } from "../work-question.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { BULK_ACTIONS } from "./bulk-actions.ts";
+import { appendFailureSays, writeFailureSays } from "./write-readback.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
@@ -212,10 +213,7 @@ const refuse = (refusal: RefusalCode, says: string): ActionRefusal => ({ ok: fal
  * the connection string, and this text reaches a browser.
  */
 function storeRefusal(what: string, error: unknown): ActionRefusal {
-  return refuse(
-    "DOWNSTREAM_REFUSED",
-    `${what} could not be written (${(error as Error)?.name ?? "error"}), so nothing was recorded.`,
-  );
+  return refuse("DOWNSTREAM_REFUSED", writeFailureSays(what, error));
 }
 
 /** The owner-decision intent both decision-shaped actions append. */
@@ -260,7 +258,7 @@ async function appendIntent(
   const requestedAt = context.at;
   const intent = buildResearchIntent(action, requestedAt, context.request.actorRef, note, undefined, budgetUsd);
   const wrote = await appendResearchIntent(deps.repos, intent, requestedAt);
-  if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+  if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
   return {
     ok: true,
     outcome: "QUEUED",
@@ -328,7 +326,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         actorRef: context.request.actorRef,
       });
       const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
       return {
         ok: true,
         outcome: "QUEUED",
@@ -388,7 +386,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         actorRef: context.request.actorRef,
       });
       const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
-      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", appendFailureSays(wrote.detail));
       return {
         ok: true,
         outcome: "DONE",
@@ -1214,31 +1212,6 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  /* ------------------------------------------------- prohibited.promotionOn */
-  {
-    definition: {
-      type: "prohibited.promotionOn",
-      label: "Turn promotion on",
-      does: "Nothing. This is refused every time, by design, and the refusal is recorded.",
-      doesNot: "Does not turn promotion on, ask anyone whether it should, or leave a way to.",
-      authority: "PROHIBITED",
-      subjectKind: "the nightly promotion door",
-      requiresStateVersion: false,
-      refusals: ["PROHIBITED_ACTION"],
-    },
-    validate() {
-      // Declared so the refusal is typed and provable. The gateway refuses a
-      // PROHIBITED class before it ever validates, so this is unreachable — and
-      // it fails closed anyway rather than returning a value nobody checked.
-      return bad("this is never allowed from here");
-    },
-    async execute() {
-      return refuse(
-        "PROHIBITED_ACTION",
-        "Promotion is not something this console can turn on. That is deliberate and there is no version of this button that works.",
-      );
-    },
-  },
 ];
 
 /**

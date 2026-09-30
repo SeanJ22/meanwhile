@@ -213,3 +213,82 @@ test("follow-up asks are quick at first and stop after about fifteen minutes", (
   assert.equal(followUpDelayMs(30), 15_000);
   assert.equal(followUpDelayMs(86), null);
 });
+
+/* ------------------------------------------------------------------ S7's finding: a timed-out write is read back */
+
+import { ControlPlaneRequestTimeout } from "@/lib/control-plane/repository/request-bounds.ts";
+import { ADMIN_CONFIG_ID } from "@/lib/control-plane/gateway/admin-config.ts";
+
+const timeout = () => new ControlPlaneRequestTimeout({ operation: "cp_admin_config.compare_and_set", callClass: "POINT", timeoutMs: 1000, kind: "REQUEST", budget: null });
+
+/** A config store whose next compare-and-set times out: after applying it (landed) or before (not landed). */
+function timingOut(repos: ControlPlaneRepositories, landed: boolean, readbackWorks = true): ControlPlaneRepositories {
+  const real = repos.adminConfig;
+  let armed = true;
+  return {
+    ...repos,
+    adminConfig: {
+      ...real,
+      async compareAndSet(id, rev, next, now) {
+        if (!armed) return real.compareAndSet(id, rev, next, now);
+        armed = false;
+        if (landed) await real.compareAndSet(id, rev, next, now);
+        throw timeout();
+      },
+      async read(id) {
+        if (!armed && !readbackWorks) throw new Error("read failed");
+        return real.read(id);
+      },
+    },
+  };
+}
+
+async function withCeiling(repos: ControlPlaneRepositories) {
+  await submit(ask("config.setFleetSpendCeiling", "ceiling-key-seed01", { rollingCeilingUsd: 30 }), deps(repos));
+}
+
+test("a write that timed out AFTER it landed is reported as saved, because it was read back", async () => {
+  const repos = createMemoryRepositories();
+  await withCeiling(repos);
+  const out = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-land01", { rollingCeilingUsd: 55 }), deps(timingOut(repos, true)));
+  assert.equal(out.ok, true, out.receipt.says);
+  assert.match(out.receipt.says, /Recorded: the Fleet spend ceiling is now \$55\.00/);
+  assert.equal(((await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as { fleetSpendCeiling?: { rollingCeilingUsd?: number } }).fleetSpendCeiling?.rollingCeilingUsd, 55);
+});
+
+test("a write that timed out BEFORE it landed says it was not saved and is safe to send again", async () => {
+  const repos = createMemoryRepositories();
+  await withCeiling(repos);
+  const out = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-lost01", { rollingCeilingUsd: 55 }), deps(timingOut(repos, false)));
+  assert.equal(out.ok, false);
+  assert.match(out.receipt.says, /was not saved: the store timed out, and reading it back shows the change is not there/);
+  assert.match(out.receipt.says, /safe to send again/);
+});
+
+test("a timeout whose read-back also fails says it MAY have saved, never 'nothing was recorded'", async () => {
+  const repos = createMemoryRepositories();
+  await withCeiling(repos);
+  const out = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-maybe1", { rollingCeilingUsd: 55 }), deps(timingOut(repos, true, false)));
+  assert.equal(out.ok, false);
+  assert.match(out.receipt.says, /may have been saved/);
+  assert.doesNotMatch(out.receipt.says, /nothing was recorded/);
+});
+
+test("an intent append that timed out after landing is reported as queued, not as lost", async () => {
+  const repos = createMemoryRepositories();
+  const real = repos.researchIntents;
+  const flaky: ControlPlaneRepositories = {
+    ...repos,
+    researchIntents: {
+      ...real,
+      async append(key, id, record, now) {
+        await real.append(key, id, record, now);
+        throw timeout();
+      },
+    },
+  };
+  const out = await submit(ask("runner.pause", "pause-key-timeout1"), deps(flaky));
+  assert.equal(out.ok, true, out.receipt.says);
+  assert.equal(out.receipt.outcome, "QUEUED");
+  assert.equal((await real.read(RESEARCH_INTENT_LOG_KEY)).length, 1, "exactly one intent, not two");
+});

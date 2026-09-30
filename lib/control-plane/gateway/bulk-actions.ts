@@ -38,6 +38,7 @@ import {
 } from "../expansion/scopes.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import type { ActionResult, RegisteredAction, Validation } from "./registry.ts";
+import { writeFailureSays } from "./write-readback.ts";
 
 /** A hunt is named by its scope key (`zcta:2020/85635`) or by the place key a screen shows it under (`geo:az.zcta.85635`). */
 const PLACE_KEY = /^geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}$/;
@@ -154,7 +155,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
         if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
         else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
       } catch (error) {
-        return refuse(`your list of hunts could not be written (${(error as Error)?.name ?? "error"}), so nothing was recorded.`);
+        return refuse(writeFailureSays("your list of hunts", error));
       }
       const total = items.reduce((sum, i) => sum + Math.round(i.budgetUsd * 100), 0) / 100;
       const groups = new Set(items.map((i) => i.group).filter((g) => g !== null)).size;
@@ -242,7 +243,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
         });
         await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
       } catch (error) {
-        return refuse(`the change to your hunt could not be written (${(error as Error)?.name ?? "error"}), so nothing was recorded.`);
+        return refuse(writeFailureSays("the change to your hunt", error));
       }
       const words =
         change === "pause"

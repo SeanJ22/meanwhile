@@ -24,10 +24,11 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
-import { runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
-import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
-import { section3Record } from "../lib/control-plane/promotion/section3.ts";
+import { runNationalPlaceTask } from "../lib/hunt/place-source-task.ts";
 import { nationalDelivery, publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
+import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
+import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
+import { browseWithPlaywright } from "./scout-browse.mts";
 
 async function main(): Promise<void> {
   if (!process.argv.includes("--promote")) {
@@ -49,20 +50,18 @@ async function main(): Promise<void> {
     const failures: string[] = [];
     if (nationalZips) {
       try {
-        const zips = [...new Set(nationalZips.split(",").filter(Boolean))];
-        await runNationalPlaceWorkerProcesses({ root: process.cwd(), store, zips,
-          capacity: () => zips.length, publish: async input => {
+        const places = await runNationalPlaceTask({ tools: { repos, store: vault, spaceOut: serializeHostSpacing(hostSpacer()),
+          browse: browseWithPlaywright, now: () => new Date().toISOString() }, store,
+          zips: nationalZips.split(",").filter(Boolean), publish: async input => {
             const publication = await publishNationalPlaceSources({ ...input,
               divisions: input.divisions.filter(row => row.sourceDataset).map(row => ({ ...row, sourceDataset: row.sourceDataset! })) });
             nationalPublications.push(publication);
             return publication;
-          },
-          publishElection: (fields, now) => publishElectionFields({ store, fields, now, verify: section3Record }),
-          onResult: place => { nationalPlaces.push({ zip: place.zip, officials: place.sources?.officials.length ?? 0,
+          } });
+        nationalPlaces.push(...places.map(place => ({ zip: place.zip, officials: place.sources?.officials.length ?? 0,
           publishedFields: place.items.filter(item => item.state === "published").length,
           owedFields: place.work.length, sourceGaps: place.sources?.gaps ?? [],
-          inherited: place.inherited, electionPublications: place.electionPublications }); },
-        });
+          inherited: place.inherited, electionPublications: place.electionPublications })));
       } catch (error) { failures.push(error instanceof Error ? error.message : String(error)); }
     }
     const readObject = researchVaultResolver(repos, vault, "freshness");

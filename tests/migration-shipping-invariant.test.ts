@@ -30,7 +30,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { GATES } from "../scripts/gates.mjs";
-import { sourceFiles } from "../scripts/duplicate-implementations.mts";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import {
   contractSignalsIn,
   declaredPhase,
@@ -512,7 +512,7 @@ test("ONE DETECTOR — the gate reuses the comparator, it does not reimplement i
    */
   const QUERIES_IT =
     /\b(?:FROM|INTO|UPDATE|CREATE TABLE(?: IF NOT EXISTS)?)\s+drizzle\.__drizzle_migrations\b/i;
-  const files = sourceFiles();
+  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app", "components", "lib", "scripts"] }).filter(path => /\.[cm]?[jt]sx?$/.test(path));
   assert.ok(files.length > 600, `only ${files.length} source file(s) enumerated — the sweep saw nothing`);
 
   const queriers = files

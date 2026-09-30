@@ -82,6 +82,30 @@ async function main() {
 
   log(`context=${context} branch=${process.env.BRANCH || "?"} cached=${cached.slice(0, 7) || "-"} head=${head.slice(0, 7) || "-"}`);
 
+  if (context === "deploy-preview") {
+    const pr = process.env.REVIEW_ID;
+    if (!/^\d+$/.test(pr ?? "")) {
+      log("CANCEL — no pull request number for preview label lookup");
+      process.exit(CANCEL);
+    }
+    try {
+      const headers = { Accept: "application/vnd.github+json" };
+      const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const response = await fetch(`https://api.github.com/repos/SeanJ22/meanwhile/issues/${pr}/labels`, {
+        headers, signal: AbortSignal.timeout(10_000),
+      });
+      if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
+      const labels = await response.json();
+      const preview = Array.isArray(labels) && labels.some(label => label.name === "preview");
+      log(preview ? "BUILD — PR has preview label" : "CANCEL — PR has no preview label");
+      process.exit(preview ? BUILD : CANCEL);
+    } catch (error) {
+      log(`CANCEL — preview label could not be verified (${error.message})`);
+      process.exit(CANCEL);
+    }
+  }
+
   let classifyDeploy;
   try {
     ({ classifyDeploy } = await import("../lib/ops/deploy-paths.ts"));

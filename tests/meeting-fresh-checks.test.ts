@@ -40,7 +40,7 @@ import {
 } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
-import { readerEdgeCarriesForward } from "../scripts/lib/reader-edge-current.ts";
+import { readerEdgeCarriesForward } from "../scripts/lib/edge-current.ts";
 
 /*
  * Coordinator, 2026-09-25: since migration 0029 (live 3:07 PM MST) a fresh

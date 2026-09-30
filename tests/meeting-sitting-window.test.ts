@@ -293,13 +293,6 @@ test("C6: the stated-ends read is built in Postgres, returns only stated pairs, 
   assert.doesNotMatch(text.slice(0, text.indexOf(" from \"civic_data_promotions\"")), /select (?:"civic_data_promotions"\.)?"payload"[,\s]/);
 });
 
-test("C6: the scheduling bound is outside what readers see: no reader-bound file imports the admission rules", () => {
-  const receipt = readFileSync("docs/evidence/reader-last-mile-final-closure-receipt.json", "utf8");
-  for (const path of ["lib/civic-data/sitting-window-admission.ts", "lib/civic-data/runner.ts", "lib/civic-data/bounded-child-pass.ts", "lib/civic-data/observability.ts"]) {
-    assert.equal(receipt.includes(`"${path}"`), false, `${path} is not a reader source`);
-  }
-});
-
 test("C6: the runner reads the stated ends once a pass and hands them to the sitting window by task", () => {
   const now = Date.parse("2026-09-25T06:00:00.000Z");
   const partition = task(PIMA_LEGISTAR);

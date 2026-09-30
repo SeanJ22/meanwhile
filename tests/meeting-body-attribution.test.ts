@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { meetingPartitionsForSource } from "../lib/civic-data/meeting-partitions.ts";
-import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
+import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { Registry } from "../lib/registry/types.ts";
@@ -118,11 +118,11 @@ test("the snapshot reports EVERY wired source, including one that returned nothi
   // The bundled snapshot is FROZEN at the PDC v2 import. An adapter every one
   // of whose partitions was registered after that import cannot appear in it;
   // it is exempt only by being named, partition by partition, in
-  // PDC_V2_POST_IMPORT_MEETING_PARTITIONS — never by inference.
+  // POST_FIXTURE_MEETING_PARTITIONS — never by inference.
   const postImportOnly = new Set(
     registered.filter((name) => {
       const partitions = meetingPartitionsForSource(name);
-      return partitions.length > 0 && partitions.every((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
+      return partitions.length > 0 && partitions.every((p) => POST_FIXTURE_MEETING_PARTITIONS.includes(p.id));
     }),
   );
   const silent = registered.filter(

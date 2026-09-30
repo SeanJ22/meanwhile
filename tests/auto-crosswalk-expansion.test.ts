@@ -46,7 +46,7 @@ import {
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
-import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
+import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
 import { promoteDerivedMeetingFamily } from "../scripts/ingest.ts";
 import {
   processRegisteredManualCandidate,
@@ -372,7 +372,7 @@ test("EVERY REGISTERED STATE HAS A FAMILY: registration's own state list, each f
   assert.equal(families.length, 56, "every state, DC and territory in the FIPS table");
   assert.equal(new Set(families.map((p) => p.acquisitionFailureDomain)).size, families.length, "one state's slow member never waits on another state's");
   assert.deepEqual(
-    PDC_V2_POST_IMPORT_MEETING_PARTITIONS.filter((id) => id.startsWith("meetings:derived:")),
+    POST_FIXTURE_MEETING_PARTITIONS.filter((id) => id.startsWith("meetings:derived:")),
     families.map((p) => p.id),
     "the Reader proof counts every family as registered after the frozen import",
   );

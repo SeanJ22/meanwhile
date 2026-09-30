@@ -11,7 +11,6 @@ import { GPU_ARGS, READ_RENDERER } from "../lib/ops/flyin-normalized.ts";
 import { ASK_PILL_LABELS } from "../lib/routing/ask-pill-labels.ts";
 import { directionalStateEdges, RELIEF_LAYERS, RELIEF_THEME } from "../lib/map/state-relief.ts";
 import type { StateOutlines } from "../lib/map/state-focus.ts";
-import { readerSourceFingerprint } from "../lib/holdings/reader-census.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://127.0.0.1:3244";
@@ -19,7 +18,6 @@ assert.ok(["localhost", "127.0.0.1"].includes(new URL(base).hostname), "V94 proo
 const out = resolve(process.env.TESTER_VISUAL_OUTPUT ?? ".scratch/tester-visual-9-4");
 const viewport = { width: 1440, height: 1000 };
 const exactHead = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
-const sourceHashes = readerSourceFingerprint(process.cwd());
 const buildId = await readFile(".next/BUILD_ID", "utf8").then(value => value.trim()).catch(() => null);
 const results: { id: string; row: string; pass: true; evidence: unknown }[] = [];
 const screenshots: { path: string; theme: string; zoom: number; view: string }[] = [];
@@ -370,7 +368,7 @@ try {
   process.exitCode = 1;
 } finally {
   await browser.close();
-  const report = { pass: failure === null, base, runId: browser.runId, exactHead, sourceHashes, buildId, expectedCases: 13,
+  const report = { pass: failure === null, base, runId: browser.runId, exactHead, buildId, expectedCases: 13,
     results, cases: results, screenshots, basemapRequests, browserErrors, screenshotsReviewed: 0, failures: failure ? [failure] : [], error: failure };
   await writeFile(join(out, "results.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({ pass: report.pass, cases: results.length, screenshots, out, error: failure }, null, 2));

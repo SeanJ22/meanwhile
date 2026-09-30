@@ -296,6 +296,8 @@ export interface WorkerResultRecord {
     readonly surfaceEvidence: readonly Omit<WorkerEvidence, "text">[];
     readonly authorityEvidence?: readonly Omit<WorkerEvidence, "text">[];
   };
+  /** The model-quoted extraction that produced this PARSER result, when no parsing rule existed. */
+  readonly modelParse?: import("./model-parser.ts").ModelParseRecord;
   readonly modelReview?: {
     readonly escalation?: NonNullable<WorkerTaskSpec["auditEscalation"]> & { readonly at: string };
     readonly step: "adversarial-audit";
@@ -379,7 +381,7 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
       valid(object(metadata) && object(metadata.jurisdiction) && [metadata.jurisdiction.country, metadata.jurisdiction.state, metadata.jurisdiction.canonicalId].every(string) &&
         object(metadata.identity) && string(metadata.identity.namespace) && strings(metadata.identity.keyFields) && metadata.identity.keyFields.length > 0 &&
         object(metadata.sourceScope) && [metadata.sourceScope.sourceId, metadata.sourceScope.publisher].every(string) && [metadata.sourceScope.routeIds, metadata.sourceScope.canonicalUrls, metadata.sourceScope.observationArtifactIds].every(v => strings(v) && v.length > 0) && count(metadata.methodVersion) && Number(metadata.methodVersion) > 0, "PARSER_CONTRACT_METADATA");
-      valid((r.spans as unknown[]).every(span => object(span) && ["JSON_RECORDS", "HTML_TABLE", "DELIMITED_TEXT", "XML_RECORDS", "TEXT_BLOCKS"].includes(String(span.sourceFormat))), "PARSER_SOURCE_FORMAT");
+      valid((r.spans as unknown[]).every(span => object(span) && ["JSON_RECORDS", "HTML_TABLE", "DELIMITED_TEXT", "XML_RECORDS", "TEXT_BLOCKS", "UNSUPPORTED"].includes(String(span.sourceFormat))), "PARSER_SOURCE_FORMAT");
     }
   } else {
     array("findings"); array("artifactIds");

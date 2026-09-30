@@ -470,3 +470,39 @@ test("service and voter-access discovery can admit independently replayed repair
     assert.equal((await nextAutonomousOperation(f.h.runtime, child.id)).task?.workerTask?.role, "ACQUIRER");
   }
 });
+
+test("a source with real bytes but no honest mapping is admitted as a bound contract, so the quote lane fires on its own", async () => {
+  const f = await fixture();
+  const row = await f.h.repos.workItems.mustRead(f.h.item.id);
+  const plan = row.value.autonomousPlan!;
+  if (plan.contract.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  const unobserved = { ...plan, sources: [], acquisition: [], contract: { ...plan.contract,
+    sourceScope: { ...plan.contract.sourceScope, sourceId: "unobserved:roster", canonicalUrls: [], observationArtifactIds: [] },
+    extraction: { format: "UNSUPPORTED" as const, mediaType: "unobserved", fields: {}, reason: "Mapping remains to be discovered" } } };
+  await f.h.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value, autonomousPlan: unobserved }, f.h.now());
+
+  const candidate: ScoutCandidate = { ...f.candidate, contractRepair: { schemaVersion: 1, sourceArtifactId: f.evidence[0].artifactId,
+    extraction: { format: "UNSUPPORTED", mediaType: "text/plain" }, authorities: [] } as never };
+  const evaluated = evaluatePlanRepair({ plan: unobserved, candidate, evidence: f.evidence, now: f.h.now() });
+  assert.equal(evaluated.contract.extraction.format, "UNSUPPORTED");
+  assert.deepEqual(evaluated.contract.sourceScope.canonicalUrls, [f.evidence[0].canonicalUrl], "bound to the exact captured source");
+  assert.deepEqual(evaluated.contract.sourceScope.observationArtifactIds, f.evidence.map((row) => row.artifactId), "the cited captures are the observation");
+  assert.deepEqual(evaluated.contract.extraction.fields, {}, "no mapping is invented");
+  assert.ok(evaluated.unresolved.includes("EXTRACTION_BY_QUOTED_MODEL"));
+  assert.deepEqual(evaluated.profileRoutes, []);
+
+  // Any other shape without a mapping refuses as before.
+  assert.throws(() => evaluatePlanRepair({ plan: unobserved, candidate: { ...candidate, contractRepair: { schemaVersion: 1, sourceArtifactId: f.evidence[0].artifactId,
+    extraction: { format: "SOMETHING_ELSE", fields: {} }, authorities: [] } as never }, evidence: f.evidence, now: f.h.now() }), /REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED/);
+  assert.throws(() => evaluatePlanRepair({ plan: unobserved, candidate: { ...candidate, contractRepair: { schemaVersion: 1, sourceArtifactId: f.evidence[0].artifactId,
+    extraction: { format: "UNSUPPORTED", mediaType: "text/plain" }, authorities: [f.authority] } as never }, evidence: f.evidence, now: f.h.now() }), /REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED/,
+  "an authority compares mapped values, so it cannot ride with an unmapped source");
+
+  const result = await f.consume([{ ...f.scout, candidates: [candidate] }]);
+  assert.equal(result[0].code, "REPAIR_SUCCESSOR_REGISTERED", JSON.stringify(result));
+  const child = (await f.h.repos.workItems.mustRead(result[0].successorWorkItemId!)).value;
+  const born = child.autonomousPlan!.contract;
+  if (born.schemaVersion !== 2) throw new Error("GENERALIZED_FIXTURE_REQUIRED");
+  assert.equal(born.extraction.format, "UNSUPPORTED");
+  assert.deepEqual(born.sourceScope.canonicalUrls, [f.evidence[0].canonicalUrl]);
+});

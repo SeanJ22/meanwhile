@@ -53,6 +53,10 @@ test("an ambiguous transport failure is read back once and never blindly retried
   assert.deepEqual(await appendActionReceiptWithHistoryAtomic({ sql: committed.sql, receipt, sourceRecordedAt: at,
     validatedAction }), { state: "REPLAYED", position: 7 });
   assert.equal(committed.calls.filter(q => q.includes("WITH allocated AS")).length, 1);
+  const replay = fake([[], [readback()]]);
+  assert.deepEqual(await appendActionReceiptWithHistoryAtomic({ sql: replay.sql, receipt,
+    sourceRecordedAt: "2026-09-29T20:00:00.000Z", validatedAction }), { state: "REPLAYED", position: 7 },
+    "an identical replay retains the original append timestamp");
   const missing = fake([new Error("transport unknown"), []]);
   await assert.rejects(appendActionReceiptWithHistoryAtomic({ sql: missing.sql, receipt, sourceRecordedAt: at,
     validatedAction }), AtomicActionHistoryUnconfirmed);

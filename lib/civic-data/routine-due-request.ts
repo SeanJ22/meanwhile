@@ -60,7 +60,7 @@ function requestablePartition(contractId: string): boolean {
     contract.id === contractId && contract.recordClass === "MEETING" && contract.schedule?.kind === "SITTING_WINDOW");
 }
 
-function canonicalInstant(value: unknown): value is string {
+export function canonicalInstant(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const parsed = Date.parse(value);
   return Number.isFinite(parsed) && new Date(parsed).toISOString() === value;

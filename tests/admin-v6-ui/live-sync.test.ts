@@ -109,20 +109,17 @@ test("only one read per section is in flight, and an out-of-order answer is drop
   assert.deepEqual(sync.snapshot().stuck.data, ["new"]);
 });
 
-test("a stale 200 response cannot claim the newly announced section revision", async () => {
-  const { sync, calls, timers } = harness();
-  sync.onPulse(pulse(stuckAnn("v1")));
-  calls[0].resolve(ok("st:az", "v1", ["previous"]));
+test("a scoped reply retains its content revision separately from pulse invalidation", async () => {
+  const { sync, calls } = harness();
+  sync.onPulse(pulse(stuckAnn("source-v1")));
+  calls[0].resolve(ok("st:az", "scope-content-v1", ["previous"]));
   await flush();
-  sync.onPulse(pulse(stuckAnn("v2")));
-  calls[1].resolve(ok("st:az", "v1", ["stale answer"]));
+  assert.equal(sync.snapshot().stuck.phase, "live");
+  assert.equal(sync.snapshot().stuck.revision, "scope-content-v1");
+  sync.onPulse(pulse(stuckAnn("source-v2")));
+  calls[1].resolve(ok("st:az", "scope-content-v2", ["current"]));
   await flush();
-  assert.equal(sync.snapshot().stuck.phase, "failed");
-  assert.deepEqual(sync.snapshot().stuck.data, ["previous"], "last confirmed data remains visibly stale");
-  assert.equal(timers.filter(t => !t.cancelled).at(-1)?.ms, RETRY_DELAYS_MS[0]);
-  timers.filter(t => !t.cancelled).at(-1)!.fn();
-  calls[2].resolve(ok("st:az", "v2", ["current"]));
-  await flush();
+  assert.equal(sync.snapshot().stuck.revision, "scope-content-v2");
   assert.deepEqual(sync.snapshot().stuck.data, ["current"]);
 });
 

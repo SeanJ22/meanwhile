@@ -249,7 +249,7 @@ function decisionIntent(input: {
 async function appendIntent(
   deps: GatewayDeps,
   context: ActionContext,
-  action: "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
+  action: "PAUSE" | "PAUSE_RUNNER" | "RESUME_RUNNER" | "RUN_CYCLE_NOW" | "DISPATCH",
   note: string | null,
   said: { readonly says: string; readonly undo: string | null },
   /** MW-021: a DISPATCH's own rolling 24-hour budget for paid work on what it reaches. */

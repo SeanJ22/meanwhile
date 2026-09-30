@@ -4,6 +4,7 @@
  * currently loaded process, so a mismatch is never silently called a pending
  * update and a matching old cycle is never called current adoption.
  */
+import { canonicalInstant } from "../../civic-data/routine-due-request.ts";
 import { DIGEST_LOG_KEY } from "../admin-data.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { runtimeReleaseAdoptionHash } from "../readiness/checklist-running-release-witness.ts";
@@ -50,11 +51,6 @@ FROM cp_log_owner_digests
 WHERE log_key = $1 AND record #>> '{runtimeOutcome,kind}' = 'FRESHNESS_CYCLE'
 ORDER BY position DESC LIMIT 1`;
 
-function canonicalInstant(value: unknown): value is string {
-  if (typeof value !== "string") return false;
-  const ms = Date.parse(value);
-  return Number.isFinite(ms) && new Date(ms).toISOString() === value;
-}
 function validSha(value: unknown): value is string { return typeof value === "string" && SHA.test(value); }
 function nonempty(value: unknown): value is string { return typeof value === "string" && value.length > 0; }
 

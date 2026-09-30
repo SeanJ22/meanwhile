@@ -1,11 +1,11 @@
-/** Unwired Postgres-only receipt + Admin history companion append.
+/** Postgres-only receipt + Admin history companion append.
  *
  * The existing generic append repository uses separate HTTP statements for
  * position allocation and receipt insertion. It cannot make a second table
  * write atomic. This function uses one parameterized, data-modifying SQL
  * statement, so Postgres commits or rolls back receipt, companion, scope ref,
- * and readiness invalidation together. Do not call before the staged CP schema
- * is activated and the gateway is deliberately switched to this path.
+ * and readiness invalidation together. The v16 provider routes gateway receipts
+ * through this path after its normal schema bootstrap.
  */
 import type { ActionReceipt } from "../gateway/contract.ts";
 import { prepareActionHistoryProjection, type ValidatedActionEvidence } from "../admin-view/action-history-projection.ts";
@@ -128,14 +128,14 @@ export async function appendActionReceiptWithHistoryAtomic(input: {
     catch { throw new AtomicActionHistoryUnconfirmed(); }
   }
   if (canonicalJson(canonical) !== canonicalJson(input.receipt) ||
-    instant(first.recorded_at) !== instant(input.sourceRecordedAt))
+    (inserted.length > 0 && instant(first.recorded_at) !== instant(input.sourceRecordedAt)))
     throw new AtomicActionHistoryUnconfirmed();
   if (first.projection_version === null || first.projection_version === undefined) {
     if (inserted.length > 0 || insertError) throw new AtomicActionHistoryUnconfirmed();
     return { state: "LEGACY_UNPROJECTED", position };
   }
   if (held.length !== 1 || integer(first.projection_version) !== 1 ||
-    integer(first.source_position) !== position || instant(first.source_recorded_at) !== instant(input.sourceRecordedAt) ||
+    integer(first.source_position) !== position || instant(first.source_recorded_at) !== instant(first.recorded_at) ||
     valueOf(first, "gateway_type") !== planned.gatewayType ||
     valueOf(first, "idempotency_key") !== planned.idempotencyKey ||
     valueOf(first, "source_hash") !== planned.sourceHash ||

@@ -72,6 +72,7 @@ import type {
 import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
+import { appendActionReceiptWithHistoryAtomic } from "./action-history-atomic.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
@@ -924,6 +925,24 @@ export async function createPgRepositories(
   }
   const locks = pgLockManager(sql, bounds);
 
+  const receiptLog = pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded);
+  const adminReceipts: AppendOnlyRepository<ActionReceipt> = {
+    ...receiptLog,
+    async append(key, recordId, record, recordedAt) {
+      if (key !== "admin-action") return receiptLog.append(key, recordId, record, recordedAt);
+      if (recordId !== record.receiptId) throw new Error("ADMIN_RECEIPT_ID_MISMATCH");
+      const globalRunner = (record.type === "runner.pause" || record.type === "runner.resume") &&
+        record.subjectKind === "the standing runner";
+      const outcome = await appendActionReceiptWithHistoryAtomic({ sql, receipt: record,
+        sourceRecordedAt: recordedAt, bounds,
+        validatedAction: globalRunner
+          ? { kind: "GLOBAL_RUNNER", type: record.type as "runner.pause" | "runner.resume" }
+          : { kind: "UNAVAILABLE", legacy: false },
+      });
+      return { appended: outcome.state === "APPENDED", recordId, record, position: outcome.position };
+    },
+  };
+
   return {
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
     routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
@@ -996,7 +1015,7 @@ export async function createPgRepositories(
     /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews", bounded),
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
-    adminReceipts: pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded),
+    adminReceipts,
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
     adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),

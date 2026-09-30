@@ -1,9 +1,5 @@
--- STAGED DESIGN ONLY. DO NOT APPLY. This is control-plane DDL, not a serving
--- Drizzle migration. Review atomic receipt+projection writes, bootstrap v14,
--- historical backfill, completeness proof, and gate/drift coverage first.
--- Applying this file alone must never be described as a ready Admin history.
-
-CREATE TABLE cp_admin_action_history_projection (
+-- Control-plane v16. Applied by the provider bootstrap; no standalone production command.
+CREATE TABLE IF NOT EXISTS cp_admin_action_history_projection (
   gateway_receipt_id text PRIMARY KEY,
   gateway_log_key text NOT NULL DEFAULT 'admin-action' CHECK (gateway_log_key = 'admin-action'),
   projection_version integer NOT NULL CHECK (projection_version = 1),
@@ -25,7 +21,7 @@ CREATE TABLE cp_admin_action_history_projection (
     REFERENCES cp_log_admin_receipts (log_key, record_id)
 );
 
-CREATE TABLE cp_admin_action_history_scope_ref (
+CREATE TABLE IF NOT EXISTS cp_admin_action_history_scope_ref (
   gateway_receipt_id text NOT NULL REFERENCES cp_admin_action_history_projection (gateway_receipt_id),
   scope_key text NOT NULL,
   instruction_log_key text NOT NULL DEFAULT 'admin-action' CHECK (instruction_log_key = 'admin-action'),
@@ -39,15 +35,14 @@ CREATE TABLE cp_admin_action_history_scope_ref (
   CONSTRAINT cp_action_history_instruction_source FOREIGN KEY (instruction_log_key, instruction_receipt_id)
     REFERENCES cp_log_admin_receipts (log_key, record_id)
 );
-CREATE INDEX cp_admin_action_history_by_instruction
+
+CREATE INDEX IF NOT EXISTS cp_admin_action_history_by_instruction
   ON cp_admin_action_history_scope_ref (scope_key, instruction_receipt_id, gateway_receipt_id);
-CREATE INDEX cp_admin_action_history_by_position
+
+CREATE INDEX IF NOT EXISTS cp_admin_action_history_by_position
   ON cp_admin_action_history_projection (source_position, gateway_receipt_id);
 
--- Readiness belongs to the control-plane source window, not merely this table.
--- Future activation must prove an exact set equality of receipt IDs and
--- positions through source_through_position, not only matching counts.
-CREATE TABLE cp_admin_action_history_readiness (
+CREATE TABLE IF NOT EXISTS cp_admin_action_history_readiness (
   singleton boolean PRIMARY KEY DEFAULT true CHECK (singleton),
   projection_version integer NOT NULL CHECK (projection_version = 1),
   status text NOT NULL CHECK (status IN ('INCOMPLETE', 'READY')),
@@ -59,23 +54,29 @@ CREATE TABLE cp_admin_action_history_readiness (
   CONSTRAINT cp_action_history_ready_counts CHECK (status <> 'READY' OR source_count = projected_count)
 );
 
--- These guards are STAGED with the tables. They must not be applied to an old
--- gateway: its generic receipt append does not write the companion and would
--- correctly fail at COMMIT. Deferred checks see the final state of the one
--- atomic receipt+companion statement, not the intermediate CTE snapshot.
-CREATE FUNCTION cp_admin_action_history_reject_mutation() RETURNS trigger
+CREATE OR REPLACE FUNCTION cp_admin_action_history_reject_mutation() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
   RAISE EXCEPTION 'admin action history is immutable' USING ERRCODE = '23514';
 END $$;
-CREATE TRIGGER cp_admin_action_history_projection_immutable
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_projection_immutable' AND tgrelid = 'cp_admin_action_history_projection'::regclass) THEN
+    CREATE TRIGGER cp_admin_action_history_projection_immutable
 BEFORE UPDATE OR DELETE ON cp_admin_action_history_projection
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_reject_mutation();
-CREATE TRIGGER cp_admin_action_history_scope_immutable
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_scope_immutable' AND tgrelid = 'cp_admin_action_history_scope_ref'::regclass) THEN
+    CREATE TRIGGER cp_admin_action_history_scope_immutable
 BEFORE UPDATE OR DELETE ON cp_admin_action_history_scope_ref
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_reject_mutation();
+  END IF;
+END $$;
 
-CREATE FUNCTION cp_admin_action_history_assert_projection() RETURNS trigger
+CREATE OR REPLACE FUNCTION cp_admin_action_history_assert_projection() RETURNS trigger
 LANGUAGE plpgsql AS $$
 DECLARE
   source_row cp_log_admin_receipts%ROWTYPE;
@@ -96,11 +97,16 @@ BEGIN
   THEN RAISE EXCEPTION 'admin history scope cardinality mismatch' USING ERRCODE = '23514'; END IF;
   RETURN NEW;
 END $$;
-CREATE CONSTRAINT TRIGGER cp_admin_action_history_projection_parity
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_projection_parity' AND tgrelid = 'cp_admin_action_history_projection'::regclass) THEN
+    CREATE CONSTRAINT TRIGGER cp_admin_action_history_projection_parity
 AFTER INSERT ON cp_admin_action_history_projection DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_projection();
+  END IF;
+END $$;
 
-CREATE FUNCTION cp_admin_action_history_assert_scope() RETURNS trigger
+CREATE OR REPLACE FUNCTION cp_admin_action_history_assert_scope() RETURNS trigger
 LANGUAGE plpgsql AS $$
 DECLARE
   action_type text;
@@ -133,11 +139,16 @@ BEGIN
   END IF;
   RETURN NEW;
 END $$;
-CREATE CONSTRAINT TRIGGER cp_admin_action_history_scope_parity
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_scope_parity' AND tgrelid = 'cp_admin_action_history_scope_ref'::regclass) THEN
+    CREATE CONSTRAINT TRIGGER cp_admin_action_history_scope_parity
 AFTER INSERT ON cp_admin_action_history_scope_ref DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_scope();
+  END IF;
+END $$;
 
-CREATE FUNCTION cp_admin_action_history_assert_receipt() RETURNS trigger
+CREATE OR REPLACE FUNCTION cp_admin_action_history_assert_receipt() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
   IF NEW.log_key <> 'admin-action' THEN RETURN NEW; END IF;
@@ -149,11 +160,11 @@ BEGIN
   THEN RAISE EXCEPTION 'admin history READY watermark was not invalidated' USING ERRCODE = '23514'; END IF;
   RETURN NEW;
 END $$;
-CREATE CONSTRAINT TRIGGER cp_admin_action_history_receipt_companion
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'cp_admin_action_history_receipt_companion' AND tgrelid = 'cp_log_admin_receipts'::regclass) THEN
+    CREATE CONSTRAINT TRIGGER cp_admin_action_history_receipt_companion
 AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_assert_receipt();
-
--- No historical backfill, readiness activation, bootstrap registration, or
--- live write is included. A later reviewed activation must prove source set
--- equality and set READY only once old receipts have explicit mapped/unmapped
--- rows, then atomically keep it valid or INCOMPLETE on every append.
+  END IF;
+END $$;

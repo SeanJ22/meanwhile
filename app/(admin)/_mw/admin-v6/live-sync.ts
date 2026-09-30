@@ -235,8 +235,11 @@ export class LiveSync {
       this.emit();
       return;
     }
+    // Pulse revisions invalidate a section; scoped/period/paged replies carry
+    // their own content revisions. Sequence and scope checks above reject
+    // answers from an earlier request without equating these different tokens.
     if (status === 200 && r && r.contract === sectionContract(id) && r.scope === scope &&
-      r.revision === slot.wanted && "data" in r) {
+      typeof r.revision === "string" && "data" in r) {
       this.set(id, {
         phase: "live",
         data: r.data ?? null,

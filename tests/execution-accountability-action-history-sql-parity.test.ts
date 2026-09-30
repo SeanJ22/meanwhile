@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const sql = readFileSync(new URL("../docs/migration-proposals/admin-action-history-cp-v14.sql", import.meta.url), "utf8");
-const trigger = sql.split("CREATE FUNCTION cp_admin_action_history_assert_scope()")[1]?.split("CREATE CONSTRAINT TRIGGER cp_admin_action_history_scope_parity")[0] ?? "";
+const sql = readFileSync(new URL("../docs/migration-proposals/admin-action-history-cp-v16.sql", import.meta.url), "utf8");
+const trigger = sql.split("CREATE OR REPLACE FUNCTION cp_admin_action_history_assert_scope()")[1]?.split("DO $ BEGIN")[0] ?? "";
 
 type Fixture = { readonly scopeKind: "GLOBAL" | "INSTRUCTION"; readonly scope: string;
   readonly actionType: string | null; readonly projectedKind: string | null;

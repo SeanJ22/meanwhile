@@ -746,14 +746,14 @@ test("the manifest MERGES, so a cycle cannot erase what it did not touch", () =>
 
   assert.equal(result.total, 2, "a manifest that shrank every cycle would report lost work");
   const manifest = readStagingManifest(root);
-  assert.equal(manifest?.promotionEnabled, false);
+  assert.equal(manifest?.promotionEnabled, true, "research promotion is on (§3)");
   assert.deepEqual(manifest?.entries.map((e) => e.obligationId), ["a", "b"]);
 });
 
 test("the digest counts BOTH staged states, always", () => {
   const lines = promotionLines([]).join("\n");
   assert.match(lines, /0 entry\(ies\) staged/);
-  assert.match(lines, /Promotion itself is OFF/);
+  assert.match(lines, /Promotion is ON/);
 });
 
 test("both registered normalizers exist for the routes that acquire", () => {

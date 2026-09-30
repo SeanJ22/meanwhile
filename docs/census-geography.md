@@ -237,7 +237,7 @@ geography passing the checks auto-publishes; no per-import manual approval). The
 routine contract `census-geography-overlaps` is in `ROUTINE_SOURCE_CONTRACTS`
 (`autoPromotable: true`); its source authority `census-geography-relationships`
 is an official `.gov` source that auto-qualifies (`routineAutoPromotion: true`)
-under the shared `officialGovAutoQualifies` policy in
+under the shared `isOfficialSource` rule in
 `lib/civic-data/source-authority.ts` — not a Census-specific exception. The
 standing runner executes `scripts/census-geography-refresh.mts` on its cadence:
 `acquireDataset()` → `censusGeographyCandidate` → the 8 civic-data validation

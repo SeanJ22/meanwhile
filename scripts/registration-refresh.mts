@@ -23,8 +23,7 @@ import {
 } from "../lib/civic-data/source-acquisition-failure.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { assertWriteAllowed } from "../lib/db/write-guard.ts";
-import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { acquireRegistrationSource, type RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
@@ -58,11 +57,7 @@ async function reviewedRegistryIds(): Promise<ReviewedRegistryIds> {
 async function main(): Promise<void> {
   const { target } = parseRegistrationArguments(process.argv.slice(2));
   installNeonRequestDeadline();
-  const handle = resolveProductionWriteHandle();
-  process.env.DATABASE_URL = handle.connection;
-  process.env.WTP_DB_ROLE = "production";
-  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-  assertWriteAllowed("a routine civic data candidate/version promotion");
+  prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
 
   let candidate: RoutineCandidate;

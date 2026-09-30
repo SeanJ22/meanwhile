@@ -290,6 +290,23 @@ export function assertRuntimeAuthority(
     readonly immediateParentPid?: number;
   } = {},
 ): RuntimeAuthorityEnvelope {
+  if (env.WTP_RUNTIME_MODE === "staging") {
+    if (env.WTP_DB_ROLE !== "local" || !env.DATABASE_URL || !env.WTP_CONTROL_PLANE_DATABASE_URL) {
+      throw new RuntimeAuthorityRefused("staging requires WTP_DB_ROLE=local and explicit staging database/control-plane URLs");
+    }
+    const existing = runtimeAuthorityEnvelope(env);
+    if (existing) {
+      if (!expectation.capabilities.includes(existing.capability) ||
+          (expectation.contract !== undefined && expectation.contract !== existing.contract)) {
+        throw new RuntimeAuthorityRefused("staging child capability or contract does not match its requested operation");
+      }
+      return existing;
+    }
+    const repo = resolve(/* turbopackIgnore: true */ options.cwd ?? process.cwd());
+    const sha = env[RUNTIME_AUTHORITY_ENV.sha] ?? execFileSync("git", ["rev-parse", "HEAD"], gitOptions(repo)).trim();
+    return { repo, sha, capability: expectation.capabilities[0]!, contract: expectation.contract ?? null,
+      parentPid: process.ppid, nonce: randomBytes(32).toString("hex") };
+  }
   // This checkout inspection runs only when a sanctioned non-Next writer asks
   // for authority. It is deliberately runtime-dynamic; it is not a request for
   // Turbopack to trace the entire repository (including tests and credentials)
@@ -326,6 +343,18 @@ export function admittedRuntimeChildEnvironment(input: {
   readonly billingCollector?: boolean;
 }): NodeJS.ProcessEnv {
   const env = input.parentEnv ?? process.env;
+  if (env.WTP_RUNTIME_MODE === "staging") {
+    const parent = assertRuntimeAuthority({ capabilities: RUNTIME_AUTHORITY_CAPABILITIES }, env);
+    return {
+      ...(input.billingCollector === true && input.capability === "CONSOLE_PUBLISHER" ? env : withoutBillingSecrets(env)),
+      [RUNTIME_AUTHORITY_ENV.repo]: parent.repo,
+      [RUNTIME_AUTHORITY_ENV.sha]: parent.sha,
+      [RUNTIME_AUTHORITY_ENV.capability]: input.capability,
+      [RUNTIME_AUTHORITY_ENV.contract]: input.contract?.trim() || undefined,
+      [RUNTIME_AUTHORITY_ENV.parentPid]: String(input.parentPid ?? process.pid),
+      [RUNTIME_AUTHORITY_ENV.nonce]: input.nonce ?? randomBytes(32).toString("hex"),
+    };
+  }
   const repo = env[RUNTIME_AUTHORITY_ENV.repo];
   const sha = env[RUNTIME_AUTHORITY_ENV.sha];
   if (!repo || !sha || !FULL_SHA.test(sha)) {

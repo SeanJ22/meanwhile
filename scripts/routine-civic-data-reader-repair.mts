@@ -16,8 +16,7 @@ import {
 } from "../lib/civic-data/reader-verification.ts";
 import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { assertWriteAllowed } from "../lib/db/write-guard.ts";
-import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { installFatalLine } from "../lib/ops/fatal-line.ts";
@@ -68,11 +67,7 @@ stage?.(`modules loaded for ${contractId}`);
 
 installNeonRequestDeadline();
 step = "admitting the production write";
-const handle = resolveProductionWriteHandle();
-process.env.DATABASE_URL = handle.connection;
-process.env.WTP_DB_ROLE = "production";
-process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-assertWriteAllowed("a routine civic data candidate/version promotion");
+prepareProductionCivicDataWrite();
 step = meetingAggregate ? "repairing the meeting aggregate" : `repairing ${contractId}`;
 const store = stage
   ? traceMethodCalls(new PostgresRoutineDataStore(), "store", stage)

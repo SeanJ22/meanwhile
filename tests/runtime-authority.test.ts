@@ -7,6 +7,7 @@ import test from "node:test";
 
 import {
   admittedRuntimeChildEnvironment,
+  assertRuntimeAuthority,
   GIT_READ_ATTEMPTS,
   inspectRuntimeCheckout,
   runtimeAuthorityEnvelope,
@@ -20,6 +21,27 @@ import {
 const ROOT = realpathSync(process.cwd());
 const SHA = "a".repeat(40);
 const PID = 4312;
+
+test("staging ordinary child carries readable exact mutation authority and keeps its contract", async () => {
+  const { assertRoutineDataStoreMutationAuthority, routineDataStoreCandidateAuthorityIssue } = await import("../lib/civic-data/store.ts");
+  const parentEnv: NodeJS.ProcessEnv = { NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
+    DATABASE_URL: "postgresql://local:local@staging.invalid/reader",
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control",
+    WTP_SANCTIONED_WRITE: "routine-civic-data-promotion" };
+  for (const [capability, contract, sourceId, recordClass, scope] of [
+    ["MANUAL_CONTRACT", "voting-sites", "voting-sites", "VOTING_SITE", "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions"],
+    ["ROUTINE_CONTRACT", "fec-funding", "fec-open-api", "FEC_FUNDING", "federal-supported"],
+  ] as const) {
+    const child = admittedRuntimeChildEnvironment({ parentEnv, capability, contract });
+    const authority = assertRoutineDataStoreMutationAuthority(child);
+    assert.equal(authority.capability, capability);
+    assert.equal(authority.contract, contract);
+    assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "staging-child", sourceId, recordClass, scope }, authority, "candidate"), null);
+    assert.throws(() => assertRuntimeAuthority({ capabilities: [capability], contract: "wrong-contract" }, child), /does not match/);
+  }
+  assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_DB_ROLE: "production" }, capability: "ROUTINE_SUPERVISOR" }), /local/);
+  assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_CONTROL_PLANE_DATABASE_URL: "" }, capability: "ROUTINE_SUPERVISOR" }), /staging database/);
+});
 
 const envelope = (overrides: Partial<RuntimeAuthorityEnvelope> = {}): RuntimeAuthorityEnvelope => ({
   repo: ROOT,

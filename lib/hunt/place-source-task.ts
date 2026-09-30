@@ -65,7 +65,7 @@ export async function runNationalPlaceTask(input: {
             } });
             report = await runPlaceSource({ repos: tools.repos, store: input.store, zip, now, clock: tools.now, knowledge,
               readSource: async url => { if (leaseError) throw leaseError; return saved.read(url); },
-              geography: { capture: saved.captureGeography, fetchImpl: async (url, options) => {
+              geography: { capture: saved.captureGeography, readHeld: saved.readGeography, fetchImpl: async (url, options) => {
                 saved.cost.requestCount++;
                 const response = await fetch(url, options);
                 return response;
@@ -78,8 +78,7 @@ export async function runNationalPlaceTask(input: {
                 observation: { rawCount: artifacts.length, normalizedCount: report.sources?.officials.length ?? 0,
                   routeOnlyCount: null, earliest: null, latest: null },
                 note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed." },
-              cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started,
-                bytesFetched: saved.cost.bytesFetched + saved.geographyCaptures.reduce((n, c) => n + Buffer.byteLength(c.evidence.text), 0) },
+              cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },
               detail: `ZIP ${zip}: ${report.items.filter(item => item.state === "published").length} published fields, ${report.work.length} source gaps` };
           } finally { clearInterval(timer); await renewing; }
         },

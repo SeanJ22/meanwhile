@@ -50,6 +50,29 @@ export async function placeSourceReader(input: {
   const provenance: ArtifactProvenance[] = [];
   const inherited = new Map<string, WorkerPublicationCapture>();
   const resolvedUrls = new Set<string>();
+  const heldCapture = async (url: string) => {
+    const current = [...captures.values()].find(capture => capture.evidence.canonicalUrl === url);
+    if (current) return current;
+    if (!resolvedUrls.has(url)) {
+      resolvedUrls.add(url);
+      for (const row of records.filter(row => row.canonicalUrl === url).sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))) {
+        try {
+          const [{ artifact }, parsed] = await Promise.all([readObject(row.artifactId), readHeld(row.artifactId)]);
+          if (artifact.httpStatus !== 200 || artifact.retentionPolicy === "DIAGNOSTIC" || Date.parse(artifact.retrievedAt) < cutoff) continue;
+          const capture = { evidence: evidenceProjection(parsed), observedAt: artifact.retrievedAt,
+            httpStatus: artifact.httpStatus, transport: artifact.transport, partial: false };
+          inherited.set(row.artifactId, capture);
+          captures.set(row.artifactId, capture);
+          provenance.push({ artifactId: row.artifactId, canonicalUrl: artifact.canonicalUrl,
+            retrievedAt: artifact.retrievedAt, httpStatus: artifact.httpStatus,
+            permission: artifact.permission, methodRouteId: artifact.methodRouteId,
+            contentType: artifact.contentType, retrievalUrl: artifact.retrievalUrl });
+          return capture;
+        } catch { /* Unreadable held bytes leave acquisition owed. */ }
+      }
+    }
+    return null;
+  };
   const read = savedPageReader({ ...context, ...durable, vault,
     openBytes: async request => {
       cost.requestCount++;
@@ -75,30 +98,21 @@ export async function placeSourceReader(input: {
     artifacts,
     cost,
     geographyCaptures,
+    readGeography: async (url: string) => {
+      const capture = await heldCapture(url);
+      if (!capture) return null;
+      if (!geographyCaptures.some(prior => prior.evidence.artifactId === capture.evidence.artifactId)) geographyCaptures.push(capture);
+      return capture.evidence.text;
+    },
     read: async (url: string): Promise<HeldSourcePage> => {
-      if (!resolvedUrls.has(url)) {
-        resolvedUrls.add(url);
-        for (const row of records.filter(row => row.canonicalUrl === url).sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))) {
-          try {
-            const [{ artifact }, parsed] = await Promise.all([readObject(row.artifactId), readHeld(row.artifactId)]);
-            if (artifact.httpStatus !== 200 || artifact.retentionPolicy === "DIAGNOSTIC" || Date.parse(artifact.retrievedAt) < cutoff) continue;
-            const capture = { evidence: evidenceProjection(parsed), observedAt: artifact.retrievedAt,
-              httpStatus: artifact.httpStatus, transport: artifact.transport, partial: false };
-            inherited.set(row.artifactId, capture);
-            provenance.push({ artifactId: row.artifactId, canonicalUrl: artifact.canonicalUrl,
-              retrievedAt: artifact.retrievedAt, httpStatus: artifact.httpStatus,
-              permission: artifact.permission, methodRouteId: artifact.methodRouteId,
-              contentType: artifact.contentType, retrievalUrl: artifact.retrievalUrl });
-            break;
-          } catch { /* Unreadable held bytes leave acquisition owed. */ }
-        }
-      }
+      await heldCapture(url);
       const page = await read(url);
       const capture = captures.get(page.artifactId);
       if (!capture) throw new Error("Saved source has no capture metadata");
       return { url: page.url, text: page.text, collectedAt: page.collectedAt, capture };
     },
     captureGeography: async (url: string, text: string) => {
+      cost.bytesFetched += Buffer.byteLength(text);
       const { artifact } = recordAcquisition({ canonicalUrl: url, retrievedAt: tools.now(), httpStatus: 200,
         contentType: "application/json", sourceId: "census-tiger", methodRouteId: "census-tiger-query",
         workItemId: context.workItemId, attemptId: context.attemptId, permission: "ALLOWED", transport: "REACHABLE" }, text);

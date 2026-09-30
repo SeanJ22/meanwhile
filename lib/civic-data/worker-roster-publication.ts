@@ -52,6 +52,9 @@ const SCHOOL_BOARD = /\b(governing board|school board|board of (education|truste
 const BODY_NAME = [/\b(city|town|village|borough|township) (council|commission|committee)\b/, /\bboard of (supervisors|commissioners|education|trustees|aldermen|selectmen)\b/,
   /\b(governing board|school board|select ?board|township committee)\b/, /\bcouncil\b/];
 const titleCase = (text: string) => text.replace(/\b\p{L}/gu, c => c.toUpperCase());
+/** The division a body governs: the place its page must name when the body has no name yet. */
+const governmentOf = <D extends { readonly ocdId: string }>(divisions: readonly D[], { ocdId }: { readonly ocdId: string | null }): D | null =>
+  divisions.find(row => row.ocdId === ocdId) ?? null;
 
 /**
  * The saved page is about this body. A page read in code (`inTitle`) must say
@@ -102,7 +105,7 @@ export function workerRosterPublication(input: {
   const body = prior.payload.registry.bodies.find(row => row.id === input.bodyId);
   requireThat(body, "ROSTER_BODY_UNREGISTERED");
   if (!body) throw new Error("ROSTER_BODY_UNREGISTERED");
-  const division = prior.payload.registry.divisions.find(row => row.ocdId === body.ocdId) ?? null;
+  const division = governmentOf(prior.payload.registry.divisions, body);
   // The right place: the page is about this body, and names its government when the body is not yet named.
   requireThat((body.name !== null || division === null || pageWords(capture.evidence.text).includes(division.label.toLowerCase())) &&
     pageIsAboutBody(capture.evidence.text, body, division?.label ?? null, reading.id.startsWith("held:")), "ROSTER_PAGE_NOT_THIS_BODY");
@@ -225,7 +228,7 @@ export async function heldRosterReading(input: {
 }): Promise<RosterReading | null> {
   const body = input.prior.payload.registry.bodies.find(row => row.id === input.bodyId);
   if (!body) return null;
-  const division = input.prior.payload.registry.divisions.find(row => row.ocdId === body.ocdId) ?? null;
+  const division = governmentOf(input.prior.payload.registry.divisions, body);
   const seen = new Set<string>();
   const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))

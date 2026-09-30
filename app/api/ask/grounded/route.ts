@@ -721,10 +721,9 @@ export async function POST(request: Request) {
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
   const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question) : null;
   /* "What meetings are happening this week?": the sittings held for the reader's divisions (lib/ask/area-meetings.ts). It reads the registry and the calendar and nothing else. */
-  /* Only when nothing else is in front of the reader: a focused card or an earlier turn makes "is there a meeting soon?" about that body. */
+  /* Not when the reader has a card open: "is there a meeting soon?" is then about that body. An earlier turn does not change it — the shapes name no body and carry no pronoun. */
   const areaMeetingsAsk = !topicRoute && !officialsAsk && ocdIds.length > 0 &&
-    readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused) && readSubjectRefs(body.priorSubjects, 8).length === 0 &&
-    (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0)
+    readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused)
     ? areaMeetingsQuestion(question) : null;
   /* Both answer from the registry and what is already held for the reader's divisions: no ballot, no money, no votes, no recorded outcomes. */
   const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);

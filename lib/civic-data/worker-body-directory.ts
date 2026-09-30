@@ -5,9 +5,8 @@ import { jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan } from "../contro
 import type { RegistryRuntimePackage, RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { Body, BodyClass } from "../registry/types.ts";
 import type { JurisdictionSource } from "../hunt/jurisdiction-universe.ts";
-import { captureIntact, registryEdition, section3SourceReceipt, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
+import { captureIntact, heldPageCopies, registryEdition, section3SourceReceipt, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { readHeldDirectory } from "./worker-held-directory.ts";
-import { isOfficialSource } from "./source-authority.ts";
 import { pageWords, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
@@ -134,11 +133,7 @@ export async function heldDirectoryReading(input: {
   if (contract.schemaVersion !== 2 || contract.recordClass !== "OFFICIAL_BOARD_DIRECTORY" || !subject) return null;
   const division = input.prior.payload.registry.divisions.find(d => d.ocdId === subject.divisionId);
   if (!division) return null;
-  const seen = new Set<string>();
-  const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
-    .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
-    .filter(a => !seen.has(a.contentHash) && Boolean(seen.add(a.contentHash)))
-    .slice(0, input.limit ?? 40);
+  const candidates = heldPageCopies(input.artifacts, input.limit ?? 40);
   const records: { id: string; fields: Record<string, unknown> }[] = [], sourceOf = new Map<string, WorkerPublicationCapture>(), used: WorkerPublicationCapture[] = [];
   // The newest usable copy of each page speaks for it: an older copy never re-adds a board the newer one dropped,
   // and a later "Access Denied" capture never shadows a good one.

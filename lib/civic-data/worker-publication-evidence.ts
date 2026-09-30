@@ -6,7 +6,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
 import { linkingPageFrom, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ManualSourceSetReceipt } from "./types.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { isOfficialSource } from "./source-authority.ts";
 import { hostOfUrl, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 
@@ -16,6 +16,20 @@ export function requirePublication(value: unknown, reason: string): asserts valu
 
 /** Source-wide shortfalls: blanks stay open as work, no captured record is wrong. */
 const COVERAGE_CODES = new Set(["COMPLETENESS_SOURCE_ROW_OMITTED", "DECLARED_COUNT_MISMATCH"]);
+
+/**
+ * Any job's saved official HTML pages to read in code, newest first: each
+ * distinct content once, and at most `pages` distinct pages. Every saved copy
+ * of a page is kept, so a reader can pass over a later "Access Denied" copy
+ * to the good one saved before it.
+ */
+export function heldPageCopies(artifacts: readonly ArtifactRecord[], pages: number): readonly ArtifactRecord[] {
+  const hashes = new Set<string>(), urls = new Set<string>();
+  return [...artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && isOfficialSource(a.canonicalUrl))
+    .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
+    .filter(a => !hashes.has(a.contentHash) && Boolean(hashes.add(a.contentHash)))
+    .filter(a => urls.has(a.canonicalUrl) || (urls.size < pages && Boolean(urls.add(a.canonicalUrl))));
+}
 
 /** The saved page is intact: fully read, a success status, and the bytes hash to their recorded identity. */
 export function captureIntact(capture: WorkerPublicationCapture): boolean {

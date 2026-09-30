@@ -186,6 +186,56 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
   if (Object.values(shape.fields).some(mapping => mapping.attribute !== undefined &&
     (shape.format !== "HTML_TABLE" || mapping.attribute !== "href" || typeof mapping.source !== "number")))
     refuse("FIELD_MAPPING_INVALID", "A link attribute is supported only on an HTML table column.");
+  if (shape.format === "HTML_PROFILE") {
+    // CivicPlus individual staff pages expose one detail heading and a
+    // label/value list. Mask active/template content without shifting UTF-16
+    // offsets; a script's document.title or an image alt is never a person row.
+    const inert = evidence.text.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, match => " ".repeat(match.length));
+    const hasClass = (attrs: string, wanted: string): boolean => {
+      const declared = /\bclass\s*=\s*(["'])(.*?)\1/i.exec(attrs)?.[2];
+      return declared?.split(/\s+/).includes(wanted) ?? false;
+    };
+    const elements = (tag: "h2" | "ul", className: string) =>
+      [...inert.matchAll(new RegExp(`<${tag}\\b([^>]*)>([\\s\\S]*?)<\\/${tag}\\s*>`, "gi"))]
+        .filter(match => hasClass(match[1]!, className));
+    const heading = elements("h2", "detail-title");
+    const details = elements("ul", "detail-list");
+    if (heading.length !== 1 || details.length !== 1) refuse("HTML_PROFILE_AMBIGUOUS", "One visible profile heading and one detail list are required.");
+    const values = new Map<string, { value: string; start: number; end: number }>();
+    const put = (key: string, raw: string, start: number, end: number) => {
+      if (values.has(key)) refuse("HTML_PROFILE_AMBIGUOUS", `Repeated profile field ${key} has no unique source span.`);
+      values.set(key, { value: htmlText(raw), start, end });
+    };
+    const h = heading[0]!;
+    const headingStart = h.index! + h[0].indexOf(">") + 1;
+    put("heading:detail-title", h[2]!, headingStart, headingStart + h[2]!.length);
+    const list = details[0]!;
+    const items = [...list[2]!.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li\s*>/gi)];
+    if ([...list[2]!.matchAll(/<li\b/gi)].length !== items.length)
+      refuse("HTML_PROFILE_INCOMPLETE", "A profile detail list contains an incomplete item.");
+    for (const li of items) {
+      const spans = [...li[0].matchAll(/<span\b([^>]*)>([\s\S]*?)<\/span\s*>/gi)];
+      const label = spans.filter(span => hasClass(span[1]!, "detail-list-label"));
+      const value = spans.filter(span => hasClass(span[1]!, "detail-list-value"));
+      if (label.length !== 1 || value.length !== 1) refuse("HTML_PROFILE_AMBIGUOUS", "A profile detail needs one label and one value span.");
+      const key = `detail:${htmlText(label[0]![2]!).replace(/:\s*$/, "")}`;
+      const span = value[0]!;
+      const start = list.index! + list[0].indexOf(">") + 1 + li.index! + span.index! + span[0].indexOf(">") + 1;
+      put(key, span[2]!, start, start + span[2]!.length);
+    }
+    const fields: Record<string, RecordEvidenceCell> = Object.create(null);
+    for (const [field, mapping] of Object.entries(shape.fields)) {
+      const source = mapping.source;
+      if (typeof source !== "string" || !/^(?:heading:detail-title|detail:[A-Za-z][A-Za-z ]{0,79})$/.test(source)) {
+        throw new RecordEvidenceRefusal("HTML_PROFILE_MAPPING_INVALID", "Profile fields need an exact heading:detail-title or detail:Label source selector.");
+      }
+      const scalar = values.get(source);
+      if (!scalar?.value) throw new RecordEvidenceRefusal("HTML_PROFILE_FIELD_MISSING", `The visible profile has no ${source} value.`);
+      fields[field] = { value: convert(scalar.value, mapping), locator: `/profile/${escapePointer(source)}`,
+        start: scalar.start, end: scalar.end };
+    }
+    return { rows: [fields], declaredCount: null };
+  }
   if (shape.format === "TEXT_BLOCKS") {
     const labels = Object.values(shape.fields).map(mapping => mapping.source);
     if (!shape.recordStart?.trim() || shape.recordStart.length > 4096 ||

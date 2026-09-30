@@ -71,7 +71,7 @@ test("a copy of the source, its URL, or its acquisition cannot be an independent
   }
 });
 
-test("one profile contradiction fails the whole chain but preserves only the unrelated row's safe IDs", () => {
+test("one profile contradiction holds only the disputed row; the unrelated row validates (§6)", () => {
   const producer = { role: "PARSER" as const, provider: "fixture", version: "1", instance: "parser-1" };
   const validator = { role: "VALIDATOR" as const, provider: "fixture", version: "1", instance: "validator-1" };
   const auditor = { role: "ADVERSARIAL_AUDITOR" as const, provider: "fixture", version: "1", instance: "auditor-1" };
@@ -80,7 +80,7 @@ test("one profile contradiction fails the whole chain but preserves only the unr
   const conflicting = evidence("profile", JSON.stringify([{ name: "Ada One", office: "Mayor" }, { name: "Bea Two", office: "City Manager" }]), independent.canonicalUrl, independent.acquiredByAttemptId);
   const checked = validateGeneralizedExtraction({ attemptId: "validator", worker: validator, producer, producerAttemptId: "parser", evidence: primary,
     candidate: parsed, contract, authorityEvidence: [conflicting], verifiedAt: "2026-09-28T08:10:00.000Z" }, contract);
-  assert.equal(checked.verdict, "FAIL");
+  assert.equal(checked.verdict, "PASS");
   assert.deepEqual(checked.validatedRecordIds, [parsed.records[0]!.id]);
   assert.equal(checked.validatedRecordCount, 1);
   const challenged = auditGeneralizedExtraction({ attemptId: "auditor", worker: auditor,
@@ -95,13 +95,14 @@ test("one profile contradiction fails the whole chain but preserves only the unr
   assert.equal(challenged.survivingRecordCount, 1);
 });
 
-test("a global authority defect cannot issue any isolated validator IDs", () => {
+test("a copy of the source offered as an authority is not a check, and never holds facts found on the official page", () => {
   const producer = { role: "PARSER" as const, provider: "fixture", version: "1", instance: "parser-1" };
   const validator = { role: "VALIDATOR" as const, provider: "fixture", version: "1", instance: "validator-1" };
   const parsed = parseGeneralizedRecords({ attemptId: "parser", worker: producer, evidence: primary, contract }, contract);
   const copied = { ...independent, contentHash: primary.contentHash };
   const checked = validateGeneralizedExtraction({ attemptId: "validator", worker: validator, producer, producerAttemptId: "parser", evidence: primary,
     candidate: parsed, contract, authorityEvidence: [copied], verifiedAt: "2026-09-28T08:10:00.000Z" }, contract);
-  assert.equal(checked.verdict, "INCONCLUSIVE");
-  assert.deepEqual(checked.validatedRecordIds, []);
+  assert.equal(checked.verdict, "PASS");
+  assert.deepEqual(checked.validatedRecordIds, parsed.records.map(record => record.id));
+  assert.ok(checked.findings.some(f => f.code === "SELF_VERIFICATION_REFUSED" && f.severity === "INFO"));
 });

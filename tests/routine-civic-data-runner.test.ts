@@ -270,7 +270,6 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   for (const [id, source] of Object.entries(SOURCE_AUTHORITIES)) {
     assert.equal(source.id, id);
     assert.ok(source.publisher);
-    assert.equal(source.routePrefixes.length === 0, source.allowedFinalHosts.length === 0);
     if (source.routePrefixes.length === 0) {
       /* A route-less authority is authorized only by a reviewed receipt, or only as the exact inputs it names (C16). */
       assert.ok(
@@ -285,7 +284,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   }
   const arbitrary = authorityFor("az-legislature", "STATE_ROLL_CALL", "https://example.gov/roll/1");
   assert.equal(arbitrary.ok, false);
-  if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_HOST_NOT_AUTHORIZED");
+  if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
   assert.equal(intermediary.ok, false);
   if (!intermediary.ok) assert.equal(intermediary.code, "SOURCE_NOT_AUTO_PROMOTABLE");

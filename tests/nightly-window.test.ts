@@ -14,7 +14,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
+import { ACTIVATION_GATE, readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { deriveItemState } from "../lib/control-plane/promotion/pipeline.ts";
 import {
   CATCH_UP_GRACE_MS,
@@ -298,10 +298,10 @@ test("a foreign row under window_runs is not a window: the last-window read and 
 
 test("PDC: local shadow run records are diagnostic only and cannot activate promotion", () => {
   const gate = readActivationGate(ROOT);
-  /* The one open class is the owner's decision in code (2026-09-21, campaign sites only; tests/campaign-site-gate.test.ts), never a run record. */
+  /* The open classes are the owner's decision in code (§3, 2026-09-29; tests/campaign-site-gate.test.ts), never a run record. */
   assert.equal(gate.promotionEnabled, true);
-  assert.deepEqual(gate.openRecordClasses, ["candidate-enrichment"]);
-  assert.deepEqual(gate.openFields, { "candidate-enrichment": ["campaignSite"] });
+  assert.deepEqual(gate.openRecordClasses, ACTIVATION_GATE.openRecordClasses);
+  assert.deepEqual(gate.openFields, ACTIVATION_GATE.openFields);
   assert.equal(gate.mode, "SHADOW");
   assert.equal(gate.readFrom, null);
   assert.deepEqual(gate.contracts, { READER: "UNREAD", TRUTH: "UNREAD", FRESHNESS: "UNREAD" });

@@ -355,7 +355,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);
@@ -406,9 +406,20 @@ function registryPlaceholderRemovalCheck(
     const division = object(value);
     if (division && typeof division.ocdId === "string") divisions.set(division.ocdId, division);
   }
+  const rosters = Array.isArray(object(candidate.readModel)?.bodyRosters) ? (object(candidate.readModel)!.bodyRosters as unknown[]).map(object) : [];
   for (const delta of removed) {
     const row = evidenceByKey.get(delta.key)!;
     const before = object(delta.before);
+    if (row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
+      // A departure: this candidate's complete official roster for the body, from that page, no longer lists the holder.
+      const roster = rosters.find(r => r?.bodyId === row.bodyId);
+      const listed = Array.isArray(roster?.members) && roster.members.some(member => object(member)?.id === row.holderId);
+      if (!roster || roster.sourceUrl !== row.sourceUrl || listed ||
+          !["roster-disposition", "official-candidacy", "official-photo", "roster-photo"].some(kind => delta.key === `${kind}:${row.holderId}`)) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven gone from its body's complete official roster.`);
+      }
+      continue;
+    }
     const division = row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" ? divisions.get(row.divisionOcdId) : undefined;
     if (
       row.code !== "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" ||

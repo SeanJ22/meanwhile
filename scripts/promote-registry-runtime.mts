@@ -4,6 +4,7 @@
  * reviewed software inputs; mutable body/contact/photo bindings arrive only
  * through the exact-byte source receipt embedded in the package.
  */
+import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 
@@ -38,7 +39,8 @@ async function main(): Promise<void> {
     const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
     const readObject = researchVaultResolver(repos, vault, "freshness");
     const readEvidence = workerVaultResolver(repos, vault, "freshness", { snapshot: true });
-    const report = await publishWorkerRosterResults({ repos, store: new PostgresRoutineDataStore(),
+    const store = new PostgresRoutineDataStore();
+    const report = await publishWorkerRosterResults({ repos, store,
       workItemIds: workerRosters.split(",").filter(Boolean), now, readCapture: async (id, records) => {
         const [{ artifact }, input] = await Promise.all([readObject(id), readEvidence(id)]);
         const evidence = evidenceProjection(input);
@@ -52,10 +54,10 @@ async function main(): Promise<void> {
           httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" };
       } });
     const published = report.filter(row => row.outcome.status === "PUBLISHED" || row.outcome.status === "PARTIALLY_PUBLISHED");
-    const held = report.filter(row => row.outcome.status === "HELD");
     console.log(JSON.stringify({ contractId: "registry-runtime-bindings", candidateId: published.at(-1)?.outcome.candidateId ?? null,
       promotedVersionId: published.at(-1)?.outcome.versionId ?? null, workerPublications: report }, null, 2));
-    if (held.length) throw new Error(`ROSTER_PUBLICATION_REPAIR_OWED:${held.map(row => `${row.workItemId}:${row.outcome.code}`).join(",")}`);
+    // Holds stay on their own work items as owed work; the pass fails only when nothing went live.
+    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", report);
     return;
   }
   const packagePath = assignment(process.argv, "package");

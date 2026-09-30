@@ -21,6 +21,7 @@ import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
+import { needsSecondSource } from "../promotion/section3.ts";
 
 /**
  * Blocker codes an acquisition recorded for robots.txt alone, before the owner decision of 2026-09-25. Historical:
@@ -340,6 +341,8 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const validator=records.find(r=>r.routeTaskId===validatorTask.id && r.result.role==="VALIDATOR");
       if (!validator) { const next=await taskFor({...spec,role:"VALIDATOR",producerResultId:parser.id}); if(next)return next; unresolved=true; continue; }
       if (validator.result.role!=="VALIDATOR" || (validator.result.verdict!=="PASS" && validator.result.extractionVerdict!=="PASS")) { unresolved=true; continue; }
+      // §3: a fact that is not a judgment call is verified when the Validator passes; there is no audit stage.
+      if (validator.result.verdict==="PASS" && !needsSecondSource(plan.contract)) { if (identityUnresolved) unresolved=true; else staged=true; continue; }
       let auditSpec: Parameters<typeof enqueueWorkerTask>[1] = {...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope};
       for (;;) {
         const auditTask = await enqueueWorkerTask(repos, auditSpec);

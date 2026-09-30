@@ -524,6 +524,7 @@ export function toAgendaItems(items: LegistarEventItem[]): AgendaItem[] {
 
 export function makeLegistarSource(
   clients: readonly LegistarClient[] = LEGISTAR_CLIENTS,
+  fetchImpl?: typeof fetch,
 ): MeetingSource<LegistarEventWithClient> {
   return {
     name: SOURCE_NAME,
@@ -545,6 +546,7 @@ export function makeLegistarSource(
 
       const events = await fetchEvents<LegistarEvent>(client.slug, { from, to }, {
         signal: query.signal,
+        fetchImpl,
       });
       const collectedAt = new Date().toISOString();
 
@@ -554,7 +556,7 @@ export function makeLegistarSource(
           event,
           slug: client.slug,
           collectedAt,
-          items: await readAgendaItems(client.slug, event.EventId, query.signal),
+          items: await readAgendaItems(client.slug, event.EventId, query.signal, fetchImpl),
         });
       }
     }));
@@ -597,9 +599,10 @@ async function readAgendaItems(
   slug: string,
   eventId: number,
   signal?: AbortSignal,
+  fetchImpl?: typeof fetch,
 ): Promise<LegistarEventItem[] | null> {
   try {
-    return await fetchEventItems<LegistarEventItem>(slug, eventId, { signal });
+    return await fetchEventItems<LegistarEventItem>(slug, eventId, { signal, fetchImpl });
   } catch (error) {
     console.warn(
       `  legistar: agenda items unavailable for ${slug}/${eventId} — ${error}; ` +

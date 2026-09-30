@@ -1781,7 +1781,7 @@ Read each source file for its current exports, configuration, commands and data.
 
 ## Complete file tree
 
-7080 file(s).
+7081 file(s).
 
 - `.claude/launch.json`
 - `.claude/settings.json`
@@ -5644,6 +5644,7 @@ Read each source file for its current exports, configuration, commands and data.
 - `lib/meetings/reader-listing-count.ts`
 - `lib/meetings/reader-records.ts`
 - `lib/meetings/registry.ts`
+- `lib/meetings/shared-fetch.ts`
 - `lib/meetings/snapshot.ts`
 - `lib/meetings/source-labels.ts`
 - `lib/meetings/status-marks.ts`

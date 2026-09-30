@@ -109,7 +109,7 @@ export function agentRuns(input: {
     const shares = (cost?.byModel ?? []).length;
     const result = resultBy.get(run.id);
     const art = artifactBy.get(run.id);
-    const found = run.role === "SCOUT" && result?.kind === "scout" && result.verdict
+    const found = result?.kind === "scout" && result.verdict
       ? `${SCOUT_OUTCOME_WORDS[result.verdict] ?? `Ended: ${result.verdict.toLowerCase().replace(/_/g, " ")}.`}${result.narrative ? ` ${result.narrative}` : ""}`
       : result?.kind === "worker" ? `${run.role === "PARSER" ? `Pulled out ${result.records ?? 0} record${result.records === 1 ? "" : "s"}.` : `Verdict: ${(result.verdict ?? "none recorded").toLowerCase().replace(/_/g, " ")}.`}`
       : state === "running" ? "Still working. Nothing recorded yet."

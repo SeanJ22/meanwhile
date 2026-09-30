@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -16,6 +16,10 @@ test("staging has no shared mirror and accepts only a mirror inside its worktree
     assert.equal(resolvePilotMirror(root, join(dir, "shared"), true), null);
     assert.equal(resolvePilotMirror(root, join(dir, "worktree-other"), true), null);
     assert.equal(resolvePilotMirror(root, join(root, "mirror"), true), join(root, "mirror"));
+    const shared = join(dir, "shared");
+    mkdirSync(shared);
+    symlinkSync(shared, join(root, "linked-mirror"), "junction");
+    assert.equal(resolvePilotMirror(root, join(root, "linked-mirror", "new-digest-directory"), true), null);
     assert.equal(resolvePilotMirror(root, undefined, false), "G:/My Drive/we-the-people");
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

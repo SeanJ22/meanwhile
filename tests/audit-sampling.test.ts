@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import {
-  auditCoverageReport, auditHistoryFrom, createModelAuditSampler, DEFAULT_AUDIT_SAMPLE_POLICY, sampleDecision, stableFraction, stratumOf,
+  auditCoverageReport, auditHistoryFrom, auditHistoryFromManual, createModelAuditSampler, DEFAULT_AUDIT_SAMPLE_POLICY, sampleDecision, stableFraction, stratumOf,
 } from "../lib/control-plane/workers/audit-sampling.ts";
 import { auditCoverage, recordOutcome } from "../lib/control-plane/workers/audit-outcome.ts";
 import type { GeneralizedCivicExtractionContract, WorkerFinding, WorkerResultRecord, WorkerTaskSpec } from "../lib/control-plane/workers/types.ts";
@@ -74,6 +75,21 @@ test("an escalation is always reviewed, and the sampler counts its own decisions
   for (let i = 0; i < 40; i++) decisions.push(await sampler(spec("www.new.gov", `burst-${i}`)));
   assert.deepEqual(decisions.slice(0, DEFAULT_AUDIT_SAMPLE_POLICY.floorPerStratum), [true, true, true]);
   assert.ok(decisions.filter(Boolean).length < 15, "after the floor, only the fixed fraction is reviewed");
+});
+
+test("what the manual remembers of a stratum keeps it under review after its results have aged out; the results, when present, win", async () => {
+  const stratumRow = (host: string, outcome: "FAILED" | "YIELDED", modelReviewed: boolean) => newFieldManualEntry("auditor-learning", `stratum|PLANNING_MEETING|${host}`, {
+    role: "AUDITOR", kind: "AUDIT_STRATUM", title: "t", summary: "s", outcome, payload: { recordClass: "PLANNING_MEETING", host, modelReviewed } });
+  const store = { formatVersion: 1 as const, updatedOn: null, entries: [stratumRow("www.broke.gov", "FAILED", true), stratumRow("www.fine.gov", "YIELDED", true)] };
+  const h = auditHistoryFromManual(store);
+  assert.equal(h.get("PLANNING_MEETING|www.broke.gov")!.everBroken, true);
+  assert.equal(sampleDecision(spec("www.broke.gov", "x"), new Map([...h]), false, { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1 }).reason, "BROKEN_STRATUM");
+  const sampler = createModelAuditSampler({ workerResults: { readAll: async () => [] }, fieldManual: { read: async () => ({ value: store, revision: 1 }) } } as never,
+    { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1, ratio: 0, quotedRatio: 0 });
+  assert.equal(await sampler(spec("www.broke.gov", "a1")), true, "a stratum the manual says broke is reviewed");
+  assert.equal(await sampler(spec("www.fine.gov", "a2")), false, "a stratum the manual says was reviewed and held is not new");
+  const settled = auditHistoryFrom([auditRecord("www.broke.gov", "SURVIVED", "2026-09-20T00:00:00Z")]);
+  assert.equal(new Map([...h, ...settled]).get("PLANNING_MEETING|www.broke.gov")!.everBroken, false, "the durable results override the manual's summary");
 });
 
 test("the coverage report is a number for Admin: audited, model-reviewed, strata reached, and the audits' own coverage", () => {

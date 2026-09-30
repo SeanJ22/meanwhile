@@ -22,7 +22,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { newFieldManualEntry, type FieldManualEntry } from "../field-manual.ts";
+import { newFieldManualEntry, readFieldManual, type FieldManualEntry, type FieldManualStore } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ModelClass } from "../scheduler/model-routing.ts";
 import { parseLearningEntries } from "./model-parser.ts";
@@ -89,6 +89,28 @@ export function auditHistoryFrom(results: readonly WorkerResultRecord[]): Map<st
   return history;
 }
 
+/**
+ * What the field manual remembers of each stratum's latest audit (the
+ * AUDIT_STRATUM rows the Auditor writes). It fills in strata the durable results
+ * no longer show, so a stratum that broke once is still under review after its
+ * results have aged out, and a stratum already reviewed is not treated as new.
+ */
+export function auditHistoryFromManual(store: Pick<FieldManualStore, "entries">): Map<string, StratumHistory> {
+  const history = new Map<string, StratumHistory>();
+  for (const entry of store.entries) {
+    if (entry.kind !== "AUDIT_STRATUM") continue;
+    const recordClass = entry.payload.recordClass; const host = entry.payload.host;
+    if (typeof recordClass !== "string" || typeof host !== "string") continue;
+    const broke = entry.outcome === "FAILED";
+    history.set(`${recordClass}|${host}`, {
+      reviewed: entry.payload.modelReviewed === true ? 1 : 0,
+      survivedSinceBreak: broke ? 0 : entry.outcome === "YIELDED" ? 1 : 0,
+      everBroken: broke,
+    });
+  }
+  return history;
+}
+
 export type SampleReason = "ESCALATION" | "NEW_STRATUM" | "BROKEN_STRATUM" | "SAMPLED" | "NOT_SAMPLED";
 
 /** A stable value in [0, 1) from a result key: the same result always lands the same side of the line. */
@@ -120,10 +142,14 @@ export function sampleDecision(
  * its own count as it decides, so a burst of new results from one stratum does not
  * all count as "the first".
  */
-export function createModelAuditSampler(repos: Pick<ControlPlaneRepositories, "workerResults">, policy: AuditSamplePolicy = DEFAULT_AUDIT_SAMPLE_POLICY) {
+export function createModelAuditSampler(repos: Pick<ControlPlaneRepositories, "workerResults"> & Partial<Pick<ControlPlaneRepositories, "fieldManual">>, policy: AuditSamplePolicy = DEFAULT_AUDIT_SAMPLE_POLICY) {
   let loaded: Promise<{ history: Map<string, StratumHistory>; parsers: Map<string, WorkerResultRecord> }> | null = null;
-  const load = () => (loaded ??= repos.workerResults.readAll().then((all) => ({
-    history: auditHistoryFrom(all),
+  const load = () => (loaded ??= Promise.all([
+    repos.workerResults.readAll(),
+    repos.fieldManual ? readFieldManual({ fieldManual: repos.fieldManual }).then((r) => r.store) : Promise.resolve(emptyFieldManual()),
+  ]).then(([all, manual]) => ({
+    // The results are the more exact record; the manual covers strata they no longer show.
+    history: new Map([...auditHistoryFromManual(manual), ...auditHistoryFrom(all)]),
     parsers: new Map(all.filter((r) => r.result.role === "PARSER").map((r) => [r.id, r] as const)),
   })));
   return async (spec: WorkerTaskSpec): Promise<boolean> => {

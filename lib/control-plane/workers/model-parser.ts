@@ -235,6 +235,16 @@ export interface ModelParseOutcome {
   readonly metering: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch">;
 }
 
+/** Keep answered windows attributable when another window's provider request fails. */
+export class ModelParseFailure extends Error {
+  readonly accounting: Pick<ModelParseOutcome, "usage" | "usd" | "metering"> & {
+    readonly byModel: readonly CostModelShare[];
+  };
+  constructor(message: string, accounting: ModelParseFailure["accounting"]) {
+    super(message); this.name = "ModelParseFailure"; this.accounting = accounting;
+  }
+}
+
 function toolInput(response: ModelResponse, expectedModel: string): unknown {
   if (response.model !== expectedModel) throw new Error("PARSE_MODEL_IDENTITY_MISMATCH");
   const tools = (Array.isArray(response.content) ? response.content : []).filter((b) => b.type === "tool_use");
@@ -310,7 +320,7 @@ export function modelParseReasoner(
       const step = assertStepMayInvokeModel(PARSE_STEP, tier !== "haiku");
       model = step.model; effort = step.effort; validationError = null;
       const proposals: (ProposedRecord & { windowStart: number })[] = [];
-      const calls = await Promise.all(windows.map(async (w, index) => {
+      const calls = await Promise.allSettled(windows.map(async (w, index) => {
         const body = userBody(contract, route, input.evidence.text.slice(w.start, w.end));
         if (index === 0 && firstBody === "") firstBody = body;
         const request: ModelRequest = { model, max_tokens: PARSE_RESPONSE_MAX_TOKENS,
@@ -324,7 +334,21 @@ export function modelParseReasoner(
         });
         return { response, window: w };
       }));
-      for (const { response, window: w } of calls) {
+      let failure: string | null = null;
+      for (const call of calls) {
+        if (call.status === "rejected") {
+          const detail = call.reason instanceof Error ? call.reason.message : "PARSE_PROVIDER_FAILURE:UNAVAILABLE; usage NOT MEASURED";
+          const denied = detail.startsWith("DENIED_BY_POLICY");
+          const usage = readMeteredUsage(denied ? { input_tokens: 0, output_tokens: 0 } : {});
+          metered.push(usage);
+          const { batch: _batch, ...fields } = meteredCostFields(usage);
+          byModel.push({ model, tier: activeModelTierFor(model), requestCount: denied ? 0 : 1,
+            usd: denied ? 0 : null, inputTokens: usage.uncachedInputTokens, outputTokens: usage.outputTokens, ...fields });
+          if (!denied) usd = null;
+          failure ??= detail;
+          continue;
+        }
+        const { response, window: w } = call.value;
         const usage = readMeteredUsage(response.usage, response.batch === true);
         metered.push(usage);
         const price = priceMeteredUsage(response.model, usage, "5m").usd;
@@ -335,6 +359,13 @@ export function modelParseReasoner(
         usd = usd === null || price === null ? null : usd + price;
         try { for (const p of proposalsFrom(toolInput(response, model))) proposals.push({ ...p, windowStart: w.start }); }
         catch (error) { validationError = error instanceof Error ? error.message : "PARSE_MODEL_RESPONSE_INVALID"; }
+      }
+      if (failure !== null) {
+        const summed = sumMeteredUsage(metered);
+        throw new ModelParseFailure(failure, { byModel, usd, metering: meteredCostFields(summed),
+          usage: { inputTokens: summed.uncachedInputTokens, outputTokens: summed.outputTokens,
+            cacheReadInputTokens: summed.cacheReadInputTokens, cacheCreationInputTokens: summed.cacheCreationInputTokens,
+            uncachedInputTokens: summed.uncachedInputTokens } });
       }
       confirmed = confirmQuotedRecords({ evidence: input.evidence, contract }, proposals);
       attempts.push({ tier, proposed: confirmed.proposed, confirmed: confirmed.records.length, rejected: confirmed.rejections.length });

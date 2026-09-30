@@ -27,7 +27,7 @@ const TEXT = [
   "Special Meeting: Thursday, October 23, 2026 at 5:30 PM",
 ].join("\n");
 
-test("a record type with no parsing rule runs through the real fleet: Haiku quotes, code confirms, the ledger shows the spend, the Validator passes it", async () => {
+async function parserHarness(text = TEXT, overrideTransport?: ModelTransport) {
   const repos = createMemoryRepositories();
   const store = new MemoryEvidenceStore();
   let clock = Date.parse(START);
@@ -45,8 +45,8 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
   const attempt = await beginAttemptFor(repos, { routeTaskId: acquisition.id, workItemId: item.id,
     worker: { role: "ACQUIRER", provider: "fixture", version: "1", instance: holder }, lease: claim.lease.value, now: at, methodVersion: 61, policyVersion: FLEET_POLICY_VERSION });
   const { artifact } = recordAcquisition({ canonicalUrl: URL, retrievedAt: at, httpStatus: 200, contentType: "text/plain", sourceId: "exampleton",
-    methodRouteId: "route-agenda", workItemId: item.id, attemptId: attempt.id, permission: "ALLOWED", transport: "REACHABLE" }, TEXT);
-  await putArtifact(store, PROJECT, artifact, Buffer.from(TEXT));
+    methodRouteId: "route-agenda", workItemId: item.id, attemptId: attempt.id, permission: "ALLOWED", transport: "REACHABLE" }, text);
+  await putArtifact(store, PROJECT, artifact, Buffer.from(text));
   await recordArtifactMetadata(repos, { artifactId: artifact.id, workItemId: item.id, routeTaskId: acquisition.id, attemptId: attempt.id, tier: artifact.tier,
     contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl: artifact.canonicalUrl, partial: false, recordedAt: at }, at);
   await disposeRouteTask(repos, { routeTaskId: acquisition.id, attemptId: attempt.id, expectedTaskRevision: (await repos.routeTasks.mustRead(acquisition.id)).revision,
@@ -73,8 +73,13 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
       ] } }] };
   };
   const readEvidence: FleetRuntime["readEvidence"] = async () => (await readForParser(store, PROJECT, artifact as Artifact)).input;
-  const runtime: FleetRuntime = { repos, methodVersion: 61, now, readEvidence, parseReasoner: modelParseReasoner(repos, transport, now),
+  const runtime: FleetRuntime = { repos, methodVersion: 61, now, readEvidence, parseReasoner: modelParseReasoner(repos, overrideTransport ?? transport, now, { ceilingUsd: 100 }),
     independentContext: async () => { throw new Error("not used"); } };
+  return { repos, now, item, runtime, artifact, contract, calls };
+}
+
+test("a record type with no parsing rule runs through the real fleet: Haiku quotes, code confirms, the ledger shows the spend, the Validator passes it", async () => {
+  const { repos, now, item, runtime, artifact, contract, calls } = await parserHarness();
 
   const task = await enqueueWorkerTask(repos, { workItemId: item.id, role: "PARSER", artifactId: artifact.id, contract, now: now() });
   const dispatch = await dispatchWorkerTask(runtime, task);
@@ -105,4 +110,27 @@ test("a record type with no parsing rule runs through the real fleet: Haiku quot
   // And the manual now says what worked here.
   const manual = await readFieldManual(repos, { role: "PARSER", state: "az", recordClass: "PLANNING_MEETING" });
   assert.ok(manual.projection.lines.some((l) => /PARSE_OUTCOME YIELDED/.test(l)));
+});
+
+test("partial provider failure commits answered Parser window costs by tier on the aborted Attempt", async () => {
+  let calls = 0;
+  const h = await parserHarness(TEXT + "\n" + "x".repeat(25_000), async request => {
+    calls++;
+    if (calls === 1) throw new Error("HTTP 503");
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 400, output_tokens: 120 },
+      content: [{ type: "tool_use", id: "t", name: "record_extraction", input: { records: [] } }] };
+  });
+  const task = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "PARSER", artifactId: h.artifact.id, contract: h.contract, now: h.now() });
+  const result = await dispatchWorkerTask(h.runtime, task);
+  assert.equal(result.outcome, "FAILED");
+  const costs = (await h.repos.costs.readAll()).filter(row => row.attemptId === result.attemptId);
+  assert.equal(costs.length, 1);
+  assert.equal(costs[0].cost.requestCount, 2);
+  assert.equal(costs[0].cost.usd, null);
+  assert.equal(costs[0].byModel?.length, 2);
+  assert.ok(costs[0].byModel?.some(share => share.tier === "haiku" && share.usd !== null && share.usd > 0));
+  assert.ok(costs[0].byModel?.some(share => share.usd === null));
+  assert.equal((await h.repos.workerResults.readAll()).length, 0, "failed extraction publishes no record");
+  assert.equal(calls, 2);
 });

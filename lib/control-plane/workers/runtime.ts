@@ -18,7 +18,7 @@ import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
 import { normalizedParserResult } from "./parser.ts";
-import type { ModelParseOutcome, modelParseReasoner } from "./model-parser.ts";
+import { ModelParseFailure, type ModelParseOutcome, type modelParseReasoner } from "./model-parser.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
   type FleetRole, type IndependentAuditContext, type ParserWorkerInput, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
 
@@ -205,11 +205,15 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     } catch (error) {
       const detail = error instanceof Error ? error.message : "WORKER_EXECUTION_FAILED";
       const denied = detail.startsWith("DENIED_BY_POLICY") || (error instanceof Error && error.name === "NetworkAccessDenied");
-      const usage = model?.usage ?? parsed?.usage ?? NULL_USAGE;
+      const partial = error instanceof ModelParseFailure ? error.accounting : null;
+      const usage = partial?.usage ?? model?.usage ?? parsed?.usage ?? NULL_USAGE;
       return { kind: "ABORTED", ranAs: lane, endedAt: now(), detail,
+        ...(partial ? { costByModel: partial.byModel } : {}),
         failureOutcome: denied ? "DENIED_BY_POLICY" : detail.includes("BOUND_EXCEEDED") ? "TIMED_OUT" : detail.includes("PROCESS_CRASHED") ? "CRASHED" : "ABORTED",
         cost: { ...ZERO_COST, durationMs: Math.round(performance.now() - started), inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens,
-          usd: model?.usd ?? parsed?.usd ?? null, requestCount: modelRequested && !denied ? 1 : 0, ...(model?.metering ?? parsed?.metering ?? {}) } };
+          usd: partial ? partial.usd : model?.usd ?? parsed?.usd ?? null,
+          requestCount: partial ? partial.byModel.reduce((sum, share) => sum + share.requestCount, 0) : modelRequested && !denied ? 1 : 0,
+          ...(partial?.metering ?? model?.metering ?? parsed?.metering ?? {}) } };
     }
   } };
 }

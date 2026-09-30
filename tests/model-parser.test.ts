@@ -5,7 +5,7 @@ import { readFieldManual, type FieldManualStore } from "../lib/control-plane/fie
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MODEL_FOR_CLASS } from "../lib/control-plane/scheduler/model-routing.ts";
-import { documentWindows, modelParseReasoner, parseLearningEntries, routeParse } from "../lib/control-plane/workers/model-parser.ts";
+import { documentWindows, modelParseReasoner, ModelParseFailure, parseLearningEntries, routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { confirmQuotedRecords, isQuotedExtraction, quotedSourceFindings, quotesHoldAgainst } from "../lib/control-plane/workers/quoted-proof.ts";
 import { validateGeneralizedExtraction } from "../lib/control-plane/workers/generalized-validator.ts";
 import type { GeneralizedCivicExtractionContract, ParserWorkerInput, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
@@ -196,4 +196,26 @@ test("a response without the record_extraction call is refused, not read as pros
 test("the lane refuses a contract that already has a parsing rule", async () => {
   const withRule = { ...contract, extraction: { format: "JSON_RECORDS", rowsPointer: "/rows", fields: {} } } as GeneralizedCivicExtractionContract;
   await assert.rejects(modelParseReasoner(createMemoryRepositories(), async (r) => respond(r.model, []), () => NOW, { ceilingUsd: 100 }).parse({ ...input(), contract: withRule }, input().worker), /PARSE_MODEL_LANE_NOT_APPLICABLE/);
+});
+
+test("a failed window waits for answered windows and preserves their paid tier shares without retrying", async () => {
+  let calls = 0;
+  const longInput = input();
+  const text = TEXT + "\n" + "x".repeat(25_000);
+  const evidence = { ...longInput.evidence, text, contentHash: contentHash(text) };
+  const parser = modelParseReasoner(createMemoryRepositories(), async request => {
+    calls++;
+    if (calls === 1) throw new Error("HTTP 503");
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return respond(request.model, GOOD_PROPOSAL);
+  }, () => NOW, { ceilingUsd: 100 });
+  await assert.rejects(parser.parse({ ...longInput, evidence }, longInput.worker), (error: unknown) => {
+    assert.ok(error instanceof ModelParseFailure);
+    assert.equal(error.accounting.byModel.length, 2);
+    assert.ok(error.accounting.byModel.some(share => share.tier === "haiku" && share.usd !== null && share.usd > 0));
+    assert.ok(error.accounting.byModel.some(share => share.requestCount === 1 && share.usd === null));
+    assert.equal(error.accounting.usd, null, "unanswered usage remains unknown alongside known paid shares");
+    return true;
+  });
+  assert.equal(calls, 2, "the same failed request is never resent or escalated");
 });

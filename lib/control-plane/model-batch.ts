@@ -18,6 +18,12 @@ export const BATCH_LANES = {
     readerFacing: false as const,
     why: "independent evidence reviews in unattended workers; each request has its complete held context and no reader is waiting",
   },
+  "background-worker-parse": {
+    flag: "WTP_BACKGROUND_WORKER_BATCH",
+    defaultEnabled: true,
+    readerFacing: false as const,
+    why: "independent saved-document extraction windows in unattended workers; no reader waits on the response",
+  },
   "ask-model-comparison": {
     flag: "WTP_ASK_COMPARE_BATCH",
     readerFacing: false as const,

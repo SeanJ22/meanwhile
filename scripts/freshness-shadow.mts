@@ -2841,7 +2841,8 @@ async function runAutonomousWave() {
       inputTokensPerRequest: 8192, outputTokensPerRequest: RESEARCH_BOUNDS.perDispatch.maxOutputTokensPerTurn }) : taskIds.length,
     transportFor: (jurisdiction, taskId) => async request => {
       const task = (await repos.routeTasks.mustRead(taskId)).value;
-      const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && batchEnabledFor("background-worker-audit");
+      const batching = task.workerTask?.role === "ADVERSARIAL_AUDITOR" ? batchEnabledFor("background-worker-audit")
+        : task.workerTask?.role === "PARSER" && batchEnabledFor("background-worker-parse");
       const journal = attemptBatchJournal(repos, taskId, nowIso);
       const requestJobId = `worker-request:${taskId}:${batching ? batchRequestHash(request) : randomUUID()}`;
       if (batching && await journal.read(batchRequestHash(request))) {

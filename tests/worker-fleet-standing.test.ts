@@ -235,10 +235,16 @@ test("unchanged permanent failures stay terminal while provider failures back of
     contract: heldEventContract(ROOT, artifact)!, now: h.now() });
   const unchanged = attemptFor(task, 1, "ABORTED", "INVALID_INPUT_SCHEMA");
   assert.equal(workerTaskAdmission(task, [unchanged], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
-  const upstream = attemptFor(task, 1, "ABORTED", "AUDIT_PROVIDER_FAILURE:503; usage NOT MEASURED");
-  const waiting = workerTaskAdmission(task, [upstream], upstream.endedAt!);
-  assert.equal(waiting.state, "BACKOFF");
-  assert.equal(workerTaskAdmission(task, [upstream], waiting.retryAt!).due, true);
+  for (const role of ["AUDIT", "PARSE"]) {
+    const rejected = attemptFor(task, 1, "ABORTED", `${role}_PROVIDER_FAILURE:400; usage NOT MEASURED`);
+    assert.equal(workerTaskAdmission(task, [rejected], "2027-01-01T00:00:00.000Z").state, "TERMINAL");
+    for (const status of [429, 503]) {
+      const upstream = attemptFor(task, 1, "ABORTED", `${role}_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
+      const waiting = workerTaskAdmission(task, [upstream], upstream.endedAt!);
+      assert.equal(waiting.state, "BACKOFF");
+      assert.equal(workerTaskAdmission(task, [upstream], waiting.retryAt!).due, true);
+    }
+  }
 });
 
 test("only exact transient denials become due for current-policy reauthorization", async t => {
